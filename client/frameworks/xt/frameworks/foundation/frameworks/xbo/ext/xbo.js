@@ -10,7 +10,7 @@ XT.Xbo = SC.Object.extend(
 
   init: function() {
     sc_super();
-    XT._xbo_manager.didLoad(this);
+    XT.XboManager.didLoad(this);
   },
     
   /**

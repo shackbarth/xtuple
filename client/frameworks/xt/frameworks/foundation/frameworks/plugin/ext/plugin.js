@@ -31,7 +31,7 @@ XT.Plugin = SC.Object.extend(SC.StatechartManager,
   },
   
   addRoutes: function(routes) {
-    XT._router.addRoutes(this, routes);
+    XT.Router.addRoutes(this, routes);
   }
   
 }) ;

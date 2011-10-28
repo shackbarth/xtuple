@@ -7,8 +7,8 @@
 
   @extends SC.Object
 */
-XT._xbo_manager = SC.Object.create(
-  /** @lends XT._xbo_manager */ {
+XT.XboManager = SC.Object.create(
+  /** @lends XT.XboManager */ {
   
   load: function(xbo) {
     if(this._last_request && this._last_request.name === xbo.name)

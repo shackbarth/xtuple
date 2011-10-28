@@ -5,12 +5,16 @@
 
 
 */
-XT._router = SC.Object.create(
-  /** @lends XT._router */ { 
+XT.Router = SC.Object.create(
+  /** @lends XT.Router */ { 
   
   init: function() {
     sc_super();
-    SC.routes.add(":plugin", this, this.route);
+  },
+
+  start: function() {
+    console.log("starting router");
+    return YES;
   },
   
   addRoutes: function(target, routes) {
@@ -28,7 +32,7 @@ XT._router = SC.Object.create(
     var _l = SC.routes.get("location"),
       l = this.get("location");
     if(_l !== l)
-      SC.routes.set("location", this.get("location"));
+      SC.routes.set("location", l);
   }.observes("location"),
   
   locationBinding: SC.Binding.from("SC.routes.location").oneWay(),

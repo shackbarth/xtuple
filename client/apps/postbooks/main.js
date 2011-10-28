@@ -1,7 +1,7 @@
 
 Postbooks.main = function main() {
 
-  Postbooks.getPath('mainPage.mainPane').append() ;
+  XT.PostbooksStatechart.initStatechart();
 
 } ;
 

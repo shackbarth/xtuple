@@ -42,7 +42,7 @@ PLUGIN.INITIALIZE = SC.State.extend(
     var xbos = this.get("owner")._xbo_ext;
     if(xbos && xbos.length > 0)
       for(var i=0; i<xbos.length; ++i)
-        XT._xbo_manager.patch(xbos[i]);
+        XT.XboManager.patch(xbos[i]);
     this.statechart.sendEvent("done", "patchXbos");
   }
     
