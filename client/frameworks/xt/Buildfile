@@ -1,0 +1,20 @@
+
+require File.dirname(__FILE__) + "/_buildassist"
+
+inlined, deferred = detect_modules
+
+puts "selected deferred modules => ", deferred
+puts "selected inlined modules => ", inlined
+
+config :all, 
+	:required => :foundation,
+	:target_types => {
+		:frameworks => :framework,
+		:modules => :module,
+		:plugins => :module,
+		:xbos => :module
+	}
+	
+config :xt,
+	:deferred_modules => deferred,
+	:inlined_modules => inlined

@@ -1,0 +1,4 @@
+
+config :postbooks,
+  :html5_history => true,
+  :layout => "lib/index.rhtml"
