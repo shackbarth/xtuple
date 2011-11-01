@@ -1,19 +1,20 @@
 
 /*globals XT */
 
+sc_require("ext/object");
+
 /** @namespace
 
 
 */
-XT.Router = SC.Object.create(
+XT.Router = XT.Object.create(
   /** @lends XT.Router */ { 
   
-  init: function() {
-    sc_super();
-  },
+  /** @propery */
+  name: "XT.Router",
 
   start: function() {
-    console.log("starting router");
+    this.log("Starting up");
     return YES;
   },
   

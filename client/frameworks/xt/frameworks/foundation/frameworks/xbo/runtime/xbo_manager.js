@@ -7,7 +7,7 @@
 
   @extends SC.Object
 */
-XT.XboManager = SC.Object.create(
+XT.XboManager = SC.Object.create(XT.Logging,
   /** @lends XT.XboManager */ {
   
   load: function(xbo) {

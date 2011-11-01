@@ -11,6 +11,4 @@ Postbooks = SC.Application.create(
   NAMESPACE: 'Postbooks',
   VERSION: '0.1.0',
 
-  store: SC.Store.create().from(SC.Record.fixtures)
-  
 }) ;
