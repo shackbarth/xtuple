@@ -14,19 +14,15 @@ XT.Plugin.reopen(
     
   trace: YES,
   autoInitStatechart: YES,
-  rootState: SC.State.extend({
-    initialSubstate: "INITIALIZE",
+  initialState: "INITIALIZE",
     
-    /** */
-    INITIALIZE: SC.State.plugin("PLUGIN.INITIALIZE"),
-    READY: SC.State.plugin("PLUGIN.READY"),
+  INITIALIZE: XT.State.plugin("PLUGIN.INITIALIZE"),
+  READY: XT.State.plugin("PLUGIN.READY"),
+  
+  next: function() {
     
-    next: function() {
-      
-      // @todo Temporarily hardcoded to this.INITIALIZE
-      this.statechart.gotoState("READY", this.INITIALIZE);
-    }.handleEvents("ready")
+    // @todo Temporarily hardcoded to this.INITIALIZE
+    this.statechart.gotoState("READY", this.INITIALIZE);
+  }.handleEvents("ready")
     
-  })
-
 }) ;

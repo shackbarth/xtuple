@@ -10,6 +10,4 @@ sc_require("mixins/logging");
 XT.Object = SC.Object.extend(XT.Logging,
   /** @scope XT.Object.prototype */ {
 
-
-
 }) ;

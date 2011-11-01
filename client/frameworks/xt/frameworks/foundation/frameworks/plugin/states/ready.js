@@ -4,10 +4,7 @@
 /** @class
 
 */
-PLUGIN.READY = SC.State.extend(
+PLUGIN.READY = XT.State.extend(
   /** @scope PLUGIN.READY.prototype */ {
 
-  enterState: function() {
-    this.setPath("owner.isReady", YES);
-  }
 }) ;

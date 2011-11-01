@@ -25,7 +25,7 @@ XT.Router = XT.Object.create(
   },
   
   route: function(hash) {
-    console.log("received route request => ", hash);
+    this.log("received route request => ", hash);
     console.log(XT.keysFor(hash));
   },
   

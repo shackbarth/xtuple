@@ -18,15 +18,25 @@ XT.PostbooksStatechart = XT.Statechart.create(
 
     INITIALIZING: XT.TaskState.extend({
       tasks: [
+        { target: "XT.PluginManager",
+          method: "start",
+          complete: YES },
         { target: "XT.Router",
           method: "start",
           complete: YES },
+        { target: "XT.DataSource",
+          method: "start",
+          complete: YES },
+        { target: "XT.Store",
+          method: "start",
+          complete: YES,
+          wait: YES },
         { target: "XT.Session",
           method: "start",
           complete: YES }
       ],
       complete: "READY",
-      fail: "ERROR"
+      fail: "ERROR",
 
     }),
 

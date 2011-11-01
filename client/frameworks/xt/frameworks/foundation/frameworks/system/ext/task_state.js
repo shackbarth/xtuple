@@ -76,14 +76,29 @@ XT.TaskState = XT.State.extend(
     var ts = this._setup();
     this.log("Executing tasks");
     for(var i=0; i<ts.length; ++i) {
-      if(!ts[i]())
+      if(this._exec_task(ts[i]) === NO)
         return this._fail();
     }
-    this.log("All tasks completed successfully or errors were handled");
-    this._complete();
-    this._finished = YES;
+    this.log("All non-sleeper tasks completed successfully or errors were handled");
+    if(this._sleepers <= 0) {
+      // @todo This needs to be reassessed. Find a way to handle events fired
+      //  during the execution AFTER this test because the completion function
+      //  will otherwise be called twice (except for this hack)
+      if(this._finished === NO) {
+        this._complete();
+        this._finished = YES;
+      }
+    } else { this.log("Waiting for sleeper tasks to complete"); }
   },
 
+  /** @private */
+  _exec_task: function(task) {
+    if(SC.none(task)) return NO;
+    if(task.didWait && task.didWait === YES)
+      task = task();
+    return task();
+  },
+  
   /** @private */
   _setup: function() {
     if(this._finished === YES) {
@@ -95,11 +110,12 @@ XT.TaskState = XT.State.extend(
         c = this.get("complete"),
         f = this.get("fail");
     var self = this;
-    var ts = this._tasks = t.slice().map(function(task) { return self._task(task); });
+    var ts = this._tasks = t.slice().map(function(task) { return self._task(task); }).compact();
     this._complete = this._getStateFunction(c);
     this._fail = this._getStateFunction(f);
-    this.log("Setup complete, generated %@ task%@".fmt(
-      ts.length, ts.length === 1 ? "" : "s"));
+    this.log("Setup complete, generated %@ task%@ and %@ sleeper%@".fmt(
+      ts.length, ts.length === 1 ? "" : "s",
+      self._sleepers, self._sleepers === 1 ? "" : "s"));
     return ts;
   },
 
@@ -124,12 +140,43 @@ XT.TaskState = XT.State.extend(
         f = hash.fail,
         x = hash.context,
         a = hash.arguments,
+        w = hash.wait,
         s = this;
+    if(w) {
+      if(w === YES) {
+        delete hash.wait;
+        var task = function() {
+          return s._task.call(s, hash); 
+        };
+        task.didWait = YES;
+        return task;
+      }
+      else if(SC.typeOf(w) === SC.T_STRING) {
+        var event = w, callback;
+        if(SC.none(event)) 
+          this.error("Must provide an event", YES);
+        delete hash.wait;
+        callback = function() {
+          console.warn("IN THE CALLBACK!");
+          task = s._task.call(s,hash);
+          if(s._exec_task(task) === NO)
+            s._fail();
+          if(s._sleepers > 0) s._sleepers -= 1;
+          s.tryToHandleEvent("sleeperExecuted");
+        };
+        callback.events = SC.typeOf(event) === SC.T_ARRAY ? event : [event];
+        var name = callback.name = this.generateName();
+        this.warn(callback);
+        this._registerEventHandler(name, callback);
+        this._sleepers += 1;
+        return null;
+      }
+    }
     if(SC.typeOf(t) === SC.T_STRING)
       t = SC.objectForPropertyPath(t);
-    if(SC.none(t)) this.error("Target of task is invalid");
+    if(SC.none(t)) t = s;
     if(SC.typeOf(m) !== SC.T_STRING)
-      this.error("No target method supplied to task");
+      this.error("No target method supplied to task", YES);
     if(SC.typeOf(f) === SC.T_STRING)
       f = this._getStateFunction(f);
     if(SC.typeOf(c) === SC.T_STRING)
@@ -139,12 +186,14 @@ XT.TaskState = XT.State.extend(
     if(SC.typeOf(x) !== SC.T_OBJECT)
       x = this;
     return function() {
-      var result;
+      var result, target;
+      if(SC.typeOf(t) === SC.T_FUNCTION) target = t();
+      else target = t;
       if(!SC.none(a)) {
         if(SC.typeOf(a) === SC.T_FUNCTION) { a = a(); }
         else if(SC.typeOf(a) !== SC.T_ARRAY) { a = [a]; }
-        result = t[m].apply(t, a);
-      } else { result = t[m](); }
+        result = target[m].apply(target, a);
+      } else { result = target[m](); }
       if(!c.call(x, result))
         if(SC.typeOf(f) === SC.T_FUNCTION)
           f();
@@ -153,6 +202,25 @@ XT.TaskState = XT.State.extend(
   },
 
   /** @private */
+  sleeperExecuted: function() {
+    if(this._sleepers <= 0) {
+      this.log("All sleepers have completed, all tasks complete");
+      this._complete();
+      this._finished = YES;
+    }
+  },
+
+  /** @private */
   _finished: NO,
+
+  /** @private */
+  _sleepers: 0,
+
+  /** @private */
+  generateName: function() {
+    var i = 0, len = 10, name = "";
+    for(; i<len; ++i) { name += Math.floor(Math.random() * len); }
+    return name;
+  }
 
 }) ;
