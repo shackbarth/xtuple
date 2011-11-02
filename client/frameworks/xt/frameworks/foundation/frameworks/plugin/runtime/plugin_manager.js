@@ -11,7 +11,6 @@ XT.PluginManager = XT.Object.create(
   start: function() {
     this.log("Starting up");
     this._plugins = SC.clone(SC.MODULE_INFO);
-    this.fetch("login");
     return YES;
   },
 
@@ -22,7 +21,7 @@ XT.PluginManager = XT.Object.create(
       this.warn("Could not find requested plugin %@".fmt(plugin));
       return NO;
     }
-    this.load(path);
+    this.load(path, function() { self._run(); });
   },
 
   pluginPath: function(plugin) {
@@ -30,11 +29,34 @@ XT.PluginManager = XT.Object.create(
   },
 
   didLoad: function(plugin) {
-    
+    if(!plugin) return;
+    this.log("Plugin %@ was loaded".fmt(plugin.name));
+    if(
+      plugin.didLoad
+      && SC.typeOf(plugin.didLoad) === SC.T_FUNCTION
+      && plugin.get("isLoaded") !== YES)
+        this.queue(function() { plugin.didLoad(); });
+    else this.warn("No didLoad function available on plugin");
   },
 
   load: function(target, callback) {
     return SC.Module.loadModule(target, callback); 
-  }
+  },
 
+  queue: function(method) {
+    if(SC.typeOf(method) === SC.T_FUNCTION)
+      this._queue.push(method);
+    else this.warn("Could not queue non-function");
+  },
+
+  _run: function() {
+    var q = this._queue;
+    while(q.length > 0) {
+      var m = q.pop();
+      if(SC.typeOf(m) === SC.T_FUNCTION)
+        m();
+    }
+  },
+
+  _queue: [],
 }) ;

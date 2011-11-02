@@ -141,6 +141,7 @@ XT.TaskState = XT.State.extend(
         x = hash.context,
         a = hash.arguments,
         w = hash.wait,
+        h = hash.status,
         s = this;
     if(w) {
       if(w === YES) {
@@ -175,7 +176,7 @@ XT.TaskState = XT.State.extend(
     if(SC.typeOf(t) === SC.T_STRING)
       t = SC.objectForPropertyPath(t);
     if(SC.none(t)) t = s;
-    if(SC.typeOf(m) !== SC.T_STRING)
+    if(SC.typeOf(m) !== SC.T_STRING && SC.typeOf(m) !== SC.T_FUNCTION)
       this.error("No target method supplied to task", YES);
     if(SC.typeOf(f) === SC.T_STRING)
       f = this._getStateFunction(f);
@@ -187,13 +188,33 @@ XT.TaskState = XT.State.extend(
       x = this;
     return function() {
       var result, target;
+      if(!SC.none(h)) {
+        var msg = h.message,
+            prop = h.property,
+            active = h.active,
+            image = h.image;
+        if(!SC.none(image) && SC.none(active))
+          active = YES;
+        XT.MessageController.set(prop, msg);
+        image = XT.StatusImageController.getImage(image);
+        console.warn("FOUND => ", image);
+        if(!SC.none(image)) image.set("isActive", active);
+        else s.warn("Could not find image %@ to activate".fmt(h.image));
+      }
       if(SC.typeOf(t) === SC.T_FUNCTION) target = t();
       else target = t;
       if(!SC.none(a)) {
         if(SC.typeOf(a) === SC.T_FUNCTION) { a = a(); }
         else if(SC.typeOf(a) !== SC.T_ARRAY) { a = [a]; }
-        result = target[m].apply(target, a);
-      } else { result = target[m](); }
+        if(SC.typeOf(m) === SC.T_FUNCTION)
+          result = m.apply(target, a);
+        else result = target[m].apply(target, a);
+      } 
+      else {
+        if(SC.typeOf(m) === SC.T_FUNCTION)
+          result = m.call(target);
+        else result = target[m]();
+      }
       if(!c.call(x, result))
         if(SC.typeOf(f) === SC.T_FUNCTION)
           f();

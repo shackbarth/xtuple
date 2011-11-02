@@ -10,6 +10,11 @@ PLUGIN.Login = XT.Plugin.create(
 
   /** @propery */
   name: "Login",
-    
+   
+  /** @private */
+  didLoad: function() {
+    XT.Router.set("location", "login");
+    sc_super();
+  }
 }) ;
 
