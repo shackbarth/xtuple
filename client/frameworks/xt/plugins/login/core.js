@@ -5,7 +5,7 @@
 
   @extends XT.Plugin
 */
-PLUGIN.Login = XT.Plugin.create(
+Login = PLUGIN.Login = XT.Plugin.create(
   /** @scope PLUGIN.Login.prototype */ {
 
   /** @propery */

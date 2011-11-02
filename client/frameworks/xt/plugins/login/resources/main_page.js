@@ -1,10 +1,14 @@
 
 /*globals PLUGIN */
 
+sc_require("panes/default");
+
 /** @class
 
 */
-PLUGIN.Login.mainPage = SC.Page.design(
+Login.mainPage = XT.BasePage.design(
   /** @scope PLUGIN.Login.mainPage.prototype */ {
+
+  defaultPane: Login.DefaultPane.design(),
 
 }) ;

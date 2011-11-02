@@ -106,6 +106,9 @@ XT.PostbooksStatechart = XT.Statechart.create(
     READY: XT.TaskState.extend({
       enterState: function() {
         setTimeout(function() { XT.MessageController.set("loadingStatus", "preparing to launch application"); }, 1000);
+        setTimeout(function() { 
+          XT.Router.next();
+        }, 3000);
       }
     })
   })

@@ -30,6 +30,7 @@ XT.PluginManager = XT.Object.create(
 
   didLoad: function(plugin) {
     if(!plugin) return;
+    var self = this;
     this.log("Plugin %@ was loaded".fmt(plugin.name));
     if(
       plugin.didLoad
@@ -37,10 +38,17 @@ XT.PluginManager = XT.Object.create(
       && plugin.get("isLoaded") !== YES)
         this.queue(function() { plugin.didLoad(); });
     else this.warn("No didLoad function available on plugin");
+    this.queue(function() { self.notifyDidLoad.call(self, plugin); });
   },
 
   load: function(target, callback) {
     return SC.Module.loadModule(target, callback); 
+  },
+
+  notifyDidLoad: function(plugin) {
+    var activate = XT.Router.notifyDidLoad(plugin.name);
+    if(SC.none(activate)) return;
+    plugin.route(activate);
   },
 
   queue: function(method) {

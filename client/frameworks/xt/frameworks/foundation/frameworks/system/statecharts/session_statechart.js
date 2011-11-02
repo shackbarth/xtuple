@@ -12,12 +12,15 @@ SC.mixin((XT.SessionStatechart = {}), SC.StatechartManager,
   initialState: "IDLE",
   trace: YES,
 
-  IDLE: SC.State.extend(XT.Logging, {
+  IDLE: XT.State.extend({
+    gotoLoggedOut: function() {
+      this.gotoState("LOGGEDOUT");
+    }.handleEvents("loggedOut")
   }),
 
   LOGGEDOUT: SC.State.extend(XT.Logging, {
     enterState: function() {
-      console.log(this);
+      XT.Router.clear().queue("login");
     }
   }),
 
