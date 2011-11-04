@@ -13,8 +13,8 @@ Login = PLUGIN.Login = XT.Plugin.create(
    
   /** @private */
   didLoad: function() {
-    XT.Router.set("location", "login");
     sc_super();
+    this.focus();
   }
 }) ;
 

@@ -5,6 +5,14 @@
 
 */
 
+
+/** @property
+  For blocking on tasks. Cannot be numeric due to
+  restrictions on events that require them to be
+  strings or regular expression.
+*/
+XT.WAIT_SIGNAL = "XTWAITSIGNAL";
+
 XT.keysFor = function keysFor(obj) {
   if(!obj || SC.typeOf(obj) !== SC.T_HASH)
     throw "Cannot find keys on non-object";

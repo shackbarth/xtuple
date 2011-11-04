@@ -4,6 +4,9 @@
 sc_require("ext/state");
 
 /** @class
+
+  THIS DESCRIPTION IT VERY INCOMPLETE IT DOES NOT GO OVER ALL OF THE FEATURES
+  THAT HAVE BEEN ADDED OR CHANGED!
   
   @todo There are many parts only partially implemented and several
     key features missing for other useful use-cases.
@@ -152,22 +155,35 @@ XT.TaskState = XT.State.extend(
         task.didWait = YES;
         return task;
       }
-      else if(SC.typeOf(w) === SC.T_STRING) {
+      else if(SC.typeOf(w) === SC.T_STRING || 
+        SC.typeOf(w) === SC.T_NUMBER) {
         var event = w, callback;
         if(SC.none(event)) 
           this.error("Must provide an event", YES);
         delete hash.wait;
-        callback = function() {
-          console.warn("IN THE CALLBACK!");
-          task = s._task.call(s,hash);
-          if(s._exec_task(task) === NO)
-            s._fail();
-          if(s._sleepers > 0) s._sleepers -= 1;
-          s.tryToHandleEvent("sleeperExecuted");
-        };
+
+        // attempt to handle case where only command `wait` is used
+        // to specify an event on which to block
+        // for now this can only be used as the final task in the
+        // chain, eventually it should be usable anywhere in the chain
+        // but would require additional reworking
+        if(SC.none(m)) {
+          callback = function() {
+            s._sleepers = 0;
+            s._complete();
+          };
+        }
+        else {
+          callback = function() {
+            task = s._task.call(s,hash);
+            if(s._exec_task(task) === NO)
+              s._fail();
+            if(s._sleepers > 0) s._sleepers -= 1;
+            s.tryToHandleEvent("sleeperExecuted");
+          };
+        }
         callback.events = SC.typeOf(event) === SC.T_ARRAY ? event : [event];
         var name = callback.name = this.generateName();
-        this.warn(callback);
         this._registerEventHandler(name, callback);
         this._sleepers += 1;
         return null;
@@ -177,7 +193,8 @@ XT.TaskState = XT.State.extend(
       t = SC.objectForPropertyPath(t);
     if(SC.none(t)) t = s;
     if(SC.typeOf(m) !== SC.T_STRING && SC.typeOf(m) !== SC.T_FUNCTION)
-      this.error("No target method supplied to task", YES);
+      if(!SC.none(h)) m = function(){ return YES; };
+      else this.error("No target method supplied to task", YES);
     if(SC.typeOf(f) === SC.T_STRING)
       f = this._getStateFunction(f);
     if(SC.typeOf(c) === SC.T_STRING)
@@ -196,10 +213,10 @@ XT.TaskState = XT.State.extend(
         if(!SC.none(image) && SC.none(active))
           active = YES;
         XT.MessageController.set(prop, msg);
-        image = XT.StatusImageController.getImage(image);
-        console.warn("FOUND => ", image);
+        var imgname = image;
+        image = XT.StatusImageController.getImage(imgname);
         if(!SC.none(image)) image.set("isActive", active);
-        else s.warn("Could not find image %@ to activate".fmt(h.image));
+        else s.warn("Could not find image %@ to activate for message".fmt(h.image));
       }
       if(SC.typeOf(t) === SC.T_FUNCTION) target = t();
       else target = t;

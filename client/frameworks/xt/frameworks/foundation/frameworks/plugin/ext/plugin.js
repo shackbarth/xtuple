@@ -18,9 +18,9 @@ XT.Plugin = XT.Object.extend(SC.StatechartManager,
     this.set("isLoaded", YES);
   },
 
-  route: function(to) {
-    this.log("MY ROUTE METHOD WAS CALLED!");
-    this.getPath("mainPage.defaultPane").append();
+  /** @public */
+  focus: function() {
+    XT.PluginController.focus(this);
   },
 
   /** @property */

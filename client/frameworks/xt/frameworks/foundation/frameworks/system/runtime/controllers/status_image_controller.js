@@ -14,7 +14,10 @@ XT.StatusImageController = XT.Object.create(
       return NO;
     }
     var imgs = this._images;
-    if(!imgs[idx]) imgs[idx] = ref;
+    if(!imgs[idx]) {
+      imgs[idx] = ref;
+      this.log("Added new image %@ to XT.StatusImageController".fmt(idx));
+    }
     else this.warn("Could not add image %@, index already existed".fmt(idx));
     return YES;
   },
