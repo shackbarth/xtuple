@@ -9,8 +9,9 @@ Login.StatusIconView = XT.StatusImageView.extend(
 
   layout: { height: 64, width: 64, centerY: 40, right: 60 },
   isVisible: NO,
-  animations: {
+  xtAnimationEvents: {
     "active": [
+      { start: 300 },
       { disableAnimation: YES },
       { property: "opacity", value: 0.0, immediate: YES },
       { property: "centerY", value: 0, immediate: YES },
@@ -22,8 +23,6 @@ Login.StatusIconView = XT.StatusImageView.extend(
     "inactive": [
       { property: "centerY", value: 80, wait: 100 },
       { property: "opacity", value: 0.0, wait: 100 },
-      { immediate: YES },
-      { complete: YES, property: "isVisible", value: NO, set: YES }
     ]
   }
 

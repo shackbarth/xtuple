@@ -12,6 +12,8 @@ XT.Plugin = XT.Object.extend(SC.StatechartManager,
     XT.PluginManager.didLoad(this);
   },
 
+  isPlugin: YES,
+
   /** @public */
   didLoad: function() {
     this.log("Default didLoad called");

@@ -12,12 +12,29 @@ Login.DefaultPane = XT.MainPane.extend(
   
     childViews: "mainBlock".w(),
 
-    mainBlock: XT.View.design(SC.Animatable, {
+    // mainBlock: XT.View.design(SC.Animatable, {
+    mainBlock: XT.AnimationView.design({
       layout: { height: 200, width: 400, top: 100, centerX: 0 },
       classNames: "main-block-container".w(),
       childViews: "imageBlock messageBlock sessionIcon userIcon".w(),
-      transitions: {
-        height: { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      isVisible: NO,
+      xtAnimationEvents: {
+        "showLogin": [
+          { disableAnimation: YES },
+          { property: "opacity", value: 0.0, immediate: YES },
+          { property: "isVisible", value: YES, set: YES },
+          { enableAnimation: YES },
+          { property: "opacity", value: 1.0 },
+          { start: 800 },
+          { call: "expand" },
+          { call: "showLoginBlock", path: "messageBlock.loginBlock" }
+        ],
+        expand: [
+          { start: 200 },
+          { property: "height", value: 325 },
+          { immediate: YES },
+          { call: "expand", path: "messageBlock" }
+        ]
       },
       
     imageBlock: XT.View.design({
@@ -27,17 +44,19 @@ Login.DefaultPane = XT.MainPane.extend(
 
     logo: SC.ImageView.design({
       layout: { centerY: 0, centerX: 0, width: 270, height: 80 },
-      useImageQueue: NO,
       value: "image-block-logo",
       }), // logo
       }), // imageBlock
 
-    messageBlock: XT.View.design(SC.Animatable, {
+    // messageBlock: XT.View.design(SC.Animatable, {
+    messageBlock: XT.AnimationView.design({
       layout: { height: 100, bottom: 0, left: 0, right: 0 },
       classNames: "message-block-container".w(),
       childViews: "messageLabel loginBlock".w(),
-      transitions: {
-        height: { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      xtAnimationEvents: {
+        "expand": [
+          { property: "height", value: 200 },
+        ]
       },
 
     messageLabel: SC.LabelView.design({
@@ -47,14 +66,25 @@ Login.DefaultPane = XT.MainPane.extend(
       valueBinding: SC.Binding.from("XT.MessageController.loadingStatus").oneWay() 
       }), // messageLabel
 
-    loginBlock: XT.View.design(SC.Animatable, {
+    loginBlock: XT.AnimationView.design({
       layout: { height: 114, top: 0, width: 200, centerX: 0 },
       classNames: "login-block-container".w(),
       childViews: "usernameField passwordField loginButton".w(),
       isVisible: NO,
-      transitions: {
-        opacity: { duration: .5, timing: SC.Animatable.TRANSITION_CSS_EASE },
-        centerX: { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      xtAnimationEvents: {
+        "showLoginBlock": [
+          { start: 400 },
+          { disableAnimation: YES },
+          { property: "opacity", value: 0.0, immediate: YES },
+          { property: "isVisible", value: YES, set: YES },
+          { immediate: YES },
+          { enableAnimation: YES, wait: 100 },
+          { property: "opacity", value: 1.0, wait: 300 }
+        ],
+        "loggingIn": [
+          { property: "centerX", value: -90 },
+          { property: "opacity", value: .5 }
+        ]
       },
 
     usernameField: SC.TextFieldView.design({

@@ -24,11 +24,13 @@ XT.PostbooksStatechart = XT.Statechart.create(
         { target: "XT.PluginManager",
           method: "start" },
 
+        // wait until the default login plugin is loaded and processed
+        { hold: "loginPluginLoaded" },
+
         // update initial status message to indicate action
         { status: {
             message: "_postbooks is initializing".loc(),
-            property: "loadingStatus" },
-            wait: "loginPluginLoaded" },
+            property: "loadingStatus" } },
 
         // need to startup the session object to determine
         // the next few actions
@@ -44,7 +46,7 @@ XT.PostbooksStatechart = XT.Statechart.create(
         // with the remainder of the application so this
         // really just makes this (top-level) statechart block
         // until it is done
-        { wait: XT.WAIT_SIGNAL }
+        { hold: XT.WAIT_SIGNAL }
         
       ],
       
@@ -109,13 +111,6 @@ XT.PostbooksStatechart = XT.Statechart.create(
       // ],
       complete: "READY",
       fail: "ERROR",
-      showBasePane: function() {
-
-        // this will allow for smoother transitions in the future
-        Postbooks.getPath("mainPage.basePane").append();
-        XT.MessageController.set("loadingStatus", "Initializing");
-        return YES;
-      }
     }),
 
     ERROR: XT.State.extend({
@@ -133,6 +128,12 @@ XT.PostbooksStatechart = XT.Statechart.create(
     }),
 
     READY: XT.TaskState.extend({
+
+      complete: "IDLE",
+      fail: "ERROR",
+
+      IDLE: XT.State.extend()
+
     })
   })
 

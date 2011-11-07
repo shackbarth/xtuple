@@ -18,10 +18,12 @@ XT.PluginController = XT.ObjectController.create(
     passing themselves and additional properties as paramaters.
   */
   focus: function(plugin) {
+
     if(!plugin || SC.none(plugin) || !plugin.isPlugin) return NO;
     
     // @todo Needs to handle specific arguments
     var path = plugin.getPath("mainPage.defaultPane");
+
     var curr = this._currentPane;
     if(curr) curr.remove();
     path.append();

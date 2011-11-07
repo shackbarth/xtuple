@@ -6,6 +6,9 @@ sc_require("ext/object");
 /** @class
 
 */
+
+XT.HOLDING_TASK = 0x786;
+
 XT.Task = XT.Object.extend(
   /** @scope XT.Task.prototype */ {
 
@@ -13,6 +16,9 @@ XT.Task = XT.Object.extend(
   // Properties
   //
   
+  /** @property */
+  args: null,
+
   /** @property */
   method: null,
   
@@ -56,9 +62,9 @@ XT.Task = XT.Object.extend(
     var w = this.get("isWaiting");
     if(w && w === YES) {
       var task = this._createTask();
-      task.fire();
-      return;
+      return task.fire();
     }
+    this.error("Task object executed but no task method had been created", YES);
   },
 
   //.................................................
@@ -83,7 +89,8 @@ XT.Task = XT.Object.extend(
 
   /** @private */
   _createTask: function() {
-    var m = this.get("method"),
+    var a = this.get("args"),
+        m = this.get("method"),
         t = this.get("target"),
         f = this.get("fail"),
         c = this.get("complete"),
@@ -91,17 +98,22 @@ XT.Task = XT.Object.extend(
         h = this.get("hold"),
         s = this.get("status"),
         x = this.get("context"),
-        o = this.get("owner"), type;  
+        o = this.get("owner"), 
+        self = this, type, task;  
     
     // if this is a holding task, not much to it
-    if(h && SC.typeOf(h) === SC.T_STRING)
+    if(h && SC.typeOf(h) === SC.T_STRING) {
+      this.log("Creating a holding task");
       return this._createHold(); 
+    }
 
     // if this is a waiting task for an event, it is
     // a non-blocking (does not stop the remaining tasks
     // from executing while it waits)
-    if(w && SC.typeOf(w) === SC.T_STRING)
+    if(w && SC.typeOf(w) === SC.T_STRING) {
+      this.log("Creating a waiting task");
       return this._createWait(); 
+    }
 
     { // BEGIN TARGET
 
@@ -114,6 +126,7 @@ XT.Task = XT.Object.extend(
       // if that didn't turn up an object
       if(SC.none(t)) t = this;
 
+      console.warn("TARGET => ", t);
 
     } // END TARGET
 
@@ -132,6 +145,8 @@ XT.Task = XT.Object.extend(
         // significant error
         else this.error("No method supplied, nothing could be done!", YES);
 
+      console.warn("METHOD => ", m);
+
     } // END METHOD
       
     { // BEGIN FAIL
@@ -140,7 +155,18 @@ XT.Task = XT.Object.extend(
 
       // if no fail state (string) or function were supplied
       // we just point it to the default of the XT.TaskState parent
-      if(type === SC.T_STRING) f = this._getStateFunction(f);
+      if(type === SC.T_STRING) f = o._getStateFunction(f);
+
+      // if it isn't a function try and point it at the owner's
+      // fail method
+      else if(type !== SC.T_FUNCTION) f = o.fail;
+
+      // if by now it isn't a function, we're in trouble
+      if(SC.typeOf(f) !== SC.T_FUNCTION)
+        this.error("Could not find a valid fail-state method", YES);
+
+
+      console.warn("FAIL => ", f);
 
     } // END FAIL
 
@@ -149,12 +175,15 @@ XT.Task = XT.Object.extend(
       type = SC.typeOf(c);
 
       // it is the same case as for fail
-      if(type === SC.T_STRING) c = this._getStateFunction(c);
+      if(type === SC.T_STRING) c = o._getStateFunction(c);
 
       // but if it isn't a function we create one that will compare
       // the result to whatever complete was set to
       else if(type !== SC.T_FUNCTION)
-        c = function(result) { return result === c; };
+        c = function(result) { return result === YES; };
+
+
+      console.warn("COMPLETE => ", c);
 
     } // END COMPLETE
 
@@ -162,7 +191,59 @@ XT.Task = XT.Object.extend(
       
       type = SC.typeOf(x);
 
+      // if there is no context defined, use this unless it
+      // is a string that can be resolved to an object
+      if(type !== SC.T_OBJECT) {
+        if(type === SC.T_STRING) {
+          var path = x;
+          x = SC.objectForPropertyPath(path);
+          if(SC.typeOf(x) !== SC.T_OBJECT)
+            this.error("Context object could not be found, %@".fmt(path), YES);
+        } else { x = this; }
+      }
+
+      console.warn("CONTEXT => ", x);
+
     } // END CONTEXT
+
+    { // BEGIN TASK FUNCTION
+
+      // here is the actual runtime function to be executed when
+      // a task-state wishes to execute this task, this function
+      // consists of running other methods on the task object
+      // with the appropriate context and providing the appropriate
+      // data to them
+      task = function() {
+        
+
+        console.warn("status => ", s, " target => ", t, " method => ", m, " arguments => ", a, 
+          " context => ", x, " fail => ", f, " complete => ", c);
+
+
+        // execute any status updates/changes that need to be made
+        self._execStatusUpdate(s);
+
+        // execute the method for the task on the appropriate target
+        var result = self._execMethod(t, m, a)
+
+        // execute the completion function to verify success
+        if(!self._execCompletionTest(x, c, result)) {
+          this.warn("Failed to complete task");
+          self._execFailureMethod(x, f, result);
+        }
+
+        return !! result;
+  
+      };
+
+      console.warn("TASK FUNCTION => ", task);
+
+      // go ahead and set the fire method to this new task method
+      this.fire = task;
+
+      console.warn("IT WAS SET !!");
+
+    } // END NTASK FUNCTION
 
   },
 
@@ -171,11 +252,12 @@ XT.Task = XT.Object.extend(
     var h = this.get("hold"),
         f = this._holdingFunction,
         o = this.get("owner"), 
-        c = SC.copy(o._continue), n;
+        c = SC.copy(o.continue), n;
     n = c.name = this._generateFunctionName();
     c.events = [h];
     o._registerEventHandler(n, c);
     this.fire = f;
+    this.set("hold", null);
     return f;
   },
 
@@ -199,14 +281,55 @@ XT.Task = XT.Object.extend(
     return name;
   },
 
+  /** @private */
+  _holdingFunction: function() {
+    // this.fire = this._createTask();
+    return XT.HOLDING_TASK;
+  },
+
+  /** @private */
+  _execStatusUpdate: function(status) {
+    if(SC.none(status)) return;
+    var m = status.message,
+        p = status.property,
+        a = status.active,
+        i = status.image, img;
+    if(SC.typeOf(i) === SC.T_STRING && SC.none(a))
+      a = YES;
+    if(SC.typeOf(m) === SC.T_STRING)
+      if(!p) this.error("No property for message controller", YES);
+      else XT.MessageController.set(p, m); 
+    img = XT.StatusImageController.getImage(i);
+    if(img) img.set("isActive", a);
+  },
+
+  /** @private */
+  _execMethod: function(target, method, args) {
+    if(args) args = SC.typeOf(args) === SC.T_ARRAY ? args : [args]; 
+
+    console.warn("ARGUMENTS DETERMINED TO BE => ", args);
+
+    if(!target[method]) return method.apply(target, args);
+    else return target[method].apply(target, args);
+  },
+
+  /** @private */
+  _execCompletionTest: function(context, test, result) {
+    var r = test.call(context, result);
+    console.warn(test, r, result);
+    return r;
+  },
+
+  /** @private */
+  _execFailureMethod: function(context, fail, result) {
+    return fail.call(context, result);
+  },
+
   //.................................................
   // Private Properties
   //
 
   /** @private */
   _complete: NO,
-
-  /** @private */
-  _holdingFunction: function() { return XT.HOLDING_TASK; },
 
 }) ;

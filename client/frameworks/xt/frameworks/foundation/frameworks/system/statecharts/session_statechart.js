@@ -28,19 +28,7 @@ XT.SessionStatechart = XT.Statechart.extend(
           Postbooks namespace - should that be moved down?
       */
       showLogin: function() {
-        XT.MessageController.set("loadingStatus", "_must log in".loc());
-        var mb  = Postbooks.getPath("mainPage.basePane.mainBlock"),
-            msb = mb.get("messageBlock"),
-            lb  = msb.get("loginBlock");
-        this.invokeLater(function() {
-          lb.disableAnimation();
-          lb.adjust("opacity", 0).updateStyle();
-          lb.set("isVisible", YES);
-          lb.enableAnimation();
-          lb.invokeLater(function() { lb.adjust("opacity", 1.0); }, 300);
-          mb.adjust("height", 325);
-          msb.adjust("height", 200);
-        }, 500);
+        Login.showLogin();
       }.handleEvents("noSession"),
 
       /**
@@ -55,7 +43,21 @@ XT.SessionStatechart = XT.Statechart.extend(
       LOGGINGIN: XT.TaskState.design({
         
         tasks: [
-          
+          { status: {
+              message: "_logging in".loc(),
+              property: "loadingStatus",
+              image: "loading-user-icon" } },
+          { target: "XT.Session",
+            method: "set",
+            args: ["loginInputIsEnabled",NO],
+            complete: function() { return YES; } },
+          { target: "Login",
+            method: "showLoggingIn",
+            complete: function() { return YES; } },
+          { hold: "loginSet" },
+          { status: {
+              image: "loading-user-icon",
+              active: NO } }
         ],
         complete: "LOGGEDIN",
         fail: "LOGGEDOUT"
@@ -106,15 +108,7 @@ XT.SessionStatechart = XT.Statechart.extend(
           status: {
             message: "_acquiring new session id".loc(),
             property: "loadingStatus",
-            image: "loading-session-icon" },
-          complete: function() {
-            this.invokeLater(function() {
-              XT.StatusImageController.getImage("loading-session-icon").set("isActive", NO);
-            }, 800);
-            return YES;
-          }},
-
-        
+            image: "loading-session-icon" } }
              
       ],
       complete: function() {

@@ -32,7 +32,7 @@ XT.Session = XT.Object.create(
   //.................................................
   // Private Methods
   //
-  
+
   /** @private
     Initializes the statechart for the session. It defaults
     to LOGGEDOUT and will catch events if the user is determined

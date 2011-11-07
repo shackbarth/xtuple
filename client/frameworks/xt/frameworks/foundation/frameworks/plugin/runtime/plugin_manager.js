@@ -5,12 +5,20 @@
 
   @extends SC.Object
 */
+
+
+// FOR TESTING ONLY!
+XT.SYSTEM_SET_PLUGINS = ["crm"];
+XT.SYSTEM_FIXED_PLUGINS = ["login"];
+
+
 XT.PluginManager = XT.Object.create(
   /** @scope XT.PluginManager.prototype */ {
   
   start: function() {
     this.log("Starting up");
     this._plugins = SC.clone(SC.MODULE_INFO);
+    this.fetch("login");
     return YES;
   },
 
@@ -46,9 +54,9 @@ XT.PluginManager = XT.Object.create(
   },
 
   notifyDidLoad: function(plugin) {
-    var activate = XT.Router.notifyDidLoad(plugin.name);
-    if(SC.none(activate)) return;
-    plugin.route(activate);
+    // var activate = XT.Router.notifyDidLoad(plugin.name);
+    // if(SC.none(activate)) return;
+    // plugin.route(activate);
   },
 
   queue: function(method) {
