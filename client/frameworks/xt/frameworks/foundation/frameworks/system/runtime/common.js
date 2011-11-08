@@ -13,6 +13,15 @@
 */
 XT.WAIT_SIGNAL = "XTWAITSIGNAL";
 
+XT.hex = function hex() {
+  var knowns = this._hex_values || [],
+      hex;
+  hex = (Math.random()*0xFFFFFF<<0).toString(16);
+  if(knowns.contains(hex)) return XT.hex();
+  knowns.push(hex);
+  return hex;
+} ;
+
 XT.keysFor = function keysFor(obj) {
   if(!obj || SC.typeOf(obj) !== SC.T_HASH)
     throw "Cannot find keys on non-object";

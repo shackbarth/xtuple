@@ -4,12 +4,21 @@
 $shadow: 10px;
 $border: 10px;
 
+body {
+  background: -moz-linear-gradient(top,#ddd,#bbb);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddd), to(#bbb));
+}
+
 $theme.main-block-container {
+  @include background-image(radial-gradient(#222, #666));
   @include border-radius($border);
   border: 5px solid #fff;  
   box-shadow: 0 0 $shadow #888;
   -moz-box-shadow: 0 0 $shadow #888;
   -webkit-box-shadow: 0 0 $shadow #888;
+
+
+  /*
   background-image: linear-gradient(bottom, rgb(85,85,85) 24%, rgb(34,34,34) 96%);
   background-image: -o-linear-gradient(bottom, rgb(85,85,85) 24%, rgb(34,34,34) 96%);
   background-image: -moz-linear-gradient(bottom, rgb(85,85,85) 24%, rgb(34,34,34) 96%);
@@ -22,6 +31,7 @@ $theme.main-block-container {
   	color-stop(0.24, rgb(85,85,85)),
   	color-stop(0.96, rgb(34,34,34))
   );
+  */
 }
 
 $theme.loading-session-icon-container {
@@ -46,6 +56,7 @@ $theme.loading-user-icon-container {
 }
 
 $theme.message-block-container {
+  @include border-radius($border);
   color: #333;
   h3 {
     background-color: #fff;
@@ -59,16 +70,41 @@ $theme.message-block-container {
     margin: 10px;
     border: 2px solid #444;  
     background-color: #333;
+    text-align: center;
+    color: #ddd;
   }
 }
 
-
+$theme.dash-plugin-list-container {
+  @include background-image(radial-gradient(#222, #666));
+  @include border-radius($border);
+  border: 5px solid #fff;  
+  box-shadow: 0 0 $shadow #888;
+  -moz-box-shadow: 0 0 $shadow #888;
+  -webkit-box-shadow: 0 0 $shadow #888;
+  background-color: #ddd;
+  .dash-plugin-list-item-view {
+    background-color: #fff;
+    padding: 3px;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    margin: 5px;
+    font-size: 1.2em;
+    text-align: center;
+    &.sel {
+      background-color: #ddd;
+    }
+  }
+}
 
 $theme.image-block-container {
+  @include border-radius($border);
   margin: 10px;
+  /*
   border-radius: $border;
   -moz-border-radius: $border;
   -webkit-border-radius: $border;
+  */
   border: 2px solid #444;  
   background-color: #fff;
   .image-block-logo {

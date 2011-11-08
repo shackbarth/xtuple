@@ -7,7 +7,7 @@ sc_require("panes/default");
 
 */
 Login.mainPage = XT.BasePage.design(
-  /** @scope PLUGIN.Login.mainPage.prototype */ {
+  /** @scope Login.mainPage.prototype */ {
 
   defaultPane: Login.DefaultPane.design(),
 

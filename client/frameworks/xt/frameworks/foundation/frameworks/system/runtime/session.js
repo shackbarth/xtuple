@@ -46,8 +46,12 @@ XT.Session = XT.Object.create(
 
     // attempt to grab a session cookie, will return false if
     // no cookie exists
-    var c = this.get("cookie");
+    var c = SC.Cookie.find(XT.SESSION_COOKIE_STRING);
+
+    console.error(c);
+
     if(!c || SC.none(c)) c = this._newCookie(); 
+    else this._cookie = c;
 
     // if at this point we don't have a valid cookie for any reason
     // we have to fail the app :(
@@ -70,12 +74,12 @@ XT.Session = XT.Object.create(
   _newCookie: function() {
     var c = SC.Cookie.create({
       name: XT.SESSION_COOKIE_STRING,
-      secure: XT.SESSION_COOKIE_SECURE,
-      expires: SC.DateTime.create().advance({
-        minute: XT.SESSION_COOKIE_EXPIRE }),
+      // secure: XT.SESSION_COOKIE_SECURE,
+      // expires: SC.DateTime.create().advance({
+      //   minute: XT.SESSION_COOKIE_EXPIRE }),
     });
     if(!SC.none(c) && c.isCookie === YES)
-      this._cookie = c;
+      this.set("_cookie", c);
     return c;
   },
 
@@ -85,13 +89,34 @@ XT.Session = XT.Object.create(
     // @todo As of 11/3/2011 the datasource was not set up to
     //  handle sessions yet so this is hacked to compensate
     //  temporarily
+    var c = this.get("cookie"),
+        s = this.statechart, v;
+    if(c) v = c.get("value");
+    if(v) v = JSON.parse(v);
 
-    var v = this._cookie.value,
-        s = this.statechart;
+    console.error("VALIDATE SESSION => ", v, c);
+
     if(!v || SC.none(v) || !v.sid) 
       return s.sendEvent("noSession");
-    else return s.sendEvent("tryToLogin");
-    
+
+    this.set("_username", v.username);
+    Login.showLogin();
+    this.invokeLater(function() { s.sendEvent("submit"); }, 2000);
+  },
+
+  /** @private */
+  _writeSession: function() {
+
+    var c = this.get("cookie");
+
+    console.error("WRITING THE DAMN COOKIE!", c);
+
+    if(!c) this.error("Could not write session!", YES);  
+    c.set("value", JSON.stringify({
+      username: this.get("_username"),
+      sid: XT.hex()
+    })).write();
+    return YES;
   },
 
   /** @private */
@@ -109,6 +134,12 @@ XT.Session = XT.Object.create(
   /** @private */
   _acquireSessionId: function() {
     return YES;
+  },
+
+  /** @private */
+  destroy: function() {
+    sc_super();
+    this._cookie.destroy();
   },
 
   //.................................................
@@ -157,8 +188,9 @@ XT.Session = XT.Object.create(
     Returns the current session cookie if possible.
   */
   cookie: function() {
-    var c = this._cookie || SC.Cookie.find(XT.SESSION_COOKIE_STRING);
+    var c = this.get("_cookie");
     if(!c || SC.none(c) || !c.isCookie) return NO;
-  }.property().cacheable(),
+    return c;
+  }.property()
 
 }) ;

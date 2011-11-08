@@ -4,11 +4,11 @@
 /** @namespace
 
 */
-PLUGIN.Crm.xbos(
-  /** @scope Plugin.Crm.xbos */ {
-    
-    "contact": {
-      "someNewRelation": SC.Record.attr(String, { isRequired: YES })
-    } 
-    
-}) ;
+// PLUGIN.Crm.xbos(
+//   /** @scope Plugin.Crm.xbos */ {
+//     
+//     "contact": {
+//       "someNewRelation": SC.Record.attr(String, { isRequired: YES })
+//     } 
+//     
+// }) ;

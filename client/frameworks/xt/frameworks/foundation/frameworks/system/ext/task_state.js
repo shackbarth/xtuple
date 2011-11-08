@@ -71,7 +71,7 @@ XT.TaskState = XT.State.extend(
     while(ts.length > 0) {
       var t = ts.shift();
 
-      console.warn("task target => ", t.get("target"));
+      // console.warn("task target => ", t.get("target"));
 
       var r = t.fire();
 
@@ -83,13 +83,24 @@ XT.TaskState = XT.State.extend(
         return;
       }
 
+      else if(r === XT.TASK_FAIL) {
+        console.error("IT DID FAIL!");
+        this.set("didFail", YES);
+        return XT.TASK_FAIL;
+      }
       // @todo Should this really run another fail since the task will
       //  will run it on fail anyways?
     }
 
     this.set("isFinished", YES);
     var c = this.get("complete");
-    if(SC.typeOf(c) === SC.T_FUNCTION) c();
+    if(SC.typeOf(c) === SC.T_FUNCTION) c.call(this);
+  },
+
+  /** @private */
+  reset: function() {
+    if(this.get("isFinished"))
+      this.set("isFinished", NO);
   },
 
   /** @private */

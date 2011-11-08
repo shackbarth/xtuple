@@ -71,17 +71,6 @@ XT.StatusImageView = XT.AnimationView.extend(
     @type {Hash}
   */
   xtTransitions: {},
-  // transitions: {
-  //   opacity:    { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   centerX:    { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   centerY:    { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   top:        { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   bottom:     { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   left:       { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   right:      { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   height:     { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE },
-  //   width:      { duration: .08, timing: SC.Animatable.TRANSITION_CSS_EASE }
-  // },
 
   /** 
     Animations are defined on this property and is a hash with up to
@@ -168,6 +157,9 @@ XT.StatusImageView = XT.AnimationView.extend(
     if(iv === YES) this._activate();
     else this._activateOnVisibilityChange = YES;
     if(ak.length > 0 && arguments[0] !== NO) this._activateAnimation();
+
+    if(this.get("isActive") === YES)
+      XT.StatusImageController.set("current", this);
   }.observes("isActive"),
 
   /** @private */
@@ -198,87 +190,7 @@ XT.StatusImageView = XT.AnimationView.extend(
   _activateAnimation: function() {
     var ia = this.get("isActive") ? "active" : "inactive";
     this.xtAnimate(ia);
-    //    ans = this.get("xtAnimationEvents")[ia];
-    // if(!ans) return this.warn("Could not animate, no animations available for %@ status".fmt(ia));
-    // ans = ans.slice();
-
-    // while(ans.length > 0) {
-    //   var opt = ans.shift();
-    //   this._run(opt);
-    // }
   },
-
-  /** @private */
-  // _run: function(opt) {
-  //     var p = opt.property,
-  //         v = opt.value,
-  //         d = !! opt.disableAnimation,
-  //         e = !! opt.enableAnimation,
-  //         i = !! opt.immediate,
-  //         w = opt.wait,
-  //         s = !! opt.set,
-  //         c = !! opt.complete,
-  //         r = !! opt.reset,
-  //         self = this;
-  //     
-  //     if(!isNaN(w) && w > 10)
-  //       if(this._longestWait < w) this._longestWait = w;
-
-  //     if(c || r) {
-  //       delete opt.complete;
-  //       delete opt.reset;
-  //       opt.wait = this._longestWait;
-  //       this._longestWait = 50;
-
-  //       // @todo If this causes problems it will need to be reevaluated
-  //       //  but it would seem ok since we have to make sure that any previous
-  //       //  animations are complete before we run this (usually removes element
-  //       //  from the dom, etc)
-  //       var cleanup = function() {
-  //         if(c) self.invokeLater(self._run, opt.wait, opt);
-  //         if(r) self.invokeLater(self._reset, opt.wait + 100);
-  //       };
-  //       this.invokeLater(cleanup, 300);
-  //       return;
-  //     }
-
-  //     // disable animation
-  //     if(d) this.disableAnimation();
-  //     
-  //     // enable animation
-  //     else if(e) 
-
-  //       // seems to be necessary to get this to function properly
-  //       if(isNaN(w) || w === 0 || w === NO) this.invokeLater(this.enableAnimation, 25);
-
-  //       // to ensure that animation is enabled prior to any other waiting callback
-  //       else this.invokeLater(this.enableAnimation, (Math.floor(w/2)));
-  //     
-  //     // in case it was a simple enable/disable
-  //     if(SC.none(p) || SC.none(v))
-
-  //       // or maybe just a global update request
-  //       if(i) {
-  //         this.updateStyle();
-  //         return;
-  //       } else { return; }
-
-  //     // to use set or no
-  //     if(s) this.set(p, v);
-
-  //     // use adjust (default)
-  //     else {
-
-  //       // immediate
-  //       if(i) this.adjust(p, v).updateStyle(); 
-
-  //       // wait
-  //       else if(!isNaN(w) && w > 10) this.invokeLater(this.adjust, w, p, v);
-
-  //       // complete default
-  //       else this.invokeLater(this.adjust, 50, p, v);
-  //     }
-  // },
 
   /** @private
     @todo Verify that the `resetAnimations` method from the
@@ -288,7 +200,7 @@ XT.StatusImageView = XT.AnimationView.extend(
     var o = this._original,
         ks = XT.keysFor(o), k, v;
     this.beginPropertyChanges();
-    for(var i; i<k.length; ++i) {
+    for(var i; i<ks.length; ++i) {
       k = ks[i];
       v = o[k];
       this.set(k, v);

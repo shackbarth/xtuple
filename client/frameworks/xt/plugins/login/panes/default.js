@@ -10,11 +10,13 @@ sc_require("views/status_icon");
 Login.DefaultPane = XT.MainPane.extend(
   /** @scope Login.DefaultPane.prototype */ {
   
+    animateAppend: NO,
+
     childViews: "mainBlock".w(),
 
     // mainBlock: XT.View.design(SC.Animatable, {
     mainBlock: XT.AnimationView.design({
-      layout: { height: 200, width: 400, top: 100, centerX: 0 },
+      layout: { height: 200, width: 400, centerY: 0, centerX: 0 },
       classNames: "main-block-container".w(),
       childViews: "imageBlock messageBlock sessionIcon userIcon".w(),
       isVisible: NO,
@@ -84,7 +86,12 @@ Login.DefaultPane = XT.MainPane.extend(
         "loggingIn": [
           { property: "centerX", value: -90 },
           { property: "opacity", value: .5 }
+        ],
+        "reset": [
+          { property: "centerX", value: 0 },
+          { property: "opacity", value: 1.0 }
         ]
+
       },
 
     usernameField: SC.TextFieldView.design({
@@ -92,7 +99,14 @@ Login.DefaultPane = XT.MainPane.extend(
       classNames: "login-username".w(),
       hint: "username",
       valueBinding: "XT.Session._username",
-      isEnabledBinding: "XT.Session.loginInputIsEnabled"
+      isEnabledBinding: "XT.Session.loginInputIsEnabled",
+      loginIsEnabledBinding: "XT.Session.loginIsEnabled",
+      keyUp: function(evt) {
+        if(evt.keyCode === SC.Event.KEY_RETURN)
+          if(this.get("loginIsEnabled"))
+            XT.Session.statechart.sendEvent("submit");
+        return YES;
+      }
 
       }), // usernameField
 
@@ -102,7 +116,14 @@ Login.DefaultPane = XT.MainPane.extend(
       hint: "password",
       isPassword: YES, 
       valueBinding: "XT.Session._password",
-      isEnabledBinding: "XT.Session.loginInputIsEnabled"
+      isEnabledBinding: "XT.Session.loginInputIsEnabled",
+      loginIsEnabledBinding: "XT.Session.loginIsEnabled",
+      keyUp: function(evt) {
+        if(evt.keyCode === SC.Event.KEY_RETURN)
+          if(this.get("loginIsEnabled"))
+            XT.Session.statechart.sendEvent("submit");
+        return YES;
+      }
 
       }), // passwordField
 

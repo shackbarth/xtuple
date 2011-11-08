@@ -5,7 +5,7 @@
 
 
 */
-XT.PluginController = XT.ObjectController.create(
+XT.PluginController = XT.ArrayController.create(
   /** @scope XT.PluginController.prototype */ {
 
   //...............................................
@@ -25,10 +25,15 @@ XT.PluginController = XT.ObjectController.create(
     var path = plugin.getPath("mainPage.defaultPane");
 
     var curr = this._currentPane;
-    if(curr) curr.remove();
-    path.append();
+    if(curr) curr.remove(path);
+    else path.append();
     this._currentPane = path; 
   },
+
+  contentList: [
+    "thing1",
+    "thing2"
+  ],
 
   //...............................................
   // Private Properties

@@ -25,6 +25,10 @@ XT.Plugin = XT.Object.extend(SC.StatechartManager,
     XT.PluginController.focus(this);
   },
 
+  getView: function(viewPath) {
+    return this.getPath("mainPage.defaultPane")._baseView.getPath(viewPath);
+  },
+
   /** @property */
   isLoaded: NO
 

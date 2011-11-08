@@ -17,6 +17,16 @@ XT.SessionStatechart = XT.Statechart.extend(
     LOGGEDOUT: XT.State.design({
       
 
+      reset: function() {
+        Login.resetLogin();
+        XT.StatusImageController.deactivateCurrent();
+        var o = this.get("owner");
+        o.set("loginInputIsEnabled", YES);
+        XT.MessageController.set("loadingStatus", "_failed to login".loc());
+        this.statechart.getState("LOGGINGIN").reset();
+        o._shouldEnableLogin();
+      },
+
       /** @private
         During initialization will perform the proper animations and
         events to show the login form. After the initialization of the
@@ -29,6 +39,7 @@ XT.SessionStatechart = XT.Statechart.extend(
       */
       showLogin: function() {
         Login.showLogin();
+        XT.MessageController.set("loadingStatus", "_need to login".loc());
       }.handleEvents("noSession"),
 
       /**
@@ -51,9 +62,14 @@ XT.SessionStatechart = XT.Statechart.extend(
             method: "set",
             args: ["loginInputIsEnabled",NO],
             complete: function() { return YES; } },
+          { target: "XT.Session",
+            method: "set",
+            args: ["loginIsEnabled",NO],
+            complete: function() { return YES; } },
           { target: "Login",
             method: "showLoggingIn",
             complete: function() { return YES; } },
+          { method: function() { this.invokeLater(function() { XT.Session.statechart.sendEvent("loginSet"); }, 2000); return YES; } },
           { hold: "loginSet" },
           { status: {
               image: "loading-user-icon",
@@ -63,35 +79,6 @@ XT.SessionStatechart = XT.Statechart.extend(
         fail: "LOGGEDOUT"
 
       }),
-      // LOGGINGIN: XT.State.design({
-      //   enterState: function() {
-      //     XT.MessageController.set("loadingStatus", "_logging in".loc());
-      //     XT.StatusImageController.getImage("loading-user-icon").set("isActive", YES);
-      //     var o = this.get("owner"),
-      //     lb = Postbooks.getPath("mainPage.basePane.mainBlock.messageBlock.loginBlock");
-      //     lb.adjust("centerX", -((.5 * lb.get("layout").width)-10));
-      //     lb.adjust("opacity", .5);
-      //     o.set("loginIsEnabled", NO);
-      //     o.set("loginInputIsEnabled", NO);
-      //     o._login();
-      //   },
-      //   complete: function(e) {
-      //     XT.StatusImageController.getImage("loading-user-icon").set("isActive", NO);
-      //     if(e && e === "success") {
-      //       XT.MessageController.set("loadingStatus", "_success".loc());
-      //       this.invokeLater(this.gotoState, 800, "LOGGEDIN");
-      //     } else if(e && e === "fail") {
-      //       XT.MessageController.set("loadingStatus", "_failed to login".loc());
-      //       var o = this.get("owner"),
-      //           lb = Postbooks.getPath("mainPage.basePane.mainBlock.messageBlock.loginBlock");
-      //       lb.adjust("centerX", 0);
-      //       lb.adjust("opacity", 1);
-      //       o.set("loginIsEnabled", YES);
-      //       o.set("loginInputIsEnabled", YES);
-      //       this.gotoState("LOGGEDOUT");
-      //     }
-      //   }.handleEvents("success", "fail"),
-      // })
     }),
 
     /**
@@ -108,14 +95,20 @@ XT.SessionStatechart = XT.Statechart.extend(
           status: {
             message: "_acquiring new session id".loc(),
             property: "loadingStatus",
-            image: "loading-session-icon" } }
+            image: "loading-session-icon" },
+          context: "XT.Session.statechart",
+          fail: function() { this.gotoState("LOGGEDOUT"); this.invokeLater(this.sendEvent, 300, "reset"); } },
+        { method: "_writeSession",
+          target: "XT.Session" }
              
       ],
       complete: function() {
 
         // make sure to notify the primary application statechart
         // that we've completed our login if it is waiting for us
-        XT.PostbooksStatechart.sendEvent(XT.WAIT_SIGNAL);
+        this.invokeLater(function() {
+          XT.PostbooksStatechart.sendEvent(XT.WAIT_SIGNAL);
+        }, 1500);
       },
       fail: function() {
         

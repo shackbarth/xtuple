@@ -22,9 +22,14 @@ Login = PLUGIN.Login = XT.Plugin.create(
     This method will show the login fields in an animated fashion.
   */
   showLogin: function() {
-    XT.MessageController.set("loadingStatus", "_need to login".loc());
     var mb = this.getPath("mainPage.defaultPane.mainBlock");
     mb.xtAnimate("showLogin");
+  },
+
+  resetLogin: function() {
+    var lb = this.getPath("mainPage.defaultPane.mainBlock.messageBlock.loginBlock");
+    lb.resetAnimation();
+    lb.xtAnimate("reset");
   },
 
   showLoggingIn: function() {

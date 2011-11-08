@@ -50,65 +50,6 @@ XT.PostbooksStatechart = XT.Statechart.create(
         
       ],
       
-      //   { target: "XT.PluginManager",
-      //     method: "start",
-      //     complete: YES,
-      //     status: {
-      //       message: "loading plugins",
-      //       property: "loadingStatus",
-      //       image: "configuring-image" },
-      //     wait: "next1" },
-      //   { target: "XT.Router",
-      //     method: "start",
-      //     complete: YES,
-      //     status: {
-      //       message: "registering components",
-      //       property: "loadingStatus",
-      //       image: "registering-image" },
-      //     wait: "next2" },
-      //   { target: "XT.DataSource",
-      //     method: "start",
-      //     complete: YES,
-      //     status: {
-      //       message: "configuring sources",
-      //       property: "loadingStatus",
-      //       image: "records-image" },
-      //     wait: "next3" },
-      //   { target: "XT.Store",
-      //     method: "start",
-      //     complete: YES,
-      //     wait: "next4",
-      //     status: {
-      //       message: "configuring local store",
-      //       property: "loadingStatus",
-      //       image: "user-image" } },
-      //   { target: "XT.Session",
-      //     method: "start",
-      //     complete: YES,
-      //     status: {
-      //       message: "loading session data",
-      //       property: "loadingStatus",
-      //       image: "login-image" },
-      //     wait: "next5" },
-      //   { method: function() {
-      //       var evts = [
-      //         "next1",
-      //         "next2",
-      //         "next3",
-      //         "next4",
-      //         "next5"
-      //       ];
-      //       var ex = function() {
-      //         if(evts.length > 0) {
-      //           var d = evts.shift();
-      //           XT.PostbooksStatechart.sendEvent(d);
-      //           setTimeout(ex, 300);
-      //         } else return YES;
-      //       }
-      //       ex();
-      //       return YES;
-      //     } }
-      // ],
       complete: "READY",
       fail: "ERROR",
     }),
@@ -128,6 +69,13 @@ XT.PostbooksStatechart = XT.Statechart.create(
     }),
 
     READY: XT.TaskState.extend({
+
+      tasks: [
+        { target: "XT.PluginManager",
+          method: "fetch",
+          args: "dashboard",
+          complete: function() { return YES; } }
+      ],
 
       complete: "IDLE",
       fail: "ERROR",

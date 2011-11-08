@@ -7,7 +7,8 @@ sc_require("ext/object");
 
 */
 
-XT.HOLDING_TASK = 0x786;
+XT.HOLDING_TASK = XT.hex();
+XT.TASK_FAIL = XT.hex();
 
 XT.Task = XT.Object.extend(
   /** @scope XT.Task.prototype */ {
@@ -103,7 +104,7 @@ XT.Task = XT.Object.extend(
     
     // if this is a holding task, not much to it
     if(h && SC.typeOf(h) === SC.T_STRING) {
-      this.log("Creating a holding task");
+      // this.log("Creating a holding task");
       return this._createHold(); 
     }
 
@@ -111,7 +112,7 @@ XT.Task = XT.Object.extend(
     // a non-blocking (does not stop the remaining tasks
     // from executing while it waits)
     if(w && SC.typeOf(w) === SC.T_STRING) {
-      this.log("Creating a waiting task");
+      // this.log("Creating a waiting task");
       return this._createWait(); 
     }
 
@@ -126,7 +127,7 @@ XT.Task = XT.Object.extend(
       // if that didn't turn up an object
       if(SC.none(t)) t = this;
 
-      console.warn("TARGET => ", t);
+      // console.warn("TARGET => ", t);
 
     } // END TARGET
 
@@ -145,7 +146,7 @@ XT.Task = XT.Object.extend(
         // significant error
         else this.error("No method supplied, nothing could be done!", YES);
 
-      console.warn("METHOD => ", m);
+      // console.warn("METHOD => ", m);
 
     } // END METHOD
       
@@ -166,7 +167,7 @@ XT.Task = XT.Object.extend(
         this.error("Could not find a valid fail-state method", YES);
 
 
-      console.warn("FAIL => ", f);
+      // console.warn("FAIL => ", f);
 
     } // END FAIL
 
@@ -183,7 +184,7 @@ XT.Task = XT.Object.extend(
         c = function(result) { return result === YES; };
 
 
-      console.warn("COMPLETE => ", c);
+      // console.warn("COMPLETE => ", c);
 
     } // END COMPLETE
 
@@ -202,7 +203,7 @@ XT.Task = XT.Object.extend(
         } else { x = this; }
       }
 
-      console.warn("CONTEXT => ", x);
+      // console.warn("CONTEXT => ", x);
 
     } // END CONTEXT
 
@@ -216,8 +217,8 @@ XT.Task = XT.Object.extend(
       task = function() {
         
 
-        console.warn("status => ", s, " target => ", t, " method => ", m, " arguments => ", a, 
-          " context => ", x, " fail => ", f, " complete => ", c);
+        // console.warn("status => ", s, " target => ", t, " method => ", m, " arguments => ", a, 
+        //   " context => ", x, " fail => ", f, " complete => ", c);
 
 
         // execute any status updates/changes that need to be made
@@ -230,18 +231,19 @@ XT.Task = XT.Object.extend(
         if(!self._execCompletionTest(x, c, result)) {
           this.warn("Failed to complete task");
           self._execFailureMethod(x, f, result);
+          return XT.TASK_FAIL;
         }
 
         return !! result;
   
       };
 
-      console.warn("TASK FUNCTION => ", task);
+      // console.warn("TASK FUNCTION => ", task);
 
       // go ahead and set the fire method to this new task method
       this.fire = task;
 
-      console.warn("IT WAS SET !!");
+      // console.warn("IT WAS SET !!");
 
     } // END NTASK FUNCTION
 
@@ -307,7 +309,7 @@ XT.Task = XT.Object.extend(
   _execMethod: function(target, method, args) {
     if(args) args = SC.typeOf(args) === SC.T_ARRAY ? args : [args]; 
 
-    console.warn("ARGUMENTS DETERMINED TO BE => ", args);
+    // console.warn("ARGUMENTS DETERMINED TO BE => ", args);
 
     if(!target[method]) return method.apply(target, args);
     else return target[method].apply(target, args);
@@ -316,7 +318,7 @@ XT.Task = XT.Object.extend(
   /** @private */
   _execCompletionTest: function(context, test, result) {
     var r = test.call(context, result);
-    console.warn(test, r, result);
+    // console.warn(test, r, result);
     return r;
   },
 

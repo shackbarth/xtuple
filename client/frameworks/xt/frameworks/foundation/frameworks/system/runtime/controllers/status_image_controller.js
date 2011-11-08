@@ -22,6 +22,11 @@ XT.StatusImageController = XT.Object.create(
     return YES;
   },
 
+  deactivateCurrent: function() {
+    var c = this.get("current");
+    if(c) c.set("isActive", NO);
+  },
+
   getImage: function(idx) {
     var imgs = this._images;
     if(imgs[idx]) return imgs[idx];

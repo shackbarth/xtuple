@@ -17,15 +17,18 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
   /** @scope XT.AnimationView.prototype */ {
 
   
+  wait: NO,
+
   init: function() {
     var t = this.get("xtTransitions"),
         d = XT.ANIMATION_DEFAULT_TRANSITIONS,
         n = {};
-    console.warn("original transitions => ", t, " defaults => ", d);
+    // console.warn("original transitions => ", t, " defaults => ", d);
     SC.mixin(n, d, t);
-    console.warn("new ones => ", n);
+    // console.warn("new ones => ", n);
     this.set("transitions", n);
     this._processAnimationEvents();
+    this._queue = [];
     sc_super();
   },
   
@@ -139,7 +142,10 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
       else {
 
         // if value is a function we need to execute it now
-        if(SC.typeOf(v) === SC.T_FUNCTION) v = v.call(this, opt);
+        if(SC.typeOf(v) === SC.T_FUNCTION) {
+          v = v.call(this, opt);
+          this.error("The value returned by the callback function => %@".fmt(v));
+        }
 
         // immediate
         if(i) this.adjust(p, v).updateStyle(); 
