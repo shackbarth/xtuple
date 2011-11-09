@@ -12,6 +12,8 @@ sc_require("ext/view");
   to deliver the same results with better performance and fewer
   resources needed at runtime.
 
+  @todo RESET AND COMPLETE DO NOT WORK YET!!!!
+
 */
 XT.AnimationView = XT.View.extend(SC.Animatable,
   /** @scope XT.AnimationView.prototype */ {

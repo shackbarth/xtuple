@@ -48,8 +48,6 @@ XT.Session = XT.Object.create(
     // no cookie exists
     var c = SC.Cookie.find(XT.SESSION_COOKIE_STRING);
 
-    console.error(c);
-
     if(!c || SC.none(c)) c = this._newCookie(); 
     else this._cookie = c;
 
@@ -94,14 +92,11 @@ XT.Session = XT.Object.create(
     if(c) v = c.get("value");
     if(v) v = JSON.parse(v);
 
-    console.error("VALIDATE SESSION => ", v, c);
-
-    if(!v || SC.none(v) || !v.sid) 
-      return s.sendEvent("noSession");
-
+    //if(!v || SC.none(v) || !v.sid) 
+    //  return s.sendEvent("needSession");
     this.set("_username", v.username);
-    Login.showLogin();
-    this.invokeLater(function() { s.sendEvent("submit"); }, 2000);
+
+    return s.sendEvent("needSession");
   },
 
   /** @private */

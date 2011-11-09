@@ -16,13 +16,12 @@ XT.SessionStatechart = XT.Statechart.extend(
 
     LOGGEDOUT: XT.State.design({
       
-
       reset: function() {
         Login.resetLogin();
         XT.StatusImageController.deactivateCurrent();
         var o = this.get("owner");
         o.set("loginInputIsEnabled", YES);
-        XT.MessageController.set("loadingStatus", "_failed to login".loc());
+        XT.MessageController.set("loadingStatus", "_failedLogin".loc());
         this.statechart.getState("LOGGINGIN").reset();
         o._shouldEnableLogin();
       },
@@ -39,8 +38,8 @@ XT.SessionStatechart = XT.Statechart.extend(
       */
       showLogin: function() {
         Login.showLogin();
-        XT.MessageController.set("loadingStatus", "_need to login".loc());
-      }.handleEvents("noSession"),
+        XT.MessageController.set("loadingStatus", "_needLogin".loc());
+      }.handleEvents("needSession"),
 
       /**
         When logging in is enabled and the login button is clicked,
@@ -55,7 +54,7 @@ XT.SessionStatechart = XT.Statechart.extend(
         
         tasks: [
           { status: {
-              message: "_logging in".loc(),
+              message: "_loggingIn".loc(),
               property: "loadingStatus",
               image: "loading-user-icon" } },
           { target: "XT.Session",
@@ -69,7 +68,9 @@ XT.SessionStatechart = XT.Statechart.extend(
           { target: "Login",
             method: "showLoggingIn",
             complete: function() { return YES; } },
-          { method: function() { this.invokeLater(function() { XT.Session.statechart.sendEvent("loginSet"); }, 2000); return YES; } },
+          { method: function() { 
+            this.invokeLater(function() { XT.Session.statechart.sendEvent("loginSet"); }, 2000); 
+            return YES; } },
           { hold: "loginSet" },
           { status: {
               image: "loading-user-icon",
@@ -93,7 +94,7 @@ XT.SessionStatechart = XT.Statechart.extend(
         { method: "_acquireSessionId",
           target: "XT.Session",
           status: {
-            message: "_acquiring new session id".loc(),
+            message: "_acquiringSessionId".loc(),
             property: "loadingStatus",
             image: "loading-session-icon" },
           context: "XT.Session.statechart",

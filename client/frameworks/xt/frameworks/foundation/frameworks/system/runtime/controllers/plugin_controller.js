@@ -30,11 +30,6 @@ XT.PluginController = XT.ArrayController.create(
     this._currentPane = path; 
   },
 
-  contentList: [
-    "thing1",
-    "thing2"
-  ],
-
   //...............................................
   // Private Properties
   //

@@ -29,7 +29,7 @@ XT.PostbooksStatechart = XT.Statechart.create(
 
         // update initial status message to indicate action
         { status: {
-            message: "_postbooks is initializing".loc(),
+            message: "_initPostbooks".loc(),
             property: "loadingStatus" } },
 
         // need to startup the session object to determine
@@ -38,7 +38,7 @@ XT.PostbooksStatechart = XT.Statechart.create(
         { target: "XT.Session",
           method: "start",
           status: {
-            message: "_session loading".loc(),
+            message: "_loadingSession".loc(),
             property: "loadingStatus" } },
 
         // once the datasource and session are initialized properly
