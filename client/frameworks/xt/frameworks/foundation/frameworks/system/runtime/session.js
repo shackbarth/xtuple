@@ -104,12 +104,13 @@ XT.Session = XT.Object.create(
 
     var c = this.get("cookie");
 
-    console.error("WRITING THE DAMN COOKIE!", c);
-
     if(!c) this.error("Could not write session!", YES);  
     c.set("value", JSON.stringify({
       username: this.get("_username"),
-      sid: XT.hex()
+
+
+      // JUST FOR TESTING!
+      sid: this._session_id
     })).write();
     return YES;
   },
@@ -128,7 +129,46 @@ XT.Session = XT.Object.create(
 
   /** @private */
   _acquireSessionId: function() {
+
+    if(!this.get("_serverIsAvailable")) {
+      return this.error("Cannot acquire a session, no server is available", YES);
+    }
+
+    var u = this.get("_username"),
+        p = this.get("_password"),
+        json;
+    this.set("_password", null);
+    json = {
+      name: "XT.SessionFunctor",
+      username: u,
+      password: p
+    };
+    
+    SC.Request.postUrl(XT.DataSource.buildURL("functor"))
+      .header({ "Accept": "application/json" }).json()
+      .notify(this, "_receivedSessionResponse")
+      .timeoutAfter(150)
+      .send(json);
+
     return YES;
+  },
+
+  /** @private */
+  _receivedSessionResponse: function(response) {
+    var r = response, s = this.statechart;
+    if(!SC.ok(r)) {
+      XT.MessageController.set("loadingStatus", "_failedSession".loc());
+      s.gotoState("LOGGEDOUT");
+      this.invokeLater(s.sendEvent, 300, "reset");
+      return;
+    }
+    var b = r.get("body"), u = b.username, sid = b.sid;
+    if(u !== this.get("_username"))
+      this.error("The retrieved session was for a different user", YES);
+    if(!sid)
+      this.error("The server did not supply a valid session id", YES);
+    this._session_id = sid;
+    s.sendEvent(XT.SESSION_ACQUIRED); 
   },
 
   /** @private */
@@ -151,13 +191,14 @@ XT.Session = XT.Object.create(
 
   _shouldEnableLogin: function() {
     var u = this.get("_username"),
-        p = this.get("_password");
-    if(!u || !p || u.length <= 0 || p.length <= 0)
+        p = this.get("_password"),
+        a = this.get("_serverIsAvailable");
+    if(!u || !p || u.length <= 0 || p.length <= 0 || !a)
       if(this.get("loginIsEnabled") === NO) return;
       else this.set("loginIsEnabled", NO);
     else if(this.get("loginIsEnabled") === YES) return;
     else this.set("loginIsEnabled", YES);
-  }.observes("_username", "_password"),
+  }.observes("_username", "_password", "_serverIsAvailable"),
 
   //.................................................
   // Private Properties
@@ -174,6 +215,9 @@ XT.Session = XT.Object.create(
 
   /** @private */
   _session_id: null,
+
+  /** @private */
+  _serverIsAvailableBinding: "XT.DataSource.serverIsAvailable",
 
   //.................................................
   // Calculated Properties

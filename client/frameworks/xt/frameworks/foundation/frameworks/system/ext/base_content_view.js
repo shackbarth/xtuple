@@ -18,7 +18,6 @@ XT.BaseContentView = XT.AnimationView.extend(
   /** @scope XT.BaseContentView.prototype */ {
 
   init: function() {
-    XT.TESTME = this;
     return sc_super();
   },
 
@@ -63,12 +62,9 @@ XT.BaseContentView = XT.AnimationView.extend(
   },
 
   _adjustmentFor: function(type) {
-    console.error("IN ADJUSTMENT FOR!");
     var layout, adjust;
     frame = this.get("frame"),
     layout = this.get("layout");
-    console.error("layout => ", layout);
-    console.error("frame => ", frame);
     switch(type) {
       case XT.BASE_VIEW_REMOVE_LEFT:
         adjust = 0-(frame.width * 2);
@@ -80,7 +76,7 @@ XT.BaseContentView = XT.AnimationView.extend(
         adjust = 0;
         break;  
     }
-    console.error("RETURNING VALUE => ", adjust);
+    this.log("_adjustmenFor returning value => %@".fmt(adjust));
     return adjust;
   }
 

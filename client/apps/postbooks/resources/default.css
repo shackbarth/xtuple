@@ -72,6 +72,16 @@ $theme.message-block-container {
     background-color: #333;
     text-align: center;
     color: #ddd;
+    .login-server-status {
+      .login-server-status-icon {
+        @include slice("images/circles_16.png", $left: 16);
+      }
+      &.active {
+        .login-server-status-icon {
+          @include slice("images/circles_16.png", $left: 0);
+        }
+      }
+    }
   }
 }
 

@@ -16,6 +16,8 @@ XT.NestedImageView = SC.ImageView.extend(XT.Logging,
     sc_super();
   },
 
+  useImageQueue: NO,
+
   /** @private */
   destroy: function() {
 

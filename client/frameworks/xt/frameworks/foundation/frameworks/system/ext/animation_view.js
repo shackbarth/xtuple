@@ -86,9 +86,9 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
       // @todo This was not finished! It does not accurately
       //   support pathing! Please finish me!
       if(zc) {
-        this.warn("Using a call to another animation event");
+        // this.warn("Using a call to another animation event");
         if(zp) {
-          this.warn("Using a remote path to object to animate");
+          // this.warn("Using a remote path to object to animate");
           var zpt = SC.objectForPropertyPath(zp, this);
           zpt.xtAnimate(zc);
         } else { this.xtAnimate(zc); }
@@ -146,7 +146,6 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
         // if value is a function we need to execute it now
         if(SC.typeOf(v) === SC.T_FUNCTION) {
           v = v.call(this, opt);
-          this.error("The value returned by the callback function => %@".fmt(v));
         }
 
         // immediate

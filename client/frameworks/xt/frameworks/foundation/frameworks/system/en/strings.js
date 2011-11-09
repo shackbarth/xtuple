@@ -265,6 +265,8 @@ SC.stringsFor("en_US", {
   "_search": "Search",
   "_searchThrough": "Search through",
   "_secondaryContact": "Secondary Contact",
+  "_serverAvailable": "Server is available",
+  "_serverUnavailable": "Server is unavailable",
   "_setup": "Setup",
   "_severity": "Severity",
   "_site": "Site",

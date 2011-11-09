@@ -71,7 +71,7 @@ Login.DefaultPane = XT.MainPane.extend(
     loginBlock: XT.AnimationView.design({
       layout: { height: 114, top: 0, width: 200, centerX: 0 },
       classNames: "login-block-container".w(),
-      childViews: "usernameField passwordField loginButton".w(),
+      childViews: "usernameField passwordField loginButton serverStatusIcon".w(),
       isVisible: NO,
       xtAnimationEvents: {
         "showLoginBlock": [
@@ -128,13 +128,32 @@ Login.DefaultPane = XT.MainPane.extend(
       }), // passwordField
 
     loginButton: SC.ButtonView.design({
-      layout: { top: 80, width: 80, height: 24, centerX: 35 },
+      layout: { top: 80, width: 80, height: 24, right: 25 },
       title: "login",
       action: "submit",
       isEnabledBinding: SC.Binding.from("XT.Session.loginIsEnabled").oneWay(),
       target: XT.Session.statechart
 
       }), // loginButton
+
+    serverStatusIcon: XT.StatusImageView.design({
+      layout: { top: 84, width: 16, height: 16, left: 25 },
+      isVisible: YES,
+      classNames: "login-server-status".w(),
+      imageClass: "login-server-status-icon",
+      isActiveBinding: "XT.DataSource.serverIsAvailable",
+      toolTipBinding: "XT.DataSource.serverIsAvailableTooltip",
+      mouseEntered: function() {
+        var tt = this.get("toolTip"),
+            was = XT.MessageController.get("loadingStatus");
+        XT.MessageController.set("loadingStatus", tt);
+        this._prevMessage = was;
+      },
+      mouseExited: function() {
+        var was = this._prevMessage;
+        if(was) XT.MessageController.set("loadingStatus", was);
+      }
+      }), // serverStatusIcon
 
       }), // loginBlock
 

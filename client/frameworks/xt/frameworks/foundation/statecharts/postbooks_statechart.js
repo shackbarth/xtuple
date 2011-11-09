@@ -32,6 +32,12 @@ XT.PostbooksStatechart = XT.Statechart.create(
             message: "_initPostbooks".loc(),
             property: "loadingStatus" } },
 
+        { status: {
+            message: "_initDatasource".loc(),
+            property: "loadingStatus" },
+          target: "XT.DataSource",
+          method: "start" },
+
         // need to startup the session object to determine
         // the next few actions
         // all subsequent actions will be event driven

@@ -75,4 +75,6 @@ XT.PluginManager = XT.Object.create(
   },
 
   _queue: [],
+
+  name: "XT.PluginManager",
 }) ;

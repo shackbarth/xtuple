@@ -4,6 +4,9 @@
 /** @class
 
 */
+
+XT.SESSION_ACQUIRED = XT.hex();
+
 XT.SessionStatechart = XT.Statechart.extend(
   /** @scope XT.SessionStatechart.prototype */ {
 
@@ -74,7 +77,16 @@ XT.SessionStatechart = XT.Statechart.extend(
           { hold: "loginSet" },
           { status: {
               image: "loading-user-icon",
-              active: NO } }
+              active: NO } },
+          { method: "_acquireSessionId",
+            target: "XT.Session",
+            status: {
+              message: "_acquiringSessionId".loc(),
+              property: "loadingStatus",
+              image: "loading-session-icon" },
+            context: "XT.Session.statechart",
+            fail: function() { this.gotoState("LOGGEDOUT"); this.invokeLater(this.sendEvent, 300, "reset"); } },
+          { hold: XT.SESSION_ACQUIRED },
         ],
         complete: "LOGGEDIN",
         fail: "LOGGEDOUT"
@@ -91,14 +103,6 @@ XT.SessionStatechart = XT.Statechart.extend(
       tasks: [
 
         // need to acquire a valid session id for this new session
-        { method: "_acquireSessionId",
-          target: "XT.Session",
-          status: {
-            message: "_acquiringSessionId".loc(),
-            property: "loadingStatus",
-            image: "loading-session-icon" },
-          context: "XT.Session.statechart",
-          fail: function() { this.gotoState("LOGGEDOUT"); this.invokeLater(this.sendEvent, 300, "reset"); } },
         { method: "_writeSession",
           target: "XT.Session" }
              
