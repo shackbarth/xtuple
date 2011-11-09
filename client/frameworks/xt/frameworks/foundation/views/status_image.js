@@ -30,7 +30,8 @@ XT.StatusImageView = XT.AnimationView.extend(
     @property
     @type {Hash}
   */
-  layout: { height: 64, width: 64, centerY: 0 },
+  // layout: { height: 64, width: 64, centerY: 0 },
+  layout: {},
 
   /** 
     The CSS class to use as the `value` property for the child XT.NestedImageView
@@ -51,7 +52,8 @@ XT.StatusImageView = XT.AnimationView.extend(
     @property
     @type {Hash}
   */
-  imageLayout: { top: 0, left: 0, right: 0, bottom: 0 },
+  // imageLayout: { top: 0, left: 0, right: 0, bottom: 0 },
+  imageLayout: {},
 
   /**
     The default, starting state of the XT.StatusImageView.
@@ -140,7 +142,8 @@ XT.StatusImageView = XT.AnimationView.extend(
     var view = this._imageView = this.createChildView(
       XT.NestedImageView, {
         layout: SC.clone(this.get("imageLayout")),
-        value: this.get("imageClass")
+        value: this.get("imageClass"),
+        // useStaticLayout: this.get("useStaticLayout")
       });
     this.childViews = [view];
     return this;
@@ -220,6 +223,9 @@ XT.StatusImageView = XT.AnimationView.extend(
     o.layout = SC.clone(this.get("layout"));
     o.isVisible = this.get("isVisible");
     o.isActive = this.get("isActive");
+
+    if(this.parentView.get("useStaticLayout"))
+      this.set("useStaticLayout", YES);
 
     sc_super();
   }

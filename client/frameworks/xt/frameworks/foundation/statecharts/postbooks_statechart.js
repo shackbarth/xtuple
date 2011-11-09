@@ -41,6 +41,7 @@ XT.PostbooksStatechart = XT.Statechart.create(
         // need to startup the session object to determine
         // the next few actions
         // all subsequent actions will be event driven
+
         { target: "XT.Session",
           method: "start",
           status: {
@@ -52,6 +53,7 @@ XT.PostbooksStatechart = XT.Statechart.create(
         // with the remainder of the application so this
         // really just makes this (top-level) statechart block
         // until it is done
+
         { hold: XT.WAIT_SIGNAL }
         
       ],

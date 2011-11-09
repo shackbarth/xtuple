@@ -8,7 +8,7 @@
 
 
 // FOR TESTING ONLY!
-XT.SYSTEM_SET_PLUGINS = ["crm"];
+XT.SYSTEM_SET_PLUGINS = ["crm","accounting","sales"];
 XT.SYSTEM_FIXED_PLUGINS = ["login"];
 
 

@@ -1,0 +1,69 @@
+
+@import "compass/css3";
+
+$default-text-shadow-color: #444;
+$default-text-shadow-blur: 2px;
+$default-text-shadow-v-offset: 1px;
+$default-text-shadow-h-offset: 0px;
+
+$borderRadius: 5px;
+$borderInset: 1px inset #eee;
+
+$theme.inset-rounded-border {
+  &.right {
+    @include border-top-right-radius($borderRadius);
+    @include border-bottom-right-radius($borderRadius);
+  }
+  &.left {
+    @include border-top-left-radius($borderRadius);
+    @include border-bottom-left-radius($borderRadius);
+  }
+  &.all {
+    @include border-radius($borderRadius);
+  }
+}
+
+$theme.inset-border {
+  border: $borderInset;
+  @include box-sizing(border-box);
+}
+
+
+$theme.dashboard {
+  .top-menu {
+    .container {
+      @include display-box;
+      @include box-orient(horizontal);
+      @include box-pack(justify);
+      .xt-nav-option {
+        @include box-flex(1);
+        background-color: #cdcdcd;
+        .nav-label {
+          @include text-shadow(#222 1px 0 3px, #ddd -1px 0 3px);
+          color: #fff;
+          font-weight: bold;
+          font-size: 10pt;
+          position: absolute;
+          top: 25px;
+          width: 100%;
+          text-align: center;
+        }
+        .nav-icon {
+          width: 24px;
+          height: 24px;
+          position: absolute;
+          margin: 5px auto;
+          .crm-icon {
+            @include slice("images/multi-agents.png");
+          }
+          .accounting-icon {
+            @include slice("images/dollar.png");
+          }
+          .sales-icon {
+            @include slice("images/briefcase.png");
+          }
+        }
+      }
+    }
+  }
+}
