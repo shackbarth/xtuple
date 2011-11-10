@@ -6,6 +6,8 @@ Crm.DefaultPane = XT.MainPane.extend(
   {
 
 
+  name: "Crm",
+
   childViews: "test1".w(),
 
   test1: XT.View.design({

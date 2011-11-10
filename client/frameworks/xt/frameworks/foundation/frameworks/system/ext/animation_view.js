@@ -31,7 +31,7 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
     this.set("transitions", n);
     this._processAnimationEvents();
     this._queue = [];
-    sc_super();
+    return sc_super();
   },
   
   xtAnimate: function xtAnimate(eventName) {
@@ -43,7 +43,9 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
   },
 
   _processAnimationEvents: function() {
-    this._eventNames = XT.keysFor(this.get("xtAnimationEvents")).compact();
+    var e = this.get("xtAnimationEvents");
+    if(!e || e.length <= 0) return;
+    this._eventNames = XT.keysFor(e).compact();
   },
 
   _getAnimationEvent: function(event) {
@@ -86,6 +88,12 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
       // @todo This was not finished! It does not accurately
       //   support pathing! Please finish me!
       if(zc) {
+
+        if(SC.typeOf(zc) === SC.T_FUNCTION) {
+          zc.call(this);
+          return;
+        }
+
         // this.warn("Using a call to another animation event");
         if(zp) {
           // this.warn("Using a remote path to object to animate");
@@ -123,7 +131,12 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
       else if(e) 
 
         // seems to be necessary to get this to function properly
-        if(isNaN(w) || w === 0 || w === NO) this.invokeLater(this.enableAnimation, 25);
+        // if(isNaN(w) || w === 0 || w === NO) this.invokeLater(this.enableAnimation, 1);
+        if(isNaN(w) || w === 0 || w === NO) {
+          var disables = this._disableAnimation;
+          for(; disables > 0; --disables)
+            this.enableAnimation();
+        }
 
         // to ensure that animation is enabled prior to any other waiting callback
         else this.invokeLater(this.enableAnimation, (Math.floor(w/2)));
@@ -162,15 +175,15 @@ XT.AnimationView = XT.View.extend(SC.Animatable,
 }) ;
 
 XT.ANIMATION_DEFAULT_TRANSITIONS = {
-  opacity:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  centerX:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  centerY:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  top:        { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  bottom:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  left:       { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  right:      { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-  width:      { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
+  // opacity:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // centerX:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // centerY:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // top:        { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // bottom:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // left:       { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // right:      { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  // width:      { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
 };
 
 

@@ -12,6 +12,8 @@ Login.DefaultPane = XT.MainPane.extend(
   
     animateAppend: NO,
 
+    name: "Login",
+
     childViews: "mainBlock".w(),
 
     // mainBlock: XT.View.design(SC.Animatable, {
@@ -20,14 +22,18 @@ Login.DefaultPane = XT.MainPane.extend(
       classNames: "main-block-container".w(),
       childViews: "imageBlock messageBlock sessionIcon userIcon".w(),
       isVisible: NO,
+      xtTransitions: {
+        opacity:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+        height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      },
       xtAnimationEvents: {
         "showLogin": [
           { disableAnimation: YES },
           { property: "opacity", value: 0.0, immediate: YES },
           { property: "isVisible", value: YES, set: YES },
-          { enableAnimation: YES },
+          { enableAnimation: YES, wait: 100 },
           { property: "opacity", value: 1.0 },
-          { start: 800 },
+          { start: 300 },
           { call: "expand" },
           { call: "showLoginBlock", path: "messageBlock.loginBlock" }
         ],
@@ -55,6 +61,9 @@ Login.DefaultPane = XT.MainPane.extend(
       layout: { height: 100, bottom: 0, left: 0, right: 0 },
       classNames: "message-block-container".w(),
       childViews: "messageLabel loginBlock".w(),
+      xtTransitions: {
+        height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      },
       xtAnimationEvents: {
         "expand": [
           { property: "height", value: 200 },
@@ -73,6 +82,10 @@ Login.DefaultPane = XT.MainPane.extend(
       classNames: "login-block-container".w(),
       childViews: "usernameField passwordField loginButton serverStatusIcon".w(),
       isVisible: NO,
+      xtTransitions: {
+        opacity:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+        centerX:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      },
       xtAnimationEvents: {
         "showLoginBlock": [
           { start: 400 },

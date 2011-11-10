@@ -8,6 +8,7 @@
 Dashboard.DefaultPane = XT.MainPane.extend(
   /** @scope Dashboard.DefaultPane.prototype */ {
 
+  name: "Dashboard",
 
   // let it be known that this is merely a testing ground
   // for a few various things that would need to be dynamic
@@ -15,57 +16,34 @@ Dashboard.DefaultPane = XT.MainPane.extend(
   // they are fixed here because those mechanisms are
   // not currently available to use
   classNames: "dashboard".w(),
-  // childViews: "topMenu widgets bottomMenu".w(), 
-  childViews: "topMenu".w(),
+  childViews: "pluginMenu ".w(),
   
-  topMenu: XT.View.design({
-    layout: { height: 50, width: 280, top: 150, right: 150 }, 
-    classNames: "top-menu".w(),
-    childViews: "container".w(),
-
-  container: XT.View.design({
-    classNames: "container".w(),
+  pluginMenu: XT.AnimationView.design({
+    layout: { height: 50, width: 240, top: 50, centerX: 0 },
+    classNames: "plugin-menu".w(),
     childViews: "crm accounting sales".w(),
 
   crm: XT.NavOption.design({
+    layout: { left: 0, top: 0, bottom: 0, width: 80 },
     classNames: "inset-rounded-border left".w(),
     value: "CRM",
     icon: "crm-icon"
     }), // crm
 
   accounting: XT.NavOption.design({
+    layout: { left: 80, top: 0, bottom: 0, width: 80 },
     value: "Accounting",
     icon: "accounting-icon"
     }), // accounting
 
   sales: XT.NavOption.design({
+    layout: { left: 160, top: 0, bottom: 0, width: 80 },
     classNames: "inset-rounded-border right".w(),
     value: "Sales",
     icon: "sales-icon"
     }) // sales
-    }) // container
-    }), // topMenu
+    }), // pluginMenu
 
-  // widgets: XT.View.design({
-  //   childViews: "crmWidget salesWidget accountingWidget".w(),
-  //   layout: { left: 100, right: 100, height: 500, centerY: 0 },
-  //   classNames: "dash-widgets-container".w(),
-
-  // crmWidget: XT.Widget.design({
-  //   layout: { height: 300, width: 200, centerX: -200, top: 0 },
-  //   classNames: "inset-rounded-border left".w()
-  //   }), // crmWidget
-
-  // salesWidget: XT.Widget.design({
-  //   layout: { height: 300, width: 200, centerX: 0, top: 0 }
-  //   }), // salesWidget
-
-  // accountingWidget: XT.Widget.design({
-  //   layout: { height: 300, width: 200, centerX: 200, top: 0 },
-  //   classNames: "inset-rounded-border right".w()
-  //   }), // accountingWidget
-
-  //   }), // widgets
 
   // bottomMenu: XT.View.design()
 

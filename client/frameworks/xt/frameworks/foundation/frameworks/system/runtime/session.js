@@ -147,7 +147,7 @@ XT.Session = XT.Object.create(
     SC.Request.postUrl(XT.DataSource.buildURL("functor"))
       .header({ "Accept": "application/json" }).json()
       .notify(this, "_receivedSessionResponse")
-      .timeoutAfter(150)
+      .timeoutAfter(200)
       .send(json);
 
     return YES;
@@ -159,7 +159,7 @@ XT.Session = XT.Object.create(
     if(!SC.ok(r)) {
       XT.MessageController.set("loadingStatus", "_failedSession".loc());
       s.gotoState("LOGGEDOUT");
-      this.invokeLater(s.sendEvent, 300, "reset");
+      s.sendEvent("reset");
       return;
     }
     var b = r.get("body"), u = b.username, sid = b.sid;

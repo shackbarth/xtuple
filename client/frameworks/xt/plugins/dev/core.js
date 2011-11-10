@@ -5,9 +5,9 @@
 
   @extends XT.Plugin
 */
-PLUGIN.Dev = XT.Plugin.create(
+Dev = PLUGIN.Dev = XT.Plugin.create(
   /** @scope PLUGIN.Crm.prototype */ {
   
-  noXBO: YES,
+  name: "Dev",
   
 }) ;
