@@ -2,6 +2,7 @@
 /*globals XT */
 
 sc_require("mixins/logging");
+sc_require("runtime/common");
 
 /** @class
 

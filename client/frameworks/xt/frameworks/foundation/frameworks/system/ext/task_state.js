@@ -77,7 +77,7 @@ XT.TaskState = XT.State.extend(
 
       // if we run into a holding task we have to block
       // until the event that wakes it up is fired
-      if(r === XT.HOLDING_TASK) {
+      if(r === XT.HOLDING_TASK || r === XT.REGISTERED_HOOK) {
         this.log("Holding task found, blocking until further events");
         this.set("holding", YES);
         return;

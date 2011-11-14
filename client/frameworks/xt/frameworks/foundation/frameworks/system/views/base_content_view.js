@@ -2,7 +2,7 @@
 /*globals XT */
 
 sc_require("runtime/common");
-sc_require("ext/animation_view");
+sc_require("views/animation_view");
 
 XT.BASE_VIEW_REMOVE_LEFT = XT.hex();
 XT.BASE_VIEW_APPEND_LEFT = XT.hex();

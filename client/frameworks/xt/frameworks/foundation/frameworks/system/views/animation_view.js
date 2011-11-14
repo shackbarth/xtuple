@@ -1,7 +1,7 @@
 
 /*globals XT */
 
-sc_require("ext/view");
+sc_require("views/view");
 
 /** @class
 

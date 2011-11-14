@@ -1,0 +1,4 @@
+name: Dev
+load: inlined
+type: plugin
+menu: no

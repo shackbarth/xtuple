@@ -1,49 +1,49 @@
 
-/*globals Login */
+/*globals Plugin */
 
 sc_require("views/status_icon");
 
 /** @class
-
-
+  This is the default (base) page for the Login plugin.
 */
-Login.DefaultPane = XT.MainPane.extend(
-  /** @scope Login.DefaultPane.prototype */ {
-  
-    animateAppend: NO,
+Plugin.pages.login = Plugin.Page.create(
+  /** @scope Plugin.pages.login.prototype */ {
 
-    name: "Login",
+  defaultView: Plugin.View.design({
 
     childViews: "mainBlock".w(),
 
-    // mainBlock: XT.View.design(SC.Animatable, {
     mainBlock: XT.AnimationView.design({
-      layout: { height: 200, width: 400, centerY: 0, centerX: 0 },
+      layout: { height: 200, width: 400, centerX: 0 },
       classNames: "main-block-container".w(),
       childViews: "imageBlock messageBlock sessionIcon userIcon".w(),
-      isVisible: NO,
+      isVisible: YES,
       xtTransitions: {
-        opacity:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
         height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+        top:        { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
       },
       xtAnimationEvents: {
         "showLogin": [
-          { disableAnimation: YES },
-          { property: "opacity", value: 0.0, immediate: YES },
-          { property: "isVisible", value: YES, set: YES },
-          { enableAnimation: YES, wait: 100 },
-          { property: "opacity", value: 1.0 },
-          { start: 300 },
+          { start: 200 },
           { call: "expand" },
           { call: "showLoginBlock", path: "messageBlock.loginBlock" }
         ],
         expand: [
           { start: 200 },
           { property: "height", value: 325 },
+          { call: function(){this._adjustTop();} },
           { immediate: YES },
           { call: "expand", path: "messageBlock" }
         ]
       },
+      _adjustTop: function() {
+        if(!this.get("isVisibleInWindow")) return;
+        console.warn("ADJUSTING TOP!");
+        var frame = this.getPath("parentView.frame"),
+            height = this.get("layout").height,
+            top = (~~(frame.height / 2) - (height / 2)) - this.getPath("parentView.topPadding");
+        this.adjust("top", top).updateLayout();
+      }.observes("isVisibleInWindow"),
       
     imageBlock: XT.View.design({
       layout: { height: 100, top: 0, left: 0, right: 0 },
@@ -172,16 +172,18 @@ Login.DefaultPane = XT.MainPane.extend(
 
       }), // messageBlock
 
-    sessionIcon: Login.StatusIconView.design({
+    sessionIcon: Plugin.views.StatusIconView.design({
       classNames: "loading-session-icon-container".w(),
       imageClass: "loading-session-icon" 
       }),
 
-    userIcon: Login.StatusIconView.design({
+    userIcon: Plugin.views.StatusIconView.design({
       classNames: "loading-user-icon-container".w(),
       imageClass: "loading-user-icon"
       })
 
       }) // mainBlock
+
+  }) // defaultView
 
 }) ;

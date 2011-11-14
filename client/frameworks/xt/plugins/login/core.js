@@ -1,41 +1,25 @@
 
 /*globals XT */
 
-/** @namespace
+sc_require("pages/default");
 
-  @extends XT.Plugin
+/** @class
+
 */
-Login = PLUGIN.Login = XT.Plugin.create(
+Login = Plugin.Login = Plugin.Object.create(
   /** @scope PLUGIN.Login.prototype */ {
 
-  /** @propery */
-  name: "Login",
-   
-  /** @private */
-  didLoad: function() {
-    sc_super();
-    this.focus();
-    XT.PostbooksStatechart.sendEvent("loginPluginLoaded");
-  },
+  /** @property */
+  pluginName: "Login",
 
-  /** @private
-    This method will show the login fields in an animated fashion.
-  */
-  showLogin: function() {
-    var mb = this.getPath("mainPage.defaultPane.mainBlock");
-    mb.xtAnimate("showLogin");
-  },
+  /** @property */
+  pluginIndex: 0,
 
-  resetLogin: function() {
-    var lb = this.getPath("mainPage.defaultPane.mainBlock.messageBlock.loginBlock");
-    lb.resetAnimation();
-    lb.xtAnimate("reset");
-  },
+  /** @property */
+  page: Plugin.pages.login,
 
-  showLoggingIn: function() {
-    var lb = this.getPath("mainPage.defaultPane.mainBlock.messageBlock.loginBlock");
-    lb.xtAnimate("loggingIn");
-  }
+  /** @property */
+  defaultView: Plugin.DEFAULT_VIEW
 
 }) ;
 

@@ -1,10 +1,7 @@
 
 require File.dirname(__FILE__) + "/_buildassist"
 
-inlined, deferred = detect_modules
-
-puts "selected deferred modules => ", deferred
-puts "selected inlined modules => ", inlined
+deferred, prefetched, inlined = detect_modules
 
 config :all, 
 	:required => :foundation,
@@ -17,4 +14,5 @@ config :all,
 	
 config :xt,
 	:deferred_modules => deferred,
-	:inlined_modules => inlined
+	:inlined_modules => inlined,
+    :prefetched_modules => prefetched

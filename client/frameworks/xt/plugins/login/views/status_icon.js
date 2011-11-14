@@ -4,7 +4,7 @@
 /** @class
 
 */
-Login.StatusIconView = XT.StatusImageView.extend(
+Plugin.views.StatusIconView = XT.StatusImageView.extend(
   /** @scope Login.StatusIconView.prototype */ {
 
   layout: { height: 64, width: 64, centerY: 40, right: 60 },

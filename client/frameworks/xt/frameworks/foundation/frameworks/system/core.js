@@ -19,3 +19,7 @@ XT = SC.Object.create(
   })
   
 }) ;
+
+SC.ready(function() {
+  Postbooks.getPath("mainPage.mainPane").append();
+}) ;

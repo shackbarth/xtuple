@@ -1,0 +1,4 @@
+name: Dashboard
+load: deferred
+type: plugin
+menu: no

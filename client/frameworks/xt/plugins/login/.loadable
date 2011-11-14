@@ -1,0 +1,4 @@
+name: Login
+load: deferred
+type: plugin
+menu: no

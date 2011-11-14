@@ -21,11 +21,12 @@ XT.PostbooksStatechart = XT.Statechart.create(
 
         // need to startup the plugin manager so it can load
         // the login plugin (used by session)
-        { target: "XT.PluginManager",
-          method: "start" },
+        { target: "Plugin.Controller",
+          method: "load",
+          args: "Login" },
 
         // wait until the default login plugin is loaded and processed
-        { hold: "loginPluginLoaded" },
+        { hold: "PLUGIN_DID_LOAD:LOGIN" },
 
         // update initial status message to indicate action
         { status: {

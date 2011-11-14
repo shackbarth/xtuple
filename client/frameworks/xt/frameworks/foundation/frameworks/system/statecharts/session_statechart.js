@@ -40,7 +40,9 @@ XT.SessionStatechart = XT.Statechart.extend(
           Postbooks namespace - should that be moved down?
       */
       showLogin: function() {
-        Login.showLogin();
+        // Login.showLogin();
+        Login.append();
+        Login.getPath("baseView.mainBlock").xtAnimate("showLogin");
         XT.MessageController.set("loadingStatus", "_needLogin".loc());
       }.handleEvents("needSession"),
 

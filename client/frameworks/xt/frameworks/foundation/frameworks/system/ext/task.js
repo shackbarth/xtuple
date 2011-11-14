@@ -8,6 +8,7 @@ sc_require("ext/object");
 */
 
 XT.HOLDING_TASK = XT.hex();
+XT.REGISTERED_HOOK = XT.hex();
 XT.TASK_FAIL = XT.hex();
 
 XT.Task = XT.Object.extend(
@@ -252,11 +253,13 @@ XT.Task = XT.Object.extend(
   /** @private */
   _createHold: function() {
     var h = this.get("hold"),
-        f = this._holdingFunction,
+        k = !~h.indexOf("PLUGIN_DID_LOAD") ? NO : YES,
+        f = k ? this._hookFunction : this._holdingFunction,
         o = this.get("owner"), 
         c = SC.copy(o.continue), n;
     n = c.name = this._generateFunctionName();
     c.events = [h];
+    if(k) Plugin.Controller.registerHook(h, o.statechart);
     o._registerEventHandler(n, c);
     this.fire = f;
     this.set("hold", null);
@@ -287,6 +290,11 @@ XT.Task = XT.Object.extend(
   _holdingFunction: function() {
     // this.fire = this._createTask();
     return XT.HOLDING_TASK;
+  },
+
+  /** @private */
+  _hookFunction: function() {
+    return XT.REGISTERED_HOOK;
   },
 
   /** @private */

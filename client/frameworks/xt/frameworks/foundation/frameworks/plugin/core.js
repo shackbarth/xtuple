@@ -1,14 +1,18 @@
 
-/*globals PLUGIN */
+/*globals Plugin */
 
 /** @namespace
 
   @extends SC.Object
 */
-PLUGIN = XT.Object.create(
+Plugin = XT.Object.create(
   /** @scope PLUGIN.prototype */ {
     
-  NAMESPACE: "PLUGIN",
-  VERSION: "0.1.0"
+  NAMESPACE: "Plugin",
+  VERSION: "0.1.0",
+
+  pages: {},
+
+  views: {},
   
 }) ;
