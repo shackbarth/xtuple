@@ -80,10 +80,17 @@ XT.PostbooksStatechart = XT.Statechart.create(
     READY: XT.TaskState.extend({
 
       tasks: [
-        { target: "XT.PluginManager",
-          method: "fetch",
-          args: "dashboard",
-          complete: function() { return YES; } }
+
+        { target: "Plugin.Controller",
+          method: "load",
+          args: "Dashboard" },
+
+        { hold: "PLUGIN_DID_LOAD:DASHBOARD" },
+
+        { target: "Dashboard",
+          method: "focus",
+          wait: YES,
+          complete: function(result) { return result.isPlugin; } }
       ],
 
       complete: "IDLE",

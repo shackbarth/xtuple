@@ -19,15 +19,15 @@ XT.SessionStatechart = XT.Statechart.extend(
 
     LOGGEDOUT: XT.State.design({
       
-      reset: function() {
-        Login.resetLogin();
-        XT.StatusImageController.deactivateCurrent();
-        var o = this.get("owner");
-        o.set("loginInputIsEnabled", YES);
-        XT.MessageController.set("loadingStatus", "_failedLogin".loc());
-        this.statechart.getState("LOGGINGIN").reset();
-        o._shouldEnableLogin();
-      },
+      // reset: function() {
+      //   Login.resetLogin();
+      //   XT.StatusImageController.deactivateCurrent();
+      //   var o = this.get("owner");
+      //   o.set("loginInputIsEnabled", YES);
+      //   XT.MessageController.set("loadingStatus", "_failedLogin".loc());
+      //   this.statechart.getState("LOGGINGIN").reset();
+      //   o._shouldEnableLogin();
+      // },
 
       /** @private
         During initialization will perform the proper animations and
@@ -70,9 +70,9 @@ XT.SessionStatechart = XT.Statechart.extend(
             method: "set",
             args: ["loginIsEnabled",NO],
             complete: function() { return YES; } },
-          { target: "Login",
-            method: "showLoggingIn",
-            complete: function() { return YES; } },
+          // { target: "Login",
+          //   method: "showLoggingIn",
+          //   complete: function() { return YES; } },
           { method: function() { 
             this.invokeLater(function() { XT.Session.statechart.sendEvent("loginSet"); }, 2000); 
             return YES; } },

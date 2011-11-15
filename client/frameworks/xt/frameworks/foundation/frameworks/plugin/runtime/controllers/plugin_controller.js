@@ -70,9 +70,7 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
   registerHook: function(hook, target) {
     var hooks = this.get("_pluginHooks"),
         name = XT.capitalize(hook.split(":")[1]);
-    console.warn("HOOKS => ", SC.clone(hooks));
     hooks.push({ plugin: name, target: target, hook: hook });
-    console.warn("HOOKS => ", SC.clone(hooks));
   },
 
   //..........................................
@@ -94,13 +92,15 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
 
   /** @private */
   _currentPluginDidChange: function() {
-    var _cp = this._currentPlugin,
-        cp = this.get("currentPlugin");
-    if(cp.get("pluginName") !== _cp.get("pluginName")) {
+    this.warn("_currentPluginDidChange");
+    var _cp = this.get("_currentPlugin");
+    cp = this.get("currentPlugin");
+    if(cp.get("pluginName") && !_cp
+        || cp.get("pluginName") !== _cp.get("pluginName")) {
       this.set("previousPlugin", _cp);
-      this._currentPlugin = cp;
+      this.set("_currentPlugin", cp);
     }
-  }.observes("*currentPlugin"),
+  }.observes("currentPlugin"),
 
   //..........................................
   // Private Methods
@@ -162,7 +162,10 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
     var hooks = this.get("_pluginHooks"),
         jobs;
     console.warn("invoking hooks for %@".fmt(pluginName), hooks);
-    jobs = hooks.filter(function(job) { if(job.plugin === pluginName) return YES; return NO; });
+    jobs = hooks.filter(function(job) { 
+      if(job.plugin === pluginName) { 
+        console.warn("apprently ", job.plugin, " == ", pluginName); 
+        return YES; } else { return NO; } });
     if(jobs.length > 0) {
       while(jobs.length > 0) {
         var job = jobs.shift();

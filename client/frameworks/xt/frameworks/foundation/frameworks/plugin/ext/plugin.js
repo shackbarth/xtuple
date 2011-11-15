@@ -17,6 +17,12 @@ Plugin.Object = XT.Plugin = XT.Object.extend(
   // Public Properties
   //
 
+
+  /** @property
+    Walk like a duck?
+  */
+  isPlugin: YES,
+
   /** @property
     The default view to be shown when the plugin is loaded
     and focused (shown) in the application.

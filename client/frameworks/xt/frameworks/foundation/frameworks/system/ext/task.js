@@ -63,8 +63,13 @@ XT.Task = XT.Object.extend(
   fire: function() {
     var w = this.get("isWaiting");
     if(w && w === YES) {
+      this.error("YES I WAS WAITING!");
       var task = this._createTask();
-      return task.fire();
+      console.warn("task => ", task);
+      if(!task.fire) console.error("NO FIRE ON TASK!", YES);
+      var ret = task.fire();
+      console.warn("task returned => ", ret);
+      return ret;
     }
     this.error("Task object executed but no task method had been created", YES);
   },
@@ -81,6 +86,7 @@ XT.Task = XT.Object.extend(
     // if this request needs to wait we set that here
     // so that it will be processed later
     if(w && w === YES) {
+      this.error("I'M WAITING!!!!");
       this.set("isWaiting", YES);
       this.set("wait", null);
       return;
@@ -228,6 +234,8 @@ XT.Task = XT.Object.extend(
         // execute the method for the task on the appropriate target
         var result = self._execMethod(t, m, a)
 
+        console.warn("TASK SHOULD RETURN => ", result);
+
         // execute the completion function to verify success
         if(!self._execCompletionTest(x, c, result)) {
           this.warn("Failed to complete task");
@@ -246,8 +254,9 @@ XT.Task = XT.Object.extend(
 
       // console.warn("IT WAS SET !!");
 
-    } // END NTASK FUNCTION
+    } // END TASK FUNCTION
 
+    return this;
   },
 
   /** @private */

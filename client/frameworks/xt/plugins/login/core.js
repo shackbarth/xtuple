@@ -7,7 +7,7 @@ sc_require("pages/default");
 
 */
 Login = Plugin.Login = Plugin.Object.create(
-  /** @scope PLUGIN.Login.prototype */ {
+  /** @scope Plugin.Login.prototype */ {
 
   /** @property */
   pluginName: "Login",

@@ -1,16 +1,19 @@
 /*globals Dashboard */
 
+sc_require("pages/default");
+
 /** @namespace
 
 */
-Dashboard = PLUGIN.Dashboard = XT.Plugin.create(
-  /** @scope Dashboard.prototype */ {
+Dashboard = Plugin.Dashboard = Plugin.Object.create(
+  /** @scope Plugin.Dashboard.prototype */ {
 
-  name: "Dashboard",
+  pluginName: "Dashboard",
 
-  didLoad: function() {
-    sc_super();
-    this.focus();
-  }
+  pluginIndex: 1,
+
+  page: Plugin.pages.dashboard,
+
+  defaultView: Plugin.DEFAULT_VIEW
 
 }) ;

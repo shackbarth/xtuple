@@ -75,6 +75,8 @@ XT.TaskState = XT.State.extend(
 
       var r = t.fire();
 
+      console.warn("task fired and returned => ", r);
+
       // if we run into a holding task we have to block
       // until the event that wakes it up is fired
       if(r === XT.HOLDING_TASK || r === XT.REGISTERED_HOOK) {

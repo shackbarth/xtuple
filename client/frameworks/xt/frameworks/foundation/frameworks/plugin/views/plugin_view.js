@@ -43,6 +43,7 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     console.warn("append");
     var self = this;
     SC.run(function() { self.invokeLater(self._append, 10); });
+    // this.invokeLater(this._append, 10);
     return this;
   },
 
@@ -54,6 +55,7 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     console.warn("remove");
     var self = this;
     SC.run(function() { self.invokeLater(self._remove, 10, direction || Plugin.RIGHT_TO_LEFT); });
+    // this.invokeLater(this._remove, 10, direction || Plugin.RIGHT_TO_LEFT);
     return this;
   },
 
@@ -112,8 +114,8 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     console.warn("_append");
     XT.BASE_PANE.appendChild(this);
     console.warn("MADE IT PAST APPEND CHILD!");
-    var curr = Plugin.Controller._currentPlugin,
-        idx = this._index,
+    var curr = Plugin.Controller.get("_currentPlugin"),
+        idx = this.get("_index"),
         paddingTop = this.get("topPadding"),
         paddingBottom = this.get("bottomPadding"),
         frame = this.getPath("parentView.frame"),
@@ -123,7 +125,8 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
         leftAdjust, cidx, dir, side;
     if(curr) {
       cidx = curr.get("pluginIndex");
-      dir = cidx < idx ? Plugin.LEFT_TO_RIGHT : Plugin.RIGHT_TO_LEFT;
+      console.warn("CURRENT PLUGIN INDEX => ", cidx, " MINE IS => ", idx);
+      dir = cidx < idx ? Plugin.RIGHT_TO_LEFT : Plugin.LEFT_TO_RIGHT;
     } else { dir = Plugin.RIGHT_TO_LEFT; }
     leftAdjust = this._leftAdjustmentForAppend(dir, frame);
     this.disableAnimation();
