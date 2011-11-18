@@ -64,6 +64,14 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
   },
 
   /** @public
+    Convenience method to load a plugin and append it after it
+    is loaded.
+  */
+  append: function(request) {
+    this.load(request, this._appendPlugin);
+  },
+
+  /** @public
     Register via a conventional string-format for an event to be
     executed on a target when a particular plugin is loaded.
   */
@@ -137,7 +145,7 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
 
   /** @private */
   _load: function(request, callbacks) {
-    if(!this.get("_status") && (request !== "Login" && request !== "xt/login")) {
+    if(!this.get("_status") && !(request !== "Login" || request !== "xt/login")) {
       this.error("Cannot load plugins without an active session (%@)".fmt(request));
       return;
     }
@@ -159,6 +167,12 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
     console.warn("_load: ", request, callbacks, func);
 
     SC.Module.loadModule(request, func);
+  },
+
+  /** @private */
+  _appendPlugin: function(plugin) {
+    if(!plugin || !plugin.isPlugin) return NO;
+    plugin.append();
   },
 
   /** @private */

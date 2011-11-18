@@ -1,13 +1,20 @@
 
-/*globals XT */
+/*globals Crm */
+
+sc_require("pages/default");
 
 /** @namespace
 
-  @extends XT.Plugin
 */
-Crm = PLUGIN.Crm = XT.Plugin.create(
-  /** @scope PLUGIN.Crm.prototype */ {
+Crm = Plugin.Crm = Plugin.Object.create(
+  /** @scope Plugin.Crm.prototype */ {
 
-  name: "Crm",
+  pluginName: "Crm",
+
+  pluginIndex: 2,
+
+  page: Plugin.pages.crm,
+
+  defaultView: Plugin.DEFAULT_VIEW
 
 }) ;

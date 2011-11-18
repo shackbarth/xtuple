@@ -37,8 +37,8 @@ XT.NavOption = XT.View.extend(
   },
 
   click: function() {
-    var v = this.get("value").toLowerCase();
-    XT.PluginController.focus(v);
+    var v = XT.capitalize(this.get("value"));
+    Plugin.Controller.append(v);
   }
 
 }) ;

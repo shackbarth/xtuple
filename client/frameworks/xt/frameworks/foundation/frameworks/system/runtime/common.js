@@ -56,3 +56,23 @@ XT._collectAnimationEventsFor = function(fill) {
     }
   }
 } ;
+
+XT._baseFrameBinding = function(target) {
+  var bind;
+
+  // if possible, reuse the binding so as not to create an
+  // infinite number of them as plugins (or other?) are swapped
+  // in and out
+  if(target._basePaneFrameBinding && target._basePaneFrameBinding.isBinding)
+    bind = target._basePaneFrameBinding;
+  else
+    bind = SC.Binding
+    .from("XT.BASE_PANE.frame")
+    .to("_basePaneFrame", target)
+    .oneWay();
+  bind
+    .sync()
+    .connect()
+    .flushPendingChanges();
+  return bind;
+} ;

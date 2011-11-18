@@ -19,6 +19,8 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   // Public Properties
   //
 
+  layout: { top: 0, left: 0, right: 0, bottom: 0 },
+
   /** @property
     Adjusts the plugin's content below the top menu of the application.
   */
@@ -44,10 +46,19 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   append: function() {
     console.warn("%@ is about to be appended".fmt(this.get("pluginName")));
     this._xt_notifyWillAppend();
-    var self = this;
+
+    // this allows us to bind to the size of the current base pane
+    // and its adjustments (window resize) and disconnect this
+    // binding when the view is removed
+    this._xt_basePaneFrameBinding = XT._baseFrameBinding(this);
+
+    // tell the view to go ahead and make adjustments if
+    // necessary now that it has changed
+    this._xt_frameNeedsAdjust();
 
     // for development only so event will fire if issued from
     // the console!
+    var self = this;
     SC.run(function() { self.invokeLater(self._xt_append, 10); });
 
     // real command!
@@ -61,6 +72,10 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   */
   remove: function(direction) {
     console.warn("%@ is about to be removed".fmt(this.get("pluginName")));
+    var bind = this._xt_basePaneFrameBinding;
+    console.log(bind);
+    if(bind) bind.disconnect();
+
     var self = this;
 
     // for development only so event will fire if issued from
@@ -93,6 +108,9 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   _plugin: null, 
 
   /** @private */
+  _basePaneFrame: null,
+
+  /** @private */
   transitions: {
     left:   { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
     right:  { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
@@ -109,6 +127,12 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   _isShowingDidChange: function() {
 
   }.observes("isShowing"),
+
+  /** @private */
+  _xt_frameNeedsAdjust: function() {
+    this._xt_adjustWidthToBaseFrame();
+    this._xt_adjustHeightToBaseFrame();
+  }.observes("*_basePaneFrame.height", "*_basePaneFrame.width"),
 
   //..........................................
   // Private Methods
@@ -181,7 +205,6 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     sc_super();
     var cvanis = this._xt_childAnimationEvents = {};
     this._xt_collectAnimationEvents(cvanis);
-    console.warn("AT THE END, ANIMATIONS COLLECTED ARE: ", cvanis);
   }
 
 }) ;

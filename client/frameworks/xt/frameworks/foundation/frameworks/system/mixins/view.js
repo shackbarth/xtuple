@@ -37,6 +37,23 @@ XT.ViewMixin = {
     XT._collectAnimationEventsFor.call(this, fill);
   },
 
+  /** @private */
+  _xt_adjustWidthToBaseFrame: function() {
+    var frame = XT.BASE_PANE.get("frame");
+    if(this._xt_lastWidth && this._xt_lastWidth !== frame.width)
+      this.adjust("width", frame.width).updateLayout();
+    this._xt_lastWidth = frame.width;
+  },
+
+  /** @private */
+  _xt_adjustHeightToBaseFrame: function() {
+    var frame = XT.BASE_PANE.get("frame");
+    var height = frame.height - (Plugin.DEFAULT_TOP_PADDING + Plugin.DEFAULT_BOTTOM_PADDING);
+    if(this._xt_lastHeight && this._xt_lastHeight !== height)
+      this.adjust("height", height).updateLayout();
+    this._xt_lastHeight = height;
+  },
+
 } ;
 
 // Ensures that any class that uses the mixin also receives
