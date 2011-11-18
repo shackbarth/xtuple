@@ -16,7 +16,7 @@ XT.StatusImageController = XT.Object.create(
     var imgs = this._images;
     if(!imgs[idx]) {
       imgs[idx] = ref;
-      this.log("Added new image %@ to XT.StatusImageController".fmt(idx));
+      this.log("Added new image %@".fmt(idx));
     }
     else this.warn("Could not add image %@, index already existed".fmt(idx));
     return YES;
@@ -25,6 +25,20 @@ XT.StatusImageController = XT.Object.create(
   deactivateCurrent: function() {
     var c = this.get("current");
     if(c) c.set("isActive", NO);
+  },
+
+  deactivateImage: function(idx) {
+    var img = this.getImage(idx);
+    if(!img) return NO;
+    img.set("isActive", NO);
+    return YES;
+  },
+
+  activateImage: function(idx) {
+    var img = this.getImage(idx);
+    if(!img) return NO;
+    img.set("isActive", YES);
+    return YES;
   },
 
   getImage: function(idx) {
@@ -42,5 +56,7 @@ XT.StatusImageController = XT.Object.create(
   },
 
   _images: {},
+
+  name: "XT.StatusImageController",
 
 }) ;

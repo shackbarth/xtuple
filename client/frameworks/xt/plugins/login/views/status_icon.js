@@ -27,7 +27,9 @@ Plugin.views.StatusIconView = XT.StatusImageView.extend(
     "inactive": [
       { property: "centerY", value: 80, wait: 100 },
       { property: "opacity", value: 0.0, wait: 100 },
+      { start: 300 },
       { disableAnimation: YES },
+      { property: "isVisible", value: NO, set: YES },
       { property: "centerY", value: -30, wait: 300 },
       { enableAnimation: YES }
     ]

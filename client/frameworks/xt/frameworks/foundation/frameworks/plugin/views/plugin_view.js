@@ -8,7 +8,9 @@ sc_require("ext/common");
   This the the defacto-standard base view for plugins. It is
   assumed that this will be the base-type (or extended from)
   for Plugin pages and views to work properly.
-
+  
+  @extends XT.View
+  @inherits SC.Animatable
 */
 Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   /** @scope Plugin.View.prototype */ {
@@ -40,10 +42,16 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     to animate it properly. Executes an asynchronous task.
   */
   append: function() {
-    console.warn("append");
+    console.warn("%@ is about to be appended".fmt(this.get("pluginName")));
+    this._xt_notifyWillAppend();
     var self = this;
-    SC.run(function() { self.invokeLater(self._append, 10); });
-    // this.invokeLater(this._append, 10);
+
+    // for development only so event will fire if issued from
+    // the console!
+    SC.run(function() { self.invokeLater(self._xt_append, 10); });
+
+    // real command!
+    // this.invokeLater(this._xt_append, 10);
     return this;
   },
 
@@ -52,11 +60,26 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     to animate it properly. Executes an asynchronous task.
   */
   remove: function(direction) {
-    console.warn("remove");
+    console.warn("%@ is about to be removed".fmt(this.get("pluginName")));
     var self = this;
-    SC.run(function() { self.invokeLater(self._remove, 10, direction || Plugin.RIGHT_TO_LEFT); });
-    // this.invokeLater(this._remove, 10, direction || Plugin.RIGHT_TO_LEFT);
+
+    // for development only so event will fire if issued from
+    // the console!
+    SC.run(function() { self.invokeLater(self._xt_remove, 10, direction || Plugin.RIGHT_TO_LEFT); });
+
+    // real command!
+    // this.invokeLater(this._xt_remove, 10, direction || Plugin.RIGHT_TO_LEFT);
     return this;
+  },
+
+  /** @public
+    @todo This needs serious attention as it is a little tricky but very important!
+  */
+  xtAnimate: function(e) {
+    var anis = this.get("_xt_childAnimationEvents") || {};
+    if(anis[e]) anis[e].xtAnimate(e);
+    else this.warn("Could not find target childView for event %@".fmt(e));
+    return YES;
   },
 
   //..........................................
@@ -96,24 +119,20 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
 
     // when the transition ends from being removed, invoke this
     // asynchronous cleanup method
-    // if(!this.isShowing) this.invokeLater(this._cleanup, 10);
-    if(!this.isShowing) this.invokeLater(this._cleanup, 10);
+    if(!this.isShowing) this.invokeLater(this._xt_cleanup, 10);
   },
   
   /** @private */
-  _remove: function(direction) {
-    console.warn("_remove");
+  _xt_remove: function(direction) {
     var frame = this.getPath("parentView.frame"),
-        leftAdjust = this._leftAdjustmentForRemove(direction, frame);
+        leftAdjust = this._xt_leftAdjustmentForRemove(direction, frame);
     this.set("isShowing", NO);
     this.adjust("left", leftAdjust); 
   },
 
   /** @private */
-  _append: function() {
-    console.warn("_append");
+  _xt_append: function() {
     XT.BASE_PANE.appendChild(this);
-    console.warn("MADE IT PAST APPEND CHILD!");
     var curr = Plugin.Controller.get("_currentPlugin"),
         idx = this.get("_index"),
         paddingTop = this.get("topPadding"),
@@ -125,10 +144,9 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
         leftAdjust, cidx, dir, side;
     if(curr) {
       cidx = curr.get("pluginIndex");
-      console.warn("CURRENT PLUGIN INDEX => ", cidx, " MINE IS => ", idx);
       dir = cidx < idx ? Plugin.RIGHT_TO_LEFT : Plugin.LEFT_TO_RIGHT;
     } else { dir = Plugin.RIGHT_TO_LEFT; }
-    leftAdjust = this._leftAdjustmentForAppend(dir, frame);
+    leftAdjust = this._xt_leftAdjustmentForAppend(dir, frame);
     this.disableAnimation();
     this.set("layout", { height: height, width: width, top: top, left: leftAdjust });
     this.updateLayout();
@@ -140,22 +158,30 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   },
 
   /** @private */
-  _cleanup: function() {
+  _xt_cleanup: function() {
     XT.BASE_PANE.removeChild(this);
   },
 
   /** @private */
-  _leftAdjustmentForRemove: function(direction, frame) {
+  _xt_leftAdjustmentForRemove: function(direction, frame) {
     if(direction === Plugin.LEFT_TO_RIGHT) {
       return (frame.width+100);
     } else { return 0-(frame.width+100); }
   },
 
   /** @private */
-  _leftAdjustmentForAppend: function(direction, frame) {
+  _xt_leftAdjustmentForAppend: function(direction, frame) {
     if(direction === Plugin.LEFT_TO_RIGHT) {
       return 0-(frame.width+100);
     } else { return (frame.width+100); }
+  },
+
+  /** @private */
+  init: function() {
+    sc_super();
+    var cvanis = this._xt_childAnimationEvents = {};
+    this._xt_collectAnimationEvents(cvanis);
+    console.warn("AT THE END, ANIMATIONS COLLECTED ARE: ", cvanis);
   }
-   
+
 }) ;

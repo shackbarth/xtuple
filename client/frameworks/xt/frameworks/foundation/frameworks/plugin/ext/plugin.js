@@ -136,6 +136,12 @@ Plugin.Object = XT.Plugin = XT.Object.extend(
     return this;
   },
 
+  /** @public
+    Passes an animation event to the default view
+    of the plugin to be handled.
+  */
+  xtAnimate: function(e) { return this.get("baseView").xtAnimate(e); },
+
   //.......................................... 
   // Observers
   //

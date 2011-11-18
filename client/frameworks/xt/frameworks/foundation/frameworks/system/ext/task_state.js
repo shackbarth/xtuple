@@ -32,6 +32,9 @@ XT.TaskState = XT.State.extend(
   /** @property */
   holding: NO,
 
+  /** @property */
+  interrupt: NO,
+
   //..................................................
   // Private Properties
   //
@@ -51,8 +54,8 @@ XT.TaskState = XT.State.extend(
   start: function() {
     this.resumeGotoState();
     this.log("Starting...");
-    if(this.get("isFinished") === YES)
-      this.error("Cannot `start` a completed task state", YES); 
+    if(this.get("isFinished") === YES || this.get("didFail") === YES)
+      this.error("Cannot `start` a completed task state or `restart` a failed task state", YES); 
     this._setup(); 
     this._execTasks();
   },
@@ -61,21 +64,35 @@ XT.TaskState = XT.State.extend(
   continue: function() {
     var h = this.get("holding");
     if(!h || h === NO) return;
+    if(this.get("interrupt")) {
+      this.error("Cannot `continue` an interrupted task state, must be reset");
+      return;
+    }
     this.set("holding", NO);
     this._execTasks();
+  },
+
+  interrupted: function() {
+    this.set("interrupt", YES);
   },
 
   /** @private */
   _execTasks: function() {
     var ts = this._tasks;
     while(ts.length > 0) {
+
+      if(this.get("interrupt")) {
+        this.warn("Was interrupted!");
+        return;
+      }
+    
       var t = ts.shift();
 
       // console.warn("task target => ", t.get("target"));
 
       var r = t.fire();
 
-      console.warn("task fired and returned => ", r);
+      // console.warn("task fired and returned => ", r);
 
       // if we run into a holding task we have to block
       // until the event that wakes it up is fired
@@ -103,7 +120,15 @@ XT.TaskState = XT.State.extend(
   reset: function() {
     if(this.get("isFinished"))
       this.set("isFinished", NO);
+    this.set("interrupt",  NO);
+    this.set("didFail", NO);
   },
+
+  /** @private */
+  _interrupted: function() {
+    if(this.get("interrupt") && this.get("holding"))
+      this.set("didFail", YES);
+  }.observes("interrupt"),
 
   /** @private */
   _setup: function() {

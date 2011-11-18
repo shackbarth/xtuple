@@ -20,30 +20,42 @@ Plugin.pages.login = Plugin.Page.create(
       isVisible: YES,
       xtTransitions: {
         height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-        top:        { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
+        // top:        { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
+      },
+      xtWillAppend: function() {
+        this._adjustTop();
       },
       xtAnimationEvents: {
-        "showLogin": [
+        "mainBlock-show": [
           { start: 200 },
-          { call: "expand" },
-          { call: "showLoginBlock", path: "messageBlock.loginBlock" }
+          { call: "mainBlock-expand" },
+          { call: "loginBlock-show", path: "messageBlock.loginBlock" }
         ],
-        expand: [
+        "mainBlock-expand": [
           { start: 200 },
           { property: "height", value: 325 },
-          { call: function(){this._adjustTop();} },
+          // { call: function(){this._adjustTop();} },
           { immediate: YES },
-          { call: "expand", path: "messageBlock" }
+          { call: "messageBlock-expand", path: "messageBlock" }
         ]
       },
       _adjustTop: function() {
-        if(!this.get("isVisibleInWindow")) return;
-        console.warn("ADJUSTING TOP!");
-        var frame = this.getPath("parentView.frame"),
-            height = this.get("layout").height,
-            top = (~~(frame.height / 2) - (height / 2)) - this.getPath("parentView.topPadding");
-        this.adjust("top", top).updateLayout();
-      }.observes("isVisibleInWindow"),
+        // if(!this.get("isVisibleInWindow")) return;
+        this.disableAnimation();
+        // var frame = this.getPath("parentView.frame"),
+        var frame = XT.BASE_PANE.get("frame"),
+            // height = this.get("layout").height,
+            height = 325,
+            // top = (~~(frame.height / 2) - (height / 2)) - this.getPath("parentView.topPadding");
+            top = (~~(frame.height / 2) - (height / 2)) - Plugin.DEFAULT_TOP_PADDING;
+        if(top > Plugin.DEFAULT_TOP_PADDING) this.adjust("top", top).updateLayout();
+        this.enableAnimation();
+      },
+      basePaneFrameBinding: SC.Binding.from("XT.BASE_PANE.frame").oneWay(),
+      _basePaneObserver: function() {
+        var iv = this.get("isVisibleInWindow");
+        if(iv) this._adjustTop(); 
+      }.observes("basePaneFrame"),
       
     imageBlock: XT.View.design({
       layout: { height: 100, top: 0, left: 0, right: 0 },
@@ -65,7 +77,7 @@ Plugin.pages.login = Plugin.Page.create(
         height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
       },
       xtAnimationEvents: {
-        "expand": [
+        "messageBlock-expand": [
           { property: "height", value: 200 },
         ]
       },
@@ -87,7 +99,7 @@ Plugin.pages.login = Plugin.Page.create(
         centerX:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
       },
       xtAnimationEvents: {
-        "showLoginBlock": [
+        "loginBlock-show": [
           { start: 400 },
           { disableAnimation: YES },
           { property: "opacity", value: 0.0, immediate: YES },
@@ -96,13 +108,14 @@ Plugin.pages.login = Plugin.Page.create(
           { enableAnimation: YES, wait: 100 },
           { property: "opacity", value: 1.0, wait: 300 }
         ],
-        "loggingIn": [
+        "loginBlock-login": [
           { property: "centerX", value: -90 },
           { property: "opacity", value: .5 }
         ],
-        "reset": [
+        "loginBlock-reset": [
           { property: "centerX", value: 0 },
-          { property: "opacity", value: 1.0 }
+          { property: "opacity", value: 1.0 },
+          { call: function() { XT.StatusImageController.deactivateCurrent(); } },
         ]
 
       },

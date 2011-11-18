@@ -87,6 +87,12 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
   name: "Plugin.Controller",
 
   //..........................................
+  // Bindings
+  // 
+
+  _statusBinding: SC.Binding.from("XT.Session.isActive").oneWay(),
+
+  //..........................................
   // Observers
   // 
 
@@ -131,6 +137,10 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
 
   /** @private */
   _load: function(request, callbacks) {
+    if(!this.get("_status") && (request !== "Login" && request !== "xt/login")) {
+      this.error("Cannot load plugins without an active session (%@)".fmt(request));
+      return;
+    }
     if(!this.isPlugin(request)) this.error("Request for non-plugin `%@`".fmt(request), YES);
     request = this._moduleFor(request);
 

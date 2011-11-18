@@ -147,7 +147,7 @@ XT.Session = XT.Object.create(
     SC.Request.postUrl(XT.DataSource.buildURL("functor"))
       .header({ "Accept": "application/json" }).json()
       .notify(this, "_receivedSessionResponse")
-      .timeoutAfter(200)
+      .timeoutAfter(300)
       .send(json);
 
     return YES;
@@ -158,8 +158,9 @@ XT.Session = XT.Object.create(
     var r = response, s = this.statechart;
     if(!SC.ok(r)) {
       XT.MessageController.set("loadingStatus", "_failedSession".loc());
+      s.sendEvent("interrupted");
       s.gotoState("LOGGEDOUT");
-      s.sendEvent("reset");
+      this.invokeLater(function() { s.invokeStateMethod("reset"); }, 100);
       return;
     }
     var b = r.get("body"), u = b.username, sid = b.sid;
@@ -168,6 +169,7 @@ XT.Session = XT.Object.create(
     if(!sid)
       this.error("The server did not supply a valid session id", YES);
     this._session_id = sid;
+    this.set("isActive", YES);
     s.sendEvent(XT.SESSION_ACQUIRED); 
   },
 

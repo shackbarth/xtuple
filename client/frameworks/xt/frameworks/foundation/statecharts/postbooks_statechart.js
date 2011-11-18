@@ -11,7 +11,8 @@ XT.PostbooksStatechart = XT.Statechart.create(
   name: "XT.PostbooksStatechart",
 
   autoInitStatechart: NO,
-  trace: YES,
+  // trace: YES,
+  suppressStatechartWarnings: YES,
   rootState: XT.State.extend({
 
     initialSubstate: "INITIALIZING",

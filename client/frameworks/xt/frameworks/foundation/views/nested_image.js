@@ -4,7 +4,7 @@
 /** @class
 
 */
-XT.NestedImageView = SC.ImageView.extend(XT.Logging,
+XT.NestedImageView = SC.ImageView.extend(XT.ViewMixin,
   /** @scope XT.NestedImageView.prototype */ {
 
   /** @private */

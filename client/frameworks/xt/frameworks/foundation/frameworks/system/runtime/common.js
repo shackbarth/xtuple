@@ -37,4 +37,22 @@ XT.capitalize = function capitalize(str) {
   if(!str || SC.typeOf(str) !== SC.T_STRING)
     return str;
   return str[0].toUpperCase() + str.slice(1).toLowerCase();
-}
+} ;
+
+XT._collectAnimationEventsFor = function(fill) {
+  var cvs = this.get("childViews"), i=0;
+  if(!cvs || cvs.length <= 0) return;
+  for(; i<cvs.length; ++i) {
+    if(!cvs[i]) continue;
+    if(!cvs[i]._xt_collectAnimationEvents)
+      XT._collectAnimationEventsFor.call(cvs[i], fill);
+    else cvs[i]._xt_collectAnimationEvents(fill);
+  }
+  if(this.xtAnimationEvents) {
+    var keys = XT.keysFor(this.xtAnimationEvents);
+    while(keys.length > 0) {
+      var k = keys.shift();
+      fill[k] = this;
+    }
+  }
+} ;
