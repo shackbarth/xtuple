@@ -1,14 +1,17 @@
 
-/*globals XBO */
+/*globals Xbo */
 
 /** @namespace
 
-  @extends SC.Object
 */
-XBO = SC.Object.create(
-  /** @scope XBO.prototype */ {
-    
-  NAMESPACE: "XBO",
-  VERSION: "0.1.0"
-    
+Xbo = XT.Object.create(
+  /** @scope Xbo.prototype */ {
+
+  NAMESPACE: "Xbo",
+  VERSION: "0.1.0", 
+
+  models: {},
+
 }) ;
+
+XM = Xbo.models;

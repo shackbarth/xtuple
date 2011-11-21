@@ -9,12 +9,11 @@ Plugin.pages.crm = Plugin.Page.create(
 
   defaultView: Plugin.View.design({
     classNames: "crm-container".w(),
-    childViews: "crmLabel".w(),
-    crmLabel: SC.LabelView.design({
-      layout: { height: 30, width: 200, centerX: 0, centerY: 0 },
-      value: "SOME CRM VALUE!?!??!" 
+    childViews: "contacts".w(),
+      
+      contacts: XT.View.design(), 
 
-      }) // crmLabel
+
       }) // defaultView
 
 }) ;

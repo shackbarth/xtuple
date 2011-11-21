@@ -156,7 +156,7 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
 
     if(this.isLoaded(request)) return this._invokeCallbacks(callbacks, request);
 
-    console.warn("_load: was not loaded!");
+    console.warn("_load: Plugin was not loaded! (%@)".fmt(request));
 
     var self = this, func;
     func = function() {
@@ -164,9 +164,9 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
       self._invokeCallbacks(callbacks, request); 
     }; 
 
-    console.warn("_load: ", request, callbacks, func);
+    console.warn("_load (Plugin): ", request, callbacks, func);
 
-    SC.Module.loadModule(request, func);
+    SC.ready(function() { SC.Module.loadModule(request, func); });
   },
 
   /** @private */

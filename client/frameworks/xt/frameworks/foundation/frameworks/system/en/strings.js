@@ -151,6 +151,7 @@ SC.stringsFor("en_US", {
   "_loadingSession": "Session loading",
   "_location": "Location",
   "_loggingIn": "Logging in",
+  "_loginSuccess": "Successfully Logged In",
   "_logOut": "Log Out",
   "_lotSerial": "Lot/Serial",
   "_manufacturing": "Manufacturing",

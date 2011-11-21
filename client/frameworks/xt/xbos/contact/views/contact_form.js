@@ -4,7 +4,7 @@
 /** @class
 
 */
-XT.ContactForm = XT.FormView.extend(
+Contact.Form = XT.FormView.extend(
   /** @scope XT.ContactForm.prototype */ {
     
 }) ;

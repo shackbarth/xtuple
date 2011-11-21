@@ -6,7 +6,7 @@
 def detect_modules
 
   puts ""
-  puts "======== BEGIN XTBUILDASSISTANT ======="
+  puts "======== BEGIN XTBUILDASSISTANT ========"
   puts ""
 
   # a collection of deferred plugin/xbo
@@ -81,7 +81,7 @@ def detect_modules
   puts "Inlined => " + inlined.join(", ")
   puts "See generated file (__loadable_manifest.js) in the system framework"
   puts ""
-  puts "======== END XTBUILDASSISTANT ======="
+  puts "======== END XTBUILDASSISTANT ========"
   puts ""
 
   # now return the collections (which have been reformatted by
@@ -191,8 +191,9 @@ def generate_deferred_entries(js, collection)
     {
     eos
     loadable.each_pair do |k,v|
+      v = "\"#{v}\"" unless v == "YES"
       js.push(<<-eos)
-      #{k}: "#{v}",
+      #{k}: #{v},
       eos
     end
     js.push(<<-eos)

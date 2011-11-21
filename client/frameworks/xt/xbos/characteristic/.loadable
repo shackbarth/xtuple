@@ -1,0 +1,5 @@
+name: Characteristic
+type: xbo
+load: deferred
+core: YES
+

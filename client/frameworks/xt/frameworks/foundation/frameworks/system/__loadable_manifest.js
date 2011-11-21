@@ -29,10 +29,102 @@ XT.__LOADABLEINFO__ = {
       module: "xt/login"
     },
     {
+      name: "Activity",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/activity"
+    },
+    {
+      name: "Address",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/address"
+    },
+    {
+      name: "Alarm",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/alarm"
+    },
+    {
+      name: "Characteristic",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/characteristic"
+    },
+    {
+      name: "Comment",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/comment"
+    },
+    {
       name: "Contact",
       type: "xbo",
       load: "deferred",
+      core: YES,
       module: "xt/contact"
+    },
+    {
+      name: "Currency",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/currency"
+    },
+    {
+      name: "Document",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/document"
+    },
+    {
+      name: "Item",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/item"
+    },
+    {
+      name: "Priority",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/priority"
+    },
+    {
+      name: "Site",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/site"
+    },
+    {
+      name: "Type",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/type"
+    },
+    {
+      name: "Unit",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/unit"
+    },
+    {
+      name: "User",
+      type: "xbo",
+      load: "deferred",
+      core: YES,
+      module: "xt/user"
     },
   ],
 

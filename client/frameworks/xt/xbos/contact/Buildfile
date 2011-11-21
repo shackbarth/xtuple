@@ -1,0 +1,2 @@
+
+config :contact, :required => [ :document, :characteristic ]

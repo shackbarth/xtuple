@@ -1,0 +1,1 @@
+config :activity, :required => [ :document ]

@@ -1,0 +1,4 @@
+name: Activity
+type: xbo
+load: deferred
+core: YES
