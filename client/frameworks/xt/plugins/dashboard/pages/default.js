@@ -17,34 +17,34 @@ Plugin.pages.dashboard = Plugin.Page.create(
     classNames: "dashboard".w(),
     childViews: "pluginMenu ".w(),
     
-    pluginMenu: XT.AnimationView.design({
-      layout: { height: 50, width: 240, top: 50, centerX: 0 },
-      classNames: "plugin-menu".w(),
-      childViews: "crm accounting sales".w(),
+    pluginMenu: XT.Table.design()
+    // pluginMenu: XT.AnimationView.design({
+    //   layout: { height: 50, width: 240, top: 50, centerX: 0 },
+    //   classNames: "plugin-menu".w(),
+    //   childViews: "crm accounting sales".w(),
 
-    crm: XT.NavOption.design({
-      layout: { left: 0, top: 0, bottom: 0, width: 80 },
-      classNames: "inset-rounded-border left".w(),
-      value: "CRM",
-      icon: "crm-icon"
-      }), // crm
+    // crm: XT.NavOption.design({
+    //   layout: { left: 0, top: 0, bottom: 0, width: 80 },
+    //   classNames: "inset-rounded-border left".w(),
+    //   value: "CRM",
+    //   icon: "crm-icon"
+    //   }), // crm
 
-    accounting: XT.NavOption.design({
-      layout: { left: 80, top: 0, bottom: 0, width: 80 },
-      value: "Accounting",
-      icon: "accounting-icon"
-      }), // accounting
+    // accounting: XT.NavOption.design({
+    //   layout: { left: 80, top: 0, bottom: 0, width: 80 },
+    //   value: "Accounting",
+    //   icon: "accounting-icon"
+    //   }), // accounting
 
-    sales: XT.NavOption.design({
-      layout: { left: 160, top: 0, bottom: 0, width: 80 },
-      classNames: "inset-rounded-border right".w(),
-      value: "Sales",
-      icon: "sales-icon"
-      }) // sales
-      }), // pluginMenu
+    // sales: XT.NavOption.design({
+    //   layout: { left: 160, top: 0, bottom: 0, width: 80 },
+    //   classNames: "inset-rounded-border right".w(),
+    //   value: "Sales",
+    //   icon: "sales-icon"
+    //   }) // sales
+    //   }), // pluginMenu
 
 
-    // bottomMenu: XT.View.design()
   })
 
 }) ;

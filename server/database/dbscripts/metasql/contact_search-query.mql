@@ -1,0 +1,68 @@
+-- Group: XM.ContactSearch
+-- Name:  query
+-- Notes: 
+select 
+  cntct_id as "id",
+  cntct_name as "name",
+  cntct_title as "jobTitle"
+<? if not exists("completerText") ?>
+  , cntct_first_name as "firstName",
+  cntct_last_name as "lastName",
+  cntct_phone as "phone",
+  cntct_phone2 as "alternate",
+  cntct_fax as "fax",
+  cntct_email as "primaryEmail",
+  cntct_webaddr as "webAddress",
+  cntct_active as "isActive",
+  crmacct_id as "crmAccount",
+  crmacct_number as "crmAccountNumber",
+  crmacct_name as "crmAccountName",
+  coalesce(length(cntct_first_name) = 0, false) as "noFirstName", 
+  coalesce(length(cntct_last_name) = 0, false) as "noLastName"
+<? endif ?>
+from cntct
+<? if not exists("crmAccount") ?>
+  left outer 
+<? endif ?>
+  join crmacct on (crmacct_id = cntct_crmacct_id)
+where true
+<? if exists("completerText") ?>
+  and cntct_name ~* '^<? literal("completerText") ?>'
+<? elseif exists("searchText") ?> 
+ and (false
+  <? if exists("searchFirstName") ?> 
+    or cntct_first_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchLastName") ?> 
+    or cntct_last_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchJobTitle") ?> 
+    or cntct_title ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchPhone") ?> 
+    or cntct_phone || E'\n' || cntct_phone2 || E'\n' || cntct_fax ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchEmail") ?> 
+    or cntct_email ~* <? value("searchEmail") ?> 
+  <? endif ?>
+  <? if exists("searchCrmAccount") ?> 
+    or crmacct_number || E'\n' || crmacct_name ~* <? value("searchText") ?>
+  <? endif ?>
+)
+<? endif ?>
+<? if exists("crmAccount") ?>
+  and (cntct_crmacct_id = <? value("crmAccount") ?>)
+<? endif ?>
+<? if not exists("showInactive") ?>
+  and (cntct_active)
+<? endif ?>
+<? if exists("completerText") ?>
+order by cntct_name
+<? else ?>
+order by 
+  "noLastName", "lastName", 
+  "noFirstName", "firstName"
+<? endif ?>
+<? if exists("fetchLimit") ?>
+limit <? value("fetchLimit") ?>
+<? endif ?>

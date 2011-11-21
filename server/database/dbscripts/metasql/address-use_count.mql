@@ -1,0 +1,4 @@
+-- Group: XM.Address
+-- Name:  useCount
+-- Notes: Return how many places an address is used.
+select addrUseCount(<? value("id") ?>) as result;

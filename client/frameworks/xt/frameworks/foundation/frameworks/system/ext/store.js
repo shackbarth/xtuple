@@ -43,7 +43,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   // Metasql records have to be refreshed using parameters
   retrieveRecord: function(recordType, id, storeKey, isRefresh) {
     if(recordType &&
-       (SC.kindOf(recordType, XT.Metasql))) {
+       (SC.kindOf(recordType, XM.Metasql))) {
       var params = new Object;
       params.id = id;
 

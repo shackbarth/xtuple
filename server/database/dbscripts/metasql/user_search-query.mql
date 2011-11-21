@@ -1,0 +1,24 @@
+-- Group: XM.UserSearch
+-- Name:  query
+-- Notes: 
+select 
+  usr_username as "id",
+  usr_propername as "propername"
+from usr
+where usr_active
+<? if exists("completerText") ?>
+  and usr_username ~* '^<? literal("completerText") ?>'
+<? elseif exists("searchText") ?> 
+  and (false
+  <? if exists("searchNumber") ?> 
+    or usr_username ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchName") ?> 
+    or usr_propername ~* <? value("searchText") ?>
+  <? endif ?>
+)
+<? endif ?>
+order by "id"
+<? if exists("fetchLimit") ?>
+limit <? value("fetchLimit") ?>
+<? endif ?>

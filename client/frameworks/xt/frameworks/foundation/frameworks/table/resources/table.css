@@ -1,0 +1,12 @@
+
+@import "compass";
+
+$theme.xt-table {
+  @include border-radius(10px);
+  border: 2px solid #fff;
+  margin: 20px 20px;
+
+  .no-content {
+    padding: 20px 20px;
+  }
+}

@@ -1,0 +1,131 @@
+-- Group: XM.IncidentTable
+-- Name:  query
+-- Notes: 
+
+select distinct on (incdt_number) 
+  incdt_id as "id",
+  incdt_number as "incidentNumber", 
+  incdt_summary as "incidentSummary", 
+  incdt_timestamp::date as "incidentCreated",
+  incdt_updated::date as "incidentUpdated",
+  incdt_assigned_username as "incidentAssignedTo", 
+  incdt_owner_username as "incidentOwner",
+  case 
+    when(incdt_status='N') THEN <? value("newIncident") ?>
+    when (incdt_status='F') THEN <? value("feedback") ?>
+    when (incdt_status='C') THEN <? value("confirmed") ?>
+    when (incdt_status='A') THEN <? value("assigned") ?>
+    when (incdt_status='R') THEN <? value("resolved") ?>
+    when (incdt_status='L') THEN <? value("closed") ?>
+    else incdt_status
+  end as "incidentStatus",
+  crmacct_name as "crmAccountName", 
+  incdtcat_name as "incidentCategoryName", 
+  incdtseverity_name as "incidentSeverityName",  
+  incdtpriority_name as "priorityName", 
+  crmacct_name as "crmAccountName", 
+  cntct_name as "contactName", 
+  prj_number as "projectNumber", 
+  incdt_public as "incidentPublic",
+  status_color AS "statusColor"
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value as char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value as char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date as char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+from crmacct, status, incdt
+  join cntct on (incdt_cntct_id=cntct_id)
+  left outer join incdtcat on (incdtcat_id=incdt_incdtcat_id) 
+  left outer join incdtseverity on (incdtseverity_id=incdt_incdtseverity_id) 
+  left outer join incdtpriority on (incdtpriority_id=incdt_incdtpriority_id) 
+  left outer join prj on (incdt_prj_id=prj_id)
+<? foreach("char_id_text_list") ?>
+  left outer join charass charass_alias<? literal("char_id_text_list") ?> on ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='INCDT') 
+                                                                    and  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=incdt_id)
+                                                                    and  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  left outer join char char_alias<? literal("char_id_text_list") ?> on (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  left outer join charass charass_alias<? literal("char_id_list_list") ?> on ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='INCDT') 
+                                                                    and  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=incdt_id)
+                                                                    and  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  left outer join char char_alias<? literal("char_id_list_list") ?> on (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  left outer join charass charass_alias<? literal("char_id_date_list") ?> on ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='INCDT') 
+                                                                    and  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=incdt_id)
+                                                                    and  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  left outer join char char_alias<? literal("char_id_date_list") ?> on (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+where ((incdt_crmacct_id=crmacct_id)
+  and (status_type='INCDT')
+  and (incdt_status=status_code)
+<? if exists("id") ?>
+  and (incdt_id=<? value("id") ?>)
+<? endif ?>
+<? if exists("statusList") ?>
+  and (status_seq IN (-1
+  <? foreach("statusList") ?> , <? value("statusList") ?> <? endforeach ?>
+  ))
+<? endif ?>
+<? if exists("statusAbove") ?> 
+  and (status_seq < <? value("statusAbove") ?>) 
+<? endif ?>
+<? if exists("contact") ?> 
+  and (incdt_cntct_id = <? value("contact") ?>) 
+<? endif ?>
+<? if exists("owner") ?> 
+  and (incdt_owner_username=<? value("owner") ?>) 
+<? endif ?>
+<? if exists("ownerText" ?>
+  and (incdt_owner_username ~ <? value("ownerText") ?>) 
+<? endif ?>
+<? if exists("assignedTo") ?> 
+  and (incdt_assigned_username=<? value("assignedTo") ?>) 
+<? endif ?>
+<? if exists("assignedText" ?>
+  and (incdt_assigned_username ~ <? value("assignedText") ?>) 
+<? endif ?>
+<? if exists("priorityList") ?>
+  and (incdt_incdtpriority_id IN (-1
+  <? foreach("priorityList") ?> , <? value("priorityList") ?> <? endforeach ?>
+  ))
+<? endif ?>
+<? if exists("categorylist") ?>
+  and (incdt_incdtcat_id IN (-1
+  <? foreach("categorylist") ?> , <? value("categorylist") ?> <? endforeach ?>
+  ))
+<? endif ?>
+<? if exists("incidentCategory") ?> 
+  and (incdt_incdtcat_id=<? value("incidentCategory") ?>) 
+<? endif ?> 
+<? if exists("incidentSeverity") ?> 
+  and (incdt_incdtseverity_id=<? value("incidentSeverity") ?>) 
+<? endif ?>
+<? if exists("crmAccount") ?> 
+  and (incdt_crmacct_id=<? value("crmAccount") ?>) 
+<? endif ?> 
+<? if exists("project") ?> 
+  and (incdt_prj_id=<? value("project") ?>) 
+<? endif ?> 
+<? if exists("isPublic") ?> 
+  and (incdt_public=<? value("isPublic") ?>) 
+<? endif ?> 
+)
+<? if exists("searchText") ?> 
+  and ((incdt_number::text ~* <? value("searchText") ?>)
+  or (incdt_summary ~* <? value("searchText") ?>)
+  or (incdt_descrip ~* <? value("searchText") ?>)
+  or (incdt_id in (
+    select comment_source_id
+    from comment
+    where((comment_source='INCDT')
+      and (comment_text ~* <? value("searchText") ?>)))))
+<? endif ?>
+  and (incdt_timestamp between coalesce(<? value("startDate") ?>, startOfTime()) and coalesce(<? value("endDate") ?>, endOfTime())+1) 
+<? literal("charClause") ?>
+order by incdt_number;

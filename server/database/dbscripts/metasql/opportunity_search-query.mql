@@ -1,0 +1,29 @@
+-- Group: XM.OpportunitySearch
+-- Name:  query
+-- Notes: 
+select 
+  ophead_id as "id",
+  ophead_number as "number",
+  ophead_name as "name",
+  firstLine(ophead_notes) as "notes"
+from ophead
+where true 
+<? if exists("completerText") ?>
+  and ophead_number ~* '^<? literal("completerText") ?>'
+<? elseif exists("searchText") ?> 
+  and (false
+  <? if exists("searchNumber") ?> 
+    or ophead_number ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchName") ?> 
+    or ophead_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchNotes") ?> 
+    or ophead_notes ~* <? value("searchText") ?>
+  <? endif ?>
+)
+<? endif ?>
+order by "number"
+<? if exists("fetchLimit") ?>
+limit <? value("fetchLimit") ?>
+<? endif ?>

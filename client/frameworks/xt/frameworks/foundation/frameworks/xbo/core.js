@@ -13,5 +13,3 @@ Xbo = XT.Object.create(
   models: {},
 
 }) ;
-
-XM = Xbo.models;

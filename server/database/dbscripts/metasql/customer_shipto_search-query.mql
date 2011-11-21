@@ -1,0 +1,74 @@
+-- Group: XM.CustomerShiptoSearch
+-- Name:  query
+-- Notes: 
+select 
+  shipto_id as "id",
+  shipto_num as "number",
+  shipto_name as "name",
+  shipto_cust_id as "customer",
+  shipto_active as "isActive"
+<? if not exists("completerText") ?>
+  , cntct_first_name as "contactFirstName",
+  cntct_last_name as "contactLastName",
+  cntct_email as "contactEmail",
+  cntct_phone as "contactPhone",
+  cntct_phone2 as "contactAlternate",
+  cntct_fax as "contactFax",
+  addr_line1 || ' ' || addr_line2 || ' ' || addr_line3 as "addressStreet",
+  addr_city as "addressCity",
+  addr_postalcode as "addressPostalcode",
+  addr_state as "addressState",
+  addr_country as "addressCountry"
+<? endif ?>
+from shiptoinfo
+  left outer join cntct on (shipto_cntct_id = cntct_id)
+  left outer join addr on (shipto_addr_id = addr_id)
+where true 
+<? if exists("customer") ?>
+  and (shipto_cust_id=<? value("customer") ?>)
+<? else ?>
+  and false
+<? endif ?>
+<? if exists("completerText") ?>
+  and shipto_num ~* '^<? literal("completerText") ?>'
+<? elseif exists("searchText") ?> 
+  and (false
+  <? if exists("searchNumber") ?> 
+    or shipto_number ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchName") ?> 
+    or shipto_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchContactName") ?> 
+    or cntct_first_name || ' ' || cntct_last_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchContactPhone") ?> 
+    or cntct_phone || E'\n' || cntct_phone2 || E'\n' || cntct_fax ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchContactEmail") ?> 
+    or cntct_email ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressStreet") ?> 
+    or addr_line1 || E'\n' || addr_line2 || E'\n' || addr_line3 ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressCity") ?> 
+    or addr_city ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressState") ?> 
+    or addr_state ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressCountry") ?> 
+    or addr_country ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressPostalCode") ?> 
+    or addr_postalcode ~* <? value("searchText") ?> 
+  <? endif ?>
+)
+<? endif ?>
+<? if not exists("showInactive") ?>
+  and (shipto_active)
+<? endif ?>
+order by "number"
+<? if exists("fetchLimit") ?>
+limit <? value("fetchLimit") ?>
+<? endif ?>

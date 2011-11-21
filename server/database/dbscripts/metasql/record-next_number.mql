@@ -1,0 +1,4 @@
+-- Group: XM.Record
+-- Name:  nextNumber
+-- Notes: 
+SELECT fetchNextNumber(<? value('numbertype') ?>) as "number";

@@ -15,8 +15,8 @@
   @version 0.1
 */
 
-XM.Record = SC.Record.extend(XT.Logging, {
-/** @scope XM.Record.prototype */
+XM.Record = SC.Record.extend(
+/** @scope XM.Record.prototype */ {
 
   className: 'XM.Record',
 

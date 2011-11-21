@@ -23,3 +23,11 @@ XT = SC.Object.create(
 SC.ready(function() {
   Postbooks.getPath("mainPage.mainPane").append();
 }) ;
+
+XM = SC.Object.create(
+  /** @scope XM.prototype */ {
+
+  NAMESPACE: "XM",
+  VERSION: "4.0.0ALPHA"
+
+}) ;

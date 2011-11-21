@@ -33,7 +33,7 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
     var name = XT.DataSource.nameFromQuery(query);
     if(name === false) return NO;
 
-    if(SC.kindOf(query.recordType, XT.Metasql)) {
+    if(SC.kindOf(query.recordType, XM.Metasql)) {
       var metasqlGroup = query.getPath('recordType.prototype.metasqlGroup');
       var metasqlName = query.getPath('recordType.prototype.metasqlName');
       var name = XT.DataSource.nameFromQuery(query);
@@ -250,9 +250,9 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
  */
 XT.DataSource.typeFromName = function(name) {
   var nameparts = name.split('.'),
-      retval = XT;
+      retval = XM;
 
-  if (nameparts[0] === 'XT') nameparts.shift();
+  if (nameparts[0] === 'XM') nameparts.shift();
   for (i = 0; i < nameparts.length; i++)
   {
     if (nameparts[i] in retval) {
@@ -268,11 +268,11 @@ XT.DataSource.typeFromName = function(name) {
 }
 
 XT.DataSource.nameFromQuery = function(query) {
-  return String(query.recordType.prototype.className).replace(/^XT\./, "");
+  return String(query.recordType.prototype.className).replace(/^XM\./, "");
 }
 
 XT.DataSource.nameFromType = function(type) {
-  return String(type.prototype.className).replace(/^XT\./, "").toLowerCase();
+  return String(type.prototype.className).replace(/^XM\./, "").toLowerCase();
 }
 
 /**
@@ -416,7 +416,7 @@ function urlCreater() {
 XT.DataSource.start = function start() {
   var ds = XT.DataSource;
   ds.log("Starting up");
-  ds.store = XT.Store = XT.Store.create().from(XT.DataSource);
+  ds.store = XT.Store = XT.Store.create().from("XT.DataSource");
   ds.pingServer();
   return YES;
 } ;

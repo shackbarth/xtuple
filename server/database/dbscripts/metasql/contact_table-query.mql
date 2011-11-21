@@ -1,0 +1,101 @@
+-- Group: XM.ContactTable
+-- Name:  query
+-- Notes: 
+
+select distinct on (length(cntct_last_name)=0, length(cntct_first_name)=0, cntct_last_name, cntct_first_name, cntct_number) 
+  cntct_id as "id",
+  cntct_first_name as "contactFirstName",
+  cntct_last_name as "contactLastName",
+  cntct_title as "contactJobTitle",
+  cntct_phone as "contactPhone",
+  cntct_phone2 as "contactAlternate",
+  cntct_fax as "contactFax",
+  cntct_email as "contactPrimaryEmail",
+  cntct_webaddr as "contactWebAddress",
+  crmacct_number as "crmAccountNumber",
+  crmacct_name as "crmAccountName",
+  addr_line1 as "addressLine1"
+<? foreach("char_id_text_list") ?>
+  , charass_alias<? literal("char_id_text_list") ?>.charass_value as char<? literal("char_id_text_list") ?>
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  , charass_alias<? literal("char_id_list_list") ?>.charass_value as char<? literal("char_id_list_list") ?>
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  , charass_alias<? literal("char_id_date_list") ?>.charass_value::date as char<? literal("char_id_date_list") ?>
+<? endforeach ?>
+from cntct 
+  left outer join crmacct on (cntct_crmacct_id=crmacct_id) 
+  left outer join addr on (cntct_addr_id=addr_id) 
+  left outer join cntcteml on (cntcteml_cntct_id=cntct_id)
+<? foreach("char_id_text_list") ?>
+  left outer join charass charass_alias<? literal("char_id_text_list") ?> on ((charass_alias<? literal("char_id_text_list") ?>.charass_target_type='CNTCT') 
+                                                                    and  (charass_alias<? literal("char_id_text_list") ?>.charass_target_id=cntct_id)
+                                                                    and  (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=<? value("char_id_text_list") ?>))
+  left outer join char char_alias<? literal("char_id_text_list") ?> on (charass_alias<? literal("char_id_text_list") ?>.charass_char_id=char_alias<? literal("char_id_text_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_list_list") ?>
+  left outer join charass charass_alias<? literal("char_id_list_list") ?> on ((charass_alias<? literal("char_id_list_list") ?>.charass_target_type='CNTCT') 
+                                                                    and  (charass_alias<? literal("char_id_list_list") ?>.charass_target_id=cntct_id)
+                                                                    and  (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=<? value("char_id_list_list") ?>))
+  left outer join char char_alias<? literal("char_id_list_list") ?> on (charass_alias<? literal("char_id_list_list") ?>.charass_char_id=char_alias<? literal("char_id_list_list") ?>.char_id)
+<? endforeach ?>
+<? foreach("char_id_date_list") ?>
+  left outer join charass charass_alias<? literal("char_id_date_list") ?> on ((charass_alias<? literal("char_id_date_list") ?>.charass_target_type='CNTCT') 
+                                                                    and  (charass_alias<? literal("char_id_date_list") ?>.charass_target_id=cntct_id)
+                                                                    and  (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=<? value("char_id_date_list") ?>))
+  left outer join char char_alias<? literal("char_id_date_list") ?> on (charass_alias<? literal("char_id_date_list") ?>.charass_char_id=char_alias<? literal("char_id_date_list") ?>.char_id)
+<? endforeach ?>
+where true
+<? if exists("activeOnly") ?> 
+  and cntct_active
+<? endif ?>
+<? if exists("searchText") ?>
+  and (
+ (crmacct_number ~* <? value("searchText") ?>)
+  or (crmacct_name ~* <? value("searchText") ?>)
+  or (cntct_first_name || ' ' || cntct_last_name ~* <? value("searchText") ?>)
+  or (cntct_phone || ' ' || cntct_phone2 || ' ' || cntct_fax ~* <? value("searchText") ?>)
+  or (cntcteml_email ~* <? value("searchText") ?>)
+  or (addr_line1 || ' ' || addr_line2 || ' ' || addr_line3 ~* <? value("searchText") ?>)
+  or (addr_city ~* <? value("searchText") ?>)
+  or (addr_state ~* <? value("searchText") ?>)
+  or (addr_postalcode ~* <? value("searchText") ?>)
+  or (addr_country ~* <? value("searchText") ?>)
+)
+<? endif ?>
+<? if exists("id") ?>
+  and (cntct_id=<? literal("id") ?>)
+<? endif ?>
+<? if exists("contact") ?>
+  and (cntct_id=<? value("contact")?>)
+<? endif ?>
+<? if exists("crmAccount") ?>
+  and (crmacct_id=<? value("crmAccount")?>)
+<? endif ?>
+<? if exists("contactNameText") ?>
+  and (cntct_first_name || ' ' || cntct_last_name ~* <? value("contactNameText") ?>)
+<? endif ?>
+<? if exists("contactPhoneText") ?>
+  and (cntct_phone || ' ' || cntct_phone2 || ' ' || cntct_fax ~* <? value("contactPhoneText") ?>)
+<? endif ?>
+<? if exists("contactEmailText") ?>
+  and (cntcteml_email ~* <? value("contactEmailText") ?>)
+<? endif ?>
+<? if exists("addressStreetText") ?>
+  and (addr_line1 || ' ' || addr_line2 || ' ' || addr_line3 ~* <? value("addressStreetText") ?>)
+<? endif ?>
+<? if exists("addressCityText") ?>
+  and (addr_city ~* <? value("addressCityText") ?>)
+<? endif ?>
+<? if exists("addressStateText") ?>
+  and (addr_state ~* <? value("addressStateText") ?>)
+<? endif ?>
+<? if exists("addressPostalcodeText") ?>
+  and (addr_postalcode ~* <? value("addressPostalcodeText") ?>)
+<? endif ?>
+<? if exists("addressCountryText") ?>
+  and (addr_country ~* <? value("countryText") ?>)
+<? endif ?>
+<? literal("charClause") ?>
+order by length(cntct_last_name)=0, length(cntct_first_name)=0, cntct_last_name, cntct_first_name, cntct_number, cntcteml_primary desc;

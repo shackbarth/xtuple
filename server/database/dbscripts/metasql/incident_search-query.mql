@@ -1,0 +1,29 @@
+-- Group: XM.IncidentSearch
+-- Name:  query
+-- Notes: 
+select 
+  incdt_id as "id",
+  incdt_number as "number",
+  incdt_summary as "name",
+  incdt_descrip as "notes"
+from incdt
+where true 
+<? if exists("completerText") ?>
+  and incdt_number::text ~* '^<? literal("completerText") ?>'
+<? elseif exists("searchText") ?> 
+  and (false
+  <? if exists("searchNumber") ?> 
+    or incdt_number ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchName") ?> 
+    or incdt_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchNotes") ?> 
+    or incdt_notes ~* <? value("searchText") ?>
+  <? endif ?>
+)
+<? endif ?>
+order by "number"
+<? if exists("fetchLimit") ?>
+limit <? value("fetchLimit") ?>
+<? endif ?>

@@ -1,0 +1,226 @@
+-- Group: XM.ActivityTable
+-- Name:  query
+-- Notes: 
+select
+  id + altId * .1  as "id",
+  type as "activityType",
+  name as "activityName",
+  active as "activityIsActive",
+  stage as "activityStage",
+  owner as 	"activityOwner",	
+  assigned as "activityAssignedTo",
+  notes as 	"activityNotes",
+  start as "activityStartDate",
+  due as "activityDueDate",
+  priority as "priorityName",
+  seq as "priorityOrder",
+  crmacct_id as "crmAccount",
+  crmacct_number as "crmAccountNumber",
+  crmacct_name as "crmAccountName",
+  parent_id as "parent",
+  parent_type as "parentType",
+  parent_number as "parentNumber",
+  is_cust as "isCustomer",
+  cust as "customer"
+from (
+/*        ---------TO DO-------------- */
+  select todoitem_id as id, 
+         1 as altId, 
+         <? value("todo") ?> as type, 
+         CasT(incdt_number as text) as number,
+         todoitem_name as name,
+         todoitem_active as active,
+         case when (todoitem_status='C') then <? value("complete") ?>
+              when (todoitem_status='D') then <? value("deferred") ?>
+              when (todoitem_status='P') then <? value("pending") ?>
+              when (todoitem_status='I') then <? value("inprocess") ?>
+              when (todoitem_status='N') then <? value("new") ?>
+              else '?'
+         end as stage,
+         incdtpriority_name as priority, 
+         incdtpriority_order as seq,
+         todoitem_owner_username as owner, 
+         todoitem_username as assigned, 
+         firstLine(todoitem_description) as notes, 
+         todoitem_start_date as start, 
+         todoitem_due_date as due, 
+         crmacct_id,
+         crmacct_number, 
+         crmacct_name, 
+         case when (todoitem_ophead_id is not null) then
+           'XM.Opportunity'
+              when (todoitem_incdt_id is not null) then
+           'XM.Incident'
+         end as parent_type,        
+         case when (todoitem_ophead_id is not null) then
+           <? value("opportunity") ?> || '-' || ophead_number
+              when (todoitem_incdt_id is not null) then
+           <? value("incident") ?> || '-' || incdt_number
+         end as parent_number,
+         coalesce(todoitem_ophead_id, todoitem_incdt_id) as parent_id,
+         coalesce(crmacct_cust_id,-1) > 0 as is_cust,
+         crmacct_cust_id as cust
+    from todoitem left outer join incdt on (incdt_id=todoitem_incdt_id) 
+                  left outer join ophead on (ophead_id=todoitem_ophead_id)
+                  left outer join crmacct on (crmacct_id=todoitem_crmacct_id) 
+                  left outer join incdtpriority on (incdtpriority_id=todoitem_priority_id) 
+<? if not exists("todoList")?>
+    where false
+<? endif ?>
+union all
+/*        ---------INCIDENT-------------- */
+  select incdt_id as id, 
+         2 as altId, 
+         <? value("incident") ?> as type, 
+         CasT(incdt_number as text) as number,
+         incdt_summary as name, 
+         incdt_status != 'L' as active,
+         case when (incdt_status='N') then <? value("new") ?>
+              when (incdt_status='F') then <? value("feedback") ?>
+              when (incdt_status='C') then <? value("confirmed") ?>
+              when (incdt_status='A') then <? value("assigned") ?>
+              when (incdt_status='R') then <? value("resolved") ?>
+              when (incdt_status='L') then <? value("closed") ?>
+              else '?'
+         end as stage,
+         incdtpriority_name as priority,
+         incdtpriority_order as seq,
+         incdt_owner_username as owner, 
+         incdt_assigned_username as assigned,
+         firstLine(incdt_descrip) as notes, 
+         CasT(incdt_timestamp as date) as start, 
+         null as due, 
+         crmacct_id,
+         crmacct_number, 
+         crmacct_name,
+         '' as parent_type,
+         '' as parent_number,
+         null as parent_id,
+         coalesce(crmacct_cust_id,-1) > 0 as is_cust,
+         coalesce(crmacct_cust_id,-1) as cust
+    from incdt left outer join crmacct on (crmacct_id=incdt_crmacct_id) 
+               left outer join cust on (cust_id=crmacct_cust_id) 
+               left outer join incdtpriority on (incdtpriority_id=incdt_incdtpriority_id) 
+<? if not exists("incidents")?>
+    where false
+<? endif ?>
+union all
+/*        ---------PROJECT TASK-------------- */
+    select prjtask_id as id, 
+           3 as altId, 
+           <? value("task") ?> as type,
+           prjtask_number as number,
+           prjtask_name as name, 
+           prjtask_status != 'C' as active,
+           case when (prjtask_status='P') then <? value("concept") ?>
+                when (prjtask_status='O') then <? value("inprocess") ?>
+                when (prjtask_status='C') then <? value("complete") ?>
+                else '?'
+           end as stage,
+           null as priority, 
+           null as seq, 
+           prjtask_owner_username as owner, 
+           prjtask_username as assigned, 
+           firstLine(prjtask_descrip) as notes, 
+           prjtask_start_date as start, 
+           prjtask_due_date as due, 
+           null as crmacct_id,
+           '' as crmacct_number, 
+           '' as crmacct_name,
+           'PRJ' as parent_type,
+           <? value("project") ?> || '-' || prj_number as parent_number,
+           prjtask_prj_id as parent_id,
+           false as is_cust, 
+           null as cust
+      from prjtask 
+       join prj on (prj_id=prjtask_prj_id)
+<? if not exists("projects")?>
+    where false
+<? endif ?>
+union all
+/*        ---------PROJECT-------------- */
+    select prj_id as id, 
+           4 as altId, 
+           <? value("project") ?> as type,
+           prj_number as number,
+           prj_name as name, 
+           prj_status != 'C' as active,
+           case when (prj_status='P') then <? value("concept") ?>
+                when (prj_status='O') then <? value("inprocess") ?>
+                when (prj_status='C') then <? value("complete") ?>
+                else '?'
+           end as stage,
+           null as priority, 
+           null as seq,
+           prj_owner_username as owner, 
+           prj_username as assigned,
+           firstLine(prj_descrip) as notes, 
+           prj_start_date as start, 
+           prj_due_date as due, 
+           null as crmacct_id,
+           '' as crmacct_number, 
+           '' as crmacct_name,
+           '' as parent_type,
+           '' as parent_number,
+           null as parent_id,
+           false as is_cust, 
+           null as cust
+      from prj 
+<? if not exists("projects")?>
+    where false
+<? endif ?>
+union all
+/*        ---------OPPORTUNITY-------------- */
+  select ophead_id as id, 
+         5 as altId, 
+         <? value("opportunity") ?> as type, 
+         ophead_number as number,
+         ophead_name as name, 
+         ophead_active as active,
+         opstage_descrip as stage,         
+         incdtpriority_name as priority, 
+         incdtpriority_order as seq,
+         ophead_owner_username as owner, 
+         ophead_username as assigned, 
+         firstLine(ophead_notes) as notes, 
+         ophead_start_date as start, 
+         ophead_target_date as due, 
+         crmacct_id,
+         crmacct_number, 
+         crmacct_name, 
+         '' as parent,
+         '' as parent_number,
+         null as parent_id,
+         coalesce(crmacct_cust_id,-1) > 0 as is_cust,
+         crmacct_cust_id as cust
+    from ophead join opstage on (ophead_opstage_id=opstage_id)
+                left outer join crmacct on (crmacct_id=ophead_crmacct_id) 
+                left outer join incdtpriority on (incdtpriority_id=ophead_priority_id) 
+<? if not exists("opportunities")?>
+    where false
+<? endif ?>
+) data
+where (true)
+  <? if exists("startStartDate") ?>
+  and (start =< <? value("startStartDate") ?>)
+  <? endif ?>
+  <? if exists("startEndDate") ?>
+  and (start >= <? value("startEndDate") ?>)
+  <? endif ?>
+  <? if exists("dueStartDate") ?>
+  and (due <= <? value("dueStartDate") ?>)
+  <? endif ?>
+  <? if exists("dueEndDate") ?>
+  and (due >= <? value("dueEndDate") ?>)
+  <? endif ?>
+  <? if exists("crmAccount") ?>
+  and (crmacct_id =<? value("crmAccount") ?>)
+  <? endif ?>
+  <? if not exists("isCompleted") ?>
+  and (active)			
+  <? endif ?>
+  <? if exists("user") ?> 
+  and (owner=<? value("user") ?> or assigned=<? value("user") ?>) 
+  <? elseif exists("userText") ?>
+  and (owner ~ <? value("userText") ?> or assigned ~ <? value("userText") ?>) 
+  <? endif ?>

@@ -1,0 +1,31 @@
+-- Group: XM.ProjectTable
+-- Name:  query
+-- Notes: 
+select
+  prj_id as "id", 
+  prj_number as "projectNumber", 
+  prj_name as "projectName",
+  prj_start_date as "projectStartDate", 
+  prj_due_date as "projectDueDate", 
+  prj_assigned_date as "projectAssignDate",
+  prj_completed_date as "projectCompleteDate", 
+  case when(prj_status='P') then <? value("planning") ?>
+       when(prj_status='O') then <? value("open") ?>
+       when(prj_status='C') then <? value("complete") ?>
+       ELSE <? value("undefined") ?>
+  end as "projectStatus", 
+  prj_username as "projectAssignedTo", 
+  coalesce(sum(prjtask_hours_budget), 0.0) as "projectBudgetedHours",
+  coalesce(sum(prjtask_hours_actual), 0.0) as "projectActualHours",
+  coalesce(sum(prjtask_hours_budget - prjtask_hours_actual), 0.0) as "projectBalanceHours"
+from prj
+left outer join prjtask ON (prj_id=prjtask_prj_id)
+<? if not exists("showComplete") ?>
+where (prj_status <> 'C')
+<? endif ?>
+<? if exists("id") ?>
+  and (prj_id=<? value("id") ?>)
+<? endif ?>
+group by prj_id, prj_number, prj_name, prj_status, prj_username,
+  prj_start_date, prj_due_date, prj_assigned_date, prj_completed_date
+order by prj_number;

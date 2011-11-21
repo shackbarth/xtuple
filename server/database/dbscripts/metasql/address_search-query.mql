@@ -1,0 +1,50 @@
+-- Group: XM.AddressSearch
+-- Name:  query
+-- Notes: 
+select 
+  addr_id as "id",
+  addr_active as "addressIsActive",
+  addr_line1 || ' ' || addr_line2 || ' ' || addr_line3 as "addressStreet",
+  addr_city as "addressCity",
+  addr_postalcode as "addressPostalcode",
+  addr_state as "addressState",
+  addr_country as "addressCountry",
+  coalesce(length(addr_country) = 0, false) as "noAddressCountry", 
+  coalesce(length(addr_state) = 0, false) as "noAddressState",
+  coalesce(length(addr_city) = 0, false) as "noAddressCity",
+  coalesce(length(addr_line1 || addr_line2 || addr_line3) = 0, false) as "noAddressStreet",
+  rtrim(ltrim(array(select crmacct_id from address where address.addr_id = addr.addr_id and crmacct_id != -1)::text,'{'),'}') as "crmAccounts"
+<? if exists("crmAccount") ?> 
+from address addr
+where (crmacct_id = <? value('crmAccount') ?>)
+<? else ?>
+from addr
+where true
+<? endif ?>
+<? if exists("searchText") ?> 
+ and (false
+  <? if exists("searchStreet") ?> 
+    or addr_line1 || E'\n' || addr_line2 || E'\n' || addr_line3 ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchCity") ?> 
+    or addr_city ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchState") ?> 
+    or addr_state ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchCountry") ?> 
+    or addr_country ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchPostalCode") ?> 
+    or addr_postalcode ~* <? value("searchText") ?> 
+  <? endif ?>
+)
+<? endif ?>
+<? if not exists("showInactive") ?>
+  and (addr_active)
+<? endif ?>
+order by 
+  "noAddressCountry", "addressCountry", 
+  "noAddressState", "addressState", 
+  "noAddressCity", "addressCity", 
+  "noAddressStreet", "addressStreet"

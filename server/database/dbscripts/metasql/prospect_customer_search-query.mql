@@ -1,0 +1,71 @@
+-- Group: XM.ProspectCustomerSearch
+-- Name:  query
+-- Notes: 
+select 
+  prspctcust_id as "id",
+  prspctcust_number as "number",
+  prspctcust_name as "name"
+<? if not exists("completerText") ?>
+  , prspctcust_active as "isActive",
+  cntct_first_name as "contactFirstName",
+  cntct_last_name as "contactLastName",
+  cntct_email as "contactEmail",
+  cntct_phone as "contactPhone",
+  cntct_phone2 as "contactAlternate",
+  cntct_fax as "contactFax",
+  addr_line1 || ' ' || addr_line2 || ' ' || addr_line3 as "addressStreet",
+  addr_city as "addressCity",
+  addr_postalcode as "addressPostalcode",
+  addr_state as "addressState",
+  addr_country as "addressCountry"
+<? endif ?>
+from xt.prspctcust
+  left outer join cntct on (prspctcust_cntct_id = cntct_id)
+  left outer join addr on (cntct_addr_id = addr_id)
+where true 
+<? if exists("isProspect") ?>
+  and (NOT prspctcust_cust)
+<? endif ?>
+<? if exists("completerText") ?>
+  and prspctcust_number ~* '^<? literal("completerText") ?>'
+<? elseif exists("searchText") ?> 
+  and (false
+  <? if exists("searchNumber") ?> 
+    or prspctcust_number ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchName") ?> 
+    or prspctcust_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchContactName") ?> 
+    or cntct_first_name || ' ' || cntct_last_name ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchContactPhone") ?> 
+    or cntct_phone || E'\n' || cntct_phone2 || E'\n' || cntct_fax ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchContactEmail") ?> 
+    or cntct_email ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressStreet") ?> 
+    or addr_line1 || E'\n' || addr_line2 || E'\n' || addr_line3 ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressCity") ?> 
+    or addr_city ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressState") ?> 
+    or addr_state ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressCountry") ?> 
+    or addr_country ~* <? value("searchText") ?>
+  <? endif ?>
+  <? if exists("searchAddressPostalCode") ?> 
+    or addr_postalcode ~* <? value("searchText") ?> 
+  <? endif ?>
+)
+<? endif ?>
+<? if not exists("showInactive") ?>
+ and prspctcust_active
+<? endif ?>
+order by "number"
+<? if exists("fetchLimit") ?>
+limit <? value("fetchLimit") ?>
+<? endif ?>

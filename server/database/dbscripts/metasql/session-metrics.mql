@@ -1,0 +1,7 @@
+-- Group: XM.session
+-- Name:  metrics
+-- Notes: The list of system settings.
+select 
+  metric_name as metric, 
+  metric_value as value
+from metric
