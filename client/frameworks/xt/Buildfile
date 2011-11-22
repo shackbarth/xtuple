@@ -13,6 +13,7 @@ config :all,
 	}
 	
 config :xt,
+	:required => [ :plugin, :xbo, :table ],
 	:deferred_modules => deferred,
 	:inlined_modules => inlined,
     :prefetched_modules => prefetched

@@ -140,7 +140,7 @@ def write_loadable_manifest(deferred, prefetched, inlined, base_path)
   js = []
 
   # the effective path to the generated file
-  file_path = base_path + "frameworks/foundation/frameworks/system/__loadable_manifest.js" 
+  file_path = base_path + "frameworks/foundation/__loadable_manifest.js" 
 
   # test to see if the file already exists
   begin; raise OverwriteLoadableManifest unless !File.exists?(file_path)
@@ -168,10 +168,11 @@ def write_loadable_manifest(deferred, prefetched, inlined, base_path)
 end # write the loadable manifest
 
 
-# SPECIAL COMMENT
+# SPECIAL COMMENT =====================================================
 # THESE HAVE BEEN SEPARATED FOR A REASON! WE NEED THE ABILITY TO DEAL
-# WITH THE DIFFERENTLY IN THE FUTURE EVEN THOUGH THEY LOOK DAMN NEAR
+# WITH THEM DIFFERENTLY IN THE FUTURE EVEN THOUGH THEY LOOK DAMN NEAR
 # IDENTICAL NOW. LEAVE THAT ALONE!
+# =====================================================================
 
 
 # =====================================================================
@@ -191,16 +192,16 @@ def generate_deferred_entries(js, collection)
     {
     eos
     loadable.each_pair do |k,v|
-      v = "\"#{v}\"" unless v == "YES"
+      v = normalize_type v
       js.push(<<-eos)
       #{k}: #{v},
       eos
     end
     js.push(<<-eos)
-      module: "xt/#{loadable["name"].downcase}"
+      module: "xt/#{loadable['name'].downcase}"
     },
     eos
-    _collection.push(loadable["name"].downcase)
+    _collection.push(loadable['name'].downcase)
   end
   js.push(<<-eos)
   ],
@@ -225,15 +226,16 @@ def generate_prefetched_entries(js, collection)
     {
     eos
     loadable.each_pair do |k,v|
+      v = normalize_type v
       js.push(<<-eos)
-      #{k}: "#{v}",
+      #{k}: #{v},
       eos
     end
     js.push(<<-eos)
-      module: "xt/#{loadable["name"].downcase}"
+      module: "xt/#{loadable['name'].downcase}"
     },
     eos
-    _collection.push(loadable["name"].downcase)
+    _collection.push(loadable['name'].downcase)
   end
   js.push(<<-eos)
   ],
@@ -258,20 +260,49 @@ def generate_inlined_entries(js, collection)
     {
     eos
     loadable.each_pair do |k,v|
+      v = normalize_type v
       js.push(<<-eos)
-      #{k}: "#{v}",
+      #{k}: #{v},
       eos
     end
     js.push(<<-eos)
-      module: "xt/#{loadable["name"].downcase}"
+      module: "xt/#{loadable['name'].downcase}"
     },
     eos
-    _collection.push(loadable["name"].downcase)
+    _collection.push(loadable['name'].downcase)
   end
   js.push(<<-eos)
   ],
   eos
   collection.replace _collection
+end
+
+# =====================================================================
+# Try to determine what the data type is and what it should be when
+# generating SC JavaScript code
+# =====================================================================
+def normalize_type(data)
+  
+  # everything interpreted from the file will be of type String in ruby
+  # so we have to actually explicity look for certain things to be able
+  # to determine what we need
+  # this process does not nor should it be any type of true parser we
+  # are only using this with entries for options we KNOW we support
+  # and care about
+  case data
+    when /YES/i, /NO/i
+      data = data.upcase
+    when /\A(t|true)\z/i
+      data = "YES"
+    when /\A(f|false)\z/i
+      data = "NO"
+    
+    # this is the default to wrap whatever it is in quotes so that it will
+    # be interpreted as a string in JavaScript
+    else
+      data = "\"#{data}\""
+  end
+  return data
 end
 
 # =====================================================================

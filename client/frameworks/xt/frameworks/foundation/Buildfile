@@ -1,3 +1,1 @@
 
-config :foundation,
-	:required => [ :system, :xbo, :plugin, :table ]

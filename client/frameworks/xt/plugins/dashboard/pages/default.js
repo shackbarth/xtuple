@@ -17,7 +17,9 @@ Plugin.pages.dashboard = Plugin.Page.create(
     classNames: "dashboard".w(),
     childViews: "pluginMenu ".w(),
     
-    pluginMenu: XT.Table.design()
+    pluginMenu: XT.Table.design({
+      query: XM.ContactTable,
+    })
     // pluginMenu: XT.AnimationView.design({
     //   layout: { height: 50, width: 240, top: 50, centerX: 0 },
     //   classNames: "plugin-menu".w(),

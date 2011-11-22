@@ -9,4 +9,12 @@ $theme.xt-table {
   .no-content {
     padding: 20px 20px;
   }
+  
+  .row {
+    padding: 5px;
+    
+    .column {
+      display: inline-block;
+    }
+  }
 }

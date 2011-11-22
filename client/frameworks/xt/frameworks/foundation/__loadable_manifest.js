@@ -18,14 +18,14 @@ XT.__LOADABLEINFO__ = {
       name: "Dashboard",
       load: "deferred",
       type: "plugin",
-      menu: "no",
+      menu: NO,
       module: "xt/dashboard"
     },
     {
       name: "Login",
       load: "deferred",
       type: "plugin",
-      menu: "no",
+      menu: NO,
       module: "xt/login"
     },
     {
@@ -134,7 +134,7 @@ XT.__LOADABLEINFO__ = {
       name: "Dev",
       load: "inlined",
       type: "plugin",
-      menu: "no",
+      menu: NO,
       module: "xt/dev"
     },
   ],
