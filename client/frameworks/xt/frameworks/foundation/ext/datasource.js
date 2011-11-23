@@ -36,7 +36,7 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
     if(SC.kindOf(query.recordType, XM.Metasql)) {
       var metasqlGroup = query.getPath('recordType.prototype.metasqlGroup');
       var metasqlName = query.getPath('recordType.prototype.metasqlName');
-      var name = XT.DataSource.nameFromQuery(query);
+      // var name = XT.DataSource.nameFromQuery(query);
       if(metasqlGroup === null || metasqlName === null) return NO;
       SC.Request.postUrl(XT.DataSource.buildURL("metasql",
                                                 metasqlGroup, metasqlName))
@@ -53,7 +53,7 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
     // console.log("XT.Store.fetch");
     // console.log(query);
 
-    SC.Request.getUrl(XT.DataSource.buildURL(query))
+    SC.Request.getUrl(XT.DataSource.buildURL("XT.%@".fmt(name)))
       .header({'Accept': 'application/json'}).json()
       .notify(this, 'didFetchData', store, query, name)
       .send();

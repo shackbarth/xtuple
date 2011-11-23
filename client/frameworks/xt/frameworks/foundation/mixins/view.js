@@ -31,6 +31,52 @@ XT.ViewMixin = {
       );
     }
   },
+  
+  /** @private */
+  _xt_notifyDidAppend: function() {
+    
+    // since many child views may be adjusting based on our
+    // current state, go ahead and start a top-down chain
+    // so we respond first then notify the children 
+    if(this.xtDidAppend && SC.typeOf(this.xtDidAppend) === SC.T_FUNCTION)
+      this.xtDidAppend();
+    
+    // go ahead and let all of the children know
+    var cvs = this.get("childViews"), i=0;
+    if(!cvs || cvs.length <= 0) return;
+    for(; i<cvs.length; ++i) {
+      if(!cvs[i]) continue;
+      if(cvs[i]._xt_notifyDidAppend)
+        cvs[i]._xt_notifyDidAppend();
+      else this.warn(
+        ("childView %@ is not an XT.View, consider overloading the view-type " +
+        "so it can make use of the abstraction layer. This is highly recommended " +
+        "and in some cases, required.").fmt(cvs[i])
+      );
+    }
+  },
+  
+  /** @private */
+  _xt_notifyDidRemove: function() {
+    
+    if(this.xtDidRemove && SC.typeOf(this.xtDidRemove) === SC.T_FUNCTION)
+      this.xtDidRemove();
+    
+    // go ahead and let all of the children know
+    var cvs = this.get("childViews"), i=0;
+    if(!cvs || cvs.length <= 0) return;
+    for(; i<cvs.length; ++i) {
+      if(!cvs[i]) continue;
+      if(cvs[i]._xt_notifyDidRemove)
+        cvs[i]._xt_notifyDidRemove();
+      else this.warn(
+        ("childView %@ is not an XT.View, consider overloading the view-type " +
+        "so it can make use of the abstraction layer. This is highly recommended " +
+        "and in some cases, required.").fmt(cvs[i])
+      );
+    }
+    
+  },
 
   /** @private */
   _xt_collectAnimationEvents: function(fill) {

@@ -1,0 +1,16 @@
+
+$theme.xt-table {
+  .row {
+    .column {
+      &.contact-col1 {
+        width: 300px;
+      }
+      &.contact-col2 {
+        width: 200px;
+      }
+      &.contact-col3 {
+        width: 150px;
+      }
+    }
+  }
+}

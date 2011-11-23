@@ -9,8 +9,11 @@ XT.RowTemplate = XT.TemplateView.extend(
 
   templateName: "default_row",
   
-  _content: function() {
-    this.log("My content changed! => %@".fmt(this.getPath("content.storeKey")));
-  }.observes("*content"),
+  click: function() {
+    this.get("table").select(this);
+    return YES;
+  },
+  
+  isSelected: NO
     
 }) ;

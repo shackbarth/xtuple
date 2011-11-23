@@ -13,6 +13,16 @@ XT.View = SC.View.extend(XT.ViewMixin,
   xtWillAppend: function() {
     this.log("xtWillAppend!");
   },
+  
+  /** @public */
+  xtDidAppend: function() {
+    this.log("xtDidAppend!");
+  },
+  
+  /** @public */
+  xtDidRemove: function() {
+    this.log("xtDidRemove!");
+  },
 
   // /** @private */
   // _xt_notifyWillAppend: function() {

@@ -6,8 +6,8 @@ sc_require("delegates/table_delegate");
 /** @class
 
 */
-XT.Table = XT.View.extend(
-  SC.SelectionSupport, XT.TableDelegate,
+XT.Table = XT.AnimationView.extend(
+  XT.TableDelegate, CS.CScroll,
   /** @scope XT.Table.prototype */ {
 
   //...........................................
@@ -90,6 +90,13 @@ XT.Table = XT.View.extend(
 
   /** @property */
   layout: { top: 0, left: 0, right: 0, bottom: 0 },
+  
+  /** @property
+    XT.Table only supports single selection. To use multiple selection
+    you would have to use XT.StandardTable to do multi-row modifications
+    or adjustments.
+  */
+  allowsMultipleSelection: NO,
 
   //............................................
   // Computed Properties
@@ -118,6 +125,9 @@ XT.Table = XT.View.extend(
   // Private Properties
   //
 
+  /** @property */
+  displayProperties: "selection".w(),
+
   //............................................
   // Private Methods
   //
@@ -133,6 +143,47 @@ XT.Table = XT.View.extend(
         break;
     }
     this.replaceLayer();
+  },
+  
+  /** @private */
+  select: function(row) {
+    var c = this.get("controller"), cs;
+    cs = c.getPath("selection.firstObject");
+    if(cs) cs.set("isSelected", NO);
+    c.selectObject(row);
+    
+    // @todo This needs to be revisited because it should
+    //  be telling the update delegate exactly what changed
+    //  since it should also be working on adding content
+    //  in the future without rerendering the entire table
+    this.updateLayer();
+  },
+  
+  /** @private */
+  xtWillAppend: function() {
+    sc_super();
+  },
+  
+  /** @private */
+  xtDidAppend: function() {
+    if(isNaN(this._cs_original_offset))
+      this._cs_original_offset = this.offset();
+    this._registerForScrolling();
+  },
+  
+  /** @private */
+  xtDidRemove: function() {
+    this._cs_unregister();
+  },
+  
+  /** @private */
+  didCreateLayer: function() {
+    this._registerForScrolling();
+  },
+  
+  /** @private */
+  _registerForScrolling: function() {
+    this._cs_register();
   },
   
   //............................................
@@ -157,6 +208,7 @@ XT.Table = XT.View.extend(
     //  but for now it is just rerendering the entire table
     this.replaceLayer();
   }.observes("*content.length"),
+
 
   
 }) ;

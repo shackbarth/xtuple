@@ -11,7 +11,10 @@ Plugin.pages.crm = Plugin.Page.create(
     classNames: "crm-container".w(),
     childViews: "contacts".w(),
       
-      contacts: XT.View.design(), 
+      contacts: XT.Table.design({
+        query: XM.ContactTable,
+        rowTemplate: "contact_row"
+      })
 
 
       }) // defaultView

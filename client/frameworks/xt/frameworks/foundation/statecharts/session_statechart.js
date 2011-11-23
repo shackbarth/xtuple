@@ -53,7 +53,8 @@ XT.SessionStatechart = XT.Statechart.extend(
         as the user-input as it is currently.
       */
       tryToLogin: function() {
-        this.gotoState("LOGGINGIN");
+        if(XT.DataSource.get("serverIsAvailable"))
+          this.gotoState("LOGGINGIN");
       }.handleEvents("submit"),
 
       LOGGINGIN: XT.TaskState.design({

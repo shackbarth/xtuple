@@ -101,7 +101,7 @@ XT.Session = XT.Object.create(
       
       if(v.sid) {
         XT.MessageController.set("loadingStatus", "_usePrevSession".loc());
-        this.invokeLater(function() { s.sendEvent("submit"); }, 2000);
+        this.invokeLater(function() { s.sendEvent("submit"); }, 1000);
       }
     } else { return s.sendEvent("needSession"); }
     

@@ -151,6 +151,8 @@ CS.CScroll = {
   //.........................................
   //  Default Properties
   //
+  
+  _cs_isRegistered: NO,
 
   //.........................................
   // Computed Properties
@@ -168,6 +170,8 @@ CS.CScroll = {
     
     // if in error state do nothing
     if(this._cs_error_state) return;
+    
+    if(this._cs_isRegistered) return;
 
     var events = this._cs_events, self = this,
       dom = dom ? this.$(dom)[ 0 ] : events.target();
@@ -188,6 +192,8 @@ CS.CScroll = {
 
     // register the resize event on the window
     events.add(window, events.resize, events.handler, this._cs_capture ? true : false);
+    
+    this._cs_isRegistered = YES;
   },
 
   /** @public
@@ -209,6 +215,8 @@ CS.CScroll = {
 
     // unregister the resize event on the window
     events.remove(window, events.resize, events.handler, this._cs_capture ? true : false);
+    
+    this._cs_isRegistered = NO;
   },
 
   //.........................................
@@ -221,7 +229,7 @@ CS.CScroll = {
     // what type of browser do we have
     var browser = this._cs_keys_for(jQuery.browser)[ 0 ], self = this;
 
-    this.msg("found to be browser type => %@".fmt(browser), YES);
+    this.warn("found to be browser type => %@".fmt(browser));
 
     // store this info for later
     this._cs_browser_type = browser;
@@ -237,7 +245,9 @@ CS.CScroll = {
 
     // try and grab the necessary target element to scroll
     this._cs_events.target = function() {
-      return self.$("#" + self.get("scrollTarget"))[ 0 ];
+      var t = self.get("scrollTarget");
+      return self.$(t)[0];
+      //return self.$("#" + self.get("scrollTarget"))[ 0 ];
     };
 
   },
@@ -329,7 +339,6 @@ CS.DEFAULT_HANDLER_UP = function(delta) {
   var events = this._cs_events, elem = events.target(),
     offset = this.offset();
 
-
   // calculate the vertical value of the bottom of the parent container
   // to determine whether or not we can scroll
   var floor = this.parentBottom();
@@ -339,27 +348,31 @@ CS.DEFAULT_HANDLER_UP = function(delta) {
 
   var height = this.height(), bottom = this.bottom();
 
-  // this.msg("delta => %@ offset => %@ floor => %@ height => %@ bottom => %@ original => %@".fmt(
-  //   delta, offset, floor, height, bottom, this._cs_original_offset), YES);
+  // this.log("delta => %@ offset => %@ floor => %@ height => %@ bottom => %@ original => %@".fmt(
+  //    delta, offset, floor, height, bottom, this._cs_original_offset), YES);
 
   // if the bottom is greater than the floor value, allow the scroll
-  if(bottom > floor)
+  if(bottom > floor) {
 
-    if((delta + offset + height) < floor)
+    if((delta + offset + height) < floor) {
       
       // arbitrarily move it so it is at the bottom
       // elem.style.top = (floor - height) + "px";
       this.scrollTo(floor - height);
+    }
 
-    else
+    else {
 
       // move the top to the new location
       // elem.style.top = (delta + offset) + "px";
       this.scrollTo(delta + offset);
+    }
+  }
 
 };
 
 CS.DEFAULT_HANDLER_DOWN = function(delta) {
+
 
   // grab the original offset for comparitive purposes
   var events = this._cs_events, _orig = this._cs_original_offset,
@@ -367,6 +380,8 @@ CS.DEFAULT_HANDLER_DOWN = function(delta) {
 
   // if the offset is less than the original offset, we can scroll until
   // they are equal
+  
+  // this.log("original offset => %@".fmt(_orig));
 
   if(offset < _orig)
 

@@ -1,15 +1,26 @@
-{{#bind "content"}}
-<div class="row" {{bindAttr skid="storeKey"}}>
-  
-  <!-- BEGIN COLUMNS -->
-  
-  <div class="column">
-    {{contactName}}
-    {{crmAccountName}}
-    {{contactJobTitle}}
-  </div>
-  
-  <!-- END COLUMNS   -->
-  
+<div class="row">
+	{{#bind "content" tagName="div"}}
+	<div class="sub" {{bindAttr skid="storeKey"}}>
+	  
+	  <!-- BEGIN COLUMNS -->
+	  
+	  <div class="column contact-col1">
+	    <div class="field">{{contactName}}</div>
+	    <div class="field">{{crmAccountName}}</div>
+	    <div class="field">{{contactJobTitle}}</div>
+	  </div>
+	
+		<div class="column contact-col2">
+			<div class="field">{{contactPrimaryEmail}}</div>
+		</div>
+		
+		<div class="column contact-col3">
+			<div class="field">{{addressCity}}</div>
+			<div class="field">{{addressState}}</div>
+		</div>
+	  
+	  <!-- END COLUMNS   -->
+	  
+	</div>
+	{{/bind}}
 </div>
-{{/bind}}

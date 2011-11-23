@@ -44,7 +44,6 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     to animate it properly. Executes an asynchronous task.
   */
   append: function() {
-    console.warn("%@ is about to be appended".fmt(this.get("pluginName")));
     this._xt_notifyWillAppend();
 
     // this allows us to bind to the size of the current base pane
@@ -71,9 +70,7 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     to animate it properly. Executes an asynchronous task.
   */
   remove: function(direction) {
-    console.warn("%@ is about to be removed".fmt(this.get("pluginName")));
     var bind = this._xt_basePaneFrameBinding;
-    console.log(bind);
     if(bind) bind.disconnect();
 
     var self = this;
@@ -144,6 +141,10 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
     // when the transition ends from being removed, invoke this
     // asynchronous cleanup method
     if(!this.isShowing) this.invokeLater(this._xt_cleanup, 10);
+    
+    // we know that we are done now with being appended, let everyone
+    // now we're in the DOM now
+    else this.invokeLater(this._xt_notifyDidAppend, 100);
   },
   
   /** @private */
@@ -183,6 +184,7 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
 
   /** @private */
   _xt_cleanup: function() {
+    this._xt_notifyDidRemove();
     XT.BASE_PANE.removeChild(this);
   },
 

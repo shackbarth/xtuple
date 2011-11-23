@@ -84,6 +84,17 @@ XT.TableController = XT.ArrayController.extend(
     if(this._contentBindingToTable)
       this._contentBindingToTable.disconnect();
     this._contentBindingToTable = null;
+  },
+  
+  /** @private
+    Selection support is a part of array controllers. If selectObject
+    is called it will forward the request to selectObjects so this is
+    a single place to intercept and add this additional tidbit of functionality.
+  */
+  selectObjects: function() {
+    sc_super();
+    this.getPath("selection.firstObject").set("isSelected", YES);
+    return this;
   }
 
 }) ;

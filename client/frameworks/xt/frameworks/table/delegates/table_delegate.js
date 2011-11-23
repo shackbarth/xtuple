@@ -35,6 +35,11 @@ XT.TableDelegate = {
   },
 
   /** @private */
+  scrollTarget: function() {
+    return "#"+this.get("tableId")+"-container";
+  }.property("tableId").cacheable(),
+
+  /** @private */
   render: function(context) {
     
     var content = this.get("content"),
@@ -79,7 +84,19 @@ XT.TableDelegate = {
 
   /** @private */
   update: function(jquery) {
-    this.warn("I'm in update?");
+ 
+    //.........................
+    // SELECTION
+    //
+    
+    {
+      $(".selected", jquery).each(function(d, sub) { $(sub).removeClass("selected"); });
+      var skid = this.getPath("controller.selection.firstObject.content.storeKey");
+      if(skid) {
+        var row = $("div[skid='"+skid+"']");
+        if(row && !$(row).hasClass("selected")) row.addClass("selected");
+      }
+    }
   },
   
   /** @private */
@@ -88,9 +105,9 @@ XT.TableDelegate = {
         tn = this.get("rowTemplate"),
         cvs = this.get("childViews");
     if(cvs && cvs[i]) return cvs[i].set("content", content);
-    tc = this.createChildView(tc, { templateName: tn, content: content });
+    tc = this.createChildView(tc, { templateName: tn, content: content, table: this });
     tc.render(context);
-  }
+  },
     
 } ;
 

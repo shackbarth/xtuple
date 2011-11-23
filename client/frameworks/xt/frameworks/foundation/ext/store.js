@@ -57,7 +57,7 @@ XT.Store = SC.Store.extend(XT.Logging,
     }
 
     return sc_super();
-  }
+  },
 
 });
 

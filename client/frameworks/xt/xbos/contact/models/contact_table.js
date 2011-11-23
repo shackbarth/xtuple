@@ -6,8 +6,6 @@
 
 XM.ContactTable = XM.Metasql.extend({
   className: 'XM.ContactTable',
-
-  // THIS WASN'T UPDATED!!!!
   metasqlGroup: 'XM.ContactTable',
   metasqlName: 'query'
 });
