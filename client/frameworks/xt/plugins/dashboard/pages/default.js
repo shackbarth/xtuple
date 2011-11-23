@@ -19,6 +19,7 @@ Plugin.pages.dashboard = Plugin.Page.create(
     
     pluginMenu: XT.Table.design({
       query: XM.ContactTable,
+      rowTemplate: "contact_row"
     })
     // pluginMenu: XT.AnimationView.design({
     //   layout: { height: 50, width: 240, top: 50, centerX: 0 },

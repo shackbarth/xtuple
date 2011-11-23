@@ -94,9 +94,17 @@ XT.Session = XT.Object.create(
 
     //if(!v || SC.none(v) || !v.sid) 
     //  return s.sendEvent("needSession");
-    this.set("_username", v.username);
 
-    return s.sendEvent("needSession");
+    if(v.username) {
+      this.set("_username", v.username);
+      s.sendEvent("needSession");
+      
+      if(v.sid) {
+        XT.MessageController.set("loadingStatus", "_usePrevSession".loc());
+        this.invokeLater(function() { s.sendEvent("submit"); }, 2000);
+      }
+    } else { return s.sendEvent("needSession"); }
+    
   },
 
   /** @private */
@@ -124,7 +132,7 @@ XT.Session = XT.Object.create(
     // since there server cannot yet do this we must pretend
     setTimeout(function() {
       self.statechart.sendEvent("success"); 
-    }, 2000);
+    }, 1000);
   },
 
   /** @private */
@@ -147,7 +155,7 @@ XT.Session = XT.Object.create(
     SC.Request.postUrl(XT.DataSource.buildURL("functor"))
       .header({ "Accept": "application/json" }).json()
       .notify(this, "_receivedSessionResponse")
-      .timeoutAfter(300)
+      .timeoutAfter(1000)
       .send(json);
 
     return YES;

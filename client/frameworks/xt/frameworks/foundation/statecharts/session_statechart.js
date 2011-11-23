@@ -76,7 +76,7 @@ XT.SessionStatechart = XT.Statechart.extend(
             args: "loginBlock-login",
             complete: function() { return YES; } },
           { method: function() { 
-            this.invokeLater(function() { XT.Session.statechart.sendEvent("loginSet"); }, 2000); 
+            this.invokeLater(function() { XT.Session.statechart.sendEvent("loginSet"); }, 1000); 
             return YES; } },
           { hold: "loginSet" },
           { status: {

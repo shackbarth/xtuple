@@ -228,7 +228,7 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   pingServer: function() {
     SC.Request.postUrl(XT.DataSource.buildURL("functor"))
       .notify(this, "pingResponse").json()
-      .timeoutAfter(150)
+      .timeoutAfter(1000)
       .send({ name: "XT.PingFunctor" });
   },
 
