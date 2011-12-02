@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd lib; node main.js $@
+node ./lib/main.js $@
 
 exit 0

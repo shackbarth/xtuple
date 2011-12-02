@@ -1,0 +1,9 @@
+{
+	"user": "cole",
+	"port": 5432,
+	"password": "cole",
+	"database": "dev",
+	"host": "localhost",
+	"debug": "true",
+	"server-port": 7000
+}
