@@ -146,7 +146,8 @@ SELECT *
 
 -- used to exercise the update rule for the xm.opportunity_comment view
 UPDATE xm.opportunity_comment
-   SET text = '**Opportunity_Comment View - Update Test**'
+   SET  "text" 		= '**Opportunity_Comment View - Update Test**',
+	is_public 	= false;
  WHERE ( id = 99999 );
 
 -- used to exercise the delete rule for the xm.opportunity_comment view (**does nothing**)

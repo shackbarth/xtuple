@@ -14,9 +14,10 @@ SELECT 	comment_id		AS id,
 	comment_user		AS "user",
 	comment_cmnttype_id	AS comment_type,
 	comment_text		AS "text",
-	comment_public		AS is_public
-	-- sql query...		AS can_update - value derived from role(s) privileges, etc...(not implemented yet)
+	comment_public		AS is_public,
+	cmnttype_editable	AS can_update
   FROM 	"comment"
+  JOIN	cmnttype ON (comment_cmnttype_id = cmnttype_id)
  WHERE 	(comment_source = 'J');
 
 -- insert rule
@@ -49,7 +50,8 @@ CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.project_comment
   DO INSTEAD
 
 UPDATE 	"comment"
-   SET 	comment_text 	= new.text
+   SET 	comment_text 	= new.text,
+	comment_public	= new.is_public
  WHERE 	(comment_id	= old.id);
 
 -- delete rule

@@ -92,9 +92,10 @@
    -- update rule testing...
 
 	UPDATE 	xm.project_comment
-	   SET	"text" = '***This text is a test of the project_comment view UPDATE rule***'
-	 WHERE	id = (SELECT MAX(comment_id)
-		        FROM "comment");
+	   SET	"text" 		= '***This text is a test of the project_comment view UPDATE rule***',
+		is_public	= true
+	 WHERE	id 		= (SELECT MAX(comment_id)
+				     FROM "comment");
 
    -- delete rule testing...(should DO NOTHING)
 
