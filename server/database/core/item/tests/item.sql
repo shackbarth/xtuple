@@ -376,3 +376,40 @@
 		 WHERE id = 99999;
 
 -- END xm.item_conversion model view test queries
+
+-- BEGIN xm.item_conversion_type_assignment model view test queries
+
+	-- insert rule testing
+
+		INSERT INTO xm.item_conversion_type_assignment (
+		  id,
+		  item_conversion,
+		  unit_type)
+		VALUES (
+		  99999,
+		  99999,
+		  1);
+
+	-- confirm INSERT record
+
+		SELECT * 
+		  FROM xm.item_conversion_type_assignment
+		 WHERE id = 99999;
+
+	-- update rule testing
+
+		-- There is no UPDATE functionality
+
+	 -- delete rule testing
+
+		DELETE FROM xm.item_conversion_type_assignment
+		 WHERE id = 99999;
+
+-- END xm.item_conversion_type_assignment model view test queries
+
+-- BEGIN xm.item_info model view test queries
+
+	SELECT *
+	  FROM xm.item_info;
+
+-- END xm.item_info model view test queries

@@ -21,6 +21,8 @@ XM.Type = SC.Record.extend(
     /** @scope XM.Type.prototype */ {
 
   className: 'XM.Type',
+
+  isEditable: false,
    
   /**
   This should be the class name equivilent of the type.
