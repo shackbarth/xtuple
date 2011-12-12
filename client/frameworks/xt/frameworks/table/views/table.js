@@ -70,9 +70,10 @@ XT.Table = XT.AnimationView.extend(
   queryOnStart: YES,
   
   /** @property
-    Set this to the name of the template to be used for the rows.
+    Set this to the name of the template to be used for the rows or the class
+    to use with a built-in templateName already.
     
-    @type {String}
+    @type {String|Object}
   */
   rowTemplate: XT.DEFAULT_ROW_TEMPLATE,
 

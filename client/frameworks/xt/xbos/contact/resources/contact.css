@@ -9,7 +9,7 @@ $theme.xt-table {
         width: 200px;
       }
       &.contact-col3 {
-        width: 150px;
+        min-width: 150px;
       }
     }
   }

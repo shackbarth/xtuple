@@ -27,11 +27,14 @@ $theme.xt-table {
         font-weight: bold;
       }
       height: 65px;
+      overflow: hidden;
       .column {
-        display: inline-block;
-        padding: 10px;
+        float: left;
         .field {
           height: 15px;
+          display: block;
+          padding: 2px;
+          overflow: hidden;
         }
       }
     }

@@ -13,7 +13,7 @@ Plugin.pages.crm = Plugin.Page.create(
       
       contacts: XT.Table.design({
         query: XM.ContactTable,
-        rowTemplate: "contact_row"
+        rowTemplate: Contact.TableRow,
       })
 
 
