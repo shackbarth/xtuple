@@ -1,9 +1,9 @@
--- Trigger: item_sync_incdt_to_incdtrelass on incdt
+-- trigger: item_sync_incdt_to_incdtrelass on incdt
 
--- DROP TRIGGER item_sync_incdt_to_incdtrelass ON incdt;
+-- drop trigger item_sync_incdt_to_incdtrelass on incdt;
 
-CREATE TRIGGER item_sync_incdt_to_incdtrelass
-  AFTER INSERT OR UPDATE
-  ON incdt
-  FOR EACH ROW
-  EXECUTE PROCEDURE private.item_sync_incdt_to_incdtrelass();
+create or replace trigger item_sync_incdt_to_incdtrelass
+  after insert or update
+  on incdt
+  for each row
+  execute procedure private.item_sync_incdt_to_incdtrelass();
