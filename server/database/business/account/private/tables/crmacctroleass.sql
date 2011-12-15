@@ -4,6 +4,7 @@ select private.create_table('crmacctroleass');
 select private.add_column('crmacctroleass', 'crmacctroleass_id', 'serial', 'primary key');
 select private.add_column('crmacctroleass', 'crmacctroleass_crmacct_id', 'integer', 'not null');
 select private.add_column('crmacctroleass', 'crmacctroleass_crmacctrole_id', 'integer', 'not null references private.crmacctrole (crmacctrole_id)');
+select private.add_column('crmacctroleass','crmacctroleass_target_id','integer','null');
 select private.add_constraint('crmacctroleass', 'crmacctroleass_crmacct_id_crmacctroleass_crmacctrole_id_key', 'unique (crmacctroleass_crmacct_id, crmacctroleass_crmacctrole_id)');
 
 -- remove old trigger if any
