@@ -1,0 +1,16 @@
+
+$theme.xt-table {
+  .row {
+    .column {
+      &.incident-col1 {
+        width: 300px;
+      }
+      &.incident-col2 {
+        width: 200px;
+      }
+      &.incident-col3 {
+        width: 150px;
+      }
+    }
+  }
+}

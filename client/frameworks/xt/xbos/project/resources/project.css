@@ -1,0 +1,16 @@
+
+$theme.xt-table {
+  .row {
+    .column {
+      &.project-col1 {
+        width: 300px;
+      }
+      &.project-col2 {
+        width: 200px;
+      }
+      &.project-col3 {
+        width: 150px;
+      }
+    }
+  }
+}

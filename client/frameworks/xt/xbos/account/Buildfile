@@ -1,0 +1,2 @@
+
+config :account, :required => [ :document, :characteristic, :comment ]

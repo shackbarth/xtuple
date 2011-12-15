@@ -1,0 +1,2 @@
+
+config :to_do, :required => [ :comment ]
