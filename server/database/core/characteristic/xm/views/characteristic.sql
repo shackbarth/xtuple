@@ -12,14 +12,14 @@ select
   char_notes as notes,
   char_mask as mask,
   char_validator as validator,
-  rtrim(ltrim(array(
+  btrim(array(
     select charroleass_id
     from private.charroleass
-    where charroleass_char_id = char_id )::text,'{'),'}') as roles,
-  rtrim(ltrim(array(
+    where charroleass_char_id = char_id )::text,'{}') as roles,
+  btrim(array(
     select charopt_id
     from public.charopt
-    where charopt_char_id = char_id )::text,'{'),'}') as options
+    where charopt_char_id = char_id )::text,'{}') as options
 from public.char;
 
 -- insert rule

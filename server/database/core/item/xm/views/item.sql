@@ -1,78 +1,80 @@
-﻿SELECT dropIfExists('VIEW', 'item', 'xm');
+﻿select dropIfExists('VIEW', 'item', 'xm');
+select dropIfExists('VIEW', 'item_info', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.item AS
+create or replace view xm.item as
 
-SELECT	item_id								AS id,
-	item_number							AS "number",
-	item_active							AS is_active,
-	item_descrip1							AS description1,
-	item_descrip2							AS description2,
-	item_classcode_id						AS class_code,
-	item_inv_uom_id							AS inventory_unit,
-	item_picklist							AS is_picklist,
-	item_comments							AS notes,
-	item_sold							AS is_sold,
-	item_fractional							AS is_fractional,
-	item_type							AS "type",
-	item_prodweight							AS product_weight,
-	item_packweight							AS package_weight,
-	item_prodcat_id							AS product_category,
-	item_exclusive							AS is_exclusive,
-	item_listprice							AS list_price,
-	item_price_uom_id						AS price_unit,
-	item_config							AS is_configured,
-	item_extdescrip							AS extended_description,
-	item_upccode							AS barcode,
-	item_warrdays							AS warranty_days,
-	item_freightclass_id						AS freight_class,
-	item_maxcost							AS max_cost,
-	BTRIM(ARRAY(
-          SELECT comment_id
-            FROM "comment"
-           WHERE comment_source_id = item_id
-	         AND comment_source = 'I')::TEXT,'{}') 		AS "comments",
-	BTRIM(ARRAY(
-          SELECT charass_id 
-            FROM charass
-           WHERE charass_target_id = item_id
-             AND charass_target_type = 'I')::TEXT,'{}') 		AS "characteristics",
-        BTRIM(ARRAY(
-          SELECT itemuomconv_id
-            FROM itemuomconv
-           WHERE itemuomconv_item_id = item_id)::TEXT,'{}') 		AS conversions,
-        BTRIM(ARRAY(
-          SELECT itemalias_id
-            FROM itemalias
-           WHERE itemalias_item_id = item_id)::TEXT,'{}') 		AS aliases,
-	BTRIM(ARRAY(
-          SELECT itemsub_id 
-            FROM itemsub
-           WHERE itemsub_parent_item_id = item_id)::TEXT,'{}') 	AS substitutes,
-        BTRIM(ARRAY(
-    	  SELECT docass_id 
-	    FROM docass
-	   WHERE docass_target_id = item_id 
-	     AND docass_target_type = 'I'
-	   UNION ALL
-	  SELECT docass_id 
-	    FROM docass
-	   WHERE docass_source_id = item_id 
-	     AND docass_source_type = 'I'
-	   UNION ALL
-	  SELECT imageass_id 
-	    FROM imageass
-	   WHERE imageass_source_id = item_id 
-	     AND imageass_source = 'I')::TEXT,'{}') 			AS documents
-  FROM	item;
+select  
+  item_id  as id,
+  item_number  as "number",
+  item_active  as is_active,
+  item_descrip1 as description1,
+  item_descrip2 as description2,
+  item_classcode_id as class_code,
+  item_inv_uom_id as inventory_unit,
+  item_picklist as is_picklist,
+  item_comments as notes,
+  item_sold as is_sold,
+  item_fractional as is_fractional,
+  item_type as "type",
+  item_prodweight as product_weight,
+  item_packweight as package_weight,
+  item_prodcat_id as product_category,
+  item_exclusive as is_exclusive,
+  item_listprice as list_price,
+  item_price_uom_id as price_unit,
+  item_config as is_configured,
+  item_extdescrip as extended_description,
+  item_upccode as barcode,
+  item_warrdays as warranty_days,
+  item_freightclass_id as freight_class,
+  item_maxcost as max_cost,
+  btrim(array(
+  select comment_id
+  from "comment"
+  where comment_source_id = item_id
+    and comment_source = 'I')::text,'{}') as "comments",
+  btrim(array(
+  select charass_id 
+  from charass
+  where charass_target_id = item_id
+    and charass_target_type = 'I')::text,'{}') as "characteristics",
+  btrim(array(
+  select itemuomconv_id
+  from itemuomconv
+  where itemuomconv_item_id = item_id)::text,'{}') as conversions,
+  btrim(array(
+  select itemalias_id
+  from itemalias
+  where itemalias_item_id = item_id)::text,'{}') as aliases,
+  btrim(array(
+  select itemsub_id 
+  from itemsub
+  where itemsub_parent_item_id = item_id)::text,'{}') as substitutes,
+  btrim(array(
+  select docass_id 
+  from docass
+  where docass_target_id = item_id 
+    and docass_target_type = 'I'
+  union all
+  select docass_id 
+  from docass
+  where docass_source_id = item_id 
+    and docass_source_type = 'I'
+  union all
+  select imageass_id 
+  from imageass
+  where imageass_source_id = item_id 
+    and imageass_source = 'I')::text,'{}') as documents
+from item;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.item
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.item
+  do instead
 
-INSERT INTO item (
+insert into item (
   item_id,
   item_number,
   item_active,
@@ -96,8 +98,8 @@ INSERT INTO item (
   item_upccode,
   item_warrdays,
   item_freightclass_id,
-  item_maxcost)
-VALUES (
+  item_maxcost )
+values (
   new.id,
   new.number,
   new.is_active,
@@ -121,77 +123,78 @@ VALUES (
   new.barcode,
   new.warranty_days,
   new.freight_class,
-  new.max_cost);
+  new.max_cost );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.item
-  DO INSTEAD
+create or replace rule "_UPDATE" as on update to xm.item
+  do instead
 
-UPDATE 	item 
-   SET	item_active				= new.is_active,
-	item_descrip1				= new.description1,
-	item_descrip2				= new.description2,
-	item_classcode_id			= new.class_code,
-	item_inv_uom_id				= new.inventory_unit,
-	item_picklist				= new.is_picklist,
-	item_comments				= new.notes,
-	item_sold				= new.is_sold,
-	item_fractional				= new.is_fractional,
-	item_type				= new.type,
-	item_prodweight				= new.product_weight,
-	item_packweight				= new.package_weight,
-	item_prodcat_id				= new.product_category,
-	item_exclusive				= new.is_exclusive,
-	item_listprice				= new.list_price,
-	item_price_uom_id			= new.price_unit,
-	item_config				= new.is_configured,
-	item_extdescrip				= new.extended_description,
-	item_upccode				= new.barcode,
-	item_warrdays				= new.warranty_days,
-	item_freightclass_id			= new.freight_class,
-	item_maxcost				= new.max_cost
- WHERE	item_id					= old.id;
+update item set
+  item_active = new.is_active,
+  item_descrip1 = new.description1,
+  item_descrip2 = new.description2,
+  item_classcode_id = new.class_code,
+  item_inv_uom_id = new.inventory_unit,
+  item_picklist = new.is_picklist,
+  item_comments = new.notes,
+  item_sold = new.is_sold,
+  item_fractional = new.is_fractional,
+  item_type = new.type,
+  item_prodweight = new.product_weight,
+  item_packweight = new.package_weight,
+  item_prodcat_id = new.product_category,
+  item_exclusive = new.is_exclusive,
+  item_listprice = new.list_price,
+  item_price_uom_id = new.price_unit,
+  item_config = new.is_configured,
+  item_extdescrip = new.extended_description,
+  item_upccode = new.barcode,
+  item_warrdays = new.warranty_days,
+  item_freightclass_id = new.freight_class,
+  item_maxcost = new.max_cost
+where ( item_id = old.id );
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.item
-  DO INSTEAD (
+create or replace rule "_DELETE" as on delete to xm.item
+  do instead (
 
-DELETE FROM comment
- WHERE (comment_source_id = old.id
-   AND comment_source = 'I');
+delete from comment
+where (comment_source_id = old.id
+  and comment_source = 'I');
 
-DELETE FROM charass
- WHERE (charass_target_id = old.id
-	AND charass_target_type = 'I');
+delete from charass
+where (charass_target_id = old.id
+  and charass_target_type = 'I');
 
-DELETE FROM itemuom
- USING itemuomconv
- WHERE (itemuom_itemuomconv_id = itemuomconv_id
-	AND itemuomconv_item_id = old.id);
+delete from itemuom
+USING itemuomconv
+where (itemuom_itemuomconv_id = itemuomconv_id
+  and itemuomconv_item_id = old.id);
 
-DELETE FROM itemuomconv
- WHERE (itemuomconv_item_id = old.id);
+delete from itemuomconv
+where (itemuomconv_item_id = old.id);
 
-DELETE FROM itemalias
- WHERE (itemalias_item_id = old.id);
+delete from itemalias
+where (itemalias_item_id = old.id);
 
-DELETE FROM itemsub
- WHERE (itemsub_parent_item_id = old.id);
+delete from itemsub
+where (itemsub_parent_item_id = old.id);
 
-DELETE FROM docass
- WHERE (docass_target_id = old.id
-	AND docass_target_type = 'I')
-    OR
-       (docass_source_id = old.id
-       AND docass_source_type = 'I');
+delete from docass
+where (docass_target_id = old.id
+  and docass_target_type = 'I')
+  or
+    (docass_source_id = old.id
+  and docass_source_type = 'I');
 
-DELETE FROM imageass
- WHERE ( imageass_source_id = old.id
-	AND imageass_source = 'I' );
+delete from imageass
+where ( imageass_source_id = old.id
+  and imageass_source = 'I' );
 
-DELETE FROM item
- WHERE (item_id = old.id);
+delete from item
+ where (item_id = old.id);
 
 )
+

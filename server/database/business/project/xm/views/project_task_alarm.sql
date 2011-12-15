@@ -1,34 +1,31 @@
-﻿-- ProjectTaskAlarm model view
--- xTuple 4.0 project
--- Mikhail Wall
-
-SELECT dropIfExists('VIEW', 'project_task_alarm', 'xm');
+﻿select dropIfExists('VIEW', 'project_task_alarm', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.project_task_alarm AS
+create or replace view xm.project_task_alarm as
 
-SELECT	alarm_id			AS id,
-	alarm_source_id			AS project_task,
-	alarm_event			AS event,
-	alarm_event_recipient		AS event_recipient,
-	alarm_email			AS email,
-	alarm_email_recipient		AS email_recipient,
-	alarm_sysmsg			AS message,
-	alarm_sysmsg_recipient		AS message_recipient,
-	alarm_trigger			AS "trigger",
-	alarm_time			AS "time",
-	alarm_time_offset		AS "offset",
-	alarm_time_qualifier		AS qualifier
-  FROM	alarm
- WHERE	(alarm_source = 'J');
+select
+  alarm_id as id,
+  alarm_source_id as project_task,
+  alarm_event as event,
+  alarm_event_recipient as event_recipient,
+  alarm_email as email,
+  alarm_email_recipient as email_recipient,
+  alarm_sysmsg as message,
+  alarm_sysmsg_recipient as message_recipient,
+  alarm_trigger as "trigger",
+  alarm_time as "time",
+  alarm_time_offset as "offset",
+  alarm_time_qualifier as qualifier
+from alarm
+where alarm_source = 'J';
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.project_task_alarm
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.project_task_alarm
+  do instead
 
-INSERT INTO alarm (
+insert into alarm (
   alarm_id,
   alarm_number,
   alarm_source_id,
@@ -42,8 +39,8 @@ INSERT INTO alarm (
   alarm_trigger,
   alarm_time,
   alarm_time_offset,
-  alarm_time_qualifier)
-VALUES (
+  alarm_time_qualifier )
+values (
   new.id,
   new.id,
   new.project_task,
@@ -57,30 +54,30 @@ VALUES (
   new.trigger,
   new.time,
   new.offset,
-  new.qualifier);
+  new.qualifier );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.project_task_alarm
-  DO INSTEAD
+create or replace rule "_UPDATE" as on update to xm.project_task_alarm
+  do instead
 
-UPDATE	alarm
-   SET	alarm_event			= new.event,
-	alarm_event_recipient		= new.event_recipient,
-	alarm_email			= new.email,
-	alarm_email_recipient		= new.email_recipient,
-	alarm_sysmsg			= new.message,
-	alarm_sysmsg_recipient		= new.message_recipient,
-	alarm_trigger			= new.trigger,
-	alarm_time			= new.time,
-	alarm_time_offset		= new.offset,
-	alarm_time_qualifier		= new.qualifier
- WHERE	alarm_id = old.id;
+update alarm set
+  alarm_event = new.event,
+  alarm_event_recipient = new.event_recipient,
+  alarm_email = new.email,
+  alarm_email_recipient = new.email_recipient,
+  alarm_sysmsg = new.message,
+  alarm_sysmsg_recipient = new.message_recipient,
+  alarm_trigger = new.trigger,
+  alarm_time = new.time,
+  alarm_time_offset = new.offset,
+  alarm_time_qualifier = new.qualifier
+where alarm_id = old.id;
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.project_task_alarm
-  DO INSTEAD
+create or replace rule "_DELETE" as on delete to xm.project_task_alarm
+  do instead
 
-DELETE 	FROM alarm
- WHERE 	(alarm_id = old.id);
+delete from alarm
+where (alarm_id = old.id);

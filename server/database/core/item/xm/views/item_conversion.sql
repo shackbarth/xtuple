@@ -1,57 +1,56 @@
-﻿SELECT dropIfExists('VIEW', 'item_conversion', 'xm');
+﻿select dropIfExists('VIEW', 'item_conversion', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.item_conversion AS
+create or replace view xm.item_conversion as
 
-SELECT	itemuomconv_id 			AS id,
-	itemuomconv_item_id 		AS item,
-	itemuomconv_from_uom_id 	AS from_unit,
-	itemuomconv_from_value 		AS from_value,
-	itemuomconv_to_uom_id 		AS to_unit,
-	itemuomconv_to_value 		AS to_value,
-	itemuomconv_fractional 		AS fractional
-  FROM	itemuomconv;
+select  
+  itemuomconv_id as id,
+  itemuomconv_item_id as item,
+  itemuomconv_from_uom_id as from_unit,
+  itemuomconv_from_value as from_value,
+  itemuomconv_to_uom_id as to_unit,
+  itemuomconv_to_value as to_value,
+  itemuomconv_fractional as fractional
+from itemuomconv;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.item_conversion
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.item_conversion
+  do instead
 
-INSERT INTO itemuomconv (
+insert into itemuomconv (
   itemuomconv_id,
   itemuomconv_item_id,
   itemuomconv_from_uom_id,
   itemuomconv_from_value,
   itemuomconv_to_uom_id,
   itemuomconv_to_value,
-  itemuomconv_fractional)
-VALUES (
+  itemuomconv_fractional )
+values (
   new.id,
   new.item,
   new.from_unit,
   new.from_value,
   new.to_unit,
   new.to_value,
-  new.fractional);
+  new.fractional );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.item_conversion
-  DO INSTEAD
+create or replace rule "_UPDATE" as on update to xm.item_conversion
+  do instead
 
-UPDATE 	itemuomconv 
-   SET	itemuomconv_from_value 		= new.from_value,
-	itemuomconv_to_value		= new.to_value,
-	itemuomconv_fractional		= new.fractional
- WHERE	itemuomconv_id 			= old.id;
+update itemuomconv set
+  itemuomconv_from_value = new.from_value,
+  itemuomconv_to_value = new.to_value,
+  itemuomconv_fractional = new.fractional
+where ( itemuomconv_id = old.id );
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.item_conversion
-  DO INSTEAD (
+create or replace rule "_DELETE" as on delete to xm.item_conversion
+  do instead 
 
-DELETE FROM itemuomconv
- WHERE (itemuomconv_id = old.);
-
-)
+delete from itemuomconv
+where ( itemuomconv_id = old.id );

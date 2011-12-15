@@ -1,42 +1,43 @@
-﻿SELECT dropIfExists('VIEW', 'opportunity_type', 'xm');
+﻿select dropIfExists('VIEW', 'opportunity_type', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.opportunity_type AS
+create or replace view xm.opportunity_type as
 
-SELECT optype_id 		AS id,
-       optype_name		AS "name",
-       optype_descrip		AS description
-  FROM optype;
+select 
+  optype_id as id,
+  optype_name as "name",
+  optype_descrip as description
+from optype;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.opportunity_type
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.opportunity_type
+  do instead
 
-INSERT INTO optype (
+insert into optype (
   optype_id,
   optype_name,
-  optype_descrip)
-VALUES (
+  optype_descrip )
+values (
   new.id,
   new.name,
-  new.description);
+  new.description );
 
--- udate rule
+-- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.opportunity_type
-  DO INSTEAD
+create or replace rule "_update" as on update to xm.opportunity_type
+  do instead
 
-UPDATE optype
-   SET optype_name		= new.name,
-       optype_descrip		= new.description
- WHERE optype_id 		= old.id;
+update optype set
+  optype_name = new.name,
+  optype_descrip = new.description
+where ( optype_id = old.id );
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.opportunity_type
-  DO INSTEAD
+create or replace rule "_DELETE" as on delete to xm.opportunity_type
+  do instead
 
-DELETE FROM optype
- WHERE optype_id = old.id;
+delete from optype
+where ( optype_id = old.id );

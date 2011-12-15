@@ -9,7 +9,7 @@ select
   uom_name as name,
   uom_descrip as description,
   uom_item_weight as is_item_weight,
-  rtrim(ltrim(array(
+  btrim(array(
     select uomconv_id
     from uomconv
     where uom_id = uomconv_from_uom_id
@@ -17,7 +17,7 @@ select
     select uomconv_id
     from uomconv
     where uom_id = uomconv_to_uom_id
-    )::text,'{'),'}') as conversions
+    )::text,'{}') as conversions
 from public.uom;
 
 -- insert rule

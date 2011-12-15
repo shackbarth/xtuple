@@ -1,26 +1,27 @@
-﻿SELECT dropIfExists('VIEW', 'project_info', 'xm');
+﻿select dropIfExists('VIEW', 'project_info', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.project_info AS
+create or replace view xm.project_info as
 
-SELECT id,
-       "number",
-       "name",
-       project_status
-  FROM xm.project;
+select 
+  id,
+  "number",
+  "name",
+  project_status
+from xm.project;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.project_info
-  DO INSTEAD NOTHING;
+create or replace rule "_CREATE" as on insert to xm.project_info
+  do instead nothing;
 
 -- update rule
-
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.project_info
-  DO INSTEAD NOTHING;
+  
+create or replace rule "_UPDATE" as on update to xm.project_info
+  do instead nothing;
 
 -- delete rule
-
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.project_info
-  DO INSTEAD NOTHING;
+  
+create or replace rule "_DELETE" as on delete to xm.project_info
+  do instead nothing;

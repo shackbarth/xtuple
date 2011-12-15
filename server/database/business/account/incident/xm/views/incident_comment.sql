@@ -3,7 +3,7 @@ select dropIfExists('VIEW', 'incident_comment', 'xm');
 -- return rule
 
 create or replace view xm.incident_comment as
-		
+  
 select
   comment_id as id,
   comment_source_id as incident,
@@ -18,7 +18,7 @@ where ( comment_source = 'INCDT' );
 -- insert rule
 
 create or replace rule "_CREATE" as on insert to xm.incident_comment 
-	do instead
+  do instead
 
 insert into comment (
   comment_id,
@@ -42,13 +42,13 @@ values (
 -- update rule
 
 create or replace rule "_UPDATE" as on update to xm.incident_comment
-	do instead
-	
-	update comment set
-	  comment_text = new.text
-	where ( comment_id = old.id );
-	
+  do instead
+  
+update comment set
+  comment_text = new.text
+where ( comment_id = old.id );
+  
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.incident_comment	 
-    do instead nothing;
+create or replace rule "_DELETE" as on delete to xm.incident_comment   
+  do instead nothing;

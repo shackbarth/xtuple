@@ -1,59 +1,54 @@
-﻿-- ProjectTaskComment model view
--- xTuple 4.0 project
--- Mikhail Wall
-
-SELECT dropIfExists('VIEW', 'project_task_comment', 'xm');
+﻿select dropIfExists('VIEW', 'project_task_comment', 'xm');
 
 -- return rule
+create or replace view xm.project_task_comment as
 
-CREATE OR REPLACE VIEW xm.project_task_comment AS
-
-  SELECT comment_id		AS id,
-	 comment_source_id	AS project_task,
-	 comment_date		AS "date",
-	 comment_user		AS "user",
-	 comment_cmnttype_id	AS comment_type,
-	 comment_text		AS "text",
-	 comment_public		AS is_public
-	-- sql query...		AS can_update - value derived from role(s) privileges, etc...(not implemented yet)
-    FROM "comment"
-   WHERE (comment_source = 'TA');
+select 
+  comment_id as id,
+  comment_source_id as project_task,
+  comment_date as "date",
+  comment_user as "user",
+  comment_cmnttype_id as comment_type,
+  comment_text as "text",
+  comment_public as is_public
+  -- sql query...  AS can_update - value derived from role(s) privileges, etc...(not implemented yet)
+from "comment"
+where ( comment_source = 'TA' );
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.project_task_comment
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.project_task_comment
+  do instead
 
-  INSERT INTO "comment" (
-    comment_id,
-    comment_source_id,
-    comment_source,
-    comment_date,
-    comment_user,
-    comment_cmnttype_id,
-    comment_text,
-    comment_public)
-  VALUES (
-    new.id,
-    new.project_task,
-    'TA',
-    new.date,
-    new.user,
-    new.comment_type,
-    new.text,
-    new.is_public);
+insert into "comment" (
+  comment_id,
+  comment_source_id,
+  comment_source,
+  comment_date,
+  comment_user,
+  comment_cmnttype_id,
+  comment_text,
+  comment_public )
+values (
+  new.id,
+  new.project_task,
+  'TA',
+  new.date,
+  new.user,
+  new.comment_type,
+  new.text,
+  new.is_public );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.project_task_comment
-  DO INSTEAD
+create or replace rule "_UPDATE" as on update to xm.project_task_comment
+  do instead
 
-  UPDATE "comment"
-     SET comment_text = new.text
-   WHERE (comment_id  = old.id);
+update "comment" set
+  comment_text = new.text
+where ( comment_id  = old.id );
 
 -- delete rule
-
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.project_task_comment
-  DO INSTEAD NOTHING;
+create or replace rule "_DELETE" as on delete to xm.project_task_comment
+  do instead nothing;
 

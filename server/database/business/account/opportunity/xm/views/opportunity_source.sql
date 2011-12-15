@@ -1,42 +1,43 @@
-﻿SELECT dropIfExists('VIEW', 'opportunity_source', 'xm');
+﻿select dropIfExists('VIEW', 'opportunity_source', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.opportunity_source AS
+create or replace view xm.opportunity_source as
 
-SELECT opsource_id 		AS id,
-       opsource_name		AS "name",
-       opsource_descrip		AS description
-  FROM opsource;
+select 
+  opsource_id as id,
+  opsource_name as "name",
+  opsource_descrip as description
+from opsource;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.opportunity_source
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.opportunity_source
+  do instead
 
-INSERT INTO opsource (
+insert into opsource (
   opsource_id,
   opsource_name,
-  opsource_descrip)
-VALUES (
+  opsource_descrip )
+values (
   new.id,
   new.name,
-  new.description);
+  new.description );
 
--- udate rule
+-- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.opportunity_source
-  DO INSTEAD
+create or replace rule "_UPDATE" as on update to xm.opportunity_source
+  do instead
 
-UPDATE opsource
-   SET opsource_name		= new.name,
-       opsource_descrip		= new.description
- WHERE opsource_id 		= old.id;
+update opsource set
+  opsource_name = new.name,
+  opsource_descrip = new.description
+where ( opsource_id = old.id );
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.opportunity_source
-  DO INSTEAD
+create or replace rule "_DELETE" as on delete to xm.opportunity_source
+  do instead
 
-DELETE FROM opsource
- WHERE opsource_id = old.id;
+delete from opsource
+where ( opsource_id = old.id );

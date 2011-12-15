@@ -1,26 +1,27 @@
-﻿SELECT dropIfExists('VIEW', 'opportunity_info', 'xm');
+﻿select dropIfExists('VIEW', 'opportunity_info', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.opportunity_info AS
+create or replace view xm.opportunity_info as
 
-SELECT id,
-       "number",
-       "name",
-       is_active
-  FROM xm.opportunity;
+select 
+  id,
+  "number",
+  "name",
+  is_active
+from xm.opportunity;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.opportunity_info
-  DO INSTEAD NOTHING;
+create or replace rule "_CREATE" as on insert to xm.opportunity_info
+  do instead nothing;
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.opportunity_info
-  DO INSTEAD NOTHING;
+create or replace rule "_UPDATE" as on update to xm.opportunity_info
+  do instead nothing;
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.opportunity_info
-  DO INSTEAD NOTHING;
+create or replace rule "_DELETE" as on delete to xm.opportunity_info
+  do instead nothing;

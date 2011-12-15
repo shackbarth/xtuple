@@ -12,10 +12,10 @@ select
   country_curr_symbol as currency_symbol,
   country_curr_abbr as currency_abbreviation,
   country_curr_number as currency_number,
-  rtrim(ltrim(array(
+  btrim(array(
     select state_id
     from public.state
-    where state_country_id = country_id )::text,'{'),'}') as states
+    where state_country_id = country_id )::text,'{}') as states
 from public.country;
 
 -- insert rule

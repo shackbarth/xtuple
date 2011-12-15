@@ -10,10 +10,10 @@ select
   curr_symbol as symbol,
   curr_abbr as abbreviation,
   curr_base as is_base,
-  rtrim(ltrim(array(
+  btrim(array(
     select curr_rate_id 
     from curr_rate
-    where curr_rate.curr_id = curr_symbol.curr_id)::text,'{'),'}') as rates
+    where curr_rate.curr_id = curr_symbol.curr_id)::text,'{}') as rates
 from public.curr_symbol;
 
 -- insert rule
