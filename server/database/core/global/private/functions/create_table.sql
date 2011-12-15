@@ -1,10 +1,11 @@
-create or replace function private.create_table(table_name text, schema_name text default 'private', with_oids boolean default false) returns boolean volatile as $$
+﻿create or replace function private.create_table(table_name text, schema_name text default 'private',  inherit_table text default null, with_oids boolean default false) returns boolean volatile as $$
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
   count integer;
   query text;
   with_clause text := '';
+  inherit_from text := '';
 begin
 
   perform *
@@ -21,7 +22,11 @@ begin
     with_clause := 'with (OIDS=TRUE)';
   end if;
 
-  query = 'create table ' || schema_name || '.' || table_name || '()' || with_clause || '; 
+  if (inherit_table is not null) then
+    inherit_from := ' INHERITS (' || inherit_table || ') ';
+  end if;
+
+  query = 'create table ' || schema_name || '.' || table_name || '()' || inherit_from || with_clause || '; 
            grant all on ' || schema_name || '.' || table_name || ' to xtrole;';
   execute query;
 
