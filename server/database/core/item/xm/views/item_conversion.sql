@@ -4,13 +4,17 @@
 
 CREATE OR REPLACE VIEW xm.item_conversion AS
 
-SELECT	itemuomconv_id 			AS id,
-	itemuomconv_item_id 		AS item,
-	itemuomconv_from_uom_id 	AS from_unit,
-	itemuomconv_from_value 		AS from_value,
-	itemuomconv_to_uom_id 		AS to_unit,
-	itemuomconv_to_value 		AS to_value,
-	itemuomconv_fractional 		AS fractional
+SELECT	itemuomconv_id 								AS id,
+	itemuomconv_item_id 							AS item,
+	itemuomconv_from_uom_id 						AS from_unit,
+	itemuomconv_from_value 							AS from_value,
+	itemuomconv_to_uom_id 							AS to_unit,
+	itemuomconv_to_value 							AS to_value,
+	itemuomconv_fractional 							AS fractional,
+	BTRIM(ARRAY(
+	  SELECT itemuom_id
+	    FROM itemuom
+	   WHERE itemuom_itemuomconv_id = itemuomconv_id)::TEXT,'{}')		AS unit_types
   FROM	itemuomconv;
 
 -- insert rule
@@ -51,7 +55,10 @@ UPDATE 	itemuomconv
 CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.item_conversion
   DO INSTEAD (
 
+DELETE FROM itemuom
+ WHERE (itemuom_itemuomconv_id = old.id);
+
 DELETE FROM itemuomconv
- WHERE (itemuomconv_id = old.);
+ WHERE (itemuomconv_id = old.id);
 
 )
