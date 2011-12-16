@@ -1,29 +1,30 @@
-﻿SELECT dropIfExists('VIEW', 'item_info', 'xm');
+﻿select dropIfExists('VIEW', 'item_info', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.item_info AS
+create or replace view xm.item_info as
 
-SELECT	id,
-	"number",
-	description1,
-	description2,
-	"type",
-	barcode,
-	is_active
-  FROM	xm.item;
+select
+  id,
+  "number",
+  description1,
+  description2,
+  "type",
+  barcode,
+  is_active
+from xm.item;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.item_info
-  DO INSTEAD NOTHING;
-
+create or replace rule "_CREATE" as on insert to xm.item_info
+  do instead nothing;
+  
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.item_info
-  DO INSTEAD NOTHING;
+create or replace rule "_UPDATE" as on update to xm.item_info
+  do instead nothing;
+  
+-- delete rules
 
--- delete rule
-
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.item_info
-  DO INSTEAD NOTHING;
+create or replace rule "_DELETE" as on delete to xm.item_info   
+  do instead nothing;

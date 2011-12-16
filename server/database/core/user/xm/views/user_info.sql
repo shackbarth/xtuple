@@ -1,25 +1,26 @@
-﻿SELECT dropIfExists('VIEW', 'user_info', 'xm');
+﻿select dropIfExists('VIEW', 'user_info', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.user_info AS
+create or replace view xm.user_info as
 
-SELECT	username,
-	is_active,
-	propername
-  FROM	xm.user;
+select	
+  username,
+  is_active,
+  propername
+from xm.user;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.user_info
-  DO INSTEAD NOTHING;
+create or replace rule "_CREATE" as on insert to xm.user_info
+  do instead nothing;
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.user_info
-  DO INSTEAD NOTHING;
+create or replace rule "_UPDATE" as on update to xm.user_info
+  do instead nothing;
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.user_info
-  DO INSTEAD NOTHING;
+create or replace rule "_DELETE" as on delete to xm.user_info
+  do instead nothing;

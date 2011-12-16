@@ -1,112 +1,113 @@
-﻿SELECT dropIfExists('VIEW', 'item_document', 'xm');
+﻿select dropIfExists('VIEW', 'item_document', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.item_document AS
+create or replace view xm.item_document as
 
 -- documents assigned to items
 
-SELECT	docass_id 				AS id,
-	docass_source_id 			AS item,
-	docass_target_id 			AS target,
-	datatype_id 				AS target_type,
-	docass_purpose 				AS purpose
-  FROM	docass
-  JOIN	private.datatype ON (docass_target_type = datatype_source)
- WHERE	(docass_source_type = 'I')
+select  
+  docass_id as id,
+  docass_source_id as item,
+  docass_target_id as target,
+  datatype_id as  target_type,
+  docass_purpose as purpose
+from docass 
+  join private.datatype on (docass_target_type = datatype_source)
+where ( docass_source_type = 'I' )
 
- UNION	ALL
+union all
 
 -- items assigned to documents (inverse)
 
-SELECT	docass_id 				AS id,
-	docass_target_id 			AS item,
-	docass_source_id 			AS target,
-	datatype_id 				AS target_type,
-	CASE
-	  WHEN docass_purpose = 'A' THEN 'C'
-	  WHEN docass_purpose = 'C' THEN 'A'
-	  ELSE docass_purpose
-	END					AS purpose
-  FROM	docass
-  JOIN	private.datatype ON (docass_source_type = datatype_source)
- WHERE	(docass_target_type = 'I')
+select  
+  docass_id as id,
+  docass_target_id as item,
+  docass_source_id as target,
+  datatype_id as target_type,
+  CASE
+  	WHEN docass_purpose = 'A' THEN 'C'
+    WHEN docass_purpose = 'C' THEN 'A'
+  ELSE docass_purpose
+  END as purpose
+from docass
+  join private.datatype on (docass_source_type = datatype_source)
+where ( docass_target_type = 'I' )
 
- UNION	ALL
+union all
 
 -- images assigned to items
 
-SELECT	imageass_id 						AS id,
-	imageass_source_id 					AS item,
-	imageass_image_id					AS target,
-	private.get_id('datatype','datatype_name','Image')	AS target_type,
-	imageass_purpose 					AS purpose
-  FROM	imageass
- WHERE	imageass_source = 'I';
+select  
+  imageass_id as id,
+  imageass_source_id as item,
+  imageass_image_id as target,
+  private.get_id('datatype','datatype_name','Image') as target_type,
+  imageass_purpose as purpose
+from imageass
+where ( imageass_source = 'I' );
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.item_document
-    DO INSTEAD NOTHING;
+create or replace rule "_CREATE" as on insert to xm.item_document
+  do instead nothing;
 
-CREATE OR REPLACE RULE "_CREATE_DOC" AS ON INSERT TO xm.item_document
- WHERE new.target_type != private.get_id('datatype','datatype_name','Image')
-    DO INSTEAD
+create or replace rule "CREATE_DOC" as on insert to xm.item_document
+  where new.target_type != private.get_id('datatype','datatype_name','Image')
+  do instead
 
-INSERT INTO docass (
+insert into docass (
   docass_id,
   docass_source_id,
   docass_source_type,
   docass_target_id,
   docass_target_type,
-  docass_purpose)
-VALUES (
+  docass_purpose )
+values (
   new.id,
   new.item,
   'I',
   new.target,
-  (SELECT datatype_source
-    FROM private.datatype
-   WHERE datatype_id = new.target_type),
-  new.purpose);
+  (select datatype_source
+    from private.datatype
+     where datatype_id = new.target_type),
+  new.purpose );
 
-CREATE OR REPLACE RULE "_CREATE_IMG" AS ON INSERT TO xm.item_document
- WHERE new.target_type = private.get_id('datatype','datatype_name','Image')
-    DO INSTEAD
+create or replace rule "_CREATE_IMG" as on insert to xm.item_document 
+  where new.target_type = private.get_id('datatype','datatype_name','Image')
+  do instead
 
-INSERT INTO imageass (
+insert into imageass (
   imageass_id,
   imageass_source_id,
   imageass_source,
   imageass_image_id,
-  imageass_purpose)
-VALUES (
+  imageass_purpose )
+values (
   new.id,
   new.item,
   'I',
   new.target,
-  new.purpose);
+  new.purpose );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.item_document
-  DO INSTEAD NOTHING;
+create or replace rule "_UPDATE" as on update to xm.item_document
+  do instead nothing;
 
--- delete rule
+create or replace rule "_DELETE" as on delete to xm.item_document
+  do instead nothing;
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.item_document
-  DO INSTEAD NOTHING;
+create or replace rule "_DELETE_DOC" as on delete to xm.item_document
+  where old.target_type != private.get_id('datatype','datatype_name','Image')
+  do instead
 
-CREATE OR REPLACE RULE "_DELETE_DOC" AS ON DELETE TO xm.item_document
- WHERE old.target_type != private.get_id('datatype','datatype_name','Image')
-    DO INSTEAD
+delete from docass
+where (docass_id = old.id);
 
-DELETE FROM docass
- WHERE (docass_id = old.id);
+create or replace rule "_DELETE_IMG" as on delete to xm.item_document
+   where old.target_type = private.get_id('datatype','datatype_name','Image')
+  do instead
 
-CREATE OR REPLACE RULE "_DELETE_IMG" AS ON DELETE TO xm.item_document
- WHERE old.target_type = private.get_id('datatype','datatype_name','Image')
-    DO INSTEAD
-
-DELETE FROM imageass
- WHERE (imageass_id = old.id);
+delete from imageass
+where (imageass_id = old.id);

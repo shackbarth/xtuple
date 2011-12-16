@@ -1,3 +1,4 @@
+select dropIfExists('VIEW', 'user_info', 'xm');
 select dropIfExists('VIEW', 'user', 'xm');
 
 -- return rule
@@ -20,14 +21,14 @@ select
   ), false ) as disable_export,
   public.userCanCreateUsers(usr_username) as can_create_users,
   true as is_database_user,
-  rtrim(ltrim(array(
+  btrim(array(
     select usrpriv_id
     from public.usrpriv
-    where usrpriv_username = usr_username )::text,'{'),'}') as privileges,
-  rtrim(ltrim(array(
+    where usrpriv_username = usr_username )::text,'{}') as privileges,
+  btrim(array(
     select usrgrp_id
     from public.usrgrp
-    where usrgrp_username = usr_username )::text,'{'),'}') as user_roles
+    where usrgrp_username = usr_username )::text,'{}') as user_roles
 from public.usr
 union all
 select
@@ -41,14 +42,14 @@ select
   user_disable_export,
   false as can_create_users,
   false as is_database_user,
-  rtrim(ltrim(array(
+  btrim(array(
     select usrpriv_id
     from public.usrpriv
-    where usrpriv_username = user_username )::text,'{'),'}') as privileges,
-  rtrim(ltrim(array(
+    where usrpriv_username = user_username )::text,'{}') as privileges,
+  btrim(array(
     select usrgrp_id
     from public.usrgrp
-    where usrgrp_username = user_username )::text,'{'),'}') as user_roles
+    where usrgrp_username = user_username )::text,'{}') as user_roles
 from private.user;
 
 -- insert rules

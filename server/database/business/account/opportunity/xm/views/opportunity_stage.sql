@@ -1,46 +1,47 @@
-﻿SELECT dropIfExists('VIEW', 'opportunity_stage', 'xm');
+﻿select dropIfExists('VIEW', 'opportunity_stage', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.opportunity_stage AS
+create or replace view xm.opportunity_stage as
 
-SELECT opstage_id 		AS id,
-       opstage_name		AS "name",
-       opstage_descrip		AS description,
-       opstage_opinactive	AS deactivate
-  FROM opstage;
+select 
+  opstage_id as id,
+  opstage_name as "name",
+  opstage_descrip as description,
+  opstage_opinactive as deactivate
+from opstage;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.opportunity_stage
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.opportunity_stage
+  do instead
 
-INSERT INTO opstage (
+insert into opstage (
   opstage_id,
   opstage_name,
   opstage_descrip,
-  opstage_opinactive)
-VALUES (
+  opstage_opinactive )
+values (
   new.id,
   new.name,
   new.description,
-  new.deactivate);
+  new.deactivate );
 
--- udate rule
+-- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.opportunity_stage
-  DO INSTEAD
+create or replace rule "_update" as on update to xm.opportunity_stage
+  do instead
 
-UPDATE opstage
-   SET opstage_name		= new.name,
-       opstage_descrip		= new.description,
-       opstage_opinactive	= new.deactivate
- WHERE opstage_id 		= old.id;
+update opstage set
+  opstage_name = new.name,
+  opstage_descrip = new.description,
+  opstage_opinactive = new.deactivate
+where ( opstage_id = old.id );
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.opportunity_stage
-  DO INSTEAD
+create or replace rule "_DELETE" as on delete to xm.opportunity_stage
+  do instead
 
-DELETE FROM opstage
- WHERE opstage_id = old.id;
+delete from opstage
+where ( opstage_id = old.id );

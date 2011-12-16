@@ -1,3 +1,4 @@
+select dropIfExists('VIEW', 'account_info', 'xm');
 select dropIfExists('VIEW', 'account', 'xm');
 
 -- return rule
@@ -15,25 +16,25 @@ select
   crmacct_notes as notes,
   crmacct_cntct_id_1 as primary_contact,
   crmacct_cntct_id_2 as secondary_contact,
-  rtrim(ltrim(array(
+  btrim(array(
     select cntct_id
     from cntct
-    where cntct_crmacct_id = crmacct_id )::text,'{'),'}') as contacts,
-  rtrim(ltrim(array(
+    where cntct_crmacct_id = crmacct_id )::text,'{}') as contacts,
+  btrim(array(
     select crmacctroleass_id
     from private.crmacctroleass
-    where crmacctroleass_crmacct_id = crmacct_id )::text,'{'),'}') as roles,
-  rtrim(ltrim(array(
+    where crmacctroleass_crmacct_id = crmacct_id )::text,'{}') as roles,
+  btrim(array(
     select comment_id 
     from comment
     where comment_source_id = crmacct_id 
-      and comment_source = 'CRMA')::text,'{'),'}') as comments,
-  rtrim(ltrim(array(
+      and comment_source = 'CRMA')::text,'{}') as comments,
+  btrim(array(
     select charass_id 
     from charass
     where charass_target_id = crmacct_id 
-      and charass_target_type = 'CRMACCT')::text,'{'),'}') as characteristics,
-  rtrim(ltrim(array(
+      and charass_target_type = 'CRMACCT')::text,'{}') as characteristics,
+  btrim(array(
     select docass_id 
     from docass
     where docass_target_id = crmacct_id 
@@ -47,7 +48,7 @@ select
     select imageass_id 
     from imageass
     where imageass_source_id = crmacct_id 
-      and imageass_source = 'CRMA')::text,'{'),'}') as documents
+      and imageass_source = 'CRMA')::text,'{}') as documents
 from crmacct;
 
 -- insert rule

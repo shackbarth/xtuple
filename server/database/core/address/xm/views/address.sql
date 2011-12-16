@@ -15,16 +15,16 @@ select
   addr_state as state,
   addr_postalcode as postalcode,
   addr_country as country,
-  rtrim(ltrim(array(
+  btrim(array(
     select comment_id 
     from comment
     where comment_source_id = addr_id 
-      and comment_source = 'ADDR')::text,'{'),'}') as comments,
-  rtrim(ltrim(array(
+      and comment_source = 'ADDR')::text,'{}') as comments,
+  btrim(array(
     select charass_id 
     from charass
     where charass_target_id = addr_id 
-      and charass_target_type = 'ADDR')::text,'{'),'}') as characteristics
+      and charass_target_type = 'ADDR')::text,'{}') as characteristics
 from public.addr;
 
 -- insert rule

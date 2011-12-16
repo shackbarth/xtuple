@@ -1,49 +1,49 @@
-SELECT dropIfExists('VIEW', 'opportunity_characteristic', 'xm');
+select dropIfExists('VIEW', 'opportunity_characteristic', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.opportunity_characteristic AS
+create or replace view xm.opportunity_characteristic as
 
-SELECT charass_id 		 AS id,
-  	   charass_target_id AS opportunity,
-  	   charass_char_id 	 AS characteristic,
-  	   charass_value 	 AS value
-  FROM charass
- WHERE ( charass_target_type = 'OPP' );
+select 
+  charass_id as id,
+  charass_target_id as opportunity,
+  charass_char_id as characteristic,
+  charass_value as value
+from charass
+where ( charass_target_type = 'OPP' );
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.opportunity_characteristic
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.opportunity_characteristic
+  do instead
 
-INSERT INTO charass (
+insert into charass (
   charass_id,
   charass_target_id,
   charass_target_type,
   charass_char_id,
-  charass_value)
-
-VALUES (
+  charass_value )
+values (
   new.id,
   new.opportunity,
   'OPP',
   new.characteristic,
-  new.value);
+  new.value );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.opportunity_characteristic
-  DO INSTEAD
+create or replace rule "_UPDATE" as on update to xm.opportunity_characteristic
+  do instead
 
-UPDATE charass
-   SET charass_char_id = new.characteristic,
-	   charass_value   = new.value
- WHERE ( charass_id = old.id );
+update charass set
+  charass_char_id = new.characteristic,
+  charass_value   = new.value
+where ( charass_id = old.id );
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.opportunity_characteristic
-  DO INSTEAD
+create or replace rule "_DELETE" as on delete to xm.opportunity_characteristic
+  do instead
 
-DELETE FROM charass
- WHERE ( charass_id = old.id );
+delete from charass
+where ( charass_id = old.id );

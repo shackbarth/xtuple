@@ -1,51 +1,50 @@
-﻿SELECT dropIfExists('VIEW', 'item_substitute', 'xm');
+﻿select dropIfExists('VIEW', 'item_substitute', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.item_substitute AS
+create or replace view xm.item_substitute as
 
-SELECT	itemsub_id 			AS id,
-	itemsub_parent_item_id 		AS root_item,
-	itemsub_sub_item_id 		AS substitute_item,
-	itemsub_uomratio 		AS conversion_ratio,
-	itemsub_rank 			AS rank
-  FROM	itemsub;
+select
+  itemsub_id as id,
+  itemsub_parent_item_id as root_item,
+  itemsub_sub_item_id as substitute_item,
+  itemsub_uomratio as conversion_ratio,
+  itemsub_rank as rank
+from itemsub;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.item_substitute
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.item_substitute
+  do instead
 
-INSERT INTO itemsub (
+insert into itemsub (
   itemsub_id,
   itemsub_parent_item_id,
   itemsub_sub_item_id,
   itemsub_uomratio,
-  itemsub_rank)
-VALUES (
+  itemsub_rank )
+values (
   new.id,
   new.root_item,
   new.substitute_item,
   new.conversion_ratio,
-  new.rank);
+  new.rank );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.item_substitute
-  DO INSTEAD
+create or replace rule "_UPDATE" as on update to xm.item_substitute
+  do instead
 
-UPDATE 	itemsub 
-   SET	itemsub_sub_item_id 	= new.substitute_item,
-	itemsub_uomratio	= new.conversion_ratio,
-	itemsub_rank		= new.rank
- WHERE	itemsub_id = old.id;
+update itemsub set
+  itemsub_sub_item_id = new.substitute_item,
+  itemsub_uomratio = new.conversion_ratio,
+  itemsub_rank = new.rank
+where ( itemsub_id = old.id );
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.item_substitute
-  DO INSTEAD (
+create or replace rule "_DELETE" as on delete to xm.item_substitute
+  do instead
 
-DELETE FROM itemsub
- WHERE (itemsub_id = old.id);
-
-)
+delete from itemsub
+where ( itemsub_id = old.id );

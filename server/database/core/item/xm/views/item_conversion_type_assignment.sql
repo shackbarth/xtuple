@@ -1,39 +1,38 @@
-﻿SELECT dropIfExists('VIEW', 'item_conversion_type_assignment', 'xm');
+﻿select dropIfExists('VIEW', 'item_conversion_type_assignment', 'xm');
 
 -- return rule
 
-CREATE OR REPLACE VIEW xm.item_conversion_type_assignment AS
+create or replace view xm.item_conversion_type_assignment as
 
-SELECT	itemuom_id 			AS id,
-	itemuom_itemuomconv_id 		AS item_conversion,
-	itemuom_uomtype_id 		AS unit_type
-  FROM	itemuom;
+select  
+  itemuom_id as id,
+  itemuom_itemuomconv_id as item_conversion,
+  itemuom_uomtype_id as unit_type
+from itemuom;
 
 -- insert rule
 
-CREATE OR REPLACE RULE "_CREATE" AS ON INSERT TO xm.item_conversion_type_assignment
-  DO INSTEAD
+create or replace rule "_CREATE" as on insert to xm.item_conversion_type_assignment
+  do instead
 
-INSERT INTO itemuom (
+insert into itemuom (
   itemuom_id,
   itemuom_itemuomconv_id,
-  itemuom_uomtype_id)
-VALUES (
+  itemuom_uomtype_id )
+values (
   new.id,
   new.item_conversion,
-  new.unit_type);
+  new.unit_type );
 
 -- update rule
 
-CREATE OR REPLACE RULE "_UPDATE" AS ON UPDATE TO xm.item_conversion_type_assignment
-  DO INSTEAD NOTHING;
+create or replace rule "_UPDATE" as on update to xm.item_conversion_type_assignment
+  do instead nothing;
 
 -- delete rule
 
-CREATE OR REPLACE RULE "_DELETE" AS ON DELETE TO xm.item_conversion_type_assignment
-  DO INSTEAD (
+create or replace rule "_DELETE" as on delete to xm.item_conversion_type_assignment
+  do instead
 
-DELETE FROM itemuom
- WHERE (itemuom_id = old.id);
-
-)
+delete from itemuom
+where ( itemuom_id = old.id );

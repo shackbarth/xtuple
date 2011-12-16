@@ -1,0 +1,2 @@
+
+config :incident, :required => [ :account ]

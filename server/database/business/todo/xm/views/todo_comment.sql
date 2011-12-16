@@ -3,7 +3,7 @@ select dropIfExists('VIEW', 'todo_comment', 'xm');
 -- return rule
 
 create or replace view xm.todo_comment as
-		
+  
 select
   comment_id as id,
   comment_source_id as todo,
@@ -18,7 +18,7 @@ where ( comment_source = 'TD' );
 -- insert rule
 
 create or replace rule "_CREATE" as on insert to xm.todo_comment 
-	do instead
+  do instead
 
 insert into comment (
   comment_id,
@@ -42,13 +42,13 @@ values (
 -- update rule
 
 create or replace rule "_UPDATE" as on update to xm.todo_comment
-	do instead
-	
-	update comment set
-	  comment_text = new.text
-	where ( comment_id = old.id );
-	
+  do instead
+  
+update comment set
+  comment_text = new.text
+where ( comment_id = old.id );
+  
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.todo_comment	 
-    do instead nothing;
+create or replace rule "_DELETE" as on delete to xm.todo_comment   
+  do instead nothing;
