@@ -18,6 +18,11 @@
 \i core/global/private/functions/execute_query.sql;
 \! sleep 1;
 \i core/global/private/functions/get_id.sql;
+\! sleep 1;
+-- core/global tables
+\i core/global/private/tables/rel.sql
+\! sleep 1;
+\i core/global/private/tables/relass.sql
 \! sleep 2;
 -- core/type tables
 \i core/type/private/tables/datatype.sql;
@@ -25,16 +30,17 @@
 -- core/type xm views
 \i core/type/xm/views/type.sql;
 \! sleep 2;
+-- core/characteristic tables
+\i core/characteristic/private/tables/charrole.sql;
+\! sleep 1;
+\i core/characteristic/private/tables/charroleass.sql;
+\! sleep 1;
+-- tables are above functions for characteristic because function is referencing a table that does not exist
 -- core/characteristic functions
 \i core/characteristic/private/functions/get_charrole_type_name.sql;
 \! sleep 1;
 -- core/characteristic triggers
 \i core/characteristic/private/trigger_functions/core_sync_char_to_charroleass.sql;
-\! sleep 1;
--- core/characteristic tables
-\i core/characteristic/private/tables/charrole.sql;
-\! sleep 1;
-\i core/characteristic/private/tables/charroleass.sql;
 \! sleep 1;
 -- core/characteristic public tables
 \i core/characteristic/public/tables/char.sql;
@@ -212,6 +218,10 @@
 
 -- [ START ] business
 -- business/account functions
+\i business/account/private/tables/crmacctrole.sql;
+\! sleep 1;
+\i business/account/private/tables/crmacctroleass.sql;
+\! sleep 1;
 \i business/account/private/functions/get_crmacctrole_type_name.sql;
 \! sleep 1;
 -- business/account triggers
@@ -226,13 +236,9 @@
 \i business/account/private/trigger_functions/account_sync_charroleass_to_char.sql;
 \! sleep 1;
 -- business/account tables
-\i business/account/private/tables/crmacctroleass.sql;
-\! sleep 1;
-\i business/account/private/tables/crmacctrole.sql;
-\! sleep 1;
 \i business/account/private/tables/charrole.sql;
 \! sleep 1;
-\i business/account/private/tables/charroleass.sql;
+\i business/account/private/tables/charroleass.sql; 
 \! sleep 1;
 \i business/account/private/tables/datatype.sql;
 \! sleep 1;
@@ -256,20 +262,37 @@
 \! sleep 1;
 \i business/account/xm/views/account_role_assignment.sql;
 \! sleep 2;
--- business/account/incident triggers
-\i business/account/incident/private/trigger_functions/incident_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i business/account/incident/private/trigger_functions/incident_sync_charroleass_to_char.sql;
-\! sleep 1;
 -- business/account/incident tables
+\i business/account/incident/private/tables/incdtrel.sql
+\! sleep 1;
+\i business/account/incident/private/tables/incdtrelass.sql
+\! sleep 1;
 \i business/account/incident/private/tables/charrole.sql;
 \! sleep 1;
 \i business/account/incident/private/tables/charroleass.sql;
 \! sleep 1;
 \i business/account/incident/private/tables/datatype.sql;
 \! sleep 1;
+\i business/account/incident/private/tables/incdt_after_delete_check_relass_trigger.sql
+\! sleep 1;
+\i business/account/incident/private/tables/item_sync_incdt_to_incdtrelass.sql
+\! sleep 1;
 -- business/account/incident public tables
 \i business/account/incident/public/tables/char.sql;
+\! sleep 1;
+-- business/account/incident functions
+\i business/account/incident/private/functions/get_incdtrel_type_name.sql
+\! sleep 1;
+-- business/account/incident triggers
+\i business/account/incident/private/trigger_functions/incident_sync_char_to_charroleass.sql;
+\! sleep 1;
+\i business/account/incident/private/trigger_functions/incident_sync_charroleass_to_char.sql;
+\! sleep 1;
+\i business/account/incident/private/trigger_functions/item_sync_incdtrelass_to_incdt.sql
+\! sleep 1;
+\i business/account/incident/private/trigger_functions/incdtrelass_incdt_delete.sql
+\! sleep 1;
+\i business/account/incident/private/trigger_functions/item_sync_incdt_to_incdtrelass.sql
 \! sleep 1;
 -- business/account/incident xm view
 \i business/account/incident/xm/views/incident.sql;
