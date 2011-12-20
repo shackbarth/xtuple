@@ -1,8 +1,8 @@
-﻿-- drop table private.incdtrel;
+-- drop table private.incdtrel;
 
 -- table definition
 
-select private.create_table('incdtrel', 'private', 'private.rel');
+select private.create_table('incdtrel', 'private', false, 'private.rel');
 select private.add_constraint('incdtrel', 'incdtrel_pkey', 'primary key (rel_id)');
 alter table private.incdtrel alter column rel_datatype_id set not null;
 select private.add_constraint('incdtrel', 'incdtrel_rel_datatype_id_unique', 'unique (rel_datatype_id)');

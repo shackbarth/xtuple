@@ -1,4 +1,4 @@
-﻿create or replace function private.create_table(table_name text, schema_name text default 'private',  inherit_table text default null, with_oids boolean default false) returns boolean volatile as $$
+create or replace function private.create_table(table_name text, schema_name text default 'private', with_oids boolean default false, inherit_table text default null) returns boolean volatile as $$
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
