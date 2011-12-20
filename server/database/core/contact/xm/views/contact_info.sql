@@ -1,4 +1,4 @@
-﻿select dropIfExists('VIEW', 'contact_info', 'xm');
+select dropIfExists('VIEW', 'contact_info', 'xm');
 
 -- return rule
 

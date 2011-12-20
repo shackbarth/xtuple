@@ -1,64 +1,66 @@
-select dropIfExists('VIEW', 'contact_info', 'xm');
-select dropIfExists('VIEW', 'contact', 'xm');
+delete from private.model;
+insert into private.model (model_name, model_comment, model_system, model_schemaname, model_tablename, model_columns, model_rules)
+values ('contact','Contact Model', true, 'public', 'cntct',
 
--- return rule
+-- Columns
 
-create or replace view xm.contact as 
-
-select
-  cntct_id as id,
-  cntct_number as number,
-  cntct_active as is_active,
-  cntct_honorific as honorific,
-  cntct_first_name as first_name,
-  cntct_middle as middle_name,
-  cntct_last_name as last_name,
-  cntct_suffix as suffix,
-  cntct_title as job_title,
-  cntct_initials as initials,
-  cntct_phone as phone,
-  cntct_phone2 as alternate,
-  cntct_fax as fax,
-  cntct_email as primary_email,
-  cntct_webaddr as web_address,
-  cntct_crmacct_id as account,
-  cntct_owner_username as owner,
-  cntct_notes as notes,
-  cntct_addr_id as address,
-  btrim(array(
+E'{
+  "cntct_id as id",
+  "cntct_number as number",
+  "cntct_active as is_active",
+  "cntct_honorific as honorific",
+  "cntct_first_name as first_name",
+  "cntct_middle as middle_name",
+  "cntct_last_name as last_name",
+  "cntct_suffix as suffix",
+  "cntct_title as job_title",
+  "cntct_initials as initials",
+  "cntct_phone as phone",
+  "cntct_phone2 as alternate",
+  "cntct_fax as fax",
+  "cntct_email as primary_email",
+  "cntct_webaddr as web_address",
+  "cntct_crmacct_id as account",
+  "cntct_owner_username as owner",
+  "cntct_notes as notes",
+  "cntct_addr_id as address",
+  "btrim(array(
     select cntcteml_id 
     from cntcteml
-    where cntcteml_cntct_id = cntct_id )::text,'{}') as email,
-  btrim(array(
+    where cntcteml_cntct_id = cntct_id )::text,\'{}\') as email",
+  "btrim(array(
     select comment_id 
     from comment
     where comment_source_id = cntct_id 
-      and comment_source = 'T')::text,'{}') as comments,
-  btrim(array(
+      and comment_source = \'T\')::text,\'{}\') as comments",
+  "btrim(array(
     select charass_id 
     from charass
     where charass_target_id = cntct_id 
-      and charass_target_type = 'CNTCT')::text,'{}') as characteristics,
-  btrim(array(
+      and charass_target_type = \'CNTCT\')::text,\'{}\') as characteristics",
+  "btrim(array(
     select docass_id 
     from docass
     where docass_target_id = cntct_id 
-      and docass_target_type = 'T'
+      and docass_target_type = \'T\'
     union all
     select docass_id 
     from docass
     where docass_source_id = cntct_id 
-      and docass_source_type = 'T'
+      and docass_source_type = \'T\'
     union all
     select imageass_id 
     from imageass
     where imageass_source_id = cntct_id 
-      and imageass_source = 'T')::text,'{}') as documents
-from cntct;
+      and imageass_source = \'T\')::text,\'{}\') as documents"}',
+     
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.contact 
+create or replace rule _CREATE as on insert to xm.contact 
   do instead
 
 insert into cntct (
@@ -102,9 +104,11 @@ values (
   new.owner,
   new.address );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.contact 
+create or replace rule _update as on update to xm.contact 
   do instead
 
 update cntct set
@@ -128,32 +132,34 @@ update cntct set
   cntct_addr_id = new.address
 where ( cntct_id = old.id );
 
+","
+
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.contact 
+create or replace rule _delete as on delete to xm.contact 
   do instead (
 
 delete from comment 
 where ( comment_source_id = old.id ) 
- and ( comment_source = 'T' );
+ and ( comment_source = \'T\' );
 
 delete from charass
 where ( charass_target_id = old.id ) 
- and ( charass_target_type = 'CNTCT' );
+ and ( charass_target_type = \'CNTCT\' );
 
 delete from docass
 where ( docass_target_id = old.id ) 
- and ( docass_target_type = 'T' );
+ and ( docass_target_type = \'T\' );
 
 delete from docass
 where ( docass_source_id = old.id ) 
- and ( docass_source_type = 'T' );
+ and ( docass_source_type = \'T\' );
 
 delete from imageass
 where ( imageass_source_id = old.id ) 
- and ( imageass_source = 'T' );
+ and ( imageass_source = \'T\' );
 
 delete from cntct
 where ( cntct_id = old.id );
 
-)
+)"}')
