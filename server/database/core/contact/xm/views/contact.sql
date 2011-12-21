@@ -61,7 +61,7 @@ E'{"
 
 -- insert rule
 
-create or replace rule _CREATE as on insert to xm.contact 
+create or replace rule \\"_CREATE\\" as on insert to xm.contact 
   do instead
 
 insert into cntct (
@@ -107,7 +107,7 @@ values (
 
 -- update rule
 
-create or replace rule _update as on update to xm.contact 
+create or replace rule \\"_UPDATE\\" as on update to xm.contact 
   do instead
 
 update cntct set
@@ -134,7 +134,7 @@ where ( cntct_id = old.id );
 
 -- delete rules
 
-create or replace rule _delete as on delete to xm.contact 
+create or replace rule \\"_DELETE\\" as on delete to xm.contact 
   do instead (
 
 delete from comment 

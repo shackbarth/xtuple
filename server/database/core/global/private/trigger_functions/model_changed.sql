@@ -122,6 +122,10 @@ begin
     execute rec.rule;
   end loop;
 
+  -- Grant access to xtrole
+  query := 'grant all on xm.' || m_name ||' to xtrole';
+  execute query;
+  
   -- Finish up
   if tg_op = 'DELETE' then
     return old;
