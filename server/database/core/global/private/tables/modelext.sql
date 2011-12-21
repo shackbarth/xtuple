@@ -1,6 +1,6 @@
 -- remove old trigger if any
 
-select dropIfExists('TRIGGER', 'modelext_create_xm_view', 'private');
+select dropIfExists('TRIGGER', 'modelext_changed', 'private');
 
 -- table definition
 
@@ -13,6 +13,6 @@ comment on table private.modelext is 'xTuple Model Extension';
 
 -- create trigger
 
-create trigger modelext_create_xm_view after insert or update on private.model for each row execute procedure private.create_xm_view();
+create trigger modelext_changed after insert or update or delete on private.model for each row execute procedure private.model_changed();
 
 

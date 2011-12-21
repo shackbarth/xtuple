@@ -1,6 +1,8 @@
-delete from private.model;
-insert into private.model (model_name, model_comment, model_system, model_schemaname, model_tablename, model_columns, model_rules)
-values ('contact','Contact Model', true, 'public', 'cntct',
+select private.create_model(
+
+-- Model name, schema, table
+
+'contact', 'public', 'cntct',
 
 -- Columns
 
@@ -162,4 +164,7 @@ where ( imageass_source_id = old.id )
 delete from cntct
 where ( cntct_id = old.id );
 
-)"}')
+)"}', 
+
+-- Conditions, Comment, System
+'{}', 'Contact Model', true);

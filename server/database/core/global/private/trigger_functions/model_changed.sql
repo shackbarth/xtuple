@@ -1,4 +1,4 @@
-create or replace function private.create_xm_view() returns trigger as $$
+create or replace function private.model_changed() returns trigger as $$
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
@@ -12,28 +12,34 @@ declare
   rec record;
 begin
 
-  -- Make sure table is valid
-  perform tablename 
-  from pg_tables 
-  where schemaname = new.model_schemaname 
-    and tablename = new.model_tablename;
+  -- Remove old vew and determine whether to rebuild
+  if tg_op in ('UPDATE', 'DELETE') then
+    perform dropIfExists('VIEW', old.model_name, 'xm');
 
-  if (not found) then
-    raise exception 'Table % not found', new.table;
+    -- Bail out in specific cases where it is a base model
+    if tg_table_name = 'model' then
+      if tg_op = 'DELETE' then
+        return old;
+      elsif tg_op = 'UPDATE' and not new.model_active then
+        return old;
+      end if;
+    end if;
+  else
+    perform dropIfExists('VIEW', new.model_name, 'xm');
   end if;
   
   -- Loop through models and build components
   i := 1;
   
   for rec in
-    select model_id, model_columns, model_schemaname, model_tablename, 
+    select model_id, model_columns, model_schema_name, model_table_name, 
       model_conditions, model_rules, model_comment,
       false as ext, null as modelext_join_type, null modelext_join_clause, 
       -1 as modelext_seq
     from only private.model
     where model_name = new.model_name
     union
-    select model_id, model_columns, model_schemaname, model_tablename, 
+    select model_id, model_columns, model_schema_name, model_table_name, 
       model_conditions, model_rules, model_comment,
       true as ext, modelext_join_type, null modelext_join_clause, 
       modelext_seq
@@ -45,11 +51,11 @@ begin
 
     -- Concatenate join clauses on tables when specified
     if not rec.ext then
-      tbls[i] = rec.model_schemaname || '.' || rec.model_tablename;
+      tbls[i] = rec.model_schema_name || '.' || rec.model_table_name;
     elsif (rec.join_type is not null) then
-      tbls[i] = rec.join_type || ' ' || rec.model_schemaname || '.' || rec.model_tablename || ' on (' || rec.model_join_clause || ')';
+      tbls[i] = rec.join_type || ' ' || rec.model_schema_name || '.' || rec.model_table_name || ' on (' || rec.model_join_clause || ')';
     else
-      tbls[i] = ', ' || rec.model_schemaname || '.' || rec.model_tablename;
+      tbls[i] = ', ' || rec.model_schema_name || '.' || rec.model_table_name;
     end if;
     
     clauses := clauses || rec.model_conditions;
@@ -69,9 +75,6 @@ begin
   if array_length(cols, 1) = 0 then
     raise exception 'There must be at least one column defined on the model.';
   end if;
-
-  -- Remove the old view
-  perform dropIfExists('VIEW', new.model_name, 'xm');
   
   -- Build query to create the new view
   query := 'create view xm.' || new.model_name || ' as ' ||
@@ -97,6 +100,10 @@ begin
     execute rec.rule;
   end loop;
 
+  if tg_op = 'DELETE' then
+    return old;
+  end if;
+  
   return new;
   
 end;
