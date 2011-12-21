@@ -1,59 +1,62 @@
-select dropIfExists('VIEW', 'account_info', 'xm');
-select dropIfExists('VIEW', 'account', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.account as 
+'account', 'public', 'crmacct',
 
-select
-  crmacct_id as id,
-  crmacct_number as number,
-  crmacct_name as name,
-  crmacct_active as is_active,
-  crmacct_type as type,
-  crmacct_owner_username as owner,
-  crmacct_parent_id as parent,
-  crmacct_notes as notes,
-  crmacct_cntct_id_1 as primary_contact,
-  crmacct_cntct_id_2 as secondary_contact,
-  btrim(array(
+-- Columns
+
+E'{
+  "crmacct_id as id",
+  "crmacct_number as number",
+  "crmacct_name as name",
+  "crmacct_active as is_active",
+  "crmacct_type as type",
+  "crmacct_owner_username as owner",
+  "crmacct_parent_id as parent",
+  "crmacct_notes as notes",
+  "crmacct_cntct_id_1 as primary_contact",
+  "crmacct_cntct_id_2 as secondary_contact",
+  "btrim(array(
     select cntct_id
     from cntct
-    where cntct_crmacct_id = crmacct_id )::text,'{}') as contacts,
-  btrim(array(
+    where cntct_crmacct_id = crmacct_id )::text,\'{}\') as contacts",
+  "btrim(array(
     select crmacctroleass_id
     from private.crmacctroleass
-    where crmacctroleass_crmacct_id = crmacct_id )::text,'{}') as roles,
-  btrim(array(
+    where crmacctroleass_crmacct_id = crmacct_id )::text,\'{}\') as roles",
+  "btrim(array(
     select comment_id 
     from comment
     where comment_source_id = crmacct_id 
-      and comment_source = 'CRMA')::text,'{}') as comments,
-  btrim(array(
+      and comment_source = \'CRMA\')::text,\'{}\') as comments",
+  "btrim(array(
     select charass_id 
     from charass
     where charass_target_id = crmacct_id 
-      and charass_target_type = 'CRMACCT')::text,'{}') as characteristics,
-  btrim(array(
+      and charass_target_type = \'CRMACCT\')::text,\'{}\') as characteristics",
+  "btrim(array(
     select docass_id 
     from docass
     where docass_target_id = crmacct_id 
-      and docass_target_type = 'CRMA'
+      and docass_target_type = \'CRMA\'
     union all
     select docass_id 
     from docass
     where docass_source_id = crmacct_id 
-      and docass_source_type = 'CRMA'
+      and docass_source_type = \'CRMA\'
     union all
     select imageass_id 
     from imageass
     where imageass_source_id = crmacct_id 
-      and imageass_source = 'CRMA')::text,'{}') as documents
-from crmacct;
+      and imageass_source = \'CRMA\')::text,\'{}\') as documents"
+}',
 
+-- Rules
+E'{"
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.account 
+create or replace rule \\"_CREATE\\" as on insert to xm.account 
   do instead
 
 insert into crmacct (
@@ -81,7 +84,7 @@ values (
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.account
+create or replace rule \\"_UPDATE\\" as on update to xm.account
   do instead
 
 update crmacct set
@@ -98,7 +101,7 @@ where ( crmacct_id = old.id );
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.account
+create or replace rule \\"_DELETE\\" as on delete to xm.account
   do instead (
 
 delete from private.crmacctroleass
@@ -106,25 +109,28 @@ where ( crmacctroleass_crmacct_id = old.id );
 
 delete from comment 
 where ( comment_source_id = old.id ) 
- and ( comment_source = 'CRMA' );
+ and ( comment_source = \'CRMA\' );
 
 delete from charass
 where ( charass_target_id = old.id ) 
- and ( charass_target_type = 'CRMACCT' );
+ and ( charass_target_type = \'CRMACCT\' );
 
 delete from docass
 where ( docass_target_id = old.id ) 
- and ( docass_target_type = 'CRMA' );
+ and ( docass_target_type = \'CRMA\' );
 
 delete from docass
 where ( docass_source_id = old.id ) 
- and ( docass_source_type = 'CRMA' );
+ and ( docass_source_type = \'CRMA\' );
 
 delete from imageass
 where ( imageass_source_id = old.id ) 
- and ( imageass_source = 'CRMA' );
+ and ( imageass_source = \'CRMA\' );
 
 delete from crmacct
 where ( crmacct_id = old.id );
 
-)
+)"}',
+
+-- Conditions, Comment, System
+'{}', 'Account Model', true);
