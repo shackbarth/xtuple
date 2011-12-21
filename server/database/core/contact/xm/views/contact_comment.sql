@@ -1,23 +1,27 @@
-select dropIfExists('VIEW', 'contact_comment', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.contact_comment as 
+'contact_comment', 'public', 'comment',
 
-select
-  comment_id as id,
-  comment_source_id as contact,
-  comment_date as date,
-  comment_user as username,
-  comment_cmnttype_id as comment_type,
-  comment_text as text,
-  comment_public as is_public
-from public.comment
-where ( comment_source = 'T' );
+-- Columns
+
+E'{
+  "comment.comment_id as id",
+  "comment.comment_source_id as contact",
+  "comment.comment_date as date",
+  "comment.comment_user as username",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as text",
+  "comment.comment_public as is_public"}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.contact_comment 
+create or replace rule _CREATE as on insert to xm.contact_comment 
   do instead
 
 insert into public.comment (
@@ -32,23 +36,32 @@ insert into public.comment (
 values (
   new.id,
   new.contact,
-  'T',
+  \'T\',
   new.date,
   new.username,
   new.comment_type,
   new.text,
   new.is_public );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.contact_comment 
+create or replace rule _UPDATE as on update to xm.contact_comment 
   do instead
 
 update public.comment set
   comment_text = new.text
 where ( comment_id = old.id );
 
+","
+
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.contact_comment 
+create or replace rule _DELETE as on delete to xm.contact_comment 
   do instead nothing;
+
+"}', 
+
+-- Conditions, Comment, System
+'{"comment_source = \'T\'"}', 'Contact Comment Model', true);

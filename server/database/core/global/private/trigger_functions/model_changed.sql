@@ -11,6 +11,7 @@ declare
   query text;
   rec record;
   m_name text;
+  s_name text;
 begin
 
   -- Validation
@@ -65,12 +66,18 @@ begin
     cols := cols || rec.model_columns;
 
     -- Concatenate join clauses on tables when specified
-    if not rec.ext then
-      tbls[i] = rec.model_schema_name || '.' || rec.model_table_name;
-    elsif (rec.modelext_join_type is not null) then
-      tbls[i] = rec.modelext_join_type || ' ' || rec.model_schema_name || '.' || rec.model_table_name || ' on (' || rec.modelext_join_clause || ')';
+    if length(rec.model_schema_name) > 0 then
+      s_name = rec.model_schema_name || '.';
     else
-      tbls[i] = ', ' || rec.model_schema_name || '.' || rec.model_table_name;
+      s_name = '';
+    end if;
+    
+    if not rec.ext then
+      tbls[i] = s_name || rec.model_table_name;
+    elsif (rec.modelext_join_type is not null) then
+      tbls[i] = rec.modelext_join_type || ' ' || s_name || rec.model_table_name || ' on (' || rec.modelext_join_clause || ')';
+    else
+      tbls[i] = ', ' || s_name || rec.model_table_name;
     end if;
     
     clauses := clauses || rec.model_conditions;
