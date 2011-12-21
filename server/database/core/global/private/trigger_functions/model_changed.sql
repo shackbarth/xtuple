@@ -14,9 +14,11 @@ declare
 begin
 
   -- Validation
-  if tg_table_name = 'modelext' and tg_op != 'DELETE' then
-    if coalesce(new.modelext_seq,-1) < 0 then
-      raise exception 'Model extension sequence must be greater than zero';
+  if tg_op in ('INSERT','UPDATE') then
+    if tg_table_name = 'modelext' then
+      if coalesce(new.modelext_seq,-1) < 0 then
+        raise exception 'Model extension sequence must be greater than zero';
+      end if;
     end if;
     m_name = new.model_name;
   else

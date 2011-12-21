@@ -84,15 +84,17 @@ select * from xm.address_characteristic where id = 99999;
 
 ---------- TEST FOR MODEL EXTENSIONS ---------
 
-select private.extend_model('test', 'contact','public','cntct crm','join','cntct.cntct_id=crm.cntct_id',
+select private.extend_model(
+-- Context, name, schema, table, join type, join clause
+'test', 'contact','public','cntct test','join','cntct.cntct_id=test.cntct_id',
 -- columns
-'{"crm.cntct_crmacct_id as account"}',
+'{"test.cntct_crmacct_id as account"}',
 -- rules
 '{"
 
 -- insert rule
 
-create or replace rule _insert_crm as on insert to xm.contact 
+create or replace rule _insert_test as on insert to xm.contact 
   do instead
 
 update cntct set
@@ -101,7 +103,7 @@ where ( cntct_id = new.id );
 
 -- update rule
 
-create or replace rule _update_crm as on update to xm.contact 
+create or replace rule _update_test as on update to xm.contact 
   do instead
 
 update cntct set
