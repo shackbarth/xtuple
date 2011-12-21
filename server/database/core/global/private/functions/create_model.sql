@@ -10,7 +10,7 @@ begin
 
   select model_id, model_system into id, was_system
   from only private.model
-  where model_name = $1;
+  where model_name = name;
   
   get diagnostics count = row_count;
   

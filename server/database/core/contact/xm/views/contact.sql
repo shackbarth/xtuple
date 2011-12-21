@@ -7,53 +7,52 @@ select private.create_model(
 -- Columns
 
 E'{
-  "cntct_id as id",
-  "cntct_number as number",
-  "cntct_active as is_active",
-  "cntct_honorific as honorific",
-  "cntct_first_name as first_name",
-  "cntct_middle as middle_name",
-  "cntct_last_name as last_name",
-  "cntct_suffix as suffix",
-  "cntct_title as job_title",
-  "cntct_initials as initials",
-  "cntct_phone as phone",
-  "cntct_phone2 as alternate",
-  "cntct_fax as fax",
-  "cntct_email as primary_email",
-  "cntct_webaddr as web_address",
-  "cntct_crmacct_id as account",
-  "cntct_owner_username as owner",
-  "cntct_notes as notes",
-  "cntct_addr_id as address",
+  "cntct.cntct_id as id",
+  "cntct.cntct_number as number",
+  "cntct.cntct_active as is_active",
+  "cntct.cntct_honorific as honorific",
+  "cntct.cntct_first_name as first_name",
+  "cntct.cntct_middle as middle_name",
+  "cntct.cntct_last_name as last_name",
+  "cntct.cntct_suffix as suffix",
+  "cntct.cntct_title as job_title",
+  "cntct.cntct_initials as initials",
+  "cntct.cntct_phone as phone",
+  "cntct.cntct_phone2 as alternate",
+  "cntct.cntct_fax as fax",
+  "cntct.cntct_email as primary_email",
+  "cntct.cntct_webaddr as web_address",
+  "cntct.cntct_owner_username as owner",
+  "cntct.cntct_notes as notes",
+  "cntct.cntct_addr_id as address",
   "btrim(array(
     select cntcteml_id 
     from cntcteml
-    where cntcteml_cntct_id = cntct_id )::text,\'{}\') as email",
+    where cntcteml_cntct_id = cntct.cntct_id )::text,\'{}\') as email",
   "btrim(array(
     select comment_id 
     from comment
-    where comment_source_id = cntct_id 
+    where comment_source_id = cntct.cntct_id 
       and comment_source = \'T\')::text,\'{}\') as comments",
   "btrim(array(
     select charass_id 
     from charass
-    where charass_target_id = cntct_id 
+    where charass_target_id = cntct.cntct_id 
       and charass_target_type = \'CNTCT\')::text,\'{}\') as characteristics",
   "btrim(array(
     select docass_id 
     from docass
-    where docass_target_id = cntct_id 
+    where docass_target_id = cntct.cntct_id 
       and docass_target_type = \'T\'
     union all
     select docass_id 
     from docass
-    where docass_source_id = cntct_id 
+    where docass_source_id = cntct.cntct_id 
       and docass_source_type = \'T\'
     union all
     select imageass_id 
     from imageass
-    where imageass_source_id = cntct_id 
+    where imageass_source_id = cntct.cntct_id 
       and imageass_source = \'T\')::text,\'{}\') as documents"}',
      
 -- Rules
@@ -82,7 +81,6 @@ insert into cntct (
   cntct_email,
   cntct_webaddr,
   cntct_notes,
-  cntct_crmacct_id,
   cntct_owner_username,
   cntct_addr_id )
 values (
@@ -102,7 +100,6 @@ values (
   new.primary_email,
   new.web_address,
   new.notes,
-  new.account,
   new.owner,
   new.address );
 
@@ -129,7 +126,6 @@ update cntct set
   cntct_email = new.email,
   cntct_webaddr = new.web_address,
   cntct_notes = new.notes,
-  cntct_crmacct_id = new.account,
   cntct_owner_username = new.owner,
   cntct_addr_id = new.address
 where ( cntct_id = old.id );

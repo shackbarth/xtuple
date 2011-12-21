@@ -10,8 +10,19 @@ declare
   rules text[] = '{}';
   query text;
   rec record;
+  m_name text;
 begin
 
+  -- Validation
+  if tg_table_name = 'modelext' and tg_op != 'DELETE' then
+    if coalesce(new.modelext_seq,-1) < 0 then
+      raise exception 'Model extension sequence must be greater than zero';
+    end if;
+    m_name = new.model_name;
+  else
+    m_name = old.model_name;
+  end if;
+  
   -- Remove old vew and determine whether to rebuild
   if tg_op in ('UPDATE', 'DELETE') then
     perform dropIfExists('VIEW', old.model_name, 'xm');
@@ -24,6 +35,7 @@ begin
         return old;
       end if;
     end if;
+
   else
     perform dropIfExists('VIEW', new.model_name, 'xm');
   end if;
@@ -37,14 +49,15 @@ begin
       false as ext, null as modelext_join_type, null modelext_join_clause, 
       -1 as modelext_seq
     from only private.model
-    where model_name = new.model_name
+    where model_name = m_name
     union
     select model_id, model_columns, model_schema_name, model_table_name, 
       model_conditions, model_rules, model_comment,
-      true as ext, modelext_join_type, null modelext_join_clause, 
+      true as ext, modelext_join_type, modelext_join_clause, 
       modelext_seq
     from private.modelext
-    where model_name = new.model_name
+    where model_name = m_name
+    and model_active
     order by modelext_seq, model_id
   loop
     cols := cols || rec.model_columns;
@@ -52,8 +65,8 @@ begin
     -- Concatenate join clauses on tables when specified
     if not rec.ext then
       tbls[i] = rec.model_schema_name || '.' || rec.model_table_name;
-    elsif (rec.join_type is not null) then
-      tbls[i] = rec.join_type || ' ' || rec.model_schema_name || '.' || rec.model_table_name || ' on (' || rec.model_join_clause || ')';
+    elsif (rec.modelext_join_type is not null) then
+      tbls[i] = rec.modelext_join_type || ' ' || rec.model_schema_name || '.' || rec.model_table_name || ' on (' || rec.modelext_join_clause || ')';
     else
       tbls[i] = ', ' || rec.model_schema_name || '.' || rec.model_table_name;
     end if;
@@ -77,7 +90,7 @@ begin
   end if;
   
   -- Build query to create the new view
-  query := 'create view xm.' || new.model_name || ' as ' ||
+  query := 'create view xm.' || m_name || ' as ' ||
          'select ' || array_to_string(cols, ', ') ||
          ' from ' || array_to_string(tbls, ' ');
 
@@ -89,7 +102,7 @@ begin
   execute query;
 
   -- Add comment
-  query := 'comment on view xm.' || new.model_name || E' is \'' || comments || E'\''; 
+  query := 'comment on view xm.' || m_name || E' is \'' || comments || E'\''; 
 
   execute query;
   
@@ -100,6 +113,7 @@ begin
     execute rec.rule;
   end loop;
 
+  -- Finish up
   if tg_op = 'DELETE' then
     return old;
   end if;
