@@ -81,55 +81,6 @@ select * from xm.address where id = 99999;
 select * from xm.address_comment where id = 99999;
 select * from xm.address_characteristic where id = 99999;
 
----------- TEST FOR MODEL EXTENSIONS ---------
-
-select private.extend_model(
--- Context, name, schema, table, join type, join clause
-'test', 'contact','public','cntct test','join','cntct.cntct_id=test.cntct_id',
--- columns
-'{"test.cntct_crmacct_id as account"}',
--- rules
-'{"
-
--- insert rule
-
-create or replace rule _insert_test as on insert to xm.contact 
-  do instead
-
-update cntct set
-  cntct_crmacct_id = new.account
-where ( cntct_id = new.id );
-
--- update rule
-
-create or replace rule _update_test as on update to xm.contact 
-  do instead
-
-update cntct set
-  cntct_crmacct_id = new.account
-where ( cntct_id = old.id );
-
-"}', 
--- conditions, comment, sequence, system
-'{}', 'Extended by TEST', 50, true);
-
-select * from private.modelext;
-select * from xm.contact;
-
-update xm.contact set account = getCrmAcctId('TTOYS') where first_name = 'Jed' and last_name = 'Hastings';
-select * from xm.contact;
-insert into xm.contact(id, number, first_name, last_name, account) values (9999, 9999, 'Bradly', 'Johnson', getCrmAcctId('TTOYS'));
-select * from xm.contact;
-
-update xm.contact set account = null where first_name = 'Jed' and last_name = 'Hastings';
-delete from xm.contact where id = 9999;
-select * from xm.contact;
-
-update private.modelext set model_active = false where modelext_context = 'test' and model_name='contact';
-update xm.contact set account = null where first_name = 'Jed' and last_name = 'Hastings'; -- should error
-delete from private.modelext where modelext_context = 'test' and model_name='contact';
-select * from xm.contact;
-
 
 
 
