@@ -11,15 +11,30 @@
 -- core/global functions
 \i core/global/private/functions/create_table.sql;
 \! sleep 1;
+\i core/global/private/functions/create_model.sql;
+\! sleep 1;
 \i core/global/private/functions/add_column.sql;
 \! sleep 1;
 \i core/global/private/functions/add_constraint.sql;
 \! sleep 1;
+\i core/global/private/functions/add_primary_key.sql;
+\! sleep 1;
 \i core/global/private/functions/execute_query.sql;
+\! sleep 1;
+\i core/global/private/functions/extend_model.sql;
+\! sleep 1;
+\i core/global/private/functions/get_datatype_source.sql;
 \! sleep 1;
 \i core/global/private/functions/get_id.sql;
 \! sleep 1;
+-- core/trigger functions
+\i core/global/private/trigger_functions/model_changed.sql
+\! sleep 1;
 -- core/global tables
+\i core/global/private/tables/model.sql
+\! sleep 1;
+\i core/global/private/tables/modelext.sql
+\! sleep 1;
 \i core/global/private/tables/rel.sql
 \! sleep 1;
 \i core/global/private/tables/relass.sql
