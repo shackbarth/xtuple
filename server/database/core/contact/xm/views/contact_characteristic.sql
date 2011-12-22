@@ -18,7 +18,7 @@ E'{"
 
 -- insert rule
 
-create or replace rule _CREATE as on insert to xm.contact_characteristic 
+create or replace rule \\"_CREATE\\" as on insert to xm.contact_characteristic 
   do instead
 
 insert into public.charass (
@@ -38,7 +38,7 @@ values (
 
 -- update rule
 
-create or replace rule _UPDATE as on update to xm.contact_characteristic 
+create or replace rule \\"_UPDATE\\" as on update to xm.contact_characteristic 
   do instead
 
 update public.charass set
@@ -50,7 +50,7 @@ where ( charass_id = old.id );
 
 -- delete rule
 
-create or replace rule _DELETE as on delete to xm.contact_characteristic 
+create or replace rule \\"_DELETE\\" as on delete to xm.contact_characteristic 
   do instead
 
 delete from public.charass 

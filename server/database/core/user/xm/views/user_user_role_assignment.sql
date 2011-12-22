@@ -1,18 +1,23 @@
-select dropIfExists('VIEW', 'user_user_role_assignment', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.user_user_role_assignment as 
+'user_user_role_assignment', 'public', 'usrgrp',
 
-select
-  usrgrp_id as id,
-  usrgrp_username as user,
-  usrgrp_grp_id as user_role
-from public.usrgrp;
+-- Columns
+
+E'{
+  "usrgrp_id as id",
+  "usrgrp_username as user",
+  "usrgrp_grp_id as user_role"}',
+     
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.user_user_role_assignment
+create or replace rule \\"_CREATE\\" as on insert to xm.user_user_role_assignment
   do instead
 
 insert into public.usrgrp (
@@ -24,15 +29,25 @@ values (
   new.user,
   new.user_role );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.user_user_role_assignment
+create or replace rule \\"_UPDATE\\" as on update to xm.user_user_role_assignment
   do instead nothing;
+
+","
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.user_user_role_assignment
+create or replace rule \\"_DELETE\\" as on delete to xm.user_user_role_assignment
   do instead 
   
 delete from public.usrgrp
 where ( usrgrp_id = old.id );
+
+"}', 
+
+-- Conditions, Comment, System
+
+'{}', 'User User Role Assignment Model', true);

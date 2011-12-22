@@ -21,7 +21,7 @@ E'{"
 
 -- insert rule
 
-create or replace rule _CREATE as on insert to xm.contact_comment 
+create or replace rule \\"_CREATE\\" as on insert to xm.contact_comment 
   do instead
 
 insert into public.comment (
@@ -47,7 +47,7 @@ values (
 
 -- update rule
 
-create or replace rule _UPDATE as on update to xm.contact_comment 
+create or replace rule \\"_UPDATE\\" as on update to xm.contact_comment 
   do instead
 
 update public.comment set
@@ -58,7 +58,7 @@ where ( comment_id = old.id );
 
 -- delete rule
 
-create or replace rule _DELETE as on delete to xm.contact_comment 
+create or replace rule \\"_DELETE\\" as on delete to xm.contact_comment 
   do instead nothing;
 
 "}', 

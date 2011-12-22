@@ -12,11 +12,11 @@ values (
 insert into xm.contact (
   id, number, is_active, honorific, first_name, middle_name, last_name, suffix,
   phone, alternate, fax, web_address, primary_email, 
-  owner, account, notes, address )
+  owner, notes, address )
 values (
   99999, '99999', true, 'Mr.', 'John' , 'A', 'Doe', 'Jr.',
   '555-5656', '555-5555', '890-2345', 'www.xtuple.com', 'johnd@xm.ple.com', 
-  current_user, (select crmacct_id from crmacct where crmacct_number = 'TTOYS'), 'Read my notes.', 99999 );
+  current_user, 'Read my notes.', 99999 );
 
 insert into xm.contact_comment (
   id, contact, date, username, comment_type, text, is_public )
@@ -56,8 +56,7 @@ update xm.contact set
   honorific = 'Ms.',
   first_name = 'Jane',
   last_name = 'Doenut',
-  suffix = '',
-  account = (select crmacct_id from crmacct where crmacct_number = 'TPARTS')
+  suffix = ''
 where id = 99999;
 
 update xm.contact_comment set

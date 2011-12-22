@@ -30,12 +30,12 @@ E'{"
 
 -- insert rules
 
-create or replace rule _CREATE as on insert to xm.contact_document 
+create or replace rule \\"_CREATE\\" as on insert to xm.contact_document 
   do instead nothing;
 
 ","
   
-create or replace rule _CREATE_DOC as on insert to xm.contact_document 
+create or replace rule \\"_CREATE_DOC\\" as on insert to xm.contact_document 
   where new.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 insert into public.docass (
@@ -50,12 +50,12 @@ values (
   new.contact,
   \'T\',
   new.target,
-  new.target_type,
+  private.get_datatype_source(new.target_type),
   new.purpose );
 
 ","
 
-create or replace rule _CREATE_IMG as on insert to xm.contact_document 
+create or replace rule \\"_CREATE_IMG\\" as on insert to xm.contact_document 
   where new.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 insert into public.imageass (
@@ -75,19 +75,19 @@ values (
 
 -- update rule
 
-create or replace rule _UPDATE as on update to xm.contact_document 
+create or replace rule \\"_UPDATE\\" as on update to xm.contact_document 
   do instead nothing;
 
 ","
 
 -- delete rules
 
-create or replace rule _DELETE as on delete to xm.contact_document
+create or replace rule \\"_DELETE\\" as on delete to xm.contact_document
   do instead nothing;
 
 ","
   
-create or replace rule _DELETE_DOC as on delete to xm.contact_document
+create or replace rule \\"_DELETE_DOC\\" as on delete to xm.contact_document
   where old.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.docass 
@@ -95,7 +95,7 @@ where ( docass_id = old.id );
 
 ","
 
-create or replace rule _DELETE_IMG as on delete to xm.contact_document
+create or replace rule \\"_DELETE_IMG\\" as on delete to xm.contact_document
   where old.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.imageass
@@ -105,10 +105,3 @@ where ( imageass_id = old.id );
 
 -- Conditions, Comment, System
 '{}', 'Contact Document Model', true);
-
-/*
-  "datatype_id as target_type",
-from docass
-  join private.datatype on ( docass_target_type = datatype_source )
-where ( docass_source_type = 'T' )
-*/
