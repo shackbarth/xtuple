@@ -17,15 +17,8 @@ E'{
   "crmacct_notes as notes",
   "crmacct_cntct_id_1 as primary_contact",
   "crmacct_cntct_id_2 as secondary_contact",
-  "btrim(array(
-    select cntct_id
-    from cntct
-    where cntct_crmacct_id = crmacct_id )::text,\'{}\') as contacts",
-  "btrim(array(
-    select crmacctroleass_id
-    from private.crmacctroleass
-    where crmacctroleass_crmacct_id = crmacct_id )::text,\'{}\') as roles",
-  "btrim(array(
+  "crmacct_usr_username as user",
+ "btrim(array(
     select comment_id 
     from comment
     where comment_source_id = crmacct_id 
@@ -69,7 +62,8 @@ insert into crmacct (
   crmacct_parent_id,
   crmacct_notes,
   crmacct_cntct_id_1,
-  crmacct_cntct_id_2 )
+  crmacct_cntct_id_2,
+  crmacct_usr_username )
 values (
   new.id,
   new.number,
@@ -80,7 +74,8 @@ values (
   new.parent,
   new.notes,
   new.primary_contact,
-  new.secondary_contact );
+  new.secondary_contact,
+  new.user );
 
 -- update rule
 
@@ -96,16 +91,14 @@ update crmacct set
   crmacct_parent_id = new.parent,
   crmacct_notes = new.notes,
   crmacct_cntct_id_1 = new.primary_contact,
-  crmacct_cntct_id_2 = new.secondary_contact
+  crmacct_cntct_id_2 = new.secondary_contact,
+  crmacct_usr_username = new.user
 where ( crmacct_id = old.id );
 
 -- delete rules
 
 create or replace rule \\"_DELETE\\" as on delete to xm.account
   do instead (
-
-delete from private.crmacctroleass
-where ( crmacctroleass_crmacct_id = old.id );
 
 delete from comment 
 where ( comment_source_id = old.id ) 

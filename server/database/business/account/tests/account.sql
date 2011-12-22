@@ -1,17 +1,7 @@
 insert into xm.account (
-  id, "number", name, is_active, "type", owner, parent, notes, primary_contact, secondary_contact)
+  id, "number", name, is_active, "type", owner, parent, notes, primary_contact, secondary_contact, "user")
 values (
-  99999, 'TEST NUMBER', 'TEST NAME', true, 'O', 'admin', NULL, 'TEST NOTES', 1, 6);
-
-insert into comment (
-  comment_id, comment_source_id, comment_date, comment_user, comment_text, comment_cmnttype_id, comment_source, comment_public)
-values (
-  99999, 99999, now(), 'admin', 'TESTING ACCOUNT MODEL VIEW FUNCTIONALITY', 1, 'CRMA', true);
-
-insert into charass (
-  charass_id, charass_target_type, charass_target_id, charass_char_id, charass_value, charass_default, charass_price)
-values (
-  99999, 'CRMACCT', 99999, 16, 'TESTING ACCOUNT MODEL VIEW', false, 0.0000);
+  99999, 'TEST NUMBER', 'TEST NAME', true, 'O', 'admin', NULL, 'TEST NOTES', 1, 6, 'admin');
 
 insert into docass (
   docass_id, docass_source_id, docass_source_type, docass_target_id, docass_target_type, docass_purpose)
@@ -39,7 +29,7 @@ update xm.account set
   parent = 1,
   notes = '**UPDATED NOTES**',
   primary_contact = 2,
-  secondary_contact = 10,
+  secondary_contact = 7,
 where id = 99999;
 
 delete from xm.account
