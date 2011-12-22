@@ -1,35 +1,40 @@
-select dropIfExists('VIEW', 'address', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.address as 
+'address', 'public', 'addr',
 
-select
-  addr_id as id,
-  addr_number as number,
-  addr_active as is_active,
-  addr_line1 as line1,
-  addr_line2 as line2,
-  addr_line3 as line3,
-  addr_city as city,
-  addr_state as state,
-  addr_postalcode as postalcode,
-  addr_country as country,
-  btrim(array(
+-- Columns
+
+E'{
+  "addr.addr_id as id",
+  "addr.addr_number as number",
+  "addr.addr_active as is_active",
+  "addr.addr_line1 as line1",
+  "addr.addr_line2 as line2",
+  "addr.addr_line3 as line3",
+  "addr.addr_city as city",
+  "addr.addr_state as state",
+  "addr.addr_postalcode as postalcode",
+  "addr.addr_country as country",
+  "btrim(array(
     select comment_id 
     from comment
-    where comment_source_id = addr_id 
-      and comment_source = 'ADDR')::text,'{}') as comments,
-  btrim(array(
+    where comment_source_id = addr.addr_id 
+      and comment_source = \'ADDR\')::text,\'{}\') as comments",
+  "btrim(array(
     select charass_id 
     from charass
-    where charass_target_id = addr_id 
-      and charass_target_type = 'ADDR')::text,'{}') as characteristics
-from public.addr;
+    where charass_target_id = addr.addr_id 
+      and charass_target_type = \'ADDR\')::text,\'{}\') as characteristics"}',
+     
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.address 
+create or replace rule \\"_CREATE\\" as on insert to xm.address 
   do instead
 
 insert into public.addr (
@@ -55,9 +60,11 @@ values (
   new.postalcode,
   new.country );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.address 
+create or replace rule \\"_UPDATE\\" as on update to xm.address 
   do instead
 
 update public.addr set
@@ -72,20 +79,28 @@ update public.addr set
   addr_country = new.country
 where ( addr_id = old.id );
 
+","
+
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.address 
+create or replace rule \\"_DELETE\\" as on delete to xm.address 
   do instead (
 
 delete from comment 
 where ( comment_source_id = old.id ) 
- and ( comment_source = 'ADDR' );
+ and ( comment_source = \'ADDR\' );
 
 delete from charass
 where ( charass_target_id = old.id ) 
- and ( charass_target_type = 'ADDR' );
+ and ( charass_target_type = \'ADDR\' );
 
 delete from public.addr 
 where ( addr_id = old.id );
 
 )
+
+"}', 
+
+-- Conditions, Comment, System
+
+'{}', 'Address Model', true);

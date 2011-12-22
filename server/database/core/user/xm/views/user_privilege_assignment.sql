@@ -7,9 +7,9 @@ select private.create_model(
 -- Columns
 
 E'{
-  "usrpriv_id as id",
-  "usrpriv_username as user",
-  "usrpriv_priv_id as privilege"}',
+  "usrpriv.usrpriv_id as id",
+  "usrpriv.usrpriv_username as user",
+  "usrpriv.usrpriv_priv_id as privilege"}',
      
 -- Rules
 

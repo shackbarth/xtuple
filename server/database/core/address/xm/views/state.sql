@@ -1,19 +1,24 @@
-select dropIfExists('VIEW', 'state', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.state as 
+'state', 'public', 'state',
 
-select
-  state_id as id,
-  state_name as name,
-  state_abbr as abbreviation,
-  state_country_id as country
-from public.state;
+-- Columns
+
+E'{
+  "state.state_id as id",
+  "state.state_name as name",
+  "state.state_abbr as abbreviation",
+  "state.state_country_id as country"}',
+     
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.state
+create or replace rule \\"_CREATE\\" as on insert to xm.state
   do instead
 
 insert into public.state (
@@ -27,9 +32,11 @@ values (
   new.abbreviation,
   new.country );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.state
+create or replace rule \\"_UPDATE\\" as on update to xm.state
   do instead
 
 update public.state set
@@ -38,10 +45,18 @@ update public.state set
   state_country_id = new.country
 where ( state_id = old.id );
 
+","
+
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.state
+create or replace rule \\"_DELETE\\" as on delete to xm.state
   do instead 
   
 delete from public.state
 where ( state_id = old.id );
+
+"}', 
+
+-- Conditions, Comment, System
+
+'{}', 'State Model', true);
