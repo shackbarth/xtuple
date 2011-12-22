@@ -1,18 +1,23 @@
-select dropIfExists('VIEW', 'user_role_privilege_assignment', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.user_role_privilege_assignment as 
+'user_role_privilege_assignment', 'public', 'grppriv',
 
-select
-  grppriv_id as id,
-  grppriv_grp_id as user_role,
-  grppriv_priv_id as privilege
-from public.grppriv;
+-- Columns
+
+E'{
+  "grppriv_id as id",
+  "grppriv_grp_id as user_role",
+  "grppriv_priv_id as privilege"}',
+     
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.user_role_privilege_assignment
+create or replace rule \\"_CREATE\\" as on insert to xm.user_role_privilege_assignment
   do instead
 
 insert into public.grppriv (
@@ -24,17 +29,28 @@ values (
   new.user_role,
   new.privilege );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.user_role_privilege_assignment
+create or replace rule \\"_UPDATE\\" as on update to xm.user_role_privilege_assignment
   do instead nothing;
+
+","
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.user_role_privilege_assignment
+create or replace rule \\"_DELETE\\" as on delete to xm.user_role_privilege_assignment
   do instead (
 
 delete from public.grppriv
 where ( grppriv_id = old.id );
 
 );
+
+"}', 
+
+-- Conditions, Comment, System
+
+'{}', 'User Role Privilege Assignment Model', true);
+

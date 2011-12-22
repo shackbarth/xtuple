@@ -1,18 +1,23 @@
-select dropIfExists('VIEW', 'user_privilege_assignment', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.user_privilege_assignment as 
+'user_privilege_assignment', 'public', 'usrpriv',
 
-select
-  usrpriv_id as id,
-  usrpriv_username as user,
-  usrpriv_priv_id as privilege
-from public.usrpriv;
+-- Columns
+
+E'{
+  "usrpriv_id as id",
+  "usrpriv_username as user",
+  "usrpriv_priv_id as privilege"}',
+     
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.user_privilege_assignment
+create or replace rule \\"_CREATE\\" as on insert to xm.user_privilege_assignment
   do instead
 
 insert into public.usrpriv (
@@ -24,15 +29,25 @@ values (
   new.user,
   new.privilege );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.user_privilege_assignment
+create or replace rule \\"_UPDATE\\" as on update to xm.user_privilege_assignment
   do instead nothing;
+
+","
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.user_privilege_assignment
+create or replace rule \\"_DELETE\\" as on delete to xm.user_privilege_assignment
   do instead 
   
 delete from public.usrpriv
 where ( usrpriv_id = old.id );
+
+"}', 
+
+-- Conditions, Comment, System
+
+'{}', 'User Privilege Assignment Model', true);
