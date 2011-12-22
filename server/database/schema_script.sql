@@ -45,30 +45,11 @@
 -- core/type xm views
 \i core/type/xm/views/type.sql;
 \! sleep 2;
--- core/characteristic tables
-\i core/characteristic/private/tables/charrole.sql;
+-- core/characteristic xm models
+\i core/characteristic/xm/models/characteristic.sql;
 \! sleep 1;
-\i core/characteristic/private/tables/charroleass.sql;
+\i core/characteristic/xm/models/characteristic_option.sql;
 \! sleep 1;
--- tables are above functions for characteristic because function is referencing a table that does not exist
--- core/characteristic functions
-\i core/characteristic/private/functions/get_charrole_type_name.sql;
-\! sleep 1;
--- core/characteristic triggers
-\i core/characteristic/private/trigger_functions/core_sync_char_to_charroleass.sql;
-\! sleep 1;
--- core/characteristic public tables
-\i core/characteristic/public/tables/char.sql;
-\! sleep 1;
--- core/characteristic xm views
-\i core/characteristic/xm/views/characteristic.sql;
-\! sleep 1;
-\i core/characteristic/xm/views/characteristic_option.sql;
-\! sleep 1;
-\i core/characteristic/xm/views/characteristic_role.sql;
-\! sleep 1;
-\i core/characteristic/xm/views/characteristic_role_assignment.sql;
-\! sleep 2;
 -- core/document
 \i core/document/private/datatype.sql;
 \! sleep 1;
@@ -79,89 +60,51 @@
 \! sleep 1;
 \i core/document/xm/views/url.sql;
 \! sleep 2;
--- core/address triggers
-\i core/address/private/trigger_functions/address_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i core/address/private/trigger_functions/address_sync_charroleass_to_char.sql;
-\! sleep 1;
 -- core/address xm functions
 \i core/address/xm/functions/address_find_existing.sql;
 \! sleep 1;
 \i core/address/xm/functions/address_use_count.sql;
 \! sleep 1;
 -- core/address tables
-\i core/address/private/tables/charrole.sql;
-\! sleep 1;
-\i core/address/private/tables/charroleass.sql;
-\! sleep 1;
 \i core/address/private/tables/datatype.sql;
 \! sleep 1;
--- core/address public tables
-\i core/address/public/tables/char.sql;
+-- core/address xm models
+\i core/address/xm/models/address.sql;
 \! sleep 1;
--- core/address xm views
-\i core/address/xm/views/address.sql;
+\i core/address/xm/models/address_characteristic.sql;
 \! sleep 1;
-\i core/address/xm/views/address_characteristic.sql;
+\i core/address/xm/models/address_comment.sql;
 \! sleep 1;
-\i core/address/xm/views/address_comment.sql;
+\i core/address/xm/models/country.sql;
 \! sleep 1;
-\i core/address/xm/views/country.sql;
-\! sleep 1;
-\i core/address/xm/views/state.sql;
+\i core/address/xm/models/state.sql;
 \! sleep 2;
 -- core/comment xm views
 \i core/comment/xm/views/comment_type.sql;
 \! sleep 2;
--- core/contact triggers
-\i core/contact/private/trigger_functions/contact_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i core/contact/private/trigger_functions/contact_sync_charroleass_to_char.sql;
-\! sleep 1;
--- core/contact tables
-\i core/contact/private/tables/charrole.sql;
-\! sleep 1;
-\i core/contact/private/tables/charroleass.sql;
-\! sleep 1;
 \i core/contact/private/tables/datatype.sql;
 \! sleep 1;
--- core/contact public tables
-\i core/contact/public/tables/char.sql;
+-- core/contact xm models
+\i core/contact/xm/models/contact.sql;
 \! sleep 1;
--- core/contact xm views
-\i core/contact/xm/views/contact.sql;
+\i core/contact/xm/models/contact_info.sql;
 \! sleep 1;
-\i core/contact/xm/views/contact_info.sql;
+\i core/contact/xm/models/contact_characteristic.sql;
 \! sleep 1;
-\i core/contact/xm/views/contact_characteristic.sql;
+\i core/contact/xm/models/contact_comment.sql;
 \! sleep 1;
-\i core/contact/xm/views/contact_comment.sql;
+\i core/contact/xm/models/contact_document.sql;
 \! sleep 1;
-\i core/contact/xm/views/contact_document.sql;
+\i core/contact/xm/models/contact_email.sql;
 \! sleep 1;
-\i core/contact/xm/views/contact_email.sql;
-\! sleep 1;
-\i core/contact/xm/views/honorific.sql;
+\i core/contact/xm/models/honorific.sql;
 \! sleep 2;
 -- core/currency xm views
 \i core/currency/xm/views/currency.sql;
 \! sleep 1;
 \i core/currency/xm/views/currency_rate.sql;
 \! sleep 2;
--- core/item triggers
-\i core/item/private/trigger_functions/item_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i core/item/private/trigger_functions/item_sync_charroleass_to_char.sql;
-\! sleep 1;
--- core/item tables
-\i core/item/private/tables/charrole.sql;
-\! sleep 1;
-\i core/item/private/tables/charroleass.sql;
-\! sleep 1;
 \i core/item/private/tables/datatype.sql;
-\! sleep 1;
--- core/item public tables
-\i core/item/public/tables/char.sql;
 \! sleep 1;
 -- core/item xm views
 \i core/item/xm/views/item.sql;
@@ -210,24 +153,24 @@
 \! sleep 1;
 \i core/user/private/tables/user.sql;
 \! sleep 1;
--- core/user xm views
-\i core/user/xm/views/user.sql;
+-- core/user xm models
+\i core/user/xm/models/user.sql;
 \! sleep 1;
-\i core/user/xm/views/user_info.sql;
+\i core/user/xm/models/user_info.sql;
 \! sleep 1;
-\i core/user/xm/views/user_privilege_assignment.sql; 
+\i core/user/xm/models/user_privilege_assignment.sql; 
 \! sleep 1;
-\i core/user/xm/views/privilege.sql;
+\i core/user/xm/models/privilege.sql;
 \! sleep 1;
-\i core/user/xm/views/language.sql;
+\i core/user/xm/models/language.sql;
 \! sleep 1;
-\i core/user/xm/views/locale.sql;
+\i core/user/xm/models/locale.sql;
 \! sleep 1;
-\i core/user/xm/views/user_role.sql;
+\i core/user/xm/models/user_role.sql;
 \! sleep 1;
-\i core/user/xm/views/user_role_privilege_assignment.sql;
+\i core/user/xm/models/user_role_privilege_assignment.sql;
 \! sleep 1;
-\i core/user/xm/views/user_user_role_assignment.sql;
+\i core/user/xm/models/user_user_role_assignment.sql;
 \! sleep 2;
 -- [ END ] core
 
@@ -246,21 +189,11 @@
 \! sleep 1;
 \i business/account/private/trigger_functions/user_sync_crmacct_to_crmacctroleass.sql;
 \! sleep 1;
-\i business/account/private/trigger_functions/account_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i business/account/private/trigger_functions/account_sync_charroleass_to_char.sql;
-\! sleep 1;
 -- business/account tables
-\i business/account/private/tables/charrole.sql;
-\! sleep 1;
-\i business/account/private/tables/charroleass.sql; 
-\! sleep 1;
 \i business/account/private/tables/datatype.sql;
 \! sleep 1;
 -- business/account public tables
 \i business/account/public/tables/crmacct.sql;
-\! sleep 1;
-\i business/account/public/tables/char.sql;
 \! sleep 1;
 -- business/account xm views
 \i business/account/xm/views/account.sql;
@@ -282,27 +215,16 @@
 \! sleep 1;
 \i business/account/incident/private/tables/incdtrelass.sql
 \! sleep 1;
-\i business/account/incident/private/tables/charrole.sql;
-\! sleep 1;
-\i business/account/incident/private/tables/charroleass.sql;
-\! sleep 1;
 \i business/account/incident/private/tables/datatype.sql;
 \! sleep 1;
 \i business/account/incident/private/tables/incdt_after_delete_check_relass_trigger.sql
 \! sleep 1;
 \i business/account/incident/private/tables/item_sync_incdt_to_incdtrelass.sql
 \! sleep 1;
--- business/account/incident public tables
-\i business/account/incident/public/tables/char.sql;
-\! sleep 1;
 -- business/account/incident functions
 \i business/account/incident/private/functions/get_incdtrel_type_name.sql
 \! sleep 1;
 -- business/account/incident triggers
-\i business/account/incident/private/trigger_functions/incident_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i business/account/incident/private/trigger_functions/incident_sync_charroleass_to_char.sql;
-\! sleep 1;
 \i business/account/incident/private/trigger_functions/item_sync_incdtrelass_to_incdt.sql
 \! sleep 1;
 \i business/account/incident/private/trigger_functions/incdtrelass_incdt_delete.sql
@@ -328,20 +250,8 @@
 \! sleep 1;
 \i business/account/incident/xm/views/incident_severity.sql;
 \! sleep 2;
--- business/account/opportunity triggers
-\i business/account/opportunity/private/trigger_functions/opportunity_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i business/account/opportunity/private/trigger_functions/opportunity_sync_charroleass_to_char.sql;
-\! sleep 1;
 -- business/account/opportunity tables
-\i business/account/opportunity/private/tables/charrole.sql;
-\! sleep 1;
-\i business/account/opportunity/private/tables/charroleass.sql;
-\! sleep 1;
 \i business/account/opportunity/private/tables/datatype.sql;
-\! sleep 1;
--- business/account/opportunity public tables
-\i business/account/opportunity/public/tables/char.sql;
 \! sleep 1;
 -- business/account/opportunity xm view
 \i business/account/opportunity/xm/views/opportunity.sql;
@@ -358,36 +268,12 @@
 \! sleep 1;
 \i business/account/opportunity/xm/views/opportunity_type.sql;
 \! sleep 2;
--- business/customer triggers
-\i business/customer/private/trigger_functions/customer_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i business/customer/private/trigger_functions/customer_sync_charroleass_to_char.sql;
-\! sleep 1;
 -- business/customer tables
-\i business/customer/private/tables/charrole.sql;
-\! sleep 1;
-\i business/customer/private/tables/charroleass.sql;
-\! sleep 1;
 \i business/customer/private/tables/datatype.sql;
 \! sleep 1;
--- business/customer public tables
-\i business/customer/public/tables/char.sql;
-\! sleep 2;
--- business/employee triggers
-\i business/employee/private/trigger_functions/employee_sync_char_to_charroleass.sql;
-\! sleep 1;
-\i business/employee/private/trigger_functions/employee_sync_charroleass_to_char.sql;
-\! sleep 1;
 -- business/employee tables
-\i business/employee/private/tables/charrole.sql;
-\! sleep 1;
-\i business/employee/private/tables/charroleass.sql;
-\! sleep 1;
 \i business/employee/private/tables/datatype.sql;
 \! sleep 1;
--- business/employee public tables
-\i business/employee/public/tables/char.sql;
-\! sleep 2;
 -- business/project xm view
 \i business/project/xm/views/project.sql;
 \! sleep 1;
