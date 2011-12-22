@@ -1,11 +1,11 @@
 select private.create_model(
 
 -- Model name, schema, table
-'account_comment', 'public', 'crmacct',
+'account_comment', 'public', 'comment',
 
 -- Columns
 E'{
-  "comment.comment_id as id"
+  "comment_id as id",
   "comment_source_id as account",
   "comment_date as date",
   "comment_user as username",
@@ -14,33 +14,10 @@ E'{
   "comment_public as is_public"}',
 
 -- Rules
-E'{}',
-
--- Conditions, Comment, System
-'{"comment_source = \'CRMA\'"}', 'Account Comment Model', true);
-
-/*
-
-select dropIfExists('VIEW', 'account_comment', 'xm');
-
--- return rule
-
-create or replace view xm.account_comment as 
-
-select
-  comment_id as id,
-  comment_source_id as account,
-  comment_date as date,
-  comment_user as username,
-  comment_cmnttype_id as comment_type,
-  comment_text as text,
-  comment_public as is_public
-from comment
-where ( comment_source = 'CRMA' );
-
+E'{"
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.account_comment 
+create or replace rule \\"_CREATE\\" as on insert to xm.account_comment 
   do instead
 
 insert into comment (
@@ -55,7 +32,7 @@ insert into comment (
 values (
   new.id,
   new.account,
-  'CRMA',
+  \'CRMA\',
   new.date,
   new.username,
   new.comment_type,
@@ -64,16 +41,19 @@ values (
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.account_comment 
+create or replace rule \\"_UPDATE\\" as on update to xm.account_comment 
   do instead
 
 update comment set
-  comment_text = new.text
+  comment_text = new.text,
+  comment_public = new.is_public
 where ( comment_id = old.id );
 
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.account_comment 
+create or replace rule \\"_DELETE\\" as on delete to xm.account_comment 
   do instead nothing;
+"}',
 
-*/
+-- Conditions, Comment, System
+E'{"comment_source = \'CRMA\'"}', 'Account Comment Model', true);
