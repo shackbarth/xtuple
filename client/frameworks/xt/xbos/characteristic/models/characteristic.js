@@ -7,7 +7,7 @@
 
   (Document your Model here)
 
-  @extends SC.Record
+  @extends XM.Record
   @version 0.1
 */
 
@@ -52,9 +52,20 @@ XM.Characteristic = XM.Record.extend(
   validator: SC.Record.attr(String),
   
   /**
-  @type XM.CharaceteristicRoleAssignment
+  @type Boolean
   */
-  roles: SC.Record.toMany('XM.CharacteristicRoleAssignment'),
+  isAddresses: SC.Record.attr(Boolean),
+  
+  /**
+  @type Boolean
+  */
+  isContacts: SC.Record.attr(Boolean),
+  
+  /**
+  @type Boolean
+  */
+  isItems: SC.Record.attr(Boolean),
+
 
 }) ;
 
