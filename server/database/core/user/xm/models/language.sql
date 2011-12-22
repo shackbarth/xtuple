@@ -7,10 +7,10 @@ select private.create_model(
 -- Columns
 
 E'{
-  "lang_id as id",
-  "lang_name as name",
-  "lang_abbr2 as abbreviation_short",
-  "lang_abbr3 as abbreviation_long"}',
+  "lang.lang_id as id",
+  "lang.lang_name as name",
+  "lang.lang_abbr2 as abbreviation_short",
+  "lang.lang_abbr3 as abbreviation_long"}',
      
 -- Rules
 

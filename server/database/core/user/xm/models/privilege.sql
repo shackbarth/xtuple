@@ -7,10 +7,10 @@ select private.create_model(
 -- Columns
 
 E'{
-  "priv_id as id",
-  "priv_module as module",
-  "priv_name as name",
-  "priv_descrip as description"}',
+  "priv.priv_id as id",
+  "priv.priv_module as module",
+  "priv.priv_name as name",
+  "priv.priv_descrip as description"}',
      
 -- Rules
 

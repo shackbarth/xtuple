@@ -7,17 +7,17 @@ select private.create_model(
 -- Columns
 
 E'{
-  "grp_id as id",
-  "grp_name as name",
-  "grp_descrip as description",
+  "grp.grp_id as id",
+  "grp.grp_name as name",
+  "grp.grp_descrip as description",
   "btrim(array(
     select grppriv_priv_id
     from grppriv
-    where grppriv_grp_id = grp_id )::text,\'{}\') as privileges",
+    where grppriv_grp_id = grp.grp_id )::text,\'{}\') as privileges",
   "btrim(array(
     select usrgrp_username
     from usrgrp
-    where usrgrp_grp_id = grp_id )::text,\'{}\') as users"}',
+    where usrgrp_grp_id = grp.grp_id )::text,\'{}\') as users"}',
      
 -- Rules
 
