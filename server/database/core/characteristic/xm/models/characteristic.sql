@@ -58,11 +58,11 @@ values (
   new.notes,
   new.mask,
   new.validator,
+  new.is_addresses,
   false,
+  new.is_contacts,
   false,
-  false,
-  false,
-  false,
+  new.is_items,
   false,
   false,
   false,
@@ -83,7 +83,10 @@ update public.char set
   char_order = new.order,
   char_notes = new.notes,
   char_mask = new.mask,
-  char_validator = new.validator
+  char_validator = new.validator,
+  char_addresses = new.is_addresses,
+  char_contacts = new.is_contacts,
+  char_items = new.is_items
 where ( char_id = old.id );
 
 ","
