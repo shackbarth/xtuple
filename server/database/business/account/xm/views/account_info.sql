@@ -1,28 +1,40 @@
-﻿select dropIfExists('VIEW', 'account_info', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.account_info as
+'account_info', 'public', 'crmacct',
 
-select	
-  id,
-  "number",
-  "name",
-  is_active
-from xm.account;
+-- Columns
 
+E'{
+  "crmacct.crmacct_id as id",
+  "crmacct.crmacct_number as \\"number\\"",
+  "crmacct.crmacct_name as \\"name\\"",
+  "crmacct.crmacct_active as is_active"}',
+
+-- Rules
+
+E'{"
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.account_info 
+create or replace rule \\"_CREATE\\" as on insert to xm.account_info 
   do instead nothing;
 
+","
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.account_info
+create or replace rule \\"_UPDATE\\" as on update to xm.account_info
   do instead nothing;
-  
+
+","
+
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.account_info   
+create or replace rule \\"_DELETE\\" as on delete to xm.account_info   
   do instead nothing;
+
+"}', 
+
+-- Conditions, Comment, System
+'{}', 'Account Info Model', true);

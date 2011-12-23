@@ -36,6 +36,8 @@ select * from xm.account_characteristic where id = 99999;
 
 select * from xm.account_document where id in (99999,99998,99997);
 
+select * from xm.account_info;
+
 update xm.account set
   "number" = '**UPDATED NUMBER**',
   name = '**UPDATED NAME**',
