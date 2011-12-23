@@ -8,24 +8,33 @@ insert into xm.account_comment (
 values (
   99999, 99999, now(), 'admin', 1, 'TESTING ACCOUNT_COMMNET INSERT', true);
 
-insert into docass (
-  docass_id, docass_source_id, docass_source_type, docass_target_id, docass_target_type, docass_purpose)
+insert into xm.account_characteristic (
+  id, account, characteristic, value)
 values (
-  99999, 99999, 'CRMA', 325, 'I', 'S');
+  99999, 99999, 16, 'TEST XM.ACCOUNT_CHARACTERISTIC VIEW INSERT');
 
-insert into docass (
-  docass_id, docass_source_id, docass_source_type, docass_target_id, docass_target_type, docass_purpose)
+insert into xm.account_document (
+  id, account, target, target_type, purpose)
 values (
-  99998, 316, 'I', 99999, 'CRMA', 'S');
+  99999, 99999, (select incdt_id from incdt where incdt_number = '15000'), private.get_id('datatype', 'datatype_source', 'INCDT'),  'S');
 
-insert into imageass (
-  imageass_id, imageass_source_id, imageass_source, imageass_image_id, imageass_purpose)
+insert into xm.account_document (
+  id, account, target, target_type, purpose )
 values (
-  99999, 99999, 'CRMA', 23, 'S');
+  99998, 99999, (select file_id from file where file_title = 'Project Contract'), private.get_id('datatype', 'datatype_source', 'FILE'), 'S' );
+
+insert into xm.account_document (
+  id, account, target, target_type, purpose)
+values (
+  99997, 99999, (select min(image_id) from image), (select private.get_id('datatype', 'datatype_name', 'Image')), 'S');
 
 select * from xm.account where id = 99999;
 
 select * from xm.account_comment where id = 99999;
+
+select * from xm.account_characteristic where id = 99999;
+
+select * from xm.account_document where id in (99999,99998,99997);
 
 update xm.account set
   "number" = '**UPDATED NUMBER**',
@@ -44,6 +53,10 @@ update xm.account_comment set
   text = '**TESTING ACCOUNT_COMMENT UPDATE**',
   is_public = false;
 
+update xm.account_characteristic set
+  characteristic = 12,
+  value = '**TEST XM.ACCOUNT_CHARACTERISTIC UPDATE**';
+
 -- the xm.account.user field must be null
 delete from xm.account
 where id = 99999;
@@ -51,3 +64,10 @@ where id = 99999;
 -- should do nothing
 delete from xm.account_comment
 where id = 99999;
+
+delete from xm.account_characteristic
+where id = 99999;
+
+delete from xm.account_document
+where id in (99999,99998,99997);
+

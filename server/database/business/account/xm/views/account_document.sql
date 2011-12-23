@@ -1,55 +1,45 @@
-select dropIfExists('VIEW', 'account_document', 'xm');
+select private.create_model(
 
--- select rule
+-- Model name, schema
 
-create or replace view xm.account_document as 
+'account_document', '',
 
--- documents assigned to account
-select
-  docass_id as id,
-  docass_source_id as account,
-  docass_target_id as target,
-  datatype_id as target_type,
-  docass_purpose as purpose
-from docass
-  join private.datatype on ( docass_target_type = datatype_source )
-where ( docass_source_type = 'CRMA' )
-union all
--- accounts assigned to documents (inverse)
-select
-  docass_id as id,
-  docass_target_id as account,
-  docass_source_id as target,
-  datatype_id as target_type,
-  case 
-    when docass_purpose = 'A' then 'C'
-    when docass_purpose = 'C' then 'A'
-    else docass_purpose
-  end as purpose
-from docass
-  join private.datatype on ( docass_source_type = datatype_source )
-where ( docass_target_type = 'CRMA' )
-union all
--- images assigned to account
-select
-  imageass_id as id,
-  imageass_source_id as account,
-  imageass_id as target,
-  datatype_id as target_type,
-  imageass_purpose as purpose
-from imageass, private.datatype
-where ( imageass_source = 'CRMA' )
- and (  datatype_source = 'IMG' );
+-- table
+
+E'(select
+     id,
+     source_id,
+     target_id,
+     purpose,
+     datatype_id
+   from docinfo
+   join private.datatype on (docinfo.target_type = datatype_source)
+   where docinfo.source_type = \'CRMA\') doc',
+
+-- Columns
+
+E'{
+  "doc.id as id",
+  "doc.source_id as account",
+  "doc.target_id as target",
+  "doc.purpose as purpose",
+  "doc.datatype_id as target_type"}',
+
+-- Rules
+
+E'{"
 
 -- insert rules
 
-create or replace rule "_CREATE" as on insert to xm.account_document 
+create or replace rule \\"_CREATE\\" as on insert to xm.account_document 
   do instead nothing;
-  
-create or replace rule "_CREATE_DOC" as on insert to xm.account_document 
-  where new.target_type != private.get_id('datatype', 'datatype_name', 'Image') do instead
 
-insert into docass (
+","
+  
+create or replace rule \\"_CREATE_DOC\\" as on insert to xm.account_document 
+  where new.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
+
+insert into public.docass (
   docass_id,
   docass_source_id,
   docass_source_type,
@@ -59,15 +49,17 @@ insert into docass (
 values (
   new.id,
   new.account,
-  'CRMA',
+  \'CRMA\',
   new.target,
-  new.target_type,
+  private.get_datatype_source(new.target_type),
   new.purpose );
 
-create or replace rule "_CREATE_IMG" as on insert to xm.account_document 
-  where new.target_type = private.get_id('datatype', 'datatype_name', 'Image') do instead
+","
 
-insert into imageass (
+create or replace rule \\"_CREATE_IMG\\" as on insert to xm.account_document 
+  where new.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
+
+insert into public.imageass (
   imageass_id,
   imageass_source_id,
   imageass_source,
@@ -76,31 +68,42 @@ insert into imageass (
 values (
   new.id,
   new.account,
-  'CRMA',
+  \'CRMA\',
   new.target,
   new.purpose );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.account_document 
+create or replace rule \\"_UPDATE\\" as on update to xm.account_document 
   do instead nothing;
+
+","
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.account_document
+create or replace rule \\"_DELETE\\" as on delete to xm.account_document
   do instead nothing;
-  
-create or replace rule "_DELETE_DOC" as on delete to xm.account_document
-  where old.target_type != private.get_id('datatype', 'datatype_name', 'Image') do instead
 
-delete from docass 
+","
+  
+create or replace rule \\"_DELETE_DOC\\" as on delete to xm.account_document
+  where old.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
+
+delete from public.docass 
 where ( docass_id = old.id );
 
-create or replace rule "_DELETE_IMG" as on delete to xm.account_document
-  where old.target_type = private.get_id('datatype', 'datatype_name', 'Image') do instead
+","
 
-delete from imageass
+create or replace rule \\"_DELETE_IMG\\" as on delete to xm.account_document
+  where old.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
+
+delete from public.imageass
 where ( imageass_id = old.id );
 
+"}',
 
+-- Conditions, Comment, System
 
+'{}', 'Account Document Model', true);
