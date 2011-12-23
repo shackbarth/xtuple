@@ -26,7 +26,7 @@ INSERT INTO xm.opportunity (
   "number")
 VALUES (
   99999,
-  '20',
+ (select min(crmacct_id) from crmacct),
   999.99,
   2,
   1,
@@ -52,7 +52,7 @@ SELECT *
 
 -- used to exercise the update rule for the xm.opportunity view
 UPDATE xm.opportunity
-   SET account		= 2,
+   SET account		=(select min(crmacct_id) from crmacct) + 1,
        amount		= 8888.88,
        contact		= 25,
        currency		= 2,
