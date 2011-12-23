@@ -7,41 +7,41 @@ select private.create_model(
 -- Columns
 
 E'{
-  "crmacct_id as id",
-  "crmacct_number as number",
-  "crmacct_name as name",
-  "crmacct_active as is_active",
-  "crmacct_type as type",
-  "crmacct_owner_username as owner",
-  "crmacct_parent_id as parent",
-  "crmacct_notes as notes",
-  "crmacct_cntct_id_1 as primary_contact",
-  "crmacct_cntct_id_2 as secondary_contact",
-  "crmacct_usr_username as user",
+  "crmacct.crmacct_id as id",
+  "crmacct.crmacct_number as number",
+  "crmacct.crmacct_name as name",
+  "crmacct.crmacct_active as is_active",
+  "crmacct.crmacct_type as type",
+  "crmacct.crmacct_owner_username as owner",
+  "crmacct.crmacct_parent_id as parent",
+  "crmacct.crmacct_notes as notes",
+  "crmacct.crmacct_cntct_id_1 as primary_contact",
+  "crmacct.crmacct_cntct_id_2 as secondary_contact",
+  "crmacct.crmacct_usr_username as user",
  "btrim(array(
     select comment_id 
     from comment
-    where comment_source_id = crmacct_id 
+    where comment_source_id = crmacct.crmacct_id 
       and comment_source = \'CRMA\')::text,\'{}\') as comments",
   "btrim(array(
     select charass_id 
     from charass
-    where charass_target_id = crmacct_id 
+    where charass_target_id = crmacct.crmacct_id 
       and charass_target_type = \'CRMACCT\')::text,\'{}\') as characteristics",
   "btrim(array(
     select docass_id 
     from docass
-    where docass_target_id = crmacct_id 
+    where docass_target_id = crmacct.crmacct_id 
       and docass_target_type = \'CRMA\'
     union all
     select docass_id 
     from docass
-    where docass_source_id = crmacct_id 
+    where docass_source_id = crmacct.crmacct_id 
       and docass_source_type = \'CRMA\'
     union all
     select imageass_id 
     from imageass
-    where imageass_source_id = crmacct_id 
+    where imageass_source_id = crmacct.crmacct_id 
       and imageass_source = \'CRMA\')::text,\'{}\') as documents"
 }',
 

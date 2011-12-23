@@ -5,13 +5,13 @@ select private.create_model(
 
 -- Columns
 E'{
-  "comment_id as id",
-  "comment_source_id as account",
-  "comment_date as date",
-  "comment_user as username",
-  "comment_cmnttype_id as comment_type",
-  "comment_text as text",
-  "comment_public as is_public"}',
+  "comment.comment_id as id",
+  "comment.comment_source_id as account",
+  "comment.comment_date as date",
+  "comment.comment_user as username",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as text",
+  "comment.comment_public as is_public"}',
 
 -- Rules
 E'{"
@@ -56,4 +56,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.account_comment
 "}',
 
 -- Conditions, Comment, System
-E'{"comment_source = \'CRMA\'"}', 'Account Comment Model', true);
+E'{"comment.comment_source = \'CRMA\'"}', 'Account Comment Model', true);
