@@ -39,6 +39,8 @@ values (
   new.text,
   new.is_public );
 
+","
+
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.account_comment 
@@ -48,6 +50,8 @@ update comment set
   comment_text = new.text,
   comment_public = new.is_public
 where ( comment_id = old.id );
+
+","
 
 -- delete rule
 

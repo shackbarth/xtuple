@@ -28,7 +28,7 @@ VALUES (
   99999,
  (select min(crmacct_id) from crmacct),
   999.99,
-  2,
+  (select min(cntct_id) from cntct),
   1,
   99,
   1,
@@ -147,7 +147,7 @@ SELECT *
 -- used to exercise the update rule for the xm.opportunity_comment view
 UPDATE xm.opportunity_comment
    SET  "text" 		= '**Opportunity_Comment View - Update Test**',
-	is_public 	= false;
+	is_public 	= false
  WHERE ( id = 99999 );
 
 -- used to exercise the delete rule for the xm.opportunity_comment view (**does nothing**)

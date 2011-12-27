@@ -1,26 +1,24 @@
-﻿select dropIfExists('VIEW', 'opportunity_comment', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
+'opportunity_comment', 'public', 'comment, cmnttype',
 
-create or replace view xm.opportunity_comment as
+-- Columns
+E'{
+  "comment.comment_id as id",
+  "comment.comment_source_id as opportunity",
+  "comment.comment_date as \\"date\\"",
+  "comment.comment_user as user",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as \\"text\\"",
+  "comment.comment_public as is_public",
+  "cmnttype.cmnttype_editable as can_update"}',
 
-select 
-  comment_id as id,
-  comment_source_id as opportunity,
-  comment_date as "date",
-  comment_user as user,
-  comment_cmnttype_id as comment_type,
-  comment_text as "text",
-  comment_public as is_public,
-  cmnttype_editable as can_update
-   -- comment_update  as can_update - value derived from role(s), privileges, etc...(not implemented yet))
-from "comment"
-  join cmnttype ON comment_cmnttype_id = cmnttype_id
-where ( comment_source = 'OPP' );
-
+-- Rules
+E'{"
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.opportunity_comment
+create or replace rule \\"_CREATE\\" as on insert to xm.opportunity_comment
   do instead
 
 insert into comment (
@@ -35,16 +33,18 @@ insert into comment (
 values(
   new.id,
   new.opportunity,
-  'OPP',
+  \'OPP\',
   new.date,
   new.user,
   new.comment_type,
   new.text,
   new.is_public );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.opportunity_comment
+create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_comment
   do instead
 
 update comment set
@@ -52,7 +52,14 @@ update comment set
   comment_public = new.is_public
 where ( comment_id = old.id );
 
+","
+
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.opportunity_comment
+create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_comment
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+E'{"comment.comment_cmnttype_id = cmnttype.cmnttype_id", "comment.comment_source = \'OPP\'"}', 'Opportunity Comment Model', true);
