@@ -1,27 +1,41 @@
-﻿select dropIfExists('VIEW', 'opportunity_info', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.opportunity_info as
+'opportunity_info', 'public', 'ophead',
 
-select 
-  id,
-  "number",
-  "name",
-  is_active
-from xm.opportunity;
+-- Columns
 
+E'{
+  "ophead.ophead_id as id",
+  "ophead.ophead_number as \\"number\\"",
+  "ophead.ophead_name as \\"name\\"",
+  "ophead.ophead_active as is_active"}',
+
+-- Rules
+
+E'{"
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.opportunity_info
+create or replace rule \\"_CREATE\\" as on insert to xm.opportunity_info
   do instead nothing;
+
+","
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.opportunity_info
+create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_info
   do instead nothing;
+
+","
 
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.opportunity_info
+create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_info
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Opporunity Info Model', true);
