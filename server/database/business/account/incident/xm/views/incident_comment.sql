@@ -1,23 +1,28 @@
-select dropIfExists('VIEW', 'incident_comment', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.incident_comment as
-  
-select
-  comment_id as id,
-  comment_source_id as incident,
-  comment_date as date,
-  comment_user as username,
-  comment_cmnttype_id as comment_type,
-  comment_text as text,
-  comment_public as is_public
-from comment
-where ( comment_source = 'INCDT' );
+'incident_comment', 'public', 'comment',
+
+-- Columns
+
+E'{
+  "comment.comment_id as id",
+  "comment.comment_source_id as incident",
+  "comment.comment_date as date",
+  "comment.comment_user as username",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as text",
+  "comment.comment_public as is_public"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.incident_comment 
+create or replace rule \\"_CREATE\\" as on insert to xm.incident_comment 
   do instead
 
 insert into comment (
@@ -32,23 +37,33 @@ insert into comment (
 values (
   new.id,
   new.incident,
-  'INCDT',
+  \'INCDT\',
   new.date,
   new.username,
   new.comment_type,
   new.text,
   new.is_public );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.incident_comment
+create or replace rule \\"_UPDATE\\" as on update to xm.incident_comment
   do instead
   
 update comment set
   comment_text = new.text
 where ( comment_id = old.id );
+
+","
   
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.incident_comment   
+create or replace rule \\"_DELETE\\" as on delete to xm.incident_comment   
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+
+E'{"comment_source = \'INCDT\'"}', 'Incident Comment Model', true);
