@@ -1,18 +1,22 @@
-﻿select dropIfExists('VIEW', 'opportunity_type', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.opportunity_type as
+'opportunity_type', 'public', 'optype',
 
-select 
-  optype_id as id,
-  optype_name as "name",
-  optype_descrip as description
-from optype;
+-- Columns
+E'{
+  "optype.optype_id as id",
+  "optype.optype_name as \\"name\\"",
+  "optype.optype_descrip as description"}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.opportunity_type
+create or replace rule \\"_CREATE\\" as on insert to xm.opportunity_type
   do instead
 
 insert into optype (
@@ -24,9 +28,11 @@ values (
   new.name,
   new.description );
 
+","
+
 -- update rule
 
-create or replace rule "_update" as on update to xm.opportunity_type
+create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_type
   do instead
 
 update optype set
@@ -34,10 +40,18 @@ update optype set
   optype_descrip = new.description
 where ( optype_id = old.id );
 
+","
+
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.opportunity_type
+create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_type
   do instead
 
 delete from optype
 where ( optype_id = old.id );
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Opportunity Type Model', true);
