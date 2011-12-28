@@ -1,20 +1,25 @@
-select dropIfExists('VIEW', 'incident_characteristic', 'xm');
+﻿select private.create_model(
 
--- return rule
+--Model name, schema, table
 
-create or replace view xm.incident_characteristic as
-  
-select
-  charass_id as id,
-  charass_target_id as incident,
-  charass_char_id as characteristic,
-  charass_value as value
-from charass
-where ( charass_target_type = 'INCDT' );
+'incident_characteristic', 'public', 'charass',
+
+-- Columns
+
+E'{
+  "charass.charass_id as id",
+  "charass.charass_target_id as incident",
+  "charass.charass_char_id as characteristic",
+  "charass.charass_value as value"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.incident_characteristic 
+create or replace rule \\"_CREATE\\" as on insert to xm.incident_characteristic 
   do instead
 insert into charass (
   charass_id,
@@ -25,24 +30,34 @@ insert into charass (
 values (
   new.id,
   new.incident,
-  'INCDT',
+  \'INCDT\',
   new.characteristic,
   new.value );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.incident_characteristic
+create or replace rule \\"_UPDATE\\" as on update to xm.incident_characteristic
   do instead
   
 update charass set
   charass_char_id = new.characteristic,
   charass_value = new.value
 where ( charass_id = old.id );
+
+","
   
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.incident_characteristic   
+create or replace rule \\"_DELETE\\" as on delete to xm.incident_characteristic   
   do instead
   
 delete from charass 
 where ( charass_id = old.id );
+
+"}',
+
+-- Conditions, Comment, System
+
+E'{"charass_target_type = \'INCDT\'"}', 'Incident Characteristic Model', true);

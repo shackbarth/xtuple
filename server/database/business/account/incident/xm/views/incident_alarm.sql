@@ -95,4 +95,4 @@ where ( alarm_id = old.id );
 
 -- Conditions, Comment, System
 
-'{"alarm_source = \'INCDT\'"}', 'Incident Alarm Model', true);
+E'{"alarm_source = \'INCDT\'"}', 'Incident Alarm Model', true);
