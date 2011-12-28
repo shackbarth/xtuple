@@ -1,18 +1,22 @@
-﻿select dropIfExists('VIEW', 'opportunity_source', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.opportunity_source as
+'opportunity_source', 'public', 'opsource',
 
-select 
-  opsource_id as id,
-  opsource_name as "name",
-  opsource_descrip as description
-from opsource;
+-- Columns
+E'{
+  "opsource.opsource_id as id",
+  "opsource.opsource_name as \\"name\\"",
+  "opsource.opsource_descrip as description"}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.opportunity_source
+create or replace rule \\"_CREATE\\" as on insert to xm.opportunity_source
   do instead
 
 insert into opsource (
@@ -24,9 +28,11 @@ values (
   new.name,
   new.description );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.opportunity_source
+create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_source
   do instead
 
 update opsource set
@@ -34,10 +40,19 @@ update opsource set
   opsource_descrip = new.description
 where ( opsource_id = old.id );
 
+","
+
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.opportunity_source
+create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_source
   do instead
 
 delete from opsource
 where ( opsource_id = old.id );
+
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Opportunity Source Model', true);
