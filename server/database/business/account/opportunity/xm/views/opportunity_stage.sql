@@ -1,19 +1,24 @@
-﻿select dropIfExists('VIEW', 'opportunity_stage', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.opportunity_stage as
+'opportunity_stage', 'public', 'opstage',
 
-select 
-  opstage_id as id,
-  opstage_name as "name",
-  opstage_descrip as description,
-  opstage_opinactive as deactivate
-from opstage;
+-- Columns
+
+E'{
+  "opstage.opstage_id as id",
+  "opstage.opstage_name as \\"name\\"",
+  "opstage.opstage_descrip as description",
+  "opstage.opstage_opinactive as deactivate"}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.opportunity_stage
+create or replace rule \\"_CREATE\\" as on insert to xm.opportunity_stage
   do instead
 
 insert into opstage (
@@ -27,9 +32,11 @@ values (
   new.description,
   new.deactivate );
 
+","
+
 -- update rule
 
-create or replace rule "_update" as on update to xm.opportunity_stage
+create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_stage
   do instead
 
 update opstage set
@@ -38,10 +45,18 @@ update opstage set
   opstage_opinactive = new.deactivate
 where ( opstage_id = old.id );
 
+","
+
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.opportunity_stage
+create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_stage
   do instead
 
 delete from opstage
 where ( opstage_id = old.id );
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Opportunity Stage Model', true);
