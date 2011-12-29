@@ -1,9 +1,9 @@
 {
-	"user": "cole",
-	"port": 5432,
-	"password": "cole",
-	"database": "dev",
-	"host": "localhost",
-	"debug": "true",
-	"server-port": 7000
+  "user": "admin",
+  "port": 7000,
+  "password": "admin",
+  "database": "380rc2mfgdemo",
+  "host": "localhost",
+  "debug": "true",
+  "server-port": 8000
 }
