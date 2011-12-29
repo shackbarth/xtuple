@@ -1,20 +1,26 @@
-select dropIfExists('VIEW', 'incident_history', 'xm');
+select private.create_model(
 
--- return rule
+--Model name, schema, table
 
-create or replace view xm.incident_history as
-  
-select 
-  incdthist_id as id,
-  incdthist_incdt_id as incident,
-  incdthist_timestamp as timestamp,
-  incdthist_username as username,
-  incdthist_descrip as description
-from incdthist;
-  
+'incident_history', 'public', 'incdthist',
+
+-- Columns
+
+E'{
+  "incdthist.incdthist_id as id",
+  "incdthist.incdthist_incdt_id as incident",
+  "incdthist.incdthist_timestamp as timestamp",
+  "incdthist.incdthist_username as username",
+  "incdthist.incdthist_descrip as description"
+}',
+
+-- Rules
+
+E'{"
+
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.incident_history 
+create or replace rule \\"_CREATE\\" as on insert to xm.incident_history 
   do instead
 
 insert into incdthist (
@@ -34,12 +40,22 @@ values (
   new.timestamp,
   new.description );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.incident_history
+create or replace rule \\"_UPDATE\\" as on update to xm.incident_history
   do instead nothing;
+
+","
   
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.incident_history   
+create or replace rule \\"_DELETE\\" as on delete to xm.incident_history   
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Incident History Model', true);
