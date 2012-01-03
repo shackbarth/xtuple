@@ -1,22 +1,26 @@
-﻿select dropIfExists('VIEW', 'item_conversion', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
+'item_conversion', 'public', 'itemuomconv',
 
-create or replace view xm.item_conversion as
+-- Columns
+E'{
+  "itemuomconv.itemuomconv_id as id",
+  "itemuomconv.itemuomconv_item_id as item",
+  "itemuomconv.itemuomconv_from_uom_id as from_unit",
+  "itemuomconv.itemuomconv_from_value as from_value",
+  "itemuomconv.itemuomconv_to_uom_id as to_unit",
+  "itemuomconv.itemuomconv_to_value as to_value",
+  "itemuomconv.itemuomconv_fractional as fractional"
+}',
 
-select  
-  itemuomconv_id as id,
-  itemuomconv_item_id as item,
-  itemuomconv_from_uom_id as from_unit,
-  itemuomconv_from_value as from_value,
-  itemuomconv_to_uom_id as to_unit,
-  itemuomconv_to_value as to_value,
-  itemuomconv_fractional as fractional
-from itemuomconv;
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.item_conversion
+create or replace rule \\"_CREATE\\" as on insert to xm.item_conversion
   do instead
 
 insert into itemuomconv (
@@ -36,9 +40,11 @@ values (
   new.to_value,
   new.fractional );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.item_conversion
+create or replace rule \\"_UPDATE\\" as on update to xm.item_conversion
   do instead
 
 update itemuomconv set
@@ -47,10 +53,18 @@ update itemuomconv set
   itemuomconv_fractional = new.fractional
 where ( itemuomconv_id = old.id );
 
+","
+
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.item_conversion
+create or replace rule \\"_DELETE\\" as on delete to xm.item_conversion
   do instead 
 
 delete from itemuomconv
 where ( itemuomconv_id = old.id );
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Item Conversion Model', true);
