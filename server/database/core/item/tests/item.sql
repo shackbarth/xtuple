@@ -191,7 +191,7 @@
 		  is_public)
 		VALUES (
 		  99999,
-		  13401,
+		  99999,
 		  now(),
 		  'mwall',
 		  1,

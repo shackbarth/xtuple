@@ -1,25 +1,27 @@
-﻿select dropIfExists('VIEW', 'item_comment', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
+'item_comment', 'public', 'comment, cmnttype',
 
-create or replace view xm.item_comment as
+-- Columns
+E'{
+  "comment.comment_id as id",
+  "comment.comment_source_id as item",
+  "comment.comment_date as \\"date\\"",
+  "comment.comment_user as \\"user\\"",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as \\"text\\"",
+  "comment.comment_public as is_public",
+  "cmnttype.cmnttype_editable as can_update"
+}',
 
-select
-  comment_id as id,
-  comment_source_id as todo,
-  comment_date as "date",
-  comment_user as "user",
-  comment_cmnttype_id as comment_type,
-  comment_text as "text",
-  comment_public as is_public,
-  cmnttype_editable as can_update
-from "comment"
-  JOIN cmnttype ON (comment_cmnttype_id = cmnttype_id)
-where ( comment_source = 'I' );
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.item_comment 
+create or replace rule \\"_CREATE\\" as on insert to xm.item_comment 
   do instead
 
 insert into comment (
@@ -33,25 +35,35 @@ insert into comment (
   comment_public )
 values (
   new.id,
-  new.todo,
-  'I',
+  new.item,
+  \'I\',
   new.date,
   new.user,
   new.comment_type,
   new.text,
   new.is_public );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.item_comment
+create or replace rule \\"_UPDATE\\" as on update to xm.item_comment
   do instead
   
 update comment set
   comment_text = new.text,
   comment_public = new.is_public
 where ( comment_id = old.id );
+
+","
   
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.item_comment   
+create or replace rule \\"_DELETE\\" as on delete to xm.item_comment   
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+
+E'{"comment.comment_cmnttype_id = cmnttype.cmnttype_id", "comment.comment_source = \'I\'"}', 'Item Comment Model', true);
