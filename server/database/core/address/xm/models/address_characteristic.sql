@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "charass.charass_id as id",
+  "charass.charass_id as guid",
   "charass.charass_target_id as address",
   "charass.charass_char_id as characteristic",
   "charass.charass_value as value"}',
@@ -28,7 +28,7 @@ insert into public.charass (
   charass_char_id,
   charass_value )
 values (
-  new.id,
+  new.guid,
   new.address,
   \'ADDR\',
   new.characteristic,
@@ -43,7 +43,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.address_characteristic d
 update public.charass set
   charass_char_id = new.characteristic,
   charass_value = new.value
-where ( charass_id = old.id );
+where ( charass_id = old.guid );
 
 ","
 
@@ -52,7 +52,7 @@ where ( charass_id = old.id );
 create or replace rule \\"_DELETE\\" as on delete to xm.address_characteristic do instead
 
 delete from public.charass 
-where ( charass_id = old.id );
+where ( charass_id = old.guid );
 
 "}', 
 
