@@ -1,30 +1,46 @@
-﻿select dropIfExists('VIEW', 'item_info', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.item_info as
+'item_info', 'public', 'item',
 
-select
-  id,
-  "number",
-  description1,
-  description2,
-  "type",
-  barcode,
-  is_active
-from xm.item;
+-- Columns
+
+E'{
+  "item.item_id  as id",
+  "item.item_number  as \\"number\\"",
+  "item.item_descrip1 as description1",
+  "item.item_descrip2 as description2",
+  "item.item_type as \\"type\\"",
+  "item.item_upccode as barcode",
+  "item.item_active  as is_active"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.item_info
+create or replace rule \\"_CREATE\\" as on insert to xm.item_info
   do instead nothing;
+
+","
   
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.item_info
+create or replace rule \\"_UPDATE\\" as on update to xm.item_info
   do instead nothing;
+
+","
   
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.item_info   
+create or replace rule \\"_DELETE\\" as on delete to xm.item_info   
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Item Info Model', true);
