@@ -230,8 +230,8 @@
 		  purpose)
 		VALUES (
 		  99999,
-		  13401,
-		  12125,
+		  99999,
+		  (select min(cntct_id) from cntct),
 		  private.get_id('datatype','datatype_source','T'),
 		  'S');
 
@@ -243,10 +243,8 @@
 		  purpose)
 		VALUES (
 		  99998,
-		  13401,
-		  (SELECT crmacct_id
-		     FROM crmacct
-		    WHERE crmacct_number = 'UPS'),
+		  99999,
+		  (select min(crmacct_id) from crmacct),
 		  private.get_id('datatype','datatype_source','CRMA'),
 		  'A');
 
@@ -258,9 +256,8 @@
 		  purpose)
 		VALUES (
 		  99997,
-		  13401,
-		  (SELECT MIN(file_id)
-		     FROM "file"),
+		  99999,
+		  (select min(file_id) from "file"),
 		  private.get_id('datatype','datatype_source','FILE'),
 		  'C');
 
@@ -274,9 +271,8 @@
 		  purpose)
 		VALUES (
 		  99996,
-		  13401,
-		  (SELECT MIN(image_id)
-		     FROM image),
+		  99999,
+		  (select min(image_id) from image),
 		  private.get_id('datatype','datatype_name','Image'),
 		  'S');
 

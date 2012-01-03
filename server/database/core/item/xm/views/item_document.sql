@@ -1,59 +1,44 @@
-﻿select dropIfExists('VIEW', 'item_document', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema
 
-create or replace view xm.item_document as
+'item_document', '',
 
--- documents assigned to items
+-- table
 
-select  
-  docass_id as id,
-  docass_source_id as item,
-  docass_target_id as target,
-  datatype_id as  target_type,
-  docass_purpose as purpose
-from docass 
-  join private.datatype on (docass_target_type = datatype_source)
-where ( docass_source_type = 'I' )
+E'(select
+     id,
+     source_id,
+     target_id,
+     purpose,
+     datatype_id
+   from docinfo
+   join private.datatype on (docinfo.target_type = datatype_source)
+   where docinfo.source_type = \'I\') doc',
 
-union all
+-- Columns
 
--- items assigned to documents (inverse)
+E'{
+  "doc.id as id",
+  "doc.source_id as item",
+  "doc.target_id as target",
+  "doc.purpose as purpose",
+  "doc.datatype_id as target_type"
+}',
 
-select  
-  docass_id as id,
-  docass_target_id as item,
-  docass_source_id as target,
-  datatype_id as target_type,
-  CASE
-  	WHEN docass_purpose = 'A' THEN 'C'
-    WHEN docass_purpose = 'C' THEN 'A'
-  ELSE docass_purpose
-  END as purpose
-from docass
-  join private.datatype on (docass_source_type = datatype_source)
-where ( docass_target_type = 'I' )
+-- Rules
 
-union all
-
--- images assigned to items
-
-select  
-  imageass_id as id,
-  imageass_source_id as item,
-  imageass_image_id as target,
-  private.get_id('datatype','datatype_name','Image') as target_type,
-  imageass_purpose as purpose
-from imageass
-where ( imageass_source = 'I' );
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.item_document
+create or replace rule \\"_CREATE\\" as on insert to xm.item_document
   do instead nothing;
 
-create or replace rule "CREATE_DOC" as on insert to xm.item_document
-  where new.target_type != private.get_id('datatype','datatype_name','Image')
+","
+
+create or replace rule \\"CREATE_DOC\\" as on insert to xm.item_document
+  where new.target_type != private.get_id(\'datatype\',\'datatype_name\',\'Image\')
   do instead
 
 insert into docass (
@@ -66,15 +51,15 @@ insert into docass (
 values (
   new.id,
   new.item,
-  'I',
+  \'I\',
   new.target,
-  (select datatype_source
-    from private.datatype
-     where datatype_id = new.target_type),
+  private.get_datatype_source(new.target_type),
   new.purpose );
 
-create or replace rule "_CREATE_IMG" as on insert to xm.item_document 
-  where new.target_type = private.get_id('datatype','datatype_name','Image')
+","
+
+create or replace rule \\"_CREATE_IMG\\" as on insert to xm.item_document 
+  where new.target_type = private.get_id(\'datatype\',\'datatype_name\',\'Image\')
   do instead
 
 insert into imageass (
@@ -86,28 +71,44 @@ insert into imageass (
 values (
   new.id,
   new.item,
-  'I',
+  \'I\',
   new.target,
   new.purpose );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.item_document
+create or replace rule \\"_UPDATE\\" as on update to xm.item_document
   do instead nothing;
 
-create or replace rule "_DELETE" as on delete to xm.item_document
+","
+
+-- delete rules
+
+create or replace rule \\"_DELETE\\" as on delete to xm.item_document
   do instead nothing;
 
-create or replace rule "_DELETE_DOC" as on delete to xm.item_document
-  where old.target_type != private.get_id('datatype','datatype_name','Image')
+","
+
+create or replace rule \\"_DELETE_DOC\\" as on delete to xm.item_document
+  where old.target_type != private.get_id(\'datatype\',\'datatype_name\',\'Image\')
   do instead
 
 delete from docass
 where (docass_id = old.id);
 
-create or replace rule "_DELETE_IMG" as on delete to xm.item_document
-   where old.target_type = private.get_id('datatype','datatype_name','Image')
+","
+
+create or replace rule \\"_DELETE_IMG\\" as on delete to xm.item_document
+   where old.target_type = private.get_id(\'datatype\',\'datatype_name\',\'Image\')
   do instead
 
 delete from imageass
 where (imageass_id = old.id);
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Item Document Model', true);
