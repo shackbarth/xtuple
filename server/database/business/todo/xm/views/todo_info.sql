@@ -1,27 +1,41 @@
-select dropIfExists('VIEW', 'todo_info', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.todo_info as
+'todo_info', 'public', 'cntct',
 
-select
-  id,
-  "number",
-  "name",
-  is_active  
-from xm.todo;
+-- Columns
+
+E'{
+  "todoitem_id as id",
+  "todoitem_id as number",
+  "todoitem_name as name",
+  "todoitem_active as is_active"}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
 create or replace rule "_CREATE" as on insert to xm.todo_info
   do instead nothing;
-  
+
+","
+
 -- update rule
 
 create or replace rule "_UPDATE" as on update to xm.todo_info
   do instead nothing;
+
+","
   
 -- delete rules
 
 create or replace rule "_DELETE" as on delete to xm.todo_info   
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+'{}', 'Contact Info Model', true);

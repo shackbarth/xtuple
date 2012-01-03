@@ -1,29 +1,33 @@
-select dropIfExists('VIEW', 'todo_alarm', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.todo_alarm as
+'todo_alarm', 'public', 'alarm',
 
-select
-  alarm_id as id,
-  alarm_number as "number",
-  alarm_email as email,
-  alarm_email_recipient as email_recipient,
-  alarm_event as event,
-  alarm_event_recipient as event_recipient,
-  alarm_sysmsg as message,
-  alarm_sysmsg_recipient as message_recipient,
-  alarm_time_offset as offset,
-  alarm_time_qualifier as qualifier,
-  alarm_time as time,
-  alarm_trigger as trigger,
-  alarm_source as source
-from alarm
-where ( alarm_source = 'TODO' );
+-- Columns
+
+E'{"
+  "alarm_id as id",
+  "alarm_number as number",
+  "alarm_email as email",
+  "alarm_email_recipient as email_recipient",
+  "alarm_event as event",
+  "alarm_event_recipient as event_recipient",
+  "alarm_sysmsg as message",
+  "alarm_sysmsg_recipient as message_recipient",
+  "alarm_time_offset as offset",
+  "alarm_time_qualifier as qualifier",
+  "alarm_time as time",
+  "alarm_trigger as trigger",
+  "alarm_source as source"}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.todo_alarm 
+create or replace rule \\"_CREATE\\" as on insert to xm.todo_alarm 
   do instead
 
 insert into alarm ( 
@@ -53,11 +57,12 @@ values (
   new.qualifier,
   new.time,
   new.trigger,
-  'TODO' );
-
+  \'TODO\' );
+  
+","
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.todo_alarm
+create or replace rule \\"_UPDATE\\" as on update to xm.todo_alarm
   do instead
   
 update alarm set
@@ -73,11 +78,18 @@ update alarm set
   alarm_time = new.time,
   alarm_trigger = new.trigger
 where ( alarm_id = old.id );
-  
+
+","
+
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.todo_alarm   
+create or replace rule \\"_DELETE\\" as on delete to xm.todo_alarm   
   do instead
   
 delete from alarm 
 where ( alarm_id = old.id );
+
+"}', 
+
+-- Conditions, Comment, System
+'{"alarm_source = \'TODO\'"}', 'Todo Alarm Model', true);
