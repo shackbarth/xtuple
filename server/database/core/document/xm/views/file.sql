@@ -1,18 +1,24 @@
-select dropIfExists('VIEW', 'file', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.file as 
+'file', 'public', 'file',
 
-select
-  file_id as id,
-  file_title as name,
-  file_stream as data
-from file;
+-- Columns
+
+E'{
+  "file.file_id as guid",
+  "file.file_title as name",
+  "file.file_stream as data"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.file
+create or replace rule \\"_CREATE\\" as on insert to xm.file
   do instead
 
 insert into file (
@@ -20,23 +26,33 @@ insert into file (
   file_title,
   file_stream )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.data );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.file
+create or replace rule \\"_UPDATE\\" as on update to xm.file
   do instead
 
 update file set
   file_title = new.name
-where ( file_id = old.id );
+where ( file_id = old.guid );
+
+","
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.file
+create or replace rule \\"_DELETE\\" as on delete to xm.file
   do instead 
   
 delete from file
-where ( file_id = old.id );
+where ( file_id = old.guid );
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'File Model', true);

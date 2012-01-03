@@ -1,19 +1,25 @@
-select dropIfExists('VIEW', 'image', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.image as 
+'image', 'public', 'image',
 
-select
-  image_id as id,
-  image_name as name,
-  image_descrip as description,
-  image_data as data
-from image;
+-- Columns
+
+E'{
+  "image.image_id as guid",
+  "image.image_name as name",
+  "image.image_descrip as description",
+  "image.image_data as data"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.image
+create or replace rule \\"_CREATE\\" as on insert to xm.image
   do instead
 
 insert into image (
@@ -22,26 +28,36 @@ insert into image (
   image_descrip,
   image_data )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.description,
   new.data );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.image
+create or replace rule \\"_UPDATE\\" as on update to xm.image
   do instead
 
 update image set
   image_name = new.name,
   image_descrip = new.description,
   image_data = new.data
-where ( image_id = old.id );
+where ( image_id = old.guid );
+
+","
 
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.image
+create or replace rule \\"_DELETE\\" as on delete to xm.image
   do instead 
   
 delete from image
-where ( image_id = old.id );
+where ( image_id = old.guid );
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Image Model', true);

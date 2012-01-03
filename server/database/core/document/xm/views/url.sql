@@ -1,18 +1,24 @@
-select dropIfExists('VIEW', 'url', 'xm');
+select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.url as 
+'url', 'public', 'urlinfo',
 
-select
-  url_id as id,
-  url_title as name,
-  url_url as url
-from urlinfo;
+-- Columns
+
+E'{
+  "urlinfo.url_id as guid",
+  "urlinfo.url_title as name",
+  "urlinfo.url_url as url"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.url
+create or replace rule \\"_CREATE\\" as on insert to xm.url
   do instead
 
 insert into urlinfo (
@@ -20,24 +26,34 @@ insert into urlinfo (
   url_title,
   url_url )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.url );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.url
+create or replace rule \\"_UPDATE\\" as on update to xm.url
   do instead
 
 update urlinfo set
   url_title = new.name,
   url_url = new.url
-where ( url_id = old.id );
+where ( url_id = old.guid );
+
+","
 
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.url
+create or replace rule \\"_DELETE\\" as on delete to xm.url
   do instead 
   
 delete from urlinfo
-where ( url_id = old.id );
+where ( url_id = old.guid );
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'URL Model', true);
