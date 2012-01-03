@@ -6,7 +6,7 @@
 -- Columns
 
 E'{
-  itemuom_id as id,
+  itemuom_id as guid,
   itemuom_itemuomconv_id as item_conversion,
   itemuom_uomtype_id as unit_type
 }',
@@ -25,7 +25,7 @@ insert into itemuom (
   itemuom_itemuomconv_id,
   itemuom_uomtype_id )
 values (
-  new.id,
+  new.guid,
   new.item_conversion,
   new.unit_type );
 
@@ -44,7 +44,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_conversion_type_ass
   do instead
 
 delete from itemuom
-where ( itemuom_id = old.id );
+where ( itemuom_id = old.guid );
 
 "}',
 

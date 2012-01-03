@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "item.item_id  as id",
+  "item.item_id  as guid",
   "item.item_number  as \\"number\\"",
   "item.item_active  as is_active",
   "item.item_descrip1 as description1",
@@ -105,7 +105,7 @@ insert into item (
   item_freightclass_id,
   item_maxcost )
 values (
-  new.id,
+  new.guid,
   new.number,
   new.is_active,
   new.description1,
@@ -160,7 +160,7 @@ update item set
   item_warrdays = new.warranty_days,
   item_freightclass_id = new.freight_class,
   item_maxcost = new.max_cost
-where ( item_id = old.id );
+where ( item_id = old.guid );
 
 ","
 
@@ -170,40 +170,40 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item
   do instead (
 
 delete from comment
-where (comment_source_id = old.id
+where (comment_source_id = old.guid
   and comment_source = \'I\');
 
 delete from charass
-where (charass_target_id = old.id
+where (charass_target_id = old.guid
   and charass_target_type = \'I\');
 
 delete from itemuom
 USING itemuomconv
 where (itemuom_itemuomconv_id = itemuomconv_id
-  and itemuomconv_item_id = old.id);
+  and itemuomconv_item_id = old.guid);
 
 delete from itemuomconv
-where (itemuomconv_item_id = old.id);
+where (itemuomconv_item_id = old.guid);
 
 delete from itemalias
-where (itemalias_item_id = old.id);
+where (itemalias_item_id = old.guid);
 
 delete from itemsub
-where (itemsub_parent_item_id = old.id);
+where (itemsub_parent_item_id = old.guid);
 
 delete from docass
-where (docass_target_id = old.id
+where (docass_target_id = old.guid
   and docass_target_type = \'I\')
   or
-    (docass_source_id = old.id
+    (docass_source_id = old.guid
   and docass_source_type = \'I\');
 
 delete from imageass
-where ( imageass_source_id = old.id
+where ( imageass_source_id = old.guid
   and imageass_source = \'I\' );
 
 delete from item
- where (item_id = old.id);
+ where (item_id = old.guid);
 
 )
 

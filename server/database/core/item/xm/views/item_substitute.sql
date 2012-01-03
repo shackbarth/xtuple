@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "itemsub.itemsub_id as id",
+  "itemsub.itemsub_id as guid",
   "itemsub.itemsub_parent_item_id as root_item",
   "itemsub.itemsub_sub_item_id as substitute_item",
   "itemsub.itemsub_uomratio as conversion_ratio",
@@ -30,7 +30,7 @@ insert into itemsub (
   itemsub_uomratio,
   itemsub_rank )
 values (
-  new.id,
+  new.guid,
   new.root_item,
   new.substitute_item,
   new.conversion_ratio,
@@ -47,7 +47,7 @@ update itemsub set
   itemsub_sub_item_id = new.substitute_item,
   itemsub_uomratio = new.conversion_ratio,
   itemsub_rank = new.rank
-where ( itemsub_id = old.id );
+where ( itemsub_id = old.guid );
 
 ","
 
@@ -57,7 +57,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_substitute
   do instead
 
 delete from itemsub
-where ( itemsub_id = old.id );
+where ( itemsub_id = old.guid );
 
 "}',
 

@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "item.item_id  as id",
+  "item.item_id  as guid",
   "item.item_number  as \\"number\\"",
   "item.item_descrip1 as description1",
   "item.item_descrip2 as description2",

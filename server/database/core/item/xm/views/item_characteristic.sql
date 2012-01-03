@@ -6,7 +6,7 @@
 -- Columns
 
 E'{
-  "charass.charass_id as id",
+  "charass.charass_id as guid",
   "charass.charass_target_id item",
   "charass.charass_char_id characteristic",
   "charass.charass_value as \\"value\\"",
@@ -30,7 +30,7 @@ insert into charass (
   charass_value,
   charass_default )
 values (
-  new.id,
+  new.guid,
   new.item,
   \'I\',
   new.characteristic,
@@ -48,7 +48,7 @@ update charass set
   charass_char_id = new.characteristic,
   charass_value = new.value,
   charass_default = new.default_value
-where ( charass_id = old.id );
+where ( charass_id = old.guid );
 
 ","
 
@@ -58,7 +58,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_characteristic
   do instead 
 
 delete from charass
-where (charass_id = old.id);
+where (charass_id = old.guid);
 
 "}',
 

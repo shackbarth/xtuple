@@ -5,7 +5,7 @@
 
 -- Columns
 E'{
-  "itemuomconv.itemuomconv_id as id",
+  "itemuomconv.itemuomconv_id as guid",
   "itemuomconv.itemuomconv_item_id as item",
   "itemuomconv.itemuomconv_from_uom_id as from_unit",
   "itemuomconv.itemuomconv_from_value as from_value",
@@ -32,7 +32,7 @@ insert into itemuomconv (
   itemuomconv_to_value,
   itemuomconv_fractional )
 values (
-  new.id,
+  new.guid,
   new.item,
   new.from_unit,
   new.from_value,
@@ -51,7 +51,7 @@ update itemuomconv set
   itemuomconv_from_value = new.from_value,
   itemuomconv_to_value = new.to_value,
   itemuomconv_fractional = new.fractional
-where ( itemuomconv_id = old.id );
+where ( itemuomconv_id = old.guid );
 
 ","
 
@@ -61,7 +61,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_conversion
   do instead 
 
 delete from itemuomconv
-where ( itemuomconv_id = old.id );
+where ( itemuomconv_id = old.guid );
 
 "}',
 

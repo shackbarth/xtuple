@@ -19,7 +19,7 @@ E'(select
 -- Columns
 
 E'{
-  "doc.id as id",
+  "doc.id as guid",
   "doc.source_id as item",
   "doc.target_id as target",
   "doc.purpose as purpose",
@@ -49,7 +49,7 @@ insert into docass (
   docass_target_type,
   docass_purpose )
 values (
-  new.id,
+  new.guid,
   new.item,
   \'I\',
   new.target,
@@ -69,7 +69,7 @@ insert into imageass (
   imageass_image_id,
   imageass_purpose )
 values (
-  new.id,
+  new.guid,
   new.item,
   \'I\',
   new.target,
@@ -96,7 +96,7 @@ create or replace rule \\"_DELETE_DOC\\" as on delete to xm.item_document
   do instead
 
 delete from docass
-where (docass_id = old.id);
+where (docass_id = old.guid);
 
 ","
 
@@ -105,7 +105,7 @@ create or replace rule \\"_DELETE_IMG\\" as on delete to xm.item_document
   do instead
 
 delete from imageass
-where (imageass_id = old.id);
+where (imageass_id = old.guid);
 
 "}',
 
