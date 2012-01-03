@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "cntcteml.cntcteml_id as id",
+  "cntcteml.cntcteml_id as guid",
   "cntcteml.cntcteml_cntct_id as contact",
   "cntcteml.cntcteml_email as email"}',
      
@@ -25,7 +25,7 @@ insert into public.cntcteml (
   cntcteml_cntct_id,
   cntcteml_email )
 values (
-  new.id,
+  new.guid,
   new.contact,
   new.email );
 
@@ -38,7 +38,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.contact_email
 
 update public.cntcteml set
   cntcteml_email = new.email
-where ( cntcteml_id = old.id );
+where ( cntcteml_id = old.guid );
 
 ","
 
@@ -48,7 +48,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.contact_email
   do instead
 
 delete from public.cntcteml 
-where ( cntcteml_id = old.id );
+where ( cntcteml_id = old.guid );
 
 "}', 
 
