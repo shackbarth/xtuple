@@ -1,21 +1,25 @@
-﻿select dropIfExists('VIEW', 'item_characteristic', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
+'item_characteristic', 'public', 'charass',
 
-create or replace view xm.item_characteristic as
+-- Columns
 
-select  
-  charass_id as id,
-  charass_target_id item,
-  charass_char_id characteristic,
-  charass_value as "value",
-  charass_default as default_value
-from charass
-where ( charass_target_type = 'I' );
+E'{
+  "charass.charass_id as id",
+  "charass.charass_target_id item",
+  "charass.charass_char_id characteristic",
+  "charass.charass_value as \\"value\\"",
+  "charass.charass_default as default_value"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.item_characteristic 
+create or replace rule \\"_CREATE\\" as on insert to xm.item_characteristic 
   do instead
 
 insert into charass (
@@ -28,14 +32,16 @@ insert into charass (
 values (
   new.id,
   new.item,
-  'I',
+  \'I\',
   new.characteristic,
   new.value,
   new.default_value );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.item_characteristic
+create or replace rule \\"_UPDATE\\" as on update to xm.item_characteristic
   do instead
 
 update charass set
@@ -44,10 +50,18 @@ update charass set
   charass_default = new.default_value
 where ( charass_id = old.id );
 
+","
+
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to xm.item_characteristic
+create or replace rule \\"_DELETE\\" as on delete to xm.item_characteristic
   do instead 
 
 delete from charass
 where (charass_id = old.id);
+
+"}',
+
+-- Conditions, Comment, System
+
+E'{"charass_target_type = \'I\'"}', 'Item Characteristic Model', true);

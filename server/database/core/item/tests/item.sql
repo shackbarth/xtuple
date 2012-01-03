@@ -151,8 +151,8 @@
 		  default_value)
 		VALUES (
 		  99999,
-		  13401,
-		  19,
+		  99999,
+		  (select min(char_id) from char),
 		  'value INSERT',
 		  false);
 
@@ -165,8 +165,8 @@
 	-- update rule testing
 
 		UPDATE 	xm.item_characteristic
-		   SET 	characteristic		= 20,
-			"value"			= 'value UPDATE',
+		   SET 	characteristic		= (select max(char_id) from char),
+			"value"			= '**value UPDATE**',
 			default_value		= true
 		 WHERE 	id 			= 99999;
 
