@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "charopt.charopt_id as id",
+  "charopt.charopt_id as guid",
   "charopt.charopt_char_id as characteristic",
   "charopt.charopt_value as value",
   "charopt.charopt_order as order"}',
@@ -27,7 +27,7 @@ insert into public.charopt (
   charopt_value,
   charopt_order )
 values (
-  new.id,
+  new.guid,
   new.characteristic,
   new.value,
   new.order
@@ -41,11 +41,11 @@ create or replace rule \\"_UPDATE\\" as on update to xm.characteristic_option
   do instead
 
 update public.charopt set
-  charopt_id = new.id,
+  charopt_id = new.guid,
   charopt_char_id = new.characteristic,
   charopt_value = new.value,
   charopt_order = new.order
-where ( charopt_id = old.id );
+where ( charopt_id = old.guid );
 
 -- delete rules
 
@@ -53,7 +53,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.characteristic_option
   do instead 
 
 delete from public.charopt
-where ( charopt_id = old.id );
+where ( charopt_id = old.guid );
 
 "}', 
 
