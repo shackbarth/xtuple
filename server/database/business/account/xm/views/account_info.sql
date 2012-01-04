@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "crmacct.crmacct_id as id",
+  "crmacct.crmacct_id as guid",
   "crmacct.crmacct_number as \\"number\\"",
   "crmacct.crmacct_name as \\"name\\"",
   "crmacct.crmacct_active as is_active"}',

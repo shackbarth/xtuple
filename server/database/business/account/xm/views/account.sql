@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "crmacct.crmacct_id as id",
+  "crmacct.crmacct_id as guid",
   "crmacct.crmacct_number as number",
   "crmacct.crmacct_name as name",
   "crmacct.crmacct_active as is_active",
@@ -65,7 +65,7 @@ insert into crmacct (
   crmacct_cntct_id_2,
   crmacct_usr_username )
 values (
-  new.id,
+  new.guid,
   new.number,
   new.name,
   new.is_active,
@@ -93,7 +93,7 @@ update crmacct set
   crmacct_cntct_id_1 = new.primary_contact,
   crmacct_cntct_id_2 = new.secondary_contact,
   crmacct_usr_username = new.user
-where ( crmacct_id = old.id );
+where ( crmacct_id = old.guid );
 
 -- delete rules
 
@@ -101,27 +101,27 @@ create or replace rule \\"_DELETE\\" as on delete to xm.account
   do instead (
 
 delete from comment 
-where ( comment_source_id = old.id ) 
+where ( comment_source_id = old.guid ) 
  and ( comment_source = \'CRMA\' );
 
 delete from charass
-where ( charass_target_id = old.id ) 
+where ( charass_target_id = old.guid ) 
  and ( charass_target_type = \'CRMACCT\' );
 
 delete from docass
-where ( docass_target_id = old.id ) 
+where ( docass_target_id = old.guid ) 
  and ( docass_target_type = \'CRMA\' );
 
 delete from docass
-where ( docass_source_id = old.id ) 
+where ( docass_source_id = old.guid ) 
  and ( docass_source_type = \'CRMA\' );
 
 delete from imageass
-where ( imageass_source_id = old.id ) 
+where ( imageass_source_id = old.guid ) 
  and ( imageass_source = \'CRMA\' );
 
 delete from crmacct
-where ( crmacct_id = old.id );
+where ( crmacct_id = old.guid );
 
 )"}',
 
