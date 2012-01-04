@@ -1,4 +1,4 @@
-﻿select privte.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -64,4 +64,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.todo_comment
 
 -- Conditions, Comment, System
 
-'{"comment.comment_source = \'TD\'"}','Todo Comment Model', true);
+'{comment.comment_source = \'TD\'}','Todo Comment Model', true);

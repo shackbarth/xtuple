@@ -6,7 +6,7 @@
 
 -- Columns
 
-E'{"
+E'{
   "alarm.alarm_id as guid",
   "alarm.alarm_number as number",
   "alarm.alarm_email as email",
@@ -92,4 +92,4 @@ where ( alarm_id = old.guid );
 "}', 
 
 -- Conditions, Comment, System
-'{"alarm.alarm_source = \'TODO\'"}', 'Todo Alarm Model', true);
+'{alarm.alarm_source = \'TODO\'}', 'Todo Alarm Model', true);

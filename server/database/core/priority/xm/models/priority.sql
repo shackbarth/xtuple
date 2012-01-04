@@ -2,7 +2,7 @@
 
 -- Model name, schema, table
 
-'incident', 'public', 'incdtpriority',
+'priority', 'public', 'incdtpriority',
 
 -- Columns
 
@@ -55,8 +55,8 @@ create or replace rule \\"_DELETE\\" as on delete to xm.priority
 delete from incdtpriority 
 where ( incdtpriority_id = old.guid );
 
-)"}',
+"}',
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Model', true);
+'{}', 'Priority Model', true);

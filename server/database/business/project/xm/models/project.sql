@@ -57,7 +57,7 @@ E'(select
 from public.prj
    left outer join prjtask on (prj_id = prjtask_prj_id)
    group by 
-  id,
+  guid,
   number,
   name,
   notes,

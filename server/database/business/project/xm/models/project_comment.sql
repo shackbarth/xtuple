@@ -16,7 +16,8 @@ E'(select
   comment_public as is_public,
   cmnttype_editable as can_update
   from comment
-  join cmnttype on comment_cmnttype_id = cmnttype_id) cmt',
+  join cmnttype on comment_cmnttype_id = cmnttype_id
+  where comment_source = \'J\') cmt',
 
 -- Columns
 
@@ -79,4 +80,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project_comment
 
 -- Conditions, Comment, System
 
-'{"comment_source = \'J\'"}', 'Project Comment Model', true);
+'{}', 'Project Comment Model', true);
