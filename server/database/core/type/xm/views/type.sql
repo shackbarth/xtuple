@@ -1,18 +1,24 @@
-select dropIfExists('VIEW', 'type', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.type as 
+'type', 'private', 'datatype',
 
-select
-  datatype_id as id,
-  datatype_name as name,
-  datatype_descrip as description
-from private.datatype;
+-- Columns
+
+E'{
+  "datatype.datatype_id as guid",
+  "datatype.datatype_name as name",
+  "datatype.datatype_descrip as description"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to xm.type
+create or replace rule \\"_CREATE\\" as on insert to xm.type
   do instead
 
 insert into private.datatype (
@@ -20,23 +26,33 @@ insert into private.datatype (
   datatype_name,
   datatype_descrip )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.description );
 
+","
+
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xm.type
+create or replace rule \\"_UPDATE\\" as on update to xm.type
   do instead
 
 update private.datatype set
   datatype_name = new.name
-where ( datatype_id = old.id );
+where ( datatype_id = old.guid );
+
+","
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xm.type
+create or replace rule \\"_DELETE\\" as on delete to xm.type
   do instead 
   
 delete from private.datatype
-where ( datatype_id = old.id );
+where ( datatype_id = old.guid );
+
+"}',
+
+-- Condtions, Comment, System
+
+'{}', 'Type Model', true);

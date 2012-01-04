@@ -1,27 +1,43 @@
-﻿select dropifexists('view', 'unit_type', 'xm');
+﻿select private.create_model(
 
--- return rule
+-- Model name, schema, table
 
-create or replace view xm.unit_type as
+'unit_type', 'public', 'uomtype',
 
-select	
-  uomtype_id as id,
-  uomtype_name as "name",
-  uomtype_descrip as description,
-  uomtype_multiple as multiple
-from uomtype;
+-- Columns
+
+E'{
+  "uomtype.uomtype_id as guid",
+  "uomtype.uomtype_name as \\"name\\"",
+  "uomtype.uomtype_descrip as description",
+  "uomtype.uomtype_multiple as multiple"
+}',
+
+-- Rules
+
+E'{"
 
 -- insert rule
 
-create or replace rule "_create" as on insert to xm.unit_type
+create or replace rule \\"_CREATE\\" as on insert to xm.unit_type
   do instead nothing;
+
+","
 
 -- update rule
 
-create or replace rule "_update" as on update to xm.unit_type
+create or replace rule \\"_UPDATE\\" as on update to xm.unit_type
   do instead nothing;
+
+","
 
 -- delete rule
 
-create or replace rule "_delete" as on delete to xm.unit_type
+create or replace rule \\"_DELETE\\" as on delete to xm.unit_type
   do instead nothing;
+
+"}',
+
+-- Conditions, Comment, System
+
+'{}', 'Unit Type Model', true);
