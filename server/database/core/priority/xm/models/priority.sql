@@ -7,10 +7,10 @@
 -- Columns
 
 E'{
-  "incdtpriority_id as guid",
-  "incdtpriority_name as name",
-  "incdtpriority_order as order",
-  "incdtpriority_descrip as description"}',
+  "incdtpriority.incdtpriority_id as guid",
+  "incdtpriority.incdtpriority_name as name",
+  "incdtpriority.incdtpriority_order as order",
+  "incdtpriority.incdtpriority_descrip as description"}',
 
 -- Rules
 

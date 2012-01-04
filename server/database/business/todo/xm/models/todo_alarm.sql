@@ -7,19 +7,19 @@
 -- Columns
 
 E'{"
-  "alarm_id as guid",
-  "alarm_number as number",
-  "alarm_email as email",
-  "alarm_email_recipient as email_recipient",
-  "alarm_event as event",
-  "alarm_event_recipient as event_recipient",
-  "alarm_sysmsg as message",
-  "alarm_sysmsg_recipient as message_recipient",
-  "alarm_time_offset as offset",
-  "alarm_time_qualifier as qualifier",
-  "alarm_time as time",
-  "alarm_trigger as trigger",
-  "alarm_source as source"}',
+  "alarm.alarm_id as guid",
+  "alarm.alarm_number as number",
+  "alarm.alarm_email as email",
+  "alarm.alarm_email_recipient as email_recipient",
+  "alarm.alarm_event as event",
+  "alarm.alarm_event_recipient as event_recipient",
+  "alarm.alarm_sysmsg as message",
+  "alarm.alarm_sysmsg_recipient as message_recipient",
+  "alarm.alarm_time_offset as offset",
+  "alarm.alarm_time_qualifier as qualifier",
+  "alarm.alarm_time as time",
+  "alarm.alarm_trigger as trigger",
+  "alarm.alarm_source as source"}',
 
 -- Rules
 
@@ -92,4 +92,4 @@ where ( alarm_id = old.guid );
 "}', 
 
 -- Conditions, Comment, System
-'{"alarm_source = \'TODO\'"}', 'Todo Alarm Model', true);
+'{"alarm.alarm_source = \'TODO\'"}', 'Todo Alarm Model', true);

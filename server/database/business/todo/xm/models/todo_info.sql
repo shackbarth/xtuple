@@ -2,15 +2,15 @@
 
 -- Model name, schema, table
 
-'todo_info', 'public', 'cntct',
+'todo_info', 'public', 'todoitem',
 
 -- Columns
 
 E'{
-  "todoitem_id as guid",
-  "todoitem_id as number",
-  "todoitem_name as name",
-  "todoitem_active as is_active"}',
+  "todoitem.todoitem_id as guid",
+  "todoitem.todoitem_id as number",
+  "todoitem.todoitem_name as name",
+  "todoitem.todoitem_active as is_active"}',
 
 -- Rules
 
@@ -38,4 +38,4 @@ create or replace rule "_DELETE" as on delete to xm.todo_info
 "}',
 
 -- Conditions, Comment, System
-'{}', 'Contact Info Model', true);
+'{}', 'Todo Info Model', true);
