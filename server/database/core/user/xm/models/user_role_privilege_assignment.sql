@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "grppriv.grppriv_id as id",
+  "grppriv.grppriv_id as guid",
   "grppriv.grppriv_grp_id as user_role",
   "grppriv.grppriv_priv_id as privilege"}',
      
@@ -25,7 +25,7 @@ insert into public.grppriv (
   grppriv_grp_id,
   grppriv_priv_id )
 values (
-  new.id,
+  new.guid,
   new.user_role,
   new.privilege );
 
@@ -44,7 +44,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_role_privilege_assi
   do instead (
 
 delete from public.grppriv
-where ( grppriv_id = old.id );
+where ( grppriv_id = old.guid );
 
 );
 

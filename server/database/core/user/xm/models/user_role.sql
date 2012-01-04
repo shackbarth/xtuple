@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "grp.grp_id as id",
+  "grp.grp_id as guid",
   "grp.grp_name as name",
   "grp.grp_descrip as description",
   "btrim(array(
@@ -33,7 +33,7 @@ insert into grp (
   grp_name,
   grp_descrip )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.description );
 
@@ -47,7 +47,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.user_role
 update grp set
   grp_name = new.name,
   grp_descrip = new.description
-where ( grp_id = old.id );
+where ( grp_id = old.guid );
 
 ","
 
@@ -57,10 +57,10 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_role
   do instead (
 
 delete from usrgrp
-where ( usrgrp_grp_id = old.id);
+where ( usrgrp_grp_id = old.guid);
 
 delete from grp
-where ( grp_id = old.id );
+where ( grp_id = old.guid );
 
 );
 

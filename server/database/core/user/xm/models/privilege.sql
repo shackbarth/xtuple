@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "priv.priv_id as id",
+  "priv.priv_id as guid",
   "priv.priv_module as module",
   "priv.priv_name as name",
   "priv.priv_descrip as description"}',
