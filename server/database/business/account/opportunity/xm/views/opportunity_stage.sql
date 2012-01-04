@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "opstage.opstage_id as id",
+  "opstage.opstage_id as guid",
   "opstage.opstage_name as \\"name\\"",
   "opstage.opstage_descrip as description",
   "opstage.opstage_opinactive as deactivate"}',
@@ -27,7 +27,7 @@ insert into opstage (
   opstage_descrip,
   opstage_opinactive )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.description,
   new.deactivate );
@@ -43,7 +43,7 @@ update opstage set
   opstage_name = new.name,
   opstage_descrip = new.description,
   opstage_opinactive = new.deactivate
-where ( opstage_id = old.id );
+where ( opstage_id = old.guid );
 
 ","
 
@@ -53,7 +53,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_stage
   do instead
 
 delete from opstage
-where ( opstage_id = old.id );
+where ( opstage_id = old.guid );
 
 "}',
 

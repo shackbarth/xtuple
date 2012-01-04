@@ -6,7 +6,7 @@
 
 -- Columns
 E'{
-  "opsource.opsource_id as id",
+  "opsource.opsource_id as guid",
   "opsource.opsource_name as \\"name\\"",
   "opsource.opsource_descrip as description"}',
 
@@ -24,7 +24,7 @@ insert into opsource (
   opsource_name,
   opsource_descrip )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.description );
 
@@ -38,7 +38,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_source
 update opsource set
   opsource_name = new.name,
   opsource_descrip = new.description
-where ( opsource_id = old.id );
+where ( opsource_id = old.guid );
 
 ","
 
@@ -48,7 +48,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_source
   do instead
 
 delete from opsource
-where ( opsource_id = old.id );
+where ( opsource_id = old.guid );
 
 
 "}',

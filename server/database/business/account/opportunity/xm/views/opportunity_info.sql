@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "ophead.ophead_id as id",
+  "ophead.ophead_id as guid",
   "ophead.ophead_number as \\"number\\"",
   "ophead.ophead_name as \\"name\\"",
   "ophead.ophead_active as is_active"}',

@@ -6,7 +6,7 @@
 
 -- Columns
 E'{
-  "optype.optype_id as id",
+  "optype.optype_id as guid",
   "optype.optype_name as \\"name\\"",
   "optype.optype_descrip as description"}',
 
@@ -24,7 +24,7 @@ insert into optype (
   optype_name,
   optype_descrip )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.description );
 
@@ -38,7 +38,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_type
 update optype set
   optype_name = new.name,
   optype_descrip = new.description
-where ( optype_id = old.id );
+where ( optype_id = old.guid );
 
 ","
 
@@ -48,7 +48,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_type
   do instead
 
 delete from optype
-where ( optype_id = old.id );
+where ( optype_id = old.guid );
 
 "}',
 

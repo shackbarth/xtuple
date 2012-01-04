@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "ophead.ophead_id as id",
+  "ophead.ophead_id as guid",
   "ophead.ophead_crmacct_id as account",
   "ophead.ophead_amount as amount",
   "ophead.ophead_cntct_id as contact",
@@ -81,7 +81,7 @@ insert into ophead (
   ophead_start_date,
   ophead_number )
 values (
-  new.id,
+  new.guid,
   new.account,
   new.amount,
   new.contact,
@@ -127,7 +127,7 @@ update ophead set
   ophead_owner_username = new.owner,
   ophead_priority_id = new.priority,
   ophead_start_date = new.start_date
- where ( ophead_id = old.id )
+ where ( ophead_id = old.guid )
 
 ","
 
@@ -136,27 +136,27 @@ create or replace rule \\"_DELETE\\" as on delete to xm.opportunity
   do instead (
 
 delete from \\"comment\\"
-where ( comment_source_id = old.id 
+where ( comment_source_id = old.guid 
  and comment_source = \'OPP\' );
 
 delete from charass
-where ( charass_target_id = old.id ) 
+where ( charass_target_id = old.guid ) 
   and ( charass_target_type = \'OPP\' );
 
 delete from docass
-where ( docass_target_id = old.id ) 
+where ( docass_target_id = old.guid ) 
   and ( docass_target_type = \'OPP\' );
 
 delete from docass
-where ( docass_source_id = old.id ) 
+where ( docass_source_id = old.guid ) 
   and ( docass_source_type = \'OPP\' );
 
 delete from imageass
-where ( imageass_source_id = old.id ) 
+where ( imageass_source_id = old.guid ) 
   and ( imageass_source = \'OPP\' );
 
 delete from ophead
-where ( ophead_id = old.id );
+where ( ophead_id = old.guid );
 
 )"}',
 
