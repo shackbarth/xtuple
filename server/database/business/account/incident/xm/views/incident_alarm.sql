@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "alarm.alarm_id as id",
+  "alarm.alarm_id as guid",
   "alarm.alarm_number as \\"number\\"",
   "alarm.alarm_email as email",
   "alarm.alarm_email_recipient as email_recipient",
@@ -46,7 +46,7 @@ insert into alarm (
   alarm_trigger,
   alarm_source )
 values (
-  new.id,
+  new.guid,
   new.number,  
   new.email,
   new.email_recipient,
@@ -79,7 +79,7 @@ update alarm set
   alarm_time_qualifier = new.qualifier,
   alarm_time = new.time,
   alarm_trigger = new.trigger
-where ( alarm_id = old.id );
+where ( alarm_id = old.guid );
 
 ","
   
@@ -89,7 +89,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.incident_alarm
   do instead
   
 delete from alarm 
-where ( alarm_id = old.id );
+where ( alarm_id = old.guid );
 
 "}',
 

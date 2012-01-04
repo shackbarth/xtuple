@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "incdt.incdt_id as id",
+  "incdt.incdt_id as guid",
   "incdt.incdt_number as \\"number\\"",
   "incdt.incdt_summary as \\"name\\"",
   "incdt.incdt_status != \'L\' as is_active"

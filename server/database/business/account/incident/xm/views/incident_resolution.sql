@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "incdtresolution.incdtresolution_id as id",
+  "incdtresolution.incdtresolution_id as guid",
   "incdtresolution.incdtresolution_name as name",
   "incdtresolution.incdtresolution_order as order",
   "incdtresolution.incdtresolution_descrip as description"
@@ -28,7 +28,7 @@ insert into incdtresolution (
   incdtresolution_order,
   incdtresolution_descrip )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.order,
   new.description );
@@ -41,11 +41,11 @@ create or replace rule \\"_UPDATE\\" as on update to xm.incident_resolution
   do instead
   
 update incdtresolution set
-  incdtresolution_id = new.id,
+  incdtresolution_id = new.guid,
   incdtresolution_name = new.name,
   incdtresolution_order = new.order,
   incdtresolution_descrip = new.description
-where ( incdtresolution_id = old.id );
+where ( incdtresolution_id = old.guid );
 
 ","
   
@@ -55,7 +55,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.incident_resolution
   do instead
   
 delete from incdtresolution 
-where ( incdtresolution_id = old.id );
+where ( incdtresolution_id = old.guid );
 
 "}',
 

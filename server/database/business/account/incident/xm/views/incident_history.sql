@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 --Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "incdthist.incdthist_id as id",
+  "incdthist.incdthist_id as guid",
   "incdthist.incdthist_incdt_id as incident",
   "incdthist.incdthist_timestamp as timestamp",
   "incdthist.incdthist_username as username",
@@ -32,7 +32,7 @@ insert into incdthist (
   incdthist_timestamp,
   incdthist_descrip )
 values (
-  new.id,
+  new.guid,
   new.incident,
   null,
   null,

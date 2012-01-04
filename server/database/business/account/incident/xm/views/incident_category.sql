@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "incdtcat.incdtcat_id as id",
+  "incdtcat.incdtcat_id as guid",
   "incdtcat.incdtcat_descrip as description",
   "incdtcat.incdtcat_name as name",
   "incdtcat.incdtcat_order as order"
@@ -28,7 +28,7 @@ insert into incdtcat (
   incdtcat_name,
   incdtcat_order )
 values (
-  new.id,
+  new.guid,
   new.description,
   new.name,
   new.order );
@@ -44,7 +44,7 @@ update incdtcat set
   incdtcat_descrip = new.description,
   incdtcat_name = new.name,
   incdtcat_order = new.order 
-where ( incdtcat_id = old.id );
+where ( incdtcat_id = old.guid );
 
 ","
   
@@ -54,7 +54,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.incident_category
   do instead
   
 delete from incdtcat 
-where ( incdtcat_id = old.id );
+where ( incdtcat_id = old.guid );
 
 "}',
 

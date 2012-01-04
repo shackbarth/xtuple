@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "incdt.incdt_id as id",
+  "incdt.incdt_id as guid",
   "incdt.incdt_number as \\"number\\"",
   "incdt.incdt_crmacct_id as account",
   "incdt.incdt_cntct_id as contacts",
@@ -94,7 +94,7 @@ insert into incdt (
   incdt_incdtresolution_id,
   incdt_incdtseverity_id )
 values (
-  new.id,
+  new.guid,
   new.number,
   new.account,
   new.contacts,
@@ -138,7 +138,7 @@ update incdt set
   incdt_public = new.is_public,
   incdt_incdtresolution_id = new.resolution,
   incdt_incdtseverity_id = new.severity
-where ( incdt_id = old.id );
+where ( incdt_id = old.guid );
 
 ","
 

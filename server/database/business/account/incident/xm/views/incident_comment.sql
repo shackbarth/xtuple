@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "comment.comment_id as id",
+  "comment.comment_id as guid",
   "comment.comment_source_id as incident",
   "comment.comment_date as date",
   "comment.comment_user as username",
@@ -35,7 +35,7 @@ insert into comment (
   comment_text,
   comment_public )
 values (
-  new.id,
+  new.guid,
   new.incident,
   \'INCDT\',
   new.date,
@@ -53,7 +53,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.incident_comment
   
 update comment set
   comment_text = new.text
-where ( comment_id = old.id );
+where ( comment_id = old.guid );
 
 ","
   
