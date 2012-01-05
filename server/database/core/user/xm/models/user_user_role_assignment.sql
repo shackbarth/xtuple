@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "usrgrp.usrgrp_id as id",
+  "usrgrp.usrgrp_id as guid",
   "usrgrp.usrgrp_username as user",
   "usrgrp.usrgrp_grp_id as user_role"}',
      
@@ -25,7 +25,7 @@ insert into public.usrgrp (
   usrgrp_username,
   usrgrp_grp_id )
 values (
-  new.id,
+  new.guid,
   new.user,
   new.user_role );
 
@@ -44,7 +44,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_user_role_assignmen
   do instead 
   
 delete from public.usrgrp
-where ( usrgrp_id = old.id );
+where ( usrgrp_id = old.guid );
 
 "}', 
 

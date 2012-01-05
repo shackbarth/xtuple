@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "usrpriv.usrpriv_id as id",
+  "usrpriv.usrpriv_id as guid",
   "usrpriv.usrpriv_username as user",
   "usrpriv.usrpriv_priv_id as privilege"}',
      
@@ -25,7 +25,7 @@ insert into public.usrpriv (
   usrpriv_username,
   usrpriv_priv_id )
 values (
-  new.id,
+  new.guid,
   new.user,
   new.privilege );
 
@@ -44,7 +44,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_privilege_assignmen
   do instead 
   
 delete from public.usrpriv
-where ( usrpriv_id = old.id );
+where ( usrpriv_id = old.guid );
 
 "}', 
 

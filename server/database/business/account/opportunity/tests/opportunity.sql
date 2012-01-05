@@ -4,7 +4,7 @@ SELECT *
 
 -- used to exercise the insert rule for the xm.opportunity view
 INSERT INTO xm.opportunity (
-  id,
+  guid,
   account,
   amount,
   contact,
@@ -26,9 +26,9 @@ INSERT INTO xm.opportunity (
   "number")
 VALUES (
   99999,
-  '20',
+ (select min(crmacct_id) from crmacct),
   999.99,
-  2,
+  (select min(cntct_id) from cntct),
   1,
   99,
   1,
@@ -52,7 +52,7 @@ SELECT *
 
 -- used to exercise the update rule for the xm.opportunity view
 UPDATE xm.opportunity
-   SET account		= 2,
+   SET account		=(select min(crmacct_id) from crmacct) + 1,
        amount		= 8888.88,
        contact		= 25,
        currency		= 2,
@@ -70,11 +70,11 @@ UPDATE xm.opportunity
        "owner"		= 'mwall',
        priority		= 2,
        start_date	= now() + interval '2 days'
- WHERE id = 99999;
+ WHERE guid = 99999;
        
 -- used to exercise the delete rule for the xm.opportunity view
 DELETE FROM xm.opportunity
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to verify that any changes to xm.opportunity_characteristic are promulgated to the charass table
 SELECT charass_id AS id, 
@@ -86,7 +86,7 @@ SELECT charass_id AS id,
 
 -- used to exercise the insert rule for the xm.opportunity_characteristic view
 INSERT INTO xm.opportunity_characteristic (
-  id,
+  guid,
   opportunity,
   characteristic, 
   "value")
@@ -104,11 +104,11 @@ SELECT *
 UPDATE xm.opportunity_characteristic
    SET characteristic = 24,
        "value"	 = '**Opportunity Characteristic View Update Test**'
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to exercise the delete rule for the xm.opportunity_characteristic view
 DELETE FROM xm.opportunity_characteristic
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to verify that any changes to xm.opportunity_comment are promulgated to the comment table
 SELECT comment_id 			AS id,
@@ -124,7 +124,7 @@ SELECT comment_id 			AS id,
 
 -- used to exercise the insert rule for the xm.opportunity_comment view
 INSERT INTO xm.opportunity_comment (
-  id,
+  guid,
   opportunity,
   "date",
   "user",
@@ -147,12 +147,12 @@ SELECT *
 -- used to exercise the update rule for the xm.opportunity_comment view
 UPDATE xm.opportunity_comment
    SET  "text" 		= '**Opportunity_Comment View - Update Test**',
-	is_public 	= false;
- WHERE ( id = 99999 );
+	is_public 	= false
+ WHERE ( guid = 99999 );
 
 -- used to exercise the delete rule for the xm.opportunity_comment view (**does nothing**)
 DELETE FROM xm.opportunity_comment
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to delete test (garbage) record(s) inserted above from comment table
 DELETE FROM comment
@@ -166,7 +166,7 @@ SELECT opsource_id 		AS id,
 
 -- used to exercise the insert rule for the xm.opportunity_source view
 INSERT INTO xm.opportunity_source(
-  id,
+  guid,
   "name",
   description)
 VALUES (
@@ -182,11 +182,11 @@ SELECT *
 UPDATE xm.opportunity_source
    SET "name" 		= '**XM.OPPORTUNITY_SOURCE VIEW - UPDATE RULE: NAME**',
        description	= '**XM.OPPORTUNITY_SOURCE VIEW - UPDATE RULE: DESCRIPTION**'
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to exercise the delete rule for the xm.opportunity_source view
 DELETE FROM xm.opportunity_source
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to verify that any changes to xm.opportunity_stage are promulgated to the opstage table
 SELECT opstage_id 		AS id,
@@ -197,7 +197,7 @@ SELECT opstage_id 		AS id,
 
 -- used to exercise the insert rule for the xm.opportunity_stage view
 INSERT INTO xm.opportunity_stage (
-  id,
+  guid,
   "name",
   description,
   deactivate)
@@ -216,11 +216,11 @@ UPDATE xm.opportunity_stage
    SET "name"		= '**XM.OPPORTUNITY_STAGE VIEW - UPDATE RULE: NAME**',
        description	= '**XM.OPPORTUNITY_STAGE VIEW - UPDATE RULE: DESCRIPTION**',
        deactivate	= true
- WHERE id 		= 99999;
+ WHERE guid 		= 99999;
 
 -- used to exercise the delete rule for the xm.opportunity_stage view
 DELETE FROM xm.opportunity_stage
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to verify that any changes to xm.opportunity_type are promulgated to the optype table
 SELECT optype_id 		AS id,
@@ -230,7 +230,7 @@ SELECT optype_id 		AS id,
 
 -- used to exercise the insert rule for the xm.opportunity_type view
 INSERT INTO xm.opportunity_type(
-  id,
+  guid,
   "name",
   description)
 VALUES (
@@ -246,11 +246,11 @@ SELECT *
 UPDATE xm.opportunity_type
    SET "name" 		= '**XM.OPPORTUNITY_TYPE VIEW - UPDATE RULE: NAME**',
        description	= '**XM.OPPORTUNITY_TYPE VIEW - UPDATE RULE: DESCRIPTION**'
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to exercise the delete rule for the xm.opportunity_type view
 DELETE FROM xm.opportunity_type
- WHERE id = 99999;
+ WHERE guid = 99999;
 
 -- used to test opportunity_info view
 SELECT *

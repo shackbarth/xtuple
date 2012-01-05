@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "locale.locale_id as id",
+  "locale.locale_id as guid",
   "locale.locale_code as code",
   "locale.locale_descrip as description",
   "locale.locale_comments as notes",
@@ -61,7 +61,7 @@ insert into public.locale (
   locale_uomratio_scale,
   locale_percent_scale )
 values (
-  new.id,
+  new.guid,
   new.code,
   new.description,
   new.notes,
@@ -111,7 +111,7 @@ update public.locale set
   locale_qtyper_scale = new.quantity_per_scale,
   locale_uomratio_scale = new.unit_ratio_scale,
   locale_percent_scale = new.percent_scale
-where ( locale_id = old.id );
+where ( locale_id = old.guid );
 
 ","
 
@@ -121,7 +121,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.locale
   do instead 
   
 delete from public.locale
-where ( locale_id = old.id );
+where ( locale_id = old.guid );
 
 "}', 
 

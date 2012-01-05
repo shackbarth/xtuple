@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "cntct.cntct_id as id",
+  "cntct.cntct_id as guid",
   "cntct.cntct_number as number",
   "cntct.cntct_active as is_active",
   "cntct.cntct_honorific as honorific",
@@ -84,7 +84,7 @@ insert into cntct (
   cntct_owner_username,
   cntct_addr_id )
 values (
-  new.id,
+  new.guid,
   new.number,
   new.is_active,
   new.honorific,
@@ -128,7 +128,7 @@ update cntct set
   cntct_notes = new.notes,
   cntct_owner_username = new.owner,
   cntct_addr_id = new.address
-where ( cntct_id = old.id );
+where ( cntct_id = old.guid );
 
 ","
 
@@ -138,27 +138,27 @@ create or replace rule \\"_DELETE\\" as on delete to xm.contact
   do instead (
 
 delete from comment 
-where ( comment_source_id = old.id ) 
+where ( comment_source_id = old.guid ) 
  and ( comment_source = \'T\' );
 
 delete from charass
-where ( charass_target_id = old.id ) 
+where ( charass_target_id = old.guid ) 
  and ( charass_target_type = \'CNTCT\' );
 
 delete from docass
-where ( docass_target_id = old.id ) 
+where ( docass_target_id = old.guid ) 
  and ( docass_target_type = \'T\' );
 
 delete from docass
-where ( docass_source_id = old.id ) 
+where ( docass_source_id = old.guid ) 
  and ( docass_source_type = \'T\' );
 
 delete from imageass
-where ( imageass_source_id = old.id ) 
+where ( imageass_source_id = old.guid ) 
  and ( imageass_source = \'T\' );
 
 delete from cntct
-where ( cntct_id = old.id );
+where ( cntct_id = old.guid );
 
 )"}', 
 

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema
 
@@ -18,7 +18,7 @@ E'(select
 -- Columns
 
 E'{
-  "doc.id as id",
+  "doc.id as guid",
   "doc.source_id as contact",
   "doc.target_id as target",
   "doc.purpose as purpose",
@@ -46,7 +46,7 @@ insert into public.docass (
   docass_target_type,
   docass_purpose )
 values (
-  new.id,
+  new.guid,
   new.contact,
   \'T\',
   new.target,
@@ -65,7 +65,7 @@ insert into public.imageass (
   imageass_image_id,
   imageass_purpose )
 values (
-  new.id,
+  new.guid,
   new.contact,
   \'T\',
   new.target,
@@ -91,7 +91,7 @@ create or replace rule \\"_DELETE_DOC\\" as on delete to xm.contact_document
   where old.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.docass 
-where ( docass_id = old.id );
+where ( docass_id = old.guid );
 
 ","
 
@@ -99,7 +99,7 @@ create or replace rule \\"_DELETE_IMG\\" as on delete to xm.contact_document
   where old.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.imageass
-where ( imageass_id = old.id );
+where ( imageass_id = old.guid );
 
 "}', 
 

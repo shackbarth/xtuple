@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "hnfc.hnfc_id as id",
+  "hnfc.hnfc_id as guid",
   "hnfc.hnfc_code as code"}',
      
 -- Rules
@@ -23,7 +23,7 @@ insert into public.hnfc (
   hnfc_id,
   hnfc_code )
 values (
-  new.id,
+  new.guid,
   new.code );
 
 ","
@@ -35,7 +35,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.honorific
 
 update public.hnfc set
   hnfc_code = new.code
-where ( hnfc_id = old.id );
+where ( hnfc_id = old.guid );
 
 ","
 
@@ -45,7 +45,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.honorific
   do instead 
   
 delete from public.hnfc
-where ( hnfc_id = old.id );
+where ( hnfc_id = old.guid );
 
 "}', 
 

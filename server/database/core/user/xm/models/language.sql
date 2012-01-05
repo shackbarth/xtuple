@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "lang.lang_id as id",
+  "lang.lang_id as guid",
   "lang.lang_name as name",
   "lang.lang_abbr2 as abbreviation_short",
   "lang.lang_abbr3 as abbreviation_long"}',
