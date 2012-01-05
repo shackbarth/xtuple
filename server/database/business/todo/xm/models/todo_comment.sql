@@ -1,4 +1,4 @@
-﻿select privte.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -6,13 +6,13 @@
 
 -- Columns 
 E'{
-  "comment_id as id",
-  "comment_source_id as todo",
-  "comment_date as date",
-  "comment_user as username",
-  "comment_cmnttype_id as comment_type",
-  "comment_text as text",
-  "comment_public as is_public"}',
+  "comment.comment_id as guid",
+  "comment.comment_source_id as todo",
+  "comment.comment_date as date",
+  "comment.comment_user as username",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as text",
+  "comment.comment_public as is_public"}',
 
 -- Rules
 
@@ -33,7 +33,7 @@ insert into comment (
   comment_text,
   comment_public )
 values (
-  new.id,
+  new.guid,
   new.todo,
   \'TD\',
   new.date,
@@ -51,7 +51,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.todo_comment
   
 update comment set
   comment_text = new.text
-where ( comment_id = old.id );
+where ( comment_id = old.guid );
 
 ","
   
@@ -64,4 +64,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.todo_comment
 
 -- Conditions, Comment, System
 
-'{"comment_source = \'TD\'"}','Todo Comment Model', true);
+'{comment.comment_source = \'TD\'}','Todo Comment Model', true);

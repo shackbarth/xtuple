@@ -2,15 +2,15 @@
 
 -- Model name, schema, table
 
-'incident', 'public', 'incdtpriority',
+'priority', 'public', 'incdtpriority',
 
 -- Columns
 
 E'{
-  "incdtpriority_id as id",
-  "incdtpriority_name as name",
-  "incdtpriority_order as order",
-  "incdtpriority_descrip as description"}',
+  "incdtpriority.incdtpriority_id as guid",
+  "incdtpriority.incdtpriority_name as name",
+  "incdtpriority.incdtpriority_order as order",
+  "incdtpriority.incdtpriority_descrip as description"}',
 
 -- Rules
 
@@ -27,7 +27,7 @@ insert into incdtpriority (
   incdtpriority_order,
   incdtpriority_descrip )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.order,
   new.description );
@@ -43,7 +43,7 @@ update incdtpriority set
   incdtpriority_name = new.name,
   incdtpriority_order = new.order,
   incdtpriority_descrip = new.description
-where ( incdtpriority_id = old.id );
+where ( incdtpriority_id = old.guid );
 
 ","
   
@@ -53,10 +53,10 @@ create or replace rule \\"_DELETE\\" as on delete to xm.priority
   do instead
   
 delete from incdtpriority 
-where ( incdtpriority_id = old.id );
+where ( incdtpriority_id = old.guid );
 
-)"}',
+"}',
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Model', true);
+'{}', 'Priority Model', true);
