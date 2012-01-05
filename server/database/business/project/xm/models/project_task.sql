@@ -6,6 +6,8 @@
 
 -- Columns
 
+-- xm.priority not currently implemented in the prjtask table...
+-- xm.isActive not currently implemented in the prjtask table...
 E'{
   "prjtask.prjtask_id as guid",
   "prjtask.prjtask_number as number",
@@ -29,9 +31,7 @@ E'{
   "prjtask.prjtask_assigned_date as assign_date",
   "prjtask.prjtask_completed_date as complete_date",
   "prjtask.prjtask_username as assigned_to",
-  -- xm.priority not currently implemented in the prjtask table...
   "null as priority",
-  -- xm.isActive not currently implemented in the prjtask table...
   "null as is_active",
   "btrim(array(
   select comment_id
