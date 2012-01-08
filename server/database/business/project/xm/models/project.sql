@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema
 
@@ -17,62 +17,33 @@ E'(select
   prj_assigned_date as assign_date,
   prj_completed_date as complete_date,
   prj_username as assign_to,
-  NULL as priority, -- priority is part of the inherited xt.activity model, but there is no priority field in the prj table...
-  case prj_status
-   when \'P\' then \'planning\'
-   when \'O\' then \'open\'
-   when \'C\' then \'complete\'
-   else \'undefined\'
-  end as project_status,
-  coalesce(sum(prjtask_hours_budget), 0.0) as budgeted_hours,
-  coalesce(sum(prjtask_hours_actual),0.0) as acutal_hours,
-  coalesce(sum(prjtask_hours_budget - prjtask_hours_actual), 0.0)  as balance_hours,
-  coalesce(sum(prjtask_exp_budget), 0.0) as budgeted_expenses,
-  coalesce(sum(prjtask_exp_actual),0.0) as acutal_expenses,
-  coalesce(sum(prjtask_exp_budget - prjtask_exp_actual), 0.0) as balance_expenses,
-  BTRIM(ARRAY(
-  select comment_id
-  from comment
-  where comment_source_id = prj_id
-    and comment_source = \'J\')::text,\'{}\') as comments,
-  BTRIM(ARRAY(
-  select prjtask_id
-  from prjtask
-  where prjtask_prj_id = prj_id)::text,\'{}\') as tasks,
-  BTRIM(ARRAY(
-  select docass_id 
-  from docass
-  where docass_target_id = prj_id 
-  and docass_target_type = \'J\'
-  union all
-  select docass_id 
-  from docass
-  where docass_source_id = prj_id 
-  and docass_source_type = \'J\'
-  union all
-  select imageass_id 
-  from imageass
-  where imageass_source_id = prj_id 
-  and imageass_source = \'J\')::text,\'{}\') as documents
-from public.prj
-   left outer join prjtask on (prj_id = prjtask_prj_id)
-   group by 
-  guid,
-  number,
-  name,
-  notes,
-  owner,
-  start_date,
-  due_date,
-  assign_date,
-  complete_date,
-  assign_to,
-  priority,
-  project_status,
-  comments,
-  tasks,
-  documents) prj',
-
+  null::integer as priority, -- priority is part of the inherited xt.activity model, but there is no priority field in the prj table...
+  prj_status as project_status,
+  btrim(array(
+    select comment_id
+    from comment
+    where comment_source_id = prj_id
+     and comment_source = \'J\')::text,\'{}\') as comments,
+  btrim(array(
+    select prjtask_id
+    from prjtask
+    where prjtask_prj_id = prj_id)::text,\'{}\') as tasks,
+  btrim(array(
+    select docass_id 
+    from docass
+    where docass_target_id = prj_id 
+     and docass_target_type = \'J\'
+    union all
+    select docass_id 
+    from docass
+    where docass_source_id = prj_id 
+     and docass_source_type = \'J\'
+    union all
+    select imageass_id 
+    from imageass
+    where imageass_source_id = prj_id 
+    and imageass_source = \'J\')::text,\'{}\') as documents
+from public.prj) prj',
 
 -- Columns
 
@@ -89,12 +60,6 @@ E'{
   "prj.assign_to",
   "prj.priority",
   "prj.project_status",
-  "prj.budgeted_hours",
-  "prj.acutal_hours",
-  "prj.balance_hours",
-  "prj.budgeted_expenses",
-  "prj.acutal_expenses",
-  "prj.balance_expenses",
   "prj.comments",
   "prj.tasks",
   "prj.documents"}',
@@ -147,12 +112,7 @@ update prj set
   prj_assigned_date = new.assign_date,
   prj_completed_date = new.complete_date,
   prj_username = new.assign_to,
-  prj_status = case new.project_status
-       when \'planning\' then \'P\'
-      when \'open\'   then \'O\'
-      when \'complete\' then \'C\'
-      else \'?\'
-      end
+  prj_status = new.project_status
 where ( prj_id = old.guid );
 
 ","
