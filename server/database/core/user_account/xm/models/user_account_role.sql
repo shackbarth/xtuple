@@ -1,8 +1,8 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
-'user_role', 'public', 'grp',
+'user_account_role', 'public', 'grp',
 
 -- Columns
 
@@ -25,7 +25,7 @@ E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.user_role
+create or replace rule \\"_CREATE\\" as on insert to xm.user_account_role
   do instead
 
 insert into grp (
@@ -41,7 +41,7 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.user_role
+create or replace rule \\"_UPDATE\\" as on update to xm.user_account_role
   do instead
 
 update grp set
@@ -53,7 +53,7 @@ where ( grp_id = old.guid );
 
 -- delete rules
 
-create or replace rule \\"_DELETE\\" as on delete to xm.user_role
+create or replace rule \\"_DELETE\\" as on delete to xm.user_account_role
   do instead (
 
 delete from usrgrp
@@ -68,4 +68,4 @@ where ( grp_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'User Role Model', true);
+'{}', 'User Account Role Model', true);

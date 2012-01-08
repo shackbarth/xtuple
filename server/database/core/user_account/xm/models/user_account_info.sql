@@ -1,8 +1,8 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema
 
-'user_info', '', 
+'user_account_info', '', 
 
 -- table
 
@@ -31,25 +31,25 @@ E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.user_info
+create or replace rule \\"_CREATE\\" as on insert to xm.user_account_info
   do instead nothing;
 
 ","
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.user_info
+create or replace rule \\"_UPDATE\\" as on update to xm.user_account_info
   do instead nothing;
 
 ","
 
 -- delete rule
 
-create or replace rule \\"_DELETE\\" as on delete to xm.user_info
+create or replace rule \\"_DELETE\\" as on delete to xm.user_account_info
   do instead nothing;
 
 "}', 
 
 -- Conditions, Comment, System
 
-'{}', 'User Info Model', true);
+'{}', 'User Account Info Model', true);

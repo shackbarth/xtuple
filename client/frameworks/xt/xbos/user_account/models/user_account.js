@@ -1,5 +1,5 @@
 // ==========================================================================
-// Project:   XM.User
+// Project:   XM.UserAccount
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
@@ -13,10 +13,10 @@
 
   @todo handle password seeding for cloud and enhanced auth
 */
-XM.User = XM.Record.extend(
-/** @scope XM.User.prototype */ {
+XM.UserAccount = XM.Record.extend(
+/** @scope XM.UserAccount.prototype */ {
 
-  className: 'XM.User',
+  className: 'XM.UserAccount',
   primaryKey: 'username',
 
   createPrivilege: 'MaintainUsers',
@@ -72,36 +72,36 @@ XM.User = XM.Record.extend(
   isDatbaseUser: SC.Record.attr(Boolean),
   
   /**
-  @type XM.UserPrivilege
+  @type XM.UserAccountPrivilege
   */
-  privileges: SC.Record.toMany('XM.UserPrivilegeAssignment', { 
+  privileges: SC.Record.toMany('XM.UserAccountPrivilegeAssignment', { 
     isMaster: NO,
-    inverse:  'user',  
+    inverse:  'userAccount',  
   }),
   
   /**
-  @type XM.UserRole
+  @type XM.UserAccountRole
   */
-  userRoles:     SC.Record.toMany('XM.UserRoleAssignment', { 
+  userAccountRoles:     SC.Record.toMany('XM.UserAccountRoleAssignment', { 
     isMaster: NO,
-    inverse:  'user',  
+    inverse:  'userAccount',  
   }),
 
 });
 
-XM.User.canRead = function(record) {
+XM.UserAccount.canRead = function(record) {
   return (record === XM.get('currentUser') ||
-          XM.getPath('currentUser.isAdmin') ||
+          XM.getPath('currentUserAccount.isAdmin') ||
           sc_super());
 };
 
-XM.User.canUpdate = function(record) {
+XM.UserAccount.canUpdate = function(record) {
   return (record === XM.get('currentUser') ||
-          XM.getPath('currentUser.isAdmin') ||
+          XM.getPath('currentUserAccount.isAdmin') ||
           sc_super());
 };
 
-XM.User.canDelete = function() {
-  return XM.getPath('currentUser.isAdmin') && sc_super();
+XM.UserAccount.canDelete = function() {
+  return XM.getPath('currentUserAccount.isAdmin') && sc_super();
 };
 

@@ -27,13 +27,13 @@ begin
     if tg_table_name = 'model' then
       if tg_op = 'DELETE' then
         if array_upper(m_names, 1) > 0 then
-          raise exception 'Can not delete model % because it has the following dependencies: %', m_name, array_to_string(m_names, ',');
+          raise exception E'Can not delete model \'%\' because it has the following dependencies: %', m_name, array_to_string(m_names, ',');
         else
           return old;
         end if;
       elsif tg_op = 'UPDATE' and not new.model_active then
         if array_upper(m_names, 1) > 0 then
-          raise exception 'Can not deactivate model % because it has the following dependencies: %', m_name, array_to_string(m_names, ',');
+          raise exception E'Can not deactivate model \'%\' because it has the following dependencies: %', m_name, array_to_string(m_names, ',');
         else
           return old;
         end if;

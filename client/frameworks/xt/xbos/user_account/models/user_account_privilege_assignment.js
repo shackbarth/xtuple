@@ -10,10 +10,10 @@
   @extends XM.Record
   @version 0.1
 */
-XM.UserPrivilegeAssignment = XM.Record.extend(
-/** @scope XM.UserPrivilegeAssignment.prototype */ {
+XM.UserAccountPrivilegeAssignment = XM.Record.extend(
+/** @scope XM.UserAccountPrivilegeAssignment.prototype */ {
 
-  className: 'XM.UserPrivilegeAssignment',
+  className: 'XM.UserAccountPrivilegeAssignment',
 
   /**
   @type XM.Privilege
@@ -21,9 +21,9 @@ XM.UserPrivilegeAssignment = XM.Record.extend(
   privilege: SC.Record.toOne('XM.Privilege'),
   
   /**
-  @type XM.User
+  @type XM.UserAccount
   */
-  user: SC.Record.toOne('XM.User'),
+  userAccount: SC.Record.toOne('XM.UserAccount'),
   
 });
 

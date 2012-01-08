@@ -9,10 +9,10 @@
   @extends XM.Record
   @version 0.1
 */
-XM.UserRole = XM.Record.extend(
-/** @scope XM.UserRole.prototype */ {
+XM.UserAccountRole = XM.Record.extend(
+/** @scope XM.UserAccountRole.prototype */ {
 
-  className: 'XM.UserRole',
+  className: 'XM.UserAccountRole',
 
   createPrivilege: 'MaintainGroups',
   readPrivilege:   'MaintainGroups',
@@ -22,14 +22,14 @@ XM.UserRole = XM.Record.extend(
   /**
   @type String
   */
-  name:       SC.Record.attr(String, { 
+  name: SC.Record.attr(String, { 
     isRequired: YES 
   }),
   
   /**
   @type String
   */
-  description:    SC.Record.attr(String),
+  description: SC.Record.attr(String),
   
   /**
   @type XM.RolePrivilege
@@ -40,9 +40,9 @@ XM.UserRole = XM.Record.extend(
   }),
   
   /**
-  @type XM.UserRole
+  @type XM.UserAccountRole
   */
-  users:      SC.Record.toMany('XM.UserRoleAssignment', { 
+  userAccounts: SC.Record.toMany('XM.UserAccountRoleAssignment', { 
     isMaster: NO,
     inverse:  'roles',
   }),

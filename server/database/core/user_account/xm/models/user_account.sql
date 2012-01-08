@@ -1,8 +1,8 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema
 
-'user', '', 
+'user_account', '', 
 
 -- table
 
@@ -64,14 +64,14 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.user
+create or replace rule \\"_CREATE\\" as on insert to xm.user_account
   do instead nothing;
 
 ","
 
 -- create a regular user...
 
-create or replace rule \\"_CREATE_USER\\" as on insert to xm.user
+create or replace rule \\"_CREATE_USER\\" as on insert to xm.user_account
   where not new.is_database_user do instead
 
 insert into private.user (
@@ -98,7 +98,7 @@ values (
 
 -- create a database user...
 
-create or replace rule \\"_CREATE_DB_USER\\" as on insert to xm.user
+create or replace rule \\"_CREATE_DB_USER\\" as on insert to xm.user_account
   where new.is_database_user do instead (
 
 select createUser( new.username, new.can_create_users );
@@ -120,14 +120,14 @@ select setUserPreference(new.username, \'active\', case when new.is_active then 
 
 -- update rules
 
-create or replace rule \\"_UPDATE\\" as on update to xm.user
+create or replace rule \\"_UPDATE\\" as on update to xm.user_account
   do instead nothing;
 
 ","
 
 -- update a regular user...
 
-create or replace rule \\"_UPDATE_USER\\" as on update to xm.user
+create or replace rule \\"_UPDATE_USER\\" as on update to xm.user_account
   where not old.is_database_user and not new.is_database_user do instead (
 
 update private.user set
@@ -145,7 +145,7 @@ where ( user_username = old.username );
 
 -- change from a general user to a postgresql database user...
 
-create or replace rule \\"_UPDATE_TO_DB_USER\\" as on update to xm.user
+create or replace rule \\"_UPDATE_TO_DB_USER\\" as on update to xm.user_account
   where not old.is_database_user and new.is_database_user = true do instead (
 
 select createUser( old.username, new.can_create_users );
@@ -169,7 +169,7 @@ delete from private.user where ( user_username = old.username );
 
 -- once a databse user, always a database user...
 
-create or replace rule \\"_UPDATE_DB_USER\\" as on update to xm.user
+create or replace rule \\"_UPDATE_DB_USER\\" as on update to xm.user_account
   where old.is_database_user do instead (
 
 select setUserCanCreateUsers(old.username, new.can_create_users);
@@ -186,11 +186,11 @@ select setUserPreference(old.username, \'active\', case when new.is_active then 
 
 -- delete rules
 
-create or replace rule \\"_DELETE\\" as on delete to xm.user
+create or replace rule \\"_DELETE\\" as on delete to xm.user_account
   do instead nothing;
 
 "}', 
 
 -- Conditions, Comment, System
 
-'{}', 'User Model', true);
+'{}', 'User Account Model', true);

@@ -22,7 +22,9 @@ E'{
   "cntct.cntct_fax as fax",
   "cntct.cntct_email as primary_email",
   "cntct.cntct_webaddr as web_address",
-  "cntct.cntct_owner_username as owner",
+  "(select user_account
+    from xm.user_account
+    where username = cntct.cntct_owner_username) as owner",
   "cntct.cntct_notes as notes",
   "(select address 
     from xm.address
@@ -102,7 +104,7 @@ values (
   new.primary_email,
   new.web_address,
   new.notes,
-  new.owner,
+  (new.owner).username,
   (new.address).guid );
 
 ","
@@ -128,7 +130,7 @@ update cntct set
   cntct_email = new.email,
   cntct_webaddr = new.web_address,
   cntct_notes = new.notes,
-  cntct_owner_username = new.owner,
+  cntct_owner_username = (new.owner).username,
   cntct_addr_id = (new.address).guid
 where ( cntct_id = old.guid );
 
