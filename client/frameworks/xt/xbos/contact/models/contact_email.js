@@ -11,7 +11,7 @@
   @version 0.1
 */
 
-XM.ContactEmail = XM.Record.extend(
+XM.ContactEmail = SC.ChildRecord.extend(
 /** @scope XM.ContactEmail.prototype */ {
 
   className: 'XM.ContactEmail',

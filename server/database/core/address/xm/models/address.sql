@@ -17,6 +17,7 @@ E'{
   "addr.addr_state as state",
   "addr.addr_postalcode as postalcode",
   "addr.addr_country as country",
+  "addr.addr_notes as notes",
   "btrim(array(
     select comment_id 
     from comment

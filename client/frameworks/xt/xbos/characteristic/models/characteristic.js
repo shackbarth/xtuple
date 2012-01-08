@@ -11,7 +11,7 @@
   @version 0.1
 */
 
-XM.Characteristic = XM.Record.extend(
+XM.Characteristic = SC.ChildRecord.extend(
 /** @scope XM.Characteristic.prototype */ {
 
   className: 'XM.Characteristic',

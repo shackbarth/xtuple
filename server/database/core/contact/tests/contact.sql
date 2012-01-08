@@ -1,4 +1,4 @@
-﻿insert into xm.honorific (
+insert into xm.honorific (
   guid, code )
 values (
   99999, 'Sr'
@@ -16,7 +16,12 @@ insert into xm.contact (
 values (
   99999, '99999', true, 'Mr.', 'John' , 'A', 'Doe', 'Jr.',
   '555-5656', '555-5555', '890-2345', 'www.xtuple.com', 'johnd@xm.ple.com', 
-  current_user, 'Read my notes.', 99999 );
+  (select user_account_info 
+   from xm.user_account_info
+   where username = current_user), 'Read my notes.', 
+  (select address_info
+   from xm.address_info
+   where guid = 99999) );
 
 insert into xm.contact_comment (
   guid, contact, date, username, comment_type, text, is_public )
