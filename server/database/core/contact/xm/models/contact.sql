@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -24,7 +24,9 @@ E'{
   "cntct.cntct_webaddr as web_address",
   "cntct.cntct_owner_username as owner",
   "cntct.cntct_notes as notes",
-  "cntct.cntct_addr_id as address",
+  "(select address 
+    from xm.address
+    where guid = cntct.cntct_addr_id) as address",
   "btrim(array(
     select cntcteml_id 
     from cntcteml
@@ -101,7 +103,7 @@ values (
   new.web_address,
   new.notes,
   new.owner,
-  new.address );
+  (new.address).guid );
 
 ","
 
@@ -127,7 +129,7 @@ update cntct set
   cntct_webaddr = new.web_address,
   cntct_notes = new.notes,
   cntct_owner_username = new.owner,
-  cntct_addr_id = new.address
+  cntct_addr_id = (new.address).guid
 where ( cntct_id = old.guid );
 
 ","
