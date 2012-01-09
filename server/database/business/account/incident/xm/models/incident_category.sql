@@ -2,7 +2,7 @@
 
 -- Model name, schema, table
 
-'incdident_category', 'public', 'incdtcat',
+'incident_category', 'public', 'incdtcat',
 
 -- Columns
 
