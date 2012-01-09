@@ -46,7 +46,7 @@ XM.Record = SC.Record.extend(
   */
   isValid: function() {
     return this.getPath('validateErrors.length') === 0;
-  }.property('validateErrorsLength').cacheable(),
+  }.property('validateErrorsLength'),
 
   /**
   An array of SC.Error objects populated by the validate function.

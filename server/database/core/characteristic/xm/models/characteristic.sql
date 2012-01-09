@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "char.char_id as id",
+  "char.char_id as guid",
   "char.char_name as name",
   "char.char_type as characteristic_type",
   "char.char_order as order",
@@ -51,7 +51,7 @@ insert into public.char (
   char_options,
   char_attributes )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.characteristic_type,
   new.order,
@@ -78,7 +78,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.characteristic
   do instead
 
 update public.char set
-  char_id = new.id,
+  char_id = new.guid,
   char_name = new.name,
   char_order = new.order,
   char_notes = new.notes,
@@ -87,7 +87,7 @@ update public.char set
   char_addresses = new.is_addresses,
   char_contacts = new.is_contacts,
   char_items = new.is_items
-where ( char_id = old.id );
+where ( char_id = old.guid );
 
 ","
 
@@ -97,7 +97,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.characteristic
   do instead (
   
 delete from public.char
-where ( char_id = old.id );
+where ( char_id = old.guid );
 
 );
 

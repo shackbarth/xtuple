@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "country.country_id as id",
+  "country.country_id as guid",
   "country.country_abbr as abbreviation",
   "country.country_name as name",
   "country.country_curr_name as currency_name",
@@ -37,7 +37,7 @@ insert into public.country (
   country_curr_abbr,
   country_curr_number )
 values (
-  new.id,
+  new.guid,
   new.abbreviation,
   new.name,
   new.currency_name,
@@ -59,7 +59,7 @@ update public.country set
   country_curr_symbol = new.currency_symbol,
   country_curr_abbr = new.currency_abbreviation,
   country_curr_number = new.currency_number
-where ( country_id = old.id );
+where ( country_id = old.guid );
 
 ","
 
@@ -69,7 +69,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.country
   do instead 
   
 delete from public.country
-where ( country_id = old.id );
+where ( country_id = old.guid );
 
 "}', 
 

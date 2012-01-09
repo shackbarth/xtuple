@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -14,11 +14,7 @@ E'{
   "prjtask.prjtask_name as name",
   "prjtask.prjtask_descrip as notes",
   "prjtask.prjtask_prj_id as project",
-  "case prjtask.prjtask_status
-   when \'P\' then \'planning\'
-   when \'O\' then \'open\'
-   when \'C\' then \'complete\'
-  end as status",
+  "prjtask.prjtask_status as project_task_status",
   "coalesce(prjtask.prjtask_hours_budget, 0.0) as budgeted_hours",
   "coalesce(prjtask.prjtask_hours_actual, 0.0) as actual_hours",
   "coalesce((prjtask.prjtask_hours_budget - prjtask.prjtask_hours_actual), 0.0) as balance_hours",
@@ -31,8 +27,8 @@ E'{
   "prjtask.prjtask_assigned_date as assign_date",
   "prjtask.prjtask_completed_date as complete_date",
   "prjtask.prjtask_username as assigned_to",
-  "null as priority",
-  "null as is_active",
+  "null::integer as priority",
+  "null::boolean as is_active",
   "btrim(array(
   select comment_id
     from comment
@@ -74,7 +70,7 @@ values (
   new.name,
   new.notes,
   new.project,
-  new.status,
+  new.project_task_status,
   coalesce(new.budgeted_hours, 0.0),
   coalesce(new.actual_hours, 0.0),
   coalesce(new.budgeted_expenses, 0.00),
@@ -96,11 +92,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.project_task
 update prjtask set
   prjtask_name = new.name,
   prjtask_descrip = new.notes,
-  prjtask_status = case new.status
-       when \'planning\' then \'P\'
-      when \'open\'   then \'O\'
-      when \'complete\' then \'C\'
-       end,
+  prjtask_status = new.project_task_status,
   prjtask_hours_budget = coalesce(new.budgeted_hours, 0.0),
   prjtask_hours_actual = coalesce(new.actual_hours, 0.0),
   prjtask_exp_budget = coalesce(new.budgeted_expenses, 0.00),

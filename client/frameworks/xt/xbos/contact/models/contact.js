@@ -16,6 +16,8 @@ XM.Contact = XM.Document.extend(
 /** @scope XM.Contact.prototype */ {
 
   className: 'XM.Contact',
+  
+  nestedRecordNamespace: XM,
 
   createPrivilege: 'MaintainPersonalContacts MaintainAllContacts'.w(),
   readPrivilege:   'ViewPersonalContacts ViewAllContacts'.w(),
@@ -108,17 +110,22 @@ XM.Contact = XM.Document.extend(
   /**
   @type XM.User
   */
-  owner: SC.Record.toOne('XM.User'),
+  owner: SC.Record.toOne('XM.UserAccount', { 
+    nested: YES 
+  } ),
   
   /**
   @type Number
   */
-  address: SC.Record.attr(Number),
+  address: SC.Record.toOne('XM.Address', { 
+    nested: YES 
+  } ),
   
   /**
   @type XM.ContactEmail
   */
   email: SC.Record.toMany('XM.ContactEmail', {
+    nested: YES,
     inverse:  'contact',
   }),
   
@@ -126,6 +133,7 @@ XM.Contact = XM.Document.extend(
   @type XM.ContactCharacteristic
   */
   characteristics: SC.Record.toMany('XM.ContactCharacteristic', {
+    nested: YES,
     inverse: 'contact',
   }),
   

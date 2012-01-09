@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "addr.addr_id as id",
+  "addr.addr_id as guid",
   "addr.addr_number as number",
   "addr.addr_active as is_active",
   "addr.addr_line1 as line1",
@@ -17,6 +17,7 @@ E'{
   "addr.addr_state as state",
   "addr.addr_postalcode as postalcode",
   "addr.addr_country as country",
+  "addr.addr_notes as notes",
   "btrim(array(
     select comment_id 
     from comment
@@ -49,7 +50,7 @@ insert into public.addr (
   addr_postalcode,
   addr_country )
 values (
-  new.id,
+  new.guid,
   new.number,
   new.is_active,
   new.line1,
@@ -77,7 +78,7 @@ update public.addr set
   addr_state = new.state,
   addr_postalcode = new.postalcode,
   addr_country = new.country
-where ( addr_id = old.id );
+where ( addr_id = old.guid );
 
 ","
 
@@ -87,15 +88,15 @@ create or replace rule \\"_DELETE\\" as on delete to xm.address
   do instead (
 
 delete from comment 
-where ( comment_source_id = old.id ) 
+where ( comment_source_id = old.guid ) 
  and ( comment_source = \'ADDR\' );
 
 delete from charass
-where ( charass_target_id = old.id ) 
+where ( charass_target_id = old.guid ) 
  and ( charass_target_type = \'ADDR\' );
 
 delete from public.addr 
-where ( addr_id = old.id );
+where ( addr_id = old.guid );
 
 )
 

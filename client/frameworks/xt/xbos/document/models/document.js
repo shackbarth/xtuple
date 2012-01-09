@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Document = XM.Record.extend(
+XM.Document = SC.ChildRecord.extend(
 /** @scope XM.Document.prototype */ {
 
   className: 'XM.Document',
@@ -22,4 +22,4 @@ XM.Document = XM.Record.extend(
   */
   number: SC.Record.attr(String, { isRequired: YES }),
 
-})
+});

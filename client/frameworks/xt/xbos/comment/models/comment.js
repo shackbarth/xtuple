@@ -11,7 +11,7 @@
   @version 0.1
 */
 
-XM.Comment = XM.Record.extend(
+XM.Comment = SC.ChildRecord.extend(
 /** @scope XM.Comment.prototype */ {
 
   className: 'XM.Comment',

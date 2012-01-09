@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- Columns
 
 E'{
-  "cmnttype.cmnttype_id as id",
+  "cmnttype.cmnttype_id as guid",
   "cmnttype.cmnttype_name as name",
   "cmnttype.cmnttype_descrip as description",
   "cmnttype.cmnttype_sys as is_system",
@@ -31,7 +31,7 @@ insert into public.cmnttype (
   cmnttype_editable,
   cmnttype_order )
 values (
-  new.id,
+  new.guid,
   new.name,
   new.description,
   false,
@@ -50,7 +50,7 @@ update public.cmnttype set
   cmnttype_descrip = new.description,
   cmnttype_editable = new.comments_editable,
   cmnttype_order = new.order
-where ( cmnttype_id = old.id )
+where ( cmnttype_id = old.guid )
  and ( not cmnttype_sys );
 
 ","
@@ -61,7 +61,7 @@ create or replace rule \\"_DELETE\\" as on delete to xm.comment_type
   do instead 
   
 delete from public.cmnttype
-where ( cmnttype_id = old.id )
+where ( cmnttype_id = old.guid )
  and ( not cmnttype_sys );
 
 "}', 
