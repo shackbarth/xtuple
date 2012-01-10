@@ -40,15 +40,7 @@ E'{
    from incdthist
    where incdthist_incdt_id = incdt.incdt_id)::text,\'{}\') as history",
   "incdt.incdt_status != \'L\' as is_active",
-  "case incdt.incdt_status 
-   when \'N\' then \'new\'
-     when \'F\' then \'feedback\'
-     when \'C\' then \'confirmed\'
-     when \'A\' then \'assigned\'
-     when \'R\' then \'resolved\'
-     when \'L\' then \'closed\'
-   else \'?\'
-   end as incident_status",
+  "incdt.incdt_status as incident_status", 
   "incdt.incdt_public as is_public",
   "incdt.incdt_incdtresolution_id as resolution",
   "incdt.incdt_incdtseverity_id as severity",
@@ -126,15 +118,7 @@ update incdt set
   incdt_timestamp = new.start_date,
   incdt_descrip = new.notes,
   incdt_incdtpriority_id = new.priority,
-  incdt_status = case new.incident_status 
-         when \'new\' then \'N\'
-        when \'feedback\' then \'F\'
-        when \'confirmed\' then \'C\'
-        when \'assigned\' then \'A\'
-        when \'resolved\' then \'R\'
-        when \'closed\' then \'L\'
-        else \'?\' 
-       end,
+  incdt_status = new.incident_status,
   incdt_public = new.is_public,
   incdt_incdtresolution_id = new.resolution,
   incdt_incdtseverity_id = new.severity
