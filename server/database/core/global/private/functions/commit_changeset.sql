@@ -97,7 +97,7 @@ create or replace function private.commit_changeset(payload text) returns text a
         sql, expressions, params = [], 
         viewdef = executeSql(viewdefSql, [ model, schema ]);
 
-    /* build up the content for insert of this record */
+    /* build up the content for update of this record */
     for(prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
@@ -131,7 +131,14 @@ create or replace function private.commit_changeset(payload text) returns text a
 
   /* Commit deletion to the database */
   deleteRecord = function(key, value) {
+    var model = decamelize(key).replace(schema + '.',''), 
+        record = decamelize(value),
+        sql = 'delete from ' + schema + '.' + model + ' where guid = ' + record.guid;
     
+    print(NOTICE, 'sql =', sql);
+    
+    /* commit the record */
+    executeSql(sql); 
   }
 
   /* Process array columns as changesets 
@@ -211,7 +218,8 @@ create or replace function private.commit_changeset(payload text) returns text a
   return '{ "status":"ok" }';
   
 $$ language plv8;
-/*
+
+/******* TESTS ********
 select private.commit_changeset('
   {"sc_version":1,
    "XM.Contact":{
@@ -263,7 +271,7 @@ select private.commit_changeset('
    },
    "sc_types":["XM.Contact"]}
  ');
-*/
+
 select private.commit_changeset('
   {"sc_version":1,
    "XM.Contact":{
@@ -316,3 +324,42 @@ select private.commit_changeset('
    },
    "sc_types":["XM.Contact"]}
  ');
+
+select private.commit_changeset('
+  {"sc_version":1,
+   "XM.Contact":{
+     "created":[],
+     "updated":[],
+     "deleted":[{
+       "guid":12171,
+       "number":"14832",
+       "honorific":"Mrs.",
+       "firstName":"Jane",
+       "middleName":"L",
+       "lastName":"Knight",
+       "suffix":"",
+       "isActive":true,
+       "jobTitle":"Heiress to a fortune",
+       "initials":"JLK","isActive":true,
+       "phone":"555-555-5551",
+       "alternate":"555-444-4441",
+       "fax":"555-333-3331",
+       "webAddress":
+       "www.xtuple.com",
+       "notes":"A distinguished person",
+       "owner":null,
+       "primaryEmail":"jane@gmail.com",
+       "address":null,
+       "comments":{
+         "created":[],
+         "updated":[],
+         "deleted":[]
+       },
+       "characteristics":[],
+       "email":[]
+      }]
+   },
+   "sc_types":["XM.Contact"]}
+ ');
+
+*/
