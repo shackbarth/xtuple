@@ -1,18 +1,113 @@
 create or replace function private.commit_changeset(payload text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
-  
-  var changeset = JSON.parse(payload), schemaName = 'xm',
+
+  var changeset = JSON.parse(payload), 
+      schemaName = 'xm',
       recordTypes = changeset['sc_types'],
-      viewdefSql = "select attnum, attname, typname, typcategory "
+      viewdefSql = "select attname, typname, typcategory "
                  + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
                  + "where c.relname = $1 "
                  + " and n.nspname = $2"
                  + " and n.oid = c.relnamespace"
                  + " and a.attnum > 0"
                  + " and a.attrelid = c.oid"
-                 + " and a.atttypid = t.oid"
-                 + " order by attnum ";
+                 + " and a.atttypid = t.oid";
+
+  // ..........................................................
+  // METHODS
+  //
+
+  /* Process a changeset 
+
+     @param { String } model name
+     @param { Object } data
+  */
+  commitChangeset = function(key, value) {
+    var changeType;
+
+    if(value) {
+      changeType = value['created'];
+      for (var r in changeType) {
+        createRecord(key, changeType[r]);
+      }
+
+      changeType = value['updated'];
+      for (var r in changeType) {
+        updateRecord(key, changeType[r]);
+      }
+
+      changeType = value['deleted'];
+      for (var r in changeType) {
+        deleteRecord(key, changeType[r]);
+      }
+    }
+  }
+
+  /* Commit insert to the database 
+
+     @param {string} model name
+     @param {object} the record to be committed
+  */
+  createRecord = function(key, value) {
+    var modelName = decamelize(key).replace(schemaName + '.',''), 
+        record = decamelize(value),
+        sql, columns, expressions, args, 
+        props = [], params = [], 
+        viewdef = executeSql(viewdefSql, [ modelName, schemaName ]);
+
+    /* build up the content for insert of this record */
+    for(prop in record) {
+      var coldef = findProperty(viewdef, 'attname', prop);
+
+      if (coldef.typcategory !== 'A') { /* Don't process arrays here */
+        props.push(prop);
+        if(record[prop]) { 
+          if(coldef.typcategory === 'S' ||
+             coldef.typcategory === 'D') { /* Strings and dates need to be quoted */
+            params.push("'" + record[prop] + "'");
+          }
+          else {
+            params.push(record[prop]);
+          }
+        }
+        else {
+          params.push('null');
+        }
+      }
+    }
+
+    columns = props.join(', ');
+    expressions = params.join(', ');
+    sql = 'insert into ' + schemaName + '.' + modelName + ' (' + columns + ') values (' + expressions + ')';
+    
+    print(NOTICE, 'sql =', sql);
+    
+    /* commit the record */
+    executeSql(sql); 
+
+    /* okay, now lets handle arrays */
+    for(prop in record) {
+      var coldef = findProperty(viewdef, 'attname', prop);
+
+      if (coldef['typcategory'] === 'A') {
+          var key = coldef['typname'].substring(1); /* strip underscore from (array) type name */
+              value = record[prop]; 
+                     
+          commitChangeset(key, value);
+      }
+    }
+  }
+
+   /* Commit update to the database */
+  updateRecord = function(key, value) {
+    
+  } 
+
+  /* Commit deletion to the database */
+  deleteRecord = function(key, value) {
+    
+  }
 
   /* Returns an the first item in an array with a property matching the passed value.  
 
@@ -59,87 +154,17 @@ create or replace function private.commit_changeset(payload text) returns text a
     return ret;
   }
 
-  /* commit insert to the database 
+  // ..........................................................
+  // PROCESS
+  //
 
-  @param {string} model name
-  @param {object} the record to be committed
-  */
-  createRecord = function(key, value) {
-    var model = decamelize(key), 
-        modelName = model.replace(schemaName + '.',''),
-        record = decamelize(value),
-        sql, columns, expressions, args, 
-        props = [], params = [], viewdef;
-
-     print(NOTICE, 'model', model);
-     print(NOTICE, 'record', JSON.stringify(record));
-
-     viewdef = executeSql(viewdefSql, [ modelName, schemaName ]);
-     print(NOTICE, 'viewdef', JSON.stringify(viewdef));
-
-     /* build up the variables */
-     for(prop in record) {
-       var coldef = findProperty(viewdef, 'attname', prop);
-
-       if (coldef.typcategory !== 'A') { /* Don't process arrays here */
-         props.push(prop);
-         if(record[prop]) { 
-           if(coldef.typcategory === 'S') { /* Strings need to be quoted */
-             print(NOTICE, 'wtf1?', JSON.stringify(record[prop]));
-             params.push("'" + record[prop] + "'");
-           }
-           else {
-             params.push(record[prop]);
-           }
-         }
-         else {
-           params.push('null');
-         }
-       }
-     }
-
-     columns = props.join(', ');
-     expressions = params.join(', ');
-
-     sql = 'insert into ' + model + ' (' + columns + ') values (' + expressions + ')';
-
-    print(NOTICE, 'sql', sql);
-    executeSql(sql); 
-  }
-
-   /* commit update to the database */
-  updateRecord = function(recordType, obj) {
-    
-  } 
-
-  /* commit deletion to the database */
-  deleteRecord = function(recordType, obj) {
-    
-  }
-
-  /* process the changeset */
   for(var i in recordTypes) {
-    var recordType = changeset[recordTypes[i]],
-        model = recordTypes[i], changeType;
+    var key = recordTypes[i],
+        value = changeset[recordTypes[i]];
 
-    if(recordType !== undefined) {
-      changeType = recordType['created'];
-      for (var r in changeType) {
-        createRecord(model, changeType[r]);
-      }
-
-      changeType = recordType['updated'];
-      for (var r in changeType) {
-        updateRecord(model, changeType[r]);
-      }
-
-      changeType = recordType['deleted'];
-      for (var r in changeType) {
-        deleteRecord(model, changeType[r]);
-      }
-    }
+    commitChangeset(key, value);
   }
-  
+
   return '{ "status":"ok" }';
   
 $$ language plv8;
@@ -155,6 +180,7 @@ select private.commit_changeset('
        "middleName":"L",
        "lastName":"Knight",
        "suffix":"",
+       "isActive":true,
        "jobTitle":"Heiress to a fortune",
        "initials":"JLK","isActive":true,
        "phone":"555-555-5551",
@@ -167,9 +193,32 @@ select private.commit_changeset('
        "primaryEmail":
        "jane@gmail.com",
        "address":null,
-       "comments":[],"characteristics":[],
-       "email":["11904"]}],
+       "comments":{
+         "created":[{
+           "guid":739893,
+           "contact":12171,
+           "date":"2011-12-21 12:47:12.756437-05",
+           "username":"admin", 
+           "comment_type":"1",
+           "text":"booya!",
+           "isPublic":false
+           },{
+           "guid":739894,
+           "contact":12171,
+           "date":"2011-12-21 12:47:12.756437-05",
+           "username":"admin", 
+           "comment_type":"1",
+           "text":"Now is the time for all good men...",
+           "isPublic":false
+         }],
+         "updated":[],
+         "deleted":[]
+       },
+       "characteristics":[],
+       "email":[]
+      }],
      "updated":[],
-     "deleted":[]},
-   "sc_types":["XM.Contact","XM.State"]}
+     "deleted":[]
+   },
+   "sc_types":["XM.Contact"]}
  ');
