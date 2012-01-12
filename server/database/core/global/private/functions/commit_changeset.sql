@@ -3,16 +3,17 @@ create or replace function private.commit_changeset(payload text) returns text a
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   var changeset = JSON.parse(payload), 
+      debug = false,
       schema = 'xm',
       recordTypes = changeset['sc_types'],
       viewdefSql = "select attname, typname, typcategory "
                  + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
                  + "where c.relname = $1 "
-                 + " and n.nspname = $2"
-                 + " and n.oid = c.relnamespace"
-                 + " and a.attnum > 0"
-                 + " and a.attrelid = c.oid"
-                 + " and a.atttypid = t.oid";
+                 + " and n.nspname = $2 "
+                 + " and n.oid = c.relnamespace "
+                 + " and a.attnum > 0 "
+                 + " and a.attrelid = c.oid "
+                 + " and a.atttypid = t.oid ";
 
   // ..........................................................
   // METHODS
@@ -52,26 +53,30 @@ create or replace function private.commit_changeset(payload text) returns text a
   createRecord = function(key, value) {
     var model = decamelize(key).replace(schema + '.',''), 
         record = decamelize(value),
-        sql, columns, expressions, 
+        sql = '', columns, expressions,
         props = [], params = [], 
         viewdef = executeSql(viewdefSql, [ model, schema ]);
 
     /* build up the content for insert of this record */
-    for(prop in record) {
+    for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (coldef.typcategory !== 'A') { /* Don't process arrays here */
+      if (coldef.typcategory !== 'A') { /* array, don't process here */
         props.push(prop);
         if(record[prop]) { 
+          if (coldef.typcategory === 'C') { /* compound type */
+            var row = rowify(coldef.typname, record[prop]);
+
+            record[prop] = row;
+          } 
+          
           if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* Strings and dates need to be quoted */
+             coldef.typcategory === 'D') { /* strings and dates need to be quoted */
             params.push("'" + record[prop] + "'");
-          }
-          else {
+          } else {
             params.push(record[prop]);
           }
-        }
-        else {
+        } else {
           params.push('null');
         }
       }
@@ -79,15 +84,15 @@ create or replace function private.commit_changeset(payload text) returns text a
 
     columns = props.join(', ');
     expressions = params.join(', ');
-    sql = 'insert into ' + schema + '.' + model + ' (' + columns + ') values (' + expressions + ')';
+    sql = sql.concat('insert into ', schema, '.', model, ' (', columns, ') values (', expressions, ')');
     
-    print(NOTICE, 'sql =', sql);
+    if(debug) { print(NOTICE, 'sql =', sql); }
     
     /* commit the record */
     executeSql(sql); 
 
     /* okay, now lets handle arrays */
-    handleArrays(record, viewdef);
+    commitArrays(record, viewdef);
   }
 
   /* Commit update to the database 
@@ -98,39 +103,43 @@ create or replace function private.commit_changeset(payload text) returns text a
   updateRecord = function(key, value) {
     var model = decamelize(key).replace(schema + '.',''), 
         record = decamelize(value),
-        sql, expressions, params = [], 
+        sql = '', expressions, params = [],
         viewdef = executeSql(viewdefSql, [ model, schema ]);
 
     /* build up the content for update of this record */
-    for(prop in record) {
+    for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (coldef.typcategory !== 'A') { /* Don't process arrays here */
+      if (coldef.typcategory !== 'A') { /* array, don't process here */
         if(record[prop]) { 
+          if (coldef.typcategory === 'C') { /* compound type */
+            var row = rowify(coldef.typname, record[prop]);
+            
+            record[prop] = row;
+          } 
+        
           if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* Strings and dates need to be quoted */
-            params.push(prop + " = '" + record[prop] + "'");
+             coldef.typcategory === 'D') { /* strings and dates need to be quoted */
+            params.push(prop.concat(" = '", record[prop], "'"));
+          } else {
+            params.push(prop.concat(" = ", record[prop]));
           }
-          else {
-            params.push(prop + " = " + record[prop]);
-          }
-        }
-        else {
-          params.push(prop + ' = null');
+        } else {
+          params.push(prop.concat(' = null'));
         }
       }
     }
 
     expressions = params.join(', ');
-    sql = 'update ' + schema + '.' + model + ' set ' + expressions + ' where guid = ' + record.guid;
+    sql = sql.concat('update ', schema, '.', model, ' set ', expressions, ' where guid = ', record.guid);
     
-    print(NOTICE, 'sql =', sql);
+    if(debug) { print(NOTICE, 'sql =', sql); }
     
     /* commit the record */
     executeSql(sql); 
 
     /* okay, now lets handle arrays */
-    handleArrays(record, viewdef); 
+    commitArrays(record, viewdef); 
   } 
 
   /* Commit deletion to the database 
@@ -140,10 +149,11 @@ create or replace function private.commit_changeset(payload text) returns text a
   */
   deleteRecord = function(key, value) {
     var model = decamelize(key).replace(schema + '.',''), 
-        record = decamelize(value),
-        sql = 'delete from ' + schema + '.' + model + ' where guid = ' + record.guid;
+        record = decamelize(value), sql = '';
+
+    sql = sql.concat('delete from ', schema, '.', model, ' where guid = ', record.guid);
     
-    print(NOTICE, 'sql =', sql);
+    if(debug) { print(NOTICE, 'sql =', sql); }
     
     /* commit the record */
     executeSql(sql); 
@@ -154,8 +164,8 @@ create or replace function private.commit_changeset(payload text) returns text a
      @param { Object } record object to be committed
      @param { Object } view definition object
   */
-  handleArrays = function(record, viewdef) {
-      for(prop in record) {
+  commitArrays = function(record, viewdef) {
+    for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
       if (coldef['typcategory'] === 'A') {
@@ -165,6 +175,42 @@ create or replace function private.commit_changeset(payload text) returns text a
           commitChangeset(key, value);
       }
     }   
+  }
+
+  /* Convert object to postgres row type
+
+     @param { String } the column type
+     @param { Object } data to convert
+  */
+  rowify = function(key, value) {
+    var viewdef = executeSql(viewdefSql, [ key, schema ]),
+        record = decamelize(value),
+        props = [], ret = '';
+
+    for(var prop in record) {
+      var coldef = findProperty(viewdef, 'attname', prop);
+      if(prop) {
+        if(coldef.typcategory !== 'A') { /* array, don't process here */
+          if(coldef.typcategory === 'C') { /* compound type */
+            record[prop] = rowify(coldef.attname, record[prop]);
+          }
+          if(coldef.typcategory === 'S' ||
+             coldef.typcategory === 'D') { /* string or date */
+            props.push("'" + record[prop] + "'"); 
+          } else {
+            props.push(record[prop]);
+          }
+        }
+      } else {
+        props.push('null');
+      }
+    }
+
+    ret = ret.concat('(', props.join(','), ')');
+
+    if(debug) { print(NOTICE, 'rowify = ', ret); }
+    
+    return ret;
   }
 
   /* Returns an the first item in an array with a property matching the passed value.  
@@ -201,14 +247,14 @@ create or replace function private.commit_changeset(payload text) returns text a
 
     if(typeof arg == "string") {
       ret = decamelizeStr(arg);
-    }
-    else if(typeof arg == "object") {
+    } else if(typeof arg == "object") {
       ret = new Object;
+
       for(var prop in arg) {
         ret[decamelizeStr(prop)] = arg[prop];
       }
     }
-    
+
     return ret;
   }
 
@@ -227,7 +273,7 @@ create or replace function private.commit_changeset(payload text) returns text a
   
 $$ language plv8;
 
-/******* TESTS ********
+/*
 select private.commit_changeset('
   {"sc_version":1,
    "XM.Contact":{
@@ -247,9 +293,13 @@ select private.commit_changeset('
        "fax":"555-333-3333",
        "webAddress":"www.xtuple.com",
        "notes":"A famous person",
-       "owner":null,
+       "owner":{
+         "username":"admin",
+         "isActive":true,
+         "propername":"administrator"
+       },
        "primaryEmail":"jdr@gmail.com",
-       "address":null,
+       "address": null,
        "comments":{
          "created":[{
            "guid":739893,
@@ -301,9 +351,22 @@ select private.commit_changeset('
        "webAddress":
        "www.xtuple.com",
        "notes":"A distinguished person",
-       "owner":null,
+       "owner":{
+         "username":"postgres",
+         "isActive":true,
+         "propername":""
+       },
        "primaryEmail":"jane@gmail.com",
-       "address":null,
+       "address":{
+         "guid":1,
+         "line1":"Tremendous Toys Inc.",
+         "line2":"101 Toys Place",
+         "line3":"",
+         "city":"Walnut Hills",
+         "state":"VA",
+         "postalcode":"22209",
+         "country":"United States"
+       },
        "comments":{
          "created":[],
          "updated":[{
@@ -369,5 +432,4 @@ select private.commit_changeset('
    },
    "sc_types":["XM.Contact"]}
  ');
-
 */
