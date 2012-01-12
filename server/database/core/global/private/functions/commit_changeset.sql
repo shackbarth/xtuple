@@ -3,7 +3,7 @@ create or replace function private.commit_changeset(payload text) returns text a
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   var changeset = JSON.parse(payload), 
-      schemaName = 'xm',
+      schema = 'xm',
       recordTypes = changeset['sc_types'],
       viewdefSql = "select attname, typname, typcategory "
                  + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
@@ -50,11 +50,11 @@ create or replace function private.commit_changeset(payload text) returns text a
      @param {object} the record to be committed
   */
   createRecord = function(key, value) {
-    var modelName = decamelize(key).replace(schemaName + '.',''), 
+    var model = decamelize(key).replace(schema + '.',''), 
         record = decamelize(value),
-        sql, columns, expressions, args, 
+        sql, columns, expressions, 
         props = [], params = [], 
-        viewdef = executeSql(viewdefSql, [ modelName, schemaName ]);
+        viewdef = executeSql(viewdefSql, [ model, schema ]);
 
     /* build up the content for insert of this record */
     for(prop in record) {
@@ -79,7 +79,7 @@ create or replace function private.commit_changeset(payload text) returns text a
 
     columns = props.join(', ');
     expressions = params.join(', ');
-    sql = 'insert into ' + schemaName + '.' + modelName + ' (' + columns + ') values (' + expressions + ')';
+    sql = 'insert into ' + schema + '.' + model + ' (' + columns + ') values (' + expressions + ')';
     
     print(NOTICE, 'sql =', sql);
     
@@ -87,7 +87,60 @@ create or replace function private.commit_changeset(payload text) returns text a
     executeSql(sql); 
 
     /* okay, now lets handle arrays */
+    handleArrays(record, viewdef);
+  }
+
+   /* Commit update to the database */
+  updateRecord = function(key, value) {
+    var model = decamelize(key).replace(schema + '.',''), 
+        record = decamelize(value),
+        sql, expressions, params = [], 
+        viewdef = executeSql(viewdefSql, [ model, schema ]);
+
+    /* build up the content for insert of this record */
     for(prop in record) {
+      var coldef = findProperty(viewdef, 'attname', prop);
+
+      if (coldef.typcategory !== 'A') { /* Don't process arrays here */
+        if(record[prop]) { 
+          if(coldef.typcategory === 'S' ||
+             coldef.typcategory === 'D') { /* Strings and dates need to be quoted */
+            params.push(prop + " = '" + record[prop] + "'");
+          }
+          else {
+            params.push(prop + " = " + record[prop]);
+          }
+        }
+        else {
+          params.push(prop + ' = null');
+        }
+      }
+    }
+
+    expressions = params.join(', ');
+    sql = 'update ' + schema + '.' + model + ' set ' + expressions + ' where guid = ' + record.guid;
+    
+    print(NOTICE, 'sql =', sql);
+    
+    /* commit the record */
+    executeSql(sql); 
+
+    /* okay, now lets handle arrays */
+    handleArrays(record, viewdef); 
+  } 
+
+  /* Commit deletion to the database */
+  deleteRecord = function(key, value) {
+    
+  }
+
+  /* Process array columns as changesets 
+  
+     @param { Object } record object to be committed
+     @param { Object } view definition object
+  */
+  handleArrays = function(record, viewdef) {
+      for(prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
       if (coldef['typcategory'] === 'A') {
@@ -96,17 +149,7 @@ create or replace function private.commit_changeset(payload text) returns text a
                      
           commitChangeset(key, value);
       }
-    }
-  }
-
-   /* Commit update to the database */
-  updateRecord = function(key, value) {
-    
-  } 
-
-  /* Commit deletion to the database */
-  deleteRecord = function(key, value) {
-    
+    }   
   }
 
   /* Returns an the first item in an array with a property matching the passed value.  
@@ -168,30 +211,28 @@ create or replace function private.commit_changeset(payload text) returns text a
   return '{ "status":"ok" }';
   
 $$ language plv8;
-
+/*
 select private.commit_changeset('
   {"sc_version":1,
    "XM.Contact":{
      "created":[{
        "guid":12171,
        "number":"14832",
-       "honorific":"Mrs.",
-       "firstName":"Jane",
-       "middleName":"L",
-       "lastName":"Knight",
+       "honorific":"Mr.",
+       "firstName":"John",
+       "middleName":"D",
+       "lastName":"Rockefeller",
        "suffix":"",
        "isActive":true,
-       "jobTitle":"Heiress to a fortune",
-       "initials":"JLK","isActive":true,
-       "phone":"555-555-5551",
-       "alternate":"555-444-4441",
-       "fax":"555-333-3331",
-       "webAddress":
-       "www.xtuple.com",
-       "notes":"A distinguished person",
+       "jobTitle":"Founder",
+       "initials":"JDR","isActive":true,
+       "phone":"555-555-5555",
+       "alternate":"555-444-4445",
+       "fax":"555-333-3333",
+       "webAddress":"www.xtuple.com",
+       "notes":"A famous person",
        "owner":null,
-       "primaryEmail":
-       "jane@gmail.com",
+       "primaryEmail":"jdr@gmail.com",
        "address":null,
        "comments":{
          "created":[{
@@ -218,6 +259,59 @@ select private.commit_changeset('
        "email":[]
       }],
      "updated":[],
+     "deleted":[]
+   },
+   "sc_types":["XM.Contact"]}
+ ');
+*/
+select private.commit_changeset('
+  {"sc_version":1,
+   "XM.Contact":{
+     "created":[],
+     "updated":[{
+       "guid":12171,
+       "number":"14832",
+       "honorific":"Mrs.",
+       "firstName":"Jane",
+       "middleName":"L",
+       "lastName":"Knight",
+       "suffix":"",
+       "isActive":true,
+       "jobTitle":"Heiress to a fortune",
+       "initials":"JLK","isActive":true,
+       "phone":"555-555-5551",
+       "alternate":"555-444-4441",
+       "fax":"555-333-3331",
+       "webAddress":
+       "www.xtuple.com",
+       "notes":"A distinguished person",
+       "owner":null,
+       "primaryEmail":"jane@gmail.com",
+       "address":null,
+       "comments":{
+         "created":[],
+         "updated":[{
+           "guid":739893,
+           "contact":12171,
+           "date":"2011-12-21 12:47:12.756437-05",
+           "username":"admin", 
+           "comment_type":"1",
+           "text":"booya!",
+           "isPublic":false
+           },{
+           "guid":739894,
+           "contact":12171,
+           "date":"2011-12-21 12:47:12.756437-05",
+           "username":"admin", 
+           "comment_type":"1",
+           "text":"Now is the time for all good men...",
+           "isPublic":false
+         }],
+         "deleted":[]
+       },
+       "characteristics":[],
+       "email":[]
+      }],
      "deleted":[]
    },
    "sc_types":["XM.Contact"]}
