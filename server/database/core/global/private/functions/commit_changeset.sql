@@ -90,7 +90,11 @@ create or replace function private.commit_changeset(payload text) returns text a
     handleArrays(record, viewdef);
   }
 
-   /* Commit update to the database */
+  /* Commit update to the database 
+
+     @param {string} model name
+     @param {object} the record to be committed
+  */
   updateRecord = function(key, value) {
     var model = decamelize(key).replace(schema + '.',''), 
         record = decamelize(value),
@@ -129,7 +133,11 @@ create or replace function private.commit_changeset(payload text) returns text a
     handleArrays(record, viewdef); 
   } 
 
-  /* Commit deletion to the database */
+  /* Commit deletion to the database 
+
+     @param {string} model name
+     @param {object} the record to be committed
+  */
   deleteRecord = function(key, value) {
     var model = decamelize(key).replace(schema + '.',''), 
         record = decamelize(value),
