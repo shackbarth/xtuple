@@ -9,19 +9,27 @@
 
 -- [ START ] core
 -- core/global functions
-\i core/global/private/functions/create_table.sql;
-\! sleep 1;
-\i core/global/private/functions/create_model.sql;
-\! sleep 1;
 \i core/global/private/functions/add_column.sql;
 \! sleep 1;
 \i core/global/private/functions/add_constraint.sql;
 \! sleep 1;
 \i core/global/private/functions/add_primary_key.sql;
 \! sleep 1;
+\i core/global/private/functions/commit_changeset.sql;
+\! sleep 1;
+\i core/global/private/functions/create_model.sql;
+\! sleep 1;
+\i core/global/private/functions/create_table.sql;
+\! sleep 1;
+\i core/global/private/functions/create_xm_view.sql;
+\! sleep 1;
+\i core/global/private/functions/drop_xm_view.sql;
+\! sleep 1;
 \i core/global/private/functions/execute_query.sql;
 \! sleep 1;
 \i core/global/private/functions/extend_model.sql;
+\! sleep 1;
+\i core/global/private/functions/find_views.sql;
 \! sleep 1;
 \i core/global/private/functions/get_datatype_source.sql;
 \! sleep 1;
@@ -154,11 +162,11 @@
 \i core/user/private/tables/user.sql;
 \! sleep 1;
 -- core/user xm models
-\i core/user/xm/models/user.sql;
+\i core/user/xm/models/user_account.sql;
 \! sleep 1;
-\i core/user/xm/models/user_info.sql;
+\i core/user/xm/models/user_account_info.sql;
 \! sleep 1;
-\i core/user/xm/models/user_privilege_assignment.sql; 
+\i core/user/xm/models/user_account_privilege_assignment.sql; 
 \! sleep 1;
 \i core/user/xm/models/privilege.sql;
 \! sleep 1;
@@ -166,11 +174,11 @@
 \! sleep 1;
 \i core/user/xm/models/locale.sql;
 \! sleep 1;
-\i core/user/xm/models/user_role.sql;
+\i core/user/xm/models/user_account_role.sql;
 \! sleep 1;
-\i core/user/xm/models/user_role_privilege_assignment.sql;
+\i core/user/xm/models/user_account_role_privilege_assignment.sql;
 \! sleep 1;
-\i core/user/xm/models/user_user_role_assignment.sql;
+\i core/user/xm/models/user_account_user_role_assignment.sql;
 \! sleep 2;
 -- [ END ] core
 
