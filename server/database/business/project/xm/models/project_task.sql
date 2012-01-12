@@ -8,6 +8,13 @@ select private.create_model(
 
 -- xm.priority not currently implemented in the prjtask table...
 -- xm.isActive not currently implemented in the prjtask table...
+-- Project calculations
+-- coalesce(prjtask.prjtask_hours_budget, 0.0) as budgeted_hours,
+-- coalesce(prjtask.prjtask_hours_actual, 0.0) as actual_hours,
+-- coalesce((prjtask.prjtask_hours_budget - prjtask.prjtask_hours_actual), 0.0) as balance_hours,
+-- coalesce(prjtask.prjtask_exp_budget, 0.00) as budgeted_expenses,
+-- coalesce(prjtask.prjtask_exp_actual, 0.00) as actual_expenses,
+-- coalesce((prjtask.prjtask_exp_budget - prjtask.prjtask_exp_actual), 0.00) as balance_expenses,
 E'{
   "prjtask.prjtask_id as guid",
   "prjtask.prjtask_number as number",
@@ -15,12 +22,12 @@ E'{
   "prjtask.prjtask_descrip as notes",
   "prjtask.prjtask_prj_id as project",
   "prjtask.prjtask_status as project_task_status",
-  "coalesce(prjtask.prjtask_hours_budget, 0.0) as budgeted_hours",
-  "coalesce(prjtask.prjtask_hours_actual, 0.0) as actual_hours",
-  "coalesce((prjtask.prjtask_hours_budget - prjtask.prjtask_hours_actual), 0.0) as balance_hours",
-  "coalesce(prjtask.prjtask_exp_budget, 0.00) as budgeted_expenses",
-  "coalesce(prjtask.prjtask_exp_actual, 0.00) as actual_expenses",
-  "coalesce((prjtask.prjtask_exp_budget - prjtask.prjtask_exp_actual), 0.00) as balance_expenses",
+  "prjtask.prjtask_hours_budget as budgeted_hours",
+  "prjtask.prjtask_hours_actual as actual_hours",
+  "null::numeric as balance_hours",
+  "prjtask.prjtask_exp_budget as budgeted_expenses",
+  "prjtask.prjtask_exp_actual as actual_expenses",
+  "null::numeric as balance_expenses",
   "prjtask.prjtask_owner_username as owner",
   "prjtask.prjtask_start_date as start_date",
   "prjtask.prjtask_due_date as due_date",

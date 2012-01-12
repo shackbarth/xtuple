@@ -10,12 +10,7 @@ E'{
   "prj.prj_id as guid",
   "prj.prj_number as number",
   "prj.prj_name as name",
-  "case prj.prj_status
-   when \'P\' then \'planning\'
-   when \'O\' then \'open\'
-   when \'C\' then \'complete\'
-   else \'undefined\'
-  end as project_status"}',
+  "prj.prj_status as project_status"}', 
 
 E'{"
 
