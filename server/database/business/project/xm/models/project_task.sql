@@ -6,15 +6,6 @@ select private.create_model(
 
 -- Columns
 
--- xm.priority not currently implemented in the prjtask table...
--- xm.isActive not currently implemented in the prjtask table...
--- Project calculations
--- coalesce(prjtask.prjtask_hours_budget, 0.0) as budgeted_hours,
--- coalesce(prjtask.prjtask_hours_actual, 0.0) as actual_hours,
--- coalesce((prjtask.prjtask_hours_budget - prjtask.prjtask_hours_actual), 0.0) as balance_hours,
--- coalesce(prjtask.prjtask_exp_budget, 0.00) as budgeted_expenses,
--- coalesce(prjtask.prjtask_exp_actual, 0.00) as actual_expenses,
--- coalesce((prjtask.prjtask_exp_budget - prjtask.prjtask_exp_actual), 0.00) as balance_expenses,
 E'{
   "prjtask.prjtask_id as guid",
   "prjtask.prjtask_number as number",
@@ -28,24 +19,22 @@ E'{
   "prjtask.prjtask_exp_budget as budgeted_expenses",
   "prjtask.prjtask_exp_actual as actual_expenses",
   "null::numeric as balance_expenses",
-  "prjtask.prjtask_owner_username as owner",
   "prjtask.prjtask_start_date as start_date",
   "prjtask.prjtask_due_date as due_date",
   "prjtask.prjtask_assigned_date as assign_date",
   "prjtask.prjtask_completed_date as complete_date",
   "prjtask.prjtask_username as assigned_to",
-  "null::integer as priority",
-  "null::boolean as is_active",
-  "btrim(array(
-  select comment_id
-    from comment
-    where comment_source_id = prjtask.prjtask_id
-    and comment_source = \'TA\')::text,\'{}\') as comments",
-  "btrim(array(
-    select alarm_id
-    from alarm
-    where alarm_source_id = prjtask.prjtask_id
-    and alarm_source = \'J\')::text,\'{}\') as alarms"}',
+  "(select user_account_info
+    from xm.user_account_info
+    where username = prjtask.prjtask_owner_username) as owner",
+  "array(
+    select project_task_comment
+    from xm.project_task_comment
+    where project_task = prjtask.prjtask_id) as comments",
+  "array(
+    select project_task_alarm 
+    from xm.project_task_alarm
+    where project_task = prjtask.prjtask_id) as alarms"}',
 
 E'{"
 
