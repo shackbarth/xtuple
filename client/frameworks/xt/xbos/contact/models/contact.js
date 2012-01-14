@@ -111,21 +111,21 @@ XM.Contact = XM.Document.extend(
   @type XM.User
   */
   owner: SC.Record.toOne('XM.UserAccount', { 
-    nested: YES 
+    isNested: YES 
   } ),
   
   /**
   @type Number
   */
   address: SC.Record.toOne('XM.Address', { 
-    nested: YES 
+    isNested: YES 
   } ),
   
   /**
   @type XM.ContactEmail
   */
   email: SC.Record.toMany('XM.ContactEmail', {
-    nested: YES,
+    isNested: YES,
     inverse:  'contact',
   }),
   
@@ -133,7 +133,7 @@ XM.Contact = XM.Document.extend(
   @type XM.ContactCharacteristic
   */
   characteristics: SC.Record.toMany('XM.ContactCharacteristic', {
-    nested: YES,
+    isNested: YES,
     inverse: 'contact',
   }),
   

@@ -7,11 +7,11 @@
 
   (Document your Model here)
 
-  @extends SC.ChildRecord
+  @extends XM.Record
 
 */
 
-XM.AddressInfo = SC.ChildRecord.extend(
+XM.AddressInfo = XM.Record.extend(
 /** @scope XM.AddressInfo.prototype */ {
 
   className:   'XM.AddressInfo',

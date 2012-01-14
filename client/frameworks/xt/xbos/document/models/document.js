@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Document = SC.ChildRecord.extend(
+XM.Document = XM.Record.extend(
 /** @scope XM.Document.prototype */ {
 
   className: 'XM.Document',
