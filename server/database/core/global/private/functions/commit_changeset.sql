@@ -4,7 +4,7 @@ create or replace function private.commit_changeset(payload text) returns text a
 
   var changeset = JSON.parse(payload), 
       debug = false,
-      schema = 'xm',
+      nameSpace,
       recordTypes = changeset['sc_types'],
       viewdefSql = "select attname, typname, typcategory "
                  + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
@@ -22,7 +22,7 @@ create or replace function private.commit_changeset(payload text) returns text a
   /* Process a changeset 
 
      @param { String } model name
-     @param { Object } data
+     @param { Object } data object
   */
   commitChangeset = function(key, value) {
     var changeType;
@@ -51,11 +51,11 @@ create or replace function private.commit_changeset(payload text) returns text a
      @param {object} the record to be committed
   */
   createRecord = function(key, value) {
-    var model = decamelize(key).replace(schema + '.',''), 
+    var model = decamelize(key).replace(nameSpace + '.',''), 
         record = decamelize(value),
         sql = '', columns, expressions,
         props = [], params = [], 
-        viewdef = executeSql(viewdefSql, [ model, schema ]);
+        viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
 
     /* build up the content for insert of this record */
     for(var prop in record) {
@@ -84,7 +84,7 @@ create or replace function private.commit_changeset(payload text) returns text a
 
     columns = props.join(', ');
     expressions = params.join(', ');
-    sql = sql.concat('insert into ', schema, '.', model, ' (', columns, ') values (', expressions, ')');
+    sql = sql.concat('insert into ', nameSpace, '.', model, ' (', columns, ') values (', expressions, ')');
     
     if(debug) { print(NOTICE, 'sql =', sql); }
     
@@ -101,10 +101,10 @@ create or replace function private.commit_changeset(payload text) returns text a
      @param {object} the record to be committed
   */
   updateRecord = function(key, value) {
-    var model = decamelize(key).replace(schema + '.',''), 
+    var model = decamelize(key), 
         record = decamelize(value),
         sql = '', expressions, params = [],
-        viewdef = executeSql(viewdefSql, [ model, schema ]);
+        viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
 
     /* build up the content for update of this record */
     for(var prop in record) {
@@ -131,7 +131,7 @@ create or replace function private.commit_changeset(payload text) returns text a
     }
 
     expressions = params.join(', ');
-    sql = sql.concat('update ', schema, '.', model, ' set ', expressions, ' where guid = ', record.guid);
+    sql = sql.concat('update ', nameSpace, '.', model, ' set ', expressions, ' where guid = ', record.guid);
     
     if(debug) { print(NOTICE, 'sql =', sql); }
     
@@ -148,10 +148,10 @@ create or replace function private.commit_changeset(payload text) returns text a
      @param {object} the record to be committed
   */
   deleteRecord = function(key, value) {
-    var model = decamelize(key).replace(schema + '.',''), 
+    var model = decamelize(key), 
         record = decamelize(value), sql = '';
 
-    sql = sql.concat('delete from ', schema, '.', model, ' where guid = ', record.guid);
+    sql = sql.concat('delete from ', nameSpace, '.', model, ' where guid = ', record.guid);
     
     if(debug) { print(NOTICE, 'sql =', sql); }
     
@@ -183,7 +183,7 @@ create or replace function private.commit_changeset(payload text) returns text a
      @param { Object } data to convert
   */
   rowify = function(key, value) {
-    var viewdef = executeSql(viewdefSql, [ key, schema ]),
+    var viewdef = executeSql(viewdefSql, [ key, nameSpace ]),
         record = decamelize(value),
         props = [], ret = '';
 
@@ -262,10 +262,27 @@ create or replace function private.commit_changeset(payload text) returns text a
   // PROCESS
   //
 
+  /* Loop through record types and commit the changeset for each */
   for(var i in recordTypes) {
-    var key = recordTypes[i],
-        value = changeset[recordTypes[i]];
+    var key = decamelize(recordTypes[i].replace((/\w+\./i),'')),
+        value = changeset[recordTypes[i]],
+        sql = 'select coalesce((select count(*) > 0 '
+            + '                 from only private.model '
+            + '                   join private.nested on (model_id=nested_model_id) '
+            + '                 where model_name = $1), false) as "isNested"';
 
+    /* Validate this type is not nested */
+    var res = executeSql(sql, [key]);
+    
+    if(res[0].isNested) { 
+      var msg = "The model for " + recordTypes[i] + " is nested and may only be edited in the context of a parent record.";
+      throw new Error(msg); 
+    }
+
+    /* Set namespace that will be used gloabally for all parent and child records in this model */
+    nameSpace = recordTypes[i].replace((/\.\w+/i),'').toLowerCase();
+
+    /* Commit the change set */
     commitChangeset(key, value);
   }
 

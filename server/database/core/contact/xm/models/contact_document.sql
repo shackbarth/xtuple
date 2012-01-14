@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -56,5 +56,5 @@ where ( id = old.guid );
 
 "}', 
 
--- Conditions, Comment, System
-'{}', 'Contact Document Model', true);
+-- Conditions, Comment, System, Nested
+'{}', 'Contact Document Model', true, true);
