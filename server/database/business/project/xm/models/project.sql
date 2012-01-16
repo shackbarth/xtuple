@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -28,21 +28,10 @@ E'{
    select project_task 
    from xm.project_task
    where project = prj.prj_id) as tasks",
-  "btrim(array(
-    select docass_id 
-    from docass
-    where docass_target_id = prj_id 
-     and docass_target_type = \'J\'
-    union all
-    select docass_id 
-    from docass
-    where docass_source_id = prj_id 
-     and docass_source_type = \'J\'
-    union all
-    select imageass_id 
-    from imageass
-    where imageass_source_id = prj_id 
-    and imageass_source = \'J\')::text,\'{}\') as documents"}',
+  "array(
+    select project_document
+    from xm.project_document
+    where project = prj.prj_id) as documents"}',
 
 -- Rules
 
@@ -124,22 +113,22 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project
   do instead (
 
 delete from comment
- where ((comment_source_id in (  select  prjtask_id
-        from prjtask
-        where prjtask_prj_id = old.guid)
-or comment_source_id = old.guid)
-and comment_source in (\'J\',\'TA\'));
+ where ((comment_source_id in ( select prjtask_id
+				 from prjtask
+				 where prjtask_prj_id = old.guid)
+				 or comment_source_id = old.guid)
+ and comment_source in (\'J\',\'TA\'));
 
 delete from prjtask
 where ( prjtask_prj_id = old.guid );
 
 delete from docass
-where (docass_target_id = old.guid)
-(and docass_target_type = \'J\');
+where (docass_target_id = old.guid
+ and docass_target_type = \'J\');
 
 delete from docass
-where (docass_source_id = old.guid)
-(and docass_source_type = \'J\');
+where (docass_source_id = old.guid
+ and docass_source_type = \'J\');
 
 delete from imageass
  where ( imageass_source_id = old.guid
