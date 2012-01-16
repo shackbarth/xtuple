@@ -8,12 +8,12 @@
 
   (Document your Model here)
 
-  @extends SC.ChildRecord
+  @extends XM.Record
   @version 0.1
 
   @todo handle password seeding for cloud and enhanced auth
 */
-XM.UserAccountInfo = SC.ChildRecord.extend(
+XM.UserAccountInfo = XM.Record.extend(
 /** @scope XM.UserAccountInfo.prototype */ {
 
   className: 'XM.UserAccount',

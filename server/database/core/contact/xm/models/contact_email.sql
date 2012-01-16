@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -52,5 +52,5 @@ where ( cntcteml_id = old.guid );
 
 "}', 
 
--- Conditions, Comment, System
-'{}', 'Contact Email Model', true);
+-- Conditions, Comment, System, Nested
+'{}', 'Contact Email Model', true, true);

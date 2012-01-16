@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema
 
@@ -123,6 +123,6 @@ where ( imageass_id = old.id );
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
-'{}', 'Document Assignment Model', true);
+'{}', 'Document Assignment Model', true, true);

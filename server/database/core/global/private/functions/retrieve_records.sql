@@ -1,4 +1,4 @@
-﻿--drop function private.retrieve_records(text, integer[])
+--drop function private.retrieve_records(text, integer[])
 create or replace function private.retrieve_records(record_type text, ids integer[] default '{}') returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */

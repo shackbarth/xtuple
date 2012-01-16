@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -42,5 +42,5 @@ create or replace rule \\"_DELETE\\" as on delete to xm.contact_info
 
 "}', 
 
--- Conditions, Comment, System
-'{}', 'Contact Info Model', true);
+-- Conditions, Comment, System, Nested
+'{}', 'Contact Info Model', true, true);
