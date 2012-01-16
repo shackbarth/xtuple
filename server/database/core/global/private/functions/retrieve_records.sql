@@ -1,4 +1,4 @@
---drop function private.retrieve_records(text, integer[])
+﻿--drop function private.retrieve_records(text, integer[])
 create or replace function private.retrieve_records(record_type text, ids integer[] default '{}') returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
@@ -80,25 +80,55 @@ create or replace function private.retrieve_records(record_type text, ids intege
      @param { Object } view definition object
   */
   retrieveArrays = function(record, viewdef) {
+
     for(var prop in record) {
-      var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (coldef['typcategory'] === 'A' && record[prop].toString() !== '') {
-        var key = coldef['typname'].substring(1); /* strip underscore from (array) type name */
+      if (record.hasOwnProperty(prop)) {
 
-        for (var i in record[prop]) {
-          var value = record[prop][i],
-              res, sql = '';
-          
-          sql = sql.concat("select (cast('", value, "' as ", nameSpace, ".", key, ")).*");
-          
-          if(debug) print(NOTICE, 'sql = ', sql);
-          
-          res = executeSql(sql);
+	 if(debug) print(NOTICE,'property: ',prop);
 
-          record[prop][i] = camelize(res[0]);
+	 var coldef = findProperty(viewdef, 'attname', prop),
+
+	     value, result, sql = '';
+
+        if (coldef['typcategory'] === "A" && record[prop] !== null) {
+
+	  if(debug) print(NOTICE,'property(object): ',prop);
+
+          var key = coldef['typname'].substring(1);
+
+	  if(debug) print(NOTICE,'key: ', key);
+
+	  for (var i = 0; i < record[prop].length; i++) {
+
+	    value = record[prop][i];
+
+	    if(debug) print(NOTICE, 'value: ', JSON.stringify(value));
+
+	    sql = "select (cast('" + value + "' as " + nameSpace + "." + key + ")).*";
+
+	    if(debug) print(NOTICE, 'sql: ', sql);
+
+	    result = executeSql(sql);
+
+	    if(debug) print(NOTICE, 'result: ', JSON.stringify(result));
+
+	    for (var k = 0; k < result.length; k++) {
+
+	      if(debug) print(NOTICE, 'result[' + [k] + ']: ', JSON.stringify(result[k]));
+
+	      record[prop][i] = retrieveArrays(result[k], executeSql(viewdefSql, [key, nameSpace]));
+
+	      if(debug) print(NOTICE, 'record[' + prop + '][' + i + ']: ', JSON.stringify(record[prop][i]));
+
+	    }
+
+          }
+
         }
+
       }
+
     }
 
     return camelize(record);
@@ -133,5 +163,5 @@ create or replace function private.retrieve_records(record_type text, ids intege
 
 $$ language plv8;
 /*
-select private.retrieve_records('XM.Contact', '{1,2,3}');
+select private.retrieve_records('XM.Project', '{}');
 */
