@@ -85,25 +85,17 @@ create or replace function private.retrieve_records(record_type text, ids intege
 
       if (record.hasOwnProperty(prop)) {
 
-	 if(debug) print(NOTICE,'property: ',prop);
-
 	 var coldef = findProperty(viewdef, 'attname', prop),
 
 	     value, result, sql = '';
 
         if (coldef['typcategory'] === "A" && record[prop] !== null) {
 
-	  if(debug) print(NOTICE,'property(object): ',prop);
-
           var key = coldef['typname'].substring(1);
-
-	  if(debug) print(NOTICE,'key: ', key);
 
 	  for (var i = 0; i < record[prop].length; i++) {
 
 	    value = record[prop][i];
-
-	    if(debug) print(NOTICE, 'value: ', JSON.stringify(value));
 
 	    sql = "select (cast('" + value + "' as " + nameSpace + "." + key + ")).*";
 
@@ -111,15 +103,9 @@ create or replace function private.retrieve_records(record_type text, ids intege
 
 	    result = executeSql(sql);
 
-	    if(debug) print(NOTICE, 'result: ', JSON.stringify(result));
-
 	    for (var k = 0; k < result.length; k++) {
 
-	      if(debug) print(NOTICE, 'result[' + [k] + ']: ', JSON.stringify(result[k]));
-
 	      record[prop][i] = retrieveArrays(result[k], executeSql(viewdefSql, [key, nameSpace]));
-
-	      if(debug) print(NOTICE, 'record[' + prop + '][' + i + ']: ', JSON.stringify(record[prop][i]));
 
 	    }
 
