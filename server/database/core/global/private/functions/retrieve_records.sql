@@ -1,4 +1,4 @@
-﻿--drop function private.retrieve_records(text, integer[])
+--drop function private.retrieve_records(text, integer[])
 create or replace function private.retrieve_records(record_type text, ids integer[] default '{}') returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
@@ -80,22 +80,16 @@ create or replace function private.retrieve_records(record_type text, ids intege
      @param { Object } view definition object
   */
   retrieveArrays = function(record, viewdef) {
-
     for(var prop in record) {
-
       if (record.hasOwnProperty(prop)) {
+        var coldef = findProperty(viewdef, 'attname', prop),
+	    value, result, sql = '';
 
-	 var coldef = findProperty(viewdef, 'attname', prop),
-
-	     value, result, sql = '';
-
-        if (coldef['typcategory'] === "A" && record[prop] !== null) {
-
-          var key = coldef['typname'].substring(1);
+          if (coldef['typcategory'] === "A" && record[prop] !== null) {
+            var key = coldef['typname'].substring(1);
 
 	  for (var i = 0; i < record[prop].length; i++) {
-
-	    value = record[prop][i];
+	    var value = record[prop][i];
 
 	    sql = "select (cast('" + value + "' as " + nameSpace + "." + key + ")).*";
 
@@ -104,19 +98,12 @@ create or replace function private.retrieve_records(record_type text, ids intege
 	    result = executeSql(sql);
 
 	    for (var k = 0; k < result.length; k++) {
-
 	      record[prop][i] = retrieveArrays(result[k], executeSql(viewdefSql, [key, nameSpace]));
-
 	    }
-
           }
-
         }
-
       }
-
     }
-
     return camelize(record);
   }
 
