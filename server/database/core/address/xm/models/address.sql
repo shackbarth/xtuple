@@ -102,4 +102,4 @@ where ( addr_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Address Model', true, true);
+'{}', 'Address Model', true);

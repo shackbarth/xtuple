@@ -80,6 +80,7 @@ create or replace function private.retrieve_records(record_type text, ids intege
      @param { Object } view definition object
   */
   retrieveArrays = function(record, viewdef) {
+    if(debug) print(NOTICE, 'retrieveArrays(' + record + ', ' + viewdef + ') entered ', '');
 
     for(var prop in record) {
 
@@ -117,6 +118,8 @@ create or replace function private.retrieve_records(record_type text, ids intege
 
     }
 
+    
+    if(debug) print(NOTICE, 'retrieveArrays(' + record + ', ' + viewdef + ') returning ', '');
     return camelize(record);
   }
 
