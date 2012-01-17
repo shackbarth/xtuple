@@ -1,35 +1,20 @@
 ﻿select private.create_model(
 
--- Model name, schema
+-- Model name, schema, table
 
-'project_comment', '',
-
--- Table
-
-E'(select
-  comment_id as guid,
-  comment_source_id as project,
-  comment_date as date,
-  comment_user as user,
-  comment_cmnttype_id  as comment_type,
-  comment_text as text,
-  comment_public as is_public,
-  cmnttype_editable as can_update
-  from comment
-  join cmnttype on comment_cmnttype_id = cmnttype_id
-  where comment_source = \'J\') cmt',
+'project_comment', 'public', 'comment, public.cmnttype',
 
 -- Columns
 
 E'{
-  "cmt.guid",
-  "cmt.project",
-  "cmt.date",
-  "cmt.user",
-  "cmt.comment_type",
-  "cmt.text",
-  "cmt.is_public",
-  "cmt.can_update"}',
+  "comment.comment_id as guid",
+  "comment.comment_source_id as project",
+  "comment.comment_date as date",
+  "comment.comment_user as user",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as text",
+  "comment.comment_public as is_public",
+  "cmnttype.cmnttype_editable as can_update"}',
 
 E'{"
 
@@ -80,4 +65,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project_comment
 
 -- Conditions, Comment, System
 
-'{}', 'Project Comment Model', true);
+E'{"comment.comment_cmnttype_id = cmnttype.cmnttype_id", "comment.comment_source = \'J\'"}', 'Project Comment Model', true);
