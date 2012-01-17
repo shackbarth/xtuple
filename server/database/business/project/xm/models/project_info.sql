@@ -37,4 +37,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project_info
 
 -- Conditions, Comment, System
 
-'{}', 'Project Info Model', true);
+'{}', 'Project Info Model', true, true);

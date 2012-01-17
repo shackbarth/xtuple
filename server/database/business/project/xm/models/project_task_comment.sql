@@ -64,4 +64,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project_task_comment
 
 -- Conditions, Comment, System
 
-E'{"comment.comment_cmnttype_id = cmnttype.cmnttype_id", "comment.comment_source = \'TA\'"}','Project Task Comment Model', true);
+E'{"comment.comment_cmnttype_id = cmnttype.cmnttype_id", "comment.comment_source = \'TA\'"}','Project Task Comment Model', true, true);
