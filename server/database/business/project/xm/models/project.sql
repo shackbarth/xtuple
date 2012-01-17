@@ -7,16 +7,18 @@
 -- Columns
 
 E'{
-  "prj_id as guid",
-  "prj_number as number",
-  "prj_name as name",
-  "prj_descrip as notes",
-  "prj_start_date as start_date",
-  "prj_due_date as due_date",
-  "prj_assigned_date as assign_date",
-  "prj_completed_date as complete_date",
-  "prj_username as assign_to",
-  "prj_status as project_status",
+  "prj.prj_id as guid",
+  "prj.prj_number as number",
+  "prj.prj_name as name",
+  "prj.prj_descrip as notes",
+  "prj.prj_start_date as start_date",
+  "prj.prj_due_date as due_date",
+  "prj.prj_assigned_date as assign_date",
+  "prj.prj_completed_date as complete_date",
+  "(select user_account_info
+    from xm.user_account_info
+    where username = prj.prj_username) as assign_to",
+  "prj.prj_status as project_status",
   "(select user_account_info
    from xm.user_account_info
    where username = prj.prj_owner_username) as owner",
@@ -72,7 +74,8 @@ values (
 create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.project 
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
-             and (new.owner).username = getEffectiveXtUser()) do instead
+             and ((new.owner).username = getEffectiveXtUser()
+                  or (new.assign_to).username = getEffectiveXtUser())) do instead
 
   select private.raise_exception(\'You do not have privileges to create this project\');
 
@@ -100,8 +103,10 @@ where ( prj_id = old.guid );
 create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.project
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
-             and (old.owner).username = getEffectiveXtUser()
-             and (new.owner).username = getEffectiveXtUser()) do instead
+             and ((old.owner).username = getEffectiveXtUser()
+                  and (new.owner).username = getEffectiveXtUser())
+              or ((old.assign_to).username = getEffectiveXtUser()
+                  and (new.assign_to).username = getEffectiveXtUser())) do instead
 
   select private.raise_exception(\'You do not have privileges to update this project\');
 
@@ -144,7 +149,8 @@ where ( prj_id = old.guid );
 create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project 
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
-             and (old.owner).username = getEffectiveXtUser()) do instead
+             and ((old.owner).username = getEffectiveXtUser()
+                  or (old.assign_to).username = getEffectiveXtUser())) do instead
 
   select private.raise_exception(\'You do not have privileges to delete this Project\');
 
@@ -152,4 +158,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project
 
 -- Conditions, Comment, System
 
-'{}', 'Project Model', true);
+'{}', 'Project Model', true, true);

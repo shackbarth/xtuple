@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -59,4 +59,4 @@ where ( state_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'State Model', true);
+'{}', 'State Model', true, true);

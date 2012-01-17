@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -43,4 +43,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.address
 
 -- Conditions, Comment, System
 
-'{}', 'Address Info Model', true);
+'{}', 'Address Info Model', true, true);
