@@ -17,8 +17,6 @@ create or replace function private.commit_records(record_types text, data_hashes
                  + " and a.attnum > 0 "
                  + " and a.attrelid = c.oid "
                  + " and a.atttypid = t.oid ";
-                         print(NOTICE, 'key',record_types);
-        print(NOTICE, 'value',data_hashes);
 
   // ..........................................................
   // METHODS
