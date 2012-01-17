@@ -147,17 +147,30 @@ create or replace function private.fetch(record_type text, query text default nu
                                  .replace('CONTAINS','~')
                                  .replace('MATCHES','~')
                                  .replace('ANY', '<@ array'));
-    
-      if(parameters) {
-        for(var prop in parameters) {
-          var val = parameters[prop];
-        
-          if(typeof parameters[prop] === 'string') { 
-            val = "'" + parameters[prop] + "'" ;
-          } 
 
-          /* replace the value with token */
-          ret = ret.replace('{' + decamelize(prop) + '}', val);
+      quoteIfString = function(arg) { 
+        if(typeof arg === 'string') { 
+          return "'" + arg + "'"; 
+        }
+
+        return arg;
+      }
+      
+      if(parameters) {
+        if(ret.indexOf('%@') > 0) {  /* replace wild card tokens */
+          for(var prop in parameters) {
+            var n = ret.indexOf('%@'),
+                val =  quoteIfString(parameters[prop]);
+
+            ret = ret.slice(0, n) + val + ret.slice(n + 2);
+          }
+        } else {  /* replace parameterized tokens */
+          for(var prop in parameters) {
+            var param = '{' + decamelize(prop) + '}',
+                val = quoteIfString(parameters[prop]);
+            
+            ret = ret.replace(param, val);
+          }
         }
       }
     }
@@ -175,7 +188,7 @@ create or replace function private.fetch(record_type text, query text default nu
            .replace('{limit}', limit)
            .replace('{offset}', offset);
            
-  print(NOTICE, 'sql = ',  sql);
+  if(debug) { print(NOTICE, 'sql = ', sql); }
 
   recs = executeSql(sql);
 
@@ -192,10 +205,18 @@ create or replace function private.fetch(record_type text, query text default nu
   return JSON.stringify(recs);
 
 $$ language plv8;
-
+/*
 select private.fetch('XM.Contact',E'{"parameters":{ 
                                        "firstName": "Jake", 
                                        "lastName": "F"
                                      }, 
                                      "conditions":"firstName = {firstName} OR lastName STARTS_WITH {lastName}", 
                                      "orderBy":"lastName"}', 3);
+
+select private.fetch('XM.Contact',E'{"parameters":{ 
+                                       "firstName": "Jake", 
+                                       "lastName": "F"
+                                     }, 
+                                     "conditions":"firstName = %@ OR lastName STARTS_WITH %@", 
+                                     "orderBy":"lastName"}', 3);
+*/
