@@ -1,19 +1,20 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
-'address_comment', 'public', 'comment',
+'address_comment', 'xm', 'comments',
 
 -- Columns
 
 E'{
-  "comment.comment_id as guid",
-  "comment.comment_source_id as address",
-  "comment.comment_date as date",
-  "comment.comment_user as username",
-  "comment.comment_cmnttype_id as comment_type",
-  "comment.comment_text as text",
-  "comment.comment_public as is_public"}',
+  "comments.guid as guid",
+  "comments.source_id as address",
+  "comments.date as date",
+  "comments.username as username",
+  "comments.comment_type as comment_type",
+  "comments.text as text",
+  "comments.is_public as is_public",
+  "comments.can_update as can_update"}',
      
 -- Rules
 
@@ -24,15 +25,15 @@ E'{"
 create or replace rule \\"_CREATE\\" as on insert to xm.address_comment 
   do instead
 
-insert into public.comment (
-  comment_id,
-  comment_source_id,
-  comment_source,
-  comment_date,
-  comment_user,
-  comment_cmnttype_id,
-  comment_text,
-  comment_public )
+insert into xm.comments (
+  guid,
+  source_id,
+  source,
+  date,
+  username,
+  comment_type,
+  text,
+  is_public  )
 values (
   new.guid,
   new.address,
@@ -50,9 +51,10 @@ values (
 create or replace rule \\"_UPDATE\\" as on update to xm.address_comment 
   do instead
 
-update public.comment set
-  comment_text = new.text
-where ( comment_id = old.guid );
+update xm.comments set
+  text = new.text,
+  is_public = new.is_public
+where ( guid = old.guid );
 
 ","
 
@@ -65,4 +67,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.address_comment
 
 -- Conditions, Comment, System
 
-E'{"comment_source = \'ADDR\'"}', 'Address Comment Model', true);
+E'{"comments.source = \'ADDR\'"}', 'Address Comment Model', true, true);

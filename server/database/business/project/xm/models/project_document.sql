@@ -57,4 +57,4 @@ where ( id = old.guid );
 "}', 
 
 -- Conditions, Comment, System
-E'{"private.get_datatype_source(source_type) = \'J\'","private.get_datatype_source(target_type) = \'J\'"}', 'Contact Document Model', true);
+E'{"private.get_datatype_source(source_type) = \'J\'","private.get_datatype_source(target_type) = \'J\'"}', 'Contact Document Model', true, true);

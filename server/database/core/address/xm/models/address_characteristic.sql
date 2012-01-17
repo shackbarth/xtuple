@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -58,4 +58,4 @@ where ( charass_id = old.guid );
 
 -- Conditions, Comment, System
 
-E'{"charass_target_type = \'ADDR\'"}', 'Address Characteristic Model', true);
+E'{"charass_target_type = \'ADDR\'"}', 'Address Characteristic Model', true, true);
