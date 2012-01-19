@@ -179,10 +179,33 @@ create or replace function private.fetch(record_type text, query text default nu
     return ret;
   }
 
+  /* Validate whether the passed type is nested
+     based on the model definition in Postgres
+
+     @param {String} recordType
+     @returns {Boolean}
+  */
+  validateType = function(recordType) {
+    var sql = 'select coalesce((select count(*) > 0 '
+                  + '           from only private.model '
+                  + '             join private.nested on (model_id=nested_model_id) '
+                  + '           where model_name = $1), false) as "isNested"',
+        res = executeSql(sql, [ recordType ]);
+    
+    if(res[0].isNested) { 
+      var msg = "The model for " + recordType + " is nested and may only be accessed in the context of a parent record.";
+      throw new Error(msg); 
+    }
+
+    return true;
+  }
+
   // ..........................................................
   // PROCESS
   //
 
+  validateType(model);
+  
   /* query the model */
   sql = sql.replace('{table}', nameSpace + '.' + model)
            .replace('{clause}', buildClause(conditions, parameters))

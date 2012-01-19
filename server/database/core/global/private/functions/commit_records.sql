@@ -4,11 +4,7 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   var recordTypes = JSON.parse(record_types), 
       dataHashes = JSON.parse(data_hashes),
-      nameSpace, debug = true, 
-      nestedSql = 'select coalesce((select count(*) > 0 '
-                + '                 from only private.model '
-                + '                   join private.nested on (model_id=nested_model_id) '
-                + '                 where model_name = $1), false) as "isNested"';
+      nameSpace, debug = false, 
       viewdefSql = "select attname, typname, typcategory "
                  + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
                  + "where c.relname = $1 "
@@ -261,6 +257,27 @@ create or replace function private.commit_records(record_types text, data_hashes
     return ret;
   }
 
+  /* Validate whether the passed type is nested
+     based on the model definition in Postgres
+
+     @param {String} recordType
+     @returns {Boolean}
+  */
+  validateType = function(recordType) {
+    var sql = 'select coalesce((select count(*) > 0 '
+                  + '           from only private.model '
+                  + '             join private.nested on (model_id=nested_model_id) '
+                  + '           where model_name = $1), false) as "isNested"',
+        res = executeSql(sql, [ recordType ]);
+    
+    if(res[0].isNested) { 
+      var msg = "The model for " + recordType + " is nested and may only be accessed in the context of a parent record.";
+      throw new Error(msg); 
+    }
+
+    return true;
+  }
+
   // ..........................................................
   // PROCESS
   //
@@ -270,19 +287,13 @@ create or replace function private.commit_records(record_types text, data_hashes
     var key = decamelize(recordTypes[i].replace((/\w+\./i),'')),
         value = dataHashes[i];
 
-    /* Validate this type is not nested */
-    var res = executeSql(nestedSql, [key]);
-    
-    if(res[0].isNested) { 
-      var msg = "The model for " + recordTypes[i] + " is nested and may only be edited in the context of a parent record.";
-      throw new Error(msg); 
+    if(validateType(key)) {
+      /* Set namespace that will be used gloabally for all parent and child records in this model */
+      nameSpace = recordTypes[i].replace((/\.\w+/i),'').toLowerCase();
+
+      /* Commit the record */
+      commitRecord(key, value);
     }
-
-    /* Set namespace that will be used gloabally for all parent and child records in this model */
-    nameSpace = recordTypes[i].replace((/\.\w+/i),'').toLowerCase();
-
-    /* Commit the record */
-    commitRecord(key, value);
   }
 
   return '{ "status":"ok" }';
@@ -320,7 +331,7 @@ select private.commit_records(
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"booya!",
       "isPublic":false
       },{
@@ -329,7 +340,7 @@ select private.commit_records(
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"Now is the time for all good men...",
       "isPublic":false
       }
@@ -380,7 +391,7 @@ select private.commit_records(
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"booya!",
       "isPublic":false
       },{
@@ -389,7 +400,7 @@ select private.commit_records(
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"Now is the time for all good men...",
       "isPublic":false
     }],
@@ -439,7 +450,7 @@ select private.commit_records(
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"booya!",
       "isPublic":false
       },{
@@ -448,7 +459,7 @@ select private.commit_records(
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"Now is the time for all good men...",
       "isPublic":false
     }],
