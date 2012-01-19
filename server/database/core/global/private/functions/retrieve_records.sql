@@ -23,9 +23,9 @@ create or replace function private.retrieve_records(record_type text, ids intege
 
   /* Returns an the first item in an array with a property matching the passed value.  
 
-     @param { object } an array to search
-     @param { string } property name to search on
-     @param { any } a value to match
+     @param {Object} an array to search
+     @param {String} property name to search on
+     @param Object item found or null
   */
   findProperty = function(ary, key, value) {
     for(var i = 0; i < ary.length; i++) {
@@ -45,7 +45,8 @@ create or replace function private.retrieve_records(record_type text, ids intege
      If an object is passed, an object is returned with all it's
      proprety names camelized.
 
-     @param { string | object }
+     @param {String | Object}
+     @returns {String | Object} decamelized argument
   */
   camelize = function(arg) {
     var ret = arg; 
@@ -76,8 +77,8 @@ create or replace function private.retrieve_records(record_type text, ids intege
 
   /* Process array columns as changesets 
   
-     @param { Object } record object to be committed
-     @param { Object } view definition object
+     @param {Object} record object to be committed
+     @param {Object} view definition object
   */
   retrieveArrays = function(record, viewdef) {
     for(var prop in record) {

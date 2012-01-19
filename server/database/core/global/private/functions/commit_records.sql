@@ -24,8 +24,8 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit a record to the database 
 
-     @param { String } model name
-     @param { Object } data object
+     @param {String} model name
+     @param {Object} data object
   */
   commitRecord = function(key, value) {
     var changeType;
@@ -45,8 +45,8 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit insert to the database 
 
-     @param {string} model name
-     @param {object} the record to be committed
+     @param {String} model name
+     @param {Object} the record to be committed
   */
   createRecord = function(key, value) {
     var model = decamelize(key).replace(nameSpace + '.',''), 
@@ -95,8 +95,8 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit update to the database 
 
-     @param {string} model name
-     @param {object} the record to be committed
+     @param {String} model name
+     @param {Object} the record to be committed
   */
   updateRecord = function(key, value) {
     var model = decamelize(key), 
@@ -142,8 +142,8 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit deletion to the database 
 
-     @param {string} model name
-     @param {object} the record to be committed
+     @param {String} model name
+     @param {Object} the record to be committed
   */
   deleteRecord = function(key, value) {
     var model = decamelize(key), 
@@ -159,8 +159,8 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit array columns with their own statements 
   
-     @param { Object } record object to be committed
-     @param { Object } view definition object
+     @param {Object} record object to be committed
+     @param {Object} view definition object
   */
   commitArrays = function(record, viewdef) {
     for(var prop in record) {
@@ -179,8 +179,9 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Convert object to postgres row type
 
-     @param { String } the column type
-     @param { Object } data to convert
+     @param {String} the column type
+     @param {Object} data to convert
+     @returns {String} a string formatted like a postgres RECORD datatype 
   */
   rowify = function(key, value) {
     var viewdef = executeSql(viewdefSql, [ key, nameSpace ]),
@@ -215,9 +216,10 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Returns an the first item in an array with a property matching the passed value.  
 
-     @param { object } an array to search
-     @param { string } property name to search on
-     @param { any } a value to match
+     @param {Object} an array to search
+     @param {String} property name to search on
+     @param {String} a value to match
+     @returns Object found item or null
   */
   findProperty = function(ary, key, value) {
     for(var i = 0; i < ary.length; i++) {
@@ -236,7 +238,8 @@ create or replace function private.commit_records(record_types text, data_hashes
      If an object is passed, an object is returned with all it's
      proprety names camelized.
 
-     @param { string | object }
+     @param {String | Object}
+     @returns {String | Object} The argument modified
   */
   decamelize = function(arg) {
     var ret = arg; 
