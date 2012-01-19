@@ -31,43 +31,35 @@ E'{
   "item.item_warrdays as warranty_days",
   "item.item_freightclass_id as freight_class",
   "item.item_maxcost as max_cost",
-  "btrim(array(
-   select comment_id
-   from \\"comment\\"
-   where comment_source_id = item.item_id
-    and comment_source = \'I\')::text,\'{}\') as \\"comments\\"",
-  "btrim(array(
-   select charass_id 
-   from charass
-   where charass_target_id = item.item_id
-    and charass_target_type = \'I\')::text,\'{}\') as \\"characteristics\\"",
-  "btrim(array(
-   select itemuomconv_id
-   from itemuomconv
-   where itemuomconv_item_id = item.item_id)::text,\'{}\') as conversions",
-  "btrim(array(
-   select itemalias_id
-   from itemalias
-   where itemalias_item_id = item.item_id)::text,\'{}\') as aliases",
-  "btrim(array(
-   select itemsub_id 
-   from itemsub
-   where itemsub_parent_item_id = item.item_id)::text,\'{}\') as substitutes",
-  "btrim(array(
-   select docass_id 
-   from docass
-   where docass_target_id = item.item_id 
-    and docass_target_type = \'I\'
-   union all
-   select docass_id 
-   from docass
-   where docass_source_id = item.item_id 
-    and docass_source_type = \'I\'
-   union all
-   select imageass_id 
-   from imageass
-   where imageass_source_id = item.item_id 
-    and imageass_source = \'I\')::text,\'{}\') as documents"
+  "array(
+   select item_comment
+   from xm.item_comment
+   where (item = item.item_id)) as \\"comments\\"",
+  "array(
+   select item_characteristic
+   from xm.item_characteristic
+   where (item = item.item_id)) as \\"characteristics\\"",
+  "array(
+   select item_conversion
+   from xm.item_conversion
+   where (item = item.item_id)) as conversions",
+  "array(
+   select item_alias
+   from xm.item_alias
+   where (item = item.item_id)) as aliases",
+  "array(
+   select item_substitute 
+   from xm.item_substitute
+   where (root_item = item.item_id)
+    or (substitute_item = item.item_id)) as substitutes",
+   "array(
+   select item_cost
+   from xm.item_cost
+   where (item = item.item_id)) as costs",
+  "array(
+   select item_document
+   from xm.item_document
+   where item = item.item_id) as documents"
 }',
 
 -- Rules
@@ -132,6 +124,13 @@ values (
 
 ","
 
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.item 
+   where not checkPrivilege(\'MaintainItemMasters\') do instead
+
+  select private.raise_exception(\'You do not have privileges to create this Item\');
+
+","
+
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.item
@@ -164,6 +163,13 @@ where ( item_id = old.guid );
 
 ","
 
+create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.item 
+   where not checkPrivilege(\'MaintainItemMasters\') do instead
+
+  select private.raise_exception(\'You do not have privileges to update this Item\');
+
+","
+
 -- delete rule
 
 create or replace rule \\"_DELETE\\" as on delete to xm.item
@@ -191,24 +197,23 @@ where (itemalias_item_id = old.guid);
 delete from itemsub
 where (itemsub_parent_item_id = old.guid);
 
-delete from docass
-where (docass_target_id = old.guid
-  and docass_target_type = \'I\')
-  or
-    (docass_source_id = old.guid
-  and docass_source_type = \'I\');
-
-delete from imageass
-where ( imageass_source_id = old.guid
-  and imageass_source = \'I\' );
+delete from xm.document_assignment
+where (guid = old.guid);
 
 delete from item
  where (item_id = old.guid);
 
 )
 
+","
+
+create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.item 
+   where not checkPrivilege(\'DeleteItemMasters\') do instead
+
+  select private.raise_exception(\'You do not have privileges to delete this Item\');
+
 "}',
 
 -- Conditions, Comment, System
 
-'{}', 'Item Model', true);
+E'{"checkPrivilege(\'ViewItemMasters\')"}', 'Item Model', true);

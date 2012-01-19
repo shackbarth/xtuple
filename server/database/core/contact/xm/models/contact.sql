@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -155,17 +155,8 @@ delete from charass
 where ( charass_target_id = old.guid ) 
  and ( charass_target_type = \'CNTCT\' );
 
-delete from docass
-where ( docass_target_id = old.guid ) 
- and ( docass_target_type = \'T\' );
-
-delete from docass
-where ( docass_source_id = old.guid ) 
- and ( docass_source_type = \'T\' );
-
-delete from imageass
-where ( imageass_source_id = old.guid ) 
- and ( imageass_source = \'T\' );
+delete from xm.document_assignment
+where ( guid = old.guid );
 
 delete from cntct
 where ( cntct_id = old.guid );
