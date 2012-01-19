@@ -4,15 +4,7 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   var recordTypes = JSON.parse(record_types), 
       dataHashes = JSON.parse(data_hashes),
-      nameSpace, debug = false, 
-      viewdefSql = "select attname, typname, typcategory "
-                 + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
-                 + "where c.relname = $1 "
-                 + " and n.nspname = $2 "
-                 + " and n.oid = c.relnamespace "
-                 + " and a.attnum > 0 "
-                 + " and a.attrelid = c.oid "
-                 + " and a.atttypid = t.oid ";
+      nameSpace, debug = false;
 
   // ..........................................................
   // METHODS
@@ -49,7 +41,7 @@ create or replace function private.commit_records(record_types text, data_hashes
         record = decamelize(value),
         sql = '', columns, expressions,
         props = [], params = [], 
-        viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
+        viewdef = getViewDefinition(model, nameSpace);
 
     /* build up the content for insert of this record */
     for(var prop in record) {
@@ -98,7 +90,7 @@ create or replace function private.commit_records(record_types text, data_hashes
     var model = decamelize(key), 
         record = decamelize(value),
         sql = '', expressions, params = [],
-        viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
+        viewdef = getViewDefinition(model, nameSpace);
 
     /* build up the content for update of this record */
     for(var prop in record) {
@@ -180,7 +172,7 @@ create or replace function private.commit_records(record_types text, data_hashes
      @returns {String} a string formatted like a postgres RECORD datatype 
   */
   rowify = function(key, value) {
-    var viewdef = executeSql(viewdefSql, [ key, nameSpace ]),
+    var viewdef = getViewDefinition(key, nameSpace),
         record = decamelize(value),
         props = [], ret = '';
 
@@ -277,6 +269,30 @@ create or replace function private.commit_records(record_types text, data_hashes
 
     return true;
   }
+
+  /* Pass a record type and return an array
+     that describes the view definition with
+     item representing a column.
+
+     @param {String} recordType
+     @returns {Object} 
+  */
+  getViewDefinition = function(recordType, nameSpace) {
+    var sql = "select attnum, attname, typname, typcategory "
+            + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
+            + "where c.relname = $1 "
+            + "and n.nspname = $2 "
+	    + "and n.oid = c.relnamespace "
+	    + "and a.attnum > 0 "
+	    + "and a.attrelid = c.oid "
+	    + "and a.atttypid = t.oid "
+	    + "order by attnum";
+
+    if(debug) { print(NOTICE, 'viewdefSql = ', sql) };
+
+    return executeSql(sql, [ recordType, nameSpace ]);
+  }
+
 
   // ..........................................................
   // PROCESS

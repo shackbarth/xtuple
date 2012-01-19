@@ -6,16 +6,7 @@ create or replace function private.retrieve_records(record_type text, ids intege
   var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(), 
       model = record_type.replace((/\w+\./i),'').toLowerCase(), 
       debug = false, recs, 
-      sql = "select * from " + nameSpace + '.' + model + " where ", 
-      viewdefSql = "select attnum, attname, typname, typcategory "
-		 + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
-		 + "where c.relname = $1 "
-		 + "and n.nspname = $2 "
-		 + "and n.oid = c.relnamespace "
-		 + "and a.attnum > 0 "
-		 + "and a.attrelid = c.oid "
-		 + "and a.atttypid = t.oid "
-		 + "order by attnum";
+      sql = "select * from " + nameSpace + '.' + model + " where ";
 
   // ..........................................................
   // METHODS
@@ -99,7 +90,7 @@ create or replace function private.retrieve_records(record_type text, ids intege
 	    result = executeSql(sql);
 
 	    for (var k = 0; k < result.length; k++) {
-	      record[prop][i] = retrieveArrays(result[k], executeSql(viewdefSql, [key, nameSpace]));
+	      record[prop][i] = retrieveArrays(result[k], getViewDefinition(key, nameSpace));
 	    }
           }
         }
@@ -129,6 +120,29 @@ create or replace function private.retrieve_records(record_type text, ids intege
     return true;
   }
 
+  /* Pass a record type and return an array
+     that describes the view definition with
+     item representing a column.
+
+     @param {String} recordType
+     @returns {Object} 
+  */
+  getViewDefinition = function(recordType, nameSpace) {
+    var sql = "select attnum, attname, typname, typcategory "
+            + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
+            + "where c.relname = $1 "
+            + "and n.nspname = $2 "
+	    + "and n.oid = c.relnamespace "
+	    + "and a.attnum > 0 "
+	    + "and a.attrelid = c.oid "
+	    + "and a.atttypid = t.oid "
+	    + "order by attnum";
+
+    if(debug) { print(NOTICE, 'viewdefSql = ', sql) };
+
+    return executeSql(sql, [ recordType, nameSpace ]);
+  }
+
   // ..........................................................
   // PROCESS
   //
@@ -147,13 +161,8 @@ create or replace function private.retrieve_records(record_type text, ids intege
   
   recs = executeSql(sql);
 
-  /* convert the child arrays */
-  if(debug) { print(NOTICE, 'viewdefSql = ', viewdefSql) };
-
-  viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
-
   for (var i = 0; i < recs.length; i++) {
-    recs[i] = retrieveArrays(recs[i], viewdef);
+    recs[i] = retrieveArrays(recs[i], getViewDefinition(model, nameSpace));
   };
 
   /* return the results */

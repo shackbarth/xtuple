@@ -10,15 +10,7 @@ create or replace function private.fetch(record_type text, query text default nu
       limit = row_limit ? 'limit ' + row_limit : '';
       offset = row_offset ? 'offset ' + row_offset : '';
       debug = false, recs = null, 
-      sql = "select * from {table} where {clause} {orderBy} {limit} {offset}",
-      viewdefSql = "select attname, typname, typcategory "
-                 + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
-                 + "where c.relname = $1 "
-                 + " and n.nspname = $2 "
-                 + " and n.oid = c.relnamespace "
-                 + " and a.attnum > 0 "
-                 + " and a.attrelid = c.oid "
-                 + " and a.atttypid = t.oid ";
+      sql = "select * from {table} where {clause} {orderBy} {limit} {offset}";
 
   // ..........................................................
   // METHODS
@@ -130,7 +122,7 @@ create or replace function private.fetch(record_type text, query text default nu
 	    result = executeSql(sql);
 
 	    for (var k = 0; k < result.length; k++) {
-	      record[prop][i] = retrieveArrays(result[k], executeSql(viewdefSql, [key, nameSpace]));
+	      record[prop][i] = retrieveArrays(result[k], getViewDefinition(key, nameSpace));
 	    }
           }
         }
@@ -200,6 +192,29 @@ create or replace function private.fetch(record_type text, query text default nu
     return true;
   }
 
+  /* Pass a record type and return an array
+     that describes the view definition with
+     item representing a column.
+
+     @param {String} recordType
+     @returns {Object} 
+  */
+  getViewDefinition = function(recordType, nameSpace) {
+    var sql = "select attnum, attname, typname, typcategory "
+            + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
+            + "where c.relname = $1 "
+            + "and n.nspname = $2 "
+	    + "and n.oid = c.relnamespace "
+	    + "and a.attnum > 0 "
+	    + "and a.attrelid = c.oid "
+	    + "and a.atttypid = t.oid "
+	    + "order by attnum";
+
+    if(debug) { print(NOTICE, 'viewdefSql = ', sql) };
+
+    return executeSql(sql, [ recordType, nameSpace ]);
+  }
+
   // ..........................................................
   // PROCESS
   //
@@ -217,13 +232,8 @@ create or replace function private.fetch(record_type text, query text default nu
 
   recs = executeSql(sql);
 
-  /* convert the child arrays */
-  if(debug) { print(NOTICE, 'viewdefSql = ', viewdefSql) };
-
-  viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
-
   for (var i = 0; i < recs.length; i++) {
-    recs[i] = retrieveArrays(recs[i], viewdef);
+    recs[i] = retrieveArrays(recs[i], getViewDefinition(model, nameSpace));
   };
  
   /* return the results */
