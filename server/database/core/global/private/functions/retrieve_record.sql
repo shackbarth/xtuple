@@ -1,13 +1,9 @@
-create or replace function private.retrieve_records(record_type text, ids integer[] default '{}') returns text as $$
+create or replace function private.retrieve_record(record_type text, id integer) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
-     
-  var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(), 
-      model = record_type.replace((/\w+\./i),'').toLowerCase(), 
-      debug = false, recs, 
-      sql = "select * from " + nameSpace + '.' + model + " where ",
-      /* constants */
-      COMPOUND_TYPE = "C",
+
+  /* constants */
+  var COMPOUND_TYPE = "C",
       ARRAY_TYPE = "A";
 
   // ..........................................................
@@ -164,28 +160,23 @@ create or replace function private.retrieve_records(record_type text, ids intege
   // PROCESS
   //
 
+  var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(), 
+      recordType = record_type.replace((/\w+\./i),'').toLowerCase(), 
+      debug = false, rec, 
+      sql = "select * from " + nameSpace + '.' + recordType + " where guid = $1 ";  
+
   /* validate */
-  validateType(model);
+  validateType(recordType);
 
   /* query the model */
-  if(ids.length) { 
-    sql = sql.concat("guid in (", ids.join(','), ")");
-  } else {
-    sql = sql.concat('true');
-  };
-
   if(debug) print(NOTICE, 'sql = ', sql);
   
-  recs = executeSql(sql);
-
-  for (var i = 0; i < recs.length; i++) {
-    recs[i] = normalize(nameSpace, model, recs[i]);
-  };
+  rec = executeSql(sql, [ id ]);
 
   /* return the results */
-  return JSON.stringify(recs);
+  return JSON.stringify(normalize(nameSpace, recordType, rec[0]));
 
 $$ language plv8;
 /*
-select private.retrieve_records('XM.Contact', '{1,2,3}');
+select private.retrieve_record('XM.Contact', 3);
 */

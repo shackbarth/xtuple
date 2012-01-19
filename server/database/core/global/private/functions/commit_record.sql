@@ -1,12 +1,9 @@
-create or replace function private.commit_records(record_types text, data_hashes text) returns text as $$
+create or replace function private.commit_record(record_type text, data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  var recordTypes = JSON.parse(record_types), 
-      dataHashes = JSON.parse(data_hashes),
-      nameSpace, debug = false,
-      /* Constants */
-      COMPOUND_TYPE = "C",
+  /* Constants */
+  var COMPOUND_TYPE = "C",
       ARRAY_TYPE = "A",
       DATE_TYPE = "D",
       STRING_TYPE = "S";
@@ -302,32 +299,23 @@ create or replace function private.commit_records(record_types text, data_hashes
     return executeSql(sql, [ recordType, nameSpace ]);
   }
 
-
   // ..........................................................
   // PROCESS
   //
+  var recordType = decamelize(record_type.replace((/\w+\./i),'')), 
+      dataHash = JSON.parse(data_hash),
+      nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase();
+      debug = true;
 
-  /* Loop through record types and commit the changeset for each */
-  for(var i in recordTypes) {
-    var key = decamelize(recordTypes[i].replace((/\w+\./i),'')),
-        value = dataHashes[i];
-
-    if(validateType(key)) {
-      /* Set namespace that will be used gloabally for all parent and child records in this model */
-      nameSpace = recordTypes[i].replace((/\.\w+/i),'').toLowerCase();
-
-      /* Commit the record */
-      commitRecord(key, value);
-    }
-  }
+  if(validateType(recordType)) { commitRecord(recordType, dataHash) }
 
   return '{ "status":"ok" }';
   
 $$ language plv8;
 /*
-select private.commit_records(
- '["XM.Contact"]',
- '[{"status":"created",
+select private.commit_record(
+ 'XM.Contact',
+ '{"status":"created",
     "guid":12171,
     "number":"14832",
     "honorific":"Mr.",
@@ -372,12 +360,12 @@ select private.commit_records(
     ],
     "characteristics":[],
     "email":[]
-  }]'
+  }'
 );
 
-select private.commit_records(
- '["XM.Contact"]',
- '[{"status":"updated",
+select private.commit_record(
+ 'XM.Contact',
+ '{"status":"updated",
     "guid":12171,
     "number":"14832",
     "honorific":"Mrs.",
@@ -431,12 +419,12 @@ select private.commit_records(
     }],
     "characteristics":[],
     "email":[]
-  }]'
+  }'
 );
 
-select private.commit_records(
- '["XM.Contact"]',
- '[{"status":"deleted",
+select private.commit_record(
+ 'XM.Contact',
+ '{"status":"deleted",
     "guid":12171,
     "number":"14832",
     "honorific":"Mrs.",
@@ -490,6 +478,6 @@ select private.commit_records(
     }],
     "characteristics":[],
     "email":[]
-  }]'
+  }'
 );
 */

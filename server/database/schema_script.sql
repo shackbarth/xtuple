@@ -17,7 +17,7 @@
 \i core/global/private/functions/add_primary_key.sql;
 \i core/global/private/functions/any_numeric.sql;
 \i core/global/private/functions/any_text.sql;
-\i core/global/private/functions/commit_records.sql;
+\i core/global/private/functions/commit_record.sql;
 \i core/global/private/functions/create_model.sql;
 \i core/global/private/functions/create_table.sql;
 \i core/global/private/functions/create_xm_view.sql;
@@ -28,6 +28,7 @@
 \i core/global/private/functions/fetch.sql;
 \i core/global/private/functions/get_id.sql;
 \i core/global/private/functions/raise_exception.sql;
+\i core/global/private/functions/retrieve_record.sql;
 \i core/global/private/functions/starts_with.sql;
 
 -- core/trigger functions

@@ -1,18 +1,9 @@
 create or replace function private.fetch(record_type text, query text default null, row_limit integer default null, row_offset integer default null) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
-     
-  var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
-      model = record_type.replace((/\w+\./i),'').toLowerCase(),
-      conditions = JSON.parse(query).conditions,
-      orderBy = JSON.parse(query).orderBy ? 'order by ' + JSON.parse(query).orderBy : '',
-      parameters = JSON.parse(query).parameters,
-      limit = row_limit ? 'limit ' + row_limit : '';
-      offset = row_offset ? 'offset ' + row_offset : '';
-      debug = false, recs = null, 
-      sql = "select * from {table} where {clause} {orderBy} {limit} {offset}",
-      /* constants */
-      COMPOUND_TYPE = "C",
+  
+  /* constants */
+  var COMPOUND_TYPE = "C",
       ARRAY_TYPE = "A";
 
   // ..........................................................
@@ -236,6 +227,16 @@ create or replace function private.fetch(record_type text, query text default nu
   // ..........................................................
   // PROCESS
   //
+
+  var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
+      model = record_type.replace((/\w+\./i),'').toLowerCase(),
+      conditions = JSON.parse(query).conditions,
+      orderBy = JSON.parse(query).orderBy ? 'order by ' + JSON.parse(query).orderBy : '',
+      parameters = JSON.parse(query).parameters,
+      limit = row_limit ? 'limit ' + row_limit : '';
+      offset = row_offset ? 'offset ' + row_offset : '',
+      debug = false, recs = null, 
+      sql = "select * from {table} where {clause} {orderBy} {limit} {offset}";
 
   validateType(model);
   
