@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -17,16 +17,15 @@ E'{
   "addr.addr_state as state",
   "addr.addr_postalcode as postalcode",
   "addr.addr_country as country",
-  "btrim(array(
-    select comment_id 
-    from comment
-    where comment_source_id = addr.addr_id 
-      and comment_source = \'ADDR\')::text,\'{}\') as comments",
-  "btrim(array(
-    select charass_id 
-    from charass
-    where charass_target_id = addr.addr_id 
-      and charass_target_type = \'ADDR\')::text,\'{}\') as characteristics"}',
+  "addr.addr_notes as notes",
+  "array(
+    select address_comment 
+    from xm.address_comment
+    where address = addr.addr_id) as comments",
+  "array(
+    select address_characteristic 
+    from xm.address_characteristic
+    where address = addr.addr_id) as characteristics"}',
      
 -- Rules
 

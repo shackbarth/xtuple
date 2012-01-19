@@ -1,4 +1,4 @@
--- [ START ] schema
+﻿-- [ START ] schema
 -- create schema 
 	-- private and xm
 \i create_private_schema.sql;
@@ -9,19 +9,27 @@
 
 -- [ START ] core
 -- core/global functions
-\i core/global/private/functions/create_table.sql;
-\! sleep 1;
-\i core/global/private/functions/create_model.sql;
-\! sleep 1;
 \i core/global/private/functions/add_column.sql;
 \! sleep 1;
 \i core/global/private/functions/add_constraint.sql;
 \! sleep 1;
 \i core/global/private/functions/add_primary_key.sql;
 \! sleep 1;
+\i core/global/private/functions/commit_changeset.sql;
+\! sleep 1;
+\i core/global/private/functions/create_model.sql;
+\! sleep 1;
+\i core/global/private/functions/create_table.sql;
+\! sleep 1;
+\i core/global/private/functions/create_xm_view.sql;
+\! sleep 1;
+\i core/global/private/functions/drop_xm_view.sql;
+\! sleep 1;
 \i core/global/private/functions/execute_query.sql;
 \! sleep 1;
 \i core/global/private/functions/extend_model.sql;
+\! sleep 1;
+\i core/global/private/functions/find_views.sql;
 \! sleep 1;
 \i core/global/private/functions/get_datatype_source.sql;
 \! sleep 1;
@@ -34,10 +42,7 @@
 \i core/global/private/tables/model.sql
 \! sleep 1;
 \i core/global/private/tables/modelext.sql
-\! sleep 1;
-\i core/global/private/tables/rel.sql
-\! sleep 1;
-\i core/global/private/tables/relass.sql
+
 \! sleep 2;
 -- core/type tables
 \i core/type/private/tables/datatype.sql;
@@ -54,6 +59,8 @@
 \i core/document/private/datatype.sql;
 \! sleep 1;
 -- core/document xm views
+\i core/document/xm/views/document_assignment.sql;
+\! sleep 1;
 \i core/document/xm/views/file.sql;
 \! sleep 1;
 \i core/document/xm/views/image.sql;
@@ -80,6 +87,8 @@
 \i core/address/xm/models/state.sql;
 \! sleep 2;
 -- core/comment xm views
+\i core/comment/xm/views/comments.sql;
+\! sleep 1;
 \i core/comment/xm/views/comment_type.sql;
 \! sleep 2;
 \i core/contact/private/tables/datatype.sql;
@@ -154,41 +163,21 @@
 \i core/user/private/tables/user.sql;
 \! sleep 1;
 -- core/user xm models
-\i core/user/xm/models/user.sql;
+\i core/user/xm/models/user_account.sql;
 \! sleep 1;
-\i core/user/xm/models/user_info.sql;
-\! sleep 1;
-\i core/user/xm/models/user_privilege_assignment.sql; 
+\i core/user/xm/models/user_account_info.sql;
 \! sleep 1;
 \i core/user/xm/models/privilege.sql;
 \! sleep 1;
 \i core/user/xm/models/language.sql;
 \! sleep 1;
 \i core/user/xm/models/locale.sql;
-\! sleep 1;
-\i core/user/xm/models/user_role.sql;
-\! sleep 1;
-\i core/user/xm/models/user_role_privilege_assignment.sql;
-\! sleep 1;
-\i core/user/xm/models/user_user_role_assignment.sql;
 \! sleep 2;
 -- [ END ] core
 
 -- [ START ] business
 -- business/account functions
-\i business/account/private/tables/crmacctrole.sql;
-\! sleep 1;
-\i business/account/private/tables/crmacctroleass.sql;
-\! sleep 1;
-\i business/account/private/functions/get_crmacctrole_type_name.sql;
-\! sleep 1;
 -- business/account triggers
-\i business/account/private/trigger_functions/user_sync_crmacctroleass_to_crmacct.sql;
-\! sleep 1;
-\i business/account/private/trigger_functions/core_sync_crmacct_to_crmacctroleass.sql;
-\! sleep 1;
-\i business/account/private/trigger_functions/user_sync_crmacct_to_crmacctroleass.sql;
-\! sleep 1;
 -- business/account tables
 \i business/account/private/tables/datatype.sql;
 \! sleep 1;
@@ -205,32 +194,12 @@
 \i business/account/xm/views/account_comment.sql;
 \! sleep 1;
 \i business/account/xm/views/account_document.sql;
-\! sleep 1;
-\i business/account/xm/views/account_role.sql;
-\! sleep 1;
-\i business/account/xm/views/account_role_assignment.sql;
 \! sleep 2;
 -- business/account/incident tables
-\i business/account/incident/private/tables/incdtrel.sql
-\! sleep 1;
-\i business/account/incident/private/tables/incdtrelass.sql
-\! sleep 1;
 \i business/account/incident/private/tables/datatype.sql;
 \! sleep 1;
-\i business/account/incident/private/tables/incdt_after_delete_check_relass_trigger.sql
-\! sleep 1;
-\i business/account/incident/private/tables/item_sync_incdt_to_incdtrelass.sql
-\! sleep 1;
 -- business/account/incident functions
-\i business/account/incident/private/functions/get_incdtrel_type_name.sql
-\! sleep 1;
 -- business/account/incident triggers
-\i business/account/incident/private/trigger_functions/item_sync_incdtrelass_to_incdt.sql
-\! sleep 1;
-\i business/account/incident/private/trigger_functions/incdtrelass_incdt_delete.sql
-\! sleep 1;
-\i business/account/incident/private/trigger_functions/item_sync_incdt_to_incdtrelass.sql
-\! sleep 1;
 -- business/account/incident xm view
 \i business/account/incident/xm/views/incident.sql;
 \! sleep 1;
@@ -278,6 +247,8 @@
 \i business/project/xm/views/project.sql;
 \! sleep 1;
 \i business/project/xm/views/project_comment.sql;
+\! sleep 1;
+\i business/project/xm/views/project_document.sql;
 \! sleep 1;
 \i business/project/xm/views/project_info.sql;
 \! sleep 1;

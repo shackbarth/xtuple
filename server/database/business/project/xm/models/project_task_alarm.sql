@@ -92,4 +92,4 @@ where (alarm_id = old.guid);
 
 -- Conditions, Comment, System
 
-'{"alarm.alarm_source = \'J\'"}','Project Task Alarm Model', true);
+E'{"alarm.alarm_source = \'J\'"}','Project Task Alarm Model', true, true);

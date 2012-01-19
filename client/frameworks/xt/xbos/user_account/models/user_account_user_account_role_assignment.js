@@ -3,23 +3,24 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
 /** @class
-
-  (Document your Model here)
 
   @extends XM.Record
   @version 0.1
 */
+XM.UserAccountUserAccountRoleAssignment = XM.Record.extend(
+/** @scope XM.UserAccountUserAccountRoleAssignment.prototype */ {
 
-XM.Document = XM.Record.extend(
-/** @scope XM.Document.prototype */ {
+  className: 'XM.UserAccountUserAccountRoleAssignment',
 
-  className: 'XM.Document',
-  
-  /** 
-  @type String
+  /**
+  @type XM.UserAccount
   */
-  number: SC.Record.attr(String, { isRequired: YES }),
+  userAccount:  SC.Record.toOne('XM.UserAccount'),
+
+  /**
+  @type XM.Role
+  */
+  userAccountRole: SC.Record.toOne('XM.UserAccountRole'),
 
 });

@@ -2,18 +2,19 @@
 
 -- Model name, schema, table
 
-'contact_comment', 'public', 'comment',
+'contact_comment', 'xm', 'comments',
 
 -- Columns
 
 E'{
-  "comment.comment_id as guid",
-  "comment.comment_source_id as contact",
-  "comment.comment_date as date",
-  "comment.comment_user as username",
-  "comment.comment_cmnttype_id as comment_type",
-  "comment.comment_text as text",
-  "comment.comment_public as is_public"}',
+  "comments.guid as guid",
+  "comments.source_id as contact",
+  "comments.date as date",
+  "comments.username as username",
+  "comments.comment_type as comment_type",
+  "comments.text as text",
+  "comments.is_public as is_public",
+  "comments.can_update as can_update"}',
 
 -- Rules
 
@@ -24,15 +25,15 @@ E'{"
 create or replace rule \\"_CREATE\\" as on insert to xm.contact_comment 
   do instead
 
-insert into public.comment (
-  comment_id,
-  comment_source_id,
-  comment_source,
-  comment_date,
-  comment_user,
-  comment_cmnttype_id,
-  comment_text,
-  comment_public )
+insert into xm.comments (
+  guid,
+  source_id,
+  source,
+  date,
+  username,
+  comment_type,
+  text,
+  is_public )
 values (
   new.guid,
   new.contact,
@@ -50,9 +51,10 @@ values (
 create or replace rule \\"_UPDATE\\" as on update to xm.contact_comment 
   do instead
 
-update public.comment set
-  comment_text = new.text
-where ( comment_id = old.guid );
+update xm.comments set
+  text = new.text,
+  is_public = new.is_public
+where ( guid = old.guid );
 
 ","
 
@@ -63,5 +65,5 @@ create or replace rule \\"_DELETE\\" as on delete to xm.contact_comment
 
 "}', 
 
--- Conditions, Comment, System
-'{"comment_source = \'T\'"}', 'Contact Comment Model', true);
+-- Conditions, Comment, System, Nested
+E'{"comments.source = \'T\'"}', 'Contact Comment Model', true, true);

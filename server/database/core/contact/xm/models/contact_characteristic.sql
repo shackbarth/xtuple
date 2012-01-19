@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -58,5 +58,5 @@ where ( charass_id = old.guid );
 
 "}', 
 
--- Conditions, Comment, System
-E'{"charass_target_type = \'CNTCT\'"}', 'Contact Characteristic Model', true);
+-- Conditions, Comment, System, Nested
+E'{"charass_target_type = \'CNTCT\'"}', 'Contact Characteristic Model', true, true);

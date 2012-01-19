@@ -1,8 +1,8 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
-'contact', 'public', 'cntct',
+'contact', 'public', 'cntct()',
 
 -- Columns
 
@@ -22,47 +22,38 @@ E'{
   "cntct.cntct_fax as fax",
   "cntct.cntct_email as primary_email",
   "cntct.cntct_webaddr as web_address",
-  "cntct.cntct_owner_username as owner",
+  "(select user_account_info
+    from xm.user_account_info
+    where username = cntct.cntct_owner_username) as owner",
   "cntct.cntct_notes as notes",
-  "cntct.cntct_addr_id as address",
-  "btrim(array(
-    select cntcteml_id 
-    from cntcteml
-    where cntcteml_cntct_id = cntct.cntct_id )::text,\'{}\') as email",
-  "btrim(array(
-    select comment_id 
-    from comment
-    where comment_source_id = cntct.cntct_id 
-      and comment_source = \'T\')::text,\'{}\') as comments",
-  "btrim(array(
-    select charass_id 
-    from charass
-    where charass_target_id = cntct.cntct_id 
-      and charass_target_type = \'CNTCT\')::text,\'{}\') as characteristics",
-  "btrim(array(
-    select docass_id 
-    from docass
-    where docass_target_id = cntct.cntct_id 
-      and docass_target_type = \'T\'
-    union all
-    select docass_id 
-    from docass
-    where docass_source_id = cntct.cntct_id 
-      and docass_source_type = \'T\'
-    union all
-    select imageass_id 
-    from imageass
-    where imageass_source_id = cntct.cntct_id 
-      and imageass_source = \'T\')::text,\'{}\') as documents"}',
+  "(select address_info 
+    from xm.address_info
+    where guid = cntct.cntct_addr_id) as address",
+  "array(
+    select contact_email 
+    from xm.contact_email
+    where contact = cntct.cntct_id ) as email",
+  "array(
+    select contact_comment
+    from xm.contact_comment
+    where contact = cntct.cntct_id) as comments",
+  "array(
+    select contact_characteristic
+    from xm.contact_characteristic
+    where contact = cntct.cntct_id) as characteristics",
+  "array(
+    select contact_document
+    from xm.contact_document
+    where contact = cntct.cntct_id) as documents"}',
      
 -- Rules
 
 E'{"
 
--- insert rule
+-- insert rules
 
 create or replace rule \\"_CREATE\\" as on insert to xm.contact 
-  do instead
+  do instead 
 
 insert into cntct (
   cntct_id,
@@ -100,12 +91,21 @@ values (
   new.primary_email,
   new.web_address,
   new.notes,
-  new.owner,
-  new.address );
+  (new.owner).username,
+  (new.address).guid );
 
 ","
 
--- update rule
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.contact 
+   where not checkPrivilege(\'MaintainAllContacts\') 
+    and not (checkPrivilege(\'MaintainPersonalContacts\') 
+             and (new.owner).username = getEffectiveXtUser()) do instead
+
+  select private.raise_exception(\'You do not have privileges to create this contact\');
+
+","
+
+-- update rules
 
 create or replace rule \\"_UPDATE\\" as on update to xm.contact 
   do instead
@@ -126,9 +126,19 @@ update cntct set
   cntct_email = new.email,
   cntct_webaddr = new.web_address,
   cntct_notes = new.notes,
-  cntct_owner_username = new.owner,
-  cntct_addr_id = new.address
+  cntct_owner_username = (new.owner).username,
+  cntct_addr_id = (new.address).guid
 where ( cntct_id = old.guid );
+
+","
+
+create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.contact 
+   where not checkPrivilege(\'MaintainAllContacts\') 
+    and not (checkPrivilege(\'MaintainPersonalContacts\') 
+             and (old.owner).username = getEffectiveXtUser()
+             and (new.owner).username = getEffectiveXtUser()) do instead
+
+  select private.raise_exception(\'You do not have privileges to update this contact\');
 
 ","
 
@@ -160,7 +170,18 @@ where ( imageass_source_id = old.guid )
 delete from cntct
 where ( cntct_id = old.guid );
 
-)"}', 
+)
+
+","
+
+create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.contact 
+   where not checkPrivilege(\'MaintainAllContacts\') 
+    and not (checkPrivilege(\'MaintainPersonalContacts\') 
+             and (old.owner).username = getEffectiveXtUser()) do instead
+
+  select private.raise_exception(\'You do not have privileges to delete this contact\');
+
+"}', 
 
 -- Conditions, Comment, System
 

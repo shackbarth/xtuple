@@ -36,8 +36,10 @@ XT.Store = SC.Store.extend(XT.Logging,
     // server at this point in our implementation
     this.commitRecords(null, null, storeKeys);
     storeKeys.forEach(function(storeKey) {
-      that.dataSourceDidComplete(storeKey)
-    })
+      (that.peekStatus(storeKey) !== K.BUSY_DESTROYING) ? 
+        that.dataSourceDidComplete(storeKey) :
+        that.dataSourceDidDestroy(storeKey);
+    });
   },
 
   // Metasql records have to be refreshed using parameters
@@ -92,7 +94,6 @@ XT.Store = SC.Store.extend(XT.Logging,
         recordType  = nested.recordTypeFor(storeKey);
         recordName  = recordType.prototype.className;
         status      = nested.peekStatus(storeKey);
-        id          = nested.idFor(storeKey).toString();
         includeHash = NO;
         sc_types.add(recordName);
         dataHash = nested.readDataHash(storeKey);

@@ -68,4 +68,4 @@ where ( cmnttype_id = old.guid )
 
 -- Conditions, Comment, System
 
-'{}', 'Comment Type Model', true);
+'{}', 'Comment Type Model', true, true);

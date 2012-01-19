@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -14,10 +14,10 @@ E'{
   "country.country_curr_symbol as currency_symbol",
   "country.country_curr_abbr as currency_abbreviation",
   "country.country_curr_number as currency_number",
-  "btrim(array(
-    select state_id
-    from public.state
-    where state_country_id = country.country_id )::text,\'{}\') as states"}',
+  "array(
+    select state
+    from xm.state
+    where country = country.country_id) as states"}',
      
 -- Rules
 
