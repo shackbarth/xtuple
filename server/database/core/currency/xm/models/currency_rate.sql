@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -65,4 +65,4 @@ where ( curr_rate_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Currency Rate Model', true);
+'{}', 'Currency Rate Model', true, true);

@@ -59,5 +59,5 @@ where ( charopt_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Characteristic Option Model', true);
+'{}', 'Characteristic Option Model', true, true);
 

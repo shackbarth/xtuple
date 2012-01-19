@@ -59,4 +59,4 @@ where ( state_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'State Model', true, true);
+'{}', 'State Model', true);

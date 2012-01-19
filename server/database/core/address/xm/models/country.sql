@@ -75,4 +75,4 @@ where ( country_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Country Model', true, true);
+'{}', 'Country Model', true);

@@ -77,7 +77,7 @@ create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.project
              and ((new.owner).username = getEffectiveXtUser()
                   or (new.assign_to).username = getEffectiveXtUser())) do instead
 
-  select private.raise_exception(\'You do not have privileges to create this project\');
+  select private.raise_exception(\'You do not have privileges to create this Project\');
 
 ","
 
@@ -108,7 +108,7 @@ create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.project
               or ((old.assign_to).username = getEffectiveXtUser()
                   and (new.assign_to).username = getEffectiveXtUser())) do instead
 
-  select private.raise_exception(\'You do not have privileges to update this project\');
+  select private.raise_exception(\'You do not have privileges to update this Project\');
 
 ","
 

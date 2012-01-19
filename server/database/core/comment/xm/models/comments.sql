@@ -99,4 +99,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.comments
 
 -- Conditions, Comment, System, Nested
 
-'{}', 'Comments Model', true, true);
+'{}', 'Comments Model', true);

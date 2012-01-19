@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -57,4 +57,4 @@ where ( id = old.guid );
 "}', 
 
 -- Conditions, Comment, System
-E'{"private.get_datatype_source(source_type) = \'T\'","private.get_datatype_source(target_type) = \'T\'"}', 'Contact Document Model', true);
+E'{"private.get_datatype_source(source_type) = \'T\'","private.get_datatype_source(target_type) = \'T\'"}', 'Contact Document Model', true, true);
