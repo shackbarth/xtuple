@@ -1,4 +1,3 @@
---drop function private.retrieve_records(text, integer[])
 create or replace function private.retrieve_records(record_type text, ids integer[] default '{}') returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
@@ -6,7 +5,10 @@ create or replace function private.retrieve_records(record_type text, ids intege
   var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(), 
       model = record_type.replace((/\w+\./i),'').toLowerCase(), 
       debug = false, recs, 
-      sql = "select * from " + nameSpace + '.' + model + " where ";
+      sql = "select * from " + nameSpace + '.' + model + " where ",
+      /* constants */
+      COMPOUND_TYPE = "C",
+      ARRAY_TYPE = "A";
 
   // ..........................................................
   // METHODS
@@ -66,19 +68,33 @@ create or replace function private.retrieve_records(record_type text, ids intege
     return ret;
   }
 
-  /* Process array columns as changesets 
+  /* Additional processing on record properties. 
+     Adds 'type' property, stringifies arrays and
+     camelizes the record.
   
      @param {Object} record object to be committed
      @param {Object} view definition object
   */
-  retrieveArrays = function(record, viewdef) {
+  normalize = function(nameSpace, model, record) {
+    var viewdef = getViewDefinition(model, nameSpace);
+
     for(var prop in record) {
       if (record.hasOwnProperty(prop)) {
         var coldef = findProperty(viewdef, 'attname', prop),
 	    value, result, sql = '';
 
-          if (coldef['typcategory'] === "A" && record[prop] !== null) {
-            var key = coldef['typname'].substring(1);
+	 /* helper formatting function */
+        formatTypeName = function(str) {
+          return str.slice(0,1).toUpperCase() + camelize(str.substring(1));
+        }
+
+        /* if it's a compound type, add a type property */
+        if (coldef['typcategory'] === COMPOUND_TYPE && record[prop]) {
+          record[prop]['type'] = formatTypeName(coldef['typname']);
+          
+        /* if it's an array convert each row into an object */
+        } else if (coldef['typcategory'] === ARRAY_TYPE && record[prop]) {
+          var key = coldef['typname'].substring(1); /* strip off the leading underscore */
 
 	  for (var i = 0; i < record[prop].length; i++) {
 	    var value = record[prop][i];
@@ -90,7 +106,8 @@ create or replace function private.retrieve_records(record_type text, ids intege
 	    result = executeSql(sql);
 
 	    for (var k = 0; k < result.length; k++) {
-	      record[prop][i] = retrieveArrays(result[k], getViewDefinition(key, nameSpace));
+	      result[k]['type'] = formatTypeName(key);
+	      record[prop][i] = normalize(nameSpace, key, result[k]);
 	    }
           }
         }
@@ -162,7 +179,7 @@ create or replace function private.retrieve_records(record_type text, ids intege
   recs = executeSql(sql);
 
   for (var i = 0; i < recs.length; i++) {
-    recs[i] = retrieveArrays(recs[i], getViewDefinition(model, nameSpace));
+    recs[i] = normalize(nameSpace, model, recs[i]);
   };
 
   /* return the results */

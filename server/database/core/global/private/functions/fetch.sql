@@ -10,7 +10,10 @@ create or replace function private.fetch(record_type text, query text default nu
       limit = row_limit ? 'limit ' + row_limit : '';
       offset = row_offset ? 'offset ' + row_offset : '';
       debug = false, recs = null, 
-      sql = "select * from {table} where {clause} {orderBy} {limit} {offset}";
+      sql = "select * from {table} where {clause} {orderBy} {limit} {offset}",
+      /* constants */
+      COMPOUND_TYPE = "C",
+      ARRAY_TYPE = "A";
 
   // ..........................................................
   // METHODS
@@ -98,19 +101,33 @@ create or replace function private.fetch(record_type text, query text default nu
     return ret;
   }
 
-  /* Process array columns as changesets 
+  /* Additional processing on record properties. 
+     Adds 'type' property, stringifies arrays and
+     camelizes the record.
   
      @param {Object} record object to be committed
      @param {Object} view definition object
   */
-  retrieveArrays = function(record, viewdef) {
+  normalize = function(nameSpace, model, record) {
+    var viewdef = getViewDefinition(model, nameSpace);
+
     for(var prop in record) {
       if (record.hasOwnProperty(prop)) {
         var coldef = findProperty(viewdef, 'attname', prop),
 	    value, result, sql = '';
 
-          if (coldef['typcategory'] === "A" && record[prop] !== null) {
-            var key = coldef['typname'].substring(1);
+	 /* helper formatting function */
+        formatTypeName = function(str) {
+          return str.slice(0,1).toUpperCase() + camelize(str.substring(1));
+        }
+
+        /* if it's a compound type, add a type property */
+        if (coldef['typcategory'] === COMPOUND_TYPE && record[prop]) {
+          record[prop]['type'] = formatTypeName(coldef['typname']);
+          
+        /* if it's an array convert each row into an object */
+        } else if (coldef['typcategory'] === ARRAY_TYPE && record[prop]) {
+          var key = coldef['typname'].substring(1); /* strip off the leading underscore */
 
 	  for (var i = 0; i < record[prop].length; i++) {
 	    var value = record[prop][i];
@@ -122,7 +139,8 @@ create or replace function private.fetch(record_type text, query text default nu
 	    result = executeSql(sql);
 
 	    for (var k = 0; k < result.length; k++) {
-	      record[prop][i] = retrieveArrays(result[k], getViewDefinition(key, nameSpace));
+	      result[k]['type'] = formatTypeName(key);
+	      record[prop][i] = normalize(nameSpace, key, result[k]);
 	    }
           }
         }
@@ -233,7 +251,7 @@ create or replace function private.fetch(record_type text, query text default nu
   recs = executeSql(sql);
 
   for (var i = 0; i < recs.length; i++) {
-    recs[i] = retrieveArrays(recs[i], getViewDefinition(model, nameSpace));
+    recs[i] = normalize(nameSpace, model, recs[i]);
   };
  
   /* return the results */

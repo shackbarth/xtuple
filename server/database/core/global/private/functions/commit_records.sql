@@ -4,7 +4,12 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   var recordTypes = JSON.parse(record_types), 
       dataHashes = JSON.parse(data_hashes),
-      nameSpace, debug = false;
+      nameSpace, debug = false,
+      /* Constants */
+      COMPOUND_TYPE = "C",
+      ARRAY_TYPE = "A",
+      DATE_TYPE = "D",
+      STRING_TYPE = "S";
 
   // ..........................................................
   // METHODS
@@ -47,17 +52,19 @@ create or replace function private.commit_records(record_types text, data_hashes
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (prop !== 'status' && coldef.typcategory !== 'A') { /* array, don't process here */
+      if (prop !== 'status' && 
+          prop !== 'type' && 
+          coldef.typcategory !== ARRAY_TYPE) { 
         props.push(prop);
         if(record[prop]) { 
-          if (coldef.typcategory === 'C') { /* compound type */
+          if (coldef.typcategory === COMPOUND_TYPE) { 
             var row = rowify(coldef.typname, record[prop]);
 
             record[prop] = row;
           } 
           
-          if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* strings and dates need to be quoted */
+          if(coldef.typcategory === STRING_TYPE ||
+             coldef.typcategory === DATE_TYPE) { 
             params.push("'" + record[prop] + "'");
           } else {
             params.push(record[prop]);
@@ -96,16 +103,18 @@ create or replace function private.commit_records(record_types text, data_hashes
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (prop !== 'status' && coldef.typcategory !== 'A') { /* array, don't process here */
+      if (prop !== 'status' &&
+          prop !== 'type' && 
+          coldef.typcategory !== ARRAY_TYPE) {
         if(record[prop]) { 
-          if (coldef.typcategory === 'C') { /* compound type */
+          if (coldef.typcategory === COMPOUND_TYPE) {
             var row = rowify(coldef.typname, record[prop]);
             
             record[prop] = row;
           } 
         
-          if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* strings and dates need to be quoted */
+          if(coldef.typcategory === STRING_TYPE ||
+             coldef.typcategory === DATE_TYPE) { 
             params.push(prop.concat(" = '", record[prop], "'"));
           } else {
             params.push(prop.concat(" = ", record[prop]));
@@ -154,7 +163,7 @@ create or replace function private.commit_records(record_types text, data_hashes
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (coldef['typcategory'] === 'A') {
+      if (coldef['typcategory'] === ARRAY_TYPE) {
           var key = coldef['typname'].substring(1); /* strip underscore from (array) type name */
               values = record[prop]; 
 
@@ -179,12 +188,12 @@ create or replace function private.commit_records(record_types text, data_hashes
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
       if(prop) {
-        if(coldef.typcategory !== 'A') { /* array, don't process here */
-          if(coldef.typcategory === 'C') { /* compound type */
+        if(coldef.typcategory !== ARRAY_TYPE) { 
+          if(coldef.typcategory === COMPOUND_TYPE) { 
             record[prop] = rowify(coldef.attname, record[prop]);
           }
-          if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* string or date */
+          if(coldef.typcategory === STRING_TYPE ||
+             coldef.typcategory === DATE_TYPE) {
             props.push("'" + record[prop] + "'"); 
           } else {
             props.push(record[prop]);
