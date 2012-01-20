@@ -36,7 +36,7 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
     defaultValue: XM.Project.CONCEPT,
   }),
   
-    /**
+  /**
   @type SC.DateTime
   */
   startDate: SC.Record.attr(SC.DateTime, { 

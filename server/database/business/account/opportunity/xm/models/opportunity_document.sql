@@ -2,13 +2,13 @@ select private.create_model(
 
 -- Model name, schema, table
 
-'project_document', 'xm', 'document_assignment',
+'opportunity_document', 'xm', 'document_assignment',
 
 -- Columns
 
 E'{
   "document_assignment.id as guid",
-  "document_assignment.source as project",
+  "document_assignment.source as opportunity",
   "document_assignment.target as target",
   "document_assignment.purpose as purpose",
   "document_assignment.source_type as source_type",
@@ -20,7 +20,7 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.project_document do instead
+create or replace rule \\"_CREATE\\" as on insert to xm.opportunity_document do instead
 
 insert into xm.document_assignment (
   id,
@@ -31,7 +31,7 @@ insert into xm.document_assignment (
   purpose)
 values (
   new.guid,
-  new.project,
+  new.opportunity,
   new.target,
   new.source_type,
   new.target_type,
@@ -42,19 +42,19 @@ values (
   
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.project_document 
+create or replace rule \\"_UPDATE\\" as on update to xm.opportunity_document 
   do instead nothing;
 
 ","
 
 -- delete rules
 
-create or replace rule \\"_DELETE\\" as on delete to xm.project_document do instead
+create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_document do instead
 
 delete from xm.document_assignment
 where ( id = old.guid );
 
 "}', 
 
--- Conditions, Comment, System
-E'{"private.get_datatype_source(source_type) = \'J\'"}', 'Project Document Model', true, true);
+-- Conditions, Comment, System, Nested
+E'{"private.get_datatype_source(source_type) = \'OPP\'"}', 'Opportunity Document Model', true, true);

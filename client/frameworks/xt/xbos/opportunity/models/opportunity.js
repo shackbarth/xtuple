@@ -42,6 +42,11 @@ XM.Opportunity = XM.Activity.extend(
   }),
   
   /**
+  @type String
+  */
+  name: SC.Record.att(String),
+  
+  /**
   @type XM.OpportunitySource
   */
   source: SC.Record.toOne('XM.OpportunitySource'),
@@ -49,7 +54,7 @@ XM.Opportunity = XM.Activity.extend(
   /**
   @type XM.OpportunityType
   */
-  type: SC.Record.toOne('XM.OpportunityType'),
+  opportunityType: SC.Record.toOne('XM.OpportunityType'),
   
   /**
   @type Number
@@ -67,7 +72,35 @@ XM.Opportunity = XM.Activity.extend(
   probability: SC.Record.attr(Number),
   
   /**
-  @type Characteristics
+  @type SC.DateTime
+  */
+  startDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type XM.Account
+  */
+  targetClose: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d'
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  actualClose: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  completeDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type XM.OpportunityCharacteristic
   */
   characteristics: SC.Record.toMany('XM.OpportunityCharacteristic', {
     isNested: YES,
@@ -75,11 +108,19 @@ XM.Opportunity = XM.Activity.extend(
   }),
   
   /**
-  @type XM.Comment
+  @type XM.OpportunityComment
   */
   comments: XM.Record.toMany('XM.OpportunityComment', {
     isNested: YES,
     inverse: 'opportunity'
   }),
+  
+  /**
+  @type XM.OpportunityDocument
+  */
+  comments: XM.Record.toMany('XM.Opportunitydocument', {
+    isNested: YES,
+    inverse: 'opportunity'
+  }),  
 
 });

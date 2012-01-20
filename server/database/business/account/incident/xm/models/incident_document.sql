@@ -20,7 +20,7 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.contact_document do instead
+create or replace rule \\"_CREATE\\" as on insert to xm.incident_document do instead
 
 insert into xm.document_assignment (
   id,
@@ -31,7 +31,7 @@ insert into xm.document_assignment (
   purpose)
 values (
   new.guid,
-  new.contact,
+  new.incident,
   new.target,
   new.source_type,
   new.target_type,
@@ -42,14 +42,14 @@ values (
   
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.contact_document 
+create or replace rule \\"_UPDATE\\" as on update to xm.incident_document 
   do instead nothing;
 
 ","
 
 -- delete rules
 
-create or replace rule \\"_DELETE\\" as on delete to xm.contact_document do instead
+create or replace rule \\"_DELETE\\" as on delete to xm.incident_document do instead
 
 delete from xm.document_assignment
 where ( id = old.guid );
@@ -57,4 +57,4 @@ where ( id = old.guid );
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{"private.get_datatype_source(source_type) = \'INCDT\'","private.get_datatype_source(target_type) = \'INCDT\'"}', 'Incident Document Model', true, true);
+E'{"private.get_datatype_source(source_type) = \'INCDT\'"}', 'Incident Document Model', true, true);
