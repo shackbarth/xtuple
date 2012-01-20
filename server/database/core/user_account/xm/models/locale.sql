@@ -11,7 +11,9 @@ E'{
   "locale.locale_code as code",
   "locale.locale_descrip as description",
   "locale.locale_comments as notes",
-  "locale.locale_lang_id as language",
+  "(select language
+    from xm.language
+    where (guid = locale.locale_lang_id)) as language",
   "locale.locale_country_id as country",
   "locale.locale_error_color as error_color",
   "locale.locale_warning_color as warning_color",

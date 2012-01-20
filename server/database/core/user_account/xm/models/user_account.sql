@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 -- Model name, schema
 
 'user_account', '', 
@@ -48,14 +48,14 @@ E'{
   "usr.disable_export",
   "usr.can_create_users",
   "usr.is_database_user",
-  "btrim(array(
-    select usrpriv_id
-    from public.usrpriv
-    where usrpriv_username = usr.username )::text,\'{}\') as privileges",
-  "btrim(array(
-    select usrgrp_id
-    from public.usrgrp
-    where usrgrp_username = usr.username )::text,\'{}\') as user_roles"}',
+  "array(
+    select user_account_privilege_assignment
+    from xm.user_account_privilege_assignment
+    where (user_account = usr.username)) as privileges",
+  "array(
+    select user_account_user_account_role_assignment
+    from xm.user_account_user_account_role_assignment
+    where (user_account = usr.username)) as user_roles"}',
      
 -- Rules
 
@@ -114,6 +114,13 @@ select setUserPreference(new.username, \'locale_id\', new.locale::text);
 select setUserPreference(new.username, \'active\', case when new.is_active then \'t\' else \'f\' end );
 
 );
+
+","
+
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.user_account 
+   where not checkPrivilege(\'MaintainUsers\') do instead
+
+  select private.raise_exception(\'You do not have privileges to create this User\');
 
 ","
 
@@ -183,6 +190,13 @@ select setUserPreference(old.username, \'active\', case when new.is_active then 
 
 ","
 
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on update to xm.user_account 
+   where not checkPrivilege(\'MaintainUsers\') do instead
+
+  select private.raise_exception(\'You do not have privileges to update this User\');
+
+","
+
 -- delete rules
 
 create or replace rule \\"_DELETE\\" as on delete to xm.user_account
@@ -192,4 +206,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_account
 
 -- Conditions, Comment, System
 
-'{}', 'User Account Model', true);
+E'{"checkPrivilege(\'MaintainUsers\')"}', 'User Account Model', true);

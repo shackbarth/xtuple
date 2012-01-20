@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema
 
@@ -52,4 +52,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_account_info
 
 -- Conditions, Comment, System
 
-'{}', 'User Account Info Model', true);
+'{"checkPrivilege(\'MaintainUsers\')"}', 'User Account Info Model', true, true);
