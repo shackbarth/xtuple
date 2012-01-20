@@ -1,4 +1,4 @@
--- [ START ] initdb
+﻿-- [ START ] initdb
 
 -- create schemas
 \i create_private_schema.sql;
@@ -73,7 +73,7 @@
 \i core/characteristic/xm/models/characteristic_option.sql;
 
 -- core/comment xm views
-\i core/comment/xm/models/comments.sql;
+\i core/comment/xm/models/comment.sql;
 \i core/comment/xm/models/comment_type.sql;
 
 -- core/document
@@ -126,6 +126,7 @@
 \i core/item/xm/models/item_document.sql;
 \i core/item/xm/models/item_info.sql;
 \i core/item/xm/models/item_substitute.sql;
+\i core/item/xm/models/item_cost.sql;
 \i core/item/xm/models/item.sql;
 
 -- core/priority xm views 
