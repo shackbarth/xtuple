@@ -1,24 +1,15 @@
-create or replace function private.commit_records(record_types text, data_hashes text) returns text as $$
+create or replace function private.commit_record(record_type text, data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  var recordTypes = JSON.parse(record_types), 
-      dataHashes = JSON.parse(data_hashes),
-      nameSpace, debug = true, 
-      nestedSql = 'select coalesce((select count(*) > 0 '
-                + '                 from only private.model '
-                + '                   join private.nested on (model_id=nested_model_id) '
-                + '                 where model_name = $1), false) as "isNested"';
-      viewdefSql = "select attname, typname, typcategory "
-                 + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
-                 + "where c.relname = $1 "
-                 + " and n.nspname = $2 "
-                 + " and n.oid = c.relnamespace "
-                 + " and a.attnum > 0 "
-                 + " and a.attrelid = c.oid "
-                 + " and a.atttypid = t.oid ";
-                         print(NOTICE, 'key',record_types);
-        print(NOTICE, 'value',data_hashes);
+  /* Constants */
+  var COMPOUND_TYPE = "C",
+      ARRAY_TYPE = "A",
+      DATE_TYPE = "D",
+      STRING_TYPE = "S",
+      CREATED_STATE = 'created',
+      UPDATED_STATE = 'updated',
+      DELETED_STATE = 'deleted';
 
   // ..........................................................
   // METHODS
@@ -26,20 +17,20 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit a record to the database 
 
-     @param { String } model name
-     @param { Object } data object
+     @param {String} model name
+     @param {Object} data object
   */
   commitRecord = function(key, value) {
     var changeType;
 
-    if(value && value.status) {
-      if(value.status === 'created') { 
+    if(value && value.dataState) {
+      if(value.dataState === CREATED_STATE) { 
         createRecord(key, value);
       }
-      else if(value.status === 'updated') { 
+      else if(value.dataState === UPDATED_STATE) { 
         updateRecord(key, value);
       }
-      else if(value.status === 'deleted') { 
+      else if(value.dataState === DELETED_STATE) { 
         deleteRecord(key, value); 
       }
     }
@@ -47,31 +38,33 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit insert to the database 
 
-     @param {string} model name
-     @param {object} the record to be committed
+     @param {String} model name
+     @param {Object} the record to be committed
   */
   createRecord = function(key, value) {
     var model = decamelize(key).replace(nameSpace + '.',''), 
         record = decamelize(value),
         sql = '', columns, expressions,
         props = [], params = [], 
-        viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
+        viewdef = getViewDefinition(model, nameSpace);
 
     /* build up the content for insert of this record */
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (prop !== 'status' && coldef.typcategory !== 'A') { /* array, don't process here */
+      if (prop !== 'data_state' && 
+          prop !== 'type' && 
+          coldef.typcategory !== ARRAY_TYPE) { 
         props.push(prop);
         if(record[prop]) { 
-          if (coldef.typcategory === 'C') { /* compound type */
+          if (coldef.typcategory === COMPOUND_TYPE) { 
             var row = rowify(coldef.typname, record[prop]);
 
             record[prop] = row;
           } 
           
-          if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* strings and dates need to be quoted */
+          if(coldef.typcategory === STRING_TYPE ||
+             coldef.typcategory === DATE_TYPE) { 
             params.push("'" + record[prop] + "'");
           } else {
             params.push(record[prop]);
@@ -97,29 +90,31 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit update to the database 
 
-     @param {string} model name
-     @param {object} the record to be committed
+     @param {String} model name
+     @param {Object} the record to be committed
   */
   updateRecord = function(key, value) {
     var model = decamelize(key), 
         record = decamelize(value),
         sql = '', expressions, params = [],
-        viewdef = executeSql(viewdefSql, [ model, nameSpace ]);
+        viewdef = getViewDefinition(model, nameSpace);
 
     /* build up the content for update of this record */
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (prop !== 'status' && coldef.typcategory !== 'A') { /* array, don't process here */
+      if (prop !== 'data_state' &&
+          prop !== 'type' && 
+          coldef.typcategory !== ARRAY_TYPE) {
         if(record[prop]) { 
-          if (coldef.typcategory === 'C') { /* compound type */
+          if (coldef.typcategory === COMPOUND_TYPE) {
             var row = rowify(coldef.typname, record[prop]);
             
             record[prop] = row;
           } 
         
-          if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* strings and dates need to be quoted */
+          if(coldef.typcategory === STRING_TYPE ||
+             coldef.typcategory === DATE_TYPE) { 
             params.push(prop.concat(" = '", record[prop], "'"));
           } else {
             params.push(prop.concat(" = ", record[prop]));
@@ -144,8 +139,8 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit deletion to the database 
 
-     @param {string} model name
-     @param {object} the record to be committed
+     @param {String} model name
+     @param {Object} the record to be committed
   */
   deleteRecord = function(key, value) {
     var model = decamelize(key), 
@@ -161,14 +156,14 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Commit array columns with their own statements 
   
-     @param { Object } record object to be committed
-     @param { Object } view definition object
+     @param {Object} record object to be committed
+     @param {Object} view definition object
   */
   commitArrays = function(record, viewdef) {
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (coldef['typcategory'] === 'A') {
+      if (coldef['typcategory'] === ARRAY_TYPE) {
           var key = coldef['typname'].substring(1); /* strip underscore from (array) type name */
               values = record[prop]; 
 
@@ -181,23 +176,28 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Convert object to postgres row type
 
-     @param { String } the column type
-     @param { Object } data to convert
+     @param {String} the column type
+     @param {Object} data to convert
+     @returns {String} a string formatted like a postgres RECORD datatype 
   */
   rowify = function(key, value) {
-    var viewdef = executeSql(viewdefSql, [ key, nameSpace ]),
+    var viewdef = getViewDefinition(key, nameSpace),
         record = decamelize(value),
         props = [], ret = '';
 
+    /* remove potential fields not part of data definition */
+    delete record['data_state'];
+    delete record['type'];
+    
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
       if(prop) {
-        if(coldef.typcategory !== 'A') { /* array, don't process here */
-          if(coldef.typcategory === 'C') { /* compound type */
+        if(coldef.typcategory !== ARRAY_TYPE) { 
+          if(coldef.typcategory === COMPOUND_TYPE) { 
             record[prop] = rowify(coldef.attname, record[prop]);
           }
-          if(coldef.typcategory === 'S' ||
-             coldef.typcategory === 'D') { /* string or date */
+          if(coldef.typcategory === STRING_TYPE ||
+             coldef.typcategory === DATE_TYPE) {
             props.push("'" + record[prop] + "'"); 
           } else {
             props.push(record[prop]);
@@ -217,9 +217,10 @@ create or replace function private.commit_records(record_types text, data_hashes
 
   /* Returns an the first item in an array with a property matching the passed value.  
 
-     @param { object } an array to search
-     @param { string } property name to search on
-     @param { any } a value to match
+     @param {Object} an array to search
+     @param {String} property name to search on
+     @param {String} a value to match
+     @returns Object found item or null
   */
   findProperty = function(ary, key, value) {
     for(var i = 0; i < ary.length; i++) {
@@ -238,7 +239,8 @@ create or replace function private.commit_records(record_types text, data_hashes
      If an object is passed, an object is returned with all it's
      proprety names camelized.
 
-     @param { string | object }
+     @param {String | Object}
+     @returns {String | Object} The argument modified
   */
   decamelize = function(arg) {
     var ret = arg; 
@@ -260,37 +262,67 @@ create or replace function private.commit_records(record_types text, data_hashes
     return ret;
   }
 
-  // ..........................................................
-  // PROCESS
-  //
+  /* Validate whether the passed type is nested
+     based on the model definition in Postgres
 
-  /* Loop through record types and commit the changeset for each */
-  for(var i in recordTypes) {
-    var key = decamelize(recordTypes[i].replace((/\w+\./i),'')),
-        value = dataHashes[i];
-
-    /* Validate this type is not nested */
-    var res = executeSql(nestedSql, [key]);
+     @param {String} recordType
+     @returns {Boolean}
+  */
+  validateType = function(recordType) {
+    var sql = 'select coalesce((select count(*) > 0 '
+                  + '           from only private.model '
+                  + '             join private.nested on (model_id=nested_model_id) '
+                  + '           where model_name = $1), false) as "isNested"',
+        res = executeSql(sql, [ recordType ]);
     
     if(res[0].isNested) { 
-      var msg = "The model for " + recordTypes[i] + " is nested and may only be edited in the context of a parent record.";
+      var msg = "The model for " + recordType + " is nested and may only be accessed in the context of a parent record.";
       throw new Error(msg); 
     }
 
-    /* Set namespace that will be used gloabally for all parent and child records in this model */
-    nameSpace = recordTypes[i].replace((/\.\w+/i),'').toLowerCase();
-
-    /* Commit the record */
-    commitRecord(key, value);
+    return true;
   }
+
+  /* Pass a record type and return an array
+     that describes the view definition with
+     item representing a column.
+
+     @param {String} recordType
+     @returns {Object} 
+  */
+  getViewDefinition = function(recordType, nameSpace) {
+    var sql = "select attnum, attname, typname, typcategory "
+            + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
+            + "where c.relname = $1 "
+            + "and n.nspname = $2 "
+	    + "and n.oid = c.relnamespace "
+	    + "and a.attnum > 0 "
+	    + "and a.attrelid = c.oid "
+	    + "and a.atttypid = t.oid "
+	    + "order by attnum";
+
+    if(debug) { print(NOTICE, 'viewdefSql = ', sql) };
+
+    return executeSql(sql, [ recordType, nameSpace ]);
+  }
+
+  // ..........................................................
+  // PROCESS
+  //
+  var recordType = decamelize(record_type.replace((/\w+\./i),'')), 
+      dataHash = JSON.parse(data_hash),
+      nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase();
+      debug = true;
+
+  if(validateType(recordType)) { commitRecord(recordType, dataHash) }
 
   return '{ "status":"ok" }';
   
 $$ language plv8;
 /*
-select private.commit_records(
- '["XM.Contact"]',
- '[{"status":"created",
+select private.commit_record(
+ 'XM.Contact',
+ '{ "dataState":"created",
     "guid":12171,
     "number":"14832",
     "honorific":"Mr.",
@@ -307,6 +339,7 @@ select private.commit_records(
     "webAddress":"www.xtuple.com",
     "notes":"A famous person",
     "owner":{
+      "dataState":"read",
       "username":"admin",
       "isActive":true,
       "propername":"administrator"
@@ -314,33 +347,33 @@ select private.commit_records(
     "primaryEmail":"jdr@gmail.com",
     "address": null,
     "comments":[{
-      "status":"created",
+      "dataState":"created",
       "guid":739893,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"booya!",
       "isPublic":false
       },{
-      "status":"created",
+      "dataState":"created",
       "guid":739894,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"Now is the time for all good men...",
       "isPublic":false
       }
     ],
     "characteristics":[],
     "email":[]
-  }]'
+  }'
 );
 
-select private.commit_records(
- '["XM.Contact"]',
- '[{"status":"updated",
+select private.commit_record(
+ 'XM.Contact',
+ '{ "dataState":"updated",
     "guid":12171,
     "number":"14832",
     "honorific":"Mrs.",
@@ -358,12 +391,14 @@ select private.commit_records(
     "www.xtuple.com",
     "notes":"A distinguished person",
     "owner":{
+      "dataState":"read",
       "username":"postgres",
       "isActive":true,
       "propername":""
     },
     "primaryEmail":"jane@gmail.com",
     "address":{
+      "dataState":"read",
       "guid":1,
       "line1":"Tremendous Toys Inc.",
       "line2":"101 Toys Place",
@@ -374,32 +409,32 @@ select private.commit_records(
       "country":"United States"
     },
     "comments":[{
-      "status":"updated",
+      "dataState":"updated",
       "guid":739893,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"booya!",
       "isPublic":false
       },{
-      "status":"updated",
+      "dataState":"updated",
       "guid":739894,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"Now is the time for all good men...",
       "isPublic":false
     }],
     "characteristics":[],
     "email":[]
-  }]'
+  }'
 );
 
-select private.commit_records(
- '["XM.Contact"]',
- '[{"status":"deleted",
+select private.commit_record(
+ 'XM.Contact',
+ '{ "dataState":"deleted",
     "guid":12171,
     "number":"14832",
     "honorific":"Mrs.",
@@ -417,12 +452,14 @@ select private.commit_records(
     "www.xtuple.com",
     "notes":"A distinguished person",
     "owner":{
+      "dataState":"deleted",
       "username":"postgres",
       "isActive":true,
       "propername":""
     },
     "primaryEmail":"jane@gmail.com",
     "address":{
+      "dataState":"deleted",
       "guid":1,
       "line1":"Tremendous Toys Inc.",
       "line2":"101 Toys Place",
@@ -433,26 +470,26 @@ select private.commit_records(
       "country":"United States"
     },
     "comments":[{
-      "status":"deleted",
+      "dataState":"deleted",
       "guid":739893,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"booya!",
       "isPublic":false
       },{
-      "status":"deleted",
+      "dataState":"deleted",
       "guid":739894,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
       "username":"admin", 
-      "comment_type":"1",
+      "comment_type":"3",
       "text":"Now is the time for all good men...",
       "isPublic":false
     }],
     "characteristics":[],
     "email":[]
-  }]'
+  }'
 );
 */

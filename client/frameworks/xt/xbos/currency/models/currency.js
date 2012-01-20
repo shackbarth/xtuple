@@ -46,6 +46,7 @@ XM.Currency = XM.Record.extend(
   @type XM.CurrencyRate
   */
   rates: SC.Record.toMany('XM.CurrencyRate', {
+    isNested: YES,
     inverse: 'currency',
   }),
 

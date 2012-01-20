@@ -23,9 +23,16 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   deletePrivilege: 'MaintainPersonalIncidents MaintainAllIncidents'.w(),
 
   /**
+  @type String
+  */
+  description: SC.Record.attr(String);
+
+  /**
   @type XM.Account
   */
-  account: SC.Record.toOne('XM.Account'),
+  account: SC.Record.toOne('XM.Account', {
+    isNested: YES
+  }),
   
   /**
   @type Boolean
@@ -43,6 +50,11 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   incidentStatus: SC.Record.toOne('XM.Status'),
   
   /**
+  @type XM.Priority
+  */
+  severity: SC.Record.toOne('XM.Priority'),
+  
+  /**
   @type XM.IncidentSevereity
   */
   severity: SC.Record.toOne('XM.IncidentSeverity'),
@@ -53,14 +65,17 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   resolution: SC.Record.toOne('XM.IncidentResolution'),
 
   /**
-  @type XM.Contact
+  @type XM.ContactInfo
   */
-  contact: SC.Record.toOne('XM.Contact'),
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: YES,
+  }),
   
   /**
   @type XM.IncidentHistory
   */
   history: SC.Record.toMany('XM.IncidentHistory', {
+    isNested: YES,
     inverse: 'incident',
   }),
   
@@ -68,21 +83,24 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   @type XM.IncidentAlarm
   */
   alarms: SC.Record.toMany('XM.IncidentAlarm', {
-    inverse: 'incident',
+    isNested: YES,
+    inverse: 'incident'
   }),
   
   /**
   @type XM.IncidentCharacteristic
   */
   characteristics: SC.Record.toMany('XM.IncidentCharacteristic', {
-    inverse: 'incident',
+    isNested: YES,
+    inverse: 'incident'
   }),
   
   /**
   @type XM.IncidentComment
   */
   comments: XM.Record.toMany('XM.IncidentComment', {
-    inverse: 'incident',
+    isNested: YES,
+    inverse: 'incident'
   }),
 
   /****** CALCULATED PROPERTIES        */
@@ -92,10 +110,10 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   @type Boolean
   */
   isActive:  function() {
-    var stage = this.get('status');
-    if (stage !== null) return stage !== 'L';
+    var status = this.get('incidentStatus');
+    if (status) { return status !== 'L'; }
 
     return NO;
-  }.property('stage').cacheable()
+  }.property('incidentStatus').cacheable()
 
 });

@@ -69,7 +69,7 @@ XM.Item = XM.Document.extend(
   /**
   @type String
   */
-  type: SC.Record.attr(String),
+  itemType: SC.Record.attr(String),
   
   /**
   @type Number

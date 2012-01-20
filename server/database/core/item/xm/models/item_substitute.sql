@@ -38,6 +38,13 @@ values (
 
 ","
 
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.item_substitute
+   where not checkPrivilege(\'MaintainItemSubstitutes\') do instead
+
+  select private.raise_exception(\'You do not have privileges to create this Item Substitute\');
+
+","
+
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.item_substitute
@@ -51,6 +58,13 @@ where ( itemsub_id = old.guid );
 
 ","
 
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on update to xm.item_substitute
+   where not checkPrivilege(\'MaintainItemSubstitutes\') do instead
+
+  select private.raise_exception(\'You do not have privileges to update this Item Substitute\');
+
+","
+
 -- delete rule
 
 create or replace rule \\"_DELETE\\" as on delete to xm.item_substitute
@@ -59,8 +73,15 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_substitute
 delete from itemsub
 where ( itemsub_id = old.guid );
 
+","
+
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.item_substitute
+   where not checkPrivilege(\'MaintainItemSubstitutes\') do instead
+
+  select private.raise_exception(\'You do not have privileges to delete this Item Substitute\');
+  
 "}',
 
 -- Conditions, Comment, System
 
-'{}', 'Item Substitute Model', true);
+'{}', 'Item Substitute Model', true, true);

@@ -2,7 +2,7 @@
 
 -- Model name, schema 
 
-'comments', '',
+'comment', '',
 
 -- Table
 
@@ -41,7 +41,7 @@ E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.comments
+create or replace rule \\"_CREATE\\" as on insert to xm.comment
   do instead
 
 insert into public.comment (
@@ -67,7 +67,7 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.comments
+create or replace rule \\"_UPDATE\\" as on update to xm.comment
   do instead
 
 update public.comment set
@@ -77,7 +77,7 @@ where ( comment_id = old.guid );
 
 ","
 
-create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.comments
+create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.comment
    where not checkPrivilege(\'EditOthersComments\')
     and not (select cmnttype.cmnttype_editable
              from cmnttype
@@ -92,11 +92,11 @@ create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.comments
 
 -- delete rule
 
-create or replace rule \\"_DELETE\\" as on delete to xm.comments
+create or replace rule \\"_DELETE\\" as on delete to xm.comment
   do instead NOTHING;
 
 "}',
 
 -- Conditions, Comment, System, Nested
 
-'{}', 'Comments Model', true);
+'{}', 'Comment Model', true);

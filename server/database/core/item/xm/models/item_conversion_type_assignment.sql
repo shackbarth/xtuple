@@ -50,4 +50,4 @@ where ( itemuom_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Item Conversion Type Assignment Model', true);
+'{}', 'Item Conversion Type Assignment Model', true, true);

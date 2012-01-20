@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema
 
@@ -7,7 +7,7 @@ select private.create_model(
 -- table
 
 E'(select
-    docass_id as id,
+    docass_id as guid,
     docass_source_id as source_id,
     docass_target_id as target_id,
     st.datatype_id as source_type,
@@ -19,7 +19,7 @@ E'(select
    union all
    -- (inverse)
    select
-    docass_id as id,
+    docass_id as guid,
     docass_target_id as source_id,
     docass_source_id as target_id,
     tt.datatype_id as source_type,
@@ -35,7 +35,7 @@ E'(select
    union all
    -- images
    select
-    imageass_id as id,
+    imageass_id as guid,
     imageass_source_id as source_id,
     imageass_id as target_id,
     st.datatype_id as source_type,
@@ -48,7 +48,7 @@ E'(select
 -- Columns
 
 E'{
-  "documents.id as id",
+  "documents.guid as guid",
   "documents.source_id as source",
   "documents.target_id as target",
   "documents.source_type as source_type",
@@ -76,7 +76,7 @@ insert into public.docass (
   docass_target_type,
   docass_purpose )
 values (
-  new.id,
+  new.guid,
   new.source,
   private.get_datatype_source(new.source_type),
   new.target,
@@ -93,7 +93,7 @@ insert into public.imageass (
   imageass_image_id,
   imageass_purpose )
 values (
-  new.id,
+  new.guid,
   new.source,
   private.get_datatype_source(new.source_type),
   new.target,
@@ -113,13 +113,13 @@ create or replace rule \\"_DELETE_DOC\\" as on delete to xm.document_assignment
   where old.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.docass 
-where ( docass_id = old.id );
+where ( docass_id = old.guid );
 
 create or replace rule \\"_DELETE_IMG\\" as on delete to xm.document_assignment
   where old.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.imageass
-where ( imageass_id = old.id );
+where ( imageass_id = old.guid );
 
 "}',
 

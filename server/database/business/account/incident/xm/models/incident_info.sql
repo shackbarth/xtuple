@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -8,9 +8,8 @@
 
 E'{
   "incdt.incdt_id as guid",
-  "incdt.incdt_number as \\"number\\"",
-  "incdt.incdt_summary as \\"name\\"",
-  "incdt.incdt_status != \'L\' as is_active"
+  "incdt.incdt_number as number",
+  "incdt.incdt_summary as description"
 }',
 
 -- Rules
@@ -38,6 +37,6 @@ create or replace rule \\"_DELETE\\" as on delete to xm.incident_info
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
-'{}', 'Incident Info Model', true);
+'{}', 'Incident Info Model', true, true);

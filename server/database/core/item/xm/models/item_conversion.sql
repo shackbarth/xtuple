@@ -67,4 +67,4 @@ where ( itemuomconv_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Item Conversion Model', true);
+'{}', 'Item Conversion Model', true, true);

@@ -1,270 +1,205 @@
-﻿-- [ START ] schema
--- create schema 
-	-- private and xm
+﻿-- [ START ] initdb
+
+-- create schemas
 \i create_private_schema.sql;
-\! sleep 1;
 \i create_xm_schema.sql;
-\! sleep 2;
--- [ END ] schema
+
+-- create languages
+\i create_plv8.sql;
+
+-- [ END ] initdb
 
 -- [ START ] core
+
 -- core/global functions
 \i core/global/private/functions/add_column.sql;
-\! sleep 1;
 \i core/global/private/functions/add_constraint.sql;
-\! sleep 1;
 \i core/global/private/functions/add_primary_key.sql;
-\! sleep 1;
-\i core/global/private/functions/commit_changeset.sql;
-\! sleep 1;
+\i core/global/private/functions/any_numeric.sql;
+\i core/global/private/functions/any_text.sql;
+\i core/global/private/functions/commit_record.sql;
 \i core/global/private/functions/create_model.sql;
-\! sleep 1;
 \i core/global/private/functions/create_table.sql;
-\! sleep 1;
 \i core/global/private/functions/create_xm_view.sql;
-\! sleep 1;
 \i core/global/private/functions/drop_xm_view.sql;
-\! sleep 1;
+\i core/global/private/functions/ends_with.sql;
 \i core/global/private/functions/execute_query.sql;
-\! sleep 1;
 \i core/global/private/functions/extend_model.sql;
-\! sleep 1;
-\i core/global/private/functions/find_views.sql;
-\! sleep 1;
-\i core/global/private/functions/get_datatype_source.sql;
-\! sleep 1;
+\i core/global/private/functions/fetch.sql;
 \i core/global/private/functions/get_id.sql;
-\! sleep 1;
+\i core/global/private/functions/raise_exception.sql;
+\i core/global/private/functions/retrieve_record.sql;
+\i core/global/private/functions/starts_with.sql;
+
 -- core/trigger functions
 \i core/global/private/trigger_functions/model_changed.sql
-\! sleep 1;
+
 -- core/global tables
 \i core/global/private/tables/model.sql
-\! sleep 1;
 \i core/global/private/tables/modelext.sql
+\i core/global/private/tables/nested.sql
 
-\! sleep 2;
+-- core/operators
+\i core/global/private/operators/any_numeric.sql;
+\i core/global/private/operators/any_text.sql;
+\i core/global/private/operators/ends_with.sql;
+\i core/global/private/operators/starts_with.sql;
+
 -- core/type tables
 \i core/type/private/tables/datatype.sql;
-\! sleep 1;
+
+-- core/type functions
+\i core/type/private/functions/get_datatype_source.sql;
+
 -- core/type xm views
-\i core/type/xm/views/type.sql;
-\! sleep 2;
+\i core/type/xm/models/type.sql;
+
+-- core/user_account triggers
+\i core/user_account/private/trigger_functions/user_duplicate_check.sql;
+
+-- core/user_account tables
+\i core/user_account/private/tables/datatype.sql;
+\i core/user_account/private/tables/user.sql;
+
+-- core/user_account xm models
+\i core/user_account/xm/models/user_account_info.sql;
+\i core/user_account/xm/models/privilege.sql;
+\i core/user_account/xm/models/language.sql;
+\i core/user_account/xm/models/locale.sql;
+\i core/user_account/xm/models/user_account.sql;
+
 -- core/characteristic xm models
 \i core/characteristic/xm/models/characteristic.sql;
-\! sleep 1;
 \i core/characteristic/xm/models/characteristic_option.sql;
-\! sleep 1;
+
+-- core/comment xm views
+\i core/comment/xm/models/comment.sql;
+\i core/comment/xm/models/comment_type.sql;
+
 -- core/document
 \i core/document/private/datatype.sql;
-\! sleep 1;
+
 -- core/document xm views
-\i core/document/xm/views/document_assignment.sql;
-\! sleep 1;
-\i core/document/xm/views/file.sql;
-\! sleep 1;
-\i core/document/xm/views/image.sql;
-\! sleep 1;
-\i core/document/xm/views/url.sql;
-\! sleep 2;
+\i core/document/xm/models/document_assignment.sql;
+\i core/document/xm/models/file.sql;
+\i core/document/xm/models/image.sql;
+\i core/document/xm/models/url.sql;
+
 -- core/address xm functions
 \i core/address/xm/functions/address_find_existing.sql;
-\! sleep 1;
 \i core/address/xm/functions/address_use_count.sql;
-\! sleep 1;
+
 -- core/address tables
 \i core/address/private/tables/datatype.sql;
-\! sleep 1;
+
 -- core/address xm models
-\i core/address/xm/models/address.sql;
-\! sleep 1;
 \i core/address/xm/models/address_characteristic.sql;
-\! sleep 1;
 \i core/address/xm/models/address_comment.sql;
-\! sleep 1;
-\i core/address/xm/models/country.sql;
-\! sleep 1;
 \i core/address/xm/models/state.sql;
-\! sleep 2;
--- core/comment xm views
-\i core/comment/xm/views/comments.sql;
-\! sleep 1;
-\i core/comment/xm/views/comment_type.sql;
-\! sleep 2;
+\i core/address/xm/models/country.sql;
+\i core/address/xm/models/address.sql;
+\i core/address/xm/models/address_info.sql;
+
+-- core/contact tables
 \i core/contact/private/tables/datatype.sql;
-\! sleep 1;
+
 -- core/contact xm models
-\i core/contact/xm/models/contact.sql;
-\! sleep 1;
 \i core/contact/xm/models/contact_info.sql;
-\! sleep 1;
 \i core/contact/xm/models/contact_characteristic.sql;
-\! sleep 1;
 \i core/contact/xm/models/contact_comment.sql;
-\! sleep 1;
 \i core/contact/xm/models/contact_document.sql;
-\! sleep 1;
 \i core/contact/xm/models/contact_email.sql;
-\! sleep 1;
 \i core/contact/xm/models/honorific.sql;
-\! sleep 2;
+\i core/contact/xm/models/contact.sql;
+
 -- core/currency xm views
-\i core/currency/xm/views/currency.sql;
-\! sleep 1;
-\i core/currency/xm/views/currency_rate.sql;
-\! sleep 2;
+\i core/currency/xm/models/currency_rate.sql;
+\i core/currency/xm/models/currency.sql;
 \i core/item/private/tables/datatype.sql;
-\! sleep 1;
+
 -- core/item xm views
-\i core/item/xm/views/item.sql;
-\! sleep 1;
-\i core/item/xm/views/item_alias.sql; 
-\! sleep 1;
-\i core/item/xm/views/item_characteristic.sql;
-\! sleep 1;
-\i core/item/xm/views/item_comment.sql;
-\! sleep 1;
-\i core/item/xm/views/item_conversion.sql;
-\! sleep 1;
-\i core/item/xm/views/item_conversion_type_assignment.sql;
-\! sleep 1;
-\i core/item/xm/views/item_document.sql;
-\! sleep 1;
-\i core/item/xm/views/item_info.sql;
-\! sleep 1;
-\i core/item/xm/views/item_substitute.sql;
-\! sleep 2;
+\i core/item/xm/models/item_alias.sql; 
+\i core/item/xm/models/item_characteristic.sql;
+\i core/item/xm/models/item_comment.sql;
+\i core/item/xm/models/item_conversion.sql;
+\i core/item/xm/models/item_conversion_type_assignment.sql;
+\i core/item/xm/models/item_document.sql;
+\i core/item/xm/models/item_info.sql;
+\i core/item/xm/models/item_substitute.sql;
+\i core/item/xm/models/item_cost.sql;
+\i core/item/xm/models/item.sql;
+
 -- core/priority xm views 
-\i core/priority/xm/views/priority.sql;
-\! sleep 2;
--- core/site xm views 
-\i core/site/xm/views/site.sql;
-\! sleep 1;
-\i core/site/xm/views/site_comment.sql;
-\! sleep 1;
-\i core/site/xm/views/site_type.sql;
-\! sleep 1;
-\i core/site/xm/views/site_zone.sql;
-\! sleep 1;
-\i core/site/xm/views/site_info.sql;
-\! sleep 2;
--- core/unit xm views
-\i core/unit/xm/views/unit.sql;
-\! sleep 1;
-\i core/unit/xm/views/unit_conversion.sql;
-\! sleep 2;
--- core/user/private/functions [ get_user_id.sql ] does nothing needs to be removed
--- core/user triggers
-\i core/user/private/trigger_functions/user_duplicate_check.sql;
-\! sleep 1;
--- core/user tables
-\i core/user/private/tables/datatype.sql;
-\! sleep 1;
-\i core/user/private/tables/user.sql;
-\! sleep 1;
--- core/user xm models
-\i core/user/xm/models/user_account.sql;
-\! sleep 1;
-\i core/user/xm/models/user_account_info.sql;
-\! sleep 1;
-\i core/user/xm/models/privilege.sql;
-\! sleep 1;
-\i core/user/xm/models/language.sql;
-\! sleep 1;
-\i core/user/xm/models/locale.sql;
-\! sleep 2;
+\i core/priority/xm/models/priority.sql;
+
+-- core/site xm models 
+\i core/site/xm/models/site_comment.sql;
+\i core/site/xm/models/site_type.sql;
+\i core/site/xm/models/site_zone.sql;
+\i core/site/xm/models/site_info.sql;
+\i core/site/xm/models/site.sql;
+
+-- core/unit xm models
+\i core/unit/xm/models/unit.sql;
+\i core/unit/xm/models/unit_conversion.sql;
 -- [ END ] core
 
 -- [ START ] business
--- business/account functions
--- business/account triggers
 -- business/account tables
 \i business/account/private/tables/datatype.sql;
-\! sleep 1;
--- business/account public tables
-\i business/account/public/tables/crmacct.sql;
-\! sleep 1;
--- business/account xm views
-\i business/account/xm/views/account.sql;
-\! sleep 1;
-\i business/account/xm/views/account_info.sql;
-\! sleep 1;
-\i business/account/xm/views/account_characteristic.sql;
-\! sleep 1;
-\i business/account/xm/views/account_comment.sql;
-\! sleep 1;
-\i business/account/xm/views/account_document.sql;
-\! sleep 2;
+
+-- business/account xm models
+\i business/account/xm/models/account_info.sql;
+\i business/account/xm/models/account_characteristic.sql;
+\i business/account/xm/models/account_comment.sql;
+\i business/account/xm/models/account_document.sql;
+\i business/account/xm/models/account.sql;
+
 -- business/account/incident tables
 \i business/account/incident/private/tables/datatype.sql;
-\! sleep 1;
--- business/account/incident functions
--- business/account/incident triggers
--- business/account/incident xm view
-\i business/account/incident/xm/views/incident.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_alarm.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_category.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_characteristic.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_comment.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_history.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_info.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_resolution.sql;
-\! sleep 1;
-\i business/account/incident/xm/views/incident_severity.sql;
-\! sleep 2;
+
+-- business/account/incident xm models
+\i business/account/incident/xm/models/incident_alarm.sql;
+\i business/account/incident/xm/models/incident_category.sql;
+\i business/account/incident/xm/models/incident_characteristic.sql;
+\i business/account/incident/xm/models/incident_comment.sql;
+\i business/account/incident/xm/models/incident_history.sql;
+\i business/account/incident/xm/models/incident_info.sql;
+\i business/account/incident/xm/models/incident_resolution.sql;
+\i business/account/incident/xm/models/incident_severity.sql;
+\i business/account/incident/xm/models/incident.sql;
+
 -- business/account/opportunity tables
 \i business/account/opportunity/private/tables/datatype.sql;
-\! sleep 1;
--- business/account/opportunity xm view
-\i business/account/opportunity/xm/views/opportunity.sql;
-\! sleep 1
-\i business/account/opportunity/xm/views/opportunity_characteristic.sql;
-\! sleep 1;
-\i business/account/opportunity/xm/views/opportunity_comment.sql;
-\! sleep 1;
-\i business/account/opportunity/xm/views/opportunity_info.sql;
-\! sleep 1;
-\i business/account/opportunity/xm/views/opportunity_source.sql;
-\! sleep 1;
-\i business/account/opportunity/xm/views/opportunity_stage.sql;
-\! sleep 1;
-\i business/account/opportunity/xm/views/opportunity_type.sql;
-\! sleep 2;
+
+-- business/account/opportunity xm models
+\i business/account/opportunity/xm/models/opportunity_characteristic.sql;
+\i business/account/opportunity/xm/models/opportunity_comment.sql;
+\i business/account/opportunity/xm/models/opportunity_info.sql;
+\i business/account/opportunity/xm/models/opportunity_source.sql;
+\i business/account/opportunity/xm/models/opportunity_stage.sql;
+\i business/account/opportunity/xm/models/opportunity_type.sql;
+\i business/account/opportunity/xm/models/opportunity.sql;
+
 -- business/customer tables
 \i business/customer/private/tables/datatype.sql;
-\! sleep 1;
+
 -- business/employee tables
 \i business/employee/private/tables/datatype.sql;
-\! sleep 1;
--- business/project xm view
-\i business/project/xm/views/project.sql;
-\! sleep 1;
-\i business/project/xm/views/project_comment.sql;
-\! sleep 1;
-\i business/project/xm/views/project_document.sql;
-\! sleep 1;
-\i business/project/xm/views/project_info.sql;
-\! sleep 1;
-\i business/project/xm/views/project_task.sql;
-\! sleep 1;
-\i business/project/xm/views/project_task_alarm.sql;
-\! sleep 1;
-\i business/project/xm/views/project_task_comment.sql;
-\! sleep 2;
--- business/todo xm view
-\i business/todo/xm/views/todo.sql;
-\! sleep 1;
-\i business/todo/xm/views/todo_alarm.sql;
-\! sleep 1;
-\i business/todo/xm/views/todo_comment.sql;
-\! sleep 1;
-\i business/todo/xm/views/todo_info.sql;
-\! sleep 2;
+
+-- business/project xm models
+\i business/project/xm/models/project_comment.sql;
+\i business/project/xm/models/project_document.sql;
+\i business/project/xm/models/project_info.sql;
+\i business/project/xm/models/project_task_alarm.sql;
+\i business/project/xm/models/project_task_comment.sql;
+\i business/project/xm/models/project_task.sql;
+\i business/project/xm/models/project.sql;
+
+-- business/todo xm models
+\i business/todo/xm/models/todo_alarm.sql;
+\i business/todo/xm/models/todo_comment.sql;
+\i business/todo/xm/models/todo_info.sql;
+\i business/todo/xm/models/todo.sql;
+
 -- [ END ] business

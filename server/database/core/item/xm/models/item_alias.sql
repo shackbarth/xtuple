@@ -44,6 +44,13 @@ values (
 
 ","
 
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.item_alias 
+   where not checkPrivilege(\'MaintainItemAliases\') do instead
+
+  select private.raise_exception(\'You do not have privileges to create this Item Alias\');
+
+","
+
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.item_alias
@@ -58,7 +65,16 @@ where ( itemalias_id = old.guid );
 
 ","
 
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on update to xm.item_alias
+   where not checkPrivilege(\'MaintainItemAliases\') do instead
+
+  select private.raise_exception(\'You do not have privileges to update this Item Alias\');
+
+","
+
 -- delete rule
+
+","
 
 create or replace rule \\"_DELETE\\" as on delete to xm.item_alias
   do instead
@@ -66,8 +82,13 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_alias
 delete from itemalias
 where (itemalias_id = old.guid);
 
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.item_alias
+   where not checkPrivilege(\'MaintainItemAliases\') do instead
+
+  select private.raise_exception(\'You do not have privileges to delete this Item Alias\');
+
 "}',
 
 -- Conditions, Comment, System
 
-'{}', 'Item Alias Model', true);
+'{}', 'Item Alias Model', true, true);

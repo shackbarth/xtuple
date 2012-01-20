@@ -54,6 +54,15 @@ XM.Record = SC.Record.extend(
   validateErrors: null,
   validateErrorsLength: 0,
   validateErrorsLengthBinding: '.validateErrors.length',
+  
+  /**
+  State used for data source processing. You should never edit this directly.
+  
+  @property
+  */
+  dataState: SC.Record.attr(String, { 
+    defaultValue: 'created' 
+  }),
 
   // ..........................................................
   // METHODS
@@ -61,7 +70,7 @@ XM.Record = SC.Record.extend(
 
   init: function() {
     this.set('validateErrors', []);
-    if(this.getPath('store.isNested')) this.addObserver('isValid', this, 'isValidDidChange');
+    if(this.getPath('store.isNested')) this.addObserver('isValid', this, '_isValidDidChange');
     sc_super();
   },
 
@@ -110,12 +119,12 @@ XM.Record = SC.Record.extend(
   // OBSERVERS
   //
 
-  /**
+  /** @private
   If the store is nested when this record is initialized, this function
   will be set to observe 'isValid' notify the store if the record becomes
   invalid.
   */
-  isValidDidChange: function() {
+  _isValidDidChange: function() {
     var store = this.get('store'),
     invalidRecords = store.get('invalidRecords'),
     isValid = this.get('isValid'),
@@ -126,6 +135,21 @@ XM.Record = SC.Record.extend(
       else if(!isValid && idx === -1) invalidRecords.pushObject(this);
     }
   },
+  
+  /** @private 
+  Track substates for data source.
+  */
+  _statusChanged: function() {
+    if(this.get('status') === SC.Record.READY_NEW) { 
+      this.set('dataState', 'created');
+    } else if(this.get('status') === SC.Record.READY_CLEAN) { 
+      this.set('dataState', 'read');
+    } else if(this.get('status') === SC.Record.DESTROYED_DIRTY) { 
+      this.set('dataState', 'deleted');
+    } else if(this.get('status') & SC.Record.DIRTY) { 
+      this.set('dataState', 'updated');
+    } else { this.set('dataState', 'error') }
+  }.observes('status')
 
 });
 

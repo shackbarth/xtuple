@@ -108,18 +108,18 @@ XM.Contact = XM.Document.extend(
   notes: SC.Record.attr(String),
   
   /**
-  @type XM.User
+  @type XM.UserAccount
   */
   owner: SC.Record.toOne('XM.UserAccount', { 
     isNested: YES 
-  } ),
+  }),
   
   /**
   @type Number
   */
   address: SC.Record.toOne('XM.Address', { 
     isNested: YES 
-  } ),
+  }),
   
   /**
   @type XM.ContactEmail
@@ -141,6 +141,7 @@ XM.Contact = XM.Document.extend(
   @type XM.ContactComment
   */
   comments: XM.Record.toMany('XM.ContactComment', {
+    isNested: YES,
     inverse: 'contact',
   }),
   
@@ -148,6 +149,7 @@ XM.Contact = XM.Document.extend(
   @type XM.ContactDocument
   */
   documents: XM.Record.toMany('XM.ContactDocument', {
+    isNested: YES,
     inverse: 'contact',
   }),
 
