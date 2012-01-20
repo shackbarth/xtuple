@@ -17,6 +17,8 @@ XM.ContactInfo = XM.Record.extend(
 
   className: 'XM.ContactInfo',
   
+  isEditable: NO,
+  
   nestedRecordNamespace: XM,
   
   /**

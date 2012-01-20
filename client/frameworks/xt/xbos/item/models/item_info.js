@@ -5,42 +5,44 @@
 /*globals XT */
 /** @class
 
-  Element for Cost.
+  Item.
 
   @extends XM.Record
 */
-XM.CostElement = XM.Record.extend(
-/** @scope XM.CostElement.prototype */ {
+XM.ItemInfo = XM.Record.extend(
+/** @scope XM.ItemInfo.prototype */ {
 
-  className: 'XM.CostElement',
+  className: 'XM.ItemInfo',
   
   nestedRecordNamespace: XM,
-
+  
+  isEditable: NO,
+  
   /**
   @type String
   */
-  elementName: SC.Record.attr(String),
-
+  number: SC.Record.attr(String),
+  
   /**
-  @type Boolean 
+  @type Boolean
   */
   isActive: SC.Record.attr(Boolean),
   
   /**
-  @type Boolean 
+  @type XM.Unit
   */
-  isSystem: SC.Record.attr(Boolean),
+  inventoryUnit: SC.Record.toOne('XM.Unit'),
   
-   /**
-  @type Boolean 
+  /**
+  @type String
   */
-  isVoucherDistribution: SC.Record.attr(Boolean),
+  description1: SC.Record.attr(String),
   
-   /**
-  @type XM.ItemInfo
+  /**
+  @type String
   */
-  costItem: SC.Record.toOne('XM.ItemInfo', {
-    isNested: YES
-  })
+  description2: SC.Record.attr(String),
   
- });
+
+});
+
