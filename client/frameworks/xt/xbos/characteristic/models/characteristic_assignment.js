@@ -7,22 +7,22 @@
 
   (Document your Model here)
 
-  @extends XT.Record
+  @extends XM.Record
   @version 0.1
 */
-XT.CharacteristicAssignment = XT.Record.extend(
-/** @scope XT.CharacteristicAssignment.prototype */ {
+XM.CharacteristicAssignment = XM.Record.extend(
+/** @scope XM.CharacteristicAssignment.prototype */ {
 
-  className: 'XT.CharacteristicAssignment',
+  className: 'XM.CharacteristicAssignment',
 
   target:         SC.Record.attr(Number),
   targetType:     SC.Record.attr(String),
-  characteristic: SC.Record.toOne('XT.Characteristic'),
+  characteristic: SC.Record.toOne('XM.Characteristic'),
   value:          SC.Record.attr(String, {
     toType: function(record, key, value) {
       if(value) {
         var type = record.getPath('characteristic.type');
-        if(type && type === XT.Characteristic.DATE) {
+        if(type && type === XM.Characteristic.DATE) {
           value = SC.DateTime.parse(value, '%Y-%m-%d');
         }
       }
@@ -31,7 +31,7 @@ XT.CharacteristicAssignment = XT.Record.extend(
     fromType: function(record, key, value) {
       if(value) {
         var type = record.getPath('characteristic.type');
-        if(type && type === XT.Characteristic.DATE) {
+        if(type && type === XM.Characteristic.DATE) {
           value = value.toFormattedString('%Y-%m-%d'); }
       }
       return value;
