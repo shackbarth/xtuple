@@ -110,6 +110,8 @@ def parse_configuration_file(lcfp, d, i, p, n)
     parts = line.split(":")
     parsed[parts[0].strip] = parts[1].strip
   end # file-line iteration
+
+  parsed['module'] = 'xt/' + n
  
   # we load them according to their requested `load` property
   case parsed["load"]
@@ -197,11 +199,11 @@ def generate_deferred_entries(js, collection)
       #{k}: #{v},
       eos
     end
+    #   module: "xt/#{loadable['name'].downcase}"
     js.push(<<-eos)
-      module: "xt/#{loadable['name'].downcase}"
     },
     eos
-    _collection.push(loadable['name'].downcase)
+    _collection.push(loadable['module'].slice(3..-1))
   end
   js.push(<<-eos)
   ],
@@ -231,11 +233,11 @@ def generate_prefetched_entries(js, collection)
       #{k}: #{v},
       eos
     end
+    #   module: "xt/#{loadable['name'].downcase}"
     js.push(<<-eos)
-      module: "xt/#{loadable['name'].downcase}"
     },
     eos
-    _collection.push(loadable['name'].downcase)
+    _collection.push(loadable['module'].slice(3..-1))
   end
   js.push(<<-eos)
   ],
@@ -265,11 +267,11 @@ def generate_inlined_entries(js, collection)
       #{k}: #{v},
       eos
     end
+    #   module: "xt/#{loadable['name'].downcase}"
     js.push(<<-eos)
-      module: "xt/#{loadable['name'].downcase}"
     },
     eos
-    _collection.push(loadable['name'].downcase)
+    _collection.push(loadable['module'].slice(3..-1))
   end
   js.push(<<-eos)
   ],
