@@ -1,4 +1,4 @@
-﻿--[select = return]
+--[select = return]
 select * from incdt;
 select * from xm.incident;
 select * from xm.incident where guid = 88884;
@@ -30,9 +30,9 @@ select * from xm.incident_severity;
 
 -- [insert into = create]
 insert into xm.incident (
-  guid, number, account, contacts, name, owner, assigned_to, start_date, notes, priority, incident_status, is_public, resolution, severity )
+  guid, number, account, contact, description, owner, assigned_to, notes, priority, incident_status, is_public, resolution, severity )
 values (
-  88884, 88884, 12, 6 ,'New name info summary here.', 'mike', 'smith', now(), 'New notes go here.' , '3' , 'C' , true , '4' , '2' );
+  88884, 88884, (select account_info from xm.account_info where guid = 12), (select contact_info from xm.contact_info where guid = 6) ,'New name info summary here.', (select user_account_info from xm.user_account_info where username='admin'), null, 'New notes go here.' , '3' , 'C' , true , '4' , '2' );
 
 insert into xm.incident_alarm (
    guid, number, email, email_recipient, event, event_recipient, message, message_recipient, "offset", qualifier, time, trigger, source) 
@@ -57,7 +57,7 @@ values (
 insert into xm.incident_history (
   guid, incident, timestamp, username, description)
 values (
-  138, 88889, now(), current_user, 'trying history to see if ok');
+  138, 88884, now(), current_user, 'trying history to see if ok');
   
 --No Insert for xm.incident_info;
 
@@ -74,7 +74,7 @@ values (
 
 --[update]
 update xm.incident set
-  owner = 'admin'
+  assigned_to = (select user_account_info from xm.user_account_info where username= 'admin')
 where guid = 88884;
 
 update xm.incident_category set
