@@ -12,10 +12,35 @@
   @extends SC.DataSource
 */
 
-XT.DataSource = SC.DataSource.extend(
+XT.DataSource = SC.DataSource.create(XT.Logging,
 /** @scope XT.DataSource.prototype */ {
 
-  URL: '/data',
+  serverIsAvailable: NO,
+
+  serverIsAvailableTooltip: function() {
+    var iv = this.get('serverIsAvailable');
+    if(iv) return '_serverAvailable'.loc();
+    else return '_serverUnavailable'.loc();
+  }.property('serverIsAvailable'),
+
+  pingServer: function() {
+    SC.Request.postUrl(this.URL)
+      .header({'Accept': 'application/json'})
+      .notify(this, "pingResponse").json()
+      .timeoutAfter(1000)
+      .send({ name: "XT.PingFunctor" });
+  },
+
+  pingResponse: function(response) {
+    var r = response;
+    if(r.timedOut) {
+      this.warn("Ping request to server timedout!");
+      this.set("serverIsAvailable", NO);
+    } else if(r.status !== 200) { this.set("serverIsAvailable", NO); } 
+    else { this.set("serverIsAvailable", YES); }
+  },
+  
+  URL: '/datasource/data',
   
   debug: YES,
   
@@ -134,5 +159,12 @@ XT.DataSource = SC.DataSource.extend(
 
 });
 
+XT.DataSource.start = function start() {
+  var ds = XT.DataSource;
+  ds.log("Starting up");
+  ds.store = XT.Store = XT.Store.create().from("XT.DataSource");
+  ds.pingServer();
+  return YES;
+} ;
 
 

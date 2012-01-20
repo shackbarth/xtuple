@@ -104,10 +104,25 @@ XT.Task = XT.Object.extend(
         x = this.get("context"),
         o = this.get("owner"), 
         self = this, type, task;  
+
+
+    console.log(
+      "a = ", a,
+      "m = ", m,
+      "t = ", t,
+      "f = ", f,
+      "c = ", c,
+      "w = ", w,
+      "h = ", h,
+      "s = ", s,
+      "x = ", x,
+      "o = ", o
+    );
+
     
     // if this is a holding task, not much to it
     if(h && SC.typeOf(h) === SC.T_STRING) {
-      // this.log("Creating a holding task");
+      this.log("Creating a holding task", h);
       return this._createHold(); 
     }
 
@@ -322,7 +337,9 @@ XT.Task = XT.Object.extend(
   _execMethod: function(target, method, args) {
     if(args) args = SC.typeOf(args) === SC.T_ARRAY ? args : [args]; 
 
-    // console.warn("ARGUMENTS DETERMINED TO BE => ", args);
+    console.warn("TARGET DETERMINED TO BE => ", target);
+    console.warn("METHOD DETERMINED TO BE => ", method);
+    console.warn("ARGUMENTS DETERMINED TO BE => ", args);
 
     if(!target[method]) return method.apply(target, args);
     else return target[method].apply(target, args);
