@@ -60,5 +60,5 @@ where ( charass_id = old.guid );
 
 -- Conditions, Comment, System
 
-E'{"charass_target_type = \'CRMACCT\'"}', 'Account Characteristic Model', true);
+E'{"charass_target_type = \'CRMACCT\'"}', 'Account Characteristic Model', true, true);
 

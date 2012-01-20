@@ -12,37 +12,26 @@ E'{
   "crmacct.crmacct_name as name",
   "crmacct.crmacct_active as is_active",
   "crmacct.crmacct_type as type",
-  "crmacct.crmacct_owner_username as owner",
   "crmacct.crmacct_parent_id as parent",
   "crmacct.crmacct_notes as notes",
   "crmacct.crmacct_cntct_id_1 as primary_contact",
   "crmacct.crmacct_cntct_id_2 as secondary_contact",
-  "crmacct.crmacct_usr_username as user",
- "btrim(array(
-    select comment_id 
-    from comment
-    where comment_source_id = crmacct.crmacct_id 
-      and comment_source = \'CRMA\')::text,\'{}\') as comments",
-  "btrim(array(
-    select charass_id 
-    from charass
-    where charass_target_id = crmacct.crmacct_id 
-      and charass_target_type = \'CRMACCT\')::text,\'{}\') as characteristics",
-  "btrim(array(
-    select docass_id 
-    from docass
-    where docass_target_id = crmacct.crmacct_id 
-      and docass_target_type = \'CRMA\'
-    union all
-    select docass_id 
-    from docass
-    where docass_source_id = crmacct.crmacct_id 
-      and docass_source_type = \'CRMA\'
-    union all
-    select imageass_id 
-    from imageass
-    where imageass_source_id = crmacct.crmacct_id 
-      and imageass_source = \'CRMA\')::text,\'{}\') as documents"
+  "crmacct.crmacct_usr_username as user_account",
+  "(select user_account_info
+   from xm.user_account_info
+   where username = crmacct.crmacct_owner_username) as owner",
+ "array(
+    select comment 
+    from xm.comment
+    where (account = crmacct.crmacct_id)) as comments",
+  "array(
+    select account_characteristic 
+    from xm.account_characteristic
+    where (account = crmacct.crmacct_id)) as characteristics",
+  "array(
+    select document_assignment 
+    from xm.document_assignment
+    where (account = crmacct.crmacct_id)) as documents"
 }',
 
 -- Rules
@@ -70,7 +59,7 @@ values (
   new.name,
   new.is_active,
   new.type,
-  new.owner,
+  (new.owner).username,
   new.parent,
   new.notes,
   new.primary_contact,
