@@ -2,19 +2,19 @@
 
 -- Model name, schema, table
 
-'project_comment', 'xm', 'comments',
+'project_comment', 'xm', 'comment',
 
 -- Columns
 
 E'{
-  "comments.guid as guid",
-  "comments.source_id as project",
-  "comments.date as date",
-  "comments.username as username",
-  "comments.comment_type as comment_type",
-  "comments.text as text",
-  "comments.is_public as is_public",
-  "comments.can_update as can_update"}',
+  "comment.guid as guid",
+  "comment.source_id as project",
+  "comment.date as date",
+  "comment.username as username",
+  "comment.comment_type as comment_type",
+  "comment.text as text",
+  "comment.is_public as is_public",
+  "comment.can_update as can_update"}',
 
 E'{"
 
@@ -23,7 +23,7 @@ E'{"
 create or replace rule \\"_CREATE\\" as on insert to xm.project_comment
   do instead
 
-insert into xm.comments (
+insert into xm.comment (
   guid,
   source_id,
   source,
@@ -49,7 +49,7 @@ values (
 create or replace rule \\"_UPDATE\\" as on update to xm.project_comment
   do instead
 
-update xm.comments set
+update xm.comment set
   text = new.text,
   is_public = new.is_public
 where ( guid = old.guid );
@@ -65,4 +65,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project_comment
 
 -- Conditions, Comment, System
 
-E'{"comments.source = \'J\'"}', 'Project Comment Model', true,true);
+E'{"comment.source = \'J\'"}', 'Project Comment Model', true,true);

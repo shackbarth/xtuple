@@ -43,4 +43,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_info
 
 -- Conditions, Comment, System
 
-'{}', 'Item Info Model', true);
+'{}', 'Item Info Model', true, true);

@@ -64,4 +64,4 @@ where (charass_id = old.guid);
 
 -- Conditions, Comment, System
 
-E'{"charass_target_type = \'I\'"}', 'Item Characteristic Model', true);
+E'{"charass_target_type = \'I\'"}', 'Item Characteristic Model', true, true);
