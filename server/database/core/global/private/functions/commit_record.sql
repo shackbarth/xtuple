@@ -6,7 +6,10 @@ create or replace function private.commit_record(record_type text, data_hash tex
   var COMPOUND_TYPE = "C",
       ARRAY_TYPE = "A",
       DATE_TYPE = "D",
-      STRING_TYPE = "S";
+      STRING_TYPE = "S",
+      CREATED_STATE = 'created',
+      UPDATED_STATE = 'updated',
+      DELETED_STATE = 'deleted';
 
   // ..........................................................
   // METHODS
@@ -20,14 +23,14 @@ create or replace function private.commit_record(record_type text, data_hash tex
   commitRecord = function(key, value) {
     var changeType;
 
-    if(value && value.status) {
-      if(value.status === 'created') { 
+    if(value && value.dataState) {
+      if(value.dataState === CREATED_STATE) { 
         createRecord(key, value);
       }
-      else if(value.status === 'updated') { 
+      else if(value.dataState === UPDATED_STATE) { 
         updateRecord(key, value);
       }
-      else if(value.status === 'deleted') { 
+      else if(value.dataState === DELETED_STATE) { 
         deleteRecord(key, value); 
       }
     }
@@ -49,7 +52,7 @@ create or replace function private.commit_record(record_type text, data_hash tex
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (prop !== 'status' && 
+      if (prop !== 'data_state' && 
           prop !== 'type' && 
           coldef.typcategory !== ARRAY_TYPE) { 
         props.push(prop);
@@ -100,7 +103,7 @@ create or replace function private.commit_record(record_type text, data_hash tex
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
 
-      if (prop !== 'status' &&
+      if (prop !== 'data_state' &&
           prop !== 'type' && 
           coldef.typcategory !== ARRAY_TYPE) {
         if(record[prop]) { 
@@ -182,6 +185,10 @@ create or replace function private.commit_record(record_type text, data_hash tex
         record = decamelize(value),
         props = [], ret = '';
 
+    /* remove potential fields not part of data definition */
+    delete record['data_state'];
+    delete record['type'];
+    
     for(var prop in record) {
       var coldef = findProperty(viewdef, 'attname', prop);
       if(prop) {
@@ -315,7 +322,7 @@ $$ language plv8;
 /*
 select private.commit_record(
  'XM.Contact',
- '{"status":"created",
+ '{ "dataState":"created",
     "guid":12171,
     "number":"14832",
     "honorific":"Mr.",
@@ -332,6 +339,7 @@ select private.commit_record(
     "webAddress":"www.xtuple.com",
     "notes":"A famous person",
     "owner":{
+      "dataState":"read",
       "username":"admin",
       "isActive":true,
       "propername":"administrator"
@@ -339,7 +347,7 @@ select private.commit_record(
     "primaryEmail":"jdr@gmail.com",
     "address": null,
     "comments":[{
-      "status":"created",
+      "dataState":"created",
       "guid":739893,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
@@ -348,7 +356,7 @@ select private.commit_record(
       "text":"booya!",
       "isPublic":false
       },{
-      "status":"created",
+      "dataState":"created",
       "guid":739894,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
@@ -365,7 +373,7 @@ select private.commit_record(
 
 select private.commit_record(
  'XM.Contact',
- '{"status":"updated",
+ '{ "dataState":"updated",
     "guid":12171,
     "number":"14832",
     "honorific":"Mrs.",
@@ -383,12 +391,14 @@ select private.commit_record(
     "www.xtuple.com",
     "notes":"A distinguished person",
     "owner":{
+      "dataState":"read",
       "username":"postgres",
       "isActive":true,
       "propername":""
     },
     "primaryEmail":"jane@gmail.com",
     "address":{
+      "dataState":"read",
       "guid":1,
       "line1":"Tremendous Toys Inc.",
       "line2":"101 Toys Place",
@@ -399,7 +409,7 @@ select private.commit_record(
       "country":"United States"
     },
     "comments":[{
-      "status":"updated",
+      "dataState":"updated",
       "guid":739893,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
@@ -408,7 +418,7 @@ select private.commit_record(
       "text":"booya!",
       "isPublic":false
       },{
-      "status":"updated",
+      "dataState":"updated",
       "guid":739894,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
@@ -424,7 +434,7 @@ select private.commit_record(
 
 select private.commit_record(
  'XM.Contact',
- '{"status":"deleted",
+ '{ "dataState":"deleted",
     "guid":12171,
     "number":"14832",
     "honorific":"Mrs.",
@@ -442,12 +452,14 @@ select private.commit_record(
     "www.xtuple.com",
     "notes":"A distinguished person",
     "owner":{
+      "dataState":"deleted",
       "username":"postgres",
       "isActive":true,
       "propername":""
     },
     "primaryEmail":"jane@gmail.com",
     "address":{
+      "dataState":"deleted",
       "guid":1,
       "line1":"Tremendous Toys Inc.",
       "line2":"101 Toys Place",
@@ -458,7 +470,7 @@ select private.commit_record(
       "country":"United States"
     },
     "comments":[{
-      "status":"deleted",
+      "dataState":"deleted",
       "guid":739893,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
@@ -467,7 +479,7 @@ select private.commit_record(
       "text":"booya!",
       "isPublic":false
       },{
-      "status":"deleted",
+      "dataState":"deleted",
       "guid":739894,
       "contact":12171,
       "date":"2011-12-21 12:47:12.756437-05",
