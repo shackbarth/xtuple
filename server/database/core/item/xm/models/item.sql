@@ -197,6 +197,9 @@ where (itemalias_item_id = old.guid);
 delete from itemsub
 where (itemsub_parent_item_id = old.guid);
 
+delete from itemcost
+where (itemcost_item_id = old.guid);
+
 delete from xm.document_assignment
 where (guid = old.guid);
 

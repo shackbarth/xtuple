@@ -105,20 +105,34 @@ create or replace rule \\"_CREATE_CHECK_DUPLICATES\\" as on insert to xm.item_co
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.item_cost
-  do instead
+  do instead (
 
 update itemcost set
   itemcost_actcost = new.actual_cost,
-  itemcost_updated = new.updated,
+  itemcost_updated = current_date,
   itemcost_curr_id = new.currency
 where ( itemcost_id = old.guid );
 
+-- if flag is set, post actual cost to std cost
+select postcost(new.guid)
+where (new.is_post_standard);
+
+)
+
 ","
 
-create or replace rule \\"_CREATE_CHECK_PRIV\\" as on update to xm.item_cost
-   where not checkPrivilege(\'MaintainItemAliases\') do instead
+create or replace rule \\"_CREATE_CHECK_ENTERACTUAL\\" as on update to xm.item_cost
+   where not checkPrivilege(\'EnterActualCosts\') do instead
 
-  select private.raise_exception(\'You do not have privileges to update this Item Alias\');
+  select private.raise_exception(\'You do not have privileges to update Actual Costs\');
+
+","
+
+create or replace rule \\"_CREATE_CHECK_POST\\" as on update to xm.item_cost 
+   where (new.is_post_standard)
+     and not (checkPrivilege(\'PostActualCosts\')) do instead
+
+  select private.raise_exception(\'You do not have privileges to Post Actual Costs to Standard Costs\');
 
 ","
 
@@ -133,9 +147,9 @@ delete from itemcost
 where (itemcost_id = old.guid);
 
 create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.item_cost
-   where not checkPrivilege(\'MaintainItemAliases\') do instead
+   where not checkPrivilege(\'DeleteCosts\') do instead
 
-  select private.raise_exception(\'You do not have privileges to delete this Item Alias\');
+  select private.raise_exception(\'You do not have privileges to delete Item Costs\');
 
 "}',
 
