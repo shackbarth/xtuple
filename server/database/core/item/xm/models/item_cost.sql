@@ -155,4 +155,4 @@ create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.item_cost
 
 -- Conditions, Comment, System
 
-'{}', 'Item Cost Model', true, true);
+E'{"checkPrivilege(\'ViewCosts\')"}', 'Item Cost Model', true, true);
