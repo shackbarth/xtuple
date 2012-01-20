@@ -1,29 +1,19 @@
 ﻿select private.create_model(
 
--- Model name, schema
+-- Model name, schema, table
 
-'account_document', '',
-
--- table
-
-E'(select
-     id,
-     source_id,
-     target_id,
-     purpose,
-     datatype_id
-   from docinfo
-   join private.datatype on (docinfo.target_type = datatype_source)
-   where docinfo.source_type = \'CRMA\') doc',
+'account_document', 'xm', 'document_assignment',
 
 -- Columns
 
 E'{
-  "doc.id as guid",
-  "doc.source_id as account",
-  "doc.target_id as target",
-  "doc.purpose as purpose",
-  "doc.datatype_id as target_type"}',
+  "document_assignment.guid as guid",
+  "document_assignment.source as account",
+  "document_assignment.target as target",
+  "document_assignment.purpose as purpose",
+  "document_assignment.source_type as source_type",
+  "document_assignment.target_type as target_type"
+}',
 
 -- Rules
 
@@ -31,46 +21,22 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.account_document 
-  do instead nothing;
+create or replace rule \\"_CREATE\\" as on insert to xm.account_document do instead
 
-","
-  
-create or replace rule \\"_CREATE_DOC\\" as on insert to xm.account_document 
-  where new.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
-
-insert into public.docass (
-  docass_id,
-  docass_source_id,
-  docass_source_type,
-  docass_target_id,
-  docass_target_type,
-  docass_purpose )
+insert into xm.document_assignment (
+  guid,
+  source,
+  target,
+  source_type,
+  target_type,
+  purpose)
 values (
   new.guid,
   new.account,
-  \'CRMA\',
   new.target,
-  private.get_datatype_source(new.target_type),
-  new.purpose );
-
-","
-
-create or replace rule \\"_CREATE_IMG\\" as on insert to xm.account_document 
-  where new.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
-
-insert into public.imageass (
-  imageass_id,
-  imageass_source_id,
-  imageass_source,
-  imageass_image_id,
-  imageass_purpose )
-values (
-  new.guid,
-  new.account,
-  \'CRMA\',
-  new.target,
-  new.purpose );
+  new.source_type,
+  new.target_type,
+  new.purpose);
 
 ","
 
@@ -83,27 +49,13 @@ create or replace rule \\"_UPDATE\\" as on update to xm.account_document
 
 -- delete rules
 
-create or replace rule \\"_DELETE\\" as on delete to xm.account_document
-  do instead nothing;
+create or replace rule \\"_DELETE\\" as on delete to xm.account_document do instead
 
-","
-  
-create or replace rule \\"_DELETE_DOC\\" as on delete to xm.account_document
-  where old.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
-
-delete from public.docass 
-where ( docass_id = old.guid );
-
-","
-
-create or replace rule \\"_DELETE_IMG\\" as on delete to xm.account_document
-  where old.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
-
-delete from public.imageass
-where ( imageass_id = old.guid );
+delete from xm.document_assignment
+where ( guid = old.guid );
 
 "}',
 
 -- Conditions, Comment, System
 
-'{}', 'Account Document Model', true);
+E'{"private.get_datatype_source(source_type) = \'CRMA\'","private.get_datatype_source(target_type) = \'CRMA\'"}', 'Account Document Model', true, true);
