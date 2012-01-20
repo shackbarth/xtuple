@@ -23,6 +23,11 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   /**
   @type String
   */
+  name: SC.Record.attr(String),
+
+  /**
+  @type String
+  */
   description: SC.Record.attr(String),
   
   /**
@@ -37,6 +42,31 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
     /** @private */
     defaultValue: XM.ToDo.NEITHER,
   }),
+  
+  /**
+  @type XM.Priority
+  */
+  priority: SC.Record.toOne('XM.Priority'),
+  
+  /**
+  @type SC.DateTime
+  */
+  startDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  
+  /**
+  @type SC.DateTime
+  */
+  dueDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  
+  /**
+  @type SC.DateTime
+  */
+  assignDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  
+  /**
+  @type SC.DateTime
+  */
+  completeDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
     
   /**
   @type XM.ToDoAlarm
@@ -50,7 +80,7 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   */
   comments: XM.Record.toMany('XM.ToDoComment', { 
     inverse: 'toDo' ,
-  }),
+  })
 
 });
 

@@ -54,14 +54,18 @@ XM.Account = XM.Document.extend(
   }),
   
   /**
-  @type XM.User
+  @type XM.UserAccount
   */
-  owner: SC.Record.toOne('XM.User'),
-  
+  owner: SC.Record.toOne('XM.UserAccount'{
+    isNested: YES
+  }),
+
   /**
   @type XM.Account
   */
-  parent: SC.Record.toOne('XM.Account'),
+  parent: SC.Record.toOne('XM.Account'{
+    isNested: YES
+  }),
   
   /**
   @type String
@@ -71,24 +75,22 @@ XM.Account = XM.Document.extend(
   /**
   @type XM.Contact
   */
-  primaryContact: SC.Record.toOne('XM.Contact'),
+  primaryContact: SC.Record.toOne('XM.Contact', {
+    isNested: YES
+  }),
   
   /**
   @type XM.Contact
   */
-  secondaryContact: SC.Record.toOne('XM.Contact'),
-  
-  /**
-  @type XM.AccountRoleAssignment
-  */
-  roles: SC.Record.toMany('XM.AccountRoleAssignment', {
-    inverse: 'account',
+  secondaryContact: SC.Record.toOne('XM.Contact', {
+    isNested: YES
   }),
   
   /**
   @type XM.Contact
   */
   contacts: SC.Record.toMany('XM.Contact', { 
+    isNested: YES,
     inverse: 'account',
   }),
   
@@ -96,15 +98,25 @@ XM.Account = XM.Document.extend(
   @type XM.AccountCharacteristic
   */
   characteristics: SC.Record.toMany('XM.AccountCharacteristic', {
+    isNested: YES,
     inverse: 'account',
   }),
   
   /**
   @type XM.AccountComment
   */
-  comments: XM.Record.toMany('XM.AccountComment', {
+  comments: SC.Record.toMany('XM.AccountComment', {
+    isNested: YES,
     inverse: 'account',
   }),
+  
+  /**
+  @type XM.UserAccount
+  */
+  userAccount: XM.Record.toOne('XM.UserAccount', {
+    isNested: YES,
+    isRole: YES
+  },
 
   // ..........................................................
   // OBSERVERS
