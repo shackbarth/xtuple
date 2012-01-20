@@ -56,14 +56,14 @@ XM.Account = XM.Document.extend(
   /**
   @type XM.UserAccount
   */
-  owner: SC.Record.toOne('XM.UserAccount'{
+  owner: SC.Record.toOne('XM.UserAccountInfo'{
     isNested: YES
   }),
 
   /**
   @type XM.Account
   */
-  parent: SC.Record.toOne('XM.Account'{
+  parent: SC.Record.toOne('XM.AccountInfo'{
     isNested: YES
   }),
   
@@ -75,23 +75,15 @@ XM.Account = XM.Document.extend(
   /**
   @type XM.Contact
   */
-  primaryContact: SC.Record.toOne('XM.Contact', {
+  primaryContact: SC.Record.toOne('XM.ContactInfo', {
     isNested: YES
   }),
   
   /**
   @type XM.Contact
   */
-  secondaryContact: SC.Record.toOne('XM.Contact', {
+  secondaryContact: SC.Record.toOne('XM.ContactInfo', {
     isNested: YES
-  }),
-  
-  /**
-  @type XM.Contact
-  */
-  contacts: SC.Record.toMany('XM.Contact', { 
-    isNested: YES,
-    inverse: 'account',
   }),
   
   /**
@@ -113,7 +105,7 @@ XM.Account = XM.Document.extend(
   /**
   @type XM.UserAccount
   */
-  userAccount: XM.Record.toOne('XM.UserAccount', {
+  userAccount: XM.Record.toOne('XM.UserAccountInfo', {
     isNested: YES,
     isRole: YES
   },
