@@ -8,13 +8,14 @@
   (Document your Model here)
 
   @extends XM.Record
-  @version 0.2
+  @version 0.1
 */
-XM.ProjectInfo = XM.Record.extend(
-    /** @scope XM.ProjectInfo.prototype */ {
 
-  className: 'XM.ProjectInfo',
-  
+XM.IncidentInfo = XM.Record.extend({
+   /** @scope XM.IncidentInfo.prototype */ 
+
+  className: 'XM.IncidentInfo',
+
   isEditable: NO,
 
   /**
@@ -25,11 +26,6 @@ XM.ProjectInfo = XM.Record.extend(
   /**
   @type String
   */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  projectStatus: SC.Record.attr(String)
-  
+  description: SC.Record.attr(String)
+
 });

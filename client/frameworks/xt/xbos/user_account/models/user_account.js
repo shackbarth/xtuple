@@ -19,8 +19,10 @@ XM.UserAccount = XM.Record.extend(
   className: 'XM.UserAccount',
   primaryKey: 'username',
 
+  nestedRecordNamespace: XM,
+
   createPrivilege: 'MaintainUsers',
-  readPrivilege:   'ViewUsers',
+  readPrivilege:   'MaintainUsers',
   updatePrivilege: 'MaintainUsers',
   deletePrivilege: 'MaintainUsers',
   
