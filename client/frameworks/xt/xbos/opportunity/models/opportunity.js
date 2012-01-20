@@ -23,9 +23,11 @@ XM.Opportunity = XM.Activity.extend(
   deletePrivilege: 'MaintainPersonalOpportunities MaintainAllOpportunities'.w(),
 
   /**
-  @type XM.Account
+  @type XM.AccountInfo
   */
-  account: SC.Record.toOne('XM.Account'),
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: YES
+  }),
   
   /**
   @type XM.OpportunityStage
@@ -35,7 +37,9 @@ XM.Opportunity = XM.Activity.extend(
   /**
   @type XM.Contact
   */
-  contact: SC.Record.toOne('XM.Contact'),
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: YES
+  }),
   
   /**
   @type XM.OpportunitySource
@@ -66,14 +70,16 @@ XM.Opportunity = XM.Activity.extend(
   @type Characteristics
   */
   characteristics: SC.Record.toMany('XM.OpportunityCharacteristic', {
-    inverse: 'opportunity',
+    isNested: YES,
+    inverse: 'opportunity'
   }),
   
   /**
   @type XM.Comment
   */
   comments: XM.Record.toMany('XM.OpportunityComment', {
-    inverse: 'opportunity',
+    isNested: YES,
+    inverse: 'opportunity'
   }),
 
 });

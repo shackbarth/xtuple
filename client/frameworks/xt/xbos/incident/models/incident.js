@@ -16,6 +16,8 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
 /** @scope XM.Incident.prototype */ {
 
   className: 'XM.Incident',
+  
+  nestedRecordNamespace: XM,
 
   createPrivilege: 'MaintainPersonalIncidents MaintainAllIncidents'.w(),
   readPrivilege:   'ViewPersonalIncidents ViewAllIncidents',
@@ -25,7 +27,7 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   /**
   @type String
   */
-  description: SC.Record.attr(String);
+  description: SC.Record.attr(String),
 
   /**
   @type XM.Account
