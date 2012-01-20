@@ -4,7 +4,8 @@ create or replace function private.retrieve_record(record_type text, id integer)
 
   /* constants */
   var COMPOUND_TYPE = "C",
-      ARRAY_TYPE = "A";
+      ARRAY_TYPE = "A",
+      READ_STATE = "read";
 
   // ..........................................................
   // METHODS
@@ -74,6 +75,9 @@ create or replace function private.retrieve_record(record_type text, id integer)
   normalize = function(nameSpace, model, record) {
     var viewdef = getViewDefinition(model, nameSpace);
 
+    /* set data state property */
+    record['dataState'] = READ_STATE;
+
     for(var prop in record) {
       if (record.hasOwnProperty(prop)) {
         var coldef = findProperty(viewdef, 'attname', prop),
@@ -87,6 +91,7 @@ create or replace function private.retrieve_record(record_type text, id integer)
         /* if it's a compound type, add a type property */
         if (coldef['typcategory'] === COMPOUND_TYPE && record[prop]) {
           record[prop]['type'] = formatTypeName(coldef['typname']);
+          record[prop]['dataState'] = READ_STATE;
           
         /* if it's an array convert each row into an object */
         } else if (coldef['typcategory'] === ARRAY_TYPE && record[prop]) {
@@ -103,6 +108,7 @@ create or replace function private.retrieve_record(record_type text, id integer)
 
 	    for (var k = 0; k < result.length; k++) {
 	      result[k]['type'] = formatTypeName(key);
+	      result[k]['dataState'] = READ_STATE;
 	      record[prop][i] = normalize(nameSpace, key, result[k]);
 	    }
           }

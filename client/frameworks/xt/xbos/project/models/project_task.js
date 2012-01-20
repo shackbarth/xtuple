@@ -16,6 +16,13 @@ XM.ProjectTask = XM.Activity.extend(
   className: 'XM.ProjectTask',
 
   /**
+  @type String
+  */
+  name: SC.Record.attr(String, {
+    isRequired: YES
+  }),
+  
+  /**
   @type XM.Project
   */
   project: SC.Record.toOne('XM.Project', {
@@ -26,7 +33,31 @@ XM.ProjectTask = XM.Activity.extend(
   /**
   @type SC.DateTime
   */
-  dueDate:        SC.Record.attr(SC.DateTime, { isRequired: YES} ),
+  startDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  dueDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d',
+    isRequired: YES
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  assignDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  completeDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
   
   /**
   @type Number
@@ -52,13 +83,16 @@ XM.ProjectTask = XM.Activity.extend(
   @type XM.ProjectTaskAlarm
   */
   alarms: SC.Record.toMany('XM.ProjectTaskAlarm', {
-    inverse: 'alarms',
+    isNested: YES,
+    inverse: 'alarms'
   }),
   
   /**
   @type XM.ProjectTaskComment
   */
-  comments: XM.Record.toMany('XM.ProjectTaskComment'),
+  comments: XM.Record.toMany('XM.ProjectTaskComment', {
+    isNested: YES
+  }),
 
   // ..........................................................
   // CALCULATED PROPERTIES

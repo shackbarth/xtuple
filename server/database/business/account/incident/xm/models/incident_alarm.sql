@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -8,6 +8,7 @@
 
 E'{
   "alarm.alarm_id as guid",
+  "alarm.alarm_source_id as incident",
   "alarm.alarm_number as \\"number\\"",
   "alarm.alarm_email as email",
   "alarm.alarm_email_recipient as email_recipient",
@@ -93,6 +94,6 @@ where ( alarm_id = old.guid );
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
-E'{"alarm_source = \'INCDT\'"}', 'Incident Alarm Model', true);
+E'{"alarm_source = \'INCDT\'"}', 'Incident Alarm Model', true, true);
