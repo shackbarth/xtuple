@@ -17,6 +17,8 @@ XM.Activity = XM.Document.extend(
 
   className: 'XM.Activity',
 
+  nestedRecordNamespace: XM,
+  
   /** 
   @type Boolean
   */

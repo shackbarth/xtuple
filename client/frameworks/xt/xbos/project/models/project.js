@@ -1,5 +1,5 @@
 // ==========================================================================
-// Project:   XM.Project
+// Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
@@ -24,9 +24,23 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   /**
   @type String
   */
+  name: SC.Record.attr(String, {
+    isRequired: YES
+  }),
+  
+  /**
+  @type String
+  */
   projectStatus: SC.Record.attr(String, { 
     /** @private */
     defaultValue: XM.Project.CONCEPT,
+  }),
+  
+    /**
+  @type SC.DateTime
+  */
+  startDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
   }),
   
   /**
@@ -38,9 +52,24 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   }),
   
   /**
+  @type SC.DateTime
+  */
+  assignDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  completeDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
   @type XM.ProjectTask
   */
   tasks: SC.Record.toMany('XM.ProjectTask', {
+    isNested: YES,
     inverse:  'project',
   }),
   
@@ -48,6 +77,7 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   @type XM.ProjectComment
   */
   comments: XM.Record.toMany('XM.ProjectComment', {
+    isNested: YES,
     inverse: 'project',
   }),
 
