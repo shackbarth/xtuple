@@ -15,8 +15,10 @@ E'{
   "cntct.cntct_phone2 as alternate",
   "cntct.cntct_fax as fax",
   "cntct.cntct_email as primary_email",
-  "cntct.cntct_owner_username as owner",
-  "cntct.cntct_addr_id as address"}',
+  "cntct.cntct_webaddr as web_address",
+  "(select address_info 
+    from xm.address_info
+    where guid = cntct.cntct_addr_id) as address"}',
      
 -- Rules
 
