@@ -12,25 +12,33 @@ E'{
   "crmacct.crmacct_name as name",
   "crmacct.crmacct_active as is_active",
   "crmacct.crmacct_type as type",
-  "crmacct.crmacct_parent_id as parent",
+  "(select account_info
+    from xm.account_info
+    where (guid = crmacct.crmacct_parent_id)) as parent",
   "crmacct.crmacct_notes as notes",
-  "crmacct.crmacct_cntct_id_1 as primary_contact",
-  "crmacct.crmacct_cntct_id_2 as secondary_contact",
-  "crmacct.crmacct_usr_username as user_account",
+  "(select contact_info
+    from xm.contact_info
+    where (guid = crmacct.crmacct_cntct_id_1)) as primary_contact",
+  "(select contact_info
+    from xm.contact_info
+    where (guid = crmacct.crmacct_cntct_id_2)) as secondary_contact",
+  "(select user_account_info
+    from xm.user_account_info
+    where (username = crmacct.crmacct_usr_username)) as user_account",
   "(select user_account_info
    from xm.user_account_info
    where username = crmacct.crmacct_owner_username) as owner",
- "array(
-    select comment 
-    from xm.comment
+  "array(
+    select account_comment 
+    from xm.account_comment
     where (account = crmacct.crmacct_id)) as comments",
   "array(
     select account_characteristic 
     from xm.account_characteristic
     where (account = crmacct.crmacct_id)) as characteristics",
   "array(
-    select document_assignment 
-    from xm.document_assignment
+    select account_document 
+    from xm.account_document
     where (account = crmacct.crmacct_id)) as documents"
 }',
 
@@ -60,11 +68,22 @@ values (
   new.is_active,
   new.type,
   (new.owner).username,
-  new.parent,
+  (new.parent).guid,
   new.notes,
-  new.primary_contact,
-  new.secondary_contact,
-  new.user );
+  (new.primary_contact).guid,
+  (new.secondary_contact).guid,
+  (new.user_account).username );
+
+","
+
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.account 
+   where not checkPrivilege(\'MaintainAllCRMAccounts\') 
+    and not (checkPrivilege(\'MaintainPersonalCRMAccounts\') 
+             and (new.owner).username = getEffectiveXtUser()) do instead
+
+  select private.raise_exception(\'You do not have privileges to create this Account\');
+
+","
 
 -- update rule
 
@@ -76,13 +95,25 @@ update crmacct set
   crmacct_name = new.name,
   crmacct_active = new.is_active,
   crmacct_type = new.type,
-  crmacct_owner_username = new.owner,
-  crmacct_parent_id = new.parent,
+  crmacct_owner_username = (new.owner).username,
+  crmacct_parent_id = (new.parent).guid,
   crmacct_notes = new.notes,
-  crmacct_cntct_id_1 = new.primary_contact,
-  crmacct_cntct_id_2 = new.secondary_contact,
-  crmacct_usr_username = new.user
+  crmacct_cntct_id_1 = (new.primary_contact).guid,
+  crmacct_cntct_id_2 = (new.secondary_contact).guid,
+  crmacct_usr_username = (new.user_account).username
 where ( crmacct_id = old.guid );
+
+","
+
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on update to xm.account 
+   where not checkPrivilege(\'MaintainAllCRMAccounts\') 
+    and not (checkPrivilege(\'MaintainPersonalCRMAccounts\')
+	     and (old.owner).username = getEffectiveXTUser()
+             and (new.owner).username = getEffectiveXtUser()) do instead
+
+  select private.raise_exception(\'You do not have privileges to update this Account\');
+
+","
 
 -- delete rules
 
@@ -97,22 +128,24 @@ delete from charass
 where ( charass_target_id = old.guid ) 
  and ( charass_target_type = \'CRMACCT\' );
 
-delete from docass
-where ( docass_target_id = old.guid ) 
- and ( docass_target_type = \'CRMA\' );
-
-delete from docass
-where ( docass_source_id = old.guid ) 
- and ( docass_source_type = \'CRMA\' );
-
-delete from imageass
-where ( imageass_source_id = old.guid ) 
- and ( imageass_source = \'CRMA\' );
+delete from xm.document_assignment
+where ( guid = old.guid );
 
 delete from crmacct
 where ( crmacct_id = old.guid );
 
-)"}',
+)
+
+","
+
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.account 
+   where not checkPrivilege(\'MaintainAllCRMAccounts\') 
+    and not (checkPrivilege(\'MaintainPersonalCRMAccounts\') 
+             and (old.owner).username = getEffectiveXtUser()) do instead
+
+  select private.raise_exception(\'You do not have privileges to delete this Account\');
+
+"}',
 
 -- Conditions, Comment, System
-'{}', 'Account Model', true);
+E'{"checkPrivilege(\'ViewAllCRMAccounts\')", "checkPrivilege(\'ViewPersonalCRMAccounts\')"}', 'Account Model', true);
