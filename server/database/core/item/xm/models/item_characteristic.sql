@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 'item_characteristic', 'public', 'charass',
@@ -62,6 +62,6 @@ where (charass_id = old.guid);
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
 E'{"charass_target_type = \'I\'"}', 'Item Characteristic Model', true, true);

@@ -1,4 +1,4 @@
-﻿-- [ START ] initdb
+-- [ START ] initdb
 
 -- create schemas
 \i create_private_schema.sql;
@@ -196,9 +196,13 @@
 \i business/project/xm/models/project_task.sql;
 \i business/project/xm/models/project.sql;
 
+-- business/to_do tables
+\i business/to_do/private/tables/datatype.sql;
+
 -- business/todo xm models
 \i business/todo/xm/models/todo_alarm.sql;
 \i business/todo/xm/models/todo_comment.sql;
+\i business/todo/xm/models/todo_document.sql;
 \i business/todo/xm/models/todo_info.sql;
 \i business/todo/xm/models/todo.sql;
 

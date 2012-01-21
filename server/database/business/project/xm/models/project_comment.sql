@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -16,11 +16,13 @@ E'{
   "comment.is_public as is_public",
   "comment.can_update as can_update"}',
 
+-- Rules
+
 E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.project_comment
+create or replace rule \\"_CREATE\\" as on insert to xm.project_comment 
   do instead
 
 insert into xm.comment (
@@ -31,7 +33,7 @@ insert into xm.comment (
   username,
   comment_type,
   text,
-  is_public)
+  is_public )
 values (
   new.guid,
   new.project,
@@ -46,7 +48,7 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.project_comment
+create or replace rule \\"_UPDATE\\" as on update to xm.project_comment 
   do instead
 
 update xm.comment set
@@ -58,11 +60,10 @@ where ( guid = old.guid );
 
 -- delete rule
 
-create or replace rule \\"_DELETE\\" as on delete to xm.project_comment
-  do instead NOTHING;
+create or replace rule \\"_DELETE\\" as on delete to xm.project_comment 
+  do instead nothing;
 
-"}',
+"}', 
 
--- Conditions, Comment, System
-
-E'{"comment.source = \'J\'"}', 'Project Comment Model', true,true);
+-- Conditions, Comment, System, Nested
+E'{"comment.source = \'J\'"}', 'Project Comment Model', true, true);

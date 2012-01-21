@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -36,6 +36,6 @@ create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_info
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
-'{}', 'Opporunity Info Model', true);
+'{}', 'Opporunity Info Model', true, true);

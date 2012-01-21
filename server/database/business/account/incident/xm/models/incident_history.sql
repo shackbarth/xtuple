@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 --Model name, schema, table
 
@@ -56,6 +56,6 @@ create or replace rule \\"_DELETE\\" as on delete to xm.incident_history
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
-'{}', 'Incident History Model', true);
+'{}', 'Incident History Model', true, true);

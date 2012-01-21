@@ -10,9 +10,8 @@ E'{
   "document_assignment.id as guid",
   "document_assignment.source as incident",
   "document_assignment.target as target",
-  "document_assignment.purpose as purpose",
-  "document_assignment.source_type as source_type",
-  "document_assignment.target_type as target_type"}',
+  "document_assignment.target_type as target_type",
+  "document_assignment.purpose as purpose"}',
 
 -- Rules
 
@@ -33,7 +32,7 @@ values (
   new.guid,
   new.incident,
   new.target,
-  new.source_type,
+  private.get_id(\'datatype\', \'datatype_source\', \'INCDT\'),
   new.target_type,
   new.purpose
 );
@@ -56,5 +55,5 @@ where ( id = old.guid );
 
 "}', 
 
--- Conditions, Comment, System, Nested
+-- Conditions, Comment, System
 E'{"private.get_datatype_source(source_type) = \'INCDT\'"}', 'Incident Document Model', true, true);

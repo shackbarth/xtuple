@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -68,4 +68,4 @@ where ( cmnttype_id = old.guid )
 
 -- Conditions, Comment, System
 
-'{}', 'Comment Type Model', true, true);
+'{}', 'Comment Type Model', true);

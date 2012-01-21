@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 'item_comment', 'xm', 'comment',
@@ -64,6 +64,6 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_comment
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
 E'{"comment.source = \'I\'"}', 'Item Comment Model', true, true);

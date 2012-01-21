@@ -2,17 +2,19 @@ select private.create_model(
 
 -- Model name, schema, table
 
-'todo_comment','public','comment',
+'to_do_comment', 'xm', 'comment',
 
--- Columns 
+-- Columns
+
 E'{
-  "comment.comment_id as guid",
-  "comment.comment_source_id as todo",
-  "comment.comment_date as date",
-  "comment.comment_user as username",
-  "comment.comment_cmnttype_id as comment_type",
-  "comment.comment_text as text",
-  "comment.comment_public as is_public"}',
+  "comment.guid as guid",
+  "comment.source_id as to_do",
+  "comment.date as date",
+  "comment.username as username",
+  "comment.comment_type as comment_type",
+  "comment.text as text",
+  "comment.is_public as is_public",
+  "comment.can_update as can_update"}',
 
 -- Rules
 
@@ -20,21 +22,21 @@ E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.todo_comment 
+create or replace rule \\"_CREATE\\" as on insert to xm.to_do_comment 
   do instead
 
-insert into comment (
-  comment_id,
-  comment_source_id,
-  comment_source,
-  comment_date,
-  comment_user,
-  comment_cmnttype_id,
-  comment_text,
-  comment_public )
+insert into xm.comment (
+  guid,
+  source_id,
+  source,
+  date,
+  username,
+  comment_type,
+  text,
+  is_public )
 values (
   new.guid,
-  new.todo,
+  new.to_do,
   \'TD\',
   new.date,
   new.username,
@@ -46,22 +48,22 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.todo_comment
+create or replace rule \\"_UPDATE\\" as on update to xm.to_do_comment 
   do instead
-  
-update comment set
-  comment_text = new.text
-where ( comment_id = old.guid );
+
+update xm.comment set
+  text = new.text,
+  is_public = new.is_public
+where ( guid = old.guid );
 
 ","
-  
--- delete rules
 
-create or replace rule \\"_DELETE\\" as on delete to xm.todo_comment   
+-- delete rule
+
+create or replace rule \\"_DELETE\\" as on delete to xm.to_do_comment 
   do instead nothing;
 
-"}',
+"}', 
 
--- Conditions, Comment, System
-
-E'{comment.comment_source = \'TD\'}','Todo Comment Model', true);
+-- Conditions, Comment, System, Nested
+E'{"comment.source = \'TD\'"}', 'ToDo Comment Model', true, true);

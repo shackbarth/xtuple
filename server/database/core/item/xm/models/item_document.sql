@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,13 +7,11 @@
 -- Columns
 
 E'{
-  "document_assignment.guid as guid",
+  "document_assignment.id as guid",
   "document_assignment.source as item",
   "document_assignment.target as target",
-  "document_assignment.purpose as purpose",
-  "document_assignment.source_type as source_type",
-  "document_assignment.target_type as target_type"
-}',
+  "document_assignment.target_type as target_type",
+  "document_assignment.purpose as purpose"}',
 
 -- Rules
 
@@ -24,7 +22,7 @@ E'{"
 create or replace rule \\"_CREATE\\" as on insert to xm.item_document do instead
 
 insert into xm.document_assignment (
-  guid,
+  id,
   source,
   target,
   source_type,
@@ -32,14 +30,15 @@ insert into xm.document_assignment (
   purpose)
 values (
   new.guid,
-  new.item,
+  new.contact,
   new.target,
-  new.source_type,
+  private.get_id(\'datatype\', \'datatype_source\', \'T\'),
   new.target_type,
-  new.purpose);
+  new.purpose
+);
 
 ","
-
+  
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.item_document
@@ -52,10 +51,9 @@ create or replace rule \\"_UPDATE\\" as on update to xm.item_document
 create or replace rule \\"_DELETE\\" as on delete to xm.item_document do instead
 
 delete from xm.document_assignment
-where ( guid = old.guid );
+where ( id = old.guid );
 
-"}',
+"}', 
 
 -- Conditions, Comment, System
-
-E'{"private.get_datatype_source(source_type) = \'I\'","private.get_datatype_source(target_type) = \'I\'"}', 'Item Document Model', true, true);
+E'{"private.get_datatype_source(source_type) = \'I\'"}', 'Item Document Model', true, true);

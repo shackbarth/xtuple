@@ -118,7 +118,7 @@ XM.Opportunity = XM.Activity.extend(
   /**
   @type XM.OpportunityDocument
   */
-  comments: XM.Record.toMany('XM.Opportunitydocument', {
+  comments: XM.Record.toMany('XM.OpportunityDocument', {
     isNested: YES,
     inverse: 'opportunity'
   }),  

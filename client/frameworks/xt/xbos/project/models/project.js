@@ -70,7 +70,7 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   */
   tasks: SC.Record.toMany('XM.ProjectTask', {
     isNested: YES,
-    inverse:  'project',
+    inverse:  'project'
   }),
   
   /**
@@ -78,8 +78,17 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   */
   comments: XM.Record.toMany('XM.ProjectComment', {
     isNested: YES,
-    inverse: 'project',
+    inverse: 'project'
   }),
+  
+  /**
+  @type XM.ProjectDocument
+  */
+  documents: XM.Record.toMany('XM.ProjectDocument', {
+    isNested: YES,
+    inverse: 'project'
+  }),
+
 
   // ..........................................................
   // CALCULATED PROPERTIES

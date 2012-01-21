@@ -14,6 +14,8 @@ XM.Site = XM.Record.extend(
     /** @scope XM.Site.prototype */ {
 
   className: 'XM.Site',
+  
+  nestedRecordNamespace: XM,
 
   createPrivilege: 'MaintainWarehouses',
   readPrivilege:   'ViewWarehouses',
@@ -71,9 +73,11 @@ XM.Site = XM.Record.extend(
   isEnforceZones: SC.Record.attr(Boolean),
   
   /**
-  @type XM.Contact
+  @type XM.ContactInfo
   */
-  contact: SC.Record.toOne('XM.Contact'),
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: YES
+  }),
   
   /**
   @type XM.Address
@@ -133,13 +137,16 @@ XM.Site = XM.Record.extend(
   /**
   @type XM.SiteZone
   */
-  zones: SC.Record.toMany('XM.SiteZone'),
+  zones: SC.Record.toMany('XM.SiteZone', {
+    isNested: YES
+  }),
   
   /**
   @type XM.SiteComment
   */
   comments: SC.Record.toMany('XM.SiteComment', {
-    inverse: 'site',
+    isNested: YES,
+    inverse: 'site'
   }),
 
 });

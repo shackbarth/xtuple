@@ -10,9 +10,8 @@ E'{
   "document_assignment.id as guid",
   "document_assignment.source as contact",
   "document_assignment.target as target",
-  "document_assignment.purpose as purpose",
-  "document_assignment.source_type as source_type",
-  "document_assignment.target_type as target_type"}',
+  "document_assignment.target_type as target_type",
+  "document_assignment.purpose as purpose"}',
 
 -- Rules
 
@@ -33,7 +32,7 @@ values (
   new.guid,
   new.contact,
   new.target,
-  new.source_type,
+  private.get_id(\'datatype\', \'datatype_source\', \'T\'),
   new.target_type,
   new.purpose
 );
