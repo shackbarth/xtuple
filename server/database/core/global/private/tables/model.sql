@@ -13,6 +13,7 @@ select private.add_column('model','model_schema_name', 'text', 'not null');
 select private.add_column('model','model_table_name', 'text', 'not null');
 select private.add_column('model','model_columns', 'text[]', 'not null default ''{}''');
 select private.add_column('model','model_conditions', 'text[]', 'not null default ''{}''');
+select private.add_column('model','model_order', 'text[]', 'not null default ''{}''');
 select private.add_column('model','model_rules', 'text[]', 'not null default ''{}''');
 select private.add_column('model','model_active', 'boolean', 'not null default true');
 

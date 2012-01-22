@@ -56,6 +56,6 @@ create or replace rule \\"_DELETE\\" as on delete to xm.incident_history
 
 "}',
 
--- Conditions, Comment, System, Nested
+-- Conditions, Order, Comment, System, Nested
 
-'{}', 'Incident History Model', true, true);
+'{}', '{ incdthist.incdthist_timestamp }', 'Incident History Model', true, true);
