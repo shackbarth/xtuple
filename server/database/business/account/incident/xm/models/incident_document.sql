@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -7,7 +7,7 @@
 -- Columns
 
 E'{
-  "document_assignment.guid as guid",
+  "document_assignment.id as guid",
   "document_assignment.source as incident",
   "document_assignment.target as target",
   "document_assignment.target_type as target_type",
@@ -22,7 +22,7 @@ E'{"
 create or replace rule \\"_CREATE\\" as on insert to xm.incident_document do instead
 
 insert into xm.document_assignment (
-  guid,
+  id,
   source,
   target,
   source_type,
@@ -51,7 +51,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.incident_document
 create or replace rule \\"_DELETE\\" as on delete to xm.incident_document do instead
 
 delete from xm.document_assignment
-where ( guid = old.guid );
+where ( id = old.guid );
 
 "}', 
 
