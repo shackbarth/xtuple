@@ -62,10 +62,14 @@
 \i core/user_account/private/tables/user.sql;
 
 -- core/user_account xm models
-\i core/user_account/xm/models/user_account_info.sql;
 \i core/user_account/xm/models/privilege.sql;
 \i core/user_account/xm/models/language.sql;
 \i core/user_account/xm/models/locale.sql;
+\i core/user_account/xm/models/user_account_role.sql;
+\i core/user_account/xm/models/user_account_user_account_role_assignment.sql;
+\i core/user_account/xm/models/user_account_privilege_assignment.sql;
+\i core/user_account/xm/models/user_account_role_privilege_assignment.sql;
+\i core/user_account/xm/models/user_account_info.sql;
 \i core/user_account/xm/models/user_account.sql;
 
 -- core/characteristic xm models
@@ -167,6 +171,7 @@
 \i business/account/incident/xm/models/incident_info.sql;
 \i business/account/incident/xm/models/incident_resolution.sql;
 \i business/account/incident/xm/models/incident_severity.sql;
+\i business/account/incident/xm/models/incident_document.sql;
 \i business/account/incident/xm/models/incident.sql;
 
 -- business/account/opportunity tables
@@ -188,9 +193,9 @@
 \i business/employee/private/tables/datatype.sql;
 
 -- business/project xm models
+\i business/project/xm/models/project_info.sql;
 \i business/project/xm/models/project_comment.sql;
 \i business/project/xm/models/project_document.sql;
-\i business/project/xm/models/project_info.sql;
 \i business/project/xm/models/project_task_alarm.sql;
 \i business/project/xm/models/project_task_comment.sql;
 \i business/project/xm/models/project_task.sql;

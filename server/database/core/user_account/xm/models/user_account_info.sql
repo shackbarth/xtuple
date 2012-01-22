@@ -52,4 +52,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_account_info
 
 -- Conditions, Comment, System
 
-'{"checkPrivilege(\'MaintainUsers\')"}', 'User Account Info Model', true, true);
+E'{"checkPrivilege(\'MaintainUsers\')"}', 'User Account Info Model', true, true);
