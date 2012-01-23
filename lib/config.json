@@ -2,7 +2,7 @@
   "user": "admin",
   "port": 5432,
   "password": "admin",
-  "database": "380rc2mfgdemo",
+  "database": "380postbooks",
   "host": "localhost",
   "debug": "true",
   "server-port": 8000
