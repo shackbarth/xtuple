@@ -30,7 +30,7 @@ insert into xm.document_assignment (
   purpose)
 values (
   new.guid,
-  new.contact,
+  new.item,
   new.target,
   private.get_id(\'datatype\', \'datatype_source\', \'T\'),
   new.target_type,

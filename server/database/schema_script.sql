@@ -74,6 +74,7 @@
 
 -- core/characteristic xm models
 \i core/characteristic/xm/models/characteristic.sql;
+\i core/characteristic/xm/models/characteristic_assignment.sql;
 \i core/characteristic/xm/models/characteristic_option.sql;
 
 -- core/comment xm views
@@ -202,13 +203,13 @@
 \i business/project/xm/models/project.sql;
 
 -- business/to_do tables
-\i business/to_do/private/tables/datatype.sql;
+\i business/todo/private/tables/datatype.sql;
 
 -- business/todo xm models
-\i business/todo/xm/models/todo_alarm.sql;
-\i business/todo/xm/models/todo_comment.sql;
-\i business/todo/xm/models/todo_document.sql;
-\i business/todo/xm/models/todo_info.sql;
-\i business/todo/xm/models/todo.sql;
+\i business/todo/xm/models/to_do_alarm.sql;
+\i business/todo/xm/models/to_do_comment.sql;
+\i business/todo/xm/models/to_do_document.sql;
+\i business/todo/xm/models/to_do_info.sql;
+\i business/todo/xm/models/to_do.sql;
 
 -- [ END ] business

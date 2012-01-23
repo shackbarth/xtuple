@@ -180,7 +180,7 @@ where ( ophead_id = old.guid );
 
 ","
 
-create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.incident
+create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.opportunity
    where not checkPrivilege(\'MaintainAllOpportunites\') 
     and not (checkPrivilege(\'MaintainPersonalOpportunites\') 
              and ((old.owner).username = getEffectiveXtUser()

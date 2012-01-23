@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -156,7 +156,7 @@ where ( charass_target_id = old.guid )
  and ( charass_target_type = \'CNTCT\' );
 
 delete from xm.document_assignment
-where ( guid = old.guid );
+where ( id = old.guid );
 
 delete from cntct
 where ( cntct_id = old.guid );
