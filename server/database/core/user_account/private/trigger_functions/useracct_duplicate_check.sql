@@ -1,14 +1,14 @@
-create or replace function private.user_duplicate_check() returns trigger as $$
+create or replace function private.useracct_duplicate_check() returns trigger as $$
 declare
   result text;
 begin
 
   select usr_username into result
   from public.usr p
-  where ( p.usr_username = new.user_username );
+  where ( p.usr_username = new.useracct_username );
 
   if ( found ) then
-    raise exception 'User % already exists as a database user.', new.usr_username;
+    raise exception 'User account % already exists as a database user.', new.useracct_username;
   end if;
 
   return new;

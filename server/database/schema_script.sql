@@ -55,11 +55,14 @@
 \i core/type/xm/models/type.sql;
 
 -- core/user_account triggers
-\i core/user_account/private/trigger_functions/user_duplicate_check.sql;
+\i core/user_account/private/trigger_functions/useracct_duplicate_check.sql;
 
 -- core/user_account tables
 \i core/user_account/private/tables/datatype.sql;
 \i core/user_account/private/tables/useracct.sql;
+
+-- core/user_account views
+\i core/user_account/private/views/usr.sql;
 
 -- core/user_account xm models
 \i core/user_account/xm/models/privilege.sql;
