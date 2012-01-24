@@ -20,8 +20,8 @@
 \i core/global/private/functions/commit_record.sql;
 \i core/global/private/functions/create_model.sql;
 \i core/global/private/functions/create_table.sql;
-\i core/global/private/functions/create_xm_view.sql;
-\i core/global/private/functions/drop_xm_view.sql;
+\i core/global/private/functions/create_model_view.sql;
+\i core/global/private/functions/drop_model_view.sql;
 \i core/global/private/functions/ends_with.sql;
 \i core/global/private/functions/execute_query.sql;
 \i core/global/private/functions/extend_model.sql;
