@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -42,4 +42,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.site_info
 
 -- Conditions, Comment, System
 
-'{}', 'Site Info Model', true);
+'{}', 'Site Info Model', true, true);

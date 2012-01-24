@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -66,4 +66,4 @@ where ( uomconv_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Unit Conversion Model', true);
+'{}', 'Unit Conversion Model', true, true);

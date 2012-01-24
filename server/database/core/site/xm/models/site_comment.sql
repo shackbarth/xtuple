@@ -1,19 +1,20 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
-'site_comment', 'public', 'comment',
+'site_comment', 'xm', 'comment',
 
 -- Columns
 
 E'{
-  "comment.comment_id as guid",
-  "comment.comment_source_id as site",
-  "comment.comment_date as \\"date\\"",
-  "comment.comment_user as username",
-  "comment.comment_cmnttype_id as comment_type",
-  "comment.comment_text as \\"text\\"",
-  "comment.comment_public as is_public"
+  "comment.guid as guid",
+  "comment.source_id as site",
+  "comment.date as \\"date\\"",
+  "comment.username as username",
+  "comment.comment_type as comment_type",
+  "comment.text as \\"text\\"",
+  "comment.comment_public as is_public",
+  "comment.can_update as can_update"
 }',
 
 -- Rules
@@ -25,15 +26,15 @@ E'{"
 create or replace rule \\"_CREATE\\" as on insert to xm.site_comment 
   do instead
 
-insert into comment (
-  comment_id,
-  comment_source_id,
-  comment_source,
-  comment_date,
-  comment_user,
-  comment_cmnttype_id,
-  comment_text,
-  comment_public )
+insert into xm.comment (
+  guid,
+  source_id,
+  source,
+  date,
+  username,
+  comment_type,
+  text,
+  is_public )
 values (
   new.guid,
   new.site,
@@ -51,9 +52,9 @@ values (
 create or replace rule \\"_UPDATE\\" as on update to xm.site_comment
   do instead
   
-update comment set
-  comment_text = new.text
-where ( comment_id = old.guid );
+update xm.comment set
+  text = new.text
+where ( guid = old.guid );
 
 ","
   
@@ -66,4 +67,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.site_comment
 
 -- Conditions, Comment, System
 
-E'{"comment_source = \'WH\'"}', 'Site Comment Model', true);
+E'{"comment.source = \'WH\'"}', 'Site Comment Model', true, true);
