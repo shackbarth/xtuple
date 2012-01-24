@@ -59,7 +59,7 @@
 
 -- core/user_account tables
 \i core/user_account/private/tables/datatype.sql;
-\i core/user_account/private/tables/user.sql;
+\i core/user_account/private/tables/useracct.sql;
 
 -- core/user_account xm models
 \i core/user_account/xm/models/privilege.sql;
