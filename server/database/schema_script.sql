@@ -148,8 +148,8 @@
 \i core/site/xm/models/site.sql;
 
 -- core/unit xm models
-\i core/unit/xm/models/unit.sql;
 \i core/unit/xm/models/unit_conversion.sql;
+\i core/unit/xm/models/unit.sql;
 -- [ END ] core
 
 -- [ START ] business
