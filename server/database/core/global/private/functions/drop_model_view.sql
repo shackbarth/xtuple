@@ -3,7 +3,7 @@ create or replace function private.drop_model_view(m_name text) returns text[] a
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
   rec record;
-  m_names text[];
+  m_names text[] := '{}';
   q_name text := 'xm.' || m_name;
 begin
 
@@ -21,11 +21,13 @@ begin
      and (nspname || '.' || relname != q_name)
   loop
 
-    -- drop the dependency and add
+    -- Drop the dependency and add
     m_names := private.drop_model_view(rec.model_name) || m_names;
 
-    -- Append the dropped dependency
-    m_names := array_prepend(rec.model_name, m_names);
+    -- If the model we're on isnt already in the array, prepend the dropped dependency
+   if not rec.model_name <@ m_names then
+      m_names := array_prepend(rec.model_name, m_names);
+   end if;
     
   end loop;
 

@@ -1,4 +1,3 @@
-select dropIfExists('VIEW', 'usr', 'private');
 create or replace view private.usr as
 
   select 
