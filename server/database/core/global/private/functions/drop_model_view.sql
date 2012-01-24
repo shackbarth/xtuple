@@ -1,4 +1,4 @@
-create or replace function private.drop_xm_view(m_name text) returns text[] as $$
+create or replace function private.drop_model_view(m_name text) returns text[] as $$
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
@@ -22,7 +22,7 @@ begin
   loop
 
     -- drop the dependency and add
-    m_names := private.drop_xm_view(rec.model_name) || m_names;
+    m_names := private.drop_model_view(rec.model_name) || m_names;
 
     -- Append the dropped dependency
     m_names := array_prepend(rec.model_name, m_names);
