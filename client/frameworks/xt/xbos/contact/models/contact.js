@@ -110,14 +110,14 @@ XM.Contact = XM.Document.extend(
   /**
   @type XM.UserAccount
   */
-  owner: SC.Record.toOne('XM.UserAccount', { 
+  owner: SC.Record.toOne('XM.UserAccountInfo', { 
     isNested: YES 
   }),
   
   /**
   @type Number
   */
-  address: SC.Record.toOne('XM.Address', { 
+  address: SC.Record.toOne('XM.AddressInfo', { 
     isNested: YES 
   }),
   

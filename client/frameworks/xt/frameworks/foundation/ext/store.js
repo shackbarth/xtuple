@@ -19,3 +19,5 @@ XT.Store = SC.Store.extend(XT.Logging,
   name: "XT.Store"
 
 });
+
+XT.set('store', XT.Store.create().from('XT.DataSource'));
