@@ -49,27 +49,25 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   //
 
   fetch: function(store, query) {
-    var payload = new Object, json = {};
+    var payload = new Object;
     
     payload.requestType = 'fetch',
 
     console.log(query);
 
-    payload.recordType = query.get('recordType').toString();
+    payload.recordType = query.get('recordType').prototype.className;
     
     payload.query = new Object;
     payload.query.conditions = query.get('conditions');
     payload.query.parameters = query.get('parameters');
     payload.query.orderBy = query.get('orderBy');
     
-    json = JSON.stringify(payload)
-    
-    if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(json)); }
+    if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
     SC.Request.postUrl(this.URL)
       .header({'Accept': 'application/json'}).json()
       .notify(this, 'didFetchData', store, query)
-      .send(json);
+      .send(payload);
 
     return YES;
   },
@@ -92,32 +90,32 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   //
 
   retrieveRecord: function(store, storeKey, id) {
-    var recordType = store.recordTypeFor(storeKey).toString(), 
-        payload = new Object, json = {};
+    var recordType = store.recordTypeFor(storeKey).prototype.className, 
+        payload = new Object;
     
     payload.requestType = 'retrieveRecord',
     payload.recordType = recordType;
     payload.id = id;
-    
-    json = JSON.stringify(payload);
   
-    if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(json)); }
+    if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
     SC.Request.postUrl(this.URL)
       .header({ 'Accept': 'application/json' }).json()
       .notify(this, 'didRetrieveData', store, storeKey)
-      .send(json);
+      .send(payload);
 
     return YES;
   },
 
-  didRetrieveData: function(response, store, storeKeys) {
+  didRetrieveData: function(response, store, storeKey) {
+
     if(SC.ok(response)) {
-      var dataHash = response.get("body");
+      var dataHash = JSON.parse(response.get("body").rows[0].retrieve_record);
         store.dataSourceDidComplete(storeKey, dataHash);
     } else {
       store.dataSourceDidError(storeKey, response);
     }
+    
   },
   
   commitRecords: function(store, createStoreKeys, updateStoreKeys, destroyStoreKeys, params) {
@@ -133,16 +131,14 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   
   commitRecord: function(store, storeKey) {
     var recordType = store.recordTypeFor(storeKey).toString(), 
-        payload = new Object, json = {};
+        payload = new Object,
         record = store.materializeRecord(storeKey);
 
     payload.requestType = 'commitRecord',
     payload.recordType = recordType;
     payload.dataHash = JSON.stringify(record);
   
-    json = JSON.stringify(payload);
-  
-    if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(json)); }
+    if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
     SC.Request.postUrl(this.URL)
       .header({ 'Accept': 'application/json' }).json()
