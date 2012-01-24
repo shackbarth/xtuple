@@ -147,7 +147,7 @@ create or replace function private.export_model(record_type text) returns text a
       recordType = decamelize(record_type.replace((/\w+\./i),'')), 
       nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
       viewdef = getViewDefinition(recordType, nameSpace),
-      debug = true, model, ret = new Object;
+      debug = false, model, ret = new Object;
 
   /* query the model */
   if(debug) print(NOTICE, 'sql = ', sql);
@@ -155,39 +155,50 @@ create or replace function private.export_model(record_type text) returns text a
   model = executeSql(sql, [ recordType ]);
 
   if(model.length) {
-    var rules = [], updRule;
+    var rules = [], updcmd;
     
     model = model[0];
-
-    /* parse rules */
-    for(var i = 0; i < model.model_rules.length; ++i) {
-      var curr = model.model_rules[i], rule = new Object,
-          isNone = curr.search(/nothing/i) > 0 && curr.search(/when/i) === -1;
- 
-      if(!isNone) {
-        var ridx = curr.search(/rule /i) + 4,
-            aidx = curr.search(/as/i);
-            iidx = curr.search(/instead/i) + 7;
-            event = curr.search(/ insert/i) > 0 ? 'insert' : curr.search(/ update/i) > 0 ? 'update' : curr.search(/ delete/i) > 0 ? 'delete' : null;
-
-        rule.name = curr.slice(ridx, aidx).replace(/"|"/g,'').trim();
-        rule.event = event;
-        rule.command = curr.slice(iidx);
-
-        if(rule.name === "_UPDATE") { updRule = rule.name; }
-        
-        rules.push(rule);
-      }
-    }
 
     /* add some basic definition */
     ret.type = model.model_namespace.toUpperCase() + '.' + model.model_name.slice(0,1).toUpperCase() + camelize(model.model_name.slice(1));;
     ret.schema = model.model_schema_name ? model.model_schema_name : model.model_table_name.replace((/\.\w+/i),'');
     ret.table = model.model_table_name.replace((/\w+\./i),'');
     if(model.model_comment.length) { ret.comment = model.model_comment; }
-    ret.properties = [];
+
+    /* parse rules */
+    for(var i = 0; i < model.model_rules.length; ++i) {
+      var curr = model.model_rules[i], rule = new Object,
+          isNothing = curr.search(/nothing/i) > 0 && curr.search(/when/i) === -1;
+ 
+      var ridx = curr.search(/rule /i) + 4,
+          aidx = curr.search(/as/i),
+          iidx = curr.search(/instead/i) + 7,
+          widx = curr.search(/where/i) + 5,
+          didx = curr.search(/do/i),
+          cond = curr.slice(widx, didx).replace(/\n/g,'').trim();
+
+      rule.name = curr.slice(ridx, aidx).replace(/"|"/g,'').trim();
+      rule.event = curr.search(/ insert/i) > 0 ? 'insert' : curr.search(/ update/i) > 0 ? 'update' : curr.search(/ delete/i) > 0 ? 'delete' : null;
+      if(cond && cond.length) { rule.condition = curr.slice(widx, didx).replace(/\n/g,'').trim(); }
+      rule.command = curr.slice(iidx).replace(/\n/g,'').trim();
+
+      if(rule.name === "_UPDATE") { updcmd = rule.command; }
+
+      /* only include 'non-standard' rules */
+      if(rule.name === "_CREATE") {
+        if(isNothing) { ret.canCreate = false }
+      } else if (rule.name === "_UPDATE") {
+        if(isNothing) { ret.canUpdate = false }
+      } else if (rule.name === "_DELETE") {
+        if(isNothing) { ret.canDelete = false }
+      } else {
+        rules.push(rule);
+      }
+    }
 
     /* parse columns */
+    ret.properties = [];
+        
     for(var i = 0; i < model.model_columns.length; ++i) {
       var cols = model.model_columns, 
           aidx = cols[i].search(/ as /i),
@@ -196,6 +207,7 @@ create or replace function private.export_model(record_type text) returns text a
           ridx = cols[i].indexOf(')'),
           property = new Object, 
           attr, coldef;
+
 
       /* find the attribute name */
       attr = aidx > 0 ? cols[i].substring(aidx + 3).trim() : cols[i].trim();
@@ -210,7 +222,6 @@ create or replace function private.export_model(record_type text) returns text a
         var col = cols[i].slice(eidx, ridx).trim(),
             pidx = col.indexOf('.'), t;
             
-        /* TODO: namespace needs to come from the model definition eventually */
         property.toOne = new Object;
         property.toOne.type = getNamespace(coldef.typname) + '.' + coldef.typname.slice(0,1).toUpperCase() + camelize(coldef.typname.slice(1));
         property.toOne.column = col.slice(pidx + 1);
@@ -220,7 +231,6 @@ create or replace function private.export_model(record_type text) returns text a
             pidx = col.indexOf('.'),
             widx = cols[i].search(/where/) + 5;
 
-        /* TODO: namespace needs to come from the model definition eventually */
         property.toMany = new Object;
         property.toMany.type = getNamespace(coldef.typname.slice(1)) + '.' + coldef.typname.slice(1,2).toUpperCase() + camelize(coldef.typname.slice(2));
         property.toMany.column = col.slice(pidx + 1);
@@ -238,6 +248,9 @@ create or replace function private.export_model(record_type text) returns text a
         property.attr = new Object;
         property.attr.type = t;
         property.attr.column = cols[i].slice(0, aidx).slice(pidx + 1);
+        
+        /* scan the update command to determine whether this attribute can be updated */
+        if(updcmd.indexOf('new.' + attr) === -1) { property.attr.isEditable = false; }
       }
 
       ret.properties.push(property);
@@ -248,7 +261,7 @@ create or replace function private.export_model(record_type text) returns text a
     if(model.model_order.length) { 
       model.model_order.length > 1 ? ret.order = model.model_order : ret.order = model.model_order[0]; 
     }
-    ret.rules = rules;
+    if(rules.length) { ret.rules = rules; }
     if(model.nested) { ret.isNested = model.nested; }
     if(model.model_system) { ret.isSystem = model.model_system };
     
@@ -259,4 +272,4 @@ create or replace function private.export_model(record_type text) returns text a
   
 $$ language plv8;
 
-select private.export_model('XM.Contact');
+select private.export_model('XM.ContactComment');
