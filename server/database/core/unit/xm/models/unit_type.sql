@@ -40,4 +40,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.unit_type
 
 -- Conditions, Comment, System
 
-'{}', 'Unit Type Model', true);
+'{}', 'Unit Type Model', true, true);
