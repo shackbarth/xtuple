@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -158,4 +158,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project
 
 -- Conditions, Comment, System
 
-'{}', 'Project Model', true, true);
+'{}', 'Project Model', true);
