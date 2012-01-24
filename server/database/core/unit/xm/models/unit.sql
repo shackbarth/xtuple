@@ -14,11 +14,11 @@ E'{
   "array(
     select unit_conversion
     from xm.unit_conversion
-    where from_unit = uomconv_from_uom_id
+    where from_unit = uom.uom_id
     union all
     select unit_conversion
     from xm.unit_conversion
-    where to_unit = uomconv_to_uom_id) as conversions"
+    where to_unit = uom.uom_id) as conversions"
 }',
 
 -- Rules
