@@ -1,8 +1,8 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
-'project_document', 'xm', 'document_assignment',
+'project_document', '', 'xm.document_assignment',
 
 -- Columns
 
@@ -10,9 +10,8 @@ E'{
   "document_assignment.id as guid",
   "document_assignment.source as project",
   "document_assignment.target as target",
-  "document_assignment.purpose as purpose",
-  "document_assignment.source_type as source_type",
-  "document_assignment.target_type as target_type"}',
+  "document_assignment.target_type as target_type",
+  "document_assignment.purpose as purpose"}',
 
 -- Rules
 
@@ -33,7 +32,7 @@ values (
   new.guid,
   new.project,
   new.target,
-  new.source_type,
+  private.get_id(\'datatype\', \'datatype_source\', \'J\'),
   new.target_type,
   new.purpose
 );
@@ -57,4 +56,4 @@ where ( id = old.guid );
 "}', 
 
 -- Conditions, Comment, System
-E'{"private.get_datatype_source(source_type) = \'J\'","private.get_datatype_source(target_type) = \'J\'"}', 'Contact Document Model', true, true);
+E'{"private.get_datatype_source(source_type) = \'J\'"}', 'Project Document Model', true, true);

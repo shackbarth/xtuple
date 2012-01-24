@@ -1,29 +1,15 @@
 select private.create_model(
 
--- Model name, schema
+-- Model name, schema, table
 
-'user_account_info', '', 
-
--- table
-
-E'(select 
-     usr_username as username,
-     usr_active as is_active,
-     usr_propername as propername
-   from public.usr
-   union all
-   select
-     user_username as username,
-     user_active as is_active,
-     user_propername as propername
-   from private.user) usr',
+'user_account_info', 'private', 'usr',
 
 -- Columns
 
 E'{
-  "usr.username",
-  "usr.is_active",
-  "usr.propername"}',
+  "usr.usr_username as username",
+  "usr.usr_active as is_active",
+  "usr.usr_propername as propername"}',
      
 -- Rules
 
@@ -52,4 +38,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_account_info
 
 -- Conditions, Comment, System
 
-'{}', 'User Account Info Model', true);
+'{}', 'User Account Info Model', true, true);

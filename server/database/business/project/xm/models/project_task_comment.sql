@@ -1,43 +1,45 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
-'project_task_comment', 'public', 'comment, cmnttype',
+'project_task_comment', 'xm', 'comment',
 
 -- Columns
 
 E'{
-  "comment.comment_id as guid",
-  "comment.comment_source_id as project_task",
-  "comment.comment_date as date",
-  "comment.comment_user as user",
-  "comment.comment_cmnttype_id as comment_type",
-  "comment.comment_text as text",
-  "comment.comment_public as is_public",
-  "cmnttype.cmnttype_editable as can_update"}',
+  "comment.guid as guid",
+  "comment.source_id as project_task",
+  "comment.date as date",
+  "comment.username as username",
+  "comment.comment_type as comment_type",
+  "comment.text as text",
+  "comment.is_public as is_public",
+  "comment.can_update as can_update"}',
+
+-- Rules
 
 E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.project_task_comment
+create or replace rule \\"_CREATE\\" as on insert to xm.project_task_comment 
   do instead
 
-insert into comment (
-  comment_id,
-  comment_source_id,
-  comment_source,
-  comment_date,
-  comment_user,
-  comment_cmnttype_id,
-  comment_text,
-  comment_public )
+insert into xm.comment (
+  guid,
+  source_id,
+  source,
+  date,
+  username,
+  comment_type,
+  text,
+  is_public )
 values (
   new.guid,
   new.project_task,
   \'TA\',
   new.date,
-  new.user,
+  new.username,
   new.comment_type,
   new.text,
   new.is_public );
@@ -46,22 +48,22 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.project_task_comment
+create or replace rule \\"_UPDATE\\" as on update to xm.project_task_comment 
   do instead
 
-update comment set
-  comment_text = new.text,
-  comment_public = new.is_public
-where ( comment_id  = old.guid );
+update xm.comment set
+  text = new.text,
+  is_public = new.is_public
+where ( guid = old.guid );
 
 ","
 
 -- delete rule
-create or replace rule \\"_DELETE\\" as on delete to xm.project_task_comment
+
+create or replace rule \\"_DELETE\\" as on delete to xm.project_task_comment 
   do instead nothing;
 
-"}',
+"}', 
 
--- Conditions, Comment, System
-
-E'{"comment.comment_cmnttype_id = cmnttype.cmnttype_id", "comment.comment_source = \'TA\'"}','Project Task Comment Model', true, true);
+-- Conditions, Comment, System, Nested
+E'{"comment.source = \'TA\'"}', 'Project Task Comment Model', true, true);

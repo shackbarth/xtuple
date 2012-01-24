@@ -10,17 +10,17 @@
 
   @extends XM.DocumentAssignment
 */
-XM.ContactDocument = XM.DocumentAssignment.extend(
-/** @scope XM.ContactDocument.prototype */ {
+XM.ProjectDocument = XM.DocumentAssignment.extend(
+/** @scope XM.ProjectDocument.prototype */ {
 
-  className: 'XM.ContactDocument',
+  className: 'XM.ProjectDocument',
 
   /**
-  @type XM.Contact
+  @type XM.Project
   */
-  contact: SC.Record.toOne('XM.Contact', {
+  opportunity: SC.Record.toOne('XM.Project', {
     inverse:  'documents',
-    isMaster: NO,
-  }),
+    isMaster: NO
+  })
   
 }) ;

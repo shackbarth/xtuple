@@ -1,4 +1,14 @@
-create or replace function private.create_model(name text, schema_name text, table_name text, column_names text[], rules text[] default '{}', conditions text[] default '{}', comment text default '', is_system boolean default false, is_nested boolean default false) returns void volatile as $$
+create or replace function private.create_model(name text, 
+                                                schema_name text, 
+                                                table_name text, 
+                                                column_names text[], 
+                                                rules text[] default '{}', 
+                                                conditions text[] default '{}', 
+                                                order_by text[] default '{}',
+                                                comment text default '', 
+                                                is_system boolean default false, 
+                                                is_nested boolean default false) returns void volatile as $$
+                                                
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
@@ -27,6 +37,7 @@ begin
       model_columns = column_names,
       model_rules = rules,
       model_conditions = conditions,
+      model_order = order_by,
       model_comment =  comment,
       model_system = is_system
     where model_id = id;
@@ -46,9 +57,10 @@ begin
     id := nextval('private.model_model_id_seq');
     
     insert into private.model ( 
-      model_id, model_name, model_schema_name, model_table_name, model_columns, model_rules, model_conditions, model_comment, model_system
+      model_id, model_name, model_schema_name, model_table_name, model_columns, 
+      model_rules, model_conditions, model_order, model_comment, model_system
     ) values ( 
-      id, name, schema_name, table_name, column_names, rules , conditions, comment, is_system );
+      id, name, schema_name, table_name, column_names, rules , conditions, order_by, comment, is_system );
 
     ins_nested := is_nested;
   end if;
@@ -59,3 +71,15 @@ begin
   
 end;
 $$ language 'plpgsql';
+
+create or replace function private.create_model(name text, 
+                                                schema_name text, 
+                                                table_name text, 
+                                                column_names text[], 
+                                                rules text[] default '{}', 
+                                                conditions text[] default '{}', 
+                                                comment text default '', 
+                                                is_system boolean default false, 
+                                                is_nested boolean default false) returns void volatile as $$
+  select private.create_model($1, $2, $3, $4, $5, $6, '{}', $7, $8, $9);
+$$ language 'sql';

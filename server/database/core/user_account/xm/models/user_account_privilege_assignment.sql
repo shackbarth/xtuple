@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -52,4 +52,4 @@ where ( usrpriv_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'User Account Privilege Assignment Model', true);
+'{}', 'User Account Privilege Assignment Model', true, true);

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -30,11 +30,10 @@ E'{
   "whsinfo.warehous_locationsize as location_size",
   "whsinfo.warehous_racksize as rack_size",
   "whsinfo.warehous_sitetype_id as site_type",
-  "btrim(array(
-    select comment_id
-    from \\"comment\\"
-    where comment_source_id = whsinfo.warehous_id
-      and comment_source = \'WH\')::text,\'{}\') as \\"comments\\"",  
+  "array(
+    select site_comment
+    from xm.site_comment
+    where site = whsinfo.warehous_id) as \\"comments\\"",  
   "whsinfo.warehous_active as is_active"
 }',
 

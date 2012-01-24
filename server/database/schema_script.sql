@@ -1,4 +1,4 @@
-﻿-- [ START ] initdb
+-- [ START ] initdb
 
 -- create schemas
 \i create_private_schema.sql;
@@ -20,8 +20,8 @@
 \i core/global/private/functions/commit_record.sql;
 \i core/global/private/functions/create_model.sql;
 \i core/global/private/functions/create_table.sql;
-\i core/global/private/functions/create_xm_view.sql;
-\i core/global/private/functions/drop_xm_view.sql;
+\i core/global/private/functions/create_model_view.sql;
+\i core/global/private/functions/drop_model_view.sql;
 \i core/global/private/functions/ends_with.sql;
 \i core/global/private/functions/execute_query.sql;
 \i core/global/private/functions/extend_model.sql;
@@ -55,21 +55,29 @@
 \i core/type/xm/models/type.sql;
 
 -- core/user_account triggers
-\i core/user_account/private/trigger_functions/user_duplicate_check.sql;
+\i core/user_account/private/trigger_functions/useracct_duplicate_check.sql;
 
 -- core/user_account tables
 \i core/user_account/private/tables/datatype.sql;
-\i core/user_account/private/tables/user.sql;
+\i core/user_account/private/tables/useracct.sql;
+
+-- core/user_account views
+\i core/user_account/private/views/usr.sql;
 
 -- core/user_account xm models
-\i core/user_account/xm/models/user_account_info.sql;
 \i core/user_account/xm/models/privilege.sql;
 \i core/user_account/xm/models/language.sql;
 \i core/user_account/xm/models/locale.sql;
+\i core/user_account/xm/models/user_account_role.sql;
+\i core/user_account/xm/models/user_account_user_account_role_assignment.sql;
+\i core/user_account/xm/models/user_account_privilege_assignment.sql;
+\i core/user_account/xm/models/user_account_role_privilege_assignment.sql;
+\i core/user_account/xm/models/user_account_info.sql;
 \i core/user_account/xm/models/user_account.sql;
 
 -- core/characteristic xm models
 \i core/characteristic/xm/models/characteristic.sql;
+\i core/characteristic/xm/models/characteristic_assignment.sql;
 \i core/characteristic/xm/models/characteristic_option.sql;
 
 -- core/comment xm views
@@ -140,8 +148,8 @@
 \i core/site/xm/models/site.sql;
 
 -- core/unit xm models
-\i core/unit/xm/models/unit.sql;
 \i core/unit/xm/models/unit_conversion.sql;
+\i core/unit/xm/models/unit.sql;
 -- [ END ] core
 
 -- [ START ] business
@@ -167,6 +175,7 @@
 \i business/account/incident/xm/models/incident_info.sql;
 \i business/account/incident/xm/models/incident_resolution.sql;
 \i business/account/incident/xm/models/incident_severity.sql;
+\i business/account/incident/xm/models/incident_document.sql;
 \i business/account/incident/xm/models/incident.sql;
 
 -- business/account/opportunity tables
@@ -188,18 +197,22 @@
 \i business/employee/private/tables/datatype.sql;
 
 -- business/project xm models
+\i business/project/xm/models/project_info.sql;
 \i business/project/xm/models/project_comment.sql;
 \i business/project/xm/models/project_document.sql;
-\i business/project/xm/models/project_info.sql;
 \i business/project/xm/models/project_task_alarm.sql;
 \i business/project/xm/models/project_task_comment.sql;
 \i business/project/xm/models/project_task.sql;
 \i business/project/xm/models/project.sql;
 
+-- business/to_do tables
+\i business/todo/private/tables/datatype.sql;
+
 -- business/todo xm models
-\i business/todo/xm/models/todo_alarm.sql;
-\i business/todo/xm/models/todo_comment.sql;
-\i business/todo/xm/models/todo_info.sql;
-\i business/todo/xm/models/todo.sql;
+\i business/todo/xm/models/to_do_alarm.sql;
+\i business/todo/xm/models/to_do_comment.sql;
+\i business/todo/xm/models/to_do_document.sql;
+\i business/todo/xm/models/to_do_info.sql;
+\i business/todo/xm/models/to_do.sql;
 
 -- [ END ] business

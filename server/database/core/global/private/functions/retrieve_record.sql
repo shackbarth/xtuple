@@ -180,7 +180,7 @@ create or replace function private.retrieve_record(record_type text, id integer)
   rec = executeSql(sql, [ id ]);
 
   /* return the results */
-  return JSON.stringify(normalize(nameSpace, recordType, rec[0]));
+  return rec.length ? JSON.stringify(normalize(nameSpace, recordType, rec[0])) : '{ "error":"Record Not Found" }';
 
 $$ language plv8;
 /*

@@ -1,17 +1,17 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
-'address_characteristic', 'public', 'charass',
+'address_characteristic', '', 'xm.characteristic_assignment',
 
 -- Columns
 
 E'{
-  "charass.charass_id as guid",
-  "charass.charass_target_id as address",
-  "charass.charass_char_id as characteristic",
-  "charass.charass_value as value"}',
-     
+  "characteristic_assignment.guid as guid",
+  "characteristic_assignment.target as address",
+  "characteristic_assignment.characteristic",
+  "characteristic_assignment.value"}',
+
 -- Rules
 
 E'{"
@@ -21,12 +21,12 @@ E'{"
 create or replace rule \\"_CREATE\\" as on insert to xm.address_characteristic 
   do instead
 
-insert into public.charass (
-  charass_id,
-  charass_target_id,
-  charass_target_type,
-  charass_char_id,
-  charass_value )
+insert into xm.characteristic_assignment (
+  guid,
+  target,
+  target_type,
+  characteristic,
+  value )
 values (
   new.guid,
   new.address,
@@ -38,24 +38,25 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.address_characteristic do instead
+create or replace rule \\"_UPDATE\\" as on update to xm.address_characteristic 
+  do instead
 
-update public.charass set
-  charass_char_id = new.characteristic,
-  charass_value = new.value
-where ( charass_id = old.guid );
+update xm.characteristic_assignment set
+  characteristic = new.characteristic,
+  value = new.value
+where ( guid = old.guid );
 
 ","
 
 -- delete rule
 
-create or replace rule \\"_DELETE\\" as on delete to xm.address_characteristic do instead
+create or replace rule \\"_DELETE\\" as on delete to xm.address_characteristic 
+  do instead
 
-delete from public.charass 
-where ( charass_id = old.guid );
+delete from xm.characteristic_assignment 
+where ( guid = old.guid );
 
 "}', 
 
--- Conditions, Comment, System
-
-E'{"charass_target_type = \'ADDR\'"}', 'Address Characteristic Model', true, true);
+-- Conditions, Comment, System, Nested
+E'{"target_type = \'ADDR\'"}', 'Address Characteristic Model', true, true);

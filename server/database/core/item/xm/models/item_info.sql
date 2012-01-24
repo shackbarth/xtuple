@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -40,4 +40,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.item_info
 
 -- Conditions, Comment, System, Nested
 
-'{}', 'Item Info Model', true, true);
+E'{"checkPrivilege(\'ViewItemMasters\')"}', 'Item Info Model', true, true);

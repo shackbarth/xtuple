@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,15 +11,14 @@ E'{
   "uom.uom_name as name",
   "uom.uom_descrip as description",
   "uom.uom_item_weight as is_item_weight",
-  "btrim(array(
-    select uomconv_id
-    from uomconv
-    where uom.uom_id = uomconv_from_uom_id
+  "array(
+    select unit_conversion
+    from xm.unit_conversion
+    where from_unit = uom.uom_id
     union all
-    select uomconv_id
-    from uomconv
-    where uom.uom_id = uomconv_to_uom_id
-    )::text,\'{}\') as conversions"
+    select unit_conversion
+    from xm.unit_conversion
+    where to_unit = uom.uom_id) as conversions"
 }',
 
 -- Rules

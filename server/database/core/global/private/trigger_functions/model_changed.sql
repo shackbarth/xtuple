@@ -20,7 +20,7 @@ begin
   end if;
 
   -- Drop the view, a text array of dependent view model names will be returned 
-  m_names := private.drop_xm_view(m_name);
+  m_names := private.drop_model_view(m_name);
 
    -- Determine whether to rebuild
   if tg_op in ('UPDATE', 'DELETE') then
@@ -47,7 +47,7 @@ begin
   -- Loop through model names and create
   for i in 1..array_upper(m_names, 1)
   loop
-    perform private.create_xm_view(m_names[i]);
+    perform private.create_model_view(m_names[i]);
   end loop;
   
   -- Finish up

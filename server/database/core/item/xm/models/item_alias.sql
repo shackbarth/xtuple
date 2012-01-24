@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -89,6 +89,6 @@ create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.item_alias
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
 '{}', 'Item Alias Model', true, true);

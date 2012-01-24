@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -73,12 +73,12 @@ values (
   coalesce(new.actual_hours, 0.0),
   coalesce(new.budgeted_expenses, 0.00),
   coalesce(new.actual_expenses, 0.00),
-  new.owner,
+  (new.owner).username,
   new.start_date,
   new.due_date,
   new.assign_date,
   new.complete_date,
-  new.assign_to );
+  (new.assign_to).username );
 
 ","
 
@@ -155,6 +155,6 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project_task
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Order, Comment, System
 
-'{}', 'Project Task Model', true, true);
+'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true);

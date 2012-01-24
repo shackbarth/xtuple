@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -32,6 +32,13 @@ values (
 
 ","
   
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.site_type 
+   where not checkPrivilege(\'MaintainSiteTypes\') do instead
+
+  select private.raise_exception(\'You do not have privileges to create this Site Type\');
+
+","
+
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.site_type
@@ -44,6 +51,13 @@ where ( sitetype_id = old.guid );
 
 ","
   
+create or replace rule \\"_CREATE_CHECK_PRIV\\" as on update to xm.site_type 
+   where not checkPrivilege(\'MaintainSiteTypes\') do instead
+
+  select private.raise_exception(\'You do not have privileges to update this Site Type\');
+
+","
+
 -- delete rules
 
 create or replace rule \\"_DELETE\\" as on delete to xm.site_type   
@@ -56,4 +70,4 @@ where ( sitetype_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Site Type Model', true);
+E'{"checkPrivilege(\'ViewSiteTypes\')"}', 'Site Type Model', true, true);

@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema
 
@@ -7,7 +7,7 @@
 -- table
 
 E'(select
-    docass_id as guid,
+    docass_id as id,
     docass_source_id as source_id,
     docass_target_id as target_id,
     st.datatype_id as source_type,
@@ -19,11 +19,11 @@ E'(select
    union all
    -- (inverse)
    select
-    docass_id as guid,
+    docass_id as id,
     docass_target_id as source_id,
     docass_source_id as target_id,
-    tt.datatype_id as source_type,
-    st.datatype_id as target_type,
+    st.datatype_id as source_type,
+    tt.datatype_id as target_type,
     case 
      when docass_purpose = \'A\' then \'C\'
      when docass_purpose = \'C\' then \'A\'
@@ -35,7 +35,7 @@ E'(select
    union all
    -- images
    select
-    imageass_id as guid,
+    imageass_id as id,
     imageass_source_id as source_id,
     imageass_id as target_id,
     st.datatype_id as source_type,
@@ -48,7 +48,7 @@ E'(select
 -- Columns
 
 E'{
-  "documents.guid as guid",
+  "documents.id as id",
   "documents.source_id as source",
   "documents.target_id as target",
   "documents.source_type as source_type",
@@ -64,7 +64,9 @@ E'{"
 
 create or replace rule \\"_CREATE\\" as on insert to xm.document_assignment 
   do instead nothing;
-  
+
+","
+
 create or replace rule \\"_CREATE_DOC\\" as on insert to xm.document_assignment 
   where new.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
@@ -76,12 +78,14 @@ insert into public.docass (
   docass_target_type,
   docass_purpose )
 values (
-  new.guid,
+  new.id,
   new.source,
   private.get_datatype_source(new.source_type),
   new.target,
   private.get_datatype_source(new.target_type),
   new.purpose );
+
+","
 
 create or replace rule \\"_CREATE_IMG\\" as on insert to xm.document_assignment 
   where new.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
@@ -93,33 +97,41 @@ insert into public.imageass (
   imageass_image_id,
   imageass_purpose )
 values (
-  new.guid,
+  new.id,
   new.source,
   private.get_datatype_source(new.source_type),
   new.target,
   new.purpose );
+
+","
 
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.document_assignment 
   do instead nothing;
 
+","
+
 -- delete rules
 
 create or replace rule \\"_DELETE\\" as on delete to xm.document_assignment
   do instead nothing;
+
+","
   
 create or replace rule \\"_DELETE_DOC\\" as on delete to xm.document_assignment
   where old.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.docass 
-where ( docass_id = old.guid );
+where ( docass_id = old.id );
+
+","
 
 create or replace rule \\"_DELETE_IMG\\" as on delete to xm.document_assignment
   where old.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.imageass
-where ( imageass_id = old.guid );
+where ( imageass_id = old.id );
 
 "}',
 

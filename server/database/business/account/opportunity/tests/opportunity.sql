@@ -1,4 +1,4 @@
-﻿-- used to verify that any changes to xm.opportunity are promulgated to the ophead table
+-- used to verify that any changes to xm.opportunity are promulgated to the ophead table
 SELECT *
   FROM ophead;
 
@@ -12,11 +12,11 @@ INSERT INTO xm.opportunity (
   probability,
   source,
   stage,
-  "type",
+  opportunity_type,
   assign_date,
-  assign_to,
-  complete_date,
-  due_date,
+  assigned_to,
+  actual_close,
+  target_close,
   is_active,
   "name",
   notes,
@@ -26,22 +26,22 @@ INSERT INTO xm.opportunity (
   "number")
 VALUES (
   99999,
- (select min(crmacct_id) from crmacct),
+ (select account_info from xm.account_info order by guid limit 1),
   999.99,
-  (select min(cntct_id) from cntct),
+  (select contact_info from xm.contact_info order by guid limit 1),
   1,
   99,
   1,
   1,
   1,
   NULL,
-  'admin',
+  (select user_account_info from xm.user_account_info where username='admin'),
   NULL,
   NULL,
   true,
   'XM.Opportunity View - Insert Test',
   'Testing...Testing...Testing...Testing',
-  'admin',
+  (select user_account_info from xm.user_account_info where username='admin'),
   1,
   NULL,
   '99999');
@@ -52,22 +52,22 @@ SELECT *
 
 -- used to exercise the update rule for the xm.opportunity view
 UPDATE xm.opportunity
-   SET account		=(select min(crmacct_id) from crmacct) + 1,
+   SET account		=(select account_info from xm.account_info order by guid desc limit 1),
        amount		= 8888.88,
-       contact		= 25,
+       contact		= (select contact_info from xm.contact_info order by guid desc limit 1),
        currency		= 2,
        probability	= 0,
        source		= 1,
        stage		= 3,
-       "type"		= 1,
+       opportunity_type	= 1,
        assign_date	= now(),
-       assign_to	= 'mwall',
-       complete_date	= now() + interval '10 days',
-       due_date		= now() + interval '30 days',
+       assigned_to	= null,
+       actual_close	= now() + interval '10 days',
+       target_close	= now() + interval '30 days',
        is_active	= false,
        "name"		= '**XM.Opportunity View - Update Test**',
        notes		= 'Update notes...',
-       "owner"		= 'mwall',
+       "owner"		= null,
        priority		= 2,
        start_date	= now() + interval '2 days'
  WHERE guid = 99999;

@@ -14,6 +14,8 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
 /** @scope XM.ToDo.prototype */ {
 
   className: 'XM.ToDo',
+  
+  nestedRecordNamespace: XM,
 
   createPrivilege: 'MaintainPersonalToDoItems MaintainAllToDoItems'.w(),
   readPrivilege:   'ViewPersonalToDoItems ViewAllToDoItems',
@@ -31,9 +33,11 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   description: SC.Record.attr(String),
   
   /**
-  @type XM.Contact
+  @type XM.ContactInfo
   */
-  contact: SC.Record.toOne('XM.Contact'),
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: YES
+  }),
   
   /**
   @type String
@@ -51,35 +55,53 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   /**
   @type SC.DateTime
   */
-  startDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  startDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
   
   /**
   @type SC.DateTime
   */
-  dueDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  dueDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
   
   /**
   @type SC.DateTime
   */
-  assignDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  assignDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
   
   /**
   @type SC.DateTime
   */
-  completeDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  completeDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
     
   /**
   @type XM.ToDoAlarm
   */
   alarms: SC.Record.toMany('XM.ToDoAlarm', { 
-    inverse: 'toDo' ,
+    isNested: YES,
+    inverse: 'toDo'
   }),
   
   /**
   @type XM.ToDoComment
   */
   comments: XM.Record.toMany('XM.ToDoComment', { 
-    inverse: 'toDo' ,
+    isNested: YES,
+    inverse: 'toDo'
+  }),
+  
+  /**
+  @type XM.ToDoDocument
+  */
+  documents: XM.Record.toMany('XM.ToDoDocument', { 
+    isNested: YES,
+    inverse: 'toDo'
   })
 
 });

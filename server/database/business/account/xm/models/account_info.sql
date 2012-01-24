@@ -37,4 +37,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.account_info
 "}', 
 
 -- Conditions, Comment, System
-'{}', 'Account Info Model', true);
+'{}', 'Account Info Model', true, true);

@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 'item_conversion', 'public', 'itemuomconv',
@@ -65,6 +65,6 @@ where ( itemuomconv_id = old.guid );
 
 "}',
 
--- Conditions, Comment, System
+-- Conditions, Comment, System, Nested
 
 '{}', 'Item Conversion Model', true, true);

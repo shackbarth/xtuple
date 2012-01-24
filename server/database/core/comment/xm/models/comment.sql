@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema 
 
@@ -97,6 +97,6 @@ create or replace rule \\"_DELETE\\" as on delete to xm.comment
 
 "}',
 
--- Conditions, Comment, System, Nested
+-- Conditions, Order, Comment, System, Nested
 
-'{}', 'Comment Model', true);
+'{}', '{"date desc"}', 'Comment Model', true, true);

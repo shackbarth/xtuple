@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -201,7 +201,7 @@ delete from itemcost
 where (itemcost_item_id = old.guid);
 
 delete from xm.document_assignment
-where (guid = old.guid);
+where (id = old.guid);
 
 delete from item
  where (item_id = old.guid);

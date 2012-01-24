@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -68,4 +68,4 @@ where ( grp_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'User Account Role Model', true);
+'{}', 'User Account Role Model', true, true);
