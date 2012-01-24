@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - xt.io</title>
+		<title>JsDoc Reference - xt.sessionStore</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -254,7 +254,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace xt.io
+				Class xt.sessionStore
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -262,22 +262,17 @@ ul.inheritsList
 				
 				
 			
-				All functionality for input/output to logs or console reporting
-  is included in this namespace. Filesystem manipulation is also
-  pulled into this namespace for consistency but can also be used
-  directly.
-  
-  This is only partially implemented but abstracted for extension.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_io.js.html">io.js</a>.
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_server_ext_session_store.js.html">session_store.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.io.">
-				<caption>Namespace Summary</caption>
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.sessionStore.">
+				<caption>Class Summary</caption>
 				<thead>
 					<tr>
 						<th scope="col">Constructor Attributes</th>
@@ -289,7 +284,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/xt.io.html#constructor">xt.io</a></b>
+								<b><a href="../symbols/xt.sessionStore.html#constructor">xt.sessionStore</a></b>()
 							</div>
 							<div class="description"></div>
 						</td>
@@ -300,12 +295,50 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class xt.sessionStore.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.sessionStore.html#ipSessions">ipSessions</a></b>
+								</div>
+								<div class="description">Redundant storage of sessions by client ip address.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.sessionStore.html#sessions">sessions</a></b>
+								</div>
+								<div class="description">Storage of actual sessions.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class xt.io.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class xt.sessionStore.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -316,84 +349,60 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.buff">buff</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.sessionStore.html#createSession">createSession</a></b>(info)
 								</div>
-								<div class="description">Returns a new string buffer.</div>
+								<div class="description">Creates a new session with the given client information.</div>
 							</td>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.debug">debug</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.sessionStore.html#exists">exists</a></b>(sid)
 								</div>
-								<div class="description"></div>
+								<div class="description">Tests to see if an active session exists for the
+    passed session id (hash).</div>
 							</td>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.dev">dev</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.sessionStore.html#removeSession">removeSession</a></b>(sid, info)
 								</div>
-								<div class="description"></div>
+								<div class="description">Removes a session from the internal store once it has
+    been deactivated or become inactive.</div>
 							</td>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.err">err</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.sessionStore.html#sessionFromInfo">sessionFromInfo</a></b>(info)
 								</div>
-								<div class="description"></div>
+								<div class="description">Attempts to retrieve an active session object from the
+    given client data hash.</div>
 							</td>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.inspect">inspect</a></b>(args)
+								<div class="fixedFont"><b><a href="../symbols/xt.sessionStore.html#sessionFromSid">sessionFromSid</a></b>(sid)
 								</div>
-								<div class="description">Inspects arguments and returns them for output still
-    in an array.</div>
+								<div class="description">Attempts to retrieve an active session object from the
+    given session id.</div>
 							</td>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.log">log</a></b>(args)
+								<div class="fixedFont"><b><a href="../symbols/xt.sessionStore.html#validate">validate</a></b>(ses)
 								</div>
-								<div class="description">For general logging to console use this method.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.out">out</a></b>()
-								</div>
-								<div class="description">Reference to stdout.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.report">report</a></b>()
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">xt.io.<b><a href="../symbols/xt.io.html#.warn">warn</a></b>()
-								</div>
-								<div class="description"></div>
+								<div class="description">Validates a session.</div>
 							</td>
 						</tr>
 					
@@ -410,11 +419,11 @@ ul.inheritsList
 			
 			<div class="details"><a name="constructor"> </a>
 				<div class="sectionTitle">
-					Namespace Detail
+					Class Detail
 				</div>
 				
 				<div class="fixedFont">
-						<b>xt.io</b>
+						<b>xt.sessionStore</b>()
 				</div>
 				
 				<div class="description">
@@ -438,6 +447,56 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="ipSessions"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>ipSessions</b>
+					
+					</div>
+					<div class="description">
+						Redundant storage of sessions by client ip address.
+    Allows many sessions on the same ip.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="sessions"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>sessions</b>
+					
+					</div>
+					<div class="description">
+						Storage of actual sessions.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
 			
@@ -445,125 +504,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name=".buff"> </a>
-					<div class="fixedFont">&lt;static&gt; 
+					<a name="createSession"> </a>
+					<div class="fixedFont">
 					
-					<span class="light">{Object}</span>
-					<span class="light">xt.io.</span><b>buff</b>()
-					
-					</div>
-					<div class="description">
-						Returns a new string buffer. Since these methods may be called
-    asynchronously we can never be sure who might be using a shared
-    buffer so we're relying on the GC to pick-up after us.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{Object}</span> A new string buffer.</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name=".debug"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">xt.io.</span><b>debug</b>()
+					<span class="light">{<a href="../symbols/xt.session.html">xt.session</a>}</span>
+					<b>createSession</b>(info)
 					
 					</div>
 					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name=".dev"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">xt.io.</span><b>dev</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name=".err"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">xt.io.</span><b>err</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name=".inspect"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					<span class="light">{<a href="../symbols/Array.html">Array</a>}</span>
-					<span class="light">xt.io.</span><b>inspect</b>(args)
-					
-					</div>
-					<div class="description">
-						Inspects arguments and returns them for output still
-    in an array.
+						Creates a new session with the given client information.
 						
 						
 					</div>
@@ -575,10 +524,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Object}</span> <b>args</b>
+									<span class="light fixedFont">{Object}</span> <b>info</b>
 									
 								</dt>
-								<dd>Variable number of arguments to inspect</dd>
+								<dd>The client information hash.</dd>
 							
 							</dl>
 						
@@ -589,7 +538,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/Array.html">Array</a>}</span> An array of the arguments having been inspected</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/xt.session.html">xt.session</a>}</span> A xt.session object.</dd>
 							
 							</dl>
 						
@@ -598,20 +547,16 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name=".log"> </a>
-					<div class="fixedFont">&lt;static&gt; 
+					<a name="exists"> </a>
+					<div class="fixedFont">
 					
-					
-					<span class="light">xt.io.</span><b>log</b>(args)
+					<span class="light">{Boolean}</span>
+					<b>exists</b>(sid)
 					
 					</div>
 					<div class="description">
-						For general logging to console use this method. It takes
-    any number of arguments and attempts to push them to the
-    output buffer in some meaningful way. For objects it uses
-    any `toString` method available or does not print the object.
-    For debugging output (for inspection of objects) and data that
-    should not display during production use `debug`.
+						Tests to see if an active session exists for the
+    passed session id (hash).
 						
 						
 					</div>
@@ -623,50 +568,12 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Object}</span> <b>args</b>
-									<i>Optional</i>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>sid</b>
+									
 								</dt>
-								<dd>Any number of arguments of any type.</dd>
+								<dd>The session id.</dd>
 							
 							</dl>
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>xt#io#debug</dd>
-							
-								<dd>xt#io#dev</dd>
-							
-								<dd>xt#io#err</dd>
-							
-								<dd>xt#io#warn</dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name=".out"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					<span class="light">{Object}</span>
-					<span class="light">xt.io.</span><b>out</b>()
-					
-					</div>
-					<div class="description">
-						Reference to stdout.
-						
-						
-					</div>
-					
-					
-					
 						
 						
 						
@@ -675,7 +582,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object}</span> Stream stdout.</dd>
+								<dd><span class="light fixedFont">{Boolean}</span> YES|NO if the session does exist.</dd>
 							
 							</dl>
 						
@@ -684,15 +591,16 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name=".report"> </a>
-					<div class="fixedFont">&lt;static&gt; 
+					<a name="removeSession"> </a>
+					<div class="fixedFont">
 					
-					
-					<span class="light">xt.io.</span><b>report</b>()
+					<span class="light">{Boolean}</span>
+					<b>removeSession</b>(sid, info)
 					
 					</div>
 					<div class="description">
-						
+						Removes a session from the internal store once it has
+    been deactivated or become inactive.
 						
 						
 					</div>
@@ -700,24 +608,49 @@ ul.inheritsList
 					
 					
 						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>sid</b>
+									
+								</dt>
+								<dd>The session id.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>info</b>
+									
+								</dt>
+								<dd>The client information data hash.</dd>
+							
+							</dl>
 						
 						
 						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Boolean}</span> Returns YES|NO on success/failure respectively.</dd>
+							
+							</dl>
 						
 						
 						
 
 					<hr />
 				
-					<a name=".warn"> </a>
-					<div class="fixedFont">&lt;static&gt; 
+					<a name="sessionFromInfo"> </a>
+					<div class="fixedFont">
 					
-					
-					<span class="light">xt.io.</span><b>warn</b>()
+					<span class="light">{<a href="../symbols/xt.session.html">xt.session</a>}</span>
+					<b>sessionFromInfo</b>(info)
 					
 					</div>
 					<div class="description">
-						
+						Attempts to retrieve an active session object from the
+    given client data hash.
 						
 						
 					</div>
@@ -725,9 +658,117 @@ ul.inheritsList
 					
 					
 						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>info</b>
+									
+								</dt>
+								<dd>The client information data hash.</dd>
+							
+							</dl>
 						
 						
 						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/xt.session.html">xt.session</a>}</span> The active session object or null if none exists.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="sessionFromSid"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/xt.session.html">xt.session</a>}</span>
+					<b>sessionFromSid</b>(sid)
+					
+					</div>
+					<div class="description">
+						Attempts to retrieve an active session object from the
+    given session id.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>sid</b>
+									
+								</dt>
+								<dd>The session id hash.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/xt.session.html">xt.session</a>}</span> The active session object or null if none exists.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="validate"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Boolean}</span>
+					<b>validate</b>(ses)
+					
+					</div>
+					<div class="description">
+						Validates a session. Can take a xt session object or a
+    session id to determine if the session exists and is
+    currently valid. Returns false if the session cannot
+    be found.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>|<a href="../symbols/xt.session.html">xt.session</a>}</span> <b>ses</b>
+									
+								</dt>
+								<dd>The session id or xt session object.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Boolean}</span> YES|NO on whether the session is active and valid or not.</dd>
+							
+							</dl>
 						
 						
 						

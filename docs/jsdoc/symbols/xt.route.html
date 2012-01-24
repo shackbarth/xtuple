@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - xt.proto</title>
+		<title>JsDoc Reference - xt.route</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -254,7 +254,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace xt.proto
+				Namespace xt.route
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -262,20 +262,18 @@ ul.inheritsList
 				
 				
 			
-				The proto namespace is a mixture of common prototypal modifications
-  to core JavaScript (and a few others) objects. They are placed here
-  to be included for the entire application to make use of. These 
-  features are generally convenience methods that have been tested in
-  the context of their use in this application only.
+				Routes provide custom handling for specific paths designated as 
+  valid requests from clients. They have custom implementations of
+  handlers for the generated xt response objects.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_server_ext_route.js.html">route.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.proto.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.route.">
 				<caption>Namespace Summary</caption>
 				<thead>
 					<tr>
@@ -288,7 +286,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/xt.proto.html#constructor">xt.proto</a></b>
+								<b><a href="../symbols/xt.route.html#constructor">xt.route</a></b>
 							</div>
 							<div class="description"></div>
 						</td>
@@ -299,8 +297,64 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class xt.route.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.route.html#routes">routes</a></b>
+								</div>
+								<div class="description">Routes have a list of the paths they handle.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
 
 <!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class xt.route.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.route.html#handle">handle</a></b>(xtr)
+								</div>
+								<div class="description">If a router matches a requested path to this route it will call this
+    method on the route and pass it the generated xt response object.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
 			
 <!-- ============================== events summary ======================== -->
 			
@@ -313,7 +367,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>xt.proto</b>
+						<b>xt.route</b>
 				</div>
 				
 				<div class="description">
@@ -337,8 +391,81 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="routes"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>routes</b>
+					
+					</div>
+					<div class="description">
+						Routes have a list of the paths they handle. For now the paths are
+    hard-coded for efficient matching but can/should be extended in the
+    future to be more versatile.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="handle"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>handle</b>(xtr)
+					
+					</div>
+					<div class="description">
+						If a router matches a requested path to this route it will call this
+    method on the route and pass it the generated xt response object. Routes
+    have custom implementations depending on their purpose so the request
+    should be specific to the type of route handler.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>xtr</b>
+									
+								</dt>
+								<dd>The xt response object.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
 			
 			
 <!-- ============================== event details ========================= -->		

@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - xt.proto</title>
+		<title>JsDoc Reference - xt.router</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -254,7 +254,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace xt.proto
+				Namespace xt.router
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -262,20 +262,20 @@ ul.inheritsList
 				
 				
 			
-				The proto namespace is a mixture of common prototypal modifications
-  to core JavaScript (and a few others) objects. They are placed here
-  to be included for the entire application to make use of. These 
-  features are generally convenience methods that have been tested in
-  the context of their use in this application only.
+				Routers provide a mechanism (and the possibility for) custom handling for
+  specific types of requests. They are instanced and used by individual
+  servers to handle their incoming requests. In their most basic form routers
+  are comprised of a single-entry API (handle) that the server passes the
+  opened server response object and the native server request object.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_server_ext_router.js.html">router.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.proto.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.router.">
 				<caption>Namespace Summary</caption>
 				<thead>
 					<tr>
@@ -288,7 +288,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/xt.proto.html#constructor">xt.proto</a></b>
+								<b><a href="../symbols/xt.router.html#constructor">xt.router</a></b>
 							</div>
 							<div class="description"></div>
 						</td>
@@ -299,8 +299,73 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class xt.router.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.router.html#routes">routes</a></b>
+								</div>
+								<div class="description">Routes is an array of xt route objects.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
 
 <!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class xt.router.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.router.html#handle">handle</a></b>(res, req)
+								</div>
+								<div class="description">This method is called by servers to handle incoming requests.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.router.html#route">route</a></b>(xtr)
+								</div>
+								<div class="description">This method is used by the router to determine if it knows of any
+    routes capable of handling the request.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
 			
 <!-- ============================== events summary ======================== -->
 			
@@ -313,7 +378,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>xt.proto</b>
+						<b>xt.router</b>
 				</div>
 				
 				<div class="description">
@@ -337,8 +402,122 @@ ul.inheritsList
 
 <!-- ============================== field details ========================== -->		
 			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="routes"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>routes</b>
+					
+					</div>
+					<div class="description">
+						Routes is an array of xt route objects.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
+			
 
 <!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="handle"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>handle</b>(res, req)
+					
+					</div>
+					<div class="description">
+						This method is called by servers to handle incoming requests.
+    It creates a xt response object that in turn emits an event on the
+    router to execute the route when it is ready.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>res</b>
+									
+								</dt>
+								<dd>The server response object.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>req</b>
+									
+								</dt>
+								<dd>The server request object.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="route"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>route</b>(xtr)
+					
+					</div>
+					<div class="description">
+						This method is used by the router to determine if it knows of any
+    routes capable of handling the request. While it can be overloaded
+    it should generally not be modified or called directly.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>xtr</b>
+									
+								</dt>
+								<dd>The xt response object.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
 			
 			
 <!-- ============================== event details ========================= -->		

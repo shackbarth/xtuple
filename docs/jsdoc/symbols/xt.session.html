@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - String</title>
+		<title>JsDoc Reference - xt.session</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -254,7 +254,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Built-In Namespace String
+				Class xt.session
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -262,12 +262,61 @@ ul.inheritsList
 				
 				
 			
+				Session objects are nothing more than context containers. They
+  are created once a client requests a session and is validated
+  as a current/active user. Active sessions enable the queries
+  to be executed as the correct database user (for privilege
+  enforcement), tracking and additional automated events that
+  use the current user (triggers).
+
+  <p></p>
+
+  Sessions are fairly dumb objects that are acted on by the
+  session store. They have a limited API and automatically
+  generate query prefixes for the user assigned to them while
+  also supplying a special callback during queries. Queries
+  are executed under the context of the session to which they
+  belong and this gives access to the xt response object
+  supplied during client requests and allows for the callback
+  to write to the correct client.
+
+  <p></p>
+*WARNING**
+
+  <p></p>
+
+  In this pass (as of 01/24/2012) sessions are very unsecure.
+  An effort will be made to clean up this process but as such
+  they are volatile and the API is expected to change
+  dramatically in the future.
 				
 				
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_server_ext_session.js.html">session.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.session.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/xt.session.html#constructor">xt.session</a></b>()
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 			
 
 <!-- ============================== properties summary ===================== -->
@@ -277,7 +326,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class String.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class xt.session.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -288,47 +337,39 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#capitalize">capitalize</a></b>()
+								<div class="fixedFont">xt.session.<b><a href="../symbols/xt.session.html#.hash">hash</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns a unique hash for a particular session.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#f">f</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.session.html#isActive">isActive</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Returns whether or not the current session is still active.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#format">format</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.session.html#query">query</a></b>(query, xtr, func)
 								</div>
-								<div class="description"></div>
+								<div class="description">Allows queries to be run correctly according to their
+    active session information.</div>
 							</td>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#pre">pre</a></b>()
+								<div class="fixedFont">xt.session.<b><a href="../symbols/xt.session.html#.time">time</a></b>()
 								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#trim">trim</a></b>()
-								</div>
-								<div class="description"></div>
+								<div class="description">Returns the current UTC time.</div>
 							</td>
 						</tr>
 					
@@ -343,6 +384,61 @@ ul.inheritsList
 
 <!-- ============================== constructor details ==================== -->		
 			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>xt.session</b>()
+				</div>
+				
+				<div class="description">
+					
+					
+				</div>
+				
+				
+				
+				<pre class="code">    
+    // this is unrealistic because sessions are created
+    // automatically on client requests not manually but
+    // for the sake of example...
+    var s = xt.session.create({ 
+      info: { user: 'cole', ip: '127.0.0.1' }
+    });
+
+    // note that the query will be prefixed properly
+    // automatically to ensure it is executed in the correct
+    // context of the appropriate user
+    // also note that error handling is already dealt with
+    // by the session object so the callback will only
+    // be executed when errors do not exist
+    s.query('select * from public.incdt', function(r) {
+
+      // inside the callback we are in the context of the
+      // session and can request the xt response object (xtr)
+      var xtr = this.get('xtr');
+      
+      // write some response from the successfully executed
+      // query directly back to the client as the payload
+      // of the response and close the response object
+      xtr.write(xt.json(r)).close();
+    });</pre>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
 
 <!-- ============================== field details ========================== -->		
 			
@@ -353,88 +449,85 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="capitalize"> </a>
-					<div class="fixedFont">
+					<a name=".hash"> </a>
+					<div class="fixedFont">&lt;static&gt; 
 					
-					
-					<b>capitalize</b>()
+					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
+					<span class="light">xt.session.</span><b>hash</b>()
 					
 					</div>
 					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+						Returns a unique hash for a particular session.
 						
 						
 					</div>
 					
 					
 					
-						
-						
 						
 						
 						
 						
 						
 							<dl class="detailList">
-							<dt class="heading">See:</dt>
+							<dt class="heading">Returns:</dt>
 							
-								<dd>xt.string.capitalize</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> The hash for the session.</dd>
 							
 							</dl>
+						
+						
 						
 
 					<hr />
 				
-					<a name="f"> </a>
+					<a name="isActive"> </a>
 					<div class="fixedFont">
 					
-					
-					<b>f</b>()
+					<span class="light">{Boolean}</span>
+					<b>isActive</b>()
 					
 					</div>
 					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+						Returns whether or not the current session is still active.
 						
 						
 					</div>
 					
 					
 					
-						
-						
 						
 						
 						
 						
 						
 							<dl class="detailList">
-							<dt class="heading">See:</dt>
+							<dt class="heading">Returns:</dt>
 							
-								<dd>xt.string.format</dd>
+								<dd><span class="light fixedFont">{Boolean}</span> YES|NO on session active status.</dd>
 							
 							</dl>
+						
+						
 						
 
 					<hr />
 				
-					<a name="format"> </a>
+					<a name="query"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>format</b>()
+					<b>query</b>(query, xtr, func)
 					
 					</div>
 					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+						Allows queries to be run correctly according to their
+    active session information. If the callback function
+    is not provided the open server response object will
+    automatically be closed with no bytes written to the
+    client. The callback will be executed within the context
+    of the session object and allows the use of this inside
+    to retrieve the xt response object or other properties.
 						
 						
 					</div>
@@ -442,88 +535,66 @@ ul.inheritsList
 					
 					
 						
-						
-						
-						
-						
-						
-						
 							<dl class="detailList">
-							<dt class="heading">See:</dt>
+							<dt class="heading">Parameters:</dt>
 							
-								<dd>xt.string.format</dd>
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>query</b>
+									
+								</dt>
+								<dd>The query string to execute under the session.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/xt.response.html">xt.response</a>}</span> <b>xtr</b>
+									
+								</dt>
+								<dd>The xt response object.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>func</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The callback for completed queries.</dd>
 							
 							</dl>
+						
+						
+						
+						
+						
+						
 						
 
 					<hr />
 				
-					<a name="pre"> </a>
-					<div class="fixedFont">
+					<a name=".time"> </a>
+					<div class="fixedFont">&lt;static&gt; 
 					
-					
-					<b>pre</b>()
+					<span class="light">{Integer}</span>
+					<span class="light">xt.session.</span><b>time</b>()
 					
 					</div>
 					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+						Returns the current UTC time.
 						
 						
 					</div>
 					
 					
 					
-						
-						
 						
 						
 						
 						
 						
 							<dl class="detailList">
-							<dt class="heading">See:</dt>
+							<dt class="heading">Returns:</dt>
 							
-								<dd>xt.string.pre</dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="trim"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>trim</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>xt.string.trim</dd>
+								<dd><span class="light fixedFont">{Integer}</span> The UTC current time in milliseconds.</dd>
 							
 							</dl>
+						
+						
 						
 
 					

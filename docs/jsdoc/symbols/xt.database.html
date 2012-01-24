@@ -191,17 +191,31 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/Array.html">Array</a></li>
+	
+	<li><a href="../symbols/Function.html">Function</a></li>
+	
 	<li><a href="../symbols/String.html">String</a></li>
 	
 	<li><a href="../symbols/xt.html">xt</a></li>
 	
+	<li><a href="../symbols/xt.commitRecord.html">xt.commitRecord</a></li>
+	
 	<li><a href="../symbols/xt.database.html">xt.database</a></li>
 	
+	<li><a href="../symbols/xt.dataRoute.html">xt.dataRoute</a></li>
+	
+	<li><a href="../symbols/xt.dataRouter.html">xt.dataRouter</a></li>
+	
 	<li><a href="../symbols/xt.exception.html">xt.exception</a></li>
+	
+	<li><a href="../symbols/xt.fetch.html">xt.fetch</a></li>
 	
 	<li><a href="../symbols/xt.filesystem.html">xt.filesystem</a></li>
 	
 	<li><a href="../symbols/xt.function.html">xt.function</a></li>
+	
+	<li><a href="../symbols/xt.functor.html">xt.functor</a></li>
 	
 	<li><a href="../symbols/xt.io.html">xt.io</a></li>
 	
@@ -210,6 +224,22 @@ ul.inheritsList
 	<li><a href="../symbols/xt.options.html">xt.options</a></li>
 	
 	<li><a href="../symbols/xt.proto.html">xt.proto</a></li>
+	
+	<li><a href="../symbols/xt.requestSession.html">xt.requestSession</a></li>
+	
+	<li><a href="../symbols/xt.response.html">xt.response</a></li>
+	
+	<li><a href="../symbols/xt.retrieveRecord.html">xt.retrieveRecord</a></li>
+	
+	<li><a href="../symbols/xt.route.html">xt.route</a></li>
+	
+	<li><a href="../symbols/xt.router.html">xt.router</a></li>
+	
+	<li><a href="../symbols/xt.server.html">xt.server</a></li>
+	
+	<li><a href="../symbols/xt.session.html">xt.session</a></li>
+	
+	<li><a href="../symbols/xt.sessionStore.html">xt.sessionStore</a></li>
 	
 	<li><a href="../symbols/xt.string.html">xt.string</a></li>
 	
@@ -236,7 +266,7 @@ ul.inheritsList
   functionality of the framework.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_node_modules_xt_node_modules_database_database.js.html">database.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_database_database.js.html">database.js</a>.
 				
 			</p>
 
@@ -284,18 +314,28 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/xt.database.html#conString">conString</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.database.html#conString">conString</a></b>(user, password, host, port, database)
 								</div>
-								<div class="description">..</div>
+								<div class="description">Takes parameter(s) to construct a PostgreSQL connection
+    string.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/xt.database.html#query">query</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.database.html#defaultString">defaultString</a></b>()
 								</div>
-								<div class="description">..</div>
+								<div class="description">Returns the default connection string for the database.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.database.html#query">query</a></b>(query, callback)
+								</div>
+								<div class="description">Queries the database.</div>
 							</td>
 						</tr>
 					
@@ -350,12 +390,86 @@ ul.inheritsList
 					<a name="conString"> </a>
 					<div class="fixedFont">
 					
-					
-					<b>conString</b>()
+					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
+					<b>conString</b>(user, password, host, port, database)
 					
 					</div>
 					<div class="description">
-						...
+						Takes parameter(s) to construct a PostgreSQL connection
+    string. Can be passed an ordered number of parameters
+    or a hash of key/value entries for the string with the
+    parts user, password, host, port and database (all required).
+    Note, the string contains the password for the given
+    database user!
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object|<a href="../symbols/String.html">String</a>}</span> <b>user</b>
+									
+								</dt>
+								<dd>A hash with all parameters or the username.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>password</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The database password for the user.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>host</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The hostname for the database.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>port</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The port for the database.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>database</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The name of the database to use once connected.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> The formatted connection string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="defaultString"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>defaultString</b>()
+					
+					</div>
+					<div class="description">
+						Returns the default connection string for the database.
+    Typically not useful outside the context of the database
+    controller and should not be accessed globally.
 						
 						
 					</div>
@@ -376,17 +490,42 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					
-					<b>query</b>()
+					<b>query</b>(query, callback)
 					
 					</div>
 					<div class="description">
-						...
+						Queries the database. Expects a ready SQL query string and
+    a valid callback to handle errors and responses. It is important
+    to note that this is not a final state for this method and
+    the API is volatile with a strong likelyhood that it will change
+    dramatically. This method is not intended to be executed
+    arbitrarily but is instead used by xt session objects to
+    execute specific types of queries.
 						
 						
 					</div>
 					
 					
 					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>query</b>
+									
+								</dt>
+								<dd>The SQL query string ready to execute.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
+									
+								</dt>
+								<dd>The callback that can also handle errors.
+      If the callback was passed in from a xt session object then it
+      will be capable of calling `this` from the context of the session.</dd>
+							
+							</dl>
 						
 						
 						
@@ -409,7 +548,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 17:15:29 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Jan 24 2012 11:31:58 GMT-0500 (EST)
 		</div>
 	</body>
 </html>

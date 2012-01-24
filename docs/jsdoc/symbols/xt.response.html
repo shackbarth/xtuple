@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - String</title>
+		<title>JsDoc Reference - xt.response</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -254,7 +254,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Built-In Namespace String
+				Namespace xt.response
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -262,22 +262,130 @@ ul.inheritsList
 				
 				
 			
+				The xt response object provides a mechanism to pass around
+  data from client requests of various types and have methods interact
+  and be able to respond via a single API. It provides a means
+  of inspection of the original server request/response objects
+  but also a means to push back various types of data such as
+  JSON payloads or bitstreams.
 				
 				
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_server_ext_response.js.html">response.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.response.">
+				<caption>Namespace Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/xt.response.html#constructor">xt.response</a></b>
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
 
 <!-- ============================== properties summary ===================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class xt.response.">
+					<caption>Field Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Field Attributes</th>
+							<th scope="col">Field Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.response.html#isOpen">isOpen</a></b>
+								</div>
+								<div class="description">If the server response object can still be written to.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.response.html#payloadData">payloadData</a></b>
+								</div>
+								<div class="description">Any payload data retrieved from the original
+    server request object on initialization.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.response.html#request">request</a></b>
+								</div>
+								<div class="description">The server request object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.response.html#response">response</a></b>
+								</div>
+								<div class="description">The server response object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.response.html#router">router</a></b>
+								</div>
+								<div class="description">The router that owns this response object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/xt.response.html#server">server</a></b>
+								</div>
+								<div class="description">The server that owns the router that owns this
+    response object.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
 			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class String.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class xt.response.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -290,45 +398,27 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#capitalize">capitalize</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.response.html#close">close</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Close the connection to the client.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#f">f</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.response.html#consume">consume</a></b>()
 								</div>
-								<div class="description"></div>
+								<div class="description">Consumes information about the server request.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#format">format</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.response.html#write">write</a></b>()
 								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#pre">pre</a></b>()
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/String.html#trim">trim</a></b>()
-								</div>
-								<div class="description"></div>
+								<div class="description">Explicit write to response stream.</div>
 							</td>
 						</tr>
 					
@@ -343,8 +433,184 @@ ul.inheritsList
 
 <!-- ============================== constructor details ==================== -->		
 			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Namespace Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>xt.response</b>
+				</div>
+				
+				<div class="description">
+					
+					
+				</div>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
 
 <!-- ============================== field details ========================== -->		
+			
+				<div class="sectionTitle">
+					Field Detail
+				</div>
+				
+					<a name="isOpen"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Boolean}</span>
+					<b>isOpen</b>
+					
+					</div>
+					<div class="description">
+						If the server response object can still be written to.
+    Will be YES unless the pipe has been closed. Subsequent
+    requests to close the connection when this is already
+    NO will be ignored.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Default Value:</dt>
+							<dd>
+								YES
+							</dd>
+							</dl>
+						
+
+					<hr />
+				
+					<a name="payloadData"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>payloadData</b>
+					
+					</div>
+					<div class="description">
+						Any payload data retrieved from the original
+    server request object on initialization.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="request"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>request</b>
+					
+					</div>
+					<div class="description">
+						The server request object.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="response"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>response</b>
+					
+					</div>
+					<div class="description">
+						The server response object.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="router"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>router</b>
+					
+					</div>
+					<div class="description">
+						The router that owns this response object.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="server"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>server</b>
+					
+					</div>
+					<div class="description">
+						The server that owns the router that owns this
+    response object.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					
+				
 			
 
 <!-- ============================== method details ========================= -->		
@@ -353,18 +619,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="capitalize"> </a>
+					<a name="close"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>capitalize</b>()
+					<b>close</b>()
 					
 					</div>
 					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+						Close the connection to the client...forcefully.
 						
 						
 					</div>
@@ -377,29 +640,19 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>xt.string.capitalize</dd>
-							
-							</dl>
 						
 
 					<hr />
 				
-					<a name="f"> </a>
+					<a name="consume"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>f</b>()
+					<b>consume</b>()
 					
 					</div>
 					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+						Consumes information about the server request...
 						
 						
 					</div>
@@ -412,64 +665,21 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>xt.string.format</dd>
-							
-							</dl>
 						
 
 					<hr />
 				
-					<a name="format"> </a>
+					<a name="write"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>format</b>()
+					<b>write</b>()
 					
 					</div>
 					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>xt.string.format</dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="pre"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>pre</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
+						Explicit write to response stream. If no content-type
+    or additional headers have been set this forces
+    implicit headers.
 						
 						
 					</div>
@@ -482,48 +692,6 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>xt.string.pre</dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="trim"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>trim</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_proto.js.html">proto.js</a>.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>xt.string.trim</dd>
-							
-							</dl>
 						
 
 					
