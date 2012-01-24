@@ -13,7 +13,7 @@ E'{
   "comment.username as username",
   "comment.comment_type as comment_type",
   "comment.text as \\"text\\"",
-  "comment.comment_public as is_public",
+  "comment.is_public as is_public",
   "comment.can_update as can_update"
 }',
 
@@ -53,7 +53,8 @@ create or replace rule \\"_UPDATE\\" as on update to xm.site_comment
   do instead
   
 update xm.comment set
-  text = new.text
+  text = new.text,
+  is_public = new.is_public
 where ( guid = old.guid );
 
 ","
