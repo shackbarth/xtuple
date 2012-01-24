@@ -8,8 +8,7 @@ create or replace function private.export_model(record_type text) returns text a
       STRING_TYPE = 'S',
       DATE_TYPE = 'D',
       NUMBER_TYPE = 'N',
-      BOOLEAN_TYPE = 'B'
-      NAMESPACE = 'XM'; /* temporary */
+      BOOLEAN_TYPE = 'B';
 
   // ..........................................................
   // METHODS
@@ -125,11 +124,26 @@ create or replace function private.export_model(record_type text) returns text a
     return executeSql(sql, [ recordType, nameSpace ]);
   }
 
+  getNamespace = function(model_name) {
+    var sql = "select model_namespace from only private.model where model_name = $1",
+        ret;
+
+    ret = executeSql(sql, [ model_name ]);
+
+    if(ret && ret.length) { return ret[0].model_namespace.toUpperCase(); }
+
+    return false;
+  }
+
   // ..........................................................
   // PROCESS
   //
   
-  var sql = "select * from only private.model where model_name = $1",
+  var sql = "select model.*, "
+          + "case when nested_model_id is not null then true else false end as nested "
+          + "from only private.model "
+          + "  left outer join private.nested on model_id=nested_model_id "
+          + "where model_name = $1",
       recordType = decamelize(record_type.replace((/\w+\./i),'')), 
       nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
       viewdef = getViewDefinition(recordType, nameSpace),
@@ -141,14 +155,42 @@ create or replace function private.export_model(record_type text) returns text a
   model = executeSql(sql, [ recordType ]);
 
   if(model.length) {
+    var rules = [], updRule;
+    
     model = model[0];
 
-    ret.name = model.model_name;
-    ret.table = model.model_table_name;
+    /* parse rules */
+    for(var i = 0; i < model.model_rules.length; ++i) {
+      var curr = model.model_rules[i], rule = new Object,
+          isNone = curr.search(/nothing/i) > 0 && curr.search(/when/i) === -1;
+ 
+      if(!isNone) {
+        var ridx = curr.search(/rule /i) + 4,
+            aidx = curr.search(/as/i);
+            iidx = curr.search(/instead/i) + 7;
+            event = curr.search(/ insert/i) > 0 ? 'insert' : curr.search(/ update/i) > 0 ? 'update' : curr.search(/ delete/i) > 0 ? 'delete' : null;
+
+        rule.name = curr.slice(ridx, aidx).replace(/"|"/g,'').trim();
+        rule.event = event;
+        rule.command = curr.slice(iidx);
+
+        if(rule.name === "_UPDATE") { updRule = rule.name; }
+        
+        rules.push(rule);
+      }
+    }
+
+    /* add some basic definition */
+    ret.type = model.model_namespace.toUpperCase() + '.' + model.model_name.slice(0,1).toUpperCase() + camelize(model.model_name.slice(1));;
+    ret.schema = model.model_schema_name ? model.model_schema_name : model.model_table_name.replace((/\.\w+/i),'');
+    ret.table = model.model_table_name.replace((/\w+\./i),'');
+    if(model.model_comment.length) { ret.comment = model.model_comment; }
     ret.properties = [];
+
+    /* parse columns */
     for(var i = 0; i < model.model_columns.length; ++i) {
       var cols = model.model_columns, 
-          aidx = cols[i].search(' as '),
+          aidx = cols[i].search(/ as /i),
           pidx = cols[i].indexOf('.'),
           eidx = cols[i].indexOf('=') + 1,
           ridx = cols[i].indexOf(')'),
@@ -160,52 +202,59 @@ create or replace function private.export_model(record_type text) returns text a
 
       coldef = findProperty(viewdef, 'attname', attr);
 
+      property.name = camelize(attr);
+
       switch (coldef.typcategory) 
       {
       case COMPOUND_TYPE:
         var col = cols[i].slice(eidx, ridx).trim(),
-            pidx = col.indexOf('.');
+            pidx = col.indexOf('.'), t;
             
         /* TODO: namespace needs to come from the model definition eventually */
-        property.type = NAMESPACE + '.' + coldef.typname.slice(0,1).toUpperCase() + camelize(coldef.typname.slice(1));
-        property.toOne = camelize(attr);
-        property.column = col.slice(pidx + 1);
+        property.toOne = new Object;
+        property.toOne.type = getNamespace(coldef.typname) + '.' + coldef.typname.slice(0,1).toUpperCase() + camelize(coldef.typname.slice(1));
+        property.toOne.column = col.slice(pidx + 1);
         break;
       case ARRAY_TYPE:
         var col = cols[i].slice(eidx, ridx).trim(),
             pidx = col.indexOf('.'),
-            widx = cols[i].indexOf('where') + 5;
+            widx = cols[i].search(/where/) + 5;
 
         /* TODO: namespace needs to come from the model definition eventually */
-        property.type = NAMESPACE + '.' + coldef.typname.slice(1,2).toUpperCase() + camelize(coldef.typname.slice(2));
-        property.toMany = camelize(attr);
-        property.column = cols[0].slice(eidx,ridx).trim();
-        property.inverse = cols[i].slice(widx, eidx - 1).trim();
-        delete property.column;
+        property.toMany = new Object;
+        property.toMany.type = getNamespace(coldef.typname.slice(1)) + '.' + coldef.typname.slice(1,2).toUpperCase() + camelize(coldef.typname.slice(2));
+        property.toMany.column = col.slice(pidx + 1);
+        property.toMany.inverse = cols[i].slice(widx, eidx - 1).trim();
         break; 
       case STRING_TYPE:
-        property.type = 'String';
+        t = 'String';
       case NUMBER_TYPE:
-        property.type = 'Number';
+        t = 'Number';
       case BOOLEAN_TYPE:
-        property.type = 'Boolean';
+        t = 'Boolean';
       case DATE_TYPE:
-        property.type = 'Date';
+        t = 'Date';
       default:
-        property.attr = camelize(attr);
-        property.column = cols[i].slice(0, aidx).slice(pidx + 1);
+        property.attr = new Object;
+        property.attr.type = t;
+        property.attr.column = cols[i].slice(0, aidx).slice(pidx + 1);
       }
 
       ret.properties.push(property);
     }
-    ret.conditions = model.model_conditions;
-    ret.order = model.model_order;
-    ret.comment = model.model_comment;
-    ret.isSystem = model.model_system;
+    if(model.model_conditions.length) { 
+      model.model_conditions.length > 1 ? ret.conditions = model.model_conditions : ret.conditions = model.model_conditions[0]; 
+    }
+    if(model.model_order.length) { 
+      model.model_order.length > 1 ? ret.order = model.model_order : ret.order = model.model_order[0]; 
+    }
+    ret.rules = rules;
+    if(model.nested) { ret.isNested = model.nested; }
+    if(model.model_system) { ret.isSystem = model.model_system };
     
     return JSON.stringify(ret, null, 2);
   } else {
-    return '{ error: "Model not found" }';
+    return '{ "error": "Model not found" }';
   }
   
 $$ language plv8;

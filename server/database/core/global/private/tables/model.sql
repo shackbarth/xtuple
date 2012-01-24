@@ -6,6 +6,7 @@ select dropIfExists('TRIGGER', 'model_changed', 'private');
 
 select private.create_table('model');
 select private.add_column('model','model_id', 'serial', 'primary key');
+select private.add_column('model','model_namespace', 'text', E'not null default \'xm\'');
 select private.add_column('model','model_name', 'text', 'not null unique');
 select private.add_column('model','model_comment', 'text', 'not null default ''{}''');
 select private.add_column('model','model_system', 'boolean', 'not null default false');

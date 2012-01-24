@@ -64,7 +64,9 @@ E'{"
 
 create or replace rule \\"_CREATE\\" as on insert to xm.document_assignment 
   do instead nothing;
-  
+
+","
+
 create or replace rule \\"_CREATE_DOC\\" as on insert to xm.document_assignment 
   where new.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
@@ -83,6 +85,8 @@ values (
   private.get_datatype_source(new.target_type),
   new.purpose );
 
+","
+
 create or replace rule \\"_CREATE_IMG\\" as on insert to xm.document_assignment 
   where new.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
@@ -99,21 +103,29 @@ values (
   new.target,
   new.purpose );
 
+","
+
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.document_assignment 
   do instead nothing;
 
+","
+
 -- delete rules
 
 create or replace rule \\"_DELETE\\" as on delete to xm.document_assignment
   do instead nothing;
+
+","
   
 create or replace rule \\"_DELETE_DOC\\" as on delete to xm.document_assignment
   where old.target_type != private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
 
 delete from public.docass 
 where ( docass_id = old.id );
+
+","
 
 create or replace rule \\"_DELETE_IMG\\" as on delete to xm.document_assignment
   where old.target_type = private.get_id(\'datatype\', \'datatype_name\', \'Image\') do instead
