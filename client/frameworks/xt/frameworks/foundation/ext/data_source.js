@@ -52,6 +52,9 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
     var payload = new Object, json = {};
     
     payload.requestType = 'fetch',
+
+    console.log(query);
+
     payload.recordType = query.get('recordType').toString();
     
     payload.query = new Object;
