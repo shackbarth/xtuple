@@ -27,9 +27,12 @@
 \i core/global/private/functions/extend_model.sql;
 \i core/global/private/functions/fetch.sql;
 \i core/global/private/functions/get_id.sql;
+\i core/global/private/functions/isdate.sql;
 \i core/global/private/functions/raise_exception.sql;
 \i core/global/private/functions/retrieve_record.sql;
 \i core/global/private/functions/starts_with.sql;
+\i core/global/private/functions/text_gt_date.sql;
+\i core/global/private/functions/text_lt_date.sql;
 
 -- core/trigger functions
 \i core/global/private/trigger_functions/model_changed.sql
@@ -44,6 +47,8 @@
 \i core/global/private/operators/any_text.sql;
 \i core/global/private/operators/ends_with.sql;
 \i core/global/private/operators/starts_with.sql;
+\i core/global/private/operators/text_gt_date.sql;
+\i core/global/private/operators/text_lt_date.sql;
 
 -- core/type tables
 \i core/type/private/tables/datatype.sql;
@@ -85,7 +90,7 @@
 \i core/comment/xm/models/comment_type.sql;
 
 -- core/document
-\i core/document/private/datatype.sql;
+\i core/document/private/tables/datatype.sql;
 
 -- core/document xm views
 \i core/document/xm/models/document_assignment.sql;
