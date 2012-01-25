@@ -312,7 +312,7 @@ create or replace function private.commit_record(record_type text, data_hash tex
   // PROCESS
   //
   var recordType = decamelize(record_type.replace((/\w+\./i),'')), 
-      dataHash = JSON.parse(data_hash).dataHash,
+      dataHash = JSON.parse(data_hash),
       nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase();
       debug = false;
 

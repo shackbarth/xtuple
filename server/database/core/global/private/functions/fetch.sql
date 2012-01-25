@@ -150,7 +150,7 @@ create or replace function private.fetch(payload text default null, row_limit in
     
     if(conditions) {
       /* replace special operators */
-      ret = decamelize(conditions.replace('STARTS_WITH','~^')
+      ret = decamelize(conditions.replace('BEGINS_WITH','~^')
                                  .replace('ENDS_WITH','~?')
                                  .replace('CONTAINS','~')
                                  .replace('MATCHES','~')
@@ -239,11 +239,11 @@ create or replace function private.fetch(payload text default null, row_limit in
       nameSpace = query.recordType.replace((/\.\w+/i),'').toLowerCase(),
       model = query.recordType.replace((/\w+\./i),'').toLowerCase(),
       conditions = query.conditions,
-      orderBy = query.orderBy ? 'order by ' + dataHash.query.orderBy : '',
+      orderBy = query.orderBy ? 'order by ' + query.orderBy : '',
       parameters = query.parameters,
       limit = row_limit ? 'limit ' + row_limit : '';
       offset = row_offset ? 'offset ' + row_offset : '',
-      debug = false, recs = null, 
+      debug = true, recs = null, 
       sql = "select * from {table} where {clause} {orderBy} {limit} {offset}";
 
   validateType(model);
@@ -268,17 +268,16 @@ create or replace function private.fetch(payload text default null, row_limit in
 
 $$ language plv8;
 /*
-select private.fetch('XM.Contact',E'{"parameters":{ 
-                                       "firstName": "Jake", 
-                                       "lastName": "F"
-                                     }, 
-                                     "conditions":"firstName = {firstName} OR lastName STARTS_WITH {lastName}", 
-                                     "orderBy":"lastName"}', 3);
+select private.fetch(E'{ "query": {"recordType":"XM.Contact",
+                                   "parameters":{ 
+                                     "firstName": "Jake", 
+                                     "lastName": "F"
+                                    }, 
+                                  "conditions":"firstName = {firstName} OR lastName BEGINS_WITH {lastName}", 
+                                  "orderBy":"lastName"}}', 3);
 
-select private.fetch('XM.Contact',E'{"parameters":{ 
-                                       "firstName": "Jake", 
-                                       "lastName": "F"
-                                     }, 
-                                     "conditions":"firstName = %@ OR lastName STARTS_WITH %@", 
-                                     "orderBy":"lastName"}', 3);
+select private.fetch(E'{ "query": {"recordType":"XM.Contact",
+                                   "parameters":[ "Jake",  "F" ], 
+                                   "conditions":"firstName = %@ OR lastName BEGINS_WITH %@", 
+                                   "orderBy":"lastName"}}', 3);
 */
