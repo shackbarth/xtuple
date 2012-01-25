@@ -2,19 +2,7 @@ select private.create_model(
 
 -- Model name, schema, table
 
-'characteristic_assignment', '', 
-
--- table
-'(select 
-    charass_id,
-    charass_target_type,
-    charass_target_id,
-    charass_char_id,
-    charass_value,
-    char_name,
-    char_order
-  from charass
-   join char on charass_char_id=char_id) as charass',
+'characteristic_assignment', 'public', 'char join charass on char_id = charass_char_id', 
 
 -- Columns
 
@@ -72,4 +60,4 @@ where ( charass_id = old.guid );
 "}', 
 
 -- Conditions, Order, Comment, System, Nested
-'{}', '{"charass.char_order","charass.char_name"}', 'Characteristic Assignment Model', true, true);
+'{}', '{"char_order","char_name"}', 'Characteristic Assignment Model', true, true);
