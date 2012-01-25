@@ -51,17 +51,13 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   fetch: function(store, query) {
     var payload = new Object;
     
-    payload.requestType = 'fetch',
-
-    console.log(query);
-
-    payload.recordType = query.get('recordType').prototype.className;
-    
+    payload.requestType = 'fetch';
     payload.query = new Object;
+    payload.query.recordType = query.get('recordType').prototype.className;
     payload.query.conditions = query.get('conditions');
     payload.query.parameters = query.get('parameters');
     payload.query.orderBy = query.get('orderBy');
-    
+
     if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
     SC.Request.postUrl(this.URL)
@@ -74,11 +70,11 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
 
   didFetchData: function(response, store, query) {
     if(SC.ok(response)) {
-      var body = response.get("body"),
+      var results = JSON.parse(response.get("body").rows[0].fetch),
           recordType = query.get('recordType');
-      
-      body.forEach(function(dataHash) {
-        store.pushRetrieve(recordType, row.guid, dataHash);
+
+      results.forEach(function(dataHash) {
+        store.pushRetrieve(recordType, dataHash.guid, dataHash);
       });
     } else {
       store.dataSourceDidErrorQuery(query, response);
@@ -108,14 +104,12 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   },
 
   didRetrieveData: function(response, store, storeKey) {
-
     if(SC.ok(response)) {
       var dataHash = JSON.parse(response.get("body").rows[0].retrieve_record);
         store.dataSourceDidComplete(storeKey, dataHash);
     } else {
       store.dataSourceDidError(storeKey, response);
     }
-    
   },
   
   commitRecords: function(store, createStoreKeys, updateStoreKeys, destroyStoreKeys, params) {
@@ -130,27 +124,29 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   },
   
   commitRecord: function(store, storeKey) {
-    var recordType = store.recordTypeFor(storeKey).toString(), 
+    var recordType = store.recordTypeFor(storeKey).prototype.className, 
         payload = new Object,
         record = store.materializeRecord(storeKey);
 
     payload.requestType = 'commitRecord',
     payload.recordType = recordType;
-    payload.dataHash = JSON.stringify(record);
+    payload.dataHash = record;
   
     if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
     SC.Request.postUrl(this.URL)
       .header({ 'Accept': 'application/json' }).json()
       .notify(this, 'didCommitData', store, storeKey)
-      .send(json);
+      .send(payload);
 
     return YES;
   },
 
   didCommitData: function(response, store, storeKey) {
     if(SC.ok(response)) {
-      store.dataSourceDidComplete(storeKey);
+      store.peekStatus(storeKey) === SC.Record.BUSY_DESTROYING ?
+        store.dataSourceDidDestroy(storeKey) :
+        store.dataSourceDidComplete(storeKey);
     } else {
       store.dataSourceDidError(storeKey, response);
     }

@@ -1,4 +1,4 @@
-create or replace function private.fetch(record_type text, query text default null, row_limit integer default null, row_offset integer default null) returns text as $$
+create or replace function private.fetch(payload text default null, row_limit integer default null, row_offset integer default null) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
@@ -166,11 +166,11 @@ create or replace function private.fetch(record_type text, query text default nu
       
       if(parameters) {
         if(ret.indexOf('%@') > 0) {  /* replace wild card tokens */
-          for(var prop in parameters) {
+          for(var i = 0; i < parameters.length; i++) {
             var n = ret.indexOf('%@'),
-                val =  quoteIfString(parameters[prop]);
+                val =  quoteIfString(parameters[i]);
 
-            ret = ret.slice(0, n) + val + ret.slice(n + 2);
+            ret = ret.replace(/%@/,val);
           }
         } else {  /* replace parameterized tokens */
           for(var prop in parameters) {
@@ -192,15 +192,17 @@ create or replace function private.fetch(record_type text, query text default nu
      @returns {Boolean}
   */
   validateType = function(recordType) {
-    var sql = 'select coalesce((select count(*) > 0 '
-                  + '           from only private.model '
-                  + '             join private.nested on (model_id=nested_model_id) '
-                  + '           where model_name = $1), false) as "isNested"',
+    var sql = 'select model_id, nested_id is not null as is_nested '
+            + 'from only private.model '
+            + '  left outer join private.nested on model_id=nested_model_id '
+            + 'where model_name=$1',
         res = executeSql(sql, [ recordType ]);
-    
-    if(res[0].isNested) { 
-      var msg = "The model for " + recordType + " is nested and may only be accessed in the context of a parent record.";
-      throw new Error(msg); 
+
+    if(!res.length) {
+      throw new Error("The model definition for " + recordType + " was not found.");
+    }
+    if(res[0].is_nested) { 
+      throw new Error ("The model definition for " + recordType + " is nested and may only be accessed in the context of a parent record.");
     }
 
     return true;
@@ -233,11 +235,12 @@ create or replace function private.fetch(record_type text, query text default nu
   // PROCESS
   //
 
-  var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
-      model = record_type.replace((/\w+\./i),'').toLowerCase(),
-      conditions = JSON.parse(query).conditions,
-      orderBy = JSON.parse(query).orderBy ? 'order by ' + JSON.parse(query).orderBy : '',
-      parameters = JSON.parse(query).parameters,
+  var query = JSON.parse(payload).query;
+      nameSpace = query.recordType.replace((/\.\w+/i),'').toLowerCase(),
+      model = query.recordType.replace((/\w+\./i),'').toLowerCase(),
+      conditions = query.conditions,
+      orderBy = query.orderBy ? 'order by ' + dataHash.query.orderBy : '',
+      parameters = query.parameters,
       limit = row_limit ? 'limit ' + row_limit : '';
       offset = row_offset ? 'offset ' + row_offset : '',
       debug = false, recs = null, 

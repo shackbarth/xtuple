@@ -123,7 +123,7 @@ update cntct set
   cntct_phone = new.phone,
   cntct_phone2 = new.alternate,
   cntct_fax = new.fax,
-  cntct_email = new.email,
+  cntct_email = new.primary_email,
   cntct_webaddr = new.web_address,
   cntct_notes = new.notes,
   cntct_owner_username = (new.owner).username,

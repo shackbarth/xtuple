@@ -125,15 +125,17 @@ create or replace function private.retrieve_record(record_type text, id integer)
      @returns {Boolean}
   */
   validateType = function(recordType) {
-    var sql = 'select coalesce((select count(*) > 0 '
-                  + '           from only private.model '
-                  + '             join private.nested on (model_id=nested_model_id) '
-                  + '           where model_name = $1), false) as "isNested"',
+    var sql = 'select model_id, nested_id is not null as is_nested '
+            + 'from only private.model '
+            + '  left outer join private.nested on model_id=nested_model_id '
+            + 'where model_name=$1',
         res = executeSql(sql, [ recordType ]);
-    
-    if(res[0].isNested) { 
-      var msg = "The model for " + recordType + " is nested and may only be accessed in the context of a parent record.";
-      throw new Error(msg); 
+
+    if(!res.length) {
+      throw new Error("The model definition for " + recordType + " was not found.");
+    }
+    if(res[0].is_nested) { 
+      throw new Error ("The model definition for " + recordType + " is nested and may only be accessed in the context of a parent record.");
     }
 
     return true;

@@ -17,7 +17,9 @@ XM.CharacteristicAssignment = XM.Record.extend(
 
   target:         SC.Record.attr(Number),
   targetType:     SC.Record.attr(String),
-  characteristic: SC.Record.toOne('XM.Characteristic'),
+  characteristic: SC.Record.toOne('XM.Characteristic', {
+    isNested: true
+  }),
   value:          SC.Record.attr(String, {
     toType: function(record, key, value) {
       if(value) {
