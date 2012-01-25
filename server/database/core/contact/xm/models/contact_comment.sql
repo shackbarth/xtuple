@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -13,8 +13,7 @@ E'{
   "comment.username as username",
   "comment.comment_type as comment_type",
   "comment.text as text",
-  "comment.is_public as is_public",
-  "comment.can_update as can_update"}',
+  "comment.is_public as is_public"}',
 
 -- Rules
 

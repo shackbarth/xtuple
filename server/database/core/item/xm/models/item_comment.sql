@@ -7,12 +7,11 @@ select private.create_model(
 E'{
   "comment.guid as guid",
   "comment.source_id as item",
-  "comment.date as \\"date\\"",
+  "comment.date as date",
   "comment.username as username",
   "comment.comment_type as comment_type",
-  "comment.text as \\"text\\"",
-  "comment.is_public as is_public",
-  "comment.can_update as can_update"
+  "comment.text as text",
+  "comment.is_public as is_public"
 }',
 
 -- Rules

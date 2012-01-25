@@ -2,37 +2,19 @@ select private.create_model(
 
 -- Model name, schema 
 
-'comment', '',
-
--- Table
-
-E'(select
-     comment.comment_id as guid,
-     comment.comment_source_id as source_id,
-     comment.comment_source as source,
-     comment.comment_date as date,
-     comment.comment_user as username,
-     comment.comment_cmnttype_id as comment_type,
-     comment.comment_text as text,
-     comment.comment_public as is_public,
-     ((cmnttype.cmnttype_editable) 
-      and (checkPrivilege(\'EditOwnComments\')) 
-      and (checkPrivilege(\'EditOthersComments\'))) as can_update
-   from comment, cmnttype
-   where comment.comment_cmnttype_id = cmnttype.cmnttype_id) comments',
+'comment', 'public', 'comment',
 
 -- Columns
 
 E'{
-  "comments.guid as guid",
-  "comments.source_id as source_id",
-  "comments.source as source",
-  "comments.date as date",
-  "comments.username as username",
-  "comments.comment_type as comment_type",
-  "comments.text as text",
-  "comments.is_public as is_public",
-  "comments.can_update as can_update"
+  "comment.comment_id as guid",
+  "comment.comment_source_id as source_id",
+  "comment.comment_source as source",
+  "comment.comment_date as date",
+  "comment.comment_user as username",
+  "comment.comment_cmnttype_id as comment_type",
+  "comment.comment_text as text",
+  "comment.comment_public as is_public"
 }',
 
 -- Rules
@@ -78,15 +60,14 @@ where ( comment_id = old.guid );
 ","
 
 create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.comment
-   where not checkPrivilege(\'EditOthersComments\')
-    and not (select cmnttype.cmnttype_editable
-             from cmnttype
-             where cmnttype.cmnttype_id = old.comment_type)
-    and not (checkPrivilege(\'EditOwnComments\') 
-             and (old.username) = getEffectiveXtUser()
-             and (new.username) = getEffectiveXtUser()) do instead
+   where (select case when not cmnttype_editable then true
+                      when (checkPrivilege(\'EditOwnComments\') and old.username = getEffectiveXtUser()) then false
+                      when (checkPrivilege(\'EditOthersComments\') and old.username != getEffectiveXtUser()) then false
+                      else true end
+          from cmnttype
+          where cmnttype_id = old.comment_type) do instead
 
-  select private.raise_exception(\'You do not have privileges to update this comment\');
+  select private.raise_exception(\'You are not allowed to update this comment\');
 
 ","
 
