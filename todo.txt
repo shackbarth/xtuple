@@ -1,0 +1,6 @@
+- Session needs to load and store user information including privileges.
+
+- Functors need privilege level access control.
+
+- Routers need to unwrap requests before passing to route and ensure the correct
+  session is supplied via the xt response object.
