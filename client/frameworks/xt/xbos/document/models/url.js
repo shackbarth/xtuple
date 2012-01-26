@@ -25,6 +25,6 @@ XM.Url = XM.Record.extend(
   /**
   @type String
   */
-  url: SC.Record.attr(String),
+  path: SC.Record.attr(String),
 
 })

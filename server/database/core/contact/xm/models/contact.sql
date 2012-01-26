@@ -42,9 +42,27 @@ E'{
     from xm.contact_characteristic
     where contact = cntct.cntct_id) as characteristics",
   "array(
-    select contact_document
-    from xm.contact_document
-    where contact = cntct.cntct_id) as documents"}',
+    select contact_assignment
+    from xm.contact_assignment
+    where source = cntct.cntct_id and source_type=\'T\') as contacts",
+  "array(
+    select item_assignment
+    from xm.item_assignment
+    where source = cntct.cntct_id and source_type=\'T\') as items",
+  "array(
+    select file_assignment
+    from xm.file_assignment
+    where source = cntct.cntct_id and source_type=\'T\') as files",
+  "array(
+    select image_assignment
+    from xm.image_assignment
+    where source = cntct.cntct_id and source_type=\'T\') as images",
+  "array(
+    select url_assignment
+    from xm.url_assignment
+    where source = cntct.cntct_id and source_type=\'T\') as urls"
+
+}',
      
 -- Rules
 
@@ -176,4 +194,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.contact
 
 -- Conditions, Comment, System
 
-'{}', 'Contact Model', true);
+'{}', 'Contact Model', true, false, 'T');

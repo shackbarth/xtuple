@@ -45,9 +45,31 @@ E'{
     from xm.incident_characteristic
     where incident = incdt.incdt_id) as characteristics",
   "array(
-    select incident_document
-    from xm.incident_document
-    where incident = incdt.incdt_id) as documents"}',
+    select contact_assignment
+    from xm.contact_assignment
+    where source = incdt.incdt_id and source_type=\'INCDT\') as contacts",
+  "array(
+    select item_assignment
+    from xm.item_assignment
+    where source = incdt.incdt_id and source_type=\'INCDT\') as items",
+  "array(
+    select file_assignment
+    from xm.file_assignment
+    where source = incdt.incdt_id and source_type=\'INCDT\') as files",
+  "array(
+    select image_assignment
+    from xm.image_assignment
+    where source = incdt.incdt_id and source_type=\'INCDT\') as images",
+  "array(
+    select url_assignment
+    from xm.url_assignment
+    where source = incdt.incdt_id and source_type=\'INCDT\') as urls",
+  "array(
+    select incident_assignment
+    from xm.incident_assignment
+    where source = incdt.incdt_id and source_type=\'INCDT\') as incidents"
+
+    }',
 
 -- Rules
 
@@ -152,4 +174,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.incident
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Model', true);
+'{}', 'Incident Model', true, false, 'INCDT');

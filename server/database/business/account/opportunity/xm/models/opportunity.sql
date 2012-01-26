@@ -44,9 +44,29 @@ E'{
     from xm.opportunity_characteristic
     where opportunity = ophead.ophead_id) as characteristics",
   "array(
-    select opportunity_characteristic
-    from xm.opportunity_characteristic
-    where opportunity = ophead.ophead_id) as documents"}',
+    select contact_assignment
+    from xm.contact_assignment
+    where source = ophead.ophead_id and source_type=\'OPP\') as contacts",
+  "array(
+    select item_assignment
+    from xm.item_assignment
+    where source = ophead.ophead_id and source_type=\'OPP\') as items",
+  "array(
+    select file_assignment
+    from xm.file_assignment
+    where source = ophead.ophead_id and source_type=\'OPP\') as files",
+  "array(
+    select image_assignment
+    from xm.image_assignment
+    where source = ophead.ophead_id and source_type=\'OPP\') as images",
+  "array(
+    select url_assignment
+    from xm.url_assignment
+    where source = ophead.ophead_id and source_type=\'OPP\') as urls",
+  "array(
+    select opportunity_assignment
+    from xm.opportunity_assignment
+    where source = ophead.ophead_id and source_type=\'OPP\') as opportunities"}',
 
 E'{"
 -- insert rule
@@ -192,4 +212,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.opportunity
 
 -- Conditions, Comment, System
 
-'{}', 'Opportunity Model', true);
+'{}', 'Opportunity Model', true, false, 'OPP');

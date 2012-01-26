@@ -1,4 +1,4 @@
-﻿insert into xm.account (
+insert into xm.account (
   guid, "number", name, is_active, "type", owner, parent, notes, primary_contact, secondary_contact, "user")
 values (
   99999, 'TEST NUMBER', 'TEST NAME', true, 'O', 'admin', NULL, 'TEST NOTES', 1, 6, 'admin');
@@ -16,17 +16,17 @@ values (
 insert into xm.account_document (
   guid, account, target, target_type, purpose)
 values (
-  99999, 99999, (select incdt_id from incdt where incdt_number = '15000'), private.get_id('datatype', 'datatype_source', 'INCDT'),  'S');
+  99999, 99999, (select incdt_id from incdt where incdt_number = '15000'), private.get_id('modelbas', 'modelbas_source', 'INCDT'),  'S');
 
 insert into xm.account_document (
   guid, account, target, target_type, purpose )
 values (
-  99998, 99999, (select file_id from file where file_title = 'Project Contract'), private.get_id('datatype', 'datatype_source', 'FILE'), 'S' );
+  99998, 99999, (select file_id from file where file_title = 'Project Contract'), private.get_id('modelbas', 'modelbas_source', 'FILE'), 'S' );
 
 insert into xm.account_document (
   guid, account, target, target_type, purpose)
 values (
-  99997, 99999, (select min(image_id) from image), (select private.get_id('datatype', 'datatype_name', 'Image')), 'S');
+  99997, 99999, (select min(image_id) from image), (select private.get_id('modelbas', 'model_name', 'image')), 'S');
 
 select * from xm.account where guid = 99999;
 

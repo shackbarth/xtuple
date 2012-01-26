@@ -1,4 +1,4 @@
-﻿-- BEGIN xm.item model view test queries
+-- BEGIN xm.item model view test queries
 
 	-- insert rule testing
 
@@ -232,7 +232,7 @@
 		  99999,
 		  99999,
 		  (select min(cntct_id) from cntct),
-		  private.get_id('datatype','datatype_source','T'),
+		  private.get_id('modelbas','modelbas_source','T'),
 		  'S');
 
 		INSERT INTO xm.item_document (
@@ -245,7 +245,7 @@
 		  99998,
 		  99999,
 		  (select min(crmacct_id) from crmacct),
-		  private.get_id('datatype','datatype_source','CRMA'),
+		  private.get_id('modelbas','modelbas_source','CRMA'),
 		  'A');
 
 		INSERT INTO xm.item_document (
@@ -258,7 +258,7 @@
 		  99997,
 		  99999,
 		  (select min(file_id) from "file"),
-		  private.get_id('datatype','datatype_source','FILE'),
+		  private.get_id('modelbas','modelbas_source','FILE'),
 		  'C');
 
 	-- insert rule testing (Imageass)
@@ -273,7 +273,7 @@
 		  99996,
 		  99999,
 		  (select min(image_id) from image),
-		  private.get_id('datatype','datatype_name','Image'),
+		  private.get_id('modelbas','model_name','image'),
 		  'S');
 
 	-- confirm INSERT record

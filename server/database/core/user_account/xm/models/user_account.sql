@@ -102,4 +102,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.user_account
 
 -- Conditions, Comment, System
 
-E'{"checkPrivilege(\'MaintainUsers\')"}', 'User Account Model', true);
+E'{"checkPrivilege(\'MaintainUsers\')"}', 'User Account Model', true, false, 'U');

@@ -40,7 +40,7 @@
 -- core/global tables
 \i core/global/private/tables/model.sql
 \i core/global/private/tables/modelext.sql
-\i core/global/private/tables/nested.sql
+\i core/global/private/tables/modelbas.sql
 
 -- core/operators
 \i core/global/private/operators/any_numeric.sql;
@@ -50,20 +50,10 @@
 \i core/global/private/operators/text_gt_date.sql;
 \i core/global/private/operators/text_lt_date.sql;
 
--- core/type tables
-\i core/type/private/tables/datatype.sql;
-
--- core/type functions
-\i core/type/private/functions/get_datatype_source.sql;
-
--- core/type xm views
-\i core/type/xm/models/type.sql;
-
 -- core/user_account triggers
 \i core/user_account/private/trigger_functions/useracct_duplicate_check.sql;
 
 -- core/user_account tables
-\i core/user_account/private/tables/datatype.sql;
 \i core/user_account/private/tables/useracct.sql;
 
 -- core/user_account views
@@ -89,21 +79,22 @@
 \i core/comment/xm/models/comment.sql;
 \i core/comment/xm/models/comment_type.sql;
 
--- core/document
-\i core/document/private/tables/datatype.sql;
+-- core/document xm views
+\i core/document/xm/views/docinfo.sql;
 
 -- core/document xm views
-\i core/document/xm/models/document_assignment.sql;
 \i core/document/xm/models/file.sql;
+\i core/document/xm/models/file_info.sql;
+\i core/document/xm/models/file_assignment.sql;
 \i core/document/xm/models/image.sql;
+\i core/document/xm/models/image_info.sql;
+\i core/document/xm/models/image_assignment.sql;
 \i core/document/xm/models/url.sql;
+\i core/document/xm/models/url_assignment.sql;
 
 -- core/address xm functions
 \i core/address/xm/functions/address_find_existing.sql;
 \i core/address/xm/functions/address_use_count.sql;
-
--- core/address tables
-\i core/address/private/tables/datatype.sql;
 
 -- core/address xm models
 \i core/address/xm/models/address_characteristic.sql;
@@ -113,30 +104,26 @@
 \i core/address/xm/models/address.sql;
 \i core/address/xm/models/address_info.sql;
 
--- core/contact tables
-\i core/contact/private/tables/datatype.sql;
-
 -- core/contact xm models
-\i core/contact/xm/models/contact_info.sql;
+\i core/contact/xm/models/contact_assignment.sql;
 \i core/contact/xm/models/contact_characteristic.sql;
 \i core/contact/xm/models/contact_comment.sql;
-\i core/contact/xm/models/contact_document.sql;
 \i core/contact/xm/models/contact_email.sql;
-\i core/contact/xm/models/honorific.sql;
+\i core/contact/xm/models/contact_info.sql;
 \i core/contact/xm/models/contact.sql;
+\i core/contact/xm/models/honorific.sql;
 
 -- core/currency xm views
 \i core/currency/xm/models/currency_rate.sql;
 \i core/currency/xm/models/currency.sql;
-\i core/item/private/tables/datatype.sql;
 
 -- core/item xm views
 \i core/item/xm/models/item_alias.sql; 
+\i core/item/xm/models/item_assignment.sql; 
 \i core/item/xm/models/item_characteristic.sql;
 \i core/item/xm/models/item_comment.sql;
 \i core/item/xm/models/item_conversion.sql;
 \i core/item/xm/models/item_conversion_type_assignment.sql;
-\i core/item/xm/models/item_document.sql;
 \i core/item/xm/models/item_info.sql;
 \i core/item/xm/models/item_substitute.sql;
 \i core/item/xm/models/item_cost.sql;
@@ -158,18 +145,12 @@
 -- [ END ] core
 
 -- [ START ] business
--- business/account tables
-\i business/account/private/tables/datatype.sql;
-
 -- business/account xm models
 \i business/account/xm/models/account_info.sql;
+\i business/account/xm/models/account_assignment.sql;
 \i business/account/xm/models/account_characteristic.sql;
 \i business/account/xm/models/account_comment.sql;
-\i business/account/xm/models/account_document.sql;
 \i business/account/xm/models/account.sql;
-
--- business/account/incident tables
-\i business/account/incident/private/tables/datatype.sql;
 
 -- business/account/incident xm models
 \i business/account/incident/xm/models/incident_alarm.sql;
@@ -180,11 +161,7 @@
 \i business/account/incident/xm/models/incident_info.sql;
 \i business/account/incident/xm/models/incident_resolution.sql;
 \i business/account/incident/xm/models/incident_severity.sql;
-\i business/account/incident/xm/models/incident_document.sql;
 \i business/account/incident/xm/models/incident.sql;
-
--- business/account/opportunity tables
-\i business/account/opportunity/private/tables/datatype.sql;
 
 -- business/account/opportunity xm models
 \i business/account/opportunity/xm/models/opportunity_characteristic.sql;
@@ -195,28 +172,17 @@
 \i business/account/opportunity/xm/models/opportunity_type.sql;
 \i business/account/opportunity/xm/models/opportunity.sql;
 
--- business/customer tables
-\i business/customer/private/tables/datatype.sql;
-
--- business/employee tables
-\i business/employee/private/tables/datatype.sql;
-
 -- business/project xm models
 \i business/project/xm/models/project_info.sql;
 \i business/project/xm/models/project_comment.sql;
-\i business/project/xm/models/project_document.sql;
 \i business/project/xm/models/project_task_alarm.sql;
 \i business/project/xm/models/project_task_comment.sql;
 \i business/project/xm/models/project_task.sql;
 \i business/project/xm/models/project.sql;
 
--- business/to_do tables
-\i business/todo/private/tables/datatype.sql;
-
 -- business/todo xm models
 \i business/todo/xm/models/to_do_alarm.sql;
 \i business/todo/xm/models/to_do_comment.sql;
-\i business/todo/xm/models/to_do_document.sql;
 \i business/todo/xm/models/to_do_info.sql;
 \i business/todo/xm/models/to_do.sql;
 

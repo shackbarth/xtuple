@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -31,9 +31,29 @@ E'{
    from xm.project_task
    where project = prj.prj_id) as tasks",
   "array(
-    select project_document
-    from xm.project_document
-    where project = prj.prj_id) as documents"}',
+    select contact_assignment
+    from xm.contact_assignment
+    where source = prj.prj_id and source_type=\'J\') as contacts",
+  "array(
+    select item_assignment
+    from xm.item_assignment
+    where source = prj.prj_id and source_type=\'J\') as items",
+  "array(
+    select file_assignment
+    from xm.file_assignment
+    where source = prj.prj_id and source_type=\'J\') as files",
+  "array(
+    select image_assignment
+    from xm.image_assignment
+    where source = prj.prj_id and source_type=\'J\') as images",
+  "array(
+    select url_assignment
+    from xm.url_assignment
+    where source = prj.prj_id and source_type=\'J\') as urls",
+  "array(
+    select project_assignment
+    from xm.project_assignment
+    where source = prj.prj_id and source_type=\'J\') as projects"}',
 
 -- Rules
 
@@ -158,4 +178,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project
 
 -- Conditions, Comment, System
 
-'{}', 'Project Model', true);
+'{}', 'Project Model', true, false, 'J');

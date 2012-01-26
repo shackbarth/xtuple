@@ -1,7 +1,3 @@
--- remove old trigger if any
-
-select dropIfExists('TRIGGER', 'model_changed', 'private');
-
 -- table definition
 
 select private.create_table('model');
@@ -17,12 +13,6 @@ select private.add_column('model','model_conditions', 'text[]', 'not null defaul
 select private.add_column('model','model_order', 'text[]', 'not null default ''{}''');
 select private.add_column('model','model_rules', 'text[]', 'not null default ''{}''');
 select private.add_column('model','model_active', 'boolean', 'not null default true');
+select private.add_column('model','model_source', 'text');
 
-comment on table private.model is 'xTuple Model Definitions';
-
--- create trigger
-
-create trigger model_changed after insert or update or delete on private.model for each row execute procedure private.model_changed();
-
-
-
+comment on table private.model is 'Core table for xTuple Model Definitions';

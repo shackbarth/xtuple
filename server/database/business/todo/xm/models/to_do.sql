@@ -25,18 +25,41 @@ E'{
   "(select user_account_info
     from xm.user_account_info
     where username = todoitem.todoitem_owner_username) as owner",
-   "(select user_account_info
+  "(select user_account_info
     from xm.user_account_info
     where username = todoitem.todoitem_username) as assigned_to",
-  "(select to_do_alarm 
+  "array(
+    select to_do_alarm 
     from xm.to_do_alarm
-    where to_do = todoitem.todoitem_id) as alarms",  
-  "(select to_do_comment
+    where to_do = todoitem.todoitem_id) as alarms",
+  "array(
+    select to_do_comment
     from xm.to_do_comment
-    where to_do = todoitem.todoitem_id) as comments", 
-  "(select to_do_document
-    from xm.to_do_document
-    where to_do = todoitem.todoitem_id) as documents"}',
+    where to_do = todoitem.todoitem_id) as comments",
+  "array(
+    select contact_assignment
+    from xm.contact_assignment
+    where source = todoitem.todoitem_id and source_type=\'TODO\') as contacts",
+  "array(
+    select item_assignment
+    from xm.item_assignment
+    where source = todoitem.todoitem_id and source_type=\'TODO\') as items",
+  "array(
+    select file_assignment
+    from xm.file_assignment
+    where source = todoitem.todoitem_id and source_type=\'TODO\') as files",
+  "array(
+    select image_assignment
+    from xm.image_assignment
+    where source = todoitem.todoitem_id and source_type=\'TODO\') as images",
+  "array(
+    select url_assignment
+    from xm.url_assignment
+    where source = todoitem.todoitem_id and source_type=\'TODO\') as urls",
+  "array(
+    select to_do_assignment
+    from xm.to_do_assignment
+    where source = todoitem.todoitem_id and source_type=\'TODO\') as to_dos"}',
 
 -- Rules
 
@@ -129,4 +152,4 @@ where ( todoitem_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'ToDo Model', true);
+'{}', 'ToDo Model', true, false, 'TODO');

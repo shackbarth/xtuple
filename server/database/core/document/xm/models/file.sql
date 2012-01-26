@@ -55,4 +55,4 @@ where ( file_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'File Model', true);
+'{}', 'File Model', true, false, 'FILE');

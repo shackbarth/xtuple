@@ -33,20 +33,10 @@ insert into xm.contact_characteristic (
 values (
   99999, 99999, (select char_id from char where char_name = 'ADR-STOP'), 'Yes' );
 
-insert into xm.contact_document (
-  guid, contact, target, target_type, purpose )
-values (
-  99999, 99999, (select incdt_id from incdt where incdt_number = '15000'), private.get_id('datatype', 'datatype_source', 'INCDT'), 'S' );
-
 insert into xm.file (
   guid, name, data )
 values (
   99999, 'now.txt', 'Now is the time...' );
-
-insert into xm.contact_document (
-  guid, contact, target, target_type, purpose )
-values (
-  99998, 99999, (select file_id from file where file_title = 'now.txt'), private.get_id('datatype', 'datatype_source', 'FILE'), 'S' );
 
 select * from xm.honorific;
 select * from xm.contact where guid = 99999;

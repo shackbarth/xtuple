@@ -52,14 +52,30 @@ E'{
    from xm.item_substitute
    where (root_item = item.item_id)
     or (substitute_item = item.item_id)) as substitutes",
-   "array(
+  "array(
    select item_cost
    from xm.item_cost
    where (item = item.item_id)) as costs",
   "array(
-   select item_document
-   from xm.item_document
-   where item = item.item_id) as documents"
+    select contact_assignment
+    from xm.contact_assignment
+    where source = item.item_id and source_type=\'I\') as contacts",
+  "array(
+    select item_assignment
+    from xm.item_assignment
+    where source = item.item_id and source_type=\'I\') as items",
+  "array(
+    select file_assignment
+    from xm.file_assignment
+    where source = item.item_id and source_type=\'I\') as files",
+  "array(
+    select image_assignment
+    from xm.image_assignment
+    where source = item.item_id and source_type=\'I\') as images",
+  "array(
+    select url_assignment
+    from xm.url_assignment
+    where source = item.item_id and source_type=\'I\') as urls"
 }',
 
 -- Rules
@@ -219,4 +235,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.item
 
 -- Conditions, Comment, System
 
-E'{"checkPrivilege(\'ViewItemMasters\')"}', 'Item Model', true);
+E'{"checkPrivilege(\'ViewItemMasters\')"}', 'Item Model', true, false, 'I');

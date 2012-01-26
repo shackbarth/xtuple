@@ -23,7 +23,7 @@ begin
       model_table_name, model_conditions, model_order, model_rules, model_comment,
       false as ext, null as modelext_join_type, null modelext_join_clause, 
       -1 as modelext_seq
-    from only private.model
+    from private.modelbas
     where model_name = m_name
     union
     -- model extensions

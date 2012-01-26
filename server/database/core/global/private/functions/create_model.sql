@@ -7,7 +7,8 @@ create or replace function private.create_model(name text,
                                                 order_by text[] default '{}',
                                                 comment text default '', 
                                                 is_system boolean default false, 
-                                                is_nested boolean default false) returns void volatile as $$
+                                                is_nested boolean default false,
+                                                source text default '') returns void volatile as $$
                                                 
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
@@ -17,11 +18,10 @@ declare
   id integer;
   was_system boolean;
   n_id integer;
-  ins_nested boolean := false;
 begin
 
   select model_id, model_system into id, was_system
-  from only private.model
+  from private.modelbas
   where model_name = name;
   
   get diagnostics count = row_count;
@@ -31,7 +31,7 @@ begin
       raise exception 'A system model already exists for %', model_name;
     end if;
     
-    update private.model set
+    update private.modelbas set
       model_schema_name = schema_name,
       model_table_name = table_name,
       model_columns = column_names,
@@ -39,34 +39,18 @@ begin
       model_conditions = conditions,
       model_order = order_by,
       model_comment =  comment,
-      model_system = is_system
+      model_system = is_system,
+      modelbas_nested = is_nested,
+      modelbas_source = source
     where model_id = id;
-
-    select nested_id into n_id
-    from private.nested
-    where nested_model_id = id;
-
-    if (found) then
-      if (not is_nested) then
-        delete from private.nested where nested_id = n_id;
-      end if;
-    else
-      ins_nested = is_nested;
-    end if;
   else
-    id := nextval('private.model_model_id_seq');
-    
-    insert into private.model ( 
-      model_id, model_name, model_schema_name, model_table_name, model_columns, 
-      model_rules, model_conditions, model_order, model_comment, model_system
+    insert into private.modelbas ( 
+      model_name, model_schema_name, model_table_name, model_columns, 
+      model_rules, model_conditions, model_order, model_comment, model_system,
+      modelbas_nested, modelbas_source
     ) values ( 
-      id, name, schema_name, table_name, column_names, rules , conditions, order_by, comment, is_system );
-
-    ins_nested := is_nested;
-  end if;
-
-  if (ins_nested) then
-    insert into private.nested ( nested_model_id ) values ( id );
+      name, schema_name, table_name, column_names, rules , conditions, 
+      order_by, comment, is_system, is_nested, source );
   end if;
   
 end;
@@ -80,6 +64,7 @@ create or replace function private.create_model(name text,
                                                 conditions text[] default '{}', 
                                                 comment text default '', 
                                                 is_system boolean default false, 
-                                                is_nested boolean default false) returns void volatile as $$
-  select private.create_model($1, $2, $3, $4, $5, $6, '{}', $7, $8, $9);
+                                                is_nested boolean default false,
+                                                source text default '') returns void volatile as $$
+  select private.create_model($1, $2, $3, $4, $5, $6, '{}', $7, $8, $9, $10);
 $$ language 'sql';

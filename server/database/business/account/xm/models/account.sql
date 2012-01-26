@@ -37,9 +37,29 @@ E'{
     from xm.account_characteristic
     where (account = crmacct.crmacct_id)) as characteristics",
   "array(
-    select account_document 
-    from xm.account_document
-    where (account = crmacct.crmacct_id)) as documents"
+    select contact_assignment
+    from xm.contact_assignment
+    where source = crmacct.crmacct_id and source_type=\'CRMA\') as contacts",
+  "array(
+    select item_assignment
+    from xm.item_assignment
+    where source = crmacct.crmacct_id and source_type=\'CRMA\') as items",
+  "array(
+    select file_assignment
+    from xm.file_assignment
+    where source = crmacct.crmacct_id and source_type=\'CRMA\') as files",
+  "array(
+    select image_assignment
+    from xm.image_assignment
+    where source = crmacct.crmacct_id and source_type=\'CRMA\') as images",
+  "array(
+    select url_assignment
+    from xm.url_assignment
+    where source = crmacct.crmacct_id and source_type=\'CRMA\') as urls",
+  "array(
+    select account_assignment
+    from xm.account_assignment
+    where source = crmacct.crmacct_id and source_type=\'CRMA\') as accounts"
 }',
 
 -- Rules
@@ -148,4 +168,4 @@ create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.account
 "}',
 
 -- Conditions, Comment, System
-E'{"checkPrivilege(\'ViewAllCRMAccounts\')", "checkPrivilege(\'ViewPersonalCRMAccounts\')"}', 'Account Model', true);
+E'{"checkPrivilege(\'ViewAllCRMAccounts\')", "checkPrivilege(\'ViewPersonalCRMAccounts\')"}', 'Account Model', true, false, 'CRMA');

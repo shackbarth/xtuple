@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -102,4 +102,4 @@ where ( addr_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Address Model', true);
+'{}', 'Address Model', true, false, 'ADDR');

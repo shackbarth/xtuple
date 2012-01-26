@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -22,21 +22,21 @@ E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.address 
+create or replace rule \\"_CREATE\\" as on insert to xm.address_info
   do instead nothing
 
 ","
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.address 
+create or replace rule \\"_UPDATE\\" as on update to xm.address_info
   do instead nothing;
 
 ","
 
 -- delete rules
 
-create or replace rule \\"_DELETE\\" as on delete to xm.address 
+create or replace rule \\"_DELETE\\" as on delete to xm.address_info
   do instead nothing;
 
 "}', 

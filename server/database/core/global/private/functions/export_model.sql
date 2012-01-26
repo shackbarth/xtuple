@@ -125,7 +125,7 @@ create or replace function private.export_model(record_type text) returns text a
   }
 
   getNamespace = function(model_name) {
-    var sql = "select model_namespace from only private.model where model_name = $1",
+    var sql = "select model_namespace from private.modelbas where model_name = $1",
         ret;
 
     ret = executeSql(sql, [ model_name ]);
@@ -141,7 +141,7 @@ create or replace function private.export_model(record_type text) returns text a
   
   var sql = "select model.*, "
           + "case when nested_model_id is not null then true else false end as nested "
-          + "from only private.model "
+          + "from private.modelbas "
           + "  left outer join private.nested on model_id=nested_model_id "
           + "where model_name = $1",
       recordType = decamelize(record_type.replace((/\w+\./i),'')), 

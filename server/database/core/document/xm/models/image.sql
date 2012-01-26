@@ -1,4 +1,4 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
@@ -60,4 +60,4 @@ where ( image_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Image Model', true);
+'{}', 'Image Model', true, false, 'IMG');

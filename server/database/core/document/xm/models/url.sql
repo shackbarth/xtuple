@@ -9,7 +9,7 @@ select private.create_model(
 E'{
   "urlinfo.url_id as guid",
   "urlinfo.url_title as name",
-  "urlinfo.url_url as url"
+  "urlinfo.url_url as path"
 }',
 
 -- Rules
@@ -28,7 +28,7 @@ insert into urlinfo (
 values (
   new.guid,
   new.name,
-  new.url );
+  new.path );
 
 ","
 
@@ -39,7 +39,7 @@ create or replace rule \\"_UPDATE\\" as on update to xm.url
 
 update urlinfo set
   url_title = new.name,
-  url_url = new.url
+  url_url = new.path
 where ( url_id = old.guid );
 
 ","
@@ -56,4 +56,4 @@ where ( url_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'URL Model', true);
+'{}', 'URL Model', true, false, 'URL');

@@ -269,16 +269,15 @@ create or replace function private.commit_record(record_type text, data_hash tex
      @returns {Boolean}
   */
   validateType = function(recordType) {
-    var sql = 'select model_id, nested_id is not null as is_nested '
-            + 'from only private.model '
-            + '  left outer join private.nested on model_id=nested_model_id '
+    var sql = 'select model_id, modelbas_nested '
+            + 'from private.modelbas '
             + 'where model_name=$1',
         res = executeSql(sql, [ recordType ]);
 
     if(!res.length) {
       throw new Error("The model definition for " + recordType + " was not found.");
     }
-    if(res[0].is_nested) { 
+    if(res[0].modelbas_nested) { 
       throw new Error ("The model definition for " + recordType + " is nested and may only be accessed in the context of a parent record.");
     }
 
