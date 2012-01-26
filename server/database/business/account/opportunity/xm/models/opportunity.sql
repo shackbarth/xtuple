@@ -181,13 +181,9 @@ delete from charass
 where ( charass_target_id = old.guid ) 
   and ( charass_target_type = \'OPP\' );
 
-delete from docass
-where ( docass_target_id = old.guid ) 
-  and ( docass_target_type = \'OPP\' );
-
-delete from docass
-where ( docass_source_id = old.guid ) 
-  and ( docass_source_type = \'OPP\' );
+delete from private.docinfo
+where ( source_id = old.guid ) 
+ and ( source_type = \'OPP\' );
 
 delete from imageass
 where ( imageass_source_id = old.guid ) 

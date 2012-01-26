@@ -148,8 +148,9 @@ delete from charass
 where ( charass_target_id = old.guid ) 
  and ( charass_target_type = \'CRMACCT\' );
 
-delete from xm.document_assignment
-where ( id = old.guid );
+delete from private.docinfo
+where ( source_id = old.guid ) 
+ and ( source_type = \'CRMA\' );
 
 delete from crmacct
 where ( crmacct_id = old.guid );

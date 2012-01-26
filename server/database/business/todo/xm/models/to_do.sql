@@ -133,17 +133,9 @@ delete from comment
 where ( comment_source_id = old.guid ) 
  and ( comment_source = \'TD\' );
 
-delete from docass
-where ( docass_target_id = old.guid ) 
- and ( docass_target_type = \'TODO\' );
-
-delete from docass
-where ( docass_source_id = old.guid ) 
- and ( docass_source_type = \'TODO\' );
-
-delete from imageass
-where ( imageass_source_id = old.guid ) 
- and ( imageass_source = \'TODO\' );
+delete from private.docinfo
+where ( source_id = old.guid ) 
+ and ( source_type = \'TODO\' );
 
 delete from todoitem
 where ( todoitem_id = old.guid );

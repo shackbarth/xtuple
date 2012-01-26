@@ -173,8 +173,9 @@ delete from charass
 where ( charass_target_id = old.guid ) 
  and ( charass_target_type = \'CNTCT\' );
 
-delete from xm.document_assignment
-where ( id = old.guid );
+delete from private.docinfo
+where ( source_id = old.guid ) 
+ and ( source_type = \'T\' );
 
 delete from cntct
 where ( cntct_id = old.guid );

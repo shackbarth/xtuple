@@ -216,8 +216,9 @@ where (itemsub_parent_item_id = old.guid);
 delete from itemcost
 where (itemcost_item_id = old.guid);
 
-delete from xm.document_assignment
-where (id = old.guid);
+delete from private.docinfo
+where ( source_id = old.guid ) 
+ and ( source_type = \'I\' );
 
 delete from item
  where (item_id = old.guid);

@@ -147,17 +147,9 @@ delete from comment
 delete from prjtask
 where ( prjtask_prj_id = old.guid );
 
-delete from docass
-where (docass_target_id = old.guid
- and docass_target_type = \'J\');
-
-delete from docass
-where (docass_source_id = old.guid
- and docass_source_type = \'J\');
-
-delete from imageass
- where ( imageass_source_id = old.guid
-and imageass_source = \'J\' );
+delete from private.docinfo
+where ( source_id = old.guid ) 
+ and ( source_type = \'J\' );
 
 delete from prj
 where ( prj_id = old.guid );
