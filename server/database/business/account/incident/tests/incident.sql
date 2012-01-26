@@ -47,12 +47,12 @@ values (
 insert into xm.incident_characteristic (
   guid, incident, characteristic, value )
 values (
-  88884, 88884, (select char_id from char where char_name like 'I-%' Limit 1), 'Yes' );
+  88884, 88884, (select characteristic from xm.characteristic where name like 'I-%' Limit 1), 'Yes' );
 
 insert into xm.incident_comment (
   guid, incident, date, username, comment_type, text, is_public )
 values (
-  439856, 88884, now(), current_user, (select cmnttype_id from cmnttype where cmnttype_name = 'General'), 'Foo.', true );
+  439856, 88884, now(), current_user, (select cmnttype_id from cmnttype where cmnttype_name = 'Sales'), 'Foo.', true );
 
 insert into xm.incident_history (
   guid, incident, timestamp, username, description)

@@ -1,9 +1,9 @@
-﻿-- BEGIN xm. project.sql test queries...
+-- BEGIN xm. project.sql test queries...
 
   -- insert rule testing...
 
 	INSERT INTO xm.project (
-	  id,
+	  guid,
 	  "number",
 	  "name",
 	  notes,
@@ -12,19 +12,19 @@
 	  due_date,
 	  assign_date,
 	  complete_date,
-	  assign_to,
+	  assigned_to,
 	  project_status)
 	VALUES (
 	  (SELECT nextval(pg_get_serial_sequence('prj','prj_id'))),
 	  '99996',
 	  'xm.project insert rule test name',
 	  'xm.project insert rule test notes',
-	  'admin',
+	  (select user_account_info from xm.user_account_info where username= 'admin'),
 	  now(),
 	  now() + interval '45 days',
 	  now() + interval '5 days',
 	  null,
-	  'mike',
+	  (select user_account_info from xm.user_account_info where username= 'admin'),
 	  'P');
 
 	-- used to confirm key value inserted above....
@@ -33,27 +33,22 @@
 	-- confirm insert into xm.project view
 	SELECT *
 	  FROM xm.project
-	 WHERE id = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
+	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
 
   -- update rule testing...
 
 	UPDATE xm.project
 	   SET 	"name"			= 'xm.project update rule test name',
 		notes			= 'xm.project update rule test notes',
-		"owner"			= 'testall',
+		"owner"			= null,
 		start_date		= start_date + interval '6 months',
 		due_date		= due_date + interval '6 months',
 		assign_date		= assign_date + interval '6 months',
 		complete_date		= now() + interval '6 months',
-		assign_to		= 'web',
-		project_status		= 'complete' 
+		assigned_to		= null,
+		project_status		= 'C' 
 					-- = 'open' -- used to test both remaining options
-	 WHERE id = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
-
-  -- delete rule testing...
-
-	DELETE FROM xm.project
-	 WHERE id = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
+	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
 
 -- END xm.project model view testing...
 
@@ -62,20 +57,20 @@
    -- insert rule testing...
 
 	INSERT INTO xm.project_comment (
-	id,
+	guid,
 	project,
 	"date",
-	"user",
+	"username",
 	comment_type,
 	"text",
 	is_public)
 	VALUES (
 	(SELECT MAX(comment_id) + 1
 	   FROM "comment"),
-	133,
+	(select cmnttype_id from cmnttype where cmnttype_name = 'Sales'),
 	now(),
 	'admin',
-	1,
+	(select cmnttype_id from cmnttype where cmnttype_name='Sales'),
 	'This text is a test of the project_comment model view INSERT rule...',
 	false);
 
@@ -86,7 +81,7 @@
 	-- confirm insert into xm.project_comment view
 	SELECT *
 	  FROM xm.project_comment
-	 WHERE id = (SELECT MAX(comment_id)
+	 WHERE guid = (SELECT MAX(comment_id)
 		       FROM "comment");
 
    -- update rule testing...
@@ -94,13 +89,13 @@
 	UPDATE 	xm.project_comment
 	   SET	"text" 		= '***This text is a test of the project_comment view UPDATE rule***',
 		is_public	= true
-	 WHERE	id 		= (SELECT MAX(comment_id)
+	 WHERE	guid 		= (SELECT MAX(comment_id)
 				     FROM "comment");
 
    -- delete rule testing...(should DO NOTHING)
 
 	DELETE 	FROM xm.project_comment
-	WHERE	id = (SELECT MAX(comment_id)
+	WHERE	guid = (SELECT MAX(comment_id)
 		        FROM "comment");
 
 -- END xm.project_comment model view testing...
@@ -110,12 +105,12 @@
   -- insert rule testing...
 
 	INSERT INTO xm.project_task (
-	  id,
+	  guid,
 	  "number",
 	  "name",
 	  notes,
 	  project,
-	  status,
+	  project_task_status,
 	  budgeted_hours,
 	  actual_hours,
 	  budgeted_expenses,
@@ -131,18 +126,18 @@
 	  (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id'))),
 	  'xm.project_task name test',
 	  'This text is a test of the project_task model view notes field INSERT rule...',
-	  133,--(SELECT currval(pg_get_serial_sequence('prj','prj_id'))),
+	  (SELECT currval(pg_get_serial_sequence('prj','prj_id'))),
 	  'P',
 	  225,
 	  NULL,
 	  3000.00,
 	  1500.00,
-	  'admin',
+	  (select user_account_info from xm.user_account_info where username='admin'),
 	  now(),
 	  now() + interval '60 days',
 	  now() + interval '10 days',
 	  NULL,
-	  'mike');
+	  (select user_account_info from xm.user_account_info where username='admin'));
 
 	-- used to confirm key value inserted above....
 	SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id'));
@@ -150,7 +145,7 @@
 	-- confirm insert into xm.project view
 	SELECT *
 	  FROM xm.project_task
-	 WHERE id = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
+	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
 
   -- update rule testing...
 
@@ -162,18 +157,18 @@
 		 actual_hours			= 99.99,
 		 budgeted_expenses		= 555.55,
 		 actual_expenses		= NULL,
-		 "owner"			= 'jsmith',
+		 "owner"			= null,
 		 start_date			= start_date + interval '12 months',
 		 due_date			= due_date + interval '12 months',
 		 assign_date			= assign_date + interval '12 months',
 		 complete_date			= now() + interval '12 months',
-		 assigned_to			= 'shopfloor'
-	   WHERE id = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
+		 assigned_to			= null
+	   WHERE guid = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
 
   -- delete rule testing...
 
 	DELETE FROM xm.project_task
-	 WHERE id = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
+	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
 
 -- END xm.project_task model view testing...
 
@@ -182,20 +177,20 @@
    -- insert rule testing...
 
 	INSERT INTO xm.project_task_comment (
-	id,
+	guid,
 	project_task,
 	"date",
-	"user",
+	"username",
 	comment_type,
 	"text",
 	is_public)
 	VALUES (
 	(SELECT MAX(comment_id) + 1
 	   FROM "comment"),
-	152,--(SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id'))),
+	(SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id'))),
 	now(),
 	'admin',
-	1,
+	(select cmnttype_id from cmnttype where cmnttype_name = 'Sales'),
 	'This text is a test of the project_task_comment model view INSERT rule...',
 	false);
 
@@ -206,20 +201,20 @@
 	-- confirm insert into xm.project_task_comment view
 	SELECT *
 	  FROM xm.project_task_comment
-	 WHERE id = (SELECT MAX(comment_id)
+	 WHERE guid = (SELECT MAX(comment_id)
 		       FROM "comment");
 
    -- update rule testing...
 
 	UPDATE 	xm.project_task_comment
 	   SET	"text" = '***This text is a test of the project_task_comment view UPDATE rule***'
-	 WHERE	id = (SELECT MAX(comment_id)
+	 WHERE	guid = (SELECT MAX(comment_id)
 		        FROM "comment");
 
    -- delete rule testing...(should DO NOTHING)
 
 	DELETE 	FROM xm.project_task_comment
-	WHERE	id = (SELECT MAX(comment_id)
+	WHERE	guid = (SELECT MAX(comment_id)
 		        FROM "comment");
 
 -- END xm.project_task_comment model view testing...
@@ -229,7 +224,7 @@
   -- insert rule testing...
 
 	INSERT INTO xm.project_task_alarm (
-	  id,
+	  guid,
 	  project_task,
 	  event,
 	  event_recipient,
@@ -243,7 +238,7 @@
 	  qualifier)
 	VALUES (
 	  (SELECT nextval(pg_get_serial_sequence('alarm','alarm_id'))),
-	  152,--(SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id'))),
+	  (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id'))),
 	  false,
 	  NULL,
 	  false,
@@ -261,7 +256,7 @@
 	-- confirm insert into xm.project view
 	SELECT *
 	  FROM xm.project_task_alarm
-	 WHERE id = 26--(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
+	 WHERE guid = 26; --(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
 
   -- update rule testing...
 
@@ -276,11 +271,16 @@
 		 "time"				= now(),
 		 "offset"			= 10,
 		 qualifier			= 'DA'
-	   WHERE id = 26 --currval(pg_get_serial_sequence('alarm','alarm_id'));
+	   WHERE guid = 26; --currval(pg_get_serial_sequence('alarm','alarm_id'));
 
   -- delete rule testing...
 
 	DELETE FROM xm.project_task_alarm
-	 WHERE id = 26--(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
+	 WHERE guid = 26;--(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
 
 -- END xm.project_task_alarm model view testing...
+
+  -- delete rule testing...
+
+	DELETE FROM xm.project
+	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));

@@ -1,4 +1,4 @@
-﻿insert into xm.country (
+insert into xm.country (
   guid, abbreviation, "name", currency_abbreviation, currency_name, currency_number, currency_symbol )
 values (
   99999, 'KS', 'Kerplekestan', 'TZS',  'Tanzanian Shilling', 834, '' );
@@ -16,12 +16,12 @@ values (
 insert into xm.address_comment (
   guid, address, date, username, comment_type, text, is_public )
 values (
-  99999, 99999, now(), current_user, (select cmnttype_id from cmnttype where cmnttype_name = 'General'), 'Foo.', false );
+  99999, 99999, now(), current_user, (select cmnttype_id from cmnttype where cmnttype_name = 'Sales'), 'Foo.', false );
 
 insert into xm.address_characteristic (
   guid, address, characteristic, value )
 values (
-  99999, 99999, (select char_id from char where char_name = 'ADR-STOP'), 'Yes' );
+  99999, 99999, (select characteristic from xm.characteristic where name = 'ADR-STOP'), 'Yes' );
 
 select * from xm.address where guid = 99999;
 select * from xm.address_comment where guid = 99999;

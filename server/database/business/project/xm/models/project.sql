@@ -124,9 +124,7 @@ create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.project
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
              and ((old.owner).username = getEffectiveXtUser()
-                  and (new.owner).username = getEffectiveXtUser())
-              or ((old.assigned_to).username = getEffectiveXtUser()
-                  and (new.assigned_to).username = getEffectiveXtUser())) do instead
+               or (old.assigned_to).username = getEffectiveXtUser())) do instead
 
   select private.raise_exception(\'You do not have privileges to update this Project\');
 

@@ -93,7 +93,7 @@ INSERT INTO xm.opportunity_characteristic (
 VALUES (
   99999, 
   99999, 
-  (SELECT char_id FROM "char" WHERE char_name LIKE '%OPPORTUNITY%'), 
+  (SELECT characteristic FROM xm.characteristic WHERE name LIKE '%OPPORTUNITY%'), 
   'Opportunity Characteristic View - Test' );
 
 -- used to verify changes to the xm.opportunity_characteristic view
@@ -102,7 +102,7 @@ SELECT *
 
 -- used to exercise the update rule for the xm.opportunity_characteristic view
 UPDATE xm.opportunity_characteristic
-   SET characteristic = 24,
+   SET characteristic = (SELECT characteristic FROM xm.characteristic WHERE guid = 24),
        "value"	 = '**Opportunity Characteristic View Update Test**'
  WHERE guid = 99999;
 
@@ -127,7 +127,7 @@ INSERT INTO xm.opportunity_comment (
   guid,
   opportunity,
   "date",
-  "user",
+  "username",
   comment_type,
   "text",
   is_public)

@@ -15,17 +15,15 @@ E'{
   "prjtask.prjtask_status as project_task_status",
   "prjtask.prjtask_hours_budget as budgeted_hours",
   "prjtask.prjtask_hours_actual as actual_hours",
-  "null::numeric as balance_hours",
   "prjtask.prjtask_exp_budget as budgeted_expenses",
   "prjtask.prjtask_exp_actual as actual_expenses",
-  "null::numeric as balance_expenses",
   "prjtask.prjtask_start_date as start_date",
   "prjtask.prjtask_due_date as due_date",
   "prjtask.prjtask_assigned_date as assign_date",
   "prjtask.prjtask_completed_date as complete_date",
   "(select user_account_info
     from xm.user_account_info
-    where username = prjtask.prjtask_username) as assign_to",
+    where username = prjtask.prjtask_username) as assigned_to",
   "(select user_account_info
     from xm.user_account_info
     where username = prjtask.prjtask_owner_username) as owner",
@@ -78,7 +76,7 @@ values (
   new.due_date,
   new.assign_date,
   new.complete_date,
-  (new.assign_to).username );
+  (new.assigned_to).username );
 
 ","
 
@@ -86,7 +84,7 @@ create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.project_task
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
              and ((new.owner).username = getEffectiveXtUser()
-                  or (new.assign_to).username = getEffectiveXtUser())) do instead
+                  or (new.assigned_to).username = getEffectiveXtUser())) do instead
 
   select private.raise_exception(\'You do not have privileges to create this Project Task\');
 
@@ -110,7 +108,7 @@ update prjtask set
   prjtask_due_date = new.due_date,
   prjtask_assigned_date = new.assign_date,
   prjtask_completed_date = new.complete_date,
-  prjtask_username = new.assign_to
+  prjtask_username = new.assigned_to
 where ( prjtask_id = old.guid );
 
 ","
@@ -119,9 +117,7 @@ create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.project_task
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
              and ((old.owner).username = getEffectiveXtUser()
-                  and (new.owner).username = getEffectiveXtUser())
-              or ((old.assign_to).username = getEffectiveXtUser()
-                  and (new.assign_to).username = getEffectiveXtUser())) do instead
+              or (old.assigned_to).username = getEffectiveXtUser())) do instead
 
   select private.raise_exception(\'You do not have privileges to update this Project Task\');
 
@@ -149,7 +145,7 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project_task
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
              and ((old.owner).username = getEffectiveXtUser()
-                  or (old.assign_to).username = getEffectiveXtUser())) do instead
+                  or (old.assigned_to).username = getEffectiveXtUser())) do instead
 
   select private.raise_exception(\'You do not have privileges to delete this Project Task\');
 

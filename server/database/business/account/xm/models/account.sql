@@ -97,9 +97,9 @@ values (
 ","
 
 create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.account 
-   where not checkPrivilege(\'MaintainAllCRMAccounts\') 
-    and not (checkPrivilege(\'MaintainPersonalCRMAccounts\') 
-             and (new.owner).username = getEffectiveXtUser()) do instead
+ where not checkPrivilege(\'MaintainAllCRMAccounts\') 
+    and not (checkPrivilege(\'MaintainPersonalCRMAccounts\')
+	     and (new.owner).username = getEffectiveXtUser()) do instead
 
   select private.raise_exception(\'You do not have privileges to create this Account\');
 
@@ -125,11 +125,10 @@ where ( crmacct_id = old.guid );
 
 ","
 
-create or replace rule \\"_CREATE_CHECK_PRIV\\" as on update to xm.account 
+create or replace rule \\"_UPDATE_CHECK_PRIV\\" as on update to xm.account 
    where not checkPrivilege(\'MaintainAllCRMAccounts\') 
     and not (checkPrivilege(\'MaintainPersonalCRMAccounts\')
-	     and (old.owner).username = getEffectiveXTUser()
-             and (new.owner).username = getEffectiveXtUser()) do instead
+	     and (old.owner).username = getEffectiveXtUser()) do instead
 
   select private.raise_exception(\'You do not have privileges to update this Account\');
 
@@ -159,7 +158,7 @@ where ( crmacct_id = old.guid );
 
 ","
 
-create or replace rule \\"_CREATE_CHECK_PRIV\\" as on delete to xm.account 
+create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.account 
    where not checkPrivilege(\'MaintainAllCRMAccounts\') 
     and not (checkPrivilege(\'MaintainPersonalCRMAccounts\') 
              and (old.owner).username = getEffectiveXtUser()) do instead

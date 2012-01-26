@@ -89,11 +89,6 @@
 			max_cost			= 888888.88
 		 WHERE guid 				= 99999;
 
-	 -- delete rule testing
-
-		DELETE FROM xm.item
-		 WHERE guid = 99999;
-
 -- END xm.item model view test queries
 
 -- BEGIN xm.item_alias model view test queries
@@ -148,13 +143,15 @@
 		  item,
 		  characteristic,
 		  "value",
-		  default_value)
+		  is_default,
+		  price)
 		VALUES (
 		  99999,
 		  99999,
-		  (select min(char_id) from char),
+		  (select characteristic from xm.characteristic  where is_items order by guid limit 1),
 		  'value INSERT',
-		  false);
+		  false,
+		  0);
 
 	-- confirm INSERT record
 
@@ -165,9 +162,9 @@
 	-- update rule testing
 
 		UPDATE 	xm.item_characteristic
-		   SET 	characteristic		= (select max(char_id) from char),
+		   SET 	characteristic		= (select characteristic from xm.characteristic  where is_items order by guid desc limit 1),
 			"value"			= '**value UPDATE**',
-			default_value		= true
+			is_default		= true
 		 WHERE 	guid 			= 99999;
 
 	 -- delete rule testing
@@ -185,7 +182,7 @@
 		  guid,
 		  item,
 		  "date",
-		  "user",
+		  "username",
 		  comment_type,
 		  "text",
 		  is_public)
@@ -194,7 +191,7 @@
 		  99999,
 		  now(),
 		  'mwall',
-		  1,
+		  (select cmnttype_id from cmnttype where cmnttype_name = 'Sales'),
 		  'comment text INSERT',
 		  false);
 
@@ -222,72 +219,55 @@
 
 	-- insert rule testing (Docass)
 
-		INSERT INTO xm.item_document (
+		INSERT INTO xm.contact_assignment (
 		  guid,
-		  item,
-		  target,
-		  target_type,
+		  source,
+		  source_type,
+		  contact,
 		  purpose)
 		VALUES (
 		  99999,
 		  99999,
-		  (select min(cntct_id) from cntct),
-		  private.get_id('modelbas','modelbas_source','T'),
+		  'I',
+		  (select contact_info from xm.contact_info order by guid limit 1),
 		  'S');
 
-		INSERT INTO xm.item_document (
+		INSERT INTO xm.item_assignment (
 		  guid,
+		  source,
+		  source_type,
 		  item,
-		  target,
-		  target_type,
 		  purpose)
 		VALUES (
 		  99998,
 		  99999,
-		  (select min(crmacct_id) from crmacct),
-		  private.get_id('modelbas','modelbas_source','CRMA'),
-		  'A');
+		  'I',
+		  (select item_info from xm.item_info order by guid limit 1),
+		  'S');
 
-		INSERT INTO xm.item_document (
+	-- insert rule testing (Imageass)
+
+		INSERT INTO xm.image_assignment (
 		  guid,
-		  item,
-		  target,
-		  target_type,
+		  source,
+		  source_type,
+		  image,
 		  purpose)
 		VALUES (
 		  99997,
 		  99999,
-		  (select min(file_id) from "file"),
-		  private.get_id('modelbas','modelbas_source','FILE'),
-		  'C');
-
-	-- insert rule testing (Imageass)
-
-		INSERT INTO xm.item_document (
-		  guid,
-		  item,
-		  target,
-		  target_type,
-		  purpose)
-		VALUES (
-		  99996,
-		  99999,
-		  (select min(image_id) from image),
-		  private.get_id('modelbas','model_name','image'),
+		  'I',
+		  (select image_info from xm.image_info order by guid limit 1),
 		  'S');
 
 	-- confirm INSERT record
 
 		SELECT * 
-		  FROM xm.item_document
-		 WHERE guid IN (99999,99998,99997,99996);
+		  FROM private.docinfo
+		 WHERE id IN (99999,99998,99997,99996);
 
 	-- NO update rule functionality for the xm.item_document model view
 
-	 -- delete rule testing
-
-		DELETE FROM xm.item_document
-		 WHERE guid IN (99999,99998,99997,99996);
 
 -- END xm.item_document model view test queries
 
@@ -366,11 +346,6 @@
 			fractional		= true
 		 WHERE 	guid 			= 99999;
 
-	 -- delete rule testing
-
-		DELETE FROM xm.item_conversion
-		 WHERE guid = 99999;
-
 -- END xm.item_conversion model view test queries
 
 -- BEGIN xm.item_conversion_type_assignment model view test queries
@@ -401,6 +376,11 @@
 		DELETE FROM xm.item_conversion_type_assignment
 		 WHERE guid = 99999;
 
+	-- delete rule testing
+
+		DELETE FROM xm.item_conversion
+		 WHERE guid = 99999;
+
 -- END xm.item_conversion_type_assignment model view test queries
 
 -- BEGIN xm.item_info model view test queries
@@ -409,3 +389,8 @@
 	  FROM xm.item_info;
 
 -- END xm.item_info model view test queries
+
+-- delete rule testing
+
+        DELETE FROM xm.item
+        WHERE guid = 99999;

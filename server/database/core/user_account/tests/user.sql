@@ -27,6 +27,11 @@ update xm.user_account set
   is_database_user = true
 where username = 'sbsquarepants';
 
+drop user sbsquarepants;
+delete from usrpref where usrpref_username = 'sbsquarepants';
+delete from xm.user_account_role where guid = 99999;
+delete from xm.user_account_privilege_assignment where guid = 99999;
+
 select * from xm.user_account where username = 'sbsquarepants';
 
 delete from xm.user_account where username = 'sbsquareparts';

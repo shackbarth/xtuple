@@ -26,12 +26,12 @@ values (
 insert into xm.contact_comment (
   guid, contact, date, username, comment_type, text, is_public )
 values (
-  99999, 99999, now(), current_user, (select cmnttype_id from cmnttype where cmnttype_name = 'General'), 'Foo.', false );
+  99999, 99999, now(), current_user, (select cmnttype_id from cmnttype where cmnttype_name = 'Sales'), 'Foo.', false );
 
 insert into xm.contact_characteristic (
   guid, contact, characteristic, value )
 values (
-  99999, 99999, (select char_id from char where char_name = 'ADR-STOP'), 'Yes' );
+  99999, 99999, (select characteristic from xm.characteristic where name = 'ADR-STOP'), 'Yes' );
 
 insert into xm.file (
   guid, name, data )
@@ -65,7 +65,6 @@ where guid = 99999;
 select * from xm.contact where guid = 99999;
 select * from xm.contact_comment where guid = 99999;
 select * from xm.contact_characteristic where guid = 99999;
-select * from xm.contact_document where guid in (99998,99999);
 
 delete from xm.honorific where guid = 99999;
 delete from xm.contact where guid = 99999;
