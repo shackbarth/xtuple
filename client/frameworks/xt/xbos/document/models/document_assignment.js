@@ -4,33 +4,31 @@
 // ==========================================================================
 /*globals XT */
 
-/** @class
+/** @mixin
 
   (Document your Model here)
 
-  @extends XM.Record
   @version 0.1
 */
 
-XM.DocumentAssignment = XM.Record.extend(
-/** @scope XM.DocumentAssignment.prototype */ {
-
-  className: 'XM.DocumentAssignment',
+XM.DocumentAssignment = XM.Record.extend({
+   /** @scope XM.DocumentAssignment.prototype */ {
   
   /**
   @type Number
   */
-  target: SC.Record.attr(Number),
+  source: SC.Record.attr(Number),
   
   /**
   @type XM.Source
   */
-  targetType: SC.Record.toOne('XM.Type'),
+  sourceType: SC.Record.attr(String),
   
   /**
   @type String
   */
   purpose: SC.Record.attr(String),
+  
 
   // ..........................................................
   // CALCULATED PROPERTIES
@@ -43,4 +41,4 @@ XM.DocumentAssignment = XM.Record.extend(
     return XM.purpose.get(this.get('purpose'));
   }.property('purpose').cacheable()
 
-})
+});
