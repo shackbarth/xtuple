@@ -8,28 +8,21 @@
 
   (Document your Model here)
 
-  @extends XM.Document
+  @extends XM.Record
   @version 0.1
 */
 
-XM.File = XM.Document.extend(
-/** @scope XM.File.prototype */ {
+XM.UrlAssignment = XM.DocumentAssignment.extend(
+/** @scope XM.UrlAssignment.prototype */ {
 
-  className: 'XM.File',
+  className: 'XM.UrlAssignment',
   
-  /**
-  @type String
+  /** 
+  @type XM.Url
   */
-  name: SC.Record.attr(String),
+  url: SC.Record.toOne('XM.Url', { 
+    isNested: YES,
+    isRequired: YES 
+  })
   
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  data: SC.Record.attr(String),
-  
-})
+});

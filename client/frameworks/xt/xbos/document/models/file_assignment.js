@@ -8,28 +8,21 @@
 
   (Document your Model here)
 
-  @extends XM.Document
+  @extends XM.Record
   @version 0.1
 */
 
-XM.File = XM.Document.extend(
-/** @scope XM.File.prototype */ {
+XM.FileAssignment = XM.Record.extend( XT.DocumentAssignment,
+/** @scope XM.FileAssignment.prototype */ {
 
-  className: 'XM.File',
+  className: 'XM.FileAssignment',
   
-  /**
-  @type String
+  /** 
+  @type XM.FileInfo
   */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  data: SC.Record.attr(String),
-  
-})
+  file: SC.Record.toOne('XM.FileInfo', { 
+    isNested: YES,
+    isRequired: YES 
+  })
+
+});

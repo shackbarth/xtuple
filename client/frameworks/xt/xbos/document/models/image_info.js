@@ -8,14 +8,16 @@
 
   (Document your Model here)
 
-  @extends XM.Document
+  @extends XM.Record
   @version 0.1
 */
 
-XM.File = XM.Document.extend(
-/** @scope XM.File.prototype */ {
+XM.ImageInfo = XM.Record.extend(
+/** @scope XM.ImageInfo.prototype */ {
 
-  className: 'XM.File',
+  className: 'XM.ImageInfo',
+  
+  isEditable: NO,
   
   /**
   @type String
@@ -25,11 +27,6 @@ XM.File = XM.Document.extend(
   /**
   @type String
   */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  data: SC.Record.attr(String),
-  
+  description: SC.Record.attr(String)
+
 })
