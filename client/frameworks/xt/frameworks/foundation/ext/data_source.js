@@ -104,12 +104,27 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
   },
 
   didRetrieveData: function(response, store, storeKey) {
+    var error;
+    
     if(SC.ok(response)) {
       var dataHash = JSON.parse(response.get("body").rows[0].retrieve_record);
+      
+      if(dataHash.error) {
+        error = SC.Error.create({ 
+          code: 'Error',
+          label: 'Datasource Error',
+          message: dataHash.error
+        });
+      } else {
         store.dataSourceDidComplete(storeKey, dataHash);
-    } else {
-      store.dataSourceDidError(storeKey, response);
-    }
+        return YES;
+      }
+    } 
+    
+    /* TODO: Why does this cause an internal inconsistency error? */
+    store.dataSourceDidError(storeKey, error);
+    
+    return NO;
   },
   
   commitRecords: function(store, createStoreKeys, updateStoreKeys, destroyStoreKeys, params) {
