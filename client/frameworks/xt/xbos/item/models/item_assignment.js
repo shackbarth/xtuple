@@ -12,17 +12,17 @@
   @version 0.1
 */
 
-XM.UrlAssignment = XM.DocumentAssignment.extend(
-/** @scope XM.UrlAssignment.prototype */ {
+XM.ItemAssignment = XM.DocumentAssignment.extend( 
+/** @scope XM.ItemAssignment.prototype */ {
 
-  className: 'XM.UrlAssignment',
+  className: 'XM.ItemAssignment',
   
   /** 
-  @type XM.Url
+  @type XM.ItemInfo
   */
-  url: SC.Record.toOne('XM.Url', { 
+  item: SC.Record.toOne('XM.ItemInfo', { 
     isNested: YES,
     isRequired: YES 
   })
-  
+
 });

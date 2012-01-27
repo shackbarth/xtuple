@@ -12,17 +12,17 @@
   @version 0.1
 */
 
-XM.UrlAssignment = XM.DocumentAssignment.extend(
-/** @scope XM.UrlAssignment.prototype */ {
+XM.ContactAssignment = XM.DocumentAssignment.extend( 
+/** @scope XM.ContactAssignment.prototype */ {
 
-  className: 'XM.UrlAssignment',
+  className: 'XM.ContactAssignment',
   
   /** 
-  @type XM.Url
+  @type XM.ContactInfo
   */
-  url: SC.Record.toOne('XM.Url', { 
+  contact: SC.Record.toOne('XM.ContactInfo', { 
     isNested: YES,
     isRequired: YES 
   })
-  
+
 });

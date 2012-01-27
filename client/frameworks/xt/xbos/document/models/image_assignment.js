@@ -8,7 +8,7 @@
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
   @version 0.1
 */
 

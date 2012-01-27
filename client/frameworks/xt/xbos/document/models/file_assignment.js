@@ -8,11 +8,11 @@
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
   @version 0.1
 */
 
-XM.FileAssignment = XM.Record.extend( XT.DocumentAssignment,
+XM.FileAssignment = XM.DocumentAssignment.extend( 
 /** @scope XM.FileAssignment.prototype */ {
 
   className: 'XM.FileAssignment',

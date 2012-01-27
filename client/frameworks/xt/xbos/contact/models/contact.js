@@ -146,11 +146,38 @@ XM.Contact = XM.Document.extend(
   }),
   
   /**
-  @type XM.ContactDocument
+  @type XM.ContactAssignment
   */
-  documents: XM.Record.toMany('XM.ContactDocument', {
-    isNested: YES,
-    inverse: 'contact',
+  contacts: XM.Record.toMany('XM.ContactAssignment', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ItemAssignment
+  */
+  items: XM.Record.toMany('XM.ItemAssignment', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.FileAssignment
+  */
+  files: XM.Record.toMany('XM.FileAssignment', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ImageAssignment
+  */
+  images: XM.Record.toMany('XM.ImageAssignment', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ImageAssignment
+  */
+  urls: XM.Record.toMany('XM.UrlAssignment', {
+    isNested: YES
   }),
 
   // ..........................................................
