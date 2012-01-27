@@ -11,7 +11,7 @@
   @version 0.2
 */
 
-XM.Account = XM.Document.extend(
+XM.Account = XM.Document.extend( XM.CoreAssignments,
 /** @scope XM.Account.prototype */ {
 
   className: 'XM.Account',
@@ -134,16 +134,13 @@ XM.Account = XM.Document.extend(
   /* @private */
   _accountsLengthBinding: '.accounts.length',
   
-  
   /* @private */
-  /*
   _accountsDidChange: function() {
     var documents = this.get('documents'),
         accounts = this.get('accounts');
 
     documents.addEach(accounts);    
   }.observes('accountsLength'),
-  */
 
   // ..........................................................
   // OBSERVERS

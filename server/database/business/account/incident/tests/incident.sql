@@ -30,9 +30,30 @@ select * from xm.incident_severity;
 
 -- [insert into = create]
 insert into xm.incident (
-  guid, number, account, contact, description, owner, assigned_to, notes, priority, incident_status, is_public, resolution, severity )
+  guid, number, account, contact, description, owner, assigned_to, notes, priority, incident_status, is_public, resolution, severity, recurrence )
 values (
-  88884, 88884, (select account_info from xm.account_info where guid = 12), (select contact_info from xm.contact_info where guid = 6) ,'New name info summary here.', (select user_account_info from xm.user_account_info where username='admin'), null, 'New notes go here.' , '3' , 'C' , true , '4' , '2' );
+  88884, 88884, (select account_info from xm.account_info where guid = 12), 
+  (select contact_info from xm.contact_info where guid = 6) ,'New name info summary here.', 
+  (select user_account_info from xm.user_account_info where username='admin'), null, 
+  'New notes go here.' , '3' , 'C' , true , '4' , '2', ( nextval('recur_recur_id_seq'), 88884, 'W', 1, (current_date + 2)::timestamp with time zone, null, 2)
+   );
+
+-- remove the recurrance
+
+update xm.incident set
+  recurrence = null
+where guid = 88884;
+
+-- add a new recurrance
+update xm.incident set
+  recurrence = ( nextval('recur_recur_id_seq'), 88884, 'M', 1, (current_date + 4)::timestamp with time zone, null, 2)
+where guid = 88884;
+
+-- update the recurrance
+
+update xm.incident set
+  recurrence = ( currval('recur_recur_id_seq'), 88884, 'D', 1, (current_date + 2)::timestamp with time zone, null, 2)
+where guid = 88884;
 
 insert into xm.incident_alarm (
    guid, number, email, email_recipient, event, event_recipient, message, message_recipient, "offset", qualifier, time, trigger, source) 
@@ -111,8 +132,11 @@ where guid = 6;
 --[delete]
 
 --deletes incident, history, comments, characteristic and documents
-delete from xm.incident 
-where guid = 88889;
+delete from comment where comment_source = 'INCDT' and comment_source_id=88884;
+delete from charass where charass_target_type = 'INCDT' and charass_target_id=88884;
+delete from recur where recur_parent_type='INCDT' and recur_parent_id=88884;
+delete from incdthist where incdthist_incdt_id=88884;
+delete from incdt where incdt_id = 88884;
 
 delete from xm.incident_alarm 
 where guid = 29;
