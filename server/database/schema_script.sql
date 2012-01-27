@@ -1,4 +1,4 @@
--- [ START ] initdb
+﻿-- [ START ] initdb
 
 -- create schemas
 \i create_private_schema.sql;
@@ -162,6 +162,7 @@
 \i business/account/incident/xm/models/incident_assignment.sql;
 \i business/account/incident/xm/models/incident_resolution.sql;
 \i business/account/incident/xm/models/incident_severity.sql;
+\i business/account/incident/xm/models/incident_recurrence.sql;
 \i business/account/incident/xm/models/incident.sql;
 
 -- business/account/opportunity xm models
