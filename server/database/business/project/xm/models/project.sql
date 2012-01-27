@@ -22,6 +22,9 @@ E'{
   "(select user_account_info
    from xm.user_account_info
    where username = prj.prj_owner_username) as owner",
+  "(select project_recurrence
+    from xm.project_recurrence
+    where project = prj.prj_id) as recurrence",
   "array(
    select project_comment
    from xm.project_comment
@@ -91,6 +94,30 @@ values (
 
 ","
 
+create or replace rule \\"_CREATE_RECURRENCE\\" as on insert to xm.project
+  where new.recurrence is null = false do instead (
+
+insert into xm.project_recurrence (
+  guid,
+  project,
+  period,
+  frequency,
+  start_date,
+  end_date,
+  maximum)
+values (
+  (new.recurrence).guid,
+  new.guid,
+  (new.recurrence).period,
+  (new.recurrence).frequency,
+  (new.recurrence).start_date,
+  (new.recurrence).end_date,
+  (new.recurrence).maximum );
+
+)
+
+","
+
 create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.project 
    where not checkPrivilege(\'MaintainAllProjects\') 
     and not (checkPrivilege(\'MaintainPersonalProjects\') 
@@ -117,6 +144,54 @@ update prj set
   prj_username = (new.assigned_to).username,
   prj_status = new.project_status
 where ( prj_id = old.guid );
+
+","
+
+
+create or replace rule \\"_UPDATE_RECURRENCE_CREATE\\" as on update to xm.project
+  where old.recurrence is null and new.recurrence is null = false do instead
+
+insert into xm.project_recurrence (
+  guid,
+  project,
+  period,
+  frequency,
+  start_date,
+  end_date,
+  maximum)
+values (
+  (new.recurrence).guid,
+  new.guid,
+  (new.recurrence).period,
+  (new.recurrence).frequency,
+  (new.recurrence).start_date,
+  (new.recurrence).end_date,
+  (new.recurrence).maximum );
+
+","
+
+create or replace rule \\"_UPDATE_RECURRENCE_UPDATE\\" as on update to xm.project
+  where old.recurrence != new.recurrence do instead (
+
+update xm.project_recurrence set
+  period = (new.recurrence).period,
+  frequency = (new.recurrence).frequency,
+  start_date = (new.recurrence).start_date,
+  end_date = (new.recurrence).end_date,
+  maximum = (new.recurrence).maximum
+where (guid = (old.recurrence).guid );
+
+)
+
+","
+
+create or replace rule \\"_UPDATE_RECURRENCE_DELETE\\" as on update to xm.project
+  where old.recurrence is not null != new.recurrence is null do instead (
+
+delete from xm.project_recurrence
+where (guid = (old.recurrence).guid );
+
+)
 
 ","
 

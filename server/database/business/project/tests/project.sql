@@ -13,9 +13,10 @@
 	  assign_date,
 	  complete_date,
 	  assigned_to,
-	  project_status)
+	  project_status, 
+	  recurrence)
 	VALUES (
-	  (SELECT nextval(pg_get_serial_sequence('prj','prj_id'))),
+	  9999,
 	  '99996',
 	  'xm.project insert rule test name',
 	  'xm.project insert rule test notes',
@@ -25,15 +26,14 @@
 	  now() + interval '5 days',
 	  null,
 	  (select user_account_info from xm.user_account_info where username= 'admin'),
-	  'P');
-
-	-- used to confirm key value inserted above....
-	SELECT currval(pg_get_serial_sequence('prj','prj_id'));
+	  'P',
+	 ( nextval('recur_recur_id_seq'), 9999, 'W', 1, (current_date + 2)::timestamp with time zone, null, 2)
+	  );
 
 	-- confirm insert into xm.project view
 	SELECT *
 	  FROM xm.project
-	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
+	 WHERE guid = 9999;
 
   -- update rule testing...
 
@@ -48,7 +48,25 @@
 		assigned_to		= null,
 		project_status		= 'C' 
 					-- = 'open' -- used to test both remaining options
-	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
+	 WHERE guid = 9999;
+
+
+-- remove the recurrance
+
+update xm.project set
+  recurrence = null
+where guid = 9999;
+
+-- add a new recurrance
+update xm.project set
+  recurrence = ( nextval('recur_recur_id_seq'), 9999, 'M', 1, (current_date + 4)::timestamp with time zone, null, 2)
+where guid = 9999;
+
+-- update the recurrance
+
+update xm.project set
+  recurrence = ( currval('recur_recur_id_seq'), 9999, 'D', 1, (current_date + 2)::timestamp with time zone, null, 2)
+where guid = 9999;
 
 -- END xm.project model view testing...
 
@@ -126,7 +144,7 @@
 	  (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id'))),
 	  'xm.project_task name test',
 	  'This text is a test of the project_task model view notes field INSERT rule...',
-	  (SELECT currval(pg_get_serial_sequence('prj','prj_id'))),
+	  9999,
 	  'P',
 	  225,
 	  NULL,
@@ -152,7 +170,7 @@
 	  UPDATE xm.project_task
 	     SET "name"				= '**Updated xm.project_task name**',
 		 notes				= '**Udated xm.project_task notes**',
-		 project			= (SELECT currval(pg_get_serial_sequence('prj','prj_id'))),
+		 project			= 9999,
 		 budgeted_hours			= 999.00,
 		 actual_hours			= 99.99,
 		 budgeted_expenses		= 555.55,
@@ -283,4 +301,4 @@
   -- delete rule testing...
 
 	DELETE FROM xm.project
-	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prj','prj_id')));
+	 WHERE number = '99996';

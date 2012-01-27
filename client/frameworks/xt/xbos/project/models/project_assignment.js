@@ -9,18 +9,20 @@
   (Document your Model here)
 
   @extends XM.DocumentAssignment
+  @version 0.1
 */
-XM.ContactDocument = XM.DocumentAssignment.extend(
-/** @scope XM.ContactDocument.prototype */ {
 
-  className: 'XM.ContactDocument',
+XM.ProjectAssignment = XM.DocumentAssignment.extend( 
+/** @scope XM.ProjectAssignment.prototype */ {
 
-  /**
-  @type XM.Contact
-  */
-  contact: SC.Record.toOne('XM.Contact', {
-    inverse:  'documents',
-    isMaster: NO,
-  }),
+  className: 'XM.ProjectAssignment',
   
-}) ;
+  /** 
+  @type XM.ProjectInfo
+  */
+  project: SC.Record.toOne('XM.ProjectInfo', { 
+    isNested: YES,
+    isRequired: YES 
+  })
+
+});

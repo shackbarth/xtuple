@@ -8,19 +8,18 @@
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.Record
+  @version 0.1
 */
-XM.ProjectDocument = XM.DocumentAssignment.extend(
-/** @scope XM.ProjectDocument.prototype */ {
 
-  className: 'XM.ProjectDocument',
+XM.ProjectRecurrence = XM.Record.extend( XM.Recurrence,
+/** @scope XM.ProjectRecurrence.prototype */ {
 
-  /**
+  className: 'XM.ProjectRecurrence',
+  
+  /** 
   @type XM.Project
   */
-  opportunity: SC.Record.toOne('XM.Project', {
-    inverse:  'documents',
-    isMaster: NO
-  })
-  
-}) ;
+  project: SC.Record.toOne('XM.Project')
+
+});
