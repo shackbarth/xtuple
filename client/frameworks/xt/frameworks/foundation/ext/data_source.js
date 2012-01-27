@@ -109,7 +109,7 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
     if(SC.ok(response)) {
       var dataHash = JSON.parse(response.get("body").rows[0].retrieve_record);
       
-      if(dataHash.error) {
+      if(!dataHash.guid) {
         error = SC.Error.create({ 
           code: 'Error',
           label: 'Datasource Error',
