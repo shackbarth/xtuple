@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Opportunity = XM.Activity.extend(
+XM.Opportunity = XM.Activity.extend( XM.CoreAssignments, 
 /** @scope XM.Opportunity.prototype */ {
 
   className: 'XM.Opportunity',
@@ -44,7 +44,7 @@ XM.Opportunity = XM.Activity.extend(
   /**
   @type String
   */
-  name: SC.Record.att(String),
+  name: SC.Record.attr(String),
   
   /**
   @type XM.OpportunitySource
@@ -98,6 +98,34 @@ XM.Opportunity = XM.Activity.extend(
   completeDate: SC.Record.attr(SC.DateTime, { 
     format: '%Y-%m-%d' 
   }),
+  
+    
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
+  sourceType: 'OPP',
+  
+  /**
+  @type XM.OpportunityAssignment
+  */
+  opportunities: XM.Record.toMany('XM.OpportunityAssignment', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _opportunitiesLength: 0,
+  
+  /* @private */
+  _opportunitiesLengthBinding: '.opportunities.length',
+  
+  /* @private */
+  _opportunitiesDidChange: function() {
+    var documents = this.get('documents'),
+        opportunities = this.get('opportunities');
+
+    documents.addEach(opportunities);    
+  }.observes('opportunitiesLength'),
   
   /**
   @type XM.OpportunityCharacteristic
