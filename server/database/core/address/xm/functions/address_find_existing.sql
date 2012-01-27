@@ -14,7 +14,7 @@
     throw new Error("Class type invalid: must be type Adress!");
 
   } else {
-      sql = "select address "
+      sql = "select * "
           + "from xm.address "
           + "where ((coalesce(upper(line1),'') = coalesce(upper($1),'')) "
           + "and (coalesce(upper(line2),'') = coalesce(upper($2),'')) "
@@ -44,3 +44,14 @@
     };
 
 $$ LANGUAGE plv8;
+
+/*
+select private.fetch(E'{ "query": {"recordType":"XM.Address",
+                                   "parameters":{}, 
+                                  "conditions":"", 
+                                  "orderBy":"guid"}}');
+
+select private.retrieve_record('XM.Address',1);
+
+select xm.address_find_existing(E'{"guid":1,"number":"1","isActive":true,"line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States","notes":"","comments":[],"characteristics":[],"type":"Address","dataState":"read"}');
+*/
