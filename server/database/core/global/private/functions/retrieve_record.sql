@@ -75,6 +75,14 @@ create or replace function private.retrieve_record(record_type text, id integer)
   normalize = function(nameSpace, model, record) {
     var viewdef = getViewDefinition(model, nameSpace);
 
+    /* helper formatting function */
+    formatTypeName = function(str) {
+      return str.slice(0,1).toUpperCase() + camelize(str.substring(1));
+    }
+
+    /* set data type property */
+    record['type'] = formatTypeName(model);
+
     /* set data state property */
     record['dataState'] = READ_STATE;
 
@@ -82,11 +90,6 @@ create or replace function private.retrieve_record(record_type text, id integer)
       if (record.hasOwnProperty(prop)) {
         var coldef = findProperty(viewdef, 'attname', prop),
 	    value, result, sql = '';
-
-	 /* helper formatting function */
-        formatTypeName = function(str) {
-          return str.slice(0,1).toUpperCase() + camelize(str.substring(1));
-        }
 
         /* if it's a compound type, add a type property */
         if (coldef['typcategory'] === COMPOUND_TYPE && record[prop]) {
