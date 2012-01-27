@@ -28,6 +28,9 @@ E'{
   "(select user_account_info
     from xm.user_account_info
     where username = todoitem.todoitem_username) as assigned_to",
+  "(select to_do_recurrence
+    from xm.to_do_recurrence
+    where to_do = todoitem.todoitem_id) as recurrence",
   "array(
     select to_do_alarm 
     from xm.to_do_alarm
@@ -101,6 +104,30 @@ values (
 
 ","
 
+create or replace rule \\"_CREATE_RECURRENCE\\" as on insert to xm.to_do
+  where new.recurrence is null = false do instead (
+
+insert into xm.to_do_recurrence (
+  guid,
+  to_do,
+  period,
+  frequency,
+  start_date,
+  end_date,
+  maximum)
+values (
+  (new.recurrence).guid,
+  new.guid,
+  (new.recurrence).period,
+  (new.recurrence).frequency,
+  (new.recurrence).start_date,
+  (new.recurrence).end_date,
+  (new.recurrence).maximum );
+
+)
+
+","
+
 -- update rule
 
 create or replace rule \\"_UPDATE\\" as on update to xm.to_do
@@ -121,6 +148,54 @@ update todoitem set
   todoitem_owner_username = (new.owner).username,
   todoitem_username = (new.assigned_to).username
 where ( todoitem_id = old.guid );
+
+","
+
+
+create or replace rule \\"_UPDATE_RECURRENCE_CREATE\\" as on update to xm.to_do
+  where old.recurrence is null and new.recurrence is null = false do instead
+
+insert into xm.to_do_recurrence (
+  guid,
+  to_do,
+  period,
+  frequency,
+  start_date,
+  end_date,
+  maximum)
+values (
+  (new.recurrence).guid,
+  new.guid,
+  (new.recurrence).period,
+  (new.recurrence).frequency,
+  (new.recurrence).start_date,
+  (new.recurrence).end_date,
+  (new.recurrence).maximum );
+
+","
+
+create or replace rule \\"_UPDATE_RECURRENCE_UPDATE\\" as on update to xm.to_do
+  where old.recurrence != new.recurrence do instead (
+
+update xm.to_do_recurrence set
+  period = (new.recurrence).period,
+  frequency = (new.recurrence).frequency,
+  start_date = (new.recurrence).start_date,
+  end_date = (new.recurrence).end_date,
+  maximum = (new.recurrence).maximum
+where (guid = (old.recurrence).guid );
+
+)
+
+","
+
+create or replace rule \\"_UPDATE_RECURRENCE_DELETE\\" as on update to xm.to_do
+  where old.recurrence is not null != new.recurrence is null do instead (
+
+delete from xm.to_do_recurrence
+where (guid = (old.recurrence).guid );
+
+)
 
 ","
 

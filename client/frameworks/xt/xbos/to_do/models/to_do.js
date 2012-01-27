@@ -10,7 +10,7 @@
   @extends XM.Activity
   @version 0.1
 */
-XM.ToDo = XM.Activity.extend( XM.Recurrence,
+XM.ToDo = XM.Activity.extend( XM.CoreAssignments,
 /** @scope XM.ToDo.prototype */ {
 
   className: 'XM.ToDo',
@@ -44,7 +44,9 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   */
   toDoStatus: SC.Record.attr(String, {
     /** @private */
-    defaultValue: XM.ToDo.NEITHER,
+    defaultValue: function() {
+      return XM.ToDo.NEITHER
+    }
   }),
   
   /**
@@ -79,6 +81,13 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   completeDate: SC.Record.attr(SC.DateTime, { 
     format: '%Y-%m-%d' 
   }),
+  
+  /**
+  @type XM.ToDoRecurrence
+  */
+  recurrence: SC.Record.toOne('XM.ToDoRecurrence', {
+    isNested: YES
+  }),
     
   /**
   @type XM.ToDoAlarm
@@ -96,15 +105,37 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
     inverse: 'toDo'
   }),
   
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
+  sourceType: 'TODO',
+  
   /**
-  @type XM.ToDoDocument
+  @type XM.ToDoAssignment
   */
-  documents: XM.Record.toMany('XM.ToDoDocument', { 
-    isNested: YES,
-    inverse: 'toDo'
-  })
+  toDos: XM.Record.toMany('XM.ToDoAssignment', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _toDosLength: 0,
+  
+  /* @private */
+  _toDosLengthBinding: '.toDos.length',
+  
+  /* @private */
+  _toDosDidChange: function() {
+    var documents = this.get('documents'),
+        toDos = this.get('toDos');
 
+    documents.addEach(toDos);    
+  }.observes('toDosLength')
+  
 });
+
+
+XM.ToDo.mixin( /** @scope XM.ToDo */ {
 
 /**
   Pending status for To-Do.
@@ -114,7 +145,7 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   @type String
   @default P
 */
-XM.ToDo.PENDING = 'P';
+  PENDING: 'P',
 
 /**
   Deffered status for To-Do.
@@ -124,7 +155,7 @@ XM.ToDo.PENDING = 'P';
   @type String
   @default O
 */
-XM.ToDo.DEFERRED = 'D';
+  DEFERRED: 'D',
 
 /**
   Open status for To-Do. Neither Pending or Deferred.
@@ -133,7 +164,7 @@ XM.ToDo.DEFERRED = 'D';
   @type String
   @default N
 */
-XM.ToDo.NEITHER = 'N';
+  NEITHER: 'N',
 
 /**
   Completed status for To-Do.
@@ -142,4 +173,7 @@ XM.ToDo.NEITHER = 'N';
   @type String
   @default C
 */
-XM.ToDo.COMPLETED = 'C';
+  COMPLETED: 'C'
+
+});
+

@@ -65,6 +65,34 @@ create or replace function private.retrieve_record(record_type text, id integer)
     return ret;
   }
 
+  /* Pass an argument to change camel case names to snake case.
+     A string passed in simply returns a decamelized string.
+     If an object is passed, an object is returned with all it's
+     proprety names camelized.
+
+     @param {String | Object}
+     @returns {String | Object} The argument modified
+  */
+  decamelize = function(arg) {
+    var ret = arg; 
+
+    decamelizeStr = function(str) {
+      return str.replace((/([a-z])([A-Z])/g), '$1_$2').toLowerCase();
+    }
+
+    if(typeof arg == "string") {
+      ret = decamelizeStr(arg);
+    } else if(typeof arg == "object") {
+      ret = new Object;
+
+      for(var prop in arg) {
+        ret[decamelizeStr(prop)] = arg[prop];
+      }
+    }
+
+    return ret;
+  }
+
   /* Additional processing on record properties. 
      Adds 'type' property, stringifies arrays and
      camelizes the record.
@@ -171,7 +199,7 @@ create or replace function private.retrieve_record(record_type text, id integer)
   //
 
   var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(), 
-      recordType = record_type.replace((/\w+\./i),'').toLowerCase(), 
+      recordType = decamelize(record_type.replace((/\w+\./i),'')), 
       debug = false, rec, 
       sql = "select * from " + nameSpace + '.' + recordType + " where guid = $1 ";  
 

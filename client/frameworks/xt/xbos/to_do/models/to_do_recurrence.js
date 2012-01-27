@@ -8,19 +8,18 @@
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.Record
+  @version 0.1
 */
-XM.ToDoDocument = XM.DocumentAssignment.extend(
-/** @scope XM.ToDoDocument.prototype */ {
 
-  className: 'XM.ToDoDocument',
+XM.ToDoRecurrence = XM.Record.extend( XM.Recurrence,
+/** @scope XM.ToDoRecurrence.prototype */ {
 
-  /**
+  className: 'XM.ToDoRecurrence',
+  
+  /** 
   @type XM.ToDo
   */
-  toDo: SC.Record.toOne('XM.ToDo', {
-    inverse:  'documents',
-    isMaster: NO,
-  })
-  
-}) ;
+  toDo: SC.Record.toOne('XM.ToDo')
+
+});
