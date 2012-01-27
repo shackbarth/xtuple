@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Contact = XM.Document.extend(
+XM.Contact = XM.Document.extend( XM.CoreAssignments,
 /** @scope XM.Contact.prototype */ {
 
   className: 'XM.Contact',
@@ -143,41 +143,6 @@ XM.Contact = XM.Document.extend(
   comments: XM.Record.toMany('XM.ContactComment', {
     isNested: YES,
     inverse: 'contact',
-  }),
-  
-  /**
-  @type XM.ContactAssignment
-  */
-  contacts: XM.Record.toMany('XM.ContactAssignment', {
-    isNested: YES
-  }),
-    
-  /**
-  @type XM.ItemAssignment
-  */
-  items: XM.Record.toMany('XM.ItemAssignment', {
-    isNested: YES
-  }),
-  
-  /**
-  @type XM.FileAssignment
-  */
-  files: XM.Record.toMany('XM.FileAssignment', {
-    isNested: YES
-  }),
-  
-  /**
-  @type XM.ImageAssignment
-  */
-  images: XM.Record.toMany('XM.ImageAssignment', {
-    isNested: YES
-  }),
-  
-  /**
-  @type XM.ImageAssignment
-  */
-  urls: XM.Record.toMany('XM.UrlAssignment', {
-    isNested: YES
   }),
 
   // ..........................................................

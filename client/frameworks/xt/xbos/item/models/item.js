@@ -9,7 +9,7 @@
 
   @extends XM.Document
 */
-XM.Item = XM.Document.extend(
+XM.Item = XM.Document.extend( XM.CoreAssignments,
 /** @scope XM.Item.prototype */ {
 
   className: 'XM.Item',
@@ -159,14 +159,7 @@ XM.Item = XM.Document.extend(
   */
   substitues: SC.Record.toMany('XM.ItemSubstitute', {
     inverse: 'rootItem',
-  }),
-  
-  /**
-  @type XM.ItemDocument
-  */
-  documents: SC.Record.toMany('XM.ItemDocument', {
-    inverse: 'item',
-  }),
+  })
 
 });
 
