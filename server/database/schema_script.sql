@@ -1,4 +1,4 @@
-﻿-- [ START ] initdb
+-- [ START ] initdb
 
 -- create schemas
 \i create_private_schema.sql;
@@ -178,6 +178,7 @@
 -- business/project xm models
 \i business/project/xm/models/project_info.sql;
 \i business/project/xm/models/project_assignment.sql;
+\i business/project/xm/models/project_recurrence.sql;
 \i business/project/xm/models/project_comment.sql;
 \i business/project/xm/models/project_task_alarm.sql;
 \i business/project/xm/models/project_task_comment.sql;
@@ -189,6 +190,7 @@
 \i business/todo/xm/models/to_do_comment.sql;
 \i business/todo/xm/models/to_do_info.sql;
 \i business/todo/xm/models/to_do_assignment.sql;
+\i business/todo/xm/models/to_do_recurrence.sql;
 \i business/todo/xm/models/to_do.sql;
 
 -- [ END ] business
