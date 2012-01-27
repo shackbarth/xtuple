@@ -18,6 +18,21 @@ XM.CoreAssignments = {
   sourceType: null,
   
   /**
+  A set of all the document assignments on this record
+  
+  @type SC.Set
+  */
+  documents: function(key, value) {
+    if(value) { 
+      this._documents = value;
+    } else if(!this._documents) { 
+      this._documents = SC.Set.create(); 
+    }
+    
+    return this._documents;
+  }.property().cacheable(),
+  
+  /**
   @type XM.ContactAssignment
   */
   contacts: XM.Record.toMany('XM.ContactAssignment', {
@@ -51,21 +66,6 @@ XM.CoreAssignments = {
   urls: XM.Record.toMany('XM.UrlAssignment', {
     isNested: YES
   }),
-  
-  /**
-  A set of all the document assignments on this record
-  
-  @type SC.Set
-  */
-  documents: function(key, value) {
-    if(value) { 
-      this._documents = value;
-    } else if(!this._documents) { 
-      this._documents = SC.Set.create(); 
-    }
-    
-    return this._documents;
-  }.property().cacheable(),
   
   // ..........................................................
   // PRIVATE

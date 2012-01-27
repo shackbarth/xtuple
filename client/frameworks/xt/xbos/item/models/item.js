@@ -159,7 +159,9 @@ XM.Item = XM.Document.extend( XM.CoreAssignments,
   */
   substitues: SC.Record.toMany('XM.ItemSubstitute', {
     inverse: 'rootItem',
-  })
+  }),
+  
+  sourceType: 'I'
 
 });
 
