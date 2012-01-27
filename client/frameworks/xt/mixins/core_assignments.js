@@ -1,3 +1,7 @@
+// ==========================================================================
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// =========================================================================
 /*globals XT */
 
 /** @mixin
@@ -16,6 +20,21 @@ XM.CoreAssignments = {
   @type String
   */
   sourceType: null,
+  
+  /**
+  A set of all the document assignments on this record
+  
+  @type SC.Set
+  */
+  documents: function(key, value) {
+    if(value) { 
+      this._documents = value;
+    } else if(!this._documents) { 
+      this._documents = SC.Set.create(); 
+    }
+    
+    return this._documents;
+  }.property().cacheable(),
   
   /**
   @type XM.ContactAssignment
@@ -51,21 +70,6 @@ XM.CoreAssignments = {
   urls: XM.Record.toMany('XM.UrlAssignment', {
     isNested: YES
   }),
-  
-  /**
-  A set of all the document assignments on this record
-  
-  @type SC.Set
-  */
-  documents: function(key, value) {
-    if(value) { 
-      this._documents = value;
-    } else if(!this._documents) { 
-      this._documents = SC.Set.create(); 
-    }
-    
-    return this._documents;
-  }.property().cacheable(),
   
   // ..........................................................
   // PRIVATE

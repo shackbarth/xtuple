@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Incident = XM.Activity.extend( XM.Recurrence,
+XM.Incident = XM.Activity.extend( XM.CoreAssignments,
 /** @scope XM.Incident.prototype */ {
 
   className: 'XM.Incident',
@@ -74,6 +74,13 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   }),
   
   /**
+  @type XM.IncidentRecurrence
+  */
+  recurrence: SC.Record.toOne('XM.IncidentRecurrence', {
+    isNested: YES
+  }),
+  
+  /**
   @type XM.IncidentHistory
   */
   history: SC.Record.toMany('XM.IncidentHistory', {
@@ -104,6 +111,34 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
     isNested: YES,
     inverse: 'incident'
   }),
+  
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
+  sourceType: 'INCDT',
+  
+  /**
+  @type XM.IncidentAssignment
+  */
+  incidents: XM.Record.toMany('XM.IncidentAssignment', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _incidentsLength: 0,
+  
+  /* @private */
+  _incidentsLengthBinding: '.incidents.length',
+  
+  /* @private */
+  _incidentsDidChange: function() {
+    var documents = this.get('documents'),
+        incidents = this.get('incidents');
+
+    documents.addEach(incidents);    
+  }.observes('incidentsLength'),
+  
 
   /****** CALCULATED PROPERTIES        */
 

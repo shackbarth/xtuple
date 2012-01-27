@@ -144,6 +144,8 @@ XM.Contact = XM.Document.extend( XM.CoreAssignments,
     isNested: YES,
     inverse: 'contact',
   }),
+  
+  sourceType: 'T',
 
   // ..........................................................
   // CALCULATED PROPERTIES

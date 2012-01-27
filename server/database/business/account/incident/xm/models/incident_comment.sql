@@ -65,4 +65,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.incident_comment
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{"comment.source = \'INCDT\'"}', 'Contact Comment Model', true, true);
+E'{"comment.source = \'INCDT\'"}', 'Incident Comment Model', true, true);

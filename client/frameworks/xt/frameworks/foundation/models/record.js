@@ -18,7 +18,24 @@
 XM.Record = SC.Record.extend(
 /** @scope XM.Record.prototype */ {
 
+  /*
+  The full path name of this class. Should be set in every subclass.
+  
+  @type string
+  */
   className: 'XM.Record',
+  
+  /**
+  The data type name. The same as the class name without the namespace.
+  Used by nested records.
+  
+  @type string
+  */
+  type: SC.Record.attr(String, {
+    defaultValue: function() {
+      return arguments[0].get('className').replace((/\w+\./i),'');
+    }
+  }),
 
   /**
   The name of the privilege required to create this record type.
@@ -63,7 +80,7 @@ XM.Record = SC.Record.extend(
   dataState: SC.Record.attr(String, { 
     defaultValue: 'created' 
   }),
-
+  
   // ..........................................................
   // METHODS
   //

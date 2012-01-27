@@ -11,7 +11,7 @@
   @version 0.2
 */
 
-XM.Account = XM.Document.extend(
+XM.Account = XM.Document.extend( XM.CoreAssignments,
 /** @scope XM.Account.prototype */ {
 
   className: 'XM.Account',
@@ -23,16 +23,20 @@ XM.Account = XM.Document.extend(
 
   number: SC.Record.attr(String, {
     defaultValue: function() {
+    /*
+      TODO: Uncomment this when session metrics work again
+      
       var autoGen = XM.session.metrics.get('CRMAccountNumberGeneration'),
       status = arguments[0].get('status');
 
       if(autoGen && status === SC.Record.READY_NEW) {
         return XM.Record.nextNumber.call(arguments[ 0 ], "CRMAccountNumber");
       } else return null;
+      */
     },
     isRequired: YES
   }),
-  
+
   /**
   @type String
   */
@@ -56,14 +60,14 @@ XM.Account = XM.Document.extend(
   /**
   @type XM.UserAccount
   */
-  owner: SC.Record.toOne('XM.UserAccountInfo'{
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: YES
   }),
 
   /**
   @type XM.Account
   */
-  parent: SC.Record.toOne('XM.AccountInfo'{
+  parent: SC.Record.toOne('XM.AccountInfo', {
     isNested: YES
   }),
   
@@ -99,7 +103,7 @@ XM.Account = XM.Document.extend(
   */
   comments: SC.Record.toMany('XM.AccountComment', {
     isNested: YES,
-    inverse: 'account',
+    inverse: 'account'
   }),
   
   /**
@@ -108,7 +112,35 @@ XM.Account = XM.Document.extend(
   userAccount: XM.Record.toOne('XM.UserAccountInfo', {
     isNested: YES,
     isRole: YES
-  },
+  }),
+  
+  
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
+  sourceType: 'CRMA',
+  
+  /**
+  @type XM.AccountAssignment
+  */
+  accounts: XM.Record.toMany('XM.AccountAssignment', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _accountsLength: 0,
+  
+  /* @private */
+  _accountsLengthBinding: '.accounts.length',
+  
+  /* @private */
+  _accountsDidChange: function() {
+    var documents = this.get('documents'),
+        accounts = this.get('accounts');
+
+    documents.addEach(accounts);    
+  }.observes('accountsLength'),
 
   // ..........................................................
   // OBSERVERS
@@ -128,7 +160,8 @@ XM.Account = XM.Document.extend(
     this.updateErrors(err, !len);
 
     return errors;
-  }.observes('number', 'name'),
+  }.observes('number', 'name')
+
 
 });
 
