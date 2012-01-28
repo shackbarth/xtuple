@@ -145,6 +145,27 @@ XM.Contact = XM.Document.extend( XM.CoreAssignments,
     inverse: 'contact',
   }),
   
+  /**
+  A set of all the contact uses on this record.
+  
+  Append values to this property with plugins by
+  adding a new property for each use type with
+  observers that add objects to this property.
+  See 'XM.CoreAssignments' mixin for example of the
+  implementation technique.
+  
+  @type SC.Set
+  */
+  uses: function(key, value) {
+    if(value) { 
+      this._uses = value;
+    } else if(!this._documents) { 
+      this._uses = SC.Set.create(); 
+    }
+    
+    return this._uses;
+  }.property().cacheable(),
+  
   sourceType: 'T',
 
   // ..........................................................
