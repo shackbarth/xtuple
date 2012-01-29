@@ -2,12 +2,12 @@ select private.create_model(
 
 -- Model name, schema
 
-'project_url', '', 'xm.url, private.docinfo',
+'to_do_image', '', 'xm.image_info, private.docinfo',
 
 E'{
   "docinfo.id as guid",
   "docinfo.source_id as source",
-  "url as url",
+  "image_info as image",
   "docinfo.purpose as purpose"
 }',
 
@@ -17,7 +17,7 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.project_url
+create or replace rule \\"_CREATE\\" as on insert to xm.to_do_image
   do instead
 
 insert into private.docinfo (
@@ -30,23 +30,23 @@ insert into private.docinfo (
 values (
   new.guid,
   new.source,
-  \'J\',
-  (new.url).guid,
-  \'URL\',
+  \'TODO\',
+  (new.image).guid,
+  \'IMG\',
   new.purpose );
   
 ","
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.project_url
+create or replace rule \\"_UPDATE\\" as on update to xm.to_do_image
   do instead nothing;
 
 ","
 
 -- delete rules
   
-create or replace rule \\"_DELETE\\" as on delete to xm.project_url
+create or replace rule \\"_DELETE\\" as on delete to xm.to_do_image
   do instead
 
 delete from private.docinfo
@@ -57,4 +57,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"url.guid=target_id","docinfo.source_type=\'J\'","docinfo.target_type=\'URL\'"}', 'Project Url Model', true, true);
+E'{"image_info.guid=target_id","docinfo.source_type=\'TODO\'","docinfo.target_type=\'IMG\'"}', 'ToDo Image Model', true, true);

@@ -40,29 +40,29 @@ E'{
     from xm.to_do_comment
     where to_do = todoitem.todoitem_id) as comments",
   "array(
-    select contact_assignment
-    from xm.contact_assignment
-    where source = todoitem.todoitem_id and source_type=\'TODO\') as contacts",
+    select to_do_contact
+    from xm.to_do_contact
+    where source = todoitem.todoitem_id) as contacts",
   "array(
-    select item_assignment
-    from xm.item_assignment
-    where source = todoitem.todoitem_id and source_type=\'TODO\') as items",
+    select to_do_item
+    from xm.to_do_item
+    where source = todoitem.todoitem_id) as items",
   "array(
-    select file_assignment
-    from xm.file_assignment
-    where source = todoitem.todoitem_id and source_type=\'TODO\') as files",
+    select to_do_file
+    from xm.to_do_file
+    where source = todoitem.todoitem_id) as files",
   "array(
-    select image_assignment
-    from xm.image_assignment
-    where source = todoitem.todoitem_id and source_type=\'TODO\') as images",
+    select to_do_image
+    from xm.to_do_image
+    where source = todoitem.todoitem_id) as images",
   "array(
-    select url_assignment
-    from xm.url_assignment
-    where source = todoitem.todoitem_id and source_type=\'TODO\') as urls",
+    select to_do_url
+    from xm.to_do_url
+    where source = todoitem.todoitem_id) as urls",
   "array(
-    select to_do_assignment
-    from xm.to_do_assignment
-    where source = todoitem.todoitem_id and source_type=\'TODO\') as to_dos"}',
+    select to_do_to_do
+    from xm.to_do_to_do
+    where source = todoitem.todoitem_id) as to_dos"}',
 
 -- Rules
 

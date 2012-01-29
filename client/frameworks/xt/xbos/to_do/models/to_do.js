@@ -10,7 +10,7 @@
   @extends XM.Activity
   @version 0.1
 */
-XM.ToDo = XM.Activity.extend( XM.CoreAssignments,
+XM.ToDo = XM.Activity.extend( XM.CoreDocuments,
 /** @scope XM.ToDo.prototype */ {
 
   className: 'XM.ToDo',
@@ -109,12 +109,45 @@ XM.ToDo = XM.Activity.extend( XM.CoreAssignments,
   // DOCUMENT ASSIGNMENTS
   // 
   
-  sourceType: 'TODO',
+  /**
+  @type XM.ToDoContact
+  */
+  contacts: SC.Record.toMany('XM.ToDoContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ToDoItem
+  */
+  items: SC.Record.toMany('XM.ToDoItem', {
+    isNested: YES
+  }),
   
   /**
-  @type XM.ToDoAssignment
+  @type XM.ToDoFile
   */
-  toDos: XM.Record.toMany('XM.ToDoAssignment', {
+  files: SC.Record.toMany('XM.ToDoFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ToDoImage
+  */
+  images: SC.Record.toMany('XM.ToDoImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ToDoUrl
+  */
+  urls: SC.Record.toMany('XM.ToDoUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ToDoToDo
+  */
+  toDos: XM.Record.toMany('XM.ToDoToDo', {
     isNested: YES
   }),
   
