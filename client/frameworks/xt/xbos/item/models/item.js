@@ -9,7 +9,7 @@
 
   @extends XM.Document
 */
-XM.Item = XM.Document.extend( XM.CoreAssignments,
+XM.Item = XM.Document.extend( XM.CoreDocuments,
 /** @scope XM.Item.prototype */ {
 
   className: 'XM.Item',
@@ -161,7 +161,40 @@ XM.Item = XM.Document.extend( XM.CoreAssignments,
     inverse: 'rootItem',
   }),
   
-  sourceType: 'I'
+  /**
+  @type XM.ItemContact
+  */
+  contacts: SC.Record.toMany('XM.ItemContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ItemItem
+  */
+  items: SC.Record.toMany('XM.ItemItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ItemFile
+  */
+  files: SC.Record.toMany('XM.ItemFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ItemImage
+  */
+  images: SC.Record.toMany('XM.ItemImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ItemUrl
+  */
+  urls: SC.Record.toMany('XM.ItemUrl', {
+    isNested: YES
+  })
 
 });
 

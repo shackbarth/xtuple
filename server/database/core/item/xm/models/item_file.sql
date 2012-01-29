@@ -2,14 +2,13 @@ select private.create_model(
 
 -- Model name, schema
 
-'file_assignment', '', 'xm.file_info, private.docinfo',
+'item_file', '', 'xm.file_info, private.docinfo',
 
 E'{
   "docinfo.id as guid",
   "docinfo.source_id as source",
-  "docinfo.source_type as source_type",
-  "docinfo.purpose as purpose",
-  "file_info as file"
+  "file_info as file",
+  "docinfo.purpose as purpose"
 }',
 
 -- Rules
@@ -18,7 +17,7 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.file_assignment 
+create or replace rule \\"_CREATE\\" as on insert to xm.item_file
   do instead
 
 insert into private.docinfo (
@@ -31,7 +30,7 @@ insert into private.docinfo (
 values (
   new.guid,
   new.source,
-  new.source_type,
+  \'I\',
   (new.file).guid,
   \'FILE\',
   new.purpose );
@@ -40,14 +39,14 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.file_assignment 
+create or replace rule \\"_UPDATE\\" as on update to xm.item_file
   do instead nothing;
 
 ","
 
 -- delete rules
   
-create or replace rule \\"_DELETE\\" as on delete to xm.file_assignment 
+create or replace rule \\"_DELETE\\" as on delete to xm.item_file
   do instead
 
 delete from private.docinfo
@@ -58,4 +57,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"file_info.guid=target_id","docinfo.target_type=\'FILE\'"}', 'File Assignment Model', true, true);
+E'{"file_info.guid=target_id","docinfo.source_type=\'I\'","docinfo.target_type=\'FILE\'"}', 'Item File Model', true, true);

@@ -57,25 +57,25 @@ E'{
    from xm.item_cost
    where (item = item.item_id)) as costs",
   "array(
-    select contact_assignment
-    from xm.contact_assignment
-    where source = item.item_id and source_type=\'I\') as contacts",
+    select item_contact
+    from xm.item_contact
+    where source = item.item_id) as contacts",
   "array(
-    select item_assignment
-    from xm.item_assignment
-    where source = item.item_id and source_type=\'I\') as items",
+    select item_item
+    from xm.item_item
+    where source = item.item_id) as items",
   "array(
-    select file_assignment
-    from xm.file_assignment
-    where source = item.item_id and source_type=\'I\') as files",
+    select item_file
+    from xm.item_file
+    where source = item.item_id) as files",
   "array(
-    select image_assignment
-    from xm.image_assignment
-    where source = item.item_id and source_type=\'I\') as images",
+    select item_image
+    from xm.item_image
+    where source = item.item_id) as images",
   "array(
-    select url_assignment
-    from xm.url_assignment
-    where source = item.item_id and source_type=\'I\') as urls"
+    select item_url
+    from xm.item_url
+    where source = item.item_id) as urls"
 }',
 
 -- Rules

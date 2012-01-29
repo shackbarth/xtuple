@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Contact = XM.Document.extend( XM.CoreAssignments,
+XM.Contact = XM.Document.extend( XM.CoreDocuments,
 /** @scope XM.Contact.prototype */ {
 
   className: 'XM.Contact',
@@ -167,35 +167,35 @@ XM.Contact = XM.Document.extend( XM.CoreAssignments,
   }.property().cacheable(),
   
   /**
-  @type XM.ContactAssignment
+  @type XM.ContactContact
   */
   contacts: SC.Record.toMany('XM.ContactContact', {
     isNested: YES
   }),
     
   /**
-  @type XM.ItemAssignment
+  @type XM.ContactItem
   */
   items: SC.Record.toMany('XM.ContactItem', {
     isNested: YES
   }),
   
   /**
-  @type XM.FileAssignment
+  @type XM.ContactFile
   */
   files: SC.Record.toMany('XM.ContactFile', {
     isNested: YES
   }),
   
   /**
-  @type XM.ImageAssignment
+  @type XM.ContactImage
   */
   images: SC.Record.toMany('XM.ContactImage', {
     isNested: YES
   }),
   
   /**
-  @type XM.ImageAssignment
+  @type XM.ContactUrl
   */
   urls: SC.Record.toMany('XM.ContactUrl', {
     isNested: YES

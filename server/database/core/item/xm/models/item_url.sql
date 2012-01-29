@@ -2,14 +2,13 @@ select private.create_model(
 
 -- Model name, schema
 
-'item_assignment', '', 'xm.item_info, private.docinfo',
+'item_url', '', 'xm.url, private.docinfo',
 
 E'{
   "docinfo.id as guid",
   "docinfo.source_id as source",
-  "docinfo.source_type as source_type",
-  "docinfo.purpose as purpose",
-  "item_info as item"
+  "url as url",
+  "docinfo.purpose as purpose"
 }',
 
 -- Rules
@@ -18,7 +17,7 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.item_assignment 
+create or replace rule \\"_CREATE\\" as on insert to xm.item_url
   do instead
 
 insert into private.docinfo (
@@ -31,23 +30,23 @@ insert into private.docinfo (
 values (
   new.guid,
   new.source,
-  new.source_type,
-  (new.item).guid,
   \'I\',
+  (new.url).guid,
+  \'URL\',
   new.purpose );
   
 ","
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.item_assignment 
+create or replace rule \\"_UPDATE\\" as on update to xm.item_url
   do instead nothing;
 
 ","
 
 -- delete rules
   
-create or replace rule \\"_DELETE\\" as on delete to xm.item_assignment 
+create or replace rule \\"_DELETE\\" as on delete to xm.item_url
   do instead
 
 delete from private.docinfo
@@ -58,4 +57,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"item_info.guid=target_id","docinfo.target_type=\'I\'"}', 'Item Assignment Model', true, true);
+E'{"url.guid=target_id","docinfo.source_type=\'I\'","docinfo.target_type=\'URL\'"}', 'Item Url Model', true, true);
