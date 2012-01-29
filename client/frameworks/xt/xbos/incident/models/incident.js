@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Incident = XM.Activity.extend( XM.CoreAssignments,
+XM.Incident = XM.Activity.extend( XM.CoreDocuments,
 /** @scope XM.Incident.prototype */ {
 
   className: 'XM.Incident',
@@ -116,12 +116,45 @@ XM.Incident = XM.Activity.extend( XM.CoreAssignments,
   // DOCUMENT ASSIGNMENTS
   // 
   
-  sourceType: 'INCDT',
+  /**
+  @type XM.IncidentContact
+  */
+  contacts: SC.Record.toMany('XM.IncidentContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.IncidentItem
+  */
+  items: SC.Record.toMany('XM.IncidentItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.IncidentFile
+  */
+  files: SC.Record.toMany('XM.IncidentFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.IncidentImage
+  */
+  images: SC.Record.toMany('XM.IncidentImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.IncidentUrl
+  */
+  urls: SC.Record.toMany('XM.IncidentUrl', {
+    isNested: YES
+  }),
   
   /**
   @type XM.IncidentAssignment
   */
-  incidents: XM.Record.toMany('XM.IncidentAssignment', {
+  incidents: XM.Record.toMany('XM.IncidentIncident', {
     isNested: YES
   }),
   

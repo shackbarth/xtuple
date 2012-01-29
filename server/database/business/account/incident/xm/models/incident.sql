@@ -48,29 +48,29 @@ E'{
     from xm.incident_characteristic
     where incident = incdt.incdt_id) as characteristics",
   "array(
-    select contact_assignment
-    from xm.contact_assignment
-    where source = incdt.incdt_id and source_type=\'INCDT\') as contacts",
+    select incident_contact
+    from xm.incident_contact
+    where source = incdt.incdt_id) as contacts",
   "array(
-    select item_assignment
-    from xm.item_assignment
-    where source = incdt.incdt_id and source_type=\'INCDT\') as items",
+    select incident_item
+    from xm.incident_item
+    where source = incdt.incdt_id) as items",
   "array(
-    select file_assignment
-    from xm.file_assignment
-    where source = incdt.incdt_id and source_type=\'INCDT\') as files",
+    select incident_file
+    from xm.incident_file
+    where source = incdt.incdt_id) as files",
   "array(
-    select image_assignment
-    from xm.image_assignment
-    where source = incdt.incdt_id and source_type=\'INCDT\') as images",
+    select incident_image
+    from xm.incident_image
+    where source = incdt.incdt_id) as images",
   "array(
-    select url_assignment
-    from xm.url_assignment
-    where source = incdt.incdt_id and source_type=\'INCDT\') as urls",
+    select incident_url
+    from xm.incident_url
+    where source = incdt.incdt_id) as urls",
   "array(
-    select incident_assignment
-    from xm.incident_assignment
-    where source = incdt.incdt_id and source_type=\'INCDT\') as incidents"
+    select incident_incident
+    from xm.incident_incident
+    where source = incdt.incdt_id) as incidents"
 
     }',
 

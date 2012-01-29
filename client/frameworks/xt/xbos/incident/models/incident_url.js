@@ -3,26 +3,18 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/incident_info');
+
 /** @class
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.UrlAssignment
   @version 0.1
 */
 
-XM.IncidentAssignment = XM.DocumentAssignment.extend( 
-/** @scope XM.IncidentAssignment.prototype */ {
+XM.IncidentUrl = XM.UrlAssignment.extend( 
+/** @scope XM.IncidentUrl.prototype */ {
 
-  className: 'XM.IncidentAssignment',
-  
-  /** 
-  @type XM.IncidentInfo
-  */
-  incident: SC.Record.toOne('XM.IncidentInfo', { 
-    isNested: YES,
-    isRequired: YES 
-  })
+  className: 'XM.IncidenttUrl'
 
 });
