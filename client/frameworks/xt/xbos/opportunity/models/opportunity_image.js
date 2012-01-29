@@ -8,13 +8,13 @@
 
   (Document your Model here)
 
-  @extends XM.UrlAssignment
+  @extends XM.ImageAssignment
   @version 0.1
 */
 
-XM.IncidentUrl = XM.UrlAssignment.extend( 
-/** @scope XM.IncidentUrl.prototype */ {
+XM.OpportunityImage = XM.ImageAssignment.extend( 
+/** @scope XM.OpportunityImage.prototype */ {
 
-  className: 'XM.IncidentUrl'
+  className: 'XM.OpportunityImage'
 
 });

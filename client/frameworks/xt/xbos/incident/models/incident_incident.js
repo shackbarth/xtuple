@@ -8,7 +8,7 @@ sc_require('models/incident_assignment');
 
   (Document your Model here)
 
-  @extends XM.AccountAssignment
+  @extends XM.IncidentAssignment
   @version 0.1
 */
 

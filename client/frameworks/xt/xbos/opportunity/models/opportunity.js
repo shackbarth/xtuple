@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Opportunity = XM.Activity.extend( XM.CoreAssignments, 
+XM.Opportunity = XM.Activity.extend( XM.CoreDocuments, 
 /** @scope XM.Opportunity.prototype */ {
 
   className: 'XM.Opportunity',
@@ -79,7 +79,7 @@ XM.Opportunity = XM.Activity.extend( XM.CoreAssignments,
   }),
   
   /**
-  @type XM.Account
+  @type XM.DateTime
   */
   targetClose: SC.Record.attr(SC.DateTime, { 
     format: '%Y-%m-%d'
@@ -99,34 +99,6 @@ XM.Opportunity = XM.Activity.extend( XM.CoreAssignments,
     format: '%Y-%m-%d' 
   }),
   
-    
-  // ..........................................................
-  // DOCUMENT ASSIGNMENTS
-  // 
-  
-  sourceType: 'OPP',
-  
-  /**
-  @type XM.OpportunityAssignment
-  */
-  opportunities: XM.Record.toMany('XM.OpportunityAssignment', {
-    isNested: YES
-  }),
-  
-  /* @private */
-  _opportunitiesLength: 0,
-  
-  /* @private */
-  _opportunitiesLengthBinding: '.opportunities.length',
-  
-  /* @private */
-  _opportunitiesDidChange: function() {
-    var documents = this.get('documents'),
-        opportunities = this.get('opportunities');
-
-    documents.addEach(opportunities);    
-  }.observes('opportunitiesLength'),
-  
   /**
   @type XM.OpportunityCharacteristic
   */
@@ -142,13 +114,65 @@ XM.Opportunity = XM.Activity.extend( XM.CoreAssignments,
     isNested: YES,
     inverse: 'opportunity'
   }),
+    
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
   
   /**
-  @type XM.OpportunityDocument
+  @type XM.OpportunityContact
   */
-  comments: XM.Record.toMany('XM.OpportunityDocument', {
-    isNested: YES,
-    inverse: 'opportunity'
-  }),  
+  contacts: SC.Record.toMany('XM.OpportunityContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.OpportunityItem
+  */
+  items: SC.Record.toMany('XM.OpportunityItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityFile
+  */
+  files: SC.Record.toMany('XM.OpportunityFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityImage
+  */
+  images: SC.Record.toMany('XM.OpportunityImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityUrl
+  */
+  urls: SC.Record.toMany('XM.OpportunityUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityAssignment
+  */
+  opportunities: XM.Record.toMany('XM.OpportunityOpportunity', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _opportunitiesLength: 0,
+  
+  /* @private */
+  _opportunitiesLengthBinding: '.opportunities.length',
+  
+  /* @private */
+  _opportunitiesDidChange: function() {
+    var documents = this.get('documents'),
+        opportunities = this.get('opportunities');
+
+    documents.addEach(opportunities);    
+  }.observes('opportunitiesLength') 
 
 });

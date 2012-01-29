@@ -12,9 +12,9 @@
   @version 0.1
 */
 
-XM.IncidentUrl = XM.UrlAssignment.extend( 
-/** @scope XM.IncidentUrl.prototype */ {
+XM.OpportunityUrl = XM.UrlAssignment.extend( 
+/** @scope XM.OpportunityUrl.prototype */ {
 
-  className: 'XM.IncidentUrl'
+  className: 'XM.OpportunityUrl'
 
 });

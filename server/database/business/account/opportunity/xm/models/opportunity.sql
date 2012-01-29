@@ -44,29 +44,29 @@ E'{
     from xm.opportunity_characteristic
     where opportunity = ophead.ophead_id) as characteristics",
   "array(
-    select contact_assignment
-    from xm.contact_assignment
-    where source = ophead.ophead_id and source_type=\'OPP\') as contacts",
+    select opportunity_contact
+    from xm.opportunity_contact
+    where source = ophead.ophead_id) as contacts",
   "array(
-    select item_assignment
-    from xm.item_assignment
-    where source = ophead.ophead_id and source_type=\'OPP\') as items",
+    select opportunity_item
+    from xm.opportunity_item
+    where source = ophead.ophead_id) as items",
   "array(
-    select file_assignment
-    from xm.file_assignment
-    where source = ophead.ophead_id and source_type=\'OPP\') as files",
+    select opportunity_file
+    from xm.opportunity_file
+    where source = ophead.ophead_id) as files",
   "array(
-    select image_assignment
-    from xm.image_assignment
-    where source = ophead.ophead_id and source_type=\'OPP\') as images",
+    select opportunity_image
+    from xm.opportunity_image
+    where source = ophead.ophead_id) as images",
   "array(
-    select url_assignment
-    from xm.url_assignment
-    where source = ophead.ophead_id and source_type=\'OPP\') as urls",
+    select opportunity_url
+    from xm.opportunity_url
+    where source = ophead.ophead_id) as urls",
   "array(
-    select opportunity_assignment
-    from xm.opportunity_assignment
-    where source = ophead.ophead_id and source_type=\'OPP\') as opportunities"}',
+    select opportunity_opportunity
+    from xm.opportunity_opportunity
+    where source = ophead.ophead_id) as opportunities"}',
 
 E'{"
 -- insert rule

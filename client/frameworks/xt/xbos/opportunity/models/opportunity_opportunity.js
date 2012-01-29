@@ -3,18 +3,18 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
+sc_require('models/incident_assignment');
 /** @class
 
   (Document your Model here)
 
-  @extends XM.UrlAssignment
+  @extends XM.OpportunityAssignment
   @version 0.1
 */
 
-XM.IncidentUrl = XM.UrlAssignment.extend( 
-/** @scope XM.IncidentUrl.prototype */ {
+XM.OpportunityOpportunity = XM.OpportunityAssignment.extend( 
+/** @scope XM.OpportunityOpportunity.prototype */ {
 
-  className: 'XM.IncidentUrl'
+  className: 'XM.OpportunityOpportunity'
 
 });

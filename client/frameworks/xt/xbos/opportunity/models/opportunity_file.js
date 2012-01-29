@@ -8,13 +8,13 @@
 
   (Document your Model here)
 
-  @extends XM.UrlAssignment
+  @extends XM.FileAssignment
   @version 0.1
 */
 
-XM.IncidentUrl = XM.UrlAssignment.extend( 
-/** @scope XM.IncidentUrl.prototype */ {
+XM.OpportunityFile = XM.FileAssignment.extend( 
+/** @scope XM.OpportunityFile.prototype */ {
 
-  className: 'XM.IncidentUrl'
+  className: 'XM.OpportunityFile'
 
 });
