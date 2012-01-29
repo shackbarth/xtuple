@@ -8,7 +8,7 @@
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.UrlAssignment
   @version 0.1
 */
 
