@@ -2,12 +2,12 @@ select private.create_model(
 
 -- Model name, schema
 
-'incident_incident', '', 'xm.account_info, private.docinfo',
+'incident_incident', '', 'xm.incident_info, private.docinfo',
 
 E'{
   "docinfo.id as guid",
   "docinfo.source_id as source",
-  "account_info as account",
+  "incident_info as incident",
   "docinfo.purpose as purpose"
 }',
 
@@ -31,7 +31,7 @@ values (
   new.guid,
   new.source,
   \'INCDT\',
-  (new.account).guid,
+  (new.incident).guid,
   \'INCDT\',
   new.purpose );
   
@@ -57,4 +57,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"account_info.guid=target_id","docinfo.source_type=\'INCDT\'","docinfo.target_type=\'INCDT\'"}', 'Incident Incident Model', true, true);
+E'{"incident_info.guid=target_id","docinfo.source_type=\'INCDT\'","docinfo.target_type=\'INCDT\'"}', 'Incident Incident Model', true, true);
