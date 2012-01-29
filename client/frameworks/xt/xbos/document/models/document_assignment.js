@@ -25,11 +25,6 @@ XM.DocumentAssignment = XM.Record.extend(
   source: SC.Record.attr(Number),
   
   /**
-  @type XM.Source
-  */
-  sourceType: SC.Record.attr(String),
-  
-  /**
   @type String
   */
   purpose: SC.Record.attr(String),

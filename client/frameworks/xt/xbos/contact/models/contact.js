@@ -151,7 +151,7 @@ XM.Contact = XM.Document.extend( XM.CoreAssignments,
   Append values to this property with plugins by
   adding a new property for each use type with
   observers that add objects to this property.
-  See 'XM.CoreAssignments' mixin for example of the
+  See 'XM.CoreDocuments' mixin for example of the
   implementation technique.
   
   @type SC.Set
@@ -166,7 +166,40 @@ XM.Contact = XM.Document.extend( XM.CoreAssignments,
     return this._uses;
   }.property().cacheable(),
   
-  sourceType: 'T',
+  /**
+  @type XM.ContactAssignment
+  */
+  contacts: XM.Record.toMany('XM.ContactContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ItemAssignment
+  */
+  items: XM.Record.toMany('XM.ContactItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.FileAssignment
+  */
+  files: XM.Record.toMany('XM.ContactFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ImageAssignment
+  */
+  images: XM.Record.toMany('XM.ContactImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ImageAssignment
+  */
+  urls: XM.Record.toMany('XM.ContactUrl', {
+    isNested: YES
+  }),
 
   // ..........................................................
   // CALCULATED PROPERTIES
