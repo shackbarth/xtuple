@@ -3,26 +3,35 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
+sc_require("models/record");
 /** @class
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.Record
   @version 0.1
 */
 
-XM.FileAssignment = XM.DocumentAssignment.extend( 
-/** @scope XM.FileAssignment.prototype */ {
+XM.FileInfo = XM.Record.extend(
+/** @scope XM.FileInfo.prototype */ {
 
-  className: 'XM.FileAssignment',
+  className: 'XM.FileInfo',
   
-  /** 
-  @type XM.FileInfo
+  isEditable: NO,
+  
+  /**
+  @type String
   */
-  file: SC.Record.toOne('XM.FileInfo', { 
-    isNested: YES,
-    isRequired: YES 
-  })
-
-});
+  name: SC.Record.attr(String),
+  
+  /**
+  @type String
+  */
+  description: SC.Record.attr(String),
+  
+  /**
+  @type String
+  */
+  data: SC.Record.attr(String)
+  
+})

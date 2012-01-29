@@ -3,21 +3,19 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
+sc_require("models/record");
 /** @class
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XM.Document
   @version 0.1
 */
 
-XM.ImageInfo = XM.Record.extend(
-/** @scope XM.ImageInfo.prototype */ {
+XM.Image = XM.Document.extend(
+/** @scope XM.Image.prototype */ {
 
-  className: 'XM.ImageInfo',
-  
-  isEditable: NO,
+  className: 'XM.Image',
   
   /**
   @type String
@@ -27,6 +25,11 @@ XM.ImageInfo = XM.Record.extend(
   /**
   @type String
   */
-  description: SC.Record.attr(String)
+  description: SC.Record.attr(String),
+  
+  /**
+  @type String
+  */
+  data: SC.Record.attr(String),
 
 })

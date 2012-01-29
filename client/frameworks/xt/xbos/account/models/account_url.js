@@ -3,26 +3,18 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/account_info');
+
 /** @class
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.UrlAssignment
   @version 0.1
 */
 
-XM.AccountAssignment = XM.DocumentAssignment.extend( 
-/** @scope XM.AccountAssignment.prototype */ {
+XM.AccountUrl = XM.UrlAssignment.extend( 
+/** @scope XM.AccountUrl.prototype */ {
 
-  className: 'XM.AccountAssignment',
-  
-  /** 
-  @type XM.AccountInfo
-  */
-  account: SC.Record.toOne('XM.AccountInfo', { 
-    isNested: YES,
-    isRequired: YES 
-  })
+  className: 'XM.AccountUrl'
 
 });

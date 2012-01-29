@@ -3,7 +3,7 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
+sc_require("models/document_assignment");
 /** @class
 
   (Document your Model here)
@@ -12,17 +12,17 @@
   @version 0.1
 */
 
-XM.ItemAssignment = XM.DocumentAssignment.extend( 
-/** @scope XM.ItemAssignment.prototype */ {
+XM.ImageAssignment = XM.DocumentAssignment.extend(
+/** @scope XM.ImageAssignment.prototype */ {
 
-  className: 'XM.ItemAssignment',
+  className: 'XM.ImageAssignment',
   
   /** 
-  @type XM.ItemInfo
+  @type XM.ImageInfo
   */
-  item: SC.Record.toOne('XM.ItemInfo', { 
+  image: SC.Record.toOne('XM.ImageInfo', { 
     isNested: YES,
     isRequired: YES 
   })
-
+  
 });

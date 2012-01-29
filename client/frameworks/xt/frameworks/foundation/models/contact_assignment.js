@@ -3,7 +3,7 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/account_info');
+sc_require("models/document_assignment");
 /** @class
 
   (Document your Model here)
@@ -12,15 +12,15 @@ sc_require('models/account_info');
   @version 0.1
 */
 
-XM.AccountAssignment = XM.DocumentAssignment.extend( 
-/** @scope XM.AccountAssignment.prototype */ {
+XM.ContactAssignment = XM.DocumentAssignment.extend( 
+/** @scope XM.ContactAssignment.prototype */ {
 
-  className: 'XM.AccountAssignment',
+  className: 'XM.ContactAssignment',
   
   /** 
-  @type XM.AccountInfo
+  @type XM.ContactInfo
   */
-  account: SC.Record.toOne('XM.AccountInfo', { 
+  contact: SC.Record.toOne('XM.ContactInfo', { 
     isNested: YES,
     isRequired: YES 
   })

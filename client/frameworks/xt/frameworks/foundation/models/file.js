@@ -3,19 +3,19 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
+sc_require("models/record");
 /** @class
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XM.Document
   @version 0.1
 */
 
-XM.Url = XM.Record.extend(
-/** @scope XM.Url.prototype */ {
+XM.File = XM.Document.extend(
+/** @scope XM.File.prototype */ {
 
-  className: 'XM.Url',
+  className: 'XM.File',
   
   /**
   @type String
@@ -25,6 +25,11 @@ XM.Url = XM.Record.extend(
   /**
   @type String
   */
-  path: SC.Record.attr(String),
-
+  description: SC.Record.attr(String),
+  
+  /**
+  @type String
+  */
+  data: SC.Record.attr(String),
+  
 })

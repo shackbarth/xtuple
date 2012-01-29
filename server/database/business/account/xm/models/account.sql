@@ -37,29 +37,29 @@ E'{
     from xm.account_characteristic
     where (account = crmacct.crmacct_id)) as characteristics",
   "array(
-    select contact_assignment
-    from xm.contact_assignment
-    where source = crmacct.crmacct_id and source_type=\'CRMA\') as contacts",
+    select account_contact
+    from xm.account_contact
+    where source = crmacct.crmacct_id) as contacts",
   "array(
-    select item_assignment
-    from xm.item_assignment
-    where source = crmacct.crmacct_id and source_type=\'CRMA\') as items",
+    select account_item
+    from xm.account_item
+    where source = crmacct.crmacct_id) as items",
   "array(
-    select file_assignment
-    from xm.file_assignment
-    where source = crmacct.crmacct_id and source_type=\'CRMA\') as files",
+    select account_file
+    from xm.account_file
+    where source = crmacct.crmacct_id) as files",
   "array(
-    select image_assignment
-    from xm.image_assignment
-    where source = crmacct.crmacct_id and source_type=\'CRMA\') as images",
+    select account_image
+    from xm.account_image
+    where source = crmacct.crmacct_id) as images",
   "array(
-    select url_assignment
-    from xm.url_assignment
-    where source = crmacct.crmacct_id and source_type=\'CRMA\') as urls",
+    select account_url
+    from xm.account_url
+    where source = crmacct.crmacct_id) as urls",
   "array(
-    select account_assignment
-    from xm.account_assignment
-    where source = crmacct.crmacct_id and source_type=\'CRMA\') as accounts"
+    select account_account
+    from xm.account_account
+    where source = crmacct.crmacct_id) as accounts"
 }',
 
 -- Rules

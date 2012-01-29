@@ -8,28 +8,13 @@
 
   (Document your Model here)
 
-  @extends XM.Document
+  @extends XM.ImageAssignment
   @version 0.1
 */
 
-XM.File = XM.Document.extend(
-/** @scope XM.File.prototype */ {
+XM.AccountImage = XM.ImageAssignment.extend( 
+/** @scope XM.AccountImage.prototype */ {
 
-  className: 'XM.File',
-  
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  data: SC.Record.attr(String),
-  
-})
+  className: 'XM.AccountImage'
+
+});

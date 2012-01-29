@@ -8,21 +8,13 @@
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.FileAssignment
   @version 0.1
 */
 
-XM.UrlAssignment = XM.DocumentAssignment.extend(
-/** @scope XM.UrlAssignment.prototype */ {
+XM.AccountFile = XM.FileAssignment.extend( 
+/** @scope XM.AccountFile.prototype */ {
 
-  className: 'XM.UrlAssignment',
-  
-  /** 
-  @type XM.Url
-  */
-  url: SC.Record.toOne('XM.Url', { 
-    isNested: YES,
-    isRequired: YES 
-  })
-  
+  className: 'XM.AccountFile'
+
 });

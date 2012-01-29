@@ -3,26 +3,28 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
+sc_require("models/record");
 /** @class
 
   (Document your Model here)
 
-  @extends XM.DocumentAssignment
+  @extends XM.Record
   @version 0.1
 */
 
-XM.ImageAssignment = XM.DocumentAssignment.extend(
-/** @scope XM.ImageAssignment.prototype */ {
+XM.Url = XM.Record.extend(
+/** @scope XM.Url.prototype */ {
 
-  className: 'XM.ImageAssignment',
+  className: 'XM.Url',
   
-  /** 
-  @type XM.ImageInfo
+  /**
+  @type String
   */
-  image: SC.Record.toOne('XM.ImageInfo', { 
-    isNested: YES,
-    isRequired: YES 
-  })
+  name: SC.Record.attr(String),
   
-});
+  /**
+  @type String
+  */
+  path: SC.Record.attr(String),
+
+})

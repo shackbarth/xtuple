@@ -11,7 +11,7 @@
   @version 0.2
 */
 
-XM.Account = XM.Document.extend( XM.CoreAssignments,
+XM.Account = XM.Document.extend( XM.CoreDocuments,
 /** @scope XM.Account.prototype */ {
 
   className: 'XM.Account',
@@ -114,17 +114,49 @@ XM.Account = XM.Document.extend( XM.CoreAssignments,
     isRole: YES
   }),
   
-  
   // ..........................................................
   // DOCUMENT ASSIGNMENTS
   // 
+    
+  /**
+  @type XM.AccountContact
+  */
+  contacts: SC.Record.toMany('XM.AccountContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.AccountItem
+  */
+  items: SC.Record.toMany('XM.AccountItem', {
+    isNested: YES
+  }),
   
-  sourceType: 'CRMA',
+  /**
+  @type XM.AccountFile
+  */
+  files: SC.Record.toMany('XM.AccountFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.AccountImage
+  */
+  images: SC.Record.toMany('XM.AccountImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.AccountUrl
+  */
+  urls: SC.Record.toMany('XM.AccountUrl', {
+    isNested: YES
+  }),
   
   /**
   @type XM.AccountAssignment
   */
-  accounts: XM.Record.toMany('XM.AccountAssignment', {
+  accounts: XM.Record.toMany('XM.AccountAccount', {
     isNested: YES
   }),
   

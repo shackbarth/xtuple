@@ -8,18 +8,13 @@
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XM.ContactAssignment
   @version 0.1
 */
 
-XM.Document = XM.Record.extend(
-/** @scope XM.Document.prototype */ {
+XM.AccountContact = XM.ContactAssignment.extend( 
+/** @scope XM.AccountContact.prototype */ {
 
-  className: 'XM.Document',
-  
-  /** 
-  @type String
-  */
-  number: SC.Record.attr(String, { isRequired: YES }),
+  className: 'XM.AccountContact'
 
 });
