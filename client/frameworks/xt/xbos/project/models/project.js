@@ -11,7 +11,7 @@
   @extends XM.Recurrence
   @version 0.2
 */
-XM.Project = XM.Activity.extend( XM.CoreAssignments,
+XM.Project = XM.Activity.extend( XM.CoreDocuments,
     /** @scope XM.Project.prototype */ {
 
   className: 'XM.Project',
@@ -94,12 +94,45 @@ XM.Project = XM.Activity.extend( XM.CoreAssignments,
   // DOCUMENT ASSIGNMENTS
   // 
   
-  sourceType: 'J',
+  /**
+  @type XM.ProjectContact
+  */
+  contacts: SC.Record.toMany('XM.ProjectContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ProjectItem
+  */
+  items: SC.Record.toMany('XM.ProjectItem', {
+    isNested: YES
+  }),
   
   /**
-  @type XM.ProjectAssignment
+  @type XM.ProjectFile
   */
-  projects: XM.Record.toMany('XM.ProjectAssignment', {
+  files: SC.Record.toMany('XM.ProjectFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectImage
+  */
+  images: SC.Record.toMany('XM.ProjectImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectUrl
+  */
+  urls: SC.Record.toMany('XM.ProjectUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectProject
+  */
+  projects: XM.Record.toMany('XM.ProjectProject', {
     isNested: YES
   }),
   

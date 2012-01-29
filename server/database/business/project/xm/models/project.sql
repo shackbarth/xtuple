@@ -34,29 +34,29 @@ E'{
    from xm.project_task
    where project = prj.prj_id) as tasks",
   "array(
-    select contact_assignment
-    from xm.contact_assignment
-    where source = prj.prj_id and source_type=\'J\') as contacts",
+    select project_contact
+    from xm.project_contact
+    where source = prj.prj_id) as contacts",
   "array(
-    select item_assignment
-    from xm.item_assignment
-    where source = prj.prj_id and source_type=\'J\') as items",
+    select project_item
+    from xm.project_item
+    where source = prj.prj_id) as items",
   "array(
-    select file_assignment
-    from xm.file_assignment
-    where source = prj.prj_id and source_type=\'J\') as files",
+    select project_file
+    from xm.project_file
+    where source = prj.prj_id) as files",
   "array(
-    select image_assignment
-    from xm.image_assignment
-    where source = prj.prj_id and source_type=\'J\') as images",
+    select project_image
+    from xm.project_image
+    where source = prj.prj_id) as images",
   "array(
-    select url_assignment
-    from xm.url_assignment
-    where source = prj.prj_id and source_type=\'J\') as urls",
+    select project_url
+    from xm.project_url
+    where source = prj.prj_id) as urls",
   "array(
-    select project_assignment
-    from xm.project_assignment
-    where source = prj.prj_id and source_type=\'J\') as projects"}',
+    select project_project
+    from xm.project_project
+    where source = prj.prj_id) as projects"}',
 
 -- Rules
 

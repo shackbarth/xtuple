@@ -3,18 +3,18 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/opportunity_assignment');
+
 /** @class
 
   (Document your Model here)
 
-  @extends XM.OpportunityAssignment
+  @extends XM.ContactAssignment
   @version 0.1
 */
 
-XM.OpportunityOpportunity = XM.OpportunityAssignment.extend( 
-/** @scope XM.OpportunityOpportunity.prototype */ {
+XM.ProjectContact = XM.ContactAssignment.extend( 
+/** @scope XM.ProjectContact.prototype */ {
 
-  className: 'XM.OpportunityOpportunity'
+  className: 'XM.ProjectContact'
 
 });

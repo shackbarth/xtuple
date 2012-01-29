@@ -3,18 +3,18 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/opportunity_assignment');
+
 /** @class
 
   (Document your Model here)
 
-  @extends XM.OpportunityAssignment
+  @extends XM.ImageAssignment
   @version 0.1
 */
 
-XM.OpportunityOpportunity = XM.OpportunityAssignment.extend( 
-/** @scope XM.OpportunityOpportunity.prototype */ {
+XM.ProjectImage = XM.ImageAssignment.extend( 
+/** @scope XM.ProjectImage.prototype */ {
 
-  className: 'XM.OpportunityOpportunity'
+  className: 'XM.ProjectImage'
 
 });
