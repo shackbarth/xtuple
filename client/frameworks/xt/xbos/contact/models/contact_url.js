@@ -13,7 +13,7 @@
 */
 
 XM.ContactUrl = XM.UrlAssignment.extend( 
-/** @scope XM.ContactFile.prototype */ {
+/** @scope XM.ContactUrl.prototype */ {
 
   className: 'XM.ContactUrl'
 

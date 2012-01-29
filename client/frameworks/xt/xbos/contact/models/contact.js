@@ -169,35 +169,35 @@ XM.Contact = XM.Document.extend( XM.CoreAssignments,
   /**
   @type XM.ContactAssignment
   */
-  contacts: XM.Record.toMany('XM.ContactContact', {
+  contacts: SC.Record.toMany('XM.ContactContact', {
     isNested: YES
   }),
     
   /**
   @type XM.ItemAssignment
   */
-  items: XM.Record.toMany('XM.ContactItem', {
+  items: SC.Record.toMany('XM.ContactItem', {
     isNested: YES
   }),
   
   /**
   @type XM.FileAssignment
   */
-  files: XM.Record.toMany('XM.ContactFile', {
+  files: SC.Record.toMany('XM.ContactFile', {
     isNested: YES
   }),
   
   /**
   @type XM.ImageAssignment
   */
-  images: XM.Record.toMany('XM.ContactImage', {
+  images: SC.Record.toMany('XM.ContactImage', {
     isNested: YES
   }),
   
   /**
   @type XM.ImageAssignment
   */
-  urls: XM.Record.toMany('XM.ContactUrl', {
+  urls: SC.Record.toMany('XM.ContactUrl', {
     isNested: YES
   }),
 
