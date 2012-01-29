@@ -85,14 +85,12 @@
 -- core/document xm views
 \i core/document/xm/models/file.sql;
 \i core/document/xm/models/file_info.sql;
-\i core/document/xm/models/file_assignment.sql;
 \i core/document/xm/models/image.sql;
 \i core/document/xm/models/image_info.sql;
-\i core/document/xm/models/image_assignment.sql;
 \i core/document/xm/models/url.sql;
-\i core/document/xm/models/url_assignment.sql;
+
+-- core/item view (needed for contact_contact)
 \i core/item/xm/models/item_info.sql;
-\i core/item/xm/models/item_assignment.sql; 
 
 -- core/address xm functions
 \i core/address/xm/functions/address_find_existing.sql;
@@ -111,7 +109,11 @@
 \i core/contact/xm/models/contact_comment.sql;
 \i core/contact/xm/models/contact_email.sql;
 \i core/contact/xm/models/contact_info.sql;
-\i core/contact/xm/models/contact_assignment.sql;
+\i core/contact/xm/models/contact_contact.sql;
+\i core/contact/xm/models/contact_file.sql;
+\i core/contact/xm/models/contact_image.sql;
+\i core/contact/xm/models/contact_item.sql;
+\i core/contact/xm/models/contact_url.sql;
 \i core/contact/xm/models/contact.sql;
 \i core/contact/xm/models/honorific.sql;
 
@@ -127,6 +129,11 @@
 \i core/item/xm/models/item_conversion_type_assignment.sql;
 \i core/item/xm/models/item_substitute.sql;
 \i core/item/xm/models/item_cost.sql;
+\i core/item/xm/models/item_contact.sql;
+\i core/item/xm/models/item_file.sql;
+\i core/item/xm/models/item_image.sql;
+\i core/item/xm/models/item_item.sql;
+\i core/item/xm/models/item_url.sql;
 \i core/item/xm/models/item.sql;
 
 -- core/priority xm views 
@@ -147,7 +154,12 @@
 -- [ START ] business
 -- business/account xm models
 \i business/account/xm/models/account_info.sql;
-\i business/account/xm/models/account_assignment.sql;
+\i business/account/xm/models/account_contact.sql;
+\i business/account/xm/models/account_file.sql;
+\i business/account/xm/models/account_image.sql;
+\i business/account/xm/models/account_item.sql;
+\i business/account/xm/models/account_url.sql;
+\i business/account/xm/models/account_account.sql;
 \i business/account/xm/models/account_characteristic.sql;
 \i business/account/xm/models/account_comment.sql;
 \i business/account/xm/models/account.sql;
@@ -159,7 +171,12 @@
 \i business/account/incident/xm/models/incident_comment.sql;
 \i business/account/incident/xm/models/incident_history.sql;
 \i business/account/incident/xm/models/incident_info.sql;
-\i business/account/incident/xm/models/incident_assignment.sql;
+\i business/account/incident/xm/models/incident_contact.sql;
+\i business/account/incident/xm/models/incident_file.sql;
+\i business/account/incident/xm/models/incident_image.sql;
+\i business/account/incident/xm/models/incident_item.sql;
+\i business/account/incident/xm/models/incident_url.sql;
+\i business/account/incident/xm/models/incident_incident.sql;
 \i business/account/incident/xm/models/incident_resolution.sql;
 \i business/account/incident/xm/models/incident_severity.sql;
 \i business/account/incident/xm/models/incident_recurrence.sql;
@@ -169,7 +186,12 @@
 \i business/account/opportunity/xm/models/opportunity_characteristic.sql;
 \i business/account/opportunity/xm/models/opportunity_comment.sql;
 \i business/account/opportunity/xm/models/opportunity_info.sql;
-\i business/account/opportunity/xm/models/opportunity_assignment.sql;
+\i business/account/opportunity/xm/models/opportunity_contact.sql;
+\i business/account/opportunity/xm/models/opportunity_file.sql;
+\i business/account/opportunity/xm/models/opportunity_image.sql;
+\i business/account/opportunity/xm/models/opportunity_item.sql;
+\i business/account/opportunity/xm/models/opportunity_url.sql;
+\i business/account/opportunity/xm/models/opportunity_opportunity.sql;
 \i business/account/opportunity/xm/models/opportunity_source.sql;
 \i business/account/opportunity/xm/models/opportunity_stage.sql;
 \i business/account/opportunity/xm/models/opportunity_type.sql;
@@ -177,7 +199,12 @@
 
 -- business/project xm models
 \i business/project/xm/models/project_info.sql;
-\i business/project/xm/models/project_assignment.sql;
+\i business/project/xm/models/project_contact.sql;
+\i business/project/xm/models/project_file.sql;
+\i business/project/xm/models/project_image.sql;
+\i business/project/xm/models/project_item.sql;
+\i business/project/xm/models/project_url.sql;
+\i business/project/xm/models/project_project.sql;
 \i business/project/xm/models/project_recurrence.sql;
 \i business/project/xm/models/project_comment.sql;
 \i business/project/xm/models/project_task_alarm.sql;
@@ -189,7 +216,12 @@
 \i business/todo/xm/models/to_do_alarm.sql;
 \i business/todo/xm/models/to_do_comment.sql;
 \i business/todo/xm/models/to_do_info.sql;
-\i business/todo/xm/models/to_do_assignment.sql;
+\i business/todo/xm/models/to_do_contact.sql;
+\i business/todo/xm/models/to_do_file.sql;
+\i business/todo/xm/models/to_do_image.sql;
+\i business/todo/xm/models/to_do_item.sql;
+\i business/todo/xm/models/to_do_url.sql;
+\i business/todo/xm/models/to_do_to_do.sql;
 \i business/todo/xm/models/to_do_recurrence.sql;
 \i business/todo/xm/models/to_do.sql;
 
