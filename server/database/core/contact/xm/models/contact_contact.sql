@@ -2,14 +2,13 @@ select private.create_model(
 
 -- Model name, schema
 
-'contact_assignment', '', 'xm.contact_info, private.docinfo',
+'contact_contact', '', 'xm.contact_info, private.docinfo',
 
 E'{
   "docinfo.id as guid",
   "docinfo.source_id as source",
-  "docinfo.source_type as source_type",
-  "docinfo.purpose as purpose",
-  "contact_info as contact"
+  "contact_info as contact",
+  "docinfo.purpose as purpose"
 }',
 
 -- Rules
@@ -18,7 +17,7 @@ E'{"
 
 -- insert rules
 
-create or replace rule \\"_CREATE\\" as on insert to xm.contact_assignment 
+create or replace rule \\"_CREATE\\" as on insert to xm.contact_contact 
   do instead
 
 insert into private.docinfo (
@@ -31,7 +30,7 @@ insert into private.docinfo (
 values (
   new.guid,
   new.source,
-  new.source_type,
+  \'T\',
   (new.contact).guid,
   \'T\',
   new.purpose );
@@ -40,14 +39,14 @@ values (
 
 -- update rule
 
-create or replace rule \\"_UPDATE\\" as on update to xm.contact_assignment 
+create or replace rule \\"_UPDATE\\" as on update to xm.contact_contact 
   do instead nothing;
 
 ","
 
 -- delete rules
   
-create or replace rule \\"_DELETE\\" as on delete to xm.contact_assignment 
+create or replace rule \\"_DELETE\\" as on delete to xm.contact_contact 
   do instead
 
 delete from private.docinfo
@@ -58,4 +57,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"contact_info.guid=target_id","docinfo.target_type=\'T\'"}', 'Contact Assignment Model', true, true);
+E'{"contact_info.guid=target_id","docinfo.source_type=\'T\'","docinfo.target_type=\'T\'"}', 'Contact Contact Model', true, true);

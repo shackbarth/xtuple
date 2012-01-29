@@ -42,25 +42,25 @@ E'{
     from xm.contact_characteristic
     where contact = cntct.cntct_id) as characteristics",
   "array(
-    select contact_assignment
-    from xm.contact_assignment
-    where source = cntct.cntct_id and source_type=\'T\') as contacts",
+    select contact_contact
+    from xm.contact_contact
+    where source = cntct.cntct_id) as contacts",
   "array(
-    select item_assignment
-    from xm.item_assignment
-    where source = cntct.cntct_id and source_type=\'T\') as items",
+    select contact_item
+    from xm.contact_item
+    where source = cntct.cntct_id) as items",
   "array(
-    select file_assignment
-    from xm.file_assignment
-    where source = cntct.cntct_id and source_type=\'T\') as files",
+    select contact_file
+    from xm.contact_file
+    where source = cntct.cntct_id) as files",
   "array(
-    select image_assignment
-    from xm.image_assignment
-    where source = cntct.cntct_id and source_type=\'T\') as images",
+    select contact_image
+    from xm.contact_image
+    where source = cntct.cntct_id) as images",
   "array(
-    select url_assignment
-    from xm.url_assignment
-    where source = cntct.cntct_id and source_type=\'T\') as urls"
+    select contact_url
+    from xm.contact_url
+    where source = cntct.cntct_id) as urls"
 
 }',
      
