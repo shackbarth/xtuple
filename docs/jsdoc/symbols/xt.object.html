@@ -191,17 +191,31 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/Array.html">Array</a></li>
+	
+	<li><a href="../symbols/Function.html">Function</a></li>
+	
 	<li><a href="../symbols/String.html">String</a></li>
 	
 	<li><a href="../symbols/xt.html">xt</a></li>
 	
+	<li><a href="../symbols/xt.commitRecord.html">xt.commitRecord</a></li>
+	
 	<li><a href="../symbols/xt.database.html">xt.database</a></li>
 	
+	<li><a href="../symbols/xt.dataRoute.html">xt.dataRoute</a></li>
+	
+	<li><a href="../symbols/xt.dataRouter.html">xt.dataRouter</a></li>
+	
 	<li><a href="../symbols/xt.exception.html">xt.exception</a></li>
+	
+	<li><a href="../symbols/xt.fetch.html">xt.fetch</a></li>
 	
 	<li><a href="../symbols/xt.filesystem.html">xt.filesystem</a></li>
 	
 	<li><a href="../symbols/xt.function.html">xt.function</a></li>
+	
+	<li><a href="../symbols/xt.functor.html">xt.functor</a></li>
 	
 	<li><a href="../symbols/xt.io.html">xt.io</a></li>
 	
@@ -210,6 +224,22 @@ ul.inheritsList
 	<li><a href="../symbols/xt.options.html">xt.options</a></li>
 	
 	<li><a href="../symbols/xt.proto.html">xt.proto</a></li>
+	
+	<li><a href="../symbols/xt.requestSession.html">xt.requestSession</a></li>
+	
+	<li><a href="../symbols/xt.response.html">xt.response</a></li>
+	
+	<li><a href="../symbols/xt.retrieveRecord.html">xt.retrieveRecord</a></li>
+	
+	<li><a href="../symbols/xt.route.html">xt.route</a></li>
+	
+	<li><a href="../symbols/xt.router.html">xt.router</a></li>
+	
+	<li><a href="../symbols/xt.server.html">xt.server</a></li>
+	
+	<li><a href="../symbols/xt.session.html">xt.session</a></li>
+	
+	<li><a href="../symbols/xt.sessionStore.html">xt.sessionStore</a></li>
 	
 	<li><a href="../symbols/xt.string.html">xt.string</a></li>
 	
@@ -236,7 +266,7 @@ ul.inheritsList
   objects in the xt framework for node.js server.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_node_modules_xt_node_modules_foundation_node_modules_object.js.html">object.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_object.js.html">object.js</a>.
 				
 			</p>
 
@@ -282,6 +312,16 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.object.html#addEvent">addEvent</a></b>(event, func)
+								</div>
+								<div class="description">Adds an event handler to process when a particular event is
+    encountered.</div>
+							</td>
+						</tr>
+					
+						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">xt.object.<b><a href="../symbols/xt.object.html#.create">create</a></b>(hashes)
@@ -305,6 +345,27 @@ ul.inheritsList
 								<div class="fixedFont"><b><a href="../symbols/xt.object.html#get">get</a></b>(key)
 								</div>
 								<div class="description">Retrieve a value for the given property path on the object.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.object.html#length">length</a></b>()
+								</div>
+								<div class="description">Length is an arbitrary (and somewhat ambiguous) property
+    that should really only be available on enumerable
+    implementations but, for now, is available on all xt objects
+    while not always useful or meaningful.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.object.html#removeEvent">removeEvent</a></b>(event)
+								</div>
+								<div class="description">Allows an event to be removed.</div>
 							</td>
 						</tr>
 					
@@ -392,6 +453,58 @@ ul.inheritsList
 				<div class="sectionTitle">
 					Method Detail
 				</div>
+				
+					<a name="addEvent"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object}</span>
+					<b>addEvent</b>(event, func)
+					
+					</div>
+					<div class="description">
+						Adds an event handler to process when a particular event is
+    encountered.
+
+    Note that it currently ONLY SUPPORTS ONE METHOD FOR ANY GIVEN EVENT!
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>event</b>
+									
+								</dt>
+								<dd>The event to listen for.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>func</b>
+									
+								</dt>
+								<dd>The function to execute when the event is encountered.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> Receiver</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
 				
 					<a name=".create"> </a>
 					<div class="fixedFont">&lt;static&gt; 
@@ -528,6 +641,93 @@ ul.inheritsList
 
 					<hr />
 				
+					<a name="length"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Number}</span>
+					<b>length</b>()
+					
+					</div>
+					<div class="description">
+						Length is an arbitrary (and somewhat ambiguous) property
+    that should really only be available on enumerable
+    implementations but, for now, is available on all xt objects
+    while not always useful or meaningful.
+
+    It attempts to determine a meaningful value based solely on
+    properties owned by the object instance and should be accessed
+    via the get method.
+						
+						
+					</div>
+					
+					
+					
+					<pre class="code">
+      var len = this.get('length')</pre>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> The number of unique properties owned by the object.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="removeEvent"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Object}</span>
+					<b>removeEvent</b>(event)
+					
+					</div>
+					<div class="description">
+						Allows an event to be removed.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>event</b>
+									
+								</dt>
+								<dd>The name of the event to stop listening for.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Object}</span> Receiver</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name="set"> </a>
 					<div class="fixedFont">
 					
@@ -624,7 +824,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 17:15:30 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Jan 24 2012 11:31:58 GMT-0500 (EST)
 		</div>
 	</body>
 </html>

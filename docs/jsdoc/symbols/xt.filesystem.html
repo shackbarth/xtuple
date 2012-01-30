@@ -191,17 +191,31 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/Array.html">Array</a></li>
+	
+	<li><a href="../symbols/Function.html">Function</a></li>
+	
 	<li><a href="../symbols/String.html">String</a></li>
 	
 	<li><a href="../symbols/xt.html">xt</a></li>
 	
+	<li><a href="../symbols/xt.commitRecord.html">xt.commitRecord</a></li>
+	
 	<li><a href="../symbols/xt.database.html">xt.database</a></li>
 	
+	<li><a href="../symbols/xt.dataRoute.html">xt.dataRoute</a></li>
+	
+	<li><a href="../symbols/xt.dataRouter.html">xt.dataRouter</a></li>
+	
 	<li><a href="../symbols/xt.exception.html">xt.exception</a></li>
+	
+	<li><a href="../symbols/xt.fetch.html">xt.fetch</a></li>
 	
 	<li><a href="../symbols/xt.filesystem.html">xt.filesystem</a></li>
 	
 	<li><a href="../symbols/xt.function.html">xt.function</a></li>
+	
+	<li><a href="../symbols/xt.functor.html">xt.functor</a></li>
 	
 	<li><a href="../symbols/xt.io.html">xt.io</a></li>
 	
@@ -210,6 +224,22 @@ ul.inheritsList
 	<li><a href="../symbols/xt.options.html">xt.options</a></li>
 	
 	<li><a href="../symbols/xt.proto.html">xt.proto</a></li>
+	
+	<li><a href="../symbols/xt.requestSession.html">xt.requestSession</a></li>
+	
+	<li><a href="../symbols/xt.response.html">xt.response</a></li>
+	
+	<li><a href="../symbols/xt.retrieveRecord.html">xt.retrieveRecord</a></li>
+	
+	<li><a href="../symbols/xt.route.html">xt.route</a></li>
+	
+	<li><a href="../symbols/xt.router.html">xt.router</a></li>
+	
+	<li><a href="../symbols/xt.server.html">xt.server</a></li>
+	
+	<li><a href="../symbols/xt.session.html">xt.session</a></li>
+	
+	<li><a href="../symbols/xt.sessionStore.html">xt.sessionStore</a></li>
 	
 	<li><a href="../symbols/xt.string.html">xt.string</a></li>
 	
@@ -237,7 +267,7 @@ ul.inheritsList
   for extensions and objects.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_node_modules_xt_node_modules_foundation_node_modules_filesystem.js.html">filesystem.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_filesystem.js.html">filesystem.js</a>.
 				
 			</p>
 
@@ -285,9 +315,9 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#byLine">byLine</a></b>(filedata)
+								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#byLine">byLine</a></b>(string)
 								</div>
-								<div class="description"></div>
+								<div class="description">Splits a string into individual lines.</div>
 							</td>
 						</tr>
 					
@@ -296,16 +326,46 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#directoryFiles">directoryFiles</a></b>(path, callback, extension)
 								</div>
-								<div class="description"></div>
+								<div class="description">Find and return paths to all files in a specified directory.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#readFile">readFile</a></b>(path, filename, the)
+								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#normalize">normalize</a></b>(path)
 								</div>
-								<div class="description"></div>
+								<div class="description">See Node.js documentation.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#readFile">readFile</a></b>(path, filename, callback)
+								</div>
+								<div class="description">Reads the contents of a given file and/or path.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#reduce">reduce</a></b>(files, extension)
+								</div>
+								<div class="description">Reduces an array of filenames to just files with the specified
+    extension.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.filesystem.html#shorten">shorten</a></b>(path, max)
+								</div>
+								<div class="description">Takes what might be a very long file path and shortens it to
+    a (default 3) maximum number of slashes counting from the end
+    and prepends an elipses.</div>
 							</td>
 						</tr>
 					
@@ -360,12 +420,13 @@ ul.inheritsList
 					<a name="byLine"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Array}</span>
-					<b>byLine</b>(filedata)
+					<span class="light">{<a href="../symbols/Array.html">Array</a>}</span>
+					<b>byLine</b>(string)
 					
 					</div>
 					<div class="description">
-						
+						Splits a string into individual lines. Can be used for normal strings or
+    from file data. This function is synchronous and returns an array of lines.
 						
 						
 					</div>
@@ -377,10 +438,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>filedata</b>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>string</b>
 									
 								</dt>
-								<dd>to parse</dd>
+								<dd>The string or file data to parse.</dd>
 							
 							</dl>
 						
@@ -391,7 +452,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Array}</span> of lines of file contents</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Array.html">Array</a>}</span> The array of lines from the string.</dd>
 							
 							</dl>
 						
@@ -403,12 +464,15 @@ ul.inheritsList
 					<a name="directoryFiles"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Array}</span>
+					
 					<b>directoryFiles</b>(path, callback, extension)
 					
 					</div>
 					<div class="description">
-						
+						Find and return paths to all files in a specified directory.
+    Optionally an extension can be specified as the third paramater.
+    The second parameter is the callback on completion. This method is
+    asynchronous.
 						
 						
 					</div>
@@ -423,16 +487,52 @@ ul.inheritsList
 									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>path</b>
 									
 								</dt>
-								<dd>to directory</dd>
+								<dd>The path to the directory.</dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>callback</b>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
 									
 								</dt>
-								<dd>on completion expects a single array as result</dd>
+								<dd>The callback expects a single (array) parameters of the results.</dd>
 							
 								<dt>
 									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>extension</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The file extension to look for (otherwise all file types).</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="normalize"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>normalize</b>(path)
+					
+					</div>
+					<div class="description">
+						See Node.js documentation. Reimplements path.normalize.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>path</b>
 									
 								</dt>
 								<dd></dd>
@@ -443,13 +543,6 @@ ul.inheritsList
 						
 						
 						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{Array}</span> array of strings as filepaths to files in directory</dd>
-							
-							</dl>
-						
 						
 						
 
@@ -459,11 +552,12 @@ ul.inheritsList
 					<div class="fixedFont">
 					
 					
-					<b>readFile</b>(path, filename, the)
+					<b>readFile</b>(path, filename, callback)
 					
 					</div>
 					<div class="description">
-						
+						Reads the contents of a given file and/or path. This assumes utf-8
+    encoding and is asynchronous in execution.
 						
 						
 					</div>
@@ -478,25 +572,128 @@ ul.inheritsList
 									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>path</b>
 									
 								</dt>
-								<dd>to file directory or full path</dd>
+								<dd>The path to the directory containing the file
+      or the full path to the file.</dd>
 							
 								<dt>
 									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>filename</b>
 									
 								</dt>
-								<dd>if not as part of path (will be normalized)</dd>
+								<dd>The name of the file if only directory path is provided (will be normalized).</dd>
 							
 								<dt>
-									<span class="light fixedFont">{Function}</span> <b>the</b>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
 									
 								</dt>
-								<dd>callback takes an error and filedata paramaters</dd>
+								<dd>The callback takes an error and filedata paramaters.</dd>
 							
 							</dl>
 						
 						
 						
 						
+						
+						
+						
+
+					<hr />
+				
+					<a name="reduce"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/Array.html">Array</a>}</span>
+					<b>reduce</b>(files, extension)
+					
+					</div>
+					<div class="description">
+						Reduces an array of filenames to just files with the specified
+    extension. This is a synchronous function.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/Array.html">Array</a>}</span> <b>files</b>
+									
+								</dt>
+								<dd>The array of filenames.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>extension</b>
+									
+								</dt>
+								<dd>The filetype extension to look for.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Array.html">Array</a>}</span> The array of files with the provided extension.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="shorten"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
+					<b>shorten</b>(path, max)
+					
+					</div>
+					<div class="description">
+						Takes what might be a very long file path and shortens it to
+    a (default 3) maximum number of slashes counting from the end
+    and prepends an elipses. This is strictly for aesthetic/human-
+    readability purposes.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>path</b>
+									
+								</dt>
+								<dd>The file path needing to be shortended.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>max</b>
+									<i>Optional</i>
+								</dt>
+								<dd>The maximum number of slashes to include.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> The normalized/shortened file path.</dd>
+							
+							</dl>
 						
 						
 						
@@ -515,7 +712,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 17:15:29 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Jan 24 2012 11:31:58 GMT-0500 (EST)
 		</div>
 	</body>
 </html>

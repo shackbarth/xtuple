@@ -191,17 +191,31 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/Array.html">Array</a></li>
+	
+	<li><a href="../symbols/Function.html">Function</a></li>
+	
 	<li><a href="../symbols/String.html">String</a></li>
 	
 	<li><a href="../symbols/xt.html">xt</a></li>
 	
+	<li><a href="../symbols/xt.commitRecord.html">xt.commitRecord</a></li>
+	
 	<li><a href="../symbols/xt.database.html">xt.database</a></li>
 	
+	<li><a href="../symbols/xt.dataRoute.html">xt.dataRoute</a></li>
+	
+	<li><a href="../symbols/xt.dataRouter.html">xt.dataRouter</a></li>
+	
 	<li><a href="../symbols/xt.exception.html">xt.exception</a></li>
+	
+	<li><a href="../symbols/xt.fetch.html">xt.fetch</a></li>
 	
 	<li><a href="../symbols/xt.filesystem.html">xt.filesystem</a></li>
 	
 	<li><a href="../symbols/xt.function.html">xt.function</a></li>
+	
+	<li><a href="../symbols/xt.functor.html">xt.functor</a></li>
 	
 	<li><a href="../symbols/xt.io.html">xt.io</a></li>
 	
@@ -210,6 +224,22 @@ ul.inheritsList
 	<li><a href="../symbols/xt.options.html">xt.options</a></li>
 	
 	<li><a href="../symbols/xt.proto.html">xt.proto</a></li>
+	
+	<li><a href="../symbols/xt.requestSession.html">xt.requestSession</a></li>
+	
+	<li><a href="../symbols/xt.response.html">xt.response</a></li>
+	
+	<li><a href="../symbols/xt.retrieveRecord.html">xt.retrieveRecord</a></li>
+	
+	<li><a href="../symbols/xt.route.html">xt.route</a></li>
+	
+	<li><a href="../symbols/xt.router.html">xt.router</a></li>
+	
+	<li><a href="../symbols/xt.server.html">xt.server</a></li>
+	
+	<li><a href="../symbols/xt.session.html">xt.session</a></li>
+	
+	<li><a href="../symbols/xt.sessionStore.html">xt.sessionStore</a></li>
 	
 	<li><a href="../symbols/xt.string.html">xt.string</a></li>
 	
@@ -241,7 +271,7 @@ ul.inheritsList
   each individual string when they can share.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_node_modules_xt_node_modules_foundation_node_modules_string.js.html">string.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_string.js.html">string.js</a>.
 				
 			</p>
 
@@ -289,6 +319,16 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.string.html#capitalize">capitalize</a></b>()
+								</div>
+								<div class="description">Capitalizes the first letter of the string and forces
+    the remaining characters of the string to lowercase.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/xt.string.html#format">format</a></b>(param)
 								</div>
 								<div class="description">Has the ability to replace keys in the string with
@@ -299,9 +339,28 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.string.html#pre">pre</a></b>(p)
+								</div>
+								<div class="description">Prepends a string to the front of the current string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/xt.string.html#replaceKeys">replaceKeys</a></b>(the, the)
 								</div>
-								<div class="description"></div>
+								<div class="description">Takes an object-hash of key-value pairs and globally replaces
+    each key with its assigned value anywhere in the string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/xt.string.html#trim">trim</a></b>()
+								</div>
+								<div class="description">Trims away whitespace at the beginning and end of the string.</div>
 							</td>
 						</tr>
 					
@@ -352,6 +411,39 @@ ul.inheritsList
 				<div class="sectionTitle">
 					Method Detail
 				</div>
+				
+					<a name="capitalize"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
+					<b>capitalize</b>()
+					
+					</div>
+					<div class="description">
+						Capitalizes the first letter of the string and forces
+    the remaining characters of the string to lowercase.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> The capitalized string.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
 				
 					<a name="format"> </a>
 					<div class="fixedFont">
@@ -421,6 +513,51 @@ ul.inheritsList
 
 					<hr />
 				
+					<a name="pre"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
+					<b>pre</b>(p)
+					
+					</div>
+					<div class="description">
+						Prepends a string to the front of the current string. This
+    is more convenient, can save a few characters, and arguably
+    looks better in code.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>p</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> string with prepended value as prefix</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
 					<a name="replaceKeys"> </a>
 					<div class="fixedFont">
 					
@@ -429,7 +566,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						
+						Takes an object-hash of key-value pairs and globally replaces
+    each key with its assigned value anywhere in the string.
 						
 						
 					</div>
@@ -468,6 +606,40 @@ ul.inheritsList
 						
 						
 
+					<hr />
+				
+					<a name="trim"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
+					<b>trim</b>()
+					
+					</div>
+					<div class="description">
+						Trims away whitespace at the beginning and end of the string.
+    The implementation selected (since there are a wide variety) tested to
+    be the fastest method for normal scenarios.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> trimmed string</dd>
+							
+							</dl>
+						
+						
+						
+
 					
 				
 			
@@ -482,7 +654,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 17:15:30 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Jan 24 2012 11:31:58 GMT-0500 (EST)
 		</div>
 	</body>
 </html>

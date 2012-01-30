@@ -191,17 +191,31 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
+	<li><a href="../symbols/Array.html">Array</a></li>
+	
+	<li><a href="../symbols/Function.html">Function</a></li>
+	
 	<li><a href="../symbols/String.html">String</a></li>
 	
 	<li><a href="../symbols/xt.html">xt</a></li>
 	
+	<li><a href="../symbols/xt.commitRecord.html">xt.commitRecord</a></li>
+	
 	<li><a href="../symbols/xt.database.html">xt.database</a></li>
 	
+	<li><a href="../symbols/xt.dataRoute.html">xt.dataRoute</a></li>
+	
+	<li><a href="../symbols/xt.dataRouter.html">xt.dataRouter</a></li>
+	
 	<li><a href="../symbols/xt.exception.html">xt.exception</a></li>
+	
+	<li><a href="../symbols/xt.fetch.html">xt.fetch</a></li>
 	
 	<li><a href="../symbols/xt.filesystem.html">xt.filesystem</a></li>
 	
 	<li><a href="../symbols/xt.function.html">xt.function</a></li>
+	
+	<li><a href="../symbols/xt.functor.html">xt.functor</a></li>
 	
 	<li><a href="../symbols/xt.io.html">xt.io</a></li>
 	
@@ -210,6 +224,22 @@ ul.inheritsList
 	<li><a href="../symbols/xt.options.html">xt.options</a></li>
 	
 	<li><a href="../symbols/xt.proto.html">xt.proto</a></li>
+	
+	<li><a href="../symbols/xt.requestSession.html">xt.requestSession</a></li>
+	
+	<li><a href="../symbols/xt.response.html">xt.response</a></li>
+	
+	<li><a href="../symbols/xt.retrieveRecord.html">xt.retrieveRecord</a></li>
+	
+	<li><a href="../symbols/xt.route.html">xt.route</a></li>
+	
+	<li><a href="../symbols/xt.router.html">xt.router</a></li>
+	
+	<li><a href="../symbols/xt.server.html">xt.server</a></li>
+	
+	<li><a href="../symbols/xt.session.html">xt.session</a></li>
+	
+	<li><a href="../symbols/xt.sessionStore.html">xt.sessionStore</a></li>
 	
 	<li><a href="../symbols/xt.string.html">xt.string</a></li>
 	
@@ -305,6 +335,16 @@ ul.inheritsList
 							</td>
 						</tr>
 					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/_global_.html#issue">issue</a></b>(exception, response)
+								</div>
+								<div class="description">Much like native throw, issue will pass an xt exception directly to the
+  handler.</div>
+							</td>
+						</tr>
+					
 					</tbody>
 				</table>
 				
@@ -334,7 +374,7 @@ ul.inheritsList
 						Borrowed from SproutCore, too convenient...
 						
 							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_node_modules_xt_node_modules_foundation_foundation.js.html">foundation.js</a>.
+							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_foundation.js.html">foundation.js</a>.
 						
 						
 					</div>
@@ -359,7 +399,7 @@ ul.inheritsList
 						Borrowed from SproutCore, too convenient...
 						
 							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_node_modules_xt_node_modules_foundation_foundation.js.html">foundation.js</a>.
+							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_foundation.js.html">foundation.js</a>.
 						
 						
 					</div>
@@ -384,7 +424,7 @@ ul.inheritsList
 					<a name="args"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Array}</span>
+					<span class="light">{<a href="../symbols/Array.html">Array</a>}</span>
 					<b>args</b>()
 					
 					</div>
@@ -393,7 +433,7 @@ ul.inheritsList
   array of the arguments passed into that function.
 						
 							<br />
-							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_node_modules_xt_node_modules_foundation_foundation.js.html">foundation.js</a>.
+							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_foundation.js.html">foundation.js</a>.
 						
 						
 					</div>
@@ -414,11 +454,69 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Array}</span> Array of arguments or an empty array.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Array.html">Array</a>}</span> Array of arguments or an empty array.</dd>
 							
 							</dl>
 						
 						
+						
+
+					<hr />
+				
+					<a name="issue"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>issue</b>(exception, response)
+					
+					</div>
+					<div class="description">
+						Much like native throw, issue will pass an xt exception directly to the
+  handler. If the exception is fatal it will cease execution of the entire
+  system. If it is non-fatal, it will handle the exception and continue
+  executing in the current context where it was issued.
+
+  Note that issue is the prefered way to handle exceptions that interrupt
+  responses to HTTP requests in a server.
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_exception.js.html">exception.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>exception</b>
+									
+								</dt>
+								<dd>The xt exception to issue.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>response</b>
+									<i>Optional</i>
+								</dt>
+								<dd>Any active server response to be affected.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd>xt#exception#close</dd>
+							
+							</dl>
 						
 
 					
@@ -435,7 +533,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Jan 06 2012 17:15:29 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Jan 24 2012 11:31:58 GMT-0500 (EST)
 		</div>
 	</body>
 </html>
