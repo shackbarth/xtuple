@@ -19,7 +19,7 @@ create or replace rule \\"_INSERT_CRM\\" as on insert to xm.contact
 
 update cntct set
   cntct_crmacct_id = new.account
-where ( cntct_id = new.id );
+where ( cntct_id = new.guid );
 
 ","
 
@@ -30,7 +30,7 @@ create or replace rule \\"_UPDATE_CRM\\" as on update to xm.contact
 
 update cntct set
   cntct_crmacct_id = new.account
-where ( cntct_id = old.id );
+where ( cntct_id = old.guid );
 
 "}', 
 

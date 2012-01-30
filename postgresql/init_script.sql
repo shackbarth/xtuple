@@ -225,4 +225,7 @@
 \i extensions/todo/xm/models/to_do_recurrence.sql;
 \i extensions/todo/xm/models/to_do.sql;
 
+-- extensions/crm
+\i extensions/crm/models/contact.sql;
+
 -- [ END ] extensions
