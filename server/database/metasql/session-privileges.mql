@@ -1,4 +1,0 @@
--- Group: XM.session
--- Name:  privileges
--- Notes: A list of privileges that includes a boolean designating whether the current user has been granted the privilege or not.
-select privilege, granted from privgranted
