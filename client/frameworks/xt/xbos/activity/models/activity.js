@@ -17,10 +17,7 @@ XM.Activity = XM.Document.extend(
 
   className: 'XM.Activity',
 
-  /** 
-  @type String
-  */
-  name: SC.Record.attr(String),
+  nestedRecordNamespace: XM,
   
   /** 
   @type Boolean
@@ -28,39 +25,18 @@ XM.Activity = XM.Document.extend(
   isActive: SC.Record.attr(Boolean),
   
   /** 
-  @type XM.User
+  @type XM.UserAccount
   */
-  owner: SC.Record.toOne('XM.User'),
+  owner: SC.Record.toOne('XM.UserAccount', {
+    isNested: YES
+  }),
   
   /** 
-  @type XM.User
+  @type XM.UserAccount
   */
-  assignedTo: SC.Record.toOne('XM.User'),
-  
-  /**
-  @type XM.Priority
-  */
-  priority: SC.Record.attr('XM.Priority'),
-  
-  /**
-  @type SC.DateTime
-  */
-  startDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
-  
-  /**
-  @type SC.DateTime
-  */
-  dueDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
-  
-  /**
-  @type SC.DateTime
-  */
-  assignDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
-  
-  /**
-  @type SC.DateTime
-  */
-  completeDate: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  assignedTo: SC.Record.toOne('XM.UserAccount', {
+    isNested: YES
+  }),
   
   /**
   @type String

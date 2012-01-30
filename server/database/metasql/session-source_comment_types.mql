@@ -1,9 +1,0 @@
--- Group: XM.session
--- Name:  sourceCommentTypes
--- Notes: 
-select source_name as "source", 
-rtrim(ltrim(array(select 
-                    cmnttypesource_cmnttype_id 
-                  from cmnttypesource 
-                  where cmnttypesource_source_id=source_id)::text,'{'),'}') as "commentTypes"
-from source

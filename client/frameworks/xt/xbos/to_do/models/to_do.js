@@ -10,10 +10,12 @@
   @extends XM.Activity
   @version 0.1
 */
-XM.ToDo = XM.Activity.extend( XM.Recurrence,
+XM.ToDo = XM.Activity.extend( XM.CoreDocuments,
 /** @scope XM.ToDo.prototype */ {
 
   className: 'XM.ToDo',
+  
+  nestedRecordNamespace: XM,
 
   createPrivilege: 'MaintainPersonalToDoItems MaintainAllToDoItems'.w(),
   readPrivilege:   'ViewPersonalToDoItems ViewAllToDoItems',
@@ -23,36 +25,150 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   /**
   @type String
   */
+  name: SC.Record.attr(String),
+
+  /**
+  @type String
+  */
   description: SC.Record.attr(String),
   
   /**
-  @type XM.Contact
+  @type XM.ContactInfo
   */
-  contact: SC.Record.toOne('XM.Contact'),
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: YES
+  }),
   
   /**
   @type String
   */
   toDoStatus: SC.Record.attr(String, {
     /** @private */
-    defaultValue: XM.ToDo.NEITHER,
+    defaultValue: function() {
+      return XM.ToDo.NEITHER
+    }
+  }),
+  
+  /**
+  @type XM.Priority
+  */
+  priority: SC.Record.toOne('XM.Priority'),
+  
+  /**
+  @type SC.DateTime
+  */
+  startDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  dueDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  assignDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  completeDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type XM.ToDoRecurrence
+  */
+  recurrence: SC.Record.toOne('XM.ToDoRecurrence', {
+    isNested: YES
   }),
     
   /**
   @type XM.ToDoAlarm
   */
   alarms: SC.Record.toMany('XM.ToDoAlarm', { 
-    inverse: 'toDo' ,
+    isNested: YES,
+    inverse: 'toDo'
   }),
   
   /**
   @type XM.ToDoComment
   */
   comments: XM.Record.toMany('XM.ToDoComment', { 
-    inverse: 'toDo' ,
+    isNested: YES,
+    inverse: 'toDo'
   }),
+  
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
+  /**
+  @type XM.ToDoContact
+  */
+  contacts: SC.Record.toMany('XM.ToDoContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ToDoItem
+  */
+  items: SC.Record.toMany('XM.ToDoItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ToDoFile
+  */
+  files: SC.Record.toMany('XM.ToDoFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ToDoImage
+  */
+  images: SC.Record.toMany('XM.ToDoImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ToDoUrl
+  */
+  urls: SC.Record.toMany('XM.ToDoUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ToDoToDo
+  */
+  toDos: XM.Record.toMany('XM.ToDoToDo', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _toDosLength: 0,
+  
+  /* @private */
+  _toDosLengthBinding: '.toDos.length',
+  
+  /* @private */
+  _toDosDidChange: function() {
+    var documents = this.get('documents'),
+        toDos = this.get('toDos');
 
+    documents.addEach(toDos);    
+  }.observes('toDosLength')
+  
 });
+
+
+XM.ToDo.mixin( /** @scope XM.ToDo */ {
 
 /**
   Pending status for To-Do.
@@ -62,7 +178,7 @@ XM.ToDo = XM.Activity.extend( XM.Recurrence,
   @type String
   @default P
 */
-XM.ToDo.PENDING = 'P';
+  PENDING: 'P',
 
 /**
   Deffered status for To-Do.
@@ -72,7 +188,7 @@ XM.ToDo.PENDING = 'P';
   @type String
   @default O
 */
-XM.ToDo.DEFERRED = 'D';
+  DEFERRED: 'D',
 
 /**
   Open status for To-Do. Neither Pending or Deferred.
@@ -81,7 +197,7 @@ XM.ToDo.DEFERRED = 'D';
   @type String
   @default N
 */
-XM.ToDo.NEITHER = 'N';
+  NEITHER: 'N',
 
 /**
   Completed status for To-Do.
@@ -90,4 +206,7 @@ XM.ToDo.NEITHER = 'N';
   @type String
   @default C
 */
-XM.ToDo.COMPLETED = 'C';
+  COMPLETED: 'C'
+
+});
+

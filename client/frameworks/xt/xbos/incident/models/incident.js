@@ -12,10 +12,12 @@
   @version 0.1
 */
 
-XM.Incident = XM.Activity.extend( XM.Recurrence,
+XM.Incident = XM.Activity.extend( XM.CoreDocuments,
 /** @scope XM.Incident.prototype */ {
 
   className: 'XM.Incident',
+  
+  nestedRecordNamespace: XM,
 
   createPrivilege: 'MaintainPersonalIncidents MaintainAllIncidents'.w(),
   readPrivilege:   'ViewPersonalIncidents ViewAllIncidents',
@@ -23,9 +25,16 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   deletePrivilege: 'MaintainPersonalIncidents MaintainAllIncidents'.w(),
 
   /**
+  @type String
+  */
+  description: SC.Record.attr(String),
+
+  /**
   @type XM.Account
   */
-  account: SC.Record.toOne('XM.Account'),
+  account: SC.Record.toOne('XM.Account', {
+    isNested: YES
+  }),
   
   /**
   @type Boolean
@@ -43,6 +52,11 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   incidentStatus: SC.Record.toOne('XM.Status'),
   
   /**
+  @type XM.Priority
+  */
+  severity: SC.Record.toOne('XM.Priority'),
+  
+  /**
   @type XM.IncidentSevereity
   */
   severity: SC.Record.toOne('XM.IncidentSeverity'),
@@ -53,14 +67,24 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   resolution: SC.Record.toOne('XM.IncidentResolution'),
 
   /**
-  @type XM.Contact
+  @type XM.ContactInfo
   */
-  contact: SC.Record.toOne('XM.Contact'),
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: YES,
+  }),
+  
+  /**
+  @type XM.IncidentRecurrence
+  */
+  recurrence: SC.Record.toOne('XM.IncidentRecurrence', {
+    isNested: YES
+  }),
   
   /**
   @type XM.IncidentHistory
   */
   history: SC.Record.toMany('XM.IncidentHistory', {
+    isNested: YES,
     inverse: 'incident',
   }),
   
@@ -68,22 +92,86 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   @type XM.IncidentAlarm
   */
   alarms: SC.Record.toMany('XM.IncidentAlarm', {
-    inverse: 'incident',
+    isNested: YES,
+    inverse: 'incident'
   }),
   
   /**
   @type XM.IncidentCharacteristic
   */
   characteristics: SC.Record.toMany('XM.IncidentCharacteristic', {
-    inverse: 'incident',
+    isNested: YES,
+    inverse: 'incident'
   }),
   
   /**
   @type XM.IncidentComment
   */
   comments: XM.Record.toMany('XM.IncidentComment', {
-    inverse: 'incident',
+    isNested: YES,
+    inverse: 'incident'
   }),
+  
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
+  /**
+  @type XM.IncidentContact
+  */
+  contacts: SC.Record.toMany('XM.IncidentContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.IncidentItem
+  */
+  items: SC.Record.toMany('XM.IncidentItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.IncidentFile
+  */
+  files: SC.Record.toMany('XM.IncidentFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.IncidentImage
+  */
+  images: SC.Record.toMany('XM.IncidentImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.IncidentUrl
+  */
+  urls: SC.Record.toMany('XM.IncidentUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.IncidentAssignment
+  */
+  incidents: XM.Record.toMany('XM.IncidentIncident', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _incidentsLength: 0,
+  
+  /* @private */
+  _incidentsLengthBinding: '.incidents.length',
+  
+  /* @private */
+  _incidentsDidChange: function() {
+    var documents = this.get('documents'),
+        incidents = this.get('incidents');
+
+    documents.addEach(incidents);    
+  }.observes('incidentsLength'),
+  
 
   /****** CALCULATED PROPERTIES        */
 
@@ -92,10 +180,10 @@ XM.Incident = XM.Activity.extend( XM.Recurrence,
   @type Boolean
   */
   isActive:  function() {
-    var stage = this.get('status');
-    if (stage !== null) return stage !== 'L';
+    var status = this.get('incidentStatus');
+    if (status) { return status !== 'L'; }
 
     return NO;
-  }.property('stage').cacheable()
+  }.property('incidentStatus').cacheable()
 
 });

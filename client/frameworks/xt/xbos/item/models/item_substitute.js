@@ -26,7 +26,9 @@ XM.ItemSubstitute = XM.Record.extend(
   /**
   @type XM.Item
   */
-  substituteItem: SC.Record.toOne('XM.Item'),
+  substituteItem: SC.Record.toOne('XM.ItemInfo', {
+    isNested: YES
+  }),
   
   /**
   @type Number

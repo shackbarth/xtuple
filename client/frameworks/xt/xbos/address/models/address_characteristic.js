@@ -19,7 +19,7 @@ XM.AddressCharacteristic = XM.CharacteristicAssignment.extend(
   @type XM.Address
   */
   address: SC.Record.toOne('XM.Address', {
-    inverse:  'comments',
+    inverse:  'characteristics',
     isMaster: NO,
   }),
   

@@ -152,7 +152,7 @@ XT.Session = XT.Object.create(
       password: p
     };
     
-    SC.Request.postUrl(XT.DataSource.buildURL("functor"))
+    SC.Request.postUrl(XT.DataSource.URL)
       .header({ "Accept": "application/json" }).json()
       .notify(this, "_receivedSessionResponse")
       .timeoutAfter(1000)
@@ -171,12 +171,12 @@ XT.Session = XT.Object.create(
       this.invokeLater(function() { s.invokeStateMethod("reset"); }, 100);
       return;
     }
-    var b = r.get("body"), u = b.username, sid = b.sid;
-    if(u !== this.get("_username"))
-      this.error("The retrieved session was for a different user", YES);
-    if(!sid)
-      this.error("The server did not supply a valid session id", YES);
-    this._session_id = sid;
+    // var b = r.get("body"), u = b.username, sid = b.sid;
+    // if(u !== this.get("_username"))
+    //   this.error("The retrieved session was for a different user", YES);
+    // if(!sid)
+    //   this.error("The server did not supply a valid session id", YES);
+    // this._session_id = sid;
     this.set("isActive", YES);
     s.sendEvent(XT.SESSION_ACQUIRED); 
   },

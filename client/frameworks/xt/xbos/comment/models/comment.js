@@ -27,12 +27,12 @@ XM.Comment = XM.Record.extend(
   }),
   
   /**
-  @type XM.User
+  @type {String}
   */
-  user: SC.Record.attr(XM.User, {
+  username: SC.Record.attr(XM.User, {
     /** @private */
     defaultValue: function() {
-      return arguments[0].get('status') === SC.Record.READY_NEW ? XM.currentUser() : null;
+      return arguments[0].get('status') === SC.Record.READY_NEW ? XM.currentUser().get('username') : null;
     }
   }),
   
@@ -59,7 +59,9 @@ XM.Comment = XM.Record.extend(
   /**
   @type Boolean
   */
-  canUpdate: NO,
+  canUpdate: SC.Record.attr(String, {
+    defaultValue: YES
+  }),
 
   // ..........................................................
   // OBSERVERS

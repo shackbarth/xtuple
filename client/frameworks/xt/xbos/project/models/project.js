@@ -1,5 +1,5 @@
 // ==========================================================================
-// Project:   XM.Project
+// Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
@@ -11,7 +11,7 @@
   @extends XM.Recurrence
   @version 0.2
 */
-XM.Project = XM.Activity.extend( XM.Recurrence,
+XM.Project = XM.Activity.extend( XM.CoreDocuments,
     /** @scope XM.Project.prototype */ {
 
   className: 'XM.Project',
@@ -24,9 +24,25 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   /**
   @type String
   */
+  name: SC.Record.attr(String, {
+    isRequired: YES
+  }),
+  
+  /**
+  @type String
+  */
   projectStatus: SC.Record.attr(String, { 
     /** @private */
-    defaultValue: XM.Project.CONCEPT,
+    defaultValue: function() {
+      return XM.Project.CONCEPT;
+    }
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  startDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
   }),
   
   /**
@@ -38,18 +54,102 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   }),
   
   /**
+  @type SC.DateTime
+  */
+  assignDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type SC.DateTime
+  */
+  completeDate: SC.Record.attr(SC.DateTime, { 
+    format: '%Y-%m-%d' 
+  }),
+  
+  /**
+  @type XM.ProjectRecurrence
+  */
+  recurrence: SC.Record.toOne('XM.ProjectRecurrence', {
+    isNested: YES
+  }),
+  
+  /**
   @type XM.ProjectTask
   */
   tasks: SC.Record.toMany('XM.ProjectTask', {
-    inverse:  'project',
+    isNested: YES,
+    inverse:  'project'
   }),
   
   /**
   @type XM.ProjectComment
   */
   comments: XM.Record.toMany('XM.ProjectComment', {
-    inverse: 'project',
+    isNested: YES,
+    inverse: 'project'
   }),
+  
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
+  /**
+  @type XM.ProjectContact
+  */
+  contacts: SC.Record.toMany('XM.ProjectContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ProjectItem
+  */
+  items: SC.Record.toMany('XM.ProjectItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectFile
+  */
+  files: SC.Record.toMany('XM.ProjectFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectImage
+  */
+  images: SC.Record.toMany('XM.ProjectImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectUrl
+  */
+  urls: SC.Record.toMany('XM.ProjectUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectProject
+  */
+  projects: XM.Record.toMany('XM.ProjectProject', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _projectsLength: 0,
+  
+  /* @private */
+  _projectsLengthBinding: '.projects.length',
+  
+  /* @private */
+  _projectsDidChange: function() {
+    var documents = this.get('documents'),
+        projects = this.get('projects');
+
+    documents.addEach(projects);    
+  }.observes('projectsLength'),
+
 
   // ..........................................................
   // CALCULATED PROPERTIES
@@ -111,6 +211,8 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
 
 });
 
+XM.Project.mixin( /** @scope XM.Project */ {
+
 /**
   Concept status for project.
   
@@ -119,7 +221,7 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   @type String
   @default P
 */
-XM.Project.CONCEPT = 'P';
+  CONCEPT: 'P',
 
 /**
   In-Process status for project.
@@ -129,7 +231,7 @@ XM.Project.CONCEPT = 'P';
   @type String
   @default O
 */
-XM.Project.IN_PROCESS = 'O';
+  IN_PROCESS: 'O',
 
 /**
   Completed status for project.
@@ -138,5 +240,6 @@ XM.Project.IN_PROCESS = 'O';
   @type String
   @default C
 */
-XM.Project.COMPLETED = 'C';
-
+  COMPLETED: 'C'
+  
+});

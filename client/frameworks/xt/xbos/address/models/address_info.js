@@ -21,8 +21,7 @@ XM.AddressInfo = XM.Record.extend(
   /*
   @type String
   */
-  number:     SC.Record.attr(String)
-  }),
+  number:     SC.Record.attr(String),
   
   /**
   @type String
