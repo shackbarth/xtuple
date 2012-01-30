@@ -3,7 +3,7 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/activity/activity');
+
 /** @class
 
   (Document your Model here)
@@ -12,7 +12,7 @@ sc_require('models/activity/activity');
   @version 0.1
 */
 
-XM.Opportunity = XM.Activity.extend(
+XM.Opportunity = XM.Activity.extend( XM.CoreDocuments, 
 /** @scope XM.Opportunity.prototype */ {
 
   className: 'XM.Opportunity',
@@ -44,7 +44,7 @@ XM.Opportunity = XM.Activity.extend(
   /**
   @type String
   */
-  name: SC.Record.att(String),
+  name: SC.Record.attr(String),
   
   /**
   @type XM.OpportunitySource
@@ -79,7 +79,7 @@ XM.Opportunity = XM.Activity.extend(
   }),
   
   /**
-  @type XM.Account
+  @type XM.DateTime
   */
   targetClose: SC.Record.attr(SC.DateTime, { 
     format: '%Y-%m-%d'
@@ -114,13 +114,65 @@ XM.Opportunity = XM.Activity.extend(
     isNested: YES,
     inverse: 'opportunity'
   }),
+    
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
   
   /**
-  @type XM.OpportunityDocument
+  @type XM.OpportunityContact
   */
-  comments: XM.Record.toMany('XM.OpportunityDocument', {
-    isNested: YES,
-    inverse: 'opportunity'
-  }),  
+  contacts: SC.Record.toMany('XM.OpportunityContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.OpportunityItem
+  */
+  items: SC.Record.toMany('XM.OpportunityItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityFile
+  */
+  files: SC.Record.toMany('XM.OpportunityFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityImage
+  */
+  images: SC.Record.toMany('XM.OpportunityImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityUrl
+  */
+  urls: SC.Record.toMany('XM.OpportunityUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.OpportunityAssignment
+  */
+  opportunities: XM.Record.toMany('XM.OpportunityOpportunity', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _opportunitiesLength: 0,
+  
+  /* @private */
+  _opportunitiesLengthBinding: '.opportunities.length',
+  
+  /* @private */
+  _opportunitiesDidChange: function() {
+    var documents = this.get('documents'),
+        opportunities = this.get('opportunities');
+
+    documents.addEach(opportunities);    
+  }.observes('opportunitiesLength') 
 
 });

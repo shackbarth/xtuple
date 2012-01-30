@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Contact = XM.Document.extend(
+XM.Contact = XM.Document.extend( XM.CoreDocuments,
 /** @scope XM.Contact.prototype */ {
 
   className: 'XM.Contact',
@@ -146,11 +146,59 @@ XM.Contact = XM.Document.extend(
   }),
   
   /**
-  @type XM.ContactDocument
+  A set of all the contact uses on this record.
+  
+  Append values to this property with plugins by
+  adding a new property for each use type with
+  observers that add objects to this property.
+  See 'XM.CoreDocuments' mixin for example of the
+  implementation technique.
+  
+  @type SC.Set
   */
-  documents: XM.Record.toMany('XM.ContactDocument', {
-    isNested: YES,
-    inverse: 'contact',
+  uses: function(key, value) {
+    if(value) { 
+      this._uses = value;
+    } else if(!this._documents) { 
+      this._uses = SC.Set.create(); 
+    }
+    
+    return this._uses;
+  }.property().cacheable(),
+  
+  /**
+  @type XM.ContactContact
+  */
+  contacts: SC.Record.toMany('XM.ContactContact', {
+    isNested: YES
+  }),
+    
+  /**
+  @type XM.ContactItem
+  */
+  items: SC.Record.toMany('XM.ContactItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ContactFile
+  */
+  files: SC.Record.toMany('XM.ContactFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ContactImage
+  */
+  images: SC.Record.toMany('XM.ContactImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ContactUrl
+  */
+  urls: SC.Record.toMany('XM.ContactUrl', {
+    isNested: YES
   }),
 
   // ..........................................................

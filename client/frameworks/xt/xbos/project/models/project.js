@@ -11,7 +11,7 @@
   @extends XM.Recurrence
   @version 0.2
 */
-XM.Project = XM.Activity.extend( XM.Recurrence,
+XM.Project = XM.Activity.extend( XM.CoreDocuments,
     /** @scope XM.Project.prototype */ {
 
   className: 'XM.Project',
@@ -33,7 +33,9 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   */
   projectStatus: SC.Record.attr(String, { 
     /** @private */
-    defaultValue: XM.Project.CONCEPT,
+    defaultValue: function() {
+      return XM.Project.CONCEPT;
+    }
   }),
   
   /**
@@ -66,6 +68,13 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   }),
   
   /**
+  @type XM.ProjectRecurrence
+  */
+  recurrence: SC.Record.toOne('XM.ProjectRecurrence', {
+    isNested: YES
+  }),
+  
+  /**
   @type XM.ProjectTask
   */
   tasks: SC.Record.toMany('XM.ProjectTask', {
@@ -81,13 +90,65 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
     inverse: 'project'
   }),
   
+  // ..........................................................
+  // DOCUMENT ASSIGNMENTS
+  // 
+  
   /**
-  @type XM.ProjectDocument
+  @type XM.ProjectContact
   */
-  documents: XM.Record.toMany('XM.ProjectDocument', {
-    isNested: YES,
-    inverse: 'project'
+  contacts: SC.Record.toMany('XM.ProjectContact', {
+    isNested: YES
   }),
+    
+  /**
+  @type XM.ProjectItem
+  */
+  items: SC.Record.toMany('XM.ProjectItem', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectFile
+  */
+  files: SC.Record.toMany('XM.ProjectFile', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectImage
+  */
+  images: SC.Record.toMany('XM.ProjectImage', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectUrl
+  */
+  urls: SC.Record.toMany('XM.ProjectUrl', {
+    isNested: YES
+  }),
+  
+  /**
+  @type XM.ProjectProject
+  */
+  projects: XM.Record.toMany('XM.ProjectProject', {
+    isNested: YES
+  }),
+  
+  /* @private */
+  _projectsLength: 0,
+  
+  /* @private */
+  _projectsLengthBinding: '.projects.length',
+  
+  /* @private */
+  _projectsDidChange: function() {
+    var documents = this.get('documents'),
+        projects = this.get('projects');
+
+    documents.addEach(projects);    
+  }.observes('projectsLength'),
 
 
   // ..........................................................
@@ -150,6 +211,8 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
 
 });
 
+XM.Project.mixin( /** @scope XM.Project */ {
+
 /**
   Concept status for project.
   
@@ -158,7 +221,7 @@ XM.Project = XM.Activity.extend( XM.Recurrence,
   @type String
   @default P
 */
-XM.Project.CONCEPT = 'P';
+  CONCEPT: 'P',
 
 /**
   In-Process status for project.
@@ -168,7 +231,7 @@ XM.Project.CONCEPT = 'P';
   @type String
   @default O
 */
-XM.Project.IN_PROCESS = 'O';
+  IN_PROCESS: 'O',
 
 /**
   Completed status for project.
@@ -177,5 +240,6 @@ XM.Project.IN_PROCESS = 'O';
   @type String
   @default C
 */
-XM.Project.COMPLETED = 'C';
-
+  COMPLETED: 'C'
+  
+});

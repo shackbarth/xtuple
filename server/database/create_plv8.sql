@@ -1,1 +1,0 @@
-CREATE LANGUAGE plv8;
