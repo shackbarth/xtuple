@@ -8,7 +8,7 @@
   //
 
   var a = JSON.parse(address),
-      line1, line2, line3, city, state, postalcode, country, sql, resp;
+      line1, line2, line3, city, state, postalcode, country, sql, resp, guid, ret;
 
   if(a.type !== 'Address') {
     throw new Error("Class type invalid: must be type Adress!");
@@ -40,7 +40,15 @@
                              postalcode,
                              country]);
 
-      return resp.length ? JSON.stringify(resp[0]) : '{}';
+      if(resp.length) {
+        guid = resp[0].guid;
+        sql = "select private.retrieve_record('XM.Address', $1)";
+        ret = executeSql(sql,[guid]);
+        return ret[0].retrieve_record;
+
+      } else {
+          return '{}';
+       };
     };
 
 $$ LANGUAGE plv8;
