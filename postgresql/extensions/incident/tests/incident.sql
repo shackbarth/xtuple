@@ -30,29 +30,39 @@ select * from xm.incident_severity;
 
 -- [insert into = create]
 insert into xm.incident (
-  guid, number, account, contact, description, owner, assigned_to, notes, priority, incident_status, is_public, resolution, severity, recurrence )
+  guid, number, account, contact, description, owner, assigned_to, notes, priority, incident_status, is_public, resolution, severity, 
+  recurrence_period, recurrence_frequency, recurrence_start, recurrence_end, recurrence_max )
 values (
   88884, 88884, (select account_info from xm.account_info where guid = 12), 
   (select contact_info from xm.contact_info where guid = 6) ,'New name info summary here.', 
   (select user_account_info from xm.user_account_info where username='admin'), null, 
-  'New notes go here.' , '3' , 'C' , true , '4' , '2', ( nextval('recur_recur_id_seq'), 88884, 'W', 1, (current_date + 2)::timestamp with time zone, null, 2)
+  'New notes go here.' , '3' , 'C' , true , '4' , '2', 
+  'W', 1, (current_date + 2)::timestamp with time zone, null, 2
    );
 
 -- remove the recurrance
 
 update xm.incident set
-  recurrence = null
+  recurrence_period = null
 where guid = 88884;
 
 -- add a new recurrance
 update xm.incident set
-  recurrence = ( nextval('recur_recur_id_seq'), 88884, 'M', 1, (current_date + 4)::timestamp with time zone, null, 2)
+  recurrence_period = 'M', 
+  recurrence_frequency = 1, 
+  recurrence_start = (current_date + 4)::timestamp with time zone, 
+  recurrence_end = null,
+  recurrence_max = 2
 where guid = 88884;
 
 -- update the recurrance
 
 update xm.incident set
-  recurrence = ( currval('recur_recur_id_seq'), 88884, 'D', 1, (current_date + 2)::timestamp with time zone, null, 2)
+  recurrence_period = 'D', 
+  recurrence_frequency = 2, 
+  recurrence_start = (current_date + 2)::timestamp with time zone, 
+  recurrence_end = null,
+  recurrence_max = 3
 where guid = 88884;
 
 insert into xm.incident_alarm (

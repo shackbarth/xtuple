@@ -1,31 +1,28 @@
-select private.create_model(
+select private.extend_model(
 
--- Model name, schema, table
+-- Context, name, schema, table, join type, join clause
 
-'project_recurrence', 'public', 'recur',
+'postbooks', 'project','','recur','left outer join', E'prj.prj_id=recur_parent_id and recur_parent_type = \'J\'',
 
--- Columns
+-- columns
 
 E'{
-  "recur.recur_id as guid",
-  "recur.recur_parent_id as project",
-  "recur.recur_period as period",
-  "recur.recur_freq as frequency",
-  "recur.recur_start as start_date",
-  "recur.recur_end as end_date",
-  "recur.recur_max as maximum"}',
+  "recur.recur_period as recurrence_period",
+  "recur.recur_freq as recurrence_frequency",
+  "recur.recur_start as recurrence_start",
+  "recur.recur_end as recurrence_end",
+  "recur.recur_max as recurrence_max"}',
 
--- Rules
+-- rules
 
 E'{"
 
 -- insert rule
 
-create or replace rule \\"_CREATE\\" as on insert to xm.project_recurrence
+create or replace rule \\"_CREATE_RECURRENCE\\" as on insert to xm.project
   do instead
 
 insert into recur (
-  recur_id,
   recur_parent_id,
   recur_parent_type,
   recur_period,
@@ -35,39 +32,60 @@ insert into recur (
   recur_max)
 values (
   new.guid,
-  new.project,
   \'J\',
-  new.period,
-  new.frequency,
-  new.start_date,
-  new.end_date,
-  new.maximum );
+  new.recurrence_period,
+  new.recurrence_frequency,
+  new.recurrence_start,
+  new.recurrence_end,
+  new.recurrence_max );
 
 ","
 
--- update rule
+create or replace rule \\"_UPDATE_RECURRENCE_CREATE\\" as on update to xm.project
+  where old.recurrence_period is null and new.recurrence_period is null = false do instead
 
-create or replace rule \\"_UPDATE\\" as on update to xm.project_recurrence
-  do instead
+insert into recur (
+  recur_parent_id,
+  recur_parent_type,
+  recur_period,
+  recur_freq,
+  recur_start,
+  recur_end,
+  recur_max)
+values (
+  new.guid,
+  \'J\',
+  new.recurrence_period,
+  new.recurrence_frequency,
+  new.recurrence_start,
+  new.recurrence_end,
+  new.recurrence_max );
+
+","
+
+create or replace rule \\"_UPDATE_RECURRENCE_UPDATE\\" as on update to xm.project
+  where old.recurrence_period is null = false and new.recurrence_period is null = false do instead
 
 update recur set
-  recur_period = new.period,
-  recur_freq = new.frequency,
-  recur_start = new.start_date,
-  recur_end = new.end_date,
-  recur_max = new.maximum
-where ( recur_id = old.guid );
+  recur_period = new.recurrence_period,
+  recur_freq = new.recurrence_frequency,
+  recur_start = new.recurrence_start,
+  recur_end = new.recurrence_end,
+  recur_max = new.recurrence_max
+where recur_parent_id = old.guid
+  and recur_parent_type = \'J\';
 
 ","
 
--- delete rule
+create or replace rule \\"_UPDATE_RECURRENCE_DELETE\\" as on update to xm.project
+  where old.recurrence_period is null = false and new.recurrence_period is null do instead
 
-create or replace rule \\"_DELETE\\" as on delete to xm.project_recurrence 
-  do instead
-
-  delete from recur where recur_id = old.guid;
+delete from recur
+where recur_parent_id = old.guid
+  and recur_parent_type = \'J\';
 
 "}', 
 
--- Conditions, Comment, System, Nested
-E'{"recur_parent_type = \'J\'"}', 'Project Recurrence Model', true, true);
+-- conditions, comment, sequence, system
+
+'{}', 'Extended by Postbooks', 50, true);
