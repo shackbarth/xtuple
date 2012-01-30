@@ -12,7 +12,7 @@
   @version 0.1
 */
 
-XM.Incident = XM.Activity.extend( XM.CoreDocuments,
+XM.Incident = XM.Activity.extend( XM.Recurrence, XM.CoreDocuments,
 /** @scope XM.Incident.prototype */ {
 
   className: 'XM.Incident',
@@ -71,13 +71,6 @@ XM.Incident = XM.Activity.extend( XM.CoreDocuments,
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
     isNested: YES,
-  }),
-  
-  /**
-  @type XM.IncidentRecurrence
-  */
-  recurrence: SC.Record.toOne('XM.IncidentRecurrence', {
-    isNested: YES
   }),
   
   /**

@@ -14,26 +14,26 @@ XM.Recurrence = {
   /**
   @type String
   */
-  period: SC.Record.attr(String),
+  recurrencePeriod: SC.Record.attr(String),
     
   /**
   @type Number
   */
-  frequency: SC.Record.attr(Number),
+  recurrenceFrequency: SC.Record.attr(Number),
     
   /**
   @type SC.DateTime
   */
-  startDate: SC.Record.attr(SC.DateTime),
+  recurrenceStart: SC.Record.attr(SC.DateTime),
   
   /**
   @type SC.DateTime
   */
-  endDate: SC.Record.attr(SC.DateTime),
+  recurrenceEnd: SC.Record.attr(SC.DateTime),
   
   /**
   @type Number
   */
-  maximum: SC.Record.attr(Number)
+  recurrenceMax: SC.Record.attr(Number)
   
 };

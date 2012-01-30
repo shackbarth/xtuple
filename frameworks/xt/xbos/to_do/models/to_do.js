@@ -10,7 +10,7 @@
   @extends XM.Activity
   @version 0.1
 */
-XM.ToDo = XM.Activity.extend( XM.CoreDocuments,
+XM.ToDo = XM.Activity.extend( XM.Recurrence, XM.CoreDocuments,
 /** @scope XM.ToDo.prototype */ {
 
   className: 'XM.ToDo',
@@ -80,13 +80,6 @@ XM.ToDo = XM.Activity.extend( XM.CoreDocuments,
   */
   completeDate: SC.Record.attr(SC.DateTime, { 
     format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type XM.ToDoRecurrence
-  */
-  recurrence: SC.Record.toOne('XM.ToDoRecurrence', {
-    isNested: YES
   }),
     
   /**

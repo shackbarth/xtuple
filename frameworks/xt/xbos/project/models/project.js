@@ -11,7 +11,7 @@
   @extends XM.Recurrence
   @version 0.2
 */
-XM.Project = XM.Activity.extend( XM.CoreDocuments,
+XM.Project = XM.Activity.extend( XM.Recurrence, XM.CoreDocuments,
     /** @scope XM.Project.prototype */ {
 
   className: 'XM.Project',
@@ -65,13 +65,6 @@ XM.Project = XM.Activity.extend( XM.CoreDocuments,
   */
   completeDate: SC.Record.attr(SC.DateTime, { 
     format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type XM.ProjectRecurrence
-  */
-  recurrence: SC.Record.toOne('XM.ProjectRecurrence', {
-    isNested: YES
   }),
   
   /**
