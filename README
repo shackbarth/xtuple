@@ -1,0 +1,11 @@
+This repository contains the database object definitions that enable a standard xTuple database to run in conjunction with the xTuple node based Datasource (https://github.com/xtuple/datasource).
+
+Prerequisites:
+ - Must have a running PostgreSQL server v8.4.0 or higher.
+ - Must have a xTuple Postbooks or Commercial edition database installed v3.8.0 or higher.
+
+Install node support on the database:
+
+From the command line navigate to the postgresql directory, then run:
+
+psql -d [your database] -U [your admin user] -f 'init_script.sql'
