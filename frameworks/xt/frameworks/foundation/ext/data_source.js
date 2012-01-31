@@ -87,9 +87,10 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
 
   retrieveRecord: function(store, storeKey, id) {
     var recordType = store.recordTypeFor(storeKey).prototype.className, 
-        payload = new Object;
+        payload = new Object,
+        id = id ? id : store.materializeRecord(storeKey).get('id');
     
-    payload.requestType = 'retrieveRecord',
+    payload.requestType = 'retrieveRecord';
     payload.recordType = recordType;
     payload.id = id;
   
@@ -145,7 +146,7 @@ XT.DataSource = SC.DataSource.create(XT.Logging,
 
     payload.requestType = 'commitRecord',
     payload.recordType = recordType;
-    payload.dataHash = record;
+    payload.dataHash = record.get('attributes');
   
     if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 

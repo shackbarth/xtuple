@@ -154,18 +154,26 @@ XM.Record = SC.Record.extend(
   },
   
   /** @private 
-  Track substates for data source.
+  Track substates for data source use. Updates
+  dataState property directly so we don't fire events
+  the change the status to dirty.
   */
   _statusChanged: function() {
-    if(this.get('status') === SC.Record.READY_NEW) { 
-      this.set('dataState', 'created');
-    } else if(this.get('status') === SC.Record.READY_CLEAN) { 
-      this.set('dataState', 'read');
-    } else if(this.get('status') === SC.Record.DESTROYED_DIRTY) { 
-      this.set('dataState', 'deleted');
-    } else if(this.get('status') & SC.Record.DIRTY) { 
-      this.set('dataState', 'updated');
-    } else { this.set('dataState', 'error') }
+    var status = this.get('status'),
+        key = 'dataState',
+        value = 'error';
+
+    if(status === SC.Record.READY_NEW) { 
+      value = 'created';
+    } else if(status === SC.Record.READY_CLEAN) { 
+      value = 'read';
+    } else if(status === SC.Record.DESTROYED_DIRTY) { 
+      value = 'deleted';
+    } else if(status & SC.Record.DIRTY) { 
+      value = 'updated';
+    }
+    
+    this.writeAttribute(key, value, YES);
   }.observes('status')
 
 });
