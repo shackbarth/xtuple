@@ -1,4 +1,4 @@
-create or replace function private.create_model(name text, 
+﻿create or replace function private.create_model(name text, 
                                                 schema_name text, 
                                                 table_name text, 
                                                 column_names text[], 
@@ -8,7 +8,8 @@ create or replace function private.create_model(name text,
                                                 comment text default '', 
                                                 is_system boolean default false, 
                                                 is_nested boolean default false,
-                                                source text default '') returns void volatile as $$
+                                                source text default '',
+                                                model_orderseq_name text default '') returns void volatile as $$
                                                 
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
@@ -18,8 +19,17 @@ declare
   id integer;
   was_system boolean;
   n_id integer;
+  model_orderseq_id integer;
 begin
 
+  if (model_orderseq_name is not null) then
+    -- get sequence id for fetching next number
+    select orderseq_id
+    into model_orderseq_id
+    from orderseq 
+    where orderseq_name = model_orderseq_name;
+  end if;
+  
   select model_id, model_system into id, was_system
   from private.modelbas
   where model_name = name;
@@ -41,16 +51,18 @@ begin
       model_comment =  comment,
       model_system = is_system,
       modelbas_nested = is_nested,
-      modelbas_source = source
+      modelbas_source = source,
+      modelbas_orderseq_id = model_orderseq_id
     where model_id = id;
   else
+
     insert into private.modelbas ( 
       model_name, model_schema_name, model_table_name, model_columns, 
       model_rules, model_conditions, model_order, model_comment, model_system,
-      modelbas_nested, modelbas_source
+      modelbas_nested, modelbas_source, modelbas_orderseq_id
     ) values ( 
       name, schema_name, table_name, column_names, rules , conditions, 
-      order_by, comment, is_system, is_nested, source );
+      order_by, comment, is_system, is_nested, source, model_orderseq_id );
   end if;
   
 end;
@@ -65,6 +77,7 @@ create or replace function private.create_model(name text,
                                                 comment text default '', 
                                                 is_system boolean default false, 
                                                 is_nested boolean default false,
-                                                source text default '') returns void volatile as $$
-  select private.create_model($1, $2, $3, $4, $5, $6, '{}', $7, $8, $9, $10);
+                                                source text default '',
+                                                model_orderseq_name text default '') returns void volatile as $$
+  select private.create_model($1, $2, $3, $4, $5, $6, '{}', $7, $8, $9, $10, $11);
 $$ language 'sql';

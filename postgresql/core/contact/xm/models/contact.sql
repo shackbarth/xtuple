@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -195,4 +195,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.contact
 
 -- Conditions, Comment, System
 
-'{}', 'Contact Model', true, false, 'T');
+'{}', 'Contact Model', true, false, 'T', 'ContactNumber');

@@ -1,4 +1,4 @@
--- remove old trigger if any
+﻿-- remove old trigger if any
 
 select dropIfExists('TRIGGER', 'modelbas_changed', 'private');
 
@@ -7,6 +7,7 @@ select dropIfExists('TRIGGER', 'modelbas_changed', 'private');
 select private.create_table('modelbas', 'private', false, 'private.model');
 select private.add_column('modelbas','modelbas_nested', 'boolean', 'not null default false');
 select private.add_column('modelbas','modelbas_source', 'text');
+select private.add_column('modelbas','modelbas_orderseq_id','integer','references orderseq (orderseq_id)');
 select private.add_primary_key('modelbas', 'model_id');
 select private.add_constraint('modelbas', 'unique_model_name', 'unique(model_name)');
 

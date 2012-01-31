@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -168,4 +168,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.account
 "}',
 
 -- Conditions, Comment, System
-E'{"checkPrivilege(\'ViewAllCRMAccounts\')", "checkPrivilege(\'ViewPersonalCRMAccounts\')"}', 'Account Model', true, false, 'CRMA');
+E'{"checkPrivilege(\'ViewAllCRMAccounts\')", "checkPrivilege(\'ViewPersonalCRMAccounts\')"}', 'Account Model', true, false, 'CRMA', 'CRMAccountNumber');

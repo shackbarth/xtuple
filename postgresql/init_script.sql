@@ -1,4 +1,4 @@
--- [ START ] initdb
+﻿-- [ START ] initdb
 
 -- create schemas
 \i create_private_schema.sql;
@@ -58,6 +58,9 @@
 
 -- core/user_account views
 \i core/user_account/private/views/usr.sql;
+
+-- core/global/xm/functions
+\i core/global/xm/functions/fetch_number.sql;
 
 -- core/user_account xm models
 \i core/user_account/xm/models/privilege.sql;
