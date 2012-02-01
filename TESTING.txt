@@ -9,37 +9,27 @@ Next, install the following Node packages:
     sudo npm install -g vows jsdom xmlhttprequest
 
 Vows.js tests are in the tests/ folder (client/tests/ in the Git repo). Take
-a look at tests/example.js for how to code a Vows.js test with access to 
-sproutnode and xt-core.
+a look at tests/example.js for how to code a Vows.js test. Pay special 
+attention to the final line, which returns the test suite in module.exports 
+(this is a change from previous versions).
 
-Before you run tests, you'll need to get the proxy server running. To do that,
-open aonther terminal window, cd to the client/ directory, and do:
+Before you run your tests, you'll need to get the proxy server running. To do 
+that, open aonther terminal window, cd to the client/ repository, and do:
 
     node proxy.js
 
 Leave the proxy running indefinitely. The proxy expects the xTuple Node server
-to be running on port 8080 on localhost. If this is not true, modify the 
+to be running on port 9000 on localhost. If this is not true, modify the 
 values in proxy.js to point to the correct PROXY_HOST and PROXY_PORT.
 
-To run them, type:
+To run all of the tests, type:
 
     node testrunner.js tests/*
 
-This will run vows with all tests. You should see output that looks something 
-like this:
+You should see output that looks something like this:
 
-    ♢ Simple XM Core Tests
-    
-      XM's store
-        ✓ is not null
-        ✓ is of type SC.Store
-        ✗ has datasource
-          » expected 'XM.DataSource' to be of type 'object' // example.js:37
-        ✗ with datasource of type XM.DataSource
-          » expected 'XM.DataSource' to be a  // example.js:41
-     
-    ✗ Broken » 2 honored ∙ 2 broken (0.007s)
+    · ✓ OK » 1 honored (0.002s)
 
-To run a specific test, do:
+To run a specific test, just do:
 
     node testrunner.js tests/path/to/test.js

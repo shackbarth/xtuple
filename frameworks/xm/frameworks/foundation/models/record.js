@@ -386,7 +386,7 @@ XM.Record.next = function() {
 
   // @note Not sure this will work with record-types where the guid is
   //    anything other than a valid integer
-  var response = SC.Request.postUrl(
+  var response = XM.Request.postUrl(
   
     // the URL should just be /retrieve/functor
     XM.DataSource.buildURL("functor")).header(

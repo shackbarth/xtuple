@@ -1,6 +1,7 @@
 /*globals XM */
 
 sc_require('ext/object');
+sc_require('ext/request');
 sc_require('ext/data_source');
 
 XM.SESSION_COOKIE_STRING = "XTUPLEACTIVESESSIONCOOKIE";
@@ -142,7 +143,7 @@ XM.Session = XM.Object.create(
       password: p
     };
     
-    SC.Request.postUrl(XM.DataSource.URL)
+    XM.Request.postUrl(XM.DataSource.URL)
       .header({ "Accept": "application/json" }).json()
       .notify(this, "_receivedSessionResponse")
       .timeoutAfter(1000)

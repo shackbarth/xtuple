@@ -29,7 +29,6 @@ var app = project.findApp('postbooks'),
 
 function appendFile(file) {
   jsFiles.push(file.get('sourcePath'));
-  // jsFiles.push("http://localhost:4020/" + file.get('targetPath'));
 }
 
 // HACK: Use the app object to grab the framework files for now.
@@ -39,8 +38,6 @@ app.get('orderedFrameworks').forEach(function(framework) {
 
 // Don't include the app itself.
 
-// console.log(jsFiles);
-
 var jsdom = require('jsdom').jsdom,
     document = jsdom(app.get('indexHTML')),
     window = document.createWindow();
@@ -49,27 +46,15 @@ var jsdom = require('jsdom').jsdom,
 global.window = window;
 global.document = document;
 global.top = window;
-
 global.navigator = { userAgent: "node-js", language: "en" };
-
 global.sc_require = function do_nothing(){};
 global.sc_resource = function sc_resource(){};
-
 global.YES = true ;
 global.NO = false ;
-
 global.SC = {};
 global.SproutCore = SC;
 global.SC.isNode = true;
-
-// use a node.js xmlhttprequest plugin
 global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
-// hack to get the node xmlhttprequest to work
-// msie cannot be true otherwise ready.js wont work properly and
-// node processes that use sproutnode won't exit
-SC.browser = { msie: false, opera: true };
-
 global.BLOSSOM = true;
 global.SPROUTCORE = false;
 global.FAST_LAYOUT_FUNCTION = false;
@@ -77,19 +62,19 @@ global.sc_assert = function(assertion, msg) {
   if (!assertion) throw msg || "sc_assert()";
 };
 
+// Load the code we want to test.
+// console.log(jsFiles);
 jsFiles.forEach(function(path) { require(path); });
 
+// Load and process our tests.
 var tests = process.argv.slice(2);
 console.log(tests);
 process.nextTick(function() {
   tests.forEach(function(filename) {
     if (filename) {
       var suite = require('./'+filename);
-      try {
-        suite.run();
-      } catch (e) {
-        debugger;
-      }
+      try { suite.run();
+      } catch (e) { console.log(e); }
     }
   });
   var filename = process.argv[2];

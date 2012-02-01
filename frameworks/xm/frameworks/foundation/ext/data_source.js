@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals XM */
 
+sc_require('ext/request');
+
 /** @class XM.DataSource
 
   To add a new table to XM.DataSource, add the
@@ -24,7 +26,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   }.property('serverIsAvailable'),
 
   pingServer: function() {
-    SC.Request.postUrl(this.URL)
+    XM.Request.postUrl(this.URL)
       .header({'Accept': 'application/json'})
       .notify(this, "pingResponse").json()
       .timeoutAfter(1000)
@@ -40,7 +42,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
     else { this.set("serverIsAvailable", YES); }
   },
   
-  URL: '/datasource/data',
+  URL: SC.isNode? 'http://localhost:4020/datasource/data' : '/datasource/data',
   
   debug: YES,
   
@@ -60,7 +62,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
 
     if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
-    SC.Request.postUrl(this.URL)
+    XM.Request.postUrl(this.URL)
       .header({'Accept': 'application/json'}).json()
       .notify(this, 'didFetchData', store, query)
       .send(payload);
@@ -95,7 +97,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   
     if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
-    SC.Request.postUrl(this.URL)
+    XM.Request.postUrl(this.URL)
       .header({ 'Accept': 'application/json' }).json()
       .notify(this, 'didRetrieveData', store, storeKey)
       .send(payload);
@@ -149,7 +151,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   
     if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
 
-    SC.Request.postUrl(this.URL)
+    XM.Request.postUrl(this.URL)
       .header({ 'Accept': 'application/json' }).json()
       .notify(this, 'didCommitData', store, storeKey)
       .send(payload);

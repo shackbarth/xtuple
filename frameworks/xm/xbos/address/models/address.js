@@ -3,6 +3,7 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
+
 /** @class
 
   (Document your Model here)
@@ -170,7 +171,7 @@ XM.Address.findExisting = function(address) {
   params.postalcode = address.get('postalcode');
   params.country = address.get('country');
 
-  var response = SC.Request.postUrl(XM.DataSource.buildURL('metasql','XM.Address', 'findExisting'))
+  var response = XM.Request.postUrl(XM.DataSource.buildURL('metasql','XM.Address', 'findExisting'))
   .header({ 'Accept': 'application/json' }).json().async(NO).send(params);
 
   if (SC.ok(response) && response.get('body').content !== false) {
@@ -257,7 +258,7 @@ XM.Address.useCount = function(address) {
 
   if(params.id === undefined) return NO;
 
-  var response = SC.Request.postUrl(XT.DataSource.buildURL('metasql','XM.Address', 'useCount'))
+  var response = XM.Request.postUrl(XT.DataSource.buildURL('metasql','XM.Address', 'useCount'))
   .header({ 'Accept': 'application/json' }).json().async(NO).send(params);
 
   if (SC.ok(response) && response.get('body').content !== false) {

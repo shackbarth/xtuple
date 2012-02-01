@@ -1,6 +1,6 @@
 var http = require('http'),
     PROXY_LISTEN = 4020,
-    PROXY_HOST = 'localhost', PROXY_PORT = 7000,
+    PROXY_HOST = '127.0.0.1', PROXY_PORT = 9000,
     PROXY_PREFIX_FROM = '/datasource/', PROXY_PREFIX_TO = '/';
 
 http.createServer(function(request, response) {
@@ -56,4 +56,4 @@ http.createServer(function(request, response) {
 
 }).listen(PROXY_LISTEN);
 
-console.log("PROXYING http://localhost:"+PROXY_LISTEN + PROXY_PREFIX_FROM + 'foo' + " TO http://" + PROXY_HOST + ":" + PROXY_PORT + PROXY_PREFIX_TO + 'foo');
+console.log("PROXYING http://"+PROXY_HOST+":"+PROXY_LISTEN + PROXY_PREFIX_FROM + 'foo' + " TO http://" + PROXY_HOST + ":" + PROXY_PORT + PROXY_PREFIX_TO + 'foo');
