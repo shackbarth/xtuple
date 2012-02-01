@@ -29,7 +29,7 @@ Plugin.Object = XT.Plugin = XT.Object.extend(
 
     @type {String}
   */
-  defaultView: Plugin.DEFEAULT_VIEW,
+  defaultView: Plugin.DEFAULT_VIEW,
 
   /** @property
     Each plugin needs a valid and unique index (integer). This
@@ -177,7 +177,7 @@ Plugin.Object = XT.Plugin = XT.Object.extend(
     this.append = this.focus;
     this.setPath("baseView._plugin", this);
     this.setPath("baseView._index", this.get("pluginIndex"));
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);
   }
 
 }) ;

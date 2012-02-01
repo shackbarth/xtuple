@@ -1,5 +1,6 @@
-
 /*globals XT */
+
+sc_require('ext/object');
 
 /** @namespace
 

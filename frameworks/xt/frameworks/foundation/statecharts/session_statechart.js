@@ -1,5 +1,8 @@
+/*globals XT Login */
 
-/*globals XT */
+sc_require('runtime/common');
+sc_require('ext/statechart');
+sc_require('ext/task_state');
 
 /** @class
 
@@ -42,9 +45,10 @@ XT.SessionStatechart = XT.Statechart.extend(
       */
       showLogin: function() {
         // Login.showLogin();
-        Login.append();
-        Login.xtAnimate("mainBlock-show");
-        XT.MessageController.set("loadingStatus", "_needLogin".loc());
+        console.log('Did not handle XT.SessionStatechart#showLogin()');
+        // Login.append();
+        // Login.xtAnimate("mainBlock-show");
+        // XT.MessageController.set("loadingStatus", "_needLogin".loc());
       }.handleEvents("needSession"),
 
       /**
@@ -53,8 +57,9 @@ XT.SessionStatechart = XT.Statechart.extend(
         as the user-input as it is currently.
       */
       tryToLogin: function() {
-        if(XT.DataSource.get("serverIsAvailable"))
+        if (XT.DataSource.get("serverIsAvailable")) {
           this.gotoState("LOGGINGIN");
+        }
       }.handleEvents("submit"),
 
       LOGGINGIN: XT.TaskState.design({
@@ -89,7 +94,7 @@ XT.SessionStatechart = XT.Statechart.extend(
               message: "_acquiringSessionId".loc(),
               property: "loadingStatus",
               image: "loading-session-icon" },
-            context: "XT.Session.statechart", },
+            context: "XT.Session.statechart" },
           { hold: XT.SESSION_ACQUIRED },
           { status: {
               message: "_loginSuccess".loc(),
@@ -98,7 +103,7 @@ XT.SessionStatechart = XT.Statechart.extend(
         complete: "LOGGEDIN",
         fail: "LOGGEDOUT"
 
-      }),
+      })
     }),
 
     /**

@@ -3,6 +3,10 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
+
+sc_require('mixins/core_documents');
+sc_require('xbos/activity/models/activity');
+
 /** @class
 
   (Document your Model here)

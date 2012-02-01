@@ -9,10 +9,10 @@ Plugin.views.StatusIconView = XT.StatusImageView.extend(
 
   layout: { height: 64, width: 64, centerY: 40, right: 60 },
   isVisible: NO,
-  xtTransitions: {
-    "centerY": { duration: .2, timing: SC.Animatable.TRANSITION_CSS_EASE },
-    "opacity": { duration: .2, timing: SC.Animatable.TRANSITION_CSS_EASE }
-  },
+  // xtTransitions: {
+  //   "centerY": { duration: .2, timing: SC.Animatable.TRANSITION_CSS_EASE },
+  //   "opacity": { duration: .2, timing: SC.Animatable.TRANSITION_CSS_EASE }
+  // },
   xtAnimationEvents: {
     "active": [
       { start: 250 },

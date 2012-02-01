@@ -3,7 +3,9 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/account_assignment');
+
+sc_require('xbos/account/models/account_assignment');
+
 /** @class
 
   (Document your Model here)

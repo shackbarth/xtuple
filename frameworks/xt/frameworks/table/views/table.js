@@ -7,7 +7,7 @@ sc_require("delegates/table_delegate");
 
 */
 XT.Table = XT.AnimationView.extend(
-  XT.TableDelegate, CS.CScroll,
+  XT.TableDelegate, // CS.CScroll,
   /** @scope XT.Table.prototype */ {
 
   //...........................................
@@ -162,7 +162,7 @@ XT.Table = XT.AnimationView.extend(
   
   /** @private */
   xtWillAppend: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
   },
   
   /** @private */

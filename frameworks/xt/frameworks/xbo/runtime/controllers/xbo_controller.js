@@ -73,7 +73,7 @@ Xbo.Controller = XT.Object.create(
   */
   isCore: function(request) {
     if(!this.isXbo(request)) return NO;
-    return this._core.contains(request);
+    return this._core.indexOf(request >= 0);
   },
 
   /** @public
@@ -168,7 +168,7 @@ Xbo.Controller = XT.Object.create(
 
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
     this._info = XT.__LOADABLEINFO__;
     this._deferred = this._info.DEFERRED;
     this._prefetched = this._info.PREFETCHED;
@@ -192,7 +192,7 @@ Xbo.Controller = XT.Object.create(
     if(!this.isXbo(request)) this.error("Request for non-xbo `%@`".fmt(request), YES);
     request = this._moduleFor(request);
 
-    console.warn("_load: Xbo was not loaded! (%@)".fmt(request));
+    // console.warn("_load: Xbo was not loaded! (%@)".fmt(request));
 
     var self = this, func;
     func = function() {
@@ -200,9 +200,10 @@ Xbo.Controller = XT.Object.create(
       self._invokeCallbacks(callbacks, request);
     };
 
-    console.warn("_load (Xbo): ", request, callbacks, func);
+    // console.warn("_load (Xbo): ", request, callbacks, func);
 
-    SC.ready(function() { SC.Module.loadModule(request, func); });
+    // SC.ready(function() { SC.Module.loadModule(request, func); });
+    SC.ready(func); // FIXME
   },
 
   /** @private */

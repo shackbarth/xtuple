@@ -77,7 +77,7 @@ XT.Task = XT.Object.extend(
 
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
     var w = this.get("wait");
     
     // if this request needs to wait we set that here

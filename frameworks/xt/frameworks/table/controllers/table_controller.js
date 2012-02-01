@@ -79,7 +79,7 @@ XT.TableController = XT.ArrayController.extend(
   
   /** @private */
   destroy: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
     this.table = null;
     if(this._contentBindingToTable)
       this._contentBindingToTable.disconnect();
@@ -92,7 +92,7 @@ XT.TableController = XT.ArrayController.extend(
     a single place to intercept and add this additional tidbit of functionality.
   */
   selectObjects: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
     this.getPath("selection.firstObject").set("isSelected", YES);
     return this;
   }

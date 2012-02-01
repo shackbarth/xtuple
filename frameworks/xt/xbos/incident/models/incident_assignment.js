@@ -3,7 +3,9 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/incident_info');
+
+sc_require('xbos/incident/models/incident_info');
+
 /** @class
 
   (Document your Model here)

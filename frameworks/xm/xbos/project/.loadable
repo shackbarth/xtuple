@@ -1,0 +1,5 @@
+name: Project
+type: xbo
+load: deferred
+core: YES
+

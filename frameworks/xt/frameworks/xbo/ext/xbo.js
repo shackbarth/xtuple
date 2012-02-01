@@ -82,7 +82,7 @@ Xbo.Object = XT.Xbo = XT.Object.extend(
 
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
   },
 
 }) ;

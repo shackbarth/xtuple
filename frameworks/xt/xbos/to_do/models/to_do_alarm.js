@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals XT */
 
+sc_require('xbos/alarm/models/alarm');
+
 /** @class
 
   (Document your Model here)

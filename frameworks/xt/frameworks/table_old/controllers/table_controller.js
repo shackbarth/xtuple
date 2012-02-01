@@ -159,7 +159,7 @@ XT.TableController = SC.ArrayController.extend(
     //....................................
 
     // do the default stuff
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
 
     console.warn("%@: parentView of table view is => %@".fmt(this, this.getPath("table.parentView")));
 

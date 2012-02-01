@@ -1,10 +1,12 @@
+/*globals XT Opportunity */
 
-/*globals XT */
+sc_require('views/form');
+sc_require('xbos/opportunity/core');
 
 /** @class
 
 */
-Account.Form = XT.FormView.extend(
-  /** @scope XT.AccountForm.prototype */ {
+Opportunity.Form = XT.FormView.extend(
+  /** @scope Opportunity.Form.prototype */ {
     
 }) ;

@@ -53,7 +53,7 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
     Returns whether or not the requested plugin is loaded.
   */
   isLoaded: function(request) {
-    return this.get("loadedPlugins").contains(request);
+    return this.get("loadedPlugins").indexOf(request >= 0);
   },
 
   /** @public
@@ -166,7 +166,8 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
 
     console.warn("_load (Plugin): ", request, callbacks, func);
 
-    SC.ready(function() { SC.Module.loadModule(request, func); });
+    // SC.ready(function() { SC.Module.loadModule(request, func); });
+    SC.ready(func); // FIXME
   },
 
   /** @private */
@@ -223,7 +224,7 @@ Plugin.Controller = XT.PluginController = XT.Object.create(
 
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
     this._info = XT.__LOADABLEINFO__;
     this._deferred = this._info.DEFERRED;
     this._prefetched = this._info.PREFETCHED;

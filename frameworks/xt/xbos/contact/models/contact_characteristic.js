@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals XT */
 
+sc_require('xbos/characteristic/models/characteristic_assignment');
+
 /** @class
 
   (Document your Model here)

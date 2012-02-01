@@ -1,4 +1,3 @@
-
 /*globals XT */
 
 /** @namespace
@@ -18,16 +17,4 @@ XT = SC.Object.create(
     error: YES
   })
   
-}) ;
-
-SC.ready(function() {
-  Postbooks.getPath("mainPage.mainPane").append();
-}) ;
-
-XM = SC.Object.create(
-  /** @scope XM.prototype */ {
-
-  NAMESPACE: "XM",
-  VERSION: "4.0.0ALPHA"
-
 }) ;

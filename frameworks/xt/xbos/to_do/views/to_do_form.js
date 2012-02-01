@@ -1,5 +1,7 @@
+/*globals XT ToDo */
 
-/*globals XT */
+sc_require('views/form');
+sc_require('xbos/to_do/core');
 
 /** @class
 

@@ -49,7 +49,7 @@ XT.TableStatechart = SC.Statechart.extend({
     this.rootState = XT.State.extend(props);
 
     // carry on now
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
   },
 
 });

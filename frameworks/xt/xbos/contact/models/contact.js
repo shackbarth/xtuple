@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals XT */
 
+sc_require('mixins/core_documents');
+
 /** @class
 
   (Document your Model here)

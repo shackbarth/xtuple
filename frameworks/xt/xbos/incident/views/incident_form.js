@@ -1,5 +1,7 @@
+/*globals XT Incident */
 
-/*globals XT */
+sc_require('views/form');
+sc_require('xbos/incident/core');
 
 /** @class
 

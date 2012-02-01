@@ -31,7 +31,7 @@ XT.StatusImageView = XT.AnimationView.extend(
     @type {Hash}
   */
   // layout: { height: 64, width: 64, centerY: 0 },
-  layout: {},
+  // layout: {},
 
   /** 
     The CSS class to use as the `value` property for the child XT.NestedImageView
@@ -72,7 +72,7 @@ XT.StatusImageView = XT.AnimationView.extend(
     @property
     @type {Hash}
   */
-  xtTransitions: {},
+  // xtTransitions: {},
 
   /** 
     Animations are defined on this property and is a hash with up to
@@ -141,7 +141,7 @@ XT.StatusImageView = XT.AnimationView.extend(
   createChildViews: function() {
     var view = this._imageView = this.createChildView(
       XT.NestedImageView, {
-        layout: SC.clone(this.get("imageLayout")),
+        // layout: SC.clone(this.get("imageLayout")),
         value: this.get("imageClass"),
         // useStaticLayout: this.get("useStaticLayout")
       });
@@ -227,7 +227,7 @@ XT.StatusImageView = XT.AnimationView.extend(
     if(this.parentView.get("useStaticLayout"))
       this.set("useStaticLayout", YES);
 
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
   }
 
 }) ;

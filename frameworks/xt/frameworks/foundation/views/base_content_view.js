@@ -19,15 +19,15 @@ XT.BaseContentView = XT.AnimationView.extend(
 
   init: function() {
     this._layout = SC.clone(this.get("layout"));
-    return sc_super();
+    return arguments.callee.base.apply(this, arguments);
   },
 
   layout: { top: 0, left: 0, right: 0, bottom: 0 },
 
-  xtTransitions: {
-    "left": { duration: .25, timing: SC.Animatable.TRANSITION_CSS_EASE_IN_OUT },
-    "right": { duration: .25, timing: SC.Animatable.TRANSITION_CSS_EASE_IN_OUT },
-  },
+  // xtTransitions: {
+  //   "left": { duration: .25, timing: SC.Animatable.TRANSITION_CSS_EASE_IN_OUT },
+  //   "right": { duration: .25, timing: SC.Animatable.TRANSITION_CSS_EASE_IN_OUT },
+  // },
 
   xtAnimationEvents: {
     "reset": [

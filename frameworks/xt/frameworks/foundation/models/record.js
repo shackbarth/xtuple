@@ -2,7 +2,7 @@
 // Project:   XM.Record
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals XT */
+/*globals XT XM */
 
 /** @class XM.Record
 
@@ -14,7 +14,6 @@
 ™
   @version 0.1
 */
-
 XM.Record = SC.Record.extend(
 /** @scope XM.Record.prototype */ {
 
@@ -88,7 +87,7 @@ XM.Record = SC.Record.extend(
   init: function() {
     this.set('validateErrors', []);
     if(this.getPath('store.isNested')) this.addObserver('isValid', this, '_isValidDidChange');
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
   },
 
   /**
@@ -165,7 +164,7 @@ XM.Record = SC.Record.extend(
       this.set('dataState', 'deleted');
     } else if(this.get('status') & SC.Record.DIRTY) { 
       this.set('dataState', 'updated');
-    } else { this.set('dataState', 'error') }
+    } else { this.set('dataState', 'error'); }
   }.observes('status')
 
 });
@@ -178,7 +177,7 @@ XM.Record.extend = function() {
   var ret = SC.Object.extend.apply(this, arguments).setup();
   SC.Query._scq_didDefineRecordType(ret);
   return ret ;
-}
+};
 
 /**
   Auto-executed from XM.Record.extend overloaded function. Features that need
@@ -209,7 +208,7 @@ XM.Record.setup = function() {
 
   // return the original reference (!important)
   return this;
-}
+};
 
 /**
 Use this function to find out whether a user can create records before instantiating one.
@@ -229,7 +228,7 @@ XM.Record.canCreate = function() {
   } else result = XT.Session.privileges.get(createPrivilege);
 
   return result;
-}
+};
 
 /**
 Use this function to find out whether a user can read this record type before any have been loaded.
@@ -247,14 +246,14 @@ XM.Record.canRead = function() {
   if(SC.typeOf(readPrivilege) === SC.T_ARRAY) {
     readPrivilege.forEach(function(privilege) {
       privileges.push(privilege);
-    })
+    });
   } else privileges.push(readPrivilege);
 
   // Push update privilege(s) into the array
   if(SC.typeOf(updatePrivilege) === SC.T_ARRAY) {
     updatePrivilege.forEach(function(privilege) {
       privileges.push(privilege);
-    })
+    });
   } else privileges.push(updatePrivilege);
 
   // Return YES if any privileges are true
@@ -263,7 +262,7 @@ XM.Record.canRead = function() {
   });
 
   return result;
-}
+};
 
 /**
 Returns whether a user has access to update this record type.
@@ -284,7 +283,7 @@ XM.Record.canUpdate = function(record) {
   if(SC.typeOf(updatePrivilege) === SC.T_ARRAY) {
     updatePrivilege.forEach(function(privilege) {
       privileges.push(privilege);
-    })
+    });
   } else privileges.push(updatePrivilege);
 
   // Return YES if any privileges are true
@@ -293,7 +292,7 @@ XM.Record.canUpdate = function(record) {
   });
 
   return result;
-},
+};
 
 /**
 Returns whether a user has access to delete this record type.
@@ -314,7 +313,7 @@ XM.Record.canDelete = function(record) {
   if(SC.typeOf(deletePrivilege) === SC.T_ARRAY) {
     deletePrivilege.forEach(function(privilege) {
       privileges.push(privilege);
-    })
+    });
   } else privileges.push(updatePrivilege);
 
   // Return YES if any privileges are true
@@ -323,7 +322,7 @@ XM.Record.canDelete = function(record) {
   });
 
   return result;
-}
+};
 
 /**
   Wrapper for XM.Record.next to fetch the next NUMBER for a XM.Record type.
@@ -337,7 +336,7 @@ XM.Record.nextNumber = function(numberType) {
 
   // execute the XM.Record.next method
   return XM.Record.next(className, "number", numberType);
-}
+};
 
 /**
   Wrapper for XM.Record.next to fetch the next GUID for a XM.Record type.
@@ -351,7 +350,7 @@ XM.Record.nextGuid = function() {
 
   // execute the XM.Record.next method
   return XM.Record.next(className, "guid");
-}
+};
 
 /**
   Called by XM.Record.nextGuid and XM.Record.nextNumber to acquire the next
@@ -367,16 +366,17 @@ XM.Record.next = function() {
   var json = {
     name: "XM.NextFunctor",
     target: field,
-    type: recordClass,
+    type: recordClass
   };
   
   // if the field is `number` then the payload is a little different
-  if(field == "number")
+  if (field == "number") {
 
     // add the additional data field from the arguments object that
     // is the number-type to execute `fetchNextNumber`
     // if we don't have it, let the server handle the invalid data
     json[ "numberType" ] = arguments[ 2 ] || "";
+  }
 
   //.............................................
   // TEMPORARILY EXECUTED SYNCHRONOUSLY
@@ -408,5 +408,4 @@ XM.Record.next = function() {
 
   // regardless of what it is (worst case: null) return it
   return value;
-}
-
+};

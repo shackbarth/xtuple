@@ -92,7 +92,7 @@ XT.Table = XT.View.extend(
   init: function() {
 
     // do whatever the default is...yada yada
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
 
     // reference to self
     var self = this;

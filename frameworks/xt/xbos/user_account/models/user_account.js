@@ -94,16 +94,16 @@ XM.UserAccount = XM.Record.extend(
 XM.UserAccount.canRead = function(record) {
   return (record === XM.get('currentUser') ||
           XM.getPath('currentUserAccount.isAdmin') ||
-          sc_super());
+          arguments.callee.base.apply(this, arguments));
 };
 
 XM.UserAccount.canUpdate = function(record) {
   return (record === XM.get('currentUser') ||
           XM.getPath('currentUserAccount.isAdmin') ||
-          sc_super());
+          arguments.callee.base.apply(this, arguments));
 };
 
 XM.UserAccount.canDelete = function() {
-  return XM.getPath('currentUserAccount.isAdmin') && sc_super();
+  return XM.getPath('currentUserAccount.isAdmin') && arguments.callee.base.apply(this, arguments);
 };
 

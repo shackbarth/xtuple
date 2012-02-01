@@ -1,5 +1,7 @@
+/*globals XT Project */
 
-/*globals XT */
+sc_require('views/form');
+sc_require('xbos/project/core');
 
 /** @class
 

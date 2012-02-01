@@ -1,0 +1,45 @@
+To set up Vows.js testing, you need to install Node 0.6.5 or higher:
+
+    http://nodejs.org/
+
+This automatically includes npm, the Node Package Manager.
+
+Next, install the following Node packages:
+
+    sudo npm install -g vows jsdom xmlhttprequest
+
+Vows.js tests are in the tests/ folder (client/tests/ in the Git repo). Take
+a look at tests/example.js for how to code a Vows.js test with access to 
+sproutnode and xt-core.
+
+Before you run tests, you'll need to get the proxy server running. To do that,
+open aonther terminal window, cd to the client/ directory, and do:
+
+    node proxy.js
+
+Leave the proxy running indefinitely. The proxy expects the xTuple Node server
+to be running on port 8080 on localhost. If this is not true, modify the 
+values in proxy.js to point to the correct PROXY_HOST and PROXY_PORT.
+
+To run them, type:
+
+    node testrunner.js tests/*
+
+This will run vows with all tests. You should see output that looks something 
+like this:
+
+    ♢ Simple XM Core Tests
+    
+      XM's store
+        ✓ is not null
+        ✓ is of type SC.Store
+        ✗ has datasource
+          » expected 'XM.DataSource' to be of type 'object' // example.js:37
+        ✗ with datasource of type XM.DataSource
+          » expected 'XM.DataSource' to be a  // example.js:41
+     
+    ✗ Broken » 2 honored ∙ 2 broken (0.007s)
+
+To run a specific test, do:
+
+    node testrunner.js tests/path/to/test.js

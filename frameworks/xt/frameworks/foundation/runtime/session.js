@@ -183,7 +183,7 @@ XT.Session = XT.Object.create(
 
   /** @private */
   destroy: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
     this._cookie.destroy();
   },
 

@@ -12,7 +12,7 @@ sc_require("ext/common");
   @extends XT.View
   @inherits SC.Animatable
 */
-Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
+Plugin.View = XT.PluginView = XT.View.extend(//SC.Animatable,
   /** @scope Plugin.View.prototype */ {
 
   //..........................................
@@ -108,10 +108,10 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
   _basePaneFrame: null,
 
   /** @private */
-  transitions: {
-    left:   { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-    right:  { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
-  },
+  // transitions: {
+  //   left:   { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+  //   right:  { duration: .25, timing: SC.Animatable.TRANSITION_EASE_IN_OUT }
+  // },
 
   /** @private */
   name: "Plugin.View",
@@ -204,7 +204,7 @@ Plugin.View = XT.PluginView = XT.View.extend(SC.Animatable,
 
   /** @private */
   init: function() {
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
     var cvanis = this._xt_childAnimationEvents = {};
     this._xt_collectAnimationEvents(cvanis);
   }
