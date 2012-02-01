@@ -90,7 +90,9 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   retrieveRecord: function(store, storeKey, id) {
     var recordType = store.recordTypeFor(storeKey).prototype.className, 
         payload = {};
-    
+
+    id = id ? id : store.materializeRecord(storeKey).get('id');
+
     payload.requestType = 'retrieveRecord';
     payload.recordType = recordType;
     payload.id = id;
@@ -160,10 +162,10 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   },
 
   didCommitData: function(response, store, storeKey) {
-    if(SC.ok(response)) {
-      store.peekStatus(storeKey) === SC.Record.BUSY_DESTROYING ?
-        store.dataSourceDidDestroy(storeKey) :
-        store.dataSourceDidComplete(storeKey);
+    if (SC.ok(response)) {
+      if (store.peekStatus(storeKey) === SC.Record.BUSY_DESTROYING) {
+        store.dataSourceDidDestroy(storeKey);
+      } else store.dataSourceDidComplete(storeKey);
     } else {
       store.dataSourceDidError(storeKey, response);
     }
