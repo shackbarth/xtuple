@@ -3,7 +3,9 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-sc_require('models/opportunity_info');
+
+sc_require('xbos/opportunity/models/opportunity_info');
+
 /** @class
 
   (Document your Model here)

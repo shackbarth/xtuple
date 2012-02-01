@@ -38,7 +38,7 @@ XT.ColumnDataHandler = SC.Object.extend(
   init: function() {
 
     // do normal stuff
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
 
     this.sendEvent("completed", "DATAHANDLER");
   },

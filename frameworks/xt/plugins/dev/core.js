@@ -1,7 +1,7 @@
 
 /*globals XT */
 
-sc_require("pages/default");
+sc_require("plugins/dev/pages/default");
 
 /** @namespace
 

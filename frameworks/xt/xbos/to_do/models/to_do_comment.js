@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals XT */
 
+sc_require('xbos/comment/models/comment');
+
 /** @class
 
   Comment for To-Do.

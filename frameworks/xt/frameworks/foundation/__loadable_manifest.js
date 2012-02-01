@@ -84,13 +84,13 @@ XT.__LOADABLEINFO__ = {
       core: YES,
       module: "xt/currency",
     },
-    {
-      name: "Document",
-      type: "xbo",
-      load: "deferred",
-      core: YES,
-      module: "xt/document",
-    },
+    // {
+    //   name: "Document",
+    //   type: "xbo",
+    //   load: "deferred",
+    //   core: YES,
+    //   module: "xt/document",
+    // },
     {
       name: "Incident",
       type: "xbo",

@@ -28,7 +28,7 @@ XT.State = SC.State.extend(
   initState: function() {
 
     // make sure to do all the normal stuff
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
 
     // try to see if we have a table set (top of initialization chain)
     if(this.get("table"))

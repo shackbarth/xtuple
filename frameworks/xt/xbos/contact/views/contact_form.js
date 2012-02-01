@@ -1,5 +1,7 @@
+/*globals XT Contact */
 
-/*globals XT */
+sc_require('views/form');
+sc_require('xbos/contact/core');
 
 /** @class
 

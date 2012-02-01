@@ -1,7 +1,7 @@
 
 /*globals Plugin */
 
-sc_require("views/status_icon");
+sc_require("views/status_image");
 
 /** @class
   This is the default (base) page for the Login plugin.
@@ -14,13 +14,13 @@ Plugin.pages.login = Plugin.Page.create(
     childViews: "mainBlock".w(),
 
     mainBlock: XT.AnimationView.design({
-      layout: { height: 200, width: 400, centerX: 0 },
+      layout: { centerY: 0, height: 200, width: 400, centerX: 0 },
       classNames: "main-block-container".w(),
       childViews: "imageBlock messageBlock sessionIcon userIcon".w(),
       isVisible: YES,
-      xtTransitions: {
-        height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-      },
+      // xtTransitions: {
+      //   height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      // },
       xtWillAppend: function() {
         this._adjustTop();
       },
@@ -68,9 +68,9 @@ Plugin.pages.login = Plugin.Page.create(
       layout: { height: 100, bottom: 0, left: 0, right: 0 },
       classNames: "message-block-container".w(),
       childViews: "messageLabel loginBlock".w(),
-      xtTransitions: {
-        height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-      },
+      // xtTransitions: {
+      //   height:     { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      // },
       xtAnimationEvents: {
         "messageBlock-expand": [
           { property: "height", value: 200 },
@@ -89,10 +89,10 @@ Plugin.pages.login = Plugin.Page.create(
       classNames: "login-block-container".w(),
       childViews: "usernameField passwordField loginButton serverStatusIcon".w(),
       isVisible: NO,
-      xtTransitions: {
-        opacity:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-        centerX:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
-      },
+      // xtTransitions: {
+      //   opacity:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      //   centerX:    { duration: .5, timing: SC.Animatable.TRANSITION_EASE_IN_OUT },
+      // },
       xtAnimationEvents: {
         "loginBlock-show": [
           { start: 400 },

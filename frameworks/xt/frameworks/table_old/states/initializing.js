@@ -87,7 +87,7 @@ XT.Initializing = XT.State.extend({
   init: function() {
 
     // execute defaults
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
 
     this.set("checklist", this.get("checklist").slice());
 
@@ -102,7 +102,7 @@ XT.Initializing = XT.State.extend({
     this.removeObserver("checklist", this, "checkCompleted");
 
     // resume normal activities...
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
   },
 
   /** @private

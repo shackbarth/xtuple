@@ -1,0 +1,35 @@
+To set up Vows.js testing, you need to install Node 0.6.5 or higher:
+
+    http://nodejs.org/
+
+This automatically includes npm, the Node Package Manager.
+
+Next, install the following Node packages:
+
+    sudo npm install -g vows jsdom xmlhttprequest
+
+Vows.js tests are in the tests/ folder (client/tests/ in the Git repo). Take
+a look at tests/example.js for how to code a Vows.js test. Pay special 
+attention to the final line, which returns the test suite in module.exports 
+(this is a change from previous versions).
+
+Before you run your tests, you'll need to get the proxy server running. To do 
+that, open aonther terminal window, cd to the client/ repository, and do:
+
+    node proxy.js
+
+Leave the proxy running indefinitely. The proxy expects the xTuple Node server
+to be running on port 9000 on localhost. If this is not true, modify the 
+values in proxy.js to point to the correct PROXY_HOST and PROXY_PORT.
+
+To run all of the tests, type:
+
+    node testrunner.js tests/*
+
+You should see output that looks something like this:
+
+    · ✓ OK » 1 honored (0.002s)
+
+To run a specific test, just do:
+
+    node testrunner.js tests/path/to/test.js

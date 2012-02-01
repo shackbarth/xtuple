@@ -1,6 +1,6 @@
 /*globals Dashboard */
 
-sc_require("pages/default");
+sc_require("plugins/dashboard/pages/default");
 
 /** @namespace
 

@@ -111,16 +111,16 @@ XT.TableDelegate = {
     // @note As per comment in table.js this will not do in the long run
     //  because it should be allowed to reuse rows...
     
-    var tc = this.get("rowTemplate"),
-        cvs = this.get("childViews"), tn;
-    if(SC.typeOf(tc) === SC.T_STRING) {
-      tn = tc;
-      tc = XT.RowTemplate;
-    } else { tn = tc.prototype.templateName; }
-    if(cvs && cvs[i]) return cvs[i].set("content", content);
-    tc = this.createChildView(tc, { templateName: tn, content: content, table: this });
-    tc.get("content").set("ext", tc);
-    tc.render(context);
+    // var tc = this.get("rowTemplate"),
+    //     cvs = this.get("childViews"), tn;
+    // if(SC.typeOf(tc) === SC.T_STRING) {
+    //   tn = tc;
+    //   tc = XT.RowTemplate;
+    // } else { tn = tc.prototype.templateName; }
+    // if(cvs && cvs[i]) return cvs[i].set("content", content);
+    // tc = this.createChildView(tc, { templateName: tn, content: content, table: this });
+    // tc.get("content").set("ext", tc);
+    // tc.render(context);
   },
     
 } ;

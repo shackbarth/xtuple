@@ -1,0 +1,5 @@
+name: Priority
+type: xbo
+load: deferred
+core: YES
+

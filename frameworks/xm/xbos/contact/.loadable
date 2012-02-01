@@ -1,0 +1,4 @@
+name: Contact
+type: xbo
+load: deferred
+core: YES

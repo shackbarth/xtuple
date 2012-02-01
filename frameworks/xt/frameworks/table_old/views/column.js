@@ -63,7 +63,7 @@ XT.Column = SC.Object.extend(
   init: function() {
 
     // do the default stuff...
-    sc_super();
+    arguments.callee.base.apply(this, arguments);
 
     // grab the definition
     var def = this.get("definition");

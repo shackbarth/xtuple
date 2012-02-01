@@ -17,7 +17,7 @@ XT.hex = function hex() {
   var knowns = this._hex_values || [],
       hex;
   hex = (Math.random()*0xFFFFFF<<0).toString(16);
-  if(knowns.contains(hex)) return XT.hex();
+  if (knowns.indexOf(hex) >= 0) return XT.hex();
   knowns.push(hex);
   return hex;
 } ;

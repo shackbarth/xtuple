@@ -1,7 +1,7 @@
 
 /*globals Crm */
 
-sc_require("pages/default");
+sc_require("plugins/crm/pages/default");
 
 /** @namespace
 

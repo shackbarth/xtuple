@@ -1,5 +1,6 @@
-
 /*globals XT */
+
+sc_require('ext/object');
 
 /** @namespace
 
@@ -57,6 +58,6 @@ XT.StatusImageController = XT.Object.create(
 
   _images: {},
 
-  name: "XT.StatusImageController",
+  name: "XT.StatusImageController"
 
-}) ;
+});

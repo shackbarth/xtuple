@@ -1,4 +1,3 @@
-
 /*globals Crm */
 
 /** @namespace
@@ -13,7 +12,7 @@ Plugin.pages.crm = Plugin.Page.create(
       
       contacts: XT.Table.design({
         query: XM.Contact,
-        rowTemplate: Contact.TableRow,
+        // rowTemplate: Contact.TableRow,
       })
 
 

@@ -1,0 +1,5 @@
+name: Currency
+type: xbo
+load: deferred
+core: YES
+

@@ -1,0 +1,5 @@
+name: Incident
+type: xbo
+load: deferred
+core: YES
+

@@ -21,7 +21,7 @@
 
   @extends XT.Object
 */
-Plugin = XT.Object.create(
+Plugin = global.Plugin = XT.Object.create(
   /** @scope PLUGIN.prototype */ {
     
   NAMESPACE: "Plugin",
