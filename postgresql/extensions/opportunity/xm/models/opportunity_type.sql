@@ -10,6 +10,10 @@ E'{
   "optype.optype_name as \\"name\\"",
   "optype.optype_descrip as description"}',
 
+-- sequence
+
+'public.optype_optype_id_seq',
+
 -- Rules
 
 E'{"
@@ -54,4 +58,4 @@ where ( optype_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Opportunity Type Model', true, false, '', '', 'public.optype_optype_id_seq');
+'{}', 'Opportunity Type Model', true);

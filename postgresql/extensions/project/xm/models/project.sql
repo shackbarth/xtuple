@@ -55,6 +55,10 @@ E'{
     from xm.project_project
     where source = prj.prj_id) as projects"}',
 
+-- sequence
+
+'public.prj_prj_id_seq',
+
 -- Rules
 
 E'{"
@@ -168,4 +172,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project
 
 -- Conditions, Comment, System
 
-'{}', 'Project Model', true, false, 'J', '', 'public.prj_prj_id_seq');
+'{}', 'Project Model', true, false, 'J');

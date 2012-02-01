@@ -10,7 +10,13 @@ E'{
   "prj.prj_id as guid",
   "prj.prj_number as number",
   "prj.prj_name as name",
-  "prj.prj_status as project_status"}', 
+  "prj.prj_status as project_status"}',
+
+-- sequence
+
+'',
+
+-- rules
 
 E'{"
 
@@ -37,4 +43,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project_info
 
 -- Conditions, Comment, System
 
-'{}', 'Project Info Model', true, true, '', '', 'public.prj_prj_id_seq');
+'{}', 'Project Info Model', true, true);

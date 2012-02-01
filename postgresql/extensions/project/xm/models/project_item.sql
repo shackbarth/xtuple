@@ -11,6 +11,10 @@ E'{
   "docinfo.purpose as purpose"
 }',
 
+-- sequence
+
+'public.docass_docass_id_seq',
+
 -- Rules
 
 E'{"
@@ -57,4 +61,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"item_info.guid=target_id","docinfo.source_type=\'J\'","docinfo.target_type=\'I\'"}', 'Project Item Model', true, true, '', '', 'public.docass_docass_id_seq');
+E'{"item_info.guid=target_id","docinfo.source_type=\'J\'","docinfo.target_type=\'I\'"}', 'Project Item Model', true, true);

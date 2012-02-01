@@ -11,6 +11,10 @@ E'{
   "docinfo.purpose as purpose"
 }',
 
+-- sequence
+
+'public.docass_docass_id_seq',
+
 -- Rules
 
 E'{"
@@ -57,4 +61,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"url.guid=target_id","docinfo.source_type=\'OPP\'","docinfo.target_type=\'URL\'"}', 'Opportunity Url Model', true, true, '', '', 'public.docass_docass_id_seq');
+E'{"url.guid=target_id","docinfo.source_type=\'OPP\'","docinfo.target_type=\'URL\'"}', 'Opportunity Url Model', true, true);

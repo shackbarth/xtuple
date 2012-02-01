@@ -13,6 +13,10 @@ E'{
   "incdtresolution.incdtresolution_descrip as description"
 }',
 
+-- sequence
+
+'public.incdtresolution_incdtresolution_id_seq',
+
 -- Rules
 
 E'{"
@@ -61,4 +65,4 @@ where ( incdtresolution_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Resolution Model', true, false, '', '', 'public.incdtresolution_incdtresolution_id_seq');
+'{}', 'Incident Resolution Model', true);

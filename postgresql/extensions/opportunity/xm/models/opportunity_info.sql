@@ -12,6 +12,10 @@ E'{
   "ophead.ophead_name as \\"name\\"",
   "ophead.ophead_active as is_active"}',
 
+-- sequence
+
+'',
+
 -- Rules
 
 E'{"
@@ -38,4 +42,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_info
 
 -- Conditions, Comment, System, Nested
 
-'{}', 'Opporunity Info Model', true, true, '', '', 'public.ophead_ophead_id_seq');
+'{}', 'Opporunity Info Model', true, true);

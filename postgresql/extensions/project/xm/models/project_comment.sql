@@ -15,6 +15,10 @@ E'{
   "comment.text as text",
   "comment.is_public as is_public"}',
 
+-- sequence
+
+'public.comment_comment_id_seq',
+
 -- Rules
 
 E'{"
@@ -65,4 +69,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.project_comment
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{"comment.source = \'J\'"}', 'Project Comment Model', true, true, '', '', 'public.comment_comment_id_seq');
+E'{"comment.source = \'J\'"}', 'Project Comment Model', true, true);

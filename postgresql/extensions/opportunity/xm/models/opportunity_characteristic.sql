@@ -12,6 +12,10 @@ E'{
   "characteristic_assignment.characteristic",
   "characteristic_assignment.value"}',
 
+-- sequence
+
+'public.charass_charass_id_seq',
+
 -- Rules
 
 E'{"
@@ -59,4 +63,4 @@ where ( guid = old.guid );
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{"target_type = \'OPP\'"}', 'Opportunity Characteristic Model', true, true, '', '', 'public.charass_charass_id_seq');
+E'{"target_type = \'OPP\'"}', 'Opportunity Characteristic Model', true, true);

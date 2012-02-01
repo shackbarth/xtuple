@@ -20,6 +20,12 @@ E'{
   "alarm.alarm_time_offset as offset",
   "alarm.alarm_time_qualifier as qualifier"}',
 
+-- sequence
+
+'public.alarm_alarm_id_seq',
+
+-- rules
+
 E'{"
 
 -- insert rule
@@ -92,4 +98,4 @@ where (alarm_id = old.guid);
 
 -- Conditions, Comment, System
 
-E'{"alarm.alarm_source = \'J\'"}','Project Task Alarm Model', true, true, '', '', 'public.alarm_alarm_id_seq');
+E'{"alarm.alarm_source = \'J\'"}','Project Task Alarm Model', true, true);

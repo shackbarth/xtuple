@@ -13,6 +13,10 @@ E'{
   "incdtseverity.incdtseverity_descrip as description"
 }',
 
+-- sequence
+
+'public.incdtseverity_incdtseverity_id_seq',
+
 -- Rules
 
 E'{"
@@ -61,4 +65,4 @@ where ( incdtseverity_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Severity Model', true, false, '', '', 'public.incdtseverity_incdtseverity_id_seq');
+'{}', 'Incident Severity Model', true);

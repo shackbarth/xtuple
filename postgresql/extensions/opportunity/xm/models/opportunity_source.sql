@@ -10,6 +10,10 @@ E'{
   "opsource.opsource_name as \\"name\\"",
   "opsource.opsource_descrip as description"}',
 
+-- sequence
+
+'public.opsource_opsource_id_seq',
+
 -- Rules
 
 E'{"
@@ -55,4 +59,4 @@ where ( opsource_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Opportunity Source Model', true, false, '', '', 'public.opsource_opsource_id_seq');
+'{}', 'Opportunity Source Model', true);

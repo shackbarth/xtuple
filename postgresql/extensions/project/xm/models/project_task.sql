@@ -36,6 +36,12 @@ E'{
     from xm.project_task_alarm
     where project_task = prjtask.prjtask_id) as alarms"}',
 
+-- sequence
+
+'public.prjtask_prjtask_id_seq',
+
+-- rules
+
 E'{"
 
 -- insert rule
@@ -153,4 +159,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project_task
 
 -- Conditions, Order, Comment, System
 
-'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true, '', '', 'public.prjtask_prjtask_id_seq');
+'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true, 'TA');
