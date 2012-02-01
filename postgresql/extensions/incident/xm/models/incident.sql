@@ -28,9 +28,6 @@ E'{
   "incdt.incdt_public as is_public",
   "incdt.incdt_incdtresolution_id as resolution",
   "incdt.incdt_incdtseverity_id as severity",
-  "(select incident_recurrence
-    from xm.incident_recurrence
-    where incident = incdt_id) as recurrence",
   "array(
     select incident_alarm
     from xm.incident_alarm
@@ -114,30 +111,6 @@ values (
 
 ","
 
-create or replace rule \\"_CREATE_RECURRENCE\\" as on insert to xm.incident 
-  where new.recurrence is null = false do instead (
-
-insert into xm.incident_recurrence (
-  guid,
-  incident,
-  period,
-  frequency,
-  start_date,
-  end_date,
-  maximum)
-values (
-  (new.recurrence).guid,
-  new.guid,
-  (new.recurrence).period,
-  (new.recurrence).frequency,
-  (new.recurrence).start_date,
-  (new.recurrence).end_date,
-  (new.recurrence).maximum );
-
-)
-
-","
-
 create or replace rule \\"_CREATE_CHECK_PRIV\\" as on insert to xm.incident
    where not checkPrivilege(\'MaintainAllIncidents\') 
     and not (checkPrivilege(\'MaintainPersonalIncidents\') 
@@ -167,53 +140,6 @@ update incdt set
   incdt_incdtresolution_id = new.resolution,
   incdt_incdtseverity_id = new.severity
 where ( incdt_id = old.guid );
-
-","
-
-create or replace rule \\"_UPDATE_RECURRENCE_CREATE\\" as on update to xm.incident
-  where old.recurrence is null and new.recurrence is null = false do instead
-
-insert into xm.incident_recurrence (
-  guid,
-  incident,
-  period,
-  frequency,
-  start_date,
-  end_date,
-  maximum)
-values (
-  (new.recurrence).guid,
-  new.guid,
-  (new.recurrence).period,
-  (new.recurrence).frequency,
-  (new.recurrence).start_date,
-  (new.recurrence).end_date,
-  (new.recurrence).maximum );
-
-","
-
-create or replace rule \\"_UPDATE_RECURRENCE_UPDATE\\" as on update to xm.incident
-  where old.recurrence != new.recurrence do instead (
-
-update xm.incident_recurrence set
-  period = (new.recurrence).period,
-  frequency = (new.recurrence).frequency,
-  start_date = (new.recurrence).start_date,
-  end_date = (new.recurrence).end_date,
-  maximum = (new.recurrence).maximum
-where (guid = (old.recurrence).guid );
-
-)
-
-","
-
-create or replace rule \\"_UPDATE_RECURRENCE_DELETE\\" as on update to xm.incident
-  where old.recurrence is not null != new.recurrence is null do instead (
-
-delete from xm.incident_recurrence
-where ( guid = (old.recurrence).guid );
-
-)
 
 ","
 

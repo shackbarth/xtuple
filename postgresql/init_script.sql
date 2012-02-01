@@ -182,8 +182,8 @@
 \i extensions/incident/xm/models/incident_incident.sql;
 \i extensions/incident/xm/models/incident_resolution.sql;
 \i extensions/incident/xm/models/incident_severity.sql;
-\i extensions/incident/xm/models/incident_recurrence.sql;
 \i extensions/incident/xm/models/incident.sql;
+\i extensions/incident/xm/models/incident_recurrence.sql;
 
 -- extensions/opportunity xm models
 \i extensions/opportunity/xm/models/opportunity_characteristic.sql;
@@ -208,12 +208,12 @@
 \i extensions/project/xm/models/project_item.sql;
 \i extensions/project/xm/models/project_url.sql;
 \i extensions/project/xm/models/project_project.sql;
-\i extensions/project/xm/models/project_recurrence.sql;
 \i extensions/project/xm/models/project_comment.sql;
 \i extensions/project/xm/models/project_task_alarm.sql;
 \i extensions/project/xm/models/project_task_comment.sql;
 \i extensions/project/xm/models/project_task.sql;
 \i extensions/project/xm/models/project.sql;
+\i extensions/project/xm/models/project_recurrence.sql;
 
 -- extensions/todo xm models
 \i extensions/todo/xm/models/to_do_alarm.sql;
@@ -225,7 +225,10 @@
 \i extensions/todo/xm/models/to_do_item.sql;
 \i extensions/todo/xm/models/to_do_url.sql;
 \i extensions/todo/xm/models/to_do_to_do.sql;
-\i extensions/todo/xm/models/to_do_recurrence.sql;
 \i extensions/todo/xm/models/to_do.sql;
+\i extensions/todo/xm/models/to_do_recurrence.sql;
+
+-- extensions/crm
+\i extensions/crm/models/contact.sql;
 
 -- [ END ] extensions

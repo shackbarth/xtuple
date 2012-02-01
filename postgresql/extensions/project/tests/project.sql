@@ -14,7 +14,11 @@
 	  complete_date,
 	  assigned_to,
 	  project_status, 
-	  recurrence)
+	  recurrence_period,
+	  recurrence_frequency,
+	  recurrence_start,
+	  recurrence_end,
+	  recurrence_max)
 	VALUES (
 	  9999,
 	  '99996',
@@ -27,8 +31,7 @@
 	  null,
 	  (select user_account_info from xm.user_account_info where username= 'admin'),
 	  'P',
-	 ( nextval('recur_recur_id_seq'), 9999, 'W', 1, (current_date + 2)::timestamp with time zone, null, 2)
-	  );
+	  'W', 1, (current_date + 2)::timestamp with time zone, null, 2);
 
 	-- confirm insert into xm.project view
 	SELECT *
@@ -54,20 +57,27 @@
 -- remove the recurrance
 
 update xm.project set
-  recurrence = null
+  recurrence_period = null
 where guid = 9999;
 
 -- add a new recurrance
 update xm.project set
-  recurrence = ( nextval('recur_recur_id_seq'), 9999, 'M', 1, (current_date + 4)::timestamp with time zone, null, 2)
+  recurrence_period = 'M', 
+  recurrence_frequency = 1, 
+  recurrence_start = (current_date + 4)::timestamp with time zone, 
+  recurrence_end = null,
+  recurrence_max = 2
 where guid = 9999;
 
 -- update the recurrance
 
 update xm.project set
-  recurrence = ( currval('recur_recur_id_seq'), 9999, 'D', 1, (current_date + 2)::timestamp with time zone, null, 2)
+  recurrence_period = 'D', 
+  recurrence_frequency = 2, 
+  recurrence_start = (current_date + 2)::timestamp with time zone, 
+  recurrence_end = null,
+  recurrence_max = 3
 where guid = 9999;
-
 -- END xm.project model view testing...
 
 -- BEGIN xm.project_comment model view testing...
