@@ -1,13 +1,35 @@
 XTUPLE CLIENT
 =============
 
-Based originally on Sproutcore 1.7.1Beta, is in a very volatile state and is
-being reworked with many backend changes. Current use requires `sc-server`
-version `1.7.1Beta+`.
+The xTuple client now runs on Blossom.
 
 Prerequisites
 -------------
 
-* [sproutcore] (https://github.com/sproutcore/sproutcore) -- `sudo gem install sproutcore --pre`
+* [blossom] (https://github.com/fohr/blossom) -- see below
 * [datasource] (https://github.com/xtuple/datasource) -- follow instructions has own prerequisites
 * [database] (https://github.com/xtuple/database) -- follow instructions has own prerequisites
+
+Installing Blossom
+------------------
+
+Blossom's buildtools run on Node, so you'll need to install that first:
+
+    http://nodejs.org/
+
+This automatically includes npm, the Node Package Manager.
+
+At the top-level of the xtuple/client project, do:
+
+    $ mkdir node_modules
+    $ cd node_modules
+    $ git clone https://github.com/fohr/blossom.git
+
+This makes the 'blossom' module available to npm.
+
+When you need a newer version of blossom, simply do:
+
+    $ cd node_modules
+    $ git pull
+
+And you'll be up-to-date.
