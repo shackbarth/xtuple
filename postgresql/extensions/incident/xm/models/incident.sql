@@ -248,4 +248,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.incident
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Model', true, false, 'INCDT', 'IncidentNumber');
+'{}', 'Incident Model', true, false, 'INCDT', 'IncidentNumber', 'public.incdt_incdt_id_seq');

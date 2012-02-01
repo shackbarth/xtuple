@@ -13,6 +13,10 @@ E'{
     from xm.user_account_role
     where guid = usrgrp.usrgrp_grp_id) as user_account_role"}',
      
+-- sequence
+
+'public.usrgrp_usrgrp_id_seq',
+
 -- Rules
 
 E'{"

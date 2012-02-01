@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -59,4 +59,4 @@ where ( guid = old.guid );
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{"target_type = \'OPP\'"}', 'Opportunity Characteristic Model', true, true);
+E'{"target_type = \'OPP\'"}', 'Opportunity Characteristic Model', true, true, '', '', 'public.charass_charass_id_seq');

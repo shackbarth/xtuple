@@ -62,7 +62,12 @@ E'{
     where source = crmacct.crmacct_id) as accounts"
 }',
 
+-- sequence
+
+'public.crmacct_crmacct_id_seq',
+
 -- Rules
+
 E'{"
 -- insert rule
 

@@ -1,7 +1,8 @@
 ﻿create or replace function private.create_model(name text, 
                                                 schema_name text, 
                                                 table_name text, 
-                                                column_names text[], 
+                                                column_names text[],
+                                                id_seq_name text,
                                                 rules text[] default '{}', 
                                                 conditions text[] default '{}', 
                                                 order_by text[] default '{}',
@@ -45,6 +46,7 @@ begin
       model_schema_name = schema_name,
       model_table_name = table_name,
       model_columns = column_names,
+      modelbas_id_seq_name = id_seq_name,
       model_rules = rules,
       model_conditions = conditions,
       model_order = order_by,
@@ -57,12 +59,13 @@ begin
   else
 
     insert into private.modelbas ( 
-      model_name, model_schema_name, model_table_name, model_columns, 
-      model_rules, model_conditions, model_order, model_comment, model_system,
-      modelbas_nested, modelbas_source, modelbas_orderseq_id
+      model_name, model_schema_name, model_table_name, model_columns,
+      modelbas_id_seq_name, model_rules, model_conditions, model_order,
+      model_comment, model_system, modelbas_nested, modelbas_source, modelbas_orderseq_id
     ) values ( 
-      name, schema_name, table_name, column_names, rules , conditions, 
-      order_by, comment, is_system, is_nested, source, model_orderseq_id );
+      name, schema_name, table_name, column_names, id_seq_name, rules , conditions, 
+      order_by, comment, is_system, is_nested, source, model_orderseq_id
+    );
   end if;
   
 end;
@@ -71,7 +74,8 @@ $$ language 'plpgsql';
 create or replace function private.create_model(name text, 
                                                 schema_name text, 
                                                 table_name text, 
-                                                column_names text[], 
+                                                column_names text[],
+                                                id_seq_name text, 
                                                 rules text[] default '{}', 
                                                 conditions text[] default '{}', 
                                                 comment text default '', 
@@ -79,5 +83,5 @@ create or replace function private.create_model(name text,
                                                 is_nested boolean default false,
                                                 source text default '',
                                                 model_orderseq_name text default '') returns void volatile as $$
-  select private.create_model($1, $2, $3, $4, $5, $6, '{}', $7, $8, $9, $10, $11);
+  select private.create_model($1, $2, $3, $4, $5, $6, $7, '{}', $8, $9, $10, $11, $12);
 $$ language 'sql';

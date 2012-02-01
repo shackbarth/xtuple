@@ -8,6 +8,7 @@ select private.create_table('modelbas', 'private', false, 'private.model');
 select private.add_column('modelbas','modelbas_nested', 'boolean', 'not null default false');
 select private.add_column('modelbas','modelbas_source', 'text');
 select private.add_column('modelbas','modelbas_orderseq_id','integer','references orderseq (orderseq_id)');
+select private.add_column('modelbas','modelbas_id_seq_name','text');
 select private.add_primary_key('modelbas', 'model_id');
 select private.add_constraint('modelbas', 'unique_model_name', 'unique(model_name)');
 

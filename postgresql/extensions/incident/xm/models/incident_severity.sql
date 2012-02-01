@@ -61,4 +61,4 @@ where ( incdtseverity_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Severity Model', true);
+'{}', 'Incident Severity Model', true, false, '', '', 'public.incdtseverity_incdtseverity_id_seq');

@@ -12,6 +12,10 @@ E'{
   "priv.priv_name as name",
   "priv.priv_descrip as description"}',
      
+-- sequence
+
+'public.priv_priv_id_seq',
+
 -- Rules
 
 E'{"

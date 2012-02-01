@@ -13,6 +13,10 @@ E'{
   "whsezone.whsezone_descrip as description"
 }',
 
+-- sequence
+
+'public.whsezone_whsezone_id_seq',
+
 -- Rules
 
 E'{"

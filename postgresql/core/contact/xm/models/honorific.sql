@@ -10,6 +10,10 @@ E'{
   "hnfc.hnfc_id as guid",
   "hnfc.hnfc_code as code"}',
      
+-- sequence
+
+'public.hnfc_hnfc_id_seq',
+
 -- Rules
 
 E'{"

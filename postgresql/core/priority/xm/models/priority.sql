@@ -12,6 +12,10 @@ E'{
   "incdtpriority.incdtpriority_order as order",
   "incdtpriority.incdtpriority_descrip as description"}',
 
+-- sequence
+
+'public.incdtpriority_incdtpriority_id_seq',
+
 -- Rules
 
 E'{"

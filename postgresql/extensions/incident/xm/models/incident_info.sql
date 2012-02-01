@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "incdt.incdt_number as number",
   "incdt.incdt_summary as description"
 }',
+
+-- sequence
+
+'',
 
 -- Rules
 

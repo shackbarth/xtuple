@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -77,6 +77,10 @@ E'{
     from xm.item_url
     where source = item.item_id) as urls"
 }',
+
+-- sequence
+
+'public.item_item_id_seq',
 
 -- Rules
 

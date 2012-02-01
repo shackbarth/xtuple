@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -20,6 +20,10 @@ E'{
     from xm.address_info
     where guid = cntct.cntct_addr_id) as address"}',
      
+-- sequence
+
+'public.cntct_cntct_id_seq',
+
 -- Rules
 
 E'{"

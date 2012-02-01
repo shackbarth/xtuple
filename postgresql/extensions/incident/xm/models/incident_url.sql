@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema
 
@@ -57,4 +57,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"url.guid=target_id","docinfo.source_type=\'INCDT\'","docinfo.target_type=\'URL\'"}', 'Incident Url Model', true, true);
+E'{"url.guid=target_id","docinfo.source_type=\'INCDT\'","docinfo.target_type=\'URL\'"}', 'Incident Url Model', true, true, '', '', 'public.docass_docass_id_seq');

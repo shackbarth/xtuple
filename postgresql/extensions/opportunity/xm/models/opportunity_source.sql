@@ -55,4 +55,4 @@ where ( opsource_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Opportunity Source Model', true);
+'{}', 'Opportunity Source Model', true, false, '', '', 'public.opsource_opsource_id_seq');

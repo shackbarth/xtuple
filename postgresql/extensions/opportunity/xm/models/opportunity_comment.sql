@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -65,4 +65,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.opportunity_comment
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{"comment.source = \'OPP\'"}', 'Cpportunity Comment Model', true, true);
+E'{"comment.source = \'OPP\'"}', 'Cpportunity Comment Model', true, true, '', '', 'public.comment_comment_id_seq');

@@ -59,4 +59,4 @@ where ( opstage_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Opportunity Stage Model', true);
+'{}', 'Opportunity Stage Model', true, false, '', '', 'public.opstage_opstage_id_seq');

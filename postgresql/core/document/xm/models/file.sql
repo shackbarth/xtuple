@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "file.file_title as name",
   "file.file_stream as data"
 }',
+
+-- sequence
+
+'public.file_file_id_seq',
 
 -- Rules
 

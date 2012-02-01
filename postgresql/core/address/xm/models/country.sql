@@ -18,6 +18,10 @@ E'{
     select state
     from xm.state
     where country = country.country_id) as states"}',
+
+-- sequence
+
+'public.country_country_id_seq',
      
 -- Rules
 

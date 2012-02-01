@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -38,4 +38,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.to_do_info
 "}',
 
 -- Conditions, Comment, System, Nested
-'{}', 'Todo Info Model', true, true);
+'{}', 'Todo Info Model', true, true, '', '', 'public.todoitem_todoitem_id_seq');

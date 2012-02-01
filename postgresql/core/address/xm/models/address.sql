@@ -26,6 +26,10 @@ E'{
     select address_characteristic 
     from xm.address_characteristic
     where address = addr.addr_id) as characteristics"}',
+
+-- sequence
+
+'public.addr_addr_id_seq',
      
 -- Rules
 

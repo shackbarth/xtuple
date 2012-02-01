@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -16,6 +16,10 @@ E'{
   "addr.addr_postalcode as postalcode",
   "addr.addr_country as country"}',
      
+-- sequence
+
+'public.addr_addr_id_seq',
+
 -- Rules
 
 E'{"

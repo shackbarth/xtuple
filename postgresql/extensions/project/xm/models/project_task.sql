@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -153,4 +153,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project_task
 
 -- Conditions, Order, Comment, System
 
-'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true);
+'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true, '', '', 'public.prjtask_prjtask_id_seq');

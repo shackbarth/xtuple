@@ -61,4 +61,4 @@ where ( incdtresolution_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Incident Resolution Model', true);
+'{}', 'Incident Resolution Model', true, false, '', '', 'public.incdtresolution_incdtresolution_id_seq');

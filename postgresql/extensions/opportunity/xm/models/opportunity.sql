@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -208,4 +208,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.opportunity
 
 -- Conditions, Comment, System
 
-'{}', 'Opportunity Model', true, false, 'OPP');
+'{}', 'Opportunity Model', true, false, 'OPP', '', 'public.ophead_ophead_id_seq');

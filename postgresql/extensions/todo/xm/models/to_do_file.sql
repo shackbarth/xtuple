@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema
 
@@ -57,4 +57,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"file_info.guid=target_id","docinfo.source_type=\'TODO\'","docinfo.target_type=\'FILE\'"}', 'ToDo File Model', true, true);
+E'{"file_info.guid=target_id","docinfo.source_type=\'TODO\'","docinfo.target_type=\'FILE\'"}', 'ToDo File Model', true, true, '', '', 'public.docass_docass_id_seq');

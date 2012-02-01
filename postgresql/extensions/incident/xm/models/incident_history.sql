@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 --Model name, schema, table
 
@@ -13,6 +13,10 @@ E'{
   "incdthist.incdthist_username as username",
   "incdthist.incdthist_descrip as description"
 }',
+
+-- sequence
+
+'public.incdthist_incdthist_id_seq',
 
 -- Rules
 

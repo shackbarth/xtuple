@@ -12,6 +12,10 @@ E'{
   "charopt.charopt_value as value",
   "charopt.charopt_order as order"}',
      
+-- sequence
+
+'public.charopt_charopt_id_seq',
+
 -- Rules
 
 E'{"

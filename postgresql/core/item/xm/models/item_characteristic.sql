@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -13,6 +13,10 @@ E'{
   "charass.charass_value as value",  
   "charass.charass_default as is_default",
   "charass.charass_price as price"}',
+
+-- sequence
+
+'public.charass_charass_id_seq',
 
 -- Rules
 

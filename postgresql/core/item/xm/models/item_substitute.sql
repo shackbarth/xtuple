@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -13,6 +13,10 @@ E'{
   "itemsub.itemsub_uomratio as conversion_ratio",
   "itemsub.itemsub_rank as rank"
 }',
+
+-- sequence
+
+'public.itemsub_itemsub_id_seq',
 
 -- Rules
 

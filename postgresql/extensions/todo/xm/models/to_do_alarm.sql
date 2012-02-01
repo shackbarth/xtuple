@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -95,4 +95,4 @@ where ( alarm_id = old.guid );
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{alarm.alarm_source = \'TODO\'}', 'ToDo Alarm Model', true, true);
+E'{alarm.alarm_source = \'TODO\'}', 'ToDo Alarm Model', true, true, '', '', 'public.alarm_alarm_id_seq');

@@ -54,4 +54,4 @@ where ( optype_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Opportunity Type Model', true);
+'{}', 'Opportunity Type Model', true, false, '', '', 'public.optype_optype_id_seq');

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -219,4 +219,4 @@ where ( todoitem_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'ToDo Model', true, false, 'TODO');
+'{}', 'ToDo Model', true, false, 'TODO', '', 'public.todoitem_todoitem_id_seq');

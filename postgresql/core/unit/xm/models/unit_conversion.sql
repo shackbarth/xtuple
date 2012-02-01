@@ -14,6 +14,10 @@ E'{
   "uomconv.uomconv_to_value as to_value"
 }',
 
+-- sequence
+
+'public.uomconv_uomconv_id_seq',
+
 -- Rules
 
 E'{"

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "crmacct.crmacct_number as \\"number\\"",
   "crmacct.crmacct_name as \\"name\\"",
   "crmacct.crmacct_active as is_active"}',
+
+-- sequence
+
+'',
 
 -- Rules
 
