@@ -133,6 +133,12 @@ console.log("PROXYING http://"+PROXY_HOST+":"+PROXY_LISTEN + PROXY_PREFIX_FROM +
 // Load and process our tests.
 var tests = process.argv.slice(2),
     suites = tests.length;
+
+if (suites === 0) {
+  console.log("ERROR: Nothing to test. Please pass files to test, like this:\n\n    node testrunner.js tests/path/to/test1.js tests/path/to/test2.js\n");
+  server.close(); // nothing to test
+}
+
 // console.log(tests);
 process.nextTick(function() {
   tests.forEach(function(filename) {
