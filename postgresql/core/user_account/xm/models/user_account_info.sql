@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "usr.usr_active as is_active",
   "usr.usr_propername as propername"}',
      
+-- sequence
+
+'',
+
 -- Rules
 
 E'{"

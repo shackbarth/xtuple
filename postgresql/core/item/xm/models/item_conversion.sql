@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 'item_conversion', 'public', 'itemuomconv',
@@ -13,6 +13,10 @@ E'{
   "itemuomconv.itemuomconv_to_value as to_value",
   "itemuomconv.itemuomconv_fractional as fractional"
 }',
+
+-- sequence
+
+'public.itemuomconv_itemuomconv_id_seq',
 
 -- Rules
 

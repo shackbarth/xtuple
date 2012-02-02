@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -62,7 +62,12 @@ E'{
     where source = crmacct.crmacct_id) as accounts"
 }',
 
+-- sequence
+
+'public.crmacct_crmacct_id_seq',
+
 -- Rules
+
 E'{"
 -- insert rule
 
@@ -168,4 +173,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.account
 "}',
 
 -- Conditions, Comment, System
-E'{"checkPrivilege(\'ViewAllCRMAccounts\')", "checkPrivilege(\'ViewPersonalCRMAccounts\')"}', 'Account Model', true, false, 'CRMA');
+E'{"checkPrivilege(\'ViewAllCRMAccounts\')", "checkPrivilege(\'ViewPersonalCRMAccounts\')"}', 'Account Model', true, false, 'CRMA', 'CRMAccountNumber');

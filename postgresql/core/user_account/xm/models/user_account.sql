@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 -- Model name, schema, table
 
 'user_account', 'private', 'usr',
@@ -26,6 +26,10 @@ E'{
     from xm.user_account_user_account_role_assignment
     where (user_account = usr.usr_username)) as user_roles"}',
      
+-- sequence
+
+'private.useracct_useracct_id_seq',
+
 -- Rules
 
 E'{"

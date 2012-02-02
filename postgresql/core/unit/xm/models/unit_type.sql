@@ -13,6 +13,10 @@ E'{
   "uomtype.uomtype_multiple as multiple"
 }',
 
+-- sequence
+
+'public.uomtype_uomtype_id_seq',
+
 -- Rules
 
 E'{"

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "todoitem.todoitem_id as number",
   "todoitem.todoitem_name as name",
   "todoitem.todoitem_active as is_active"}',
+
+-- sequence
+
+'',
 
 -- Rules
 

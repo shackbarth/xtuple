@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "image.image_name as name",
   "image.image_descrip as description"
 }',
+
+-- sequence
+
+'',
 
 -- Rules
 

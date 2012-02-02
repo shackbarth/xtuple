@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "ophead.ophead_number as \\"number\\"",
   "ophead.ophead_name as \\"name\\"",
   "ophead.ophead_active as is_active"}',
+
+-- sequence
+
+'',
 
 -- Rules
 

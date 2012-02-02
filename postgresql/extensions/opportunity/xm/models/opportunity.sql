@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -67,6 +67,12 @@ E'{
     select opportunity_opportunity
     from xm.opportunity_opportunity
     where source = ophead.ophead_id) as opportunities"}',
+
+-- sequence
+
+'public.ophead_ophead_id_seq',
+
+-- rules
 
 E'{"
 -- insert rule

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -54,6 +54,10 @@ E'{
     select project_project
     from xm.project_project
     where source = prj.prj_id) as projects"}',
+
+-- sequence
+
+'public.prj_prj_id_seq',
 
 -- Rules
 

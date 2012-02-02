@@ -13,6 +13,10 @@ E'{
   "incdtresolution.incdtresolution_descrip as description"
 }',
 
+-- sequence
+
+'public.incdtresolution_incdtresolution_id_seq',
+
 -- Rules
 
 E'{"

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -60,6 +60,10 @@ E'{
     select to_do_to_do
     from xm.to_do_to_do
     where source = todoitem.todoitem_id) as to_dos"}',
+
+-- sequence
+
+'public.todoitem_todoitem_id_seq',
 
 -- Rules
 

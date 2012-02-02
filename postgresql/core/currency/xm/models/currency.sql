@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -17,6 +17,10 @@ E'{
     from curr_rate
     where curr_rate.curr_id = curr_symbol.curr_id)::text,\'{}\') as rates"
 }',
+
+-- sequence
+
+'public.curr_symbol_curr_id_seq',
 
 -- Rules
 
