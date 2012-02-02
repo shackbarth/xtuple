@@ -128,7 +128,7 @@ var server = http.createServer(function(request, response) {
   });
 
 }).listen(PROXY_LISTEN);
-console.log("PROXYING http://"+PROXY_HOST+":"+PROXY_LISTEN + PROXY_PREFIX_FROM + 'foo' + " TO http://" + PROXY_HOST + ":" + PROXY_PORT + PROXY_PREFIX_TO + 'foo');
+console.log("PROXY: http://"+PROXY_HOST+":"+PROXY_LISTEN + PROXY_PREFIX_FROM + '*' + " \u2192 http://" + PROXY_HOST + ":" + PROXY_PORT + PROXY_PREFIX_TO + '*');
 
 // Load and process our tests.
 var tests = process.argv.slice(2),
