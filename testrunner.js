@@ -60,7 +60,10 @@ global.BLOSSOM = true;
 global.SPROUTCORE = false;
 global.FAST_LAYOUT_FUNCTION = false;
 global.sc_assert = function(assertion, msg) {
-  if (!assertion) throw msg || "sc_assert()";
+  if (!assertion) {
+    debugger;
+    throw msg || "sc_assert()";
+  }
 };
 
 // Load the code we want to test.
@@ -78,5 +81,4 @@ process.nextTick(function() {
       } catch (e) { console.log(e); }
     }
   });
-  var filename = process.argv[2];
 });

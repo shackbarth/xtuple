@@ -165,9 +165,11 @@ XM.Record = SC.Record.extend(
     else if (status === SC.Record.READY_CLEAN)     value = 'read';
     else if (status === SC.Record.DESTROYED_DIRTY) value = 'deleted';
     else if (status & SC.Record.DIRTY)             value = 'updated';
-    else sc_assert(false); // shouldn't happen
 
-    this.writeAttribute(key, value, YES);
+    if (status !== SC.Record.DESTROYED_CLEAN) {
+      // You cannot write attributes once an object is fully destroyed.
+      this.writeAttribute(key, value, YES);
+    }
   }.observes('status')
 
 });
