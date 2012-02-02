@@ -11,6 +11,10 @@ E'{
   "docinfo.purpose as purpose"
 }',
 
+-- sequence
+
+'public.docass_docass_id_seq',
+
 -- Rules
 
 E'{"
@@ -57,4 +61,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"image_info.guid=target_id","docinfo.source_type=\'TODO\'","docinfo.target_type=\'IMG\'"}', 'ToDo Image Model', true, true, '', '', 'public.docass_docass_id_seq');
+E'{"image_info.guid=target_id","docinfo.source_type=\'TODO\'","docinfo.target_type=\'IMG\'"}', 'ToDo Image Model', true, true);

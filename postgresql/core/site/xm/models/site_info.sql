@@ -17,7 +17,7 @@ E'{
 
 -- sequence
 
-'public.warehous_warehous_id_seq',
+'',
 
 -- Rules
 

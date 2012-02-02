@@ -18,7 +18,7 @@ E'{
      
 -- sequence
 
-'public.addr_addr_id_seq',
+'',
 
 -- Rules
 

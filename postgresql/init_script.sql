@@ -61,6 +61,7 @@
 
 -- core/global/xm/functions
 \i core/global/xm/functions/fetch_number.sql;
+\i core/global/xm/functions/fetch_id.sql;
 
 -- core/user_account xm models
 \i core/user_account/xm/models/privilege.sql;

@@ -14,7 +14,7 @@ E'{
 
 -- sequence
 
-'public.image_image_id_seq',
+'',
 
 -- Rules
 

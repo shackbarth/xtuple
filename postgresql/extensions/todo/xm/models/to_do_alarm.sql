@@ -22,6 +22,10 @@ E'{
   "alarm.alarm_trigger as trigger",
   "alarm.alarm_source as source"}',
 
+-- sequence
+
+'public.alarm_alarm_id_seq',
+
 -- Rules
 
 E'{"
@@ -95,4 +99,4 @@ where ( alarm_id = old.guid );
 "}', 
 
 -- Conditions, Comment, System, Nested
-E'{alarm.alarm_source = \'TODO\'}', 'ToDo Alarm Model', true, true, '', '', 'public.alarm_alarm_id_seq');
+E'{alarm.alarm_source = \'TODO\'}', 'ToDo Alarm Model', true, true);

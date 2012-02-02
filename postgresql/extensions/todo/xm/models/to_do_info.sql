@@ -12,6 +12,10 @@ E'{
   "todoitem.todoitem_name as name",
   "todoitem.todoitem_active as is_active"}',
 
+-- sequence
+
+'',
+
 -- Rules
 
 E'{"
@@ -38,4 +42,4 @@ create or replace rule \\"_DELETE\\" as on delete to xm.to_do_info
 "}',
 
 -- Conditions, Comment, System, Nested
-'{}', 'Todo Info Model', true, true, '', '', 'public.todoitem_todoitem_id_seq');
+'{}', 'Todo Info Model', true, true);

@@ -22,7 +22,7 @@ E'{
      
 -- sequence
 
-'public.cntct_cntct_id_seq',
+'',
 
 -- Rules
 

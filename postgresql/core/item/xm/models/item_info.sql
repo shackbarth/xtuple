@@ -16,7 +16,7 @@ E'{
 
 -- sequence
 
-'public.item_item_id_seq',
+'',
 
 -- Rules
 

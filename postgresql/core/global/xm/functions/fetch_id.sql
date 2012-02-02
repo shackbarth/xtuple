@@ -11,12 +11,26 @@
       /* decamelize model name for private.modelbas query*/
       modelName = typeName.type.replace((/([a-z])([A-Z])/g), '$1_$2').toLowerCase(),
       modelSql = "select modelbas_id_seq_name "
-                 + "from modelbas "
+                 + "from private.modelbas "
                  + "where model_name = $1",
-      seqName;
+      nextSql = "select nextval($1)",
+      seqName, nextId;
 
       seqName = executeSql(modelSql,[modelName]);
 
-      return seqName.length ? nextval(seqName[0].modelbas_id_seq_name) : throw new Error("Invalid Sequence Name!");
+      if(seqName.length) { 
+        nextId = executeSql(nextSql,[seqName[0].modelbas_id_seq_name]);
+        print(NOTICE,JSON.stringify(nextId));
+        return nextId[0].nextval;
+
+      } else {
+          throw new Error("Invalid Sequence Name!");
+        };
 
 $$ LANGUAGE plv8;
+
+/* Tests
+
+select xm.fetch_id(E'{"type":"Address"}');
+
+*/

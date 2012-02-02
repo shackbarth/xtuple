@@ -13,7 +13,7 @@ E'{
 
 -- sequence
 
-'public.file_file_id_seq',
+'',
 
 -- Rules
 

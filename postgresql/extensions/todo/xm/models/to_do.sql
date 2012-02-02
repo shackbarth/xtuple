@@ -61,6 +61,10 @@ E'{
     from xm.to_do_to_do
     where source = todoitem.todoitem_id) as to_dos"}',
 
+-- sequence
+
+'public.todoitem_todoitem_id_seq',
+
 -- Rules
 
 E'{"
@@ -144,4 +148,4 @@ where ( todoitem_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'ToDo Model', true, false, 'TODO', '', 'public.todoitem_todoitem_id_seq');
+'{}', 'ToDo Model', true, false, 'TODO');
