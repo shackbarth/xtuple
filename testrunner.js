@@ -42,7 +42,8 @@ var jsdom = require('jsdom').jsdom,
     document = jsdom(app.get('indexHTML')),
     window = document.createWindow();
 
-    // set up so we don't need to change window everywhere by defining a reference to global
+// set up so we don't need to change window everywhere by defining a 
+// reference to global
 global.window = window;
 global.document = document;
 global.top = window;
@@ -68,12 +69,12 @@ jsFiles.forEach(function(path) { require(path); });
 
 // Load and process our tests.
 var tests = process.argv.slice(2);
-console.log(tests);
+// console.log(tests);
 process.nextTick(function() {
   tests.forEach(function(filename) {
     if (filename) {
-      var suite = require('./'+filename);
-      try { suite.run();
+      try {
+        require('./'+filename).run();
       } catch (e) { console.log(e); }
     }
   });
