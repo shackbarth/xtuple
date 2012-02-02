@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -22,6 +22,10 @@ E'{
   "alarm.alarm_trigger as trigger",
   "alarm.alarm_source as source"
   }',
+
+-- sequence
+
+'public.alarm_alarm_id_seq',
 
 -- Rules
 

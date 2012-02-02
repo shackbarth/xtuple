@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -35,6 +35,12 @@ E'{
     select project_task_alarm 
     from xm.project_task_alarm
     where project_task = prjtask.prjtask_id) as alarms"}',
+
+-- sequence
+
+'public.prjtask_prjtask_id_seq',
+
+-- rules
 
 E'{"
 
@@ -153,4 +159,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project_task
 
 -- Conditions, Order, Comment, System
 
-'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true);
+'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true, 'TA');

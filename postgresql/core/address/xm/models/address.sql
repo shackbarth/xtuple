@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -26,6 +26,10 @@ E'{
     select address_characteristic 
     from xm.address_characteristic
     where address = addr.addr_id) as characteristics"}',
+
+-- sequence
+
+'public.addr_addr_id_seq',
      
 -- Rules
 
@@ -102,4 +106,4 @@ where ( addr_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Address Model', true, false, 'ADDR');
+'{}', 'Address Model', true, false, 'ADDR', 'AddressNumber');

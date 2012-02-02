@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -15,6 +15,10 @@ E'{
   "itemalias.itemalias_descrip2 as description2",
   "itemalias.itemalias_comments as notes"
 }',
+
+-- sequence
+
+'public.itemalias_itemalias_id_seq',
 
 -- Rules
 

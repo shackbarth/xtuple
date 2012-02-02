@@ -20,6 +20,12 @@ E'{
   "alarm.alarm_time_offset as offset",
   "alarm.alarm_time_qualifier as qualifier"}',
 
+-- sequence
+
+'public.alarm_alarm_id_seq',
+
+-- rules
+
 E'{"
 
 -- insert rule

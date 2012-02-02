@@ -12,6 +12,10 @@ E'{
   "lang.lang_abbr2 as abbreviation_short",
   "lang.lang_abbr3 as abbreviation_long"}',
      
+-- sequence
+
+'public.lang_lang_id_seq',
+
 -- Rules
 
 E'{"

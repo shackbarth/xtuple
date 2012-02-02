@@ -22,6 +22,10 @@ E'{
   "char.char_contacts as is_contacts",
   "char.char_items as is_items"}',
      
+-- sequence
+
+'public.char_char_id_seq',
+
 -- Rules
 
 E'{"

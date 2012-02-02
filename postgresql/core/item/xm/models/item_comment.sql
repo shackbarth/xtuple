@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 'item_comment', 'xm', 'comment',
@@ -13,6 +13,10 @@ E'{
   "comment.text as text",
   "comment.is_public as is_public"
 }',
+
+-- sequence
+
+'public.comment_comment_id_seq',
 
 -- Rules
 

@@ -12,6 +12,10 @@ E'{
   "opstage.opstage_descrip as description",
   "opstage.opstage_opinactive as deactivate"}',
 
+-- sequence
+
+'public.opstage_opstage_id_seq',
+
 -- Rules
 
 E'{"

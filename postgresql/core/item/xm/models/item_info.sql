@@ -14,6 +14,10 @@ E'{
   "item.item_descrip2 as description2",
   "item.item_inv_uom_id as inventory_unit"}',
 
+-- sequence
+
+'',
+
 -- Rules
 
 E'{"

@@ -13,6 +13,10 @@ E'{
     from xm.privilege
     where guid = usrpriv.usrpriv_priv_id) as privilege"}',
      
+-- sequence
+
+'public.usrpriv_usrpriv_id_seq',
+
 -- Rules
 
 E'{"

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -14,6 +14,10 @@ E'{
   "cmnttype.cmnttype_editable as comments_editable",
   "cmnttype.cmnttype_order as order"}',
      
+-- sequence
+
+'public.cmnttype_cmnttype_id_seq',
+
 -- Rules
 
 E'{"

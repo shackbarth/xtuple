@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema
 
@@ -10,6 +10,10 @@ E'{
   "file_info as file",
   "docinfo.purpose as purpose"
 }',
+
+-- sequence
+
+'public.docass_docass_id_seq',
 
 -- Rules
 
@@ -57,4 +61,4 @@ where ( id = old.guid );
 
 -- Conditions, Comment, System, Nested
 
-E'{"file_info.guid=target_id","docinfo.source_type=\'I\'","docinfo.target_type=\'FILE\'"}', 'Item File Model', true, true);
+E'{"file_info.guid=target_id","docinfo.source_type=\'I\'","docinfo.target_type=\'FILE\'"}', 'Item File Model', true, true );

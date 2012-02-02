@@ -11,6 +11,10 @@ E'{
   "state.state_name as name",
   "state.state_abbr as abbreviation",
   "state.state_country_id as country"}',
+
+-- sequence
+
+'public.state_state_id_seq',
      
 -- Rules
 

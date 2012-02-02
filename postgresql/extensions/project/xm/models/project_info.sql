@@ -10,7 +10,13 @@ E'{
   "prj.prj_id as guid",
   "prj.prj_number as number",
   "prj.prj_name as name",
-  "prj.prj_status as project_status"}', 
+  "prj.prj_status as project_status"}',
+
+-- sequence
+
+'',
+
+-- rules
 
 E'{"
 

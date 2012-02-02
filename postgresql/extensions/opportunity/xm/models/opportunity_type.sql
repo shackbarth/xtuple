@@ -10,6 +10,10 @@ E'{
   "optype.optype_name as \\"name\\"",
   "optype.optype_descrip as description"}',
 
+-- sequence
+
+'public.optype_optype_id_seq',
+
 -- Rules
 
 E'{"

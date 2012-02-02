@@ -37,6 +37,10 @@ E'{
   "whsinfo.warehous_active as is_active"
 }',
 
+-- sequence
+
+'public.warehous_warehous_id_seq',
+
 -- Rules
 
 E'{"

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "urlinfo.url_title as name",
   "urlinfo.url_url as path"
 }',
+
+-- sequence
+
+'public.urlinfo_url_id_seq',
 
 -- Rules
 

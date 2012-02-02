@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -11,6 +11,10 @@ E'{
   "cntcteml.cntcteml_cntct_id as contact",
   "cntcteml.cntcteml_email as email"}',
      
+-- sequence
+
+'public.cntcteml_cntcteml_id_seq',
+
 -- Rules
 
 E'{"

@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 'item_conversion_type_assignment', 'public', 'itemuom',
@@ -10,6 +10,10 @@ E'{
   itemuom_itemuomconv_id as item_conversion,
   itemuom_uomtype_id as unit_type
 }',
+
+-- sequence
+
+'public.itemuom_itemuom_id_seq',
 
 -- Rules
 

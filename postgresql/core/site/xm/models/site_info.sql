@@ -15,6 +15,10 @@ E'{
   "whsinfo.warehous_addr_id as address"
 }',
 
+-- sequence
+
+'',
+
 -- Rules
 
 E'{"

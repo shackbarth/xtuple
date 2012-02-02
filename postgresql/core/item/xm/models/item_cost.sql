@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema, table
 
@@ -18,6 +18,10 @@ E'{
   "itemcost.itemcost_updated as updated",
   "itemcost.itemcost_curr_id as currency"
 }',
+
+-- sequence
+
+'public.itemcost_itemcost_id_seq',
 
 -- Rules
 

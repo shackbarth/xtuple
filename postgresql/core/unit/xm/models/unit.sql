@@ -21,6 +21,10 @@ E'{
     where to_unit = uom.uom_id) as conversions"
 }',
 
+-- sequence
+
+'public.uom_uom_id_seq',
+
 -- Rules
 
 E'{"
@@ -76,4 +80,4 @@ where ( uom_id = old.guid );
 
 -- Conditions, Comment, System
 
-'{}', 'Unit Model', true);
+'{}', 'Unit Model', true, true);

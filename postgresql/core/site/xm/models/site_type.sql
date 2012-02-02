@@ -12,6 +12,10 @@ E'{
   "sitetype.sitetype_descrip as description"
 }',
 
+-- sequence
+
+'public.sitetype_sitetype_id_seq',
+
 -- Rules
 
 E'{"

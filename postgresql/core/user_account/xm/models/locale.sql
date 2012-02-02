@@ -29,6 +29,10 @@ E'{
   "locale.locale_uomratio_scale as unit_ratio_scale",
   "locale.locale_percent_scale as percent_scale"}',
      
+-- sequence
+
+'public.locale_locale_id_seq',
+
 -- Rules
 
 E'{"

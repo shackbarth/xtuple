@@ -13,6 +13,10 @@ E'{
   "incdtseverity.incdtseverity_descrip as description"
 }',
 
+-- sequence
+
+'public.incdtseverity_incdtseverity_id_seq',
+
 -- Rules
 
 E'{"

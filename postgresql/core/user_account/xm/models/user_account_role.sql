@@ -19,6 +19,10 @@ E'{
     from usrgrp
     where usrgrp_grp_id = grp.grp_id )::text,\'{}\') as users"}',
      
+-- sequence
+
+'public.grp_grp_id_seq',
+
 -- Rules
 
 E'{"

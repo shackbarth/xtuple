@@ -1,4 +1,4 @@
-select private.create_model(
+﻿select private.create_model(
 
 -- Model name, schema
 
@@ -10,6 +10,10 @@ E'{
   "opportunity_info as opportunity",
   "docinfo.purpose as purpose"
 }',
+
+-- sequence
+
+'public.docass_docass_id_seq',
 
 -- Rules
 

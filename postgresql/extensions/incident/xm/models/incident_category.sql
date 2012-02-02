@@ -13,6 +13,10 @@ E'{
   "incdtcat.incdtcat_order as order"
   }',
 
+-- sequence
+
+'public.incdtcat_incdtcat_id_seq',
+
 -- Rules
 
 E'{"

@@ -14,6 +14,10 @@ E'{
   "curr_rate.curr_expires as expires"
 }',
 
+-- sequence
+
+'public.curr_rate_curr_rate_id_seq',
+
 -- Rules
 
 E'{"
