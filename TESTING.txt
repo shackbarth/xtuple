@@ -15,14 +15,9 @@ how to code a Vows.js test. Pay special attention to the final line, which
 returns the test suite in module.exports (this is a change from previous 
 versions).
 
-Before you run your tests, you'll need to get the proxy server running. To do 
-that, open aonther terminal window, cd to the client/ repository, and do:
-
-    node proxy.js
-
-Leave the proxy running indefinitely. The proxy expects the xTuple Node server
-to be running on port 9000 on localhost. If this is not true, modify the 
-values in proxy.js to point to the correct PROXY_HOST and PROXY_PORT.
+The proxy in testrunner.js expects the xTuple Node server to be running on 
+port 9000 on localhost. If this is not true, modify the values in 
+testrunner.js to point to the correct PROXY_HOST and PROXY_PORT.
 
 To run all of the tests, type:
 
