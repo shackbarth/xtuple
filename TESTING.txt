@@ -8,7 +8,7 @@ This automatically includes npm, the Node Package Manager.
 
 Next, install the following Node packages:
 
-    sudo npm install -g vows jsdom xmlhttprequest
+    sudo npm install -g vows xmlhttprequest
 
 Vows.js tests are in the tests/ folder. Take a look at tests/example.js for 
 how to code a Vows.js test. Pay special attention to the final line, which 

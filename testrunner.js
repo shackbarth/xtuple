@@ -38,16 +38,7 @@ app.get('orderedFrameworks').forEach(function(framework) {
 
 // Don't include the app itself.
 
-var jsdom = require('jsdom').jsdom,
-    document = jsdom(app.get('indexHTML')),
-    window = document.createWindow();
-
-// set up so we don't need to change window everywhere by defining a 
-// reference to global
-global.window = window;
-global.document = document;
-global.top = window;
-global.navigator = { userAgent: "node-js", language: "en" };
+global.window = global;
 global.sc_require = function do_nothing(){};
 global.sc_resource = function sc_resource(){};
 global.YES = true ;
