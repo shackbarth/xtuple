@@ -70,6 +70,9 @@ global.sc_assert = function(assertion, msg) {
 // console.log(jsFiles);
 jsFiles.forEach(function(path) { require(path); });
 
+// Simulate becoming "ready"
+SC.didBecomeReady();
+
 // Start the proxy server.
 var http = require('http'),
     PROXY_LISTEN = 4020,
