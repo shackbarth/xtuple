@@ -123,15 +123,13 @@ if (suites === 0) {
 }
 
 // console.log(tests);
-process.nextTick(function() {
-  tests.forEach(function(filename) {
-    if (filename) {
-      try {
-        require('./'+filename).run(null, function(results) {
-          suites--;
-          if (suites === 0) server.close(); // the process will exit now
-        });
-      } catch (e) { suites--; console.log(e); }
-    }
-  });
+tests.forEach(function(filename) {
+  if (filename) {
+    try {
+      require('./'+filename).run(null, function(results) {
+        suites--;
+        if (suites === 0) server.close(); // the process will exit now
+      });
+    } catch (e) { suites--; console.log(e); }
+  }
 });
