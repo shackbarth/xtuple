@@ -1,6 +1,6 @@
 /*globals global require __dirname BT XM process */
 
-require('blossom/buildtools'); // adds the SC and BT namespaces as globals
+require('blossom/buildtools'); // adds the BT namespace as a global
 
 var path = require('path'),
     util  = require('util');
@@ -31,31 +31,27 @@ function appendFile(file) {
   jsFiles.push(file.get('sourcePath'));
 }
 
+var useCachedSC = false;
+
 // HACK: Use the app object to grab the framework files for now.
 app.get('orderedFrameworks').forEach(function(framework) {
+  // This is subtle. If the app is loading the exact same blossom/framework
+  // that was loaded by the buildtools, we don't want those files (they are 
+  // already loaded).
+  if (framework.get('sourceTree') === BT.foundationSourcePath) {
+    useCachedSC = true;
+    return;
+  }
   framework.get('orderedJavaScriptFiles').forEach(appendFile);
 });
 
 // Don't include the app itself.
 
-global.window = global;
-global.sc_require = function do_nothing(){};
-global.sc_resource = function sc_resource(){};
-global.YES = true ;
-global.NO = false ;
-global.SC = {};
+global.SC = useCachedSC? global.SproutCore : {};
 global.SproutCore = SC;
-global.SC.isNode = true;
-global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 global.BLOSSOM = true;
 global.SPROUTCORE = false;
 global.FAST_LAYOUT_FUNCTION = false;
-global.sc_assert = function(assertion, msg) {
-  if (!assertion) {
-    debugger;
-    throw msg || "sc_assert()";
-  }
-};
 
 // Load the code we want to test.
 // console.log(jsFiles);
