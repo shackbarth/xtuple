@@ -17,13 +17,6 @@ var project = BT.Project.create({
 
 // project.accept(BT.LoggingVisitor.create());
 
-require('jsdom').defaultDocumentFeatures = {
-  FetchExternalResources   : ['script', 'img'],
-  ProcessExternalResources : false, // We load our code manually.
-  MutationEvents           : false,
-  QuerySelector            : false
-};
-
 var app = project.findApp('postbooks'),
     jsFiles = [];
 
