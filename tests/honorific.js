@@ -5,12 +5,14 @@ var vows = require('vows'),
 
 require('../xv-core');
 
-var createHash  = { 
+XV.honorific = new Object;
+
+XV.honorific.createHash  = { 
   guid: 1999, 
   code: 'Sr'
 };
 
-var updateHash  = {  
+XV.honorific.updateHash  = {  
   code: 'Sra'
 };
 
@@ -30,7 +32,7 @@ honorificSuite.addBatch({
       }
     },
     "-> CREATE" : {
-      topic: XV.record.create(XM.Honorific, createHash),
+      topic: XV.record.create(XM.Honorific, XV.honorific.createHash),
       'status is READY_NEW' : assert.status(SC.Record.READY_NEW),
       'guid is number' : assert.propertyIsNumber('guid'),
       'code is "Sr"' : assert.property('code','Sr'),
@@ -42,7 +44,7 @@ honorificSuite.addBatch({
           'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
           'code is "Sr"' : assert.property('code','Sr'),
           "-> UPDATE" : {
-            topic: XV.record.update(updateHash),
+            topic: XV.record.update(XV.honorific.updateHash),
             'status is READY_DIRTY' : assert.status(SC.Record.READY_DIRTY),
             'code is "Sra"' : assert.property('code','Sra'),
             "-> commit" : {
