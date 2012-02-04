@@ -44,7 +44,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   
   URL: SC.isNode? 'http://localhost:4020/datasource/data' : '/datasource/data',
   
-  debug: YES,
+  debug: NO,
   
   // ..........................................................
   // QUERY SUPPORT

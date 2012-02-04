@@ -165,9 +165,11 @@ XM.Record = SC.Record.extend(
     else if (status === SC.Record.READY_CLEAN)     value = 'read';
     else if (status === SC.Record.DESTROYED_DIRTY) value = 'deleted';
     else if (status & SC.Record.DIRTY)             value = 'updated';
-    else sc_assert(false); // shouldn't happen
 
-    this.writeAttribute(key, value, YES);
+    if (status !== SC.Record.DESTROYED_CLEAN) {
+      // You cannot write attributes once an object is fully destroyed.
+      this.writeAttribute(key, value, YES);
+    }
   }.observes('status')
 
 });
@@ -199,15 +201,17 @@ XM.Record.setup = function() {
   // this will create an entry for `guid` on the XM.Record that
   // defines the attribute as type String and adds a defaultValue
   // function that will return the correct type automatically
-  this.prototype.guid = SC.Record.attr(String, {
+  if(this.primaryKey === 'guid') {
+    this.prototype.guid = SC.Record.attr(String, {
 
-  // this was held out of the previous call for clarity
-  defaultValue: function() {
+    // this was held out of the previous call for clarity
+    defaultValue: function() {
 
-    // execute in the context of this record type since that is
-    // how it determines what the class is
-    return XM.Record.nextGuid.call(self.prototype);
-  }});
+      // execute in the context of this record type since that is
+      // how it determines what the class is
+      return XM.Record.nextGuid.call(self.prototype);
+    }});
+  }
 
   // return the original reference (!important)
   return this;

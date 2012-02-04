@@ -1,12 +1,5 @@
 /*globals XM process global */
 
-/* Node compatibility */
-if (SC.ready === undefined) {
-  SC.ready = function(callback) {
-    process.nextTick(callback);
-  };
-}
-
 /** @namespace
   
   @extends SC.Object

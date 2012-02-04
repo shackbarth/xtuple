@@ -5,24 +5,43 @@ var vows = require('vows'),
 
 require('../xv-core');
 
-XV.honorific = new Object;
+XV.country = new Object;
 
-XV.honorific.createHash  = { 
+XV.country.createHash  = { 
   guid: 1999, 
-  code: 'Sr'
+  abbreviation: 'EB',
+  name: 'Elbonia',
+  currencyName: 'Chit',
+  currencySymbol: '!',
+  currencyAbbreviation: 'CHT',
+  currencyNumber: 666
 };
 
-XV.honorific.updateHash  = {  
-  code: 'Sra'
+XV.country.createHashResult = { 
+  guid: 1999, 
+  abbreviation: 'EB',
+  name: 'Elbonia',
+  currencyName: 'Chit',
+  currencySymbol: '!',
+  currencyAbbreviation: 'CHT',
+  currencyNumber: 666
 };
 
-var honorificSuite = vows.describe('XT Core Honorific Tests');
+XV.country.updateHash  = {  
+  name: 'Ebania'
+};
 
-honorificSuite.addBatch({
-  "XM.Honorific": {
+XV.country.updateHashResult  = {  
+  name: 'Ebania'
+};
+
+var countrySuite = vows.describe('XT Core Country Tests');
+
+countrySuite.addBatch({
+  "XM.Country": {
     "Validate Class" : {
       topic: function() {
-        return XM.Honorific;
+        return XM.Country;
       },
       'is not null': function (recordType) {
         assert.isNotNull(recordType);
@@ -32,28 +51,28 @@ honorificSuite.addBatch({
       }
     },
     "-> CREATE" : {
-      topic: XV.record.create(XM.Honorific, XV.honorific.createHash),
+      topic: XV.record.create(XM.Country, XV.country.createHash),
       'status is READY_NEW' : assert.status(SC.Record.READY_NEW),
       'guid is number' : assert.propertyIsNumber('guid'),
-      'code is "Sr"' : assert.property('code','Sr'),
+      'validate properties' : assert.properties(XV.country.createHashResult),
       "-> commit" : {
         topic: XV.record.commit(),
         'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
         "-> READ" : {
           topic: XV.record.refresh(),
           'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
-          'code is "Sr"' : assert.property('code','Sr'),
+          'validate properties' : assert.properties(XV.country.createHashResult),
           "-> UPDATE" : {
-            topic: XV.record.update(XV.honorific.updateHash),
+            topic: XV.record.update(XV.country.updateHash),
             'status is READY_DIRTY' : assert.status(SC.Record.READY_DIRTY),
-            'code is "Sra"' : assert.property('code','Sra'),
+            'validate properties' : assert.properties(XV.country.updateHashResult),
             "-> commit" : {
               topic: XV.record.commit(),
               'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
               "-> READ" : {
                 topic: XV.record.refresh(),
                 'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
-                'code is "Sra"' : assert.property('code','Sra'),
+                'validate properties' : assert.properties(XV.country.updateHashResult),
                 "-> DELETE" : {
                   topic: XV.record.destroy(),
                   'status is DESTROYED_DIRTY' : assert.status(SC.Record.DESTROYED_DIRTY),
@@ -72,4 +91,4 @@ honorificSuite.addBatch({
 });
 
 
-module.exports = honorificSuite;
+module.exports = countrySuite;
