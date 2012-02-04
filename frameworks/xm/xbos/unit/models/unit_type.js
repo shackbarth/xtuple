@@ -12,10 +12,24 @@ sc_require('xbos/type/models/type');
   @version 0.1
 */
 
-XM.UnitType = XM.Type.extend(
+XM.UnitType = XM.Record.extend(
     /** @scope XM.UnitType.prototype */ {
 
   className: 'XM.UnitType',
+
+  /**
+  This should be the class name equivilent of the type.
+  
+  @type String
+  */
+  name: SC.Record.attr(String),
+  
+  /**
+  This should be translatable text.
+  
+  @type String
+  */
+  description: SC.Record.attr(String),
 
   /**
   @type Boolean
