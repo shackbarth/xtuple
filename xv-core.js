@@ -21,6 +21,16 @@ XV.record.create = function (recordType, dataHash) {
   };
 };
 
+XV.record.update = function (dataHash) {
+  return function (record) {
+    for(var prop in dataHash) {
+      record.set(prop, dataHash[prop]);
+    }
+    
+    return record;          
+  };
+};
+
 XV.record.commit = function (status) {
   return function (record) {
     XV.record._handleAction(record, status, record.commitRecord, this.callback);

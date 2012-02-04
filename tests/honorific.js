@@ -5,9 +5,13 @@ var vows = require('vows'),
 
 require('../xv-core');
 
-var dataHash  = { 
+var createHash  = { 
   guid: 1999, 
   code: 'Sr'
+};
+
+var updateHash  = {  
+  code: 'Sra'
 };
 
 var honorificSuite = vows.describe('XT Core Honorific Tests');
@@ -26,7 +30,7 @@ honorificSuite.addBatch({
       }
     },
     "-> CREATE" : {
-      topic: XV.record.create(XM.Honorific, dataHash),
+      topic: XV.record.create(XM.Honorific, createHash),
       'status is READY_NEW' : assert.status(SC.Record.READY_NEW),
       'guid is number' : assert.propertyIsNumber('guid'),
       'code is "Sr"' : assert.property('code','Sr'),
@@ -38,11 +42,7 @@ honorificSuite.addBatch({
           'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
           'code is "Sr"' : assert.property('code','Sr'),
           "-> UPDATE" : {
-            topic: function(record) {
-              record.set('code','Sra');
-              
-              return record;
-            },
+            topic: XV.record.update(updateHash),
             'status is READY_DIRTY' : assert.status(SC.Record.READY_DIRTY),
             'code is "Sra"' : assert.property('code','Sra'),
             "-> commit" : {
