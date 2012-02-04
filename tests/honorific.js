@@ -5,30 +5,42 @@ var vows = require('vows'),
 
 require('sys');
 
+XV = new Object;
+
 /** Add some generic topics **/
 
-vows.record = {};
+XV.record = {};
 
-vows.record.commit = function (status) {
+XV.record.create = function (recordType, dataHash) {
   return function (record) {
-    vows.record._handleAction(record, status, record.commitRecord, this.callback);
+    var record = XM.store.createRecord(recordType, dataHash).normalize();
+    
+    record.validate();
+    
+    return record;          
   };
 };
 
-vows.record.refresh = function () {
+XV.record.commit = function (status) {
   return function (record) {
-    vows.record._handleAction(record, SC.Record.READY_CLEAN, record.refresh, this.callback);
+    XV.record._handleAction(record, status, record.commitRecord, this.callback);
   };
 };
 
-vows.record.destroy = function () {
+XV.record.refresh = function () {
+  return function (record) {
+    XV.record._handleAction(record, SC.Record.READY_CLEAN, record.refresh, this.callback);
+  };
+};
+
+XV.record.destroy = function () {
   return function (record) {
     return record.destroy();
   };
 };
 
 /* @private */
-vows.record._handleAction = function(record, status, action, callback) {
+XV.record._handleAction = function(record, status, action, callback) {
     var timeoutId,
         sts = status ? status : SC.Record.READY_CLEAN;
     
@@ -61,6 +73,14 @@ assert.status = function (status) {
   };
 };
 
+assert.propertyIsNumber = function (property) {
+  return function (err, record) {
+      var value = record.get(property);
+
+      assert.isNumber (isNaN(value - 0) ? value : value - 0);
+  };
+};
+
 assert.property = function (prop, value) {
   return function (err, record) {
       assert.equal (record.get(prop), value);
@@ -68,6 +88,11 @@ assert.property = function (prop, value) {
 };
 
 var honorificSuite = vows.describe('XT Core Honorific Tests');
+
+var dataHash  = { 
+  guid: 1999, 
+  code: 'Sr'
+};
 
 honorificSuite.addBatch({
   "XM.Honorific": {
@@ -83,16 +108,15 @@ honorificSuite.addBatch({
       }
     },
     "-> CREATE" : {
-      topic: function(record) {
-        return XM.store.createRecord(XM.Honorific, { guid: 1999, code: 'Sr'}).normalize();
-      },
+      topic: XV.record.create(XM.Honorific, dataHash),
       'status is READY_NEW' : assert.status(SC.Record.READY_NEW),
+      'guid is number' : assert.propertyIsNumber('guid'),
       'code is "Sr"' : assert.property('code','Sr'),
       "-> commit" : {
-        topic: vows.record.commit(),
+        topic: XV.record.commit(),
         'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
         "-> READ" : {
-          topic: vows.record.refresh(),
+          topic: XV.record.refresh(),
           'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
           'code is "Sr"' : assert.property('code','Sr'),
           "-> UPDATE" : {
@@ -104,17 +128,17 @@ honorificSuite.addBatch({
             'status is READY_DIRTY' : assert.status(SC.Record.READY_DIRTY),
             'code is "Sra"' : assert.property('code','Sra'),
             "-> commit" : {
-              topic: vows.record.commit(),
+              topic: XV.record.commit(),
               'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
               "-> READ" : {
-                topic: vows.record.refresh(),
+                topic: XV.record.refresh(),
                 'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
                 'code is "Sra"' : assert.property('code','Sra'),
                 "-> DELETE" : {
-                  topic: vows.record.destroy(),
+                  topic: XV.record.destroy(),
                   'status is DESTROYED_DIRTY' : assert.status(SC.Record.DESTROYED_DIRTY),
                   "-> commit" : {
-                    topic: vows.record.commit(SC.Record.DESTROYED_CLEAN),
+                    topic: XV.record.commit(SC.Record.DESTROYED_CLEAN),
                     'status is DESTROYED_CLEAN' : assert.status(SC.Record.DESTROYED_CLEAN)
                   }
                 }
@@ -126,5 +150,6 @@ honorificSuite.addBatch({
     }
   }
 });
+
 
 module.exports = honorificSuite;
