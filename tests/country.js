@@ -17,7 +17,21 @@ XV.country.createHash  = {
   currencyNumber: 666
 };
 
+XV.country.createHashResult = { 
+  guid: 1999, 
+  abbreviation: 'EB',
+  name: 'Elbonia',
+  currencyName: 'Chit',
+  currencySymbol: '!',
+  currencyAbbreviation: 'CHT',
+  currencyNumber: 666
+};
+
 XV.country.updateHash  = {  
+  name: 'Ebania'
+};
+
+XV.country.updateHashResult  = {  
   name: 'Ebania'
 };
 
@@ -40,26 +54,25 @@ countrySuite.addBatch({
       topic: XV.record.create(XM.Country, XV.country.createHash),
       'status is READY_NEW' : assert.status(SC.Record.READY_NEW),
       'guid is number' : assert.propertyIsNumber('guid'),
-      'abbreviation is "EB"' : assert.property('abbreviation','EB'),
-      'abbreviation is "EB"' : assert.property('abbreviation','EB'),
+      'validate properties' : assert.properties(XV.country.createHashResult),
       "-> commit" : {
         topic: XV.record.commit(),
         'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
         "-> READ" : {
           topic: XV.record.refresh(),
           'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
-          'abbreviation is "EB"' : assert.property('abbreviation','EB'),
+          'validate properties' : assert.properties(XV.country.createHashResult),
           "-> UPDATE" : {
             topic: XV.record.update(XV.country.updateHash),
             'status is READY_DIRTY' : assert.status(SC.Record.READY_DIRTY),
-            'abbreviation is "EB"' : assert.property('abbreviation','EB'),
+            'validate properties' : assert.properties(XV.country.updateHashResult),
             "-> commit" : {
               topic: XV.record.commit(),
               'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
               "-> READ" : {
                 topic: XV.record.refresh(),
                 'status is READY_CLEAN' : assert.status(SC.Record.READY_CLEAN),
-                'abbreviation is "EB"' : assert.property('abbreviation','EB'),
+                'validate properties' : assert.properties(XV.country.updateHashResult),
                 "-> DELETE" : {
                   topic: XV.record.destroy(),
                   'status is DESTROYED_DIRTY' : assert.status(SC.Record.DESTROYED_DIRTY),

@@ -79,20 +79,36 @@ assert.isKindOf = function (actual, expected, message) {
 
 assert.status = function (status) {
   return function (err, record) {
-      assert.equal (record.get('status'), status);
-  };
+    assert.equal (record.get('status'), status);
+  }
 };
 
 assert.propertyIsNumber = function (property) {
   return function (err, record) {
-      var value = record.get(property);
+    var value = record.get(property);
 
-      assert.isNumber (isNaN(value - 0) ? value : value - 0);
-  };
+    assert.isNumber (isNaN(value - 0) ? value : value - 0);
+  }
 };
 
 assert.property = function (prop, value) {
   return function (err, record) {
-      assert.equal (record.get(prop), value);
-  };
+    assert.equal (record.get(prop), value);
+  }
 };
+
+assert.properties = function (dataHash, message) {
+  return function (err, record) {
+    for(var prop in dataHash) {
+      var actual = record.get(prop),
+          expected = dataHash[prop];
+        
+      if(actual !== expected) {
+        assert.fail(actual, expected, message || "expected " + prop + " {actual} to be {expected}", 
+                    "properties", assert.properties);
+      }
+    }
+  }
+};
+
+
