@@ -139,10 +139,8 @@ create or replace function private.export_model(record_type text) returns text a
   // PROCESS
   //
   
-  var sql = "select model.*, "
-          + "case when nested_model_id is not null then true else false end as nested "
+  var sql = "select * "
           + "from private.modelbas "
-          + "  left outer join private.nested on model_id=nested_model_id "
           + "where model_name = $1",
       recordType = decamelize(record_type.replace((/\w+\./i),'')), 
       nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
@@ -160,9 +158,11 @@ create or replace function private.export_model(record_type text) returns text a
     model = model[0];
 
     /* add some basic definition */
-    ret.type = model.model_namespace.toUpperCase() + '.' + model.model_name.slice(0,1).toUpperCase() + camelize(model.model_name.slice(1));;
+    ret.nameSpace = model.model_namespace.toUpperCase();
+    ret.type = model.model_name.slice(0,1).toUpperCase() + camelize(model.model_name.slice(1));;
     ret.schema = model.model_schema_name ? model.model_schema_name : model.model_table_name.replace((/\.\w+/i),'');
     ret.table = model.model_table_name.replace((/\w+\./i),'');
+    if(model.modelbas_id_seq_name) { ret.idSequenceName = modelbase_id_seq_name };
     if(model.model_comment.length) { ret.comment = model.model_comment; }
 
     /* parse rules */
@@ -179,7 +179,7 @@ create or replace function private.export_model(record_type text) returns text a
 
       rule.name = curr.slice(ridx, aidx).replace(/"|"/g,'').trim();
       rule.event = curr.search(/ insert/i) > 0 ? 'insert' : curr.search(/ update/i) > 0 ? 'update' : curr.search(/ delete/i) > 0 ? 'delete' : null;
-      if(cond && cond.length) { rule.condition = curr.slice(widx, didx).replace(/\n/g,'').trim(); }
+      if(cond && cond.length) { rule.condition = curr.slice(widx, didx).replace(/\n/g,'').replace(/\s+/g,' ').trim(); }
       rule.command = curr.slice(iidx).replace(/\n/g,'').trim();
 
       if(rule.name === "_UPDATE") { updcmd = rule.command; }
@@ -191,6 +191,12 @@ create or replace function private.export_model(record_type text) returns text a
         if(isNothing) { ret.canUpdate = false }
       } else if (rule.name === "_DELETE") {
         if(isNothing) { ret.canDelete = false }
+      } else if(rule.name === "_CREATE_CHECK_PRIV") {
+        ret.canCreate = rule.condition;
+      } else if (rule.name === "_UPDATE_CHECK_PRIV") {
+        ret.canUpdate = rule.condition;
+      } else if (rule.name === "_DELETE_CHECK_PRIV") {
+        ret.canDelete = rule.condition;
       } else {
         rules.push(rule);
       }
@@ -262,7 +268,7 @@ create or replace function private.export_model(record_type text) returns text a
       model.model_order.length > 1 ? ret.order = model.model_order : ret.order = model.model_order[0]; 
     }
     if(rules.length) { ret.rules = rules; }
-    if(model.nested) { ret.isNested = model.nested; }
+    if(model.model_nested) { ret.isNested = model.nested; }
     if(model.model_system) { ret.isSystem = model.model_system };
     
     return JSON.stringify(ret, null, 2);
@@ -272,4 +278,4 @@ create or replace function private.export_model(record_type text) returns text a
   
 $$ language plv8;
 
-select private.export_model('XM.ContactComment');
+select private.export_model('XM.Address');
