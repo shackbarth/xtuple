@@ -27,7 +27,8 @@ XV.record.create = function (recordType,
                              createdDataHash, 
                              createHashResult, 
                              updateHash, 
-                             updateHashResult) {
+                             updateHashResult,
+                             destroy) {
   var context = {
     topic: function() {
       var record = XM.store.createRecord(recordType, createdDataHash).normalize();
@@ -43,12 +44,13 @@ XV.record.create = function (recordType,
   context['validate properties'] =  XV.callback.assert.properties(XV.createHashResult);
   context['-> commit'] = XV.record.createdCommit(createHashResult,
                                                  updateHash, 
-                                                 updateHashResult);
+                                                 updateHashResult,
+                                                 destroy);
  
   return context;
 }
 
-XV.record.createdCommit = function(createHashResult, updateHash, updateHashResult) {
+XV.record.createdCommit = function(createHashResult, updateHash, updateHashResult, destroy) {
   var context = {
     topic: XV.record.commit()
   }
@@ -56,24 +58,25 @@ XV.record.createdCommit = function(createHashResult, updateHash, updateHashResul
   context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
   context['-> READ'] = XV.record.createdRefresh(createHashResult,
                                                 updateHash, 
-                                                updateHashResult);
+                                                updateHashResult,
+                                                destroy);
 
   return context;
 }
 
-XV.record.createdRefresh = function(createHashResult, updateHash, updateHashResult) {
+XV.record.createdRefresh = function(createHashResult, updateHash, updateHashResult, destroy) {
   var context = {
     topic:  XV.record.refresh()
   }
 
   context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
   context['validate properties'] = XV.callback.assert.properties(createHashResult);
-  context['-> UPDATE'] = XV.record.update(updateHash, updateHashResult);
+  context['-> UPDATE'] = XV.record.update(updateHash, updateHashResult, destroy);
 
   return context;
 }
 
-XV.record.update = function (dataHash, dataHashResult) {
+XV.record.update = function (dataHash, dataHashResult, destroy) {
   var context = {
     topic: function(record) {
       for(var prop in dataHash) {
@@ -86,31 +89,32 @@ XV.record.update = function (dataHash, dataHashResult) {
 
   context['status is READY_DIRTY'] = XV.callback.assert.status(SC.Record.READY_DIRTY);
   context['validate properties'] = XV.callback.assert.properties(dataHashResult);
-  context['-> commit'] = XV.record.updatedCommit(dataHashResult);
+  context['-> commit'] = XV.record.updatedCommit(dataHashResult, destroy);
 
   return context;
 
 };
 
-XV.record.updatedCommit = function(dataHashResult) {
+XV.record.updatedCommit = function(dataHashResult, destroy) {
   var context = {
     topic: XV.record.commit()
   }
 
   context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
-  context['-> READ'] = XV.record.updatedRefresh(dataHashResult);
+  context['-> READ'] = XV.record.updatedRefresh(dataHashResult, destroy);
 
   return context;
 }
 
-XV.record.updatedRefresh = function(dataHashResult) {
+XV.record.updatedRefresh = function(dataHashResult, destroy) {
   var context = {
     topic:  XV.record.refresh()
-  }
+  },
+  destroy = destroy !== false ? true : false;
 
   context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
   context['validate properties'] = XV.callback.assert.properties(dataHashResult);
-  context['-> DELETE'] = XV.record.destroy();
+  if(destroy) context['-> DELETE'] = XV.record.destroy();
 
   return context;
 }
