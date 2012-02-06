@@ -1,4 +1,4 @@
-create or replace function private.commit_record(record_type text, data_hash text) returns text as $$
+create or replace function private.commit_record(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -310,10 +310,14 @@ create or replace function private.commit_record(record_type text, data_hash tex
   // ..........................................................
   // PROCESS
   //
-  var recordType = decamelize(record_type.replace((/\w+\./i),'')), 
-      dataHash = JSON.parse(data_hash),
-      nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase();
+  var dataHash = JSON.parse(data_hash),
+      recordType = decamelize(dataHash.recordType.replace((/\w+\./i),'')), 
+      nameSpace = dataHash.recordType.replace((/\.\w+/i),'').toLowerCase();
       debug = false;
+
+  delete dataHash.recordType;
+
+  if(debug) print(NOTICE, recordType, nameSpace);
 
   if(validateType(recordType)) { 
     commitRecord(recordType, dataHash);
@@ -325,8 +329,8 @@ create or replace function private.commit_record(record_type text, data_hash tex
 $$ language plv8;
 /*
 select private.commit_record(
- 'XM.Contact',
- '{ "dataState":"created",
+ E'{ "recordType":"XM.Contact", 
+    "dataState":"created",
     "guid":12171,
     "number":"14832",
     "honorific":"Mr.",

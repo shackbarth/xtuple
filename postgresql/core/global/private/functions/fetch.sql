@@ -1,4 +1,4 @@
-create or replace function private.fetch(payload text default null, row_limit integer default null, row_offset integer default null) returns text as $$
+create or replace function private.fetch(payload text default null) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
@@ -234,12 +234,14 @@ create or replace function private.fetch(payload text default null, row_limit in
   // PROCESS
   //
 
-  var query = JSON.parse(payload).query;
+  var query = JSON.parse(payload),
       nameSpace = query.recordType.replace((/\.\w+/i),'').toLowerCase(),
       model = query.recordType.replace((/\w+\./i),'').toLowerCase(),
       conditions = query.conditions,
       orderBy = query.orderBy ? 'order by ' + query.orderBy : '',
       parameters = query.parameters,
+      row_limit = query.rowLimit,
+      row_offset = query.rowOffset,
       limit = row_limit ? 'limit ' + row_limit : '';
       offset = row_offset ? 'offset ' + row_offset : '',
       debug = true, recs = null, 
@@ -267,16 +269,16 @@ create or replace function private.fetch(payload text default null, row_limit in
 
 $$ language plv8;
 /*
-select private.fetch(E'{ "query": {"recordType":"XM.Contact",
+select private.fetch(E'{ "recordType":"XM.Contact",
                                    "parameters":{ 
                                      "firstName": "Jake", 
                                      "lastName": "F"
                                     }, 
                                   "conditions":"firstName = {firstName} OR lastName BEGINS_WITH {lastName}", 
-                                  "orderBy":"lastName"}}', 3);
+                                  "orderBy":"lastName"}, rowLimit: 3');
 
-select private.fetch(E'{ "query": {"recordType":"XM.Contact",
+select private.fetch(E'{ "recordType":"XM.Contact",
                                    "parameters":[ "Jake",  "F" ], 
                                    "conditions":"firstName = %@ OR lastName BEGINS_WITH %@", 
-                                   "orderBy":"lastName"}}', 3);
+                                   "orderBy":"lastName"}, rowLimit: 3');
 */
