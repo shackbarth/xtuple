@@ -5,16 +5,29 @@ create or replace function private.retrieve_record(record_type text, id integer)
   /* constants */
   var COMPOUND_TYPE = "C",
       ARRAY_TYPE = "A",
-      READ_STATE = "read";
+      READ_STATE = "read",
+      local = {};
 
   // ..........................................................
   // METHODS
   //
 
+  /* extend array type to check for an existing value */
+  Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+      if (this[i] === obj) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   /* Returns an the first item in an array with a property matching the passed value.  
 
      @param {Object} an array to search
      @param {String} property name to search on
+     @param {Any} value to search for
      @param Object item found or null
   */
   findProperty = function(ary, key, value) {
@@ -149,28 +162,6 @@ create or replace function private.retrieve_record(record_type text, id integer)
     return camelize(record);
   }
 
-  /* Validate whether the passed type is nested
-     based on the model definition in Postgres
-
-     @param {String} recordType
-     @returns {Boolean}
-  */
-  validateType = function(recordType) {
-    var sql = 'select model_id, modelbas_nested '
-            + 'from private.modelbas '
-            + 'where model_name=$1',
-        res = executeSql(sql, [ recordType ]);
-
-    if(!res.length) {
-      throw new Error("The model definition for " + recordType + " was not found.");
-    }
-    if(res[0].modelbas_nested) { 
-      throw new Error ("The model definition for " + recordType + " is nested and may only be accessed in the context of a parent record.");
-    }
-
-    return true;
-  }
-
   /* Pass a record type and return an array
      that describes the view definition with
      item representing a column.
@@ -194,27 +185,129 @@ create or replace function private.retrieve_record(record_type text, id integer)
     return executeSql(sql, [ recordType, nameSpace ]);
   }
 
+  /* Return a model definition based on a recordType name.
+
+     @param {String} recordType
+     @returns {Object}
+  */
+  fetchModel = function(recordType) {
+    var sql = 'select model_json as json '
+            + 'from private.modelbas '
+            + 'where model_name=$1',
+        res = executeSql(sql, [ recordType ]), 
+        model, isGranted = false;
+
+    if(!res.length) {
+      throw new Error("No model definition for " + recordType + " found.");
+    }
+
+    return JSON.parse(res[0].json);
+  }
+
+  /* Accept a privilege name and calculate whether
+     the current user has the privilege.
+
+     @param {String} privilege
+     @returns {Boolean}
+  */
+  checkPrivilege = function(privilege) {
+    var ret = false;
+       
+    if(privilege) {
+      if(!local._grantedPrivs) local._grantedPrivs = [];
+
+      if(local._grantedPrivs.contains(privilege)) return true;
+    
+      var res = executeSql("select checkPrivilege($1) as is_granted", [ privilege ]),
+          ret = res[0].is_granted;
+
+      /* cache the result locally so we don't requery needlessly */
+      if(ret) local._grantedPrivs.push(privilege);
+    }
+
+    return ret;
+  }
+
+  currentUser = function() {
+    var res;
+
+    if(!local._currentUser) {
+      res = executeSql("select getEffectiveXtUSer() as curr_user");
+
+      /* cache the result locally so we don't requery needlessly */
+      local._currentUser = res[0].curr_user;
+    }
+
+    return local._currentUser;
+  }
+  
+  /* Validate whether user has read access to the model.
+     If a record is passed, check personal privileges of
+     that record.
+
+     @param {Object} Model
+     @param {Object} Record - optional
+     @returns {Boolean}
+  */
+  checkPrivileges = function(model, record) {
+    var isGrantedAll = false,
+        isGrantedPersonal = false,
+        privileges = model.privileges;
+
+    /* check privileges - only general access here */
+    if(privileges) {
+      /* check if user has 'all' read privileges */
+      isGrantedAll = privileges.all ? 
+                     (checkPrivilege(privileges.all.read) || 
+                      checkPrivilege(privileges.all.update)) : false;
+
+      /* otherwise check for 'personal' read privileges */
+      if(!isGrantedAll) isGrantedPersonal =  privileges.personal ? 
+                                            (checkPrivilege(privileges.personal.read) || 
+                                             checkPrivilege(privileges.personal.update)) : false;
+    }
+
+    /* check personal privileges on the record passed if applicable */
+    if(record && !isGrantedAll && isGrantedPersonal && privileges.personal.properties) {
+      var i = 0, props = privileges.personal.properties;
+      
+      isGrantedPersonal = false;
+      
+      while(!isGrantedPersonal && i < props.length) {
+        var prop = props[i];
+        isGrantedPersonal = record[prop].username === currentUser();
+        i++;
+      }
+    }
+
+    return isGrantedAll || isGrantedPersonal;
+  }
+
   // ..........................................................
   // PROCESS
   //
 
   var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(), 
       recordType = decamelize(record_type.replace((/\w+\./i),'')), 
-      debug = false, rec, 
+      model = fetchModel(recordType),
+      debug = false, rec,
       sql = "select * from " + nameSpace + '.' + recordType + " where guid = $1 ";  
 
-  /* validate */
-  validateType(recordType);
+  /* validate - don't bother running the query if the user has no privileges */
+  if(!checkPrivileges(model)) throw new Error("Access Denied.");
 
   /* query the model */
   if(debug) print(NOTICE, 'sql = ', sql);
   
-  rec = executeSql(sql, [ id ]);
+  rec = normalize(nameSpace, recordType, executeSql(sql, [ id ])[0]);
+
+  /* check privileges again, this time against record specific criteria where applicable */
+  if(!checkPrivileges(model, rec)) throw new Error("Access Denied.");
 
   /* return the results */
-  return rec.length ? JSON.stringify(normalize(nameSpace, recordType, rec[0])) : '{}';
+  return JSON.stringify(rec);
 
 $$ language plv8;
 /*
-select private.retrieve_record('XM.Contact', 3);
+select private.retrieve_record('XM.ProjectTask', 3);
 */

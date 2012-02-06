@@ -1,8 +1,8 @@
-﻿select private.create_model(
+select private.create_model(
 
 -- Model name, schema, table
 
-'project_task', 'public', 'prjtask',
+'project_task', '', 'prj, prjtask',
 
 -- Columns
 
@@ -27,6 +27,12 @@ E'{
   "(select user_account_info
     from xm.user_account_info
     where username = prjtask.prjtask_owner_username) as owner",
+   "(select user_account_info
+    from xm.user_account_info
+    where username = prj.prj_username) as project_assigned_to",
+  "(select user_account_info
+    from xm.user_account_info
+    where username = prj.prj_owner_username) as project_owner",
   "array(
     select project_task_comment
     from xm.project_task_comment
@@ -159,4 +165,4 @@ create or replace rule \\"_DELETE_CHECK_PRIV\\" as on delete to xm.project_task
 
 -- Conditions, Order, Comment, System
 
-'{}', '{prjtask.prjtask_number}', 'Project Task Model', true, true, 'TA');
+'{prj_id=prjtask_prj_id}', '{prjtask.prjtask_number}', 'Project Task Model', true, false, 'TA');

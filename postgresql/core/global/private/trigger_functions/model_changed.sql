@@ -45,10 +45,12 @@ begin
   m_names := array_prepend(m_name, m_names);
 
   -- Loop through model names and create
-  for i in 1..array_upper(m_names, 1)
-  loop
-    perform private.create_model_view(m_names[i]);
-  end loop;
+  if tg_op in ('INSERT', 'UPDATE') then  
+    for i in 1..array_upper(m_names, 1)
+    loop
+      perform private.create_model_view(m_names[i]);
+    end loop;
+  end if;
   
   -- Finish up
   if tg_op = 'DELETE' then

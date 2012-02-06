@@ -1,0 +1,162 @@
+select private.install_model('{
+  "nameSpace": "XM",
+  "type": "ProjectTask",
+  "table": "prjtask",
+  "comment": "Project Task Model",
+  "privileges": {
+    "all": {
+      "create": "MaintainAllProjects",
+      "read": "ViewAllProjects",
+      "update": "MaintainAllProjects",
+      "delete": "MaintainAllProjects"
+    },
+    "personal": {
+      "create": "MaintainPersonalProjects",
+      "read": "ViewPersonalProjects",
+      "update": "MaintainPersonalProjects",
+      "delete": "MaintainPersonalProjects",
+      "properties": [
+        "owner",
+        "assignedTo",
+        "projectOwner",
+        "projectAssignedTo"
+       ]
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "prjtask_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "prjtask_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "prjtask_name"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "prjtask_descrip"
+      }
+    },
+    {
+      "name": "project",
+      "attr": {
+        "type": "Number",
+        "column": "prjtask_prj_id"
+      }
+    },
+    {
+      "name": "projectTaskStatus",
+      "attr": {
+        "type": "String",
+        "column": "prjtask_status"
+      }
+    },
+    {
+      "name": "budgetedHours",
+      "attr": {
+        "type": "Number",
+        "column": "prjtask_hours_budget"
+      }
+    },
+    {
+      "name": "actualHours",
+      "attr": {
+        "type": "Number",
+        "column": "prjtask_hours_actual"
+      }
+    },
+    {
+      "name": "budgetedExpenses",
+      "attr": {
+        "type": "Number",
+        "column": "prjtask_exp_budget"
+      }
+    },
+    {
+      "name": "actualExpenses",
+      "attr": {
+        "type": "Number",
+        "column": "prjtask_exp_actual"
+      }
+    },
+    {
+      "name": "startDate",
+      "attr": {
+        "type": "Date",
+        "column": "prjtask_start_date"
+      }
+    },
+    {
+      "name": "dueDate",
+      "attr": {
+        "type": "Date",
+        "column": "prjtask_due_date"
+      }
+    },
+    {
+      "name": "assignDate",
+      "attr": {
+        "type": "Date",
+        "column": "prjtask_assigned_date"
+      }
+    },
+    {
+      "name": "completeDate",
+      "attr": {
+        "type": "Date",
+        "column": "prjtask_completed_date"
+      }
+    },
+    {
+      "name": "assignedTo",
+      "toOne": {
+        "type": "XM.UserAccountInfo",
+        "column": "prjtask_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "XM.UserAccountInfo",
+        "column": "prjtask_owner_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "type": "XM.ProjectTaskComment",
+        "column": "prjtask_id",
+        "inverse": "project_task"
+      }
+    },
+    {
+      "name": "alarms",
+      "toMany": {
+        "type": "XM.ProjectTaskAlarm",
+        "column": "prjtask_id",
+        "inverse": "project_task"
+      }
+    }
+  ],
+  "order": "prjtask_number",
+  "isSystem": true
+}')

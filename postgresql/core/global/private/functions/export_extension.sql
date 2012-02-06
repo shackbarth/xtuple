@@ -1,4 +1,4 @@
-create or replace function private.export_model(record_type text) returns text as $$
+create or replace function private.export_extension(context text, record_type text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -141,8 +141,8 @@ create or replace function private.export_model(record_type text) returns text a
   //
   
   var sql = "select * "
-          + "from private.modelbas "
-          + "where model_name = $1",
+          + "from private.modelext "
+          + "where model_name = $1 and modelext_context = $2",
       recordType = decamelize(record_type.replace((/\w+\./i),'')), 
       nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
       viewdef = getViewDefinition(recordType, nameSpace),
@@ -151,7 +151,7 @@ create or replace function private.export_model(record_type text) returns text a
   /* query the model */
   if(debug) print(NOTICE, 'sql = ', sql);
 
-  model = executeSql(sql, [ recordType ]);
+  model = executeSql(sql, [ recordType, context ]);
 
   if(model.length) {
     var rules = [], updcmd;
@@ -159,11 +159,10 @@ create or replace function private.export_model(record_type text) returns text a
     model = model[0];
 
     /* add some basic definition */
+    ret.context = model.modelext_context;
     ret.nameSpace = model.model_namespace.toUpperCase();
     ret.type = model.model_name.slice(0,1).toUpperCase() + camelize(model.model_name.slice(1));;
-    //ret.schema = model.model_schema_name ? model.model_schema_name : model.model_table_name.replace((/\.\w+/i),'');
-    ret.table = model.model_table_name.replace((/\w+\./i),'');
-    if(model.modelbas_id_seq_name) { ret.idSequenceName = model.modelbase_id_seq_name };
+    ret.tables = model.model_table_name.replace((/\w+\./i),'');
     if(model.model_comment.length) { ret.comment = model.model_comment; }
 
     /* parse rules */
@@ -187,11 +186,11 @@ create or replace function private.export_model(record_type text) returns text a
 
       /* only include 'non-standard' rules */
       if(rule.name === "_CREATE") {
-   //     if(isNothing) { ret.canCreate = false }
+        if(isNothing) { ret.canCreate = false }
       } else if (rule.name === "_UPDATE") {
-     //   if(isNothing) { ret.canUpdate = false }
+        if(isNothing) { ret.canUpdate = false }
       } else if (rule.name === "_DELETE") {
-     //   if(isNothing) { ret.canDelete = false }
+        if(isNothing) { ret.canDelete = false }
       } else if(rule.name === "_CREATE_CHECK_PRIV") {
 //        ret.canCreate = rule.condition;
       } else if (rule.name === "_UPDATE_CHECK_PRIV") {
@@ -199,7 +198,7 @@ create or replace function private.export_model(record_type text) returns text a
       } else if (rule.name === "_DELETE_CHECK_PRIV") {
     //    ret.canDelete = rule.condition;
       } else {
-        rules.push(rule);
+   //     rules.push(rule);
       }
     }
 
@@ -228,13 +227,10 @@ create or replace function private.export_model(record_type text) returns text a
       case COMPOUND_TYPE:
         var col = cols[i].slice(eidx, ridx).trim(),
             pidx = col.indexOf('.'), t;
-            widx = cols[i].search(/where/) + 5;
             
         property.toOne = new Object;
         property.toOne.type = getNamespace(coldef.typname) + '.' + coldef.typname.slice(0,1).toUpperCase() + camelize(coldef.typname.slice(1));
-   //     property.toOne.table = col.slice(0, pidx);
         property.toOne.column = col.slice(pidx + 1);
-        if(cols[i].slice(widx, eidx - 1).trim() !== 'guid') property.toOne.inverse = cols[i].slice(widx, eidx - 1).trim();
         break;
       case ARRAY_TYPE:
         var col = cols[i].slice(eidx, ridx).trim(),
@@ -243,37 +239,25 @@ create or replace function private.export_model(record_type text) returns text a
 
         property.toMany = new Object;
         property.toMany.type = getNamespace(coldef.typname.slice(1)) + '.' + coldef.typname.slice(1,2).toUpperCase() + camelize(coldef.typname.slice(2));
-   //     property.toMany.table = col.slice(0, pidx);
         property.toMany.column = col.slice(pidx + 1);
         property.toMany.inverse = cols[i].slice(widx, eidx - 1).trim();
         break; 
       case STRING_TYPE:
         t = 'String';
-        break;
       case NUMBER_TYPE:
         t = 'Number';
-        break;
       case BOOLEAN_TYPE:
         t = 'Boolean';
-        break;
       case DATE_TYPE:
         t = 'Date';
-        break;
-      }
-        
-      if(!property.toOne && !property.toMany) {
-      print(NOTICE, 'wtf?');
+      default:
         property.attr = new Object;
         property.attr.type = t;
-       // property.attr.table = cols[i].slice(0, pidx);
         property.attr.column = cols[i].slice(0, aidx).slice(pidx + 1);
-
-       /* scan the update command to determine whether this attribute can be updated */
-        if(property.name === 'guid') property.attr.isPrimaryKey = true;
-        else if(updcmd.indexOf('new.' + attr) === -1) { property.attr.isEditable = false; }
-      }
         
-
+        /* scan the update command to determine whether this attribute can be updated */
+        if(updcmd && updcmd.indexOf('new.' + attr) === -1) { property.attr.isEditable = false; }
+      }
 
       ret.properties.push(property);
     }
@@ -284,9 +268,12 @@ create or replace function private.export_model(record_type text) returns text a
       model.model_order.length > 1 ? ret.order = model.model_order : ret.order = model.model_order[0]; 
     }
     if(rules.length) { ret.rules = rules; }
-    if(model.modelbas_nested) { ret.isNested = model.modelbas_nested; }
+    ret.sequence = model.modelext_seq;
+    ret.joinType = model.modelext_join_type;
+    ret.joinClause = model.modelext_join_clause;
+    if(model.model_nested) { ret.isNested = model.nested; }
     if(model.model_system) { ret.isSystem = model.model_system };
-    
+  //  print(NOTICE, 'model', JSON.stringify(model, null, 2));
     return JSON.stringify(ret, null, 2);
   } else {
     return '{ "error": "Model not found" }';
@@ -294,4 +281,4 @@ create or replace function private.export_model(record_type text) returns text a
   
 $$ language plv8;
 
-select private.export_model('XM.ProjectTask');
+select private.export_extension('postbooks','XM.Project');

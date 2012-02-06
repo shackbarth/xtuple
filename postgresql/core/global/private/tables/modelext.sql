@@ -7,8 +7,6 @@ select dropIfExists('TRIGGER', 'modelext_changed', 'private');
 select private.create_table('modelext', 'private', false, 'private.model');
 select private.add_column('modelext','modelext_context', 'text', 'not null');
 select private.add_column('modelext','modelext_seq', 'integer', 'not null default 50');
-select private.add_column('modelext','modelext_join_type', 'text');
-select private.add_column('modelext','modelext_join_clause', 'text');
 select private.add_constraint('modelext', 'model_name_modelext_context', 'unique (model_name, modelext_context)');
 select private.add_primary_key('modelext', 'model_id');
 
