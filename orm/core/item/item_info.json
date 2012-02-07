@@ -1,0 +1,62 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemInfo",
+  "table": "item",
+  "comment": "Item Info Model",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "item_id ",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "item_number ",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "item_active ",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description1",
+      "attr": {
+        "type": "String",
+        "column": "item_descrip1",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description2",
+      "attr": {
+        "type": "String",
+        "column": "item_descrip2",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "inventoryUnit",
+      "attr": {
+        "type": "Number",
+        "column": "item_inv_uom_id",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

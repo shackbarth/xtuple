@@ -58,6 +58,9 @@
 -- core/user_account views
 \i core/user_account/private/views/usr.sql;
 
+-- core/document xm views
+\i core/document/private/views/docinfo.sql; 
+
 -- core/global/xm/functions
 \i core/global/xm/functions/fetch_number.sql;
 \i core/global/xm/functions/fetch_id.sql;

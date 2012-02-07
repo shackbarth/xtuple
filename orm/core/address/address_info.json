@@ -1,0 +1,78 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "AddressInfo",
+  "table": "addr",
+  "comment": "Address Info Model",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "addr_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "line1",
+      "attr": {
+        "type": "String",
+        "column": "addr_line1",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "line2",
+      "attr": {
+        "type": "String",
+        "column": "addr_line2",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "line3",
+      "attr": {
+        "type": "String",
+        "column": "addr_line3",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "city",
+      "attr": {
+        "type": "String",
+        "column": "addr_city",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "state",
+      "attr": {
+        "type": "String",
+        "column": "addr_state",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "postalcode",
+      "attr": {
+        "type": "String",
+        "column": "addr_postalcode",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "country",
+      "attr": {
+        "type": "String",
+        "column": "addr_country",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

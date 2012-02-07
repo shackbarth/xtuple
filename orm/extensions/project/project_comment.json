@@ -1,9 +1,9 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ProjectTaskComment",
+  "type": "ProjectComment",
   "table": "xm.comment",
-  "comment": "Project Task Comment Model",
+  "comment": "Project Comment Model",
   "canDelete": false,
   "properties": [
     {
@@ -19,12 +19,12 @@
       "attr": {
         "type": "String",
         "column": "source",
-        "value": "TA",
+        "value": "J",
         "isVisible": false
       }
     },
     {
-      "name": "projectTask",
+      "name": "project",
       "attr": {
         "type": "Number",
         "column": "source_id",

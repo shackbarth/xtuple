@@ -158,6 +158,41 @@
       }
     }
   ],
+  "extensions": [
+    {
+      "table": "prj",
+      "isRequired": true,
+      "canCreate": false,
+      "canUpdate": false,
+      "canDelete": false,
+      "properties": [
+        {
+          "name": "fkey",
+          "relation": {
+            "type": "Number",
+            "column": "prj_id",
+            "inverse": "prjtask_prj_id"
+          }
+        },
+        {
+          "name": "projectAssignedTo",
+          "toOne": {
+            "type": "XM.UserAccountInfo",
+            "column": "prj_username",
+            "inverse": "username"
+          }
+        },
+        {
+          "name": "projectOwner",
+          "toOne": {
+            "type": "XM.UserAccountInfo",
+            "column": "prj_owner_username",
+            "inverse": "username"
+          }
+        }
+      ]
+    }
+  ],
   "order": "prjtask_number",
   "isSystem": true
 }

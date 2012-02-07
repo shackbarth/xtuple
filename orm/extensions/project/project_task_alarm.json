@@ -14,7 +14,7 @@
       }
     },
     {
-      "name": "source",
+      "name": "sourceType",
       "attr": {
         "type": "Number",
         "column": "alarm_source",

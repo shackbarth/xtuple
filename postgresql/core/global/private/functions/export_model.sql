@@ -299,4 +299,4 @@ create or replace function private.export_model(record_type text) returns text a
   
 $$ language plv8;
 
-select private.export_model('XM.ProjectTaskAlarm');
+select private.export_model('XM.ProjectInfo');

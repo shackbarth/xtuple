@@ -1,15 +1,19 @@
 {
+  "context": "xtuple",
   "nameSpace": "XM",
   "type": "UserAccountInfo",
   "table": "private.usr",
   "comment": "User Account Info Model",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
   "properties": [
     {
       "name": "username",
       "attr": {
         "type": "String",
         "column": "usr_username",
-        "isEditable": false
+        "isPrimaryKey": false
       }
     },
     {
@@ -29,5 +33,6 @@
       }
     }
   ],
-  "isSystem": true
+  "isSystem": true,
+  "isNested": true
 }
