@@ -1,0 +1,74 @@
+{
+  "nameSpace": "XM",
+  "type": "ProjectTaskComment",
+  "table": "xm.comment",
+  "comment": "Project Task Comment Model",
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "guid",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "source",
+      "attr": {
+        "type": "String",
+        "column": "source",
+        "value": "TA",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "projectTask",
+      "attr": {
+        "type": "Number",
+        "column": "source_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "date",
+      "attr": {
+        "type": "Date",
+        "column": "date",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "username",
+      "attr": {
+        "type": "String",
+        "column": "username",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "commentType",
+      "attr": {
+        "type": "Number",
+        "column": "comment_type",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "text",
+      "attr": {
+        "type": "String",
+        "column": "text"
+      }
+    },
+    {
+      "name": "isPublic",
+      "attr": {
+        "type": "Boolean",
+        "column": "is_public"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

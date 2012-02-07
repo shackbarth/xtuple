@@ -166,6 +166,10 @@ create or replace function private.export_model(record_type text) returns text a
     if(model.modelbas_id_seq_name) { ret.idSequenceName = model.modelbase_id_seq_name };
     if(model.model_comment.length) { ret.comment = model.model_comment; }
 
+    ret.canCreate = false;
+    ret.canUpdate = false;
+    ret.canDelete = false;
+
     /* parse rules */
     for(var i = 0; i < model.model_rules.length; ++i) {
       var curr = model.model_rules[i], rule = new Object,
@@ -187,11 +191,11 @@ create or replace function private.export_model(record_type text) returns text a
 
       /* only include 'non-standard' rules */
       if(rule.name === "_CREATE") {
-   //     if(isNothing) { ret.canCreate = false }
+        if(!isNothing) delete ret.canCreate;
       } else if (rule.name === "_UPDATE") {
-     //   if(isNothing) { ret.canUpdate = false }
+        if(!isNothing) delete ret.canUpdate;
       } else if (rule.name === "_DELETE") {
-     //   if(isNothing) { ret.canDelete = false }
+        if(!isNothing) delete ret.canDelete;
       } else if(rule.name === "_CREATE_CHECK_PRIV") {
 //        ret.canCreate = rule.condition;
       } else if (rule.name === "_UPDATE_CHECK_PRIV") {
@@ -262,7 +266,7 @@ create or replace function private.export_model(record_type text) returns text a
       }
         
       if(!property.toOne && !property.toMany) {
-      print(NOTICE, 'wtf?');
+
         property.attr = new Object;
         property.attr.type = t;
        // property.attr.table = cols[i].slice(0, pidx);
@@ -294,4 +298,4 @@ create or replace function private.export_model(record_type text) returns text a
   
 $$ language plv8;
 
-select private.export_model('XM.ProjectTask');
+select private.export_model('XM.ProjectTaskAlarm');

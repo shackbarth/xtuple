@@ -1,4 +1,4 @@
-select private.install_model('{
+{
   "nameSpace": "XM",
   "type": "ProjectTask",
   "table": "prjtask",
@@ -159,4 +159,4 @@ select private.install_model('{
   ],
   "order": "prjtask_number",
   "isSystem": true
-}')
+}

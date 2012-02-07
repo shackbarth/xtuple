@@ -37,27 +37,48 @@ create or replace function private.create_model_view(model_name text) returns vo
   processModel = function(model) {
     var props = model.properties,
         view_name = model.nameSpace.toLowerCase() + '.' + model_name,
-        insTgtCols = [], insSrcCols = [], updCols = [], pKeyCol, pKeyAlias;
+        insTgtCols = [], insSrcCols = [], updCols = [], pKeyCol, pKeyAlias,
+        canCreate = model.canCreate !== false ? true : false,
+        canUpdate = model.canUpdate !== false ? true : false,
+        canDelete = model.canDelete !== false ? true : false;
 
     for(var i = 0; i < props.length; i++) {
       var col, alias = decamelize(props[i].name);
       
       /* process attributes */
       if(props[i].attr && props[i].attr.column) {
-        var isEditable = props[i].attr.isEditable !== false || 
-                         props[i].attr.isPrimaryKey !== false ? true : false;
-        
-        col = 't' + tbl + '.' + props[i].attr.column + ' as "' + alias + '"';
-        cols.push(col);
+        var isVisible = props[i].attr.isVisible !== false ? true : false,
+            isEditable = props[i].attr.isEditable !== false ? true : false,
+            isPrimaryKey = props[i].attr.isPrimaryKey ? true : false;   
 
-        /* build data for rules */
-        if(props[i].attr.isPrimaryKey) {
+        if(isVisible) {
+          col = 't' + tbl + '.' + props[i].attr.column + ' as "' + alias + '"';
+          cols.push(col);
+        }
+
+        /* for update and delete rules */
+        if(isPrimaryKey) {
           pKeyCol = props[i].attr.column;
           pKeyAlias = alias;
         }
+
+        /* handle fixed value */
+        if(props[i].attr.value) {
+          var value = isNaN(props[i].attr.value - 0) ? "'" + props[i].attr.value + "'" : props[i].attr.value;
+
+          /* for select */     
+          clauses.push(props[i].attr.column + ' = ' + value);
+          
+          /* for insert */
+          insSrcCols.push(value);
+        }
+        else insSrcCols.push('new.' + alias);
+
+        /* for insert rule */
         insTgtCols.push(props[i].attr.column);
-        insSrcCols.push('new.' + alias);
-        if(isEditable) updCols.push(props[i].attr.column + ' = new.' + alias);
+
+        /* for update rule */
+        if(isVisible && isEditable && !isPrimaryKey) updCols.push(props[i].attr.column + ' = new.' + alias);
       }
 
       /* process toOne */
@@ -67,6 +88,16 @@ create or replace function private.create_model_view(model_name text) returns vo
             inverse = props[i].toOne.inverse ? props[i].toOne.inverse : 'guid';
             
         col = '(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + props[i].toOne.column + ') as "' + alias + '"';
+        cols.push(col);
+      }
+
+      /* process toMany */
+      if(props[i].toMany && props[i].toMany.column) {
+        var table = decamelize(props[i].toMany.type),
+            type = table.replace((/\w+\./i),''),
+            inverse = props[i].toMany.inverse ? props[i].toMany.inverse : 'guid';
+            
+        col = 'array(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + props[i].toMany.column + ') as "' + alias + '"';
         cols.push(col);
       }
     }
@@ -82,8 +113,29 @@ create or replace function private.create_model_view(model_name text) returns vo
           delpre = 'create rule "_DELETE" as on delete to ' + view_name + ' do instead ';
           
       if(model.privileges || model.isNested) {
-        rules.push(inspre + 'insert into ' + model.table + '(' + insTgtCols.join(',') + ') values (' + insSrcCols.join(',') + ')');
-        if(pKeyCol) rules.push(updpre + 'update ' + model.table + ' set ' + updCols.join(',') + ' where ' + pKeyCol + ' = new.' + pKeyAlias);      
+        var rule;
+        
+        /* insert rule */
+        rule = canCreate ? 
+               inspre + 'insert into ' + model.table + '(' + insTgtCols.join(',') + ') values (' + insSrcCols.join(',') + ')' :
+               inspre + 'nothing;';
+
+        rules.push(rule);
+
+        /* update rule */
+        rule = canUpdate && pKeyCol ? 
+               updpre + 'update ' + model.table + ' set ' + updCols.join(',') + ' where ' + pKeyCol + ' = old.' + pKeyAlias :
+               updpre + 'nothing;';
+
+        rules.push(rule); 
+
+        /* delete rule */
+        rule = canDelete && pKeyCol ?
+               delpre + 'delete from ' + model.table + ' where ' + pKeyCol + ' = old.' + pKeyAlias :
+               delpre + 'nothing;';
+
+        rules.push(rule);
+             
       } else {
         rules.push(inspre + 'nothing;');
         rules.push(updpre + 'nothing;');
