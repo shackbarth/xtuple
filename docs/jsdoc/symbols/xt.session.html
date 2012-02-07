@@ -191,13 +191,15 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
-	<li><a href="../symbols/Array.html">Array</a></li>
-	
 	<li><a href="../symbols/Function.html">Function</a></li>
+	
+	<li><a href="../symbols/Object.html">Object</a></li>
 	
 	<li><a href="../symbols/String.html">String</a></li>
 	
 	<li><a href="../symbols/xt.html">xt</a></li>
+	
+	<li><a href="../symbols/xt.cache.html">xt.cache</a></li>
 	
 	<li><a href="../symbols/xt.commitRecord.html">xt.commitRecord</a></li>
 	
@@ -212,6 +214,8 @@ ul.inheritsList
 	<li><a href="../symbols/xt.fetch.html">xt.fetch</a></li>
 	
 	<li><a href="../symbols/xt.filesystem.html">xt.filesystem</a></li>
+	
+	<li><a href="../symbols/xt.functify.html">xt.functify</a></li>
 	
 	<li><a href="../symbols/xt.function.html">xt.function</a></li>
 	
@@ -262,36 +266,10 @@ ul.inheritsList
 				
 				
 			
-				Session objects are nothing more than context containers. They
-  are created once a client requests a session and is validated
-  as a current/active user. Active sessions enable the queries
-  to be executed as the correct database user (for privilege
-  enforcement), tracking and additional automated events that
-  use the current user (triggers).
-
-  <p></p>
-
-  Sessions are fairly dumb objects that are acted on by the
-  session store. They have a limited API and automatically
-  generate query prefixes for the user assigned to them while
-  also supplying a special callback during queries. Queries
-  are executed under the context of the session to which they
-  belong and this gives access to the xt response object
-  supplied during client requests and allows for the callback
-  to write to the correct client.
-
-  <p></p>
-*WARNING**
-
-  <p></p>
-
-  In this pass (as of 01/24/2012) sessions are very unsecure.
-  An effort will be made to clean up this process but as such
-  they are volatile and the API is expected to change
-  dramatically in the future.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_server_ext_session.js.html">session.js</a>.
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_cole_Devel_xtuple_git_clinuz_datasource_lib_xt_server_ext_session.js.html">session.js</a>.
 				
 			</p>
 
@@ -339,37 +317,36 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.session.<b><a href="../symbols/xt.session.html#.hash">hash</a></b>()
+								<div class="fixedFont">xt.session.<b><a href="../symbols/xt.session.html#.checksum">checksum</a></b>(data)
 								</div>
-								<div class="description">Returns a unique hash for a particular session.</div>
+								<div class="description">Creates a checksum of the parameter.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/xt.session.html#isActive">isActive</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/xt.session.html#commit">commit</a></b>(callback)
 								</div>
-								<div class="description">Returns whether or not the current session is still active.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/xt.session.html#query">query</a></b>(query, xtr, func)
-								</div>
-								<div class="description">Allows queries to be run correctly according to their
-    active session information.</div>
+								<div class="description">Commits the current session data collection into the cache.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">xt.session.<b><a href="../symbols/xt.session.html#.time">time</a></b>()
+								<div class="fixedFont">xt.session.<b><a href="../symbols/xt.session.html#.id">id</a></b>()
 								</div>
-								<div class="description">Returns the current UTC time.</div>
+								<div class="description">Creates a unique session id from a random MD5 hash.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">xt.session.<b><a href="../symbols/xt.session.html#.timestamp">timestamp</a></b>()
+								</div>
+								<div class="description">Returns a timestamp in milliseconds.</div>
 							</td>
 						</tr>
 					
@@ -400,34 +377,6 @@ ul.inheritsList
 				
 				
 				
-				<pre class="code">    
-    // this is unrealistic because sessions are created
-    // automatically on client requests not manually but
-    // for the sake of example...
-    var s = xt.session.create({ 
-      info: { user: 'cole', ip: '127.0.0.1' }
-    });
-
-    // note that the query will be prefixed properly
-    // automatically to ensure it is executed in the correct
-    // context of the appropriate user
-    // also note that error handling is already dealt with
-    // by the session object so the callback will only
-    // be executed when errors do not exist
-    s.query('select * from public.incdt', function(r) {
-
-      // inside the callback we are in the context of the
-      // session and can request the xt response object (xtr)
-      var xtr = this.get('xtr');
-      
-      // write some response from the successfully executed
-      // query directly back to the client as the payload
-      // of the response and close the response object
-      xtr.write(xt.json(r)).close();
-    });</pre>
-				
-				
-				
 				
 					
 					
@@ -449,85 +398,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name=".hash"> </a>
+					<a name=".checksum"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
 					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
-					<span class="light">xt.session.</span><b>hash</b>()
+					<span class="light">xt.session.</span><b>checksum</b>(data)
 					
 					</div>
 					<div class="description">
-						Returns a unique hash for a particular session.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> The hash for the session.</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name="isActive"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{Boolean}</span>
-					<b>isActive</b>()
-					
-					</div>
-					<div class="description">
-						Returns whether or not the current session is still active.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{Boolean}</span> YES|NO on session active status.</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
-					<a name="query"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>query</b>(query, xtr, func)
-					
-					</div>
-					<div class="description">
-						Allows queries to be run correctly according to their
-    active session information. If the callback function
-    is not provided the open server response object will
-    automatically be closed with no bytes written to the
-    client. The callback will be executed within the context
-    of the session object and allows the use of this inside
-    to retrieve the xt response object or other properties.
+						Creates a checksum of the parameter.
 						
 						
 					</div>
@@ -539,22 +418,56 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> <b>query</b>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>|<a href="../symbols/String.html">String</a>}</span> <b>data</b>
 									
 								</dt>
-								<dd>The query string to execute under the session.</dd>
+								<dd>The data to be digested into a checksum.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> The checksum of the data.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="commit"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>commit</b>(callback)
+					
+					</div>
+					<div class="description">
+						Commits the current session data collection into the cache.
+    The data checksum will be updated after the lastModified
+    property is updated to the current time.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{<a href="../symbols/xt.response.html">xt.response</a>}</span> <b>xtr</b>
-									
-								</dt>
-								<dd>The xt response object.</dd>
-							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>func</b>
+									<span class="light fixedFont">{<a href="../symbols/Function.html">Function</a>}</span> <b>callback</b>
 									<i>Optional</i>
 								</dt>
-								<dd>The callback for completed queries.</dd>
+								<dd>The callback to execute after the
+      write to the cache has transpired.</dd>
 							
 							</dl>
 						
@@ -567,15 +480,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name=".time"> </a>
+					<a name=".id"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{Integer}</span>
-					<span class="light">xt.session.</span><b>time</b>()
+					<span class="light">{<a href="../symbols/String.html">String</a>}</span>
+					<span class="light">xt.session.</span><b>id</b>()
 					
 					</div>
 					<div class="description">
-						Returns the current UTC time.
+						Creates a unique session id from a random MD5 hash.
 						
 						
 					</div>
@@ -590,7 +503,39 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Integer}</span> The UTC current time in milliseconds.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/String.html">String</a>}</span> A unique MD5 session id.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".timestamp"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{Number}</span>
+					<span class="light">xt.session.</span><b>timestamp</b>()
+					
+					</div>
+					<div class="description">
+						Returns a timestamp in milliseconds.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Number}</span> The current time in milliseconds.</dd>
 							
 							</dl>
 						
@@ -611,7 +556,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Jan 24 2012 11:31:58 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Feb 07 2012 16:01:29 GMT-0500 (EST)
 		</div>
 	</body>
 </html>

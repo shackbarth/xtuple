@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - xt.functor</title>
+		<title>JsDoc Reference - Object</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -258,7 +258,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class xt.functor
+				Built-In Namespace Object
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -266,86 +266,22 @@ ul.inheritsList
 				
 				
 			
-				Functors are special handlers for data requests from the client.
-  They are only used by the dataRoute xt route object and are loaded
-  automatically at server start.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_cole_Devel_xtuple_git_clinuz_datasource_lib_xt_server_ext_functor.js.html">functor.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class xt.functor.">
-				<caption>Class Summary</caption>
-				<thead>
-					<tr>
-						<th scope="col">Constructor Attributes</th>
-						<th scope="col">Constructor Name and Description</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td class="attributes">&nbsp;</td>
-						<td class="nameDescription" >
-							<div class="fixedFont">
-								<b><a href="../symbols/xt.functor.html#constructor">xt.functor</a></b>()
-							</div>
-							<div class="description"></div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			
 
 <!-- ============================== properties summary ===================== -->
-			
-				
-				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class xt.functor.">
-					<caption>Field Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Field Attributes</th>
-							<th scope="col">Field Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="../symbols/xt.functor.html#handles">handles</a></b>
-								</div>
-								<div class="description">Each functor handles a specific request type from
-    the client.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="../symbols/xt.functor.html#needSession">needSession</a></b>
-								</div>
-								<div class="description">Almost all functors should require a session.</div>
-							</td>
-						</tr>
-					
-					</tbody>
-				</table>
-				
-				
-				
 			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class xt.functor.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class Object.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -358,10 +294,27 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/xt.functor.html#handle">handle</a></b>(xtr)
+								<div class="fixedFont"><b><a href="../symbols/Object.html#camelize">camelize</a></b>()
 								</div>
-								<div class="description">A functor must provide a handle method that takes
-    a single parameter: the xt response obejct.</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/Object.html#cml">cml</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/Object.html#decamelize">decamelize</a></b>()
+								</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -376,100 +329,8 @@ ul.inheritsList
 
 <!-- ============================== constructor details ==================== -->		
 			
-			<div class="details"><a name="constructor"> </a>
-				<div class="sectionTitle">
-					Class Detail
-				</div>
-				
-				<div class="fixedFont">
-						<b>xt.functor</b>()
-				</div>
-				
-				<div class="description">
-					
-					
-				</div>
-				
-				
-				
-				
-					
-					
-					
-					
-					
-					
-					
-
-			</div>
-			
 
 <!-- ============================== field details ========================== -->		
-			
-				<div class="sectionTitle">
-					Field Detail
-				</div>
-				
-					<a name="handles"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>handles</b>
-					
-					</div>
-					<div class="description">
-						Each functor handles a specific request type from
-    the client. This is a string representing the request
-    type that it should be selected when this type is
-    encountered by the server.
-						
-						
-					</div>
-					
-					
-
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="needSession"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{Boolean}</span>
-					<b>needSession</b>
-					
-					</div>
-					<div class="description">
-						Almost all functors should require a session. If they do,
-    they will automatically attempt to acquire the session before
-    handling the request to ensure they can execute their
-    functionality as the correct user. In the rare cases that
-    a functor does not require an active session (such as a request
-    for a new session) this boolean must be set to NO but it
-    defaults to YES.
-						
-						
-					</div>
-					
-					
-
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Default Value:</dt>
-							<dd>
-								YES
-							</dd>
-							</dl>
-						
-
-					
-				
 			
 
 <!-- ============================== method details ========================= -->		
@@ -478,22 +339,18 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="handle"> </a>
+					<a name="camelize"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>handle</b>(xtr)
+					<b>camelize</b>()
 					
 					</div>
 					<div class="description">
-						A functor must provide a handle method that takes
-    a single parameter: the xt response obejct. From here
-    it has access to the original response and request objects
-    as well as the payload data. The session object will be
-    attached to the xt response object by the time this
-    method is executed when one can be present. If a functor
-    requires a session but the sessionStore fails to retrieve
-    the session this method will not be executed.
+						
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/_Users_cole_Devel_xtuple_git_clinuz_datasource_lib_xt_foundation_proto.js.html">proto.js</a>.
 						
 						
 					</div>
@@ -501,22 +358,88 @@ ul.inheritsList
 					
 					
 						
+						
+						
+						
+						
+						
+						
 							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
+							<dt class="heading">See:</dt>
 							
-								<dt>
-									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>xtr</b>
-									
-								</dt>
-								<dd>The xt response object.</dd>
+								<dd><a href="../symbols/xt.object.html#.camelize">xt.object.camelize</a></dd>
 							
 							</dl>
 						
+
+					<hr />
+				
+					<a name="cml"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>cml</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/_Users_cole_Devel_xtuple_git_clinuz_datasource_lib_xt_foundation_proto.js.html">proto.js</a>.
+						
+						
+					</div>
+					
+					
+					
 						
 						
 						
 						
 						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/xt.object.html#.camelize">xt.object.camelize</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="decamelize"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>decamelize</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+							<br />
+							<i>Defined in: </i> <a href="../symbols/src/_Users_cole_Devel_xtuple_git_clinuz_datasource_lib_xt_foundation_proto.js.html">proto.js</a>.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/xt.object.html#.camelize">xt.object.camelize</a></dd>
+							
+							</dl>
 						
 
 					
