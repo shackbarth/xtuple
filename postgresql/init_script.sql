@@ -19,15 +19,14 @@
 \i core/global/private/functions/any_text.sql;
 \i core/global/private/functions/commit_record.sql;
 \i core/global/private/functions/create_table.sql;
-\i core/global/private/functions/create_model_view.sql;
-\i core/global/private/functions/drop_model_view.sql;
+\i core/global/private/functions/create_orm_view.sql;
+\i core/global/private/functions/drop_orm_view.sql;
 \i core/global/private/functions/ends_with.sql;
 \i core/global/private/functions/execute_query.sql;
 \i core/global/private/functions/extend_model.sql;
 \i core/global/private/functions/fetch.sql;
 \i core/global/private/functions/get_id.sql;
-\i core/global/private/functions/install_model.sql;
-\i core/global/private/functions/install_extension.sql;
+\i core/global/private/functions/install_orm.sql;
 \i core/global/private/functions/is_date.sql;
 \i core/global/private/functions/raise_exception.sql;
 \i core/global/private/functions/retrieve_record.sql;
@@ -37,12 +36,10 @@
 \i core/global/private/functions/validate_user.sql;
 
 -- core/trigger functions
-\i core/global/private/trigger_functions/model_changed.sql
+\i core/global/private/trigger_functions/orm_did_change.sql
 
 -- core/global tables
-\i core/global/private/tables/model.sql
-\i core/global/private/tables/modelext.sql
-\i core/global/private/tables/modelbas.sql
+\i core/global/private/tables/orm.sql
 
 -- core/operators
 \i core/global/private/operators/any_numeric.sql;

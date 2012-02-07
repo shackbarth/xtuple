@@ -1,4 +1,5 @@
 {
+  "context": "xtuple",
   "nameSpace": "XM",
   "type": "ProjectTaskComment",
   "table": "xm.comment",

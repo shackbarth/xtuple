@@ -1,4 +1,5 @@
 {
+  "context": "xtuple",
   "nameSpace": "XM",
   "type": "Comment",
   "table": "public.comment",

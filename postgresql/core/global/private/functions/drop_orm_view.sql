@@ -1,16 +1,16 @@
-create or replace function private.drop_model_view(m_name text) returns text[] as $$
+create or replace function private.drop_orm_view(orm_name text) returns text[] as $$
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
   rec record;
-  m_names text[] := '{}';
-  q_name text := 'xm.' || m_name;
+  orm_names text[] := '{}';
+  q_name text := 'xm.' || orm_name;
 begin
 
   -- Loop through xm view dependencies 
   -- (any other dependencies are not handled)
   for rec in
-    select distinct relname::text as model_name
+    select distinct relname::text as orm_name
     from pg_depend
       join pg_rewrite on (pg_rewrite.oid=objid)
       join pg_class c on (c.oid=ev_class)
@@ -22,20 +22,20 @@ begin
   loop
 
     -- Drop the dependency and add
-    m_names := private.drop_model_view(rec.model_name) || m_names;
+    orm_names := private.drop_orm_view(rec.orm_name) || orm_names;
 
     -- If the model we're on isnt already in the array, prepend the dropped dependency
-   if not rec.model_name <@ m_names then
-      m_names := array_prepend(rec.model_name, m_names);
+   if not rec.orm_name <@ orm_names then
+      orm_names := array_prepend(rec.orm_name, orm_names);
    end if;
     
   end loop;
 
   -- Drop the view for the model name passed in
-  perform dropIfExists('VIEW', m_name, 'xm');
+  perform dropIfExists('VIEW', orm_name, 'xm');
 
   -- Return the dependencies
-  return m_names;
+  return orm_names;
 
 end;
 $$ language 'plpgsql';

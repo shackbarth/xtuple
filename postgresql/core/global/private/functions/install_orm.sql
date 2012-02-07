@@ -1,4 +1,4 @@
-create or replace function private.install_model(json text) returns void volatile as $$                                
+create or replace function private.install_orm(json text) returns void volatile as $$                                
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -31,24 +31,42 @@ create or replace function private.install_model(json text) returns void volatil
     return ret;
   }
 
-  var newModel = JSON.parse(json),
-      oldModel, sql,
-      model_name = decamelize(newModel.type);
+  var newJson = JSON.parse(json), oldJson,
+      oldOrm, sql, isExtension, sequence,
+      orm_name = decamelize(newJson.type),
+      orm_context = decamelize(newJson.context);
 
-  sql = 'select model_id as "id", model_json as "json" '
-      + 'from private.modelbas '
-      + 'where model_name = $1 ';
+  if(!newJson.nameSpace) throw new Error("A name space is required");
+  if(!orm_name) throw new Error("A type is required");
+  if(!orm_context) throw new Error("A context is required");
 
-  oldModel = executeSql(sql, [model_name])[0];
+  sql = 'select orm_id as "id", '
+      + '  orm_json as "json", '
+      + '  orm_ext as "isExtension" '
+      + 'from private.orm '
+      + 'where orm_name = $1 '
+      + ' and orm_context = $2';
 
-  if(oldModel) {
-    if(JSON.parse(oldModel.json).isSystem && !newModel.isSystem) throw new Error("A system model already exists for" + newModel.type);
+  oldOrm = executeSql(sql, [orm_name, orm_context])[0];
+
+  sequence = newJson.sequence ? newJson.sequence : 0;
+  isExtension = newJson.isExtension ? true : false;
+
+  if(oldOrm) {
+    oldJson = JSON.parse(oldOrm.json);
+    if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + newJson.type);
+    if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension status for " + newJson.type);
     
-    sql = 'update private.modelbas set model_json = $2 where model_name = $1';  
-  } else { 
-    sql = 'insert into private.modelbas ( model_name, model_json ) values ( $1, $2 )';
-  }
+    sql = 'update private.orm set '
+        + ' orm_json = $1, '
+        + ' orm_seq = $2 '
+        + 'where orm_id = $3';
 
-  executeSql(sql, [model_name, json]); 
+    executeSql(sql, [json, sequence, oldOrm.id]);   
+  } else { 
+    sql = 'insert into private.orm ( orm_name, orm_context, orm_json, orm_seq, orm_ext ) values ( $1, $2, $3, $4, $5 )';
+
+    executeSql(sql, [orm_name, orm_context, json, sequence, isExtension ]); 
+  }
   
 $$ language plv8;

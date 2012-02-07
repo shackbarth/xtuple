@@ -159,6 +159,7 @@ create or replace function private.export_model(record_type text) returns text a
     model = model[0];
 
     /* add some basic definition */
+    ret.context = "xtuple";
     ret.nameSpace = model.model_namespace.toUpperCase();
     ret.type = model.model_name.slice(0,1).toUpperCase() + camelize(model.model_name.slice(1));;
     //ret.schema = model.model_schema_name ? model.model_schema_name : model.model_table_name.replace((/\.\w+/i),'');
