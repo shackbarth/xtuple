@@ -7,6 +7,7 @@ Prerequisites
 -------------
 
 * [Node.js] (https://github.com/joyent/node) -- `v0.6.3+`
+* [Redis] (https://github.com/antirez/redis) -- `v2.9.3+`
 
 Instructions
 ------------
@@ -30,6 +31,11 @@ For an example configuration json file look at `lib/config.json`.
 Notes on building Node.js
 -------------------------
 
+> **NOTE: as of node v0.7.2 the hiredis driver no longer worked and xt-node now  
+> relies on the pure javascript driver node-redis but if you had hiredis installed  
+> you need to remove it and re-run the setup.sh script. If hiredis is updated  
+> to work in future node releases it will again be the default
+
 In general you need to follow the directions as supplied with the project. It is
 imperative that node builds with openssl support. If you have a custom build of
 openssl there are two special command-line directives that need to be passed to 
@@ -48,3 +54,4 @@ for the suffix.
 
 It is also imperative that node be in your path and you can assist additional modules
 by providing a NODE_PATH environment variable.
+
