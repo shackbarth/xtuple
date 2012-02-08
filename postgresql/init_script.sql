@@ -36,6 +36,7 @@
 \i core/global/private/functions/session_privileges.sql;
 \i core/global/private/functions/session_metrics.sql;
 \i core/global/private/functions/session_locale.sql;
+\i core/global/private/functions/validate_user.sql;
 
 -- core/trigger functions
 \i core/global/private/trigger_functions/model_changed.sql
