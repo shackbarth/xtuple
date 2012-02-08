@@ -1,4 +1,4 @@
-create or replace function private.export_model(record_type text) returns text as $$
+﻿create or replace function private.export_model(record_type text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -140,8 +140,9 @@ create or replace function private.export_model(record_type text) returns text a
   // PROCESS
   //
   
-  var sql = "select * "
+  var sql = "select *, orderseq_name "
           + "from private.modelbas "
+          + " left outer join orderseq on orderseq_id = modelbas_orderseq_id "
           + "where model_name = $1",
       recordType = decamelize(record_type.replace((/\w+\./i),'')), 
       nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(),
@@ -164,7 +165,8 @@ create or replace function private.export_model(record_type text) returns text a
     ret.type = model.model_name.slice(0,1).toUpperCase() + camelize(model.model_name.slice(1));;
     //ret.schema = model.model_schema_name ? model.model_schema_name : model.model_table_name.replace((/\.\w+/i),'');
     ret.table = model.model_table_name.replace((/\w+\./i),'');
-    if(model.modelbas_id_seq_name) { ret.idSequenceName = model.modelbase_id_seq_name };
+    if(model.modelbas_id_seq_name) { ret.idSequenceName = model.modelbas_id_seq_name };
+    if(model.orderseq_name) { ret.orderSequence = model.orderseq_name };
     if(model.model_comment.length) { ret.comment = model.model_comment.replace(/Model/, 'Map'); }
 
     ret.canCreate = false;
@@ -299,4 +301,4 @@ create or replace function private.export_model(record_type text) returns text a
   
 $$ language plv8;
 
-select private.export_model('XM.CharacteristicAssignment');
+select private.export_model('XM.ContactComment');
