@@ -51,4 +51,12 @@ select xm.dispatch(E'{"request_type":"callFunction",
                       "isJSON":false
                      }');
 
+select guid from xm.address order by guid desc;
+
+select xm.dispatch(E'{"request_type":"callFunction",
+                      "function_name":"address_use_count",
+                      "params":{"guid":41},
+                      "isJSON":false
+                     }');
+                     
 */
