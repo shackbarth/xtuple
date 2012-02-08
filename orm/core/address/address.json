@@ -1,4 +1,4 @@
-{
+﻿{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Address",
@@ -12,16 +12,6 @@
       "read": "ViewAllAddress",
       "update": "MaintainAllAddress",
       "delete": "MaintainAllAddress"
-    },
-    "personal": {
-      "create": "MaintainPersonalAddress",
-      "read": "ViewPersonalAddress",
-      "update": "MaintainPersonalAddress",
-      "delete": "MaintainPersonalAddress",
-      "properties": [
-        "owner",
-        "assignedTo"
-       ]
     }
   },
   "properties": [
@@ -101,7 +91,7 @@
       "attr": {
         "type": "String",
         "column": "addr_notes",
-        "isEditable": false
+        "isEditable": true
       }
     },
     {
