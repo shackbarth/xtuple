@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ImageInfo",
   "table": "image",
-  "comment": "Image Model",
+  "comment": "Image Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,

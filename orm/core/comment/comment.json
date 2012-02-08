@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "Comment",
   "table": "public.comment",
-  "comment": "Comment Model",
+  "comment": "Comment Map",
   "canDelete": false,
   "properties": [
     {

@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "AddressInfo",
   "table": "addr",
-  "comment": "Address Info Model",
+  "comment": "Address Info Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,

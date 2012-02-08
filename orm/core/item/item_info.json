@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ItemInfo",
   "table": "item",
-  "comment": "Item Info Model",
+  "comment": "Item Info Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,

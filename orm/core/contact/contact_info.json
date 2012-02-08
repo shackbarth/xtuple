@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ContactInfo",
   "table": "cntct",
-  "comment": "Contact Info Model",
+  "comment": "Contact Info Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,

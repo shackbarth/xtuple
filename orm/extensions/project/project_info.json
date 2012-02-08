@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectInfo",
   "table": "prj",
-  "comment": "Project Info Model",
+  "comment": "Project Info Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,

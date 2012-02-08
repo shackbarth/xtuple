@@ -1,9 +1,9 @@
-select private.install_orm('{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Project",
   "table": "prj",
-  "comment": "Project Model",
+  "comment": "Project Map",
   "privileges": {
     "all": {
       "create": "MaintainAllProjects",
@@ -169,63 +169,5 @@ select private.install_orm('{
       }
     }
   ],
-  "extensions": [
-    {
-      "table": "recur",
-      "properties": [
-        {
-          "name": "fkey1",
-          "relation": {
-            "type": "Number",
-            "column": "recur_parent_id",
-            "inverse": "prj_id"
-          }
-        },
-        {
-          "name": "fkey2",
-          "relation": {
-            "type": "Number",
-            "column": "recur_parent_type",
-            "value": "J"
-          }
-        },
-        {
-          "name": "recurrencePeriod",
-          "attr": {
-            "type": "Date",
-            "column": "recur_period"
-          }
-        },
-        {
-          "name": "recurrenceFrequency",
-          "attr": {
-            "type": "Date",
-            "column": "recur_freq"
-          }
-        },
-        {
-          "name": "recurrenceStart",
-          "attr": {
-            "type": "Date",
-            "column": "recur_start"
-          }
-        },
-        {
-          "name": "recurrenceEnd",
-          "attr": {
-            "type": "Date",
-            "column": "recur_end"
-          }
-        },
-        {
-          "name": "recurrenceMax",
-          "attr": {
-            "type": "Date",
-            "column": "recur_max"
-          }
-        }
-      ]
-    }
-  ],
   "isSystem": true
-}')
+}

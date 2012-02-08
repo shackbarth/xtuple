@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectTaskAlarm",
   "table": "alarm",
-  "comment": "Project Task Alarm Model",
+  "comment": "Project Task Alarm Map",
   "properties": [
     {
       "name": "guid",

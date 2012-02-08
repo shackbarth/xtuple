@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "UserAccountInfo",
   "table": "private.usr",
-  "comment": "User Account Info Model",
+  "comment": "User Account Info Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,

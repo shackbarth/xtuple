@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "FileInfo",
   "table": "file",
-  "comment": "File Info Model",
+  "comment": "File Info Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,

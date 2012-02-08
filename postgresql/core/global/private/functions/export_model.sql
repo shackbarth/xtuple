@@ -165,7 +165,7 @@ create or replace function private.export_model(record_type text) returns text a
     //ret.schema = model.model_schema_name ? model.model_schema_name : model.model_table_name.replace((/\.\w+/i),'');
     ret.table = model.model_table_name.replace((/\w+\./i),'');
     if(model.modelbas_id_seq_name) { ret.idSequenceName = model.modelbase_id_seq_name };
-    if(model.model_comment.length) { ret.comment = model.model_comment; }
+    if(model.model_comment.length) { ret.comment = model.model_comment.replace(/Model/, 'Map'); }
 
     ret.canCreate = false;
     ret.canUpdate = false;
@@ -299,4 +299,4 @@ create or replace function private.export_model(record_type text) returns text a
   
 $$ language plv8;
 
-select private.export_model('XM.ProjectInfo');
+select private.export_model('XM.CharacteristicAssignment');

@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectComment",
   "table": "xm.comment",
-  "comment": "Project Comment Model",
+  "comment": "Project Comment Map",
   "canDelete": false,
   "properties": [
     {

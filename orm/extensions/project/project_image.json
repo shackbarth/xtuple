@@ -3,7 +3,7 @@ select private.install_orm('{
   "nameSpace": "XM",
   "type": "ProjectImage",
   "table": "private.docinfo",
-  "comment": "Project Image Model",
+  "comment": "Project Image Map",
   "canUpdate": false,
   "properties": [
     {

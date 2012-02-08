@@ -1,0 +1,40 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CharacteristicOption",
+  "table": "charopt",
+  "comment": "Characteristic Option Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "charopt_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "characteristic",
+      "attr": {
+        "type": "Number",
+        "column": "charopt_char_id"
+      }
+    },
+    {
+      "name": "value",
+      "attr": {
+        "type": "String",
+        "column": "charopt_value"
+      }
+    },
+    {
+      "name": "order",
+      "attr": {
+        "type": "Number",
+        "column": "charopt_order"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectTask",
   "table": "prjtask",
-  "comment": "Project Task Model",
+  "comment": "Project Task Map",
   "privileges": {
     "all": {
       "create": "MaintainAllProjects",

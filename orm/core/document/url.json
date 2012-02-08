@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "Url",
   "table": "urlinfo",
-  "comment": "URL Model",
+  "comment": "URL Map",
   "properties": [
     {
       "name": "guid",

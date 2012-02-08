@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectTaskComment",
   "table": "xm.comment",
-  "comment": "Project Task Comment Model",
+  "comment": "Project Task Comment Map",
   "canDelete": false,
   "properties": [
     {

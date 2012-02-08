@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectUrl",
   "table": "private.docinfo",
-  "comment": "Project Url Model",
+  "comment": "Project Url Map",
   "canUpdate": false,
   "properties": [
     {

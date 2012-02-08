@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectContact",
   "table": "private.docinfo",
-  "comment": "Project Contact Model",
+  "comment": "Project Contact Map",
   "canUpdate": false,
   "properties": [
     {
