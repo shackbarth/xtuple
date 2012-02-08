@@ -1,0 +1,50 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "AddressCharacteristic",
+  "table": "xm.characteristic_assignment",
+  "comment": "Address Characteristic Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "guid",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "target_type",
+        "value": "ADDR",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "address",
+      "attr": {
+        "type": "Number",
+        "column": "target",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "characteristic",
+      "attr": {
+        "type": "XM.Characteristic",
+        "column": "characteristic"
+      }
+    },
+    {
+      "name": "value",
+      "attr": {
+        "type": "Number",
+        "column": "value"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}
