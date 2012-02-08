@@ -1,9 +1,17 @@
-{
+﻿{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Characteristic",
   "table": "char",
   "comment": "Characteristic Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCharacteristics",
+      "read": "ViewCharacteristics",
+      "update": "MaintainCharacteristics",
+      "delete": "MaintainCharacteristics"
+    }
+  },
   "properties": [
     {
       "name": "guid",

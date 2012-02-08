@@ -1,0 +1,63 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CommentType",
+  "table": "cmnttype",
+  "idSequenceName": "public.cmnttype_cmnttype_id_seq",
+  "comment": "Comment Type Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCommentTypes",
+      "read": "MaintainCommentTypes",
+      "update": "MaintainCommentTypes",
+      "delete": "MaintainCommentTypes"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cmnttype_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "cmnttype_name"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "cmnttype_descrip"
+      }
+    },
+    {
+      "name": "isSystem",
+      "attr": {
+        "type": "Boolean",
+        "column": "cmnttype_sys",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "commentsEditable",
+      "attr": {
+        "type": "Boolean",
+        "column": "cmnttype_editable"
+      }
+    },
+    {
+      "name": "order",
+      "attr": {
+        "type": "Number",
+        "column": "cmnttype_order"
+      }
+    }
+  ],
+  "isSystem": true
+}

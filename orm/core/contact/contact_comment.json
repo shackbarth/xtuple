@@ -1,8 +1,9 @@
-﻿"{
+﻿{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ContactComment",
-  "table": "xm.contact_comment",
+  "table": "xm.comment",
+  "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Contact Comment Map",
   "canDelete": false,
   "properties": [
@@ -22,7 +23,7 @@
         "value": "T",
         "isVisible": false
       }
-    },
+    },    
     {
       "name": "contact",
       "attr": {
@@ -72,4 +73,4 @@
   ],
   "isNested": true,
   "isSystem": true
-}"
+}
