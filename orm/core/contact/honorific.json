@@ -1,0 +1,33 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Honorific",
+  "table": "hnfc",
+  "comment": "Honorific Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainTitles",
+      "read": "ViewTitles",
+      "update": "MaintainTitles",
+      "delete": "MaintainTitles"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "hnfc_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "hnfc_code"
+      }
+    }
+  ],
+  "isSystem": true
+}
