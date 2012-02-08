@@ -1,0 +1,125 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Address",
+  "table": "addr",
+  "idSequenceName": "public.addr_addr_id_seq",
+  "orderSequence": "AddressNumber",
+  "comment": "Address Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainAllAddress",
+      "read": "ViewAllAddress",
+      "update": "MaintainAllAddress",
+      "delete": "MaintainAllAddress"
+    },
+    "personal": {
+      "create": "MaintainPersonalAddress",
+      "read": "ViewPersonalAddress",
+      "update": "MaintainPersonalAddress",
+      "delete": "MaintainPersonalAddress",
+      "properties": [
+        "owner",
+        "assignedTo"
+       ]
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "addr_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "addr_number"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "addr_active"
+      }
+    },
+    {
+      "name": "line1",
+      "attr": {
+        "type": "String",
+        "column": "addr_line1"
+      }
+    },
+    {
+      "name": "line2",
+      "attr": {
+        "type": "String",
+        "column": "addr_line2"
+      }
+    },
+    {
+      "name": "line3",
+      "attr": {
+        "type": "String",
+        "column": "addr_line3"
+      }
+    },
+    {
+      "name": "city",
+      "attr": {
+        "type": "String",
+        "column": "addr_city"
+      }
+    },
+    {
+      "name": "state",
+      "attr": {
+        "type": "String",
+        "column": "addr_state"
+      }
+    },
+    {
+      "name": "postalcode",
+      "attr": {
+        "type": "String",
+        "column": "addr_postalcode"
+      }
+    },
+    {
+      "name": "country",
+      "attr": {
+        "type": "String",
+        "column": "addr_country"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "addr_notes",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "type": "XM.AddressComment",
+        "column": "addr_id",
+        "inverse": "address"
+      }
+    },
+    {
+      "name": "characteristics",
+      "toMany": {
+        "type": "XM.AddressCharacteristic",
+        "column": "addr_id",
+        "inverse": "address"
+      }
+    }
+  ],
+  "isSystem": true
+}
