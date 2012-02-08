@@ -5,8 +5,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   // ..........................................................
   // METHODS
   //
-
-    /* Pass an argument to change camel case names to snake case.
+   
+  /* Pass an argument to change camel case names to snake case.
      A string passed in simply returns a decamelized string.
      If an object is passed, an object is returned with all it's
      proprety names camelized.
@@ -37,8 +37,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   processOrm = function(orm) {
     var props = orm.properties,
         view_name = orm.nameSpace ? orm.nameSpace.toLowerCase() + '.' + orm_name : '',
-        tblAlias = 't' + tbl,
-        insTgtCols = [], insSrcCols = [], updCols = [], pKeyCol, pKeyAlias,
+        tblAlias = 't' + tbl, pKeyCol, pKeyAlias,
+        insTgtCols = [], insSrcCols = [], updCols = [], delCascade = [], 
         canCreate = orm.canCreate !== false ? true : false,
         canUpdate = orm.canUpdate !== false ? true : false,
         canDelete = orm.canDelete !== false ? true : false;
@@ -50,7 +50,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       if(props[i].attr && props[i].attr.column) {
         var isVisible = props[i].attr.isVisible !== false ? true : false,
             isEditable = props[i].attr.isEditable !== false ? true : false,
-            isPrimaryKey = props[i].attr.isPrimaryKey ? true : false;   
+            isPrimaryKey = props[i].attr.isPrimaryKey ? true : false;
 
         if(isVisible) {
           /* if it is composite, assign the table itself */
@@ -102,6 +102,29 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             
         col = 'array(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toMany.column + ') as "' + alias + '"';
         cols.push(col);
+        
+        /* build array for delete cascade */
+        if(props[i].toMany.deleteDelegate && 
+           props[i].toMany.deleteDelegate.table && 
+           props[i].toMany.deleteDelegate.relations) {
+          var clauses = [];
+
+          for(var n = 0; n < props[i].toMany.deleteDelegate.relations.length; n++) {
+            var col = props[i].toMany.deleteDelegate.relations[n].column,
+                value = props[i].toMany.deleteDelegate.relations[n].inverse ? 
+                        'old.' + props[i].toMany.deleteDelegate.relations[n].inverse : 
+                        isNaN(props[i].toMany.deleteDelegate.relations[n].value - 0) ? 
+                        "'" + props[i].toMany.deleteDelegate.relations[n].value + "'" :
+                        props[i].toMany.deleteDelegate.relations[n].value;
+                        
+            clauses.push(col + ' = ' + value);
+          }
+
+          delCascade.push('delete from ' + props[i].toMany.deleteDelegate.table + ' where ' + clauses.join(' and ') + ';');
+        } else if(props[i].toMany.deleteCascade !== false) {
+          delCascade.push('delete from ' + table + ' where ' + type + '.' + inverse  + ' = ' + 'old.{pKeyAlias};');
+        }
+        
       }
 
       /* process relation (extension only) */
@@ -142,9 +165,11 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         rules.push(rule); 
 
         /* delete rule */
-        rule = canDelete && pKeyCol ?
-               delpre + 'delete from ' + orm.table + ' where ' + pKeyCol + ' = old.' + pKeyAlias :
-               delpre + 'nothing;';
+        if(canDelete && pKeyCol) {
+          rule = delpre + '(' + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
+          print(NOTICE, 'del rule', rule);
+        }
+        else rule = delpre + 'nothing;';
 
         rules.push(rule);
 

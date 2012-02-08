@@ -1,4 +1,4 @@
-﻿create or replace function private.export_model(record_type text) returns text as $$
+create or replace function private.export_model(record_type text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -293,6 +293,7 @@
     if(rules.length) { ret.rules = rules; }
     if(model.modelbas_nested) { ret.isNested = model.modelbas_nested; }
     if(model.model_system) { ret.isSystem = model.model_system };
+    if(model.modelbas_source) ret.sourceCode = model.modelbas_source;
     
     return JSON.stringify(ret, null, 2);
   } else {
@@ -301,4 +302,4 @@
   
 $$ language plv8;
 
-select private.export_model('XM.ContactComment');
+select private.export_model('XM.Contact');

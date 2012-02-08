@@ -110,7 +110,20 @@
       "toMany": {
         "type": "XM.ProjectComment",
         "column": "prj_id",
-        "inverse": "project"
+        "inverse": "project",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "J"
+            }
+          ]
+        }
       }
     },
     {
@@ -170,5 +183,6 @@
       }
     }
   ],
-  "isSystem": true
+  "isSystem": true,
+  "sourceCode": "J"
 }
