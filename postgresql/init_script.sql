@@ -60,6 +60,7 @@
 \i core/user_account/private/views/usr.sql;
 
 -- core/global/xm/functions
+\i core/global/xm/functions/dispatch.sql;
 \i core/global/xm/functions/fetch_number.sql;
 \i core/global/xm/functions/fetch_id.sql;
 
