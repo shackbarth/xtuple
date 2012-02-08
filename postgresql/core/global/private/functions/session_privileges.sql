@@ -1,4 +1,4 @@
-﻿create or replace function private.session_privilege() 
+﻿create or replace function private.session_privileges() 
   returns text stable as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
@@ -12,5 +12,5 @@
 
 $$ LANGUAGE plv8;
 /*
-select private.session_privilege();
+select private.session_privileges();
 */
