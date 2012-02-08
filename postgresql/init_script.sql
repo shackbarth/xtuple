@@ -33,6 +33,9 @@
 \i core/global/private/functions/starts_with.sql;
 \i core/global/private/functions/text_gt_date.sql;
 \i core/global/private/functions/text_lt_date.sql;
+\i core/global/private/functions/session_privilege.sql;
+\i core/global/private/functions/session_metrics.sql;
+\i core/global/private/functions/session_locale.sql;
 
 -- core/trigger functions
 \i core/global/private/trigger_functions/model_changed.sql
