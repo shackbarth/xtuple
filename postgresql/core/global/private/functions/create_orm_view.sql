@@ -102,12 +102,29 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             
         col = 'array(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toMany.column + ') as "' + alias + '"';
         cols.push(col);
-
+        
         /* build array for delete cascade */
-        if(props[i].toMany.deleteCascade !== false) {
-          var del = 'delete from ' + table + ' where ' + type + '.' + inverse  + ' = ' + 'old.{pKeyAlias};';
-          delCascade.push(del);
+        if(props[i].toMany.deleteDelegate && 
+           props[i].toMany.deleteDelegate.table && 
+           props[i].toMany.deleteDelegate.relations) {
+          var clauses = [];
+
+          for(var n = 0; n < props[i].toMany.deleteDelegate.relations.length; n++) {
+            var col = props[i].toMany.deleteDelegate.relations[n].column,
+                value = props[i].toMany.deleteDelegate.relations[n].inverse ? 
+                        'old.' + props[i].toMany.deleteDelegate.relations[n].inverse : 
+                        isNaN(props[i].toMany.deleteDelegate.relations[n].value - 0) ? 
+                        "'" + props[i].toMany.deleteDelegate.relations[n].value + "'" :
+                        props[i].toMany.deleteDelegate.relations[n].value;
+                        
+            clauses.push(col + ' = ' + value);
+          }
+
+          delCascade.push('delete from ' + props[i].toMany.deleteDelegate.table + ' where ' + clauses.join(' and ') + ';');
+        } else if(props[i].toMany.deleteCascade !== false) {
+          delCascade.push('delete from ' + table + ' where ' + type + '.' + inverse  + ' = ' + 'old.{pKeyAlias};');
         }
+        
       }
 
       /* process relation (extension only) */
@@ -128,7 +145,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       /* build crud rules */
       var inspre = 'create rule "_CREATE" as on insert to ' + view_name + ' do instead ';
           updpre = 'create rule "_UPDATE" as on update to ' + view_name + ' do instead ';
-          delpre = 'create rule "_DELETE" as on delete to ' + view_name + ' do instead (';
+          delpre = 'create rule "_DELETE" as on delete to ' + view_name + ' do instead ';
           
       if(orm.privileges || orm.isNested) {
         var rule;
@@ -149,10 +166,10 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
         /* delete rule */
         if(canDelete && pKeyCol) {
-          rule = delpre + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
+          rule = delpre + '(' + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
           print(NOTICE, 'del rule', rule);
         }
-        else rule = delpre + 'nothing; )';
+        else rule = delpre + 'nothing;';
 
         rules.push(rule);
 
@@ -160,7 +177,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       } else { 
         rules.push(inspre + 'nothing;');
         rules.push(updpre + 'nothing;');
-        rules.push(delpre + 'nothing; )');
+        rules.push(delpre + 'nothing;');
       }
     }
     /* handle extension */
