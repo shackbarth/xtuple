@@ -5,8 +5,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   // ..........................................................
   // METHODS
   //
-
-    /* Pass an argument to change camel case names to snake case.
+   
+  /* Pass an argument to change camel case names to snake case.
      A string passed in simply returns a decamelized string.
      If an object is passed, an object is returned with all it's
      proprety names camelized.
@@ -37,8 +37,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   processOrm = function(orm) {
     var props = orm.properties,
         view_name = orm.nameSpace ? orm.nameSpace.toLowerCase() + '.' + orm_name : '',
-        tblAlias = 't' + tbl,
-        insTgtCols = [], insSrcCols = [], updCols = [], pKeyCol, pKeyAlias,
+        tblAlias = 't' + tbl, pKeyCol, pKeyAlias,
+        insTgtCols = [], insSrcCols = [], updCols = [], delCascade = [], 
         canCreate = orm.canCreate !== false ? true : false,
         canUpdate = orm.canUpdate !== false ? true : false,
         canDelete = orm.canDelete !== false ? true : false;
@@ -50,7 +50,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       if(props[i].attr && props[i].attr.column) {
         var isVisible = props[i].attr.isVisible !== false ? true : false,
             isEditable = props[i].attr.isEditable !== false ? true : false,
-            isPrimaryKey = props[i].attr.isPrimaryKey ? true : false;   
+            isPrimaryKey = props[i].attr.isPrimaryKey ? true : false;
 
         if(isVisible) {
           /* if it is composite, assign the table itself */
@@ -102,6 +102,12 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             
         col = 'array(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toMany.column + ') as "' + alias + '"';
         cols.push(col);
+
+        /* build array for delete cascade */
+        if(props[i].toMany.deleteCascade !== false) {
+          var del = 'delete from ' + table + ' where ' + type + '.' + inverse  + ' = ' + 'old.{pKeyAlias};';
+          delCascade.push(del);
+        }
       }
 
       /* process relation (extension only) */
@@ -122,7 +128,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       /* build crud rules */
       var inspre = 'create rule "_CREATE" as on insert to ' + view_name + ' do instead ';
           updpre = 'create rule "_UPDATE" as on update to ' + view_name + ' do instead ';
-          delpre = 'create rule "_DELETE" as on delete to ' + view_name + ' do instead ';
+          delpre = 'create rule "_DELETE" as on delete to ' + view_name + ' do instead (';
           
       if(orm.privileges || orm.isNested) {
         var rule;
@@ -142,9 +148,11 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         rules.push(rule); 
 
         /* delete rule */
-        rule = canDelete && pKeyCol ?
-               delpre + 'delete from ' + orm.table + ' where ' + pKeyCol + ' = old.' + pKeyAlias :
-               delpre + 'nothing;';
+        if(canDelete && pKeyCol) {
+          rule = delpre + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
+          print(NOTICE, 'del rule', rule);
+        }
+        else rule = delpre + 'nothing; )';
 
         rules.push(rule);
 
@@ -152,7 +160,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       } else { 
         rules.push(inspre + 'nothing;');
         rules.push(updpre + 'nothing;');
-        rules.push(delpre + 'nothing;');
+        rules.push(delpre + 'nothing; )');
       }
     }
     /* handle extension */
