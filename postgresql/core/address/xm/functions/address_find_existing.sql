@@ -1,4 +1,4 @@
-﻿create or replace function xm.address_find_existing(address text) 
+﻿create or replace function xm.address_find_existing(type text, line1 text, line2 text, line3 text, city text, state text, postalcode text, country text) 
   returns text stable as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
@@ -7,10 +7,9 @@
   // PROCESS
   //
 
-  var a = JSON.parse(address),
-      line1, line2, line3, city, state, postalcode, country, sql, resp, guid, ret;
+  var sql, resp, guid, ret;
 
-  if(a.type !== 'Address') {
+  if(type !== 'Address') {
     throw new Error("Class type invalid: must be type Adress!");
 
   } else {
@@ -24,14 +23,6 @@
           + "and (coalesce(upper(postalcode),'') = coalesce(upper($6),'')) "
           + "and (coalesce(upper(country),'') = coalesce(upper($7),''))) ";
 
-      line1 = a.line1;
-      line2 = a.line2;
-      line3 = a.line3;
-      city = a.city;
-      state = a.state;
-      postalcode = a.postalcode;
-      country = a.country;
-
       resp = executeSql(sql,[line1,
                              line2,
                              line3,
@@ -42,9 +33,10 @@
 
       if(resp.length) {
         guid = resp[0].guid;
-        sql = "select private.retrieve_record('XM.Address', $1)";
-        ret = executeSql(sql,[guid]);
-        return ret[0].retrieve_record;
+        sql = "select private.retrieve_record('XM.Address', $1) as result";
+        ret = executeSql(sql,[guid])[0].result;
+        ret = JSON.parse(ret);
+        return JSON.stringify(ret);
 
       } else {
           return '{}';
@@ -61,5 +53,7 @@ select private.fetch(E'{ "query": {"recordType":"XM.Address",
 
 select private.retrieve_record('XM.Address',1);
 
-select xm.address_find_existing(E'{"guid":1,"number":"1","isActive":true,"line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States","notes":"","comments":[],"characteristics":[],"type":"Address","dataState":"read"}');
+(E'{"line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States","type":"Address"}');
+
+select xm.address_find_existing('Address','Tremendous Toys Inc.','101 Toys Place','','Walnut Hills','VA','22209','United States');
 */
