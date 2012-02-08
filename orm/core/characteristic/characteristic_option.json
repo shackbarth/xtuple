@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "CharacteristicOption",
   "table": "charopt",
+  "idSequenceName": "public.charopt_charopt_id_seq",
   "comment": "Characteristic Option Map",
   "properties": [
     {

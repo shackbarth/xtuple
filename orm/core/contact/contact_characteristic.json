@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "ContactCharacteristic",
   "table": "xm.characteristic_assignment",
+  "idSequenceName": "public.charass_charass_id_seq",
   "comment": "Contact Characteristic Map",
   "properties": [
     {

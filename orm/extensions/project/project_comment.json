@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectComment",
   "table": "xm.comment",
+  "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Project Comment Map",
   "canDelete": false,
   "properties": [

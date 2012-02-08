@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectContact",
   "table": "private.docinfo",
+  "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Project Contact Map",
   "canUpdate": false,
   "properties": [

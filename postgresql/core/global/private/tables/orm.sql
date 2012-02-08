@@ -14,7 +14,7 @@ select private.add_column('orm','orm_seq', 'integer', 'not null default 0');
 select private.add_column('orm','orm_active', 'boolean', 'not null default true');
 select private.add_constraint('orm','orm_orm_name_orm_context', 'unique(orm_name, orm_context)');
 
-comment on table private.model is 'Core table for xTuple Object Relational Mapping Definitions';
+comment on table private.orm is 'Core table for xTuple Object Relational Mapping Definitions';
 
 -- create trigger
 
