@@ -177,7 +177,6 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         /* delete rule */
         if(canDelete && pKeyCol) {
           rule = delpre + '(' + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
-          print(NOTICE, 'del rule', rule);
         }
         else rule = delpre + 'nothing;';
 
