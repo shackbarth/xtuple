@@ -177,6 +177,7 @@
   "extensions": [
     {
       "table": "prj",
+      "isChild": true,
       "canCreate": false,
       "canUpdate": false,
       "canDelete": false,
