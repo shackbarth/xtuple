@@ -65,4 +65,7 @@
 \i core/global/xm/functions/fetch_number.sql;
 \i core/global/xm/functions/fetch_id.sql;
 
+-- core/comment/private
+\i core/comment/private/comment.sql; 
+
 -- [ END ] core
