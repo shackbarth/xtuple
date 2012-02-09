@@ -1,10 +1,10 @@
 ﻿{
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "AddressComment",
+  "type": "SiteComment",
   "table": "private.comment",
   "idSequenceName": "public.comment_comment_id_seq",
-  "comment": "Address Comment Map",
+  "comment": "Site Comment Map",
   "canDelete": false,
   "properties": [
     {
@@ -20,12 +20,12 @@
       "attr": {
         "type": "String",
         "column": "comment_source",
-        "value": "ADDR",
+        "value": "WH",
         "isVisible": false
       }
-    },
+    },    
     {
-      "name": "address",
+      "name": "site",
       "attr": {
         "type": "Number",
         "column": "comment_source_id",

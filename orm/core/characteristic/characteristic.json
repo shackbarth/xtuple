@@ -1,10 +1,18 @@
-{
+﻿{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Characteristic",
   "table": "char",
   "idSequenceName": "public.char_char_id_seq",
   "comment": "Characteristic Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCharacteristics",
+      "read": "ViewCharacteristics",
+      "update": "MaintainCharacteristics",
+      "delete": "MaintainCharacteristics"
+    }
+  },
   "properties": [
     {
       "name": "guid",

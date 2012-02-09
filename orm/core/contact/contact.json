@@ -1,0 +1,244 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Contact",
+  "table": "cntct",
+  "idSequenceName": "public.cntct_cntct_id_seq",
+  "orderSequence": "ContactNumber",
+  "comment": "Contact Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainAllContacts",
+      "read": "ViewAllContacts",
+      "update": "MaintainAllContacts",
+      "delete": "MaintainAllContacts"
+    },
+    "personal": {
+      "create": "MaintainPersonalContacts",
+      "read": "ViewPersonalContacts",
+      "update": "MaintainPersonalContacts",
+      "delete": "MaintainPersonalContacts",
+      "properties": [
+        "owner"
+       ]
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cntct_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "cntct_number",
+        "isEditable":false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "cntct_active"
+      }
+    },
+    {
+      "name": "honorific",
+      "attr": {
+        "type": "String",
+        "column": "cntct_honorific"
+      }
+    },
+    {
+      "name": "firstName",
+      "attr": {
+        "type": "String",
+        "column": "cntct_first_name"
+      }
+    },
+    {
+      "name": "middleName",
+      "attr": {
+        "type": "String",
+        "column": "cntct_middle"
+      }
+    },
+    {
+      "name": "lastName",
+      "attr": {
+        "type": "String",
+        "column": "cntct_last_name"
+      }
+    },
+    {
+      "name": "suffix",
+      "attr": {
+        "type": "String",
+        "column": "cntct_suffix"
+      }
+    },
+    {
+      "name": "jobTitle",
+      "attr": {
+        "type": "String",
+        "column": "cntct_title"
+      }
+    },
+    {
+      "name": "initials",
+      "attr": {
+        "type": "String",
+        "column": "cntct_initials"
+      }
+    },
+    {
+      "name": "phone",
+      "attr": {
+        "type": "String",
+        "column": "cntct_phone"
+      }
+    },
+    {
+      "name": "alternate",
+      "attr": {
+        "type": "String",
+        "column": "cntct_phone2"
+      }
+    },
+    {
+      "name": "fax",
+      "attr": {
+        "type": "String",
+        "column": "cntct_fax"
+      }
+    },
+    {
+      "name": "primaryEmail",
+      "attr": {
+        "type": "String",
+        "column": "cntct_email"
+      }
+    },
+    {
+      "name": "webAddress",
+      "attr": {
+        "type": "String",
+        "column": "cntct_webaddr"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "XM.UserAccountInfo",
+        "column": "cntct_owner_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "cntct_notes"
+      }
+    },
+    {
+      "name": "address",
+      "toOne": {
+        "type": "XM.AddressInfo",
+        "column": "cntct_addr_id"
+      }
+    },
+    {
+      "name": "email",
+      "toMany": {
+        "type": "XM.ContactEmail",
+        "column": "cntct_id",
+        "inverse": "contact",
+        "isMaster": true
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "type": "XM.ContactComment",
+        "column": "cntct_id",
+        "inverse": "contact",
+        "isMaster": true,
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "T"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "characteristics",
+      "toMany": {
+        "type": "XM.ContactCharacteristic",
+        "column": "cntct_id",
+        "inverse": "contact",
+        "isMaster": true
+      }
+    },
+    {
+      "name": "contacts",
+      "toMany": {
+        "type": "XM.ContactContact",
+        "column": "cntct_id",
+        "inverse": "source",
+        "isMaster": true
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "type": "XM.ContactItem",
+        "column": "cntct_id",
+        "inverse": "source",
+        "isMaster": true
+      }
+    },
+    {
+      "name": "files",
+      "toMany": {
+        "type": "XM.ContactFile",
+        "column": "cntct_id",
+        "inverse": "source",
+        "isMaster": true
+      }
+    },
+    {
+      "name": "images",
+      "toMany": {
+        "type": "XM.ContactImage",
+        "column": "cntct_id",
+        "inverse": "source",
+        "isMaster": true
+      }
+    },
+    {
+      "name": "urls",
+      "toMany": {
+        "type": "XM.ContactUrl",
+        "column": "cntct_id",
+        "inverse": "source",
+        "isMaster": true
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "T"
+}

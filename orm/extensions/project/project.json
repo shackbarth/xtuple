@@ -108,7 +108,6 @@
     {
       "name": "recurrences",
       "toMany": {
-        "isMaster": true,
         "type": "XM.ProjectRecurrence",
         "column": "prj_id",
         "inverse": "project"
