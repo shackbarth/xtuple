@@ -1,10 +1,10 @@
 ﻿{
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ProjectImage",
+  "type": "ContactUrl",
   "table": "private.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
-  "comment": "Project Image Map",
+  "comment": "Contact Url Map",
   "canUpdate": false,
   "properties": [
     {
@@ -15,16 +15,16 @@
         "isPrimaryKey": true
       }
     },
-    {
+   {
       "name": "sourceType",
       "attr": {
         "type": "String",
         "column": "source_type",
-        "value": "J",
+        "value": "T",
         "isVisible": false
       }
     },
-    {
+     {
       "name": "source",
       "attr": {
         "type": "Number",
@@ -37,14 +37,14 @@
       "attr": {
         "type": "String",
         "column": "target_type",
-        "value": "IMG",
+        "value": "URL",
         "isVisible": false
       }
     },
     {
-      "name": "image",
+      "name": "url",
       "toOne": {
-        "type": "XM.ImageInfo",
+        "type": "XM.Url",
         "column": "target_id"
       }
     },

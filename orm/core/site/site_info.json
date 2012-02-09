@@ -1,9 +1,9 @@
-{
+﻿{
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ItemInfo",
-  "table": "item",
-  "comment": "Item Info Map",
+  "type": "SiteInfo",
+  "table": "whsinfo",
+  "comment": "Site Info Map",
   "canCreate": false,
   "canUpdate": false,
   "canDelete": false,
@@ -12,15 +12,15 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "item_id ",
+        "column": "warehous_id",
         "isPrimaryKey": true
       }
     },
     {
-      "name": "number",
+      "name": "code",
       "attr": {
         "type": "String",
-        "column": "item_number ",
+        "column": "warehous_code",
         "isEditable": false
       }
     },
@@ -28,32 +28,31 @@
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "item_active ",
+        "column": "warehous_active",
         "isEditable": false
       }
     },
     {
-      "name": "description1",
+      "name": "description",
       "attr": {
         "type": "String",
-        "column": "item_descrip1",
+        "column": "warehous_descrip",
         "isEditable": false
       }
     },
     {
-      "name": "description2",
-      "attr": {
-        "type": "String",
-        "column": "item_descrip2",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "inventoryUnit",
+      "name": "siteType",
       "attr": {
         "type": "Number",
-        "column": "item_inv_uom_id",
+        "column": "warehous_sitetype_id",
         "isEditable": false
+      }
+    },
+    {
+      "name": "address",
+      "toOne": {
+        "type": "XM.AddressInfo",
+        "column": "warehous_addr_id"
       }
     }
   ],

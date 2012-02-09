@@ -1,12 +1,10 @@
 ﻿{
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "FileInfo",
+  "type": "File",
   "table": "file",
-  "comment": "File Info Map",
-  "canCreate": false,
-  "canUpdate": false,
-  "canDelete": false,
+  "idSequenceName": "public.file_file_id_seq",
+  "comment": "File Map",
   "properties": [
     {
       "name": "guid",
@@ -20,11 +18,18 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "file_title",
+        "column": "file_title"
+      }
+    },
+    {
+      "name": "data",
+      "attr": {
+        "type": "String",
+        "column": "file_stream",
         "isEditable": false
       }
     }
   ],
-  "isNested": true,
-  "isSystem": true
+  "isSystem": true,
+  "sourceCode": "FILE"
 }

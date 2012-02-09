@@ -1,4 +1,4 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Address",
@@ -8,10 +8,10 @@
   "comment": "Address Map",
   "privileges": {
     "all": {
-      "create": "MaintainAllAddress",
-      "read": "ViewAllAddress",
-      "update": "MaintainAllAddress",
-      "delete": "MaintainAllAddress"
+      "create": "MaintainAddress",
+      "read": "ViewAddress",
+      "update": "MaintainAddress",
+      "delete": "MaintainAddress"
     }
   },
   "properties": [
@@ -99,7 +99,20 @@
       "toMany": {
         "type": "XM.AddressComment",
         "column": "addr_id",
-        "inverse": "address"
+        "inverse": "address",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "ADDR"
+            }
+          ]
+        }
       }
     },
     {

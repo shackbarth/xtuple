@@ -1,0 +1,67 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Unit",
+  "table": "uom",
+  "idSequenceName": "public.uom_uom_id_seq",
+  "comment": "Unit Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainUOMs",
+      "read": "ViewUOMs",
+      "update": "MaintainUOMs",
+      "delete": "MaintainUOMs"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "uom_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "uom_name"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "uom_descrip"
+      }
+    },
+    {
+      "name": "isItemWeight",
+      "attr": {
+        "type": "Boolean",
+        "column": "uom_item_weight"
+      }
+    },
+    {
+      "name": "conversionTo",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.UnitConversion",
+        "column": "uom_id",
+        "inverse": "to_unit"
+      }
+    },
+    {
+      "name": "conversionFrom",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.UnitConversion",
+        "column": "uom_id",
+        "inverse": "from_unit"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}
