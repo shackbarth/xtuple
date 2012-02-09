@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectTask",
   "table": "prjtask",
+  "idSequenceName": "public.prjtask_prjtask_id_seq",
   "comment": "Project Task Map",
   "privileges": {
     "all": {

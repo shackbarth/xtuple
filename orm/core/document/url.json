@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "Url",
   "table": "urlinfo",
+  "idSequenceName": "public.urlinfo_url_id_seq",
   "comment": "URL Map",
   "properties": [
     {

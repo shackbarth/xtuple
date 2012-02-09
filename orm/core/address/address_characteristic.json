@@ -1,10 +1,9 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ContactCharacteristic",
+  "type": "AddressCharacteristic",
   "table": "xm.characteristic_assignment",
-  "idSequenceName": "public.charass_charass_id_seq",
-  "comment": "Contact Characteristic Map",
+  "comment": "Address Characteristic Map",
   "properties": [
     {
       "name": "guid",
@@ -19,12 +18,12 @@
       "attr": {
         "type": "String",
         "column": "target_type",
-        "value": "CNTCT",
+        "value": "ADDR",
         "isVisible": false
       }
     },
     {
-      "name": "contact",
+      "name": "address",
       "attr": {
         "type": "Number",
         "column": "target",
@@ -35,8 +34,7 @@
       "name": "characteristic",
       "attr": {
         "type": "XM.Characteristic",
-        "column": "characteristic",
-        "isEditable": false
+        "column": "characteristic"
       }
     },
     {

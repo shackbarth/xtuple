@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "ProjectProject",
   "table": "private.docinfo",
+  "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Project Project Map",
   "canUpdate": false,
   "properties": [

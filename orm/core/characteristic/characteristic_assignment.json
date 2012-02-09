@@ -4,6 +4,7 @@
   "type": "CharacteristicAssignment",
   "table": "charass",
   "comment": "Characteristic Assignment Map",
+  "idSequenceName": "public.charass_charass_id_seq",
   "properties": [
     {
       "name": "guid",

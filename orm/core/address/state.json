@@ -1,0 +1,40 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "State",
+  "table": "state",
+  "idSequenceName": "public.state_state_id_seq",
+  "comment": "State Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "state_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "state_name"
+      }
+    },
+    {
+      "name": "abbreviation",
+      "attr": {
+        "type": "String",
+        "column": "state_abbr"
+      }
+    },
+    {
+      "name": "country",
+      "attr": {
+        "type": "Number",
+        "column": "state_country_id"
+      }
+    }
+  ],
+  "isSystem": true
+}

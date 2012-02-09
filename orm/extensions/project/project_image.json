@@ -3,6 +3,7 @@ select private.install_orm('{
   "nameSpace": "XM",
   "type": "ProjectImage",
   "table": "private.docinfo",
+  "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Project Image Map",
   "canUpdate": false,
   "properties": [
