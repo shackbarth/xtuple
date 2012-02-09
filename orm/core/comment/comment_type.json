@@ -3,16 +3,8 @@
   "nameSpace": "XM",
   "type": "CommentType",
   "table": "cmnttype",
-  "idSequenceName": "public.cmnttype_cmnttype_id_seq",
+  "idSequenceName": "cmnttype_cmnttype_id_seq",
   "comment": "Comment Type Map",
-  "privileges": {
-    "all": {
-      "create": "MaintainCommentTypes",
-      "read": "MaintainCommentTypes",
-      "update": "MaintainCommentTypes",
-      "delete": "MaintainCommentTypes"
-    }
-  },
   "properties": [
     {
       "name": "guid",

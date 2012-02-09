@@ -3,15 +3,8 @@
   "nameSpace": "XM",
   "type": "Honorific",
   "table": "hnfc",
+  "idSequenceName": "hnfc_hnfc_id_seq",
   "comment": "Honorific Map",
-  "privileges": {
-    "all": {
-      "create": "MaintainTitles",
-      "read": "ViewTitles",
-      "update": "MaintainTitles",
-      "delete": "MaintainTitles"
-    }
-  },
   "properties": [
     {
       "name": "guid",
