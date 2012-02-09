@@ -102,12 +102,13 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             
         col = 'array(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toMany.column + ') as "' + alias + '"';
         cols.push(col);
-        
+    
         /* build array for delete cascade */
         if(props[i].toMany.deleteDelegate && 
            props[i].toMany.deleteDelegate.table && 
            props[i].toMany.deleteDelegate.relations) {
-          var clauses = [];
+
+          var conditions = [];
 
           for(var n = 0; n < props[i].toMany.deleteDelegate.relations.length; n++) {
             var col = props[i].toMany.deleteDelegate.relations[n].column,
@@ -117,14 +118,11 @@ create or replace function private.create_orm_view(orm_name text) returns void a
                         "'" + props[i].toMany.deleteDelegate.relations[n].value + "'" :
                         props[i].toMany.deleteDelegate.relations[n].value;
                         
-            clauses.push(col + ' = ' + value);
+            conditions.push(col + ' = ' + value);
           }
 
-          delCascade.push('delete from ' + props[i].toMany.deleteDelegate.table + ' where ' + clauses.join(' and ') + ';');
-        } else if(props[i].toMany.deleteCascade !== false) {
-          delCascade.push('delete from ' + table + ' where ' + type + '.' + inverse  + ' = ' + 'old.{pKeyAlias};');
-        }
-        
+          delCascade.push('delete from ' + props[i].toMany.deleteDelegate.table + ' where ' + conditions.join(' and ') + ';');
+        } 
       }
 
       /* process relation (extension only) */
@@ -212,7 +210,6 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         processOrm(ext);
       }
     }
-    
   }
 
   // ..........................................................

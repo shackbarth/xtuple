@@ -106,6 +106,14 @@
       }
     },
     {
+      "name": "recurrences",
+      "toMany": {
+        "type": "XM.ProjectRecurrence",
+        "column": "prj_id",
+        "inverse": "project"
+      }
+    },
+    {
       "name": "comments",
       "toMany": {
         "type": "XM.ProjectComment",
