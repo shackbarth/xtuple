@@ -1,4 +1,4 @@
-{
+﻿{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "FileInfo",
@@ -27,4 +27,4 @@
   ],
   "isNested": true,
   "isSystem": true
-}'
+}
