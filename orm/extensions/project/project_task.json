@@ -145,14 +145,29 @@
     {
       "name": "comments",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectTaskComment",
         "column": "prjtask_id",
-        "inverse": "project_task"
+        "inverse": "project_task",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "TA"
+            }
+          ]
+        }
       }
     },
     {
       "name": "alarms",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectTaskAlarm",
         "column": "prjtask_id",
         "inverse": "project_task"
@@ -162,19 +177,16 @@
   "extensions": [
     {
       "table": "prj",
-      "isRequired": true,
       "canCreate": false,
       "canUpdate": false,
       "canDelete": false,
-      "properties": [
+      "relations": [
         {
-          "name": "fkey",
-          "relation": {
-            "type": "Number",
-            "column": "prj_id",
-            "inverse": "prjtask_prj_id"
-          }
-        },
+          "column": "prj_id",
+          "inverse": "prjtask_prj_id"
+        }
+      ],
+      "properties": [
         {
           "name": "projectAssignedTo",
           "toOne": {
