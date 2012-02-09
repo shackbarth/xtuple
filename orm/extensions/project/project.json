@@ -1,4 +1,4 @@
-{
+'{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Project",
@@ -106,6 +106,14 @@
       }
     },
     {
+      "name": "recurrences",
+      "toMany": {
+        "type": "XM.ProjectRecurrence",
+        "column": "prj_id",
+        "inverse": "project"
+      }
+    },
+    {
       "name": "comments",
       "toMany": {
         "type": "XM.ProjectComment",
@@ -185,4 +193,4 @@
   ],
   "isSystem": true,
   "sourceCode": "J"
-}
+}'
