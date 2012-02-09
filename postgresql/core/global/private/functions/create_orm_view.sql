@@ -104,46 +104,58 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         cols.push(col);
     
         /* build array for delete cascade */
-        if(props[i].toMany.deleteDelegate && 
+        if(props[i].toMany.isMaster &&
+           props[i].toMany.deleteDelegate && 
            props[i].toMany.deleteDelegate.table && 
            props[i].toMany.deleteDelegate.relations) {
 
-          var conditions = [];
+          var rel = props[i].toMany.deleteDelegate.relations,
+              table = props[i].toMany.deleteDelegate.table,
+              conditions = [];
 
-          for(var n = 0; n < props[i].toMany.deleteDelegate.relations.length; n++) {
-            var col = props[i].toMany.deleteDelegate.relations[n].column,
-                value = props[i].toMany.deleteDelegate.relations[n].inverse ? 
-                        'old.' + props[i].toMany.deleteDelegate.relations[n].inverse : 
-                        isNaN(props[i].toMany.deleteDelegate.relations[n].value - 0) ? 
-                        "'" + props[i].toMany.deleteDelegate.relations[n].value + "'" :
-                        props[i].toMany.deleteDelegate.relations[n].value;
+          for(var n = 0; n < rel.length; n++) {
+            var col = rel[n].column,
+                value = rel[n].inverse ? 
+                        'old.' + rel[n].inverse : 
+                        isNaN(rel[n].value - 0) ? 
+                        "'" + rel[n].value + "'" :
+                        rel[n].value;
                         
             conditions.push(col + ' = ' + value);
           }
 
-          delCascade.push('delete from ' + props[i].toMany.deleteDelegate.table + ' where ' + conditions.join(' and ') + ';');
-        } 
-      }
-
-      /* process relation (extension only) */
-      if(orm.isExtension && props[i].relation && props[i].relation.column && props[i].relation.inverse) {
-        var join = orm.isRequired ? ' join ' : ' left outer join ';
-
-        join = join + orm.table + ' ' + tblAlias + ' on ' + tblAlias + '.' + props[i].relation.column + ' = t1.' + props[i].relation.inverse;
-
-        tbls.push(join);
+          delCascade.push('delete from ' + table + ' where ' + conditions.join(' and ') + ';');
+        } else if (props[i].toMany.isMaster) { 
+          delCascade.push('delete from ' + table + ' where ' + type + '.' + inverse  + ' = ' + 'old.{pKeyAlias};'); 
+        }
       }
     }
 
-    /* process for base orm */
-    if(!orm.isExtension) {
+    /* build crud rules */
+    var inspre = 'create rule "_CREATE" as on insert to ' + view_name + ' do instead ';
+        updpre = 'create rule "_UPDATE" as on update to ' + view_name + ' do instead ';
+        delpre = 'create rule "_DELETE" as on delete to ' + view_name + ' do instead ';
+
+    /* process extension */
+    if(orm.isExtension) {
+      /* process relations */
+      if(orm.relations) {
+        var join = ' join ' + orm.table + ' ' + tblAlias + ' on ',
+            conditions = [];
+    
+        for(var i = 0; i < orm.relations.length; i++) {
+          conditions.push(tblAlias + '.' + orm.relations[i].column + ' = t1.' + orm.relations[i].inverse);
+        }
+
+        join = join.concat(conditions.join(' and '));
+
+        tbls.push(join);
+      }
+
+    /* base orm */
+    } else {
       /* table */
       tbls.push(orm.table + ' t' + tbl);
-
-      /* build crud rules */
-      var inspre = 'create rule "_CREATE" as on insert to ' + view_name + ' do instead ';
-          updpre = 'create rule "_UPDATE" as on update to ' + view_name + ' do instead ';
-          delpre = 'create rule "_DELETE" as on delete to ' + view_name + ' do instead ';
           
       if(orm.privileges || orm.isNested) {
         var rule;
@@ -178,17 +190,6 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         rules.push(delpre + 'nothing;');
       }
     }
-    /* handle extension */
-    else {
-    /*
-      if(orm.isRequired) {
-        else tbls.push(orm.table);
-        
-        tbls.push(orm.joinType + ' ' + orm.table + ' on (' + orm.joinClause + ')');
-        */
-    } ;
- 
-    /* if(orm.clauses) clauses.push(orm.conditions); */
 
     if(orm.order) {
       for(var i = 0; i < orm.order.length; i++) {
@@ -253,7 +254,6 @@ create or replace function private.create_orm_view(orm_name text) returns void a
                         'select ', cols.join(', '),
                         ' from ', tbls.join(' '));
                      
-  if(clauses.length) query = query.concat(' where ', clauses.join(' and '));
   if(orderBy.length) query = query.concat(' order by ', orderBy.join(' , '));
 
   if(debug) print(NOTICE, 'query', query);

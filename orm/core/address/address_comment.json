@@ -1,8 +1,8 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "AddressComment",
-  "table": "private.comment",
+  "table": "xm.comment",
   "comment": "Address Comment Map",
   "canDelete": false,
   "properties": [
@@ -10,7 +10,7 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "comment_id",
+        "column": "guid",
         "isPrimaryKey": true
       }
     },
@@ -18,7 +18,7 @@
       "name": "sourceType",
       "attr": {
         "type": "String",
-        "column": "comment_source",
+        "column": "source",
         "value": "ADDR",
         "isVisible": false
       }
@@ -27,7 +27,7 @@
       "name": "address",
       "attr": {
         "type": "Number",
-        "column": "comment_source_id",
+        "column": "source_id",
         "isEditable": false
       }
     },
@@ -35,7 +35,7 @@
       "name": "date",
       "attr": {
         "type": "Date",
-        "column": "comment_date",
+        "column": "date",
         "isEditable": false
       }
     },
@@ -43,7 +43,7 @@
       "name": "username",
       "attr": {
         "type": "String",
-        "column": "comment_user",
+        "column": "username",
         "isEditable": false
       }
     },
@@ -51,7 +51,7 @@
       "name": "commentType",
       "attr": {
         "type": "Number",
-        "column": "comment_cmnttype_id",
+        "column": "comment_type",
         "isEditable": false
       }
     },
@@ -59,14 +59,14 @@
       "name": "text",
       "attr": {
         "type": "String",
-        "column": "comment_text"
+        "column": "text"
       }
     },
     {
       "name": "isPublic",
       "attr": {
         "type": "Boolean",
-        "column": "comment_public"
+        "column": "is_public"
       }
     }
   ],

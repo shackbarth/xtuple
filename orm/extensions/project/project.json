@@ -116,6 +116,7 @@
     {
       "name": "comments",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectComment",
         "column": "prj_id",
         "inverse": "project",
@@ -137,6 +138,7 @@
     {
       "name": "tasks",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectTask",
         "column": "prj_id",
         "inverse": "project"
@@ -145,6 +147,7 @@
     {
       "name": "contacts",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectContact",
         "column": "prj_id",
         "inverse": "source"
@@ -153,6 +156,7 @@
     {
       "name": "items",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectItem",
         "column": "prj_id",
         "inverse": "source"
@@ -161,6 +165,7 @@
     {
       "name": "files",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectFile",
         "column": "prj_id",
         "inverse": "source"
@@ -169,6 +174,7 @@
     {
       "name": "images",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectImage",
         "column": "prj_id",
         "inverse": "source"
@@ -177,6 +183,7 @@
     {
       "name": "urls",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectUrl",
         "column": "prj_id",
         "inverse": "source"
@@ -185,6 +192,7 @@
     {
       "name": "projects",
       "toMany": {
+        "isMaster": true,
         "type": "XM.ProjectProject",
         "column": "prj_id",
         "inverse": "source"

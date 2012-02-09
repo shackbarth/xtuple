@@ -249,6 +249,7 @@ create or replace function private.export_model(record_type text) returns text a
             widx = cols[i].search(/where/) + 5;
 
         property.toMany = new Object;
+        property.toMany.isMaster = true;
         property.toMany.type = getNamespace(coldef.typname.slice(1)) + '.' + coldef.typname.slice(1,2).toUpperCase() + camelize(coldef.typname.slice(2));
    //     property.toMany.table = col.slice(0, pidx);
         property.toMany.column = col.slice(pidx + 1);
