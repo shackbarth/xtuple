@@ -1,0 +1,75 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ProjectComment",
+  "table": "xm.comment",
+  "comment": "Project Comment Map",
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "guid",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "sourceType",
+      "attr": {
+        "type": "String",
+        "column": "source",
+        "value": "J",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "project",
+      "attr": {
+        "type": "Number",
+        "column": "source_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "date",
+      "attr": {
+        "type": "Date",
+        "column": "date",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "username",
+      "attr": {
+        "type": "String",
+        "column": "username",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "commentType",
+      "attr": {
+        "type": "Number",
+        "column": "comment_type",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "text",
+      "attr": {
+        "type": "String",
+        "column": "text"
+      }
+    },
+    {
+      "name": "isPublic",
+      "attr": {
+        "type": "Boolean",
+        "column": "is_public"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

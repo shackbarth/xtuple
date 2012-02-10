@@ -1,0 +1,75 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Comment",
+  "table": "public.comment",
+  "comment": "Comment Map",
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "comment_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "sourceId",
+      "attr": {
+        "type": "Number",
+        "column": "comment_source_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "source",
+      "attr": {
+        "type": "String",
+        "column": "comment_source",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "date",
+      "attr": {
+        "type": "Date",
+        "column": "comment_date",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "username",
+      "attr": {
+        "type": "String",
+        "column": "comment_user",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "commentType",
+      "attr": {
+        "type": "Number",
+        "column": "comment_cmnttype_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "text",
+      "attr": {
+        "type": "String",
+        "column": "comment_text"
+      }
+    },
+    {
+      "name": "isPublic",
+      "attr": {
+        "type": "Boolean",
+        "column": "comment_public"
+      }
+    }
+  ],
+  "order": "date desc",
+  "isNested": true,
+  "isSystem": true
+}

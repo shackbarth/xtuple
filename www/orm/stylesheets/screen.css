@@ -1,0 +1,253 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/* line 17, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+/* line 20, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+body {
+  line-height: 1;
+}
+
+/* line 22, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 24, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 26, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 28, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 101, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 30, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 114, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+
+/* line 9, ../sass/screen.scss */
+html {
+  overflow: hidden;
+}
+
+/* line 13, ../sass/screen.scss */
+body {
+  background-color: #ddd;
+  color: #222;
+  font-family: arial, helvetica, sans-serif;
+  font-size: .8em;
+}
+
+/* line 20, ../sass/screen.scss */
+input[type="checkbox"] {
+  height: 100%;
+}
+
+/* line 24, ../sass/screen.scss */
+.light-header {
+  -moz-border-radius: 5px 5px;
+  -webkit-border-radius: 5px 5px;
+  -o-border-radius: 5px 5px;
+  -ms-border-radius: 5px 5px;
+  -khtml-border-radius: 5px 5px;
+  border-radius: 5px 5px;
+  margin-left: 2px;
+  margin-right: 2px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 2px;
+  display: block;
+  font-size: .9em;
+  font-weight: bold;
+  color: #222;
+  background-color: #bbb;
+  font-style: italic;
+}
+
+/* line 39, ../sass/screen.scss */
+.light-header.console {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+}
+
+/* line 45, ../sass/screen.scss */
+#controls {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  margin: 5px;
+  width: 150px;
+}
+
+/* line 54, ../sass/screen.scss */
+#controls button {
+  display: block;
+  width: 100%;
+}
+
+/* line 59, ../sass/screen.scss */
+#list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 165px;
+  padding: 5px;
+  margin: 5px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* line 70, ../sass/screen.scss */
+#list .entry {
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  -o-border-radius: 5px 5px 0 0;
+  -ms-border-radius: 5px 5px 0 0;
+  -khtml-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+  margin: 4px;
+  padding: 2px;
+  overflow: hidden;
+  clear: both;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+}
+
+/* line 80, ../sass/screen.scss */
+#list .entry .header {
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  -o-border-radius: 5px 5px 0 0;
+  -ms-border-radius: 5px 5px 0 0;
+  -khtml-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+  background-color: #eee;
+  padding: 4px;
+  height: 15px;
+}
+
+/* line 87, ../sass/screen.scss */
+#list .entry .header .model {
+  font-weight: bold;
+  vertical-align: middle;
+  line-height: 15px;
+}
+
+/* line 93, ../sass/screen.scss */
+#list .entry .header .comment {
+  font-style: italic;
+  font-size: .6em;
+  vertical-align: middle;
+  line-height: 15px;
+  margin-left: 12px;
+}
+
+/* line 101, ../sass/screen.scss */
+#list .entry .column {
+  float: left;
+  padding: 10px;
+  font-size: .9em;
+}
+
+/* line 107, ../sass/screen.scss */
+#list .entry .column .label {
+  padding: 2px;
+  font-style: italic;
+}
+
+/* line 112, ../sass/screen.scss */
+#list .entry .column .value {
+  padding: 2px;
+  font-weight: bold;
+}
+
+/* line 117, ../sass/screen.scss */
+#list .entry .header .check {
+  float: right;
+}
+
+/* line 121, ../sass/screen.scss */
+#console {
+  -moz-border-radius: 5px 5px;
+  -webkit-border-radius: 5px 5px;
+  -o-border-radius: 5px 5px;
+  -ms-border-radius: 5px 5px;
+  -khtml-border-radius: 5px 5px;
+  border-radius: 5px 5px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 250px;
+  padding: 5px;
+  margin: 5px;
+  border: 2px solid #222;
+  color: #eee;
+  background-color: #111;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* line 137, ../sass/screen.scss */
+#console .entry {
+  margin: 2px;
+  padding: 2px;
+  display: block;
+  width: 100%;
+  color: #fff;
+  word-wrap: break-word;
+}
+
+/* line 146, ../sass/screen.scss */
+#console .entry.error {
+  color: #ffa500;
+}
+
+/* line 150, ../sass/screen.scss */
+#console .entry.server {
+  color: #5cb3ff;
+}
