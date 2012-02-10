@@ -90,7 +90,10 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             inverse = props[i].toOne.inverse ? props[i].toOne.inverse : 'guid',
             isEditable = props[i].toOne.isEditable !== false ? true : false;
             
-        col = '(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toOne.column + ') as "' + alias + '"';
+        col = '(select ' + type 
+            + ' from ' + table 
+            + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toOne.column + ') as "' + alias + '"';
+            
         cols.push(col);
 
         /* for insert rule */
@@ -107,7 +110,10 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             type = table.replace((/\w+\./i),''),
             inverse = props[i].toMany.inverse ? props[i].toMany.inverse : 'guid';
             
-        col = 'array(select ' + type + ' from ' + table + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toMany.column + ') as "' + alias + '"';
+        col = 'array(select ' + type 
+            + ' from ' + table 
+            + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toMany.column + ') as "' + alias + '"';
+            
         cols.push(col);
     
         /* build array for delete cascade */
@@ -145,6 +151,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
     /* process extension */
     if(orm.isExtension) {
+      var upsTgtCols = [],
+          upsSrcCols = [];
 
       /* process relations */
       if(orm.relations) {
@@ -187,26 +195,51 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             value = '{state}.guid';
           }
                      
-          conditions.push(orm.relations[i].column + ' = ' + value);
+          conditions.push(rel.column + ' = ' + value);
+          upsTgtCols.push(rel.column);
+          upsSrcCols.push(value);
         }
 
-        /* insert rule for extensions */
+        /* insert rules for extensions */
         if(canCreate && insSrcCols.length) {
-          var rule = base.table === orm.table ? 
-                     inspre.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"') + 'update ' + orm.table + ' set ' + updCols.join(',') + ' where ' + conditions.join(' and ').replace(/{state}/, 'new')  : 
-                     inspre.replace(/{name}/,'"_INSERT_' + tblAlias.toUpperCase() + '"') + 'insert into ' + orm.table + '(' + insTgtCols.join(',') + ') values (' + insSrcCols.join(',') + ');';
+          if(base.table === orm.table) {
+            rule = inspre.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"') 
+                 + 'update ' + orm.table + ' set ' + updCols.join(',') 
+                 + ' where ' + conditions.join(' and ').replace(/{state}/, 'new');
+          } else {
+            rule = inspre.replace(/{name}/,'"_INSERT_' + tblAlias.toUpperCase() + '"') 
+                 + 'insert into ' + orm.table + '(' +  upsTgtCols.join(',') + ',' + insTgtCols.join(',') 
+                 + ') values (' + upsSrcCols.join(',').replace(/{state}/, 'new') + ',' + insSrcCols.join(',') + ');';
+          }
+          
           rules.push(rule); 
         }
 
-        /* update rule for extensions */
+        /* update rules for extensions */
         if(canUpdate && updCols.length) {
-          var rule = updpre.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"') + 'update ' + orm.table + ' set ' + updCols.join(',') + ' where ' + conditions.join(' and ').replace(/{state}/, 'old');
+          var rule;
+
+          if(!orm.isChild && base.table !== orm.table) {
+            rule = updpre.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"') 
+                 + 'insert into ' + orm.table + ' (' + upsTgtCols.join(',') + ',' + insTgtCols.join(',') + ') ' 
+                 + 'select ' + upsSrcCols.join(',').replace(/{state}/, 'old') + ',' + insSrcCols.join(',') 
+                 + ' where ( select count(*) = 0 from '
+                 + orm.table + ' where ' + conditions.join(' and ').replace(/{state}/, 'old') + ' )';
+
+            rules.push(rule);
+          }
+
+          rule = updpre.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"') 
+               + 'update ' + orm.table + ' set ' + updCols.join(',')
+               + ' where ' + conditions.join(' and ').replace(/{state}/, 'old');
+               
           rules.push(rule); 
         }
 
         /* only delete where circumstances allow */
         if(canDelete && !orm.isChild && base.table !== orm.table) {
-          var rule = delpre.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') + ' delete from '+ orm.table + ' where ' + conditions.join(' and ').replace(/{state}/, 'old');
+          var rule = delpre.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') 
+                   + ' delete from '+ orm.table + ' where ' + conditions.join(' and ').replace(/{state}/, 'old');
 
           rules.push(rule);
         }
@@ -236,7 +269,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
         /* delete rule */
         if(canDelete && pKeyCol) {
-          rule = delpre + '(' + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
+          rule = delpre + '(' + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) 
+               + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
         }
         else rule = delpre + 'nothing;';
 
