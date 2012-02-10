@@ -89,20 +89,38 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
       /* process toOne */
       if(props[i].toOne && props[i].toOne.column) {
-        var table = decamelize(props[i].toOne.type),
+        var toOne = props[i].toOne,
+            table = decamelize(toOne.type),
             type = table.replace((/\w+\./i),''),
-            inverse = props[i].toOne.inverse ? props[i].toOne.inverse : 'guid',
-            isEditable = props[i].toOne.isEditable !== false ? true : false;
-            
-        col = '(select ' + type 
-            + ' from ' + table 
-            + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toOne.column + ') as "' + alias + '"';
+            inverse = toOne.inverse ? props[i].toOne.inverse : 'guid',
+            isEditable = toOne.isEditable !== false ? true : false;
+
+        if(toOne.isChild) {
+          tbl++;
+          var toOneAlias = 't' + tbl;
+             join = ' join ' + table + ' as ' + toOneAlias + ' on ' + toOneAlias + '.' + inverse + ' = ' + tblAlias + '.' + toOne.column;
+
+          tbls.push(join);
+          
+          col = toOneAlias + ' as  "' + alias + '"'; 
+
+          /* fix any order references using this table */
+          for(var o = 0; o < orm.order.length; o++) {
+            orm.order[o] = orm.order[o].replace(RegExp(type, "g"), toOneAlias);
+          }       
+        } else {
+          col = '(select ' + type 
+              + ' from ' + table 
+              + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + toOne.column + ') as "' + alias + '"';
+        }
             
         cols.push(col);
 
         /* for insert rule */
-        insTgtCols.push(props[i].toOne.column);
-        insSrcCols.push('(new.' + alias + ').' + inverse);
+        if(isEditable) {
+          insTgtCols.push(props[i].toOne.column);
+          insSrcCols.push('(new.' + alias + ').' + inverse);
+        }
 
         /* for update rule */
         if(isEditable) updCols.push(props[i].toOne.column + ' = (new.' + alias + ').' + inverse );
@@ -163,14 +181,14 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         if(orm.relations) {
           var join = orm.isChild ? ' join ' : ' left join ',
               conditions = [];
-  
+
           join = join.concat(orm.table, ' ', tblAlias, ' on ');
     
           for(var i = 0; i < orm.relations.length; i++) {
             var rel = orm.relations[i], value,
                 inverse = rel.inverse ? rel.inverse : 'guid',
                 condition; 
-           
+      
             for(var i = 0; i < base.properties.length; i++) {
               if(base.properties[i].name === inverse) {
                 value = 't1.' + base.properties[i].attr.column;
@@ -263,7 +281,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
     /* base orm */
     } else {
       /* table */
-      tbls.push(orm.table + ' t' + tbl);
+      tbls.unshift(orm.table + ' ' + tblAlias);
           
       if(orm.privileges || orm.isNested) {
         var rule;
@@ -311,7 +329,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
     if(orm.order) {
       for(var i = 0; i < orm.order.length; i++) {
-        orderBy.push(tblAlias + '.' + orm.order);
+        orm.order[i] = orm.order[i].replace(RegExp(table, "g"), tblAlias);
+        orderBy.push(orm.order[i]);
       }
     }
 

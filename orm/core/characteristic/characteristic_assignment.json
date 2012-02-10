@@ -31,6 +31,14 @@
       }
     },
     {
+      "name": "characteristic",
+      "toOne": {
+        "type": "XM.Characteristic",
+        "isChild": true,
+        "column": "charass_char_id"
+      }
+    },
+    {
       "name": "value",
       "attr": {
         "type": "String",
@@ -38,32 +46,9 @@
       }
     }
   ],
-  "extensions": [
-    {
-      "table": "xm.characteristic",
-      "isRequired": true,
-      "properties": [
-        {
-          "name": "fkey",
-          "relation": {
-            "type": "XM.Characteristic",
-            "column": "guid",
-            "inverse": "charass_char_id"
-          }
-        },
-        {
-          "name": "characteristic",
-          "attr": {
-            "type": "XM.Characteristic",
-            "column": "characteristic"
-          }
-        }
-      ],
-      "order": [
-        "order",
-        "name"
-      ]   
-    }
+  "order":[
+    "characteristic.order",
+    "characteristic.name"
   ],
   "isNested": true,
   "isSystem": true

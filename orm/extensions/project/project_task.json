@@ -184,7 +184,7 @@
       "relations": [
         {
           "column": "prj_id",
-          "inverse": "prjtask_prj_id"
+          "inverse": "project"
         }
       ],
       "properties": [
