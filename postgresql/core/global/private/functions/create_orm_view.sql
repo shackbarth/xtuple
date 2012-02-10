@@ -3,7 +3,11 @@ create or replace function private.create_orm_view(orm_name text) returns void a
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* constants */
-  var INSERT_RULE = 'create rule {name} as on insert to {table} do instead {command};';
+  var SELECT = 'select {columns} from {table} where {conditions}'
+      INSERT = 'insert into {table} ({columns}) values ({expressions});',
+      UPDATE = 'update {table} set {expressions} where {conditions};',
+      DELETE = 'delete from {table} where {conditions};',
+      CREATE_RULE = 'create rule {name} as on {event} to {table} do instead {command};';
 
   // ..........................................................
   // METHODS
@@ -52,39 +56,40 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       
       /* process attributes */
       if(props[i].attr && props[i].attr.column) {
-        var isVisible = props[i].attr.isVisible !== false ? true : false,
-            isEditable = props[i].attr.isEditable !== false ? true : false,
-            isPrimaryKey = props[i].attr.isPrimaryKey ? true : false;
+        var attr = props[i].attr,
+            isVisible = attr.isVisible !== false ? true : false,
+            isEditable = attr.isEditable !== false ? true : false,
+            isPrimaryKey = attr.isPrimaryKey ? true : false;
 
         if(isVisible) {
           /* if it is composite, assign the table itself */
-          col = decamelize(props[i].attr.type) === orm.table ? tblAlias : tblAlias + '.' + props[i].attr.column;
+          col = decamelize(attr.type) === orm.table ? tblAlias : tblAlias + '.' + attr.column;
           col = col.concat(' as "', alias, '"');
           cols.push(col);
         }
 
         /* for update and delete rules */
         if(isPrimaryKey) {
-          pKeyCol = props[i].attr.column;
+          pKeyCol = attr.column;
           pKeyAlias = alias;
         }
 
         /* handle fixed value */
         if(props[i].attr.value) {
-          var value = isNaN(props[i].attr.value - 0) ? "'" + props[i].attr.value + "'" : props[i].attr.value;
+          var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
 
           /* for select */     
-          clauses.push(props[i].attr.column + ' = ' + value);
+          clauses.push(attr.column + ' = ' + value);
           
           /* for insert */
           insSrcCols.push(value);
         } else insSrcCols.push('new.' + alias);
 
         /* for insert rule */
-        insTgtCols.push(props[i].attr.column);
+        insTgtCols.push(attr.column);
 
         /* for update rule */
-        if(isVisible && isEditable && !isPrimaryKey) updCols.push(props[i].attr.column + ' = new.' + alias);
+        if(isVisible && isEditable && !isPrimaryKey) updCols.push(attr.column + ' = new.' + alias);
       }
 
       /* process toOne */
@@ -92,13 +97,18 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         var toOne = props[i].toOne,
             table = decamelize(toOne.type),
             type = table.replace((/\w+\./i),''),
-            inverse = toOne.inverse ? props[i].toOne.inverse : 'guid',
+            inverse = toOne.inverse ? toOne.inverse : 'guid',
             isEditable = toOne.isEditable !== false ? true : false;
 
         if(toOne.isChild) {
           tbl++;
           var toOneAlias = 't' + tbl;
-             join = ' join ' + table + ' as ' + toOneAlias + ' on ' + toOneAlias + '.' + inverse + ' = ' + tblAlias + '.' + toOne.column;
+             join = 'join {table} as {toOneAlias} on {toOneAlias}.{inverse} = {tableAlias}.{column}'
+                    .replace(/{table}/, table)
+                    .replace(/{toOneAlias}/g, toOneAlias)
+                    .replace(/{inverse}/, inverse)
+                    .replace(/{tableAlias}/, tblAlias)
+                    .replace(/{column}/, toOne.column);
 
           tbls.push(join);
           
@@ -109,9 +119,12 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             orm.order[o] = orm.order[o].replace(RegExp(type, "g"), toOneAlias);
           }       
         } else {
-          col = '(select ' + type 
-              + ' from ' + table 
-              + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + toOne.column + ') as "' + alias + '"';
+          col = '({select}) as "{alias}"'
+                .replace(/{select}/,
+          SELECT.replace(/{columns}/, type)
+                .replace(/{table}/, table)
+                .replace(/{conditions}/, type + '.' + inverse + ' = ' + tblAlias + '.' + toOne.column))
+                .replace(/{alias}/, alias);
         }
             
         cols.push(col);
@@ -123,29 +136,33 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         }
 
         /* for update rule */
-        if(isEditable) updCols.push(props[i].toOne.column + ' = (new.' + alias + ').' + inverse );
+        if(isEditable) updCols.push(toOne.column + ' = (new.' + alias + ').' + inverse );
       }
 
       /* process toMany */
       if(props[i].toMany && props[i].toMany.column) {
-        var table = decamelize(props[i].toMany.type),
+        var toMany = props[i].toMany,
+            table = decamelize(toMany.type),
             type = table.replace((/\w+\./i),''),
-            inverse = props[i].toMany.inverse ? props[i].toMany.inverse : 'guid';
+            inverse = toMany.inverse ? toMany.inverse : 'guid',
+            sql, col = 'array({select}) as "{alias}"';
             
-        col = 'array(select ' + type 
-            + ' from ' + table 
-            + ' where ' + type + '.' + inverse + ' = ' + tblAlias + '.' + props[i].toMany.column + ') as "' + alias + '"';
+        col = col.replace(/{select}/,
+           SELECT.replace(/{columns}/, type)
+                 .replace(/{table}/, table) 
+                 .replace(/{conditions}/, type + '.' + inverse + ' = ' + tblAlias + '.' + toMany.column))
+                 .replace(/{alias}/, alias);
             
         cols.push(col);
     
         /* build array for delete cascade */
-        if(props[i].toMany.isMaster &&
-           props[i].toMany.deleteDelegate && 
-           props[i].toMany.deleteDelegate.table && 
-           props[i].toMany.deleteDelegate.relations) {
+        if(toMany.isMaster &&
+           toMany.deleteDelegate && 
+           toMany.deleteDelegate.table && 
+           toMany.deleteDelegate.relations) {
 
-          var rel = props[i].toMany.deleteDelegate.relations,
-              table = props[i].toMany.deleteDelegate.table,
+          var rel = toMany.deleteDelegate.relations,
+              table = toMany.deleteDelegate.table,
               conditions = [];
 
           for(var n = 0; n < rel.length; n++) {
@@ -159,17 +176,20 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             conditions.push(col + ' = ' + value);
           }
 
-          delCascade.push('delete from ' + table + ' where ' + conditions.join(' and ') + ';');
-        } else if (props[i].toMany.isMaster) { 
-          delCascade.push('delete from ' + table + ' where ' + type + '.' + inverse  + ' = ' + 'old.{pKeyAlias};'); 
+          sql = DELETE.replace(/{table}/, table)
+                      .replace(/{conditions}/, conditions.join(' and '));
+
+          delCascade.push(sql);
+        } else if (toMany.isMaster) {
+          sql = DELETE.replace(/{table}/, table)
+                      .replace(/{conditions}/, type + '.' + inverse  + ' = ' + 'old.{pKeyAlias}'); 
+                      
+          delCascade.push(sql); 
         }
       }
     }
 
     /* build crud rules */
-    var inspre = 'create rule {name} as on insert to ' + view_name + ' do instead ';
-        updpre = 'create rule {name} as on update to ' + view_name + ' do instead ';
-        delpre = 'create rule {name} as on delete to ' + view_name + ' do instead ';
 
     /* process extension */
     if(orm.isExtension) {
@@ -228,22 +248,25 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       /* insert rules for extensions */
       if(canCreate && insSrcCols.length) {
         if(base.table === orm.table) {
-          rule = INSERT_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
+          rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
+                            .replace(/{event}/, 'insert')
                             .replace(/{table}/, view_name)
                             .replace(/{where}/, '')
-                            .replace(/{command}/, 'update {table} set {expressions} where {conditions}'
-                            .replace(/{table}/, orm.table)
+                            .replace(/{command}/, 
+                      UPDATE.replace(/{table}/, orm.table)
                             .replace(/{expressions}/, updCols.join(','))
                             .replace(/{conditions}/, conditions.join(' and '))
                             .replace(/{state}/, 'new'));
         } else {
-          rule = INSERT_RULE.replace(/{name}/,'"_INSERT_' + tblAlias.toUpperCase() + '"')
+          rule = CREATE_RULE.replace(/{name}/,'"_INSERT_' + tblAlias.toUpperCase() + '"')
+                            .replace(/{event}/, 'insert')
                             .replace(/{table}/, view_name)
                             .replace(/{where}/, '')
-                            .replace(/{command}/, 'insert into {table} ({columns}) values ({expressions})'
-                            .replace(/{table}/, orm.table)
+                            .replace(/{command}/, 
+                      INSERT.replace(/{table}/, orm.table)
                             .replace(/{columns}/, upsTgtCols.join(',') + ',' + insTgtCols.join(','))
-                            .replace(/{expressions}/, upsSrcCols.join(',').replace(/{state}/, 'new') + ',' + insSrcCols.join(',')));
+                            .replace(/{expressions}/, upsSrcCols.join(',')
+                            .replace(/{state}/, 'new') + ',' + insSrcCols.join(',')));
         }
         
         rules.push(rule); 
@@ -252,81 +275,163 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       /* update rules for extensions */
       if(canUpdate && updCols.length) {
         var rule;
-
+        /* insert rule for case where record doesn't yet exist */
         if(!orm.isChild && base.table !== orm.table) {
-          rule = updpre.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"') 
-               + 'insert into ' + orm.table + ' (' + upsTgtCols.join(',') + ',' + insTgtCols.join(',') + ') ' 
-               + 'select ' + upsSrcCols.join(',').replace(/{state}/, 'old') + ',' + insSrcCols.join(',') 
-               + ' where ( select count(*) = 0 from '
-               + orm.table + ' where ' + conditions.join(' and ').replace(/{state}/, 'old') + ' )';
-
+          rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
+                            .replace(/{event}/, 'update')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '(' +
+                      SELECT.replace(/{columns}/,'count(*) = 0') 
+                            .replace(/{table}/, orm.table) 
+                            .replace(/{conditions}/, conditions.join(' and ') 
+                            .replace(/{state}/, 'old') + ' )') + ')') 
+                            .replace(/{command}/, 
+                      INSERT.replace(/{table}/, orm.table)
+                            .replace(/{columns}/, upsTgtCols.join(',') + ',' + insTgtCols.join(','))
+                            .replace(/{expressions}/, upsSrcCols.join(',')
+                            .replace(/{state}/, 'old') + ',' + insSrcCols.join(',')));
+                           
           rules.push(rule);
-        }
 
-        rule = updpre.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"') 
-             + 'update ' + orm.table + ' set ' + updCols.join(',')
-             + ' where ' + conditions.join(' and ').replace(/{state}/, 'old');
-               
-        rules.push(rule); 
+          /* update rule for case where record does exist */
+          rule = CREATE_RULE.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"')
+                            .replace(/{event}/, 'update')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '(' +
+                      SELECT.replace(/{columns}/,'count(*) > 0') 
+                            .replace(/{table}/, orm.table) 
+                            .replace(/{conditions}/, conditions.join(' and ') 
+                            .replace(/{state}/, 'old') + ' )') + ')') 
+                            .replace(/{command}/, 
+                      UPDATE.replace(/{table}/, orm.table) 
+                            .replace(/{expressions}/, updCols.join(','))
+                            .replace(/{conditions}/, conditions.join(' and '))
+                            .replace(/{state}/, 'old')); 
+        } else {
+        
+          rule = CREATE_RULE.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"')
+                            .replace(/{event}/, 'update')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '')
+                            .replace(/{command}/, 
+                      UPDATE.replace(/{table}/, orm.table) 
+                            .replace(/{expressions}/, updCols.join(','))
+                            .replace(/{conditions}/, conditions.join(' and '))
+                            .replace(/{state}/, 'old'));                      
+        }
+        rules.push(rule);              
       }
 
       /* only delete where circumstances allow */
       if(canDelete && !orm.isChild && base.table !== orm.table) {
-        var rule = delpre.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') 
-                 + ' delete from '+ orm.table + ' where ' + conditions.join(' and ').replace(/{state}/, 'old');
-
+        rule = CREATE_RULE.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') 
+                          .replace(/{event}/, 'delete')
+                          .replace(/{table}/, view_name)
+                          .replace(/{where}/, '')
+                          .replace(/{command}/,
+                    DELETE.replace(/{table}/, orm.table) 
+                          .replace(/{conditions}/, conditions.join(' and '))
+                          .replace(/{state}/, 'old')); 
+                          
         rules.push(rule);
       }
 
     /* base orm */
     } else {
+      var rule;
+      
       /* table */
       tbls.unshift(orm.table + ' ' + tblAlias);
           
       if(orm.privileges || orm.isNested) {
-        var rule;
         
         /* insert rule */
         rule = canCreate && insSrcCols.length ? 
-               INSERT_RULE.replace(/{name}/, '"_INSERT"')
+               CREATE_RULE.replace(/{name}/, '"_INSERT"')
+                          .replace(/{event}/, 'insert')
                           .replace(/{table}/, view_name)
                           .replace(/{where}/, '')
-                          .replace(/{command}/, 'insert into {table} ({columns}) values ({expressions})'
-                          .replace(/{table}/, orm.table)
+                          .replace(/{command}/,
+                    INSERT.replace(/{table}/, orm.table)
                           .replace(/{columns}/, insTgtCols.join(',')) 
                           .replace(/{expressions}/, insSrcCols.join(','))) :
-               INSERT_RULE.replace(/{name}/, '"_INSERT"')
+               CREATE_RULE.replace(/{name}/, '"_INSERT"')
+                          .replace(/{event}/, 'insert')
                           .replace(/{table}/, view_name)
                           .replace(/{where}/, '')
                           .replace(/{command}/,'nothing');
 
-
-        rules.push(rule.replace(/{name}/,'"_INSERT"'));
+        rules.push(rule);
 
         /* update rule */
-        rule = canUpdate && pKeyCol && updCols.length ? 
-               updpre + 'update ' + orm.table + ' set ' + updCols.join(',') + ' where ' + pKeyCol + ' = old.' + pKeyAlias :
-               updpre + 'nothing;';
+        if(canUpdate && pKeyCol && updCols.length) {
+          rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
+                            .replace(/{event}/, 'update')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '')
+                            .replace(/{command}/, 
+                      UPDATE.replace(/{table}/, orm.table) 
+                            .replace(/{expressions}/, updCols.join(','))
+                            .replace(/{conditions}/, pKeyCol + ' = old.' + pKeyAlias)); 
+        } else {
+          rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
+                            .replace(/{event}/, 'update')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '')
+                            .replace(/{command}/, 'nothing'); 
+        }
 
-        rules.push(rule.replace(/{name}/,'"_UPDATE"')); 
+        rules.push(rule); 
 
         /* delete rule */
         if(canDelete && pKeyCol) {
-          rule = delpre + '(' + delCascade.join(' ').replace(/{pKeyAlias}/g, pKeyAlias) 
-               + ' delete from '+ orm.table + ' where ' + pKeyCol + ' = old.'+ pKeyAlias + ');';
-        }
-        else rule = delpre + 'nothing;';
+          rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
+                            .replace(/{event}/, 'delete')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '')
+                            .replace(/{command}/, '(' + delCascade.join(' ')
+                            .replace(/{pKeyAlias}/g, pKeyAlias) +
+                      DELETE.replace(/{table}/, orm.table) 
+                            .replace(/{conditions}/, pKeyCol + ' = old.' + pKeyAlias) + ')');  
+        } else {
+          rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
+                            .replace(/{event}/, 'delete')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '')
+                            .replace(/{command}/, 'nothing'); 
+        };
 
-        rules.push(rule.replace(/{name}/,'"_DELETE"'));
+        rules.push(rule);
 
       /* must be non-updatable view */
       } else { 
-        rules.push(inspre + 'nothing;');
-        rules.push(updpre + 'nothing;');
-        rules.push(delpre + 'nothing;');
+        rule = CREATE_RULE.replace(/{name}/,'"_INSERT"')
+                          .replace(/{event}/, 'insert')
+                          .replace(/{table}/, view_name)
+                          .replace(/{where}/, '')
+                          .replace(/{command}/, 'nothing'); 
+                          
+        rules.push(rule);
+
+        rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
+                          .replace(/{event}/, 'update')
+                          .replace(/{table}/, view_name)
+                          .replace(/{where}/, '')
+                          .replace(/{command}/, 'nothing'); 
+                          
+        rules.push(rule);
+
+        rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
+                          .replace(/{event}/, 'delete')
+                          .replace(/{table}/, view_name)
+                          .replace(/{where}/, '')
+                          .replace(/{command}/, 'nothing'); 
+                          
+        rules.push(rule);
       }
     }
 
+    /* process and add order by array */
     if(orm.order) {
       for(var i = 0; i < orm.order.length; i++) {
         orm.order[i] = orm.order[i].replace(RegExp(table, "g"), tblAlias);
@@ -357,7 +462,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   var cols = [], tbls = [], clauses = [], orderBy = [],
   comments = 'System view generated by object relation maps: WARNING! Do not make changes, add rules or dependencies directly to this view!',
   rules = [], query = '', tbl = 1 - 0, sql, base, extensions = [],
-  debug = false;
+  debug = true;
   
   /* base orm */
   sql = 'select orm_id as id, orm_json as json '
@@ -392,18 +497,21 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   if(!cols.length) throw new Error('There must be at least one column defined on the map.');
  
   /* Build query to create the new view */
-  query = query.concat( 'create view ' + base.nameSpace.toLowerCase() + '.' + orm_name, ' as ',
-                        'select ', cols.join(', '),
-                        ' from ', tbls.join(' '));
-                     
-  if(orderBy.length) query = query.concat(' order by ', orderBy.join(' , '));
+  query = 'create view {name} as select {columns} from {tables} {order};'
+          .replace(/{name}/, base.nameSpace.toLowerCase() + '.' + orm_name)
+          .replace(/{columns}/, cols.join(', '))
+          .replace(/{tables}/, tbls.join(' '))
+          .replace(/{order}/, orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
 
   if(debug) print(NOTICE, 'query', query);
 
   executeSql(query);
 
   /* Add comment */
-  query = "comment on view xm." + orm_name + " is '" + comments + "'"; 
+  query = "comment on view xm.{type} is '{comments}'"
+          .replace(/{type}/, orm_name)
+          .replace(/{comments}/, comments); 
+          
   executeSql(query);
   
   /* Apply the rules */
@@ -414,7 +522,9 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   }
 
  /* Grant access to xtrole */
-  query = 'grant all on xm.' + orm_name + ' to xtrole';
+  query = 'grant all on xm.{type} to xtrole'
+          .replace(/{type}/, orm_name);
+          
   executeSql(query); 
 
 $$ language plv8;
