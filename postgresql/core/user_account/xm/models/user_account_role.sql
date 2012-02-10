@@ -10,14 +10,10 @@ E'{
   "grp.grp_id as guid",
   "grp.grp_name as name",
   "grp.grp_descrip as description",
-  "btrim(array(
-    select grppriv_priv_id
-    from grppriv
-    where grppriv_grp_id = grp.grp_id )::text,\'{}\') as privileges",
-  "btrim(array(
-    select usrgrp_username
-    from usrgrp
-    where usrgrp_grp_id = grp.grp_id )::text,\'{}\') as users"}',
+  "array(
+    select user_account_role_privilege_assignment
+    from xm.user_account_role_privilege_assignment
+    where guid = grp.grp_id) as privileges"}',
      
 -- sequence
 
