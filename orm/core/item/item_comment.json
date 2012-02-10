@@ -16,9 +16,9 @@
       }
     },
     {
-      "name": "item",
+      "name": "sourceType",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "comment_source",
 		"value": "I",
         "isVisible": false
