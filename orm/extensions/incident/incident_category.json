@@ -1,0 +1,48 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "IncidentCategory",
+  "table": "incdtcat",
+  "idSequenceName": "public.incdtcat_incdtcat_id_seq",
+  "comment": "Incident Category Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainIncidentCategories",
+      "read": "MaintainIncidentCategories",
+      "update": "MaintainIncidentCategories",
+      "delete": "MaintainIncidentCategories"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "incdtcat_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "incdtcat_descrip"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "incdtcat_name"
+      }
+    },
+    {
+      "name": "order",
+      "attr": {
+        "type": "Number",
+        "column": "incdtcat_order"
+      }
+    }
+  ],
+  "isSystem": true
+}
