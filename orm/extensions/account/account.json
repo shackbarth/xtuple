@@ -1,0 +1,198 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Account",
+  "table": "crmacct",
+  "idSequenceName": "public.crmacct_crmacct_id_seq",
+  "orderSequence": "CRMAccountNumber",
+  "comment": "Account Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainAllCRMAccounts",
+      "read": "ViewAllCRMAccounts",
+      "update": "MaintainAllCRMAccounts",
+      "delete": "MaintainAllCRMAccounts"
+    },
+    "personal": {
+      "create": "MaintainPersonalCRMAccounts",
+      "read": "ViewPersonalCRMAccounts",
+      "update": "MaintainPersonalCRMAccounts",
+      "delete": "MaintainPersonalCRMAccounts",
+      "properties": [
+        "owner"
+       ]
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "crmacct_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "crmacct_number"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "crmacct_name"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "crmacct_active"
+      }
+    },
+    {
+      "name": "type",
+      "attr": {
+        "type": "String",
+        "column": "crmacct_type"
+      }
+    },
+    {
+      "name": "parent",
+      "toOne": {
+        "type": "XM.AccountInfo",
+        "column": "crmacct_parent_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "crmacct_notes"
+      }
+    },
+    {
+      "name": "primaryContact",
+      "toOne": {
+        "type": "XM.ContactInfo",
+        "column": "crmacct_cntct_id_1",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "secondaryContact",
+      "toOne": {
+        "type": "XM.ContactInfo",
+        "column": "crmacct_cntct_id_2",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "userAccount",
+      "toOne": {
+        "type": "XM.UserAccountInfo",
+        "column": "crmacct_usr_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "XM.UserAccountInfo",
+        "column": "crmacct_owner_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountComment",
+        "column": "crmacct_id",
+        "inverse": "account",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "CRMA"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "characteristics",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountCharacteristic",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
+    },
+    {
+      "name": "contacts",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountContact",
+        "column": "crmacct_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountItem",
+        "column": "crmacct_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "files",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountFile",
+        "column": "crmacct_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "images",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountImage",
+        "column": "crmacct_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "urls",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountUrl",
+        "column": "crmacct_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "accounts",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.AccountAccount",
+        "column": "crmacct_id",
+        "inverse": "source"
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "CRMA"
+}
