@@ -265,7 +265,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
                updpre + 'update ' + orm.table + ' set ' + updCols.join(',') + ' where ' + pKeyCol + ' = old.' + pKeyAlias :
                updpre + 'nothing;';
 
-        rules.push(rule.replace(/{name}/,'"_UDPATE"')); 
+        rules.push(rule.replace(/{name}/,'"_UPDATE"')); 
 
         /* delete rule */
         if(canDelete && pKeyCol) {
