@@ -1,12 +1,30 @@
 ﻿{
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "IncidentInfo",
+  "type": "Incident",
   "table": "incdt",
-  "comment": "Incident Info Map",
-  "canCreate": false,
-  "canUpdate": false,
+  "idSequenceName": "public.incdt_incdt_id_seq",
+  "orderSequence": "IncidentNumber",
+  "comment": "Incident Map",
   "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": "MaintainAllIncidents",
+      "read": "ViewAllIncidents",
+      "update": "MaintainAllIncidents",
+      "delete": "MaintainAllIncidents"
+    },
+    "personal": {
+      "create": "MaintainPersonalIncidents",
+      "read": "ViewPersonalIncidents",
+      "update": "MaintainPersonalIncidents",
+      "delete": "MaintainPersonalIncidents",
+      "properties": [
+        "owner",
+        "assignedTo"
+       ]
+    }
+  },
   "properties": [
     {
       "name": "guid",
@@ -28,11 +46,185 @@
       "name": "description",
       "attr": {
         "type": "String",
-        "column": "incdt_summary",
-        "isEditable": false
+        "column": "incdt_summary"
+      }
+    },
+    {
+      "name": "account",
+      "toOne": {
+        "type": "XM.AccountInfo",
+        "column": "incdt_crmacct_id"
+      }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "type": "XM.ContactInfo",
+        "column": "incdt_cntct_id"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "XM.UserAccountInfo",
+        "column": "incdt_owner_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "assignedTo",
+      "toOne": {
+        "type": "XM.UserAccountInfo",
+        "column": "incdt_assigned_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "incdt_descrip"
+      }
+    },
+    {
+      "name": "priority",
+      "attr": {
+        "type": "Number",
+        "column": "incdt_incdtpriority_id"
+      }
+    },
+    {
+      "name": "incidentStatus",
+      "attr": {
+        "type": "String",
+        "column": "incdt_status"
+      }
+    },
+    {
+      "name": "isPublic",
+      "attr": {
+        "type": "Boolean",
+        "column": "incdt_public"
+      }
+    },
+    {
+      "name": "resolution",
+      "attr": {
+        "type": "Number",
+        "column": "incdt_incdtresolution_id"
+      }
+    },
+    {
+      "name": "severity",
+      "attr": {
+        "type": "Number",
+        "column": "incdt_incdtseverity_id"
+      }
+    },
+    {
+      "name": "alarms",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentAlarm",
+        "column": "incdt_id",
+        "inverse": "incident"
+      }
+    },
+    {
+      "name": "history",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentHistory",
+        "column": "incdt_id",
+        "inverse": "incident"
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentComment",
+        "column": "incdt_id",
+        "inverse": "incident",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "INCDT"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "characteristics",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentCharacteristic",
+        "column": "incdt_id",
+        "inverse": "incident"
+      }
+    },
+    {
+      "name": "contacts",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentContact",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentItem",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "files",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentFile",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "images",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentImage",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "urls",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentUrl",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "incidents",
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.IncidentIncident",
+        "column": "incdt_id",
+        "inverse": "source"
       }
     }
   ],
-  "isNested": true,
-  "isSystem": true
+  "isSystem": true,
+  "sourceCode": "INCDT"
 }

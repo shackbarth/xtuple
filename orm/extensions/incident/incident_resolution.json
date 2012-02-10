@@ -1,0 +1,48 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "IncidentResolution",
+  "table": "incdtresolution",
+  "idSequenceName": "public.incdtresolution_incdtresolution_id_seq",
+  "comment": "Incident Resolution Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainIncidentResolutions",
+      "read": "MaintainIncidentResolutions",
+      "update": "MaintainIncidentResolutions",
+      "delete": "MaintainIncidentResolutions"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "incdtresolution_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "incdtresolution_name"
+      }
+    },
+    {
+      "name": "order",
+      "attr": {
+        "type": "Number",
+        "column": "incdtresolution_order"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "incdtresolution_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}

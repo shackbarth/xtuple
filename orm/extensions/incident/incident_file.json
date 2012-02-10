@@ -1,0 +1,62 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "IncidentFile",
+  "table": "private.docinfo",
+  "idSequenceName": "public.docass_docass_id_seq",
+  "comment": "Incident File Map",
+  "canUpdate": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "sourceType",
+      "attr": {
+        "type": "String",
+        "column": "source_type",
+        "value": "INCDT",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "source",
+      "attr": {
+        "type": "Number",
+        "column": "source_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "target_type",
+        "value": "FILE",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "file",
+      "toOne": {
+        "type": "XM.FileInfo",
+        "column": "target_id"
+      }
+    },
+    {
+      "name": "purpose",
+      "attr": {
+        "type": "String",
+        "column": "purpose",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

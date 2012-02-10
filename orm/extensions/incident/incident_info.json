@@ -1,0 +1,38 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "IncidentInfo",
+  "table": "incdt",
+  "comment": "Incident Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "incdt_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "incdt_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "incdt_summary",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}
