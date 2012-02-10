@@ -1,0 +1,50 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "UserAccountRole",
+  "table": "grp",
+  "idSequenceName": "public.grp_grp_id_seq",
+  "comment": "User Account Role Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "grp_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "grp_name"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "grp_descrip"
+      }
+    },
+    {
+      "name": "privileges",
+      "attr": {
+        "type": "String",
+        "column": "grp_id )::text,'{}')",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "users",
+      "attr": {
+        "type": "String",
+        "column": "grp_id )::text,'{}')",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

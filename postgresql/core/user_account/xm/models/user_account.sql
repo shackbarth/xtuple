@@ -20,11 +20,7 @@ E'{
   "array(
     select user_account_privilege_assignment
     from xm.user_account_privilege_assignment
-    where (user_account = usr.usr_username)) as privileges",
-  "array(
-    select user_account_user_account_role_assignment
-    from xm.user_account_user_account_role_assignment
-    where (user_account = usr.usr_username)) as user_roles"}',
+    where (user_account = usr.usr_username)) as privileges"}',
      
 -- sequence
 

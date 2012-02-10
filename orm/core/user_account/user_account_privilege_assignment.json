@@ -1,0 +1,36 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "UserAccountPrivilegeAssignment",
+  "table": "usrpriv",
+  "idSequenceName": "public.usrpriv_usrpriv_id_seq",
+  "comment": "User Account Privilege Assignment Map",
+  "canUpdate": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "usrpriv_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "userAccount",
+      "attr": {
+        "type": "String",
+        "column": "usrpriv_username",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "privilege",
+      "toOne": {
+        "type": "XM.Privilege",
+        "column": "usrpriv_priv_id"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}
