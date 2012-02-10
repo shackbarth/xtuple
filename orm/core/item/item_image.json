@@ -33,6 +33,15 @@
       }
     },
     {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "target_type",
+        "value": "IMG",
+        "isVisible": false
+      }
+    },
+    {
       "name": "image",
       "toOne": {
         "type": "XM.ImageInfo",
