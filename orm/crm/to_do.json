@@ -1,4 +1,4 @@
-select private.install_orm('{
+{
   "context": "crm",
   "nameSpace": "XM",
   "type": "ToDo",
@@ -36,4 +36,4 @@ select private.install_orm('{
   ],
   "sequence": 0,
   "isSystem": true
-}')
+}
