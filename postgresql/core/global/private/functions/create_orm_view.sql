@@ -98,40 +98,36 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             table = decamelize(toOne.type),
             type = table.replace((/\w+\./i),''),
             inverse = toOne.inverse ? toOne.inverse : 'guid',
-            isEditable = toOne.isEditable !== false ? true : false;
+            isEditable = toOne.isEditable !== false ? true : false,
+            toOneAlias, join;
 
-        if(toOne.isChild) {
-          tbl++;
-          var toOneAlias = 't' + tbl;
-             join = 'join {table} as {toOneAlias} on {toOneAlias}.{inverse} = {tableAlias}.{column}'
-                    .replace(/{table}/, table)
-                    .replace(/{toOneAlias}/g, toOneAlias)
-                    .replace(/{inverse}/, inverse)
-                    .replace(/{tableAlias}/, tblAlias)
-                    .replace(/{column}/, toOne.column);
+        tbl++;
+        toOneAlias = 't' + tbl;
+        
+        join = '{qualified} join {table} as {toOneAlias} on {toOneAlias}.{inverse} = {tableAlias}.{column}'
+               .replace(/{qualified}/, toOne.isChild ? '' : 'left')
+               .replace(/{table}/, table)
+               .replace(/{toOneAlias}/g, toOneAlias)
+               .replace(/{inverse}/, inverse)
+               .replace(/{tableAlias}/, tblAlias)
+               .replace(/{column}/, toOne.column);
 
-          tbls.push(join);
+        tbls.push(join);
           
-          col = toOneAlias + ' as  "' + alias + '"'; 
+        col = toOneAlias + ' as  "' + alias + '"';
 
-          /* fix any order references using this table */
+        /* fix any order items referencing this table */
+        if(orm.order) {
           for(var o = 0; o < orm.order.length; o++) {
-            orm.order[o] = orm.order[o].replace(RegExp(type, "g"), toOneAlias);
-          }       
-        } else {
-          col = '({select}) as "{alias}"'
-                .replace(/{select}/,
-          SELECT.replace(/{columns}/, type)
-                .replace(/{table}/, table)
-                .replace(/{conditions}/, type + '.' + inverse + ' = ' + tblAlias + '.' + toOne.column))
-                .replace(/{alias}/, alias);
-        }
-            
+            orm.order[o] = orm.order[o].replace(RegExp(type + ".", "g"), toOneAlias + ".");
+          }   
+        } 
+          
         cols.push(col);
 
         /* for insert rule */
         if(isEditable) {
-          insTgtCols.push(props[i].toOne.column);
+          insTgtCols.push(toOne.column);
           insSrcCols.push('(new.' + alias + ').' + inverse);
         }
 
@@ -434,7 +430,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
     /* process and add order by array */
     if(orm.order) {
       for(var i = 0; i < orm.order.length; i++) {
-        orm.order[i] = orm.order[i].replace(RegExp(table, "g"), tblAlias);
+        orm.order[i] = orm.order[i].replace(RegExp(table + ".", "g"), tblAlias + ".");
         orderBy.push(orm.order[i]);
       }
     }
