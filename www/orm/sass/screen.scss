@@ -18,7 +18,6 @@ body {
 }
 
 input[type="checkbox"] {
-  height: 100%;
 }
 
 .light-header {
@@ -84,10 +83,22 @@ input[type="checkbox"] {
   height: 15px;
 }
 
+#list .entry .header.missing-dependencies {
+  background-color: #f75d59;
+  color: #fff;
+}
+
 #list .entry .header .model {
   font-weight: bold;
   vertical-align: middle;
   line-height: 15px;
+}
+
+#list .entry .header .namespace {
+  font-weight: bold;
+  vertical-align: middle;
+  line-height: 15px;
+  margin-right: 5px;
 }
 
 #list .entry .header .comment {
@@ -100,7 +111,7 @@ input[type="checkbox"] {
 
 #list .entry .column {
   float: left;
-  padding: 10px;
+  padding: 3px;
   font-size: .9em;
 }
 
@@ -149,4 +160,33 @@ input[type="checkbox"] {
 
 #console .entry.server {
   color: #5cb3ff;
+}
+
+#installing {
+  position: fixed;
+  right: 5px;
+  width: 200px;
+  z-index: -100;
+}
+
+#installing .entry {
+  @include border-radius(5px 5px);
+  background-color: #fff;
+  display: block;
+  padding: 2px;
+  margin: 3px;
+  font-size: .7em;
+  font-weight: bold;
+}
+
+.installing {
+  @include opacity(.5);
+}
+
+.installed {
+  @include opacity(1);
+}
+
+#list .entry.installed .header {
+  background-color: #4cc552;
 }

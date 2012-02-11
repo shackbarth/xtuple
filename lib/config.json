@@ -2,11 +2,11 @@
   "user": "admin",
   "port": 5432,
   "password": "admin",
-  "database": "380postbooks",
+  "database": "380postbooks_ormtest",
   "host": "localhost",
   "debug": "true",
   "server-port": 8000,
   "session-timeout": 15,
-	"redis-host": "xtdev.com",
-	"redis-port": 6379
+  "redis-host": "xtdev.com",
+  "redis-port": 6379
 }

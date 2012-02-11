@@ -2,7 +2,7 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-/* line 17, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -24,45 +24,45 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* line 20, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 20, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 body {
   line-height: 1;
 }
 
-/* line 22, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 22, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 24, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 26, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 28, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 101, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 101, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 30, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 114, ../../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 114, ../../../../../../../../../../usr/local/ruby/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
 }
@@ -80,12 +80,7 @@ body {
   font-size: .8em;
 }
 
-/* line 20, ../sass/screen.scss */
-input[type="checkbox"] {
-  height: 100%;
-}
-
-/* line 24, ../sass/screen.scss */
+/* line 23, ../sass/screen.scss */
 .light-header {
   -moz-border-radius: 5px 5px;
   -webkit-border-radius: 5px 5px;
@@ -106,14 +101,14 @@ input[type="checkbox"] {
   font-style: italic;
 }
 
-/* line 39, ../sass/screen.scss */
+/* line 38, ../sass/screen.scss */
 .light-header.console {
   position: fixed;
   left: 8px;
   right: 8px;
 }
 
-/* line 45, ../sass/screen.scss */
+/* line 44, ../sass/screen.scss */
 #controls {
   position: fixed;
   top: 0;
@@ -123,13 +118,13 @@ input[type="checkbox"] {
   width: 150px;
 }
 
-/* line 54, ../sass/screen.scss */
+/* line 53, ../sass/screen.scss */
 #controls button {
   display: block;
   width: 100%;
 }
 
-/* line 59, ../sass/screen.scss */
+/* line 58, ../sass/screen.scss */
 #list {
   position: absolute;
   top: 0;
@@ -141,7 +136,7 @@ input[type="checkbox"] {
   overflow-y: auto;
 }
 
-/* line 70, ../sass/screen.scss */
+/* line 69, ../sass/screen.scss */
 #list .entry {
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
@@ -157,7 +152,7 @@ input[type="checkbox"] {
   background-color: #fff;
 }
 
-/* line 80, ../sass/screen.scss */
+/* line 79, ../sass/screen.scss */
 #list .entry .header {
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
@@ -170,14 +165,28 @@ input[type="checkbox"] {
   height: 15px;
 }
 
-/* line 87, ../sass/screen.scss */
+/* line 86, ../sass/screen.scss */
+#list .entry .header.missing-dependencies {
+  background-color: #f75d59;
+  color: #fff;
+}
+
+/* line 91, ../sass/screen.scss */
 #list .entry .header .model {
   font-weight: bold;
   vertical-align: middle;
   line-height: 15px;
 }
 
-/* line 93, ../sass/screen.scss */
+/* line 97, ../sass/screen.scss */
+#list .entry .header .namespace {
+  font-weight: bold;
+  vertical-align: middle;
+  line-height: 15px;
+  margin-right: 5px;
+}
+
+/* line 104, ../sass/screen.scss */
 #list .entry .header .comment {
   font-style: italic;
   font-size: .6em;
@@ -186,31 +195,31 @@ input[type="checkbox"] {
   margin-left: 12px;
 }
 
-/* line 101, ../sass/screen.scss */
+/* line 112, ../sass/screen.scss */
 #list .entry .column {
   float: left;
-  padding: 10px;
+  padding: 3px;
   font-size: .9em;
 }
 
-/* line 107, ../sass/screen.scss */
+/* line 118, ../sass/screen.scss */
 #list .entry .column .label {
   padding: 2px;
   font-style: italic;
 }
 
-/* line 112, ../sass/screen.scss */
+/* line 123, ../sass/screen.scss */
 #list .entry .column .value {
   padding: 2px;
   font-weight: bold;
 }
 
-/* line 117, ../sass/screen.scss */
+/* line 128, ../sass/screen.scss */
 #list .entry .header .check {
   float: right;
 }
 
-/* line 121, ../sass/screen.scss */
+/* line 132, ../sass/screen.scss */
 #console {
   -moz-border-radius: 5px 5px;
   -webkit-border-radius: 5px 5px;
@@ -232,7 +241,7 @@ input[type="checkbox"] {
   overflow-x: hidden;
 }
 
-/* line 137, ../sass/screen.scss */
+/* line 148, ../sass/screen.scss */
 #console .entry {
   margin: 2px;
   padding: 2px;
@@ -242,12 +251,53 @@ input[type="checkbox"] {
   word-wrap: break-word;
 }
 
-/* line 146, ../sass/screen.scss */
+/* line 157, ../sass/screen.scss */
 #console .entry.error {
   color: #ffa500;
 }
 
-/* line 150, ../sass/screen.scss */
+/* line 161, ../sass/screen.scss */
 #console .entry.server {
   color: #5cb3ff;
+}
+
+/* line 165, ../sass/screen.scss */
+#installing {
+  position: fixed;
+  right: 5px;
+  width: 200px;
+  z-index: -100;
+}
+
+/* line 172, ../sass/screen.scss */
+#installing .entry {
+  -moz-border-radius: 5px 5px;
+  -webkit-border-radius: 5px 5px;
+  -o-border-radius: 5px 5px;
+  -ms-border-radius: 5px 5px;
+  -khtml-border-radius: 5px 5px;
+  border-radius: 5px 5px;
+  background-color: #fff;
+  display: block;
+  padding: 2px;
+  margin: 3px;
+  font-size: .7em;
+  font-weight: bold;
+}
+
+/* line 182, ../sass/screen.scss */
+.installing {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+  opacity: 0.5;
+}
+
+/* line 186, ../sass/screen.scss */
+.installed {
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+/* line 190, ../sass/screen.scss */
+#list .entry.installed .header {
+  background-color: #4cc552;
 }
