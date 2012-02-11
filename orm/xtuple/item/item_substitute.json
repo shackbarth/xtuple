@@ -18,8 +18,7 @@
       "name": "item",
       "attr": {
         "type": "Number",
-        "column": "itemsub_parent_item_id",
-        "isEditable": false
+        "column": "itemsub_parent_item_id"
       }
     },
     {

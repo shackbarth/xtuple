@@ -3,16 +3,8 @@
   "nameSpace": "XM",
   "type": "ItemAlias",
   "table": "itemalias",
-  "idSequenceName": "public.itemalias_itemalias_id_seq",
+  "idSequenceName": "itemalias_itemalias_id_seq",
   "comment": "Item Alias Map",
-  "privileges": {
-    "all": {
-      "create": "MaintainItemAliases",
-      "read": "MaintainItemAliases",
-      "update": "MaintainItemAliases",
-      "delete": "MaintainItemAliases"
-    }
-  },
   "properties": [
     {
       "name": "guid",
@@ -31,11 +23,17 @@
       }
     },
     {
-      "name": "number",
+      "name": "aliasNumber",
       "attr": {
-        "type": "Number",
-        "column": "itemalias_number ",
-        "isEditable": false
+        "type": "String",
+        "column": "itemalias_number"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "itemalias_comments"
       }
     },
     {
@@ -57,13 +55,6 @@
       "attr": {
         "type": "String",
         "column": "itemalias_descrip2"
-      }
-    },
-    {
-      "name": "notes",
-      "attr": {
-        "type": "String",
-        "column": "itemalias_comments"
       }
     }
   ],
