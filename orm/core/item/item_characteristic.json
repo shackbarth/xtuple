@@ -1,0 +1,52 @@
+﻿{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemCharacteristic",
+  "table": "xm.characteristic_assignment",
+  "idSequenceName": "public.charass_charass_id_seq",
+  "comment": "Item Characteristic Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "guid",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "target_type",
+        "value": "I",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "item",
+      "attr": {
+        "type": "Number",
+        "column": "target",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "characteristic",
+      "attr": {
+        "type": "XM.Characteristic",
+        "column": "characteristic",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "value",
+      "attr": {
+        "type": "Number",
+        "column": "value"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

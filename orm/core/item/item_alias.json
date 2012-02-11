@@ -1,0 +1,72 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemAlias",
+  "table": "itemalias",
+  "idSequenceName": "public.itemalias_itemalias_id_seq",
+  "comment": "Item Alias Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainItemAliases",
+      "read": "MaintainItemAliases",
+      "update": "MaintainItemAliases",
+      "delete": "MaintainItemAliases"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "itemalias_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "item",
+      "attr": {
+        "type": "Number",
+        "column": "itemalias_item_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "itemalias_number ",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "useDescription",
+      "attr": {
+        "type": "Boolean",
+        "column": "itemalias_usedescrip"
+      }
+    },
+    {
+      "name": "description1",
+      "attr": {
+        "type": "String",
+        "column": "itemalias_descrip1"
+      }
+    },
+    {
+      "name": "description2",
+      "attr": {
+        "type": "String",
+        "column": "itemalias_descrip2"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "itemalias_comments"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

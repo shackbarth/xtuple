@@ -1,0 +1,34 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "OpportunityType",
+  "table": "optype",
+  "idSequenceName": "public.optype_optype_id_seq",
+  "comment": "Opportunity Type Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "optype_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "Number",
+        "column": "optype_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "optype_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}
