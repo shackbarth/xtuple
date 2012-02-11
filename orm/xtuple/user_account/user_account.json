@@ -1,4 +1,4 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "UserAccount",
@@ -89,10 +89,10 @@
     {
       "name": "privileges",
       "toMany": {
-        "isMaster": true,
         "type": "XM.UserAccountPrivilegeAssignment",
         "column": "usr_username",
-        "inverse": "user_account"
+        "inverse": "user_account",
+        "isMaster": true
       }
     }
   ],

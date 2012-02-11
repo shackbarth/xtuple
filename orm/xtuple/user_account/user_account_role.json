@@ -1,9 +1,9 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "UserAccountRole",
   "table": "grp",
-  "idSequenceName": "public.grp_grp_id_seq",
+  "idSequenceName": "grp_grp_id_seq",
   "comment": "User Account Role Map",
   "properties": [
     {
@@ -30,18 +30,11 @@
     },
     {
       "name": "privileges",
-      "attr": {
-        "type": "String",
-        "column": "grp_id )::text,'{}')",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "users",
-      "attr": {
-        "type": "String",
-        "column": "grp_id )::text,'{}')",
-        "isEditable": false
+      "toMany": {
+        "isMaster": true,
+        "type": "XM.UserAccountRolePrivilegeAssignment",
+        "column": "grp_id",
+        "inverse": "user_account_role"
       }
     }
   ],
