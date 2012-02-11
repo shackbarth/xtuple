@@ -115,6 +115,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         tbls.push(join);
           
         col = toOneAlias + ' as  "' + alias + '"';
+        cols.push(col);
 
         /* fix any order items referencing this table */
         if(orm.order) {
@@ -122,8 +123,6 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             orm.order[o] = orm.order[o].replace(RegExp(type + ".", "g"), toOneAlias + ".");
           }   
         } 
-          
-        cols.push(col);
 
         /* for insert rule */
         if(isEditable) {
