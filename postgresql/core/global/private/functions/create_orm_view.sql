@@ -115,6 +115,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         tbls.push(join);
           
         col = toOneAlias + ' as  "' + alias + '"';
+        cols.push(col);
 
         /* fix any order items referencing this table */
         if(orm.order) {
@@ -122,8 +123,6 @@ create or replace function private.create_orm_view(orm_name text) returns void a
             orm.order[o] = orm.order[o].replace(RegExp(type + ".", "g"), toOneAlias + ".");
           }   
         } 
-          
-        cols.push(col);
 
         /* for insert rule */
         if(isEditable) {
@@ -271,8 +270,9 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       /* update rules for extensions */
       if(canUpdate && updCols.length) {
         var rule;
-        /* insert rule for case where record doesn't yet exist */
+
         if(!orm.isChild && base.table !== orm.table) {
+          /* insert rule for case where record doesn't yet exist */
           rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
                             .replace(/{event}/, 'update')
                             .replace(/{table}/, view_name)
@@ -303,8 +303,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
                             .replace(/{expressions}/, updCols.join(','))
                             .replace(/{conditions}/, conditions.join(' and '))
                             .replace(/{state}/, 'old')); 
-        } else {
-        
+        } else {  
           rule = CREATE_RULE.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"')
                             .replace(/{event}/, 'update')
                             .replace(/{table}/, view_name)
@@ -342,21 +341,23 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       if(orm.privileges || orm.isNested) {
         
         /* insert rule */
-        rule = canCreate && insSrcCols.length ? 
-               CREATE_RULE.replace(/{name}/, '"_INSERT"')
-                          .replace(/{event}/, 'insert')
-                          .replace(/{table}/, view_name)
-                          .replace(/{where}/, '')
-                          .replace(/{command}/,
-                    INSERT.replace(/{table}/, orm.table)
-                          .replace(/{columns}/, insTgtCols.join(',')) 
-                          .replace(/{expressions}/, insSrcCols.join(','))) :
-               CREATE_RULE.replace(/{name}/, '"_INSERT"')
-                          .replace(/{event}/, 'insert')
-                          .replace(/{table}/, view_name)
-                          .replace(/{where}/, '')
-                          .replace(/{command}/,'nothing');
-
+        if(canCreate && insSrcCols.length) {
+          rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
+                            .replace(/{event}/, 'insert')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '')
+                            .replace(/{command}/,
+                      INSERT.replace(/{table}/, orm.table)
+                            .replace(/{columns}/, insTgtCols.join(',')) 
+                            .replace(/{expressions}/, insSrcCols.join(',')));
+        } else {              
+          rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
+                            .replace(/{event}/, 'insert')
+                            .replace(/{table}/, view_name)
+                            .replace(/{where}/, '')
+                            .replace(/{command}/,'nothing');
+        }
+              
         rules.push(rule);
 
         /* update rule */
@@ -517,7 +518,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
     executeSql(rules[i]);
   }
 
- /* Grant access to xtrole */
+  /* Grant access to xtrole */
   query = 'grant all on xm.{type} to xtrole'
           .replace(/{type}/, orm_name);
           
