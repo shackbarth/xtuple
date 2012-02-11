@@ -34,6 +34,9 @@
 \i core/global/private/functions/text_gt_date.sql;
 \i core/global/private/functions/text_lt_date.sql;
 \i core/global/private/functions/validate_user.sql;
+\i core/global/private/functions/session_privileges.sql;
+\i core/global/private/functions/session_metrics.sql;
+\i core/global/private/functions/session_locale.sql;
 
 -- core/trigger functions
 \i core/global/private/trigger_functions/orm_did_change.sql
@@ -57,6 +60,11 @@
 
 -- core/user_account views
 \i core/user_account/private/views/usr.sql;
+
+-- core/global/xm/functions
+\i core/global/xm/functions/dispatch.sql;
+\i core/global/xm/functions/fetch_number.sql;
+\i core/global/xm/functions/fetch_id.sql;
 
 -- core/document xm views
 \i core/document/private/views/docinfo.sql; 
