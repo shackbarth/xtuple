@@ -1,4 +1,4 @@
-create or replace function private.retrieve_record(record_type text, id integer) returns text as $$
+create or replace function private.retrieve_record(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -113,8 +113,8 @@ create or replace function private.retrieve_record(record_type text, id integer)
      @param {Object} record object to be committed
      @param {Object} view definition object
   */
-  normalize = function(nameSpace, model, record) {
-    var viewdef = getViewDefinition(model, nameSpace);
+  normalize = function(nameSpace, map, record) {
+    var viewdef = getViewDefinition(map, nameSpace);
 
     /* helper formatting function */
     formatTypeName = function(str) {
@@ -122,7 +122,7 @@ create or replace function private.retrieve_record(record_type text, id integer)
     }
 
     /* set data type property */
-    record['type'] = formatTypeName(model);
+    record['type'] = formatTypeName(map);
 
     /* set data state property */
     record['dataState'] = READ_STATE;
@@ -185,20 +185,20 @@ create or replace function private.retrieve_record(record_type text, id integer)
     return executeSql(sql, [ recordType, nameSpace ]);
   }
 
-  /* Return a model definition based on a recordType name.
+  /* Return a map definition based on a recordType name.
 
      @param {String} recordType
      @returns {Object}
   */
-  fetchModel = function(recordType) {
-    var sql = 'select model_json as json '
-            + 'from private.modelbas '
-            + 'where model_name=$1',
+  fetchMap = function(name) {
+    var sql = 'select orm_json as json '
+            + 'from private.orm '
+            + 'where orm_name=$1',
         res = executeSql(sql, [ recordType ]), 
-        model, isGranted = false;
+        map, isGranted = false;
 
     if(!res.length) {
-      throw new Error("No model definition for " + recordType + " found.");
+      throw new Error("No map definition for " + recordType + " found.");
     }
 
     return JSON.parse(res[0].json);
@@ -241,18 +241,18 @@ create or replace function private.retrieve_record(record_type text, id integer)
     return local._currentUser;
   }
   
-  /* Validate whether user has read access to the model.
+  /* Validate whether user has read access to the data.
      If a record is passed, check personal privileges of
      that record.
 
-     @param {Object} Model
+     @param {Object} Map
      @param {Object} Record - optional
      @returns {Boolean}
   */
-  checkPrivileges = function(model, record) {
+  checkPrivileges = function(map, record) {
     var isGrantedAll = false,
         isGrantedPersonal = false,
-        privileges = model.privileges;
+        privileges = map.privileges;
 
     /* check privileges - only general access here */
     if(privileges) {
@@ -287,27 +287,38 @@ create or replace function private.retrieve_record(record_type text, id integer)
   // PROCESS
   //
 
-  var nameSpace = record_type.replace((/\.\w+/i),'').toLowerCase(), 
-      recordType = decamelize(record_type.replace((/\w+\./i),'')), 
-      model = fetchModel(recordType),
+  var dataHash = JSON.parse(data_hash),
+      nameSpace = dataHash.recordType.replace((/\.\w+/i),'').toLowerCase(), 
+      recordType = decamelize(dataHash.recordType.replace((/\w+\./i),'')),
+      id = dataHash.id, 
+      prettyPrint = dataHash.prettyPrint ? 2 : null,
+      map = fetchMap(recordType),
       debug = false, rec,
-      sql = "select * from " + nameSpace + '.' + recordType + " where guid = $1 ";  
+      sql = "select * from {nameSpace}.{recordType} where guid = {id};"
+            .replace(/{nameSpace}/, nameSpace)
+            .replace(/{recordType}/, recordType)
+            .replace(/{id}/, id);  
 
   /* validate - don't bother running the query if the user has no privileges */
-  if(!checkPrivileges(model)) throw new Error("Access Denied.");
+  if(!checkPrivileges(map)) throw new Error("Access Denied.");
 
-  /* query the model */
+  /* query the map */
   if(debug) print(NOTICE, 'sql = ', sql);
   
-  rec = normalize(nameSpace, recordType, executeSql(sql, [ id ])[0]);
+  rec = normalize(nameSpace, recordType, executeSql(sql)[0]);
 
   /* check privileges again, this time against record specific criteria where applicable */
-  if(!checkPrivileges(model, rec)) throw new Error("Access Denied.");
+  if(!checkPrivileges(map, rec)) throw new Error("Access Denied.");
 
   /* return the results */
-  return JSON.stringify(rec);
+  return JSON.stringify(rec, null, prettyPrint);
 
 $$ language plv8;
 /*
-select private.retrieve_record('XM.ProjectTask', 3);
+select private.retrieve_record('{
+  "recordType":"XM.Contact", 
+  "id": 1,
+  "prettyPrint": true
+  }'
+);
 */

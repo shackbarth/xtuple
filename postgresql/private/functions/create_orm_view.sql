@@ -75,7 +75,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         }
 
         /* handle fixed value */
-        if(props[i].attr.value) {
+        if(attr.value) {
           var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
 
           /* for select */     
@@ -494,10 +494,11 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   if(!cols.length) throw new Error('There must be at least one column defined on the map.');
  
   /* Build query to create the new view */
-  query = 'create view {name} as select {columns} from {tables} {order};'
+  query = 'create view {name} as select {columns} from {tables} {where} {order};'
           .replace(/{name}/, base.nameSpace.toLowerCase() + '.' + orm_name)
           .replace(/{columns}/, cols.join(', '))
           .replace(/{tables}/, tbls.join(' '))
+          .replace(/{where}/, clauses.length ? 'where ' + clauses.join(' and ') : '')
           .replace(/{order}/, orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
 
   if(debug) print(NOTICE, 'query', query);
