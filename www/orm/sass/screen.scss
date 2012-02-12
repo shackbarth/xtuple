@@ -125,6 +125,12 @@ input[type="checkbox"] {
   font-weight: bold;
 }
 
+#list .entry .column .value.missing-dependencies {
+  padding: 2px;
+  font-weight: bold;
+  color: #f75d59;
+}
+
 #list .entry .header .check {
   float: right;
 }
@@ -169,7 +175,7 @@ input[type="checkbox"] {
   z-index: -100;
 }
 
-#installing .entry {
+#installing .installing.entry {
   @include border-radius(5px 5px);
   background-color: #fff;
   display: block;

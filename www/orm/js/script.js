@@ -72,8 +72,7 @@ $(document).ready(function() {
 
   // on success
   socket.on('success', function(name) {
-    log("successfully installed " + name);
-    doneInstalling(name);
+    setTimeout(function() { doneInstalling(name); }, 100);
   });
 
   // on message
@@ -84,7 +83,7 @@ $(document).ready(function() {
   // select all functionality
   $('#selectAll').click(function(e) {
     $('input:checkbox', $(list)).each(function() {
-      if($(this).hasClass('unselectable')) return;
+      if($(this).hasClass('unselectable') || $(this).attr('disabled')) return;
       $(this).prop('checked', true);
     });
   });
@@ -103,7 +102,7 @@ $(document).ready(function() {
     var c = $('<div id="installing" />');
     $(c).append($('<span class="light-header">Installing</span>'));
     $.each(types, function(k, type) {
-      $(c).append($('<span class="entry" />')
+      $(c).append($('<span class="installing entry" />')
         .text(type));
     });
     $('div[role="main"]').append(c);
@@ -137,6 +136,8 @@ $(document).ready(function() {
   $('#refresh').click(function(e) {
     log("refreshing populated list");
     socket.emit('refresh');
+    $('#installing').remove();
+    $(list).empty();
   });
 
 })
@@ -173,6 +174,9 @@ function populate(orms) {
               .text('Table'))
             .append($('<span class="value" />')
               .text(orm.table))));
+
+      if(!orm.enabled) $('input[type="checkbox"]', $(c)).addClass('unselectable');
+
       if(orm.deps && orm.deps.length > 0) {
         var col = $('<div class="column" />')
               .append($('<span class="label" />')
@@ -181,14 +185,59 @@ function populate(orms) {
             deps = [];
         $.each(orm.deps, function(k, dep) { 
           if($.inArray(dep.type, deps) <= -1) deps.push(dep.type); 
-          if($.inArray(dep.type, typesAvailable) <= -1) {
-            console.warn("SHOULD BE DISABLING", orm);
-            $('input[type="checkbox"]', $(c)).addClass('unselectable');
-          }
         });
         $('> span.value', $(col)).text(deps.join(', '));
         $(c).append(col);
       }
+
+      if(orm.missingDependencies) {
+        var col = $('<div class="column" />')
+          .append($('<span class="label" />')
+            .text('Missing Dependencies'))
+          .append($('<span class="value missing-dependencies" />')),
+          mdeps = [];
+        $.each(orm.mdeps, function(k, mdep) {
+          if($.inArray(mdep, mdeps) <= -1) mdeps.push(mdep);
+        });
+
+        console.log(mdeps);
+
+        $('> span.value', $(col)).text(mdeps.join(', '));
+        $(c).append(col);
+      }
+
+      if(orm.fdeps && orm.fdeps.length > 0) {
+        var col = $('<div class="column" />')
+          .append($('<span class="label" />')
+            .text('Failed Dependencies'))
+          .append($('<span class="value missing-dependencies" />')),
+          fdeps = [];
+        $.each(orm.fdeps, function(k, fdep) {
+          if($.inArray(fdep, fdeps) <= -1) fdeps.push(fdep);
+        });
+
+        console.log(fdeps);
+
+        $('> span.value', $(col)).text(fdeps.join(', '));
+        $(c).append(col);
+      }
+
+      if(orm.udeps && orm.udeps.length > 0) {
+        var col = $('<div class="column" />')
+          .append($('<span class="label" />')
+            .text('Unavailable Dependencies'))
+          .append($('<span class="value missing-dependencies" />')),
+          udeps = [];
+        $.each(orm.udeps, function(k, udep) {
+          if($.inArray(udep, udeps) <= -1) udeps.push(udep);
+        });
+
+        console.log(udeps);
+
+        $('> span.value', $(col)).text(udeps.join(', '));
+        $(c).append(col);
+      }
+
       if(orm.isExtension)
         $(c).append($('<div class="column" />')
           .append($('<span class="label" />')
@@ -216,7 +265,7 @@ function populate(orms) {
     }
     $(this).click(function(e) {
       var c = $('span > input', $(this));
-      if($(c).hasClass('unselectable')) return;
+      if($(c).hasClass('unselectable') || $(c).attr('disabled')) return;
       $(c).prop('checked', $(c).prop('checked') ? false : true);
     });
   });
@@ -235,16 +284,21 @@ function adjustList() {
 }
 
 function doneInstalling(name) {
-  
-  console.log("doneInstalling ", name);
   var id = name.replace(/\./g, '').toLowerCase(),
       entry = $('#'+id);
-
-  console.log(id);
-  $(entry)
-    .removeClass('installing')
-    .addClass('installed');
-  var span = $('span:contains('+name+')');
-  console.log(span);
-  $(span).remove();
+  setTimeout(function() { $(entry).removeClass('installing'); }, 50);
+  setTimeout(function() { $(entry).addClass('installed'); $('> .header', $(entry)).css('background-color', '#4cc552'); }, 100);
+  $('> input[type="checkbox"]', $(entry)).attr('disabled', true);
+  setTimeout(function() {
+    var spans = $('span.installing');
+    $(spans).each(function() {
+      if($(this).text() == name) {
+        $(this).remove();
+        return false;
+      }
+    });
+    if($(spans).length == 1) setTimeout(function() {
+      $('#installing').remove();
+    }, 200);
+  }, 500);
 }

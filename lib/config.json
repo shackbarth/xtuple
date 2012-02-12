@@ -7,6 +7,6 @@
   "debug": "true",
   "server-port": 8000,
   "session-timeout": 15,
-  "redis-host": "xtdev.com",
+  "redis-host": "localhost",
   "redis-port": 6379
 }
