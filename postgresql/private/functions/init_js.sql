@@ -135,16 +135,28 @@ create or replace function private.init_js() returns void as $$
      @returns {Object}
   */
   XT.fetchMap = function(name) {
-    var sql = 'select orm_json as json '
-            + 'from private.orm '
-            + 'where orm_name=$1',
-        res = executeSql(sql, [ name.decamelize() ]);
+    if(!this._maps) this._maps = [];
+    
+    var ret, res = this._maps.findProperty('name', name);
+    
+    if(res) ret = res.map;
+    else {
+      var sql = 'select orm_json as json '
+              + 'from private.orm '
+              + 'where orm_name=$1',
+          res = executeSql(sql, [ name.decamelize() ]);
 
-    if(!res.length) {
-      throw new Error("No map definition for " + name + " found.");
+      if(!res.length) {
+        throw new Error("No map definition for " + name + " found.");
+      }
+
+      ret = JSON.parse(res[0].json);
+
+      /* cache the result so we don't requery needlessly */
+      this._maps.push({ "name": name, "map": ret});
     }
 
-    return JSON.parse(res[0].json);
+    return ret;
   }
 
   // ..........................................................
@@ -198,19 +210,22 @@ create or replace function private.init_js() returns void as $$
     checkPrivileges: function(map, record) {
       var isGrantedAll = false,
           isGrantedPersonal = false,
-          privileges = map.privileges;
-
+          privileges = map.privileges,
+          commit = record ? record.dataState !== this.READ_STATE : false;
+          action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
+                    record && record.dataState === this.DELETED_STATE ? 'delete' : 'update';
+                    
       /* check privileges - only general access here */
       if(privileges) {
         /* check if user has 'all' read privileges */
         isGrantedAll = privileges.all ? 
-                       (this.checkPrivilege(privileges.all.read) || 
-                        this.checkPrivilege(privileges.all.update)) : false;
+                       ((commit ? false : this.checkPrivilege(privileges.all.read)) || 
+                        this.checkPrivilege(privileges.all[action])) : false;
 
         /* otherwise check for 'personal' read privileges */
         if(!isGrantedAll) isGrantedPersonal =  privileges.personal ? 
-                                              (checkPrivilege(privileges.personal.read) || 
-                                               checkPrivilege(privileges.personal.update)) : false;
+                                              ((commit ? false : this.checkPrivilege(privileges.personal.read)) || 
+                                               this.checkPrivilege(privileges.personal[action])) : false;
       }
 
       /* check personal privileges on the record passed if applicable */
@@ -221,7 +236,7 @@ create or replace function private.init_js() returns void as $$
       
         while(!isGrantedPersonal && i < props.length) {
           var prop = props[i];
-          isGrantedPersonal = record[prop].username === currentUser();
+          isGrantedPersonal = record[prop].username === this.currentUser();
           i++;
         }
       }
@@ -238,7 +253,7 @@ create or replace function private.init_js() returns void as $$
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop);
 
-        if (coldef['typcategory'] === XT.Data.ARRAY_TYPE) {
+        if (coldef['typcategory'] === this.ARRAY_TYPE) {
             var key = schemaName.decamelize() + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
                 values = record[prop]; 
 
@@ -289,17 +304,17 @@ create or replace function private.init_js() returns void as $$
         
         if (prop !== 'data_state' && 
             prop !== 'type' && 
-            coldef.typcategory !== XT.Data.ARRAY_TYPE) { 
+            coldef.typcategory !== this.ARRAY_TYPE) { 
           props.push(prop);
           if(record[prop]) { 
-            if (coldef.typcategory === XT.Data.COMPOUND_TYPE) { 
+            if (coldef.typcategory === this.COMPOUND_TYPE) { 
               var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
 
               record[prop] = row;
             } 
             
-            if(coldef.typcategory === XT.Data.STRING_TYPE ||
-               coldef.typcategory === XT.Data.DATE_TYPE) { 
+            if(coldef.typcategory === this.STRING_TYPE ||
+               coldef.typcategory === this.DATE_TYPE) { 
               params.push("'" + record[prop] + "'");
             } else {
               params.push(record[prop]);
@@ -344,16 +359,16 @@ create or replace function private.init_js() returns void as $$
 
         if (prop !== 'data_state' &&
             prop !== 'type' && 
-            coldef.typcategory !== XT.Data.ARRAY_TYPE) {
+            coldef.typcategory !== this.ARRAY_TYPE) {
           if(record[prop]) { 
-            if (coldef.typcategory === XT.Data.COMPOUND_TYPE) {
+            if (coldef.typcategory === this.COMPOUND_TYPE) {
               var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
               
               record[prop] = row;
             } 
           
-            if(coldef.typcategory === XT.Data.STRING_TYPE ||
-               coldef.typcategory === XT.Data.DATE_TYPE) { 
+            if(coldef.typcategory === this.STRING_TYPE ||
+               coldef.typcategory === this.DATE_TYPE) { 
               params.push(prop.concat(" = '", record[prop], "'"));
             } else {
               params.push(prop.concat(" = ", record[prop]));
@@ -434,7 +449,7 @@ create or replace function private.init_js() returns void as $$
       record['type'] = formatTypeName(map);
 
       /* set data state property */
-      record['dataState'] = XT.Data.READ_STATE;
+      record['dataState'] = this.READ_STATE;
 
       for(var prop in record) {
         if (record.hasOwnProperty(prop)) {
@@ -442,12 +457,12 @@ create or replace function private.init_js() returns void as $$
           value, result, sql = '';
 
             /* if it's a compound type, add a type property */
-            if (coldef['typcategory'] === XT.Data.COMPOUND_TYPE && record[prop]) {
+            if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
               record[prop]['type'] = formatTypeName(coldef['typname']);
-              record[prop]['dataState'] = XT.Data.READ_STATE;
+              record[prop]['dataState'] = this.READ_STATE;
               
             /* if it's an array convert each row into an object */
-            } else if (coldef['typcategory'] === XT.Data.ARRAY_TYPE && record[prop]) {
+            } else if (coldef['typcategory'] === this.ARRAY_TYPE && record[prop]) {
               var key = coldef['typname'].substring(1); /* strip off the leading underscore */
 
             for (var i = 0; i < record[prop].length; i++) {
@@ -461,7 +476,7 @@ create or replace function private.init_js() returns void as $$
 
               for (var k = 0; k < result.length; k++) {
                 result[k]['type'] = formatTypeName(key);
-                result[k]['dataState'] = XT.Data.READ_STATE;
+                result[k]['dataState'] = this.READ_STATE;
                 record[prop][i] = this.normalize(nameSpace, key, result[k]);
               }
             }
@@ -491,12 +506,12 @@ create or replace function private.init_js() returns void as $$
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop);
         if(prop) {
-          if(coldef.typcategory !== XT.Data.ARRAY_TYPE) { 
-            if(coldef.typcategory === XT.Data.COMPOUND_TYPE) { 
+          if(coldef.typcategory !== this.ARRAY_TYPE) { 
+            if(coldef.typcategory === this.COMPOUND_TYPE) { 
               record[prop] = this.rowify(schemaName + '.' + coldef.attname, record[prop]);
             }
-            if(coldef.typcategory === XT.Data.STRING_TYPE ||
-               coldef.typcategory === XT.Data.DATE_TYPE) {
+            if(coldef.typcategory === this.STRING_TYPE ||
+               coldef.typcategory === this.DATE_TYPE) {
               props.push("'" + record[prop] + "'"); 
             } else {
               props.push(record[prop]);

@@ -9,7 +9,7 @@ create or replace function private.fetch(data_hash text) returns text as $$
   // METHODS
   //
 
-  buildClause = function(conditions, parameters) {
+  var buildClause = function(conditions, parameters) {
     var ret = ' true ';
     
     if(conditions) {
@@ -64,8 +64,12 @@ create or replace function private.fetch(data_hash text) returns text as $$
       offset = dataHash.rowOffset ? 'offset ' + dataHash.rowOffset : '',
       data = Object.create(XT.Data),
       prettyPrint = dataHash.prettyPrint ? 2 : null,
-      debug = true, recs = null, 
+      recs = null, 
+      map = XT.fetchMap(type),
       sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+
+  /* validate - don't bother running the query if the user has no privileges */
+  if(!data.checkPrivileges(map)) throw new Error("Access Denied.");
   
   /* query the model */
   sql = sql.replace('{table}', nameSpace + '.' + type)
