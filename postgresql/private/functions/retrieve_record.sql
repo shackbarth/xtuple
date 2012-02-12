@@ -7,13 +7,13 @@ create or replace function private.retrieve_record(data_hash text) returns text 
 
   var dataHash = JSON.parse(data_hash),
       nameSpace = dataHash.recordType.replace((/\.\w+/i),'').toLowerCase(), 
-      recordType = dataHash.recordType.replace((/\w+\./i),'').decamelize(),
+      type = dataHash.recordType.replace((/\w+\./i),'').decamelize(),
       prettyPrint = dataHash.prettyPrint ? 2 : null,
       rec, data = Object.create(XT.Data),
-      map = XT.fetchMap(recordType),
-      sql = "select * from {nameSpace}.{recordType} where guid = {id};"
-            .replace(/{nameSpace}/, nameSpace)
-            .replace(/{recordType}/, recordType)
+      map = XT.fetchMap(type),
+      sql = "select * from {schema}.{table} where guid = {id};"
+            .replace(/{schema}/, nameSpace)
+            .replace(/{table}/, type)
             .replace(/{id}/, dataHash.id);  
 
   /* validate - don't bother running the query if the user has no privileges */
@@ -22,7 +22,7 @@ create or replace function private.retrieve_record(data_hash text) returns text 
   /* query the map */
   if(DEBUG) print(NOTICE, 'sql = ', sql);
   
-  rec = data.normalize(nameSpace, recordType, executeSql(sql)[0]);
+  rec = data.normalize(nameSpace, type, executeSql(sql)[0]);
 
   /* check privileges again, this time against record specific criteria where applicable */
   if(!data.checkPrivileges(map, rec)) throw new Error("Access Denied.");
