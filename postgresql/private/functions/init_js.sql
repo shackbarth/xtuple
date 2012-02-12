@@ -1,6 +1,8 @@
 create or replace function private.init_js() returns void as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
+
+  DEBUG = true;
   
   // ..........................................................
   // METHODS
@@ -64,32 +66,6 @@ create or replace function private.init_js() returns void as $$
   String.prototype.decamelize = function() {
     return this.replace((/([a-z])([A-Z])/g), '$1_$2').toLowerCase();
   }
-  
-  /* Change properties names with underscores '_' to camel case.
-     Only changes immediate properties, it is not recursive.
-
-     @returns {Object}
-  */
-  Object.prototype.camelize = function() {
-    var ret = {};
-
-    for(var prop in this) ret[prop.camelize()] = this[prop];
-   
-    return ret;
-  }
-
-  /* Change camel case property names names to snake case.
-     Only changes immediate properties, it is not recursive.
-
-     @returns {String | Object} The argument modified
-  */
-  Object.prototype.decamelize = function() {
-    var ret = {};
-
-    for(var prop in arg) ret[prop.decamelize()] = arg[prop];
-
-    return ret;
-  }
 
   // ..........................................................
   // XT
@@ -97,14 +73,49 @@ create or replace function private.init_js() returns void as $$
 
   XT = {};
 
+  /* Change properties names on an object with underscores '_' to camel case.
+     Only changes immediate properties, it is not recursive.
+
+     @param {Object | String}
+     @returns {Object | String}
+  */
+  XT.camelize = function(obj) {
+    var ret = {};
+
+    if(typeof obj === "object") {
+      for(var prop in obj) ret[prop.camelize()] = obj[prop];
+    }
+    else if(typeof obj === "string") return obj.camelize();
+     
+    return ret;
+  }
+
+  /* Change camel case property names in an object to snake case.
+     Only changes immediate properties, it is not recursive.
+
+     @param {Object | String} The object to decamelize
+     @returns {Object | String} The argument modified
+  */
+  XT.decamelize = function(obj) {
+    var ret = {};
+
+    if(typeof obj === "object") {
+      for(var prop in obj) ret[prop.decamelize()] = obj[prop];
+    }
+    else if(typeof obj === "string") return obj.decamelize();
+
+    return ret;
+  }
+
   /* Pass a record type and return an array
      that describes the view definition with
      item representing a column.
 
-     @param {String} recordType
+     @param {String} view name
+     @param {String} schema name
      @returns {Object} 
   */
-  XT.getViewDefinition = function(recordType, nameSpace) {
+  XT.getViewDefinition = function(viewName, schemaName) {
     var sql = "select attnum, attname, typname, typcategory "
             + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
             + "where c.relname = $1 "
@@ -115,7 +126,7 @@ create or replace function private.init_js() returns void as $$
 	    + "and a.atttypid = t.oid "
 	    + "order by attnum";
 
-    return executeSql(sql, [ recordType, nameSpace ]);
+    return executeSql(sql, [ viewName, schemaName ]);
   }
 
   /* Return a map definition based on a recordType name.
@@ -127,7 +138,7 @@ create or replace function private.init_js() returns void as $$
     var sql = 'select orm_json as json '
             + 'from private.orm '
             + 'where orm_name=$1',
-        res = executeSql(sql, [ name ]);
+        res = executeSql(sql, [ name.decamelize() ]);
 
     if(!res.length) {
       throw new Error("No map definition for " + name + " found.");
@@ -217,7 +228,179 @@ create or replace function private.init_js() returns void as $$
 
       return isGrantedAll || isGrantedPersonal;
     },
+    
+    /* Commit array columns with their own statements 
+    
+       @param {Object} record object to be committed
+       @param {Object} view definition object
+    */
+    commitArrays: function(schemaName, record, viewdef) {
+      for(var prop in record) {
+        var coldef = viewdef.findProperty('attname', prop);
 
+        if (coldef['typcategory'] === XT.Data.ARRAY_TYPE) {
+            var key = schemaName.decamelize() + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
+                values = record[prop]; 
+
+          for(var i in values) {
+            this.commitRecord(key, values[i]);
+          }
+        }
+      }   
+    },
+
+    /* Commit a record to the database 
+
+       @param {String} record type name
+       @param {Object} data object
+    */
+    commitRecord: function(key, value) {
+      var changeType;
+      
+      if(value && value.dataState) {
+        if(value.dataState === this.CREATED_STATE) { 
+          this.createRecord(key, value);
+        }
+        else if(value.dataState === this.UPDATED_STATE) { 
+          this.updateRecord(key, value);
+        }
+        else if(value.dataState === this.DELETED_STATE) { 
+          this.deleteRecord(key, value); 
+        }
+      }
+    },
+
+    /* Commit insert to the database 
+
+       @param {String} record type name
+       @param {Object} the record to be committed
+    */
+    createRecord: function(key, value) {
+      var viewName = key.decamelize().replace(/\w+\./i, ''), 
+          schemaName = key.decamelize().replace(/\.\w+/i, ''),    
+          viewdef = XT.getViewDefinition(viewName, schemaName),
+          record = XT.decamelize(value),
+          sql = '', columns, expressions,
+          props = [], params = [];
+
+      /* build up the content for insert of this record */
+      for(var prop in record) {
+        var coldef = viewdef.findProperty('attname', prop);
+        
+        if (prop !== 'data_state' && 
+            prop !== 'type' && 
+            coldef.typcategory !== XT.Data.ARRAY_TYPE) { 
+          props.push(prop);
+          if(record[prop]) { 
+            if (coldef.typcategory === XT.Data.COMPOUND_TYPE) { 
+              var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
+
+              record[prop] = row;
+            } 
+            
+            if(coldef.typcategory === XT.Data.STRING_TYPE ||
+               coldef.typcategory === XT.Data.DATE_TYPE) { 
+              params.push("'" + record[prop] + "'");
+            } else {
+              params.push(record[prop]);
+            }
+          } else {
+            params.push('null');
+          }
+        }
+      }
+
+      columns = props.join(', ');
+      expressions = params.join(', ');
+      sql = 'insert into {recordType} ({columns}) values ({expressions})'
+            .replace(/{recordType}/, key.decamelize())
+            .replace(/{columns}/, columns)
+            .replace(/{expressions}/, expressions)
+      
+      if(DEBUG) { print(NOTICE, 'sql =', sql); }
+      
+      /* commit the record */
+      executeSql(sql); 
+
+      /* okay, now lets handle arrays */
+      this.commitArrays(schemaName, record, viewdef);
+    },
+
+    /* Commit update to the database 
+
+       @param {String} record type name
+       @param {Object} the record to be committed
+    */
+    updateRecord: function(key, value) {
+      var viewName = key.decamelize().replace(/\w+\./i, ''), 
+          schemaName = key.decamelize().replace(/\.\w+/i, ''),
+          viewdef = XT.getViewDefinition(viewName, schemaName),
+          record = XT.decamelize(value),
+          sql = '', expressions, params = [];
+
+      /* build up the content for update of this record */
+      for(var prop in record) {
+        var coldef = viewdef.findProperty('attname', prop);
+
+        if (prop !== 'data_state' &&
+            prop !== 'type' && 
+            coldef.typcategory !== XT.Data.ARRAY_TYPE) {
+          if(record[prop]) { 
+            if (coldef.typcategory === XT.Data.COMPOUND_TYPE) {
+              var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
+              
+              record[prop] = row;
+            } 
+          
+            if(coldef.typcategory === XT.Data.STRING_TYPE ||
+               coldef.typcategory === XT.Data.DATE_TYPE) { 
+              params.push(prop.concat(" = '", record[prop], "'"));
+            } else {
+              params.push(prop.concat(" = ", record[prop]));
+            }
+          } else {
+            params.push(prop.concat(' = null'));
+          }
+        }
+      }
+
+      expressions = params.join(', ');
+      sql = 'update {recordType} set {expressions} where guid = {id};'
+            .replace(/{recordType}/, key.decamelize())
+            .replace(/{expressions}/, expressions)
+            .replace(/{id}/, record.guid);
+      
+      if(DEBUG) { print(NOTICE, 'sql =', sql); }
+      
+      /* commit the record */
+      executeSql(sql); 
+
+      /* okay, now lets handle arrays */
+      this.commitArrays(schemaName, record, viewdef); 
+    },
+
+    /* Commit deletion to the database 
+
+       @param {String} record type name
+       @param {Object} the record to be committed
+    */
+    deleteRecord: function(key, value) {
+      var record = XT.decamelize(value), sql = '';
+
+      sql = 'delete from {recordType} where guid = {id};'
+            .replace(/{recordType}/, key.decamelize())
+            .replace(/{id}/, record.guid);
+      
+      if(DEBUG) { print(NOTICE, 'sql =', sql); }
+      
+      /* commit the record */
+      executeSql(sql); 
+    },
+
+    /* Returns the currently logged in user.
+    
+       @returns {String} 
+    */
     currentUser: function() {
       var res;
 
@@ -237,6 +420,7 @@ create or replace function private.init_js() returns void as $$
     
        @param {Object} record object to be committed
        @param {Object} view definition object
+       @returns {Object} 
     */
     normalize: function(nameSpace, map, record) {
       var viewdef = XT.getViewDefinition(map, nameSpace);
@@ -271,7 +455,7 @@ create or replace function private.init_js() returns void as $$
 
               sql = "select (cast('" + value + "' as " + nameSpace + "." + key + ")).*";
 
-              if(debug) print(NOTICE, 'sql: ', sql);
+              if(DEBUG) print(NOTICE, 'sql: ', sql);
 
               result = executeSql(sql);
 
@@ -284,7 +468,50 @@ create or replace function private.init_js() returns void as $$
           }
         }
       }
-      return record.camelize();
+      return XT.camelize(record);
+    },
+
+    /* Convert object to PostgresSQL row type
+
+       @param {String} the column type
+       @param {Object} data to convert
+       @returns {String} a string formatted like a postgres RECORD datatype 
+    */
+    rowify: function(key, value) {
+      var viewName = key.decamelize().replace(/\w+\./i, ''), 
+          schemaName = key.decamelize().replace(/\.\w+/i, ''),
+          viewdef = XT.getViewDefinition(viewName, schemaName),
+          record = XT.decamelize(value),
+          props = [], ret = '';
+
+      /* remove potential fields not part of data definition */
+      delete record['data_state'];
+      delete record['type'];
+
+      for(var prop in record) {
+        var coldef = viewdef.findProperty('attname', prop);
+        if(prop) {
+          if(coldef.typcategory !== XT.Data.ARRAY_TYPE) { 
+            if(coldef.typcategory === XT.Data.COMPOUND_TYPE) { 
+              record[prop] = this.rowify(schemaName + '.' + coldef.attname, record[prop]);
+            }
+            if(coldef.typcategory === XT.Data.STRING_TYPE ||
+               coldef.typcategory === XT.Data.DATE_TYPE) {
+              props.push("'" + record[prop] + "'"); 
+            } else {
+              props.push(record[prop]);
+            }
+          }
+        } else {
+          props.push('null');
+        }
+      }
+
+      ret = ret.concat('(', props.join(','), ')');
+
+      if(DEBUG) { print(NOTICE, 'rowify = ', ret); }
+      
+      return ret;
     }
   }
 

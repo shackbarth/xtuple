@@ -9,10 +9,8 @@ create or replace function private.retrieve_record(data_hash text) returns text 
       nameSpace = dataHash.recordType.replace((/\.\w+/i),'').toLowerCase(), 
       recordType = dataHash.recordType.replace((/\w+\./i),'').decamelize(),
       prettyPrint = dataHash.prettyPrint ? 2 : null,
-      rec, data = Object.create(XT.Data);
-      
+      rec, data = Object.create(XT.Data),
       map = XT.fetchMap(recordType),
-      debug = false, rec,
       sql = "select * from {nameSpace}.{recordType} where guid = {id};"
             .replace(/{nameSpace}/, nameSpace)
             .replace(/{recordType}/, recordType)
@@ -22,7 +20,7 @@ create or replace function private.retrieve_record(data_hash text) returns text 
   if(!data.checkPrivileges(map)) throw new Error("Access Denied.");
 
   /* query the map */
-  if(debug) print(NOTICE, 'sql = ', sql);
+  if(DEBUG) print(NOTICE, 'sql = ', sql);
   
   rec = data.normalize(nameSpace, recordType, executeSql(sql)[0]);
 
@@ -34,6 +32,7 @@ create or replace function private.retrieve_record(data_hash text) returns text 
 
 $$ language plv8;
 /*
+select private.init_js();
 select private.retrieve_record('{
   "recordType":"XM.Contact", 
   "id": 1,
