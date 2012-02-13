@@ -47,7 +47,7 @@
       "name": "conversionTo",
       "toMany": {
         "isMaster": true,
-        "type": "XM.UnitConversion",
+        "type": "UnitConversion",
         "column": "uom_id",
         "inverse": "to_unit"
       }
@@ -56,7 +56,7 @@
       "name": "conversionFrom",
       "toMany": {
         "isMaster": true,
-        "type": "XM.UnitConversion",
+        "type": "UnitConversion",
         "column": "uom_id",
         "inverse": "from_unit"
       }

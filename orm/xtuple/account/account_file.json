@@ -44,7 +44,7 @@
     {
       "name": "file",
       "toOne": {
-        "type": "XM.FileInfo",
+        "type": "FileInfo",
         "column": "target_id"
       }
     },

@@ -85,7 +85,7 @@
     {
       "name": "assignedTo",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "prj_username",
         "inverse": "username"
       }
@@ -100,7 +100,7 @@
     {
       "name": "owner",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "prj_owner_username",
         "inverse": "username"
       }
@@ -108,7 +108,7 @@
     {
       "name": "recurrences",
       "toMany": {
-        "type": "XM.ProjectRecurrence",
+        "type": "ProjectRecurrence",
         "column": "prj_id",
         "inverse": "project"
       }
@@ -117,7 +117,7 @@
       "name": "comments",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectComment",
+        "type": "ProjectComment",
         "column": "prj_id",
         "inverse": "project",
         "deleteDelegate": {
@@ -139,7 +139,7 @@
       "name": "tasks",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectTask",
+        "type": "ProjectTask",
         "column": "prj_id",
         "inverse": "project"
       }
@@ -148,7 +148,7 @@
       "name": "contacts",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectContact",
+        "type": "ProjectContact",
         "column": "prj_id",
         "inverse": "source"
       }
@@ -157,7 +157,7 @@
       "name": "items",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectItem",
+        "type": "ProjectItem",
         "column": "prj_id",
         "inverse": "source"
       }
@@ -166,7 +166,7 @@
       "name": "files",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectFile",
+        "type": "ProjectFile",
         "column": "prj_id",
         "inverse": "source"
       }
@@ -175,7 +175,7 @@
       "name": "images",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectImage",
+        "type": "ProjectImage",
         "column": "prj_id",
         "inverse": "source"
       }
@@ -184,7 +184,7 @@
       "name": "urls",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectUrl",
+        "type": "ProjectUrl",
         "column": "prj_id",
         "inverse": "source"
       }
@@ -193,7 +193,7 @@
       "name": "projects",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectProject",
+        "type": "ProjectProject",
         "column": "prj_id",
         "inverse": "source"
       }

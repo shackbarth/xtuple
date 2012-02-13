@@ -44,7 +44,7 @@
     {
       "name": "project",
       "toOne": {
-        "type": "XM.ProjectInfo",
+        "type": "ProjectInfo",
         "column": "target_id"
       }
     },

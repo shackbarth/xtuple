@@ -33,7 +33,7 @@
     {
       "name": "characteristic",
       "attr": {
-        "type": "XM.Characteristic",
+        "type": "Characteristic",
         "column": "characteristic"
       }
     },

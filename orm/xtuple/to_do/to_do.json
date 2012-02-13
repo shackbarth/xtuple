@@ -49,7 +49,7 @@
     {
       "name": "contact",
       "toOne": {
-        "type": "XM.ContactInfo",
+        "type": "ContactInfo",
         "column": "todoitem_cntct_id"
       }
     },
@@ -112,7 +112,7 @@
     {
       "name": "owner",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "todoitem_owner_username",
         "inverse": "username"
       }
@@ -120,7 +120,7 @@
     {
       "name": "assignedTo",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "todoitem_username",
         "inverse": "username"
       }
@@ -129,7 +129,7 @@
       "name": "alarms",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoAlarm",
+        "type": "ToDoAlarm",
         "column": "todoitem_id",
         "inverse": "to_do"
       }
@@ -138,7 +138,7 @@
       "name": "comments",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoComment",
+        "type": "ToDoComment",
         "column": "todoitem_id",
         "inverse": "to_do",        
         "deleteDelegate": {
@@ -160,7 +160,7 @@
       "name": "contacts",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoContact",
+        "type": "ToDoContact",
         "column": "todoitem_id",
         "inverse": "source"
       }
@@ -169,7 +169,7 @@
       "name": "items",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoItem",
+        "type": "ToDoItem",
         "column": "todoitem_id",
         "inverse": "source"
       }
@@ -178,7 +178,7 @@
       "name": "files",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoFile",
+        "type": "ToDoFile",
         "column": "todoitem_id",
         "inverse": "source"
       }
@@ -187,7 +187,7 @@
       "name": "images",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoImage",
+        "type": "ToDoImage",
         "column": "todoitem_id",
         "inverse": "source"
       }
@@ -196,7 +196,7 @@
       "name": "urls",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoUrl",
+        "type": "ToDoUrl",
         "column": "todoitem_id",
         "inverse": "source"
       }
@@ -205,7 +205,7 @@
       "name": "toDos",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ToDoToDo",
+        "type": "ToDoToDo",
         "column": "todoitem_id",
         "inverse": "source"
       }

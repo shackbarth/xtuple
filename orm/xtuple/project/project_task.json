@@ -129,7 +129,7 @@
     {
       "name": "assignedTo",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "prjtask_username",
         "inverse": "username"
       }
@@ -137,7 +137,7 @@
     {
       "name": "owner",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "prjtask_owner_username",
         "inverse": "username"
       }
@@ -146,7 +146,7 @@
       "name": "comments",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectTaskComment",
+        "type": "ProjectTaskComment",
         "column": "prjtask_id",
         "inverse": "project_task",
         "deleteDelegate": {
@@ -168,7 +168,7 @@
       "name": "alarms",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ProjectTaskAlarm",
+        "type": "ProjectTaskAlarm",
         "column": "prjtask_id",
         "inverse": "project_task"
       }
@@ -191,7 +191,7 @@
         {
           "name": "projectAssignedTo",
           "toOne": {
-            "type": "XM.UserAccountInfo",
+            "type": "UserAccountInfo",
             "column": "prj_username",
             "inverse": "username"
           }
@@ -199,7 +199,7 @@
         {
           "name": "projectOwner",
           "toOne": {
-            "type": "XM.UserAccountInfo",
+            "type": "UserAccountInfo",
             "column": "prj_owner_username",
             "inverse": "username"
           }

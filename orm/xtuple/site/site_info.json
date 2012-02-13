@@ -51,7 +51,7 @@
     {
       "name": "address",
       "toOne": {
-        "type": "XM.AddressInfo",
+        "type": "AddressInfo",
         "column": "warehous_addr_id"
       }
     }

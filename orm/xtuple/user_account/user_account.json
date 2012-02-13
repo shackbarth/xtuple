@@ -89,7 +89,7 @@
     {
       "name": "privileges",
       "toMany": {
-        "type": "XM.UserAccountPrivilegeAssignment",
+        "type": "UserAccountPrivilegeAssignment",
         "column": "usr_username",
         "inverse": "user_account",
         "isMaster": true

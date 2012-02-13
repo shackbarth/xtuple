@@ -44,7 +44,7 @@
     {
       "name": "incident",
       "toOne": {
-        "type": "XM.IncidentInfo",
+        "type": "IncidentInfo",
         "column": "target_id"
       }
     },

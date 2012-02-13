@@ -45,7 +45,7 @@
     {
       "name": "rates",
       "toMany": {
-        "type": "XM.CurrencyRate",
+        "type": "CurrencyRate",
         "column": "curr_id",
         "inverse": "currency",
         "isMaster": true

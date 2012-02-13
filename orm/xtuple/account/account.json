@@ -63,7 +63,7 @@
     {
       "name": "parent",
       "toOne": {
-        "type": "XM.AccountInfo",
+        "type": "AccountInfo",
         "column": "crmacct_parent_id",
         "inverse": "guid"
       }
@@ -78,7 +78,7 @@
     {
       "name": "primaryContact",
       "toOne": {
-        "type": "XM.ContactInfo",
+        "type": "ContactInfo",
         "column": "crmacct_cntct_id_1",
         "inverse": "guid"
       }
@@ -86,7 +86,7 @@
     {
       "name": "secondaryContact",
       "toOne": {
-        "type": "XM.ContactInfo",
+        "type": "ContactInfo",
         "column": "crmacct_cntct_id_2",
         "inverse": "guid"
       }
@@ -94,7 +94,7 @@
     {
       "name": "userAccount",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "crmacct_usr_username",
         "inverse": "username"
       }
@@ -102,7 +102,7 @@
     {
       "name": "owner",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "crmacct_owner_username",
         "inverse": "username"
       }
@@ -111,7 +111,7 @@
       "name": "comments",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountComment",
+        "type": "AccountComment",
         "column": "crmacct_id",
         "inverse": "account",
         "deleteDelegate": {
@@ -133,7 +133,7 @@
       "name": "characteristics",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountCharacteristic",
+        "type": "AccountCharacteristic",
         "column": "crmacct_id",
         "inverse": "account"
       }
@@ -142,7 +142,7 @@
       "name": "contacts",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountContact",
+        "type": "AccountContact",
         "column": "crmacct_id",
         "inverse": "source"
       }
@@ -151,7 +151,7 @@
       "name": "items",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountItem",
+        "type": "AccountItem",
         "column": "crmacct_id",
         "inverse": "source"
       }
@@ -160,7 +160,7 @@
       "name": "files",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountFile",
+        "type": "AccountFile",
         "column": "crmacct_id",
         "inverse": "source"
       }
@@ -169,7 +169,7 @@
       "name": "images",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountImage",
+        "type": "AccountImage",
         "column": "crmacct_id",
         "inverse": "source"
       }
@@ -178,7 +178,7 @@
       "name": "urls",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountUrl",
+        "type": "AccountUrl",
         "column": "crmacct_id",
         "inverse": "source"
       }
@@ -187,7 +187,7 @@
       "name": "accounts",
       "toMany": {
         "isMaster": true,
-        "type": "XM.AccountAccount",
+        "type": "AccountAccount",
         "column": "crmacct_id",
         "inverse": "source"
       }

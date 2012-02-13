@@ -44,7 +44,7 @@
     {
       "name": "url",
       "toOne": {
-        "type": "XM.Url",
+        "type": "Url",
         "column": "target_id"
       }
     },

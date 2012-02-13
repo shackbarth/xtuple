@@ -189,7 +189,7 @@
       "name": "comments",
       "toMany": {
         "isMaster": true,
-        "type": "XM.ItemComment",
+        "type": "ItemComment",
         "column": "item_id",
         "inverse": "item",
         "deleteDelegate": {
@@ -210,7 +210,7 @@
     {
       "name": "characteristics",
       "toMany": {
-        "type": "XM.ItemCharacteristic",
+        "type": "ItemCharacteristic",
         "column": "item_id",
 		"inverse": "item",
         "isMaster": true
@@ -219,7 +219,7 @@
     {
       "name": "conversions",
       "toMany": {
-        "type": "XM.ItemConversion",
+        "type": "ItemConversion",
         "column": "item_id",
         "inverse": "item",
 		"isMaster": true
@@ -228,7 +228,7 @@
     {
       "name": "aliases",
       "toMany": {
-        "type": "XM.ItemAlias",
+        "type": "ItemAlias",
         "column": "item_id",
         "inverse": "item",
         "isMaster": true
@@ -237,7 +237,7 @@
     {
       "name": "substitutes",
       "toMany": {
-        "type": "XM.ItemSubstitute",
+        "type": "ItemSubstitute",
         "column": "item_id",
 		"inverse": "item",        
 		"isMaster": "true"
@@ -246,7 +246,7 @@
     {
       "name": "contacts",
       "toMany": {
-        "type": "XM.ItemContact",
+        "type": "ItemContact",
         "column": "item_id",
         "inverse": "source",
         "isMaster": true
@@ -255,7 +255,7 @@
     {
       "name": "items",
       "toMany": {
-        "type": "XM.ItemItem",
+        "type": "ItemItem",
         "column": "item_id",
         "inverse": "source",
         "isMaster": true
@@ -264,7 +264,7 @@
     {
       "name": "files",
       "toMany": {
-        "type": "XM.ItemFile",
+        "type": "ItemFile",
         "column": "item_id",
         "inverse": "source",
         "isMaster": true
@@ -273,7 +273,7 @@
     {
       "name": "images",
       "toMany": {
-        "type": "XM.ItemImage",
+        "type": "ItemImage",
         "column": "item_id",
         "inverse": "source",
         "isMaster": true
@@ -282,7 +282,7 @@
     {
       "name": "urls",
       "toMany": {
-        "type": "XM.ItemUrl",
+        "type": "ItemUrl",
         "column": "item_id",
         "inverse": "source",
         "isMaster": true

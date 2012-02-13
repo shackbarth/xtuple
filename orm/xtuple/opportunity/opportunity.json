@@ -39,14 +39,14 @@
     {
       "name": "account",
       "toOne": {
-        "type": "XM.AccountInfo",
+        "type": "AccountInfo",
         "column": "ophead_crmacct_id"
       }
     },
     {
       "name": "contact",
       "toOne": {
-        "type": "XM.ContactInfo",
+        "type": "ContactInfo",
         "column": "ophead_cntct_id"
       }
     },
@@ -137,7 +137,7 @@
     {
       "name": "owner",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "ophead_owner_username",
         "inverse": "username"
       }
@@ -145,7 +145,7 @@
     {
       "name": "assignedTo",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "ophead_username",
         "inverse": "username"
       }
@@ -154,7 +154,7 @@
       "name": "comments",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityComment",
+        "type": "OpportunityComment",
         "column": "ophead_id",
         "inverse": "opportunity"
       }
@@ -163,7 +163,7 @@
       "name": "characteristics",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityCharacteristic",
+        "type": "OpportunityCharacteristic",
         "column": "ophead_id",
         "inverse": "opportunity"
       }
@@ -172,7 +172,7 @@
       "name": "contacts",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityContact",
+        "type": "OpportunityContact",
         "column": "ophead_id",
         "inverse": "source"
       }
@@ -181,7 +181,7 @@
       "name": "items",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityItem",
+        "type": "OpportunityItem",
         "column": "ophead_id",
         "inverse": "source"
       }
@@ -190,7 +190,7 @@
       "name": "files",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityFile",
+        "type": "OpportunityFile",
         "column": "ophead_id",
         "inverse": "source"
       }
@@ -199,7 +199,7 @@
       "name": "images",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityImage",
+        "type": "OpportunityImage",
         "column": "ophead_id",
         "inverse": "source"
       }
@@ -208,7 +208,7 @@
       "name": "urls",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityUrl",
+        "type": "OpportunityUrl",
         "column": "ophead_id",
         "inverse": "source"
       }
@@ -217,7 +217,7 @@
       "name": "opportunities",
       "toMany": {
         "isMaster": true,
-        "type": "XM.OpportunityOpportunity",
+        "type": "OpportunityOpportunity",
         "column": "ophead_id",
         "inverse": "source"
       }

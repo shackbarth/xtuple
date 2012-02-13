@@ -15,21 +15,21 @@
     {
       "name": "account",
       "toOne": {
-        "type": "XM.AccountInfo",
+        "type": "AccountInfo",
         "column": "todoitem_crmacct_id"
       }
     },
      {
       "name": "incident",
       "toOne": {
-        "type": "XM.IncidentInfo",
+        "type": "IncidentInfo",
         "column": "todoitem_incdt_id"
       }
     },
      {
       "name": "opportunity",
       "toOne": {
-        "type": "XM.OpportunityInfo",
+        "type": "OpportunityInfo",
         "column": "todoitem_ophead_id"
       }
     }

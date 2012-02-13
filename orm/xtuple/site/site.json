@@ -179,7 +179,7 @@
     {
       "name": "comments",
       "toMany": {
-        "type": "XM.SiteComment",
+        "type": "SiteComment",
         "column": "warehous_id",
         "inverse": "site",
         "isMaster": true,

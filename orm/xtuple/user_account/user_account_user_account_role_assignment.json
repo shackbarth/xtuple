@@ -26,7 +26,7 @@
     {
       "name": "userAccountRole",
       "toOne": {
-        "type": "XM.UserAccountRole",
+        "type": "UserAccountRole",
         "column": "usrgrp_grp_id"
       }
     }

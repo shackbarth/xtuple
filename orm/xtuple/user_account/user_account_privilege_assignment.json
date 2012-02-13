@@ -26,7 +26,7 @@
     {
       "name": "privilege",
       "toOne": {
-        "type": "XM.Privilege",
+        "type": "Privilege",
         "column": "usrpriv_priv_id"
       }
     }

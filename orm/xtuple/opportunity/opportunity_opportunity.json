@@ -44,7 +44,7 @@
     {
       "name": "opportunity",
       "toOne": {
-        "type": "XM.OpportunityInfo",
+        "type": "OpportunityInfo",
         "column": "target_id"
       }
     },

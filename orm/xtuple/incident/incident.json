@@ -52,21 +52,21 @@
     {
       "name": "account",
       "toOne": {
-        "type": "XM.AccountInfo",
+        "type": "AccountInfo",
         "column": "incdt_crmacct_id"
       }
     },
     {
       "name": "contact",
       "toOne": {
-        "type": "XM.ContactInfo",
+        "type": "ContactInfo",
         "column": "incdt_cntct_id"
       }
     },
     {
       "name": "owner",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "incdt_owner_username",
         "inverse": "username"
       }
@@ -74,7 +74,7 @@
     {
       "name": "assignedTo",
       "toOne": {
-        "type": "XM.UserAccountInfo",
+        "type": "UserAccountInfo",
         "column": "incdt_assigned_username",
         "inverse": "username"
       }
@@ -125,7 +125,7 @@
       "name": "alarms",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentAlarm",
+        "type": "IncidentAlarm",
         "column": "incdt_id",
         "inverse": "incident"
       }
@@ -134,7 +134,7 @@
       "name": "history",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentHistory",
+        "type": "IncidentHistory",
         "column": "incdt_id",
         "inverse": "incident"
       }
@@ -143,7 +143,7 @@
       "name": "comments",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentComment",
+        "type": "IncidentComment",
         "column": "incdt_id",
         "inverse": "incident",
         "deleteDelegate": {
@@ -165,7 +165,7 @@
       "name": "characteristics",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentCharacteristic",
+        "type": "IncidentCharacteristic",
         "column": "incdt_id",
         "inverse": "incident"
       }
@@ -174,7 +174,7 @@
       "name": "contacts",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentContact",
+        "type": "IncidentContact",
         "column": "incdt_id",
         "inverse": "source"
       }
@@ -183,7 +183,7 @@
       "name": "items",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentItem",
+        "type": "IncidentItem",
         "column": "incdt_id",
         "inverse": "source"
       }
@@ -192,7 +192,7 @@
       "name": "files",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentFile",
+        "type": "IncidentFile",
         "column": "incdt_id",
         "inverse": "source"
       }
@@ -201,7 +201,7 @@
       "name": "images",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentImage",
+        "type": "IncidentImage",
         "column": "incdt_id",
         "inverse": "source"
       }
@@ -210,7 +210,7 @@
       "name": "urls",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentUrl",
+        "type": "IncidentUrl",
         "column": "incdt_id",
         "inverse": "source"
       }
@@ -219,7 +219,7 @@
       "name": "incidents",
       "toMany": {
         "isMaster": true,
-        "type": "XM.IncidentIncident",
+        "type": "IncidentIncident",
         "column": "incdt_id",
         "inverse": "source"
       }
