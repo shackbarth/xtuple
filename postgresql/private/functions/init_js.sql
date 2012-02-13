@@ -49,15 +49,24 @@ create or replace function private.init_js() returns void as $$
   */
   String.prototype.camelize = function() {
     var self = this,
-        rtn = self.replace( (/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g), function(self, separater, character) {
+        ret = self.replace( (/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g), function(self, separater, character) {
           return character ? character.toUpperCase() : '';
     });
 
-    var first = rtn.charAt(0),
+    var first = ret.charAt(0),
         lower = first.toLowerCase();
 
-    return first !== lower ? lower + ret.slice(1) : rtn;
+    return first !== lower ? lower + ret.slice(1) : ret;
   };
+
+  /* Converts the string into a class name. This method will camelize 
+     your string and then capitalize the first letter.
+
+     @returns {String}
+  */
+  String.prototype.classify = function() {
+    return this.slice(0,1).toUpperCase() + this.slice(1).camelize();
+  }
 
   /* Change a camel case string to snake case.
 
@@ -210,14 +219,18 @@ create or replace function private.init_js() returns void as $$
        @param {Object} Record - optional
        @returns {Boolean}
     */
-    checkPrivileges: function(nameSpace, type, record) {
-      var isGrantedAll = false,
+    checkPrivileges: function(nameSpace, type, record, isTopLevel) {
+      var isTopLevel = isTopLevel !== false ? true : false,
+          isGrantedAll = true,
           isGrantedPersonal = false,
           map = XT.fetchMap(nameSpace, type),
           privileges = map.privileges,
           committing = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
                     record && record.dataState === this.DELETED_STATE ? 'delete' : 'update';
+
+      /* can not access nested records directly */
+      if(isTopLevel && map.isNested) return false
           
       /* check privileges - only general access here */
       if(privileges) { 
@@ -231,7 +244,7 @@ create or replace function private.init_js() returns void as $$
                                               ((committing ? false : this.checkPrivilege(privileges.personal.read)) || 
                                                this.checkPrivilege(privileges.personal[action])) : false;
       }
-
+      
       /* if committing and personal privileges we need to ensure the old record is editable */
       if(committing && !isGrantedAll && isGrantedPersonal) {
         /* TODO: Need a qualified record type here to do this retrieve record */
@@ -251,7 +264,6 @@ create or replace function private.init_js() returns void as $$
           i++;
         }
       }
-
       return isGrantedAll || isGrantedPersonal;
     },
     
@@ -260,16 +272,16 @@ create or replace function private.init_js() returns void as $$
        @param {Object} record object to be committed
        @param {Object} view definition object
     */
-    commitArrays: function(schemaName, record, viewdef) {
+    commitArrays: function(nameSpace, record, viewdef) {
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop);
 
         if (coldef['typcategory'] === this.ARRAY_TYPE) {
-            var key = schemaName.decamelize() + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
+            var key = nameSpace + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
                 values = record[prop]; 
 
           for(var i in values) {
-            this.commitRecord(key, values[i]);
+            this.commitRecord(key.classify(), values[i], false);
           }
         }
       }   
@@ -280,18 +292,24 @@ create or replace function private.init_js() returns void as $$
        @param {String} name space qualified record type
        @param {Object} data object
     */
-    commitRecord: function(key, value) {
-      var changeType;
+    commitRecord: function(key, value, isTopLevel) {
+      var isTopLevel = isTopLevel !== false ? true : false,
+          nameSpace = key.replace(/\.\w+/i, '').camelize().toUpperCase(),
+          type = key.replace(/\w+\./i, '').classify();
+
+      var hasAccess = this.checkPrivileges(nameSpace, type, value, false);
+
+      if(!hasAccess) throw new Error("Access Denied.");
       
       if(value && value.dataState) {
         if(value.dataState === this.CREATED_STATE) { 
-          this.createRecord(key, value);
+          this.createRecord(key, value, isTopLevel);
         }
         else if(value.dataState === this.UPDATED_STATE) { 
-          this.updateRecord(key, value);
+          this.updateRecord(key, value, isTopLevel);
         }
         else if(value.dataState === this.DELETED_STATE) { 
-          this.deleteRecord(key, value); 
+          this.deleteRecord(key, value, isTopLevel); 
         }
       }
     },

@@ -11,13 +11,9 @@ create or replace function private.commit_record(data_hash text) returns text as
       data = Object.create(XT.Data);
 
   delete dataHash.recordType;
+  data.commitRecord(recordType, dataHash);
 
-  if(data.checkPrivileges(type, dataHash)) { 
-    data.commitRecord(recordType, dataHash);
-    return '{ "status":"ok" }';
-  }
-  
-  throw new Error("Access Denied.");
+  return '{ "status":"ok" }';
   
 $$ language plv8;
 /*
