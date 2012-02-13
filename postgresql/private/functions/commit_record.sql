@@ -6,14 +6,13 @@ create or replace function private.commit_record(data_hash text) returns text as
   if(!this.isInitialized) executeSql('select private.init_js()');
 
   var dataHash = JSON.parse(data_hash),
-      recordType = dataHash.recordType, 
-      map = XT.fetchMap(recordType.replace((/\w+\./i),'')),
-      data = Object.create(XT.Data),
-      debug = false;
+      recordType = dataHash.recordType,
+      type = dataHash.recordType.replace((/\w+\./i),''),
+      data = Object.create(XT.Data);
 
   delete dataHash.recordType;
 
-  if(data.checkPrivileges(map, dataHash)) { 
+  if(data.checkPrivileges(type, dataHash)) { 
     data.commitRecord(recordType, dataHash);
     return '{ "status":"ok" }';
   }

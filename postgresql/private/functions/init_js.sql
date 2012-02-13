@@ -203,13 +203,14 @@ create or replace function private.init_js() returns void as $$
        If a record is passed, check personal privileges of
        that record.
 
-       @param {Object} Map
+       @param {String} type name
        @param {Object} Record - optional
        @returns {Boolean}
     */
-    checkPrivileges: function(map, record) {
+    checkPrivileges: function(type, record) {
       var isGrantedAll = false,
           isGrantedPersonal = false,
+          map = XT.fetchMap(type),
           privileges = map.privileges,
           commit = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 

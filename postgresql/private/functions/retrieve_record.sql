@@ -10,14 +10,13 @@ create or replace function private.retrieve_record(data_hash text) returns text 
       type = dataHash.recordType.replace((/\w+\./i),'').decamelize(),
       prettyPrint = dataHash.prettyPrint ? 2 : null,
       rec, data = Object.create(XT.Data),
-      map = XT.fetchMap(type),
       sql = "select * from {schema}.{table} where guid = {id};"
             .replace(/{schema}/, nameSpace)
             .replace(/{table}/, type)
             .replace(/{id}/, dataHash.id);  
 
   /* validate - don't bother running the query if the user has no privileges */
-  if(!data.checkPrivileges(map)) throw new Error("Access Denied.");
+  if(!data.checkPrivileges(type)) throw new Error("Access Denied.");
 
   /* query the map */
   if(DEBUG) print(NOTICE, 'sql = ', sql);
@@ -25,7 +24,7 @@ create or replace function private.retrieve_record(data_hash text) returns text 
   rec = data.normalize(nameSpace, type, executeSql(sql)[0]);
 
   /* check privileges again, this time against record specific criteria where applicable */
-  if(!data.checkPrivileges(map, rec)) throw new Error("Access Denied.");
+  if(!data.checkPrivileges(type, rec)) throw new Error("Access Denied.");
 
   /* return the results */
   return JSON.stringify(rec, null, prettyPrint);

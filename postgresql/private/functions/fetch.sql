@@ -62,14 +62,12 @@ create or replace function private.fetch(data_hash text) returns text as $$
       parameters = dataHash.parameters,
       limit = dataHash.rowLimit ? 'limit ' + dataHash.rowLimit : '';
       offset = dataHash.rowOffset ? 'offset ' + dataHash.rowOffset : '',
-      data = Object.create(XT.Data),
-      prettyPrint = dataHash.prettyPrint ? 2 : null,
-      recs = null, 
-      map = XT.fetchMap(type),
+      data = Object.create(XT.Data), recs = null, 
+      prettyPrint = dataHash.prettyPrint ? 2 : null, 
       sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
 
   /* validate - don't bother running the query if the user has no privileges */
-  if(!data.checkPrivileges(map)) throw new Error("Access Denied.");
+  if(!data.checkPrivileges(type)) throw new Error("Access Denied.");
   
   /* query the model */
   sql = sql.replace('{table}', nameSpace + '.' + type)
