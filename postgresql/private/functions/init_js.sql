@@ -212,7 +212,7 @@ create or replace function private.init_js() returns void as $$
           isGrantedPersonal = false,
           map = XT.fetchMap(type),
           privileges = map.privileges,
-          commit = record ? record.dataState !== this.READ_STATE : false;
+          committing = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
                     record && record.dataState === this.DELETED_STATE ? 'delete' : 'update';
                     
@@ -220,17 +220,24 @@ create or replace function private.init_js() returns void as $$
       if(privileges) {
         /* check if user has 'all' read privileges */
         isGrantedAll = privileges.all ? 
-                       ((commit ? false : this.checkPrivilege(privileges.all.read)) || 
+                       ((committing ? false : this.checkPrivilege(privileges.all.read)) || 
                         this.checkPrivilege(privileges.all[action])) : false;
 
         /* otherwise check for 'personal' read privileges */
         if(!isGrantedAll) isGrantedPersonal =  privileges.personal ? 
-                                              ((commit ? false : this.checkPrivilege(privileges.personal.read)) || 
+                                              ((committing ? false : this.checkPrivilege(privileges.personal.read)) || 
                                                this.checkPrivilege(privileges.personal[action])) : false;
       }
 
+      /* if committing and personal privileges we need to ensure the old record is editable */
+      if(committing && !isGrantedAll && isGrantedPersonal) {
+        /* TODO: Need a qualified record type here to do this retrieve record */
+        var old = this.retrieveRecord(recordType, record.guid);
+
+        isGrantedPersonal = this.checkPrivileges(old);
+
       /* check personal privileges on the record passed if applicable */
-      if(record && !isGrantedAll && isGrantedPersonal && privileges.personal.properties) {
+      } else if(record && !isGrantedAll && isGrantedPersonal) {
         var i = 0, props = privileges.personal.properties;
       
         isGrantedPersonal = false;
@@ -485,6 +492,38 @@ create or replace function private.init_js() returns void as $$
         }
       }
       return XT.camelize(record);
+    },
+
+    /* Retreives a single record from the database. If
+       the user does not have appropriate privileges an
+       error will be thrown.
+    
+       @param {String} namespace qualified record type
+       @param {Number} record id
+       @returns {Object} 
+    */
+    retrieveRecord: function(recordType, id) {
+      var nameSpace = recordType.replace((/\.\w+/i),'').toLowerCase(), 
+          type = recordType.replace((/\w+\./i),'').decamelize(),
+          ret, 
+          sql = "select * from {schema}.{table} where guid = {id};"
+                .replace(/{schema}/, nameSpace)
+                .replace(/{table}/, type)
+                .replace(/{id}/, id);  
+
+      /* validate - don't bother running the query if the user has no privileges */
+      if(!this.checkPrivileges(type)) throw new Error("Access Denied.");
+
+      /* query the map */
+      if(DEBUG) print(NOTICE, 'sql = ', sql);
+      
+      ret = this.normalize(nameSpace, type, executeSql(sql)[0]);
+
+      /* check privileges again, this time against record specific criteria where applicable */
+      if(!this.checkPrivileges(type, ret)) throw new Error("Access Denied.");
+
+      /* return the results */
+      return ret;
     },
 
     /* Convert object to PostgresSQL row type

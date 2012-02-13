@@ -6,28 +6,12 @@ create or replace function private.retrieve_record(data_hash text) returns text 
   if(!this.isInitialized) executeSql('select private.init_js()');
 
   var dataHash = JSON.parse(data_hash),
-      nameSpace = dataHash.recordType.replace((/\.\w+/i),'').toLowerCase(), 
-      type = dataHash.recordType.replace((/\w+\./i),'').decamelize(),
+      data = Object.create(XT.Data),
       prettyPrint = dataHash.prettyPrint ? 2 : null,
-      rec, data = Object.create(XT.Data),
-      sql = "select * from {schema}.{table} where guid = {id};"
-            .replace(/{schema}/, nameSpace)
-            .replace(/{table}/, type)
-            .replace(/{id}/, dataHash.id);  
-
-  /* validate - don't bother running the query if the user has no privileges */
-  if(!data.checkPrivileges(type)) throw new Error("Access Denied.");
-
-  /* query the map */
-  if(DEBUG) print(NOTICE, 'sql = ', sql);
-  
-  rec = data.normalize(nameSpace, type, executeSql(sql)[0]);
-
-  /* check privileges again, this time against record specific criteria where applicable */
-  if(!data.checkPrivileges(type, rec)) throw new Error("Access Denied.");
+      ret = data.retrieveRecord(dataHash.recordType, dataHash.id);
 
   /* return the results */
-  return JSON.stringify(rec, null, prettyPrint);
+  return JSON.stringify(ret, null, prettyPrint);
 
 $$ language plv8;
 /*
