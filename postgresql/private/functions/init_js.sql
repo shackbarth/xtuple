@@ -227,7 +227,8 @@ create or replace function private.init_js() returns void as $$
           privileges = map.privileges,
           committing = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
-                    record && record.dataState === this.DELETED_STATE ? 'delete' : 'update';
+                    record && record.dataState === this.DELETED_STATE ? 'delete' :
+                    record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* can not access nested records directly */
       if(isTopLevel && map.isNested) return false
@@ -244,26 +245,33 @@ create or replace function private.init_js() returns void as $$
                                               ((committing ? false : this.checkPrivilege(privileges.personal.read)) || 
                                                this.checkPrivilege(privileges.personal[action])) : false;
       }
-      
-      /* if committing and personal privileges we need to ensure the old record is editable */
-      if(committing && !isGrantedAll && isGrantedPersonal) {
-        /* TODO: Need a qualified record type here to do this retrieve record */
-        var old = this.retrieveRecord(recordType, record.guid);
 
-        isGrantedPersonal = this.checkPrivileges(nameSpace, old);
+      if(record && !isGrantedAll && isGrantedPersonal) {
+        var that = this,
 
-      /* check personal privileges on the record passed if applicable */
-      } else if(record && !isGrantedAll && isGrantedPersonal) {
-        var i = 0, props = privileges.personal.properties;
-      
-        isGrantedPersonal = false;
-      
-        while(!isGrantedPersonal && i < props.length) {
-          var prop = props[i];
-          isGrantedPersonal = record[prop].username === this.currentUser();
-          i++;
+        checkPersonal = function(record) {
+          var i = 0, isGranted = false,
+              props = privileges.personal.properties;
+
+          while(!isGranted && i < props.length) {
+            var prop = props[i];
+            isGranted = record[prop].username === that.currentUser();
+            i++;
+          }
+
+          return isGranted;
+        };  
+        /* if committing and personal privileges we need to ensure the old record is editable */
+        if(committing && (action === 'update' || action === 'delete')) {
+          var old = this.retrieveRecord(nameSpace + '.' + type, record.guid);
+
+          isGrantedPersonal = checkPersonal(old);
+        /* check personal privileges on the record passed if applicable */
+        } else if(action === 'read') {
+          isGrantedPersonal = checkPersonal(record);
         }
       }
+    
       return isGrantedAll || isGrantedPersonal;
     },
     
