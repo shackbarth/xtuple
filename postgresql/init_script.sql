@@ -25,6 +25,7 @@
 \i private/functions/execute_query.sql;
 \i private/functions/fetch.sql;
 \i private/functions/get_id.sql;
+\i private/functions/init_js.sql;
 \i private/functions/install_orm.sql;
 \i private/functions/is_date.sql;
 \i private/functions/raise_exception.sql;

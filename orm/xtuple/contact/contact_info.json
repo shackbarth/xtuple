@@ -83,7 +83,7 @@
     {
       "name": "address",
       "toOne": {
-        "type": "XM.AddressInfo",
+        "type": "AddressInfo",
         "column": "cntct_addr_id"
       }
     }

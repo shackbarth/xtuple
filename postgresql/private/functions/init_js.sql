@@ -134,26 +134,29 @@ create or replace function private.init_js() returns void as $$
      @param {String} recordType
      @returns {Object}
   */
-  XT.fetchMap = function(name) {
+  XT.fetchMap = function(nameSpace, type) {
     if(!this._maps) this._maps = [];
     
-    var ret, res = this._maps.findProperty('name', name);
+    var ret, recordType = nameSpace + '.'+ type,
+        res = this._maps.findProperty('recordType', recordType);
     
     if(res) ret = res.map;
     else {
       var sql = 'select orm_json as json '
               + 'from private.orm '
-              + 'where orm_name=$1',
-          res = executeSql(sql, [ name.decamelize() ]);
+              + 'where orm_namespace=$1'
+              + ' and orm_type=$2'
+              + ' and not orm_ext',
+          res = executeSql(sql, [ nameSpace, type ]);
 
       if(!res.length) {
-        throw new Error("No map definition for " + name + " found.");
+        throw new Error("No map definition for " + recordType + " found.");
       }
 
       ret = JSON.parse(res[0].json);
 
       /* cache the result so we don't requery needlessly */
-      this._maps.push({ "name": name, "map": ret});
+      this._maps.push({ "recordType": recordType, "map": ret});
     }
 
     return ret;
@@ -207,17 +210,17 @@ create or replace function private.init_js() returns void as $$
        @param {Object} Record - optional
        @returns {Boolean}
     */
-    checkPrivileges: function(type, record) {
+    checkPrivileges: function(nameSpace, type, record) {
       var isGrantedAll = false,
           isGrantedPersonal = false,
-          map = XT.fetchMap(type),
+          map = XT.fetchMap(nameSpace, type),
           privileges = map.privileges,
           committing = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
                     record && record.dataState === this.DELETED_STATE ? 'delete' : 'update';
-                    
+          
       /* check privileges - only general access here */
-      if(privileges) {
+      if(privileges) { 
         /* check if user has 'all' read privileges */
         isGrantedAll = privileges.all ? 
                        ((committing ? false : this.checkPrivilege(privileges.all.read)) || 
@@ -234,7 +237,7 @@ create or replace function private.init_js() returns void as $$
         /* TODO: Need a qualified record type here to do this retrieve record */
         var old = this.retrieveRecord(recordType, record.guid);
 
-        isGrantedPersonal = this.checkPrivileges(old);
+        isGrantedPersonal = this.checkPrivileges(nameSpace, old);
 
       /* check personal privileges on the record passed if applicable */
       } else if(record && !isGrantedAll && isGrantedPersonal) {
@@ -274,7 +277,7 @@ create or replace function private.init_js() returns void as $$
 
     /* Commit a record to the database 
 
-       @param {String} record type name
+       @param {String} name space qualified record type
        @param {Object} data object
     */
     commitRecord: function(key, value) {
@@ -295,7 +298,7 @@ create or replace function private.init_js() returns void as $$
 
     /* Commit insert to the database 
 
-       @param {String} record type name
+       @param {String} name space qualified record type
        @param {Object} the record to be committed
     */
     createRecord: function(key, value) {
@@ -351,7 +354,7 @@ create or replace function private.init_js() returns void as $$
 
     /* Commit update to the database 
 
-       @param {String} record type name
+       @param {String} name space qualified record type
        @param {Object} the record to be committed
     */
     updateRecord: function(key, value) {
@@ -404,7 +407,7 @@ create or replace function private.init_js() returns void as $$
 
     /* Commit deletion to the database 
 
-       @param {String} record type name
+       @param {String} name space qualified record type
        @param {Object} the record to be committed
     */
     deleteRecord: function(key, value) {
@@ -446,7 +449,7 @@ create or replace function private.init_js() returns void as $$
        @returns {Object} 
     */
     normalize: function(nameSpace, map, record) {
-      var viewdef = XT.getViewDefinition(map, nameSpace);
+      var viewdef = XT.getViewDefinition(map, nameSpace.decamelize());
 
       /* helper formatting function */
       formatTypeName = function(str) {
@@ -503,8 +506,8 @@ create or replace function private.init_js() returns void as $$
        @returns {Object} 
     */
     retrieveRecord: function(recordType, id) {
-      var nameSpace = recordType.replace((/\.\w+/i),'').toLowerCase(), 
-          type = recordType.replace((/\w+\./i),'').decamelize(),
+      var nameSpace = recordType.replace((/\.\w+/i),''), 
+          type = recordType.replace((/\w+\./i),''),
           ret, 
           sql = "select * from {schema}.{table} where guid = {id};"
                 .replace(/{schema}/, nameSpace)
@@ -512,7 +515,7 @@ create or replace function private.init_js() returns void as $$
                 .replace(/{id}/, id);  
 
       /* validate - don't bother running the query if the user has no privileges */
-      if(!this.checkPrivileges(type)) throw new Error("Access Denied.");
+      if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
 
       /* query the map */
       if(DEBUG) print(NOTICE, 'sql = ', sql);
@@ -520,7 +523,7 @@ create or replace function private.init_js() returns void as $$
       ret = this.normalize(nameSpace, type, executeSql(sql)[0]);
 
       /* check privileges again, this time against record specific criteria where applicable */
-      if(!this.checkPrivileges(type, ret)) throw new Error("Access Denied.");
+      if(!this.checkPrivileges(nameSpace, type, ret)) throw new Error("Access Denied.");
 
       /* return the results */
       return ret;

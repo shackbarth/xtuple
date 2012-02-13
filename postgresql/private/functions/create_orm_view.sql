@@ -1,4 +1,4 @@
-create or replace function private.create_orm_view(orm_name text) returns void as $$
+create or replace function private.create_orm_view(view_name text) returns void as $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -18,7 +18,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   
   processOrm = function(orm) {
     var props = orm.properties,
-        view_name = orm.nameSpace ? orm.nameSpace.toLowerCase() + '.' + orm_name : '',
+        viewName = view_name,
         tblAlias = orm.table === base.table ? 't1' : 't' + tbl, 
         pKeyCol, pKeyAlias,
         insTgtCols = [], insSrcCols = [], updCols = [], delCascade = [], 
@@ -70,7 +70,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       /* process toOne */
       if(props[i].toOne && props[i].toOne.column) {
         var toOne = props[i].toOne,
-            table = toOne.type.decamelize(),
+            table = orm.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
             type = table.replace((/\w+\./i),''),
             inverse = toOne.inverse ? toOne.inverse : 'guid',
             isEditable = toOne.isEditable !== false ? true : false,
@@ -112,7 +112,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       /* process toMany */
       if(props[i].toMany && props[i].toMany.column) {
         var toMany = props[i].toMany,
-            table = toMany.type.decamelize(),
+            table = orm.nameSpace + '.' + toMany.type.decamelize(),
             type = table.replace((/\w+\./i),''),
             inverse = toMany.inverse ? toMany.inverse : 'guid',
             sql, col = 'array({select}) as "{alias}"';
@@ -220,7 +220,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         if(base.table === orm.table) {
           rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
                             .replace(/{event}/, 'insert')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/, 
                       UPDATE.replace(/{table}/, orm.table)
@@ -230,7 +230,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         } else {
           rule = CREATE_RULE.replace(/{name}/,'"_INSERT_' + tblAlias.toUpperCase() + '"')
                             .replace(/{event}/, 'insert')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/, 
                       INSERT.replace(/{table}/, orm.table)
@@ -250,7 +250,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
           /* insert rule for case where record doesn't yet exist */
           rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
                             .replace(/{event}/, 'update')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '(' +
                       SELECT.replace(/{columns}/,'count(*) = 0') 
                             .replace(/{table}/, orm.table) 
@@ -267,7 +267,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
           /* update rule for case where record does exist */
           rule = CREATE_RULE.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"')
                             .replace(/{event}/, 'update')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '(' +
                       SELECT.replace(/{columns}/,'count(*) > 0') 
                             .replace(/{table}/, orm.table) 
@@ -281,7 +281,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         } else {  
           rule = CREATE_RULE.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"')
                             .replace(/{event}/, 'update')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/, 
                       UPDATE.replace(/{table}/, orm.table) 
@@ -296,7 +296,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       if(canDelete && !orm.isChild && base.table !== orm.table) {
         rule = CREATE_RULE.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') 
                           .replace(/{event}/, 'delete')
-                          .replace(/{table}/, view_name)
+                          .replace(/{table}/, viewName)
                           .replace(/{where}/, '')
                           .replace(/{command}/,
                     DELETE.replace(/{table}/, orm.table) 
@@ -319,7 +319,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         if(canCreate && insSrcCols.length) {
           rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
                             .replace(/{event}/, 'insert')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/,
                       INSERT.replace(/{table}/, orm.table)
@@ -328,7 +328,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         } else {              
           rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
                             .replace(/{event}/, 'insert')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/,'nothing');
         }
@@ -339,7 +339,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         if(canUpdate && pKeyCol && updCols.length) {
           rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                             .replace(/{event}/, 'update')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/, 
                       UPDATE.replace(/{table}/, orm.table) 
@@ -348,7 +348,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         } else {
           rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                             .replace(/{event}/, 'update')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/, 'nothing'); 
         }
@@ -359,7 +359,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         if(canDelete && pKeyCol) {
           rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                             .replace(/{event}/, 'delete')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/, '(' + delCascade.join(' ')
                             .replace(/{pKeyAlias}/g, pKeyAlias) +
@@ -368,7 +368,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
         } else {
           rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                             .replace(/{event}/, 'delete')
-                            .replace(/{table}/, view_name)
+                            .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
                             .replace(/{command}/, 'nothing'); 
         };
@@ -379,7 +379,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
       } else { 
         rule = CREATE_RULE.replace(/{name}/,'"_INSERT"')
                           .replace(/{event}/, 'insert')
-                          .replace(/{table}/, view_name)
+                          .replace(/{table}/, viewName)
                           .replace(/{where}/, '')
                           .replace(/{command}/, 'nothing'); 
                           
@@ -387,7 +387,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
         rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                           .replace(/{event}/, 'update')
-                          .replace(/{table}/, view_name)
+                          .replace(/{table}/, viewName)
                           .replace(/{where}/, '')
                           .replace(/{command}/, 'nothing'); 
                           
@@ -395,7 +395,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
         rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                           .replace(/{event}/, 'delete')
-                          .replace(/{table}/, view_name)
+                          .replace(/{table}/, viewName)
                           .replace(/{where}/, '')
                           .replace(/{command}/, 'nothing'); 
                           
@@ -433,18 +433,21 @@ create or replace function private.create_orm_view(orm_name text) returns void a
 
   var cols = [], tbls = [], clauses = [], orderBy = [],
   comments = 'System view generated by object relation maps: WARNING! Do not make changes, add rules or dependencies directly to this view!',
-  rules = [], query = '', tbl = 1 - 0, sql, base, extensions = [];
+  rules = [], query = '', tbl = 1 - 0, sql, base, extensions = [],
+  nameSpace = view_name.replace(/\.\w+/i, '').toUpperCase(), 
+  type = view_name.replace(/\w+\./i, '').slice(0,1).toUpperCase() + view_name.replace(/\w+\./i, '').slice(1).camelize();
   
   /* base orm */
   sql = 'select orm_id as id, orm_json as json '
       + 'from private.orm '
-      + 'where orm_name = $1 '
+      + 'where orm_namespace = $1 '
+      + ' and orm_type = $2 '
       + ' and orm_active '
       + ' and not orm_ext ';
 
-  qry = executeSql(sql, [orm_name]);
+  qry = executeSql(sql, [nameSpace, type]);
   
-  if(!qry.length) throw new Error('No base object relational map found for ' + orm_name);
+  if(!qry.length) throw new Error('No base object relational map found for view ' + view_name);
   
   base = JSON.parse(qry[0].json);
 
@@ -453,12 +456,13 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   /* orm extensions */
   sql = 'select orm_id as id, orm_json as json '
       + 'from private.orm '
-      + 'where orm_name = $1 '
+      + 'where orm_namespace = $1 '
+      + ' and orm_type = $2 '
       + ' and orm_active '
       + ' and orm_ext '
       + 'order by orm_seq, orm_id ';
 
-  extensions = executeSql(sql, [orm_name]);
+  extensions = executeSql(sql, [nameSpace, type]);
 
   for(var i = 0; i < extensions.length; i++) {
     processOrm(JSON.parse(extensions[i].json));
@@ -469,7 +473,7 @@ create or replace function private.create_orm_view(orm_name text) returns void a
  
   /* Build query to create the new view */
   query = 'create view {name} as select {columns} from {tables} {where} {order};'
-          .replace(/{name}/, base.nameSpace.toLowerCase() + '.' + orm_name)
+          .replace(/{name}/, view_name)
           .replace(/{columns}/, cols.join(', '))
           .replace(/{tables}/, tbls.join(' '))
           .replace(/{where}/, clauses.length ? 'where ' + clauses.join(' and ') : '')
@@ -480,8 +484,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   executeSql(query);
 
   /* Add comment */
-  query = "comment on view xm.{type} is '{comments}'"
-          .replace(/{type}/, orm_name)
+  query = "comment on view {name} is '{comments}'"
+          .replace(/{name}/, view_name)
           .replace(/{comments}/, comments); 
           
   executeSql(query);
@@ -494,8 +498,8 @@ create or replace function private.create_orm_view(orm_name text) returns void a
   }
 
   /* Grant access to xtrole */
-  query = 'grant all on xm.{type} to xtrole'
-          .replace(/{type}/, orm_name);
+  query = 'grant all on {view} to xtrole'
+          .replace(/{view}/, view_name);
           
   executeSql(query); 
 

@@ -59,7 +59,7 @@
     {
       "name": "states",
       "toMany": {
-        "type": "XM.State",
+        "type": "State",
         "column": "country_id",
         "inverse": "country"
       }

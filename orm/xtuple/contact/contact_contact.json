@@ -1,4 +1,4 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ContactContact",
@@ -44,7 +44,7 @@
     {
       "name": "contact",
       "toOne": {
-        "type": "XM.ContactInfo",
+        "type": "ContactInfo",
         "column": "target_id"
       }
     },

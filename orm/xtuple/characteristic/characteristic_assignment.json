@@ -33,7 +33,7 @@
     {
       "name": "characteristic",
       "toOne": {
-        "type": "XM.Characteristic",
+        "type": "Characteristic",
         "isChild": true,
         "column": "charass_char_id"
       }

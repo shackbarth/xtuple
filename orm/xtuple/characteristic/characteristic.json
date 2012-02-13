@@ -1,4 +1,4 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Characteristic",
@@ -68,7 +68,7 @@
     {
       "name": "options",
       "toMany": {
-        "type": "XM.CharacteristicOption",
+        "type": "CharacteristicOption",
         "column": "char_id",
         "inverse": "characteristic"
       }

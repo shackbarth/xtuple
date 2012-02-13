@@ -97,7 +97,7 @@
     {
       "name": "comments",
       "toMany": {
-        "type": "XM.AddressComment",
+        "type": "AddressComment",
         "column": "addr_id",
         "inverse": "address",
         "deleteDelegate": {
@@ -118,7 +118,7 @@
     {
       "name": "characteristics",
       "toMany": {
-        "type": "XM.AddressCharacteristic",
+        "type": "AddressCharacteristic",
         "column": "addr_id",
         "inverse": "address"
       }

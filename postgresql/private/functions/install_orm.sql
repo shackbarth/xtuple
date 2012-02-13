@@ -2,60 +2,37 @@ create or replace function private.install_orm(json text) returns void volatile 
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
-
-  /* Pass an argument to change camel case names to snake case.
-     A string passed in simply returns a decamelized string.
-     If an object is passed, an object is returned with all it's
-     proprety names camelized.
-
-     @param {String | Object}
-     @returns {String | Object} The argument modified
-  */
-  decamelize = function(arg) {
-    var ret = arg; 
-
-    decamelizeStr = function(str) {
-      return str.replace((/([a-z])([A-Z])/g), '$1_$2').toLowerCase();
-    }
-
-    if(typeof arg == "string") {
-      ret = decamelizeStr(arg);
-    } else if(typeof arg == "object") {
-      ret = new Object;
-
-      for(var prop in arg) {
-        ret[decamelizeStr(prop)] = arg[prop];
-      }
-    }
-
-    return ret;
-  }
+  /* initialize plv8 if needed */
+  if(!this.isInitialized) executeSql('select private.init_js()');
 
   var newJson = JSON.parse(json), oldJson,
       oldOrm, sql, isExtension, sequence,
-      orm_name = decamelize(newJson.type),
-      orm_context = decamelize(newJson.context);
+      nameSpace = newJson.nameSpace,
+      type = newJson.type,
+      context = newJson.context,
+      sql;
 
-  if(!newJson.nameSpace) throw new Error("A name space is required");
-  if(!orm_name) throw new Error("A type is required");
-  if(!orm_context) throw new Error("A context is required");
+  if(!nameSpace) throw new Error("A name space is required");
+  if(!type) throw new Error("A type is required");
+  if(!context) throw new Error("A context is required");
 
   sql = 'select orm_id as "id", '
       + '  orm_json as "json", '
       + '  orm_ext as "isExtension" '
       + 'from private.orm '
-      + 'where orm_name = $1 '
-      + ' and orm_context = $2';
+      + 'where orm_namespace = $1 '
+      + ' and orm_type = $2 '
+      + ' and orm_context = $3';
 
-  oldOrm = executeSql(sql, [orm_name, orm_context])[0];
+  oldOrm = executeSql(sql, [nameSpace, type, context])[0];
 
   sequence = newJson.sequence ? newJson.sequence : 0;
   isExtension = newJson.isExtension ? true : false;
 
   if(oldOrm) {
     oldJson = JSON.parse(oldOrm.json);
-    if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + newJson.type);
-    if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension status for " + newJson.type);
+    if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + nameSpace + '.' + type);
+    if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
     
     sql = 'update private.orm set '
         + ' orm_json = $1, '
@@ -64,9 +41,9 @@ create or replace function private.install_orm(json text) returns void volatile 
 
     executeSql(sql, [json, sequence, oldOrm.id]);   
   } else { 
-    sql = 'insert into private.orm ( orm_name, orm_context, orm_json, orm_seq, orm_ext ) values ( $1, $2, $3, $4, $5 )';
+    sql = 'insert into private.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
 
-    executeSql(sql, [orm_name, orm_context, json, sequence, isExtension ]); 
+    executeSql(sql, [nameSpace, type, context, json, sequence, isExtension]); 
   }
   
 $$ language plv8;
