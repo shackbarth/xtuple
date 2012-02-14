@@ -1,4 +1,4 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "IncidentHistory",
@@ -67,7 +67,9 @@
       }
     }
   ],
-  "order": "incdthist_timestamp",
+  "order": [
+    "incdthist_timestamp"
+  ],
   "isNested": true,
   "isSystem": true
 }

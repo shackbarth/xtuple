@@ -1,10 +1,12 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "Image",
+  "type": "ImageInfo",
   "table": "image",
-  "idSequenceName": "public.image_image_id_seq",
   "comment": "Image Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
   "properties": [
     {
       "name": "guid",
@@ -18,24 +20,19 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "image_name"
+        "column": "image_name",
+        "isEditable": false
       }
     },
     {
       "name": "description",
       "attr": {
         "type": "String",
-        "column": "image_descrip"
-      }
-    },
-    {
-      "name": "data",
-      "attr": {
-        "type": "String",
-        "column": "image_data"
+        "column": "image_descrip",
+        "isEditable": false
       }
     }
   ],
-  "isSystem": true,
-  "sourceCode": "IMG"
+  "isNested": true,
+  "isSystem": true
 }
