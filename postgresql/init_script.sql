@@ -29,6 +29,7 @@
 \i private/functions/install_orm.sql;
 \i private/functions/is_date.sql;
 \i private/functions/raise_exception.sql;
+\i private/functions/register_js.sql;
 \i private/functions/retrieve_record.sql;
 \i private/functions/starts_with.sql;
 \i private/functions/text_gt_date.sql;
@@ -38,6 +39,9 @@
 \i private/functions/session_metrics.sql;
 \i private/functions/session_locale.sql;
 \i private/functions/validate_user.sql;
+
+-- private javascript
+\i private/javascript/data.sql;
 
 -- private trigger functions
 \i private/trigger_functions/orm_did_change.sql
@@ -52,6 +56,7 @@
 \i private/operators/text_lt_date.sql;
 
 -- private tables
+\i private/tables/js.sql
 \i private/tables/orm.sql
 \i private/tables/useracct.sql
 
