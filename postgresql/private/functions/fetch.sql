@@ -6,76 +6,33 @@ create or replace function private.fetch(data_hash text) returns text as $$
   if(!this.isInitialized) executeSql('select private.init_js()');
 
   // ..........................................................
-  // METHODS
-  //
-
-  var buildClause = function(conditions, parameters) {
-    var ret = ' true ';
-    
-    if(conditions) {
-      /* replace special operators */
-      ret = conditions.replace('BEGINS_WITH','~^')
-                      .replace('ENDS_WITH','~?')
-                      .replace('CONTAINS','~')
-                      .replace('MATCHES','~')
-                      .replace('ANY', '<@ array')
-                      .decamelize();
-
-      quoteIfString = function(arg) { 
-        if(typeof arg === 'string') { 
-          return "'" + arg + "'"; 
-        }
-
-        return arg;
-      }
-      
-      if(parameters) {
-        if(ret.indexOf('%@') > 0) {  /* replace wild card tokens */
-          for(var i = 0; i < parameters.length; i++) {
-            var n = ret.indexOf('%@'),
-                val =  quoteIfString(parameters[i]);
-
-            ret = ret.replace(/%@/,val);
-          }
-        } else {  /* replace parameterized tokens */
-          for(var prop in parameters) {
-            var param = '{' + prop.decamelize() + '}',
-                val = quoteIfString(parameters[prop]);
-            
-            ret = ret.replace(param, val);
-          }
-        }
-      }
-    }
-    return ret;
-  }
-
-  // ..........................................................
   // PROCESS
   //
 
   var dataHash = JSON.parse(data_hash),
-      nameSpace = dataHash.recordType.replace((/\.\w+/i),'').decamelize(),
-      type = dataHash.recordType.replace((/\w+\./i),'').decamelize(),
+      nameSpace = dataHash.recordType.replace((/\.\w+/i),''),
+      type = dataHash.recordType.replace((/\w+\./i),''),
+      table = (nameSpace + '.' + type).decamelize(),
       conditions = dataHash.conditions,
-      orderBy = dataHash.orderBy ? 'order by ' + dataHash.orderBy : '',
+      orderBy = (dataHash.orderBy ? 'order by ' + dataHash.orderBy : '').decamelize(),
       parameters = dataHash.parameters,
       limit = dataHash.rowLimit ? 'limit ' + dataHash.rowLimit : '';
       offset = dataHash.rowOffset ? 'offset ' + dataHash.rowOffset : '',
       data = Object.create(XT.Data), recs = null, 
+      conditions = data.buildClause(nameSpace, type, conditions, parameters),
       prettyPrint = dataHash.prettyPrint ? 2 : null, 
       sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
 
   /* validate - don't bother running the query if the user has no privileges */
-  if(!data.checkPrivileges(type)) throw new Error("Access Denied.");
-  
+  if(!data.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
+
   /* query the model */
-  sql = sql.replace('{table}', nameSpace + '.' + type)
-           .replace('{conditions}', buildClause(conditions, parameters))
-           .replace('{orderBy}', orderBy.decamelize())
+  sql = sql.replace('{table}', table)
+           .replace('{conditions}', conditions)
+           .replace('{orderBy}', orderBy)
            .replace('{limit}', limit)
            .replace('{offset}', offset);
-           
+     print(NOTICE, 'conditions', conditions);        
   if(DEBUG) { print(NOTICE, 'sql = ', sql); }
 
   recs = executeSql(sql);
@@ -89,6 +46,7 @@ create or replace function private.fetch(data_hash text) returns text as $$
 
 $$ language plv8;
 /*
+select private.init_js();
 select private.fetch(E'{ "recordType":"XM.Contact",
                          "parameters":{ 
                            "firstName": "Jake", 
@@ -97,6 +55,11 @@ select private.fetch(E'{ "recordType":"XM.Contact",
                          "conditions":"firstName = {firstName} OR lastName BEGINS_WITH {lastName}", 
                          "orderBy":"lastName", 
                          "rowLimit": 3,
+                         "prettyPrint": true
+                         }');
+
+select private.fetch(E'{ "recordType":"XM.Contact",
+                         "rowLimit": 10,
                          "prettyPrint": true
                          }');
 

@@ -187,6 +187,84 @@ create or replace function private.init_js() returns void as $$
     UPDATED_STATE: 'updated',
     DELETED_STATE: 'deleted',
 
+    /* Build a SQL clause based on privileges for name space
+       and type, and conditions and parameters passed. Input 
+       Conditions and parameters are presumed to conform to 
+       SproutCore's SC.Query syntax. 
+         
+       http://sproutcore.com/docs/#doc=SC.Query
+
+       @param {String} name space
+       @param {String} type
+       @param {Object} conditions - optional
+       @param {Object} parameters - optional
+       @returns {Boolean}
+    */
+    buildClause: function(nameSpace, type, conditions, parameters) {
+      var ret = ' true ', cond = '', pcond = '',
+          map = XT.fetchMap(nameSpace, type),
+          privileges = map.privileges;
+
+      /* handle passed conditions */
+      if(conditions) {
+        /* replace special operators */
+        cond = conditions.replace('BEGINS_WITH','~^')
+                         .replace('ENDS_WITH','~?')
+                         .replace('CONTAINS','~')
+                         .replace('MATCHES','~')
+                         .replace('ANY', '<@ array')
+                         .decamelize();
+
+        quoteIfString = function(arg) { 
+          if(typeof arg === 'string') { 
+            return "'" + arg + "'"; 
+          }
+
+          return arg;
+        }
+        
+        if(parameters) {
+          if(cond.indexOf('%@') > 0) {  /* replace wild card tokens */
+            for(var i = 0; i < parameters.length; i++) {
+              var n = cond.indexOf('%@'),
+                  val =  quoteIfString(parameters[i]);
+
+              cond = cond.replace(/%@/,val);
+            }
+          } else {  /* replace parameterized tokens */
+            for(var prop in parameters) {
+              var param = '{' + prop.decamelize() + '}',
+                  val = quoteIfString(parameters[prop]);
+              
+              cond = cond.replace(param, val);
+            }
+          }
+        }
+      }
+
+      /* handle privileges */
+      if((!privileges ||
+          !privileges.all ||
+         (!this.checkPrivilege(privileges.all.read) && 
+          !this.checkPrivilege(privileges.all.update)) &&
+           privileges.personal &&
+          (this.checkPrivilege(privileges.personal.read) || 
+           this.checkPrivilege(privileges.personal.update)))) {
+        var properties = privileges.personal.properties, conds = [];
+
+        for(var i = 0; i < properties.length; i++) {
+          conds.push("(" + properties[i] + ").username");
+        }
+
+        pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
+      }
+      
+      ret = cond.length ? '(' + cond + ')' : ret;
+      ret = pcond.length ? (cond.length ? ret.concat(' and ', pcond) : pcond) : ret;
+
+      return ret;
+    },
+
     /* Accept a privilege name and calculate whether
      the current user has the privilege.
 
@@ -213,10 +291,12 @@ create or replace function private.init_js() returns void as $$
   
     /* Validate whether user has read access to the data.
        If a record is passed, check personal privileges of
-       that record.
+       that record. 
 
+       @param {String} name space
        @param {String} type name
-       @param {Object} Record - optional
+       @param {Object} record - optional
+       @param {Boolean} is top level, default is true
        @returns {Boolean}
     */
     checkPrivileges: function(nameSpace, type, record, isTopLevel) {
