@@ -32,7 +32,7 @@ create or replace function private.fetch(data_hash text) returns text as $$
            .replace('{orderBy}', orderBy)
            .replace('{limit}', limit)
            .replace('{offset}', offset);
-     print(NOTICE, 'conditions', conditions);        
+       
   if(DEBUG) { print(NOTICE, 'sql = ', sql); }
 
   recs = executeSql(sql);

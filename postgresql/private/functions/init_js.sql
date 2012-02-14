@@ -250,10 +250,11 @@ create or replace function private.init_js() returns void as $$
            privileges.personal &&
           (this.checkPrivilege(privileges.personal.read) || 
            this.checkPrivilege(privileges.personal.update)))) {
-        var properties = privileges.personal.properties, conds = [];
+        var properties = privileges.personal.properties, conds = [], col;
 
         for(var i = 0; i < properties.length; i++) {
-          conds.push("(" + properties[i] + ").username");
+          col = map.properties.findProperty('name', properties[i]).toOne ? "(" + properties[i] + ").username" : properties[i];
+          conds.push(col);
         }
 
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
