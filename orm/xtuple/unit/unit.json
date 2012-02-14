@@ -1,4 +1,4 @@
-﻿{
+{
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "Unit",
@@ -65,3 +65,4 @@
   "isNested": true,
   "isSystem": true
 }
+
