@@ -26,7 +26,7 @@ begin
 
     -- If the model we're on isnt already in the array, prepend the dropped dependency
    if not rec.view_name <@ view_names then
-      view_names := array_prepend(rec.view_name, view_names);
+      view_names := array_prepend(nsp || '.' || rec.view_name, view_names);
    end if;
     
   end loop;

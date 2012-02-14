@@ -6,7 +6,7 @@ create or replace function private.orm_did_change() returns trigger as $$
   if(!this.isInitialized) executeSql('select private.init_js()');
 
   var view, views = [], i = 1, res;
-  
+
   /* Validate */
   if(TG_OP === 'INSERT' || TG_OP === 'UPDATE') {
     view = NEW.orm_namespace.decamelize() + '.' + NEW.orm_type.decamelize();
@@ -16,7 +16,8 @@ create or replace function private.orm_did_change() returns trigger as $$
 
   /* Drop the view, a text array of dependent view model names will be returned */
   res = executeSql('select private.drop_orm_view($1) as views', [view])[0].views;
-  if(res.length) views.push(res[0].views);
+  
+  if(res.length) views.push(res[0]);
 
   /* Determine whether to rebuild */ 
   if(TG_OP === 'UPDATE' || TG_OP === 'DELETE') {
