@@ -24,7 +24,8 @@ create or replace function private.create_orm_view(view_name text) returns void 
         insTgtCols = [], insSrcCols = [], updCols = [], delCascade = [], 
         canCreate = orm.canCreate !== false ? true : false,
         canUpdate = orm.canUpdate !== false ? true : false,
-        canDelete = orm.canDelete !== false ? true : false;
+        canDelete = orm.canDelete !== false ? true : false,
+        toOneJoins = [];
 
     for(var i = 0; i < props.length; i++) {
       var col, alias = props[i].name.decamelize();
@@ -70,7 +71,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
       /* process toOne */
       if(props[i].toOne && props[i].toOne.column) {
         var toOne = props[i].toOne,
-            table = orm.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
+            table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
             type = table.replace((/\w+\./i),''),
             inverse = toOne.inverse ? toOne.inverse : 'guid',
             isEditable = toOne.isEditable !== false ? true : false,
@@ -87,7 +88,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
                .replace(/{tableAlias}/, tblAlias)
                .replace(/{column}/, toOne.column);
 
-        tbls.push(join);
+        toOneJoins.push(join);
           
         col = toOneAlias + ' as  "' + alias + '"';
         cols.push(col);
@@ -196,6 +197,8 @@ create or replace function private.create_orm_view(view_name text) returns void 
         }
       }
 
+      tbls = tbls.concat(toOneJoins);
+      
       /* build rules */
       conditions = [];
         
@@ -312,6 +315,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
       
       /* table */
       tbls.unshift(orm.table + ' ' + tblAlias);
+      tbls = tbls.concat(toOneJoins);
           
       if(orm.privileges || orm.isNested) {
         

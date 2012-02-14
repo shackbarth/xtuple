@@ -207,6 +207,8 @@
       ]
     }
   ],
-  "order": "prjtask_number",
+  "order": [
+    "prjtask_number"
+  ],
   "isSystem": true
 }
