@@ -1,0 +1,46 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "OpportunityInfo",
+  "table": "ophead",
+  "comment": "Opporunity Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "ophead_active",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

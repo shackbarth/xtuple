@@ -1,0 +1,204 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Project",
+  "table": "prj",
+  "idSequenceName": "public.prj_prj_id_seq",
+  "comment": "Project Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainAllProjects",
+      "read": "ViewAllProjects",
+      "update": "MaintainAllProjects",
+      "delete": "MaintainAllProjects"
+    },
+    "personal": {
+      "create": "MaintainPersonalProjects",
+      "read": "ViewPersonalProjects",
+      "update": "MaintainPersonalProjects",
+      "delete": "MaintainPersonalProjects",
+      "properties": [
+        "owner",
+        "assignedTo"
+       ]
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "prj_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "prj_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "prj_name"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "prj_descrip"
+      }
+    },
+    {
+      "name": "startDate",
+      "attr": {
+        "type": "Date",
+        "column": "prj_start_date"
+      }
+    },
+    {
+      "name": "dueDate",
+      "attr": {
+        "type": "Date",
+        "column": "prj_due_date"
+      }
+    },
+    {
+      "name": "assignDate",
+      "attr": {
+        "type": "Date",
+        "column": "prj_assigned_date"
+      }
+    },
+    {
+      "name": "completeDate",
+      "attr": {
+        "type": "Date",
+        "column": "prj_completed_date"
+      }
+    },
+    {
+      "name": "assignedTo",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "prj_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "projectStatus",
+      "attr": {
+        "type": "String",
+        "column": "prj_status"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "prj_owner_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "recurrences",
+      "toMany": {
+        "type": "ProjectRecurrence",
+        "column": "prj_id",
+        "inverse": "project"
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectComment",
+        "column": "prj_id",
+        "inverse": "project",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "J"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "tasks",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectTask",
+        "column": "prj_id",
+        "inverse": "project"
+      }
+    },
+    {
+      "name": "contacts",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectContact",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectItem",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "files",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectFile",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "images",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectImage",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "urls",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectUrl",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "projects",
+      "toMany": {
+        "isMaster": true,
+        "type": "ProjectProject",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "J"
+}

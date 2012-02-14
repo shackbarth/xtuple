@@ -1,0 +1,52 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ContactCharacteristic",
+  "table": "xm.characteristic_assignment",
+  "idSequenceName": "public.charass_charass_id_seq",
+  "comment": "Contact Characteristic Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "guid",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "target_type",
+        "value": "CNTCT",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "contact",
+      "attr": {
+        "type": "Number",
+        "column": "target",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "characteristic",
+      "attr": {
+        "type": "Characteristic",
+        "column": "characteristic",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "value",
+      "attr": {
+        "type": "Number",
+        "column": "value"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

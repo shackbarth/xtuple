@@ -1,0 +1,107 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ProjectTaskAlarm",
+  "table": "alarm",
+  "idSequenceName": "public.alarm_alarm_id_seq",
+  "comment": "Project Task Alarm Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "alarm_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "sourceType",
+      "attr": {
+        "type": "Number",
+        "column": "alarm_source",
+        "value": "TA",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "projectTask",
+      "attr": {
+        "type": "Number",
+        "column": "alarm_source_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "event",
+      "attr": {
+        "type": "Boolean",
+        "column": "alarm_event"
+      }
+    },
+    {
+      "name": "eventRecipient",
+      "attr": {
+        "type": "String",
+        "column": "alarm_event_recipient"
+      }
+    },
+    {
+      "name": "email",
+      "attr": {
+        "type": "Boolean",
+        "column": "alarm_email"
+      }
+    },
+    {
+      "name": "emailRecipient",
+      "attr": {
+        "type": "String",
+        "column": "alarm_email_recipient"
+      }
+    },
+    {
+      "name": "message",
+      "attr": {
+        "type": "Boolean",
+        "column": "alarm_sysmsg"
+      }
+    },
+    {
+      "name": "messageRecipient",
+      "attr": {
+        "type": "String",
+        "column": "alarm_sysmsg_recipient"
+      }
+    },
+    {
+      "name": "trigger",
+      "attr": {
+        "type": "Date",
+        "column": "alarm_trigger"
+      }
+    },
+    {
+      "name": "time",
+      "attr": {
+        "type": "Date",
+        "column": "alarm_time"
+      }
+    },
+    {
+      "name": "offset",
+      "attr": {
+        "type": "Number",
+        "column": "alarm_time_offset"
+      }
+    },
+    {
+      "name": "qualifier",
+      "attr": {
+        "type": "String",
+        "column": "alarm_time_qualifier"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

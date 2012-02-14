@@ -1,0 +1,34 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "OpportunitySource",
+  "table": "opsource",
+  "idSequenceName": "public.opsource_opsource_id_seq",
+  "comment": "Opportunity Source Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "opsource_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "Number",
+        "column": "opsource_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "opsource_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}

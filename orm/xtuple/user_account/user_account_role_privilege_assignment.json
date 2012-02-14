@@ -1,0 +1,36 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "UserAccountRolePrivilegeAssignment",
+  "table": "grppriv",
+  "idSequenceName": "public.grppriv_grppriv_id_seq",
+  "comment": "User Account Role Privilege Assignment Map",
+  "canUpdate": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "grppriv_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "userAccountRole",
+      "attr": {
+        "type": "Number",
+        "column": "grppriv_grp_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "privilege",
+      "toOne": {
+        "type": "Privilege",
+        "column": "grppriv_priv_id"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

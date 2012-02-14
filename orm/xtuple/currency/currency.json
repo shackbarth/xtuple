@@ -1,0 +1,56 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Currency",
+  "table": "curr_symbol",
+  "idSequenceName": "public.curr_symbol_curr_id_seq",
+  "comment": "Currency Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "curr_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "curr_name"
+      }
+    },
+    {
+      "name": "symbol",
+      "attr": {
+        "type": "String",
+        "column": "curr_symbol"
+      }
+    },
+    {
+      "name": "abbreviation",
+      "attr": {
+        "type": "String",
+        "column": "curr_abbr"
+      }
+    },
+    {
+      "name": "isBase",
+      "attr": {
+        "type": "Boolean",
+        "column": "curr_base"
+      }
+    },
+    {
+      "name": "rates",
+      "toMany": {
+        "type": "CurrencyRate",
+        "column": "curr_id",
+        "inverse": "currency",
+        "isMaster": true
+      }
+    }
+  ],
+  "isSystem": true
+}

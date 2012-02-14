@@ -1,0 +1,49 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CurrencyRate",
+  "table": "curr_rate",
+  "idSequenceName": "public.curr_rate_curr_rate_id_seq",
+  "comment": "Currency Rate Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "curr_rate_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "curr_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "rate",
+      "attr": {
+        "type": "Number",
+        "column": "curr_rate"
+      }
+    },
+    {
+      "name": "effective",
+      "attr": {
+        "type": "Date",
+        "column": "curr_effective"
+      }
+    },
+    {
+      "name": "expires",
+      "attr": {
+        "type": "Date",
+        "column": "curr_expires"
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

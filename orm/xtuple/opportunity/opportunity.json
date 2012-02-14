@@ -1,0 +1,228 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Opportunity",
+  "table": "ophead",
+  "idSequenceName": "public.ophead_ophead_id_seq",
+  "comment": "Opportunity Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "ophead_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "ophead_name"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "ophead_active"
+      }
+    },
+    {
+      "name": "account",
+      "toOne": {
+        "type": "AccountInfo",
+        "column": "ophead_crmacct_id"
+      }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "type": "ContactInfo",
+        "column": "ophead_cntct_id"
+      }
+    },
+    {
+      "name": "stage",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_opstage_id"
+      }
+    },
+    {
+      "name": "priority",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_priority_id"
+      }
+    },
+    {
+      "name": "source",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_opsource_id"
+      }
+    },
+    {
+      "name": "opportunityType",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_optype_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_curr_id"
+      }
+    },
+    {
+      "name": "probability",
+      "attr": {
+        "type": "Number",
+        "column": "ophead_probability_prcnt"
+      }
+    },
+    {
+      "name": "startDate",
+      "attr": {
+        "type": "Date",
+        "column": "ophead_start_date"
+      }
+    },
+    {
+      "name": "assignDate",
+      "attr": {
+        "type": "Date",
+        "column": "ophead_assigned_date"
+      }
+    },
+    {
+      "name": "targetClose",
+      "attr": {
+        "type": "Date",
+        "column": "ophead_actual_date"
+      }
+    },
+    {
+      "name": "actualClose",
+      "attr": {
+        "type": "Date",
+        "column": "ophead_target_date"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "ophead_notes"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "ophead_owner_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "assignedTo",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "ophead_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityComment",
+        "column": "ophead_id",
+        "inverse": "opportunity"
+      }
+    },
+    {
+      "name": "characteristics",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityCharacteristic",
+        "column": "ophead_id",
+        "inverse": "opportunity"
+      }
+    },
+    {
+      "name": "contacts",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityContact",
+        "column": "ophead_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityItem",
+        "column": "ophead_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "files",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityFile",
+        "column": "ophead_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "images",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityImage",
+        "column": "ophead_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "urls",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityUrl",
+        "column": "ophead_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "opportunities",
+      "toMany": {
+        "isMaster": true,
+        "type": "OpportunityOpportunity",
+        "column": "ophead_id",
+        "inverse": "source"
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "OPP"
+}

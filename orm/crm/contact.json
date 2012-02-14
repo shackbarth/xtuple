@@ -1,0 +1,25 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "Contact",
+  "table": "cntct",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "relations": [
+    {
+      "column": "cntct_id",
+      "inverse": "cntct_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "account",
+      "attr": {
+        "type": "String",
+        "column": "cntct_crmacct_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

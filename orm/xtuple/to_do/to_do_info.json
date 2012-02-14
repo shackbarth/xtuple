@@ -1,0 +1,46 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ToDoInfo",
+  "table": "todoitem",
+  "comment": "Todo Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "todoitem_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "todoitem_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "todoitem_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "todoitem_active",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

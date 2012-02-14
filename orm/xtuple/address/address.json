@@ -1,0 +1,129 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Address",
+  "table": "addr",
+  "idSequenceName": "public.addr_addr_id_seq",
+  "orderSequence": "AddressNumber",
+  "comment": "Address Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainAddress",
+      "read": "ViewAddress",
+      "update": "MaintainAddress",
+      "delete": "MaintainAddress"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "addr_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "addr_number"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "addr_active"
+      }
+    },
+    {
+      "name": "line1",
+      "attr": {
+        "type": "String",
+        "column": "addr_line1"
+      }
+    },
+    {
+      "name": "line2",
+      "attr": {
+        "type": "String",
+        "column": "addr_line2"
+      }
+    },
+    {
+      "name": "line3",
+      "attr": {
+        "type": "String",
+        "column": "addr_line3"
+      }
+    },
+    {
+      "name": "city",
+      "attr": {
+        "type": "String",
+        "column": "addr_city"
+      }
+    },
+    {
+      "name": "state",
+      "attr": {
+        "type": "String",
+        "column": "addr_state"
+      }
+    },
+    {
+      "name": "postalcode",
+      "attr": {
+        "type": "String",
+        "column": "addr_postalcode"
+      }
+    },
+    {
+      "name": "country",
+      "attr": {
+        "type": "String",
+        "column": "addr_country"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "addr_notes",
+        "isEditable": true
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "type": "AddressComment",
+        "column": "addr_id",
+        "inverse": "address",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "ADDR"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "characteristics",
+      "toMany": {
+        "type": "AddressCharacteristic",
+        "column": "addr_id",
+        "inverse": "address"
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "ADDR"
+}

@@ -1,0 +1,46 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Privilege",
+  "table": "priv",
+  "idSequenceName": "public.priv_priv_id_seq",
+  "comment": "Privilege Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "priv_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "module",
+      "attr": {
+        "type": "String",
+        "column": "priv_module",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "priv_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "priv_descrip",
+        "isEditable": false
+      }
+    }
+  ],
+  "isSystem": true
+}

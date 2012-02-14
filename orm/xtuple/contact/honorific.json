@@ -1,0 +1,26 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Honorific",
+  "table": "hnfc",
+  "idSequenceName": "hnfc_hnfc_id_seq",
+  "comment": "Honorific Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "hnfc_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "hnfc_code"
+      }
+    }
+  ],
+  "isSystem": true
+}

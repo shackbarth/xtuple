@@ -1,0 +1,35 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "File",
+  "table": "file",
+  "idSequenceName": "public.file_file_id_seq",
+  "comment": "File Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "file_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "file_title"
+      }
+    },
+    {
+      "name": "data",
+      "attr": {
+        "type": "String",
+        "column": "file_stream",
+        "isEditable": false
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "FILE"
+}

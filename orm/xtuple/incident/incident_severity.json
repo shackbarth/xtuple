@@ -1,0 +1,48 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "IncidentSeverity",
+  "table": "incdtseverity",
+  "idSequenceName": "public.incdtseverity_incdtseverity_id_seq",
+  "comment": "Incident Severity Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainIncidentSeverities",
+      "read": "MaintainIncidentSeverities",
+      "update": "MaintainIncidentSeverities",
+      "delete": "MaintainIncidentSeverities"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "incdtseverity_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "incdtseverity_name"
+      }
+    },
+    {
+      "name": "order",
+      "attr": {
+        "type": "Number",
+        "column": "incdtseverity_order"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "incdtseverity_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}

@@ -1,0 +1,40 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Priority",
+  "table": "incdtpriority",
+  "idSequenceName": "public.incdtpriority_incdtpriority_id_seq",
+  "comment": "Priority Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "incdtpriority_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "incdtpriority_name"
+      }
+    },
+    {
+      "name": "order",
+      "attr": {
+        "type": "Number",
+        "column": "incdtpriority_order"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "incdtpriority_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}

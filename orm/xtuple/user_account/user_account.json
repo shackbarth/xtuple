@@ -1,0 +1,101 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "UserAccount",
+  "table": "private.usr",
+  "idSequenceName": "private.useracct_useracct_id_seq",
+  "comment": "User Account Map",
+  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": "MaintainUsers",
+      "read": "MaintainUsers",
+      "update": "MaintainUsers"
+    }
+  },
+  "properties": [
+    {
+      "name": "username",
+      "attr": {
+        "type": "String",
+        "column": "usr_username",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "usr_active"
+      }
+    },
+    {
+      "name": "propername",
+      "attr": {
+        "type": "String",
+        "column": "usr_propername"
+      }
+    },
+    {
+      "name": "password",
+      "attr": {
+        "type": "String",
+        "column": "usr_passwd"
+      }
+    },
+    {
+      "name": "initials",
+      "attr": {
+        "type": "String",
+        "column": "usr_initials"
+      }
+    },
+    {
+      "name": "email",
+      "attr": {
+        "type": "String",
+        "column": "usr_email"
+      }
+    },
+    {
+      "name": "locale",
+      "attr": {
+        "type": "Number",
+        "column": "usr_locale_id"
+      }
+    },
+    {
+      "name": "disableExport",
+      "attr": {
+        "type": "Boolean",
+        "column": "usr_disable_export",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "canCreateUsers",
+      "attr": {
+        "type": "Boolean",
+        "column": "usr_can_create_users"
+      }
+    },
+    {
+      "name": "isDatabaseUser",
+      "attr": {
+        "type": "Boolean",
+        "column": "usr_db_user"
+      }
+    },
+    {
+      "name": "privileges",
+      "toMany": {
+        "type": "UserAccountPrivilegeAssignment",
+        "column": "usr_username",
+        "inverse": "user_account",
+        "isMaster": true
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "U"
+}

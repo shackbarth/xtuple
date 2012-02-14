@@ -1,0 +1,46 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "AccountInfo",
+  "table": "crmacct",
+  "comment": "Account Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "crmacct_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "crmacct_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "Number",
+        "column": "crmacct_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "crmacct_active",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

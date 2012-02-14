@@ -1,0 +1,48 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "UnitType",
+  "table": "uomtype",
+  "idSequenceName": "public.uomtype_uomtype_id_seq",
+  "comment": "Unit Type Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "uomtype_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "Number",
+        "column": "uomtype_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "uomtype_descrip",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "multiple",
+      "attr": {
+        "type": "Boolean",
+        "column": "uomtype_multiple",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}
+
