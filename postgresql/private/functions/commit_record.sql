@@ -11,7 +11,7 @@ create or replace function private.commit_record(data_hash text) returns text as
       data = Object.create(XT.Data);
 
   delete dataHash.recordType;
-  data.commitRecord(recordType, dataHash);
+  data.commitRecord(recordType, dataHash.dataHash);
 
   return '{ "status":"ok" }';
   
