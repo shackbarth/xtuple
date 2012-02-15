@@ -461,8 +461,14 @@ create or replace function private.js_data() returns void as $$
 
       /* query the map */
       if(DEBUG) print(NOTICE, 'sql = ', sql);
+
+      ret = executeSql(sql);
+
+      if(!ret.length) throw new Error('No record found for {recordType} id {id}'
+                                      .replace(/{recordType}/, recordType)
+                                      .replace(/{id}/, id));
       
-      ret = this.normalize(nameSpace, type, executeSql(sql)[0]);
+      ret = this.normalize(nameSpace, type, ret[0]);
 
       /* check privileges again, this time against record specific criteria where applicable */
       if(!this.checkPrivileges(nameSpace, type, ret)) throw new Error("Access Denied.");
