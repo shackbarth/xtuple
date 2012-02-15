@@ -3,7 +3,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.init_js()');
+  if(!this.isInitialized) executeSql('select private.js_init()');
 
   /* constants */
   var SELECT = 'select {columns} from {table} where {conditions}'

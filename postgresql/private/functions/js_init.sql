@@ -1,4 +1,4 @@
-create or replace function private.init_js() returns void as $$
+create or replace function private.js_init() returns void as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -38,6 +38,16 @@ create or replace function private.init_js() returns void as $$
     return false;
   }
 
+  /* return the text before the first dot */
+  String.prototype.afterDot = function() {
+    return this.replace(/\w+\./i, '');
+  }
+  
+  /* return the text before the first dot */
+  String.prototype.beforeDot = function() {
+    return this.replace(/\.\w+/i, '');
+  }
+  
   /* Trim whitespace from a string */
   String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g,"");
@@ -175,23 +185,37 @@ create or replace function private.init_js() returns void as $$
   // PROCESS
   //
 
-  /* load up javascript objects registered in the database */
-  var res, 
-      sql = 'select js_require as "require" '
-          + 'from private.js '
-          + 'where js_active '
-          + 'order by js_ext ';
+ var res, sql;
+
+  /* create namespace objects for all registered javascript */
+  sql = 'select distinct js_namespace as "nameSpace" '
+        + 'from private.js '
+        + 'where js_active; '
 
   res = executeSql(sql);
 
   if(res.length) {
     for(var i = 0; i < res.length; i++) {
-      sql = 'select {require}()'
-            .replace(/{require}/, res[i].require);
-      executeSql(sql);
+      if(eval('typeof ' + res[i].nameSpace + " === 'undefined'")) eval(res[i].nameSpace + '= {}');
+    }
+       
+    /* load up all active javascript objects registered in the database */
+    sql = 'select js_require as "require" '
+        + 'from private.js '
+        + 'where js_active '
+        + 'order by js_ext ';
+
+    res = executeSql(sql);
+
+    if(res.length) {
+      for(var i = 0; i < res.length; i++) {
+        sql = 'select {require}()'
+              .replace(/{require}/, res[i].require);
+        executeSql(sql);
+      }
     }
   }
-
+  
   this.isInitialized = true;
 
 $$ language plv8;
