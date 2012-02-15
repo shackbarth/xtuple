@@ -5,7 +5,7 @@
   "database": "380postbooks_ormtest",
   "host": "localhost",
   "debug": "true",
-  "server-port": 8000,
+  "server-port": 9000,
   "session-timeout": 15,
   "redis-host": "localhost",
   "redis-port": 6379
