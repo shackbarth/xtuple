@@ -6,7 +6,9 @@ create or replace function private.dispatch(data_hash text) returns text as $$
   if(!this.isInitialized) executeSql('select private.js_init()');
   
   var dataHash = JSON.parse(data_hash),
-      obj = eval(dataHash.object),
+      nameSpace = dataHash.object.beforeDot(),
+      type = dataHash.object.afterDot(),
+      obj = this[nameSpace][type],
       f = dataHash.function,
       args = dataHash.arguments, ret;
 
