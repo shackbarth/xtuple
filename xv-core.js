@@ -3,8 +3,6 @@
 var vows = require('vows'),
     assert = require('assert');
 
-require('sys');
-
 XV = new Object;
 
 /** Add some generic topics **/
