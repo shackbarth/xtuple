@@ -5,6 +5,14 @@
   "table": "country",
   "idSequenceName": "public.country_country_id_seq",
   "comment": "Country Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCountries",
+      "read": "MaintainCountries",
+      "update": "MaintainCountries",
+      "delete": "MaintainCountries"
+    }
+  },
   "properties": [
     {
       "name": "guid",
