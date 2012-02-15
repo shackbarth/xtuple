@@ -37,10 +37,6 @@
 \i private/functions/text_lt_date.sql;
 \i private/functions/validate_user.sql;
 
--- private javascript
-\i private/javascript/data.sql;
-\i private/javascript/session.sql;
-
 -- private trigger functions
 \i private/trigger_functions/orm_did_change.sql
 \i private/trigger_functions/useracct_duplicate_check.sql
@@ -57,6 +53,10 @@
 \i private/tables/js.sql
 \i private/tables/orm.sql
 \i private/tables/useracct.sql
+
+-- private javascript
+\i private/javascript/data.sql;
+\i private/javascript/session.sql;
 
 -- private views
 \i private/views/comment.sql;
