@@ -20,12 +20,13 @@
 \i private/functions/commit_record.sql;
 \i private/functions/create_table.sql;
 \i private/functions/create_orm_view.sql;
+\i private/functions/dispatch.sql;
 \i private/functions/drop_orm_view.sql;
 \i private/functions/ends_with.sql;
 \i private/functions/execute_query.sql;
 \i private/functions/fetch.sql;
 \i private/functions/get_id.sql;
-\i private/functions/init_js.sql;
+\i private/functions/js_init.sql;
 \i private/functions/install_orm.sql;
 \i private/functions/is_date.sql;
 \i private/functions/raise_exception.sql;
@@ -35,13 +36,10 @@
 \i private/functions/text_gt_date.sql;
 \i private/functions/text_lt_date.sql;
 \i private/functions/validate_user.sql;
-\i private/functions/session_privileges.sql;
-\i private/functions/session_metrics.sql;
-\i private/functions/session_locale.sql;
-\i private/functions/validate_user.sql;
 
 -- private javascript
 \i private/javascript/data.sql;
+\i private/javascript/session.sql;
 
 -- private trigger functions
 \i private/trigger_functions/orm_did_change.sql
@@ -69,11 +67,7 @@
 
 -- [ START ] xm
 
--- xm/functions
-\i xm/functions/address_find_existing.sql;
-\i xm/functions/address_use_count.sql;
-\i xm/functions/dispatch.sql;
-\i xm/functions/fetch_number.sql;
-\i xm/functions/fetch_id.sql;
+-- xm/javascript
+\i xm/javascript/address.sql;
 
 -- [ END ] xm

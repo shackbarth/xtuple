@@ -1,62 +1,59 @@
-﻿create or replace function xm.dispatch(payload text) 
-  returns text volatile as $$
+create or replace function private.dispatch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  // ..........................................................
-  // PROCESS
-  //
-
-  var jsonObj = JSON.parse(payload),
-      fName = jsonObj.function_name,
-      paramObj = jsonObj.params,
-      paramArray = [],
-      sql, resp;
-
-  /* build the parameter list for the function call */
-  for(var key in paramObj) {
-    paramArray.push("'" + paramObj[key] + "'");
-  };
+  /* initialize plv8 if needed */
+  if(!this.isInitialized) executeSql('select private.js_init()');
   
-  /* function call */
-  sql = "select xm." + fName + "(" + paramArray.toString() + ") as result";
-  print(NOTICE,'sql: ',sql);
+  var dataHash = JSON.parse(data_hash),
+      obj = eval(dataHash.object),
+      f = dataHash.function,
+      args = dataHash.arguments, ret;
 
-  resp = executeSql(sql)[0].result;
+  ret = obj.isDispatchable ? obj[f](args) : false;
   
-  /* isJSON determines type of return to the client:
-      true - response is already stringified by the called function
-     false - response needs to be stringified */
-  return jsonObj.isJSON ? resp : JSON.stringify(resp);
+  return dataHash.isJSON ? JSON.stringify(ret) : ret;
 
 $$ LANGUAGE plv8;
 
-/* Tests
+/*
+select private.dispatch($${"requestType":"dispatch",
+                           "object": "XM.Address",
+                           "function":"findExisting",
+                           "arguments": {"type": "Address", "line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States"}
+                          }$$);
 
-select xm.dispatch(E'{"request_type":"callFunction",
-                      "function_name":"address_find_existing",
-                      "params": {"type":"Address","line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States"},
-                      "isJSON":true
-                     }');
 
-select xm.dispatch(E'{"request_type":"callFunction",
-                      "function_name":"fetch_id",
-                      "params":{"type":"Address"},
-                      "isJSON":false
-                     }');
+select private.dispatch($${"requestType":"dispatch",
+                          "object":"XM.Address",
+                          "function":"useCount",
+                          "arguments":{"id":41}
+                          }$$);
 
-select xm.dispatch(E'{"request_type":"callFunction",
-                      "function_name":"fetch_number",
-                      "params":{"type":"Contact"},
-                      "isJSON":false
-                     }');
+select private.dispatch($${"requestType":"dispatch",
+                           "object":"XT.Session",
+                           "function":"fetchId",
+                           "arguments":{"recordType":"XM.Address"}
+                           }$$);
 
-select guid from xm.address order by guid desc;
+select private.dispatch($${"requestType":"dispatch",
+                          "object":"XT.Session",
+                          "function":"fetchNumber",
+                          "arguments":{"recordType":"XM.Incident"}
+                          }$$);
 
-select xm.dispatch(E'{"request_type":"callFunction",
-                      "function_name":"address_use_count",
-                      "params":{"guid":41},
-                      "isJSON":false
-                     }');
-                     
+select private.dispatch($${"requestType":"dispatch",
+                          "object":"XT.Session",
+                          "function":"locale"
+                          }$$);
+
+select private.dispatch($${"requestType":"dispatch",
+                          "object":"XT.Session",
+                          "function":"metrics"
+                          }$$);
+
+select private.dispatch($${"requestType":"dispatch",
+                          "object":"XT.Session",
+                          "function":"privileges"
+                          }$$);                          
 */

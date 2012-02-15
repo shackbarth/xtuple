@@ -1,4 +1,4 @@
-create or replace function private.require_xt_data() returns void as $$
+create or replace function private.js_data() returns void as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -218,8 +218,8 @@ create or replace function private.require_xt_data() returns void as $$
     */
     commitRecord: function(key, value, isTopLevel) {
       var isTopLevel = isTopLevel !== false ? true : false,
-          nameSpace = key.replace(/\.\w+/i, '').camelize().toUpperCase(),
-          type = key.replace(/\w+\./i, '').classify();
+          nameSpace = key.beforeDot().camelize().toUpperCase(),
+          type = key.afterDot().classify();
 
       var hasAccess = this.checkPrivileges(nameSpace, type, value, false);
 
@@ -244,8 +244,8 @@ create or replace function private.require_xt_data() returns void as $$
        @param {Object} the record to be committed
     */
     createRecord: function(key, value) {
-      var viewName = key.decamelize().replace(/\w+\./i, ''), 
-          schemaName = key.decamelize().replace(/\.\w+/i, ''),    
+      var viewName = key.afterDot().decamelize(), 
+          schemaName = key.beforeDot().decamelize(),    
           viewdef = XT.getViewDefinition(viewName, schemaName),
           record = XT.decamelize(value),
           sql = '', columns, expressions,
@@ -300,8 +300,8 @@ create or replace function private.require_xt_data() returns void as $$
        @param {Object} the record to be committed
     */
     updateRecord: function(key, value) {
-      var viewName = key.decamelize().replace(/\w+\./i, ''), 
-          schemaName = key.decamelize().replace(/\.\w+/i, ''),
+      var viewName = key.afterDot().decamelize(), 
+          schemaName = key.beforeDot().decamelize(),
           viewdef = XT.getViewDefinition(viewName, schemaName),
           record = XT.decamelize(value),
           sql = '', expressions, params = [];
@@ -373,7 +373,7 @@ create or replace function private.require_xt_data() returns void as $$
       var res;
 
       if(!this._currentUser) {
-        res = executeSql("select getEffectiveXtUSer() as curr_user");
+        res = executeSql("select getEffectiveXtUser() as curr_user");
 
         /* cache the result locally so we don't requery needlessly */
         this._currentUser = res[0].curr_user;
@@ -448,8 +448,8 @@ create or replace function private.require_xt_data() returns void as $$
        @returns {Object} 
     */
     retrieveRecord: function(recordType, id) {
-      var nameSpace = recordType.replace((/\.\w+/i),''), 
-          type = recordType.replace((/\w+\./i),''),
+      var nameSpace = recordType.beforeDot(), 
+          type = recordType.afterDot(),
           ret, 
           sql = "select * from {schema}.{table} where guid = {id};"
                 .replace(/{schema}/, nameSpace)
@@ -478,8 +478,8 @@ create or replace function private.require_xt_data() returns void as $$
        @returns {String} a string formatted like a postgres RECORD datatype 
     */
     rowify: function(key, value) {
-      var viewName = key.decamelize().replace(/\w+\./i, ''), 
-          schemaName = key.decamelize().replace(/\.\w+/i, ''),
+      var viewName = key.afterDot().decamelize(), 
+          schemaName = key.beforeDot().decamelize(),
           viewdef = XT.getViewDefinition(viewName, schemaName),
           record = XT.decamelize(value),
           props = [], ret = '';
@@ -517,5 +517,5 @@ create or replace function private.require_xt_data() returns void as $$
 
 $$ language plv8;
 
-select private.register_js('XT','Data','xtuple','private.require_xt_data');
+select private.register_js('XT','Data','xtuple','private.js_data');
 

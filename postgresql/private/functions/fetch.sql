@@ -3,7 +3,7 @@ create or replace function private.fetch(data_hash text) returns text as $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.init_js()');
+  if(!this.isInitialized) executeSql('select private.js_init()');
 
   // ..........................................................
   // PROCESS
@@ -46,7 +46,6 @@ create or replace function private.fetch(data_hash text) returns text as $$
 
 $$ language plv8;
 /*
-select private.init_js();
 select private.fetch(E'{ "recordType":"XM.Contact",
                          "parameters":{ 
                            "firstName": "Jake", 

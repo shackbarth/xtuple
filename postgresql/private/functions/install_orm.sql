@@ -3,7 +3,7 @@ create or replace function private.install_orm(json text) returns void volatile 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.init_js()');
+  if(!this.isInitialized) executeSql('select private.js_init()');
 
   var newJson = JSON.parse(json), oldJson,
       oldOrm, sql, isExtension, sequence,

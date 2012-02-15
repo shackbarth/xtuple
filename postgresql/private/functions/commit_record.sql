@@ -3,7 +3,7 @@ create or replace function private.commit_record(data_hash text) returns text as
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.init_js()');
+  if(!this.isInitialized) executeSql('select private.js_init()');
 
   var dataHash = JSON.parse(data_hash),
       recordType = dataHash.recordType,
