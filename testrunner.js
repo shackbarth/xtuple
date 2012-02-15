@@ -51,13 +51,49 @@ global.FAST_LAYOUT_FUNCTION = false;
 jsFiles.forEach(function(path) { require(path); });
 
 // Simulate becoming "ready"
-SC.didBecomeReady();
+process.once('sessionReady', function() {
+  SC.didBecomeReady();
+});
 
 // Start the proxy server.
 var http = require('http'),
     PROXY_LISTEN = 4020,
     PROXY_HOST = '127.0.0.1', PROXY_PORT = 9000,
     PROXY_PREFIX_FROM = '/datasource/', PROXY_PREFIX_TO = '/';
+
+var SESSION = {
+  username: 'admin',
+  password: 'admin',
+  sid: null
+};
+
+(function() { 
+  var req = http.request({
+    host: PROXY_HOST,
+    port: PROXY_PORT,
+    method: 'POST',
+    path: '/data'
+  }, function(res) {
+    var info = '';
+    res.on('data', function(chunk) {
+      info += chunk;
+    }).on('end', function() {
+      info = JSON.parse(info);
+      SESSION.sid = info.sid;
+      process.emit('sessionReady');
+    });
+  });
+  req.on('error', function(e) {
+    console.log("Could not acquire session: " + e.message);
+    process.exit();
+  });
+  req.write(JSON.stringify({
+    requestType: 'requestSession',
+    username: 'admin',
+    password: 'admin'
+  }));
+  req.end();
+})();
 
 var server = http.createServer(function(request, response) {
   var body = '';
