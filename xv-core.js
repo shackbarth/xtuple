@@ -21,6 +21,31 @@ XV.record.refresh = function () {
   };
 };
 
+XV.record.retrieve = function (recordType, id) {
+  var context = {
+    topic: function() {
+      var timeoutId,
+          record = XM.store.find(recordType, id);
+      
+      record.addObserver('status', record, function observer() {
+        if (record.get('status') === SC.Record.READY_CLEAN) {
+          clearTimeout(timeoutId);
+          record.removeObserver('status', record, observer);
+          callback(null, record); // return the record
+        }
+      })
+
+      timeoutId = setTimeout(function() {
+        callback(null, record);
+      }, 5000) // five seconds
+    }
+  }
+  
+  context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
+  context['id matches'] =  XV.callback.assert.property('id', id);
+};
+
+
 XV.record.create = function (recordType, 
                              createdDataHash, 
                              createHashResult, 
@@ -153,13 +178,13 @@ XV.record._handleAction = function(record, status, action, callback) {
         record.removeObserver('status', record, observer);
         callback(null, record); // return the record
       }
-    });
+    })
 
     timeoutId = setTimeout(function() {
       callback(null, record);
     }, 5000); // five seconds
 
-    action.call(record);
+    action.call(record)
 };
 
 XV.record.validateClass = function(recordType) {
