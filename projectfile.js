@@ -9,6 +9,10 @@ var project = BT.Project.create({
     frameworks: 'blossom xm xt'.w(),
     sourceTree: path.join(__dirname, 'apps/postbooks')
   }),
+  "console": BT.App.create({
+    frameworks: 'blossom xm'.w(),
+    sourceTree: path.join(__dirname, 'apps/console')
+  }),
   "blossom": require('blossom'),
   "xm": require('./frameworks/xm/node/buildfile'),
   "xt": require('./frameworks/xt/node/buildfile')
