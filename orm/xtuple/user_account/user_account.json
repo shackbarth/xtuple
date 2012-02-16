@@ -19,7 +19,7 @@
       "attr": {
         "type": "String",
         "column": "usr_username",
-        "isEditable": false
+        "isPrimaryKey": true
       }
     },
     {

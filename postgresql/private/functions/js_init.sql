@@ -148,9 +148,10 @@ create or replace function private.js_init() returns void as $$
     return executeSql(sql, [ viewName, schemaName ]);
   }
 
-  /* Return a map definition based on a recordType name.
+  /* Return a map definition.
 
-     @param {String} recordType
+     @param {String} name space
+     @param {String} type
      @returns {Object}
   */
   XT.fetchMap = function(nameSpace, type) {

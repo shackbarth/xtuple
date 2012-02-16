@@ -450,11 +450,25 @@ create or replace function private.js_data() returns void as $$
     retrieveRecord: function(recordType, id) {
       var nameSpace = recordType.beforeDot(), 
           type = recordType.afterDot(),
-          ret, 
-          sql = "select * from {schema}.{table} where guid = {id};"
-                .replace(/{schema}/, nameSpace)
-                .replace(/{table}/, type)
-                .replace(/{id}/, id);  
+          map = XT.fetchMap(nameSpace, type),
+          ret, sql, pkey, i = 0;
+
+      /* find primary key */
+      while (!pkey && i < map.properties.length) {
+        if(map.properties[i].attr && 
+           map.properties[i].attr.isPrimaryKey)
+          pkey = map.properties[i].name;
+
+        i++;
+      }
+
+     if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
+
+      sql = "select * from {schema}.{table} where {primaryKey} = $1;"
+            .replace(/{schema}/, nameSpace.decamelize())
+            .replace(/{table}/, type.decamelize())
+            .replace(/{primaryKey}/, pkey)
+            .replace(/{id}/, id);  
 
       /* validate - don't bother running the query if the user has no privileges */
       if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
@@ -462,7 +476,7 @@ create or replace function private.js_data() returns void as $$
       /* query the map */
       if(DEBUG) print(NOTICE, 'sql = ', sql);
 
-      ret = executeSql(sql);
+      ret = executeSql(sql, [id]);
 
       if(!ret.length) throw new Error('No record found for {recordType} id {id}'
                                       .replace(/{recordType}/, recordType)
