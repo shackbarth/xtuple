@@ -40,7 +40,7 @@ var countrySuite = vows.describe('XT Core Country Tests');
 countrySuite.addBatch({
   "XM.Country": {
     "Validate Class" : XV.record.validateClass(XM.Country),
-    "-> CREATE" : XV.record.create(XM.Country, 
+    "Test CRUD-> CREATE" : XV.record.create(XM.Country, 
                                    XV.country.createHash,
                                    XV.country.createHashResult,
                                    XV.country.updateHash, 
