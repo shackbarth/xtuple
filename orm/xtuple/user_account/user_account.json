@@ -89,9 +89,18 @@
     {
       "name": "privileges",
       "toMany": {
-        "type": "UserAccountPrivilegeAssignment",
         "column": "usr_username",
-        "inverse": "user_account",
+        "type": "UserAccountPrivilegeAssignment",
+        "inverse": "userAccount",
+        "isMaster": true
+      }
+    },
+    {
+      "name": "roles",
+      "toMany": {
+        "column": "usr_username",
+        "type": "UserAccountUserAccountRoleAssignment",
+        "inverse": "userAccount",
         "isMaster": true
       }
     }
