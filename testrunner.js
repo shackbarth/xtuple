@@ -93,8 +93,8 @@ var SESSION = {
   });
   req.write(JSON.stringify({
     requestType: 'requestSession',
-    username: 'admin',
-    password: 'admin'
+    username: SESSION.username,
+    password: SESSION.password
   }));
   req.end();
 })();
