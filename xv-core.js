@@ -25,8 +25,9 @@ XV.record.retrieve = function (recordType, id) {
   var context = {
     topic: function() {
       var timeoutId,
+          callback = this.callback,
           record = XM.store.find(recordType, id);
-      
+ 
       record.addObserver('status', record, function observer() {
         if (record.get('status') === SC.Record.READY_CLEAN) {
           clearTimeout(timeoutId);
@@ -43,6 +44,8 @@ XV.record.retrieve = function (recordType, id) {
   
   context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
   context['id matches'] =  XV.callback.assert.property('id', id);
+  
+  return context;
 };
 
 

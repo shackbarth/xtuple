@@ -40,27 +40,7 @@ var countrySuite = vows.describe('XT Core Country Tests');
 countrySuite.addBatch({
   "XM.Country": {
     "Validate Class" : XV.record.validateClass(XM.Country),
-    "Load User Account": {
-      topic: function() {
-        var timeoutId,
-            callback = this.callback,
-            record = XM.store.find('XM.UserAccount', 'admin');
-        
-        record.addObserver('status', record, function observer() {
-          if (record.get('status') === SC.Record.READY_CLEAN) {
-            clearTimeout(timeoutId);
-            record.removeObserver('status', record, observer);
-            callback(null, record); // return the record
-          }
-        })
-
-        timeoutId = setTimeout(function() {
-          callback(null, record);
-        }, 5000) // five seconds
-      },
-      'status is READY_CLEAN': XV.callback.assert.status(SC.Record.READY_CLEAN),
-      'id matches':  XV.callback.assert.property('id', 'admin')
-    },
+    "SetUserPrivs": XV.record.setUserPrivs('XM.UserAccount','admin'),
     "Test CRUD-> CREATE" : XV.record.create(XM.Country, 
                                             XV.country.createHash,
                                             XV.country.createHashResult,
