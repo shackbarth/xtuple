@@ -15,7 +15,13 @@ var project = BT.Project.create({
   }),
   "blossom": require('blossom'),
   "xm": require('./frameworks/xm/node/buildfile'),
-  "xt": require('./frameworks/xt/node/buildfile')
+  "xt": require('./frameworks/xt/node/buildfile'),
+
+  "datasource": BT.Proxy.create({
+    proxyHost: '127.0.0.1',
+    proxyPort: 9000,
+    proxyPrefix: '/'
+  })
 });
 
 // project.accept(BT.LoggingVisitor.create());
