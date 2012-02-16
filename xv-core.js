@@ -21,7 +21,7 @@ XV.record.refresh = function () {
   };
 };
 
-XV.record.retrieve = function (recordType, id) {
+XV.record.setUserPrivs = function (recordType, id) {
   var context = {
     topic: function() {
       var timeoutId,
@@ -30,8 +30,8 @@ XV.record.retrieve = function (recordType, id) {
  
       record.addObserver('status', record, function observer() {
         if (record.get('status') === SC.Record.READY_CLEAN) {
-          clearTimeout(timeoutId);
           record.removeObserver('status', record, observer);
+          clearTimeout(timeoutId);
           callback(null, record); // return the record
         }
       })
@@ -44,10 +44,57 @@ XV.record.retrieve = function (recordType, id) {
   
   context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
   context['id matches'] =  XV.callback.assert.property('id', id);
+  context['-> clear user role'] = XV.record.userClearRole();
+  
   
   return context;
 };
 
+XV.record.userClearRole = function () {
+  var context = {
+    topic: function(record) {
+      var timeoutId,
+          callback = this.callback;
+ 
+      record.addObserver('status', record, function observer() {
+      console.log('are here?')
+        if (record.get('status') === SC.Record.READY_CLEAN) {
+          record.removeObserver('status', record, observer);
+          clearTimeout(timeoutId);
+          callback(null, record); // return the record
+        }
+      })
+      
+      /* remove all roles */
+
+      for(var i = 0; i < record.getPath('roles.length'); i++) {
+        console.log("i'm at->", i)
+        var role = record.get('roles').objectAt(i);
+        
+        console.log('hello?')
+        console.log(role);
+        console.log('isRecord->',role.get('isRecord'));
+        console.log(role.destroy);
+        debugger
+     //   role.destroy();
+
+        console.log('destroyed');
+      }
+
+      /* commit */
+      //record.commitRecord();
+
+      timeoutId = setTimeout(function() {
+      console.log('or here?');
+        callback(null, record);
+      }, 5000) // five seconds
+    }
+  }
+  
+  context['status is READY_CLEAN'] = XV.callback.assert.status(SC.Record.READY_CLEAN);
+  
+  return context;
+}
 
 XV.record.create = function (recordType, 
                              createdDataHash, 

@@ -76,17 +76,15 @@ XM.UserAccount = XM.Record.extend(
   /**
   @type XM.UserAccountPrivilege
   */
-  privileges: SC.Record.toMany('XM.UserAccountPrivilegeAssignment', { 
-    isMaster: NO,
-    inverse:  'userAccount',  
+  privileges: SC.Record.toMany('XM.UserAccountPrivilegeAssignment', {
+    isNested: YES
   }),
   
   /**
   @type XM.UserAccountRole
   */
   userAccountRoles:     SC.Record.toMany('XM.UserAccountRoleAssignment', { 
-    isMaster: NO,
-    inverse:  'userAccount',  
+    isNested: YES 
   }),
 
 });
