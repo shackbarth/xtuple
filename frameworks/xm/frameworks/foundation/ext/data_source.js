@@ -51,6 +51,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   //
 
   fetch: function(store, query) {
+
     var payload = {};
     
     payload.requestType = 'fetch';
@@ -88,6 +89,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   //
 
   retrieveRecord: function(store, storeKey, id) {
+
     var recordType = store.recordTypeFor(storeKey).prototype.className, 
         payload = {};
 
@@ -108,6 +110,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   },
 
   didRetrieveData: function(response, store, storeKey) {
+
     var error;
     
     if(SC.ok(response)) {
@@ -143,6 +146,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   },
   
   commitRecord: function(store, storeKey) {
+
     var recordType = store.recordTypeFor(storeKey).prototype.className, 
         payload = {},
         record = store.materializeRecord(storeKey);

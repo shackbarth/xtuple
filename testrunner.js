@@ -51,7 +51,10 @@ global.FAST_LAYOUT_FUNCTION = false;
 jsFiles.forEach(function(path) { require(path); });
 
 // Simulate becoming "ready"
-SC.didBecomeReady();
+// but only after a session is acquired
+process.once('sessionReady', function() {
+  SC.didBecomeReady();
+});
 
 // Start the proxy server.
 var http = require('http'),
@@ -59,14 +62,50 @@ var http = require('http'),
     PROXY_HOST = '127.0.0.1', PROXY_PORT = 9000,
     PROXY_PREFIX_FROM = '/datasource/', PROXY_PREFIX_TO = '/';
 
+
+var SESSION = {
+  username: 'admin',
+  password: 'admin',
+  sid: null
+};
+
+(function() { 
+  var req = http.request({
+    host: PROXY_HOST,
+    port: PROXY_PORT,
+    method: 'POST',
+    path: '/data'
+  }, function(res) {
+    var info = '';
+    res.on('data', function(chunk) {
+      info += chunk;
+    }).on('end', function() {
+      info = JSON.parse(info);
+      SESSION.sid = info.sid;
+      delete SESSION.password;
+      XM.DataSource.set('session', SESSION);
+      process.emit('sessionReady');
+    });
+  });
+  req.on('error', function(e) {
+    console.log("Could not acquire session: " + e.message);
+    process.exit();
+  });
+  req.write(JSON.stringify({
+    requestType: 'requestSession',
+    username: SESSION.username,
+    password: SESSION.password
+  }));
+  req.end();
+})();
+
 var server = http.createServer(function(request, response) {
   var body = '';
   
-  request.addListener('data', function(chunk) {
+  // request.addListener('data', function(chunk) {
+  request.on('data', function(chunk) {
     body += chunk;
-  });
-
-  request.addListener('end', function() {
+  }).on('end', function() {
     var proxyClient, proxyRequest,
         url = request.url;
 
@@ -79,10 +118,21 @@ var server = http.createServer(function(request, response) {
       url = url.replace(PROXY_PREFIX_FROM, PROXY_PREFIX_TO);
     }
 
-    // console.log("PROXYING http://localhost:"+PROXY_LISTEN + request.url + " TO http://" + PROXY_HOST + ":" + PROXY_PORT + url);
-    proxyClient = http.createClient(PROXY_PORT, PROXY_HOST);
+    proxyClient = http.request({
+      port: PROXY_PORT, 
+      host: PROXY_HOST,
+      path: url,
+      method: 'POST'
+    }, function(proxyResponse) {
+      response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+      proxyResponse.on('data', function(chunk) {
+        response.write(chunk, 'binary');
+      }).on('end', function() {
+        response.end();
+      });
+    });
 
-    proxyClient.addListener('error', function(err) {
+    proxyClient.on('error', function(err) {
       console.error('ERROR: "' + err.message + '" for proxy request on ' + PROXY_HOST + ':' + PROXY_PORT);
       response.writeHead(404);
       response.end();
@@ -93,21 +143,9 @@ var server = http.createServer(function(request, response) {
     request.headers['X-Forwarded-Host'] = request.headers.host + ':' + PROXY_LISTEN;
     if (PROXY_PORT != 80) request.headers.host += ':' + PROXY_PORT;
     
-    proxyRequest = proxyClient.request(request.method, url, request.headers);
+    if (body.length > 0) { proxyClient.write(body, 'binary'); }
 
-    if (body.length > 0) { proxyRequest.write(body); }
-
-    proxyRequest.addListener('response', function(proxyResponse) {
-      response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
-      proxyResponse.addListener('data', function(chunk) {
-        response.write(chunk, 'binary');
-      });
-      proxyResponse.addListener('end', function() {
-        response.end();
-      });
-    });
-
-    proxyRequest.end();
+    proxyClient.end();
   });
 
 }).listen(PROXY_LISTEN);
@@ -123,13 +161,15 @@ if (suites === 0) {
 }
 
 // console.log(tests);
-tests.forEach(function(filename) {
-  if (filename) {
-    try {
-      require('./'+filename).run(null, function(results) {
-        suites--;
-        if (suites === 0) server.close(); // the process will exit now
-      });
-    } catch (e) { suites--; console.log(e); }
-  }
+process.once('sessionReady', function() {
+  tests.forEach(function(filename) {
+    if (filename) {
+      try {
+        require('./'+filename).run(null, function(results) {
+          suites--;
+          if (suites === 0) server.close(); // the process will exit now
+        });
+      } catch (e) { suites--; console.log(e); }
+    }
+  });
 });

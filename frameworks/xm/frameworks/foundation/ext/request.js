@@ -6,8 +6,20 @@
 
 XM.Request = SC.Request.extend({
 
-  // willSend: function(request, response) {
-  //   console.log("Sending " + request.type + " request to: " + request.address + ' with body ' + JSON.stringify(request.body));
-  // }
+  willSend: function(request, response) {
+    var session = XM.DataSource.get('session') || {};
+    SC.mixin(request.body, session);
+  },
+
+  didReceive: function(request, response) {
+    var body = response.get('body');
+    if(SC.typeOf(body) === SC.T_HASH) {
+      if(body.error) {
+        console.log("\n\n**** ERROR RESPONSE FROM SERVER: %@\n\n".fmt(
+          body.message || "NO MESSAGE"));
+        response.cancel();
+      }
+    }
+  }
 
 });
