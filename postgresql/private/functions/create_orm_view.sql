@@ -73,7 +73,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
         var toOne = props[i].toOne,
             table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
             type = table.replace((/\w+\./i),''),
-            inverse = toOne.inverse ? toOne.inverse : 'guid',
+            inverse = toOne.inverse ? toOne.inverse.decamelize() : 'guid',
             isEditable = toOne.isEditable !== false ? true : false,
             toOneAlias, join;
 
@@ -115,7 +115,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
         var toMany = props[i].toMany,
             table = orm.nameSpace + '.' + toMany.type.decamelize(),
             type = table.replace((/\w+\./i),''),
-            inverse = toMany.inverse ? toMany.inverse : 'guid',
+            inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
             sql, col = 'array({select}) as "{alias}"';
             
         col = col.replace(/{select}/,
