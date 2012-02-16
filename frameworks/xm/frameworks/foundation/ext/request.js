@@ -7,6 +7,8 @@
 XM.Request = SC.Request.extend({
 
   willSend: function(request, response) {
+    // hack much?
+    if(!XM || !XM.DataSource) return;
     var session = XM.DataSource.get('session') || {};
     SC.mixin(request.body, session);
   },

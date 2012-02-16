@@ -17,6 +17,26 @@ sc_require('ext/request');
 XM.DataSource = SC.DataSource.create(XM.Logging,
 /** @scope XM.DataSource.prototype */ {
 
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    XM.Request.postUrl(this.URL)
+      .header({ 'Accept': 'application/json' })
+      .notify(this, "didGetSession").json()
+      .async(NO)
+      .send({ 
+        requestType: 'requestSession',
+        username: 'admin',
+        password: 'admin'
+      });
+  },
+
+  didGetSession: function(response) {
+    if(SC.ok(response)) {
+      var body = response.get('body');
+      this.set('session', body);
+    } else { throw "Could not acquire session" }
+  },
+
   serverIsAvailable: NO,
 
   serverIsAvailableTooltip: function() {
