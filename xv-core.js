@@ -57,7 +57,6 @@ XV.record.userClearRole = function () {
           callback = this.callback;
  
       record.addObserver('status', record, function observer() {
-      console.log('are here?')
         if (record.get('status') === SC.Record.READY_CLEAN) {
           record.removeObserver('status', record, observer);
           clearTimeout(timeoutId);
@@ -68,24 +67,16 @@ XV.record.userClearRole = function () {
       /* remove all roles */
 
       for(var i = 0; i < record.getPath('roles.length'); i++) {
-        console.log("i'm at->", i)
         var role = record.get('roles').objectAt(i);
-        
-        console.log('hello?')
-        console.log(role);
-        console.log('isRecord->',role.get('isRecord'));
-        console.log(role.destroy);
-        debugger
-     //   role.destroy();
 
-        console.log('destroyed');
+        /* TODO: How can this be made to work? Fails because role is still busy. */
+        role.destroy();
       }
 
       /* commit */
-      //record.commitRecord();
+      record.commitRecord();
 
       timeoutId = setTimeout(function() {
-      console.log('or here?');
         callback(null, record);
       }, 5000) // five seconds
     }

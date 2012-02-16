@@ -83,7 +83,7 @@ XM.UserAccount = XM.Record.extend(
   /**
   @type XM.UserAccountRole
   */
-  userAccountRoles:     SC.Record.toMany('XM.UserAccountRoleAssignment', { 
+  roles: SC.Record.toMany('XM.UserAccountUserAccountRoleAssignment', { 
     isNested: YES 
   }),
 
