@@ -32,14 +32,6 @@
         "column": "priv_name",
         "isEditable": false
       }
-    },
-    {
-      "name": "description",
-      "attr": {
-        "type": "String",
-        "column": "priv_descrip",
-        "isEditable": false
-      }
     }
   ],
   "isSystem": true

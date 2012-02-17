@@ -114,12 +114,13 @@ create or replace function private.create_orm_view(view_name text) returns void 
       if(props[i].toMany && props[i].toMany.column) {
         var toMany = props[i].toMany,
             table = orm.nameSpace + '.' + toMany.type.decamelize(),
-            type = table.replace((/\w+\./i),''),
+            type = toMany.type.decamelize(), 
+            column = toMany.isMaster ? type : XT.getPrimaryKey(XT.getORM(orm.nameSpace, toMany.type)),
             inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
             sql, col = 'array({select}) as "{alias}"';
             
         col = col.replace(/{select}/,
-           SELECT.replace(/{columns}/, type)
+           SELECT.replace(/{columns}/, column)
                  .replace(/{table}/, table) 
                  .replace(/{conditions}/, type + '.' + inverse + ' = ' + tblAlias + '.' + toMany.column))
                  .replace(/{alias}/, alias);

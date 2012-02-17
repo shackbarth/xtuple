@@ -154,7 +154,7 @@ create or replace function private.js_init() returns void as $$
      @param {String} type
      @returns {Object}
   */
-  XT.fetchMap = function(nameSpace, type) {
+  XT.getORM = function(nameSpace, type) {
     if(!this._maps) this._maps = [];
     
     var ret, recordType = nameSpace + '.'+ type,
@@ -180,6 +180,22 @@ create or replace function private.js_init() returns void as $$
     }
 
     return ret;
+  }
+
+  /* Returns the primary key as designated in an ORM map.
+
+     @param {Object} ORM
+     @returns{String}
+  */
+  XT.getPrimaryKey = function(orm) {
+    /* find primary key */
+    for(var i = 0; i < orm.properties.length; i++) {
+      if(orm.properties[i].attr && 
+         orm.properties[i].attr.isPrimaryKey)
+        return orm.properties[i].name;
+    }
+
+    return false;
   }
 
   // ..........................................................

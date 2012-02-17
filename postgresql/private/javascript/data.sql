@@ -29,7 +29,7 @@ select private.install_js('XT','Data','xtuple', $$
     */
     buildClause: function(nameSpace, type, conditions, parameters) {
       var ret = ' true ', cond = '', pcond = '',
-          map = XT.fetchMap(nameSpace, type),
+          map = XT.getORM(nameSpace, type),
           privileges = map.privileges;
 
       /* handle passed conditions */
@@ -131,7 +131,7 @@ select private.install_js('XT','Data','xtuple', $$
       var isTopLevel = isTopLevel !== false ? true : false,
           isGrantedAll = true,
           isGrantedPersonal = false,
-          map = XT.fetchMap(nameSpace, type),
+          map = XT.getORM(nameSpace, type),
           privileges = map.privileges,
           committing = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
@@ -179,7 +179,8 @@ select private.install_js('XT','Data','xtuple', $$
         };  
         /* if committing and personal privileges we need to ensure the old record is editable */
         if(committing && (action === 'update' || action === 'delete')) {
-          var old = this.retrieveRecord(nameSpace + '.' + type, record.guid);
+          var pkey = XT.getPrimaryKey(map),
+              old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
 
           isGrantedPersonal = checkPersonal(old);
         /* check personal privileges on the record passed if applicable */
@@ -200,12 +201,15 @@ select private.install_js('XT','Data','xtuple', $$
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop);
 
-        if (coldef['typcategory'] === this.ARRAY_TYPE) {
-            var key = nameSpace + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
+        /* if the property is an array of objects they must be records so commit them */
+        if (record[prop] instanceof Array && 
+            record[prop].length &&
+            isNaN(record[prop][0])) {
+            var key = nameSpace.toUpperCase() + '.' + coldef['typname'].substring(1).classify(); /* strip underscore from (array) type name */
                 values = record[prop]; 
 
           for(var i in values) {
-            this.commitRecord(key.classify(), values[i], false);
+            this.commitRecord(key, values[i], false);
           }
         }
       }   
@@ -303,6 +307,8 @@ select private.install_js('XT','Data','xtuple', $$
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),
           viewdef = XT.getViewDefinition(viewName, schemaName),
+          orm = XT.getORM(key.beforeDot(),key.afterDot()),
+          pkey = XT.getPrimaryKey(orm),
           record = XT.decamelize(value),
           sql = '', expressions, params = [];
 
@@ -333,15 +339,15 @@ select private.install_js('XT','Data','xtuple', $$
       }
 
       expressions = params.join(', ');
-      sql = 'update {recordType} set {expressions} where guid = {id};'
+      sql = 'update {recordType} set {expressions} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
             .replace(/{expressions}/, expressions)
-            .replace(/{id}/, record.guid);
+            .replace(/{primaryKey}/, pkey);
       
       if(DEBUG) { print(NOTICE, 'sql =', sql); }
       
       /* commit the record */
-      executeSql(sql); 
+      executeSql(sql, [record[pkey]]); 
 
       /* okay, now lets handle arrays */
       this.commitArrays(schemaName, record, viewdef); 
@@ -353,16 +359,18 @@ select private.install_js('XT','Data','xtuple', $$
        @param {Object} the record to be committed
     */
     deleteRecord: function(key, value) {
-      var record = XT.decamelize(value), sql = '';
+      var record = XT.decamelize(value), sql = '',
+          orm = XT.getORM(key.beforeDot(),key.afterDot()),
+          pkey = XT.getPrimaryKey(orm);
 
-      sql = 'delete from {recordType} where guid = {id};'
+      sql = 'delete from {recordType} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
-            .replace(/{id}/, record.guid);
+            .replace(/{primaryKey}/, pkey);
       
       if(DEBUG) { print(NOTICE, 'sql =', sql); }
       
       /* commit the record */
-      executeSql(sql); 
+      executeSql(sql, [record[pkey]]); 
     },
 
     /* Returns the currently logged in user.
@@ -385,21 +393,20 @@ select private.install_js('XT','Data','xtuple', $$
     /* Additional processing on record properties. 
        Adds 'type' property, stringifies arrays and
        camelizes the record.
-    
-       @param {Object} record object to be committed
+
+       @param {String} name space
+       @param {String} type
+       @param {Object} the record to be normalized
        @param {Object} view definition object
        @returns {Object} 
     */
-    normalize: function(nameSpace, map, record) {
-      var viewdef = XT.getViewDefinition(map, nameSpace.decamelize());
-
-      /* helper formatting function */
-      formatTypeName = function(str) {
-        return str.slice(0,1).toUpperCase() + str.substring(1).camelize();
-      }
+    normalize: function(nameSpace, type, record) {
+      var schemaName = nameSpace.decamelize(),
+          viewName = type.decamelize(),
+          viewdef = XT.getViewDefinition(viewName, schemaName);
 
       /* set data type property */
-      record['type'] = formatTypeName(map);
+      record['type'] = type.classify();
 
       /* set data state property */
       record['dataState'] = this.READ_STATE;
@@ -409,14 +416,16 @@ select private.install_js('XT','Data','xtuple', $$
           var coldef = viewdef.findProperty('attname', prop),
           value, result, sql = '';
 
-            /* if it's a compound type, add a type property */
-            if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
-              record[prop]['type'] = formatTypeName(coldef['typname']);
-              record[prop]['dataState'] = this.READ_STATE;
-              
-            /* if it's an array convert each row into an object */
-            } else if (coldef['typcategory'] === this.ARRAY_TYPE && record[prop]) {
-              var key = coldef['typname'].substring(1); /* strip off the leading underscore */
+          /* if it's a compound type, add a type property */
+          if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
+            record[prop]['type'] = coldef['typname'].classify();
+            record[prop]['dataState'] = this.READ_STATE;
+        
+          /* if it's an array convert each row into an object */
+          } else if (record[prop] instanceof Array && 
+                     record[prop].length &&
+                     isNaN(record[prop][0])) {
+            var key = coldef['typname'].substring(1); /* strip off the leading underscore */
 
             for (var i = 0; i < record[prop].length; i++) {
               var value = record[prop][i];
@@ -428,7 +437,7 @@ select private.install_js('XT','Data','xtuple', $$
               result = executeSql(sql);
 
               for (var k = 0; k < result.length; k++) {
-                result[k]['type'] = formatTypeName(key);
+                result[k]['type'] = key.classify();
                 result[k]['dataState'] = this.READ_STATE;
                 record[prop][i] = this.normalize(nameSpace, key, result[k]);
               }
@@ -450,19 +459,10 @@ select private.install_js('XT','Data','xtuple', $$
     retrieveRecord: function(recordType, id) {
       var nameSpace = recordType.beforeDot(), 
           type = recordType.afterDot(),
-          map = XT.fetchMap(nameSpace, type),
-          ret, sql, pkey, i = 0;
+          map = XT.getORM(nameSpace, type),
+          ret, sql, pkey = XT.getPrimaryKey(map), i = 0;
 
-      /* find primary key */
-      while (!pkey && i < map.properties.length) {
-        if(map.properties[i].attr && 
-           map.properties[i].attr.isPrimaryKey)
-          pkey = map.properties[i].name;
-
-        i++;
-      }
-
-     if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
+      if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
 
       sql = "select * from {schema}.{table} where {primaryKey} = $1;"
             .replace(/{schema}/, nameSpace.decamelize())
