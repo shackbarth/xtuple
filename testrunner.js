@@ -45,6 +45,8 @@ global.SproutCore = SC;
 global.BLOSSOM = true;
 global.SPROUTCORE = false;
 global.FAST_LAYOUT_FUNCTION = false;
+global.YES = true;
+global.NO = false;
 
 // Load the code we want to test.
 // console.log(jsFiles);
@@ -64,7 +66,7 @@ var http = require('http'),
 
 
 var SESSION = {
-  username: 'admin',
+  userName: 'admin',
   password: 'admin',
   sid: null
 };
@@ -93,7 +95,7 @@ var SESSION = {
   });
   req.write(JSON.stringify({
     requestType: 'requestSession',
-    username: SESSION.username,
+    userName: SESSION.userName,
     password: SESSION.password
   }));
   req.end();

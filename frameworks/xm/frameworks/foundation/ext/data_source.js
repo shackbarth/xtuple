@@ -205,15 +205,16 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
           label: 'Datasource Error',
           message: dataHash.message
         });
+        
+        store.dataSourceDidError(storeKey, error);
       } else {
-        if (store.peekStatus(storeKey) === SC.Record.BUSY_DESTROYING) {
-          store.dataSourceDidDestroy(storeKey);
-      } else store.dataSourceDidComplete(storeKey);
-     }
-   }
-     
-   store.dataSourceDidError(storeKey, error);
-
+        store.peekStatus(storeKey) !== SC.Record.BUSY_DESTROYING ?
+        store.dataSourceDidComplete(storeKey) :
+        store.dataSourceDidDestroy(storeKey);
+      }
+    }
+    
+    return YES;
   }
 
 });
