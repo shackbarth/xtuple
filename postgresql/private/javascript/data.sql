@@ -200,7 +200,10 @@ select private.install_js('XT','Data','xtuple', $$
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop);
 
-        if (coldef['typcategory'] === this.ARRAY_TYPE) {
+        /* if the property is an array of objects they must be records so commit them */
+        if (record[prop] instanceof Array && 
+            record[prop].length &&
+            typeof record[prop][0] === 'object' ) {
             var key = nameSpace + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
                 values = record[prop]; 
 
