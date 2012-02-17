@@ -1,4 +1,4 @@
-create or replace function private.js_session() returns void as $$
+select private.install_js('XT','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -81,7 +81,5 @@ create or replace function private.js_session() returns void as $$
     return rec.length ? JSON.stringify (rec) : '{}';
   }
   
-$$ language plv8;
-
-select private.register_js('XT','Session','xtuple','private.js_session');
+$$ );
 

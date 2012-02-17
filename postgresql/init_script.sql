@@ -27,10 +27,10 @@
 \i private/functions/fetch.sql;
 \i private/functions/get_id.sql;
 \i private/functions/js_init.sql;
+\i private/functions/install_js.sql;
 \i private/functions/install_orm.sql;
 \i private/functions/is_date.sql;
 \i private/functions/raise_exception.sql;
-\i private/functions/register_js.sql;
 \i private/functions/retrieve_record.sql;
 \i private/functions/starts_with.sql;
 \i private/functions/text_gt_date.sql;

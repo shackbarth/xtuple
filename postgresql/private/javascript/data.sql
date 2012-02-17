@@ -1,4 +1,4 @@
-create or replace function private.js_data() returns void as $$
+select private.install_js('XT','Data','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -535,7 +535,5 @@ create or replace function private.js_data() returns void as $$
     }
   }
 
-$$ language plv8;
-
-select private.register_js('XT','Data','xtuple','private.js_data');
+$$ );
 

@@ -1,4 +1,4 @@
-create or replace function xm.js_address() returns void as $$
+select private.install_js('XM','Address','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
@@ -42,7 +42,5 @@ create or replace function xm.js_address() returns void as $$
     return executeSql('select addrUseCount($1) as result', [args.id])[0].result;
   }
 
-$$ language plv8;
-
-select private.register_js('XM','Address','xtuple','xm.js_address');
+$$ );
 

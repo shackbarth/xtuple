@@ -197,11 +197,12 @@ create or replace function private.js_init() returns void as $$
 
   if(res.length) {
     for(var i = 0; i < res.length; i++) {
-      if(eval('typeof ' + res[i].nameSpace + " === 'undefined'")) eval(res[i].nameSpace + '= {}');
+      if(!this[res[i].nameSpace]) this[res[i].nameSpace] = {};
     }
        
-    /* load up all active javascript objects registered in the database */
-    sql = 'select js_require as "require" '
+    /* load up all active javascript installed in the database */
+    /* TODO: What about dependencies? */
+    sql = 'select js_text as "javascript" '
         + 'from private.js '
         + 'where js_active '
         + 'order by js_ext ';
@@ -210,9 +211,7 @@ create or replace function private.js_init() returns void as $$
 
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
-        sql = 'select {require}()'
-              .replace(/{require}/, res[i].require);
-        executeSql(sql);
+        eval(res[i].javascript);
       }
     }
   }
