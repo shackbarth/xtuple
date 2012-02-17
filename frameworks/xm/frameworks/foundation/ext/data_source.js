@@ -25,7 +25,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
       .async(NO)
       .send({ 
         requestType: 'requestSession',
-        username: 'admin',
+        userName: 'admin',
         password: 'admin'
       });
   },
