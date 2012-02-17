@@ -70,7 +70,7 @@ XV.record.userClearRole = function () {
         var role = record.get('roles').objectAt(i);
 
         /* TODO: How can this be made to work? Fails because role is still busy. */
-        role.destroy();
+        role.destroy(true);
       }
 
       /* commit */
@@ -88,14 +88,14 @@ XV.record.userClearRole = function () {
 }
 
 XV.record.create = function (recordType, 
-                             createdDataHash, 
+                             createHash, 
                              createHashResult, 
                              updateHash, 
                              updateHashResult,
                              destroy) {
   var context = {
     topic: function() {
-      var record = XM.store.createRecord(recordType, createdDataHash).normalize();
+      var record = XM.store.createRecord(recordType, createHash).normalize();
     
       record.validate();
     

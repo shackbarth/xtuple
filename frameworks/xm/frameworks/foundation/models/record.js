@@ -23,6 +23,11 @@ XM.Record = SC.Record.extend(
   @type string
   */
   className: 'XM.Record',
+
+  /*
+  The primary key field. This will typically never be manipulated directly.
+  */
+  guid: SC.Record.attr(Number),
   
   /**
   The data type name. The same as the class name without the namespace.
@@ -201,6 +206,7 @@ XM.Record.setup = function() {
   // this will create an entry for `guid` on the XM.Record that
   // defines the attribute as type String and adds a defaultValue
   // function that will return the correct type automatically
+  /*
   if(this.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
 
@@ -212,7 +218,7 @@ XM.Record.setup = function() {
       return XM.Record.nextGuid.call(self.prototype);
     }});
   }
-
+  */
   // return the original reference (!important)
   return this;
 };
