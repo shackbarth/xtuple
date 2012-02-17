@@ -64,7 +64,7 @@ var http = require('http'),
 
 
 var SESSION = {
-  username: 'admin',
+  userName: 'admin',
   password: 'admin',
   sid: null
 };
@@ -93,7 +93,7 @@ var SESSION = {
   });
   req.write(JSON.stringify({
     requestType: 'requestSession',
-    username: SESSION.username,
+    userName: SESSION.userName,
     password: SESSION.password
   }));
   req.end();
