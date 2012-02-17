@@ -29,7 +29,7 @@ select private.install_js('XT','Data','xtuple', $$
     */
     buildClause: function(nameSpace, type, conditions, parameters) {
       var ret = ' true ', cond = '', pcond = '',
-          map = XT.fetchMap(nameSpace, type),
+          map = XT.getORM(nameSpace, type),
           privileges = map.privileges;
 
       /* handle passed conditions */
@@ -131,7 +131,7 @@ select private.install_js('XT','Data','xtuple', $$
       var isTopLevel = isTopLevel !== false ? true : false,
           isGrantedAll = true,
           isGrantedPersonal = false,
-          map = XT.fetchMap(nameSpace, type),
+          map = XT.getORM(nameSpace, type),
           privileges = map.privileges,
           committing = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
@@ -450,19 +450,10 @@ select private.install_js('XT','Data','xtuple', $$
     retrieveRecord: function(recordType, id) {
       var nameSpace = recordType.beforeDot(), 
           type = recordType.afterDot(),
-          map = XT.fetchMap(nameSpace, type),
-          ret, sql, pkey, i = 0;
+          map = XT.getORM(nameSpace, type),
+          ret, sql, pkey = XT.getPrimaryKey(map), i = 0;
 
-      /* find primary key */
-      while (!pkey && i < map.properties.length) {
-        if(map.properties[i].attr && 
-           map.properties[i].attr.isPrimaryKey)
-          pkey = map.properties[i].name;
-
-        i++;
-      }
-
-     if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
+      if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
 
       sql = "select * from {schema}.{table} where {primaryKey} = $1;"
             .replace(/{schema}/, nameSpace.decamelize())
