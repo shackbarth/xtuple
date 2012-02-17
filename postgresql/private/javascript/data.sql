@@ -179,7 +179,8 @@ select private.install_js('XT','Data','xtuple', $$
         };  
         /* if committing and personal privileges we need to ensure the old record is editable */
         if(committing && (action === 'update' || action === 'delete')) {
-          var old = this.retrieveRecord(nameSpace + '.' + type, record.guid);
+          var pkey = XT.getPrimaryKey(map),
+              old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
 
           isGrantedPersonal = checkPersonal(old);
         /* check personal privileges on the record passed if applicable */
@@ -204,11 +205,11 @@ select private.install_js('XT','Data','xtuple', $$
         if (record[prop] instanceof Array && 
             record[prop].length &&
             isNaN(record[prop][0])) {
-            var key = nameSpace + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
+            var key = nameSpace.toUpperCase() + '.' + coldef['typname'].substring(1).classify(); /* strip underscore from (array) type name */
                 values = record[prop]; 
 
           for(var i in values) {
-            this.commitRecord(key.classify(), values[i], false);
+            this.commitRecord(key, values[i], false);
           }
         }
       }   
@@ -306,6 +307,8 @@ select private.install_js('XT','Data','xtuple', $$
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),
           viewdef = XT.getViewDefinition(viewName, schemaName),
+          orm = XT.getORM(key.beforeDot(),key.afterDot()),
+          pkey = XT.getPrimaryKey(orm),
           record = XT.decamelize(value),
           sql = '', expressions, params = [];
 
@@ -336,15 +339,15 @@ select private.install_js('XT','Data','xtuple', $$
       }
 
       expressions = params.join(', ');
-      sql = 'update {recordType} set {expressions} where guid = {id};'
+      sql = 'update {recordType} set {expressions} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
             .replace(/{expressions}/, expressions)
-            .replace(/{id}/, record.guid);
+            .replace(/{primaryKey}/, pkey);
       
       if(DEBUG) { print(NOTICE, 'sql =', sql); }
       
       /* commit the record */
-      executeSql(sql); 
+      executeSql(sql, [record[pkey]]); 
 
       /* okay, now lets handle arrays */
       this.commitArrays(schemaName, record, viewdef); 
@@ -356,16 +359,18 @@ select private.install_js('XT','Data','xtuple', $$
        @param {Object} the record to be committed
     */
     deleteRecord: function(key, value) {
-      var record = XT.decamelize(value), sql = '';
+      var record = XT.decamelize(value), sql = '',
+          orm = XT.getORM(key.beforeDot(),key.afterDot()),
+          pkey = XT.getPrimaryKey(orm);
 
-      sql = 'delete from {recordType} where guid = {id};'
+      sql = 'delete from {recordType} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
-            .replace(/{id}/, record.guid);
+            .replace(/{primaryKey}/, pkey);
       
       if(DEBUG) { print(NOTICE, 'sql =', sql); }
       
       /* commit the record */
-      executeSql(sql); 
+      executeSql(sql, [record[pkey]]); 
     },
 
     /* Returns the currently logged in user.
