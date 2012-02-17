@@ -203,7 +203,7 @@ select private.install_js('XT','Data','xtuple', $$
         /* if the property is an array of objects they must be records so commit them */
         if (record[prop] instanceof Array && 
             record[prop].length &&
-            typeof record[prop][0] === 'object' ) {
+            isNaN(record[prop][0])) {
             var key = nameSpace + '.' + coldef['typname'].substring(1); /* strip underscore from (array) type name */
                 values = record[prop]; 
 
@@ -388,21 +388,20 @@ select private.install_js('XT','Data','xtuple', $$
     /* Additional processing on record properties. 
        Adds 'type' property, stringifies arrays and
        camelizes the record.
-    
-       @param {Object} record object to be committed
+
+       @param {String} name space
+       @param {String} type
+       @param {Object} the record to be normalized
        @param {Object} view definition object
        @returns {Object} 
     */
-    normalize: function(nameSpace, map, record) {
-      var viewdef = XT.getViewDefinition(map, nameSpace.decamelize());
-
-      /* helper formatting function */
-      formatTypeName = function(str) {
-        return str.slice(0,1).toUpperCase() + str.substring(1).camelize();
-      }
+    normalize: function(nameSpace, type, record) {
+      var schemaName = nameSpace.decamelize(),
+          viewName = type.decamelize(),
+          viewdef = XT.getViewDefinition(viewName, schemaName);
 
       /* set data type property */
-      record['type'] = formatTypeName(map);
+      record['type'] = type.classify();
 
       /* set data state property */
       record['dataState'] = this.READ_STATE;
@@ -412,14 +411,16 @@ select private.install_js('XT','Data','xtuple', $$
           var coldef = viewdef.findProperty('attname', prop),
           value, result, sql = '';
 
-            /* if it's a compound type, add a type property */
-            if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
-              record[prop]['type'] = formatTypeName(coldef['typname']);
-              record[prop]['dataState'] = this.READ_STATE;
-              
-            /* if it's an array convert each row into an object */
-            } else if (coldef['typcategory'] === this.ARRAY_TYPE && record[prop]) {
-              var key = coldef['typname'].substring(1); /* strip off the leading underscore */
+          /* if it's a compound type, add a type property */
+          if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
+            record[prop]['type'] = coldef['typname'].classify();
+            record[prop]['dataState'] = this.READ_STATE;
+        
+          /* if it's an array convert each row into an object */
+          } else if (record[prop] instanceof Array && 
+                     record[prop].length &&
+                     isNaN(record[prop][0])) {
+            var key = coldef['typname'].substring(1); /* strip off the leading underscore */
 
             for (var i = 0; i < record[prop].length; i++) {
               var value = record[prop][i];
@@ -431,7 +432,7 @@ select private.install_js('XT','Data','xtuple', $$
               result = executeSql(sql);
 
               for (var k = 0; k < result.length; k++) {
-                result[k]['type'] = formatTypeName(key);
+                result[k]['type'] = key.classify();
                 result[k]['dataState'] = this.READ_STATE;
                 record[prop][i] = this.normalize(nameSpace, key, result[k]);
               }
