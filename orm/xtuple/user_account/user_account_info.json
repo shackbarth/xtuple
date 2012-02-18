@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "UserAccountInfo",
-  "table": "private.usr",
+  "table": "xt.usr",
   "comment": "User Account Info Map",
   "canCreate": false,
   "canUpdate": false,
@@ -34,5 +34,5 @@
     }
   ],
   "isSystem": true,
-  "isNested": true
+  "isNestedOnly": true
 }

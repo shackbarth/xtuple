@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ContactContact",
-  "table": "private.docinfo",
+  "table": "xt.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Contact Contact Map",
   "canUpdate": false,
@@ -57,6 +57,6 @@
       }
     }
   ],
-  "isNested": true,
+  "isNestedOnly": true,
   "isSystem": true
 }

@@ -26,11 +26,11 @@
     {
       "name": "userAccountRole",
       "toOne": {
-        "type": "UserAccountRole",
+        "type": "UserAccountRoleInfo",
         "column": "usrgrp_grp_id"
       }
     }
   ],
-  "isNested": true,
+  "isNestedOnly": true,
   "isSystem": true
 }

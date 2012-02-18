@@ -116,7 +116,7 @@
     {
       "name": "comments",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectComment",
         "column": "prj_id",
         "inverse": "project",
@@ -138,7 +138,7 @@
     {
       "name": "tasks",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectTask",
         "column": "prj_id",
         "inverse": "project"
@@ -147,7 +147,7 @@
     {
       "name": "contacts",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectContact",
         "column": "prj_id",
         "inverse": "source"
@@ -156,7 +156,7 @@
     {
       "name": "items",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectItem",
         "column": "prj_id",
         "inverse": "source"
@@ -165,7 +165,7 @@
     {
       "name": "files",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectFile",
         "column": "prj_id",
         "inverse": "source"
@@ -174,7 +174,7 @@
     {
       "name": "images",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectImage",
         "column": "prj_id",
         "inverse": "source"
@@ -183,7 +183,7 @@
     {
       "name": "urls",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectUrl",
         "column": "prj_id",
         "inverse": "source"
@@ -192,7 +192,7 @@
     {
       "name": "projects",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ProjectProject",
         "column": "prj_id",
         "inverse": "source"

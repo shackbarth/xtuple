@@ -188,7 +188,7 @@
     {
       "name": "comments",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ItemComment",
         "column": "item_id",
         "inverse": "item",
@@ -213,7 +213,7 @@
         "type": "ItemCharacteristic",
         "column": "item_id",
 		"inverse": "item",
-        "isMaster": true
+        "isNested": true
       }
     },
     {
@@ -222,7 +222,7 @@
         "type": "ItemConversion",
         "column": "item_id",
         "inverse": "item",
-		"isMaster": true
+		"isNested": true
       }
     },
     {
@@ -231,7 +231,7 @@
         "type": "ItemAlias",
         "column": "item_id",
         "inverse": "item",
-        "isMaster": true
+        "isNested": true
       }
     },
     {
@@ -240,7 +240,7 @@
         "type": "ItemSubstitute",
         "column": "item_id",
 		"inverse": "item",        
-		"isMaster": "true"
+		"isNested": "true"
       }
     },
     {
@@ -249,7 +249,7 @@
         "type": "ItemContact",
         "column": "item_id",
         "inverse": "source",
-        "isMaster": true
+        "isNested": true
       }
     },
     {
@@ -258,7 +258,7 @@
         "type": "ItemItem",
         "column": "item_id",
         "inverse": "source",
-        "isMaster": true
+        "isNested": true
       }
     },
     {
@@ -267,7 +267,7 @@
         "type": "ItemFile",
         "column": "item_id",
         "inverse": "source",
-        "isMaster": true
+        "isNested": true
       }
     },
     {
@@ -276,7 +276,7 @@
         "type": "ItemImage",
         "column": "item_id",
         "inverse": "source",
-        "isMaster": true
+        "isNested": true
       }
     },
     {
@@ -285,7 +285,7 @@
         "type": "ItemUrl",
         "column": "item_id",
         "inverse": "source",
-        "isMaster": true
+        "isNested": true
       }
     }
   ],

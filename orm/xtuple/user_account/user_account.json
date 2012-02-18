@@ -2,8 +2,8 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "UserAccount",
-  "table": "private.usr",
-  "idSequenceName": "private.useracct_useracct_id_seq",
+  "table": "xt.usr",
+  "idSequenceName": "xt.useracct_useracct_id_seq",
   "comment": "User Account Map",
   "canDelete": false,
   "privileges": {
@@ -100,7 +100,7 @@
         "column": "usr_username",
         "type": "UserAccountUserAccountRoleAssignment",
         "inverse": "userAccount",
-        "isMaster": true
+        "isNested": true
       }
     }
   ],

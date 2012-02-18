@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "AccountComment",
-  "table": "private.comment",
+  "table": "xt.comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Account Comment Map",
   "canDelete": false,
@@ -71,6 +71,6 @@
       }
     }
   ],
-  "isNested": true,
+  "isNestedOnly": true,
   "isSystem": true
 }

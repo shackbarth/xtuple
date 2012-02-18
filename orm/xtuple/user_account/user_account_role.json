@@ -5,6 +5,14 @@
   "table": "grp",
   "idSequenceName": "grp_grp_id_seq",
   "comment": "User Account Role Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainGroups",
+      "read": "MaintainGroups",
+      "update": "MaintainGroups",
+      "delete": "MaintainGroups"
+    }
+  },
   "properties": [
     {
       "name": "guid",
@@ -37,6 +45,5 @@
       }
     }
   ],
-  "isNested": true,
   "isSystem": true
 }

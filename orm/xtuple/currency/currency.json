@@ -48,7 +48,7 @@
         "type": "CurrencyRate",
         "column": "curr_id",
         "inverse": "currency",
-        "isMaster": true
+        "isNested": true
       }
     }
   ],

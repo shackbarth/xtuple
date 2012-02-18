@@ -110,7 +110,7 @@
     {
       "name": "comments",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountComment",
         "column": "crmacct_id",
         "inverse": "account",
@@ -132,7 +132,7 @@
     {
       "name": "characteristics",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountCharacteristic",
         "column": "crmacct_id",
         "inverse": "account"
@@ -141,7 +141,7 @@
     {
       "name": "contacts",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountContact",
         "column": "crmacct_id",
         "inverse": "source"
@@ -150,7 +150,7 @@
     {
       "name": "items",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountItem",
         "column": "crmacct_id",
         "inverse": "source"
@@ -159,7 +159,7 @@
     {
       "name": "files",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountFile",
         "column": "crmacct_id",
         "inverse": "source"
@@ -168,7 +168,7 @@
     {
       "name": "images",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountImage",
         "column": "crmacct_id",
         "inverse": "source"
@@ -177,7 +177,7 @@
     {
       "name": "urls",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountUrl",
         "column": "crmacct_id",
         "inverse": "source"
@@ -186,7 +186,7 @@
     {
       "name": "accounts",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "AccountAccount",
         "column": "crmacct_id",
         "inverse": "source"

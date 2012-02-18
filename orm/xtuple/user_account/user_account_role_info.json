@@ -1,0 +1,37 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "UserAccountRoleInfo",
+  "table": "grp",
+  "comment": "User Account Role Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "grp_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "grp_name"
+      }
+    },
+    {
+      "name": "privileges",
+      "toMany": {
+        "type": "UserAccountRolePrivilegeAssignment",
+        "column": "grp_id",
+        "inverse": "user_account_role"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

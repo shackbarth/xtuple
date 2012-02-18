@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ProjectTaskComment",
-  "table": "private.comment",
+  "table": "xt.comment",
   "idSequenceName": "comment_comment_id_seq",
   "comment": "Project Task Comment Map",
   "canDelete": false,
@@ -71,6 +71,6 @@
       }
     }
   ],
-  "isNested": true,
+  "isNestedOnly": true,
   "isSystem": true
 }

@@ -184,7 +184,7 @@
         "type": "SiteComment",
         "column": "warehous_id",
         "inverse": "site",
-        "isMaster": true,
+        "isNested": true,
         "deleteDelegate": {
           "table": "comment",
           "relations": [

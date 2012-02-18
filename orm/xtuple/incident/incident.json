@@ -124,7 +124,7 @@
     {
       "name": "alarms",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentAlarm",
         "column": "incdt_id",
         "inverse": "incident"
@@ -133,7 +133,7 @@
     {
       "name": "history",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentHistory",
         "column": "incdt_id",
         "inverse": "incident"
@@ -142,7 +142,7 @@
     {
       "name": "comments",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentComment",
         "column": "incdt_id",
         "inverse": "incident",
@@ -164,7 +164,7 @@
     {
       "name": "characteristics",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentCharacteristic",
         "column": "incdt_id",
         "inverse": "incident"
@@ -173,7 +173,7 @@
     {
       "name": "contacts",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentContact",
         "column": "incdt_id",
         "inverse": "source"
@@ -182,7 +182,7 @@
     {
       "name": "items",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentItem",
         "column": "incdt_id",
         "inverse": "source"
@@ -191,7 +191,7 @@
     {
       "name": "files",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentFile",
         "column": "incdt_id",
         "inverse": "source"
@@ -200,7 +200,7 @@
     {
       "name": "images",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentImage",
         "column": "incdt_id",
         "inverse": "source"
@@ -209,7 +209,7 @@
     {
       "name": "urls",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentUrl",
         "column": "incdt_id",
         "inverse": "source"
@@ -218,7 +218,7 @@
     {
       "name": "incidents",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "IncidentIncident",
         "column": "incdt_id",
         "inverse": "source"
