@@ -1,18 +1,12 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "UserAccountRole",
+  "type": "UserAccountRoleInfo",
   "table": "grp",
-  "idSequenceName": "grp_grp_id_seq",
-  "comment": "User Account Role Map",
-  "privileges": {
-    "all": {
-      "create": "MaintainGroups",
-      "read": "MaintainGroups",
-      "update": "MaintainGroups",
-      "delete": "MaintainGroups"
-    }
-  },
+  "comment": "User Account Role Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
   "properties": [
     {
       "name": "guid",
@@ -30,13 +24,6 @@
       }
     },
     {
-      "name": "description",
-      "attr": {
-        "type": "String",
-        "column": "grp_descrip"
-      }
-    },
-    {
       "name": "privileges",
       "toMany": {
         "type": "UserAccountRolePrivilegeAssignment",
@@ -45,5 +32,6 @@
       }
     }
   ],
+  "isNested": true,
   "isSystem": true
 }
