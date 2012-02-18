@@ -1,4 +1,4 @@
-create or replace function private.add_column(table_name text, column_name text, type_name text, constraint_text text default null, schema_name text default 'private') returns boolean volatile as $$
+create or replace function xt.add_column(table_name text, column_name text, type_name text, constraint_text text default null, schema_name text default 'xt') returns boolean volatile as $$
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare

@@ -6,6 +6,6 @@ drop operator if exists ~? (
 create operator ~? (
   leftarg = text,
   rightarg = text,
-  procedure = private.ends_with,
+  procedure = xt.ends_with,
   hashes, merges
 );

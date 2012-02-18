@@ -1,4 +1,4 @@
-select private.install_js('XT','Session','xtuple', $$
+select xt.install_js('XT','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -15,7 +15,7 @@ select private.install_js('XT','Session','xtuple', $$
     var args = arguments[0],
         nameSpace = args.recordType.beforeDot(),
         type = args.recordType.afterDot(),
-        map = XT.fetchMap(nameSpace, type),
+        map = XT.getORM(nameSpace, type),
         seq = map.idSequenceName,
         sql = 'select nextval($1) as result';
 
@@ -31,7 +31,7 @@ select private.install_js('XT','Session','xtuple', $$
     var args = arguments[0],
         nameSpace = args.recordType.beforeDot(),
         type = args.recordType.afterDot(),
-        map = XT.fetchMap(nameSpace, type),
+        map = XT.getORM(nameSpace, type),
         seq = map.orderSequence,
         sql = 'select fetchnextnumber($1) as result';
 

@@ -1,4 +1,4 @@
-create or replace function private.useracct_duplicate_check() returns trigger as $$
+create or replace function xt.useracct_duplicate_check() returns trigger as $$
 declare
   result text;
 begin

@@ -1,4 +1,4 @@
-select private.install_js('XT','Data','xtuple', $$
+select xt.install_js('XT','Data','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 

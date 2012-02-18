@@ -1,9 +1,9 @@
-create or replace function private.retrieve_record(data_hash text) returns text as $$
+create or replace function xt.retrieve_record(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.js_init()');
+  if(!this.isInitialized) executeSql('select xt.js_init()');
 
   var dataHash = JSON.parse(data_hash),
       data = Object.create(XT.Data),
@@ -15,7 +15,7 @@ create or replace function private.retrieve_record(data_hash text) returns text 
 
 $$ language plv8;
 /*
-select private.retrieve_record('{
+select xt.retrieve_record('{
   "recordType":"XM.Contact", 
   "id": 1,
   "prettyPrint": true

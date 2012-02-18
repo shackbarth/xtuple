@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ProjectContact",
-  "table": "private.docinfo",
+  "table": "xt.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Project Contact Map",
   "canUpdate": false,

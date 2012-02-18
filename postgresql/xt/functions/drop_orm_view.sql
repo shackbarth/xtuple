@@ -1,4 +1,4 @@
-create or replace function private.drop_orm_view(view_name text) returns text[] as $$
+create or replace function xt.drop_orm_view(view_name text) returns text[] as $$
 -- Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
 -- See www.xm.ple.com/CPAL for the full text of the software license.
 declare
@@ -22,7 +22,7 @@ begin
      and (nspname || '.' || relname != view_name)
   loop
     -- Drop the dependency and add
-    view_names := private.drop_orm_view(nsp || '.' || rec.view_name) || view_names;
+    view_names := xt.drop_orm_view(nsp || '.' || rec.view_name) || view_names;
 
     -- If the model we're on isnt already in the array, prepend the dropped dependency
    if not rec.view_name <@ view_names then

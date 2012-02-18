@@ -1,4 +1,4 @@
-create or replace function private.js_init() returns void as $$
+create or replace function xt.js_init() returns void as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -163,7 +163,7 @@ create or replace function private.js_init() returns void as $$
     if(res) ret = res.map;
     else {
       var sql = 'select orm_json as json '
-              + 'from private.orm '
+              + 'from xt.orm '
               + 'where orm_namespace=$1'
               + ' and orm_type=$2'
               + ' and not orm_ext',
@@ -206,7 +206,7 @@ create or replace function private.js_init() returns void as $$
 
   /* create namespace objects for all registered javascript */
   sql = 'select distinct js_namespace as "nameSpace" '
-        + 'from private.js '
+        + 'from xt.js '
         + 'where js_active; '
 
   res = executeSql(sql);
@@ -219,7 +219,7 @@ create or replace function private.js_init() returns void as $$
     /* load up all active javascript installed in the database */
     /* TODO: What about dependencies? */
     sql = 'select js_text as "javascript" '
-        + 'from private.js '
+        + 'from xt.js '
         + 'where js_active '
         + 'order by js_ext ';
 

@@ -1,9 +1,9 @@
-create or replace function private.create_orm_view(view_name text) returns void as $$
+create or replace function xt.create_orm_view(view_name text) returns void as $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.js_init()');
+  if(!this.isInitialized) executeSql('select xt.js_init()');
 
   /* constants */
   var SELECT = 'select {columns} from {table} where {conditions}'
@@ -444,7 +444,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
   
   /* base orm */
   sql = 'select orm_id as id, orm_json as json '
-      + 'from private.orm '
+      + 'from xt.orm '
       + 'where orm_namespace = $1 '
       + ' and orm_type = $2 '
       + ' and orm_active '
@@ -460,7 +460,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
 
   /* orm extensions */
   sql = 'select orm_id as id, orm_json as json '
-      + 'from private.orm '
+      + 'from xt.orm '
       + 'where orm_namespace = $1 '
       + ' and orm_type = $2 '
       + ' and orm_active '

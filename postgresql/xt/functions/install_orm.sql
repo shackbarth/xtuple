@@ -1,9 +1,9 @@
-create or replace function private.install_orm(json text) returns void volatile as $$                                
+create or replace function xt.install_orm(json text) returns void volatile as $$                                
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.js_init()');
+  if(!this.isInitialized) executeSql('select xt.js_init()');
 
   var newJson = JSON.parse(json), oldJson,
       oldOrm, sql, isExtension, sequence,
@@ -19,7 +19,7 @@ create or replace function private.install_orm(json text) returns void volatile 
   sql = 'select orm_id as "id", '
       + '  orm_json as "json", '
       + '  orm_ext as "isExtension" '
-      + 'from private.orm '
+      + 'from xt.orm '
       + 'where orm_namespace = $1 '
       + ' and orm_type = $2 '
       + ' and orm_context = $3';
@@ -34,14 +34,14 @@ create or replace function private.install_orm(json text) returns void volatile 
     if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + nameSpace + '.' + type);
     if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
     
-    sql = 'update private.orm set '
+    sql = 'update xt.orm set '
         + ' orm_json = $1, '
         + ' orm_seq = $2 '
         + 'where orm_id = $3';
 
     executeSql(sql, [json, sequence, oldOrm.id]);   
   } else { 
-    sql = 'insert into private.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
+    sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
 
     executeSql(sql, [nameSpace, type, context, json, sequence, isExtension]); 
   }

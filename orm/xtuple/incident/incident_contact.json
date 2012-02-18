@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "IncidentContact",
-  "table": "private.docinfo",
+  "table": "xt.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Incident Contact Map",
   "canUpdate": false,

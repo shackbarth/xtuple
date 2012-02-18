@@ -263,7 +263,7 @@
 	-- confirm INSERT record
 
 		SELECT * 
-		  FROM private.docinfo
+		  FROM xt.docinfo
 		 WHERE id IN (99999,99998,99997,99996);
 
 	-- NO update rule functionality for the xm.item_document model view

@@ -1,4 +1,4 @@
-create or replace function private.install_js(name_space text, type_name text, context text, javascript text, is_extension boolean default false) returns void as $$                                
+create or replace function xt.install_js(name_space text, type_name text, context text, javascript text, is_extension boolean default false) returns void as $$                                
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -8,7 +8,7 @@ create or replace function private.install_js(name_space text, type_name text, c
 
   sql = 'select js_id as "id", '
       + ' js_ext as "isExtension" '
-      + 'from private.js '
+      + 'from xt.js '
       + 'where js_namespace = $1 '
       + ' and js_type = $2 '
       + ' and js_context = $3';
@@ -21,13 +21,13 @@ create or replace function private.install_js(name_space text, type_name text, c
                                                         .replace(/{type}/, type_name)
                                                         .replace(/{context}/, context));
     
-    sql = 'update private.js set '
+    sql = 'update xt.js set '
         + ' js_text = $1 '
         + 'where js_id = $2';
 
     executeSql(sql, [javascript, js.id]);   
   } else { 
-    sql = 'insert into private.js ( js_namespace, js_type, js_context, js_text, js_ext ) values ($1, $2, $3, $4, $5)';
+    sql = 'insert into xt.js ( js_namespace, js_type, js_context, js_text, js_ext ) values ($1, $2, $3, $4, $5)';
 
     executeSql(sql, [name_space, type_name, context, javascript, is_extension]); 
   }

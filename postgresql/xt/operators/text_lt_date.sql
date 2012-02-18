@@ -6,6 +6,6 @@ drop operator if exists < (
 create operator < (
   leftarg = text,
   rightarg = date,
-  procedure = private.text_lt_date,
+  procedure = xt.text_lt_date,
   hashes, merges
 );

@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ToDoFile",
-  "table": "private.docinfo",
+  "table": "xt.docinfo",
   "idSequenceName": "docass_docass_id_seq",
   "comment": "ToDo File Map",
   "canUpdate": false,

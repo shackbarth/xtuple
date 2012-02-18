@@ -1,4 +1,4 @@
-create or replace view private.docinfo as 
+create or replace view xt.docinfo as 
 
    select
     docass_id as id,
@@ -35,11 +35,11 @@ create or replace view private.docinfo as
 
 -- insert rules
 
-create or replace rule "_CREATE" as on insert to private.docinfo
+create or replace rule "_CREATE" as on insert to xt.docinfo
   do instead nothing;
 
 
-create or replace rule "_CREATE_DOC" as on insert to private.docinfo
+create or replace rule "_CREATE_DOC" as on insert to xt.docinfo
   where new.target_type != 'IMG' do instead
 
 insert into public.docass (
@@ -57,7 +57,7 @@ values (
   new.target_type,
   new.purpose );
   
-create or replace rule "_CREATE_IMG" as on insert to private.docinfo
+create or replace rule "_CREATE_IMG" as on insert to xt.docinfo
   where new.target_type = 'IMG' do instead
 
 insert into public.imageass (
@@ -75,21 +75,21 @@ values (
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to private.docinfo
+create or replace rule "_UPDATE" as on update to xt.docinfo
   do instead nothing;
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to private.docinfo
+create or replace rule "_DELETE" as on delete to xt.docinfo
   do instead nothing;
   
-create or replace rule "_DELETE_DOC" as on delete to private.docinfo
+create or replace rule "_DELETE_DOC" as on delete to xt.docinfo
   where old.target_type != 'IMG' do instead
 
 delete from public.docass 
 where ( docass_id = old.id );
 
-create or replace rule "_DELETE_IMG" as on delete to private.docinfo
+create or replace rule "_DELETE_IMG" as on delete to xt.docinfo
   where old.target_type = 'IMG' do instead
 
 delete from public.imageass

@@ -1,9 +1,9 @@
-create or replace function private.commit_record(data_hash text) returns text as $$
+create or replace function xt.commit_record(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.js_init()');
+  if(!this.isInitialized) executeSql('select xt.js_init()');
 
   var dataHash = JSON.parse(data_hash),
       recordType = dataHash.recordType,
@@ -17,7 +17,7 @@ create or replace function private.commit_record(data_hash text) returns text as
   
 $$ language plv8;
 /*
-select private.commit_record(
+select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
       "dataState":"created",
@@ -70,7 +70,7 @@ select private.commit_record(
   }'
 );
 
-select private.commit_record(
+select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
       "dataState":"updated",
@@ -133,7 +133,7 @@ select private.commit_record(
   }'
 );
 
-select private.commit_record(
+select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
       "dataState":"deleted",

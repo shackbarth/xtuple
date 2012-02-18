@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "OpportunityContact",
-  "table": "private.docinfo",
+  "table": "xt.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Opportunity Contact Map",
   "canUpdate": false,

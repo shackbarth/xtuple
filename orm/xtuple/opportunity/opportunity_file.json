@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "OpportunityFile",
-  "table": "private.docinfo",
+  "table": "xt.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Opportunity File Map",
   "canUpdate": false,

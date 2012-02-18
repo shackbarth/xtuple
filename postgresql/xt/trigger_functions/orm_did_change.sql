@@ -1,9 +1,9 @@
-create or replace function private.orm_did_change() returns trigger as $$
+create or replace function xt.orm_did_change() returns trigger as $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select private.js_init()');
+  if(!this.isInitialized) executeSql('select xt.js_init()');
 
   var view, views = [], i = 1, res;
 
@@ -15,7 +15,7 @@ create or replace function private.orm_did_change() returns trigger as $$
   }
 
   /* Drop the view, a text array of dependent view model names will be returned */
-  res = executeSql('select private.drop_orm_view($1) as views', [view])[0].views;
+  res = executeSql('select xt.drop_orm_view($1) as views', [view])[0].views;
   
   if(res.length) views.push(res[0]);
 
@@ -48,7 +48,7 @@ create or replace function private.orm_did_change() returns trigger as $$
   /* Loop through model names and create */ 
   if(TG_OP === 'INSERT' || TG_OP === 'UPDATE') {
     for(var i = 0; i < views.length; i++) {
-      executeSql('select private.create_orm_view($1);',[views[i]]);
+      executeSql('select xt.create_orm_view($1);',[views[i]]);
     }
   }
 

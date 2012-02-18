@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "AddressComment",
-  "table": "private.comment",
+  "table": "xt.comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Address Comment Map",
   "canDelete": false,

@@ -35,7 +35,7 @@ select * from xm.account_comment where guid = 99999;
 
 select * from xm.account_characteristic where guid = 99999;
 
-select * from private.docinfo where id in (99999,99998,99997);
+select * from xt.docinfo where id in (99999,99998,99997);
 
 select * from xm.account_info;
 

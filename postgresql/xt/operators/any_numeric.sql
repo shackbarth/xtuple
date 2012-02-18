@@ -6,6 +6,6 @@ drop operator if exists <@ (
 create operator <@ (
   leftarg = numeric,
   rightarg = numeric[],
-  procedure = private.any_numeric,
+  procedure = xt.any_numeric,
   hashes, merges
 );

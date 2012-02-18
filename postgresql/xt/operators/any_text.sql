@@ -6,6 +6,6 @@ drop operator if exists <@ (
 create operator <@ (
   leftarg = text,
   rightarg = text[],
-  procedure = private.any_text,
+  procedure = xt.any_text,
   hashes, merges
 );

@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "AccountUrl",
-  "table": "private.docinfo",
+  "table": "xt.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
   "comment": "Account Url Map",
   "canUpdate": false,

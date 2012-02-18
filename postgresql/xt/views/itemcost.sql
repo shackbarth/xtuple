@@ -1,4 +1,4 @@
-create view private.itemcost as 
+create view xt.itemcost as 
 
 select 
   itemcost_id,
@@ -15,7 +15,7 @@ from itemcost;
 
 -- insert rule
 
-create or replace rule "_CREATE_INSERT" as on insert to private.itemcost
+create or replace rule "_CREATE_INSERT" as on insert to xt.itemcost
   do instead (
 
 insert into itemcost (
@@ -41,26 +41,26 @@ where (new.itemcost_post);
 
 );
 
-create or replace rule "_CREATE_CHECK_CREATECOSTS" as on insert to private.itemcost 
+create or replace rule "_CREATE_CHECK_CREATECOSTS" as on insert to xt.itemcost 
    where not checkPrivilege('CreateCosts') do instead
 
-  select private.raise_exception('You do not have privileges to create Item Costs');
+  select xt.raise_exception('You do not have privileges to create Item Costs');
 
-create or replace rule "_CREATE_CHECK_POST" as on insert to private.itemcost 
+create or replace rule "_CREATE_CHECK_POST" as on insert to xt.itemcost 
    where (new.itemcost_post)
      and not (checkPrivilege('PostActualCosts')) do instead
 
-  select private.raise_exception('You do not have privileges to Post Actual Costs to Standard Costs');
+  select xt.raise_exception('You do not have privileges to Post Actual Costs to Standard Costs');
 
 
-create or replace rule "_CREATE_CHECK_ACTIVE" as on insert to private.itemcost 
+create or replace rule "_CREATE_CHECK_ACTIVE" as on insert to xt.itemcost 
    where not (select costelem_active
               from costelem 
               where costelem_id = new.itemcost_costelem_id) do instead
 
-  select private.raise_exception('You must choose an active Cost Element');
+  select xt.raise_exception('You must choose an active Cost Element');
 
-create or replace rule "_CREATE_CHECK_MATERIAL" as on insert to private.itemcost 
+create or replace rule "_CREATE_CHECK_MATERIAL" as on insert to xt.itemcost 
    where (select (count(*) > 0)
 	  from itemcost
 	  join item i on itemcost_item_id = i.item_id
@@ -70,21 +70,21 @@ create or replace rule "_CREATE_CHECK_MATERIAL" as on insert to private.itemcost
 	   and itemcost_item_id = new.itemcost_item_id
 	   and itemcost_costelem_id = new.itemcost_costelem_id) do instead
 
-  select private.raise_exception('The Material Cost Element may only be associated with Purchased or Outside Processed Items');
+  select xt.raise_exception('The Material Cost Element may only be associated with Purchased or Outside Processed Items');
 
 
-create or replace rule "_CREATE_CHECK_DUPLICATES" as on insert to private.itemcost 
+create or replace rule "_CREATE_CHECK_DUPLICATES" as on insert to xt.itemcost 
    where (select (count(*) > 0)
 	  from itemcost
 	  where ((not itemcost_lowlevel)
 	   and (itemcost_item_id = new.itemcost_item_id))
 	   and itemcost_costelem_id = new.itemcost_costelem_id) do instead
 
-  select private.raise_exception('This Item already has all available Costing Elements assigned. No new Item Costs can be created for it until more Costing Elements are defined.');
+  select xt.raise_exception('This Item already has all available Costing Elements assigned. No new Item Costs can be created for it until more Costing Elements are defined.');
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to private.itemcost
+create or replace rule "_UPDATE" as on update to xt.itemcost
   do instead (
 
 update itemcost set
@@ -99,30 +99,30 @@ where (new.itemcost_post);
 
 );
 
-create or replace rule "_CREATE_CHECK_ENTERACTUAL" as on update to private.itemcost
+create or replace rule "_CREATE_CHECK_ENTERACTUAL" as on update to xt.itemcost
    where not checkPrivilege('EnterActualCosts') do instead
 
-  select private.raise_exception('You do not have privileges to update Actual Costs');
+  select xt.raise_exception('You do not have privileges to update Actual Costs');
 
 
-create or replace rule "_CREATE_CHECK_POST" as on update to private.itemcost 
+create or replace rule "_CREATE_CHECK_POST" as on update to xt.itemcost 
    where (new.itemcost_post)
      and not (checkPrivilege('PostActualCosts')) do instead
 
-  select private.raise_exception('You do not have privileges to Post Actual Costs to Standard Costs');
+  select xt.raise_exception('You do not have privileges to Post Actual Costs to Standard Costs');
 
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to private.itemcost
+create or replace rule "_DELETE" as on delete to xt.itemcost
   do instead
 
 delete from itemcost
 where (itemcost_id = old.itemcost_id);
 
-create or replace rule "_CREATE_CHECK_PRIV" as on delete to private.itemcost
+create or replace rule "_CREATE_CHECK_PRIV" as on delete to xt.itemcost
    where not checkPrivilege('DeleteCosts') do instead
 
-  select private.raise_exception('You do not have privileges to delete Item Costs');
+  select xt.raise_exception('You do not have privileges to delete Item Costs');
 
 
 

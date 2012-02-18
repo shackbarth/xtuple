@@ -1,4 +1,4 @@
-create or replace view private.comment as 
+create or replace view xt.comment as 
 select
   comment_id,
   comment_source_id,
@@ -13,7 +13,7 @@ order by comment_date desc;
 
 -- insert rule
 
-create or replace rule "_CREATE" as on insert to private.comment
+create or replace rule "_CREATE" as on insert to xt.comment
   do instead
 
 insert into public.comment (
@@ -37,7 +37,7 @@ values (
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to private.comment
+create or replace rule "_UPDATE" as on update to xt.comment
   do instead
 
 update public.comment set
@@ -45,7 +45,7 @@ update public.comment set
   comment_public = new.comment_public
 where ( comment_id = old.comment_id );
 
-create or replace rule "_UPDATE_CHECK_PRIV" as on update to private.comment
+create or replace rule "_UPDATE_CHECK_PRIV" as on update to xt.comment
    where (select case when not cmnttype_editable then true
                       when (checkPrivilege('EditOwnComments') and old.comment_user = getEffectiveXtUser()) then false
                       when (checkPrivilege('EditOthersComments') and old.comment_user != getEffectiveXtUser()) then false
@@ -53,10 +53,10 @@ create or replace rule "_UPDATE_CHECK_PRIV" as on update to private.comment
           from cmnttype
           where cmnttype_id = old.comment_cmnttype_id) do instead
 
-  select private.raise_exception('You are not allowed to update this comment');
+  select xt.raise_exception('You are not allowed to update this comment');
 
 -- delete rule
 
-create or replace rule "_DELETE" as on delete to private.comment
+create or replace rule "_DELETE" as on delete to xt.comment
   do instead nothing;
 

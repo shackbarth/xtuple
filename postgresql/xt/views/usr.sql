@@ -1,4 +1,4 @@
-create or replace view private.usr as
+create or replace view xt.usr as
 
   select 
     usename::text as guid,
@@ -52,22 +52,22 @@ create or replace view private.usr as
     useracct_disable_export,
     false,
     false
-  from private.useracct;
+  from xt.useracct;
      
 -- Rules
 
 -- insert rules
 
-create or replace rule "_CREATE" as on insert to private.usr
+create or replace rule "_CREATE" as on insert to xt.usr
   do instead nothing;
 
 
 -- create a regular user...
 
-create or replace rule "_CREATE_USER" as on insert to private.usr
+create or replace rule "_CREATE_USER" as on insert to xt.usr
   where not new.usr_db_user do instead
 
-insert into private.useracct (
+insert into xt.useracct (
   useracct_username,
   useracct_active,
   useracct_propername,
@@ -89,12 +89,12 @@ values (
 
 -- create a database user...
 
-create or replace rule "_CREATE_DB_USER" as on insert to private.usr
+create or replace rule "_CREATE_DB_USER" as on insert to xt.usr
   where new.usr_db_user do instead (
 
 select createUser( new.usr_username, new.usr_can_create_users );
-select private.execute_query( 'alter group xtrole add user ' || new.usr_username );
-select private.execute_query( 'alter user ' || new.usr_username || ' with password ''' || new.usr_passwd || '''' )
+select xt.execute_query( 'alter group xtrole add user ' || new.usr_username );
+select xt.execute_query( 'alter user ' || new.usr_username || ' with password ''' || new.usr_passwd || '''' )
 where new.usr_passwd != '        ';
 
 select setUserCanCreateUsers(new.usr_username, new.usr_can_create_users);
@@ -109,15 +109,15 @@ select setUserPreference(new.usr_username, 'active', case when new.usr_active th
 
 -- update rules
 
-create or replace rule "_UPDATE" as on update to private.usr
+create or replace rule "_UPDATE" as on update to xt.usr
   do instead nothing;
 
 -- update a regular user...
 
-create or replace rule "_UPDATE_USER" as on update to private.usr
+create or replace rule "_UPDATE_USER" as on update to xt.usr
   where not old.usr_db_user and not new.usr_db_user do instead (
 
-update private.useracct set
+update xt.useracct set
   useracct_active = new.usr_active,
   useracct_propername = new.usr_propername,
   useracct_passwd = new.usr_passwd,
@@ -130,12 +130,12 @@ where ( useracct_username = old.usr_username );
 
 -- change from a general user to a postgresql database user...
 
-create or replace rule "_UPDATE_TO_DB_USER" as on update to private.usr
+create or replace rule "_UPDATE_TO_DB_USER" as on update to xt.usr
   where not old.usr_db_user and new.usr_db_user = true do instead (
 
 select createUser( old.usr_username, new.usr_can_create_users );
-select private.execute_query( 'alter group xtrole add user ' || old.usr_username );
-select private.execute_query( 'alter user ' || old.usr_username || ' with password ''' || new.usr_passwd || '''' )
+select xt.execute_query( 'alter group xtrole add user ' || old.usr_username );
+select xt.execute_query( 'alter user ' || old.usr_username || ' with password ''' || new.usr_passwd || '''' )
 where new.usr_passwd != '        ';
 
 select setUserCanCreateUsers(old.usr_username, new.usr_can_create_users);
@@ -146,13 +146,13 @@ select setUserPreference(old.usr_username, 'initials', new.usr_initials);
 select setUserPreference(old.usr_username, 'locale_id', new.usr_locale_id::text);
 select setUserPreference(old.usr_username, 'active', case when new.usr_active then 't' else 'f' end );
 
-delete from private.useracct where ( useracct_username = old.usr_username );
+delete from xt.useracct where ( useracct_username = old.usr_username );
 
 );
 
 -- once a databse user, always a database user...
 
-create or replace rule "_UPDATE_DB_USER" as on update to private.usr
+create or replace rule "_UPDATE_DB_USER" as on update to xt.usr
   where old.usr_db_user do instead (
 
 select setUserCanCreateUsers(old.usr_username, new.usr_can_create_users);
@@ -167,7 +167,7 @@ select setUserPreference(old.usr_username, 'active', case when new.usr_active th
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to private.usr
+create or replace rule "_DELETE" as on delete to xt.usr
   do instead nothing;
 
 
