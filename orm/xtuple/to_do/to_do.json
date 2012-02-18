@@ -128,7 +128,7 @@
     {
       "name": "alarms",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoAlarm",
         "column": "todoitem_id",
         "inverse": "to_do"
@@ -137,7 +137,7 @@
     {
       "name": "comments",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoComment",
         "column": "todoitem_id",
         "inverse": "to_do",        
@@ -159,7 +159,7 @@
     {
       "name": "contacts",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoContact",
         "column": "todoitem_id",
         "inverse": "source"
@@ -168,7 +168,7 @@
     {
       "name": "items",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoItem",
         "column": "todoitem_id",
         "inverse": "source"
@@ -177,7 +177,7 @@
     {
       "name": "files",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoFile",
         "column": "todoitem_id",
         "inverse": "source"
@@ -186,7 +186,7 @@
     {
       "name": "images",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoImage",
         "column": "todoitem_id",
         "inverse": "source"
@@ -195,7 +195,7 @@
     {
       "name": "urls",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoUrl",
         "column": "todoitem_id",
         "inverse": "source"
@@ -204,7 +204,7 @@
     {
       "name": "toDos",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "ToDoToDo",
         "column": "todoitem_id",
         "inverse": "source"

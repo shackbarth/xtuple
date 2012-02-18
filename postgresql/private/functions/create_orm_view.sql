@@ -115,7 +115,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
         var toMany = props[i].toMany,
             table = orm.nameSpace + '.' + toMany.type.decamelize(),
             type = toMany.type.decamelize(), 
-            column = toMany.isMaster ? type : XT.getPrimaryKey(XT.getORM(orm.nameSpace, toMany.type)),
+            column = toMany.isNested ? type : XT.getPrimaryKey(XT.getORM(orm.nameSpace, toMany.type)),
             inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
             sql, col = 'array({select}) as "{alias}"';
             
@@ -128,7 +128,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
         cols.push(col);
     
         /* build array for delete cascade */
-        if(toMany.isMaster &&
+        if(toMany.isNested &&
            toMany.deleteDelegate && 
            toMany.deleteDelegate.table && 
            toMany.deleteDelegate.relations) {
@@ -152,7 +152,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
                       .replace(/{conditions}/, conditions.join(' and '));
 
           delCascade.push(sql);
-        } else if (toMany.isMaster) {
+        } else if (toMany.isNested) {
           sql = DELETE.replace(/{table}/, table)
                       .replace(/{conditions}/, type + '.' + inverse  + ' = ' + 'old.{pKeyAlias}'); 
                       
@@ -318,7 +318,7 @@ create or replace function private.create_orm_view(view_name text) returns void 
       tbls.unshift(orm.table + ' ' + tblAlias);
       tbls = tbls.concat(toOneJoins);
           
-      if(orm.privileges || orm.isNested) {
+      if(orm.privileges || orm.isNestedOnly) {
         
         /* insert rule */
         if(canCreate && insSrcCols.length) {

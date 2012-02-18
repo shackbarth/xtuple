@@ -153,7 +153,7 @@
     {
       "name": "comments",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityComment",
         "column": "ophead_id",
         "inverse": "opportunity"
@@ -162,7 +162,7 @@
     {
       "name": "characteristics",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityCharacteristic",
         "column": "ophead_id",
         "inverse": "opportunity"
@@ -171,7 +171,7 @@
     {
       "name": "contacts",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityContact",
         "column": "ophead_id",
         "inverse": "source"
@@ -180,7 +180,7 @@
     {
       "name": "items",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityItem",
         "column": "ophead_id",
         "inverse": "source"
@@ -189,7 +189,7 @@
     {
       "name": "files",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityFile",
         "column": "ophead_id",
         "inverse": "source"
@@ -198,7 +198,7 @@
     {
       "name": "images",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityImage",
         "column": "ophead_id",
         "inverse": "source"
@@ -207,7 +207,7 @@
     {
       "name": "urls",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityUrl",
         "column": "ophead_id",
         "inverse": "source"
@@ -216,7 +216,7 @@
     {
       "name": "opportunities",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "OpportunityOpportunity",
         "column": "ophead_id",
         "inverse": "source"

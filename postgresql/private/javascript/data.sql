@@ -139,7 +139,7 @@ select private.install_js('XT','Data','xtuple', $$
                     record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* can not access nested records directly */
-      if(isTopLevel && map.isNested) return false
+      if(isTopLevel && map.isNestedOnly) return false
         
       /* check privileges - only general access here */
       if(privileges) { 

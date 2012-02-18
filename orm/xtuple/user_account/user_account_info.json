@@ -34,5 +34,5 @@
     }
   ],
   "isSystem": true,
-  "isNested": true
+  "isNestedOnly": true
 }

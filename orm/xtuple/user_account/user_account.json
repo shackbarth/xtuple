@@ -100,7 +100,7 @@
         "column": "usr_username",
         "type": "UserAccountUserAccountRoleAssignment",
         "inverse": "userAccount",
-        "isMaster": true
+        "isNested": true
       }
     }
   ],

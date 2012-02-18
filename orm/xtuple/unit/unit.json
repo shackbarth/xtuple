@@ -46,7 +46,7 @@
     {
       "name": "conversionTo",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "UnitConversion",
         "column": "uom_id",
         "inverse": "to_unit"
@@ -55,14 +55,14 @@
     {
       "name": "conversionFrom",
       "toMany": {
-        "isMaster": true,
+        "isNested": true,
         "type": "UnitConversion",
         "column": "uom_id",
         "inverse": "from_unit"
       }
     }
   ],
-  "isNested": true,
+  "isNestedOnly": true,
   "isSystem": true
 }
 

@@ -50,6 +50,6 @@
     "characteristic.order",
     "characteristic.name"
   ],
-  "isNested": true,
+  "isNestedOnly": true,
   "isSystem": true
 }

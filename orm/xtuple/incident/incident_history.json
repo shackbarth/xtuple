@@ -70,6 +70,6 @@
   "order": [
     "incdthist_timestamp"
   ],
-  "isNested": true,
+  "isNestedOnly": true,
   "isSystem": true
 }
