@@ -31,7 +31,7 @@
  ORMs can be activated and deactivated in the xt.orm table so extensions can be "turned off" at
  any time.
  
- The initial ORM is referred to as the "base" ORM. Additional ORMS can be defined against the 
+ The initial ORM is referred to as the "base" ORM. Additional ORMs can be defined against the 
  original base using the same name space and type but giving them a different context name and 
  setting the isExtension flag to true. Typically the table on an ORM extension should reside in a 
  different database schema where you would create a table with colums that contain data you want to 
@@ -391,16 +391,14 @@
         "type": "ProjectTaskComment",
         
         /** 
-        The table column to map to.
-        
-        Required.
+        The table column to map to. If not specified all rows for the type will be returned.
 
         @type {String}
         */
         "column": "prjtask_id",
         
         /** 
-        The key that is the relation to the column.
+        The key that is the relation to the column. Ignored if no column specified.
         
         @type {String}
         */
@@ -527,8 +525,7 @@
   
   /** 
   Dictates the sequence that extensions are processed in. Higher sequences will add columns to the
-  furthermost right of the ORM views. In highly complex scenarios this can also be important for
-  join definitions if you intend to join extensions on extensions.
+  furthermost right of the ORM views. 
   
   @type {String}
   */
