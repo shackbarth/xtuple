@@ -111,18 +111,19 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
       }
 
       /* process toMany */
-      if(props[i].toMany && props[i].toMany.column) {
+      if(props[i].toMany) {
         var toMany = props[i].toMany,
             table = orm.nameSpace + '.' + toMany.type.decamelize(),
             type = toMany.type.decamelize(), 
             column = toMany.isNested ? type : XT.getPrimaryKey(XT.getORM(orm.nameSpace, toMany.type)),
             inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
-            sql, col = 'array({select}) as "{alias}"';
+            sql, col = 'array({select}) as "{alias}"',
+            conditions = toMany.column ? type + '.' + inverse + ' = ' + tblAlias + '.' + toMany.column : 'true';
             
         col = col.replace(/{select}/,
            SELECT.replace(/{columns}/, column)
                  .replace(/{table}/, table) 
-                 .replace(/{conditions}/, type + '.' + inverse + ' = ' + tblAlias + '.' + toMany.column))
+                 .replace(/{conditions}/, conditions))
                  .replace(/{alias}/, alias);
             
         cols.push(col);
