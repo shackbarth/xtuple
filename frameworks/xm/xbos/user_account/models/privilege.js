@@ -31,12 +31,7 @@ XM.Privilege = XM.Record.extend(
   */
   name: SC.Record.attr(String, { 
     isRequired: YES ,
-  }),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
+  })
   
 });
 
