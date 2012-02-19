@@ -3,7 +3,6 @@
   "nameSpace": "XM",
   "type": "Privilege",
   "table": "priv",
-  "idSequenceName": "public.priv_priv_id_seq",
   "comment": "Privilege Map",
   "canCreate": false,
   "canUpdate": false,

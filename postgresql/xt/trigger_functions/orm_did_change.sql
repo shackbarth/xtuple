@@ -5,7 +5,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
   /* initialize plv8 if needed */
   if(!this.isInitialized) executeSql('select xt.js_init()');
 
-  var view, views = [], i = 1, res;
+  var view, views = [], i = 1, res, n;
 
   /* Validate */
   if(TG_OP === 'INSERT' || TG_OP === 'UPDATE') {
@@ -14,10 +14,16 @@ create or replace function xt.orm_did_change() returns trigger as $$
     view = OLD.orm_namespace.decamelize() + '.' + OLD.orm_type.decamelize();
   }
 
-  /* Drop the view, a text array of dependent view model names will be returned */
-  res = executeSql('select xt.drop_orm_view($1) as views', [view])[0].views;
-  
-  if(res.length) views.push(res[0]);
+  /* determine view dependencies */
+  views = executeSql('select xt.view_dependencies($1)  as result', [view])[0].result;
+
+  /* drop the views */
+  n = views.length;
+  while (n--) {
+    nsp = views[n].beforeDot();
+    rel = views[n].afterDot();
+    executeSql("select dropIfExists('VIEW', $1, $2)", [rel, nsp]);
+  }
 
   /* Determine whether to rebuild */ 
   if(TG_OP === 'UPDATE' || TG_OP === 'DELETE') {
@@ -41,9 +47,6 @@ create or replace function xt.orm_did_change() returns trigger as $$
       }
     }
   }
-
-  /* Add the map we're working on to the array of model names */
-  views.unshift(view);
 
   /* Loop through model names and create */ 
   if(TG_OP === 'INSERT' || TG_OP === 'UPDATE') {

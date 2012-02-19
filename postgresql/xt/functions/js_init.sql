@@ -19,6 +19,16 @@ create or replace function xt.js_init() returns void as $$
     return false;
   }
 
+  Array.prototype.indexOf = function(obj) {
+    var i = this.length;
+    while (i--) {
+      if (this[i] === obj) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   /* Returns an the first item in an array with a property matching the passed value.  
 
      @param {String} property name to search on

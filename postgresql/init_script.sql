@@ -21,7 +21,6 @@
 \i xt/functions/create_table.sql;
 \i xt/functions/create_orm_view.sql;
 \i xt/functions/dispatch.sql;
-\i xt/functions/drop_orm_view.sql;
 \i xt/functions/ends_with.sql;
 \i xt/functions/execute_query.sql;
 \i xt/functions/fetch.sql;
@@ -36,6 +35,7 @@
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
 \i xt/functions/validate_user.sql;
+\i xt/functions/view_dependencies.sql;
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql

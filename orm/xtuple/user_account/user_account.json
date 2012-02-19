@@ -89,13 +89,27 @@
     {
       "name": "privileges",
       "toMany": {
-        "column": "usr_username",
-        "type": "UserAccountPrivilegeAssignment",
-        "inverse": "userAccount"
+        "type": "Privilege"
       }
     },
     {
-      "name": "roles",
+      "name": "grantedPrivileges",
+      "toMany": {
+        "column": "usr_username",
+        "type": "UserAccountPrivilegeAssignment",
+        "inverse": "userAccount",
+        "isNested": true
+      }
+    },
+    {
+      "name": "userAccountRoles",
+      "toMany": {
+        "type": "UserAccountRole",
+        "isNested": true
+      }
+    },
+    {
+      "name": "grantedUserAccountRoles",
       "toMany": {
         "column": "usr_username",
         "type": "UserAccountUserAccountRoleAssignment",
