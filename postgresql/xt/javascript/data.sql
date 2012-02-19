@@ -511,16 +511,16 @@ select xt.install_js('XT','Data','xtuple', $$
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop);
         if(prop) {
-          if(coldef.typcategory !== this.ARRAY_TYPE) { 
-            if(coldef.typcategory === this.COMPOUND_TYPE) { 
-              record[prop] = this.rowify(schemaName + '.' + coldef.attname, record[prop]);
-            }
-            if(coldef.typcategory === this.STRING_TYPE ||
-               coldef.typcategory === this.DATE_TYPE) {
-              props.push("'" + record[prop] + "'"); 
-            } else {
-              props.push(record[prop]);
-            }
+          if(coldef.typcategory === this.ARRAY_TYPE) { 
+            /* orm rules ignore arrays, but we need this place holder so type signatures match */
+            props.push("'{}'");  
+          } else if(coldef.typcategory === this.COMPOUND_TYPE) { 
+            record[prop] = this.rowify(schemaName + '.' + coldef.attname, record[prop]);
+          } else if(coldef.typcategory === this.STRING_TYPE ||
+                    coldef.typcategory === this.DATE_TYPE) {
+            props.push("'" + record[prop] + "'"); 
+          } else {
+            props.push(record[prop]);
           }
         } else {
           props.push('null');
