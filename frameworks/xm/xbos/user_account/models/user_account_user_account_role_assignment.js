@@ -21,6 +21,8 @@ XM.UserAccountUserAccountRoleAssignment = XM.Record.extend(
   /**
   @type XM.Role
   */
-  userAccountRole: SC.Record.toOne('XM.UserAccountRole'),
+  userAccountRole: SC.Record.toOne('XM.UserAccountRoleInfo', {
+    isNested: YES
+  }),
 
 });

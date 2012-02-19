@@ -9,15 +9,12 @@
   @extends XM.Record
   @version 0.1
 */
-XM.UserAccountRole = XM.Record.extend(
-/** @scope XM.UserAccountRole.prototype */ {
+XM.UserAccountRoleInfo = XM.Record.extend(
+/** @scope XM.UserAccountRoleInfo.prototype */ {
 
-  className: 'XM.UserAccountRole',
+  className: 'XM.UserAccountRoleInfo',
 
-  createPrivilege: 'MaintainGroups',
-  readPrivilege:   'MaintainGroups',
-  updatePrivilege: 'MaintainGroups',
-  deletePrivilege: 'MaintainGroups',
+  isEditable: NO,
 
   /**
   @type String
@@ -25,11 +22,6 @@ XM.UserAccountRole = XM.Record.extend(
   name: SC.Record.attr(String, { 
     isRequired: YES 
   }),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
   
   /**
   @type XM.UserAccountRolePrivilegeAssignment
