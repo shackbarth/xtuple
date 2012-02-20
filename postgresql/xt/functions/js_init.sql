@@ -112,7 +112,9 @@ create or replace function xt.js_init() returns void as $$
     var ret = {};
 
     if(typeof obj === "object") {
-      for(var prop in obj) ret[prop.camelize()] = obj[prop];
+      for(var prop in obj) {
+        ret[prop.camelize()] = typeof obj[prop] === 'object' ? XT.camelize(obj[prop]) : obj[prop];
+      }
     }
     else if(typeof obj === "string") return obj.camelize();
      
