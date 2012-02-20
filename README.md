@@ -15,3 +15,10 @@ Build and install the plV8 language on your PostgreSQL server per instructions o
 
 * 'cd postgresql'
 *  psql -d [database] -U [user] -f 'init_script.sql'
+
+Install Object Relational Map (ORM) definitions
+
+* configure and start the xTuple [datasource] (https://github.com/xtuple/datasource)
+* launch the orm installer in your browser: http://localhost:9080/orm/
+* click 'Select All'
+* click 'Install Selected'
