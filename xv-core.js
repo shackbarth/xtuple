@@ -63,11 +63,10 @@ XV.record.userClearRole = function () {
           callback(null, record); // return the record
         }
       })
-      
-      /* remove all roles */
 
-      for(var i = 0; i < record.getPath('roles.length'); i++) {
-        var role = record.get('roles').objectAt(i);
+      /* remove all roles */
+      for(var i = 0; i < record.getPath('grantedUserAccountRoles.length'); i++) {
+        var role = record.get('grantedUserAccountRoles').objectAt(i);
 
         /* TODO: How can this be made to work? Fails because role is still busy. */
         role.destroy(true);
