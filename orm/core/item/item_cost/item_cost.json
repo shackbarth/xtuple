@@ -1,0 +1,146 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemCost",
+  "table": "itemcost",
+  "idSequenceName": "public.itemcost_itemcost_id_seq",
+  "comment": "Item Cost Map",
+  "canCreate": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "itemcost_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "item",
+      "attr": {
+        "type": "Number",
+        "column": "itemcost_item_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "costElement",
+      "attr": {
+        "type": "Number",
+        "column": "itemcost_costelem_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isLowerLevel",
+      "attr": {
+        "type": "Boolean",
+        "column": "itemcost_lowlevel",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "standardCost",
+      "attr": {
+        "type": "Number",
+        "column": "itemcost_stdcost",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isPostStandard",
+      "attr": {
+        "type": "Boolean",
+        "column": "false"
+      }
+    },
+    {
+      "name": "posted",
+      "attr": {
+        "type": "Date",
+        "column": "itemcost_posted",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "actualCost",
+      "attr": {
+        "type": "Number",
+        "column": "itemcost_actcost"
+      }
+    },
+    {
+      "name": "updated",
+      "attr": {
+        "type": "Date",
+        "column": "itemcost_updated",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "itemcost_curr_id"
+      }
+    }
+  ],
+  "conditions": "checkPrivilege('ViewCosts')",
+  "rules": [
+    {
+      "name": "_CREATE_INSERT",
+      "event": "insert",
+      "command": "(insert into itemcost (  itemcost_id,  itemcost_item_id,  itemcost_costelem_id,  itemcost_posted,  itemcost_actcost,  itemcost_updated,  itemcost_curr_id )values (  new.guid,  new.item,  new.cost_element,  startoftime(),  new.actual_cost,  current_date,  new.currency );-- if flag is set, post actual cost to std costselect postcost(new.guid)where (new.is_post_standard);)"
+    },
+    {
+      "name": "_CREATE_CHECK_CREATECOSTS",
+      "event": "insert",
+      "condition": "not checkPrivilege('CreateCosts')",
+      "command": "select private.raise_exception('You do not have privileges to create Item Costs');"
+    },
+    {
+      "name": "_CREATE_CHECK_POST",
+      "event": "insert",
+      "condition": "(new.is_post_standard) and not (checkPrivilege('PostActualCosts'))",
+      "command": "select private.raise_exception('You do not have privileges to Post Actual Costs to Standard Costs');"
+    },
+    {
+      "name": "_CREATE_CHECK_ACTIVE",
+      "event": "insert",
+      "condition": "not (select costelem_active from costelem where costelem_id = new.cost_element)",
+      "command": "select private.raise_exception('You must choose an active Cost Element');"
+    },
+    {
+      "name": "_CREATE_CHECK_MATERIAL",
+      "event": "insert",
+      "condition": "(select (count(*) > 0) from itemcost join item i on itemcost_item_id = i.item_id join costelem c on itemcost_costelem_id = c.costelem_id where (c.costelem_type = 'Material' and i.item_type not in ('O', 'P')) and itemcost_item_id = new.item and itemcost_costelem_id = new.cost_element)",
+      "command": "select private.raise_exception('The Material Cost Element may only be associated with Purchased or Outside Processed Items');"
+    },
+    {
+      "name": "_CREATE_CHECK_DUPLICATES",
+      "event": "insert",
+      "condition": "(select (count(*) > 0) from itemcost where ((not itemcost_lowlevel) and (itemcost_item_id = new.item)) and itemcost_costelem_id = new.cost_element)",
+      "command": "select private.raise_exception('This Item already has all available Costing Elements assigned. No new Item Costs can be created for it until more Costing Elements are defined.');"
+    },
+    {
+      "name": "_CREATE_CHECK_ENTERACTUAL",
+      "event": "update",
+      "condition": "not checkPrivilege('EnterActualCosts')",
+      "command": "select private.raise_exception('You do not have privileges to update Actual Costs');"
+    },
+    {
+      "name": "_CREATE_CHECK_POST",
+      "event": "update",
+      "condition": "(new.is_post_standard) and not (checkPrivilege('PostActualCosts'))",
+      "command": "select private.raise_exception('You do not have privileges to Post Actual Costs to Standard Costs');"
+    },
+    {
+      "name": "- delete rule",
+      "event": "delete",
+      "condition": "delete rule",
+      "command": "elete rule"
+    }
+  ],
+  "isNested": true,
+  "isSystem": true
+}

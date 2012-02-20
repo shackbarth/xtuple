@@ -9,18 +9,18 @@ create or replace function xt.fetch(data_hash text) returns text as $$
   // PROCESS
   //
 
-  var dataHash = JSON.parse(data_hash),
-      nameSpace = dataHash.recordType.replace((/\.\w+/i),''),
-      type = dataHash.recordType.replace((/\w+\./i),''),
+  var query = JSON.parse(data_hash).query,
+      nameSpace = query.recordType.replace((/\.\w+/i),''),
+      type = query.recordType.replace((/\w+\./i),''),
       table = (nameSpace + '.' + type).decamelize(),
-      conditions = dataHash.conditions,
-      orderBy = (dataHash.orderBy ? 'order by ' + dataHash.orderBy : '').decamelize(),
-      parameters = dataHash.parameters,
-      limit = dataHash.rowLimit ? 'limit ' + dataHash.rowLimit : '';
-      offset = dataHash.rowOffset ? 'offset ' + dataHash.rowOffset : '',
+      conditions = query.conditions,
+      orderBy = (query.orderBy ? 'order by ' + query.orderBy : '').decamelize(),
+      parameters = query.parameters,
+      limit = query.rowLimit ? 'limit ' + query.rowLimit : '';
+      offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
       data = Object.create(XT.Data), recs = null, 
       conditions = data.buildClause(nameSpace, type, conditions, parameters),
-      prettyPrint = dataHash.prettyPrint ? 2 : null, 
+      prettyPrint = query.prettyPrint ? 2 : null, 
       sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
 
   /* validate - don't bother running the query if the user has no privileges */

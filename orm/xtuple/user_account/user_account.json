@@ -87,12 +87,6 @@
       }
     },
     {
-      "name": "privileges",
-      "toMany": {
-        "type": "Privilege"
-      }
-    },
-    {
       "name": "grantedPrivileges",
       "toMany": {
         "column": "usr_username",
