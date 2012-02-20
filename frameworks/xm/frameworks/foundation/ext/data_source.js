@@ -93,19 +93,19 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
 
   didFetchData: function(response, store, query) {
     if(SC.ok(response)) {
-      var results = JSON.parse(response.get("body").rows[0].fetch),
-          recordType = query.get('recordType');
-
       // TODO: Handle specific db error codes
-      if(results.error) {
+      if(response.get("body").error ) {
         var error = SC.Error.create({ 
           code: 'Error',
           label: 'Datasource Error',
-          message: dataHash.message
+          message: response.get("body").message
         });
         
         store.dataSourceDidErrorQuery(query, error);
       } else {
+        var results = JSON.parse(response.get("body").rows[0].fetch),
+        recordType = query.get('recordType');
+        
         results.forEach(function(dataHash) {
           store.pushRetrieve(recordType, dataHash.guid, dataHash);
         })
@@ -139,25 +139,25 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   },
 
   didRetrieveData: function(response, store, storeKey) {
-    var error;
-    
+    var error, dataHash;
+
     if(SC.ok(response)) {
-      var dataHash = JSON.parse(response.get("body").rows[0].retrieve_record);
-      // TODO: Handle specific db error codes
-      if(dataHash.error) {
+      if(response.get("body").error) {
         error = SC.Error.create({ 
           code: 'Error',
           label: 'Datasource Error',
-          message: dataHash.message
+          message: response.get("body").message
         });
+            
+        store.dataSourceDidError(storeKey, error);
       } else {
+        dataHash = JSON.parse(response.get("body").rows[0].retrieve_record);
+        
         store.dataSourceDidComplete(storeKey, dataHash);
-        return YES;
+        
+        return YES
       }
     } 
-    
-    store.dataSourceDidError(storeKey, error);
-    
     return NO;
   },
   
@@ -193,17 +193,15 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   },
 
   didCommitData: function(response, store, storeKey) {
-    var error;
+    var error, dataHash;
     
     if (SC.ok(response)) {
-      var dataHash = JSON.parse(response.get('body').rows[0].commit_record)
-
       // TODO: Handle specific db error codes
-      if(dataHash.error) {
+      if(response.get("body").error) {
         error = SC.Error.create({ 
           code: 'Error',
           label: 'Datasource Error',
-          message: dataHash.message
+          message: response.get("body").message
         });
         
         store.dataSourceDidError(storeKey, error);
