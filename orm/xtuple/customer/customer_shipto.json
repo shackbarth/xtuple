@@ -1,0 +1,125 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CustomerShipto",
+  "table": "shiptoinfo",
+  "comment": "Customer ShipTo Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "shipto_name"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "shipto_active"
+      }
+    },
+    {
+      "name": "isDefault",
+      "attr": {
+        "type": "Boolean",
+        "column": "shipto_default"
+      }
+    },
+    {
+      "name": "salesRep",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_salesrep_id"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "String",
+        "column": "shipto_commission"
+      }
+    },
+    {
+      "name": "shipZone",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_shipzone_id"
+      }
+    },
+    {
+      "name": "taxZone",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_taxzone_id"
+      }
+    },
+    {
+      "name": "shipVia",
+      "attr": {
+        "type": "String",
+        "column": "shipto_shipvia"
+      }
+    },
+    {
+      "name": "shipForm",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_shipform_id"
+      }
+    },
+    {
+      "name": "shipCharge",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_shipchrg_id"
+      }
+    },
+    {
+      "name": "contact",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_cntct_id"
+      }
+    },
+    {
+      "name": "address",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_addr_id"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "shipto_comments"
+      }
+    },
+    {
+      "name": "shippingNotes",
+      "attr": {
+        "type": "String",
+        "column": "shipto_shipcomments"
+      }
+    },
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_cust_id",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

@@ -1,0 +1,306 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Customer",
+  "table": "custinfo",
+  "idSequenceName": "public.cust_cust_id_seq",
+  "orderSequence": "CustomerNumber",
+  "comment": "Customer Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCustomerMasters",
+      "read": "ViewCustomerMasters",
+      "update": "MaintainCustomerMasters",
+      "delete": "MaintainCustomerMasters"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cust_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "cust_number"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "cust_name"
+      }
+    },
+    {
+      "name": "customerType",
+      "attr": {
+        "type": "Number",
+        "column": "cust_custtype_id"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "cust_active"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "cust_comments"
+      }
+    },
+    {
+      "name": "billingContact",
+      "toOne": {
+        "type": "ContactInfo",
+        "column": "cust_cntct_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "correspondenceContact",
+      "toOne": {
+        "type": "ContactInfo",
+        "column": "cust_corrcntct_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "salesRep",
+      "attr": {
+        "type": "Number",
+        "column": "cust_salesrep_id"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "cust_commprcnt"
+      }
+    },
+    {
+      "name": "shipVia",
+      "attr": {
+        "type": "String",
+        "column": "cust_shipvia"
+      }
+    },
+    {
+      "name": "shipForm",
+      "attr": {
+        "type": "Number",
+        "column": "cust_shipform_id"
+      }
+    },
+    {
+      "name": "shipCharge",
+      "attr": {
+        "type": "Number",
+        "column": "cust_shipchrg_id"
+      }
+    },
+    {
+      "name": "isAcceptsBackorders",
+      "attr": {
+        "type": "Boolean",
+        "column": "cust_backorder"
+      }
+    },
+    {
+      "name": "isAcceptsPartialShip",
+      "attr": {
+        "type": "Boolean",
+        "column": "cust_partialship"
+      }
+    },
+    {
+      "name": "isFreeFormShipto",
+      "attr": {
+        "type": "Boolean",
+        "column": "cust_ffshipto"
+      }
+    },
+    {
+      "name": "isFreeFormBillto",
+      "attr": {
+        "type": "Boolean",
+        "column": "cust_ffbillto"
+      }
+    },
+    {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "cust_terms_id"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Number",
+        "column": "cust_discntprcnt"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "cust_curr_id"
+      }
+    },
+    {
+      "name": "creditStatus",
+      "attr": {
+        "type": "String",
+        "column": "cust_creditstatus"
+      }
+    },
+    {
+      "name": "balanceMethod",
+      "attr": {
+        "type": "String",
+        "column": "cust_balmethod"
+      }
+    },
+    {
+      "name": "creditLimit",
+      "attr": {
+        "type": "Number",
+        "column": "cust_creditlmt"
+      }
+    },
+    {
+      "name": "creditLimitCurrency",
+      "attr": {
+        "type": "Number",
+        "column": "cust_creditlmt_curr_id"
+      }
+    },
+    {
+      "name": "creditRating",
+      "attr": {
+        "type": "String",
+        "column": "cust_creditrating"
+      }
+    },
+    {
+      "name": "graceDays",
+      "attr": {
+        "type": "Number",
+        "column": "cust_gracedays"
+      }
+    },
+    {
+      "name": "taxZone",
+      "attr": {
+        "type": "Number",
+        "column": "cust_taxzone_id"
+      }
+    },
+    {
+      "name": "shiptos",
+      "toMany": {
+        "type": "CustomerShipto",
+        "column": "cust_id",
+		"inverse" : "customer"
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerComment",
+        "column": "cust_id",
+        "inverse": "customer",
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "C"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "characteristics",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerCharacteristic",
+        "column": "cust_id",
+        "inverse": "customer"
+      }
+    },
+    {
+      "name": "contacts",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerContact",
+        "column": "cust_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerItem",
+        "column": "cust_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "files",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerFile",
+        "column": "cust_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "images",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerImage",
+        "column": "cust_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "urls",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerUrl",
+        "column": "cust_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "customer",
+      "toMany": {
+        "isNested": true,
+        "type": "CustomerCustomer",
+        "column": "cust_id",
+        "inverse": "source"
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "C"
+}
