@@ -74,16 +74,23 @@ XM.UserAccount = XM.Record.extend(
   isDatbaseUser: SC.Record.attr(Boolean),
   
   /**
-  @type XM.UserAccountPrivilege
+  @type XM.UserAccountPrivilegeAssignment
   */
-  privileges: SC.Record.toMany('XM.UserAccountPrivilegeAssignment', {
+  grantedPrivileges: SC.Record.toMany('XM.UserAccountPrivilegeAssignment', {
     isNested: YES
   }),
   
   /**
   @type XM.UserAccountRole
   */
-  roles: SC.Record.toMany('XM.UserAccountUserAccountRoleAssignment', { 
+  userAccountRoles: SC.Record.toMany('XM.UserAccountRole', { 
+    isNested: YES 
+  }),  
+  
+  /**
+  @type XM.UserAccountUserAccountRoleAssignment
+  */
+  grantedUserAccountRoles: SC.Record.toMany('XM.UserAccountUserAccountRoleAssignment', { 
     isNested: YES 
   }),
 
