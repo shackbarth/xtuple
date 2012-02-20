@@ -6,11 +6,11 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
   if(!this.isInitialized) executeSql('select xt.js_init()');
   
   var dataHash = JSON.parse(data_hash),
-      nameSpace = dataHash.object.beforeDot(),
-      type = dataHash.object.afterDot(),
+      nameSpace = dataHash.className.beforeDot(),
+      type = dataHash.className.afterDot(),
       obj = this[nameSpace][type],
-      f = dataHash.function,
-      args = dataHash.arguments, ret;
+      f = dataHash.functionName,
+      args = dataHash.parameters, ret;
 
   ret = obj.isDispatchable ? obj[f](args) : false;
   
@@ -20,42 +20,42 @@ $$ LANGUAGE plv8;
 
 /*
 select xt.dispatch($${"requestType":"dispatch",
-                           "object": "XM.Address",
-                           "function":"findExisting",
-                           "arguments": {"type": "Address", "line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States"}
+                           "className": "XM.Address",
+                           "functionName":"findExisting",
+                           "parameters": {"type": "Address", "line1":"Tremendous Toys Inc.","line2":"101 Toys Place","line3":"","city":"Walnut Hills","state":"VA","postalcode":"22209","country":"United States"}
                           }$$);
 
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "object":"XM.Address",
+                          "className":"XM.Address",
                           "function":"useCount",
-                          "arguments":{"id":41}
+                          "parameters":{"id":41}
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                           "object":"XT.Session",
-                           "function":"fetchId",
-                           "arguments":{"recordType":"XM.Address"}
+                           "className":"XT.Session",
+                           "functionName":"fetchId",
+                           "parameters":{"recordType":"XM.Address"}
                            }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "object":"XT.Session",
-                          "function":"fetchNumber",
-                          "arguments":{"recordType":"XM.Incident"}
+                          "className":"XT.Session",
+                          "functionName":"fetchNumber",
+                          "parameters":{"recordType":"XM.Incident"}
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "object":"XT.Session",
-                          "function":"locale"
+                          "className":"XT.Session",
+                          "functionName":"locale"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "object":"XT.Session",
-                          "function":"metrics"
+                          "className":"XT.Session",
+                          "functionName":"metrics"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "object":"XT.Session",
-                          "function":"privileges"
+                          "className":"XT.Session",
+                          "functionName":"privileges"
                           }$$);                          
 */

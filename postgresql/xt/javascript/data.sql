@@ -390,64 +390,6 @@ select xt.install_js('XT','Data','xtuple', $$
       return this._currentUser;
     },
 
-    /* Additional processing on record properties. 
-       Adds 'type' property, stringifies arrays and
-       camelizes the record.
-
-       @param {String} name space
-       @param {String} type
-       @param {Object} the record to be normalized
-       @param {Object} view definition object
-       @returns {Object} 
-    */
-    normalize: function(nameSpace, type, record) {
-      var schemaName = nameSpace.decamelize(),
-          viewName = type.decamelize(),
-          viewdef = XT.getViewDefinition(viewName, schemaName);
-
-      /* set data type property */
-      record['type'] = type.classify();
-
-      /* set data state property */
-      record['dataState'] = this.READ_STATE;
-
-      for(var prop in record) {
-        if (record.hasOwnProperty(prop)) {
-          var coldef = viewdef.findProperty('attname', prop),
-          value, result, sql = '';
-
-          /* if it's a compound type, add a type property */
-          if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
-            record[prop]['type'] = coldef['typname'].classify();
-            record[prop]['dataState'] = this.READ_STATE;
-        
-          /* if it's an array convert each row into an object */
-          } else if (record[prop] instanceof Array && 
-                     record[prop].length &&
-                     isNaN(record[prop][0])) {
-            var key = coldef['typname'].substring(1); /* strip off the leading underscore */
-
-            for (var i = 0; i < record[prop].length; i++) {
-              var value = record[prop][i];
-
-              sql = "select (cast('" + value + "' as " + nameSpace + "." + key + ")).*";
-
-              if(DEBUG) print(NOTICE, 'sql: ', sql);
-
-              result = executeSql(sql);
-
-              for (var k = 0; k < result.length; k++) {
-                result[k]['type'] = key.classify();
-                result[k]['dataState'] = this.READ_STATE;
-                record[prop][i] = this.normalize(nameSpace, key, result[k]);
-              }
-            }
-          }
-        }
-      }
-      return XT.camelize(record);
-    },
-
     /* Retreives a single record from the database. If
        the user does not have appropriate privileges an
        error will be thrown.
@@ -481,14 +423,12 @@ select xt.install_js('XT','Data','xtuple', $$
       if(!ret.length) throw new Error('No record found for {recordType} id {id}'
                                       .replace(/{recordType}/, recordType)
                                       .replace(/{id}/, id));
-      
-      ret = this.normalize(nameSpace, type, ret[0]);
 
       /* check privileges again, this time against record specific criteria where applicable */
       if(!this.checkPrivileges(nameSpace, type, ret)) throw new Error("Access Denied.");
 
       /* return the results */
-      return ret;
+      return XT.camelize(ret);
     },
 
     /* Convert object to PostgresSQL row type
