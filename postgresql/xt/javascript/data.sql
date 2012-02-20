@@ -70,10 +70,10 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* handle privileges */
-      if((!privileges ||
-          !privileges.all ||
+      if((privileges &&
+         (!privileges.all || (privileges.all &&
          (!this.checkPrivilege(privileges.all.read) && 
-          !this.checkPrivilege(privileges.all.update)) &&
+          !this.checkPrivilege(privileges.all.update)))) &&
            privileges.personal &&
           (this.checkPrivilege(privileges.personal.read) || 
            this.checkPrivilege(privileges.personal.update)))) {
