@@ -1,0 +1,245 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Invoice",
+  "table": "invchead",
+  "comment": "Invoice Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_id",
+        "isPrimaryKey": true
+      }
+    },
+	{
+	  "name": "invoiceLineItems",
+	  "toMany": {
+	    "isNested": true,
+	    "type": "InvoiceItem",
+	    "column": "invchead_id",
+	    "inverse": "invoiceHead"
+	  }
+	},
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_cust_id"
+      }
+    },
+    {
+      "name": "shipto",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_shipto_id"
+      }
+    },
+    {
+      "name": "orderNumber",
+      "attr": {
+        "type": "String",
+        "column": "invchead_ordernumber"
+      }
+    },
+    {
+      "name": "orderDate",
+      "attr": {
+        "type": "Date",
+        "column": "invchead_orderdate"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "invchead_posted"
+      }
+    },
+    {
+      "name": "isPrinted",
+      "attr": {
+        "type": "Boolean",
+        "column": "invchead_printed"
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "invchead_invcnumber"
+      }
+    },
+    {
+      "name": "invoiceDate",
+      "attr": {
+        "type": "Date",
+        "column": "invchead_invcdate"
+      }
+    },
+    {
+      "name": "shipDate",
+      "attr": {
+        "type": "Date",
+        "column": "invchead_shipdate"
+      }
+    },
+    {
+      "name": "purchaseOrderNumber",
+      "attr": {
+        "type": "String",
+        "column": "invchead_ponumber"
+      }
+    },
+    {
+      "name": "shipVia",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipvia"
+      }
+    },
+    {
+      "name": "freeOnBoard",
+      "attr": {
+        "type": "String",
+        "column": "invchead_fob"
+      }
+    },
+    {
+      "name": "billtoName",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_name"
+      }
+    },
+    {
+      "name": "billtoAddress1",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_address1"
+      }
+    },
+    {
+      "name": "billtoAddress2",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_address2"
+      }
+    },
+    {
+      "name": "billtoAddress3",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_address3"
+      }
+    },
+    {
+      "name": "billtoCity",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_city"
+      }
+    },
+    {
+      "name": "billtoState",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_state"
+      }
+    },
+    {
+      "name": "billtoZipcode",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_zipcode"
+      }
+    },
+    {
+      "name": "billtoPhone",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_phone"
+      }
+    },
+	{
+	  "name": "shiptoAddress1",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_address1"
+	  }
+	},
+	{
+	  "name": "shiptoAddress2",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_address2"
+	  }
+	},
+	{
+	  "name": "shiptoAddress3",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_address3"
+	  }
+	},
+	{
+	  "name": "shiptoCity",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_city"
+	  }
+	},
+	{
+	  "name": "shiptoState",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_state"
+	  }
+	},
+	{
+	  "name": "shiptoZipcode",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_zipcode"
+	  }
+	},
+	{
+	  "name": "shiptoPhone",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_phone"
+	  }
+	},
+	{
+	  "name": "salesRep",
+	  "attr": {
+	    "type": "Number",
+	    "column": "invchead_salesrep_id"
+	  }
+	},
+	{
+	  "name": "commission",
+	  "attr": {
+	    "type": "Number",
+	    "column": "invchead_commission"
+	  }
+	},
+	{
+	  "name": "terms",
+	  "attr": {
+	    "type": "Number",
+	    "column": "invchead_terms_id"
+	  }
+	},
+	{
+	  "name": "freight",
+	  "attr": {
+	    "type": "Number",
+	    "column": "invchead_freight"
+	  }
+	}
+],
+	"isNestedOnly": true,
+	 "isSystem": true
+}
