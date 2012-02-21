@@ -191,13 +191,15 @@ ul.inheritsList
 	
 	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
 	
-	<li><a href="../symbols/Array.html">Array</a></li>
-	
 	<li><a href="../symbols/Function.html">Function</a></li>
+	
+	<li><a href="../symbols/Object.html">Object</a></li>
 	
 	<li><a href="../symbols/String.html">String</a></li>
 	
 	<li><a href="../symbols/xt.html">xt</a></li>
+	
+	<li><a href="../symbols/xt.cache.html">xt.cache</a></li>
 	
 	<li><a href="../symbols/xt.commitRecord.html">xt.commitRecord</a></li>
 	
@@ -212,6 +214,8 @@ ul.inheritsList
 	<li><a href="../symbols/xt.fetch.html">xt.fetch</a></li>
 	
 	<li><a href="../symbols/xt.filesystem.html">xt.filesystem</a></li>
+	
+	<li><a href="../symbols/xt.functify.html">xt.functify</a></li>
 	
 	<li><a href="../symbols/xt.function.html">xt.function</a></li>
 	
@@ -266,7 +270,7 @@ ul.inheritsList
   objects in the xt framework for node.js server.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/xt-node_lib_xt_foundation_object.js.html">object.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/_Users_cole_Devel_xtuple_git_clinuz_datasource_lib_xt_foundation_object.js.html">object.js</a>.
 				
 			</p>
 
@@ -324,9 +328,27 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">xt.object.<b><a href="../symbols/xt.object.html#.camelize">camelize</a></b>(b)
+								</div>
+								<div class="description">Camelizes object property names after removing '_' and ' '.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">xt.object.<b><a href="../symbols/xt.object.html#.create">create</a></b>(hashes)
 								</div>
 								<div class="description">Creates a new object based on this object type.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">xt.object.<b><a href="../symbols/xt.object.html#.decamelize">decamelize</a></b>(b)
+								</div>
+								<div class="description">Decamelizes object property names, adding '_' between (formerly) camelized values.</div>
 							</td>
 						</tr>
 					
@@ -421,7 +443,7 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								<span class="light fixedFont">{Object}</span>  <b>hashes</b>
+								<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span>  <b>hashes</b>
 								<i>Optional</i>
 							</dt>
 								<dd>Hashes or a hash to extend from.</dd>
@@ -435,7 +457,7 @@ ul.inheritsList
 						<dl class="detailList">
 						<dt class="heading">Returns:</dt>
 						
-								<dd><span class="light fixedFont">{Object}</span> A new instance of an xt.object or child of xt.object.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> A new instance of an xt.object or child of xt.object.</dd>
 						
 						</dl>
 					
@@ -457,15 +479,13 @@ ul.inheritsList
 					<a name="addEvent"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Object}</span>
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
 					<b>addEvent</b>(event, func)
 					
 					</div>
 					<div class="description">
 						Adds an event handler to process when a particular event is
     encountered.
-
-    Note that it currently ONLY SUPPORTS ONE METHOD FOR ANY GIVEN EVENT!
 						
 						
 					</div>
@@ -497,7 +517,50 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object}</span> Receiver</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Receiver</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".camelize"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
+					<span class="light">xt.object.</span><b>camelize</b>(b)
+					
+					</div>
+					<div class="description">
+						Camelizes object property names after removing '_' and ' '.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>b</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> with camelized property names.</dd>
 							
 							</dl>
 						
@@ -509,7 +572,7 @@ ul.inheritsList
 					<a name=".create"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{Object}</span>
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
 					<span class="light">xt.object.</span><b>create</b>(hashes)
 					
 					</div>
@@ -529,7 +592,7 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Object}</span> <b>hashes</b>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>hashes</b>
 									<i>Optional</i>
 								</dt>
 								<dd>Mixins to be added to the object.</dd>
@@ -543,7 +606,50 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object}</span> An instance of the [extended] object.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> An instance of the [extended] object.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".decamelize"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
+					<span class="light">xt.object.</span><b>decamelize</b>(b)
+					
+					</div>
+					<div class="description">
+						Decamelizes object property names, adding '_' between (formerly) camelized values.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>b</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> with decamelized property names.</dd>
 							
 							</dl>
 						
@@ -555,7 +661,7 @@ ul.inheritsList
 					<a name=".extend"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{Object}</span>
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
 					<span class="light">xt.object.</span><b>extend</b>(hashes)
 					
 					</div>
@@ -575,7 +681,7 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{Object}</span> <b>hashes</b>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>hashes</b>
 									<i>Optional</i>
 								</dt>
 								<dd>Mixins to be added to the object.</dd>
@@ -589,7 +695,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object}</span> An extended prototype.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> An extended prototype.</dd>
 							
 							</dl>
 						
@@ -601,7 +707,7 @@ ul.inheritsList
 					<a name="get"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Object|Boolean}</span>
+					<span class="light">{<a href="../symbols/Object.html">Object</a>|Boolean}</span>
 					<b>get</b>(key)
 					
 					</div>
@@ -632,7 +738,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object|Boolean}</span> The value for the key or undefined if not found.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>|Boolean}</span> The value for the key or undefined if not found.</dd>
 							
 							</dl>
 						
@@ -688,12 +794,13 @@ ul.inheritsList
 					<a name="removeEvent"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Object}</span>
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
 					<b>removeEvent</b>(event)
 					
 					</div>
 					<div class="description">
-						Allows an event to be removed.
+						Allows an event to be removed. NOTE it removes ALL listeners for the
+    event.
 						
 						
 					</div>
@@ -719,7 +826,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object}</span> Receiver</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Receiver</dd>
 							
 							</dl>
 						
@@ -731,7 +838,7 @@ ul.inheritsList
 					<a name="set"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Object}</span>
+					<span class="light">{<a href="../symbols/Object.html">Object</a>}</span>
 					<b>set</b>(key, value)
 					
 					</div>
@@ -757,7 +864,7 @@ ul.inheritsList
 								<dd>The key/path for the property to set (relative).</dd>
 							
 								<dt>
-									<span class="light fixedFont">{Object}</span> <b>value</b>
+									<span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> <b>value</b>
 									
 								</dt>
 								<dd>The object (any type) to place at path.</dd>
@@ -771,7 +878,7 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object}</span> Callee for chaining.</dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/Object.html">Object</a>}</span> Callee for chaining.</dd>
 							
 							</dl>
 						
@@ -824,7 +931,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Jan 24 2012 11:31:58 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Feb 07 2012 16:01:29 GMT-0500 (EST)
 		</div>
 	</body>
 </html>
