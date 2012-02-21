@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "Invoice",
   "table": "invchead",
+  "idSequenceName": "public.invcitem_invcitem_id_seq",
   "comment": "Invoice Map",
   "properties": [
     {
@@ -238,7 +239,57 @@
 	    "type": "Number",
 	    "column": "invchead_freight"
 	  }
-	}
+	},
+	{
+	  "name": "notes",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_notes"
+	  }
+	},
+	{
+	  "name": "billtoCountry",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_billto_country"
+	  }
+	},
+	{
+	  "name": "shiptoCountry",
+	  "attr": {
+	    "type": "String",
+	    "column": "invchead_shipto_country"
+	  }
+	},
+	{
+	  "name": "currency",
+	  "attr": {
+	    "type": "Number",
+	    "column": "invchead_curr_id"
+	  }
+	},
+    {
+      "name": "recurrences",
+      "toMany": {
+        "type": "InvoiceRecurrence",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },	
+	{
+	  "name": "shipCharge",
+	  "attr": {
+	    "type": "Number",
+	    "column": "invchead_shipchrg_id"
+	  }
+	},
+	{
+	  "name": "isVoid",
+	  "attr": {
+	    "type": "Boolean",
+	    "column": "invchead_void"
+	  }
+	}		
 ],
 	"isNestedOnly": true,
 	 "isSystem": true
