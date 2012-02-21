@@ -35,7 +35,7 @@ XM.Dispatch = SC.Object.extend(
   /**
     The name of the function to call.
 
-    @type String
+    @type String|function
   */
   functionName: null,
 
@@ -48,11 +48,16 @@ XM.Dispatch = SC.Object.extend(
   parameters: null,
   
   /**
+    The target object.
+  */
+  target: null,
+  
+  /**
     Callback
     
     @type function
   */
-  callback: null
+  action: null
 
 })
 

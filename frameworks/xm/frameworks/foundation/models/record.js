@@ -215,7 +215,7 @@ XM.Record.setup = function() {
           url = ds.get('URL'), ret;
 
       payload.requestType = 'dispatch';
-      payload.className = 'XT.Session';
+      payload.className = 'XM.Session';
       payload.functionName = 'fetchId';
       payload.parameters = {};
       payload.parameters.recordType = recordType;
@@ -372,12 +372,13 @@ XM.Record.fetchNumber = function(prop) {
   }
   
   dispatch = XM.Dispatch.create({
-    className: 'XT.Session',
+    className: 'XM.Session',
     functionName: 'fetchNumber',
     parameters: {
       recordType: recordType
     },
-    callback: callback
+    target: self,
+    action: callback
   });
 
   console.log("XM.Record.fetchNumber for: %@".fmt(recordType));
