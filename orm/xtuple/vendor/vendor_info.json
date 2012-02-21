@@ -1,0 +1,61 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "VendorInfo",
+  "table": "vendinfo",
+  "comment": "Vendor Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "vend_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "vend_name",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "vend_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "type",
+      "attr": {
+        "type": "Number",
+        "column": "vend_vendtype_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "type": "ContactInfo",
+        "column": "vend_cntct1_id"
+      }
+    },
+    {
+      "name": "address",
+      "toOne": {
+        "type": "AddressInfo",
+        "column": "vend_addr_id"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
+
