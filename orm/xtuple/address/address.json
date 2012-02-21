@@ -8,10 +8,10 @@
   "comment": "Address Map",
   "privileges": {
     "all": {
-      "create": "MaintainAddress",
-      "read": "ViewAddress",
-      "update": "MaintainAddress",
-      "delete": "MaintainAddress"
+      "create": "MaintainAddresses",
+      "read": "ViewAddresses",
+      "update": "MaintainAddresses",
+      "delete": "MaintainAddresses"
     }
   },
   "properties": [
