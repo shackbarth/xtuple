@@ -36,9 +36,13 @@ create or replace function xt.fetch(data_hash text) returns text as $$
   if(DEBUG) { print(NOTICE, 'sql = ', sql); }
 
   recs = executeSql(sql);
+
+  for (var i = 0; i < recs.length; i++) {  	
+    recs[i] = data.normalize(nameSpace, type, recs[i]);	  	
+  };
  
   /* return the results */
-  return JSON.stringify(XT.camelize(recs), null, prettyPrint);
+  return JSON.stringify(recs, null, prettyPrint);
 
 $$ language plv8;
 /*
