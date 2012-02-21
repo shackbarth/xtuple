@@ -1,6 +1,6 @@
 // ==========================================================================
-// Project:   XM.DataSource
-// Copyright: Â©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
 
@@ -65,6 +65,51 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   URL: SC.isNode? 'http://localhost:4020/datasource/data' : '/datasource/data',
   
   debug: NO,
+  
+  // ..........................................................
+  // FUNCTION SUPPORT
+  //
+
+  dispatch: function(store, dispatch) {
+
+    var payload = {};
+
+    payload.requestType = 'dispatch';
+    payload.className = dispatch.get('className');
+    payload.functionName = dispatch.get('functionName');
+    payload.parameters = dispatch.get('parameters');
+  
+    if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
+
+    XM.Request.postUrl(this.URL)
+      .header({ 'Accept': 'application/json' }).json()
+      .notify(this, 'didDispatchData', store, dispatch)
+      .send(payload);
+
+    return YES;
+  },
+
+  didDispatchData: function(response, store, dispatch) {
+    var error, dataHash;
+    if(SC.ok(response)) {
+      if(response.get("body").error) {
+        error = SC.Error.create({ 
+          code: 'Error',
+          label: 'Datasource Error',
+          message: response.get("body").message
+        });
+            
+        store.dataSourceDidErrorDispatch(dispatch, error);
+      } else {
+        result = JSON.parse(response.get("body").rows[0].dispatch);
+    
+        store.dataSourceDidDispatch(dispatch, result);
+        
+        return YES;
+      }
+    } 
+    return NO;
+  },
   
   // ..........................................................
   // QUERY SUPPORT

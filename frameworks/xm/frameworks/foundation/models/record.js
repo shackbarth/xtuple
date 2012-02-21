@@ -23,11 +23,6 @@ XM.Record = SC.Record.extend(
   @type string
   */
   className: 'XM.Record',
-
-  /*
-  The primary key field. This will typically never be manipulated directly.
-  */
-  guid: SC.Record.attr(Number),
   
   /**
   The data type name. The same as the class name without the namespace.
@@ -206,19 +201,37 @@ XM.Record.setup = function() {
   // this will create an entry for `guid` on the XM.Record that
   // defines the attribute as type String and adds a defaultValue
   // function that will return the correct type automatically
-  /*
-  if(this.primaryKey === 'guid') {
+
+  if(this.prototype.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
 
-    // this was held out of the previous call for clarity
     defaultValue: function() {
+      // TODO: How can we make this use the store.dispatch method? SC.store.createRecord 
+      // calls this function before a record object has been created, so we have 
+      // no instance to reference or callback to.
+      var payload = {}, response,
+          recordType = self.prototype.className,
+          ds = XM.DataSource, // hack - no other place to get this?
+          url = ds.get('URL'), ret;
 
-      // execute in the context of this record type since that is
-      // how it determines what the class is
-      return XM.Record.nextGuid.call(self.prototype);
+      payload.requestType = 'dispatch';
+      payload.className = 'XT.Session';
+      payload.functionName = 'fetchId';
+      payload.parameters = {};
+      payload.parameters.recordType = recordType;
+      
+      response =  XM.Request.postUrl(url)
+        .header({ 'Accept': 'application/json' })
+        .json()
+        .async(NO)
+        .send(payload);
+
+      ret = response.get('body').rows[0].dispatch;
+
+      return ret;
     }});
   }
-  */
+
   // return the original reference (!important)
   return this;
 };
@@ -338,87 +351,43 @@ XM.Record.canDelete = function(record) {
 };
 
 /**
-  Wrapper for XM.Record.next to fetch the next NUMBER for a XM.Record type.
-*/
-XM.Record.nextNumber = function(numberType) {
-
-  // grab the unambiguous class name
-  var className = this.get("className");
-
-  console.log("XM.Record.nextNumber for: %@".fmt(className));
-
-  // execute the XM.Record.next method
-  return XM.Record.next(className, "number", numberType);
-};
-
-/**
-  Wrapper for XM.Record.next to fetch the next GUID for a XM.Record type.
-*/
-XM.Record.nextGuid = function() {
-
-  // grab the classname
-  var className = this.get("className");
-
-  console.log("XM.Record.nextGuid for: %@".fmt(className));
-
-  // execute the XM.Record.next method
-  return XM.Record.next(className, "guid");
-};
-
-/**
-  Called by XM.Record.nextGuid and XM.Record.nextNumber to acquire the next
-  of those values for the record type. This method is not called directly, instead
-  use `.nextGuid()` or `.nextNumber()` although this are typically called
-  automatically.
-*/
-XM.Record.next = function() {
-
-  // grab some of the data sent to us and setup the payload data object
-  var recordClass = arguments[ 0 ];
-  var field = arguments[ 1 ];
-  var json = {
-    name: "XM.NextFunctor",
-    target: field,
-    type: recordClass
-  };
+  A utility function to sets the next sequential number on a record. 
+  Accepts a number property to set when the server responds. 
   
-  // if the field is `number` then the payload is a little different
-  if (field == "number") {
-
-    // add the additional data field from the arguments object that
-    // is the number-type to execute `fetchNextNumber`
-    // if we don't have it, let the server handle the invalid data
-    json[ "numberType" ] = arguments[ 2 ] || "";
+  The function will send the class name property of itself to the server
+  which will cross reference the ORM 'orderSequnce' property for the class 
+  to determine which sequence to use.
+  
+  @param {String} number property to set, defaults to 'number'
+  @returns {Object} receiever
+*/
+XM.Record.fetchNumber = function(prop) {
+  var self = this,
+      prop = prop ? prop : 'number',
+      recordType = this.get("className"),
+      dispatch;
+  
+  callback = function(error, result) {
+    if(!error) self.set(prop, result);
   }
-
-  //.............................................
-  // TEMPORARILY EXECUTED SYNCHRONOUSLY
-
-  // grab the response for the synchronous request for the next "guid"
-  // of the record type
-
-  // @note Not sure this will work with record-types where the guid is
-  //    anything other than a valid integer
-  var response = XM.Request.postUrl(
   
-    // the URL should just be /retrieve/functor
-    XM.DataSource.buildURL("functor")).header(
-    
-      // accept json encoded response, jsonify post data, as previously
-      // noted execute synchronously
-      { "Accept": "application/json" }).json().async(NO).send(
+  dispatch = XM.Dispatch.create({
+    className: 'XT.Session',
+    functionName: 'fetchNumber',
+    parameters: {
+      recordType: recordType
+    },
+    callback: callback
+  });
 
-      // send the name of the functor it is requesting
-      // the target that the functor will need
-      // and the record class-type so it knows what sequence to use
-      // or what number to pull, etc.
-      json);
+  console.log("XM.Record.fetchNumber for: %@".fmt(recordType));
 
-  // retrieve the response value
-  var value = response.get("body").value;
-
-  console.log("XM.Record.next: for %@ returned value: %@".fmt(recordClass, value));
-
-  // regardless of what it is (worst case: null) return it
-  return value;
+  self.get('store').dispatch(dispatch);
+  
+  return this;
 };
+
+
+
+
+
