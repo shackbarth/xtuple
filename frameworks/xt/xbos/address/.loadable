@@ -1,5 +1,0 @@
-name: Address
-type: xbo
-load: deferred
-core: YES
-
