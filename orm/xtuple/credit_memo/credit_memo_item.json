@@ -1,0 +1,105 @@
+{	
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CreditMemoItem",
+  "table": "cmitem",
+  "comment": "Credit Memo Item Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "creditMemo",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_cmhead_id"
+      }
+    },
+    {
+      "name": "lineNumber",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_linenumber"
+      }
+    },
+    {
+      "name": "item",
+      "toMany": {
+        "isNested": true,
+        "type": "ItemSiteInfo",
+        "column": "cmitem_itemsite_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "quantityCredit",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_qtycredit"
+      }
+    },
+    {
+      "name": "quantityReturned",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_qtyreturned"
+      }
+    },
+    {
+      "name": "unitPrice",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_unitprice"
+      }
+    },
+    {
+      "name": "comments",
+      "attr": {
+        "type": "String",
+        "column": "cmitem_comments"
+      }
+    },
+    {
+      "name": "reasonCode",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_rsncode_id"
+      }
+    },
+    {
+      "name": "quantityUnit",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_qty_uom_id"
+      }
+    },
+    {
+      "name": "quantityInventoryUnitRatio",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_qty_invuomratio"
+      }
+    },
+    {
+      "name": "priceUnit",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_price_uom_id"
+      }
+    },
+    {
+      "name": "priceInventoryUnitRatio",
+      "attr": {
+        "type": "Number",
+        "column": "cmitem_price_invuomratio"
+      }
+    }
+],
+	"isNestedOnly": true,
+	 "isSystem": true
+}

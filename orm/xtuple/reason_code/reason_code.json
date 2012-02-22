@@ -1,0 +1,40 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ReasonCode",
+  "table": "rsncode",
+  "comment": "Reason Code Map",
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "rsncode_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "rsncode_code"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "rsncode_descrip"
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "rsncode_doctype"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
