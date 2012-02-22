@@ -14,7 +14,7 @@
       }
     },
     {
-      "name": "invoiceHead",
+      "name": "invoice",
       "attr": {
         "type": "Number",
         "column": "invcitem_invchead_id"

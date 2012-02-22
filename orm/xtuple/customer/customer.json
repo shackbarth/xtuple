@@ -210,6 +210,7 @@
     {
       "name": "shiptos",
       "toMany": {
+	    "isNested": true,
         "type": "CustomerShipto",
         "column": "cust_id",
 		"inverse" : "customer"
@@ -292,15 +293,24 @@
       }
     },
     {
-      "name": "customer",
+      "name": "customers",
       "toMany": {
         "isNested": true,
         "type": "CustomerCustomer",
         "column": "cust_id",
         "inverse": "source"
       }
+    },
+    {
+      "name": "customerCreditCard",
+      "toMany": {
+        "isNested": true,	
+        "type": "CustomerCreditcard",
+        "column": "cust_id",
+        "inverse": "customer"
+      }
     }
   ],
-  "isSystem": true,
-  "sourceCode": "C"
+  "isNestedOnly": true,
+  "isSystem": true
 }

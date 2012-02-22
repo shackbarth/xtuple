@@ -15,7 +15,7 @@
       }
     },
 	{
-	  "name": "invoiceLineItems",
+	  "name": "lineItems",
 	  "toMany": {
 	    "isNested": true,
 	    "type": "InvoiceItem",
@@ -150,7 +150,7 @@
       }
     },
     {
-      "name": "billtoZipcode",
+      "name": "billtoPostalCode",
       "attr": {
         "type": "String",
         "column": "invchead_billto_zipcode"
@@ -199,7 +199,7 @@
 	  }
 	},
 	{
-	  "name": "shiptoZipcode",
+	  "name": "shiptoPostalCode",
 	  "attr": {
 	    "type": "String",
 	    "column": "invchead_shipto_zipcode"

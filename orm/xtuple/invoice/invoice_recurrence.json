@@ -19,7 +19,7 @@
       "attr": {
         "type": "String",
         "column": "recur_parent_type",
-        "value": "J",
+        "value": "I",
         "isVisible": false
       }
     },

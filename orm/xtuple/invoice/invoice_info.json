@@ -1,0 +1,30 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "InvoiceInfo",
+  "table": "invchead",
+  "comment": "Invoice Info Map",
+  "canCreate": false,
+  "canUpdate": false,
+  "canDelete": false,
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_invcnumber",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
