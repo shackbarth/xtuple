@@ -22,9 +22,9 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
         tblAlias = orm.table === base.table ? 't1' : 't' + tbl, 
         pKeyCol, pKeyAlias,
         insTgtCols = [], insSrcCols = [], updCols = [], delCascade = [], 
-        canCreate = orm.canCreate !== false ? true : false,
-        canUpdate = orm.canUpdate !== false ? true : false,
-        canDelete = orm.canDelete !== false ? true : false,
+        canCreate = orm.privileges && orm.privileges.all && orm.privileges.all.create ? true : false,
+        canUpdate = orm.privileges && orm.privileges.all && orm.privileges.all.update ? true : false,
+        canDelete = orm.privileges && orm.privileges.all && orm.privileges.all.delete ? true : false,
         toOneJoins = [];
 
     for(var i = 0; i < props.length; i++) {

@@ -5,7 +5,14 @@
   "table": "usrpriv",
   "idSequenceName": "public.usrpriv_usrpriv_id_seq",
   "comment": "User Account Privilege Assignment Map",
-  "canUpdate": false,
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

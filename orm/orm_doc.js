@@ -123,32 +123,18 @@
   "comment": "Project Task Map",
   
   /** 
-  Indicates whether the record can be created. If false any attempts to insert will do nothing.
+  Designates that data for this type can only be accessed in the context of a parent. Any attempts 
+  by a client to query or update this record directly, regardless of privilege settings, will fail.
+    
+  @type {Boolean}
+  @default false
+  */   
+  "isNestedOnly": false,
+  
+  /** 
+  Used to describe document access. If absent no access will be granted to this type.
 
-  @type {Boolean}
-  @default true
-  */
-  "canCreate": true,
-  
-  /** 
-  Indicates whether the record can be updated. If false any attempts to update will do nothing.
-   
-  @type {Boolean}
-  @default true
-  */
-  "canUpdate": true,
-  
-  /** 
-  Indicates whether the record can be deleted. If false any attempts to delete will do nothing.
-   
-  @type {Boolean}
-  @default true
-  */
-  "canDelete": true,
-  
-  /** 
-  Used to describe which privilege codes control access privileges. If absent and the record 
-  is not nested, it will not be updatable.
+  Required.
    
   @type {Object}
   */
@@ -156,7 +142,9 @@
     /** 
     Describes privileges that allow a user to have access to all records of this 
     object type. The same privilege can be set to control multiple or all of the create, read, 
-    update and delete (aka. crud) access methods.
+    update and delete (aka. crud) access methods. Privilege settings can be a boolean that indicates
+    universal access or lack thereof, or a string that refereces a specific privilege name that
+    allows access if the user has been granted the privilege.
      
     Required.
      
@@ -514,15 +502,6 @@
   */
   
   "extensions": [],
-
-  /** 
-  Designates that data for this type can only be accessed in the context of a parent. Any attemps 
-  by a client to query this record directly will fail.
-    
-  @type {Boolean}
-  @default false
-  */   
-  "isNestedOnly": false,
   
   /** 
   Indicates the ORM has been created as part of an extension package. Helps to differentiate 

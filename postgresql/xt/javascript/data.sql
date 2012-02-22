@@ -108,9 +108,9 @@ select xt.install_js('XT','Data','xtuple', $$
     @returns {Boolean}
     */
     checkPrivilege: function(privilege) {
-      var ret = false;
-       
-      if(privilege) {
+      var ret = privilege;
+
+      if (typeof privilege === 'string') {
         if(!this._grantedPrivs) this._grantedPrivs = [];
 
         if(this._grantedPrivs.contains(privilege)) return true;
@@ -434,21 +434,34 @@ select xt.install_js('XT','Data','xtuple', $$
 
           /* if it's a compound type, add a type property */
           if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
-            record[prop]['type'] = coldef['typname'].classify();
-            record[prop]['dataState'] = this.READ_STATE;
-            record[prop] = XT.camelize(record[prop]);
+            var typeName = coldef['typname'].classify();
+
+            /* if no privileges remove the data */
+            if(this.checkPrivileges(nameSpace, typeName, null, false)) {
+              record[prop]['type'] = typeName;
+              record[prop]['dataState'] = this.READ_STATE;
+              record[prop] = XT.camelize(record[prop]);
+            } else {
+              delete record[prop];
+            }
+            
           /* if it's an array convert each row into an object */
           } else if (coldef['typcategory'] === this.ARRAY_TYPE && 
                      record[prop].length &&
                      isNaN(record[prop][0])) {
-            var key = coldef['typname'].substring(1); /* strip off the leading underscore */
+            var key = coldef['typname'].substring(1).classify(); /* strip off the leading underscore */
 
-            for (var i = 0; i < record[prop].length; i++) {
-              var value = record[prop][i];
+            /* if no privileges remove the data */  
+            if(this.checkPrivileges(nameSpace, key, null, false)) {
+              for (var i = 0; i < record[prop].length; i++) {
+                var value = record[prop][i];
 
-              value['type'] = key.classify();
-              value['dataState'] = this.READ_STATE;
-              record[prop][i] = this.normalize(nameSpace, key, value);
+                value['type'] = key;
+                value['dataState'] = this.READ_STATE;
+                record[prop][i] = this.normalize(nameSpace, key, value);
+              }
+            } else {
+              delete record[prop];    
             }
           }
         }

@@ -8,7 +8,7 @@
   "privileges": {
     "all": {
       "create": "MaintainCountries",
-      "read": "MaintainCountries",
+      "read": true,
       "update": "MaintainCountries",
       "delete": "MaintainCountries"
     }
