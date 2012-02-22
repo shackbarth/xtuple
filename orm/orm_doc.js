@@ -320,7 +320,17 @@
         @type {Boolean}
         @default {true}
         */
-        "isVisible": false
+        "isVisible": false,
+        
+        /** 
+        Flags whether the property must be encrypted. When true, the data source must pass
+        an encryption key in with the payload to encrypte the data. If one is not found
+        the commit will fail.
+           
+        @type {Boolean}
+        @default {true}
+        */
+        "isEncrypted": false
       },
       
       /** 
