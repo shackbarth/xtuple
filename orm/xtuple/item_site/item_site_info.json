@@ -18,7 +18,7 @@
     },
     {
       "name": "item",
-      "toMany": {
+      "toOne": {
         "isNested": true,
         "type": "ItemInfo",
         "column": "itemsite_item_id",
@@ -27,7 +27,7 @@
     },
     {
       "name": "site",
-      "toMany": {
+      "toOne": {
         "isNested": true,
         "type": "SiteInfo",
         "column": "itemsite_warehous_id",

@@ -30,6 +30,15 @@
       }
     },
     {
+      "name": "lineItems",
+      "toMany": {
+        "isNested": true,
+        "type": "CreditMemoItem",
+        "column": "cmhead_id",
+        "inverse": "creditMemo"
+      }
+    },
+    {
       "name": "isPosted",
       "attr": {
         "type": "Boolean",
@@ -44,7 +53,7 @@
       }
     },
     {
-      "name": "customerPurchaseNumber",
+      "name": "PurchaseOrderNumber",
       "attr": {
         "type": "String",
         "column": "cmhead_custponumber"
@@ -135,14 +144,7 @@
       }
     },
     {
-      "name": "miscellaneous",
-      "attr": {
-        "type": "Number",
-        "column": "cmhead_misc"
-      }
-    },
-    {
-      "name": "comments",
+      "name": "notes",
       "attr": {
         "type": "String",
         "column": "cmhead_comments"
@@ -222,8 +224,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "cmhead_curr_id"
       }
     },
