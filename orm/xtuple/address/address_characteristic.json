@@ -4,6 +4,14 @@
   "type": "AddressCharacteristic",
   "table": "xm.characteristic_assignment",
   "comment": "Address Characteristic Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

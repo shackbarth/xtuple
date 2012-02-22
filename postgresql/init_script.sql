@@ -56,7 +56,6 @@
 
 -- xt javascript
 \i xt/javascript/data.sql;
-\i xt/javascript/session.sql;
 
 -- xt views
 \i xt/views/comment.sql;
@@ -69,5 +68,6 @@
 
 -- xm/javascript
 \i xm/javascript/address.sql;
+\i xm/javascript/session.sql;
 
 -- [ END ] xm
