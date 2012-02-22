@@ -5,6 +5,14 @@
   "table": "cntcteml",
   "idSequenceName": "public.cntcteml_cntcteml_id_seq",
   "comment": "Contact Email Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

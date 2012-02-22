@@ -5,12 +5,12 @@
   "table": "xt.usr",
   "idSequenceName": "xt.useracct_useracct_id_seq",
   "comment": "User Account Map",
-  "canDelete": false,
   "privileges": {
     "all": {
       "create": "MaintainUsers",
       "read": "MaintainUsers",
-      "update": "MaintainUsers"
+      "update": "MaintainUsers",
+      "delete": false
     }
   },
   "properties": [
@@ -91,8 +91,7 @@
       "toMany": {
         "column": "usr_username",
         "type": "UserAccountPrivilegeAssignment",
-        "inverse": "userAccount",
-        "isNested": true
+        "inverse": "userAccount"
       }
     },
     {

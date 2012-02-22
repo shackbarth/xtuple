@@ -4,9 +4,14 @@
   "type": "UserAccountInfo",
   "table": "xt.usr",
   "comment": "User Account Info Map",
-  "canCreate": false,
-  "canUpdate": false,
-  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "username",

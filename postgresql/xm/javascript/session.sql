@@ -1,17 +1,17 @@
-select xt.install_js('XT','Session','xtuple', $$
+select xt.install_js('XM','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XT.Session = {};
+  XM.Session = {};
   
-  XT.Session.isDispatchable = true;
+  XM.Session.isDispatchable = true;
 
   /* pass in a record type and get the next id for that type 
 
     @param {String} record type
     @returns {Number}
   */
-  XT.Session.fetchId = function() { 
+  XM.Session.fetchId = function() { 
     var args = arguments[0],
         nameSpace = args.recordType.beforeDot(),
         type = args.recordType.afterDot(),
@@ -27,7 +27,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} record type
     @returns {Number}
   */
-  XT.Session.fetchNumber = function() {
+  XM.Session.fetchNumber = function() {
     var args = arguments[0],
         nameSpace = args.recordType.beforeDot(),
         type = args.recordType.afterDot(),
@@ -38,7 +38,7 @@ select xt.install_js('XT','Session','xtuple', $$
     return seq ? executeSql(sql, [seq])[0].result : false;
   }
 
-  XT.Session.locale = function() {
+  XM.Session.locale = function() {
     var sql = "select "
             + "locale_id as id, "
             + "locale_code as code, "
@@ -69,13 +69,13 @@ select xt.install_js('XT','Session','xtuple', $$
     return rec.length ? JSON.stringify(rec[0]) : '{}';
   }
 
-  XT.Session.metrics = function() {
+  XM.Session.metrics = function() {
     var rec = executeSql( 'select metric_name as metric, metric_value as value from metric' );
     
     return rec.length ? JSON.stringify (rec) : '{}';
   }
 
-  XT.Session.privileges = function() {
+  XM.Session.privileges = function() {
     var rec = executeSql( 'select privilege, granted as "isGranted" from privgranted' );
 
     return rec.length ? JSON.stringify (rec) : '{}';

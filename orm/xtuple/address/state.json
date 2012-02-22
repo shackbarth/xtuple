@@ -5,6 +5,14 @@
   "table": "state",
   "idSequenceName": "public.state_state_id_seq",
   "comment": "State Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainStates",
+      "read": true,
+      "update": "MaintainStates",
+      "delete": "MaintainStates"
+    }
+  },
   "properties": [
     {
       "name": "guid",
