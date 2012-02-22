@@ -30,10 +30,9 @@ XM.Contact = XM.Document.extend( XM.CoreDocuments,
     isRequired: YES,
     /** @private */
     defaultValue: function () {
-      return arguments[0].get('status') === SC.Record.READY_NEW
-        ? XM.Record.nextNumber.call(arguments[ 0 ], 'ContactNumber')
-        : null
-        ;
+      if(arguments[0].get('status') === SC.Record.READY_NEW) {
+        XM.Record.fetchNumber.call(arguments[ 0 ]);
+      }
     }
   }),
   

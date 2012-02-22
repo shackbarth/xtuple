@@ -25,40 +25,39 @@ XM.Address = XM.Record.extend( SC.Copyable,
   /*
   @type String
   */
-  number:     SC.Record.attr(String, {
+  number: SC.Record.attr(String, {
     isRequired: YES,
     defaultValue: function () {
-      return arguments[ 0 ].get("status") === SC.Record.READY_NEW
-        ? XM.Record.nextNumber.call(arguments[ 0 ], "AddressNumber")
-        : null
-        ;
+      if(arguments[0].get('status') === SC.Record.READY_NEW) {
+        XM.Record.fetchNumber.call(arguments[ 0 ]);
+      }
     }
   }),
   
   /**
   @type String
   */
-  line1:      SC.Record.attr(String),
+  line1: SC.Record.attr(String),
   
   /**
   @type String
   */
-  line2:      SC.Record.attr(String),
+  line2: SC.Record.attr(String),
   
   /**
   @type String
   */
-  line3:      SC.Record.attr(String),
+  line3: SC.Record.attr(String),
   
   /**
   @type String
   */
-  city:	      SC.Record.attr(String),
+  city: SC.Record.attr(String),
   
   /**
   @type String
   */
-  state:      SC.Record.attr(String),
+  state: SC.Record.attr(String),
   
   /**
   @type String
@@ -68,7 +67,7 @@ XM.Address = XM.Record.extend( SC.Copyable,
   /**
   @type String
   */
-  country:    SC.Record.attr(String, {
+  country: SC.Record.attr(String, {
     defaultValue: function() {
       var country = XT.Session.metrics.get('DefaultAddressCountry');
       return country ? country : null;
@@ -78,12 +77,12 @@ XM.Address = XM.Record.extend( SC.Copyable,
   /**
   @type String
   */
-  notes:      SC.Record.attr(String),
+  notes: SC.Record.attr(String),
   
   /**
   @type Boolean
   */
-  isActive:   SC.Record.attr(Boolean, {
+  isActive: SC.Record.attr(Boolean, {
     defaultValue: YES
   }),
   
@@ -154,30 +153,35 @@ XM.Address.copy = function(address) {
 /**
   Find an address with the same fields as the passed. Only
   works if the record is in READY_NEW status, otherwise returns
-  false;
+  false.
 
-  @return {Number} id of an existing address
+  @param {XM.Address} and address to query for a matchon
+  @param {function} callback to receive the result
+  @return receiver
 */
-XM.Address.findExisting = function(address) {
-  // Validate argument
-  if(!SC.kindOf(address, XM.Address)) return NO;
+XM.Address.findExisting = function(address, callback) {
+  if(!SC.kindOf(address, XM.Address) || 
+     address.get('status') !== SC.Record.READY_NEW) return NO;
 
-  var params = new Object;
-  params.line1 = address.get('line1');
-  params.line2 = address.get('line2');
-  params.line3 = address.get('line3');
-  params.city = address.get('city');
-  params.state = address.get('state');
-  params.postalcode = address.get('postalcode');
-  params.country = address.get('country');
+  var dispatch = XM.Dispatch.create({
+    className: 'XM.Address',
+    functionName: 'findExisting',
+    parameters: {
+      type: address.get('type'),
+      line1: address.get('line1'),
+      line2: address.get('line2'),
+      line3: address.get('line3'),
+      city: address.get('city'),
+      state: address.get('state'),
+      postalcode: address.get('postalcode'),
+      country: address.get('country')
+    },
+    action: callback
+  })
 
-  var response = XM.Request.postUrl(XM.DataSource.buildURL('metasql','XM.Address', 'findExisting'))
-  .header({ 'Accept': 'application/json' }).json().async(NO).send(params);
+  console.log("XM.Address.findExisting for: %@".fmt(JSON.stringify(address.get('attributes'))));
 
-  if (SC.ok(response) && response.get('body').content !== false) {
-    return response.get('body').content[0].result ? response.get('body').content[0].result : NO;
-  } else return NO;
-
+  address.get('store').dispatch(dispatch);
 };
 
 /**
@@ -246,24 +250,29 @@ XM.Address.format = function() {
 };
 
 /**
-  Returns an integer from the server indicating how many times the address is used by other records.
+  Returns an integer from the server indicating how many times the address is used 
+  by other records.
 
-  @return {Number}
+  @param {XM.Address} and address to query use count on
+  @param {function} callback to receive the result
+  @return receiver
 */
-XM.Address.useCount = function(address) {
+XM.Address.useCount = function(address, callback) {
   if(!SC.kindOf(address, XM.Address)) return NO;
 
-  var params = new Object;
-  params.id = address.get('id');
+  var dispatch = XM.Dispatch.create({
+    className: 'XM.Address',
+    functionName: 'useCount',
+    parameters: {
+      id: address.get('id')
+    },
+    action: callback
+  })
 
-  if(params.id === undefined) return NO;
+  console.log("XM.Address.useCount for: %@".fmt(address.get('id')));
 
-  var response = XM.Request.postUrl(XT.DataSource.buildURL('metasql','XM.Address', 'useCount'))
-  .header({ 'Accept': 'application/json' }).json().async(NO).send(params);
-
-  if (SC.ok(response) && response.get('body').content !== false) {
-    return response.get('body').content[0].result ? response.get('body').content[0].result : 0;
-  }
-  else return 0;
+  address.get('store').dispatch(dispatch);
+  
+  return this;
 };
 

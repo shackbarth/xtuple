@@ -7,8 +7,7 @@ require('../xv-core');
 
 XV.country = {};
 
-XV.country.createHash  = { 
-  guid: 1999, 
+XV.country.createHash  = {  
   abbreviation: 'EB',
   name: 'Elbonia',
   currencyName: 'Chit',
@@ -18,7 +17,6 @@ XV.country.createHash  = {
 };
 
 XV.country.createHashResult = { 
-  id: 1999, 
   abbreviation: 'EB',
   name: 'Elbonia',
   currencyName: 'Chit',
@@ -40,13 +38,12 @@ var countrySuite = vows.describe('XT Core Country Tests');
 countrySuite.addBatch({
   "XM.Country": {
     "Validate Class" : XV.record.validateClass(XM.Country),
-    "SetUserPrivs": XV.record.setUserPrivs('XM.UserAccount','admin') /*,
+ //   "SetUserPrivs": XV.record.setUserPrivs('XM.UserAccount','admin') /*,
     "Test CRUD-> CREATE" : XV.record.create(XM.Country, 
                                             XV.country.createHash,
                                             XV.country.createHashResult,
                                             XV.country.updateHash, 
                                             XV.country.updateHashResult) 
-                                            */
   }
 });
 

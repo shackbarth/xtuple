@@ -94,6 +94,7 @@ XV.record.create = function (recordType,
                              destroy) {
   var context = {
     topic: function() {
+    debugger
       var record = XM.store.createRecord(recordType, createHash).normalize();
     
       record.validate();

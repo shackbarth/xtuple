@@ -19,7 +19,6 @@ XM.Request = SC.Request.extend({
       if(body.error) {
         console.log("\n\n**** ERROR RESPONSE FROM SERVER: %@\n\n".fmt(
           body.message || "NO MESSAGE"));
-        response.cancel();
       }
     }
   }
