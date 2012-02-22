@@ -4,9 +4,14 @@
   "type": "VendorInfo",
   "table": "vendinfo",
   "comment": "Vendor Info Map",
-  "canCreate": false,
-  "canUpdate": false,
-  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",
@@ -33,25 +38,11 @@
       }
     },
     {
-      "name": "type",
+      "name": "isActive",
       "attr": {
-        "type": "Number",
-        "column": "vend_vendtype_id",
+        "type": "Boolean",
+        "column": "vend_active",
         "isEditable": false
-      }
-    },
-    {
-      "name": "contact",
-      "toOne": {
-        "type": "ContactInfo",
-        "column": "vend_cntct1_id"
-      }
-    },
-    {
-      "name": "address",
-      "toOne": {
-        "type": "AddressInfo",
-        "column": "vend_addr_id"
       }
     }
   ],
