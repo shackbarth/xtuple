@@ -491,7 +491,6 @@
   definition:
     
     * table
-    * type
     * isChild
     * properties
     * order

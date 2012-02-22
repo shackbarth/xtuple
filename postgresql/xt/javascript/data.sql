@@ -233,9 +233,8 @@ select xt.install_js('XT','Data','xtuple', $$
     @param {String} name space qualified record type
     @param {Object} data object
     */
-    commitRecord: function(key, value, isTopLevel) {
-      var isTopLevel = isTopLevel !== false ? true : false,
-          nameSpace = key.beforeDot().camelize().toUpperCase(),
+    commitRecord: function(key, value, encryptionKey) {
+      var nameSpace = key.beforeDot().camelize().toUpperCase(),
           type = key.afterDot().classify();
 
       var hasAccess = this.checkPrivileges(nameSpace, type, value, false);
@@ -244,13 +243,13 @@ select xt.install_js('XT','Data','xtuple', $$
       
       if(value && value.dataState) {
         if(value.dataState === this.CREATED_STATE) { 
-          this.createRecord(key, value, isTopLevel);
+          this.createRecord(key, value, encryptionKey);
         }
         else if(value.dataState === this.UPDATED_STATE) { 
-          this.updateRecord(key, value, isTopLevel);
+          this.updateRecord(key, value, encryptionKey);
         }
         else if(value.dataState === this.DELETED_STATE) { 
-          this.deleteRecord(key, value, isTopLevel); 
+          this.deleteRecord(key, value); 
         }
       }
     },
@@ -261,27 +260,45 @@ select xt.install_js('XT','Data','xtuple', $$
     @param {String} name space qualified record type
     @param {Object} the record to be committed
     */
-    createRecord: function(key, value) {
+    createRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),    
           viewdef = XT.getViewDefinition(viewName, schemaName),
+          orm = XT.getORM(key.beforeDot(), key.afterDot()),
           record = XT.decamelize(value),
           sql = '', columns, expressions,
           props = [], params = [];
 
+      delete record['data_state'];
+      delete record['type'];
+
       /* build up the content for insert of this record */
       for(var prop in record) {
-        var coldef = viewdef.findProperty('attname', prop);
-        
-        if (prop !== 'data_state' && 
-            prop !== 'type' && 
-            coldef.typcategory !== this.ARRAY_TYPE) { 
-          props.push(prop);
-          if(record[prop]) { 
-            if (coldef.typcategory === this.COMPOUND_TYPE) { 
-              var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
+        var coldef = viewdef.findProperty('attname', prop),
+            ormp = XT.getProperty(orm, prop.camelize());
 
-              record[prop] = row;
+        if (coldef.typcategory !== this.ARRAY_TYPE) { 
+          props.push(prop);
+
+          if(typeof record[prop] !== undefined) { 
+                  /* handle encryption if applicable */
+            if(ormp && ormp.attr && ormp.attr.isEncrypted) {
+              if(encryptionKey) {
+                record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                                .replace(/{value}/, record[prop])
+                                .replace(/{encryptionKey}/, encryptionKey);
+                
+              } else { 
+                throw new Error("No encryption key provided.");
+              }
+            } else if (coldef.typcategory === this.COMPOUND_TYPE) { 
+              if(record[prop] !== null) {
+                var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
+
+                record[prop] = row;
+              } else {
+                record[prop] = "null::" + schemaName + '.' + coldef.typname;
+              }
             } 
             
             if(coldef.typcategory === this.STRING_TYPE ||
@@ -318,7 +335,7 @@ select xt.install_js('XT','Data','xtuple', $$
     @param {String} name space qualified record type
     @param {Object} the record to be committed
     */
-    updateRecord: function(key, value) {
+    updateRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),
           viewdef = XT.getViewDefinition(viewName, schemaName),
@@ -327,18 +344,35 @@ select xt.install_js('XT','Data','xtuple', $$
           record = XT.decamelize(value),
           sql = '', expressions, params = [];
 
+      delete record['data_state'];
+      delete record['type'];
+
       /* build up the content for update of this record */
       for(var prop in record) {
-        var coldef = viewdef.findProperty('attname', prop);
+        var coldef = viewdef.findProperty('attname', prop),
+            ormp = XT.getProperty(orm, prop.camelize());
 
-        if (prop !== 'data_state' &&
-            prop !== 'type' && 
-            coldef.typcategory !== this.ARRAY_TYPE) {
-          if(record[prop]) { 
+        /* handle encryption if applicable */
+        if(ormp && ormp.attr && ormp.attr.isEncrypted) {
+          if(encryptionKey) {
+            record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                           .replace(/{value}/, record[prop])
+                           .replace(/{encryptionKey}/, encryptionKey);
+
+            params.push(prop.concat(" = ", record[prop]));
+          } else {
+            throw new Error("No encryption key provided.");
+          }
+        } else if (coldef.typcategory !== this.ARRAY_TYPE) {
+          if(typeof record[prop] !== 'undefined') { 
             if (coldef.typcategory === this.COMPOUND_TYPE) {
-              var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
+              if(record[prop] !== null) {
+                var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
               
-              record[prop] = row;
+                record[prop] = row;
+              } else {
+                record[prop] = "null::" + schemaName + '.' + coldef.typname;
+              }
             } 
           
             if(coldef.typcategory === this.STRING_TYPE ||
@@ -416,10 +450,11 @@ select xt.install_js('XT','Data','xtuple', $$
     @param {Object} view definition object
     @returns {Object} 
     */
-    normalize: function(nameSpace, type, record) {
+    normalize: function(nameSpace, type, record, encryptionKey) {
       var schemaName = nameSpace.decamelize(),
           viewName = type.decamelize(),
-          viewdef = XT.getViewDefinition(viewName, schemaName);
+          viewdef = XT.getViewDefinition(viewName, schemaName),
+          orm = XT.getORM(nameSpace, type);
 
       /* set data type property */
       record['type'] = type.classify();
@@ -430,7 +465,18 @@ select xt.install_js('XT','Data','xtuple', $$
       for(var prop in record) {
         if (record.hasOwnProperty(prop)) {
           var coldef = viewdef.findProperty('attname', prop),
-          value, result, sql = '';
+          value, result, sql = '',
+          ormp = XT.getProperty(orm, prop.camelize());
+
+          /* handle encryption if applicable */
+          if(ormp && ormp.attr && ormp.attr.isEncrypted) {
+            if(encryptionKey) {
+              sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
+              record[prop] = executeSql(sql, [record[prop], encryptionKey])[0].result;
+            } else {
+              record[prop] = '**********'
+            }
+          }
 
           /* if it's a compound type, add a type property */
           if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
@@ -475,9 +521,10 @@ select xt.install_js('XT','Data','xtuple', $$
     
     @param {String} namespace qualified record type
     @param {Number} record id
+    @param {String} encryption key
     @returns {Object} 
     */
-    retrieveRecord: function(recordType, id) {
+    retrieveRecord: function(recordType, id, encryptionKey) {
       var nameSpace = recordType.beforeDot(), 
           type = recordType.afterDot(),
           map = XT.getORM(nameSpace, type),
@@ -503,7 +550,7 @@ select xt.install_js('XT','Data','xtuple', $$
                                       .replace(/{recordType}/, recordType)
                                       .replace(/{id}/, id));
 
-      ret = this.normalize(nameSpace, type, ret[0]);
+      ret = this.normalize(nameSpace, type, ret[0], encryptionKey);
 
       /* check privileges again, this time against record specific criteria where applicable */
       if(!this.checkPrivileges(nameSpace, type, ret)) throw new Error("Access Denied.");
@@ -538,6 +585,7 @@ select xt.install_js('XT','Data','xtuple', $$
             props.push("'{}'");  
           } else if(coldef.typcategory === this.COMPOUND_TYPE) { 
             record[prop] = this.rowify(schemaName + '.' + coldef.attname, record[prop]);
+            props.push(record[prop]); 
           } else if(coldef.typcategory === this.STRING_TYPE ||
                     coldef.typcategory === this.DATE_TYPE) {
             props.push("'" + record[prop] + "'"); 
