@@ -248,6 +248,15 @@
       }
     },
     {
+      "name": "creditCards",
+      "toMany": {
+        "isNested": true,	
+        "type": "CustomerCreditCard",
+        "column": "cust_id",
+        "inverse": "customer"
+      }
+    },
+    {
       "name": "contacts",
       "toMany": {
         "isNested": true,
@@ -299,15 +308,6 @@
         "type": "CustomerCustomer",
         "column": "cust_id",
         "inverse": "source"
-      }
-    },
-    {
-      "name": "customerCreditCard",
-      "toMany": {
-        "isNested": true,	
-        "type": "CustomerCreditCard",
-        "column": "cust_id",
-        "inverse": "customer"
       }
     }
   ],
