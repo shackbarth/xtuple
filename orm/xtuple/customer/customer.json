@@ -4,7 +4,7 @@
   "type": "Customer",
   "table": "custinfo",
   "idSequenceName": "public.cust_cust_id_seq",
-  "orderSequence": "CustomerNumber",
+  "orderSequence": "CRMAccountNumber",
   "comment": "Customer Map",
   "privileges": {
     "all": {
@@ -311,6 +311,5 @@
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }

@@ -96,9 +96,8 @@
     {
       "name": "type",
       "attr": {
-        "type": "Boolean",
-        "column": "item_type",
-        "isEditable": false
+        "type": "String",
+        "column": "item_type"
       }
     },
     {
@@ -212,7 +211,7 @@
       "toMany": {
         "type": "ItemCharacteristic",
         "column": "item_id",
-		"inverse": "item",
+		    "inverse": "item",
         "isNested": true
       }
     },
@@ -222,7 +221,7 @@
         "type": "ItemConversion",
         "column": "item_id",
         "inverse": "item",
-		"isNested": true
+		    "isNested": true
       }
     },
     {
@@ -239,8 +238,8 @@
       "toMany": {
         "type": "ItemSubstitute",
         "column": "item_id",
-		"inverse": "item",        
-		"isNested": "true"
+	    	"inverse": "item",        
+	    	"isNested": "true"
       }
     },
     {

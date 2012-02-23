@@ -1,0 +1,72 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "AccountBrowse",
+  "table": "crmacct",
+  "comment": "Account Browse Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": "ViewAllCRMAccounts",
+      "update": false,
+      "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": true,
+      "properties": [
+        "owner"
+       ]
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "crmacct_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "crmacct_number"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "crmacct_name"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "crmacct_active"
+      }
+    },
+    {
+      "name": "primaryContact",
+      "toOne": {
+        "type": "ContactInfo",
+        "column": "crmacct_cntct_id_1",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "crmacct_owner_username",
+        "inverse": "username"
+      }
+    }
+  ],
+  "isSystem": true
+}
