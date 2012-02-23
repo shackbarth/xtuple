@@ -6,10 +6,10 @@
   "comment": "Invoice Item Map",
   "privileges": {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
       "update": false,
-      "delete": false
+      "delete": true
     }
   },
   "properties": [

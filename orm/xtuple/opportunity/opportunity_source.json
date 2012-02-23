@@ -5,6 +5,14 @@
   "table": "opsource",
   "idSequenceName": "public.opsource_opsource_id_seq",
   "comment": "Opportunity Source Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

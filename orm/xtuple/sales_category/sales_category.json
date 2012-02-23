@@ -4,6 +4,14 @@
   "type": "SalesCategory",
   "table": "salescat",
   "comment": "Sales Category Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

@@ -5,6 +5,14 @@
   "table": "curr_symbol",
   "idSequenceName": "public.curr_symbol_curr_id_seq",
   "comment": "Currency Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

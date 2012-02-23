@@ -5,9 +5,14 @@
   "table": "uomtype",
   "idSequenceName": "public.uomtype_uomtype_id_seq",
   "comment": "Unit Type Map",
-  "canCreate": false,
-  "canUpdate": false,
-  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",

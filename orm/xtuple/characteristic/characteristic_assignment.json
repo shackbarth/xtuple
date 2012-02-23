@@ -5,6 +5,14 @@
   "table": "charass",
   "comment": "Characteristic Assignment Map",
   "idSequenceName": "public.charass_charass_id_seq",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",

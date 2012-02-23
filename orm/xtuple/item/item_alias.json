@@ -5,6 +5,14 @@
   "table": "itemalias",
   "idSequenceName": "itemalias_itemalias_id_seq",
   "comment": "Item Alias Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

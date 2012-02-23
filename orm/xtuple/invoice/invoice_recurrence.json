@@ -5,6 +5,14 @@
   "table": "recur",
   "idSequenceName": "recur_recur_id_seq",
   "comment": "Invoice Recurrence Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

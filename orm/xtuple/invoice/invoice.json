@@ -5,6 +5,14 @@
   "table": "invchead",
   "idSequenceName": "public.invcitem_invcitem_id_seq",
   "comment": "Invoice Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainMiscInvoices",
+      "read": "ViewMiscInvoices",
+      "update": "MaintainMiscInvoices",
+      "delete": "MaintainMiscInvoices"
+    }
+  },
   "properties": [
     {
       "name": "guid",

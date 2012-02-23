@@ -5,6 +5,14 @@
   "table": "itemuomconv",
   "idSequenceName": "public.itemuomconv_itemuomconv_id_seq",
   "comment": "Item Conversion Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

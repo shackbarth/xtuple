@@ -5,6 +5,14 @@
   "table": "ccard",
   "idSequenceName": "public.ccard_ccard_id_seq",
   "comment": "Customer Credit Card Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

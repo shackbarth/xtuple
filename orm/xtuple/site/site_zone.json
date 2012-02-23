@@ -6,6 +6,14 @@
   "table": "whsezone",
   "idSequenceName": "public.whsezone_whsezone_id_seq",
   "comment": "Site Zone Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

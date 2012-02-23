@@ -4,6 +4,14 @@
   "type": "CustomerShipto",
   "table": "shiptoinfo",
   "comment": "Customer ShipTo Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",
