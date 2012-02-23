@@ -48,7 +48,7 @@
       "attr": {
         "type": "String",
         "column": "vend_number",
-        "isEditable":false
+        "isEditable": false
       }
     },
     {
