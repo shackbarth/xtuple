@@ -46,89 +46,88 @@
     {
       "name": "name",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_name",
-		"isEncrypted" : true
+		    "isEncrypted" : true
       }
     },
     {
       "name": "address1",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_address1",
-		"isEncrypted" : true
+	    	"isEncrypted" : true
       }
     },
     {
       "name": "address2",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_address2",
-		"isEncrypted" : true
+		    "isEncrypted" : true
       }
     },
     {
       "name": "city",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_city",
-		"isEncrypted" : true
+    		"isEncrypted" : true
       }
     },
     {
       "name": "state",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_state",
-		"isEncrypted" : true
+	    	"isEncrypted" : true
       }
     },
     {
       "name": "postalCode",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_zip",
-		"isEncrypted" : true
+	    	"isEncrypted" : true
       }
     },
     {
       "name": "country",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_country",
-		"isEncrypted" : true
+	    	"isEncrypted" : true
       }
     },
     {
       "name": "number",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_number",
-		"isEncrypted" : true
+		    "isEncrypted" : true
       }
     },
     {
       "name": "isDebit",
       "attr": {
         "type": "Boolean",
-        "column": "ccard_debit",
-		"isEncrypted" : true
+        "column": "ccard_debit"
       }
     },
     {
-      "name": "monthExpired",
+      "name": "monthExpire",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_month_expired",
-		"isEncrypted" : true
+		    "isEncrypted" : true
       }
     },
     {
-      "name": "yearExpired",
+      "name": "yearExpire",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "ccard_year_expired",
-		"isEncrypted" : true
+		    "isEncrypted" : true
       }
     },
     {
@@ -139,28 +138,28 @@
       }
     },
     {
-      "name": "dateAdded",
+      "name": "created",
       "attr": {
         "type": "Date",
         "column": "ccard_date_added"
       }
     },
     {
-      "name": "lastUpdated",
-      "attr": {
-        "type": "Date",
-        "column": "ccard_lastupdated"
-      }
-    },
-    {
-      "name": "addedByUsername",
+      "name": "createdBy",
       "attr": {
         "type": "String",
         "column": "ccard_added_by_username"
       }
     },
     {
-      "name": "lastUpdatedByUsername",
+      "name": "updated",
+      "attr": {
+        "type": "Date",
+        "column": "ccard_lastupdated"
+      }
+    },
+    {
+      "name": "updatedBy",
       "attr": {
         "type": "String",
         "column": "ccard_last_updated_by_username"

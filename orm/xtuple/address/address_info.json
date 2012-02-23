@@ -62,7 +62,7 @@
       }
     },
     {
-      "name": "postalcode",
+      "name": "postalCode",
       "attr": {
         "type": "String",
         "column": "addr_postalcode",
