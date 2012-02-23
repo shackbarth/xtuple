@@ -26,16 +26,14 @@
       "name": "code",
       "attr": {
         "type": "String",
-        "column": "taxzone_code",
-        "isEditable": false
+        "column": "taxzone_code"
       }
     },
     {
       "name": "description",
       "attr": {
         "type": "String",
-        "column": "taxzone_descrip",
-        "isEditable": false
+        "column": "taxzone_descrip"
       }
     }
   ],
