@@ -183,9 +183,7 @@ create or replace function xt.js_init() returns void as $$
               + ' and orm_active ',
           res = executeSql(sql, [ nameSpace, type ]);
 
-      if(!res.length) {
-        throw new Error("No map definition for " + recordType + " found.");
-      }
+      if(!res.length) return false;
 
       ret = JSON.parse(res[0].json);
 

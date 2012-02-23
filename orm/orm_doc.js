@@ -475,6 +475,84 @@
           ]
         }
       }
+            
+      /** 
+      Convert columns on table to a money object. You can map up to four properties:
+        * amount
+        * currency
+        * effective
+        * rate
+        
+      Each of the properties is represented as a hash with a required 'column' property
+      that maps the column and an optional 'isMaster' property that determines whether
+      changes to that property on the Money object should write back to the database column.
+      Note that if you have multiple Money objects on your record that reference the same column,
+      such as the currency, that only one, if any, should be the master that writes back to
+      that column.
+      
+      A money object will have all the definable properties listed above, plus an isPosted boolean
+      that will return true if a rate is mapped to a column in the database and false if not.
+         
+      @type {Hash}
+      */
+      "toMoney": {
+      
+        /** 
+        Accepted types on a toMoney property are:
+          * Money
+          * Cost
+          * SalesPrice
+          * PurchasePrice
+          * ExtPrice
+          
+        Money is the default type if no valid type is provided.
+        
+        @type {String}
+        */
+        "type": "Money",
+        
+        /**
+        The amount in local currency.
+        
+        Required.
+        
+        @type {Hash}
+        */
+        "amount": {
+          "column": "prjtask_amount",
+          "isMaster": true
+        },
+        
+        /**
+        The currency of the money. If absent defaults to system base currency.
+        
+        @type {Hash}
+        */
+        "currency": {
+          "column": "prjtask_curr_id",
+          "isMaster": true
+        },
+        
+        /**
+        The effective date of the exchange rate. If none is provided defaults to the current date.
+        
+        @type {Hash}
+        */
+        "effective": {
+          "column": "prjtask_duedate",
+        },
+        
+        /**
+        The rate used for currency conversion to the system base currency. If none is provided the system
+        will calculate the rate based on system exchange rates for the currency and effective date.
+        
+        @type {Hash}
+        */
+        "rate": {
+          "column": "prjtask_curr_id",
+          "isMaster": true
+        }
+      }
     }
   ],
   

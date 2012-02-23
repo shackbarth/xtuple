@@ -13,7 +13,7 @@ select xt.install_js('XT','Data','xtuple', $$
   XT.Data = {
 
     ARRAY_TYPE: "A",
-    COMPOUND_TYPE: "C",
+    COMPOSITE_TYPE: "C",
     DATE_TYPE: "D",
     STRING_TYPE: "S",
   
@@ -146,6 +146,9 @@ select xt.install_js('XT','Data','xtuple', $$
                     record && record.dataState === this.DELETED_STATE ? 'delete' :
                     record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
+      /* if there is no ORM, this isn't a table data type so no check required */
+      if(!map) return true;
+      
       /* can not access 'nested only' records directly */
       if(isTopLevel && map.isNestedOnly) return false
         
@@ -280,18 +283,19 @@ select xt.install_js('XT','Data','xtuple', $$
         if (coldef.typcategory !== this.ARRAY_TYPE) { 
           props.push(prop);
 
-          if(typeof record[prop] !== undefined) { 
-                  /* handle encryption if applicable */
-            if(ormp && ormp.attr && ormp.attr.isEncrypted) {
-              if(encryptionKey) {
-                record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                                .replace(/{value}/, record[prop])
-                                .replace(/{encryptionKey}/, encryptionKey);
-                
-              } else { 
-                throw new Error("No encryption key provided.");
-              }
-            } else if (coldef.typcategory === this.COMPOUND_TYPE) { 
+          /* handle encryption if applicable */
+          if(ormp && ormp.attr && ormp.attr.isEncrypted) {
+            if(encryptionKey) {
+              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                             .replace(/{value}/, record[prop])
+                             .replace(/{encryptionKey}/, encryptionKey);
+
+              params.push(record[prop]);
+            } else { 
+              throw new Error("No encryption key provided.");
+            }
+          } else if(record[prop] !== null) { 
+            if (coldef.typcategory === this.COMPOSITE_TYPE) { 
               if(record[prop] !== null) {
                 var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
 
@@ -364,8 +368,8 @@ select xt.install_js('XT','Data','xtuple', $$
             throw new Error("No encryption key provided.");
           }
         } else if (coldef.typcategory !== this.ARRAY_TYPE) {
-          if(typeof record[prop] !== 'undefined') { 
-            if (coldef.typcategory === this.COMPOUND_TYPE) {
+          if(record[prop] !== null) { 
+            if (coldef.typcategory === this.COMPOSITE_TYPE) {
               if(record[prop] !== null) {
                 var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
               
@@ -461,7 +465,6 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* set data state property */
       record['dataState'] = this.READ_STATE;
-
       for(var prop in record) {
         if (record.hasOwnProperty(prop)) {
           var coldef = viewdef.findProperty('attname', prop),
@@ -478,8 +481,8 @@ select xt.install_js('XT','Data','xtuple', $$
             }
           }
 
-          /* if it's a compound type, add a type property */
-          if (coldef['typcategory'] === this.COMPOUND_TYPE && record[prop]) {
+          /* if it's a composite type, add a type property */
+          if (coldef['typcategory'] === this.COMPOSITE_TYPE && record[prop]) {
             var typeName = coldef['typname'].classify();
 
             /* if no privileges remove the data */
@@ -583,7 +586,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if(coldef.typcategory === this.ARRAY_TYPE) { 
             /* orm rules ignore arrays, but we need this place holder so type signatures match */
             props.push("'{}'");  
-          } else if(coldef.typcategory === this.COMPOUND_TYPE) { 
+          } else if(coldef.typcategory === this.COMPOSITE_TYPE) { 
             record[prop] = this.rowify(schemaName + '.' + coldef.attname, record[prop]);
             props.push(record[prop]); 
           } else if(coldef.typcategory === this.STRING_TYPE ||

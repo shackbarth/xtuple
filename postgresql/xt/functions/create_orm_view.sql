@@ -11,6 +11,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
       UPDATE = 'update {table} set {expressions} where {conditions};',
       DELETE = 'delete from {table} where {conditions};',
       CREATE_RULE = 'create rule {name} as on {event} to {table} do instead {command};',
+      TO_MONEY = '(select row({amount},{currency},{effective},{rate},{isPosted})::{nameSpace}.{type})';
 
   // ..........................................................
   // METHODS
@@ -158,6 +159,60 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
                       .replace(/{conditions}/, type + '.' + inverse  + ' = ' + 'old.{pKeyAlias}'); 
                       
           delCascade.push(sql); 
+        }
+      }
+
+      /* process toMoney */
+      if(props[i].toMoney) {
+        var toMoney = props[i].toMoney, 
+            isEditable = toMoney.isEditable !== false ? true : false,
+            amtcol = toMoney.amount && toMoney.amount.column ? tblAlias + '.' + toMoney.amount.column : 0,
+            curcol = toMoney.currency && toMoney.currency.column ? tblAlias + '.' + toMoney.currency.column : 'baseCurrId()',
+            effcol = toMoney.effective && toMoney.effective.column ? tblAlias + '.' + toMoney.effective.column : 'current_date',
+            ratcol = toMoney.rate && toMoney.rate.column ? tblAlias + '.' + toMoney.rate.column : 'currRate({currency}, {effective})'
+                                                                                                 .replace(/{currency}/, curcol)
+                                                                                                 .replace(/{effective}/, effcol),
+            pstcol = toMoney.rate && toMoney.rate.column ? true : false,
+            typcol = toMoney.type === 'Cost' ||
+                     toMoney.type === 'SalesPrice' ||
+                     toMoney.type === 'PurchPrice' ||
+                     toMoney.type === 'ExtPrice' ||
+                     toMoney.type === 'Cost' ? toMoney.type : 'Money',
+            moneycol = TO_MONEY.replace(/{amount}/, amtcol)
+                               .replace(/{currency}/, curcol)
+                               .replace(/{effective}/, effcol)
+                               .replace(/{rate}/, ratcol)
+                               .replace(/{isPosted}/, pstcol)
+                               .replace(/{nameSpace}/, orm.nameSpace)
+                               .replace(/{type}/, typcol);
+
+        col = moneycol + ' as "' + alias + '"';
+        cols.push(col);
+
+        /* for insert rule */
+        if(toMoney.amount && toMoney.amount.isMaster) {
+          insTgtCols.push(toMoney.amount.column);
+          insSrcCols.push('(new.' + alias + ').amount');
+        }
+        if(toMoney.currency && toMoney.currency.isMaster) {
+          insTgtCols.push(toMoney.currency.column);
+          insSrcCols.push('(new.' + alias + ').currency');
+        }
+        if(toMoney.effective && toMoney.effective.isMaster) {
+          insTgtCols.push(toMoney.effective.column);
+          insSrcCols.push('(new.' + alias + ').effective');
+        }
+        if(toMoney.rate && toMoney.rate.isMaster) {
+          insTgtCols.push(toMoney.rate.column);
+          insSrcCols.push('(new.' + alias + ').rate');
+        }
+
+        /* for update rule */
+        if(isEditable) {
+          if(toMoney.amount && toMoney.amount.isMaster) updCols.push(toMoney.amount.column + ' = (new.' + alias + ').amount'); 
+          if(toMoney.currency && toMoney.currency.isMaster) updCols.push(toMoney.currency.column + ' = (new.' + alias + ').currency'); 
+          if(toMoney.effective && toMoney.effective.isMaster) updCols.push(toMoney.effective.column + ' = (new.' + alias + ').effective');
+          if(toMoney.rate && toMoney.rate.isMaster) updCols.push(toMoney.rate.column + ' = (new.' + alias + ').rate');       
         }
       }
     }
