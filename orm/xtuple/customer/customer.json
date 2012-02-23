@@ -305,7 +305,7 @@
       "name": "customerCreditCard",
       "toMany": {
         "isNested": true,	
-        "type": "CustomerCreditcard",
+        "type": "CustomerCreditCard",
         "column": "cust_id",
         "inverse": "customer"
       }

@@ -1,7 +1,7 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "CustomerCreditcard",
+  "type": "CustomerCreditCard",
   "table": "ccard",
   "idSequenceName": "public.ccard_ccard_id_seq",
   "comment": "Customer Credit Card Map",
