@@ -205,8 +205,10 @@ create or replace function xt.js_init() returns void as $$
         var orm = JSON.parse(res[i].json),
             ext = {};
 
+        ext.context = orm.context;
         ext.table = orm.table;
         ext.isChild = orm.isChild;
+        ext.relations = orm.relations;
         ext.properties = orm.properties;
         ext.order = orm.order;
 
