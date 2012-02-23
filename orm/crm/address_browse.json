@@ -1,13 +1,13 @@
 {
   "context": "crm",
   "nameSpace": "XM",
-  "type": "Contact",
-  "table": "cntct",
+  "type": "AddressBrowse",
+  "table": "address",
   "isExtension": true,
   "comment": "Extended by Crm",
   "relations": [
     {
-      "column": "cntct_id",
+      "column": "addr_id",
       "inverse": "guid"
     }
   ],
@@ -16,7 +16,7 @@
       "name": "account",
       "toOne": {
         "type": "AccountInfo",
-        "column": "cntct_crmacct_id"
+        "column": "crmacct_id"
       }
     }
   ],

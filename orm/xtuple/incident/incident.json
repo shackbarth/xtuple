@@ -216,6 +216,15 @@
       }
     },
     {
+      "name": "accounts",
+      "toMany": {
+        "isNested": true,
+        "type": "IncidentAccount",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    },
+    {
       "name": "incidents",
       "toMany": {
         "isNested": true,
