@@ -1,14 +1,14 @@
 {	
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "InvoiceItem",
+  "type": "InvoiceLine",
   "table": "invcitem",
-  "comment": "Invoice Item Map",
+  "comment": "Invoice Line Map",
   "privileges": {
     "all": {
       "create": true,
       "read": true,
-      "update": false,
+      "update": true,
       "delete": true
     }
   },
@@ -50,6 +50,15 @@
       }
     },
     {
+      "name": "salesCategory",
+      "toOne": {
+	    "isNested" : true,
+        "type": "SalesCategory",
+        "column": "invcitem_salescat_id",
+        "inverse" : "guid"
+      }
+    },
+    {
       "name": "customerPartNumber",
       "attr": {
         "type": "String",
@@ -64,10 +73,38 @@
       }
     },
     {
+      "name": "quantityUnit",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_qty_uom_id"
+      }
+    },
+    {
+      "name": "quantityInventoryUnitRatio",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_qty_invuomratio"
+      }
+    },
+    {
       "name": "billed",
       "attr": {
         "type": "Number",
         "column": "invcitem_billed"
+      }
+    },
+    {
+      "name": "priceUnit",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_price_uom_id"
+      }
+    },
+    {
+      "name": "priceInventoryUnitRatio",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_price_invuomratio"
       }
     },
     {
@@ -90,45 +127,8 @@
         "type": "String",
         "column": "invcitem_notes"
       }
-    },
-    {
-      "name": "salesCategory",
-      "toOne": {
-	    "isNested" : true,
-        "type": "SalesCategory",
-        "column": "invcitem_salescat_id",
-        "inverse" : "guid"
-      }
-    },
-    {
-      "name": "quantityUnit",
-      "attr": {
-        "type": "Number",
-        "column": "invcitem_qty_uom_id"
-      }
-    },
-    {
-      "name": "quantityInventoryUnitRatio",
-      "attr": {
-        "type": "Number",
-        "column": "invcitem_qty_invuomratio"
-      }
-    },
-    {
-      "name": "priceUnit",
-      "attr": {
-        "type": "Number",
-        "column": "invcitem_price_uom_id"
-      }
-    },
-    {
-      "name": "priceInventoryUnitRatio",
-      "attr": {
-        "type": "Number",
-        "column": "invcitem_price_invuomratio"
-      }
     }
-],
+  ],
 	"isNestedOnly": true,
 	 "isSystem": true
 }

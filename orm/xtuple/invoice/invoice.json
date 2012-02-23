@@ -22,27 +22,11 @@
         "isPrimaryKey": true
       }
     },
-	{
-	  "name": "lineItems",
-	  "toMany": {
-	    "isNested": true,
-	    "type": "InvoiceItem",
-	    "column": "invchead_id",
-	    "inverse": "invoice"
-	  }
-	},
     {
-      "name": "customer",
+      "name": "number",
       "attr": {
-        "type": "Number",
-        "column": "invchead_cust_id"
-      }
-    },
-    {
-      "name": "shipto",
-      "attr": {
-        "type": "Number",
-        "column": "invchead_shipto_id"
+        "type": "String",
+        "column": "invchead_invcnumber"
       }
     },
     {
@@ -60,27 +44,6 @@
       }
     },
     {
-      "name": "isPosted",
-      "attr": {
-        "type": "Boolean",
-        "column": "invchead_posted"
-      }
-    },
-    {
-      "name": "isPrinted",
-      "attr": {
-        "type": "Boolean",
-        "column": "invchead_printed"
-      }
-    },
-    {
-      "name": "number",
-      "attr": {
-        "type": "String",
-        "column": "invchead_invcnumber"
-      }
-    },
-    {
       "name": "invoiceDate",
       "attr": {
         "type": "Date",
@@ -95,24 +58,31 @@
       }
     },
     {
-      "name": "purchaseOrderNumber",
+      "name": "isPrinted",
       "attr": {
-        "type": "String",
-        "column": "invchead_ponumber"
+        "type": "Boolean",
+        "column": "invchead_printed"
       }
     },
     {
-      "name": "shipVia",
+      "name": "isPosted",
       "attr": {
-        "type": "String",
-        "column": "invchead_shipvia"
+        "type": "Boolean",
+        "column": "invchead_posted"
       }
     },
     {
-      "name": "freeOnBoard",
+      "name": "isVoid",
       "attr": {
-        "type": "String",
-        "column": "invchead_fob"
+        "type": "Boolean",
+        "column": "invchead_void"
+      }
+    },		
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_cust_id"
       }
     },
     {
@@ -165,117 +135,161 @@
       }
     },
     {
+      "name": "billtoCountry",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_country"
+      }
+    },
+    {
       "name": "billtoPhone",
       "attr": {
         "type": "String",
         "column": "invchead_billto_phone"
       }
     },
-	{
-	  "name": "shiptoAddress1",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_address1"
-	  }
-	},
-	{
-	  "name": "shiptoAddress2",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_address2"
-	  }
-	},
-	{
-	  "name": "shiptoAddress3",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_address3"
-	  }
-	},
-	{
-	  "name": "shiptoCity",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_city"
-	  }
-	},
-	{
-	  "name": "shiptoState",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_state"
-	  }
-	},
-	{
-	  "name": "shiptoPostalCode",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_zipcode"
-	  }
-	},
-	{
-	  "name": "shiptoPhone",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_phone"
-	  }
-	},
-	{
-	  "name": "salesRep",
-	  "attr": {
-	    "type": "Number",
-	    "column": "invchead_salesrep_id"
-	  }
-	},
-	{
-	  "name": "commission",
-	  "attr": {
-	    "type": "Number",
-	    "column": "invchead_commission"
-	  }
-	},
-	{
-	  "name": "terms",
-	  "attr": {
-	    "type": "Number",
-	    "column": "invchead_terms_id"
-	  }
-	},
-	{
-	  "name": "freight",
-	  "attr": {
-	    "type": "Number",
-	    "column": "invchead_freight"
-	  }
-	},
-	{
-	  "name": "notes",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_notes"
-	  }
-	},
-	{
-	  "name": "billtoCountry",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_billto_country"
-	  }
-	},
-	{
-	  "name": "shiptoCountry",
-	  "attr": {
-	    "type": "String",
-	    "column": "invchead_shipto_country"
-	  }
-	},
-	{
-	  "name": "currency",
-	  "attr": {
-	    "type": "Number",
-	    "column": "invchead_curr_id"
-	  }
-	},
+    {
+      "name": "shipto",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_shipto_id"
+      }
+    },
+    {
+      "name": "shiptoAddress1",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_address1"
+      }
+    },
+    {
+      "name": "shiptoAddress2",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_address2"
+      }
+    },
+    {
+      "name": "shiptoAddress3",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_address3"
+      }
+    },
+    {
+      "name": "shiptoCity",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_city"
+      }
+    },
+    {
+      "name": "shiptoState",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_state"
+      }
+    },
+    {
+      "name": "shiptoPostalCode",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_zipcode"
+      }
+    },
+    {
+      "name": "shiptoCountry",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_country"
+      }
+    },
+    {
+      "name": "shiptoPhone",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_phone"
+      }
+    },
+    {
+      "name": "salesRep",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_salesrep_id"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_commission"
+      }
+    },
+    {
+      "name": "taxZone",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_taxzone_id"
+      }
+    },
+    {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_terms_id"
+      }
+    },
+    {
+      "name": "purchaseOrderNumber",
+      "attr": {
+        "type": "String",
+        "column": "invchead_ponumber"
+      }
+    },
+    {
+      "name": "shipVia",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipvia"
+      }
+    },
+    {
+      "name": "freeOnBoard",
+      "attr": {
+        "type": "String",
+        "column": "invchead_fob"
+      }
+    },
+    {
+      "name": "shipCharge",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_shipchrg_id"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_curr_id"
+      }
+    },
+    {
+      "name": "freight",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_freight"
+      }
+    },
+    {
+      "name": "lines",
+      "toMany": {
+        "isNested": true,
+        "type": "InvoiceLine",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },
     {
       "name": "recurrences",
       "toMany": {
@@ -283,22 +297,14 @@
         "column": "invchead_id",
         "inverse": "invoice"
       }
-    },	
-	{
-	  "name": "shipCharge",
-	  "attr": {
-	    "type": "Number",
-	    "column": "invchead_shipchrg_id"
-	  }
-	},
-	{
-	  "name": "isVoid",
-	  "attr": {
-	    "type": "Boolean",
-	    "column": "invchead_void"
-	  }
-	}		
-],
-	"isNestedOnly": true,
-	 "isSystem": true
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "invchead_notes"
+      }
+    }
+  ],
+  "isSystem": true
 }

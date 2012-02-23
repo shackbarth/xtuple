@@ -30,12 +30,17 @@
       }
     },
     {
-      "name": "lineItems",
-      "toMany": {
-        "isNested": true,
-        "type": "CreditMemoItem",
-        "column": "cmhead_id",
-        "inverse": "creditMemo"
+      "name": "invoiceNumber",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_invcnumber"
+      }
+    },
+    {
+      "name": "isPrinted",
+      "attr": {
+        "type": "Boolean",
+        "column": "cmhead_printed"
       }
     },
     {
@@ -46,24 +51,10 @@
       }
     },
     {
-      "name": "invoiceNumber",
+      "name": "isVoid",
       "attr": {
-        "type": "String",
-        "column": "cmhead_invcnumber"
-      }
-    },
-    {
-      "name": "PurchaseOrderNumber",
-      "attr": {
-        "type": "String",
-        "column": "cmhead_custponumber"
-      }
-    },
-    {
-      "name": "customer",
-      "attr": {
-        "type": "Number",
-        "column": "cmhead_cust_id"
+        "type": "Boolean",
+        "column": "cmhead_void"
       }
     },
     {
@@ -73,6 +64,69 @@
         "column": "cmhead_docdate"
       }
     },
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_cust_id"
+      }
+    },
+        {
+      "name": "billtoName",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtoname"
+      }
+    },
+    {
+      "name": "billtoAddress1",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtoaddress1"
+      }
+    },
+    {
+      "name": "billtoAddress2",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtoaddress2"
+      }
+    },
+    {
+      "name": "billtoAddress3",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtoaddress3"
+      }
+    },
+    {
+      "name": "billtoCity",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtocity"
+      }
+    },
+    {
+      "name": "billtoState",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtostate"
+      }
+    },
+    {
+      "name": "billtoPostalCode",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtozip"
+      }
+    }, 
+    {
+      "name": "billtoCountry",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtocountry"
+      }
+    }, 
     {
       "name": "shipto",
       "attr": {
@@ -130,6 +184,13 @@
       }
     },
     {
+      "name": "shiptoCountry",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_country"
+      }
+    },
+    {
       "name": "salesRep",
       "attr": {
         "type": "Number",
@@ -137,80 +198,17 @@
       }
     },
     {
-      "name": "freight",
-      "attr": {
-        "type": "Number",
-        "column": "cmhead_freight"
-      }
-    },
-    {
-      "name": "notes",
-      "attr": {
-        "type": "String",
-        "column": "cmhead_comments"
-      }
-    },
-    {
-      "name": "isPrinted",
-      "attr": {
-        "type": "Boolean",
-        "column": "cmhead_printed"
-      }
-    },
-	{
-	  "name": "billtoName",
-	  "attr": {
-	    "type": "String",
-	    "column": "cmhead_billtoname"
-	  }
-	},
-	{
-	  "name": "billtoAddress1",
-	  "attr": {
-	    "type": "String",
-	    "column": "cmhead_billtoaddress1"
-	  }
-	},
-	{
-	  "name": "billtoAddress2",
-	  "attr": {
-	    "type": "String",
-	    "column": "cmhead_billtoaddress2"
-	  }
-	},
-	{
-	  "name": "billtoAddress3",
-	  "attr": {
-	    "type": "String",
-	    "column": "cmhead_billtoaddress3"
-	  }
-	},
-	{
-	  "name": "billtoCity",
-	  "attr": {
-	    "type": "String",
-	    "column": "cmhead_billtocity"
-	  }
-	},
-	{
-	  "name": "billtoState",
-	  "attr": {
-	    "type": "String",
-	    "column": "cmhead_billtostate"
-	  }
-	},
-	{
-	  "name": "billtoPostalCode",
-	  "attr": {
-	    "type": "String",
-	    "column": "cmhead_billtozip"
-	  }
-	},  
- 	{
       "name": "commission",
       "attr": {
         "type": "Number",
         "column": "cmhead_commission"
+      }
+    },
+    {
+      "name": "taxZone",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_taxzone_id"
       }
     },
     {
@@ -223,31 +221,40 @@
       }
     },
     {
+      "name": "PurchaseOrderNumber",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_custponumber"
+      }
+    },
+    {
       "name": "currency",
-      "toOne": {
-        "type": "Currency",
+      "attr": {
+        "type": "Number",
         "column": "cmhead_curr_id"
       }
     },
     {
-      "name": "billtoCountry",
+      "name": "freight",
       "attr": {
-        "type": "String",
-        "column": "cmhead_billtocountry"
+        "type": "Number",
+        "column": "cmhead_freight"
       }
     },
     {
-      "name": "shiptoCountry",
-      "attr": {
-        "type": "String",
-        "column": "cmhead_shipto_country"
+      "name": "lines",
+      "toMany": {
+        "isNested": true,
+        "type": "CreditMemoLine",
+        "column": "cmhead_id",
+        "inverse": "creditMemo"
       }
     },
     {
-      "name": "isVoid",
+      "name": "notes",
       "attr": {
-        "type": "Boolean",
-        "column": "cmhead_void"
+        "type": "String",
+        "column": "cmhead_comments"
       }
     }
   ],
