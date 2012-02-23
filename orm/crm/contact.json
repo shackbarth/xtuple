@@ -14,8 +14,8 @@
   "properties": [
     {
       "name": "account",
-      "attr": {
-        "type": "String",
+      "toOne": {
+        "type": "AccountInfo",
         "column": "cntct_crmacct_id"
       }
     }

@@ -4,8 +4,14 @@
   "type": "OpportunityContact",
   "table": "xt.docinfo",
   "idSequenceName": "public.docass_docass_id_seq",
-  "comment": "Opportunity Contact Map",
-  "canUpdate": false,
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

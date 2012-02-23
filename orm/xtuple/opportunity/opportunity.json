@@ -5,6 +5,23 @@
   "table": "ophead",
   "idSequenceName": "public.ophead_ophead_id_seq",
   "comment": "Opportunity Map",
+  "privileges": {
+      "all": {
+        "create": "MaintainAllOpportunities",
+	    "read": "ViewAllOpportunities",
+	    "update": "MaintainAllOpportunities",
+	    "delete": "MaintainAllOpportunities"
+	  },
+	  "personal": {
+	    "create": "MaintainPersonalOpportunities",
+	    "read": "ViewPersonalOpportunities",
+	    "update": "MaintainPersonalOpportunities",
+	    "delete": "MaintainPersonalOpportunities",
+	    "properties": [
+	      "owner"
+	     ]
+	  }
+    },
   "properties": [
     {
       "name": "guid",

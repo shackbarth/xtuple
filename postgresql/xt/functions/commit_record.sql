@@ -7,11 +7,11 @@ create or replace function xt.commit_record(data_hash text) returns text as $$
 
   var dataHash = JSON.parse(data_hash),
       recordType = dataHash.recordType,
-      type = dataHash.recordType.replace((/\w+\./i),''),
+      encryptionKey = dataHash.encryptionKey,
       data = Object.create(XT.Data);
 
   delete dataHash.recordType;
-  data.commitRecord(recordType, dataHash.dataHash);
+  data.commitRecord(recordType, dataHash.dataHash, encryptionKey);
 
   return '{ "status":"ok" }';
   

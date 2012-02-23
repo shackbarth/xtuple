@@ -4,9 +4,14 @@
   "type": "IncidentInfo",
   "table": "incdt",
   "comment": "Incident Info Map",
-  "canCreate": false,
-  "canUpdate": false,
-  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",

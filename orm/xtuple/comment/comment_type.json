@@ -5,6 +5,14 @@
   "table": "cmnttype",
   "idSequenceName": "cmnttype_cmnttype_id_seq",
   "comment": "Comment Type Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",

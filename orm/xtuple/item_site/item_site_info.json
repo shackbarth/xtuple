@@ -1,0 +1,53 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemSiteInfo",
+  "table": "itemsite",
+  "comment": "Item Site Info Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "itemsite_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "item",
+      "toOne": {
+        "isNested": true,
+        "type": "ItemInfo",
+        "column": "itemsite_item_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "site",
+      "toOne": {
+        "isNested": true,
+        "type": "SiteInfo",
+        "column": "itemsite_warehous_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "itemsite_active",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

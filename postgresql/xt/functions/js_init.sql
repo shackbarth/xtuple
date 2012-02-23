@@ -160,7 +160,7 @@ create or replace function xt.js_init() returns void as $$
     return executeSql(sql, [ viewName, schemaName ]);
   }
 
-  /* Return a map definition.
+  /* Return an Object Relational Map definition including all active extensions.
 
      @param {String} name space
      @param {String} type
@@ -174,11 +174,13 @@ create or replace function xt.js_init() returns void as $$
     
     if(res) ret = res.map;
     else {
+     /* get base */
       var sql = 'select orm_json as json '
               + 'from xt.orm '
               + 'where orm_namespace=$1'
               + ' and orm_type=$2'
-              + ' and not orm_ext',
+              + ' and not orm_ext '
+              + ' and orm_active ',
           res = executeSql(sql, [ nameSpace, type ]);
 
       if(!res.length) {
@@ -186,6 +188,32 @@ create or replace function xt.js_init() returns void as $$
       }
 
       ret = JSON.parse(res[0].json);
+
+      /* get extensions and merge them into the base */
+      if(!ret.extensions) ret.extensions = [];
+      
+      sql = 'select orm_json as json '
+              + 'from xt.orm '
+              + 'where orm_namespace=$1'
+              + ' and orm_type=$2'
+              + ' and orm_ext '
+              + ' and orm_active '
+              + 'order by orm_seq';
+      res = executeSql(sql, [ nameSpace, type ]);
+
+      for(var i = 0; i < res.length; i++) {
+        var orm = JSON.parse(res[i].json),
+            ext = {};
+
+        ext.context = orm.context;
+        ext.table = orm.table;
+        ext.isChild = orm.isChild;
+        ext.relations = orm.relations;
+        ext.properties = orm.properties;
+        ext.order = orm.order;
+
+        ret.extensions.push(ext);
+      }
 
       /* cache the result so we don't requery needlessly */
       this._maps.push({ "recordType": recordType, "map": ret});
@@ -197,7 +225,7 @@ create or replace function xt.js_init() returns void as $$
   /* Returns the primary key as designated in an ORM map.
 
      @param {Object} ORM
-     @returns{String}
+     @returns String
   */
   XT.getPrimaryKey = function(orm) {
     /* find primary key */
@@ -205,6 +233,30 @@ create or replace function xt.js_init() returns void as $$
       if(orm.properties[i].attr && 
          orm.properties[i].attr.isPrimaryKey)
         return orm.properties[i].name;
+    }
+
+    return false;
+  }
+
+  /* Returns matching property as designated in an ORM map.
+
+     @param {Object} ORM
+     @param {String} property
+     @returns Object
+  */
+  XT.getProperty = function(orm, property) {
+    /* look for property on the first level */
+    for(var i = 0; i < orm.properties.length; i++) {
+      if(orm.properties[i].name === property)
+        return orm.properties[i];
+    }
+
+    /* look recursively for property on extensions */
+    if(orm.extensions) {
+      for(var i = 0; i < orm.extensions.length; i++) {
+        var ret = XT.getProperty(orm.extensions[i], property);
+        if(ret) return ret;
+      }
     }
 
     return false;

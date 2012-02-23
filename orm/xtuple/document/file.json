@@ -5,6 +5,14 @@
   "table": "file",
   "idSequenceName": "public.file_file_id_seq",
   "comment": "File Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

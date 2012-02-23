@@ -6,9 +6,14 @@
   "type": "SiteInfo",
   "table": "whsinfo",
   "comment": "Site Info Map",
-  "canCreate": false,
-  "canUpdate": false,
-  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",

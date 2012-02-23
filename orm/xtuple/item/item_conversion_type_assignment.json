@@ -5,7 +5,14 @@
   "table": "itemuom",
   "idSequenceName": "public.itemuom_itemuom_id_seq",
   "comment": "Item Conversion Type Assignment Map",
-  "canUpdate": false,
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

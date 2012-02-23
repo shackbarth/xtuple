@@ -5,6 +5,14 @@
   "table": "charopt",
   "idSequenceName": "public.charopt_charopt_id_seq",
   "comment": "Characteristic Option Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",

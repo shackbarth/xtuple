@@ -5,6 +5,14 @@
   "table": "alarm",
   "idSequenceName": "alarm_alarm_id_seq",
   "comment": "ToDo Alarm Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",
