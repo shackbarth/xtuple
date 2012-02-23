@@ -20,7 +20,7 @@
 	    "isNested": true,
 	    "type": "InvoiceItem",
 	    "column": "invchead_id",
-	    "inverse": "invoiceHead"
+	    "inverse": "invoice"
 	  }
 	},
     {

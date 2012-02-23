@@ -5,7 +5,20 @@
   "table": "xt.comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Incident Comment Map",
-  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": "EditOthersComments",
+      "delete": false
+    },
+    "personal": {
+      "update": "EditOwnComments",
+      "properties": [
+        "username"
+       ]
+    }
+  },
   "properties": [
     {
       "name": "guid",

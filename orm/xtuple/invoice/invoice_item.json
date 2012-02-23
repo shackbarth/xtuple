@@ -3,7 +3,15 @@
   "nameSpace": "XM",
   "type": "InvoiceItem",
   "table": "invcitem",
-  "comment": "Invoice Map",
+  "comment": "Invoice Item Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
   "properties": [
     {
       "name": "guid",

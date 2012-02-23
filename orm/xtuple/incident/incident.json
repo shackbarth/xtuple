@@ -6,7 +6,6 @@
   "idSequenceName": "public.incdt_incdt_id_seq",
   "orderSequence": "IncidentNumber",
   "comment": "Incident Map",
-  "canDelete": false,
   "privileges": {
     "all": {
       "create": "MaintainAllIncidents",
