@@ -1,0 +1,256 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CreditMemo",
+  "table": "cmhead",
+  "idSequenceName": "public.cmhead_cmhead_id_seq",
+  "comment": "Credit Memo Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCreditMemos",
+      "read": "ViewCreditMemos",
+      "update": "MaintainCreditMemos",
+      "delete": "MaintainCreditMemos"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_number"
+      }
+    },
+    {
+      "name": "lineItems",
+      "toMany": {
+        "isNested": true,
+        "type": "CreditMemoItem",
+        "column": "cmhead_id",
+        "inverse": "creditMemo"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "cmhead_posted"
+      }
+    },
+    {
+      "name": "invoiceNumber",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_invcnumber"
+      }
+    },
+    {
+      "name": "PurchaseOrderNumber",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_custponumber"
+      }
+    },
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_cust_id"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "cmhead_docdate"
+      }
+    },
+    {
+      "name": "shipto",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_shipto_id"
+      }
+    },
+    {
+      "name": "shiptoName",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_name"
+      }
+    },
+    {
+      "name": "shiptoAddress1",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_address1"
+      }
+    },
+    {
+      "name": "shiptoAddress2",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_address2"
+      }
+    },
+    {
+      "name": "shiptoAddress3",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_address3"
+      }
+    },
+    {
+      "name": "shiptoCity",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_city"
+      }
+    },
+    {
+      "name": "shiptoState",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_state"
+      }
+    },
+    {
+      "name": "shiptoPostalCode",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_zipcode"
+      }
+    },
+    {
+      "name": "salesRep",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_salesrep_id"
+      }
+    },
+    {
+      "name": "freight",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_freight"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_comments"
+      }
+    },
+    {
+      "name": "isPrinted",
+      "attr": {
+        "type": "Boolean",
+        "column": "cmhead_printed"
+      }
+    },
+	{
+	  "name": "billtoName",
+	  "attr": {
+	    "type": "String",
+	    "column": "cmhead_billtoname"
+	  }
+	},
+	{
+	  "name": "billtoAddress1",
+	  "attr": {
+	    "type": "String",
+	    "column": "cmhead_billtoaddress1"
+	  }
+	},
+	{
+	  "name": "billtoAddress2",
+	  "attr": {
+	    "type": "String",
+	    "column": "cmhead_billtoaddress2"
+	  }
+	},
+	{
+	  "name": "billtoAddress3",
+	  "attr": {
+	    "type": "String",
+	    "column": "cmhead_billtoaddress3"
+	  }
+	},
+	{
+	  "name": "billtoCity",
+	  "attr": {
+	    "type": "String",
+	    "column": "cmhead_billtocity"
+	  }
+	},
+	{
+	  "name": "billtoState",
+	  "attr": {
+	    "type": "String",
+	    "column": "cmhead_billtostate"
+	  }
+	},
+	{
+	  "name": "billtoPostalCode",
+	  "attr": {
+	    "type": "String",
+	    "column": "cmhead_billtozip"
+	  }
+	},  
+ 	{
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "cmhead_commission"
+      }
+    },
+    {
+      "name": "reasonCode",
+      "toMany": {
+        "isNested": true,
+        "type": "ReasonCode",
+        "column": "cmhead_rsncode_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "cmhead_curr_id"
+      }
+    },
+    {
+      "name": "billtoCountry",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_billtocountry"
+      }
+    },
+    {
+      "name": "shiptoCountry",
+      "attr": {
+        "type": "String",
+        "column": "cmhead_shipto_country"
+      }
+    },
+    {
+      "name": "isVoid",
+      "attr": {
+        "type": "Boolean",
+        "column": "cmhead_void"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

@@ -5,8 +5,6 @@
   "table": "incdthist",
   "idSequenceName": "public.incdthist_incdthist_id_seq",
   "comment": "Incident History Map",
-  "canUpdate": false,
-  "canDelete": false,
   "privileges": {
     "all": {
       "create": "MaintainAllIncidentHistory",

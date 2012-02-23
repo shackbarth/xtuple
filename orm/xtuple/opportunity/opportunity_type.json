@@ -5,6 +5,14 @@
   "table": "optype",
   "idSequenceName": "public.optype_optype_id_seq",
   "comment": "Opportunity Type Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

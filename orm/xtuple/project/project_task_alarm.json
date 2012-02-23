@@ -5,6 +5,14 @@
   "table": "alarm",
   "idSequenceName": "public.alarm_alarm_id_seq",
   "comment": "Project Task Alarm Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",
