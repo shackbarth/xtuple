@@ -52,7 +52,7 @@
       }
     },
     {
-      "name": "receives1099",
+      "name": "isReceives1099",
       "attr": {
         "type": "Boolean",
         "column": "vend_1099"
@@ -94,7 +94,7 @@
       }
     },
     {
-      "name": "qualified",
+      "name": "isQualified",
       "attr": {
         "type": "Boolean",
         "column": "vend_qualified"
@@ -138,14 +138,14 @@
       }
     },
     {
-      "name": "match",
+      "name": "isMatch",
       "attr": {
         "type": "Boolean",
         "column": "vend_match"
       }
     },
     {
-      "name": "achEnabled",
+      "name": "isAchEnabled",
       "attr": {
         "type": "Boolean",
         "column": "vend_ach_enabled"
@@ -159,7 +159,7 @@
       }
     },
     {
-      "name": "achUseVendorInfo",
+      "name": "isAchUseVendorInfo",
       "attr": {
         "type": "Boolean",
         "column": "vend_ach_use_vendinfo"
@@ -184,7 +184,7 @@
       "attr": {
         "type": "Bytea",
         "column": "vend_ach_routingnumber",
-	"isEncrypted":true
+	"isEncrypted": true
       }
     },
     {
@@ -192,7 +192,7 @@
       "attr": {
         "type": "Bytea",
         "column": "vend_ach_accntnumber",
-	"isEncrypted":true
+	"isEncrypted": true
       }
     },
     {
