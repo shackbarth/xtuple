@@ -1,0 +1,45 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "VendorType",
+  "table": "vendtype",
+  "idSequenceName": "public.vendtype_vendtype_id_seq",
+  "comment": "Vendor Type Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainVendorTypes",
+      "read": true,
+      "update": "MaintainVendorTypes",
+      "delete": "MaintainVendorTypes"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "vendtype_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "vendtype_code",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "vendtype_descrip",
+        "isEditable": false
+      }
+    }
+  ],
+  "isSystem": true
+}
+
+

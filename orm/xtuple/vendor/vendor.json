@@ -1,0 +1,239 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Vendor",
+  "table": "vendinfo",
+  "idSequenceName": "public.vend_vend_id_seq",
+  "comment": "Vendor Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainVendors",
+      "read": "ViewVendors",
+      "update": "MaintainVendors",
+      "delete": "MaintainVendors"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "vend_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "Name",
+      "attr": {
+        "type": "String",
+        "column": "vend_name"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "vend_active"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "vend_comments"
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "vend_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isReceives1099",
+      "attr": {
+        "type": "Boolean",
+        "column": "vend_1099"
+      }
+    },
+    {
+      "name": "freeOnBoardSource",
+      "attr": {
+        "type": "String",
+        "column": "vend_fobsource"
+      }
+    },
+    {
+      "name": "freeOnBoard",
+      "attr": {
+        "type": "String",
+        "column": "vend_fob"
+      }
+    },
+   {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "vend_terms_id"
+      }
+    },
+    {
+      "name": "shipVia",
+      "attr": {
+        "type": "String",
+        "column": "vend_shipvia"
+      }
+    },
+    {
+      "name": "type",
+      "attr": {
+        "type": "Number",
+        "column": "vend_vendtype_id"
+      }
+    },
+    {
+      "name": "isQualified",
+      "attr": {
+        "type": "Boolean",
+        "column": "vend_qualified"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "vend_curr_id"
+      }
+    },
+    {
+      "name": "primaryContact",
+      "toOne": {
+        "type": "ContactInfo",
+        "column": "vend_cntct1_id"
+      }
+    },
+    {
+      "name": "secondaryContact",
+      "toOne": {
+        "type": "ContactInfo",
+        "column": "vend_cntct2_id"
+      }
+    },
+    {
+      "name": "mainAddress",
+      "toOne": {
+        "type": "AddressInfo",
+        "column": "vend_addr_id"
+      }
+    },
+    {
+      "name": "alternateAddresses",
+      "toMany": {
+        "type": "VendorAddress",
+        "column": "vend_id",
+        "inverse": "vendor",
+        "isNested": true
+      }
+    },
+    {
+      "name": "isMatch",
+      "attr": {
+        "type": "Boolean",
+        "column": "vend_match"
+      }
+    },
+    {
+      "name": "isAchEnabled",
+      "attr": {
+        "type": "Boolean",
+        "column": "vend_ach_enabled"
+      }
+    },
+    {
+      "name": "achAccountType",
+      "attr": {
+        "type": "String",
+        "column": "vend_ach_accnttype"
+      }
+    },
+    {
+      "name": "isAchUseVendorInfo",
+      "attr": {
+        "type": "Boolean",
+        "column": "vend_ach_use_vendinfo"
+      }
+    },
+    {
+      "name": "achIndividualNumber",
+      "attr": {
+        "type": "String",
+        "column": "vend_ach_indiv_number"
+      }
+    },
+    {
+      "name": "achIndividualName",
+      "attr": {
+        "type": "String",
+        "column": "vend_ach_indiv_name"
+      }
+    },
+    {
+      "name": "achRoutingNumber",
+      "attr": {
+        "type": "Bytea",
+        "column": "vend_ach_routingnumber",
+        "isEncrypted": true
+      }
+    },
+    {
+      "name": "achAccountNumber",
+      "attr": {
+        "type": "Bytea",
+        "column": "vend_ach_accntnumber",
+        "isEncrypted": true
+      }
+    },
+    {
+      "name": "taxZoneId",
+      "attr": {
+        "type": "Number",
+        "column": "vend_taxzone_id"
+      }
+    },
+    {
+      "name": "taxRegistrations",
+      "toMany": {
+        "type": "VendorTaxRegistration",
+        "column": "vend_id",
+        "inverse": "vendor",
+        "isNested": true
+      }
+    },
+    {
+      "name": "comments",
+      "toMany": {
+        "type": "VendorComment",
+        "column": "vend_id",
+        "inverse": "vendor",
+        "isNested": true,
+        "deleteDelegate": {
+          "table": "comment",
+          "relations": [
+            {
+              "column": "comment_source_id",
+              "inverse": "guid"
+            },
+            {
+              "column": "comment_source",
+              "value": "V"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "isSystem": true,
+  "sourceCode": "V"
+}
