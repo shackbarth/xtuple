@@ -1,0 +1,126 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CreditMemoTax",
+  "table": "cmheadtax",
+  "idSequenceName": "public.taxhist_taxhist_id_seq",
+  "comment": "Credit Memo Tax Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "parent",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_parent_id"
+      }
+    },
+    {
+      "name": "taxType",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_taxtype_id"
+      }
+    },
+    {
+      "name": "taxCode",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_tax_id"
+      }
+    },
+    {
+      "name": "basic",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_basis"
+      }
+    },
+    {
+      "name": "basicTax",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_basis_tax_id"
+      }
+    },
+    {
+      "name": "sequence",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_sequence"
+      }
+    },
+    {
+      "name": "percent",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_percent"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_amount"
+      }
+    },
+    {
+      "name": "tax",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_tax"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_docdate"
+      }
+    },
+    {
+      "name": "discountDate",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_distdate"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_curr_rate"
+      }
+    },
+    {
+      "name": "journal",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_journalnumber"
+      }
+    }
+],
+	"isNestedOnly": true,
+	 "isSystem": true
+}
