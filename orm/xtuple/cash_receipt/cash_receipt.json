@@ -1,0 +1,142 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CashReceipt",
+  "table": "cashrcpt",
+  "idSequenceName": "public.cashrcpt_cashrcpt_id_seq",
+  "comment": "Cash Receipt Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCashReceipts",
+      "read": "ViewCashReceipts",
+      "update": "MaintainCashReceipts",
+      "delete": "MaintainCashReceipts"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_cust_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_amount"
+      }
+    },
+    {
+      "name": "fundsType",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_docnumber"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_notes"
+      }
+    },
+    {
+      "name": "salesCategory",
+      "toOne": {
+	    "isNested" : true,
+        "type": "SalesCategory",
+        "column": "cashrcpt_salescat_id",
+        "inverse" : "guid"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_curr_id"
+      }
+    },
+    {
+      "name": "useCustomerDeposit",
+      "attr": {
+        "type": "Boolean",
+        "column": "cashrcpt_usecustdeposit"
+      }
+    },
+    {
+      "name": "isVoid",
+      "attr": {
+        "type": "Boolean",
+        "column": "cashrcpt_void"
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_number"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_docdate"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "cashrcpt_posted"
+      }
+    },
+    {
+      "name": "postedDate",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_posteddate"
+      }
+    },
+    {
+      "name": "postedBy",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_postedby"
+      }
+    },
+    {
+      "name": "applyDate",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_applydate"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_discount"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_curr_rate"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
