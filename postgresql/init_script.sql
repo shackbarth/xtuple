@@ -71,5 +71,9 @@
 
 -- xm/types
 \i xm/types/money.sql;
+\i xm/types/cost.sql;
+\i xm/types/sales_price.sql;
+\i xm/types/purch_price.sql;
+\i xm/types/ext_price.sql;
 
 -- [ END ] xm

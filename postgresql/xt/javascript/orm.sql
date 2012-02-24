@@ -762,7 +762,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   
    selectColumn: function(obj, alias, table, nameSpace) {
       var ret = '(select row({amount},{currency},{effective},{rate},{isPosted})::{nameSpace}.{type}) as {alias}',
-          type = obj.type
+          type = obj.type.decamelize(),
           amount = obj.amount,
           currency = obj.currency,
           effective = obj.effective,
