@@ -97,7 +97,7 @@
     },
     {
       "name": "amount",
-      "toMoney": {
+      "attr": {
         "type": "Money",
         "amount": {
           "column": "ophead_amount",

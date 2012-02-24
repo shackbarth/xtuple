@@ -15,7 +15,7 @@ select xt.install_js('XM','Session','xtuple', $$
     var args = arguments[0],
         nameSpace = args.recordType.beforeDot(),
         type = args.recordType.afterDot(),
-        map = XT.getORM(nameSpace, type),
+        map = XT.Orm.fetch(nameSpace, type),
         seq = map.idSequenceName,
         sql = 'select nextval($1) as result';
 
@@ -31,7 +31,7 @@ select xt.install_js('XM','Session','xtuple', $$
     var args = arguments[0],
         nameSpace = args.recordType.beforeDot(),
         type = args.recordType.afterDot(),
-        map = XT.getORM(nameSpace, type),
+        map = XT.Orm.fetch(nameSpace, type),
         seq = map.orderSequence,
         sql = 'select fetchnextnumber($1) as result';
 

@@ -15,7 +15,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
   }
 
   /* determine view dependencies */
-  views = executeSql('select xt.view_dependencies($1)  as result', [view])[0].result;
+  views = XT.Orm.viewDependencies(view);
 
   /* drop the views */
   n = views.length;
@@ -51,7 +51,11 @@ create or replace function xt.orm_did_change() returns trigger as $$
   /* Loop through model names and create */ 
   if(TG_OP === 'INSERT' || TG_OP === 'UPDATE') {
     for(var i = 0; i < views.length; i++) {
-      executeSql('select xt.create_orm_view($1);',[views[i]]);
+      var nameSpace = views[i].beforeDot().camelize().toUpperCase(),
+          type = views[i].afterDot().classify(),
+          orm = XT.Orm.fetch(nameSpace, type);
+          
+      XT.Orm.createView(orm);
     }
   }
 
