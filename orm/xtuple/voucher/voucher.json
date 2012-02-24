@@ -1,0 +1,129 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Voucher",
+  "table": "vohead",
+  "idSequenceName": "public.vohead_vohead_id_seq",
+  "comment": "Voucher Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainVouchers",
+      "read": "ViewVouchers",
+      "update": "MaintainVouchers",
+      "delete": "MaintainVouchers"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "vohead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "isMiscellaneous",
+      "attr": {
+        "type": "Boolean",
+        "column": "vohead_misc",
+        "isVisible": false,
+        "value": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "vohead_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "vohead_posted"
+      }
+    },
+    {
+      "name": "docDate",
+      "attr": {
+        "type": "Date",
+        "column": "vohead_docdate"
+      }
+    },
+    {
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "vohead_distdate"
+      }
+    },
+    {
+      "name": "isFlagFor1099",
+      "attr": {
+        "type": "Boolean",
+        "column": "vohead_1099"
+      }
+    },
+    {
+      "name": "reference",
+      "attr": {
+        "type": "String",
+        "column": "vohead_reference"
+      }
+    },
+    {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "vohead_terms_id"
+      }
+    },
+    {
+      "name": "vendor",
+      "toOne": {
+        "type": "Vendor",
+        "column": "vohead_vend_id"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "vohead_curr_id"
+      }
+    },
+    {
+      "name": "taxZone",
+      "attr": {
+        "type": "Number",
+        "column": "vohead_taxzone_id"
+      }
+    },
+    {
+      "name": "taxType",
+      "attr": {
+        "type": "Number",
+        "column": "vohead_taxtype_id"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "vohead_notes"
+      }
+    },
+    {
+      "name": "recurrences",
+      "toMany": {
+        "type": "VoucherRecurrence",
+        "column": "vohead_id",
+        "inverse": "voucher"
+      }
+    }
+  ],
+  "isSystem": true
+}
