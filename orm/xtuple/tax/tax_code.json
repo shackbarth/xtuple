@@ -1,0 +1,61 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "TaxCode",
+  "table": "tax",
+  "comment": "Tax Code Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainTaxCodes",
+      "read": "ViewTaxCodes",
+      "update": "MaintainTaxCodes",
+      "delete": "MaintainTaxCodes"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "tax_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "tax_code"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "tax_descrip"
+      }
+    },
+    {
+      "name": "taxClass",
+      "attr": {
+        "type": "Number",
+        "column": "tax_taxclass_id"
+      }
+    },
+    {
+      "name": "taxAuthority",
+      "attr": {
+        "type": "Number",
+        "column": "tax_taxauth_id"
+      }
+    },
+    {
+      "name": "basis",
+      "attr": {
+        "type": "Number",
+        "column": "tax_basis_tax_id"
+      }
+    }
+  ],
+  "isSystem": true
+}
