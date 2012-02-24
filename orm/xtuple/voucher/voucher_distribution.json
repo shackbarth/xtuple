@@ -1,0 +1,78 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "VoucherDistribution",
+  "table": "vodist",
+  "idSequenceName": "public.vodist_vodist_id_seq",
+  "comment": "Voucher Distribution Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "vodist_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "voucher",
+      "attr": {
+        "type": "Number",
+        "column": "vodist_vohead_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "vodist_amount"
+      }
+    },
+    {
+      "name": "quantity",
+      "attr": {
+        "type": "Number",
+        "column": "vodist_qty"
+      }
+    },
+    {
+      "name": "expenseCategory",
+      "attr": {
+        "type": "Number",
+        "column": "vodist_expcat_id"
+      }
+    },
+    {
+      "name": "taxCode",
+      "attr": {
+        "type": "Number",
+        "column": "vodist_tax_id"
+      }
+    },
+    {
+      "name": "isDiscountable",
+      "attr": {
+        "type": "Boolean",
+        "column": "vodist_discountable"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "vodist_notes"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
