@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "TaxCode",
   "table": "tax",
+  "idSequenceName": "public.tax_tax_id_seq",
   "comment": "Tax Code Map",
   "privileges": {
     "all": {
