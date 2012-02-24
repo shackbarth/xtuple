@@ -1,0 +1,32 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "Account",
+  "table": "crmacct",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "relations": [
+    {
+      "column": "crmacct_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "customer",
+      "toOne": {
+        "type": "CustomerInfo",
+        "column": "crmacct_cust_id"
+      }
+    },
+    {
+      "name": "taxAuthority",
+      "toOne": {
+        "type": "TaxAuthority",
+        "column": "crmacct_taxauth_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}
