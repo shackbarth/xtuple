@@ -70,4 +70,7 @@
 \i xm/javascript/address.sql;
 \i xm/javascript/session.sql;
 
+-- xm/types
+\i xm/types/money.sql;
+
 -- [ END ] xm
