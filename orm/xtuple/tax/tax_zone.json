@@ -1,0 +1,41 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "TaxZone",
+  "table": "taxzone",
+  "idSequenceName": "public.taxzone_taxzone_id_seq",
+  "comment": "Tax Zone Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainTaxZones",
+      "read": true,
+      "update": "MaintainTaxZones",
+      "delete": "MaintainTaxZones"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxzone_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "taxzone_code"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "taxzone_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}

@@ -18,6 +18,20 @@
         "type": "CustomerInfo",
         "column": "crmacct_cust_id"
       }
+    },
+    {
+      "name": "taxAuthority",
+      "toOne": {
+        "type": "TaxAuthority",
+        "column": "crmacct_taxauth_id"
+      }
+    },
+    {
+      "name": "vendor",
+      "toOne": {
+        "type": "Vendor",
+        "column": "crmacct_vend_id"
+      }
     }
   ],
   "sequence": 0,
