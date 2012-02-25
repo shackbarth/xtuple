@@ -23,6 +23,13 @@
       }
     },
     {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_number"
+      }
+    },
+    {
       "name": "customer",
       "attr": {
         "type": "Number",
@@ -37,6 +44,20 @@
       }
     },
     {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_curr_rate"
+      }
+    },
+    {
       "name": "fundsType",
       "attr": {
         "type": "String",
@@ -44,26 +65,10 @@
       }
     },
     {
-      "name": "notes",
-      "attr": {
-        "type": "String",
-        "column": "cashrcpt_notes"
-      }
-    },
-    {
       "name": "salesCategory",
-      "toOne": {
-	    "isNested" : true,
-        "type": "SalesCategory",
-        "column": "cashrcpt_salescat_id",
-        "inverse" : "guid"
-      }
-    },
-    {
-      "name": "currency",
       "attr": {
         "type": "Number",
-        "column": "cashrcpt_curr_id"
+        "column": "cashrcpt_salescat_id"
       }
     },
     {
@@ -74,20 +79,6 @@
       }
     },
     {
-      "name": "isVoid",
-      "attr": {
-        "type": "Boolean",
-        "column": "cashrcpt_void"
-      }
-    },
-    {
-      "name": "number",
-      "attr": {
-        "type": "String",
-        "column": "cashrcpt_number"
-      }
-    },
-    {
       "name": "documentDate",
       "attr": {
         "type": "Date",
@@ -95,24 +86,10 @@
       }
     },
     {
-      "name": "isPosted",
+      "name": "bankAccount",
       "attr": {
-        "type": "Boolean",
-        "column": "cashrcpt_posted"
-      }
-    },
-    {
-      "name": "postedDate",
-      "attr": {
-        "type": "Date",
-        "column": "cashrcpt_posteddate"
-      }
-    },
-    {
-      "name": "postedBy",
-      "attr": {
-        "type": "String",
-        "column": "cashrcpt_postedby"
+        "type": "Number",
+        "column": "cashrcpt_bankaccnt_id"
       }
     },
     {
@@ -123,17 +100,33 @@
       }
     },
     {
-      "name": "discount",
+      "name": "isPosted",
       "attr": {
-        "type": "Number",
-        "column": "cashrcpt_discount"
+        "type": "Boolean",
+        "column": "cashrcpt_posted"
       }
     },
     {
-      "name": "currencyRate",
+      "name": "isVoid",
       "attr": {
-        "type": "Number",
-        "column": "cashrcpt_curr_rate"
+        "type": "Boolean",
+        "column": "cashrcpt_void"
+      }
+    },
+    {
+      "name": "applications",
+      "toMany": {
+        "isNested": true,
+        "type": "CashReceiptApplication",
+        "column": "cashrcpt_id",
+        "inverse": "cashReceipt"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_notes"
       }
     }
   ],

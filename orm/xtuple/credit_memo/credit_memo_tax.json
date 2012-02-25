@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "CreditMemoTax",
   "table": "cmheadtax",
-  "idSequenceName": "public.taxhist_taxhist_id_seq",
+  "idSequenceName": "taxhist_taxhist_id_seq",
   "comment": "Credit Memo Tax Map",
   "privileges": {
     "all": {
@@ -23,7 +23,7 @@
       }
     },
     {
-      "name": "parent",
+      "name": "creditMemo",
       "attr": {
         "type": "Number",
         "column": "taxhist_parent_id"
@@ -44,14 +44,14 @@
       }
     },
     {
-      "name": "basic",
+      "name": "basis",
       "attr": {
         "type": "Number",
         "column": "taxhist_basis"
       }
     },
     {
-      "name": "basicTax",
+      "name": "basisTaxCode",
       "attr": {
         "type": "Number",
         "column": "taxhist_basis_tax_id"
@@ -93,13 +93,6 @@
       }
     },
     {
-      "name": "discountDate",
-      "attr": {
-        "type": "Date",
-        "column": "taxhist_distdate"
-      }
-    },
-    {
       "name": "currency",
       "attr": {
         "type": "Number",
@@ -112,15 +105,8 @@
         "type": "Number",
         "column": "taxhist_curr_rate"
       }
-    },
-    {
-      "name": "journal",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_journalnumber"
-      }
     }
-],
+  ],
 	"isNestedOnly": true,
-	 "isSystem": true
+  "isSystem": true
 }

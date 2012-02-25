@@ -1,10 +1,10 @@
 {
-  "context": "xtuple",
+  "context": "generalLedger",
   "nameSpace": "XM",
-  "type": "CashReceiptItem",
-  "table": "cashrcptitem",
-  "idSequenceName": "public.cashrcptitem_cashrcptitem_id_seq",
-  "comment": "Cash Receipt Item Map",
+  "type": "CashReceiptDistribution",
+  "table": "cashrcptmisc",
+  "idSequenceName": "cashrcptmisc_cashrcptmisc_id_seq",
+  "comment": "Cash Receipt Distribution Map",
   "privileges": {
     "all": {
       "create": "false",
@@ -18,7 +18,7 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "cashrcptitem_id",
+        "column": "cashrcptmisc_id",
         "isPrimaryKey": true
       }
     },
@@ -26,28 +26,28 @@
       "name": "cashReceipt",
       "attr": {
         "type": "Number",
-        "column": "cashrcptitem_cashrcpt_id"
+        "column": "cashrcptmisc_cashrcpt_id"
       }
     },
     {
-      "name": "accountReceivable",
+      "name": "account",
       "attr": {
-        "type": "Number",
-        "column": "cashrcptitem_aropen_id"
+        "type": "Boolean",
+        "column": "cashrcptmisc_accnt_id"
       }
     },
     {
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "cashrcptitem_amount"
+        "column": "cashrcptmisc_amount"
       }
     },
     {
-      "name": "discount",
+      "name": "notes",
       "attr": {
-        "type": "Number",
-        "column": "cashrcptitem_discount"
+        "type": "String",
+        "column": "cashrcptmisc_notes"
       }
     }
   ],

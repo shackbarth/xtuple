@@ -1,10 +1,10 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "InvoiceItemTax",
-  "table": "invcheadtax",
-  "idSequenceName": "public.taxhist_taxhist_id_seq",
-  "comment": "Invoice Item Tax Map",
+  "type": "InvoiceLineTax",
+  "table": "invcitemtax",
+  "idSequenceName": "taxhist_taxhist_id_seq",
+  "comment": "Invoice Line Tax Map",
   "privileges": {
     "all": {
       "create": false,
@@ -23,7 +23,7 @@
       }
     },
     {
-      "name": "parent",
+      "name": "invoiceLine",
       "attr": {
         "type": "Number",
         "column": "taxhist_parent_id"
@@ -44,14 +44,14 @@
       }
     },
     {
-      "name": "basic",
+      "name": "basis",
       "attr": {
         "type": "Number",
         "column": "taxhist_basis"
       }
     },
     {
-      "name": "basicTax",
+      "name": "basisTaxCode",
       "attr": {
         "type": "Number",
         "column": "taxhist_basis_tax_id"
@@ -93,13 +93,6 @@
       }
     },
     {
-      "name": "discountDate",
-      "attr": {
-        "type": "Date",
-        "column": "taxhist_distdate"
-      }
-    },
-    {
       "name": "currency",
       "attr": {
         "type": "Number",
@@ -112,15 +105,8 @@
         "type": "Number",
         "column": "taxhist_curr_rate"
       }
-    },
-    {
-      "name": "journal",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_journalnumber"
-      }
     }
-],
+  ],
 	"isNestedOnly": true,
-	 "isSystem": true
+  "isSystem": true
 }
