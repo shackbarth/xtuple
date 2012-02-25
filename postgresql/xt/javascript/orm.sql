@@ -210,42 +210,42 @@ select xt.install_js('XT','Orm','xtuple', $$
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name.decamelize();
 
-        /* process attributes using transform */
-        if(props[i].attr) {
-          var obj = props[i].attr,
-              transform = XT.Orm.transforms[obj.type],
-              isVisible = obj.isVisible !== false ? true : false;
-              isEditable = obj.isEditable !== false ? true : false;
+        /* process attributes */
+        if(props[i].attr && props[i].attr.column) {
+          var attr = props[i].attr,
+              isVisible = attr.isVisible !== false ? true : false,
+              isEditable = attr.isEditable !== false ? true : false,
+              isPrimaryKey = attr.isPrimaryKey ? true : false;
 
-          /* create */
-          if(transform && transform.insertTargets)
-          {
-            var targets = transform.insertTargets(obj, alias);
-            if(targets.length) insTgtCols.push(targets);
-          }
-
-          if(transform && transform.insertSources)
-          {
-            var sources = transform.insertSources(obj, alias);
-            if(sources.length) insSrcCols.push(sources);
-          }
-       
-          /* read */
-          if(isVisible && transform && transform.selectColumn) {
-            col = transform.selectColumn(obj, alias, tblAlias, base.nameSpace);
+          if(isVisible) {
+            /* if it is composite, assign the table itself */
+            col = attr.type.decamelize() === orm.table ? tblAlias : tblAlias + '.' + attr.column;
+            col = col.concat(' as "', alias, '"');
             cols.push(col);
           }
 
-          if(transform && transform.whereClauses) {
-            var res = transform.whereClauses(obj);
-            if(clauses.length) clauses.push(res);
+          /* for update and delete rules */
+          if(isPrimaryKey) {
+            pKeyCol = attr.column;
+            pKeyAlias = alias;
           }
-  
-          /* update */
-          if(isEditable && transform && transform.updateExpressions) {
-            var expressions = transform.updateExpressions(obj, alias);
-            if(expressions.length) updCols.push(expressions);
-          }
+
+          /* handle fixed value */
+          if(attr.value) {
+            var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
+
+            /* for select */     
+            clauses.push(attr.column + ' = ' + value);
+            
+            /* for insert */
+            insSrcCols.push(value);
+          } else insSrcCols.push('new.' + alias);
+
+          /* for insert rule */
+          insTgtCols.push(attr.column);
+
+          /* for update rule */
+          if(isVisible && isEditable && !isPrimaryKey) updCols.push(attr.column + ' = new.' + alias);
         }
 
         /* process toOne - TODO: we should make a transform for this */
@@ -661,71 +661,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     executeSql(query); 
 
   }
-  
-  /**
-  Transforms object.
-  
-  */
-  XT.Orm.transforms = {};
-  
-  /** 
-  Register a transform.
-  
-  @param {String} type
-  @param {Hash} transform
-  */
-  XT.Orm.registerTransform = function(type, transform) {
-    XT.Orm.transforms[type] = transform;
-  }
-
-  // ..........................................................
-  // TRANSFORMS
-  //
-
-  /** @private default transformation for basic data types */
-  var defaultTransform = {
-    insertTargets: function(obj, alias) {
-      return [obj.column];
-    },
-
-    insertSources: function(obj, alias) {
-      return obj.value ?  [isNaN(obj.value - 0) ? "'" + obj.value + "'" : obj.value] :  ['new.' + alias]
-    },
-  
-    selectColumn: function(obj, alias, table, nameSpace) {
-      var ret = [], col;
-
-      if(obj.isVisible !== false) {
-        /* if it is composite, assign the table itself */
-        col = obj.type.decamelize() === table ? table : table + '.' + obj.column;
-        col = col.concat(' as "', alias, '"');
-        ret.push(col);
-      }
-
-      return ret;
-    },
-
-    updateExpressions: function(obj, alias) {
-      return obj.isVisible !== false &&  obj.isEditable !== false && !obj.isPrimaryKey ? [obj.column + ' = new.' + alias] : []      
-    },
-
-    whereClauses: function(obj) {
-      var ret = [];
-     
-      if(obj.value) {
-        var value = isNaN(obj.value - 0) ? "'" + obj.value + "'" : obj.value;
-  
-        ret.push(obj.column + ' = ' + value);
-      }
-
-      return ret;
-    }  
-  }
-  
-  XT.Orm.registerTransform('String', defaultTransform);
-  XT.Orm.registerTransform('Date', defaultTransform);
-  XT.Orm.registerTransform('Number', defaultTransform);
-  XT.Orm.registerTransform('Boolean', defaultTransform);
 
 $$ );
 
