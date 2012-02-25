@@ -3,11 +3,11 @@
   "nameSpace": "XM",
   "type": "Opportunity",
   "table": "ophead",
-  "idSequenceName": "public.ophead_ophead_id_seq",
+  "idSequenceName": "ophead_ophead_id_seq",
   "comment": "Opportunity Map",
   "privileges": {
-      "all": {
-        "create": "MaintainAllOpportunities",
+    "all": {
+      "create": "MaintainAllOpportunities",
 	    "read": "ViewAllOpportunities",
 	    "update": "MaintainAllOpportunities",
 	    "delete": "MaintainAllOpportunities"
@@ -19,9 +19,9 @@
 	    "delete": "MaintainPersonalOpportunities",
 	    "properties": [
 	      "owner"
-	     ]
+      ]
 	  }
-    },
+  },
   "properties": [
     {
       "name": "guid",
@@ -100,13 +100,6 @@
       "attr": {
         "type": "Number",
         "column": "ophead_amount"
-      }
-    },
-    {
-      "name": "currency",
-      "attr": {
-        "type": "Number",
-        "column": "ophead_curr_id"
       }
     },
     {

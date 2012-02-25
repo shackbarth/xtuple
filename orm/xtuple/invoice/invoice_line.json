@@ -122,6 +122,15 @@
       }
     },
     {
+      "name": "taxes",
+      "toMany": {
+        "isNested": true,
+        "type": "InvoiceLineTax",
+        "column": "invcitem_id",
+        "inverse": "invoiceLine"
+      }
+    },
+    {
       "name": "notes",
       "attr": {
         "type": "String",

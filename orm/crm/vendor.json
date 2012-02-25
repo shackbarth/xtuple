@@ -1,0 +1,26 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "Vendor",
+  "table": "crmacct",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "isChild": true,
+  "relations": [
+    {
+      "column": "crmacct_vend_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "account",
+      "toOne": {
+        "type": "AccountInfo",
+        "column": "crmacct_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

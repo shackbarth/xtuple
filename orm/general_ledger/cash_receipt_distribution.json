@@ -1,0 +1,56 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "CashReceiptDistribution",
+  "table": "cashrcptmisc",
+  "idSequenceName": "cashrcptmisc_cashrcptmisc_id_seq",
+  "comment": "Cash Receipt Distribution Map",
+  "privileges": {
+    "all": {
+      "create": "false",
+      "read": "true",
+      "update": "false",
+      "delete": "false"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptmisc_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "cashReceipt",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptmisc_cashrcpt_id"
+      }
+    },
+    {
+      "name": "account",
+      "attr": {
+        "type": "Boolean",
+        "column": "cashrcptmisc_accnt_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptmisc_amount"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "cashrcptmisc_notes"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

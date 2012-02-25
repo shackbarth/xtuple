@@ -1,0 +1,76 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ExpenseCategory",
+  "table": "expcat",
+  "idSequenceName": "public.expcat_expcat_id_seq",
+  "comment": "Expense Category Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainExpenseCategories",
+      "read": true,
+      "update": "MaintainExpenseCategories",
+      "delete": "MaintainExpenseCategories"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "expcat_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "expcat_code"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "expcat_descrip"
+      }
+    },
+    {
+      "name": "expenseAccount",
+      "attr": {
+        "type": "Number",
+        "column": "expcat_exp_accnt_id"
+      }
+    },
+    {
+      "name": "liabilityAccount",
+      "attr": {
+        "type": "Number",
+        "column": "expcat_liability_accnt_id"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "expcat_active"
+      }
+    },
+    {
+      "name": "purchasePrice",
+      "attr": {
+        "type": "Number",
+        "column": "expcat_purchprice_accnt_id"
+      }
+    },
+    {
+      "name": "freightAccount",
+      "attr": {
+        "type": "Number",
+        "column": "expcat_freight_accnt_id"
+      }
+    }
+  ],
+  "isSystem": true
+}

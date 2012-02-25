@@ -1,0 +1,56 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CashReceiptApplication",
+  "table": "cashrcptitem",
+  "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
+  "comment": "Cash Receipt Application Map",
+  "privileges": {
+    "all": {
+      "create": "false",
+      "read": "true",
+      "update": "false",
+      "delete": "false"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptitem_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "cashReceipt",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptitem_cashrcpt_id"
+      }
+    },
+    {
+      "name": "receivable",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptitem_aropen_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptitem_amount"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcptitem_discount"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

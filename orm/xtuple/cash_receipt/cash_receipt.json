@@ -1,0 +1,135 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CashReceipt",
+  "table": "cashrcpt",
+  "idSequenceName": "public.cashrcpt_cashrcpt_id_seq",
+  "comment": "Cash Receipt Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainCashReceipts",
+      "read": "ViewCashReceipts",
+      "update": "MaintainCashReceipts",
+      "delete": "MaintainCashReceipts"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_number"
+      }
+    },
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_cust_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_curr_rate"
+      }
+    },
+    {
+      "name": "fundsType",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_docnumber"
+      }
+    },
+    {
+      "name": "salesCategory",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_salescat_id"
+      }
+    },
+    {
+      "name": "useCustomerDeposit",
+      "attr": {
+        "type": "Boolean",
+        "column": "cashrcpt_usecustdeposit"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_docdate"
+      }
+    },
+    {
+      "name": "bankAccount",
+      "attr": {
+        "type": "Number",
+        "column": "cashrcpt_bankaccnt_id"
+      }
+    },
+    {
+      "name": "applyDate",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_applydate"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "cashrcpt_posted"
+      }
+    },
+    {
+      "name": "isVoid",
+      "attr": {
+        "type": "Boolean",
+        "column": "cashrcpt_void"
+      }
+    },
+    {
+      "name": "applications",
+      "toMany": {
+        "isNested": true,
+        "type": "CashReceiptApplication",
+        "column": "cashrcpt_id",
+        "inverse": "cashReceipt"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_notes"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
