@@ -232,7 +232,7 @@ select xt.install_js('XT','Orm','xtuple', $$
        
           /* read */
           if(isVisible && transform && transform.selectColumn) {
-            col = transform.selectColumn(obj, alias, tblAlias, orm.nameSpace);
+            col = transform.selectColumn(obj, alias, tblAlias, base.nameSpace);
             cols.push(col);
           }
 
@@ -293,7 +293,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         /* process toMany - TODO: We should make a transform for this */
         if(props[i].toMany) {
           var toMany = props[i].toMany,
-              table = orm.nameSpace + '.' + toMany.type.decamelize(),
+              table = base.nameSpace + '.' + toMany.type.decamelize(),
               type = toMany.type.decamelize(), 
               column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(orm.nameSpace, toMany.type)),
               inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
@@ -725,6 +725,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   XT.Orm.registerTransform('String', defaultTransform);
   XT.Orm.registerTransform('Date', defaultTransform);
   XT.Orm.registerTransform('Number', defaultTransform);
+  XT.Orm.registerTransform('Boolean', defaultTransform);
   
   /** @private money transform definition used for all money types */
   var moneyTransform = {
@@ -761,20 +762,21 @@ select xt.install_js('XT','Orm','xtuple', $$
    },
   
    selectColumn: function(obj, alias, table, nameSpace) {
+
       var ret = '(select row({amount},{currency},{effective},{rate},{isPosted})::{nameSpace}.{type}) as {alias}',
           type = obj.type.decamelize(),
           amount = obj.amount,
           currency = obj.currency,
           effective = obj.effective,
           rate = obj.rate,
-          amtcol = amount && amount.column ? table + '.' + amount.column : 0,
-          curcol = currency && currency.column ? table + '.' + currency.column : 'baseCurrId()',
-          effcol = effective && effective.column ? table + '.' + effective.column : 'current_date',
-          ratcol = rate && rate.column ? table + '.' + rate.column : 'currRate({currency}, {effective})'
-                                                                     .replace(/{currency}/, curcol)
-                                                                     .replace(/{effective}/, effcol),
+          amtcol = amount && amount.column ? amount.column : 0,
+          curcol = currency && currency.column ? currency.column : 'baseCurrId()',
+          effcol = effective && effective.column ? effective.column : 'current_date',
+          ratcol = rate && rate.column ? rate.column : 'currRate({currency}, {effective})'
+                                                       .replace(/{currency}/, curcol)
+                                                       .replace(/{effective}/, effcol),
           pstcol = rate && rate.column ? true : false;
-        
+
       ret = ret.replace(/{amount}/, amtcol)
                .replace(/{currency}/, curcol)
                .replace(/{effective}/, effcol)
