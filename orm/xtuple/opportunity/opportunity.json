@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "Opportunity",
   "table": "ophead",
-  "idSequenceName": "public.ophead_ophead_id_seq",
+  "idSequenceName": "ophead_ophead_id_seq",
   "comment": "Opportunity Map",
   "privileges": {
     "all": {
@@ -98,15 +98,8 @@
     {
       "name": "amount",
       "attr": {
-        "type": "Money",
-        "amount": {
-          "column": "ophead_amount",
-          "isMaster": true
-        },
-        "currency": {
-          "column": "ophead_curr_id",
-          "isMaster": true
-        }
+        "type": "Number",
+        "column": "ophead_amount"
       }
     },
     {
