@@ -1,14 +1,15 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "AccountReceivableTax",
+  "type": "ReceivableTax",
   "table": "aropentax",
-  "comment": "Credit Memo Tax Map",
+  "idSequenceName": "taxhist_taxhist_id_seq",
+  "comment": "Receivebale Tax Map",
   "privileges": {
     "all": {
       "create": false,
       "read": true,
-      "update": true,
+      "update": false,
       "delete": false
     }
   },
@@ -22,7 +23,7 @@
       }
     },
     {
-      "name": "parent",
+      "name": "receivable",
       "attr": {
         "type": "Number",
         "column": "taxhist_parent_id"
@@ -43,14 +44,14 @@
       }
     },
     {
-      "name": "basic",
+      "name": "basis",
       "attr": {
         "type": "Number",
         "column": "taxhist_basis"
       }
     },
     {
-      "name": "basicTax",
+      "name": "basisTaxCode",
       "attr": {
         "type": "Number",
         "column": "taxhist_basis_tax_id"
@@ -92,13 +93,6 @@
       }
     },
     {
-      "name": "discountDate",
-      "attr": {
-        "type": "Date",
-        "column": "taxhist_distdate"
-      }
-    },
-    {
       "name": "currency",
       "attr": {
         "type": "Number",
@@ -111,15 +105,8 @@
         "type": "Number",
         "column": "taxhist_curr_rate"
       }
-    },
-    {
-      "name": "journal",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_journalnumber"
-      }
     }
-],
+  ],
 	"isNestedOnly": true,
-	 "isSystem": true
+  "isSystem": true
 }

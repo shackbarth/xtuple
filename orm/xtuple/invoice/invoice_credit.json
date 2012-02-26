@@ -1,15 +1,15 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "AccountReceivableAllocation",
+  "type": "InvoiceCredit",
   "table": "aropenalloc",
-  "comment": "Account Receivable Allocation Map",
+  "comment": "Invoice Credit Map",
   "privileges": {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
   "properties": [
@@ -25,11 +25,12 @@
       "name": "documentType",
       "attr": {
         "type": "String",
-        "column": "aropenalloc_doctype"
+        "value": "I",
+        "isVisible": false
       }
     },
     {
-      "name": "document",
+      "name": "invoice",
       "attr": {
         "type": "Number",
         "column": "aropenalloc_doc_id"
@@ -49,7 +50,7 @@
         "column": "aropenalloc_curr_id"
       }
     }
-],
+  ],
 	"isNestedOnly": true,
-	 "isSystem": true
+  "isSystem": true
 }

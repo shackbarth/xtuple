@@ -282,6 +282,15 @@
       }
     },
     {
+      "name": "credits",
+      "toMany": {
+        "isNested": true,
+        "type": "InvoiceCredit",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },
+    {
       "name": "lines",
       "toMany": {
         "isNested": true,

@@ -1,13 +1,13 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "AccountReceivableApplication",
+  "type": "ReceivableApplication",
   "table": "arapply",
-  "comment": "Account Receivable Application Map",
+  "comment": "Receivable Application Map",
   "privileges": {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewAROpenItems",
       "update": false,
       "delete": false
     }
@@ -30,7 +30,7 @@
     },
     {
       "name": "customer",
-      "toMany": {
+      "toOne": {
 	    "isNested" : true,
         "type": "Customer",
         "column": "arapply_cust_id",
@@ -94,7 +94,7 @@
       }
     },
     {
-      "name": "username",
+      "name": "userName",
       "attr": {
         "type": "String",
         "column": "arapply_username"
@@ -107,7 +107,6 @@
         "column": "arapply_curr_id"
       }
     }
-],
-	"isNestedOnly": true,
-	 "isSystem": true
+  ],
+  "isSystem": true
 }

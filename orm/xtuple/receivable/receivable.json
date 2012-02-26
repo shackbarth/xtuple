@@ -1,9 +1,9 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "AccountReceivable",
+  "type": "Receivable",
   "table": "aropen",
-  "comment": "Account Receivable Map",
+  "comment": "Receivable Map",
   "privileges": {
     "all": {
       "create": "MaintainARMemos",
@@ -36,19 +36,19 @@
       }
     },
     {
-      "name": "terms",
-      "attr": {
-        "type": "Number",
-        "column": "aropen_terms_id"
-      }
-    },
-    {
       "name": "customer",
-      "toMany": {
+      "toOne": {
 	    "isNested" : true,
         "type": "Customer",
         "column": "aropen_cust_id",
         "inverse" : "guid"
+      }
+    },
+    {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_terms_id"
       }
     },
     {
@@ -59,24 +59,38 @@
       }
     },
     {
-      "name": "ducumentNumber",
+      "name": "documentNumber",
       "attr": {
         "type": "String",
         "column": "aropen_docnumber"
       }
     },
     {
-      "name": "applyTo",
+      "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "aropen_applyto"
+        "column": "aropen_amount"
       }
     },
     {
-      "name": "purchaseOrderNumber",
+      "name": "paid",
       "attr": {
-        "type": "String",
-        "column": "aropen_ponumber"
+        "type": "Number",
+        "column": "aropen_paid"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_curr_rate"
       }
     },
     {
@@ -115,6 +129,13 @@
       }
     },
     {
+      "name": "purchaseOrderNumber",
+      "attr": {
+        "type": "String",
+        "column": "aropen_ordernumber"
+      }
+    },
+    {
       "name": "orderNumber",
       "attr": {
         "type": "String",
@@ -122,14 +143,7 @@
       }
     },
     {
-      "name": "open",
-      "attr": {
-        "type": "Date",
-        "column": "aropen_open"
-      }
-    },
-    {
-      "name": "username",
+      "name": "userName",
       "attr": {
         "type": "String",
         "column": "aropen_username"
@@ -154,10 +168,31 @@
       }
     },
     {
-      "name": "currency",
+      "name": "commission",
       "attr": {
         "type": "Number",
-        "column": "aropen_curr_id"
+        "column": "aropen_terms_id"
+      }
+    },
+    {
+      "name": "isCommissionPaid",
+      "attr": {
+        "type": "Boolean",
+        "column": "aropen_commission_paid"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Boolean",
+        "column": "aropen_discount"
+      }
+    },
+    {
+      "name": "isOpen",
+      "attr": {
+        "type": "Date",
+        "column": "aropen_open"
       }
     },
     {
@@ -167,28 +202,6 @@
         "column": "aropen_closedate"
       }
     },
-    {
-      "name": "discountDate",
-      "attr": {
-        "type": "Date",
-        "column": "aropen_distdate"
-      }
-    },
-    {
-      "name": "journal",
-      "attr": {
-        "type": "Number",
-        "column": "aropen_curr_rate"
-      }
-    },
-    {
-      "name": "discount",
-      "attr": {
-        "type": "Boolean",
-        "column": "aropen_discount"
-      }
-    }
-],
-	"isNestedOnly": true,
-	 "isSystem": true
+  ],
+  "isSystem": true
 }
