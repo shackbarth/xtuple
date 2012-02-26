@@ -1,0 +1,62 @@
+  {
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "StandardJournalGroupItem",
+  "table": "stdjrnlgrpitem",
+  "comment": "Standard Journal Group Item Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "stdjrnlgrpitem_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "standardJournalGroup",
+      "attr": {
+        "type": "Number",
+        "column": "stdjrnlgrpitem_stdjrnlgrp_id"
+      }
+    },
+    {
+      "name": "standardJournal",
+      "attr": {
+        "type": "Number",
+        "column": "stdjrnlgrpitem_stdjrnl_id"
+      }
+    },
+    {
+      "name": "apply",
+      "attr": {
+        "type": "Number",
+        "value": "stdjrnlgrpitem_applied"
+      }
+    },
+    {
+      "name": "effective",
+      "attr": {
+        "type": "Date",
+        "column": "stdjrnlgrpitem_effective"
+      }
+    },
+    {
+      "name": "expires",
+      "attr": {
+        "type": "Date",
+        "column": "stdjrnlgrpitem_expires"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

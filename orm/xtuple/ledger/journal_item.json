@@ -1,0 +1,103 @@
+  {
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "JournalItem",
+  "table": "sltrans",
+  "comment": "Journal Item Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": "ViewJournals",
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "sltrans_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "date",
+      "attr": {
+        "type": "Date",
+        "column": "sltrans_date"
+      }
+    },
+    {
+      "name": "transaction",
+      "attr": {
+        "type": "Number",
+        "value": "sltrans_sequence"
+      }
+    },
+    {
+      "name": "source",
+      "attr": {
+        "type": "String",
+        "column": "sltrans_source"
+      }
+    },    
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "sltrans_doctype"
+      }
+    },
+    {
+      "name": "documentNumber",
+      "attr": {
+        "type": "String",
+        "column": "sltrans_docnumber"
+      }
+    },
+    {
+      "name": "document",
+      "attr": {
+        "type": "Number",
+        "column": "sltrans_misc_id"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "sltrans_notes"
+      }
+    },
+    {
+      "name": "ledgerAccount",
+      "toOne": {
+        "type": "LedgerAccountInfo",
+        "column": "sltrans_accnt_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "sltrans_amount"
+      }
+    },
+    {
+      "name": "userName",
+      "attr": {
+        "type": "String",
+        "column": "sltrans_username"
+      }
+    },   
+    {
+      "name": "folio",
+      "attr": {
+        "type": "Boolean",
+        "column": "sltrans_posted"
+      }
+    }
+  ],
+  "isSystem": true
+}

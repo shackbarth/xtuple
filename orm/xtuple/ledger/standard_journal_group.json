@@ -1,0 +1,49 @@
+  {
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "StandardJournalGroup",
+  "table": "stdjrnlgrp",
+  "comment": "Standard Journal Group Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainStandardJournalGroups",
+      "read": "MaintainStandardJournalGroups",
+      "update": "MaintainStandardJournalGroups",
+      "delete": "MaintainStandardJournalGroups"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "stdjrnlgrp_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "Date",
+        "column": "stdjrnlgrp_name"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "value": "stdjrnlgrp_descrip"
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "isNested": true,
+        "type": "StandardJournalGroupItem",
+        "column": "stdjrnlgrp_id",
+        "inverse": "standardJournalGroup"
+      }
+    }
+  ],
+  "isSystem": true
+}
