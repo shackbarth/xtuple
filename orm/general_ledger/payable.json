@@ -1,0 +1,25 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "Payable",
+  "table": "apopen",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "relations": [
+    {
+      "column": "apopen_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "account",
+      "toOne": {
+        "type": "AccountInfo",
+        "column": "apopen_accnt_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

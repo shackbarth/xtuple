@@ -59,14 +59,14 @@
       }
     },
     {
-      "name": "freeOnBoardSource",
+      "name": "incoTermsSource",
       "attr": {
         "type": "String",
         "column": "vend_fobsource"
       }
     },
     {
-      "name": "freeOnBoard",
+      "name": "incoTerms",
       "attr": {
         "type": "String",
         "column": "vend_fob"

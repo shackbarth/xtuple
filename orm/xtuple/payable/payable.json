@@ -1,0 +1,188 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Payable",
+  "table": "apopen",
+  "idSequenceName": "apopen_apopen_id_seq",
+  "comment": "Payable Map",
+  "privileges": {
+    "all": {
+      "create": "",
+      "read": "",
+      "update": "",
+      "delete": ""
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "apopen_docdate"
+      }
+    },
+    {
+      "name": "dueDate",
+      "attr": {
+        "type": "Date",
+        "column": "apopen_duedate"
+      }
+    },
+    {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_terms_id"
+      }
+    },
+    {
+      "name": "vendor",
+      "toOne": {
+        "type": "VendorInfo",
+        "column": "apopen_vend_id"
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "apopen_doctype"
+      }
+    },
+    {
+      "name": "ducumentNumber",
+      "attr": {
+        "type": "String",
+        "column": "apopen_docnumber"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_amount"
+      }
+    },
+    {
+      "name": "purchaseOrderNumber",
+      "attr": {
+        "type": "String",
+        "column": "apopen_ponumber"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "apopen_notes"
+      }
+    },
+    {
+      "name": "open",
+      "attr": {
+        "type": "Boolean",
+        "column": "apopen_open"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "apopen_posted"
+      }
+    },
+   {
+      "name": "reference",
+      "attr": {
+        "type": "String",
+        "column": "apopen_reference"
+      }
+    },
+   {
+      "name": "invoiceNumber",
+      "attr": {
+        "type": "String",
+        "column": "apopen_invcnumber"
+      }
+    },
+    {
+      "name": "closeDate",
+      "attr": {
+        "type": "Date",
+        "column": "apopen_closedate"
+      }
+    },
+    {
+      "name": "status",
+      "attr": {
+        "type": "String",
+        "column": "apopen_status"
+      }
+    },
+    {
+      "name": "username",
+      "attr": {
+        "type": "String",
+        "column": "apopen_username"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_curr_rate"
+      }
+    },
+    {
+      "name": "discountAmount",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_discountable_amount"
+      }
+    },
+    {
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "apopen_distdate"
+      }
+    },
+    {
+      "name": "paid",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_paid"
+      }
+    },
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_journalnumber"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Boolean",
+        "column": "apopen_discount"
+      }
+    }
+],
+  "isSystem": true
+}

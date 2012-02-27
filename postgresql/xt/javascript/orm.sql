@@ -78,13 +78,14 @@ select xt.install_js('XT','Orm','xtuple', $$
 
   @param {String} name space
   @param {String} type
+  @param {Boolean} indicate whether to force a refresh of the orm cached result
   @returns {Object}
   */
-  XT.Orm.fetch = function(nameSpace, type) {
+  XT.Orm.fetch = function(nameSpace, type, refresh) {
     if(!this._maps) this._maps = [];
     
     var ret, recordType = nameSpace + '.'+ type,
-        res = this._maps.findProperty('recordType', recordType);
+        res = refresh ? null : this._maps.findProperty('recordType', recordType);
     
     if(res) ret = res.map;
     else {
