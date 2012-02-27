@@ -118,6 +118,7 @@
     {
       "name": "owner",
       "toOne": {
+        "isNested": true,
         "type": "UserAccountInfo",
         "column": "cntct_owner_username",
         "inverse": "username"

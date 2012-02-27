@@ -58,6 +58,7 @@
     {
       "name": "address",
       "toOne": {
+        "isNested": true,
         "type": "AddressInfo",
         "column": "warehous_addr_id"
       }

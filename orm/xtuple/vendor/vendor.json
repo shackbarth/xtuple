@@ -110,6 +110,7 @@
     {
       "name": "primaryContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "vend_cntct1_id"
       }
@@ -117,6 +118,7 @@
     {
       "name": "secondaryContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "vend_cntct2_id"
       }
@@ -124,6 +126,7 @@
     {
       "name": "mainAddress",
       "toOne": {
+        "isNested": true,
         "type": "AddressInfo",
         "column": "vend_addr_id"
       }

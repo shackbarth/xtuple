@@ -33,6 +33,7 @@
     {
       "name": "privilege",
       "toOne": {
+        "isNested": true,
         "type": "Privilege",
         "column": "usrpriv_priv_id"
       }

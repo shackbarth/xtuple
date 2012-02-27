@@ -39,6 +39,7 @@
     {
       "name": "yearEndLedgerAccount",
       "toOne": {
+        "isNested": true,
         "type": "LedgerAccountInfo",
         "column": "company_yearend_accnt_id"
       }
@@ -46,6 +47,7 @@
     {
       "name": "gainLossLedgerAccount",
       "toOne": {
+        "isNested": true,
         "type": "LedgerAccountInfo",
         "column": "company_gainloss_accnt_id"
       }
@@ -53,6 +55,7 @@
     {
       "name": "discrepencyLedgerAccount",
       "toOne": {
+        "isNested": true,
         "type": "LedgerAccountInfo",
         "column": "company_dscrp_accnt_id"
       }

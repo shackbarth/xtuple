@@ -51,6 +51,7 @@
     {
       "name": "file",
       "toOne": {
+        "isNested": true,
         "type": "FileInfo",
         "column": "target_id"
       }

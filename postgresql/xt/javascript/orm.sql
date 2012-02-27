@@ -211,9 +211,11 @@ select xt.install_js('XT','Orm','xtuple', $$
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name.decamelize();
 
+        if(DEBUG) print(NOTICE, 'processing property ->', props[i].name);
+        
         /* process attributes */
-        if(props[i].attr && props[i].attr.column) {
-          var attr = props[i].attr,
+        if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
+          var attr = props[i].attr ? props[i].attr : props[i].toOne,
               isVisible = attr.isVisible !== false ? true : false,
               isEditable = attr.isEditable !== false ? true : false,
               isPrimaryKey = attr.isPrimaryKey ? true : false;
@@ -249,8 +251,8 @@ select xt.install_js('XT','Orm','xtuple', $$
           if(isVisible && isEditable && !isPrimaryKey) updCols.push(attr.column + ' = new.' + alias);
         }
 
-        /* process toOne - TODO: we should make a transform for this */
-        if(props[i].toOne && props[i].toOne.column) {
+        /* process toOne  */
+        if(props[i].toOne && props[i].toOne.isNested) {
           var toOne = props[i].toOne,
               table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
               type = table.replace((/\w+\./i),''),
@@ -291,7 +293,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           if(isEditable) updCols.push(toOne.column + ' = (new.' + alias + ').' + inverse );
         }
 
-        /* process toMany - TODO: We should make a transform for this */
+        /* process toMany */
         if(props[i].toMany) {
           var toMany = props[i].toMany,
               table = base.nameSpace + '.' + toMany.type.decamelize(),
@@ -344,11 +346,14 @@ select xt.install_js('XT','Orm','xtuple', $$
       }
 
       /* build crud rules */
-
+      if(DEBUG) print(NOTICE, 'building CRUD rules');
+      
       /* process extension */
       if(orm.isExtension) {
         var upsTgtCols = [],
             upsSrcCols = [];
+
+        if(DEBUG) print(NOTICE, 'process CRUD extension');
 
         /* process relations (if different table) */
         if(orm.table !== base.table) {
@@ -495,6 +500,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* base orm */
       } else {
         var rule;
+
+        if(DEBUG) print(NOTICE, 'process base CRUD');
         
         /* table */
         tbls.unshift(orm.table + ' ' + tblAlias);
@@ -503,6 +510,8 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(orm.privileges || orm.isNestedOnly) {
           
           /* insert rule */
+         if(DEBUG) print(NOTICE, 'process base INSERT');
+          
           if(canCreate && insSrcCols.length) {
             rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
                               .replace(/{event}/, 'insert')
@@ -523,6 +532,8 @@ select xt.install_js('XT','Orm','xtuple', $$
           rules.push(rule);
 
           /* update rule */
+          if(DEBUG) print(NOTICE, 'process base UPDATE');
+          
           if(canUpdate && pKeyCol && updCols.length) {
             rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                               .replace(/{event}/, 'update')
@@ -543,6 +554,8 @@ select xt.install_js('XT','Orm','xtuple', $$
           rules.push(rule); 
 
           /* delete rule */
+          if(DEBUG) print(NOTICE, 'process base DELETE');
+          
           if(canDelete && pKeyCol) {
             rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                               .replace(/{event}/, 'delete')
@@ -564,6 +577,8 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* must be non-updatable view */
         } else { 
+          if(DEBUG) print(NOTICE, 'process base non-updatable');
+          
           rule = CREATE_RULE.replace(/{name}/,'"_INSERT"')
                             .replace(/{event}/, 'insert')
                             .replace(/{table}/, viewName)
@@ -591,6 +606,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       }
 
       /* process and add order by array */
+      if(DEBUG) print(NOTICE, 'process base order array');
+      
       if(orm.order) {
         for(var i = 0; i < orm.order.length; i++) {
           orm.order[i] = orm.order[i].replace(RegExp(table + ".", "g"), tblAlias + ".");
@@ -603,6 +620,8 @@ select xt.install_js('XT','Orm','xtuple', $$
       tbl++;
 
       /* add extensions */
+      if(DEBUG) print(NOTICE, 'process base extensions');
+      
       if(orm.extensions) {
         for(var i = 0; i < orm.extensions.length; i++) {
           var ext = orm.extensions[i];

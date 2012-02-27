@@ -41,6 +41,7 @@
     {
       "name": "characteristic",
       "toOne": {
+        "isNested": true,
         "type": "Characteristic",
         "isChild": true,
         "column": "charass_char_id"

@@ -50,6 +50,7 @@
     {
       "name": "contact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "target_id"
       }

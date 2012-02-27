@@ -15,6 +15,7 @@
     {
       "name": "customer",
       "toOne": {
+        "isNested": true,
         "type": "CustomerInfo",
         "column": "crmacct_cust_id"
       }
@@ -22,6 +23,7 @@
     {
       "name": "taxAuthority",
       "toOne": {
+        "isNested": true,
         "type": "TaxAuthority",
         "column": "crmacct_taxauth_id"
       }
@@ -29,6 +31,7 @@
     {
       "name": "vendor",
       "toOne": {
+        "isNested": true,
         "type": "Vendor",
         "column": "crmacct_vend_id"
       }

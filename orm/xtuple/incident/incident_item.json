@@ -51,6 +51,7 @@
     {
       "name": "item",
       "toOne": {
+        "isNested": true,
         "type": "ItemInfo",
         "column": "target_id"
       }
