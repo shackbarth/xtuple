@@ -86,7 +86,7 @@
       }
     },
     {
-      "name": "open",
+      "name": "isOpen",
       "attr": {
         "type": "Boolean",
         "column": "apopen_open"
@@ -177,7 +177,7 @@
       }
     },
     {
-      "name": "discount",
+      "name": "isDiscount",
       "attr": {
         "type": "Boolean",
         "column": "apopen_discount"
