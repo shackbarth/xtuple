@@ -9,7 +9,7 @@ window.loc = (function() {
   var l = window.location.href,
       p = l.match(/:(\d+)\//)[1],
       d = document.domain;
-  return 'http://' + d + ':' + p;
+  return 'http://' + d + ':' + p + '/orm';
 })();
 
 function log() {
