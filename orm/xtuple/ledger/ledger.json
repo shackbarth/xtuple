@@ -43,7 +43,7 @@
       }
     },
     {
-      "name": "folio",
+      "name": "journal",
       "attr": {
         "type": "Number",
         "column": "gltrans_journalnumber"
