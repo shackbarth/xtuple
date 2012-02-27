@@ -115,27 +115,6 @@
       }
     },
     {
-      "name": "commissionDue",
-      "attr": {
-        "type": "Number",
-        "column": "aropen_commission_due"
-      }
-    },
-    {
-      "name": "commissionPaid",
-      "attr": {
-        "type": "Boolean",
-        "column": "aropen_commission_paid"
-      }
-    },
-    {
-      "name": "purchaseOrderNumber",
-      "attr": {
-        "type": "String",
-        "column": "aropen_ordernumber"
-      }
-    },
-    {
       "name": "orderNumber",
       "attr": {
         "type": "String",
@@ -171,7 +150,7 @@
       "name": "commission",
       "attr": {
         "type": "Number",
-        "column": "aropen_terms_id"
+        "column": "aropen_commission_due"
       }
     },
     {
@@ -201,7 +180,7 @@
         "type": "Date",
         "column": "aropen_closedate"
       }
-    },
+    }
   ],
   "isSystem": true
 }

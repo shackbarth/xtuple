@@ -59,6 +59,7 @@
 -- xt views
 \i xt/views/comment.sql;
 \i xt/views/docinfo.sql; 
+\i xt/views/jrnl.sql;
 \i xt/views/usr.sql;
 
 -- [ END ] xt

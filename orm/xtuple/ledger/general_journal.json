@@ -1,9 +1,9 @@
   {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "JournalItem",
-  "table": "sltrans",
-  "comment": "Journal Item Map",
+  "type": "GeneralJournal",
+  "table": "xt.jrnl",
+  "comment": "General Journal Map",
   "privileges": {
     "all": {
       "create": false,
@@ -17,7 +17,7 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "sltrans_id",
+        "column": "jrnl_id",
         "isPrimaryKey": true
       }
     },
@@ -25,79 +25,86 @@
       "name": "date",
       "attr": {
         "type": "Date",
-        "column": "sltrans_date"
+        "column": "jrnl_date"
       }
     },
     {
-      "name": "transaction",
+      "name": "series",
       "attr": {
         "type": "Number",
-        "value": "sltrans_sequence"
+        "column": "jrnl_sequence"
       }
     },
     {
       "name": "source",
       "attr": {
         "type": "String",
-        "column": "sltrans_source"
+        "column": "jrnl_type",
+        "value": "G",
+        "isVisible": false
       }
     },    
     {
       "name": "documentType",
       "attr": {
         "type": "String",
-        "column": "sltrans_doctype"
+        "column": "jrnl_doctype"
       }
     },
     {
       "name": "documentNumber",
       "attr": {
         "type": "String",
-        "column": "sltrans_docnumber"
-      }
-    },
-    {
-      "name": "document",
-      "attr": {
-        "type": "Number",
-        "column": "sltrans_misc_id"
+        "column": "jrnl_docnumber"
       }
     },
     {
       "name": "notes",
       "attr": {
         "type": "String",
-        "column": "sltrans_notes"
+        "column": "jrnl_notes"
       }
     },
     {
       "name": "ledgerAccount",
       "toOne": {
         "type": "LedgerAccountInfo",
-        "column": "sltrans_accnt_id"
+        "column": "jrnl_accnt_id"
+      }
+    },
+    {
+      "name": "sense",
+      "attr": {
+        "type": "String",
+        "column": "jrnl_sense"
       }
     },
     {
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "sltrans_amount"
+        "column": "jrnl_amount"
       }
     },
     {
       "name": "userName",
       "attr": {
         "type": "String",
-        "column": "sltrans_username"
+        "column": "jrnl_username"
       }
     },   
     {
-      "name": "folio",
+      "name": "journal",
       "attr": {
         "type": "Boolean",
-        "column": "sltrans_posted"
+        "column": "jrnl_number"
       }
     }
+  ],
+  "order": [
+    "jrnl_date",
+    "jrnl_sequence DESC",
+    "jrnl_sense DESC"
   ],
   "isSystem": true
 }
