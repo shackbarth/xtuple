@@ -7,31 +7,29 @@ select xt.install_js('XM','Invoice','xtuple', $$
   XM.Invoice.isDispatchable = true;
   
   XM.Invoice.post = function() {
-  	/* Post Invoice 
-  		First check privileges than post the invoice
-  		
-  		
-  		public.function postinvoice() 
-  		
-  		Question: In public functions there is 5 functions for postinvoice 3 pass integers and the other 2 pass boolean which one do I use
-  					for this function??
-  	*/
-  	
-  	/* Checks privileges 
-  		Check to make sure that MaintainMiscInvoices is the correct name for that privilege
-  	*/
-  	data = Object.create(XT.Data);
-	if(!data.checkPrivilege('MaintainMiscInvoices')) throw new Error("Access Denied");
-  	
+  /* checks privilege to post than pass id to function postinvoice()
+
+   @param {Object} Invoice object
+   @returns {Integer}
+  */
+    data = Object.create(XT.Data);
+    if(!data.checkPrivilege('PostMiscInvoices')) throw new Error("Access Denied");
+    var args = arguments[0];
+    
+    return executeSql('select postinvoice($1) as result', [args.id])[0].result;
   }
   
-  XM.Invoice.isVoid = function() {
-  	/* Void Invoice 
-  		Set void to true passing booleans values
-  		
-  		public.function voidinvoice() 1 param integer
-  	*/
-  	
+  XM.Invoice.void = function() {
+  /* checks privilege to void than pass id to function voidinvoice()
+
+   @param {Object} Invoice object
+   @returns {Integer}
+  */
+    data = Object.create(XT.Data);
+    if(!data.checkPrivilege('VoidPostedInvoices')) throw new Error("Access Denied");
+    var args = arguments[0];
+    
+    return executeSql('select voidinvoice($1) as result', [args.id])[0].result;
   }  
   
 $$ );
