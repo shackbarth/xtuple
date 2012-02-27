@@ -68,7 +68,7 @@
       "name": "isSold",
       "attr": {
         "type": "Boolean",
-        "column": "item_active"
+        "column": "item_sold"
       }
     }
   ],
