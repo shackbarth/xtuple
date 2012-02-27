@@ -4,7 +4,7 @@
   "type": "Payable",
   "table": "apopen",
   "isExtension": true,
-  "comment": "Extended by Crm",
+  "comment": "Extended by General Ledger",
   "relations": [
     {
       "column": "apopen_id",
@@ -13,9 +13,9 @@
   ],
   "properties": [
     {
-      "name": "account",
+      "name": "ledgerAccount",
       "toOne": {
-        "type": "AccountInfo",
+        "type": "LedgerAccount",
         "column": "apopen_accnt_id"
       }
     }

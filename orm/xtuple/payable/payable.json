@@ -7,10 +7,10 @@
   "comment": "Payable Map",
   "privileges": {
     "all": {
-      "create": "",
-      "read": "",
-      "update": "",
-      "delete": ""
+      "create": "MaintainAPMemos",
+      "read": "ViewAPMemos",
+      "update": "MaintainAPMemos",
+      "delete": "MaintainAPMemos"
     }
   },
   "properties": [
