@@ -51,6 +51,7 @@
     {
       "name": "project",
       "toOne": {
+        "isNested": true,
         "type": "ProjectInfo",
         "column": "target_id"
       }

@@ -1,0 +1,89 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "GeneralLedger",
+  "table": "xt.gl",
+  "comment": "General Ledger Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": "Viewglactions",
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "gl_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "date",
+      "attr": {
+        "type": "Date",
+        "column": "gl_date"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "gl_notes"
+      }
+    },
+    {
+      "name": "ledgerAccount",
+      "toOne": {
+        "isNested": true,
+        "type": "LedgerAccountInfo",
+        "column": "gl_accnt_id"
+      }
+    },
+    {
+      "name": "sense",
+      "attr": {
+        "type": "String",
+        "column": "gl_sense"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "gl_amount"
+      }
+    },
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "gl_journalnumber"
+      }
+    },
+    {
+      "name": "userName",
+      "attr": {
+        "type": "Number",
+        "column": "gl_username"
+      }
+    },
+    {
+      "name": "isDeleted",
+      "attr": {
+        "type": "Boolean",
+        "column": "gl_deleted"
+      }
+    }
+  ],
+  "order": [
+    "gl_accnt_id",
+    "gl_date",
+    "gl_journalnumber DESC",
+    "gl_sense DESC"
+  ],
+  "isSystem": true
+}

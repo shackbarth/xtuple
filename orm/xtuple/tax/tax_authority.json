@@ -60,6 +60,7 @@
     {
       "name": "address",
       "toOne": {
+        "isNested": true,
         "type": "AddressInfo",
         "column": "taxauth_addr_id"
       }

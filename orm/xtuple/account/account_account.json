@@ -51,6 +51,7 @@
     {
       "name": "account",
       "toOne": {
+        "isNested": true,
         "type": "AccountInfo",
         "column": "target_id"
       }

@@ -51,6 +51,7 @@
     {
       "name": "incident",
       "toOne": {
+        "isNested": true,
         "type": "IncidentInfo",
         "column": "target_id"
       }

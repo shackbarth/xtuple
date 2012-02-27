@@ -88,6 +88,7 @@
     {
       "name": "address",
       "toOne": {
+        "isNested": true,
         "type": "AddressInfo",
         "column": "cntct_addr_id"
       }

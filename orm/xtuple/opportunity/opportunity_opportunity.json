@@ -51,6 +51,7 @@
     {
       "name": "opportunity",
       "toOne": {
+        "isNested": true,
         "type": "OpportunityInfo",
         "column": "target_id"
       }

@@ -50,7 +50,7 @@
     },
     {
       "name": "customer",
-      "toOne": {
+      "toOne": { "isNested": true,
         "type": "CustomerInfo",
         "column": "target_id"
       }

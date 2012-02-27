@@ -51,6 +51,7 @@
     {
       "name": "image",
       "toOne": {
+        "isNested": true,
         "type": "ImageInfo",
         "column": "target_id"
       }

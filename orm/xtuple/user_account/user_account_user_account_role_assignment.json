@@ -33,6 +33,7 @@
     {
       "name": "userAccountRole",
       "toOne": {
+        "isNested": true,
         "type": "UserAccountRoleInfo",
         "column": "usrgrp_grp_id"
       }

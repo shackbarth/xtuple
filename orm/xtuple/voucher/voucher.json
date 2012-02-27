@@ -84,6 +84,7 @@
     {
       "name": "vendor",
       "toOne": {
+        "isNested": true,
         "type": "Vendor",
         "column": "vohead_vend_id"
       }

@@ -68,6 +68,7 @@
     {
       "name": "ledgerAccount",
       "toOne": {
+        "isNested": true,
         "type": "LedgerAccountInfo",
         "column": "jrnl_accnt_id"
       }

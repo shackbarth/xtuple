@@ -45,6 +45,7 @@
     {
       "name": "billingContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "cust_cntct_id",
         "inverse": "guid"

@@ -338,6 +338,15 @@
         "type": "UserAccountInfo",
         
         /** 
+        If true the returned value will contain the complete row for each matching record, otherwise 
+        the value will return exactly like a regular attribute.
+
+        @type {Boolean}
+        @default false
+        */
+        "isNested": true,
+        
+        /** 
         The table column to map to. It should be a foreign key relation to the corresponding type.
            
         Required.
