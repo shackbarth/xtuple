@@ -123,32 +123,18 @@
   "comment": "Project Task Map",
   
   /** 
-  Indicates whether the record can be created. If false any attempts to insert will do nothing.
+  Designates that data for this type can only be accessed in the context of a parent. Any attempts 
+  by a client to query or update this record directly, regardless of privilege settings, will fail.
+    
+  @type {Boolean}
+  @default false
+  */   
+  "isNestedOnly": false,
+  
+  /** 
+  Used to describe document access. If absent no access will be granted to this type.
 
-  @type {Boolean}
-  @default true
-  */
-  "canCreate": true,
-  
-  /** 
-  Indicates whether the record can be updated. If false any attempts to update will do nothing.
-   
-  @type {Boolean}
-  @default true
-  */
-  "canUpdate": true,
-  
-  /** 
-  Indicates whether the record can be deleted. If false any attempts to delete will do nothing.
-   
-  @type {Boolean}
-  @default true
-  */
-  "canDelete": true,
-  
-  /** 
-  Used to describe which privilege codes control access privileges. If absent and the record 
-  is not nested, it will not be updatable.
+  Required.
    
   @type {Object}
   */
@@ -156,7 +142,9 @@
     /** 
     Describes privileges that allow a user to have access to all records of this 
     object type. The same privilege can be set to control multiple or all of the create, read, 
-    update and delete (aka. crud) access methods.
+    update and delete (aka. crud) access methods. Privilege settings can be a boolean that indicates
+    universal access or lack thereof, or a string that refereces a specific privilege name that
+    allows access if the user has been granted the privilege.
      
     Required.
      
@@ -320,7 +308,17 @@
         @type {Boolean}
         @default {true}
         */
-        "isVisible": false
+        "isVisible": false,
+        
+        /** 
+        Flags whether the property must be encrypted. When true, the data source must pass
+        an encryption key in with the payload to encrypte the data. If one is not found
+        the commit will fail.
+           
+        @type {Boolean}
+        @default {true}
+        */
+        "isEncrypted": false
       },
       
       /** 
@@ -477,6 +475,84 @@
           ]
         }
       }
+            
+      /** 
+      Convert columns on table to a money object. You can map up to four properties:
+        * amount
+        * currency
+        * effective
+        * rate
+        
+      Each of the properties is represented as a hash with a required 'column' property
+      that maps the column and an optional 'isMaster' property that determines whether
+      changes to that property on the Money object should write back to the database column.
+      Note that if you have multiple Money objects on your record that reference the same column,
+      such as the currency, that only one, if any, should be the master that writes back to
+      that column.
+      
+      A money object will have all the definable properties listed above, plus an isPosted boolean
+      that will return true if a rate is mapped to a column in the database and false if not.
+         
+      @type {Hash}
+      */
+      "toMoney": {
+      
+        /** 
+        Accepted types on a toMoney property are:
+          * Money
+          * Cost
+          * SalesPrice
+          * PurchasePrice
+          * ExtPrice
+          
+        Money is the default type if no valid type is provided.
+        
+        @type {String}
+        */
+        "type": "Money",
+        
+        /**
+        The amount in local currency.
+        
+        Required.
+        
+        @type {Hash}
+        */
+        "amount": {
+          "column": "prjtask_amount",
+          "isMaster": true
+        },
+        
+        /**
+        The currency of the money. If absent defaults to system base currency.
+        
+        @type {Hash}
+        */
+        "currency": {
+          "column": "prjtask_curr_id",
+          "isMaster": true
+        },
+        
+        /**
+        The effective date of the exchange rate. If none is provided defaults to the current date.
+        
+        @type {Hash}
+        */
+        "effective": {
+          "column": "prjtask_duedate",
+        },
+        
+        /**
+        The rate used for currency conversion to the system base currency. If none is provided the system
+        will calculate the rate based on system exchange rates for the currency and effective date.
+        
+        @type {Hash}
+        */
+        "rate": {
+          "column": "prjtask_curr_id",
+          "isMaster": true
+        }
+      }
     }
   ],
   
@@ -493,7 +569,6 @@
   definition:
     
     * table
-    * type
     * isChild
     * properties
     * order
@@ -504,15 +579,6 @@
   */
   
   "extensions": [],
-
-  /** 
-  Designates that data for this type can only be accessed in the context of a parent. Any attemps 
-  by a client to query this record directly will fail.
-    
-  @type {Boolean}
-  @default false
-  */   
-  "isNestedOnly": false,
   
   /** 
   Indicates the ORM has been created as part of an extension package. Helps to differentiate 

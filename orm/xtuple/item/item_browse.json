@@ -1,0 +1,76 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemBrowse",
+  "table": "item",
+  "comment": "Item Browse Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "item_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "item_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "item_active"
+      }
+    },
+    {
+      "name": "description1",
+      "attr": {
+        "type": "String",
+        "column": "item_descrip1"
+      }
+    },
+    {
+      "name": "description2",
+      "attr": {
+        "type": "String",
+        "column": "item_descrip2"
+      }
+    },
+    {
+      "name": "type",
+      "attr": {
+        "type": "String",
+        "column": "item_type"
+      }
+    },
+    {
+      "name": "barcode",
+      "attr": {
+        "type": "String",
+        "column": "item_upccode"
+      }
+    },
+    {
+      "name": "isSold",
+      "attr": {
+        "type": "Boolean",
+        "column": "item_active"
+      }
+    }
+  ],
+  "isSystem": true
+}

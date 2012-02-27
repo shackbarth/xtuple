@@ -5,6 +5,23 @@
   "table": "ophead",
   "idSequenceName": "public.ophead_ophead_id_seq",
   "comment": "Opportunity Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainAllOpportunities",
+	    "read": "ViewAllOpportunities",
+	    "update": "MaintainAllOpportunities",
+	    "delete": "MaintainAllOpportunities"
+	  },
+	  "personal": {
+	    "create": "MaintainPersonalOpportunities",
+	    "read": "ViewPersonalOpportunities",
+	    "update": "MaintainPersonalOpportunities",
+	    "delete": "MaintainPersonalOpportunities",
+	    "properties": [
+	      "owner"
+      ]
+	  }
+  },
   "properties": [
     {
       "name": "guid",
@@ -80,16 +97,16 @@
     },
     {
       "name": "amount",
-      "attr": {
-        "type": "Number",
-        "column": "ophead_amount"
-      }
-    },
-    {
-      "name": "currency",
-      "attr": {
-        "type": "Number",
-        "column": "ophead_curr_id"
+      "toMoney": {
+        "type": "Money",
+        "amount": {
+          "column": "ophead_amount",
+          "isMaster": true
+        },
+        "currency": {
+          "column": "ophead_curr_id",
+          "isMaster": true
+        }
       }
     },
     {

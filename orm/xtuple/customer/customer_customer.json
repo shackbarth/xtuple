@@ -1,0 +1,69 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CustomerCustomer",
+  "table": "xt.docinfo",
+  "idSequenceName": "public.docass_docass_id_seq",
+  "comment": "Customer Account Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "sourceType",
+      "attr": {
+        "type": "String",
+        "column": "source_type",
+        "value": "C",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "source",
+      "attr": {
+        "type": "Number",
+        "column": "source_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "target_type",
+        "value": "C",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "customer",
+      "toOne": {
+        "type": "CustomerInfo",
+        "column": "target_id"
+      }
+    },
+    {
+      "name": "purpose",
+      "attr": {
+        "type": "String",
+        "column": "purpose",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

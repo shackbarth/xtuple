@@ -5,6 +5,14 @@
   "table": "itemsub",
   "idSequenceName": "public.itemsub_itemsub_id_seq",
   "comment": "Item Substitute Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

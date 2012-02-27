@@ -45,11 +45,8 @@ update public.comment set
   comment_public = new.comment_public
 where ( comment_id = old.comment_id );
 
-create or replace rule "_UPDATE_CHECK_PRIV" as on update to xt.comment
-   where (select case when not cmnttype_editable then true
-                      when (checkPrivilege('EditOwnComments') and old.comment_user = getEffectiveXtUser()) then false
-                      when (checkPrivilege('EditOthersComments') and old.comment_user != getEffectiveXtUser()) then false
-                      else true end
+create or replace rule "_UPDATE_CHECK_EDITABLE" as on update to xt.comment
+   where (select not cmnttype_editable
           from cmnttype
           where cmnttype_id = old.comment_cmnttype_id) do instead
 

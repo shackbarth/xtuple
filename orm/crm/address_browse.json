@@ -1,0 +1,25 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "AddressBrowse",
+  "table": "address",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "relations": [
+    {
+      "column": "addr_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "account",
+      "toOne": {
+        "type": "AccountInfo",
+        "column": "crmacct_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

@@ -5,6 +5,14 @@
   "table": "xm.characteristic_assignment",
   "idSequenceName": "public.charass_charass_id_seq",
   "comment": "Incident Characteristic Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

@@ -7,8 +7,9 @@ create or replace function xt.retrieve_record(data_hash text) returns text as $$
 
   var dataHash = JSON.parse(data_hash),
       data = Object.create(XT.Data),
+      encryptionKey = dataHash.encryptionKey,
       prettyPrint = dataHash.prettyPrint ? 2 : null,
-      ret = data.retrieveRecord(dataHash.recordType, dataHash.id);
+      ret = data.retrieveRecord(dataHash.recordType, dataHash.id, encryptionKey);
 
   /* return the results */
   return JSON.stringify(ret, null, prettyPrint);

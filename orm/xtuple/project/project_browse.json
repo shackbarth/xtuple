@@ -1,0 +1,68 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ProjectBrowse",
+  "table": "prj",
+  "comment": "Project Browse Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": "ViewAllProjects",
+      "update": false,
+      "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false,
+      "properties": [
+        "owner",
+        "assignedTo"
+       ]
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "prj_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "prj_number",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "prj_name"
+      }
+    },
+ 
+    {
+      "name": "assignedTo",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "prj_username",
+        "inverse": "username"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "prj_owner_username",
+        "inverse": "username"
+      }
+    }
+  ],
+  "isSystem": true
+}

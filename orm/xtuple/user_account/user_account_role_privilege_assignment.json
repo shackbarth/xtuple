@@ -5,7 +5,14 @@
   "table": "grppriv",
   "idSequenceName": "public.grppriv_grppriv_id_seq",
   "comment": "User Account Role Privilege Assignment Map",
-  "canUpdate": false,
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

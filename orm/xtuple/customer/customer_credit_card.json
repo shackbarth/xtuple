@@ -1,0 +1,171 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CustomerCreditCard",
+  "table": "ccard",
+  "idSequenceName": "public.ccard_ccard_id_seq",
+  "comment": "Customer Credit Card Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "ccard_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "sequence",
+      "attr": {
+        "type": "Number",
+        "column": "ccard_seq"
+      }
+    },
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "ccard_cust_id"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "ccard_active"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "ccard_name",
+		    "isEncrypted" : true
+      }
+    },
+    {
+      "name": "address1",
+      "attr": {
+        "type": "String",
+        "column": "ccard_address1",
+	    	"isEncrypted" : true
+      }
+    },
+    {
+      "name": "address2",
+      "attr": {
+        "type": "String",
+        "column": "ccard_address2",
+		    "isEncrypted" : true
+      }
+    },
+    {
+      "name": "city",
+      "attr": {
+        "type": "String",
+        "column": "ccard_city",
+    		"isEncrypted" : true
+      }
+    },
+    {
+      "name": "state",
+      "attr": {
+        "type": "String",
+        "column": "ccard_state",
+	    	"isEncrypted" : true
+      }
+    },
+    {
+      "name": "postalCode",
+      "attr": {
+        "type": "String",
+        "column": "ccard_zip",
+	    	"isEncrypted" : true
+      }
+    },
+    {
+      "name": "country",
+      "attr": {
+        "type": "String",
+        "column": "ccard_country",
+	    	"isEncrypted" : true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "ccard_number",
+		    "isEncrypted" : true
+      }
+    },
+    {
+      "name": "isDebit",
+      "attr": {
+        "type": "Boolean",
+        "column": "ccard_debit"
+      }
+    },
+    {
+      "name": "monthExpire",
+      "attr": {
+        "type": "String",
+        "column": "ccard_month_expired",
+		    "isEncrypted" : true
+      }
+    },
+    {
+      "name": "yearExpire",
+      "attr": {
+        "type": "String",
+        "column": "ccard_year_expired",
+		    "isEncrypted" : true
+      }
+    },
+    {
+      "name": "type",
+      "attr": {
+        "type": "String",
+        "column": "ccard_type"
+      }
+    },
+    {
+      "name": "created",
+      "attr": {
+        "type": "Date",
+        "column": "ccard_date_added"
+      }
+    },
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "ccard_added_by_username"
+      }
+    },
+    {
+      "name": "updated",
+      "attr": {
+        "type": "Date",
+        "column": "ccard_lastupdated"
+      }
+    },
+    {
+      "name": "updatedBy",
+      "attr": {
+        "type": "String",
+        "column": "ccard_last_updated_by_username"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

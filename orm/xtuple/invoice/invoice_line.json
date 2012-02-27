@@ -1,0 +1,134 @@
+{	
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "InvoiceLine",
+  "table": "invcitem",
+  "comment": "Invoice Line Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "invoice",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_invchead_id"
+      }
+    },
+    {
+      "name": "lineNumber",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_linenumber"
+      }
+    },
+    {
+      "name": "item",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_item_id"
+      }
+    },
+    {
+      "name": "site",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_warehous_id"
+      }
+    },
+    {
+      "name": "salesCategory",
+      "toOne": {
+	    "isNested" : true,
+        "type": "SalesCategory",
+        "column": "invcitem_salescat_id",
+        "inverse" : "guid"
+      }
+    },
+    {
+      "name": "customerPartNumber",
+      "attr": {
+        "type": "String",
+        "column": "invcitem_custpn"
+      }
+    },
+    {
+      "name": "ordered",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_ordered"
+      }
+    },
+    {
+      "name": "quantityUnit",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_qty_uom_id"
+      }
+    },
+    {
+      "name": "quantityInventoryUnitRatio",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_qty_invuomratio"
+      }
+    },
+    {
+      "name": "billed",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_billed"
+      }
+    },
+    {
+      "name": "priceUnit",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_price_uom_id"
+      }
+    },
+    {
+      "name": "priceInventoryUnitRatio",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_price_invuomratio"
+      }
+    },
+    {
+      "name": "customerPrice",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_custprice"
+      }
+    },
+    {
+      "name": "price",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_price"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "invcitem_notes"
+      }
+    }
+  ],
+	"isNestedOnly": true,
+	 "isSystem": true
+}

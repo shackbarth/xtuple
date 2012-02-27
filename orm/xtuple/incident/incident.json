@@ -6,7 +6,6 @@
   "idSequenceName": "public.incdt_incdt_id_seq",
   "orderSequence": "IncidentNumber",
   "comment": "Incident Map",
-  "canDelete": false,
   "privileges": {
     "all": {
       "create": "MaintainAllIncidents",
@@ -211,6 +210,15 @@
       "toMany": {
         "isNested": true,
         "type": "IncidentUrl",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "accounts",
+      "toMany": {
+        "isNested": true,
+        "type": "IncidentAccount",
         "column": "incdt_id",
         "inverse": "source"
       }

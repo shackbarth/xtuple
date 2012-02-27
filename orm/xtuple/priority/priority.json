@@ -5,6 +5,14 @@
   "table": "incdtpriority",
   "idSequenceName": "public.incdtpriority_incdtpriority_id_seq",
   "comment": "Priority Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",

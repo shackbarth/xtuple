@@ -28,7 +28,7 @@ select xt.dispatch($${"requestType":"dispatch",
 
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Address",
-                          "function":"useCount",
+                          "functionName":"useCount",
                           "parameters":{"id":41}
                           }$$);
 

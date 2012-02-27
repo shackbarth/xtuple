@@ -1,0 +1,310 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Invoice",
+  "table": "invchead",
+  "idSequenceName": "public.invcitem_invcitem_id_seq",
+  "comment": "Invoice Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainMiscInvoices",
+      "read": "ViewMiscInvoices",
+      "update": "MaintainMiscInvoices",
+      "delete": "MaintainMiscInvoices"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "invchead_invcnumber"
+      }
+    },
+    {
+      "name": "orderNumber",
+      "attr": {
+        "type": "String",
+        "column": "invchead_ordernumber"
+      }
+    },
+    {
+      "name": "orderDate",
+      "attr": {
+        "type": "Date",
+        "column": "invchead_orderdate"
+      }
+    },
+    {
+      "name": "invoiceDate",
+      "attr": {
+        "type": "Date",
+        "column": "invchead_invcdate"
+      }
+    },
+    {
+      "name": "shipDate",
+      "attr": {
+        "type": "Date",
+        "column": "invchead_shipdate"
+      }
+    },
+    {
+      "name": "isPrinted",
+      "attr": {
+        "type": "Boolean",
+        "column": "invchead_printed"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "invchead_posted"
+      }
+    },
+    {
+      "name": "isVoid",
+      "attr": {
+        "type": "Boolean",
+        "column": "invchead_void"
+      }
+    },		
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_cust_id"
+      }
+    },
+    {
+      "name": "billtoName",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_name"
+      }
+    },
+    {
+      "name": "billtoAddress1",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_address1"
+      }
+    },
+    {
+      "name": "billtoAddress2",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_address2"
+      }
+    },
+    {
+      "name": "billtoAddress3",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_address3"
+      }
+    },
+    {
+      "name": "billtoCity",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_city"
+      }
+    },
+    {
+      "name": "billtoState",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_state"
+      }
+    },
+    {
+      "name": "billtoPostalCode",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_zipcode"
+      }
+    },
+    {
+      "name": "billtoCountry",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_country"
+      }
+    },
+    {
+      "name": "billtoPhone",
+      "attr": {
+        "type": "String",
+        "column": "invchead_billto_phone"
+      }
+    },
+    {
+      "name": "shipto",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_shipto_id"
+      }
+    },
+    {
+      "name": "shiptoAddress1",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_address1"
+      }
+    },
+    {
+      "name": "shiptoAddress2",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_address2"
+      }
+    },
+    {
+      "name": "shiptoAddress3",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_address3"
+      }
+    },
+    {
+      "name": "shiptoCity",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_city"
+      }
+    },
+    {
+      "name": "shiptoState",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_state"
+      }
+    },
+    {
+      "name": "shiptoPostalCode",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_zipcode"
+      }
+    },
+    {
+      "name": "shiptoCountry",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_country"
+      }
+    },
+    {
+      "name": "shiptoPhone",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_phone"
+      }
+    },
+    {
+      "name": "salesRep",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_salesrep_id"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_commission"
+      }
+    },
+    {
+      "name": "taxZone",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_taxzone_id"
+      }
+    },
+    {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_terms_id"
+      }
+    },
+    {
+      "name": "purchaseOrderNumber",
+      "attr": {
+        "type": "String",
+        "column": "invchead_ponumber"
+      }
+    },
+    {
+      "name": "shipVia",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipvia"
+      }
+    },
+    {
+      "name": "freeOnBoard",
+      "attr": {
+        "type": "String",
+        "column": "invchead_fob"
+      }
+    },
+    {
+      "name": "shipCharge",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_shipchrg_id"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_curr_id"
+      }
+    },
+    {
+      "name": "freight",
+      "attr": {
+        "type": "Number",
+        "column": "invchead_freight"
+      }
+    },
+    {
+      "name": "lines",
+      "toMany": {
+        "isNested": true,
+        "type": "InvoiceLine",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },
+    {
+      "name": "recurrences",
+      "toMany": {
+        "type": "InvoiceRecurrence",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "invchead_notes"
+      }
+    }
+  ],
+  "isSystem": true
+}

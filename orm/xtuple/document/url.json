@@ -5,6 +5,14 @@
   "table": "urlinfo",
   "idSequenceName": "public.urlinfo_url_id_seq",
   "comment": "URL Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
   "properties": [
     {
       "name": "guid",
