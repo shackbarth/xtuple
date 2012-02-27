@@ -1,0 +1,98 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CheckDetails",
+  "table": "checkitem",
+  "idSequenceName": "checkitem_checkitem_id_seq",
+  "comment": "Check Details Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "check",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_checkhead_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_amount"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_discount"
+      }
+    },
+    {
+      "name": "purchaseOrder",
+      "attr": {
+        "type": "String",
+        "column": "checkitem_ponumber"
+      }
+    },
+    {
+      "name": "voucher",
+      "attr": {
+        "type": "String",
+        "column": "checkitem_vouchernumber"
+      }
+    },
+    {
+      "name": "invoice",
+      "attr": {
+        "type": "String",
+        "column": "checkitem_invcnumber"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "checkitem_docdate"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_curr_rate"
+      }
+    },
+    {
+      "name": "creditMemo",
+      "attr": {
+        "type": "String",
+        "column": "checkitem_cmnumber"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

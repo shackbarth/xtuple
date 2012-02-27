@@ -58,6 +58,14 @@
       }
     },
     {
+      "name": "checks",
+      "toMany": {
+        "type": "TaxAuthorityCheck",
+        "column": "taxauth_id",
+        "inverse": "taxAuthority"
+      }
+    },
+    {
       "name": "address",
       "toOne": {
         "isNested": true,
