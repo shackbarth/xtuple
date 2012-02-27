@@ -1,0 +1,112 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CreditMemoLineTax",
+  "table": "cmheadtax",
+  "idSequenceName": "taxhist_taxhist_id_seq",
+  "comment": "CreditMemo Line Tax Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "creditMemoLine",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_parent_id"
+      }
+    },
+    {
+      "name": "taxType",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_taxtype_id"
+      }
+    },
+    {
+      "name": "taxCode",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_tax_id"
+      }
+    },
+    {
+      "name": "basis",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_basis"
+      }
+    },
+    {
+      "name": "basisTaxCode",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_basis_tax_id"
+      }
+    },
+    {
+      "name": "sequence",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_sequence"
+      }
+    },
+    {
+      "name": "percent",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_percent"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_amount"
+      }
+    },
+    {
+      "name": "tax",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_tax"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_docdate"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_curr_rate"
+      }
+    }
+  ],
+	"isNestedOnly": true,
+  "isSystem": true
+}

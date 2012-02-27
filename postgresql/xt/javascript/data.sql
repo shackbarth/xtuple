@@ -37,7 +37,7 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     buildClause: function(nameSpace, type, conditions, parameters) {
       var ret = ' true ', cond = '', pcond = '',
-          map = XT.getORM(nameSpace, type),
+          map = XT.Orm.fetch(nameSpace, type),
           privileges = map.privileges;
 
       /* handle passed conditions */
@@ -139,7 +139,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var isTopLevel = isTopLevel !== false ? true : false,
           isGrantedAll = true,
           isGrantedPersonal = false,
-          map = XT.getORM(nameSpace, type),
+          map = XT.Orm.fetch(nameSpace, type),
           privileges = map.privileges,
           committing = record ? record.dataState !== this.READ_STATE : false;
           action =  record && record.dataState === this.CREATED_STATE ? 'create' : 
@@ -193,7 +193,7 @@ select xt.install_js('XT','Data','xtuple', $$
         
         /* if committing we need to ensure the record in its previous state is editable by this user */
         if(committing && (action === 'update' || action === 'delete')) {
-          var pkey = XT.getPrimaryKey(map),
+          var pkey = XT.Orm.primaryKey(map),
               old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
 
           isGrantedPersonal = checkPersonal(old);
@@ -266,8 +266,8 @@ select xt.install_js('XT','Data','xtuple', $$
     createRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),    
-          viewdef = XT.getViewDefinition(viewName, schemaName),
-          orm = XT.getORM(key.beforeDot(), key.afterDot()),
+          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
+          orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
           record = XT.decamelize(value),
           sql = '', columns, expressions,
           props = [], params = [];
@@ -278,7 +278,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* build up the content for insert of this record */
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop),
-            ormp = XT.getProperty(orm, prop.camelize());
+            ormp = XT.Orm.getProperty(orm, prop.camelize());
 
         if (coldef.typcategory !== this.ARRAY_TYPE) { 
           props.push(prop);
@@ -342,9 +342,9 @@ select xt.install_js('XT','Data','xtuple', $$
     updateRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),
-          viewdef = XT.getViewDefinition(viewName, schemaName),
-          orm = XT.getORM(key.beforeDot(),key.afterDot()),
-          pkey = XT.getPrimaryKey(orm),
+          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
+          orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+          pkey = XT.Orm.primaryKey(orm),
           record = XT.decamelize(value),
           sql = '', expressions, params = [];
 
@@ -354,7 +354,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* build up the content for update of this record */
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop),
-            ormp = XT.getProperty(orm, prop.camelize());
+            ormp = XT.Orm.getProperty(orm, prop.camelize());
 
         /* handle encryption if applicable */
         if(ormp && ormp.attr && ormp.attr.isEncrypted) {
@@ -414,8 +414,8 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     deleteRecord: function(key, value) {
       var record = XT.decamelize(value), sql = '',
-          orm = XT.getORM(key.beforeDot(),key.afterDot()),
-          pkey = XT.getPrimaryKey(orm);
+          orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+          pkey = XT.Orm.primaryKey(orm);
 
       sql = 'delete from {recordType} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
@@ -457,8 +457,8 @@ select xt.install_js('XT','Data','xtuple', $$
     normalize: function(nameSpace, type, record, encryptionKey) {
       var schemaName = nameSpace.decamelize(),
           viewName = type.decamelize(),
-          viewdef = XT.getViewDefinition(viewName, schemaName),
-          orm = XT.getORM(nameSpace, type);
+          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
+          orm = XT.Orm.fetch(nameSpace, type);
 
       /* set data type property */
       record['type'] = type.classify();
@@ -469,7 +469,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if (record.hasOwnProperty(prop)) {
           var coldef = viewdef.findProperty('attname', prop),
           value, result, sql = '',
-          ormp = XT.getProperty(orm, prop.camelize());
+          ormp = XT.Orm.getProperty(orm, prop.camelize());
 
           /* handle encryption if applicable */
           if(ormp && ormp.attr && ormp.attr.isEncrypted) {
@@ -530,8 +530,8 @@ select xt.install_js('XT','Data','xtuple', $$
     retrieveRecord: function(recordType, id, encryptionKey) {
       var nameSpace = recordType.beforeDot(), 
           type = recordType.afterDot(),
-          map = XT.getORM(nameSpace, type),
-          ret, sql, pkey = XT.getPrimaryKey(map), i = 0;
+          map = XT.Orm.fetch(nameSpace, type),
+          ret, sql, pkey = XT.Orm.primaryKey(map), i = 0;
 
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
 
@@ -572,7 +572,7 @@ select xt.install_js('XT','Data','xtuple', $$
     rowify: function(key, value) {
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),
-          viewdef = XT.getViewDefinition(viewName, schemaName),
+          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
           record = XT.decamelize(value),
           props = [], ret = '';
 

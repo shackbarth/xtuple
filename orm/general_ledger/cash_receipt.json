@@ -1,0 +1,26 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "CashReceipt",
+  "table": "cashrcpt",
+  "isExtension": true,
+  "comment": "Extended by General Ledger",
+  "relations": [
+    {
+      "column": "cashrcpt_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "distributions",
+      "toMany": {
+        "isNested": true,
+        "type": "CashReceiptDistribution",
+        "column": "cashrcpt_id",
+        "inverse": "cashReceipt"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

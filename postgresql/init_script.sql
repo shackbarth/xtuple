@@ -19,7 +19,6 @@
 \i xt/functions/any_text.sql;
 \i xt/functions/commit_record.sql;
 \i xt/functions/create_table.sql;
-\i xt/functions/create_orm_view.sql;
 \i xt/functions/dispatch.sql;
 \i xt/functions/ends_with.sql;
 \i xt/functions/execute_query.sql;
@@ -35,7 +34,6 @@
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
 \i xt/functions/validate_user.sql;
-\i xt/functions/view_dependencies.sql;
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
@@ -56,10 +54,12 @@
 
 -- xt javascript
 \i xt/javascript/data.sql;
+\i xt/javascript/orm.sql;
 
 -- xt views
 \i xt/views/comment.sql;
 \i xt/views/docinfo.sql; 
+\i xt/views/jrnl.sql;
 \i xt/views/usr.sql;
 
 -- [ END ] xt
@@ -69,8 +69,5 @@
 -- xm/javascript
 \i xm/javascript/address.sql;
 \i xm/javascript/session.sql;
-
--- xm/types
-\i xm/types/money.sql;
 
 -- [ END ] xm

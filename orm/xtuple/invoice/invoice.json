@@ -282,10 +282,28 @@
       }
     },
     {
+      "name": "credits",
+      "toMany": {
+        "isNested": true,
+        "type": "InvoiceCredit",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },
+    {
       "name": "lines",
       "toMany": {
         "isNested": true,
         "type": "InvoiceLine",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },
+    {
+      "name": "taxes",
+      "toMany": {
+        "isNested": true,
+        "type": "InvoiceTax",
         "column": "invchead_id",
         "inverse": "invoice"
       }

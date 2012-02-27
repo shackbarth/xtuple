@@ -1,0 +1,112 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ReceivableApplication",
+  "table": "arapply",
+  "comment": "Receivable Application Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": "ViewAROpenItems",
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "arapply_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "postDate",
+      "attr": {
+        "type": "Date",
+        "column": "arapply_postdate"
+      }
+    },
+    {
+      "name": "customer",
+      "toOne": {
+	    "isNested" : true,
+        "type": "Customer",
+        "column": "arapply_cust_id",
+        "inverse" : "guid"
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "arapply_source_doctype"
+      }
+    },
+    {
+      "name": "documentNumber",
+      "attr": {
+        "type": "String",
+        "column": "arapply_source_docnumber"
+      }
+    },
+    {
+      "name": "documentTargetType",
+      "attr": {
+        "type": "String",
+        "column": "arapply_target_doctype"
+      }
+    },
+    {
+      "name": "fundsType",
+      "attr": {
+        "type": "String",
+        "column": "arapply_fundstype"
+      }
+    },
+    {
+      "name": "referenceNumber",
+      "attr": {
+        "type": "String",
+        "column": "arapply_refnumber"
+      }
+    },
+    {
+      "name": "applied",
+      "attr": {
+        "type": "Number",
+        "column": "arapply_applied"
+      }
+    },
+    {
+      "name": "source",
+      "attr": {
+        "type": "Number",
+        "column": "arapply_source_aropen_id"
+      }
+    },
+    {
+      "name": "target",
+      "attr": {
+        "type": "Number",
+        "column": "arapply_target_aropen_id"
+      }
+    },
+    {
+      "name": "userName",
+      "attr": {
+        "type": "String",
+        "column": "arapply_username"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "arapply_curr_id"
+      }
+    }
+  ],
+  "isSystem": true
+}

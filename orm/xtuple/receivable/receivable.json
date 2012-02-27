@@ -1,0 +1,186 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Receivable",
+  "table": "aropen",
+  "comment": "Receivable Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainARMemos",
+      "read": "ViewARMemos",
+      "update": "MaintainARMemos",
+      "delete": "MaintainARMemos"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "aropen_docdate"
+      }
+    },
+    {
+      "name": "dueDate",
+      "attr": {
+        "type": "Date",
+        "column": "aropen_duedate"
+      }
+    },
+    {
+      "name": "customer",
+      "toOne": {
+	    "isNested" : true,
+        "type": "Customer",
+        "column": "aropen_cust_id",
+        "inverse" : "guid"
+      }
+    },
+    {
+      "name": "terms",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_terms_id"
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "aropen_doctype"
+      }
+    },
+    {
+      "name": "documentNumber",
+      "attr": {
+        "type": "String",
+        "column": "aropen_docnumber"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_amount"
+      }
+    },
+    {
+      "name": "paid",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_paid"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_curr_rate"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "aropen_notes"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "aropen_posted"
+      }
+    },
+    {
+      "name": "salesRep",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_salesrep_id"
+      }
+    },
+    {
+      "name": "orderNumber",
+      "attr": {
+        "type": "String",
+        "column": "aropen_ordernumber"
+      }
+    },
+    {
+      "name": "userName",
+      "attr": {
+        "type": "String",
+        "column": "aropen_username"
+      }
+    },
+    {
+      "name": "reasonCode",
+      "toMany": {
+        "isNested": true,
+        "type": "ReasonCode",
+        "column": "aropen_rsncode_id",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "salesCategory",
+      "toOne": {
+	    "isNested" : true,
+        "type": "SalesCategory",
+        "column": "aropen_salescat_id",
+        "inverse" : "guid"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_commission_due"
+      }
+    },
+    {
+      "name": "isCommissionPaid",
+      "attr": {
+        "type": "Boolean",
+        "column": "aropen_commission_paid"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Boolean",
+        "column": "aropen_discount"
+      }
+    },
+    {
+      "name": "isOpen",
+      "attr": {
+        "type": "Date",
+        "column": "aropen_open"
+      }
+    },
+    {
+      "name": "closeDate",
+      "attr": {
+        "type": "Date",
+        "column": "aropen_closedate"
+      }
+    }
+  ],
+  "isSystem": true
+}

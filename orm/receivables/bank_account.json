@@ -1,0 +1,23 @@
+{
+  "context": "receivables",
+  "nameSpace": "XM",
+  "type": "BankAccount",
+  "table": "bankaccnt",
+  "isExtension": true,
+  "comment": "Extended by Receivables",
+  "relations": [
+    {
+      "column": "bankaccnt_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "useForReceivables",
+      "attr": {
+        "type": "Boolean",
+        "column": "bankaccnt_ar"
+      }
+    }
+  ],
+  "isSystem": true
+}
