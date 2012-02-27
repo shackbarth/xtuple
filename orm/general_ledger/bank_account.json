@@ -1,0 +1,26 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "BankAccount",
+  "table": "bankaccnt",
+  "isExtension": true,
+  "comment": "Extended by General Ledger",
+  "relations": [
+    {
+      "column": "bankaccnt_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ledgerAccount",
+      "toOne": { 
+        "isNested": true,
+        "type": "LedgerAccountInfo",
+        "column": "bankaccnt_accnt_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}
