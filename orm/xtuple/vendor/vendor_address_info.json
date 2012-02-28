@@ -55,6 +55,7 @@
     {
       "name": "contact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "vendaddr_cntct_id"
       }
@@ -62,6 +63,7 @@
     {
       "name": "address",
       "toOne": {
+        "isNested": true,
         "type": "AddressInfo",
         "column": "vendaddr_addr_id"
       }

@@ -1,0 +1,64 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CharacteristicAssignment",
+  "table": "charass",
+  "comment": "Characteristic Assignment Map",
+  "idSequenceName": "public.charass_charass_id_seq",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "charass_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "charass_target_type",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "target",
+      "attr": {
+        "type": "Number",
+        "column": "charass_target_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "characteristic",
+      "toOne": {
+        "isNested": true,
+        "type": "Characteristic",
+        "isChild": true,
+        "column": "charass_char_id"
+      }
+    },
+    {
+      "name": "value",
+      "attr": {
+        "type": "String",
+        "column": "charass_value"
+      }
+    }
+  ],
+  "order":[
+    "characteristic.order",
+    "characteristic.name"
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

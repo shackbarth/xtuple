@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "VoucherTax",
   "table": "voheadtax",
-  "idSequenceName": "public.taxhist_taxhist_id_seq",
+  "idSequenceName": "taxhist_taxhist_id_seq",
   "comment": "Voucher Tax Map",
   "privileges": {
     "all": {
@@ -23,7 +23,7 @@
       }
     },
     {
-      "name": "parent",
+      "name": "voucher",
       "attr": {
         "type": "Number",
         "column": "taxhist_parent_id"
@@ -51,7 +51,7 @@
       }
     },
     {
-      "name": "basisTax",
+      "name": "basisTaxCode",
       "attr": {
         "type": "Number",
         "column": "taxhist_basis_tax_id"
@@ -86,41 +86,27 @@
       }
     },
     {
-      "name": "docDate",
+      "name": "documentDate",
       "attr": {
         "type": "Date",
         "column": "taxhist_docdate"
       }
     },
     {
-      "name": "distributionDate",
-      "attr": {
-        "type": "Date",
-        "column": "taxhist_distdate"
-      }
-    },
-    {
       "name": "currency",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_curr_rate"
-      }
-    },
-    {
-      "name": "currency_rate",
       "attr": {
         "type": "Number",
         "column": "taxhist_curr_id"
       }
     },
     {
-      "name": "journalNumber",
+      "name": "currencyRate",
       "attr": {
         "type": "Number",
-        "column": "taxhist_journalnumber"
+        "column": "taxhist_curr_rate"
       }
     }
   ],
-  "isNestedOnly": true,
+	"isNestedOnly": true,
   "isSystem": true
 }

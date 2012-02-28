@@ -32,7 +32,7 @@
       "name": "description",
       "attr": {
         "type": "String",
-        "value": "stdjrnlgrp_descrip"
+        "column": "stdjrnlgrp_descrip"
       }
     },
     {

@@ -1,0 +1,69 @@
+
+
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "SiteInfo",
+  "table": "whsinfo",
+  "comment": "Site Info Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "warehous_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "warehous_code",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "warehous_active",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "warehous_descrip",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "siteType",
+      "attr": {
+        "type": "Number",
+        "column": "warehous_sitetype_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "address",
+      "toOne": {
+        "isNested": true,
+        "type": "AddressInfo",
+        "column": "warehous_addr_id"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

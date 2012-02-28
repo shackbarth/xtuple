@@ -1,0 +1,33 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "Payable",
+  "table": "apopen",
+  "isExtension": true,
+  "comment": "Extended by General Ledger",
+  "relations": [
+    {
+      "column": "apopen_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "apopen_distdate"
+      }
+    },
+    {
+      "name": "ledgerAccount",
+      "toOne": {
+        "isNested": true,
+        "type": "LedgerAccount",
+        "column": "apopen_accnt_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

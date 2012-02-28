@@ -63,6 +63,7 @@
     {
       "name": "parent",
       "toOne": {
+        "isNested": true,
         "type": "AccountInfo",
         "column": "crmacct_parent_id",
         "inverse": "guid"
@@ -78,6 +79,7 @@
     {
       "name": "primaryContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "crmacct_cntct_id_1",
         "inverse": "guid"
@@ -86,6 +88,7 @@
     {
       "name": "secondaryContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "crmacct_cntct_id_2",
         "inverse": "guid"
@@ -94,6 +97,7 @@
     {
       "name": "userAccount",
       "toOne": {
+        "isNested": true,
         "type": "UserAccountInfo",
         "column": "crmacct_usr_username",
         "inverse": "username"
@@ -102,6 +106,7 @@
     {
       "name": "owner",
       "toOne": {
+        "isNested": true,
         "type": "UserAccountInfo",
         "column": "crmacct_owner_username",
         "inverse": "username"

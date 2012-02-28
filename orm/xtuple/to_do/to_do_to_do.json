@@ -51,6 +51,7 @@
     {
       "name": "toDo",
       "toOne": {
+        "isNested": true,
         "type": "ToDoInfo",
         "column": "target_id"
       }
