@@ -380,7 +380,8 @@ select xt.install_js('XT','Orm','xtuple', $$
         
               for(var i = 0; i < base.properties.length; i++) {
                 if(base.properties[i].name === inverse) {
-                  value = 't1.' + base.properties[i].attr.column;
+                  var obj = base.properties[i].attr ? base.properties[i].attr : base.properties[i].toOne;
+                  value = 't1.' + obj.column;
                   break;
                 }
               }
