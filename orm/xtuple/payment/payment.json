@@ -1,0 +1,155 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "Payment",
+  "table": "checkhead",
+  "idSequenceName": "checkhead_checkhead_id_seq",
+  "comment": "Payment Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainPayments",
+      "read": "ViewPayments",
+      "update": "MaintainPayments",
+      "delete": "MaintainPayments"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "bankAccount",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_bankaccnt_id"
+      }
+    },
+    {
+      "name": "paymentDate",
+      "attr": {
+        "type": "Date",
+        "column": "checkhead_checkdate"
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_number"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_curr_rate"
+      }
+    },
+    {
+      "name": "isMiscellaneous",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_misc"
+      }
+    },
+    {
+      "name": "isPrinted",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_printed"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_posted"
+      }
+    },
+    {
+      "name": "isVoid",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_void"
+      }
+    },
+    {
+      "name": "isReplaced",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_replaced"
+      }
+    },
+    {
+      "name": "expenseCategory",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_expcat_id"
+      }
+    },
+    {
+      "name": "for",
+      "attr": {
+        "type": "String",
+        "column": "checkhead_for"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "checkhead_notes"
+      }
+    },
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_journalnumber"
+      }
+    },
+    {
+      "name": "isDeleted",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_deleted"
+      }
+    },
+    {
+      "name": "achBatch",
+      "attr": {
+        "type": "String",
+        "column": "checkhead_ach_batch"
+      }
+    },
+    {
+      "name": "details",
+      "toMany": {
+        "isNested": true,
+        "type": "PaymentDetail",
+        "column": "checkhead_id",
+        "inverse": "payment"
+      }
+    }
+  ],
+  "isSystem": true
+}

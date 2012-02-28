@@ -26,6 +26,7 @@
       "attr": {
         "type": "String",
         "value": "I",
+        "column": "aropenalloc_doctype",
         "isVisible": false
       }
     },

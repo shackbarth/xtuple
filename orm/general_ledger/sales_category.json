@@ -1,0 +1,37 @@
+{	
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "SalesCategory",
+  "table": "salescat",
+  "isExtension": true,
+  "comment": "Extended by General Ledger",
+  "relations": [
+    {
+      "column": "salescat_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "salesLedgerAccount",
+      "toOne": {
+        "type": "LedgerAccount",
+        "column": "salescat_sales_accnt_id"
+      }
+    },
+    {
+      "name": "prepaidLedgerAccount",
+      "toOne": {
+        "type": "LedgerAccount",
+        "column": "salescat_prepaid_accnt_id"
+      }
+    },
+    {
+      "name": "receivableLedgerAccount",
+      "toOne": {
+        "type": "LedgerAccount",
+        "column": "salescat_ar_accnt_id"
+      }
+    }
+  ],
+  "isSystem": true
+}

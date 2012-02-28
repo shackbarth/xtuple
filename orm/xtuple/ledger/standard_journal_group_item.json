@@ -39,7 +39,7 @@
       "name": "apply",
       "attr": {
         "type": "Number",
-        "value": "stdjrnlgrpitem_applied"
+        "column": "stdjrnlgrpitem_applied"
       }
     },
     {

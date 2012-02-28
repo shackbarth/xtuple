@@ -61,6 +61,7 @@
     {
       "name": "billingContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "cust_cntct_id",
         "inverse": "guid"
@@ -69,6 +70,7 @@
     {
       "name": "correspondenceContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "cust_corrcntct_id",
         "inverse": "guid"
@@ -299,14 +301,6 @@
         "type": "CustomerUrl",
         "column": "cust_id",
         "inverse": "source"
-      }
-    },
-    {
-      "name": "checks",
-      "toMany": {
-        "type": "CustomerCheck",
-        "column": "cust_id",
-        "inverse": "customer"
       }
     },
     {

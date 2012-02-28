@@ -38,6 +38,7 @@
     {
       "name": "ledgerAccount",
       "toOne": {
+        "isNested": true,
         "type": "LedgerAccountInfo",
         "column": "gl_accnt_id"
       }

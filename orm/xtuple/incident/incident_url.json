@@ -51,6 +51,7 @@
     {
       "name": "url",
       "toOne": {
+        "isNested": true,
         "type": "Url",
         "column": "target_id"
       }
