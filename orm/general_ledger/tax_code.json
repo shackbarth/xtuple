@@ -1,0 +1,23 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "TaxCode",
+  "table": "tax",
+  "isExtension": true,
+  "comment": "Extended by General Ledger",
+  "relations": [
+    {
+      "column": "tax_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ledgerAccount",
+      "toOne": {
+        "type": "LedgerAccount",
+        "column": "tax_sales_accnt_id"
+      }
+    }
+  ],
+  "isSystem": true
+}

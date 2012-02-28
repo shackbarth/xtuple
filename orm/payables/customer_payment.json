@@ -1,0 +1,43 @@
+{
+  "context": "payables",
+  "nameSpace": "XM",
+  "type": "CustomerPayment",
+  "table": "checkhead",
+  "comment": "Customer Payment Map",
+  "privileges": {
+    "all": {
+      "create": "false",
+      "read": "read",
+      "update": "false",
+      "delete": "false"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "recipientType",
+      "attr": {
+        "type": "String",
+        "column": "checkhead_recip_type",
+        "value": "C",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "customer",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_recip_id"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

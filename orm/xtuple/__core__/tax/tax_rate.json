@@ -23,7 +23,7 @@
       }
     },
     {
-      "name": "taxcode",
+      "name": "taxCode",
       "attr": {
         "type": "Number",
         "column": "taxrate_tax_id",
@@ -38,18 +38,18 @@
       }
     },
     {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "taxrate_amount"
+      }
+    },
+    {
       "name": "currency",
       "toOne": {
         "isNested": true,
         "type": "Currency",
         "column": "taxrate_curr_id"
-      }
-    },
-    {
-      "name": "amount",
-      "attr": {
-        "type": "Number",
-        "column": "taxrate_amount"
       }
     },
     {

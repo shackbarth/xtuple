@@ -1,0 +1,43 @@
+{
+  "context": "payables",
+  "nameSpace": "XM",
+  "type": "TaxAuthorityPayment",
+  "table": "checkhead",
+  "comment": "Tax Authority Payment Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainPayments",
+      "read": "ViewPayments",
+      "update": "MaintainPayments",
+      "delete": "MaintainPayments"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "recipientType",
+      "attr": {
+        "type": "String",
+        "column": "checkhead_recip_type",
+        "value": "T",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "taxAuthority",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_recip_id"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

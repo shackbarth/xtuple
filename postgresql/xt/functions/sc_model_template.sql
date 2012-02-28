@@ -78,12 +78,13 @@ create or replace function xt.sc_model_template(class_name text) returns text as
 
       attributes.push(attr);
     }
-
+/*
     if(orm.extensions) {
       for(var i = 0; i < orm.extensions.length; i++) {
         buildAttributes(orm.extensions[i]);
       }
     }
+*/
   }
 
   buildAttributes(orm);

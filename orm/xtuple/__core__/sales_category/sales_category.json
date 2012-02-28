@@ -3,13 +3,14 @@
   "nameSpace": "XM",
   "type": "SalesCategory",
   "table": "salescat",
+  "idSequenceName": "salescat_salescat_id_seq",
   "comment": "Sales Category Map",
   "privileges": {
     "all": {
-      "create": true,
+      "create": "MaintainSalesCategories",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainSalesCategories",
+      "delete": "MaintainSalesCategories"
     }
   },
   "properties": [
@@ -42,7 +43,6 @@
         "column": "salescat_descrip"
       }
     }
-],
-	"isNestedOnly": true,
-	 "isSystem": true
+  ],
+  "isSystem": true
 }

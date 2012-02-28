@@ -1,9 +1,9 @@
   {
-  "context": "xtuple",
+  "context": "generalLedger",
   "nameSpace": "XM",
-  "type": "CashReceiptJournal",
+  "type": "SalesJournal",
   "table": "xt.jrnl",
-  "comment": "Cash Receipt Journal Map",
+  "comment": "Sales Journal Map",
   "privileges": {
     "all": {
       "create": false,
@@ -40,7 +40,7 @@
       "attr": {
         "type": "String",
         "column": "jrnl_type",
-        "value": "CR",
+        "value": "S",
         "isVisible": false
       }
     },    
@@ -79,7 +79,7 @@
         "type": "String",
         "column": "jrnl_sense"
       }
-    },
+    },  
     {
       "name": "amount",
       "attr": {

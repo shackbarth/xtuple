@@ -1,9 +1,9 @@
   {
-  "context": "xtuple",
+  "context": "generalLedger",
   "nameSpace": "XM",
-  "type": "CashDisbursementJournal",
+  "type": "PurchaseJournal",
   "table": "xt.jrnl",
-  "comment": "Cash Disbursement Journal Map",
+  "comment": "Purchase Journal Map",
   "privileges": {
     "all": {
       "create": false,
@@ -40,7 +40,7 @@
       "attr": {
         "type": "String",
         "column": "jrnl_type",
-        "value": "CD",
+        "value": "P",
         "isVisible": false
       }
     },    
