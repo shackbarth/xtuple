@@ -23,10 +23,9 @@
     },
     {
       "name": "vendor",
-      "attr": {
-        "type": "Number",
-        "column": "vendaddr_vend_id",
-        "isEditable": false
+      "toOne": {
+        "type": "Vendor",
+        "column": "vendaddr_vend_id"
       }
     },
     {

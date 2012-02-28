@@ -72,10 +72,10 @@
         "column": "vend_fob"
       }
     },
-   {
+    {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Terms",
         "column": "vend_terms_id"
       }
     },
@@ -88,8 +88,8 @@
     },
     {
       "name": "type",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "VendorType",
         "column": "vend_vendtype_id"
       }
     },
@@ -199,9 +199,9 @@
       }
     },
     {
-      "name": "taxZoneId",
-      "attr": {
-        "type": "Number",
+      "name": "taxZone",
+      "toOne": {
+        "type": "TaxZone",
         "column": "vend_taxzone_id"
       }
     },

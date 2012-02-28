@@ -33,6 +33,13 @@
       }
     },
     {
+      "name": "vendor",
+      "toOne": {
+        "type": "Vendor",
+        "column": "comment_source_id"
+      }
+    },
+    {
       "name": "date",
       "attr": {
         "type": "Date",
@@ -50,10 +57,9 @@
     },
     {
       "name": "commentType",
-      "attr": {
-        "type": "Number",
-        "column": "comment_cmnttype_id",
-        "isEditable": false
+      "toOne": {
+        "type": "CommentType",
+        "column": "comment_cmnttype_id"
       }
     },
     {

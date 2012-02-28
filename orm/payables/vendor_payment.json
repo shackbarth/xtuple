@@ -32,8 +32,8 @@
     },
     {
       "name": "vendor",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Vendor",
         "column": "checkhead_recip_id"
       }
     }
