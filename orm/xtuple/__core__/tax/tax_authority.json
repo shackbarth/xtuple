@@ -45,8 +45,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "taxauth_curr_id"
       }
     },

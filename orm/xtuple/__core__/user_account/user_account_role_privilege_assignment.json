@@ -24,10 +24,9 @@
     },
     {
       "name": "userAccountRole",
-      "attr": {
-        "type": "Number",
-        "column": "grppriv_grp_id",
-        "isEditable": false
+      "toOne": {
+        "type": "UserAccountRole",
+        "column": "grppriv_grp_id"
       }
     },
     {

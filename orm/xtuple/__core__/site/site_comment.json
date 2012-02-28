@@ -40,10 +40,9 @@
     },    
     {
       "name": "site",
-      "attr": {
-        "type": "Number",
-        "column": "comment_source_id",
-        "isEditable": false
+      "toOne": {
+        "type": "Site",
+        "column": "comment_source_id"
       }
     },
     {
@@ -64,10 +63,9 @@
     },
     {
       "name": "commentType",
-      "attr": {
-        "type": "Number",
-        "column": "comment_cmnttype_id",
-        "isEditable": false
+      "toOne": {
+        "type": "CommentType",
+        "column": "comment_cmnttype_id"
       }
     },
     {

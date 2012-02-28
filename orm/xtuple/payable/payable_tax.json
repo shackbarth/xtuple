@@ -1,10 +1,10 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "VoucherTax",
-  "table": "voheadtax",
+  "type": "PayableTax",
+  "table": "apopentax",
   "idSequenceName": "taxhist_taxhist_id_seq",
-  "comment": "Voucher Tax Map",
+  "comment": "Payable Tax Map",
   "privileges": {
     "all": {
       "create": false,
@@ -23,9 +23,9 @@
       }
     },
     {
-      "name": "voucher",
+      "name": "payable",
       "toOne": {
-        "type": "Voucher",
+        "type": "Payable",
         "column": "taxhist_parent_id"
       }
     },
@@ -93,6 +93,13 @@
       }
     },
     {
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_distdate"
+      }
+    },
+    {
       "name": "currency",
       "toOne": {
         "type": "Currency",
@@ -104,6 +111,13 @@
       "attr": {
         "type": "Number",
         "column": "taxhist_curr_rate"
+      }
+    },
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_journalNumber"
       }
     }
   ],

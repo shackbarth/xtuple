@@ -23,8 +23,8 @@
     },
     {
       "name": "period",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Period",
         "column": "trialbal_period_id"
       }
     },

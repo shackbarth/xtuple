@@ -1,5 +1,5 @@
   {
-  "context": "xtuple",
+  "context": "generalLedger",
   "nameSpace": "XM",
   "type": "StandardJournalGroupItem",
   "table": "stdjrnlgrpitem",
@@ -23,15 +23,15 @@
     },
     {
       "name": "standardJournalGroup",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "StandardJournalGroup",
         "column": "stdjrnlgrpitem_stdjrnlgrp_id"
       }
     },
     {
       "name": "standardJournal",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "StandardJournal",
         "column": "stdjrnlgrpitem_stdjrnl_id"
       }
     },

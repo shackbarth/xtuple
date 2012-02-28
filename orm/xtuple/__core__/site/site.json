@@ -38,22 +38,22 @@
     },
     {
       "name": "address",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Address",
         "column": "warehous_addr_id"
       }
     },
     {
       "name": "zones",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "warehous_taxzone_id"
       }
     },
     {
       "name": "contact",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Contact",
         "column": "warehous_cntct_id"
       }
     },
@@ -171,8 +171,8 @@
     },
     {
       "name": "siteType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "SiteType",
         "column": "warehous_sitetype_id"
       }
     },

@@ -24,8 +24,8 @@
     },
     {
       "name": "fromUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Unit",
         "column": "uomconv_from_uom_id"
       }
     },
@@ -38,8 +38,8 @@
     },
     {
       "name": "toUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Unit",
         "column": "uomconv_to_uom_id"
       }
     },

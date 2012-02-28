@@ -49,10 +49,9 @@
     },
     {
       "name": "siteType",
-      "attr": {
-        "type": "Number",
-        "column": "warehous_sitetype_id",
-        "isEditable": false
+      "toOne": {
+        "type": "SiteType",
+        "column": "warehous_sitetype_id"
       }
     },
     {

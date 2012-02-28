@@ -59,8 +59,8 @@
     },
     {
       "name": "locale",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Locale",
         "column": "usr_locale_id"
       }
     },
