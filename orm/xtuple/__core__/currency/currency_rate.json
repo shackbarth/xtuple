@@ -24,8 +24,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "curr_id",
         "isEditable": false
       }

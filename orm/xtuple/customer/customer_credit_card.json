@@ -31,8 +31,8 @@
     },
     {
       "name": "customer",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "ccard_cust_id"
       }
     },

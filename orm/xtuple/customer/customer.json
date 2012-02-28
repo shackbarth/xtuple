@@ -39,8 +39,8 @@
     },
     {
       "name": "customerType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "cust_custtype_id"
       }
     },
@@ -78,8 +78,8 @@
     },
     {
       "name": "salesRep",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "SalesRep",
         "column": "cust_salesrep_id"
       }
     },
@@ -106,8 +106,8 @@
     },
     {
       "name": "shipCharge",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "cust_shipchrg_id"
       }
     },
@@ -141,8 +141,8 @@
     },
     {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "cust_terms_id"
       }
     },
@@ -155,8 +155,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "cust_curr_id"
       }
     },
@@ -183,8 +183,8 @@
     },
     {
       "name": "creditLimitCurrency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "cust_creditlmt_curr_id"
       }
     },
@@ -204,8 +204,8 @@
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "cust_taxzone_id"
       }
     },

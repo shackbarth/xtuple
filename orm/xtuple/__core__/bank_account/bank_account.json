@@ -59,8 +59,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "bankaccnt_curr_id"
       }
     },
