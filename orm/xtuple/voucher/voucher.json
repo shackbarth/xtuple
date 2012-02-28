@@ -23,6 +23,14 @@
       }
     },
     {
+      "name": "vendor",
+      "toOne": {
+        "isNested": true,
+        "type": "Vendor",
+        "column": "vohead_vend_id"
+      }
+    },
+    {
       "name": "isMiscellaneous",
       "attr": {
         "type": "Boolean",
@@ -47,17 +55,10 @@
       }
     },
     {
-      "name": "docDate",
+      "name": "documentDate",
       "attr": {
         "type": "Date",
         "column": "vohead_docdate"
-      }
-    },
-    {
-      "name": "distributionDate",
-      "attr": {
-        "type": "Date",
-        "column": "vohead_distdate"
       }
     },
     {
@@ -79,14 +80,6 @@
       "attr": {
         "type": "Number",
         "column": "vohead_terms_id"
-      }
-    },
-    {
-      "name": "vendor",
-      "toOne": {
-        "isNested": true,
-        "type": "Vendor",
-        "column": "vohead_vend_id"
       }
     },
     {

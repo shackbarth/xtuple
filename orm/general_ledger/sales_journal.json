@@ -1,5 +1,5 @@
   {
-  "context": "receivable",
+  "context": "generalLedger",
   "nameSpace": "XM",
   "type": "SalesJournal",
   "table": "xt.jrnl",

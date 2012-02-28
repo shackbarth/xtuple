@@ -1,5 +1,5 @@
   {
-  "context": "payables",
+  "context": "generalLedger",
   "nameSpace": "XM",
   "type": "CashDisbursementJournal",
   "table": "xt.jrnl",

@@ -1,13 +1,13 @@
 {
   "context": "generalLedger",
   "nameSpace": "XM",
-  "type": "Payable",
-  "table": "apopen",
+  "type": "Receivable",
+  "table": "aropen",
   "isExtension": true,
   "comment": "Extended by General Ledger",
   "relations": [
     {
-      "column": "apopen_id",
+      "column": "aropen_id",
       "inverse": "guid"
     }
   ],
@@ -16,7 +16,7 @@
       "name": "distributionDate",
       "attr": {
         "type": "Date",
-        "column": "apopen_distdate"
+        "column": "aropen_distdate"
       }
     },
     {
@@ -24,7 +24,7 @@
       "toOne": {
         "isNested": true,
         "type": "LedgerAccount",
-        "column": "apopen_accnt_id"
+        "column": "aropen_accnt_id"
       }
     }
   ],

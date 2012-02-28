@@ -1,33 +1,24 @@
 {
   "context": "generalLedger",
   "nameSpace": "XM",
-  "type": "Payable",
-  "table": "apopen",
+  "type": "VoucherDistribution",
+  "table": "vodist",
   "isExtension": true,
   "comment": "Extended by General Ledger",
   "relations": [
     {
-      "column": "apopen_id",
-      "inverse": "guid"
+      "column": "vodist_id"
     }
   ],
   "properties": [
-    {
-      "name": "distributionDate",
-      "attr": {
-        "type": "Date",
-        "column": "apopen_distdate"
-      }
-    },
     {
       "name": "ledgerAccount",
       "toOne": {
         "isNested": true,
         "type": "LedgerAccount",
-        "column": "apopen_accnt_id"
+        "column": "vodist_accnt_id"
       }
     }
   ],
-  "sequence": 0,
   "isSystem": true
 }
