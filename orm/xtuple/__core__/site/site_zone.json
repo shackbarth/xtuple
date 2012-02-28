@@ -24,11 +24,10 @@
       }
     },
     {
-      "name": "warehousId",
-      "attr": {
-        "type": "Number",
-        "column": "whsezone_warehous_id",
-        "isEditable": false
+      "name": "site",
+      "toOne": {
+        "type": "Site",
+        "column": "whsezone_warehous_id"
       }
     },
     {

@@ -24,10 +24,9 @@
     },
     {
       "name": "taxCode",
-      "attr": {
-        "type": "Number",
-        "column": "taxrate_tax_id",
-        "isEditable": false
+      "toOne": {
+        "type": "TaxCode",
+        "column": "taxrate_tax_id"
       }
     },
     {

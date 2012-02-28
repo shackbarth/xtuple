@@ -105,8 +105,8 @@
     },
     {
       "name": "priority",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Priority",
         "column": "todoitem_priority_id"
       }
     },

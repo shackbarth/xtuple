@@ -38,11 +38,10 @@
       }
     },
     {
-      "name": "toDo",
-      "attr": {
-        "type": "Number",
-        "column": "comment_source_id",
-        "isEditable": false
+      "name": "todo",
+      "toOne": {
+        "type": "ToDo",
+        "column": "comment_source_id"
       }
     },
     {
@@ -63,10 +62,9 @@
     },
     {
       "name": "commentType",
-      "attr": {
-        "type": "Number",
-        "column": "comment_cmnttype_id",
-        "isEditable": false
+      "toOne": {
+        "type": "CommentType",
+        "column": "comment_cmnttype_id"
       }
     },
     {

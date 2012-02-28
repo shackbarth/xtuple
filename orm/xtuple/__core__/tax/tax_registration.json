@@ -42,8 +42,8 @@
     },
     {
       "name": "taxAuthority",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxAuthority",
         "column": "taxreg_taxauth_id"
       }
     },
@@ -56,8 +56,8 @@
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "taxreg_taxzone_id"
       }
     },
