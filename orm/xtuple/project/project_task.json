@@ -58,8 +58,8 @@
     },
     {
       "name": "project",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Project",
         "column": "prjtask_prj_id"
       }
     },

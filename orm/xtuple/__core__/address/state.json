@@ -38,8 +38,8 @@
     },
     {
       "name": "country",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Country",
         "column": "state_country_id"
       }
     }

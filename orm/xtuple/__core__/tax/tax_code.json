@@ -38,22 +38,22 @@
     },
     {
       "name": "taxClass",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxClass",
         "column": "tax_taxclass_id"
       }
     },
     {
       "name": "taxAuthority",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxAuthority",
         "column": "tax_taxauth_id"
       }
     },
     {
-      "name": "basis",
-      "attr": {
-        "type": "Number",
+      "name": "basisTaxCode",
+      "toOne": {
+        "type": "TaxCode",
         "column": "tax_basis_tax_id"
       }
     }

@@ -29,6 +29,13 @@
       }
     },
     {
+      "name": "standardJournal",
+      "toOne": {
+        "type": "StandardJournal",
+        "column": "stdjrnlitem_stdjrnl_id"
+      }
+    },
+    {
       "name": "ledgerAccount",
       "toOne": {
         "isNested": true,

@@ -81,15 +81,15 @@
     },
     {
       "name": "source",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Receivable",
         "column": "arapply_source_aropen_id"
       }
     },
     {
       "name": "target",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Receivable",
         "column": "arapply_target_aropen_id"
       }
     },
@@ -102,8 +102,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "arapply_curr_id"
       }
     }

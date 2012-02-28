@@ -38,7 +38,7 @@
     {
       "name": "customer",
       "toOne": {
-	    "isNested" : true,
+        "isNested" : true,
         "type": "Customer",
         "column": "aropen_cust_id",
         "inverse" : "guid"
@@ -46,8 +46,8 @@
     },
     {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Terms",
         "column": "aropen_terms_id"
       }
     },
@@ -81,8 +81,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "aropen_curr_id"
       }
     },
@@ -111,6 +111,13 @@
       "name": "salesRep",
       "attr": {
         "type": "Number",
+        "column": "aropen_salesrep_id"
+      }
+    },
+    {
+      "name": "salesRep",
+      "toOne": {
+        "type": "SalesRep",
         "column": "aropen_salesrep_id"
       }
     },

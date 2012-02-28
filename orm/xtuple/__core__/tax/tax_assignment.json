@@ -24,22 +24,22 @@
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "taxass_taxzone_id"
       }
     },
     {
       "name": "taxType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxType",
         "column": "taxass_taxtype_id"
       }
     },
     {
       "name": "taxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxCode",
         "column": "taxass_tax_id"
       }
     }

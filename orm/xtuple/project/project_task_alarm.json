@@ -33,10 +33,9 @@
     },
     {
       "name": "projectTask",
-      "attr": {
-        "type": "Number",
-        "column": "alarm_source_id",
-        "isEditable": false
+      "toOne": {
+        "type": "ProjectTask",
+        "column": "alarm_source_id"
       }
     },
     {
