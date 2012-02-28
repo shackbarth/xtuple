@@ -1,15 +1,16 @@
-{
+{	
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ReasonCode",
-  "table": "rsncode",
-  "comment": "Reason Code Map",
+  "type": "FreightClass",
+  "table": "freightclass",
+  "idSequenceName": "freightclass_freightclass_id_seq",
+  "comment": "Freight Class Map",
   "privileges": {
     "all": {
-      "create": true,
+      "create": "MaintainFreightClasses",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainFreightClasses",
+      "delete": "MaintainFreightClasses"
     }
   },
   "properties": [
@@ -17,7 +18,7 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "rsncode_id",
+        "column": "freightclass_id",
         "isPrimaryKey": true
       }
     },
@@ -25,17 +26,16 @@
       "name": "code",
       "attr": {
         "type": "String",
-        "column": "rsncode_code"
+        "column": "freightclass_code"
       }
     },
     {
       "name": "description",
       "attr": {
         "type": "String",
-        "column": "rsncode_descrip"
+        "column": "freightclass_descrip"
       }
     }
   ],
-  "isNestedOnly": false,
   "isSystem": true
 }

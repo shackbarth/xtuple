@@ -30,13 +30,6 @@
     },
     {
       "name": "standardJournal",
-      "attr": {
-        "type": "Number",
-        "column": "stdjrnlgrpitem_stdjrnl_id"
-      }
-    },
-    {
-      "name": "standardJournal",
       "toOne": {
         "type": "StandardJournal",
         "column": "stdjrnlgrpitem_stdjrnl_id"

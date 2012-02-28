@@ -33,18 +33,18 @@
       "attr": {
         "type": "String",
         "column": "comment_source",
-		"value": "OPP",
+		    "value": "OPP",
         "isVisible": false
       }
     },
-	{
+    {
       "name": "opportunity",
-	  "attr": {
-        "type": "Number",
-		"column": "comment_source_id",
-		"isEditable": false
-	  }
-	},
+      "toOne": {
+        "type": "Opportunity",
+        "column": "comment_source_id",
+        "isEditable": false
+      }
+    },
     {
       "name": "date",
       "attr": {
@@ -63,8 +63,8 @@
     },
     {
       "name": "commentType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CommentType",
         "column": "comment_cmnttype_id",
         "isEditable": false
       }

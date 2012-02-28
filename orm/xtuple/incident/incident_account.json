@@ -26,8 +26,8 @@
     },
     {
       "name": "source",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Incident",
         "column": "source_id",
         "isEditable": false
       }

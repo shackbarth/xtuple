@@ -53,15 +53,15 @@
     },
     {
       "name": "classCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "ClassCode",
         "column": "item_classcode_id"
       }
     },
     {
       "name": "inventoryUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Unit",
         "column": "item_inv_uom_id"
       }
     },
@@ -116,8 +116,8 @@
     },
     {
       "name": "productCategory",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "ProductCategory",
         "column": "item_prodcat_id"
       }
     },
@@ -137,8 +137,8 @@
     },
     {
       "name": "priceUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Unit",
         "column": "item_price_uom_id"
       }
     },
@@ -172,8 +172,8 @@
     },
     {
       "name": "freightClass",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "FreightClass",
         "column": "item_freightclass_id"
       }
     },

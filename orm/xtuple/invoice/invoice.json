@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "Invoice",
   "table": "invchead",
-  "idSequenceName": "public.invcitem_invcitem_id_seq",
+  "idSequenceName": "invchead_invchead_id_seq",
   "comment": "Invoice Map",
   "privileges": {
     "all": {
@@ -80,8 +80,9 @@
     },		
     {
       "name": "customer",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "isNested": true,
+        "type": "CustomerInfo",
         "column": "invchead_cust_id"
       }
     },
@@ -150,8 +151,9 @@
     },
     {
       "name": "shipto",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "isNested": true,
+        "type": "CustomerShiptoInfo",
         "column": "invchead_shipto_id"
       }
     },
@@ -213,8 +215,8 @@
     },
     {
       "name": "salesRep",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "SalesRep",
         "column": "invchead_salesrep_id"
       }
     },
@@ -227,15 +229,15 @@
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "invchead_taxzone_id"
       }
     },
     {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Terms",
         "column": "invchead_terms_id"
       }
     },
@@ -262,15 +264,15 @@
     },
     {
       "name": "shipCharge",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "ShipCharge",
         "column": "invchead_shipchrg_id"
       }
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "invchead_curr_id"
       }
     },

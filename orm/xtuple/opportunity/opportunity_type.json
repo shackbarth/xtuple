@@ -3,14 +3,14 @@
   "nameSpace": "XM",
   "type": "OpportunityType",
   "table": "optype",
-  "idSequenceName": "public.optype_optype_id_seq",
+  "idSequenceName": "optype_optype_id_seq",
   "comment": "Opportunity Type Map",
   "privileges": {
     "all": {
-      "create": true,
+      "create": "MaintainOpportunityTypes",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainOpportunityTypes",
+      "delete": "MaintainOpportunityTypes"
     }
   },
   "properties": [

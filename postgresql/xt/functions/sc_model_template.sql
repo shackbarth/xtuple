@@ -76,15 +76,8 @@ create or replace function xt.sc_model_template(class_name text) returns text as
                       .replace(/{type2}/, type2)
                       .replace(/{extra}/, extra);
 
-      attributes.push(attr);
+      if(obj.isVisible !== false) attributes.push(attr);
     }
-/*
-    if(orm.extensions) {
-      for(var i = 0; i < orm.extensions.length; i++) {
-        buildAttributes(orm.extensions[i]);
-      }
-    }
-*/
   }
 
   buildAttributes(orm);

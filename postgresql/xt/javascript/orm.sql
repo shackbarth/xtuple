@@ -119,6 +119,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             ext = {};
 
         ext.context = orm.context;
+        ext.comment = orm.comment;
         ext.table = orm.table;
         ext.isChild = orm.isChild;
         ext.relations = orm.relations;
@@ -379,7 +380,8 @@ select xt.install_js('XT','Orm','xtuple', $$
         
               for(var i = 0; i < base.properties.length; i++) {
                 if(base.properties[i].name === inverse) {
-                  value = 't1.' + base.properties[i].attr.column;
+                  var obj = base.properties[i].attr ? base.properties[i].attr : base.properties[i].toOne;
+                  value = 't1.' + obj.column;
                   break;
                 }
               }

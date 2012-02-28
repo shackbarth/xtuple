@@ -43,6 +43,13 @@
       }
     },
     {
+      "name": "project",
+      "toOne": {
+        "type": "Project",
+        "column": "prjtask_prj_id"
+      }
+    },
+    {
       "name": "name",
       "attr": {
         "type": "String",
@@ -54,13 +61,6 @@
       "attr": {
         "type": "String",
         "column": "prjtask_descrip"
-      }
-    },
-    {
-      "name": "project",
-      "toOne": {
-        "type": "Project",
-        "column": "prjtask_prj_id"
       }
     },
     {

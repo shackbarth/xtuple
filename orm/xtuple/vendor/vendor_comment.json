@@ -26,14 +26,6 @@
     },    
     {
       "name": "vendor",
-      "attr": {
-        "type": "Number",
-        "column": "comment_source_id",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "vendor",
       "toOne": {
         "type": "Vendor",
         "column": "comment_source_id"
