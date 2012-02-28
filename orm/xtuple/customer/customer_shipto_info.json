@@ -1,7 +1,7 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "CustomerShipto",
+  "type": "CustomerShiptoInfo",
   "table": "shiptoinfo",
   "comment": "Customer Shipto Info Map",
   "privileges": {

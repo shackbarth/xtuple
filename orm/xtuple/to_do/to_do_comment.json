@@ -38,7 +38,7 @@
       }
     },
     {
-      "name": "todo",
+      "name": "toDo",
       "toOne": {
         "type": "ToDo",
         "column": "comment_source_id"

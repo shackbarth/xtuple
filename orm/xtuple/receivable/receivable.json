@@ -109,13 +109,6 @@
     },
     {
       "name": "salesRep",
-      "attr": {
-        "type": "Number",
-        "column": "aropen_salesrep_id"
-      }
-    },
-    {
-      "name": "salesRep",
       "toOne": {
         "type": "SalesRep",
         "column": "aropen_salesrep_id"

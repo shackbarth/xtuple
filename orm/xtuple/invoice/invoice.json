@@ -153,7 +153,7 @@
       "name": "shipto",
       "toOne": {
         "isNested": true,
-        "type": "ShiptoInfo",
+        "type": "CustomerShiptoInfo",
         "column": "invchead_shipto_id"
       }
     },

@@ -54,7 +54,7 @@
       "name": "contact",
       "toOne": {
         "type": "Contact",
-        "column": "warehour_cntct_id"
+        "column": "warehous_cntct_id"
       }
     },
     {

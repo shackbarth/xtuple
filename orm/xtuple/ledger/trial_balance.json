@@ -25,7 +25,7 @@
       "name": "period",
       "toOne": {
         "type": "Period",
-        "column": "trial_period_id"
+        "column": "trialbal_period_id"
       }
     },
     {
