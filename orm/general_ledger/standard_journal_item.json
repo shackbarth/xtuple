@@ -1,5 +1,5 @@
   {
-  "context": "xtuple",
+  "context": "generalLedger",
   "nameSpace": "XM",
   "type": "StandardJournalItem",
   "table": "stdjrnlitem",
