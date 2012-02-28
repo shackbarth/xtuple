@@ -1,15 +1,15 @@
 {
   "context": "payables",
   "nameSpace": "XM",
-  "type": "CustomerCheck",
+  "type": "TaxAuthorityPayment",
   "table": "checkhead",
-  "comment": "Customer Check Map",
+  "comment": "Tax Authority Payment Map",
   "privileges": {
     "all": {
-      "create": "false",
-      "read": "read",
-      "update": "false",
-      "delete": "false"
+      "create": "MaintainPayments",
+      "read": "ViewPayments",
+      "update": "MaintainPayments",
+      "delete": "MaintainPayments"
     }
   },
   "properties": [
@@ -26,12 +26,12 @@
       "attr": {
         "type": "String",
         "column": "checkhead_recip_type",
-        "value": "C",
+        "value": "T",
         "isVisible": false
       }
     },
     {
-      "name": "customer",
+      "name": "taxAuthority",
       "attr": {
         "type": "Number",
         "column": "checkhead_recip_id"

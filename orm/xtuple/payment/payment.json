@@ -1,10 +1,10 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "Check",
+  "type": "Payment",
   "table": "checkhead",
   "idSequenceName": "checkhead_checkhead_id_seq",
-  "comment": "Check Map",
+  "comment": "Payment Map",
   "privileges": {
     "all": {
       "create": "MaintainPayments",
@@ -30,7 +30,7 @@
       }
     },
     {
-      "name": "checkDate",
+      "name": "paymentDate",
       "attr": {
         "type": "Date",
         "column": "checkhead_checkdate"
@@ -145,9 +145,9 @@
       "name": "details",
       "toMany": {
         "isNested": true,
-        "type": "CheckDetail",
+        "type": "PaymentDetail",
         "column": "checkhead_id",
-        "inverse": "check"
+        "inverse": "payment"
       }
     }
   ],

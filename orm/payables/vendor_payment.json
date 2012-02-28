@@ -1,9 +1,9 @@
 {
   "context": "payables",
   "nameSpace": "XM",
-  "type": "VendorCheck",
+  "type": "VendorPayment",
   "table": "checkhead",
-  "comment": "Vendor Check Map",
+  "comment": "Vendor Payment Map",
   "privileges": {
     "all": {
       "create": "MaintainPayments",
