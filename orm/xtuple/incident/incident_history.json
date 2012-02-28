@@ -34,8 +34,8 @@
     },
     {
       "name": "incident",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Incident",
         "column": "incdthist_incdt_id",
         "isEditable": false
       }

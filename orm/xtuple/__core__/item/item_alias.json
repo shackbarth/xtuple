@@ -9,7 +9,7 @@
     "all": {
       "create": true,
       "read": true,
-      "update": false,
+      "update": true,
       "delete": true
     }
   },
@@ -24,8 +24,8 @@
     },
     {
       "name": "item",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Item",
         "column": "itemalias_item_id",
         "isEditable": false
       }

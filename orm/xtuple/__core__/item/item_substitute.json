@@ -24,15 +24,15 @@
     },
     {
       "name": "item",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Item",
         "column": "itemsub_parent_item_id"
       }
     },
     {
       "name": "substituteItem",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Item",
         "column": "itemsub_sub_item_id"
       }
     },

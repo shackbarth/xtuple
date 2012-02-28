@@ -26,6 +26,13 @@
         "type": "LedgerAccount",
         "column": "apopen_accnt_id"
       }
+    },
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_journalnumber"
+      }
     }
   ],
   "sequence": 0,

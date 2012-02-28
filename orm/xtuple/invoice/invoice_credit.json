@@ -32,8 +32,8 @@
     },
     {
       "name": "invoice",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Invoice",
         "column": "aropenalloc_doc_id"
       }
     },
@@ -46,8 +46,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "aropenalloc_curr_id"
       }
     }

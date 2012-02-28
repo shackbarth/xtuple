@@ -24,16 +24,16 @@
     },
     {
       "name": "itemConversion",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "ItemConversion",
         "column": "itemuom_itemuomconv_id",
         "isEditable": false
       }
     },
     {
       "name": "unitType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Unit",
         "column": "itemuom_uomtype_id",
         "isEditable": false
       }

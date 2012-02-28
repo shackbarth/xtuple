@@ -1,0 +1,72 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CustomerShiptoBrowse",
+  "table": "shiptoinfo",
+  "comment": "Customer Shipto Browse Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "customer",
+      "toOne": {
+        "type": "Customer",
+        "column": "shipto_cust_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "shipto_num"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "shipto_name"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "shipto_active"
+      }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "isNested": true,
+        "type": "ContactInfo",
+        "column": "shipto_cntct_id"
+      }
+    },
+    {
+      "name": "address",
+      "toOne": {
+        "isNested": true,
+        "type": "AddressInfo",
+        "column": "shipto_addr_id"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

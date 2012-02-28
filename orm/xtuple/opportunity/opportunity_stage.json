@@ -3,14 +3,14 @@
   "nameSpace": "XM",
   "type": "OpportunityStage",
   "table": "opstage",
-  "idSequenceName": "public.opstage_opstage_id_seq",
+  "idSequenceName": "opstage_opstage_id_seq",
   "comment": "Opportunity Stage Map",
   "privileges": {
     "all": {
-      "create": true,
+      "create": "MaintainOpportunityStages",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainOpportunityStages",
+      "delete": "MaintainOpportunityStages"
     }
   },
   "properties": [

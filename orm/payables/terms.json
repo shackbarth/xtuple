@@ -1,0 +1,23 @@
+{	
+  "context": "payables",
+  "nameSpace": "XM",
+  "type": "Terms",
+  "table": "terms",
+  "isExtension": true,
+  "comment": "Extended by Payables",
+  "relations": [
+    {
+      "column": "terms_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "usedByPayables",
+      "attr": {
+        "type": "Boolean",
+        "column": "terms_ap"
+      }
+    }
+  ],
+  "isSystem": true
+}

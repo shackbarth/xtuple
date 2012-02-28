@@ -12,7 +12,7 @@
   ],
   "properties": [
     {
-      "name": "useForPayables",
+      "name": "usedByPayables",
       "attr": {
         "type": "Boolean",
         "column": "bankaccnt_ap"
