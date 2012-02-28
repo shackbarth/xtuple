@@ -64,13 +64,6 @@
       }
     },
     {
-      "name": "project",
-      "toOne": {
-        "type": "Project",
-        "column": "prjtask_prj_id"
-      }
-    },
-    {
       "name": "projectTaskStatus",
       "attr": {
         "type": "String",
