@@ -304,14 +304,6 @@
       }
     },
     {
-      "name": "checks",
-      "toMany": {
-        "type": "CustomerCheck",
-        "column": "cust_id",
-        "inverse": "customer"
-      }
-    },
-    {
       "name": "customers",
       "toMany": {
         "isNested": true,

@@ -1,5 +1,5 @@
   {
-  "context": "xtuple",
+  "context": "receivbles",
   "nameSpace": "XM",
   "type": "CashReceiptJournal",
   "table": "xt.jrnl",

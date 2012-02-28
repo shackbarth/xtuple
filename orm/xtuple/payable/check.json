@@ -1,10 +1,10 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "VendorCheck",
+  "type": "Check",
   "table": "checkhead",
   "idSequenceName": "checkhead_checkhead_id_seq",
-  "comment": "Vendor Check Map",
+  "comment": "Check Map",
   "privileges": {
     "all": {
       "create": "MaintainPayments",
@@ -23,42 +23,10 @@
       }
     },
     {
-      "name": "recipientType",
-      "attr": {
-        "type": "String",
-        "column": "checkhead_recip_type",
-        "value": "V",
-        "isVisible": false
-      }
-    },
-    {
-      "name": "vendor",
-      "attr": {
-        "type": "Number",
-        "column": "checkhead_recip_id"
-      }
-    },
-    {
-      "name": "details",
-      "toMany": {
-        "isNested": true,
-        "type": "CheckDetails",
-        "column": "checkhead_id",
-        "inverse": "check"
-      }
-    },
-    {
       "name": "bankAccount",
       "attr": {
         "type": "Number",
         "column": "checkhead_bankaccnt_id"
-      }
-    },
-    {
-      "name": "isPrinted",
-      "attr": {
-        "type": "Boolean",
-        "column": "checkhead_printed"
       }
     },
     {
@@ -83,6 +51,41 @@
       }
     },
     {
+      "name": "currency",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_curr_rate"
+      }
+    },
+    {
+      "name": "isMiscellaneous",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_misc"
+      }
+    },
+    {
+      "name": "isPrinted",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_printed"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Boolean",
+        "column": "checkhead_posted"
+      }
+    },
+    {
       "name": "isVoid",
       "attr": {
         "type": "Boolean",
@@ -94,20 +97,6 @@
       "attr": {
         "type": "Boolean",
         "column": "checkhead_replaced"
-      }
-    },
-    {
-      "name": "isPosted",
-      "attr": {
-        "type": "Boolean",
-        "column": "checkhead_posted"
-      }
-    },
-    {
-      "name": "isMiscellaneous",
-      "attr": {
-        "type": "Boolean",
-        "column": "checkhead_misc"
       }
     },
     {
@@ -139,13 +128,6 @@
       }
     },
     {
-      "name": "currency",
-      "attr": {
-        "type": "Number",
-        "column": "checkhead_curr_id"
-      }
-    },
-    {
       "name": "isDeleted",
       "attr": {
         "type": "Boolean",
@@ -160,10 +142,12 @@
       }
     },
     {
-      "name": "currencyRate",
-      "attr": {
-        "type": "Number",
-        "column": "checkhead_curr_rate"
+      "name": "details",
+      "toMany": {
+        "isNested": true,
+        "type": "CheckDetail",
+        "column": "checkhead_id",
+        "inverse": "check"
       }
     }
   ],

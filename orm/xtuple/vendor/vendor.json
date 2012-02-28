@@ -215,14 +215,6 @@
       }
     },
     {
-      "name": "checks",
-      "toMany": {
-        "type": "VendorCheck",
-        "column": "vend_id",
-        "inverse": "vendor"
-      }
-    },
-    {
       "name": "comments",
       "toMany": {
         "type": "VendorComment",
