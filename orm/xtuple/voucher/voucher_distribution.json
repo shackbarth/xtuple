@@ -24,10 +24,9 @@
     },
     {
       "name": "voucher",
-      "attr": {
-        "type": "Number",
-        "column": "vodist_vohead_id",
-        "isEditable": false
+      "toOne": {
+        "type": "Voucher",
+        "column": "vodist_vohead_id"
       }
     },
     {
@@ -46,15 +45,15 @@
     },
     {
       "name": "expenseCategory",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "ExpenseCategory",
         "column": "vodist_expcat_id"
       }
     },
     {
       "name": "taxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxCode",
         "column": "vodist_tax_id"
       }
     },

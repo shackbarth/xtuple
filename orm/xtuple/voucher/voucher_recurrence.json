@@ -25,10 +25,9 @@
     },
     {
       "name": "voucher",
-      "attr": {
-        "type": "Number",
-        "column": "recur_parent_id",
-        "isEditable": false
+      "toOne": {
+        "type": "Voucher",
+        "column": "recur_parent_id"
       }
     },
     {

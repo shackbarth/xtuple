@@ -77,29 +77,29 @@
     },
     {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Terms",
         "column": "vohead_terms_id"
       }
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "vohead_curr_id"
       }
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "vohead_taxzone_id"
       }
     },
     {
       "name": "taxType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxType",
         "column": "vohead_taxtype_id"
       }
     },
