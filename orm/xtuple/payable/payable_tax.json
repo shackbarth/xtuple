@@ -1,0 +1,107 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "PayableTax",
+  "table": "apopentax",
+  "idSequenceName": "taxhist_taxhist_id_seq",
+  "comment": "Payable Tax Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "payable",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_parent_id"
+      }
+    },
+    {
+      "name": "taxType",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_taxtype_id"
+      }
+    },
+    {
+      "name": "taxCode",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_tax_id"
+      }
+    },
+    {
+      "name": "basis",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_basis_id"
+      }
+    },
+    {
+      "name": "basisTaxCode",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_basis_tax_id"
+      }
+    },
+    {
+      "name": "sequence",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_sequence_id"
+      }
+    },
+    {
+      "name": "",
+      "attr": {
+        "type": "String",
+        "column": "taxhist_"
+      }
+    },
+    {
+      "name": "is",
+      "attr": {
+        "type": "Boolean",
+        "column": "taxhist_"
+      }
+    },
+    {
+      "name": "",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_"
+      }
+    },
+    {
+      "name": "",
+      "toMany": {
+        "isNested": true,
+        "type": "",
+        "column": "_id",
+        "inverse": ""
+      }
+    },
+    {
+      "name": "",
+      "toOne": {
+        "type": "",
+        "column": "_id"
+      }
+    },
+  ],
+  "isNestedOnly": true,
+  "isSystem": true,
+}
