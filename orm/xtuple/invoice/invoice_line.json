@@ -23,8 +23,8 @@
     },
     {
       "name": "invoice",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Invoice",
         "column": "invcitem_invchead_id"
       }
     },
@@ -37,22 +37,23 @@
     },
     {
       "name": "item",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "isNested": true,
+        "type": "ItemInfo",
         "column": "invcitem_item_id"
       }
     },
     {
       "name": "site",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "isNested": true,
+        "type": "SiteInfo",
         "column": "invcitem_warehous_id"
       }
     },
     {
       "name": "salesCategory",
       "toOne": {
-	    "isNested" : true,
         "type": "SalesCategory",
         "column": "invcitem_salescat_id",
         "inverse" : "guid"
@@ -74,8 +75,8 @@
     },
     {
       "name": "quantityUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Unit",
         "column": "invcitem_qty_uom_id"
       }
     },
@@ -95,8 +96,8 @@
     },
     {
       "name": "priceUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Unit",
         "column": "invcitem_price_uom_id"
       }
     },

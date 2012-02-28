@@ -38,8 +38,8 @@
     },
     {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Terms",
         "column": "apopen_terms_id"
       }
     },
@@ -72,6 +72,34 @@
       }
     },
     {
+      "name": "paid",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_paid"
+      }
+    },
+    {
+      "name": "discountAmount",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_discountable_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "apopen_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_curr_rate"
+      }
+    },
+    {
       "name": "purchaseOrderNumber",
       "attr": {
         "type": "String",
@@ -99,18 +127,18 @@
         "column": "apopen_posted"
       }
     },
-   {
+    {
+      "name": "isDiscount",
+      "attr": {
+        "type": "Boolean",
+        "column": "apopen_discount"
+      }
+    },
+    {
       "name": "reference",
       "attr": {
         "type": "String",
         "column": "apopen_reference"
-      }
-    },
-   {
-      "name": "invoiceNumber",
-      "attr": {
-        "type": "String",
-        "column": "apopen_invcnumber"
       }
     },
     {
@@ -133,56 +161,7 @@
         "type": "String",
         "column": "apopen_username"
       }
-    },
-    {
-      "name": "currency",
-      "attr": {
-        "type": "Number",
-        "column": "apopen_curr_id"
-      }
-    },
-    {
-      "name": "currencyRate",
-      "attr": {
-        "type": "Number",
-        "column": "apopen_curr_rate"
-      }
-    },
-    {
-      "name": "discountAmount",
-      "attr": {
-        "type": "Number",
-        "column": "apopen_discountable_amount"
-      }
-    },
-    {
-      "name": "distributionDate",
-      "attr": {
-        "type": "Date",
-        "column": "apopen_distdate"
-      }
-    },
-    {
-      "name": "paid",
-      "attr": {
-        "type": "Number",
-        "column": "apopen_paid"
-      }
-    },
-    {
-      "name": "journalNumber",
-      "attr": {
-        "type": "Number",
-        "column": "apopen_journalnumber"
-      }
-    },
-    {
-      "name": "isDiscount",
-      "attr": {
-        "type": "Boolean",
-        "column": "apopen_discount"
-      }
     }
-],
+  ],
   "isSystem": true
 }

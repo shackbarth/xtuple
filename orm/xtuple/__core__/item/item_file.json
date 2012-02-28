@@ -24,8 +24,8 @@
     },
     {
       "name": "sourceType",
-      "attr": {
-        "type": "String",
+      "toOne": {
+        "type": "Item",
         "column": "source_type",
         "value": "I",
         "isVisible": false

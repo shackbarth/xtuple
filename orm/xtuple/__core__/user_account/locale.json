@@ -45,15 +45,15 @@
     },
     {
       "name": "language",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Language",
         "column": "locale_lang_id"
       }
     },
     {
       "name": "country",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Country",
         "column": "locale_country_id"
       }
     },

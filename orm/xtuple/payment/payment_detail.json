@@ -24,8 +24,8 @@
     },
     {
       "name": "payment",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Payment",
         "column": "checkitem_checkhead_id"
       }
     },
@@ -34,6 +34,20 @@
       "attr": {
         "type": "Number",
         "column": "checkitem_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "checkitem_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_curr_rate"
       }
     },
     {
@@ -48,20 +62,6 @@
       "attr": {
         "type": "Date",
         "column": "checkitem_docdate"
-      }
-    },
-    {
-      "name": "currency",
-      "attr": {
-        "type": "Number",
-        "column": "checkitem_curr_id"
-      }
-    },
-    {
-      "name": "currencyRate",
-      "attr": {
-        "type": "Number",
-        "column": "checkitem_curr_rate"
       }
     }
   ],

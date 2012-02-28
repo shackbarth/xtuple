@@ -70,30 +70,30 @@
       }
     },
     {
-      "name": "stage",
-      "attr": {
-        "type": "Number",
+      "name": "opportunityStage",
+      "toOne": {
+        "type": "OpportunityStage",
         "column": "ophead_opstage_id"
       }
     },
     {
       "name": "priority",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Priority",
         "column": "ophead_priority_id"
       }
     },
     {
-      "name": "source",
-      "attr": {
-        "type": "Number",
+      "name": "opportunitySource",
+      "toOne": {
+        "type": "OpportunitySource",
         "column": "ophead_opsource_id"
       }
     },
     {
       "name": "opportunityType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "opportunityType",
         "column": "ophead_optype_id"
       }
     },
@@ -102,6 +102,13 @@
       "attr": {
         "type": "Number",
         "column": "ophead_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "ophead_curr_id"
       }
     },
     {

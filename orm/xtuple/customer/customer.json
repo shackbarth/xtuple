@@ -98,13 +98,6 @@
       }
     },
     {
-      "name": "shipForm",
-      "attr": {
-        "type": "Number",
-        "column": "cust_shipform_id"
-      }
-    },
-    {
       "name": "shipCharge",
       "attr": {
         "type": "Number",
