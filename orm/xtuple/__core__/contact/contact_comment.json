@@ -39,8 +39,8 @@
     },    
     {
       "name": "contact",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Contact",
         "column": "comment_source_id",
         "isEditable": false
       }
@@ -63,8 +63,8 @@
     },
     {
       "name": "commentType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Comment",
         "column": "comment_cmnttype_id",
         "isEditable": false
       }

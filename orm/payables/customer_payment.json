@@ -32,8 +32,8 @@
     },
     {
       "name": "customer",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "checkhead_recip_id"
       }
     }

@@ -24,8 +24,8 @@
     },
     {
       "name": "contact",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Comment",
         "column": "cntcteml_cntct_id",
         "isEditable": false
       }

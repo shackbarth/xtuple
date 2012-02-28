@@ -39,8 +39,8 @@
     },    
     {
       "name": "account",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Account",
         "column": "comment_source_id",
         "isEditable": false
       }
@@ -63,8 +63,8 @@
     },
     {
       "name": "commentType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Account",
         "column": "comment_cmnttype_id",
         "isEditable": false
       }

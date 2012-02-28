@@ -32,8 +32,8 @@
     },
     {
       "name": "target",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Characteristic",
         "column": "charass_target_id",
         "isEditable": false
       }

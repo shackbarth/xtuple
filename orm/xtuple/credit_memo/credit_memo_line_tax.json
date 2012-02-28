@@ -24,22 +24,22 @@
     },
     {
       "name": "creditMemoLine",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CreditMemo",
         "column": "taxhist_parent_id"
       }
     },
     {
       "name": "taxType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CreditMemo",
         "column": "taxhist_taxtype_id"
       }
     },
     {
       "name": "taxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CreditMemo",
         "column": "taxhist_tax_id"
       }
     },
@@ -52,8 +52,8 @@
     },
     {
       "name": "basisTaxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CreditMemo",
         "column": "taxhist_basis_tax_id"
       }
     },
