@@ -24,22 +24,22 @@
     },
     {
       "name": "payable",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Payable",
         "column": "taxhist_parent_id"
       }
     },
     {
       "name": "taxType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxType",
         "column": "taxhist_taxtype_id"
       }
     },
     {
       "name": "taxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxCode",
         "column": "taxhist_tax_id"
       }
     },
@@ -47,13 +47,13 @@
       "name": "basis",
       "attr": {
         "type": "Number",
-        "column": "taxhist_basis_id"
+        "column": "taxhist_basis"
       }
     },
     {
       "name": "basisTaxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxCode",
         "column": "taxhist_basis_tax_id"
       }
     },
@@ -61,46 +61,65 @@
       "name": "sequence",
       "attr": {
         "type": "Number",
-        "column": "taxhist_sequence_id"
+        "column": "taxhist_sequence"
       }
     },
     {
-      "name": "",
+      "name": "percent",
       "attr": {
-        "type": "String",
-        "column": "taxhist_"
+        "type": "Number",
+        "column": "taxhist_percent"
       }
     },
     {
-      "name": "is",
+      "name": "amount",
       "attr": {
-        "type": "Boolean",
-        "column": "taxhist_"
+        "type": "Number",
+        "column": "taxhist_amount"
       }
     },
     {
-      "name": "",
+      "name": "tax",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_tax"
+      }
+    },
+    {
+      "name": "documentDate",
       "attr": {
         "type": "Date",
-        "column": "taxhist_"
+        "column": "taxhist_docdate"
       }
     },
     {
-      "name": "",
-      "toMany": {
-        "isNested": true,
-        "type": "",
-        "column": "_id",
-        "inverse": ""
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_distdate"
       }
     },
     {
-      "name": "",
+      "name": "currency",
       "toOne": {
-        "type": "",
-        "column": "_id"
+        "type": "Currency",
+        "column": "taxhist_curr_id"
       }
     },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_curr_rate"
+      }
+    },
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_journalNumber"
+      }
+    }
   ],
   "isNestedOnly": true,
   "isSystem": true,
