@@ -45,8 +45,8 @@
     },
     {
       "name": "fiscalYear",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "FiscalYear",
         "column": "period_yearperiod_id"
       }
     },

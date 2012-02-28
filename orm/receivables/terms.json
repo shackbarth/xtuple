@@ -1,21 +1,21 @@
-{
+{	
   "context": "receivables",
   "nameSpace": "XM",
-  "type": "BankAccount",
-  "table": "bankaccnt",
+  "type": "Terms",
+  "table": "terms",
   "isExtension": true,
   "comment": "Extended by Receivables",
   "relations": [
     {
-      "column": "bankaccnt_id"
+      "column": "terms_id"
     }
   ],
   "properties": [
     {
-      "name": "useByReceivables",
+      "name": "usedByReceievables",
       "attr": {
         "type": "Boolean",
-        "column": "bankaccnt_ar"
+        "column": "terms_ar"
       }
     }
   ],

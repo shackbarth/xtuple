@@ -24,8 +24,8 @@
     },
     {
       "name": "bankAccount",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "BankAccount",
         "column": "checkhead_bankaccnt_id"
       }
     },
@@ -52,8 +52,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "checkhead_curr_id"
       }
     },
@@ -101,8 +101,8 @@
     },
     {
       "name": "expenseCategory",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "ExpenseCategory",
         "column": "checkhead_expcat_id"
       }
     },
@@ -118,13 +118,6 @@
       "attr": {
         "type": "String",
         "column": "checkhead_notes"
-      }
-    },
-    {
-      "name": "journalNumber",
-      "attr": {
-        "type": "Number",
-        "column": "checkhead_journalnumber"
       }
     },
     {

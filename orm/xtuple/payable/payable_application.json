@@ -24,8 +24,8 @@
     },
     {
       "name": "vendor",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Vendor",
         "column": "apapply_vend_id"
       }
     },
@@ -51,6 +51,14 @@
       }
     },
     {
+      "name": "source",
+      "toOne": {
+        "isNested": true,
+        "type": "Payable",
+        "column": "apapply_source_apopen_id"
+      }
+    },
+    {
       "name": "targetDocumentType",
       "attr": {
         "type": "String",
@@ -65,17 +73,11 @@
       }
     },
     {
-      "name": "check",
-      "attr": {
-        "type": "Number",
-        "column": "apapply_checkhead_id"
-      }
-    },
-    {
-      "name": "journalNumber",
-      "attr": {
-        "type": "Number",
-        "column": "apapply_journalnumber"
+      "name": "target",
+      "toOne": {
+        "isNested": true,
+        "type": "Payable",
+        "column": "apapply_target_apopen_id"
       }
     },
     {
@@ -86,19 +88,10 @@
       }
     },
     {
-      "name": "source",
+      "name": "currency",
       "toOne": {
-        "isNested": true,
-        "type": "Payable",
-        "column": "apapply_source_apopen_id"
-      }
-    },
-    {
-      "name": "target",
-      "toOne": {
-        "isNested": true,
-        "type": "Payable",
-        "column": "apapply_target_apopen_id"
+        "type": "Currency",
+        "column": "apapply_curr_id"
       }
     },
     {
@@ -106,13 +99,6 @@
       "attr": {
         "type": "String",
         "column": "apapply_username"
-      }
-    },
-    {
-      "name": "currency",
-      "attr": {
-        "type": "Number",
-        "column": "apapply_curr_id"
       }
     }
   ],
