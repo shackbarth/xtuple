@@ -1,4 +1,4 @@
---drop view xt.gl
+--drop view xt.gl cascade
 
 create or replace view xt.gl as
 
@@ -10,6 +10,7 @@ select
   case when gltrans_amount < 0 then 'D' else 'C' end as gl_sense,
   abs(gltrans_amount) as gl_amount,
   gltrans_journalnumber as gl_journalnumber,
+  gltrans_created as gl_created,
   gltrans_username as gl_username,
   gltrans_deleted as gl_deleted
 from gltrans
