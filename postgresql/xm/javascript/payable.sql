@@ -13,15 +13,16 @@ select xt.install_js('XM','Payable','xtuple', $$
    @param {Number} BankAccount
    @returns {Boolean} 
   */
-  XM.Payable.approve = function(payable, bankAccount) {
-    var ret, sql, err;
+  XM.Payable.approve = function(payableId, bankAccountId) {
+    var ret, sql, err,
+        data = Object.create(XT.Data);
 
-    if(!XT.Data.checkPrivilege("MaintainPayments")) err = "Access denied."
-    else if(payable === undefined) err = "No payable specified";
-    else if(bankAccount === undefined) err = "No bank account specified";
+    if(!data.checkPrivilege("MaintainPayments")) err = "Access denied."
+    else if(payableId === undefined) err = "No payable specified";
+    else if(bankAccountId === undefined) err = "No bank account specified";
 
     if(!err) {
-      ret = executeSql("select selectPayment($1, $2) AS result;", [payable, bankAccount])[0].result;
+      ret = executeSql("select selectPayment($1, $2) AS result;", [payableId, bankAccountId])[0].result;
 
       switch (ret)
       {
