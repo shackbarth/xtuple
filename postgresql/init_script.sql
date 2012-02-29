@@ -71,5 +71,6 @@
 -- xm/javascript
 \i xm/javascript/address.sql;
 \i xm/javascript/session.sql;
+\i xm/javascript/voucher.sql;
 
 -- [ END ] xm

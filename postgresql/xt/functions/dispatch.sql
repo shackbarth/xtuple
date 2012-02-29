@@ -68,5 +68,10 @@ select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Invoice",
                           "functionName":"void",
                           "parameters":{"id":129}
-                          }$$);                 
+                          }$$);
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Voucher",
+                          "functionName":"post",
+                          "parameters":{"id":}
+                          }$$);
 */
