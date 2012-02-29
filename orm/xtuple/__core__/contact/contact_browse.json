@@ -116,13 +116,6 @@
       }
     },
     {
-      "name": "account",
-      "toOne": {
-        "type": "Account",
-        "column": "cntct_crmacct_id"
-      }
-    },
-    {
       "name": "owner",
       "toOne": {
         "isNested": true,

@@ -15,7 +15,7 @@
     {
       "name": "checks",
       "toMany": {
-        "type": "TaxAuthorityCheck",
+        "type": "TaxAuthorityPayment",
         "column": "taxauth_id",
         "inverse": "tax_authority"
       }
