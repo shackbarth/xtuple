@@ -55,7 +55,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
     for(var i = 0; i < views.length; i++) {
       var nameSpace = views[i].beforeDot().camelize().toUpperCase(),
           type = views[i].afterDot().classify(),
-          orm = XT.Orm.fetch(nameSpace, type);
+          orm = XT.Orm.fetch(nameSpace, type, true);
           
       XT.Orm.createView(orm);
     }

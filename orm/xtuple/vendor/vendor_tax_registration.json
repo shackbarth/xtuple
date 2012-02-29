@@ -33,16 +33,15 @@
     },    
     {
       "name": "vendor",
-      "attr": {
-        "type": "Number",
-        "column": "taxreg_rel_id",
-        "isEditable": false
+      "toOne": {
+        "type": "Vendor",
+        "column": "taxreg_rel_id"
       }
     },
     {
       "name": "taxAuthority",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxAuthority",
         "column": "taxreg_taxauth_id"
       }
     },
@@ -55,8 +54,8 @@
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "taxreg_taxzone_id"
       }
     },

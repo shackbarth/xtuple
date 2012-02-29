@@ -1,4 +1,4 @@
-create or replace function xt.dispatch(data_hash text) returns text as $$
+﻿create or replace function xt.dispatch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -33,29 +33,40 @@ select xt.dispatch($${"requestType":"dispatch",
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                           "className":"XT.Session",
+                           "className":"XM.Session",
                            "functionName":"fetchId",
                            "parameters":{"recordType":"XM.Address"}
                            }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XT.Session",
+                          "className":"XM.Session",
                           "functionName":"fetchNumber",
                           "parameters":{"recordType":"XM.Incident"}
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XT.Session",
+                          "className":"XM.Session",
                           "functionName":"locale"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XT.Session",
+                          "className":"XM.Session",
                           "functionName":"metrics"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XT.Session",
+                          "className":"XM.Session",
                           "functionName":"privileges"
-                          }$$);                          
+                          }$$);    
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Invoice",
+                          "functionName":"post",
+                          "parameters":{"id":129}
+                          }$$);        
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Invoice",
+                          "functionName":"void",
+                          "parameters":{"id":129}
+                          }$$);                 
 */

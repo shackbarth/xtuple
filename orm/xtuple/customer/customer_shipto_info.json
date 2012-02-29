@@ -1,0 +1,48 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CustomerShiptoInfo",
+  "table": "shiptoinfo",
+  "comment": "Customer Shipto Info Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "shipto_num"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "shipto_name"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "shipto_active"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

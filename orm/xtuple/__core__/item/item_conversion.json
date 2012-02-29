@@ -1,0 +1,73 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemConversion",
+  "table": "itemuomconv",
+  "idSequenceName": "public.itemuomconv_itemuomconv_id_seq",
+  "comment": "Item Conversion Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "itemuomconv_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "item",
+      "toOne": {
+        "type": "Item",
+        "column": "itemuomconv_item_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "fromUnit",
+      "toOne": {
+        "type": "Unit",
+        "column": "itemuomconv_from_uom_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "fromValue",
+      "attr": {
+        "type": "Number",
+        "column": "itemuomconv_from_value"
+      }
+    },
+    {
+      "name": "toUnit",
+      "toOne": {
+        "type": "Unit",
+        "column": "itemuomconv_to_uom_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "toValue",
+      "attr": {
+        "type": "Number",
+        "column": "itemuomconv_to_value"
+      }
+    },
+    {
+      "name": "fractional",
+      "attr": {
+        "type": "Boolean",
+        "column": "itemuomconv_fractional"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

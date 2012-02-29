@@ -66,8 +66,8 @@
     },
     {
       "name": "customer",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "cmhead_cust_id"
       }
     },
@@ -129,8 +129,8 @@
     }, 
     {
       "name": "shipto",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CustomerShipto",
         "column": "cmhead_shipto_id"
       }
     },
@@ -192,8 +192,8 @@
     },
     {
       "name": "salesRep",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "SalesRep",
         "column": "cmhead_salesrep_id"
       }
     },
@@ -206,8 +206,8 @@
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "cmhead_taxzone_id"
       }
     },

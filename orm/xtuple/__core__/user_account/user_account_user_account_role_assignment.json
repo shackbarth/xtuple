@@ -1,0 +1,44 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "UserAccountUserAccountRoleAssignment",
+  "table": "usrgrp",
+  "idSequenceName": "public.usrgrp_usrgrp_id_seq",
+  "comment": "User User Role Assignment Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "usrgrp_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "userAccount",
+      "attr": {
+        "type": "String",
+        "column": "usrgrp_username",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "userAccountRole",
+      "toOne": {
+        "isNested": true,
+        "type": "UserAccountRoleInfo",
+        "column": "usrgrp_grp_id"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

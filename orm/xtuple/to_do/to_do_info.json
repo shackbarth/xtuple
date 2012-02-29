@@ -22,14 +22,6 @@
       }
     },
     {
-      "name": "number",
-      "attr": {
-        "type": "Number",
-        "column": "todoitem_id",
-        "isEditable": false
-      }
-    },
-    {
       "name": "name",
       "attr": {
         "type": "String",

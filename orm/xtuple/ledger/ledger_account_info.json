@@ -1,0 +1,47 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "LedgerAccountInfo",
+  "table": "accnt",
+  "comment": "Ledger Account Info Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "accnt_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "accnt_name"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "accnt_descrip"
+      }
+    },
+    {
+      "name": "type",
+      "attr": {
+        "type": "String",
+        "column": "accnt_type"
+      }
+    }
+  ],
+  "isSystem": true
+}

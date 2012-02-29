@@ -1,0 +1,41 @@
+{	
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "FreightClass",
+  "table": "freightclass",
+  "idSequenceName": "freightclass_freightclass_id_seq",
+  "comment": "Freight Class Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainFreightClasses",
+      "read": true,
+      "update": "MaintainFreightClasses",
+      "delete": "MaintainFreightClasses"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "freightclass_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "freightclass_code"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "freightclass_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}

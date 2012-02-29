@@ -1,0 +1,24 @@
+{
+  "context": "payables",
+  "nameSpace": "XM",
+  "type": "Vendor",
+  "table": "vendinfo",
+  "isExtension": true,
+  "comment": "Extended by Payables",
+  "relations": [
+    {
+      "column": "vend_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "checks",
+      "toMany": {
+        "type": "VendorPayment",
+        "column": "vend_id",
+        "inverse": "vendor"
+      }
+    }
+  ],
+  "isSystem": true
+}

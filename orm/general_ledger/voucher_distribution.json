@@ -1,0 +1,24 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "VoucherDistribution",
+  "table": "vodist",
+  "isExtension": true,
+  "comment": "Extended by General Ledger",
+  "relations": [
+    {
+      "column": "vodist_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ledgerAccount",
+      "toOne": {
+        "isNested": true,
+        "type": "LedgerAccount",
+        "column": "vodist_accnt_id"
+      }
+    }
+  ],
+  "isSystem": true
+}

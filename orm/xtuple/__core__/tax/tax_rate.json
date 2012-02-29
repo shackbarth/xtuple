@@ -1,0 +1,71 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "TaxRate",
+  "table": "taxrate",
+  "idSequenceName": "public.taxrate_taxrate_id_seq",
+  "comment": "Tax Rate Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxrate_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "taxCode",
+      "toOne": {
+        "type": "TaxCode",
+        "column": "taxrate_tax_id"
+      }
+    },
+    {
+      "name": "percent",
+      "attr": {
+        "type": "Number",
+        "column": "taxrate_percent"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "taxrate_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "isNested": true,
+        "type": "Currency",
+        "column": "taxrate_curr_id"
+      }
+    },
+    {
+      "name": "effective",
+      "attr": {
+        "type": "Date",
+        "column": "taxrate_effective"
+      }
+    },
+    {
+      "name": "expires",
+      "attr": {
+        "type": "Date",
+        "column": "taxrate_expires"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

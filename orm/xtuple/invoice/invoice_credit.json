@@ -1,0 +1,57 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "InvoiceCredit",
+  "table": "aropenalloc",
+  "comment": "Invoice Credit Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "aropenalloc_aropen_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "value": "I",
+        "column": "aropenalloc_doctype",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "invoice",
+      "toOne": {
+        "type": "Invoice",
+        "column": "aropenalloc_doc_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "aropenalloc_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "aropenalloc_curr_id"
+      }
+    }
+  ],
+	"isNestedOnly": true,
+  "isSystem": true
+}

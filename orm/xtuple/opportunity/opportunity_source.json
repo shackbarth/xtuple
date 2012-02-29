@@ -3,14 +3,14 @@
   "nameSpace": "XM",
   "type": "OpportunitySource",
   "table": "opsource",
-  "idSequenceName": "public.opsource_opsource_id_seq",
+  "idSequenceName": "opsource_opsource_id_seq",
   "comment": "Opportunity Source Map",
   "privileges": {
     "all": {
-      "create": true,
+      "create": "MaintainOpportunitySources",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainOpportunitySources",
+      "delete": "MaintainOpportunitySources"
     }
   },
   "properties": [

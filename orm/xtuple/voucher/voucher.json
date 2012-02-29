@@ -23,6 +23,14 @@
       }
     },
     {
+      "name": "vendor",
+      "toOne": {
+        "isNested": true,
+        "type": "Vendor",
+        "column": "vohead_vend_id"
+      }
+    },
+    {
       "name": "isMiscellaneous",
       "attr": {
         "type": "Boolean",
@@ -47,17 +55,10 @@
       }
     },
     {
-      "name": "docDate",
+      "name": "documentDate",
       "attr": {
         "type": "Date",
         "column": "vohead_docdate"
-      }
-    },
-    {
-      "name": "distributionDate",
-      "attr": {
-        "type": "Date",
-        "column": "vohead_distdate"
       }
     },
     {
@@ -76,36 +77,29 @@
     },
     {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Terms",
         "column": "vohead_terms_id"
       }
     },
     {
-      "name": "vendor",
-      "toOne": {
-        "type": "Vendor",
-        "column": "vohead_vend_id"
-      }
-    },
-    {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "vohead_curr_id"
       }
     },
     {
       "name": "taxZone",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxZone",
         "column": "vohead_taxzone_id"
       }
     },
     {
       "name": "taxType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxType",
         "column": "vohead_taxtype_id"
       }
     },

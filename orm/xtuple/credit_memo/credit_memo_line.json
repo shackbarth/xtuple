@@ -23,8 +23,8 @@
     },
     {
       "name": "creditMemo",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CreditMemo",
         "column": "cmitem_cmhead_id"
       }
     },
@@ -37,8 +37,8 @@
     },
     {
       "name": "reasonCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "ReasonCode",
         "column": "cmitem_rsncode_id"
       }
     },
@@ -60,8 +60,8 @@
     },
     {
       "name": "quantityUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CreditMemo",
         "column": "cmitem_qty_uom_id"
       }
     },
@@ -88,8 +88,8 @@
     },
     {
       "name": "priceUnit",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CreditMemo",
         "column": "cmitem_price_uom_id"
       }
     },

@@ -59,23 +59,23 @@
       }
     },
     {
-      "name": "freeOnBoardSource",
+      "name": "incoTermsSource",
       "attr": {
         "type": "String",
         "column": "vend_fobsource"
       }
     },
     {
-      "name": "freeOnBoard",
+      "name": "incoTerms",
       "attr": {
         "type": "String",
         "column": "vend_fob"
       }
     },
-   {
+    {
       "name": "terms",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Terms",
         "column": "vend_terms_id"
       }
     },
@@ -88,8 +88,8 @@
     },
     {
       "name": "type",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "VendorType",
         "column": "vend_vendtype_id"
       }
     },
@@ -110,6 +110,7 @@
     {
       "name": "primaryContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "vend_cntct1_id"
       }
@@ -117,6 +118,7 @@
     {
       "name": "secondaryContact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "vend_cntct2_id"
       }
@@ -124,6 +126,7 @@
     {
       "name": "mainAddress",
       "toOne": {
+        "isNested": true,
         "type": "AddressInfo",
         "column": "vend_addr_id"
       }
@@ -196,9 +199,9 @@
       }
     },
     {
-      "name": "taxZoneId",
-      "attr": {
-        "type": "Number",
+      "name": "taxZone",
+      "toOne": {
+        "type": "TaxZone",
         "column": "vend_taxzone_id"
       }
     },

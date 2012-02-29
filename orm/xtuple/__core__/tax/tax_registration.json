@@ -1,0 +1,87 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "TaxRegistration",
+  "table": "taxreg",
+  "idSequenceName": "public.taxreg_taxreg_id_seq",
+  "comment": "Tax Registration Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainChartOfAccounts",
+      "read": true,
+      "update": "MaintainChartOfAccounts",
+      "delete": "MaintainChartOfAccounts"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxreg_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "relationType",
+      "attr": {
+        "type": "String",
+        "column": "taxreg_rel_type"
+      }
+    },    
+    {
+      "name": "relation",
+      "attr": {
+        "type": "Number",
+        "column": "taxreg_rel_id",
+        "isEditable": false,
+        "value": -1,
+        "isVisible": false
+
+      }
+    },
+    {
+      "name": "taxAuthority",
+      "toOne": {
+        "type": "TaxAuthority",
+        "column": "taxreg_taxauth_id"
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "taxreg_number"
+      }
+    },
+    {
+      "name": "taxZone",
+      "toOne": {
+        "type": "TaxZone",
+        "column": "taxreg_taxzone_id"
+      }
+    },
+    {
+      "name": "effective",
+      "attr": {
+        "type": "Date",
+        "column": "taxreg_effective"
+      }
+    },
+    {
+      "name": "expires",
+      "attr": {
+        "type": "Date",
+        "column": "taxreg_expires"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "taxreg_notes"
+      }
+    }
+  ],
+  "isSystem": true
+}

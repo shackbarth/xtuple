@@ -1,0 +1,26 @@
+{
+  "context": "payables",
+  "nameSpace": "XM",
+  "type": "TaxAuthority",
+  "table": "taxauth",
+  "isExtension": true,
+  "comment": "Extended by Payables",
+  "relations": [
+    {
+      "column": "taxauth_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "checks",
+      "toMany": {
+        "type": "TaxAuthorityPayment",
+        "column": "taxauth_id",
+        "inverse": "tax_authority"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

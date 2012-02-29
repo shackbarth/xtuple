@@ -7,10 +7,10 @@
   "comment": "Invoice Tax Map",
   "privileges": {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
   "properties": [
@@ -24,22 +24,22 @@
     },
     {
       "name": "invoice",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Invoice",
         "column": "taxhist_parent_id"
       }
     },
     {
       "name": "taxType",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxType",
         "column": "taxhist_taxtype_id"
       }
     },
     {
       "name": "taxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxCode",
         "column": "taxhist_tax_id"
       }
     },
@@ -52,8 +52,8 @@
     },
     {
       "name": "basisTaxCode",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "TaxCode",
         "column": "taxhist_basis_tax_id"
       }
     },
@@ -94,8 +94,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "taxhist_curr_id"
       }
     },

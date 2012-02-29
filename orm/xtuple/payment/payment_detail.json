@@ -1,0 +1,70 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "PaymentDetail",
+  "table": "checkitem",
+  "idSequenceName": "checkitem_checkitem_id_seq",
+  "comment": "Payment Detail Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "payment",
+      "toOne": {
+        "type": "Payment",
+        "column": "checkitem_checkhead_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "checkitem_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_curr_rate"
+      }
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Number",
+        "column": "checkitem_discount"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "checkitem_docdate"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

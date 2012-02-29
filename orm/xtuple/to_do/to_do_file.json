@@ -33,10 +33,9 @@
     },
     {
       "name": "source",
-      "attr": {
-        "type": "Number",
-        "column": "source_id",
-        "isEditable": false
+      "toOne": {
+        "type": "ToDo",
+        "column": "source_id"
       }
     },
     {
@@ -51,6 +50,7 @@
     {
       "name": "file",
       "toOne": {
+        "isNested": true,
         "type": "FileInfo",
         "column": "target_id"
       }

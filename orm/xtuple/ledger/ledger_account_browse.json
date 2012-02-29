@@ -1,0 +1,68 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "LedgerAccountBrowse",
+  "table": "accnt",
+  "comment": "Ledger Account Browse Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "accnt_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "company",
+      "attr": {
+        "type": "String",
+        "column": "accnt_company"
+      }
+    },
+    {
+      "name": "profitCenter",
+      "attr": {
+        "type": "String",
+        "column": "accnt_profit"
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "accnt_number"
+      }
+    },
+    {
+      "name": "subAccount",
+      "attr": {
+        "type": "String",
+        "column": "accnt_sub"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "accnt_descrip"
+      }
+    },
+    {
+      "name": "type",
+      "attr": {
+        "type": "String",
+        "column": "accnt_type"
+      }
+    }
+  ],
+  "isSystem": true
+}

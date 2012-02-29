@@ -1,0 +1,106 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "PayableApplication",
+  "table": "apapply",
+  "idSequenceName": "apapply_apapply_id_seq",
+  "comment": "Payable Application Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": "ViewAPOpenItems",
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "apapply_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "vendor",
+      "toOne": {
+        "type": "Vendor",
+        "column": "apapply_vend_id"
+      }
+    },
+    {
+      "name": "postDate",
+      "attr": {
+        "type": "Date",
+        "column": "apapply_postdate"
+      }
+    },
+    {
+      "name": "sourceDocumentType",
+      "attr": {
+        "type": "String",
+        "column": "apapply_source_doctype"
+      }
+    },
+    {
+      "name": "sourceDocumentNumber",
+      "attr": {
+        "type": "String",
+        "column": "apapply_source_docnumber"
+      }
+    },
+    {
+      "name": "source",
+      "toOne": {
+        "isNested": true,
+        "type": "Payable",
+        "column": "apapply_source_apopen_id"
+      }
+    },
+    {
+      "name": "targetDocumentType",
+      "attr": {
+        "type": "String",
+        "column": "apapply_target_doctype"
+      }
+    },
+    {
+      "name": "targetDocumentNumber",
+      "attr": {
+        "type": "String",
+        "column": "apapply_target_docnumber"
+      }
+    },
+    {
+      "name": "target",
+      "toOne": {
+        "isNested": true,
+        "type": "Payable",
+        "column": "apapply_target_apopen_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "apapply_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "apapply_curr_id"
+      }
+    },
+    {
+      "name": "userName",
+      "attr": {
+        "type": "String",
+        "column": "apapply_username"
+      }
+    }
+  ],
+  "isSystem": true
+}

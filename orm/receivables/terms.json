@@ -1,0 +1,23 @@
+{	
+  "context": "receivables",
+  "nameSpace": "XM",
+  "type": "Terms",
+  "table": "terms",
+  "isExtension": true,
+  "comment": "Extended by Receivables",
+  "relations": [
+    {
+      "column": "terms_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "usedByReceievables",
+      "attr": {
+        "type": "Boolean",
+        "column": "terms_ar"
+      }
+    }
+  ],
+  "isSystem": true
+}

@@ -1,0 +1,25 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "PayableApplication",
+  "table": "apapply",
+  "isExtension": true,
+  "comment": "Extended by General Ledger",
+  "relations": [
+    {
+      "column": "apapply_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "apapply_journalnumber"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

@@ -33,8 +33,8 @@
     },
     {
       "name": "source",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "source_id",
         "isEditable": false
       }
@@ -51,6 +51,7 @@
     {
       "name": "contact",
       "toOne": {
+        "isNested": true,
         "type": "ContactInfo",
         "column": "target_id"
       }
