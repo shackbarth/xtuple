@@ -21,7 +21,7 @@ select xt.install_js('XM','Payable','xtuple', $$
     else if(bankAccount === undefined) err = "No bank account specified";
 
     if(!err) {
-      ret = executeSql("select selectPayment(integer, integer) AS result;", [source, target, amount, currency])[0].result;
+      ret = executeSql("select selectPayment($1, $2) AS result;", [payable, bankAccount])[0].result;
 
       switch (ret)
       {
