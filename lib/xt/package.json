@@ -1,1 +1,33 @@
-{ "name": "xt", "main": "xt.js" }
+{
+    "name": "xt"
+  , "version": "0.1.1"
+  , "description": "Framework for xTuple Postbooks series applications"
+  , "homepage": "http://github.com/xtuple/datasource"
+  , "keywords": ["xtuple", "xt", "framework", "postbooks"]
+  , "author": "W. Cole Davis <cole@xtuple.com>"
+  , "contributors": [
+        { "name": "John Rogelstad", "email": "john@xtuple.com" }
+      , { "name": "Mikhail Wall", "email": "mike@xtuple.com" }
+      , { "name": "Steven Negron", "email": "snegron@xtuple.com" }
+    ] 
+  , "repository": {
+        "type": "git"
+      , "url": "https://github.com/xtuple/datasource.git"
+    }
+  , "dependencies": {
+        "async": "0.1.18"
+      , "colors": "0.6.0-1"
+      , "connect": "1.0.1"
+      , "diveSync": "0.2.0"
+      , "optimist": "0.3.1"
+      , "pg": "0.6.12"
+      , "redis": "0.7.1"
+      , "request": "2.9.152"
+      , "socket.io": "0.8.7"
+      , "underscore": "1.3.1"
+      , "walk": "2.1.1"
+      , "watch": "0.5.0"
+    }
+  , "main": "xt"
+  , "engines": { "node": ">= 0.6.0" }
+}
