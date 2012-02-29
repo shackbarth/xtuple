@@ -13,17 +13,12 @@ Instructions
 ------------
 
 Once node is built and available in your path (see notes at bottom on building
-and installing node) you can clone this repository. You will need to execute the
-simple setup.sh script from within the lib directory. Once that has been executed
-npm should have installed all of the necessary 3rd party modules and you can
-execute the project-root-level server alias (points to `lib/server.sh`) and either
+and installing node) you can clone this repository. Execute the project-root-level 
+server alias (points to `lib/server.sh`) and either
 specify settings from the command line or use the `-c` option and pass it a path
 to a configuration json file. For more information just run `./server` or `./server -h`
 to see the full list of command-line options.
 
-* `cd lib`
-* `./setup.sh` -- installs 3rd-party modules
-* `cd ..`
 * `./server -h` -- will show the command line options
 
 For an example configuration json file look at `lib/config.json`.
