@@ -1,18 +1,15 @@
 select xt.install_js('XM','CreditMemo','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
-     See www.xm.ple.com/CPAL for the full text of the software license. 
-     
-     Not Working Still need to run test and pass all correct number of params
-     
-     */
+     See www.xm.ple.com/CPAL for the full text of the software license. */
+
 
   XM.CreditMemo = {};
   
   XM.CreditMemo.isDispatchable = true;
   
   XM.CreditMemo.post = function() {
-  /* On post it has to pass to integers
-		Pass 2 args both integer
+  /* check privilege to post credit memo than pass id and item loc to function postcreditmemo()
+   
    @param {Object} Invoice object
    @returns {Integer}
   */
@@ -24,7 +21,7 @@ select xt.install_js('XM','CreditMemo','xtuple', $$
   }
   
   XM.CreditMemo.void = function() {
-  /* Check privilege than void invoice set is_void to true
+  /* check privilege to void credit memo than pass id to function voidcreditmemo
 
    @param {Object} Invoice object
    @returns {Integer}
