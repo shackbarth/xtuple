@@ -24,15 +24,15 @@
     },
     {
       "name": "cashReceipt",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CashReceipt",
         "column": "cashrcptitem_cashrcpt_id"
       }
     },
     {
       "name": "receivable",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Receivable",
         "column": "cashrcptitem_aropen_id"
       }
     },

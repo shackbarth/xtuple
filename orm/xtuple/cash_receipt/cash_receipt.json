@@ -31,8 +31,8 @@
     },
     {
       "name": "customer",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Customer",
         "column": "cashrcpt_cust_id"
       }
     },
@@ -45,8 +45,8 @@
     },
     {
       "name": "currency",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Currency",
         "column": "cashrcpt_curr_id"
       }
     },
@@ -66,8 +66,8 @@
     },
     {
       "name": "salesCategory",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "SalesCategory",
         "column": "cashrcpt_salescat_id"
       }
     },
@@ -87,8 +87,8 @@
     },
     {
       "name": "bankAccount",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "BankAccount",
         "column": "cashrcpt_bankaccnt_id"
       }
     },

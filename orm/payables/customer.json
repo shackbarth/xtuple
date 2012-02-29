@@ -22,7 +22,7 @@
     {
       "name": "checks",
       "toMany": {
-        "type": "CustomerCheck",
+        "type": "CustomerPayment",
         "column": "cust_id",
         "inverse": "customer"
       }

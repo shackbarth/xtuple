@@ -24,15 +24,15 @@
     },
     {
       "name": "cashReceipt",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "CashReceipt",
         "column": "cashrcptmisc_cashrcpt_id"
       }
     },
     {
       "name": "account",
-      "attr": {
-        "type": "Boolean",
+      "toOne": {
+        "type": "Account",
         "column": "cashrcptmisc_accnt_id"
       }
     },

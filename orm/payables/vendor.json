@@ -14,7 +14,7 @@
     {
       "name": "checks",
       "toMany": {
-        "type": "VendorCheck",
+        "type": "VendorPayment",
         "column": "vend_id",
         "inverse": "vendor"
       }
