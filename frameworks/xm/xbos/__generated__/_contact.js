@@ -1,4 +1,4 @@
-"// ==========================================================================
+// ==========================================================================
 // Project:   xTuple Postbooks - Business Management System Framework        
 // Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                                
 // ==========================================================================
@@ -12,7 +12,7 @@
   @extends XM.Record
 */
 
-XM._Contact = XM.Record.extend(,
+XM._Contact = XM.Record.extend(
 /** @scope XM._Contact.prototype */ {
 
   className: 'XM.Contact',
@@ -48,175 +48,159 @@ XM._Contact = XM.Record.extend(,
   /**
   @type Number
   */
-  guid: SC.Record.attr(Number
-  ),
+  guid: SC.Record.attr(Number),
 
   /**
   @type String
   */
-  number: SC.Record.attr(String
-  ),
+  number: SC.Record.attr(String),
 
   /**
   @type Boolean
   */
-  isActive: SC.Record.attr(Boolean
-  ),
+  isActive: SC.Record.attr(Boolean),
 
   /**
   @type String
   */
-  honorific: SC.Record.attr(String
-  ),
+  honorific: SC.Record.attr(String),
 
   /**
   @type String
   */
-  firstName: SC.Record.attr(String
-  ),
+  firstName: SC.Record.attr(String),
 
   /**
   @type String
   */
-  middleName: SC.Record.attr(String
-  ),
+  middleName: SC.Record.attr(String),
 
   /**
   @type String
   */
-  lastName: SC.Record.attr(String
-  ),
+  lastName: SC.Record.attr(String),
 
   /**
   @type String
   */
-  suffix: SC.Record.attr(String
-  ),
+  suffix: SC.Record.attr(String),
 
   /**
   @type String
   */
-  jobTitle: SC.Record.attr(String
-  ),
+  jobTitle: SC.Record.attr(String),
 
   /**
   @type String
   */
-  initials: SC.Record.attr(String
-  ),
+  initials: SC.Record.attr(String),
 
   /**
   @type String
   */
-  phone: SC.Record.attr(String
-  ),
+  phone: SC.Record.attr(String),
 
   /**
   @type String
   */
-  alternate: SC.Record.attr(String
-  ),
+  alternate: SC.Record.attr(String),
 
   /**
   @type String
   */
-  fax: SC.Record.attr(String
-  ),
+  fax: SC.Record.attr(String),
 
   /**
   @type String
   */
-  primaryEmail: SC.Record.attr(String
-  ),
+  primaryEmail: SC.Record.attr(String),
 
   /**
   @type String
   */
-  webAddress: SC.Record.attr(String
-  ),
+  webAddress: SC.Record.attr(String),
 
   /**
   @type XM.UserAccountInfo
   */
-  owner: SC.Record.toOne('XM.UserAccountInfo',
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true
-  ),
+  }),
 
   /**
   @type String
   */
-  notes: SC.Record.attr(String
-  ),
+  notes: SC.Record.attr(String),
 
   /**
   @type XM.AddressInfo
   */
-  address: SC.Record.toOne('XM.AddressInfo',
+  address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true
-  ),
+  }),
 
   /**
   @type XM.ContactEmail
   */
-  email: SC.Record.toMany('XM.ContactEmail',
+  email: SC.Record.toMany('XM.ContactEmail', {
     isNested: true,
-    inverse: contact
-  ),
+    inverse: 'contact'
+  }),
 
   /**
   @type XM.ContactComment
   */
-  comments: SC.Record.toMany('XM.ContactComment',
+  comments: SC.Record.toMany('XM.ContactComment', {
     isNested: true,
-    inverse: contact
-  ),
+    inverse: 'contact'
+  }),
 
   /**
   @type XM.ContactCharacteristic
   */
-  characteristics: SC.Record.toMany('XM.ContactCharacteristic',
+  characteristics: SC.Record.toMany('XM.ContactCharacteristic', {
     isNested: true,
-    inverse: contact
-  ),
+    inverse: 'contact'
+  }),
 
   /**
   @type XM.ContactContact
   */
-  contacts: SC.Record.toMany('XM.ContactContact',
+  contacts: SC.Record.toMany('XM.ContactContact', {
     isNested: true,
-    inverse: source
-  ),
+    inverse: 'source'
+  }),
 
   /**
   @type XM.ContactItem
   */
-  items: SC.Record.toMany('XM.ContactItem',
+  items: SC.Record.toMany('XM.ContactItem', {
     isNested: true,
-    inverse: source
-  ),
+    inverse: 'source'
+  }),
 
   /**
   @type XM.ContactFile
   */
-  files: SC.Record.toMany('XM.ContactFile',
+  files: SC.Record.toMany('XM.ContactFile', {
     isNested: true,
-    inverse: source
-  ),
+    inverse: 'source'
+  }),
 
   /**
   @type XM.ContactImage
   */
-  images: SC.Record.toMany('XM.ContactImage',
+  images: SC.Record.toMany('XM.ContactImage', {
     isNested: true,
-    inverse: source
-  ),
+    inverse: 'source'
+  }),
 
   /**
   @type XM.ContactUrl
   */
-  urls: SC.Record.toMany('XM.ContactUrl',
+  urls: SC.Record.toMany('XM.ContactUrl', {
     isNested: true,
-    inverse: source
-  )
+    inverse: 'source'
+  })
 
-});"
+});

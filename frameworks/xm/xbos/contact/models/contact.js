@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals XM */
 
-sc_require('__generated__/_contact');
+sc_require('xbos/__generated__/_contact');
 sc_require('mixins/core_documents');
 
 /** @class
