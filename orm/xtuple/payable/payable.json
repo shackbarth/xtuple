@@ -156,7 +156,7 @@
       }
     },
     {
-      "name": "username",
+      "name": "createdBy",
       "attr": {
         "type": "String",
         "column": "apopen_username"
