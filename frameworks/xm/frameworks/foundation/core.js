@@ -1,5 +1,8 @@
 /*globals XM process global */
 
+global.YES = true;
+global.NO = false;
+
 /** @namespace
   
   @extends SC.Object

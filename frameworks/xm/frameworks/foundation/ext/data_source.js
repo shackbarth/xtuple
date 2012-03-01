@@ -17,12 +17,10 @@ sc_require('ext/request');
 XM.DataSource = SC.DataSource.create(XM.Logging,
 /** @scope XM.DataSource.prototype */ {
 
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
+  getSession: function() {
     XM.Request.postUrl(this.URL)
       .header({ 'Accept': 'application/json' })
-      .notify(this, "didGetSession").json()
-      .async(NO)
+      .notify(this, 'didGetSession').json()
       .send({ 
         requestType: 'requestSession',
         userName: 'admin',
@@ -30,38 +28,40 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
       });
   },
 
+  ready: function(callback, context) {
+    var args = Array.prototype.slice.call(arguments),
+        args = args.length > 2 ? args.slice(2) : [], 
+        context = context ? context : null, cbs;
+    if(this.get('isReady')) return callback.apply(context, args);
+    if(!this._onreadycallbacks) cbs = this._onreadycallbacks = [];
+    else cbs = this._onreadycallbacks;
+    cbs.push({ callback: callback, context: context, args: args });
+  },
+
+  isReadyDidChange: function() {
+    if(!this.get('isReady')) return;
+    var cbs = this._onreadycallbacks || [],
+        i = 0, cb;
+    for(; i<cbs.length; ++i) {
+      cb = cbs[i];
+      if(cb.callback && SC.typeOf(cb.callback) === SC.T_FUNCTION)
+        cb.callback.apply(cb.context, cb.args);
+    }
+
+    if(SC.isNode) process.emit('sessionReady');
+    
+  }.observes('isReady'),
+
   didGetSession: function(response) {
     if(SC.ok(response)) {
       var body = response.get('body');
       this.set('session', body);
     } else { throw "Could not acquire session" }
+    this.set('isReady', YES);
   },
 
   serverIsAvailable: NO,
 
-  serverIsAvailableTooltip: function() {
-    var iv = this.get('serverIsAvailable');
-    if(iv) return '_serverAvailable'.loc();
-    else return '_serverUnavailable'.loc();
-  }.property('serverIsAvailable'),
-
-  pingServer: function() {
-    XM.Request.postUrl(this.URL)
-      .header({'Accept': 'application/json'})
-      .notify(this, "pingResponse").json()
-      .timeoutAfter(1000)
-      .send({ name: "XM.PingFunctor" });
-  },
-
-  pingResponse: function(response) {
-    var r = response;
-    if(r.timedOut) {
-      this.warn("Ping request to server timedout!");
-      this.set("serverIsAvailable", NO);
-    } else if(r.status !== 200) { this.set("serverIsAvailable", NO); } 
-    else { this.set("serverIsAvailable", YES); }
-  },
-  
   URL: SC.isNode? 'http://localhost:4020/datasource/data' : '/datasource/data',
   
   debug: NO,

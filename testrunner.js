@@ -52,12 +52,6 @@ global.NO = false;
 // console.log(jsFiles);
 jsFiles.forEach(function(path) { require(path); });
 
-// Simulate becoming "ready"
-// but only after a session is acquired
-process.once('sessionReady', function() {
-  SC.didBecomeReady();
-});
-
 // Start the proxy server.
 var http = require('http'),
     PROXY_LISTEN = 4020,
@@ -65,41 +59,41 @@ var http = require('http'),
     PROXY_PREFIX_FROM = '/datasource/', PROXY_PREFIX_TO = '/';
 
 
-var SESSION = {
-  userName: 'admin',
-  password: 'admin',
-  sid: null
-};
-
-(function() { 
-  var req = http.request({
-    host: PROXY_HOST,
-    port: PROXY_PORT,
-    method: 'POST',
-    path: '/data'
-  }, function(res) {
-    var info = '';
-    res.on('data', function(chunk) {
-      info += chunk;
-    }).on('end', function() {
-      info = JSON.parse(info);
-      SESSION.sid = info.sid;
-      delete SESSION.password;
-      XM.DataSource.set('session', SESSION);
-      process.emit('sessionReady');
-    });
-  });
-  req.on('error', function(e) {
-    console.log("Could not acquire session: " + e.message);
-    process.exit();
-  });
-  req.write(JSON.stringify({
-    requestType: 'requestSession',
-    userName: SESSION.userName,
-    password: SESSION.password
-  }));
-  req.end();
-})();
+// var SESSION = {
+//   userName: 'admin',
+//   password: 'admin',
+//   sid: null
+// };
+// 
+// (function() { 
+//   var req = http.request({
+//     host: PROXY_HOST,
+//     port: PROXY_PORT,
+//     method: 'POST',
+//     path: '/data'
+//   }, function(res) {
+//     var info = '';
+//     res.on('data', function(chunk) {
+//       info += chunk;
+//     }).on('end', function() {
+//       info = JSON.parse(info);
+//       SESSION.sid = info.sid;
+//       delete SESSION.password;
+//       XM.DataSource.set('session', SESSION);
+//       process.emit('sessionReady');
+//     });
+//   });
+//   req.on('error', function(e) {
+//     console.log("Could not acquire session: " + e.message);
+//     process.exit();
+//   });
+//   req.write(JSON.stringify({
+//     requestType: 'requestSession',
+//     userName: SESSION.userName,
+//     password: SESSION.password
+//   }));
+//   req.end();
+// })();
 
 var server = http.createServer(function(request, response) {
   var body = '';
@@ -152,6 +146,11 @@ var server = http.createServer(function(request, response) {
 
 }).listen(PROXY_LISTEN);
 console.log("PROXY: http://"+PROXY_HOST+":"+PROXY_LISTEN + PROXY_PREFIX_FROM + '*' + " \u2192 http://" + PROXY_HOST + ":" + PROXY_PORT + PROXY_PREFIX_TO + '*');
+
+// Simulate becoming "ready"
+SC.didBecomeReady();
+
+XM.DataSource.getSession();
 
 // Load and process our tests.
 var tests = process.argv.slice(2),

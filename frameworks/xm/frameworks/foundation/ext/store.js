@@ -47,7 +47,10 @@ XM.Store = SC.Store.extend(XM.Logging,
   */
 
   dataSourceDidDispatch: function(dispatch, result) {
-    dispatch.callback(null, result);
+    var target = dispatch.get('target'),
+        action = dispatch.get('action');
+        
+    action.call(target, null, result);
   },
   
   /**
