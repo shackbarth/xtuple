@@ -1,5 +1,5 @@
   {
-  "context": "generalLedger",
+  "context": "xtuple",
   "nameSpace": "XM",
   "type": "StandardJournalGroup",
   "table": "stdjrnlgrp",

@@ -12,8 +12,8 @@ select xt.install_js('XM','Address','xtuple', $$
    @param {Object} Address object
    @returns {Boolean}
   */
-  XM.Address.findExisting = function() {
-    var resp, args = arguments[0],
+  XM.Address.findExisting = function(address) {
+    var resp,
         sql = "select addr_id as id "
             + "from addr "
             + "where ((coalesce(upper(addr_line1),'') = coalesce(upper($1),'')) "
@@ -24,9 +24,9 @@ select xt.install_js('XM','Address','xtuple', $$
             + "and (coalesce(upper(addr_postalcode),'') = coalesce(upper($6),'')) "
             + "and (coalesce(upper(addr_country),'') = coalesce(upper($7),''))) ";
 
-    if(args.type !== 'Address') throw new Error('Invalid type passed to XM.Address.findExisting.');
+    if(address.type !== 'Address') throw new Error('Invalid type passed to XM.Address.findExisting.');
     
-    resp = executeSql(sql,[args.line1, args.line2, args.line3, args.city, args.state, args.postalcode, args.country]);
+    resp = executeSql(sql,[address.line1, address.line2, address.line3, address.city, address.state, address.postalcode, address.country]);
 
     return resp.length ? resp[0].id : 0;
   }
@@ -36,10 +36,8 @@ select xt.install_js('XM','Address','xtuple', $$
      @param {Number} address id
      @returns {Number}
   */
-  XM.Address.useCount = function() {
-    var args = arguments[0];
-    
-    return executeSql('select addrUseCount($1) as result', [args.id])[0].result;
+  XM.Address.useCount = function(id) {
+    return executeSql('select addrUseCount($1) as result', [id])[0].result;
   }
 
 $$ );

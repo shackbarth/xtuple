@@ -3,6 +3,7 @@ create or replace function xt.js_init() returns void as $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   DEBUG = false;
+  DEV_MODE = false;
   
   // ..........................................................
   // METHODS
@@ -172,7 +173,7 @@ create or replace function xt.js_init() returns void as $$
     }
   }
   
-  this.isInitialized = true;
+  this.isInitialized = !DEV_MODE;
 
 $$ language plv8;
 

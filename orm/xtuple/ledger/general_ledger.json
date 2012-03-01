@@ -65,7 +65,14 @@
       }
     },
     {
-      "name": "userName",
+      "name": "created",
+      "attr": {
+        "type": "Number",
+        "column": "gl_created"
+      }
+    },
+    {
+      "name": "createdBy",
       "attr": {
         "type": "Number",
         "column": "gl_username"
