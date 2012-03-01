@@ -85,9 +85,9 @@ XM.Record = SC.Record.extend(
   //
 
   init: function() {
+    arguments.callee.base.apply(this, arguments);
     this.set('validateErrors', []);
     if(this.getPath('store.isNested')) this.addObserver('isValid', this, '_isValidDidChange');
-    arguments.callee.base.apply(this, arguments);
   },
 
   /**
