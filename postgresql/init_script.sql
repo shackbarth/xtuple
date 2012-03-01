@@ -38,6 +38,7 @@
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
+\i xt/trigger_functions/comment_did_change.sql
 \i xt/trigger_functions/useracct_duplicate_check.sql
 
 -- xt operators
@@ -49,6 +50,7 @@
 \i xt/operators/text_lt_date.sql;
 
 -- xt tables
+\i xt/tables/comment.sql
 \i xt/tables/js.sql
 \i xt/tables/orm.sql
 \i xt/tables/useracct.sql
@@ -58,10 +60,10 @@
 \i xt/javascript/orm.sql;
 
 -- xt views
-\i xt/views/comment.sql;
 \i xt/views/docinfo.sql; 
 \i xt/views/gl.sql;
 \i xt/views/jrnl.sql;
+\i xt/views/unrec.sql;
 \i xt/views/usr.sql;
 
 -- [ END ] xt

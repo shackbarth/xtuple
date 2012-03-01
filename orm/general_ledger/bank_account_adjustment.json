@@ -1,0 +1,112 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "BankAccountAdjustment",
+  "table": "bankadj",
+  "idSequenceName": "bankadj_bankadj_id_seq",
+  "comment": "Bank Account Adjustment Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainBankAdjustments",
+      "read": "MaintainBankAdjustments",
+      "update": "MaintainBankAdjustments",
+      "delete": "MaintainBankAdjustments"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "bankadj_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "bankAccount",
+      "toOne": {
+        "isNested": true,
+        "type": "BankAccountInfo",
+        "column": "bankadj_bankaccnt_id"
+      }
+    },
+    {
+      "name": "bankAccountAdjustmentType",
+      "toOne": {
+        "type": "BankAccountAdjustmentType",
+        "column": "bankadj_bankadjtype_id"
+      }
+    },
+    {
+      "name": "created",
+      "attr": {
+        "type": "Date",
+        "column": "bankadj_created"
+      }
+    },
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "bankadj_username"
+      }
+    },
+    {
+      "name": "date",
+      "attr": {
+        "type": "Date",
+        "column": "bankadj_date"
+      }
+    },
+    {
+      "name": "documentNumber",
+      "attr": {
+        "type": "String",
+        "column": "bankadj_docnumber"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "bankadj_amount"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "bankadj_curr_id"
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "bankadj_curr_rate"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "Date",
+        "column": "bankadj_notes"
+      }
+    },
+    {
+      "name": "sequence",
+      "attr": {
+        "type": "Number",
+        "column": "bankadj_sequence"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "Number",
+        "column": "bankadj_posted"
+      }
+    }
+  ],
+  "isSystem": true
+}

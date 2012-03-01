@@ -2,10 +2,23 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "VendorComment",
-  "table": "xt.comment",
+  "table": "comment",
   "idSequenceName": "comment_comment_id_seq",
   "comment": "Vendor Comment Map",
-  "canDelete": false,
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": "EditOthersComments",
+      "delete": false
+    },
+    "personal": {
+      "update": "EditOwnComments",
+      "properties": [
+        "createdBy"
+       ]
+    }
+  },
   "properties": [
     {
       "name": "guid",
@@ -32,22 +45,6 @@
       }
     },
     {
-      "name": "date",
-      "attr": {
-        "type": "Date",
-        "column": "comment_date",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "username",
-      "attr": {
-        "type": "String",
-        "column": "comment_user",
-        "isEditable": false
-      }
-    },
-    {
       "name": "commentType",
       "toOne": {
         "type": "CommentType",
@@ -66,6 +63,22 @@
       "attr": {
         "type": "Boolean",
         "column": "comment_public"
+      }
+    },
+    {
+      "name": "created",
+      "attr": {
+        "type": "Date",
+        "column": "comment_date",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "comment_user",
+        "isEditable": false
       }
     }
   ],

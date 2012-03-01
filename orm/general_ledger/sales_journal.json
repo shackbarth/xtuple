@@ -86,21 +86,28 @@
         "type": "Number",
         "column": "jrnl_amount"
       }
-    },
-    {
-      "name": "userName",
-      "attr": {
-        "type": "String",
-        "column": "jrnl_username"
-      }
-    },   
+    }, 
     {
       "name": "journal",
       "attr": {
         "type": "Boolean",
         "column": "jrnl_number"
       }
-    }
+    },
+    {
+      "name": "created",
+      "attr": {
+        "type": "String",
+        "column": "jrnl_created"
+      }
+    }, 
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "jrnl_username"
+      }
+    } 
   ],
   "order": [
     "jrnl_date",

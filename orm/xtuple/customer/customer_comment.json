@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "CustomerComment",
-  "table": "xt.comment",
+  "table": "comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Customer Comment Map",
   "canDelete": false,
@@ -16,7 +16,7 @@
     "personal": {
       "update": "EditOwnComments",
       "properties": [
-        "username"
+        "createdBy"
        ]
     }
   },
@@ -47,22 +47,6 @@
       }
     },
     {
-      "name": "date",
-      "attr": {
-        "type": "Date",
-        "column": "comment_date",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "username",
-      "attr": {
-        "type": "String",
-        "column": "comment_user",
-        "isEditable": false
-      }
-    },
-    {
       "name": "commentType",
       "toOne": {
         "type": "Customer",
@@ -82,6 +66,22 @@
       "attr": {
         "type": "Boolean",
         "column": "comment_public"
+      }
+    },
+    {
+      "name": "created",
+      "attr": {
+        "type": "Date",
+        "column": "comment_date",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "comment_user",
+        "isEditable": false
       }
     }
   ],

@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "AddressComment",
-  "table": "xt.comment",
+  "table": "comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Address Comment Map",
   "privileges": {
@@ -15,7 +15,7 @@
     "personal": {
       "update": "EditOwnComments",
       "properties": [
-        "username"
+        "createdBy"
        ]
     }
   },
@@ -46,25 +46,9 @@
       }
     },
     {
-      "name": "date",
-      "attr": {
-        "type": "Date",
-        "column": "comment_date",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "username",
-      "attr": {
-        "type": "String",
-        "column": "comment_user",
-        "isEditable": false
-      }
-    },
-    {
       "name": "commentType",
       "toOne": {
-        "type": "Address",
+        "type": "CommentType",
         "column": "comment_cmnttype_id",
         "isEditable": false
       }
@@ -81,6 +65,22 @@
       "attr": {
         "type": "Boolean",
         "column": "comment_public"
+      }
+    },
+    {
+      "name": "created",
+      "attr": {
+        "type": "Date",
+        "column": "comment_date",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "comment_user",
+        "isEditable": false
       }
     }
   ],
