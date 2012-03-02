@@ -37,25 +37,10 @@ XM.Record = SC.Record.extend(
   }),
 
   /**
-  The name of the privilege required to create this record type.
+  A hash structure that defines data access.
   */
-  createPrivilege: null,
-
-  /**
-  The name of the privilege required to read this record type.
-  */
-  readPrivilege: null,
-
-  /**
-  The name of the privilege required to update this record type.
-  */
-  updatePrivilege: null,
-
-  /**
-  The name of the privilege required to delete this record type.
-  */
-  deletePrivilege: null,
-
+  privileges: null,
+  
   /**
   Indicates whether the record is in a valid state to be saved. Will be false if any
   errors exist in validateErrors.
@@ -205,31 +190,10 @@ XM.Record.setup = function() {
   if(this.prototype.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
 
-    defaultValue: function() {
-      // TODO: How can we make this use the store.dispatch method? SC.store.createRecord 
-      // calls this function before a record object has been created, so we have 
-      // no instance to reference or callback to.
-      var payload = {}, response,
-          recordType = self.prototype.className,
-          ds = XM.DataSource, // hack - no other place to get this?
-          url = ds.get('URL'), ret;
-
-      payload.requestType = 'dispatch';
-      payload.className = 'XM.Session';
-      payload.functionName = 'fetchId';
-      payload.parameters = {};
-      payload.parameters.recordType = recordType;
-      
-      response =  XM.Request.postUrl(url)
-        .header({ 'Accept': 'application/json' })
-        .json()
-        .async(NO)
-        .send(payload);
-
-      ret = response.get('body').rows[0].dispatch;
-
-      return ret;
-    }});
+      defaultValue: function () {
+        if(arguments[0]) XM.Record.fetchId.call(arguments[0]);
+      }
+    })
   }
 
   // return the original reference (!important)
@@ -351,6 +315,42 @@ XM.Record.canDelete = function(record) {
 };
 
 /**
+  A utility function to sets the next sequential id on a record. 
+  Accepts a number property to set when the server responds. 
+  
+  The function will send the class name property of itself to the server
+  which will cross reference the ORM 'idSequnceName' property for the class 
+  to determine which sequence to use.
+  
+  @param {String} id property to set, defaults to 'guid'
+  @returns {Object} receiever
+*/
+XM.Record.fetchId = function(prop) {
+  var self = this,
+      prop = prop ? prop : 'guid',
+      recordType = this.get("className"),
+      dispatch;
+  
+  callback = function(error, result) {
+    if(!error) self.set(prop, result);
+  }
+  
+  dispatch = XM.Dispatch.create({
+    className: 'XM.Session',
+    functionName: 'fetchId',
+    parameters: recordType,
+    target: self,
+    action: callback
+  });
+
+  console.log("XM.Record.fetchId for: %@".fmt(recordType));
+
+  self.get('store').dispatch(dispatch);
+  
+  return this;
+};
+
+/**
   A utility function to sets the next sequential number on a record. 
   Accepts a number property to set when the server responds. 
   
@@ -374,9 +374,7 @@ XM.Record.fetchNumber = function(prop) {
   dispatch = XM.Dispatch.create({
     className: 'XM.Session',
     functionName: 'fetchNumber',
-    parameters: {
-      recordType: recordType
-    },
+    parameters: recordType,
     target: self,
     action: callback
   });
