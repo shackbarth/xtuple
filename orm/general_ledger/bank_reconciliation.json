@@ -1,0 +1,111 @@
+{
+  "context": "generalLedger",
+  "nameSpace": "XM",
+  "type": "BankReconciliation",
+  "table": "bankrec",
+  "idSequenceName": "bankrec_bankrec_id_seq",
+  "comment": "Bank Reconcilition Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainBankRec",
+      "read": "MaintainBankRec",
+      "update": "MaintainBankRec",
+      "delete": "MaintainBankRec"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "bankrec_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "bankAccount",
+      "toOne": {
+        "isNested": true,
+        "type": "BankAccountInfo",
+        "column": "bankrec_bankaccnt_id"
+      }
+    },
+    {
+      "name": "openDate",
+      "attr": {
+        "type": "Date",
+        "column": "bankrec_opendate"
+      }
+    },
+    {
+      "name": "endDate",
+      "attr": {
+        "type": "Date",
+        "column": "bankrec_enddate"
+      }
+    },
+    {
+      "name": "openBalance",
+      "attr": {
+        "type": "Number",
+        "column": "bankrec_openbal"
+      }
+    },
+    {
+      "name": "endBalance",
+      "attr": {
+        "type": "Number",
+        "column": "bankrec_endbal"
+      }
+    },
+    {
+      "name": "items",
+      "toMany": {
+        "isNested": true,
+        "type": "BankReconciliationItem",
+        "column": "bankrec_id",
+        "inverse": "bankReconciliation"
+      }
+    },
+    {
+      "name": "unreconciled",
+      "toMany": {
+        "isNested": true,
+        "type": "BankReconciliationUnreconciled",
+        "column": "bankrec_id",
+        "inverse": "bankReconciliation"
+      }
+    },
+    {
+      "name": "isPosted",
+      "attr": {
+        "type": "String",
+        "column": "bankrec_posted"
+      }
+    },
+    {
+      "name": "postDate",
+      "attr": {
+        "type": "Date",
+        "column": "bankrec_postdate"
+      }
+    },
+    {
+      "name": "created",
+      "attr": {
+        "type": "Date",
+        "column": "bankrec_created",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "bankrec_username",
+        "isEditable": false
+      }
+    }
+  ],
+  "isSystem": true
+}

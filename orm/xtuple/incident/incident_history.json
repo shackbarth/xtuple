@@ -41,7 +41,15 @@
       }
     },
     {
-      "name": "timestamp",
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "incdthist_descrip",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "created",
       "attr": {
         "type": "Date",
         "column": "incdthist_timestamp",
@@ -49,18 +57,10 @@
       }
     },
     {
-      "name": "username",
+      "name": "createdBy",
       "attr": {
         "type": "String",
         "column": "incdthist_username",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "description",
-      "attr": {
-        "type": "String",
-        "column": "incdthist_descrip",
         "isEditable": false
       }
     }

@@ -1,4 +1,4 @@
---drop view xt.jrnl
+--drop view xt.jrnl cascade
 
 create or replace view xt.jrnl as
 
@@ -25,7 +25,9 @@ select
   abs(sltrans_amount) as jrnl_amount,
   sltrans_notes as jrnl_notes,
   sltrans_gltrans_journalnumber as jrnl_number,
-  sltrans_username as jrnl_username
+  sltrans_created as jrnl_created,
+  sltrans_username as jrnl_username,
+  sltrans_rec as jrnl_rec
 from sltrans
 where sltrans_source in ('G/L','A/R','A/P','W/O','P/D','I/M','S/R')
 union all
@@ -52,7 +54,9 @@ select
   abs(gltrans_amount) as jrnl_amount,
   gltrans_notes as jrnl_notes,
   gltrans_journalnumber as jrnl_number,
-  gltrans_username as jrnl_username
+  gltrans_created as jrnl_created,
+  gltrans_username as jrnl_username,
+  gltrans_rec as jrnl_rec
 from gltrans
 where gltrans_source in ('G/L','A/R','A/P','W/O','P/D','I/M','S/R')
  and gltrans_doctype != 'JP'
