@@ -1,4 +1,4 @@
--- [ START ] initdb
+﻿-- [ START ] initdb
 
 -- create schemas
 \i create_xt_schema.sql;
@@ -75,4 +75,5 @@
 \i xm/javascript/session.sql;
 \i xm/javascript/voucher.sql;
 \i xm/javascript/payable.sql;
+\i xm/javascript/payment.sql;
 -- [ END ] xm
