@@ -6,7 +6,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
   
   XM.Invoice.isDispatchable = true;
   
-	XM.Invoice.post = function(invoiceId) {
+	XM.Invoice.post = function(invoiceId,distributionDate) {
 	/**
 	 Post a invoice.
 
@@ -18,20 +18,21 @@ select xt.install_js('XM','Invoice','xtuple', $$
 
 	  if(!data.checkPrivilege("PostMiscInvoices")) err = "Access denied."
 	  else if(invoiceId === undefined) err = "No Invoice specified";
+	  else if(distributionDate === undefined) err = "No Distribution date specified";
 
 	  if(!err) {
-			ret = executeSql("select postinvoice($1) AS result;", [invoiceId])[0].result;
+			ret = executeSql("select postinvoice($1, coalesce($2, invchead_invcdate)) from invchead where invchead_id = $1 AS result;", [invoiceId,distributionDate])[0].result;
 
 			switch (ret)
 			{
 			  case -1: 
-					err = "insertIntoGLSeries";
+					err = "Cannot add to a G/L Series because the Account is NULL or -1.";
 					break;
 			  case -4: 
-					err = "insertIntoGLSeries";
+					err = "Cannot add to a G/L Series because the Account is NULL or -1.";
 					break;				
 			  case -5: 
-					err = "postGLSeries";
+					err = "Could not post this G/L Series because the G/L Series Discrepancy Account was not found.";
 					break;
 			  case -10: 
 					err = "Unable to post this Invoice because it has already been posted.";
@@ -64,6 +65,29 @@ select xt.install_js('XM','Invoice','xtuple', $$
 
 	  throw new Error(err);
 	}
+	
+	XM.Invoice.postAll = function(postUnprinted,inclZeros) {
+	/**
+	 Post a All invoice.
+
+	 @param {boolean, boolean} Post Unprinted and Include Zeros
+	 @returns {boolean} 
+*/
+	  var ret, sql, err,
+			  data = Object.create(XT.Data);
+
+	  if(!data.checkPrivilege("PostMiscInvoices")) err = "Access denied."
+	  else if(postUnprinted === undefined) err = "Post unprinted not defined";
+	  else if(inclZeros === undefined) err = "Include Zero not defined";
+
+	  if(!err) {
+			ret = executeSql("select postinvoices($1,$2) AS result;", [postUnprinted,inclZeros])[0].result;
+
+			return ret;
+	  }
+
+	  throw new Error(err);
+	}
 
 	XM.Invoice.void = function(invoiceId) {
   /**
@@ -84,13 +108,13 @@ select xt.install_js('XM','Invoice','xtuple', $$
 			switch (ret)
 			{
 			  case -1: 
-					err = "insertIntoGLSeries";
+					err = "Cannot add to a G/L Series because the Account is NULL or -1.";
 					break;
 			  case -4: 
-					err = "insertIntoGLSeries";
+					err = "Cannot add to a G/L Series because the Account is NULL or -1.";
 					break;				
 			  case -5: 
-					err = "postGLSeries";
+					err = "Could not post this G/L Series because the G/L Series Discrepancy Account was not found.";
 					break;
 			  case -10: 
 					err = "Unable to void this Credit Memo because it has not been posted.";
