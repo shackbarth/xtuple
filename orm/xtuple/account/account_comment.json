@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "AccountComment",
-  "table": "xt.comment",
+  "table": "comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Account Comment Map",
   "privileges": {

@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "AddressComment",
-  "table": "xt.comment",
+  "table": "comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Address Comment Map",
   "privileges": {
@@ -48,7 +48,7 @@
     {
       "name": "commentType",
       "toOne": {
-        "type": "Address",
+        "type": "CommentType",
         "column": "comment_cmnttype_id",
         "isEditable": false
       }

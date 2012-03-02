@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ContactComment",
-  "table": "xt.comment",
+  "table": "comment",
   "idSequenceName": "comment_comment_id_seq",
   "comment": "Contact Comment Map",
   "privileges": {
@@ -48,7 +48,7 @@
     {
       "name": "commentType",
       "toOne": {
-        "type": "Comment",
+        "type": "CommentType",
         "column": "comment_cmnttype_id",
         "isEditable": false
       }

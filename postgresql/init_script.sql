@@ -1,4 +1,4 @@
--- [ START ] initdb
+﻿-- [ START ] initdb
 
 -- create schemas
 \i create_xt_schema.sql;
@@ -30,7 +30,7 @@
 \i xt/functions/is_date.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
-\i xt/functions/sc_model_template.sql;
+\i xt/functions/sc_model_gen.sql;
 \i xt/functions/starts_with.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
@@ -38,6 +38,7 @@
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
+\i xt/trigger_functions/comment_did_change.sql
 \i xt/trigger_functions/useracct_duplicate_check.sql
 
 -- xt operators
@@ -49,6 +50,7 @@
 \i xt/operators/text_lt_date.sql;
 
 -- xt tables
+\i xt/tables/comment.sql
 \i xt/tables/js.sql
 \i xt/tables/orm.sql
 \i xt/tables/useracct.sql
@@ -58,7 +60,6 @@
 \i xt/javascript/orm.sql;
 
 -- xt views
-\i xt/views/comment.sql;
 \i xt/views/docinfo.sql; 
 \i xt/views/gl.sql;
 \i xt/views/jrnl.sql;
@@ -72,5 +73,7 @@
 -- xm/javascript
 \i xm/javascript/address.sql;
 \i xm/javascript/session.sql;
-
+\i xm/javascript/voucher.sql;
+\i xm/javascript/payable.sql;
+\i xm/javascript/payment.sql;
 -- [ END ] xm

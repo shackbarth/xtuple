@@ -3,7 +3,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "SiteComment",
-  "table": "xt.comment",
+  "table": "comment",
   "idSequenceName": "public.comment_comment_id_seq",
   "comment": "Site Comment Map",
   "privileges": {
