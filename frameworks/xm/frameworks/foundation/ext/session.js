@@ -115,6 +115,8 @@ XM.session = SC.Object.create({
     // Create a special object for privileges where the get function returns NO if it can't find the key
     var privileges = SC.Object.create({
       get: function(key) {
+        if(typeof key === 'boolean') return key;
+        
         for(prop in this) {
           if(prop === key) return this[prop];
         }
