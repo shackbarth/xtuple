@@ -263,9 +263,7 @@ XM.Address.useCount = function(address, callback) {
   var dispatch = XM.Dispatch.create({
     className: 'XM.Address',
     functionName: 'useCount',
-    parameters: {
-      id: address.get('id')
-    },
+    parameters: address.get('id'),
     action: callback
   })
 

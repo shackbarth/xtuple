@@ -94,12 +94,27 @@ XV.record.create = function (recordType,
                              destroy) {
   var context = {
     topic: function() {
-    debugger
-      var record = XM.store.createRecord(recordType, createHash).normalize();
-    
-      record.validate();
-    
-      this.callback(null, record);    
+      var record = XM.store.createRecord(recordType, createHash),
+          callback = this.callback;
+
+      if(record.get('guid')) { // just looking at this triggers a call to get an id
+        record.normalize().validate();
+  
+        callback(null, record);
+      } else {
+        record.addObserver('guid', record, function observer() {
+          if (record.get('guid')) {
+            clearTimeout(timeoutId);
+            record.removeObserver('guid', record, observer);
+            record.normalize().validate();
+            callback(null, record); // return the record
+          }
+        })
+
+        timeoutId = setTimeout(function() {
+          callback(null, record);
+        }, 5000); // five seconds 
+      }
     }
   }
 
