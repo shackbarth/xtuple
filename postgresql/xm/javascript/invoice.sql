@@ -1,12 +1,12 @@
 select xt.install_js('XM','Invoice','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
-     See www.xm.ple.com/CPAL for the full text of the software license. */
+     See www.xtuple.com/CPAL for the full text of the software license. */
 
   XM.Invoice = {};
   
   XM.Invoice.isDispatchable = true;
   
-	XM.Invoice.post = function(invoiceId,distributionDate) {
+	XM.Invoice.post = function(invoiceId) {
 	/**
 	 Post a invoice.
 
@@ -18,10 +18,9 @@ select xt.install_js('XM','Invoice','xtuple', $$
 
 	  if(!data.checkPrivilege("PostMiscInvoices")) err = "Access denied."
 	  else if(invoiceId === undefined) err = "No Invoice specified";
-	  else if(distributionDate === undefined) err = "No Distribution date specified";
 
 	  if(!err) {
-			ret = executeSql("select postinvoice($1, coalesce($2, invchead_invcdate)) from invchead where invchead_id = $1 AS result;", [invoiceId,distributionDate])[0].result;
+			ret = executeSql("select postinvoice($1) AS result;", [invoiceId])[0].result;
 
 			switch (ret)
 			{
@@ -66,7 +65,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
 	  throw new Error(err);
 	}
 	
-	XM.Invoice.postAll = function(postUnprinted,inclZeros) {
+	XM.Invoice.postAll = function(postUnprinted) {
 	/**
 	 Post a All invoice.
 
@@ -78,10 +77,9 @@ select xt.install_js('XM','Invoice','xtuple', $$
 
 	  if(!data.checkPrivilege("PostMiscInvoices")) err = "Access denied."
 	  else if(postUnprinted === undefined) err = "Post unprinted not defined";
-	  else if(inclZeros === undefined) err = "Include Zero not defined";
 
 	  if(!err) {
-			ret = executeSql("select postinvoices($1,$2) AS result;", [postUnprinted,inclZeros])[0].result;
+			ret = executeSql("select postinvoices($1) AS result;", [postUnprinted])[0].result;
 
 			return ret;
 	  }

@@ -1,4 +1,4 @@
-create or replace function xt.dispatch(data_hash text) returns text as $$
+﻿create or replace function xt.dispatch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -77,12 +77,16 @@ select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Session",
                           "functionName":"privileges"
                           }$$);    
-
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Invoice",
                           "functionName":"post",
-                          "parameters":{"id":129}
-                          }$$);        
+                          "parameters":[137]
+                          }$$);    
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Invoice",
+                          "functionName":"postALl",
+                          "parameters":[false]
+                          }$$);     
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Invoice",
                           "functionName":"void",
