@@ -1,4 +1,4 @@
-create or replace function xt.sc_model_template(class_name text) returns text as $$
+create or replace function xt.sc_model_gen(class_name text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -7,23 +7,22 @@ create or replace function xt.sc_model_template(class_name text) returns text as
 
   var body   =  "// ==========================================================================\n"
              +  "// Project:   xTuple Postbooks - Business Management System Framework        \n"
-             +  "// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                                \n"
+             +  "// Copyright: ©{year} OpenMFG LLC, d/b/a xTuple                                \n"
              +  "// ==========================================================================\n"
              +  "/*globals XM */\n"
              + "\n"
              + "/** \n"
              + "  @class\n"
              + "\n"
-             + "  (Document your Model here)\n"
+             + "  This code is automatically generated and will be over-written. Do not edit directly. \n"
              + "\n"
              + "  @extends XM.Record\n"
-             + "  @version 0.1\n"
              + "*/\n"
              + "\n"
-             + "{className} = XM.Record.extend(,\n"
+             + "{className} = XM.Record.extend(\n"
              + "/** @scope {className}.prototype */ {\n"
              + "\n"
-             + "  className: '{className}',\n"
+             + "  className: '{className2}',\n"
              + "\n"
              + "  {nestedRecordNamespace}\n"
              + "\n"
@@ -38,22 +37,15 @@ create or replace function xt.sc_model_template(class_name text) returns text as
              + "  //\n"
              + "  {attributes}\n"
              + "\n"
-             + "  // ..........................................................\n"
-             + "  // CALCULATED PROPERTIES\n"
-             + "  //\n"
-             + "\n"
-             + "\n"
-             + "  // ..........................................................\n"
-             + "  // OBSERVERS\n"
-             + "  //\n"
-             + "\n"
              + "});",
 
   attribute =  "\n  /**\n  @type {type}\n  */\n  {name}: SC.Record.{method}({type2}{extra})",
   nameSpace = class_name.beforeDot(),
   type = class_name.afterDot(),
-  orm = XT.Orm.fetch(nameSpace, type),
+  orm = XT.Orm.fetch(nameSpace, type), d = new Date(),
   nestedRecordNamespace, privileges, attributes = [];
+
+  if(!orm) throw new Error('Model ' + class_name + ' not found.');
 
   buildAttributes = function(orm) {
     for(var i = 0; i < orm.properties.length; i++) {
@@ -62,8 +54,13 @@ create or replace function xt.sc_model_template(class_name text) returns text as
           type2 = type,
           method =  prop.attr ? 'attr' : prop.toOne ? 'toOne' : 'toMany',
           obj = prop.attr ? prop.attr : prop.toOne ? prop.toOne : prop.toMany,
-          extra = obj.isNested ? ',\n    isNested: true\n  ' : '',
+          extra = '',     
           name = prop.name, attr;
+
+      if(obj.isNested) {
+        extra = ', {\n    isNested: true';
+        extra = extra + (prop.toMany ? (",\n    inverse: '" + (prop.toMany.inverse ? prop.toMany.inverse + "'" : "'guid'") + '\n  }') : '\n  }');
+      }
 
       if(type !== 'String' && type !== 'Number' && type !== 'Date' && type !== 'Boolean') {
         type =  nameSpace + '.' + type;
@@ -102,7 +99,9 @@ create or replace function xt.sc_model_template(class_name text) returns text as
 
   privileges = orm.privileges ? "privileges:" + JSON.stringify(orm.privileges, null, 2).replace(/\n/g,'\n  ') + ',' : '';
   
-  body = body.replace(/{className}/g, class_name)
+  body = body.replace(/{year}/, d.getFullYear())
+             .replace(/{className}/g, class_name.replace(/\./, '._'))
+             .replace(/{className2}/g, class_name)
              .replace(/{nestedRecordNamespace}/, nestedRecordNamespace)
              .replace(/{privileges}/, privileges)
              .replace(/{attributes}/, attributes.join(',\n'));
