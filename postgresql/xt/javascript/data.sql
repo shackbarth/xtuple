@@ -231,6 +231,25 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
+    Commit metrics that have changed to the database.
+
+    @param {Object} metrics
+    @returns Boolean
+    */
+    commitMetrics: function(metrics) {
+      for(var key in metrics) {
+        var value = metrics[key]; 
+      
+        if(typeof value === 'boolean') value = value ? 't' : 'f';
+        else if(typeof value === 'number') value = value.toString();
+      
+        executeSql('select setMetric($1,$2)', [key, value]);
+      }
+
+      return true;
+    },
+
+    /**
     Commit a record to the database 
 
     @param {String} name space qualified record type

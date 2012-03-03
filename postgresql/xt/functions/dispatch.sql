@@ -5,19 +5,15 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
   /* initialize plv8 if needed */
   if(!this.isInitialized) executeSql('select xt.js_init()');
 
-  /* support methods */
-  function toArray(e) {
-    return Array.prototype.slice.call(e);
-  }
-  
+  /* support methods */  
   Function.prototype.curry = function() {
     if (arguments.length<1) {
         return this; //nothing to curry with - return function
     }
     var __method = this;
-    var args = arguments[0]; //toArray(arguments);
+    var args = arguments[0]; 
         return function() {
-        return __method.apply(this, args.concat(toArray(arguments)));
+        return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
     }
   }
 
@@ -93,5 +89,28 @@ select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Payable",
                           "functionName":"approve",
                           "parameters":[264,13]
-                          }$$);                
+                          }$$);  
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.CRM",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "NextCRMAccountNumber": 1,
+                            "NextIncidentNumber": 1600,
+                            "CRMAccountNumberGeneration": "A",
+                            "UseProjects": true,
+                            "AutoCreateProjectsForOrders": true,
+                            "OpportunityChangeLog": false,
+                            "DefaultAddressCountry": "Mexico",
+                            "StrictAddressCountry": true,
+                            "IncidentsPublicPrivate": true,
+                            "IncidentPublicDefault": true,
+                            "IncidentNewColor": "red",
+                            "IncidentFeedbackColor": "purple",
+                            "IncidentConfirmedColor": "yellow",
+                            "IncidentAssignedColor": "blue",
+                            "IncidentResolvedColor": "green",
+                            "IncidentClosedColor": "grey"
+                           }
+                          }$$);            
 */

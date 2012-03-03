@@ -72,6 +72,7 @@
 
 -- xm/javascript
 \i xm/javascript/address.sql;
+\i xm/javascript/crm.sql;
 \i xm/javascript/session.sql;
 
 -- [ END ] xm

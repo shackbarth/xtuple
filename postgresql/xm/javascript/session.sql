@@ -6,10 +6,11 @@ select xt.install_js('XM','Session','xtuple', $$
   
   XM.Session.isDispatchable = true;
 
-  /* pass in a record type and get the next id for that type 
+  /** 
+  Pass in a record type and get the next id for that type 
 
-    @param {String} record type
-    @returns {Number}
+  @param {String} record type
+  @returns {Number}
   */
   XM.Session.fetchId = function(recordType) { 
     var nameSpace = recordType.beforeDot(),
@@ -21,10 +22,11 @@ select xt.install_js('XM','Session','xtuple', $$
     return seq ? executeSql(sql, [seq])[0].result : false;
   }
 
-  /* pass in a record type and get the next id for that type 
+  /**
+  Pass in a record type and get the next id for that type 
 
-    @param {String} record type
-    @returns {Number}
+  @param {String} record type
+  @returns {Number}
   */
   XM.Session.fetchNumber = function(recordType) {
     var nameSpace = recordType.beforeDot(),
@@ -36,6 +38,11 @@ select xt.install_js('XM','Session','xtuple', $$
     return seq ? executeSql(sql, [seq])[0].result : false;
   }
 
+  /** 
+  Returns a hash of key, value pairs of locale properties and their selections for the effective user.
+
+  @returns {hash}
+  */ 
   XM.Session.locale = function() {
     var sql = "select "
             + "locale_id as id, "
@@ -67,12 +74,22 @@ select xt.install_js('XM','Session','xtuple', $$
     return rec.length ? JSON.stringify(rec[0]) : '{}';
   }
 
+  /** 
+  Returns a hash of key, value pairs of metrics and their settings for the effective user.
+
+  @returns {hash}
+  */ 
   XM.Session.metrics = function() {
     var rec = executeSql( 'select metric_name as metric, metric_value as value from metric' );
     
     return rec.length ? JSON.stringify (rec) : '{}';
   }
 
+  /** 
+  Returns a hash of key, value pairs of privileges and their granted state for the effective user.
+
+  @returns {hash}
+  */ 
   XM.Session.privileges = function() {
     var rec = executeSql( 'select privilege, granted as "isGranted" from privgranted' );
 

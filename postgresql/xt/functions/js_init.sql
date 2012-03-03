@@ -3,31 +3,52 @@ create or replace function xt.js_init() returns void as $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   DEBUG = false;
-  DEV_MODE = false;
+  DEV_MODE = true;
   
   // ..........................................................
   // METHODS
   //
 
-  /* extend array type to check for an existing value */
-  Array.prototype.contains = function(obj) {
+  /**
+  Return whether an array contains an item.
+
+  @param {Any}
+  @returns Boolean
+  */
+  Array.prototype.contains = function(item) {
     var i = this.length;
     while (i--) {
-      if (this[i] === obj) {
+      if (this[i] === item) {
         return true;
       }
     }
     return false;
   }
 
-  Array.prototype.indexOf = function(obj) {
+  /**
+  Return the index of an item in an array 
+
+  @param {Any}
+  @returns Any
+  */
+  Array.prototype.indexOf = function(item) {
     var i = this.length;
     while (i--) {
-      if (this[i] === obj) {
+      if (this[i] === item) {
         return i;
       }
     }
     return -1;
+  }
+
+  /**
+  Remove an item from an array and return it. 
+
+  @param {Any}
+  @returns Any
+  */
+  Array.prototype.remove = function(item) {
+    return this.contains(item) ? this.splice(this.indexOf(item),1) : false;
   }
 
   /* Returns an the first item in an array with a property matching the passed value.  
