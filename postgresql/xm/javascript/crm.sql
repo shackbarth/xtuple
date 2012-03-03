@@ -1,4 +1,4 @@
-select xt.install_js('XM','crm','xtuple', $$
+select xt.install_js('XM','crm','crm', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
@@ -89,7 +89,7 @@ select xt.install_js('XM','crm','xtuple', $$
        first make sure we pass an object that only has valid metric options for this type */
     for(var i = 0; i < options.length; i++) {
       var prop = options[i];
-      if(settings[prop]) metrics[prop] = settings[prop];
+      if(settings[prop] !== undefined) metrics[prop] = settings[prop];
     }
  
     return data.commitMetrics(metrics);

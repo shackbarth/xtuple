@@ -137,5 +137,25 @@ select xt.dispatch($${"requestType":"dispatch",
                             "AutoCloseARIncident": true,
                             "RecurringInvoiceBuffer": 10
                            }
-                          }$$);          
+                          }$$);  
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Payables",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "NextAPMemoNumber": 100,
+                            "ACHEnabled": false,
+                            "ACHCompanyId": "",
+                            "ACHCompanyIdType": "D",
+                            "ACHCompanyName": "Wacky Widgets, Inc.",
+                            "ACHDefaultSuffix": ".txt",
+                            "EFTRoutingRegex": "",
+                            "EFTAccountRegex": "",
+                            "EFTFunction": "",
+                            "NextACHBatchNumber": 200,
+                            "ReqInvRegVoucher": true,
+                            "ReqInvMiscVoucher": true,
+                            "RecurringVoucherBuffer": 10
+                           }
+                          }$$);         
 */
