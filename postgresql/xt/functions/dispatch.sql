@@ -157,5 +157,26 @@ select xt.dispatch($${"requestType":"dispatch",
                             "ReqInvMiscVoucher": true,
                             "RecurringVoucherBuffer": 10
                            }
+                          }$$);  
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.GeneralLedger",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "GLMainSize": 5,
+                            "GLCompanySize": 3,
+                            "YearEndEquityAccount": 83,
+                            "CurrencyGainLossAccount": 83,
+                            "GLSeriesDiscrepancyAccount": 83,
+                            "GLProfitSize": 3,
+                            "GLFFProfitCenters": true,
+                            "GLSubaccountSize": 3,
+                            "GLFFSubaccounts": true,
+                            "UseJournals": false,
+                            "CurrencyExchangeSense": 0,
+                            "MandatoryGLEntryNotes": false,
+                            "ManualForwardUpdate": false,
+                            "InterfaceToGL": false
+                           }
                           }$$);         
 */

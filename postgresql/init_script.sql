@@ -73,6 +73,8 @@
 -- xm/javascript
 \i xm/javascript/address.sql;
 \i xm/javascript/crm.sql;
+\i xm/javascript/general_ledger.sql;
+\i xm/javascript/payables.sql;
 \i xm/javascript/receivables.sql;
 \i xm/javascript/session.sql;
 
