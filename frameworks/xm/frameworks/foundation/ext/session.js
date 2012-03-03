@@ -91,7 +91,16 @@ XM.session = SC.Object.create({
         }
 
         return NO;
-      }
+      },
+      
+      set: function(key, value) {
+        this._changed.push(key);
+        
+        arguments.callee.base.apply(this, arguments);
+      },
+      
+      _changed: []
+      
     });
 
     // Loop through the response and set a metric for each found
@@ -105,6 +114,8 @@ XM.session = SC.Object.create({
       metrics.set(item.metric, value);
     });
 
+    metrics._changed = [];
+    
     // Attach the metrics to the session object
     this.set('metrics', metrics);
 
@@ -143,10 +154,39 @@ XM.session = SC.Object.create({
     return YES
   },
   
+  commitMetrics: function() {
+    var m = this.get('metrics'),
+        self = this, metrics = {}, 
+        dispatch, store = this.get('store');
+    
+    if(!m || !m._changed || !m._changed.length) return;
+    
+    // build list of metrics that changed
+    for(var i = 0; i < m._changed.length; i++) {
+      metrics[m._changed[i]] = m.get(m._changed[i]);
+    }
+  
+    // response handler
+    callback = function(error, result) {
+      if(!error) self.load(self.METRICS);
+    }
+  
+    dispatch = XM.Dispatch.create({
+      className: 'XM.Session',
+      functionName: 'commitMetrics',
+      parameters: metrics,
+      target: self,
+      action: callback
+    });
+
+    store.dispatch(dispatch);
+    
+  },
+  
   init: function() {
     arguments.callee.base.apply(this, arguments);
     XM.DataSource.ready(this.load, this);  
-  }
+  },
   
 });
 
