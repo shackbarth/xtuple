@@ -1,12 +1,12 @@
-select xt.install_js('XM','CRM','xtuple', $$
+select xt.install_js('XM','crm','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
-  XM.CRM = {};
+  XM.Crm = {};
 
-  XM.CRM.isDispatchable = true,
+  XM.Crm.isDispatchable = true,
 
-  XM.CRM.options = [
+  XM.Crm.options = [
     "NextCRMAccountNumber",
     "NextIncidentNumber",
     "CRMAccountNumberGeneration",
@@ -27,13 +27,13 @@ select xt.install_js('XM','CRM','xtuple', $$
 
   /* 
   Update CRM configuration settings. Only valid options as defined in the array
-  XM.CRM.options will be processed.
+  XM.Crm.options will be processed.
 
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.CRM.updateSettings = function(settings) {
-    var sql, options = XM.CRM.options.slice(0),
+  XM.Crm.updateSettings = function(settings) {
+    var sql, options = XM.Crm.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */
@@ -84,15 +84,14 @@ select xt.install_js('XM','CRM','xtuple', $$
       executeSql(sql, [settings['IncidentNewColor'], 'L'])
     }
     options.remove('IncidentClosedColor');
-  print(NOTICE, 'array', options);
-    /* update remaining options as metrics */
 
-    /* first make sure we pass an abject that only has valid metric options for this type */
+    /* update remaining options as metrics
+       first make sure we pass an object that only has valid metric options for this type */
     for(var i = 0; i < options.length; i++) {
       var prop = options[i];
       if(settings[prop]) metrics[prop] = settings[prop];
     }
-    
+ 
     return data.commitMetrics(metrics);
   }
 

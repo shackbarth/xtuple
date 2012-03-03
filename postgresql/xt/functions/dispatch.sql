@@ -92,7 +92,7 @@ select xt.dispatch($${"requestType":"dispatch",
                           }$$);  
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.CRM",
+                          "className":"XM.Crm",
                           "functionName":"updateSettings",
                           "parameters":{ 
                             "NextCRMAccountNumber": 1,
@@ -112,5 +112,30 @@ select xt.dispatch($${"requestType":"dispatch",
                             "IncidentResolvedColor": "green",
                             "IncidentClosedColor": "grey"
                            }
-                          }$$);            
+                          }$$);    
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Receivables",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "NextARMemoNumber": 100,
+                            "NextCashRcptNumber": 2000,
+                            "HideApplyToBalance": true,
+                            "EnableCustomerDeposits": false,
+                            "CreditTaxDiscount": false,
+                            "remitto_name": "Wacky Widgets, Inc.",
+                            "remitto_address1": "123 Azalea Court",
+                            "remitto_address2": "Unit 201",
+                            "remitto_address3": "",
+                            "remitto_city": "Murfreesboro",
+                            "remitto_state": "TN",
+                            "remitto_zipcode": "76811",
+                            "remitto_country": "United States",
+                            "remitto_phone": "478-112-8989",
+                            "DefaultAutoCreditWarnGraceDays": 20,
+                            "DefaultARIncidentStatus": 1,
+                            "AutoCloseARIncident": true,
+                            "RecurringInvoiceBuffer": 10
+                           }
+                          }$$);          
 */
