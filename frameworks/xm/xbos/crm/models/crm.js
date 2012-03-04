@@ -19,6 +19,8 @@ XM.Crm = XM.Object.extend( XM.Settings,
 
   className: 'XM.Crm',
   
+  privilege: 'ConfigureCRM',
+  
   /**
     @type Number
   */
@@ -47,6 +49,13 @@ XM.Crm = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */
+  autoCreateProjectsForOrdersIsEnabled: function() {
+    return this.get('useProjects');
+  }.property('useProjects').cacheable(),
+  
+  /**
+    @type Boolean
+  */
   opportunityChangeLogBinding: '*settings.OpportunityChangeLog',
   
   /**
@@ -58,6 +67,17 @@ XM.Crm = XM.Object.extend( XM.Settings,
     @type Boolean
   */
   strictAddressCountryBinding: '*settings.StrictAddressCountry',
+  
+  /**
+    @type Boolean
+  */
+  strictAddressCountryIsEnabled: function() {
+    var isStrict = this.get('strictAddressCountry'),
+        isChanged = XM.session.getPath('settings.changed').indexOf('strictAddressCountry') > 0;
+    
+    // strict setting is irreversible once turned on and committed
+    return isStrict && !isChanged ? false : true;
+  }.property('strictAddressCountry').cacheable(),
 
   /**
     @type Boolean
@@ -97,7 +117,23 @@ XM.Crm = XM.Object.extend( XM.Settings,
   /**
     @type String
   */
-  incidentClosedColorBinding: '*settings.IncidentClosedColor'
+  incidentClosedColorBinding: '*settings.IncidentClosedColor',
+  
+  // ..........................................................
+  // OBSERVERS
+  //
+  
+  useProjectsDidChange: function() {
+    if(!this.get('useProjects')) this.set('autoCreateProjectsForOrders', false);
+  }.observes('useProjects', 'autoCreateProjectsForOrders'),
+  
+  strictAddressCountryDidChange: function() {
+    var isStrict = this.get('strictAddressCountry'),
+        isChanged = XM.session.getPath('settings.changed').indexOf('strictAddressCountry') > 0;
+    
+    // strict setting is irreversible once turned on and committed
+    if(isStrict && !isChanged) this.set('strictAddressCountry', true);
+  }.observes('strictAddressCountry')
   
 }) ;
 
