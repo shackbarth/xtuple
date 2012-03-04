@@ -41,11 +41,11 @@ select xt.install_js('XM','receivables','receivables', $$
             + " where (orderseq_name=$1)",
         cnum = {}, inum = {}, ret = [];
 
-    cnum.metric = 'NextARMemoNumber';
+    cnum.setting = 'NextARMemoNumber';
     cnum.value = executeSql(sql, ['ARMemoNumber'])[0].value;
     ret.push(cnum);
 
-    inum.metric = 'NextCashRcptNumber';
+    inum.setting = 'NextCashRcptNumber';
     inum.value = executeSql(sql, ['CashRcptNumber'])[0].value;
     ret.push(inum);
 

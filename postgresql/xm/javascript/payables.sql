@@ -35,11 +35,11 @@ select xt.install_js('XM','payables','payables', $$
             + " where (orderseq_name=$1)",
         cnum = {}, inum = {}, ret = [];
 
-    cnum.metric = 'NextAPMemoNumber';
+    cnum.setting = 'NextAPMemoNumber';
     cnum.value = executeSql(sql, ['APMemoNumber'])[0].value;
     ret.push(cnum);
 
-    inum.metric = 'NextACHBatchNumber';
+    inum.setting = 'NextACHBatchNumber';
     inum.value = executeSql(sql, ['ACHBatch'])[0].value;
     ret.push(inum);
 

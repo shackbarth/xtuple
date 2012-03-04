@@ -46,11 +46,11 @@ select xt.install_js('XM','crm','crm', $$
             + " where (orderseq_name=$1)",
         cnum = {}, inum = {}, ret = [], qry;
 
-    cnum.metric = 'NextCRMAccountNumber';
+    cnum.setting = 'NextCRMAccountNumber';
     cnum.value = executeSql(sql, ['CRMAccountNumber'])[0].value;
     ret.push(cnum);
 
-    inum.metric = 'NextIncidentNumber';
+    inum.setting = 'NextIncidentNumber';
     inum.value = executeSql(sql, ['IncidentNumber'])[0].value;
     ret.push(inum);
 
@@ -62,7 +62,7 @@ select xt.install_js('XM','crm','crm', $$
 
     while(colors.length) {
       var col = {};
-      col.metric = colors.pop(),
+      col.setting = colors.pop(),
       col.value = qry.pop().color;        
       ret.push(col);
     }

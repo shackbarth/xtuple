@@ -582,13 +582,13 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Returns a array of key value pairs of metrics that correspond with an array of passed keys.
+    Returns a array of key value pairs of metric settings that correspond with an array of passed keys.
     
     @param {Array} array of metric names
     @returns {Array} 
     */
     retrieveMetrics: function(keys) {
-      var sql = 'select metric_name as metric, metric_value as value '
+      var sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
               + 'where metric_name in ({keys})'; 
 
