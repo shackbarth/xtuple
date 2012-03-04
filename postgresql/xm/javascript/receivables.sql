@@ -61,7 +61,7 @@ select xt.install_js('XM','receivables','receivables', $$
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.Receivables.updateSettings = function(settings) {
+  XM.Receivables.commitSettings = function(settings) {
     var sql, options = XM.Receivables.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 

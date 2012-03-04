@@ -37,7 +37,7 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.DatabaseInformation.updateSettings = function(settings) {
+  XM.DatabaseInformation.commitSettings = function(settings) {
     var options = XM.DatabaseInformation.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 

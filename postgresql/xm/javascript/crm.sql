@@ -79,7 +79,7 @@ select xt.install_js('XM','crm','crm', $$
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.Crm.updateSettings = function(settings) {
+  XM.Crm.commitSettings = function(settings) {
     var sql, options = XM.Crm.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 

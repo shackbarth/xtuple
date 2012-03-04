@@ -55,7 +55,7 @@ select xt.install_js('XM','payables','payables', $$
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.Payables.updateSettings = function(settings) {
+  XM.Payables.commitSettings = function(settings) {
     var sql, options = XM.Payables.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 

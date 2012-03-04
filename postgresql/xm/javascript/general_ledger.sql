@@ -42,7 +42,7 @@ select xt.install_js('XM','generalLedger','generalLedger', $$
   @param {Object} settings
   @returns {Boolean}
   */
-  XM.GeneralLedger.updateSettings = function(settings) {
+  XM.GeneralLedger.commitSettings = function(settings) {
     var sql, options = XM.GeneralLedger.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
