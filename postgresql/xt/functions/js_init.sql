@@ -9,25 +9,46 @@ create or replace function xt.js_init() returns void as $$
   // METHODS
   //
 
-  /* extend array type to check for an existing value */
-  Array.prototype.contains = function(obj) {
+  /**
+  Return whether an array contains an item.
+
+  @param {Any}
+  @returns Boolean
+  */
+  Array.prototype.contains = function(item) {
     var i = this.length;
     while (i--) {
-      if (this[i] === obj) {
+      if (this[i] === item) {
         return true;
       }
     }
     return false;
   }
 
-  Array.prototype.indexOf = function(obj) {
+  /**
+  Return the index of an item in an array 
+
+  @param {Any}
+  @returns Any
+  */
+  Array.prototype.indexOf = function(item) {
     var i = this.length;
     while (i--) {
-      if (this[i] === obj) {
+      if (this[i] === item) {
         return i;
       }
     }
     return -1;
+  }
+
+  /**
+  Remove an item from an array and return it. 
+
+  @param {Any}
+  @returns Any
+  */
+  Array.prototype.remove = function(item) {
+    return this.contains(item) ? this.splice(this.indexOf(item),1) : false;
   }
 
   /* Returns an the first item in an array with a property matching the passed value.  
@@ -137,6 +158,36 @@ create or replace function xt.js_init() returns void as $$
     else if(typeof obj === "string") return obj.decamelize();
 
     return ret;
+  }
+
+  /**
+  Register an action call that will yield an array of key value pairs of settings. This
+  provides a way to develop a function call that can use these registrations to return
+  all the settings in the system.
+
+  @param {String} name space
+  @param {String} type name
+  @param {String} action name
+  */
+  XT.registerSettings = function(nameSpace, type, action) {
+    var reg = {};
+
+    if(!this._settingsreg) this._settingsreg = [];
+
+    reg.nameSpace = nameSpace,
+    reg.type = type,
+    reg.action = action;
+
+    this._settingsreg.push(reg);
+  };
+
+  /**
+  Returns an array of settings registrations.
+
+  @returns Array
+  */
+  XT.settingsRegistrations = function() {
+    return this._settingsreg ? this._settingsreg : [];
   }
 
   // ..........................................................

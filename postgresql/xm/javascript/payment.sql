@@ -28,15 +28,19 @@
       case -10:
         err = "Cannot post this Check because it has already "
               + "been posted.";
+        break;
       case -11:
         err = "Cannot post this Check because the recipient "
               + "type is not valid.";
+        break;
       case -12:
         err = "Cannot post this Check because the Expense "
               + "Category could not be found.";
+        break;
       case -13:
         err = "Cannot post this Check because the G/L Account "
               + "against which it is to be posted is not valid.";
+        break;
       default:
         return ret;
     }
@@ -66,15 +70,19 @@
       case -10:
         err = "Cannot post this Check because it has already "
               + "been posted.";
+        break;
       case -11:
         err = "Cannot post this Check because the recipient "
               + "type is not valid.";
+        break;
       case -12:
         err = "Cannot post this Check because the Expense "
               + "Category could not be found.";
+        break;
       case -13:
         err = "Cannot post this Check because the G/L Account "
               + "against which it is to be posted is not valid.";
+        break;
       default:
         return ret;
     }
@@ -101,7 +109,7 @@
                     + "from checkhead "
                     + "where checkhead_id = $1 as result;", [paymentId])[0].result) {
                     
-        ret = executeSql("select voidpostedcheck($1, fetchjournalnumber('AP-CK'), coalesce($2, date)) from xm.payment where guid = $1 as result;", [paymentId,distributionDate])[0].result;
+        ret = executeSql("select voidpostedcheck($1, fetchjournalnumber('AP-CK'), coalesce($2, checkhead_checkdate)) from checkhead where checkhead_id = $1 as result;", [paymentId,distributionDate])[0].result;
       }
       else {
         ret = executeSql("select voidcheck($1) as result;", [paymentId])[0].result;
@@ -115,7 +123,8 @@
               + "been voided, posted, or replaced, or it has been "
               + "transmitted electronically. If this check has been "
               + "posted, try Void Posted Check with the Check Register "
-              + "window."
+              + "window.";
+        break;
       default:
         return ret;
     }
@@ -155,6 +164,7 @@
               + "transmitted electronically. If this check has been "
               + "posted, try Void Posted Check with the Check Register "
               + "window."
+        break;
       default:
         return ret;
     }

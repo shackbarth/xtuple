@@ -44,13 +44,6 @@
       }
     },
     {
-      "name": "isCleared",
-      "attr": {
-        "type": "Boolean",
-        "column": "bankrecitem_cleared"
-      }
-    },
-    {
       "name": "amount",
       "attr": {
         "type": "Number",

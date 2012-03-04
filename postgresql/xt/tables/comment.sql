@@ -2,7 +2,7 @@
 
 -- remove old trigger if any
 
-select dropIfExists('TRIGGER', 'comment_did_change', 'xt');
+select dropIfExists('TRIGGER', 'comment_did_change');
 
 -- create trigger
 

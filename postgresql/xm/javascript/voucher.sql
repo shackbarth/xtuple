@@ -33,6 +33,7 @@
               + "with an A/P Account Number. Because of this, "
               + "G/L Transactions cannot be posted for this "
               +"Voucher.";
+        break;
       default:
         return ret;
     }
@@ -67,6 +68,7 @@
               + "with an A/P Account Number. Because of this, "
               + "G/L Transactions cannot be posted for this "
               +"Voucher.";
+        break;
       default:
         return ret;
     }
