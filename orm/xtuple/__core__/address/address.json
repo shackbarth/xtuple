@@ -97,6 +97,7 @@
     {
       "name": "comments",
       "toMany": {
+        "isNested": true,
         "type": "AddressComment",
         "column": "addr_id",
         "inverse": "address",
@@ -118,6 +119,7 @@
     {
       "name": "characteristics",
       "toMany": {
+        "isNested": true,
         "type": "AddressCharacteristic",
         "column": "addr_id",
         "inverse": "address"
