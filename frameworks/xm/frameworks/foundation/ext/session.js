@@ -15,7 +15,7 @@ An object that contains user login information for quick access at run time.
 
 XM.session = SC.Object.create({
 
-  METRICS:              0x0100,
+  SETTINGS:             0x0100,
   PRIVILEGES:           0x0200,
   LOCALE:               0x0400,
   ALL:                  0x0100 | 0x0200 | 0x0400,
@@ -25,8 +25,8 @@ XM.session = SC.Object.create({
   store: XM.store,
 
   /**
-  Loads session objects for metrics, preferences and privileges into local memory.
-  Types XM.session.METRICS, XM.session.LOCALE or types XM.session.PRIVILEGES
+  Loads session objects for settings, preferences and privileges into local memory.
+  Types XM.session.SETTINGS, XM.session.LOCALE or types XM.session.PRIVILEGES
   can be passed as bitwise operators. If no arguments are passed the default is
   XM.session.ALL which will load all session objects.
   */
@@ -50,13 +50,13 @@ XM.session = SC.Object.create({
       store.dispatch(dispatch);
     }
 
-    if(types & this.METRICS) {
+    if(types & this.SETTINGS) {
       var dispatch,
-          callback = self.didFetchMetrics,
+          callback = self.didFetchSettings,
       
       dispatch = XM.Dispatch.create({
         className: 'XM.Session',
-        functionName: 'metrics',
+        functionName: 'settings',
         target: self,
         action: callback
       });
@@ -81,9 +81,9 @@ XM.session = SC.Object.create({
     return YES;
   },
 
-  didFetchMetrics: function(error, response) {
-    // Create an object for metrics
-    var metrics = SC.Object.create({
+  didFetchSettings: function(error, response) {
+    // Create an object for settings
+    var settings = SC.Object.create({
       // Return false if property not found
       get: function(key) {
         for(prop in this) {
@@ -103,21 +103,15 @@ XM.session = SC.Object.create({
       
     });
 
-    // Loop through the response and set a metric for each found
+    // Loop through the response and set a setting for each found
     response.forEach(function(item) {
-      var value = item.value
-
-      // Cast to boolean where appropriate
-      if(value === 't') value = YES;
-      else if(value == 'f') value = NO;
-
-      metrics.set(item.metric, value);
+      settings.set(item.setting, item.value);
     });
 
-    metrics._changed = [];
+    settings._changed = [];
     
-    // Attach the metrics to the session object
-    this.set('metrics', metrics);
+    // Attach the settings to the session object
+    this.set('settings', settings);
 
     return YES
   },
@@ -152,35 +146,6 @@ XM.session = SC.Object.create({
     this.set('locale', response);
 
     return YES
-  },
-  
-  commitMetrics: function() {
-    var m = this.get('metrics'),
-        self = this, metrics = {}, 
-        dispatch, store = this.get('store');
-    
-    if(!m || !m._changed || !m._changed.length) return;
-    
-    // build list of metrics that changed
-    for(var i = 0; i < m._changed.length; i++) {
-      metrics[m._changed[i]] = m.get(m._changed[i]);
-    }
-  
-    // response handler
-    callback = function(error, result) {
-      if(!error) self.load(self.METRICS);
-    }
-  
-    dispatch = XM.Dispatch.create({
-      className: 'XM.Session',
-      functionName: 'commitMetrics',
-      parameters: metrics,
-      target: self,
-      action: callback
-    });
-
-    store.dispatch(dispatch);
-    
   },
   
   init: function() {
