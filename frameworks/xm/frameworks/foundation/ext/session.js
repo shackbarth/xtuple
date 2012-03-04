@@ -83,32 +83,33 @@ XM.session = SC.Object.create({
 
   didFetchSettings: function(error, response) {
     // Create an object for settings
-    var settings = SC.Object.create({
-      // Return false if property not found
-      get: function(key) {
-        for(prop in this) {
-          if(prop === key) return this[prop];
-        }
+    var that = this,
+        settings = SC.Object.create({
+          // Return false if property not found
+          get: function(key) {
+            for(prop in this) {
+              if(prop === key) return this[prop];
+            }
 
-        return NO;
-      },
+            return NO;
+          },
+          
+          set: function(key, value) {
+            this.get('changed').push(key);
+            
+            arguments.callee.base.apply(this, arguments);
+          },
       
-      set: function(key, value) {
-        this._changed.push(key);
-        
-        arguments.callee.base.apply(this, arguments);
-      },
-      
-      _changed: []
-      
-    });
+          changed: []
+          
+        });
 
     // Loop through the response and set a setting for each found
     response.forEach(function(item) {
       settings.set(item.setting, item.value);
     });
 
-    settings._changed = [];
+    settings.set('changed', []);
     
     // Attach the settings to the session object
     this.set('settings', settings);
