@@ -20,7 +20,7 @@ XM.Record = SC.Record.extend(
   /*
   The full path name of this class. Should be set in every subclass.
   
-  @type string
+  @type String
   */
   className: 'XM.Record',
   
@@ -28,7 +28,7 @@ XM.Record = SC.Record.extend(
   The data type name. The same as the class name without the namespace.
   Used by nested records.
   
-  @type string
+  @type String
   */
   type: SC.Record.attr(String, {
     defaultValue: function() {
@@ -38,12 +38,18 @@ XM.Record = SC.Record.extend(
 
   /**
   A hash structure that defines data access.
+  
+  @property
+  @type Hash
   */
   privileges: null,
   
   /**
   Indicates whether the record is in a valid state to be saved. Will be false if any
   errors exist in validateErrors.
+  
+  @property
+  @type Boolean
   */
   isValid: function() {
     return this.getPath('validateErrors.length') === 0;
@@ -146,6 +152,10 @@ XM.Record = SC.Record.extend(
         key = 'dataState',
         value = 'error';
 
+    // cache the current attributes of the record for later reference if they have changed
+    if (status === SC.Record.READY_CLEAN) this._attrCache = this.get('attributes');
+    
+    // update data state used for server side evaluation
     if (status === SC.Record.READY_NEW)            value = 'created';
     else if (status === SC.Record.READY_CLEAN)     value = 'read';
     else if (status === SC.Record.DESTROYED_DIRTY) value = 'deleted';
@@ -204,114 +214,82 @@ XM.Record.setup = function() {
 Use this function to find out whether a user can create records before instantiating one.
 */
 XM.Record.canCreate = function() {
-  var createPrivilege = this.prototype.createPrivilege,
-  result = NO;
+  var privileges = this.prototype.privileges,
+      sessionPrivs = XM.session.privileges,
+      isGranted = false;
+      
+  if(sessionPrivs) {
+    isGranted = privileges.all && privileges.all.create && sessionPrivs.get(privileges.all.create) ? true : 
+               (privileges.personal && privileges.personal.create && sessionPrivs.get(privileges.personal.create) ? true : false);
+  
+  }
 
-  if(createPrivilege === null) return YES;
-
-  if(XM.Session.privileges === null) return NO;
-
-  if(SC.typeOf(createPrivilege) === SC.T_ARRAY) {
-    createPrivilege.some(function(privilege) {
-      result = XM.Session.privileges.get(privilege);
-    });
-  } else result = XM.Session.privileges.get(createPrivilege);
-
-  return result;
+  return isGranted;
 };
 
 /**
 Use this function to find out whether a user can read this record type before any have been loaded.
 */
 XM.Record.canRead = function() {
-  var readPrivilege = this.prototype.readPrivilege,
-      updatePrivilege = this.prototype.updatePrivilege,
-      privileges = [], result = NO;
+  var privileges = this.prototype.privileges,
+      sessionPrivs = XM.session.privileges,
+      isGranted = false;
+      
+  if(sessionPrivs) {
+    isGranted = privileges.all && privileges.all.read && sessionPrivs.get(privileges.all.read) ? true : 
+               (privileges.all && privileges.all.update && sessionPrivs.get(privileges.all.update) ? true :
+               (privileges.personal && privileges.personal.read && sessionPrivs.get(privileges.personal.read) ? true :
+               (privileges.personal && privileges.personal.update && sessionPrivs.get(privileges.personal.update) ? true : false)));
+  
+  }
 
-  if(readPrivilege === null  && updatePrivilege === null) return YES;
-
-  if(XM.Session.privileges === null) return NO;
-
-  // Push read privilege(s) into the array
-  if(SC.typeOf(readPrivilege) === SC.T_ARRAY) {
-    readPrivilege.forEach(function(privilege) {
-      privileges.push(privilege);
-    });
-  } else privileges.push(readPrivilege);
-
-  // Push update privilege(s) into the array
-  if(SC.typeOf(updatePrivilege) === SC.T_ARRAY) {
-    updatePrivilege.forEach(function(privilege) {
-      privileges.push(privilege);
-    });
-  } else privileges.push(updatePrivilege);
-
-  // Return YES if any privileges are true
-  result = privileges.some(function(privilege) {
-    return XM.Session.privileges.get(privilege);
-  });
-
-  return result;
+  return isGranted;
 };
 
 /**
-Returns whether a user has access to update this record type.
-By default it is based on the updatePrivilege property. A record
-instance may be passed in to check for row level privileges, however
-the base class does not implement any row level checking. That
-functionality must be implemented on subclasses as required.
+Returns whether a user has access to update a record of this type. If a record is passed that involves
+personal privileges, it will validate whether that particular record is updatable.
 */
 XM.Record.canUpdate = function(record) {
-  var updatePrivilege = this.prototype.updatePrivilege,
-  privileges = [], result = NO;
-
-  if(updatePrivilege === null) return YES;
-
-  if(XM.Session.privileges === null) return NO;
-
-  // Push update privilege(s) into the array
-  if(SC.typeOf(updatePrivilege) === SC.T_ARRAY) {
-    updatePrivilege.forEach(function(privilege) {
-      privileges.push(privilege);
-    });
-  } else privileges.push(updatePrivilege);
-
-  // Return YES if any privileges are true
-  result = privileges.some(function(privilege) {
-    return XM.Session.privileges.get(privilege);
-  });
-
-  return result;
+  return XM.Record._canDo.call(this, 'update', record);
 };
 
 /**
-Returns whether a user has access to delete this record type.
-By default it is based on the updatePrivilege property. A record
-instance may be passed in to check for row level privileges, however
-the base class does not implement any row level checking. That
-functionality must be implemented on subclasses as required.
+Returns whether a user has access to delete a record of this type. If a record is passed that involves
+personal privileges, it will validate whether that particular record is deletable.
 */
 XM.Record.canDelete = function(record) {
-  var deletePrivilege = this.prototype.deletePrivilege,
-      privileges = [], result = NO;
+  return XM.Record._canDo.call(this, 'delete', record);
+};
 
-  if(deletePrivilege === null) return YES;
+/** @private */
+XM.Record._canDo = function(action, record) {
+  var privileges = this.prototype.privileges,
+      sessionPrivs = XM.session.privileges,
+      isGrantedAll = false,
+      isGrantedPersonal = false,
+      userName = XM.DataSource.session.userName;
 
-  if(XM.Session.privileges === null) return NO;
+  if(sessionPrivs) {
+    isGrantedAll = privileges.all && privileges.all[action] ? sessionPrivs.get(privileges.all[action]) : false;
+               
+    isGrantedPersonal = isGrantedAll ? true : 
+                       (privileges.personal && privileges.personal[action] ? sessionPrivs.get(privileges.personal[action]) : false);
+  
+  }
+  
+  // if only personal privileges, check the original attribute cache to see if this was it was updatable
+  if(!isGrantedAll && isGrantedPersonal && record && this._attrCache) {
+    var i = 0, props = privileges.personal && privileges.personal.properties ? privileges.personal.properties : [];
+    
+    isGrantedPersonal = false;
+    while(!isGrantedPersonal && i < props.length) {
+      isGrantedPersonal = this._attrCache[prop[i]] === XM.DataSource.session.userName;
+      i++;
+    }
+  }
 
-  // Push delete privilege(s) into the array
-  if(SC.typeOf(deletePrivilege) === SC.T_ARRAY) {
-    deletePrivilege.forEach(function(privilege) {
-      privileges.push(privilege);
-    });
-  } else privileges.push(updatePrivilege);
-
-  // Return YES if any privileges are true
-  result = privileges.some(function(privilege) {
-    return XM.Session.privileges.get(privilege);
-  });
-
-  return result;
+  return isGrantedAll || isGrantedPersonal;
 };
 
 /**
