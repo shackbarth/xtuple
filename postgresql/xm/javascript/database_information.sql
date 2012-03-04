@@ -1,12 +1,12 @@
-select xt.install_js('XM','DatabaseInfo','xtuple', $$
+select xt.install_js('XM','DatabaseInformation','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
-  XM.DatabaseInfo = {};
+  XM.DatabaseInformation = {};
 
-  XM.DatabaseInfo.isDispatchable = true,
+  XM.DatabaseInformation.isDispatchable = true,
 
-  XM.DatabaseInfo.options = [
+  XM.DatabaseInformation.options = [
     "Application",
     "RegistrationKey",
     "DatabaseName",
@@ -23,8 +23,8 @@ select xt.install_js('XM','DatabaseInfo','xtuple', $$
 
   @returns {Object}
   */
-  XM.DatabaseInfo.settings = function() {
-    var keys = XM.DatabaseInfo.options,
+  XM.DatabaseInformation.settings = function() {
+    var keys = XM.DatabaseInformation.options,
         data = Object.create(XT.Data);
     
     return data.retrieveMetrics(keys);
@@ -37,8 +37,8 @@ select xt.install_js('XM','DatabaseInfo','xtuple', $$
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.DatabaseInfo.updateSettings = function(settings) {
-    var options = XM.DatabaseInfo.options.slice(0),
+  XM.DatabaseInformation.updateSettings = function(settings) {
+    var options = XM.DatabaseInformation.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */
@@ -59,7 +59,7 @@ select xt.install_js('XM','DatabaseInfo','xtuple', $$
     return data.commitMetrics(metrics);
   }
 
-  XT.registerSettings('XM','DatabaseInfo','settings');
+  XT.registerSettings('XM','DatabaseInformation','settings');
 
 $$ );
 
