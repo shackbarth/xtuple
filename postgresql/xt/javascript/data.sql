@@ -590,13 +590,22 @@ select xt.install_js('XT','Data','xtuple', $$
     retrieveMetrics: function(keys) {
       var sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
-              + 'where metric_name in ({keys})'; 
+              + 'where metric_name in ({keys})', ret; 
 
       for(var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
 
       sql = sql.replace(/{keys}/, keys.join(','));
- 
-      return executeSql(sql);
+
+      ret =  executeSql(sql);
+
+      /* recast where applicable */
+      for(var i = 0; i < ret.length; i++) {
+        if(ret[i].value === 't') ret[i].value = true;
+        else if(ret[i].value === 'f') ret[i].value = false
+        else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
+      }
+
+      return ret;
     },
 
     /** 

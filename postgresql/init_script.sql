@@ -83,6 +83,7 @@
 \i xm/javascript/payment.sql;
 \i xm/javascript/receivables.sql;
 \i xm/javascript/session.sql;
+\i xm/javascript/database_info.sql;
 --\i xm/javascript/todo.sql;
 \i xm/javascript/voucher.sql;
 -- [ END ] xm
