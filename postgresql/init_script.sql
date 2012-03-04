@@ -72,9 +72,12 @@
 
 -- xm/javascript
 \i xm/javascript/address.sql;
+\i xm/javascript/cash_receipt.sql;
+\i xm/javascript/credit_memo.sql;
 \i xm/javascript/crm.sql;
 \i xm/javascript/general_ledger.sql;
 \i xm/javascript/incident.sql;
+\i xm/javascript/invoice.sql;
 \i xm/javascript/payable.sql;
 \i xm/javascript/payables.sql;
 \i xm/javascript/receivables.sql;
