@@ -48,6 +48,8 @@ create or replace function xt.sc_model_gen(class_name text, is_superclass boolea
              +  "// ==========================================================================\n"
              +  "/*globals XM */\n"
              + "\n"
+             + "sc_require('xbos/__generated__/_{fileName}');\n"
+             + "\n"
              + "/** \n"
              + "  @class\n"
              + "\n"
@@ -134,7 +136,8 @@ create or replace function xt.sc_model_gen(class_name text, is_superclass boolea
              .replace(/{className2}/g, class_name)
              .replace(/{nestedRecordNamespace}/, nestedRecordNamespace)
              .replace(/{privileges}/, privileges)
-             .replace(/{attributes}/, attributes.join(',\n'));
+             .replace(/{attributes}/, attributes.join(',\n'))
+             .replace(/{fileName}/, class_name.afterDot().decamelize());
  
   return body;
 
