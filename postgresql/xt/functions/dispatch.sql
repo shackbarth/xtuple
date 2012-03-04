@@ -66,7 +66,7 @@ select xt.dispatch($${"requestType":"dispatch",
 
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Session",
-                          "functionName":"metrics"
+                          "functionName":"settings"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",

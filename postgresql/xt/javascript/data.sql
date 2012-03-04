@@ -581,6 +581,24 @@ select xt.install_js('XT','Data','xtuple', $$
       return ret;
     },
 
+    /**
+    Returns a array of key value pairs of metrics that correspond with an array of passed keys.
+    
+    @param {Array} array of metric names
+    @returns {Array} 
+    */
+    retrieveMetrics: function(keys) {
+      var sql = 'select metric_name as metric, metric_value as value '
+              + 'from metric '
+              + 'where metric_name in ({keys})'; 
+
+      for(var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
+
+      sql = sql.replace(/{keys}/, keys.join(','));
+ 
+      return executeSql(sql);
+    },
+
     /** 
     Convert a record object to PostgresSQL row formatted string.
 

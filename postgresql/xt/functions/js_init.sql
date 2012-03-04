@@ -160,6 +160,36 @@ create or replace function xt.js_init() returns void as $$
     return ret;
   }
 
+  /**
+  Register an action call that will yield an array of key value pairs of settings. This
+  provides a way to develop a function call that can use these registrations to return
+  all the settings in the system.
+
+  @param {String} name space
+  @param {String} type name
+  @param {String} action name
+  */
+  XT.registerSettings = function(nameSpace, type, action) {
+    var reg = {};
+
+    if(!this._settingsreg) this._settingsreg = [];
+
+    reg.nameSpace = nameSpace,
+    reg.type = type,
+    reg.action = action;
+
+    this._settingsreg.push(reg);
+  };
+
+  /**
+  Returns an array of settings registrations.
+
+  @returns Array
+  */
+  XT.settingsRegistrations = function() {
+    return this._settingsreg ? this._settingsreg : [];
+  }
+
   // ..........................................................
   // PROCESS
   //

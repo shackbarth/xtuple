@@ -24,11 +24,23 @@ select xt.install_js('XM','generalLedger','generalLedger', $$
   ]
 
   /* 
+  Return GeneralLedger configuration settings.
+
+  @returns {Object}
+  */
+  XM.GeneralLedger.settings = function() {
+    var keys = XM.GeneralLedger.options,
+        data = Object.create(XT.Data);
+    
+    return data.retrieveMetrics(keys);
+  }
+
+  /* 
   Update GeneralLedger configuration settings. Only valid options as defined in the array
   XM.GeneralLedger.options will be processed.
 
-   @param {Object} settings
-   @returns {Boolean}
+  @param {Object} settings
+  @returns {Boolean}
   */
   XM.GeneralLedger.updateSettings = function(settings) {
     var sql, options = XM.GeneralLedger.options.slice(0),
@@ -46,6 +58,8 @@ select xt.install_js('XM','generalLedger','generalLedger', $$
  
     return data.commitMetrics(metrics);
   }
+
+  XT.registerSettings('XM','GeneralLedger','settings');
 
 $$ );
 

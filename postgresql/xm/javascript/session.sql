@@ -75,14 +75,22 @@ select xt.install_js('XM','Session','xtuple', $$
   }
 
   /** 
-  Returns a hash of key, value pairs of metrics and their settings for the effective user.
+  Returns a hash of key, value pairs of settings and values for the effective user.
 
   @returns {hash}
   */ 
-  XM.Session.metrics = function() {
-    var rec = executeSql( 'select metric_name as metric, metric_value as value from metric' );
-    
-    return rec.length ? JSON.stringify (rec) : '{}';
+  XM.Session.settings = function() {
+    var settings = [], regs = XT.settingsRegistrations();
+
+    for(var i = 0; i < regs.length; i++) {
+      var nameSpace = regs[i].nameSpace,
+          type = regs[i].type,
+          action = regs[i].action;
+  
+      settings = settings.concat(this[nameSpace][type][action]()); 
+    }
+
+    return JSON.stringify(settings);
   }
 
   /** 

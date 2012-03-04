@@ -26,6 +26,53 @@ select xt.install_js('XM','crm','crm', $$
   ]
 
   /* 
+  Return Crm configuration settings.
+
+  @returns {Object}
+  */
+  XM.Crm.settings = function() {
+    var keys = XM.Crm.options,
+        data = Object.create(XT.Data),
+        colors = [
+          "IncidentNewColor",
+          "IncidentFeedbackColor",
+          "IncidentConfirmedColor",
+          "IncidentAssignedColor",
+          "IncidentResolvedColor",
+          "IncidentClosedColor"
+        ],
+        sql = "select orderseq_number as value "
+            + "from orderseq"
+            + " where (orderseq_name=$1)",
+        cnum = {}, inum = {}, ret = [], qry;
+
+    cnum.metric = 'NextCRMAccountNumber';
+    cnum.value = executeSql(sql, ['CRMAccountNumber'])[0].value;
+    ret.push(cnum);
+
+    inum.metric = 'NextIncidentNumber';
+    inum.value = executeSql(sql, ['IncidentNumber'])[0].value;
+    ret.push(inum);
+
+    sql = "select status_color as color "
+        + "from status "
+        + " where (status_type='INCDT') "
+        + "order by status_seq";
+    qry = executeSql(sql);
+
+    while(colors.length) {
+      var col = {};
+      col.metric = colors.pop(),
+      col.value = qry.pop().color;        
+      ret.push(col);
+    }
+
+    ret = ret.concat(data.retrieveMetrics(keys));
+    
+    return ret;
+  }
+
+  /* 
   Update CRM configuration settings. Only valid options as defined in the array
   XM.Crm.options will be processed.
 
@@ -94,6 +141,8 @@ select xt.install_js('XM','crm','crm', $$
  
     return data.commitMetrics(metrics);
   }
+
+  XT.registerSettings('XM','Crm','settings');
 
 $$ );
 

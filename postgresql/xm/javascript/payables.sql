@@ -23,6 +23,32 @@ select xt.install_js('XM','payables','payables', $$
   ]
 
   /* 
+  Return Payables configuration settings.
+
+  @returns {Object}
+  */
+  XM.Payables.settings = function() {
+    var keys = XM.Payables.options,
+        data = Object.create(XT.Data),
+        sql = "select orderseq_number as value "
+            + "from orderseq"
+            + " where (orderseq_name=$1)",
+        cnum = {}, inum = {}, ret = [];
+
+    cnum.metric = 'NextAPMemoNumber';
+    cnum.value = executeSql(sql, ['APMemoNumber'])[0].value;
+    ret.push(cnum);
+
+    inum.metric = 'NextACHBatchNumber';
+    inum.value = executeSql(sql, ['ACHBatch'])[0].value;
+    ret.push(inum);
+
+    ret = ret.concat(data.retrieveMetrics(keys));
+    
+    return ret;
+  }
+
+  /* 
   Update Payables configuration settings. Only valid options as defined in the array
   XM.Payables.options will be processed.
 
@@ -56,6 +82,8 @@ select xt.install_js('XM','payables','payables', $$
  
     return data.commitMetrics(metrics);
   }
+
+  XT.registerSettings('XM','Payables','settings');
 
 $$ );
 

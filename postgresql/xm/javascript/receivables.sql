@@ -29,6 +29,32 @@ select xt.install_js('XM','receivables','receivables', $$
   ]
 
   /* 
+  Return Receivables configuration settings.
+
+  @returns {Object}
+  */
+  XM.Receivables.settings = function() {
+    var keys = XM.Receivables.options,
+        data = Object.create(XT.Data),
+        sql = "select orderseq_number as value "
+            + "from orderseq"
+            + " where (orderseq_name=$1)",
+        cnum = {}, inum = {}, ret = [];
+
+    cnum.metric = 'NextARMemoNumber';
+    cnum.value = executeSql(sql, ['ARMemoNumber'])[0].value;
+    ret.push(cnum);
+
+    inum.metric = 'NextCashRcptNumber';
+    inum.value = executeSql(sql, ['CashRcptNumber'])[0].value;
+    ret.push(inum);
+
+    ret = ret.concat(data.retrieveMetrics(keys));
+    
+    return ret;
+  }
+
+  /* 
   Update Receivables configuration settings. Only valid options as defined in the array
   XM.Receivables.options will be processed.
 
@@ -72,6 +98,8 @@ select xt.install_js('XM','receivables','receivables', $$
  
     return data.commitMetrics(metrics);
   }
+
+  XT.registerSettings('XM','Receivables','settings');
 
 $$ );
 
