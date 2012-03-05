@@ -163,7 +163,37 @@
               + "been voided, posted, or replaced, or it has been "
               + "transmitted electronically. If this check has been "
               + "posted, try Void Posted Check with the Check Register "
-              + "window."
+              + "window.";
+        break;
+      default:
+        return ret;
+    }
+
+    throw new Error(err);
+  }
+
+  /** 
+   Replace a voided check with a new ID
+
+   @param {Number} Payment ID
+   @returns {Number}
+  */
+  XM.Payment.replace = function(paymentId) {
+    var data, err, ret;
+
+    data = Object.create(XT.Data);
+    if(!data.checkPrivilege('MaintainPayments')) err = "Access Denied.";
+    else if(paymentId === undefined) err = "No Payment specified";
+
+    if(!err) {
+      ret = executeSql("select replacevoidedcheck($1));", [paymentId])[0].result;
+    }
+
+    switch (ret)
+    {
+      case -1:
+        err = "Cannot void this check because either it has already "
+              + "been voided, posted, or replaced.";
         break;
       default:
         return ret;
