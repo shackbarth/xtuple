@@ -1,5 +1,5 @@
 
-/*globals Crm */
+/*globals GeneralLedger */
 
 /** @namespace
 

@@ -39,34 +39,34 @@ XM.Crm = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */
-  useProjectsBinding: '*settings.UseProjects',
+  isUseProjectsBinding: '*settings.UseProjects',
  
   /**
     @type Boolean
   */ 
-  autoCreateProjectsForOrdersBinding: '*settings.AutoCreateProjectsForOrders',
+  isAutoCreateProjectsForOrdersBinding: '*settings.AutoCreateProjectsForOrders',
   
   /**
     @type Boolean
   */
-  autoCreateProjectsForOrdersIsEnabled: function() {
-    return this.get('useProjects');
-  }.property('useProjects').cacheable(),
+  isAutoCreateProjectsForOrdersEnabled: function() {
+    return this.get('isUseProjects');
+  }.property('isUseProjects').cacheable(),
   
   /**
     @type Boolean
   */
-  opportunityChangeLogBinding: '*settings.OpportunityChangeLog',
+  isOpportunityChangeLogBinding: '*settings.OpportunityChangeLog',
 
   /**
     @type Boolean
   */  
-  incidentsPublicPrivateBinding: '*settings.IncidentsPublicPrivate',
+  isIncidentsPublicPrivateBinding: '*settings.IncidentsPublicPrivate',
 
   /**
     @type Boolean
   */  
-  incidentPublicDefaultBinding: '*settings.IncidentPublicDefault',
+  isIncidentPublicDefaultBinding: '*settings.IncidentPublicDefault',
 
   /**
     @type String
@@ -101,39 +101,41 @@ XM.Crm = XM.Object.extend( XM.Settings,
   /**
     @type String
   */
-  defaultAddressCountryBinding: '*settings.DefaultAddressCountry',
+  isDefaultAddressCountryBinding: '*settings.DefaultAddressCountry',
 
   /**
     @type Boolean
   */
-  strictAddressCountryBinding: '*settings.StrictAddressCountry',
+  isStrictAddressCountryBinding: '*settings.StrictAddressCountry',
   
   /**
     @type Boolean
   */
-  strictAddressCountryIsEnabled: function() {
-    var isStrict = this.get('strictAddressCountry'),
-        isChanged = XM.session.getPath('settings.changed').indexOf('strictAddressCountry') > 0;
+  isStrictAddressCountryEnabled: function() {
+    var isStrict = this.get('isStrictAddressCountry'),
+        isChanged = XM.session.getPath('settings.changed').indexOf('StrictAddressCountry') > 0;
     
     // strict setting is irreversible once turned on and committed
     return isStrict && !isChanged ? false : true;
-  }.property('strictAddressCountry').cacheable(),
+  }.property('isStrictAddressCountry').cacheable(),
   
   // ..........................................................
   // OBSERVERS
   //
   
-  useProjectsDidChange: function() {
-    if(!this.get('useProjects')) this.set('autoCreateProjectsForOrders', false);
-  }.observes('useProjects', 'autoCreateProjectsForOrders'),
+  /** @private */
+  _useProjectsDidChange: function() {
+    if(!this.get('isUseProjects')) this.set('isAutoCreateProjectsForOrders', false);
+  }.observes('isUseProjects', 'isAutoCreateProjectsForOrders'),
   
-  strictAddressCountryDidChange: function() {
-    var isStrict = this.get('strictAddressCountry'),
-        isChanged = XM.session.getPath('settings.changed').indexOf('strictAddressCountry') > 0;
+  /** @private */
+  _isStrictAddressCountryDidChange: function() {
+    var isStrict = this.get('isStrictAddressCountry'),
+        isChanged = XM.session.getPath('settings.changed').indexOf('StrictAddressCountry') > 0;
     
     // strict setting is irreversible once turned on and committed
-    if(isStrict && !isChanged) this.set('strictAddressCountry', true);
-  }.observes('strictAddressCountry')
+    if(isStrict && !isChanged) this.set('isStrictAddressCountry', true);
+  }.observes('isStrictAddressCountry')
   
 }) ;
 

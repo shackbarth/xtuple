@@ -24,21 +24,21 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */  
-  useCompany: false,
+  isUseCompany: false,
 
   /**
     @type Boolean
   */  
-  useCompanyIsEnabled: function() {
+  isUseCompanyEnabled: function() {
     var len = this.get('companyAccountsLength');
     
     if(len) {
-      this.set('useCompany', true);
+      this.set('isUseCompany', true);
       return false;
     }
     
     return true;
-  }.property('companyAccountsLength', 'useCompany'),
+  }.property('companyAccountsLength', 'isUseCompany'),
 
   /**
     @type Number
@@ -48,21 +48,21 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */  
-  useProfitCenters: false,
+  isUseProfitCenters: false,
 
   /**
     @type Boolean
   */  
-  useProfitCentersIsEnabled: function() {
+  isUseProfitCentersEnabled: function() {
     var len = this.get('profitCenterAccountsLength');
     
     if(len) {
-      this.set('useProfitCenters', true);
+      this.set('isUseProfitCenters', true);
       return false;
     }
     
     return true;
-  }.property('profitCenterAccountsLength', 'useProfitCenters'),
+  }.property('profitCenterAccountsLength', 'isUseProfitCenters'),
 
   /**
     @type Boolean
@@ -72,7 +72,7 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type String
   */
-  freeFormProfitCentersBinding: '*settings.GLFFProfitCenters',
+  isFreeFormProfitCentersBinding: '*settings.GLFFProfitCenters',
   
   /**
     @type Number
@@ -82,21 +82,21 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */  
-  useSubAccounts: false,
+  isUseSubAccounts: false,
 
   /**
     @type Boolean
   */  
-  useSubAccountsIsEnabled: function() {
+  isUseSubAccountsEnabled: function() {
     var len = this.get('subAccountAccountsLength');
     
     if(len) {
-      this.set('useSubAccounts', true);
+      this.set('isUseSubAccounts', true);
       return false;
     }
     
     return true;
-  }.property('subAccountAccountsLength', 'useSubAccounts'),
+  }.property('subAccountAccountsLength', 'isUseSubAccounts'),
 
   /**
     @type Boolean
@@ -106,22 +106,22 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */  
-  freeFormSubAccountsBinding: '*settings.GLFFSubaccounts',
+  isFreeFormSubAccountsBinding: '*settings.GLFFSubaccounts',
 
   /**
     @type Boolean
   */  
-  useJournalsBinding: '*settings.UseJournals',
+  isUseJournalsBinding: '*settings.UseJournals',
   
   /**
     @type String
   */
-  mandatoryJournalEntryNotesBinding: '*settings.MandatoryGLEntryNotes',
+  isMandatoryJournalEntryNotesBinding: '*settings.MandatoryGLEntryNotes',
   
   /**
     @type String
   */
-  manualForwardUpdateBinding: '*settings.ManualForwardUpdate',
+  isManualForwardUpdateBinding: '*settings.ManualForwardUpdate',
   
   /**
     @type Boolean
@@ -153,7 +153,7 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type String
   */
-  interfaceInventoryIsEnabledBinding: '*settings.InterfaceToGL', 
+  isInventoryInterfaceEnabledBinding: '*settings.InterfaceToGL', 
 
   // ..........................................................
   // PRIVATE
@@ -225,17 +225,17 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
       this.set('retainedEarningsAccount', -1);
       this.set('currencyGainLossAccount', -1);
       this.set('journSeriesDiscrepancyAccount', -1);
-    } else if(size > 0) this.set('useCompany', true);
+    } else if(size > 0) this.set('isUseCompany', true);
   }.observes('companySize','retainedEarningsAccount','currencyGainLossAccount','journalSeriesDiscrepancyAccount' ),
   
   /** @private */
   _profitCenterSizeDidChange: function() {
-    if(this.get('profitSize') > 0) this.set('useProfitCenter', true);
+    if(this.get('profitSize') > 0) this.set('isUseProfitCenter', true);
   }.observes('profitSize' ),
  
   /** @private */
   _subAccountSizeDidChange: function() {
-    if(this.get('subAccountSize') > 0) this.set('useSubAccounts', true);
+    if(this.get('subAccountSize') > 0) this.set('isUseSubAccounts', true);
   }.observes('subAccountSize' )
   
 }) ;
