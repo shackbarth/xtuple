@@ -1,11 +1,14 @@
-create or replace function xt.sc_model_gen(class_name text) returns text as $$
+create or replace function xt.sc_model_gen(class_name text, is_superclass boolean default false) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
   if(!this.isInitialized) executeSql('select xt.js_init()');
 
-  var body   =  "// ==========================================================================\n"
+  var body;
+
+  if(!is_superclass) {
+      body   =  "// ==========================================================================\n"
              +  "// Project:   xTuple Postbooks - Business Management System Framework        \n"
              +  "// Copyright: ©{year} OpenMFG LLC, d/b/a xTuple                                \n"
              +  "// ==========================================================================\n"
@@ -37,13 +40,46 @@ create or replace function xt.sc_model_gen(class_name text) returns text as $$
              + "  //\n"
              + "  {attributes}\n"
              + "\n"
-             + "});",
-
-  attribute =  "\n  /**\n  @type {type}\n  */\n  {name}: SC.Record.{method}({type2}{extra})",
-  nameSpace = class_name.beforeDot(),
-  type = class_name.afterDot(),
-  orm = XT.Orm.fetch(nameSpace, type), d = new Date(),
-  nestedRecordNamespace, privileges, attributes = [];
+             + "});";
+  } else {
+      body   =  "// ==========================================================================\n"
+             +  "// Project:   xTuple Postbooks - Business Management System Framework        \n"
+             +  "// Copyright: ©{year} OpenMFG LLC, d/b/a xTuple                                \n"
+             +  "// ==========================================================================\n"
+             +  "/*globals XM */\n"
+             + "\n"
+             + "sc_require('xbos/__generated__/_{fileName}');\n"
+             + "\n"
+             + "/** \n"
+             + "  @class\n"
+             + "\n"
+             + "\n"
+             + "  @extends {className}\n"
+             + "*/\n"
+             + "\n"
+             + "{className2} = {className}.extend(\n"
+             + "/** @scope {className2}.prototype */ {\n"
+             + "\n"
+             + "  // ..........................................................\n"
+             + "  // CALCULATED PROPERTIES\n"
+             + "  //\n"
+             + "\n"
+             + "  // ..........................................................\n"
+             + "  // METHODS\n"
+             + "  //\n"
+             + "\n"
+             + "  // ..........................................................\n"
+             + "  // OBSERVERS\n"
+             + "  //\n"
+             + "\n"
+             + "});";
+  }
+  
+  var attribute =  "\n  /**\n  @type {type}\n  */\n  {name}: SC.Record.{method}({type2}{extra})",
+      nameSpace = class_name.beforeDot(),
+      type = class_name.afterDot(),
+      orm = XT.Orm.fetch(nameSpace, type), d = new Date(),
+      nestedRecordNamespace, privileges, attributes = [];
 
   if(!orm) throw new Error('Model ' + class_name + ' not found.');
 
@@ -104,7 +140,8 @@ create or replace function xt.sc_model_gen(class_name text) returns text as $$
              .replace(/{className2}/g, class_name)
              .replace(/{nestedRecordNamespace}/, nestedRecordNamespace)
              .replace(/{privileges}/, privileges)
-             .replace(/{attributes}/, attributes.join(',\n'));
+             .replace(/{attributes}/, attributes.join(',\n'))
+             .replace(/{fileName}/, class_name.afterDot().decamelize());
  
   return body;
 

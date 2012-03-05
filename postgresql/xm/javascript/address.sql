@@ -6,11 +6,11 @@ select xt.install_js('XM','Address','xtuple', $$
 
   XM.Address.isDispatchable = true,
 
-  /* Returns the address id of an address found
-     that matches the arguments.
+  /** 
+  Returns the address id of an address found that matches the arguments.
 
-   @param {Object} Address object
-   @returns {Boolean}
+  @param {Object} Address object
+  @returns {Boolean}
   */
   XM.Address.findExisting = function(address) {
     var resp,
@@ -31,10 +31,11 @@ select xt.install_js('XM','Address','xtuple', $$
     return resp.length ? resp[0].id : 0;
   }
 
-  /* Returns the number of records on which an address is referenced. 
+  /**
+  Returns the number of records on which an address is referenced. 
 
-     @param {Number} address id
-     @returns {Number}
+  @param {Number} address id
+  @returns {Number}
   */
   XM.Address.useCount = function(id) {
     return executeSql('select addrUseCount($1) as result', [id])[0].result;

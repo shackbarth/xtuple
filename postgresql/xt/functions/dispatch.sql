@@ -1,23 +1,19 @@
-﻿create or replace function xt.dispatch(data_hash text) returns text as $$
+create or replace function xt.dispatch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
   if(!this.isInitialized) executeSql('select xt.js_init()');
 
-  /* support methods */
-  function toArray(e) {
-    return Array.prototype.slice.call(e);
-  }
-  
+  /* support methods */  
   Function.prototype.curry = function() {
     if (arguments.length<1) {
         return this; //nothing to curry with - return function
     }
     var __method = this;
-    var args = arguments[0]; //toArray(arguments);
+    var args = arguments[0]; 
         return function() {
-        return __method.apply(this, args.concat(toArray(arguments)));
+        return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
     }
   }
 
@@ -29,8 +25,10 @@
       f = dataHash.functionName, 
       params = dataHash.parameters,
       args = params instanceof Array ? params : [params], 
-      method = obj[f].curry(args),
-      ret;
+      method, ret;
+
+  if(obj[f]) method = obj[f].curry(args);
+  else throw new Error('Function ' + dataHash.className + '.' + f + ' not found.');
 
   ret = obj.isDispatchable ? method() : false;
   
@@ -70,7 +68,7 @@ select xt.dispatch($${"requestType":"dispatch",
 
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Session",
-                          "functionName":"metrics"
+                          "functionName":"settings"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
@@ -97,5 +95,94 @@ select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Payable",
                           "functionName":"approve",
                           "parameters":[264,13]
-                          }$$);                
+                          }$$);  
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Crm",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "NextCRMAccountNumber": 1,
+                            "NextIncidentNumber": 1600,
+                            "CRMAccountNumberGeneration": "A",
+                            "UseProjects": true,
+                            "AutoCreateProjectsForOrders": true,
+                            "OpportunityChangeLog": false,
+                            "DefaultAddressCountry": "Mexico",
+                            "StrictAddressCountry": true,
+                            "IncidentsPublicPrivate": true,
+                            "IncidentPublicDefault": true,
+                            "IncidentNewColor": "red",
+                            "IncidentFeedbackColor": "purple",
+                            "IncidentConfirmedColor": "yellow",
+                            "IncidentAssignedColor": "blue",
+                            "IncidentResolvedColor": "green",
+                            "IncidentClosedColor": "grey"
+                           }
+                          }$$);    
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Receivables",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "NextARMemoNumber": 100,
+                            "NextCashRcptNumber": 2000,
+                            "HideApplyToBalance": true,
+                            "EnableCustomerDeposits": false,
+                            "CreditTaxDiscount": false,
+                            "remitto_name": "Wacky Widgets, Inc.",
+                            "remitto_address1": "123 Azalea Court",
+                            "remitto_address2": "Unit 201",
+                            "remitto_address3": "",
+                            "remitto_city": "Murfreesboro",
+                            "remitto_state": "TN",
+                            "remitto_zipcode": "76811",
+                            "remitto_country": "United States",
+                            "remitto_phone": "478-112-8989",
+                            "DefaultAutoCreditWarnGraceDays": 20,
+                            "DefaultARIncidentStatus": 1,
+                            "AutoCloseARIncident": true,
+                            "RecurringInvoiceBuffer": 10
+                           }
+                          }$$);  
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Payables",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "NextAPMemoNumber": 100,
+                            "ACHEnabled": false,
+                            "ACHCompanyId": "",
+                            "ACHCompanyIdType": "D",
+                            "ACHCompanyName": "Wacky Widgets, Inc.",
+                            "ACHDefaultSuffix": ".txt",
+                            "EFTRoutingRegex": "",
+                            "EFTAccountRegex": "",
+                            "EFTFunction": "",
+                            "NextACHBatchNumber": 200,
+                            "ReqInvRegVoucher": true,
+                            "ReqInvMiscVoucher": true,
+                            "RecurringVoucherBuffer": 10
+                           }
+                          }$$);  
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.GeneralLedger",
+                          "functionName":"updateSettings",
+                          "parameters":{ 
+                            "GLMainSize": 5,
+                            "GLCompanySize": 3,
+                            "YearEndEquityAccount": 83,
+                            "CurrencyGainLossAccount": 83,
+                            "GLSeriesDiscrepancyAccount": 83,
+                            "GLProfitSize": 3,
+                            "GLFFProfitCenters": true,
+                            "GLSubaccountSize": 3,
+                            "GLFFSubaccounts": true,
+                            "UseJournals": false,
+                            "CurrencyExchangeSense": 0,
+                            "MandatoryGLEntryNotes": false,
+                            "ManualForwardUpdate": false,
+                            "InterfaceToGL": false
+                           }
+                          }$$);         
 */

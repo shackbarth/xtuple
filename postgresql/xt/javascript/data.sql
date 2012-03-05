@@ -231,6 +231,25 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
+    Commit metrics that have changed to the database.
+
+    @param {Object} metrics
+    @returns Boolean
+    */
+    commitMetrics: function(metrics) {
+      for(var key in metrics) {
+        var value = metrics[key]; 
+      
+        if(typeof value === 'boolean') value = value ? 't' : 'f';
+        else if(typeof value === 'number') value = value.toString();
+      
+        executeSql('select setMetric($1,$2)', [key, value]);
+      }
+
+      return true;
+    },
+
+    /**
     Commit a record to the database 
 
     @param {String} name space qualified record type
@@ -559,6 +578,33 @@ select xt.install_js('XT','Data','xtuple', $$
       if(!this.checkPrivileges(nameSpace, type, ret)) throw new Error("Access Denied.");
 
       /* return the results */
+      return ret;
+    },
+
+    /**
+    Returns a array of key value pairs of metric settings that correspond with an array of passed keys.
+    
+    @param {Array} array of metric names
+    @returns {Array} 
+    */
+    retrieveMetrics: function(keys) {
+      var sql = 'select metric_name as setting, metric_value as value '
+              + 'from metric '
+              + 'where metric_name in ({keys})', ret; 
+
+      for(var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
+
+      sql = sql.replace(/{keys}/, keys.join(','));
+
+      ret =  executeSql(sql);
+
+      /* recast where applicable */
+      for(var i = 0; i < ret.length; i++) {
+        if(ret[i].value === 't') ret[i].value = true;
+        else if(ret[i].value === 'f') ret[i].value = false
+        else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
+      }
+
       return ret;
     },
 
