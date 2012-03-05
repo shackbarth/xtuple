@@ -24,7 +24,7 @@ select xt.install_js('XM','DatabaseInformation','xtuple', $$
   @returns {Object}
   */
   XM.DatabaseInformation.settings = function() {
-    var keys = XM.DatabaseInformation.options.slice(0),
+    var keys = XM.DatabaseInformation.options,
         data = Object.create(XT.Data);
     
     return data.retrieveMetrics(keys);

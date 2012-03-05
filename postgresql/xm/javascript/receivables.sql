@@ -34,7 +34,7 @@ select xt.install_js('XM','receivables','receivables', $$
   @returns {Object}
   */
   XM.Receivables.settings = function() {
-    var keys = XM.Receivables.options.slice(0),
+    var keys = XM.Receivables.options,
         data = Object.create(XT.Data),
         sql = "select orderseq_number as value "
             + "from orderseq"

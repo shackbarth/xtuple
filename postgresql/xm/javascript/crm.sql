@@ -31,7 +31,7 @@ select xt.install_js('XM','crm','crm', $$
   @returns {Object}
   */
   XM.Crm.settings = function() {
-    var keys = XM.Crm.options.slice(0),
+    var keys = XM.Crm.options,
         data = Object.create(XT.Data),
         colors = [
           "IncidentNewColor",

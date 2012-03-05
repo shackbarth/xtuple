@@ -28,7 +28,7 @@ select xt.install_js('XM','payables','payables', $$
   @returns {Object}
   */
   XM.Payables.settings = function() {
-    var keys = XM.Payables.options.slice(0),
+    var keys = XM.Payables.options,
         data = Object.create(XT.Data),
         sql = "select orderseq_number as value "
             + "from orderseq"
