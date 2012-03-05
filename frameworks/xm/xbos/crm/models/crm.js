@@ -22,6 +22,11 @@ XM.Crm = XM.Object.extend( XM.Settings,
   privilege: 'ConfigureCRM',
   
   /**
+    @type String
+  */  
+  crmAccountNumberGenerationBinding: '*settings.CRMAccountNumberGeneration',
+    
+  /**
     @type Number
   */
   nextCRMAccountNumberBinding: '*settings.NextCRMAccountNumber',
@@ -30,11 +35,6 @@ XM.Crm = XM.Object.extend( XM.Settings,
     @type Number
   */  
   nextIncidentNumberBinding: '*settings.NextIncidentNumber',
-
-  /**
-    @type String
-  */  
-  crmAccountNumberGenerationBinding: '*settings.CRMAccountNumberGeneration',
   
   /**
     @type Boolean
@@ -57,27 +57,6 @@ XM.Crm = XM.Object.extend( XM.Settings,
     @type Boolean
   */
   opportunityChangeLogBinding: '*settings.OpportunityChangeLog',
-  
-  /**
-    @type String
-  */
-  defaultAddressCountryBinding: '*settings.DefaultAddressCountry',
-
-  /**
-    @type Boolean
-  */
-  strictAddressCountryBinding: '*settings.StrictAddressCountry',
-  
-  /**
-    @type Boolean
-  */
-  strictAddressCountryIsEnabled: function() {
-    var isStrict = this.get('strictAddressCountry'),
-        isChanged = XM.session.getPath('settings.changed').indexOf('strictAddressCountry') > 0;
-    
-    // strict setting is irreversible once turned on and committed
-    return isStrict && !isChanged ? false : true;
-  }.property('strictAddressCountry').cacheable(),
 
   /**
     @type Boolean
@@ -118,6 +97,27 @@ XM.Crm = XM.Object.extend( XM.Settings,
     @type String
   */
   incidentClosedColorBinding: '*settings.IncidentClosedColor',
+  
+  /**
+    @type String
+  */
+  defaultAddressCountryBinding: '*settings.DefaultAddressCountry',
+
+  /**
+    @type Boolean
+  */
+  strictAddressCountryBinding: '*settings.StrictAddressCountry',
+  
+  /**
+    @type Boolean
+  */
+  strictAddressCountryIsEnabled: function() {
+    var isStrict = this.get('strictAddressCountry'),
+        isChanged = XM.session.getPath('settings.changed').indexOf('strictAddressCountry') > 0;
+    
+    // strict setting is irreversible once turned on and committed
+    return isStrict && !isChanged ? false : true;
+  }.property('strictAddressCountry').cacheable(),
   
   // ..........................................................
   // OBSERVERS
