@@ -14,6 +14,18 @@
 
 XM.Settings = {
   
+  /**
+    Required.
+    
+    @type String
+  */
+  className: null,
+  
+  /**
+    @type String
+  */
+  privilege: null,
+  
   /** 
     Binding to global settings to which all properties on a settings object should bind to.
   */
@@ -28,7 +40,10 @@ XM.Settings = {
   commitSettings: function() {  
     var self = this,
         globalChanged = XM.session.getPath('settings.changed');
-        changed = {};
+        changed = {},
+        privilege = this.get('privilege');
+        
+    if(!XM.session.get('privileges').get(privilege)) return NO;
 
     for(var i = 0; i < self.getPath('_bindings.length'); i++) {
       var prop = self.get('_bindings').objectAt(i),

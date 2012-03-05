@@ -116,14 +116,18 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
   //
 
   fetch: function(store, query) {
-
-    var payload = {};
+    var payload = {}, qp = query.get('parameters'), params = {};
     
+    // convert any any regular expressions to text
+    for(var prop in qp) {
+      params[prop] = qp[prop].source === undefined ? qp[prop] : qp[prop].source;
+    }
+
     payload.requestType = 'fetch';
     payload.query = {};
     payload.query.recordType = query.get('recordType').prototype.className;
     payload.query.conditions = query.get('conditions');
-    payload.query.parameters = query.get('parameters');
+    payload.query.parameters = params;
     payload.query.orderBy = query.get('orderBy');
 
     if(this.get('debug')) { console.log("JSON PAYLOAD: %@".fmt(JSON.stringify(payload))); }
@@ -154,6 +158,7 @@ XM.DataSource = SC.DataSource.create(XM.Logging,
         results.forEach(function(dataHash) {
           store.pushRetrieve(recordType, dataHash.guid, dataHash);
         })
+        store.dataSourceDidFetchQuery(query);
       }
     } 
   },
