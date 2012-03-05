@@ -96,4 +96,26 @@
     throw new Error(err);
   }
 
+  /** 
+   Create 1 or more recurring Vouchers
+
+   @param {Number} VoucherId
+   @returns {Number}
+  */
+  XM.Voucher.createRecurring = function(voucherId) {
+    var sql = "select createrecurringitems({id}, 'V') as result;"
+              .replace(/{id}/, voucherId === undefined ? null : voucherId),
+        data = Object.create(XT.Data),
+        err;
+
+    if(!data.checkPrivilege('MaintainVouchers'))
+      err = "Access Denied.";
+
+    if(!err) {
+      return executeSql(sql)[0].result;
+    }
+
+    throw new Error(err);
+  }
+
 $$ );
