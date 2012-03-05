@@ -20,22 +20,23 @@
     else if(voucherId === undefined) err = "No Voucher specified.";
     if(!err) {
       ret = executeSql("select postvoucher($1, false) as result;", [voucherId])[0].result;
-    }
 
-    switch (ret)
-    {
-      case -5:
-        err = "The Cost Category for one or more Item Sites "
-              + "for the Purchase Order covered by this Voucher "
-              + "is not configured with Purchase Price Variance "
-              + "or P/O Liability Clearing Account Numbers or "
-              + "the Vendor of this Voucher is not configured "
-              + "with an A/P Account Number. Because of this, "
-              + "G/L Transactions cannot be posted for this "
-              +"Voucher.";
-        break;
-      default:
-        return ret;
+      switch (ret)
+      {
+        case -5:
+          err = "The Cost Category for one or more Item Sites "
+                + "for the Purchase Order covered by this Voucher "
+                + "is not configured with Purchase Price Variance "
+                + "or P/O Liability Clearing Account Numbers or "
+                + "the Vendor of this Voucher is not configured "
+                + "with an A/P Account Number. Because of this, "
+                + "G/L Transactions cannot be posted for this "
+                +"Voucher.";
+          break;
+        default:
+          return ret;
+      }
+
     }
 
     throw new Error(err);
@@ -55,22 +56,23 @@
 
     if(!err) {
       ret = executeSql("select postvouchers(false) as result;")[0].result;
-    }
 
-    switch (ret)
-    {
-      case -5:
-        err = "The Cost Category for one or more Item Sites "
-              + "for the Purchase Order covered by this Voucher "
-              + "is not configured with Purchase Price Variance "
-              + "or P/O Liability Clearing Account Numbers or "
-              + "the Vendor of this Voucher is not configured "
-              + "with an A/P Account Number. Because of this, "
-              + "G/L Transactions cannot be posted for this "
-              +"Voucher.";
-        break;
-      default:
-        return ret;
+      switch (ret)
+      {
+        case -5:
+          err = "The Cost Category for one or more Item Sites "
+                + "for the Purchase Order covered by this Voucher "
+                + "is not configured with Purchase Price Variance "
+                + "or P/O Liability Clearing Account Numbers or "
+                + "the Vendor of this Voucher is not configured "
+                + "with an A/P Account Number. Because of this, "
+                + "G/L Transactions cannot be posted for this "
+                +"Voucher.";
+          break;
+        default:
+          return ret;
+      }
+
     }
 
     throw new Error(err);
