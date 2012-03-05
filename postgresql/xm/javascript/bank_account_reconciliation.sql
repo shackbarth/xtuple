@@ -7,12 +7,12 @@
   XM.BankAccountReconciliation.isDispatchable = true;
   
   /** 
-   Close an accounting year period.
+   Reconcile a bank account.
 
-   @param {Number} periodId
+   @param {Number} bankrecId
    @returns {Number}
   */
-  XM.BankAccountReconciliation.close = function(bankRecId) {
+  XM.BankAccountReconciliation.reconcile = function(bankRecId) {
     var data, ret, err;
 
     data = Object.create(XT.Data);
