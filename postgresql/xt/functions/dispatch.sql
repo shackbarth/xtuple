@@ -1,4 +1,4 @@
-﻿create or replace function xt.dispatch(data_hash text) returns text as $$
+create or replace function xt.dispatch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -25,8 +25,10 @@
       f = dataHash.functionName, 
       params = dataHash.parameters,
       args = params instanceof Array ? params : [params], 
-      method = obj[f].curry(args),
-      ret;
+      method, ret;
+
+  if(obj[f]) method = obj[f].curry(args);
+  else throw new Error('Function ' + dataHash.className + '.' + f + ' not found.');
 
   ret = obj.isDispatchable ? method() : false;
   
