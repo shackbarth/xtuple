@@ -20,7 +20,7 @@
     else if(paymentId === undefined) err = "No payment specified";
 
     if(!err) {
-      ret = executeSql("select postcheck(1$, null) as result;", [paymentId])[0].result;
+      ret = executeSql("select postcheck($1, null) as result;", [paymentId])[0].result;
 
       switch (ret)
       {
@@ -63,7 +63,7 @@
     else if(bankAccountId === undefined) err = "No bank account specified";
 
     if(!err) {
-      ret = executeSql("select postchecks(1$) as result;", [bankAccountId])[0].result;
+      ret = executeSql("select postchecks($1) as result;", [bankAccountId])[0].result;
 
       switch (ret)
       {
@@ -190,7 +190,7 @@
     else if(paymentId === undefined) err = "No Payment specified";
 
     if(!err) {
-      ret = executeSql("select replacevoidedcheck($1));", [paymentId])[0].result;
+      ret = executeSql("select replacevoidedcheck($1);", [paymentId])[0].result;
 
       switch (ret)
       {
@@ -221,7 +221,7 @@
     else if(paymentId === undefined) err = "No Bank Account specified";
 
     if(!err) {
-      ret = executeSql("select replaceallvoidedchecks($1));", [bankaccountId])[0].result;
+      ret = executeSql("select replaceallvoidedchecks($1);", [bankaccountId])[0].result;
 
       switch (ret)
       {
@@ -253,7 +253,7 @@
     else if(checkDate === undefined) err = "No Check Date specified";
 
     if(!err) {
-      return executeSql("select createchecks($1, $2));", [bankaccountId, checkDate])[0].result;
+      return executeSql("select createchecks($1, $2);", [bankaccountId, checkDate])[0].result;
     }
 
     throw new Error(err);
