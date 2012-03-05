@@ -17,7 +17,6 @@ select xt.install_js('XM','payables','payables', $$
     "EFTAccountRegex",
     "EFTFunction",
     "NextACHBatchNumber",
-    "ReqInvRegVoucher",
     "ReqInvMiscVoucher",
     "RecurringVoucherBuffer"
   ]
