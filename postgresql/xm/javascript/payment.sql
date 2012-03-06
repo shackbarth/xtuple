@@ -95,7 +95,7 @@
   /** 
    ...
 
-   @param {Number} Payment ID
+   @param {Number, Date} Payment ID, distribution date
    @returns {Number}
   */
   XM.Payment.void = function(paymentId, distributionDate) {
@@ -241,7 +241,7 @@
   /** 
    create checks for a check run
 
-   @param {Number} Bank Account ID
+   @param {Number, Date} Bank Account ID, check date
    @returns {Number}
   */
   XM.Payment.prepare = function(bankaccountId, checkDate) {
