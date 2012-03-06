@@ -79,6 +79,7 @@
 \i xm/javascript/fiscal_year.sql;
 \i xm/javascript/general_ledger.sql;
 \i xm/javascript/incident.sql;
+\i xm/javascript/journal.sql;
 \i xm/javascript/payable.sql;
 \i xm/javascript/payables.sql;
 \i xm/javascript/payment.sql;
