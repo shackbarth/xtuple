@@ -8,7 +8,6 @@ require('../xv-core');
 XV.honorific = new Object;
 
 XV.honorific.createHash  = { 
-  guid: 1999, 
   code: 'Sr'
 };
 
