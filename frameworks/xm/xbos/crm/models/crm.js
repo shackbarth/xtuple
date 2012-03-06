@@ -24,12 +24,12 @@ XM.Crm = XM.Object.extend( XM.Settings,
   /**
     @type String
   */  
-  crmAccountNumberGenerationBinding: '*settings.CRMAccountNumberGeneration',
+  accountNumberGenerationBinding: '*settings.CRMAccountNumberGeneration',
     
   /**
     @type Number
   */
-  nextCRMAccountNumberBinding: '*settings.NextCRMAccountNumber',
+  nextAccountNumberBinding: '*settings.NextCRMAccountNumber',
 
   /**
     @type Number
