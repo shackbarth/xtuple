@@ -89,4 +89,8 @@
 \i xm/javascript/project.sql;
 \i xm/javascript/standard_journal.sql;
 \i xm/javascript/todo.sql;
+\i xm/javascript/contact.sql;
+\i xm/javascript/invoice.sql;
+\i xm/javascript/period.sql;
+\i xm/javascript/cash_receipt.sql;
 -- [ END ] xm
