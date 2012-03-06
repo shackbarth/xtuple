@@ -4,23 +4,17 @@
 // ==========================================================================
 /*globals XM */
 
+sc_require('xbos/__generated__/_address');
+
 /** @class
 
   (Document your Model here)
 
-  @extends XM.Record
-
+  @extends XM._Address
 */
 
-XM.Address = XM.Record.extend( SC.Copyable,
+XM.Address = XM._Address.extend( SC.Copyable,
 /** @scope XM.Address.prototype */ {
-
-  className:   'XM.Address',
-
-  createPrivilege:  'MaintainAddresses',
-  readPrivilege:    'ViewAddresses',
-  updatePrivilege:  'MaintainAddresses',
-  deletePrivilege:  'MaintainAddresses',
 
   /*
   @type String
@@ -33,71 +27,23 @@ XM.Address = XM.Record.extend( SC.Copyable,
       }
     }
   }),
-  
-  /**
-  @type String
-  */
-  line1: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  line2: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  line3: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  city: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  state: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  postalcode: SC.Record.attr(String),
+
   
   /**
   @type String
   */
   country: SC.Record.attr(String, {
     defaultValue: function() {
-      var country = XT.Session.metrics.get('DefaultAddressCountry');
+      var country = XM.session.settings.get('DefaultAddressCountry');
       return country ? country : null;
     }
   }),
-  
-  /**
-  @type String
-  */
-  notes: SC.Record.attr(String),
   
   /**
   @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
     defaultValue: YES
-  }),
-  
-  /**
-  @type XM.CharactersticAssignment
-  */
-  characteristics: SC.Record.toMany('XM.CharacteristicAssignment', {
-    inverse: 'address',
-  }),
-  
-  /**
-  @type XM.AddressComment
-  */
-  comments: XM.Record.toMany('XM.AddressComment', {
-    inverse: 'address',
   }),
 
   // ..........................................................

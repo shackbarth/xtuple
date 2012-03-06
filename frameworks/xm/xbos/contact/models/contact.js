@@ -23,7 +23,7 @@ XM.Contact = XM._Contact.extend( XM.CoreDocuments,
     /** @private */
     defaultValue: function () {
       if(arguments[0].get('status') === SC.Record.READY_NEW) {
-        XM.Record.fetchNumber.call(arguments[ 0 ]);
+        return XM.Record.fetchNumber.call(arguments[0]);
       }
     }
   }),
