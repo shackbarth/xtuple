@@ -1,0 +1,59 @@
+// ==========================================================================
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
+// ==========================================================================
+
+/*globals XM */
+
+/**
+  @class
+
+  This code is automatically generated and will be over-written. Do not edit directly.
+
+  @extends XM.Record
+*/
+XM._TaxAssignment = XM.Record.extend(
+  /** @scope XM._TaxAssignment.prototype */ {
+  
+  className: 'XM.TaxAssignment',
+
+  
+
+  // .................................................
+  // PRIVILEGES
+  //
+
+  privileges: {
+    "all": {
+      "create": "MaintainTaxAssignments",
+      "read": "ViewTaxAssignments",
+      "update": "MaintainTaxAssignments",
+      "delete": "MaintainTaxAssignments"
+    }
+  },
+
+  //..................................................
+  // ATTRIBUTES
+  //
+  
+  /**
+    @type Number
+  */
+  guid: SC.Record.attr(Number),
+
+  /**
+    @type XM.TaxZone
+  */
+  taxZone: SC.Record.toOne('XM.TaxZone'),
+
+  /**
+    @type XM.TaxType
+  */
+  taxType: SC.Record.toOne('XM.TaxType'),
+
+  /**
+    @type XM.TaxCode
+  */
+  taxCode: SC.Record.toOne('XM.TaxCode')
+
+});
