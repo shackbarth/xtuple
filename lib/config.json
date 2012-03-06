@@ -11,5 +11,7 @@
   "redis-port": 6379,
   "dev-ui-port": 9080,
   "encryption-key-file": "lib/key.txt",
-  "orm-installer-debugging": false
+  "orm-installer-debugging": false,
+  "generated-models-directory": "../client/frameworks/xm/xbos/__generated__",
+  "generated-subclass-models-directory": "../generated_template_models"
 }
