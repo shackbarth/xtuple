@@ -153,4 +153,27 @@
     throw new Error(err);
   }
 
+	XM.Invoice.purge = function(cutOffDate, invoiceId) {
+	/**
+	 Purge invoice.
+
+	 @param {date, number}
+	 @returns {number} 
+*/
+	  var ret, sql, err,
+			  data = Object.create(XT.Data);
+
+	  if(!data.checkPrivilege("PurgeInvoices")) err = "Access denied."
+	  else if(cutOffDate === undefined) err = "Not defined";
+	  else if(invoiceId === undefined) err = "Not defined";
+
+	  if(!err) {
+			ret = executeSql("select purgeInvoiceRecord($1,$2) AS result;", [cutOffDate, invoiceId])[0].result;
+
+			return ret;
+	  }
+
+	  throw new Error(err);
+	}
+
 $$ );
