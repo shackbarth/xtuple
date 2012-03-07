@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_account_contact');
+sc_require('xbos/__generated__/_account_browse');
 
 /**
   @class
 
-  @extends XM._AccountContact
+  @extends XM._AccountBrowse
 */
-XM.AccountContact = XM._AccountContact.extend(
-  /** @scope XM.AccountContact.prototype */ {
+XM.AccountBrowse = XM._AccountBrowse.extend(
+  /** @scope XM.AccountBrowse.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

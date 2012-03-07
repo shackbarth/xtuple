@@ -1,25 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_account_characteristic');
 
-  @extends XM.CharacteristicAssignment
+/**
+  @class
+
+  @extends XM._AccountCharacteristic
 */
-XM.AccountCharacteristic = XM.CharacteristicAssignment.extend(
-/** @scope XM.AccountCharacteristic.prototype */ {
+XM.AccountCharacteristic = XM._AccountCharacteristic.extend(
+  /** @scope XM.AccountCharacteristic.prototype */ {
 
-  className: 'XM.AccountCharacteristic',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.Account
-  */
-  account: SC.Record.toOne('XM.Account', {
-    inverse:  'comments',
-    isMaster: NO,
-  }),
-  
-}) ;
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
+
+});
+

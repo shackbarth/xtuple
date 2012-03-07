@@ -1,22 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/account/models/account_assignment');
+sc_require('xbos/__generated__/_account_account');
 
-/** @class
+/**
+  @class
 
-  (Document your Model here)
-
-  @extends XM.AccountAssignment
-  @version 0.1
+  @extends XM._AccountAccount
 */
+XM.AccountAccount = XM._AccountAccount.extend(
+  /** @scope XM.AccountAccount.prototype */ {
 
-XM.AccountAccount = XM.AccountAssignment.extend( 
-/** @scope XM.AccountAccount.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.AccountAccount'
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

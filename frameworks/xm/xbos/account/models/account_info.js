@@ -1,37 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_account_info');
 
-  @extends XM.Record
-  @version 0.2
+/**
+  @class
+
+  @extends XM._AccountInfo
 */
+XM.AccountInfo = XM._AccountInfo.extend(
+  /** @scope XM.AccountInfo.prototype */ {
 
-XM.AccountInfo = XM.Record.extend(
-/** @scope XM.AccountInfo.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.AccountInfo',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  number: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String, {
-    isRequired: YES
-  }),
-  
-  /**
-  @type Boolean
-  */
-  isActive: SC.Record.attr(Boolean),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 
