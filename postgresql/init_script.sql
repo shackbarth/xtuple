@@ -1,4 +1,4 @@
-﻿-- [ START ] initdb
+-- [ START ] initdb
 
 -- create schemas
 \i create_xt_schema.sql;
@@ -84,7 +84,7 @@
 \i xm/javascript/general_ledger.sql;
 \i xm/javascript/incident.sql;
 \i xm/javascript/ledger_account.sql;
-\i xm/javascript/payable.sql;
+--\i xm/javascript/payable.sql;
 \i xm/javascript/payables.sql;
 \i xm/javascript/payment.sql;
 \i xm/javascript/purchase_journal.sql;
@@ -95,9 +95,8 @@
 \i xm/javascript/project.sql;
 \i xm/javascript/standard_journal.sql;
 \i xm/javascript/todo.sql;
-\i xm/javascript/contact.sql;
+--\i xm/javascript/contact.sql;
 \i xm/javascript/invoice.sql;
 \i xm/javascript/period.sql;
-\i xm/javascript/cash_receipt.sql;
 \i xm/javascript/customer.sql;
 -- [ END ] xm
