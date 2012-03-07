@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._ContactInfo = XM.Record.extend(
+  /** @scope XM._ContactInfo.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.ContactInfo',
 
   nestedRecordNamespace: XM,
 
@@ -25,10 +25,10 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
     }
   },
 
@@ -44,7 +44,7 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
@@ -54,57 +54,38 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
-  line1: SC.Record.attr(String),
+  jobTitle: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line2: SC.Record.attr(String),
+  phone: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line3: SC.Record.attr(String),
+  alternate: SC.Record.attr(String),
 
   /**
     @type String
   */
-  city: SC.Record.attr(String),
+  fax: SC.Record.attr(String),
 
   /**
     @type String
   */
-  state: SC.Record.attr(String),
+  primaryEmail: SC.Record.attr(String),
 
   /**
     @type String
   */
-  postalCode: SC.Record.attr(String),
+  webAddress: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.AddressInfo
   */
-  country: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  notes: SC.Record.attr(String),
-
-  /**
-    @type XM.AddressComment
-  */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
-  }),
-
-  /**
-    @type XM.AddressCharacteristic
-  */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
+  address: SC.Record.toOne('XM.AddressInfo', {
+    isNested: true
   })
 
 });

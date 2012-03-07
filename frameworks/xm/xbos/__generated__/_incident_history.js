@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._IncidentHistory = XM.Record.extend(
+  /** @scope XM._IncidentHistory.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.IncidentHistory',
 
   
 
@@ -25,10 +25,20 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "MaintainAllIncidentHistory",
+      "read": "ViewAllIncidentHistory",
+      "update": "MaintainAllIncidentHistory",
+      "delete": "MaintainAllIncidentHistory"
+    },
+    "personal": {
+      "create": "MaintainPersonalIncidentHistory",
+      "read": "ViewPersonalIncidentHistory",
+      "update": "MaintainPersonalIncidentHistory",
+      "delete": "MaintainPersonalIncidentHistory",
+      "properties": [
+        "owner",
+        "assignedTo"
+      ]
     }
   },
 
@@ -42,24 +52,9 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Incident
   */
-  company: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
+  incident: SC.Record.toOne('XM.Incident'),
 
   /**
     @type String
@@ -67,8 +62,13 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   description: SC.Record.attr(String),
 
   /**
+    @type Date
+  */
+  created: SC.Record.attr(Date),
+
+  /**
     @type String
   */
-  type: SC.Record.attr(String)
+  createdBy: SC.Record.attr(String)
 
 });

@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._CustomerCreditCard = XM.Record.extend(
+  /** @scope XM._CustomerCreditCard.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.CustomerCreditCard',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
     }
   },
 
@@ -42,9 +42,14 @@ XM._Address = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  sequence: SC.Record.attr(Number),
+
+  /**
+    @type XM.Customer
+  */
+  customer: SC.Record.toOne('XM.Customer'),
 
   /**
     @type Boolean
@@ -54,17 +59,17 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
-  line1: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line2: SC.Record.attr(String),
+  address1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line3: SC.Record.attr(String),
+  address2: SC.Record.attr(String),
 
   /**
     @type String
@@ -89,22 +94,46 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
-  notes: SC.Record.attr(String),
+  number: SC.Record.attr(String),
 
   /**
-    @type XM.AddressComment
+    @type Boolean
   */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
-  }),
+  isDebit: SC.Record.attr(Boolean),
 
   /**
-    @type XM.AddressCharacteristic
+    @type String
   */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
-  })
+  monthExpire: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  yearExpire: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  type: SC.Record.attr(String),
+
+  /**
+    @type Date
+  */
+  created: SC.Record.attr(Date),
+
+  /**
+    @type String
+  */
+  createdBy: SC.Record.attr(String),
+
+  /**
+    @type Date
+  */
+  updated: SC.Record.attr(Date),
+
+  /**
+    @type String
+  */
+  updatedBy: SC.Record.attr(String)
 
 });

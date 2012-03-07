@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._Period = XM.Record.extend(
+  /** @scope XM._Period.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.Period',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": "MaintainAccountingPeriods",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainAccountingPeriods",
+      "delete": "MaintainAccountingPeriods"
     }
   },
 
@@ -44,31 +44,41 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Date
   */
-  profitCenter: SC.Record.attr(String),
+  start: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Date
   */
-  number: SC.Record.attr(String),
+  end: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type XM.FiscalYear
   */
-  subAccount: SC.Record.attr(String),
+  fiscalYear: SC.Record.toOne('XM.FiscalYear'),
 
   /**
-    @type String
+    @type Number
   */
-  description: SC.Record.attr(String),
+  number: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  type: SC.Record.attr(String)
+  quarter: SC.Record.attr(Number),
+
+  /**
+    @type Boolean
+  */
+  frozen: SC.Record.attr(Boolean),
+
+  /**
+    @type Boolean
+  */
+  closed: SC.Record.attr(Boolean)
 
 });

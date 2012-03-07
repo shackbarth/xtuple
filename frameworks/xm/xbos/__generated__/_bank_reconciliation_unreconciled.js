@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._BankReconciliationUnreconciled = XM.Record.extend(
+  /** @scope XM._BankReconciliationUnreconciled.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.BankReconciliationUnreconciled',
 
   
 
@@ -42,33 +42,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.BankReconciliation
   */
-  company: SC.Record.attr(String),
+  bankReconciliation: SC.Record.toOne('XM.BankReconciliation'),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  date: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  documentType: SC.Record.attr(String),
+
+  /**
+    @type Number
+  */
+  documentNumber: SC.Record.attr(Number),
+
+  /**
+    @type Number
+  */
+  amount: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  notes: SC.Record.attr(String)
 
 });

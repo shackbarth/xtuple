@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ContactEmail = XM.Record.extend(
+  /** @scope XM._ContactEmail.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ContactEmail',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,13 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Comment
   */
-  company: SC.Record.attr(String),
+  contact: SC.Record.toOne('XM.Comment'),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  email: SC.Record.attr(String)
 
 });

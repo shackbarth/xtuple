@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._TrialBalance = XM.Record.extend(
+  /** @scope XM._TrialBalance.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.TrialBalance',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -26,7 +26,7 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   privileges: {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewTrialBalances",
       "update": false,
       "delete": false
     }
@@ -42,33 +42,35 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Period
   */
-  company: SC.Record.attr(String),
+  period: SC.Record.toOne('XM.Period'),
 
   /**
-    @type String
+    @type XM.LedgerAccountInfo
   */
-  profitCenter: SC.Record.attr(String),
+  ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
+    isNested: true
+  }),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  beginning: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  subAccount: SC.Record.attr(String),
+  ending: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  description: SC.Record.attr(String),
+  credits: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  type: SC.Record.attr(String)
+  debits: SC.Record.attr(Number)
 
 });

@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._Characteristic = XM.Record.extend(
+  /** @scope XM._Characteristic.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.Characteristic',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "MaintainCharacteristics",
+      "read": "ViewCharacteristics",
+      "update": "MaintainCharacteristics",
+      "delete": "MaintainCharacteristics"
     }
   },
 
@@ -44,31 +44,51 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  name: SC.Record.attr(String),
+
+  /**
+    @type Number
+  */
+  characteristicType: SC.Record.attr(Number),
+
+  /**
+    @type Number
+  */
+  order: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  notes: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  mask: SC.Record.attr(String),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String),
+  validator: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.CharacteristicOption
   */
-  description: SC.Record.attr(String),
+  options: SC.Record.toMany('XM.CharacteristicOption'),
 
   /**
-    @type String
+    @type Boolean
   */
-  type: SC.Record.attr(String)
+  isAddresses: SC.Record.attr(Boolean),
+
+  /**
+    @type Boolean
+  */
+  isContacts: SC.Record.attr(Boolean),
+
+  /**
+    @type Boolean
+  */
+  isItems: SC.Record.attr(Boolean)
 
 });

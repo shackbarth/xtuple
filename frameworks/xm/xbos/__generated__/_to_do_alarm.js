@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ToDoAlarm = XM.Record.extend(
+  /** @scope XM._ToDoAlarm.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ToDoAlarm',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,14 +42,9 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.ToDo
   */
-  company: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  profitCenter: SC.Record.attr(String),
+  toDo: SC.Record.toOne('XM.ToDo'),
 
   /**
     @type String
@@ -57,18 +52,53 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   number: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Boolean
   */
-  subAccount: SC.Record.attr(String),
+  email: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
+  emailRecipient: SC.Record.attr(String),
+
+  /**
+    @type Boolean
+  */
+  event: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  type: SC.Record.attr(String)
+  eventRecipient: SC.Record.attr(String),
+
+  /**
+    @type Boolean
+  */
+  message: SC.Record.attr(Boolean),
+
+  /**
+    @type String
+  */
+  messageRecipient: SC.Record.attr(String),
+
+  /**
+    @type Number
+  */
+  offset: SC.Record.attr(Number),
+
+  /**
+    @type String
+  */
+  qualifier: SC.Record.attr(String),
+
+  /**
+    @type Date
+  */
+  time: SC.Record.attr(Date),
+
+  /**
+    @type Date
+  */
+  trigger: SC.Record.attr(Date)
 
 });

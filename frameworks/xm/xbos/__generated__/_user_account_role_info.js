@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._UserAccountRoleInfo = XM.Record.extend(
+  /** @scope XM._UserAccountRoleInfo.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.UserAccountRoleInfo',
 
   
 
@@ -44,31 +44,11 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.UserAccountRolePrivilegeAssignment
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  privileges: SC.Record.toMany('XM.UserAccountRolePrivilegeAssignment')
 
 });

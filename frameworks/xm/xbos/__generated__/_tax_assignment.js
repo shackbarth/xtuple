@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._TaxAssignment = XM.Record.extend(
+  /** @scope XM._TaxAssignment.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.TaxAssignment',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "MaintainTaxAssignments",
+      "read": "ViewTaxAssignments",
+      "update": "MaintainTaxAssignments",
+      "delete": "MaintainTaxAssignments"
     }
   },
 
@@ -42,33 +42,18 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.TaxZone
   */
-  company: SC.Record.attr(String),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
-    @type String
+    @type XM.TaxType
   */
-  profitCenter: SC.Record.attr(String),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
-    @type String
+    @type XM.TaxCode
   */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  taxCode: SC.Record.toOne('XM.TaxCode')
 
 });

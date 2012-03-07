@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._StandardJournal = XM.Record.extend(
+  /** @scope XM._StandardJournal.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.StandardJournal',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "MaintainStandardJournals",
+      "read": "MaintainStandardJournals",
+      "update": "MaintainStandardJournals",
+      "delete": "MaintainStandardJournals"
     }
   },
 
@@ -42,24 +42,9 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  company: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
+  name: SC.Record.attr(Date),
 
   /**
     @type String
@@ -69,6 +54,14 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String)
+  notes: SC.Record.attr(String),
+
+  /**
+    @type XM.StandardJournalItem
+  */
+  items: SC.Record.toMany('XM.StandardJournalItem', {
+    isNested: true,
+    inverse: 'standardJournal'
+  })
 
 });

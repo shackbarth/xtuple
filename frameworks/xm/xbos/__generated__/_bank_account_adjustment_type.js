@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._BankAccountAdjustmentType = XM.Record.extend(
+  /** @scope XM._BankAccountAdjustmentType.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.BankAccountAdjustmentType',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": "MaintainAdjustmentTypes",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainAdjustmentTypes",
+      "delete": "MaintainAdjustmentTypes"
     }
   },
 
@@ -44,22 +44,7 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
     @type String
@@ -69,6 +54,11 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String)
+  ledgerAccount: SC.Record.attr(String),
+
+  /**
+    @type Boolean
+  */
+  isCredit: SC.Record.toOne(Boolean)
 
 });

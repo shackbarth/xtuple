@@ -1,29 +1,29 @@
 // ==========================================================================
 // Project:   xTuple Postbooks - Business Management System Framework        
-// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                                
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** 
+/**
   @class
 
-  This code is automatically generated and will be over-written. Do not edit directly. 
+  This code is automatically generated and will be over-written. Do not edit directly.
 
   @extends XM.Record
 */
-
 XM._Contact = XM.Record.extend(
-/** @scope XM._Contact.prototype */ {
-
+  /** @scope XM._Contact.prototype */ {
+  
   className: 'XM.Contact',
 
   nestedRecordNamespace: XM,
 
-  // ..........................................................
+  // .................................................
   // PRIVILEGES
   //
 
-  privileges:{
+  privileges: {
     "all": {
       "create": "MaintainAllContacts",
       "read": "ViewAllContacts",
@@ -41,106 +41,106 @@ XM._Contact = XM.Record.extend(
     }
   },
 
-  // ..........................................................
+  //..................................................
   // ATTRIBUTES
   //
   
   /**
-  @type Number
+    @type Number
   */
   guid: SC.Record.attr(Number),
 
   /**
-  @type String
+    @type String
   */
   number: SC.Record.attr(String),
 
   /**
-  @type Boolean
+    @type Boolean
   */
   isActive: SC.Record.attr(Boolean),
 
   /**
-  @type String
+    @type String
   */
   honorific: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   firstName: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   middleName: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   lastName: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   suffix: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   jobTitle: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   initials: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   phone: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   alternate: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   fax: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   primaryEmail: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   webAddress: SC.Record.attr(String),
 
   /**
-  @type XM.UserAccountInfo
+    @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true
   }),
 
   /**
-  @type String
+    @type String
   */
   notes: SC.Record.attr(String),
 
   /**
-  @type XM.AddressInfo
+    @type XM.AddressInfo
   */
   address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true
   }),
 
   /**
-  @type XM.ContactEmail
+    @type XM.ContactEmail
   */
   email: SC.Record.toMany('XM.ContactEmail', {
     isNested: true,
@@ -148,7 +148,7 @@ XM._Contact = XM.Record.extend(
   }),
 
   /**
-  @type XM.ContactComment
+    @type XM.ContactComment
   */
   comments: SC.Record.toMany('XM.ContactComment', {
     isNested: true,
@@ -156,7 +156,7 @@ XM._Contact = XM.Record.extend(
   }),
 
   /**
-  @type XM.ContactCharacteristic
+    @type XM.ContactCharacteristic
   */
   characteristics: SC.Record.toMany('XM.ContactCharacteristic', {
     isNested: true,
@@ -164,7 +164,7 @@ XM._Contact = XM.Record.extend(
   }),
 
   /**
-  @type XM.ContactContact
+    @type XM.ContactContact
   */
   contacts: SC.Record.toMany('XM.ContactContact', {
     isNested: true,
@@ -172,7 +172,7 @@ XM._Contact = XM.Record.extend(
   }),
 
   /**
-  @type XM.ContactItem
+    @type XM.ContactItem
   */
   items: SC.Record.toMany('XM.ContactItem', {
     isNested: true,
@@ -180,7 +180,7 @@ XM._Contact = XM.Record.extend(
   }),
 
   /**
-  @type XM.ContactFile
+    @type XM.ContactFile
   */
   files: SC.Record.toMany('XM.ContactFile', {
     isNested: true,
@@ -188,7 +188,7 @@ XM._Contact = XM.Record.extend(
   }),
 
   /**
-  @type XM.ContactImage
+    @type XM.ContactImage
   */
   images: SC.Record.toMany('XM.ContactImage', {
     isNested: true,
@@ -196,7 +196,7 @@ XM._Contact = XM.Record.extend(
   }),
 
   /**
-  @type XM.ContactUrl
+    @type XM.ContactUrl
   */
   urls: SC.Record.toMany('XM.ContactUrl', {
     isNested: true,

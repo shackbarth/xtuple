@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ToDoImage = XM.Record.extend(
+  /** @scope XM._ToDoImage.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ToDoImage',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
       "update": false,
-      "delete": false
+      "delete": true
     }
   },
 
@@ -42,33 +42,20 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.ToDo
   */
-  company: SC.Record.attr(String),
+  source: SC.Record.toOne('XM.ToDo'),
+
+  /**
+    @type XM.ImageInfo
+  */
+  image: SC.Record.toOne('XM.ImageInfo', {
+    isNested: true
+  }),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  purpose: SC.Record.attr(String)
 
 });

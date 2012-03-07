@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._VoucherDistribution = XM.Record.extend(
+  /** @scope XM._VoucherDistribution.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.VoucherDistribution',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,38 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Voucher
   */
-  company: SC.Record.attr(String),
+  voucher: SC.Record.toOne('XM.Voucher'),
+
+  /**
+    @type Number
+  */
+  amount: SC.Record.attr(Number),
+
+  /**
+    @type Number
+  */
+  quantity: SC.Record.attr(Number),
+
+  /**
+    @type XM.ExpenseCategory
+  */
+  expenseCategory: SC.Record.toOne('XM.ExpenseCategory'),
+
+  /**
+    @type XM.TaxCode
+  */
+  taxCode: SC.Record.toOne('XM.TaxCode'),
+
+  /**
+    @type Boolean
+  */
+  isDiscountable: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  notes: SC.Record.attr(String)
 
 });

@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._TaxAuthority = XM.Record.extend(
+  /** @scope XM._TaxAuthority.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.TaxAuthority',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "MaintainTaxAuthorities",
+      "read": "ViewTaxAuthorities",
+      "update": "MaintainTaxAuthorities",
+      "delete": "MaintainTaxAuthorities"
     }
   },
 
@@ -44,31 +44,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  code: SC.Record.attr(String),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  externalReference: SC.Record.attr(String),
+
+  /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String),
+  county: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.AddressInfo
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  address: SC.Record.toOne('XM.AddressInfo', {
+    isNested: true
+  })
 
 });

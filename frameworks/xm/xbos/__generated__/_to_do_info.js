@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ToDoInfo = XM.Record.extend(
+  /** @scope XM._ToDoInfo.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ToDoInfo',
 
   
 
@@ -44,31 +44,11 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Boolean
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  isActive: SC.Record.attr(Boolean)
 
 });

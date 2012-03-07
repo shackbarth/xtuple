@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._StandardJournalGroupItem = XM.Record.extend(
+  /** @scope XM._StandardJournalGroupItem.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.StandardJournalGroupItem',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,28 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.StandardJournalGroup
   */
-  company: SC.Record.attr(String),
+  standardJournalGroup: SC.Record.toOne('XM.StandardJournalGroup'),
 
   /**
-    @type String
+    @type XM.StandardJournal
   */
-  profitCenter: SC.Record.attr(String),
+  standardJournal: SC.Record.toOne('XM.StandardJournal'),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  apply: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  subAccount: SC.Record.attr(String),
+  effective: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Date
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  expires: SC.Record.attr(Date)
 
 });

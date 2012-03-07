@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._ContactBrowse = XM.Record.extend(
+  /** @scope XM._ContactBrowse.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.ContactBrowse',
 
   nestedRecordNamespace: XM,
 
@@ -25,10 +25,19 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": false,
+      "read": "ViewAllContacts",
+      "update": false,
+      "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false,
+      "properties": [
+        "owner"
+      ]
     }
   },
 
@@ -54,57 +63,58 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
-  line1: SC.Record.attr(String),
+  firstName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line2: SC.Record.attr(String),
+  middleName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line3: SC.Record.attr(String),
+  lastName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  city: SC.Record.attr(String),
+  suffix: SC.Record.attr(String),
 
   /**
     @type String
   */
-  state: SC.Record.attr(String),
+  jobTitle: SC.Record.attr(String),
 
   /**
     @type String
   */
-  postalCode: SC.Record.attr(String),
+  phone: SC.Record.attr(String),
 
   /**
     @type String
   */
-  country: SC.Record.attr(String),
+  alternate: SC.Record.attr(String),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String),
+  fax: SC.Record.attr(String),
 
   /**
-    @type XM.AddressComment
+    @type String
   */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
-  }),
+  primaryEmail: SC.Record.attr(String),
 
   /**
-    @type XM.AddressCharacteristic
+    @type String
   */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
+  webAddress: SC.Record.attr(String),
+
+  /**
+    @type XM.UserAccountInfo
+  */
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true
   })
 
 });

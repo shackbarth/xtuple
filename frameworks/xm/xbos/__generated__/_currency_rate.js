@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._CurrencyRate = XM.Record.extend(
+  /** @scope XM._CurrencyRate.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.CurrencyRate',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,23 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Currency
   */
-  company: SC.Record.attr(String),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
-    @type String
+    @type Number
   */
-  profitCenter: SC.Record.attr(String),
+  rate: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  number: SC.Record.attr(String),
+  effective: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Date
   */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  expires: SC.Record.attr(Date)
 
 });

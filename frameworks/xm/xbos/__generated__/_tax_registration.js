@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._TaxRegistration = XM.Record.extend(
+  /** @scope XM._TaxRegistration.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.TaxRegistration',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": "MaintainChartOfAccounts",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainChartOfAccounts",
+      "delete": "MaintainChartOfAccounts"
     }
   },
 
@@ -44,12 +44,12 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  relationType: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.TaxAuthority
   */
-  profitCenter: SC.Record.attr(String),
+  taxAuthority: SC.Record.toOne('XM.TaxAuthority'),
 
   /**
     @type String
@@ -57,18 +57,23 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   number: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.TaxZone
   */
-  subAccount: SC.Record.attr(String),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
+
+  /**
+    @type Date
+  */
+  effective: SC.Record.attr(Date),
+
+  /**
+    @type Date
+  */
+  expires: SC.Record.attr(Date),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  notes: SC.Record.attr(String)
 
 });

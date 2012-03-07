@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._ReceivableApplication = XM.Record.extend(
+  /** @scope XM._ReceivableApplication.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.ReceivableApplication',
 
   nestedRecordNamespace: XM,
 
@@ -25,10 +25,10 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": false,
+      "read": "ViewAROpenItems",
+      "update": false,
+      "delete": false
     }
   },
 
@@ -42,69 +42,65 @@ XM._Address = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  number: SC.Record.attr(String),
+  postDate: SC.Record.attr(Date),
 
   /**
-    @type Boolean
+    @type XM.Customer
   */
-  isActive: SC.Record.attr(Boolean),
-
-  /**
-    @type String
-  */
-  line1: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  line2: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  line3: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  city: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  state: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  postalCode: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  country: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  notes: SC.Record.attr(String),
-
-  /**
-    @type XM.AddressComment
-  */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
+  customer: SC.Record.toOne('XM.Customer', {
+    isNested: true
   }),
 
   /**
-    @type XM.AddressCharacteristic
+    @type String
   */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
-  })
+  documentType: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  documentNumber: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  documentTargetType: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  fundsType: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  referenceNumber: SC.Record.attr(String),
+
+  /**
+    @type Number
+  */
+  applied: SC.Record.attr(Number),
+
+  /**
+    @type XM.Receivable
+  */
+  source: SC.Record.toOne('XM.Receivable'),
+
+  /**
+    @type XM.Receivable
+  */
+  target: SC.Record.toOne('XM.Receivable'),
+
+  /**
+    @type String
+  */
+  userName: SC.Record.attr(String),
+
+  /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency')
 
 });

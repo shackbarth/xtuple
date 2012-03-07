@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._AddressInfo = XM.Record.extend(
+  /** @scope XM._AddressInfo.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.AddressInfo',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
     }
   },
 
@@ -40,16 +40,6 @@ XM._Address = XM.Record.extend(
     @type Number
   */
   guid: SC.Record.attr(Number),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type Boolean
-  */
-  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
@@ -84,27 +74,6 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
-  country: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  notes: SC.Record.attr(String),
-
-  /**
-    @type XM.AddressComment
-  */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
-  }),
-
-  /**
-    @type XM.AddressCharacteristic
-  */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
-  })
+  country: SC.Record.attr(String)
 
 });

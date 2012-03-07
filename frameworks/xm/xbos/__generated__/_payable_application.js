@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._PayableApplication = XM.Record.extend(
+  /** @scope XM._PayableApplication.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.PayableApplication',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -26,7 +26,7 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   privileges: {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewAPOpenItems",
       "update": false,
       "delete": false
     }
@@ -42,33 +42,62 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Vendor
   */
-  company: SC.Record.attr(String),
+  vendor: SC.Record.toOne('XM.Vendor'),
+
+  /**
+    @type Date
+  */
+  postDate: SC.Record.attr(Date),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  sourceDocumentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  sourceDocumentNumber: SC.Record.attr(String),
+
+  /**
+    @type XM.Payable
+  */
+  source: SC.Record.toOne('XM.Payable', {
+    isNested: true
+  }),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String),
+  targetDocumentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
+  targetDocumentNumber: SC.Record.attr(String),
+
+  /**
+    @type XM.Payable
+  */
+  target: SC.Record.toOne('XM.Payable', {
+    isNested: true
+  }),
+
+  /**
+    @type Number
+  */
+  amount: SC.Record.attr(Number),
+
+  /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type String
   */
-  type: SC.Record.attr(String)
+  userName: SC.Record.attr(String)
 
 });

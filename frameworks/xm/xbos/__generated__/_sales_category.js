@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._SalesCategory = XM.Record.extend(
+  /** @scope XM._SalesCategory.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.SalesCategory',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": "MaintainSalesCategories",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainSalesCategories",
+      "delete": "MaintainSalesCategories"
     }
   },
 
@@ -42,33 +42,18 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Boolean
   */
-  company: SC.Record.attr(String),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  description: SC.Record.attr(String)
 
 });

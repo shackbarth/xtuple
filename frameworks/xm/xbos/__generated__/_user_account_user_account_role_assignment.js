@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._UserAccountUserAccountRoleAssignment = XM.Record.extend(
+  /** @scope XM._UserAccountUserAccountRoleAssignment.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.UserAccountUserAccountRoleAssignment',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
       "update": false,
-      "delete": false
+      "delete": true
     }
   },
 
@@ -44,31 +44,13 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  userAccount: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.UserAccountRoleInfo
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  userAccountRole: SC.Record.toOne('XM.UserAccountRoleInfo', {
+    isNested: true
+  })
 
 });

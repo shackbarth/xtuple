@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ItemConversion = XM.Record.extend(
+  /** @scope XM._ItemConversion.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ItemConversion',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Item
   */
-  company: SC.Record.attr(String),
+  item: SC.Record.toOne('XM.Item'),
 
   /**
-    @type String
+    @type XM.Unit
   */
-  profitCenter: SC.Record.attr(String),
+  fromUnit: SC.Record.toOne('XM.Unit'),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  fromValue: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Unit
   */
-  subAccount: SC.Record.attr(String),
+  toUnit: SC.Record.toOne('XM.Unit'),
 
   /**
-    @type String
+    @type Number
   */
-  description: SC.Record.attr(String),
+  toValue: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Boolean
   */
-  type: SC.Record.attr(String)
+  fractional: SC.Record.attr(Boolean)
 
 });

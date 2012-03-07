@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._PaymentDetail = XM.Record.extend(
+  /** @scope XM._PaymentDetail.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.PaymentDetail',
 
   
 
@@ -42,33 +42,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Payment
   */
-  company: SC.Record.attr(String),
+  payment: SC.Record.toOne('XM.Payment'),
 
   /**
-    @type String
+    @type Number
   */
-  profitCenter: SC.Record.attr(String),
+  amount: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Currency
   */
-  number: SC.Record.attr(String),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
-    @type String
+    @type Number
   */
-  subAccount: SC.Record.attr(String),
+  currencyRate: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  description: SC.Record.attr(String),
+  discount: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  type: SC.Record.attr(String)
+  documentDate: SC.Record.attr(Date)
 
 });

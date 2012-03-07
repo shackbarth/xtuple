@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._Country = XM.Record.extend(
+  /** @scope XM._Country.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.Country',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": "MaintainCountries",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainCountries",
+      "delete": "MaintainCountries"
     }
   },
 
@@ -44,31 +44,36 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  abbreviation: SC.Record.attr(String),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  currencyName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String),
+  currencySymbol: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
+  currencyAbbreviation: SC.Record.attr(String),
 
   /**
     @type String
   */
-  type: SC.Record.attr(String)
+  currencyNumber: SC.Record.attr(String),
+
+  /**
+    @type XM.State
+  */
+  states: SC.Record.toMany('XM.State')
 
 });

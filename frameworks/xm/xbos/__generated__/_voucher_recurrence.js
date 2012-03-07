@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._VoucherRecurrence = XM.Record.extend(
+  /** @scope XM._VoucherRecurrence.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.VoucherRecurrence',
 
   
 
@@ -23,14 +23,7 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   // PRIVILEGES
   //
 
-  privileges: {
-    "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
-    }
-  },
+  
 
   //..................................................
   // ATTRIBUTES
@@ -42,33 +35,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Voucher
   */
-  company: SC.Record.attr(String),
+  voucher: SC.Record.toOne('XM.Voucher'),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  period: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  frequency: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  subAccount: SC.Record.attr(String),
+  startDate: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Date
   */
-  description: SC.Record.attr(String),
+  endDate: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Number
   */
-  type: SC.Record.attr(String)
+  maximum: SC.Record.attr(Number)
 
 });

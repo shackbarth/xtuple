@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._BankReconciliationItem = XM.Record.extend(
+  /** @scope XM._BankReconciliationItem.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.BankReconciliationItem',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,28 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.BankReconciliation
   */
-  company: SC.Record.attr(String),
+  bankReconciliation: SC.Record.toOne('XM.BankReconciliation'),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  sourceType: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  source: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  subAccount: SC.Record.attr(String),
+  amount: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  currencyRate: SC.Record.attr(Number)
 
 });

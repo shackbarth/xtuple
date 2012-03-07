@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._IncidentComment = XM.Record.extend(
+  /** @scope XM._IncidentComment.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.IncidentComment',
 
   
 
@@ -25,10 +25,16 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
+      "update": "EditOthersComments",
       "delete": false
+    },
+    "personal": {
+      "update": "EditOwnComments",
+      "properties": [
+        "createdBy"
+      ]
     }
   },
 
@@ -42,33 +48,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Incident
   */
-  company: SC.Record.attr(String),
+  incident: SC.Record.toOne('XM.Incident'),
+
+  /**
+    @type XM.CommentType
+  */
+  commentType: SC.Record.toOne('XM.CommentType'),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  text: SC.Record.attr(String),
+
+  /**
+    @type Boolean
+  */
+  isPublic: SC.Record.attr(Boolean),
+
+  /**
+    @type Date
+  */
+  created: SC.Record.attr(Date),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  createdBy: SC.Record.attr(String)
 
 });

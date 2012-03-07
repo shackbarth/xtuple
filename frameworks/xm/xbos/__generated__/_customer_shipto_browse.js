@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._CustomerShiptoBrowse = XM.Record.extend(
+  /** @scope XM._CustomerShiptoBrowse.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.CustomerShiptoBrowse',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -42,14 +42,9 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Customer
   */
-  company: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  profitCenter: SC.Record.attr(String),
+  customer: SC.Record.toOne('XM.Customer'),
 
   /**
     @type String
@@ -59,16 +54,25 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Boolean
   */
-  description: SC.Record.attr(String),
+  isActive: SC.Record.attr(Boolean),
 
   /**
-    @type String
+    @type XM.ContactInfo
   */
-  type: SC.Record.attr(String)
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: true
+  }),
+
+  /**
+    @type XM.AddressInfo
+  */
+  address: SC.Record.toOne('XM.AddressInfo', {
+    isNested: true
+  })
 
 });

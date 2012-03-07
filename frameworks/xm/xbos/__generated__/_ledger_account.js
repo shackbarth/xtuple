@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._LedgerAccount = XM.Record.extend(
+  /** @scope XM._LedgerAccount.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.LedgerAccount',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": "MaintainChartOfAccounts",
+      "read": "MaintainChartOfAccounts",
+      "update": "MaintainChartOfAccounts",
+      "delete": "MaintainChartOfAccounts"
     }
   },
 
@@ -44,7 +44,42 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
+  company: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  profitCenter: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
   number: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  subAccount: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  description: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  externalReference: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  type: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  subType: SC.Record.attr(String),
 
   /**
     @type Boolean
@@ -54,57 +89,6 @@ XM._Address = XM.Record.extend(
   /**
     @type String
   */
-  line1: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  line2: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  line3: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  city: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  state: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  postalCode: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  country: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  notes: SC.Record.attr(String),
-
-  /**
-    @type XM.AddressComment
-  */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
-  }),
-
-  /**
-    @type XM.AddressCharacteristic
-  */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
-  })
+  notes: SC.Record.attr(String)
 
 });

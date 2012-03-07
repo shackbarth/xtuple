@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._CashReceiptApplication = XM.Record.extend(
+  /** @scope XM._CashReceiptApplication.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.CashReceiptApplication',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "false",
+      "read": "true",
+      "update": "false",
+      "delete": "false"
     }
   },
 
@@ -42,33 +42,23 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.CashReceipt
   */
-  company: SC.Record.attr(String),
+  cashReceipt: SC.Record.toOne('XM.CashReceipt'),
 
   /**
-    @type String
+    @type XM.Receivable
   */
-  profitCenter: SC.Record.attr(String),
+  receivable: SC.Record.toOne('XM.Receivable'),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  amount: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  discount: SC.Record.attr(Number)
 
 });

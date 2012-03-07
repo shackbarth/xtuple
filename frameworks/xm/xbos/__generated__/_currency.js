@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._Currency = XM.Record.extend(
+  /** @scope XM._Currency.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.Currency',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -44,31 +44,29 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  symbol: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  abbreviation: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Boolean
   */
-  subAccount: SC.Record.attr(String),
+  isBase: SC.Record.attr(Boolean),
 
   /**
-    @type String
+    @type XM.CurrencyRate
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  rates: SC.Record.toMany('XM.CurrencyRate', {
+    isNested: true,
+    inverse: 'currency'
+  })
 
 });

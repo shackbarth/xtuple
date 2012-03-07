@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ToDoRecurrence = XM.Record.extend(
+  /** @scope XM._ToDoRecurrence.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ToDoRecurrence',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.ToDo
   */
-  company: SC.Record.attr(String),
+  toDo: SC.Record.toOne('XM.ToDo'),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  period: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String),
+  frequency: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  subAccount: SC.Record.attr(String),
+  startDate: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Date
   */
-  description: SC.Record.attr(String),
+  endDate: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Number
   */
-  type: SC.Record.attr(String)
+  maximum: SC.Record.attr(Number)
 
 });

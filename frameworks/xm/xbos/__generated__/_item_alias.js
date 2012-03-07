@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ItemAlias = XM.Record.extend(
+  /** @scope XM._ItemAlias.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ItemAlias',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -42,33 +42,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Item
   */
-  company: SC.Record.attr(String),
+  item: SC.Record.toOne('XM.Item'),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
+  aliasNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String),
+  notes: SC.Record.attr(String),
+
+  /**
+    @type Boolean
+  */
+  useDescription: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String),
+  description1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  description2: SC.Record.attr(String)
 
 });

@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._GeneralJournal = XM.Record.extend(
+  /** @scope XM._GeneralJournal.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.GeneralJournal',
 
   nestedRecordNamespace: XM,
 
@@ -25,10 +25,10 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": false,
+      "read": "ViewJournals",
+      "update": false,
+      "delete": false
     }
   },
 
@@ -42,49 +42,24 @@ XM._Address = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  number: SC.Record.attr(String),
+  date: SC.Record.attr(Date),
 
   /**
-    @type Boolean
+    @type Number
   */
-  isActive: SC.Record.attr(Boolean),
-
-  /**
-    @type String
-  */
-  line1: SC.Record.attr(String),
+  series: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  line2: SC.Record.attr(String),
+  documentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line3: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  city: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  state: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  postalCode: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  country: SC.Record.attr(String),
+  documentNumber: SC.Record.attr(String),
 
   /**
     @type String
@@ -92,19 +67,35 @@ XM._Address = XM.Record.extend(
   notes: SC.Record.attr(String),
 
   /**
-    @type XM.AddressComment
+    @type XM.LedgerAccountInfo
   */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
+  ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
+    isNested: true
   }),
 
   /**
-    @type XM.AddressCharacteristic
+    @type String
   */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
-  })
+  sense: SC.Record.attr(String),
+
+  /**
+    @type Number
+  */
+  amount: SC.Record.attr(Number),
+
+  /**
+    @type Boolean
+  */
+  journal: SC.Record.attr(Boolean),
+
+  /**
+    @type String
+  */
+  created: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  createdBy: SC.Record.attr(String)
 
 });

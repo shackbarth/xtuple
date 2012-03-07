@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._ReceivableTax = XM.Record.extend(
+  /** @scope XM._ReceivableTax.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ReceivableTax',
 
   
 
@@ -42,33 +42,63 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Receivable
   */
-  company: SC.Record.attr(String),
+  receivable: SC.Record.toOne('XM.Receivable'),
 
   /**
-    @type String
+    @type XM.TaxType
   */
-  profitCenter: SC.Record.attr(String),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
-    @type String
+    @type XM.TaxCode
   */
-  number: SC.Record.attr(String),
+  taxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
-    @type String
+    @type Number
   */
-  subAccount: SC.Record.attr(String),
+  basis: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.TaxCode
   */
-  description: SC.Record.attr(String),
+  basisTaxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
-    @type String
+    @type Number
   */
-  type: SC.Record.attr(String)
+  sequence: SC.Record.attr(Number),
+
+  /**
+    @type Number
+  */
+  percent: SC.Record.attr(Number),
+
+  /**
+    @type Number
+  */
+  amount: SC.Record.attr(Number),
+
+  /**
+    @type Number
+  */
+  tax: SC.Record.attr(Number),
+
+  /**
+    @type Date
+  */
+  documentDate: SC.Record.attr(Date),
+
+  /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency'),
+
+  /**
+    @type Number
+  */
+  currencyRate: SC.Record.attr(Number)
 
 });

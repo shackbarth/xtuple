@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._Address = XM.Record.extend(
-  /** @scope XM._Address.prototype */ {
+XM._Voucher = XM.Record.extend(
+  /** @scope XM._Voucher.prototype */ {
   
-  className: 'XM.Address',
+  className: 'XM.Voucher',
 
   nestedRecordNamespace: XM,
 
@@ -25,10 +25,10 @@ XM._Address = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainAddresses",
-      "read": "ViewAddresses",
-      "update": "MaintainAddresses",
-      "delete": "MaintainAddresses"
+      "create": "MaintainVouchers",
+      "read": "ViewVouchers",
+      "update": "MaintainVouchers",
+      "delete": "MaintainVouchers"
     }
   },
 
@@ -42,6 +42,13 @@ XM._Address = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
+    @type XM.Vendor
+  */
+  vendor: SC.Record.toOne('XM.Vendor', {
+    isNested: true
+  }),
+
+  /**
     @type String
   */
   number: SC.Record.attr(String),
@@ -49,42 +56,42 @@ XM._Address = XM.Record.extend(
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean),
+  isPosted: SC.Record.attr(Boolean),
+
+  /**
+    @type Date
+  */
+  documentDate: SC.Record.attr(Date),
+
+  /**
+    @type Boolean
+  */
+  isFlagFor1099: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  line1: SC.Record.attr(String),
+  reference: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.Terms
   */
-  line2: SC.Record.attr(String),
+  terms: SC.Record.toOne('XM.Terms'),
 
   /**
-    @type String
+    @type XM.Currency
   */
-  line3: SC.Record.attr(String),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
-    @type String
+    @type XM.TaxZone
   */
-  city: SC.Record.attr(String),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
-    @type String
+    @type XM.TaxType
   */
-  state: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  postalCode: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  country: SC.Record.attr(String),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
     @type String
@@ -92,19 +99,8 @@ XM._Address = XM.Record.extend(
   notes: SC.Record.attr(String),
 
   /**
-    @type XM.AddressComment
+    @type XM.VoucherRecurrence
   */
-  comments: SC.Record.toMany('XM.AddressComment', {
-    isNested: true,
-    inverse: 'address'
-  }),
-
-  /**
-    @type XM.AddressCharacteristic
-  */
-  characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
-    isNested: true,
-    inverse: 'address'
-  })
+  recurrences: SC.Record.toMany('XM.VoucherRecurrence')
 
 });

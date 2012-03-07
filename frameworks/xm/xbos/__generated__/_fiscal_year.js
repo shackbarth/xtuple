@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._FiscalYear = XM.Record.extend(
+  /** @scope XM._FiscalYear.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.FiscalYear',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": "MaintainAccountingPeriods",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainAccountingPeriods",
+      "delete": "MaintainAccountingPeriods"
     }
   },
 
@@ -42,33 +42,18 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Date
   */
-  company: SC.Record.attr(String),
+  start: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Date
   */
-  profitCenter: SC.Record.attr(String),
+  end: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Boolean
   */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  type: SC.Record.attr(String)
+  closed: SC.Record.attr(Boolean)
 
 });

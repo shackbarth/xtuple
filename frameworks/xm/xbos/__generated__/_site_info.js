@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._SiteInfo = XM.Record.extend(
+  /** @scope XM._SiteInfo.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.SiteInfo',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -44,22 +44,12 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  company: SC.Record.attr(String),
+  code: SC.Record.attr(String),
 
   /**
-    @type String
+    @type Boolean
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
@@ -67,8 +57,15 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   description: SC.Record.attr(String),
 
   /**
-    @type String
+    @type XM.SiteType
   */
-  type: SC.Record.attr(String)
+  siteType: SC.Record.toOne('XM.SiteType'),
+
+  /**
+    @type XM.AddressInfo
+  */
+  address: SC.Record.toOne('XM.AddressInfo', {
+    isNested: true
+  })
 
 });

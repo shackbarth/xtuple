@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+XM._PaymentApproval = XM.Record.extend(
+  /** @scope XM._PaymentApproval.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.PaymentApproval',
 
   
 
@@ -25,10 +25,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "MaintainPayments",
+      "read": "MaintainPayments",
+      "update": "MaintainPayments",
+      "delete": "MaintainPayments"
     }
   },
 
@@ -42,33 +42,33 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Payable
   */
-  company: SC.Record.attr(String),
+  payable: SC.Record.toOne('XM.Payable'),
 
   /**
-    @type String
+    @type Number
   */
-  profitCenter: SC.Record.attr(String),
+  amount: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.BankAccount
   */
-  number: SC.Record.attr(String),
+  bankAccount: SC.Record.toOne('XM.BankAccount'),
 
   /**
-    @type String
+    @type XM.Currency
   */
-  subAccount: SC.Record.attr(String),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
-    @type String
+    @type Date
   */
-  description: SC.Record.attr(String),
+  date: SC.Record.attr(Date),
 
   /**
-    @type String
+    @type Number
   */
-  type: SC.Record.attr(String)
+  discount: SC.Record.attr(Number)
 
 });
