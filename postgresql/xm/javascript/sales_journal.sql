@@ -16,7 +16,6 @@
   */
   XM.SalesJournal.post = function(startDate, endDate, distributionDate) {
     var data = Object.create(XT.Data),
-        jrnl = Object.create(XM.Journal),
         ret, err;
 
     if(!data.checkPrivilege('PostJournals')) err = "Access Denied.";
