@@ -20,22 +20,23 @@
     else if(voucherId === undefined) err = "No Voucher specified.";
     if(!err) {
       ret = executeSql("select postvoucher($1, false) as result;", [voucherId])[0].result;
-    }
 
-    switch (ret)
-    {
-      case -5:
-        err = "The Cost Category for one or more Item Sites "
-              + "for the Purchase Order covered by this Voucher "
-              + "is not configured with Purchase Price Variance "
-              + "or P/O Liability Clearing Account Numbers or "
-              + "the Vendor of this Voucher is not configured "
-              + "with an A/P Account Number. Because of this, "
-              + "G/L Transactions cannot be posted for this "
-              +"Voucher.";
-        break;
-      default:
-        return ret;
+      switch (ret)
+      {
+        case -5:
+          err = "The Cost Category for one or more Item Sites "
+                + "for the Purchase Order covered by this Voucher "
+                + "is not configured with Purchase Price Variance "
+                + "or P/O Liability Clearing Account Numbers or "
+                + "the Vendor of this Voucher is not configured "
+                + "with an A/P Account Number. Because of this, "
+                + "G/L Transactions cannot be posted for this "
+                +"Voucher.";
+          break;
+        default:
+          return ret;
+      }
+
     }
 
     throw new Error(err);
@@ -55,22 +56,23 @@
 
     if(!err) {
       ret = executeSql("select postvouchers(false) as result;")[0].result;
-    }
 
-    switch (ret)
-    {
-      case -5:
-        err = "The Cost Category for one or more Item Sites "
-              + "for the Purchase Order covered by this Voucher "
-              + "is not configured with Purchase Price Variance "
-              + "or P/O Liability Clearing Account Numbers or "
-              + "the Vendor of this Voucher is not configured "
-              + "with an A/P Account Number. Because of this, "
-              + "G/L Transactions cannot be posted for this "
-              +"Voucher.";
-        break;
-      default:
-        return ret;
+      switch (ret)
+      {
+        case -5:
+          err = "The Cost Category for one or more Item Sites "
+                + "for the Purchase Order covered by this Voucher "
+                + "is not configured with Purchase Price Variance "
+                + "or P/O Liability Clearing Account Numbers or "
+                + "the Vendor of this Voucher is not configured "
+                + "with an A/P Account Number. Because of this, "
+                + "G/L Transactions cannot be posted for this "
+                +"Voucher.";
+          break;
+        default:
+          return ret;
+      }
+
     }
 
     throw new Error(err);
@@ -91,6 +93,28 @@
 
     if(!err) {
       return executeSql("select voidapopenvoucher($1) as result;", [apOpenId])[0].result;
+    }
+
+    throw new Error(err);
+  }
+
+  /** 
+   Create 1 or more recurring Vouchers
+
+   @param {Number} VoucherId
+   @returns {Number}
+  */
+  XM.Voucher.createRecurring = function(voucherId) {
+    var sql = "select createrecurringitems({id}, 'V') as result;"
+              .replace(/{id}/, voucherId === undefined ? null : voucherId),
+        data = Object.create(XT.Data),
+        err;
+
+    if(!data.checkPrivilege('MaintainVouchers'))
+      err = "Access Denied.";
+
+    if(!err) {
+      return executeSql(sql)[0].result;
     }
 
     throw new Error(err);
