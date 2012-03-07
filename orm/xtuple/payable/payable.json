@@ -4,6 +4,7 @@
   "type": "Payable",
   "table": "apopen",
   "idSequenceName": "apopen_apopen_id_seq",
+  "orderSequence": "APMemoNumber",
   "comment": "Payable Map",
   "privileges": {
     "all": {
@@ -20,6 +21,20 @@
         "type": "Number",
         "column": "apopen_id",
         "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "apopen_docnumber"
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "apopen_doctype"
       }
     },
     {
@@ -48,20 +63,6 @@
       "toOne": {
         "type": "VendorInfo",
         "column": "apopen_vend_id"
-      }
-    },
-    {
-      "name": "documentType",
-      "attr": {
-        "type": "String",
-        "column": "apopen_doctype"
-      }
-    },
-    {
-      "name": "ducumentNumber",
-      "attr": {
-        "type": "String",
-        "column": "apopen_docnumber"
       }
     },
     {
@@ -149,7 +150,7 @@
       }
     },
     {
-      "name": "status",
+      "name": "payableStatus",
       "attr": {
         "type": "String",
         "column": "apopen_status"

@@ -4,6 +4,7 @@
   "type": "ToDoAlarm",
   "table": "alarm",
   "idSequenceName": "alarm_alarm_id_seq",
+  "orderSequence": "AlarmNumber",
   "comment": "ToDo Alarm Map",
   "privileges": {
     "all": {
@@ -23,6 +24,13 @@
       }
     },
     {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "alarm_number"
+      }
+    },
+    {
       "name": "sourceType",
       "attr": {
         "type": "Number",
@@ -36,13 +44,6 @@
       "toOne": {
         "type": "ToDo",
         "column": "alarm_source_id"
-      }
-    },
-    {
-      "name": "number",
-      "attr": {
-        "type": "String",
-        "column": "alarm_number"
       }
     },
     {

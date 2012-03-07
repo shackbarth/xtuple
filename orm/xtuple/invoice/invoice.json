@@ -4,6 +4,7 @@
   "type": "Invoice",
   "table": "invchead",
   "idSequenceName": "invchead_invchead_id_seq",
+  "orderSequence": "InvcNumber",
   "comment": "Invoice Map",
   "privileges": {
     "all": {
