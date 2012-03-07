@@ -5,20 +5,32 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_opportunity');
+sc_require('xbos/__generated__/_incident');
+sc_require('mixins/core_documents');
 
 /**
   @class
 
-  @extends XM._Opportunity
+  @extends XM._Incident
   @extends XM.CoreDocuments
 */
-XM.Opportunity = XM._Opportunity.extend( XM.CoreDocuments, 
-  /** @scope XM.Opportunity.prototype */ {
+XM.Incident = XM._Incident.extend( XM.CoreDocuments,
+  /** @scope XM.Incident.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
+
+  /**
+  @field
+  @type Boolean
+  */
+  isActive:  function() {
+    var status = this.get('incidentStatus');
+    if (status) { return status !== 'L'; }
+
+    return NO;
+  }.property('incidentStatus').cacheable(),
 
   //..................................................
   // METHODS
@@ -27,19 +39,19 @@ XM.Opportunity = XM._Opportunity.extend( XM.CoreDocuments,
   //..................................................
   // OBSERVERS
   //
-
-  /* @private */
-  _opportunitiesLength: 0,
   
   /* @private */
-  _opportunitiesLengthBinding: '.opportunities.length',
+  _incidentsLength: 0,
   
   /* @private */
-  _opportunitiesDidChange: function() {
+  _incidentsLengthBinding: '.incidents.length',
+  
+  /* @private */
+  _incidentsDidChange: function() {
     var documents = this.get('documents'),
-        opportunities = this.get('opportunities');
+        incidents = this.get('incidents');
 
-    documents.addEach(opportunities);    
-  }.observes('opportunitiesLength') 
+    documents.addEach(incidents);    
+  }.observes('incidentsLength'),
 
 });

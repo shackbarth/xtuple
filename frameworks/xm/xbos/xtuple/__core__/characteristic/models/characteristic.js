@@ -26,6 +26,8 @@ XM.Characteristic = XM._Characteristic.extend(
   //..................................................
   // OBSERVERS
   //
+  
+});
 
 /**
   @static

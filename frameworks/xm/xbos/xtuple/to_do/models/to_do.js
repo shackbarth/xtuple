@@ -6,6 +6,7 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_to_do');
+sc_require('mixins/core_documents');
 
 /**
   @class
