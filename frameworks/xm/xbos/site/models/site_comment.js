@@ -1,29 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/comment/models/comment');
+sc_require('xbos/__generated__/_site_comment');
 
-/** @class
+/**
+  @class
 
-  Comment for Site.
-
-  @extends XM.Comment
+  @extends XM._SiteComment
 */
-XM.SiteComment = XM.Comment.extend(
-/** @scope XM.SiteComment.prototype */ {
+XM.SiteComment = XM._SiteComment.extend(
+  /** @scope XM.SiteComment.prototype */ {
 
-  className: 'XM.SiteComment',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.Site
-  */
-  site: SC.Record.toOne('XM.Site', {
-    inverse:  'comments',
-    isMaster: NO,
-  }),
-  
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
+
 });
 

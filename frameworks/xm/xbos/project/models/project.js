@@ -1,153 +1,22 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('mixins/core_documents');
+sc_require('xbos/__generated__/_project');
 
-/** @class
+/**
+  @class
 
-  (Document your Model here)
-
-  @extends XM.Activity
-  @extends XM.Recurrence
-  @version 0.2
+  @extends XM._Project
+  @extends XM.CoreDocuments
 */
-XM.Project = XM.Activity.extend( XM.Recurrence, XM.CoreDocuments,
-    /** @scope XM.Project.prototype */ {
+XM.Project = XM._Project.extend( XM.CoreDocuments,
+  /** @scope XM.Project.prototype */ {
 
-  className: 'XM.Project',
-
-  createPrivilege: 'MaintainPersonalProjects MaintainAllProjects'.w(),
-  readPrivilege:   'ViewPersonalProjects ViewAllProjects',
-  updatePrivilege: 'MaintainPersonalProjects MaintainAllProjects'.w(),
-  deletePrivilege: 'MaintainPersonalProjects MaintainAllProjects'.w(),
-
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String, {
-    isRequired: YES
-  }),
-  
-  /**
-  @type String
-  */
-  projectStatus: SC.Record.attr(String, { 
-    /** @private */
-    defaultValue: function() {
-      return XM.Project.CONCEPT;
-    }
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  startDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type XM.Account
-  */
-  dueDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d', 
-    isRequired: YES,
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  assignDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  completeDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type XM.ProjectTask
-  */
-  tasks: SC.Record.toMany('XM.ProjectTask', {
-    isNested: YES,
-    inverse:  'project'
-  }),
-  
-  /**
-  @type XM.ProjectComment
-  */
-  comments: XM.Record.toMany('XM.ProjectComment', {
-    isNested: YES,
-    inverse: 'project'
-  }),
-  
-  // ..........................................................
-  // DOCUMENT ASSIGNMENTS
-  // 
-  
-  /**
-  @type XM.ProjectContact
-  */
-  contacts: SC.Record.toMany('XM.ProjectContact', {
-    isNested: YES
-  }),
-    
-  /**
-  @type XM.ProjectItem
-  */
-  items: SC.Record.toMany('XM.ProjectItem', {
-    isNested: YES
-  }),
-  
-  /**
-  @type XM.ProjectFile
-  */
-  files: SC.Record.toMany('XM.ProjectFile', {
-    isNested: YES
-  }),
-  
-  /**
-  @type XM.ProjectImage
-  */
-  images: SC.Record.toMany('XM.ProjectImage', {
-    isNested: YES
-  }),
-  
-  /**
-  @type XM.ProjectUrl
-  */
-  urls: SC.Record.toMany('XM.ProjectUrl', {
-    isNested: YES
-  }),
-  
-  /**
-  @type XM.ProjectProject
-  */
-  projects: XM.Record.toMany('XM.ProjectProject', {
-    isNested: YES
-  }),
-  
-  /* @private */
-  _projectsLength: 0,
-  
-  /* @private */
-  _projectsLengthBinding: '.projects.length',
-  
-  /* @private */
-  _projectsDidChange: function() {
-    var documents = this.get('documents'),
-        projects = this.get('projects');
-
-    documents.addEach(projects);    
-  }.observes('projectsLength'),
-
-
-  // ..........................................................
+  // .................................................
   // CALCULATED PROPERTIES
   //
 
@@ -204,7 +73,28 @@ XM.Project = XM.Activity.extend( XM.Recurrence, XM.CoreDocuments,
     //var value = this.get('budgetedExpenses') - this.get('actualExpenses');
     return 0;
   }.property(),
+  
+  //..................................................
+  // METHODS
+  //
 
+  //..................................................
+  // OBSERVERS
+  //
+
+   /* @private */
+  _projectsLength: 0,
+  
+  /* @private */
+  _projectsLengthBinding: '.projects.length',
+  
+  /* @private */
+  _projectsDidChange: function() {
+    var documents = this.get('documents'),
+        projects = this.get('projects');
+
+    documents.addEach(projects);    
+  }.observes('projectsLength'),
 });
 
 XM.Project.mixin( /** @scope XM.Project */ {

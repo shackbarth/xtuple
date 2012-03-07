@@ -1,106 +1,27 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_project_task');
 
-  @extends XM.Activity
-  @version 0.2
+/**
+  @class
+
+  @extends XM._ProjectTask
 */
-XM.ProjectTask = XM.Activity.extend(
-    /** @scope XM.ProjectTask.prototype */ {
+XM.ProjectTask = XM._ProjectTask.extend(
+  /** @scope XM.ProjectTask.prototype */ {
 
-  className: 'XM.ProjectTask',
-
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String, {
-    isRequired: YES
-  }),
-  
-  /**
-  @type XM.Project
-  */
-  project: SC.Record.toOne('XM.Project', {
-    inverse:  'tasks',
-    isMaster: NO
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  startDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  dueDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d',
-    isRequired: YES
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  assignDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  completeDate: SC.Record.attr(SC.DateTime, { 
-    format: '%Y-%m-%d' 
-  }),
-  
-  /**
-  @type Number
-  */
-  budgetedHours:  SC.Record.attr(Number),
-  
-  /**
-  @type Number
-  */
-  actualHours:    SC.Record.attr(Number),
-  
-  /**
-  @type Number
-  */
-  budgetedExpenses: SC.Record.attr(Number),
-  
-  /**
-  @type Number
-  */
-  actualExpenses:   SC.Record.attr(Number),
-  
-  /**
-  @type XM.ProjectTaskAlarm
-  */
-  alarms: SC.Record.toMany('XM.ProjectTaskAlarm', {
-    isNested: YES,
-    inverse: 'alarms'
-  }),
-  
-  /**
-  @type XM.ProjectTaskComment
-  */
-  comments: XM.Record.toMany('XM.ProjectTaskComment', {
-    isNested: YES
-  }),
-
-  // ..........................................................
+  // .................................................
   // CALCULATED PROPERTIES
   //
-
+  
   /**
-  @field
-  @type Number
+    @field
+    @type Number
   */
   balanceHours: function() {
     var value = this.get('budgetedHours') - this.get('actualHours');
@@ -109,12 +30,21 @@ XM.ProjectTask = XM.Activity.extend(
 
 
   /**
-  @field
-  @type Number
+    @field
+    @type Number
   */
   balanceExpenses: function() {
     var value = this.get('budgetedExpenses') - this.get('actualExpenses');
     return value;
   }.property('budgetedExpenses','actualExpenses'),
+  
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

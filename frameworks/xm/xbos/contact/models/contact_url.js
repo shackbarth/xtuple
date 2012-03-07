@@ -1,20 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_contact_url');
 
-  (Document your Model here)
+/**
+  @class
 
-  @extends XM.UrlAssignment
-  @version 0.1
+  @extends XM._ContactUrl
 */
+XM.ContactUrl = XM._ContactUrl.extend(
+  /** @scope XM.ContactUrl.prototype */ {
 
-XM.ContactUrl = XM.UrlAssignment.extend( 
-/** @scope XM.ContactUrl.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.ContactUrl'
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

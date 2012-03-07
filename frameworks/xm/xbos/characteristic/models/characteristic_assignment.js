@@ -1,25 +1,24 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_characteristic_assignment');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._CharacteristicAssignment
 */
-XM.CharacteristicAssignment = XM.Record.extend(
-/** @scope XM.CharacteristicAssignment.prototype */ {
+XM.CharacteristicAssignment = XM._CharacteristicAssignment.extend(
+  /** @scope XM.CharacteristicAssignment.prototype */ {
 
-  className: 'XM.CharacteristicAssignment',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  target:         SC.Record.attr(Number),
-  targetType:     SC.Record.attr(String),
-  characteristic: SC.Record.toOne('XM.Characteristic', {
-    isNested: true
-  }),
   value:          SC.Record.attr(String, {
     toType: function(record, key, value) {
       if(value) {

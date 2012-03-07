@@ -1,33 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_site_type');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._SiteType
 */
-XM.SiteType = XM.Record.extend(
-    /** @scope XM.SiteType.prototype */ {
+XM.SiteType = XM._SiteType.extend(
+  /** @scope XM.SiteType.prototype */ {
 
-  className: 'XM.SiteType',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  createPrivilege: 'MaintainSiteTypes',
-  readPrivilege:   'ViewSiteTypes',
-  updatePrivilege: 'MaintainSiteTypes',
-  deletePrivilege: 'MaintainSiteTypes',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

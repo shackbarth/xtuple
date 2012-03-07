@@ -12,6 +12,7 @@ sc_require('mixins/core_documents');
   (Document your Model here)
 
   @extends XM._Contact
+  @extends XM.CoreDocuments
   @version 0.1
 */
 

@@ -1,73 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_characteristic');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._Characteristic
 */
+XM.Characteristic = XM._Characteristic.extend(
+  /** @scope XM.Characteristic.prototype */ {
 
-XM.Characteristic = XM.Record.extend(
-/** @scope XM.Characteristic.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.Characteristic',
+  //..................................................
+  // METHODS
+  //
 
-  createPrivilege:  'MaintainCharacteristics',
-  readPrivilege:    'ViewCharacteristics',
-  updatePrivilege:  'MaintainCharacteristics',
-  deletePrivilege:  'MaintainCharacteristics',
-
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String, { isRequired: YES }),
-  
-  /**
-  @type Number
-  */
-  characteristicType: SC.Record.attr(Number),
-  
-  /**
-  @type Number
-  */
-  order: SC.Record.attr(Number),
-  
-  /**
-  @type String
-  */
-  notes: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  mask: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  validator: SC.Record.attr(String),
-  
-  /**
-  @type Boolean
-  */
-  isAddresses: SC.Record.attr(Boolean),
-  
-  /**
-  @type Boolean
-  */
-  isContacts: SC.Record.attr(Boolean),
-  
-  /**
-  @type Boolean
-  */
-  isItems: SC.Record.attr(Boolean),
-
-
-}) ;
+  //..................................................
+  // OBSERVERS
+  //
 
 /**
   @static

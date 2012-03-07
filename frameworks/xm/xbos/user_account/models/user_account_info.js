@@ -1,37 +1,31 @@
 // ==========================================================================
-// Project:   XM.UserAccountInfo
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_user_account_info');
 
-  (Document your Model here)
+/**
+  @class
 
-  @extends XM.Record
-  @version 0.1
-
-  @todo handle password seeding for cloud and enhanced auth
+  @extends XM._UserAccountInfo
 */
-XM.UserAccountInfo = XM.Record.extend(
-/** @scope XM.UserAccountInfo.prototype */ {
+XM.UserAccountInfo = XM._UserAccountInfo.extend(
+  /** @scope XM.UserAccountInfo.prototype */ {
 
-  className: 'XM.UserAccount',
-  
-  primaryKey: 'username',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  isEditable: NO,
-  
-  /**
-  @type Boolean
-  */
-  active: SC.Record.attr(Boolean, { 
-    isRequired: YES 
-  }),
-  
-  /**
-  @type String
-  */
-  propername: SC.Record.attr(String,  { isRequired: YES, } ),
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

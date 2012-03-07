@@ -1,27 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_project_task_alarm');
 
-  @extends XM.Alarm
-  @version 0.1
+/**
+  @class
+
+  @extends XM._ProjectTaskAlarm
 */
+XM.ProjectTaskAlarm = XM._ProjectTaskAlarm.extend(
+  /** @scope XM.ProjectTaskAlarm.prototype */ {
 
-XM.ProjectTaskAlarm = XM.Alarm.extend(
-/** @scope XM.ProjectTaskAlarm.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'ProjectTaskAlarm',
-  
-  /**
-  @type XM.ProjectTask
-  */
-  projectTask: SC.Record.toOne('XM.ProjectTask', {
-    inverse:  'alarms',
-    isMaster: NO,
-  }),
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

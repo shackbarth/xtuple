@@ -1,29 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_product_category');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._ProductCategory
 */
-XM.ProductCategory = XM.Record.extend(
-/** @scope XM.ProductCategory.prototype */ {
+XM.ProductCategory = XM._ProductCategory.extend(
+  /** @scope XM.ProductCategory.prototype */ {
 
-  className: 'XM.ProductCategory',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  createPrivilege: 'MaintainProductCategories',
-  readPrivilege:   'ViewProductCategories',
-  updatePrivilege: 'MaintainProductCategories',
-  deletePrivilege: 'MaintainProductCategories',
+  //..................................................
+  // METHODS
+  //
 
-  /** @property */
-  code: SC.Record.attr(String),
-  
-  /** @property */
-  description: SC.Record.attr(String)
+  //..................................................
+  // OBSERVERS
+  //
 
-}) ;
+});
+

@@ -1,38 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_opportunity_stage');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._OpportunityStage
 */
-XM.OpportunityStage = XM.Record.extend(
-/** @scope XM.OpportunityStage.prototype */ {
+XM.OpportunityStage = XM._OpportunityStage.extend(
+  /** @scope XM.OpportunityStage.prototype */ {
 
-  className: 'XM.OpportunityStage',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  createPrivilege: 'MaintainOpportunityStages',
-  readPrivilege:   'MaintainOpportunityStages',
-  updatePrivilege: 'MaintainOpportunityStages',
-  deletePrivilege: 'MaintainOpportunityStages',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type Boolean
-  */
-  deactivate: SC.Record.attr(Boolean),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

@@ -1,0 +1,5 @@
+name: Customer
+type: xbo
+load: deferred
+core: YES
+

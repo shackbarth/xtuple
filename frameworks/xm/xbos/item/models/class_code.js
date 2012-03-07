@@ -1,34 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_class_code');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._ClassCode
 */
+XM.ClassCode = XM._ClassCode.extend(
+  /** @scope XM.ClassCode.prototype */ {
 
-XM.ClassCode = XM.Record.extend(
-    /** @scope XM.ClassCode.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.ClassCode',
+  //..................................................
+  // METHODS
+  //
 
-  createPrivilege: 'MaintainClassCodes',
-  readPrivilege:   'ViewClassCodes',
-  updatePrivilege: 'MaintainClassCodes',
-  deletePrivilege: 'MaintainClassCodes',
+  //..................................................
+  // OBSERVERS
+  //
 
-  /**
-  @type String
-  */
-  code: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
+});
 
-}) ;

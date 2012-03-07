@@ -1,43 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_currency_rate');
 
-  (Document your Model here)
+/**
+  @class
 
-  @extends XM.Record
-  @version 0.1
+  @extends XM._CurrencyRate
 */
+XM.CurrencyRate = XM._CurrencyRate.extend(
+  /** @scope XM.CurrencyRate.prototype */ {
 
-XM.CurrencyRate = XM.Record.extend(
-/** @scope XM.CurrencyRate.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.CurrencyRate',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Currency
-  */
-  currency: SC.Record.toOne("XM.Currency", {
-    inverse:  "rates",
-    isMaster: NO
-  }),
-  
-  /**
-  @type Number
-  */
-  rate: SC.Record.attr(Number),
-  
-  /**
-  @type SC.DateTime
-  */
-  effective: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
-  
-  /**
-  @type SC.DateTime
-  */
-  expires: SC.Record.attr(SC.DateTime, { format: '%Y-%m-%d' }),
+  //..................................................
+  // OBSERVERS
+  //
 
-}) ;
+});
+

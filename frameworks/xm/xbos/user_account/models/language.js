@@ -1,36 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  Internally maintained reference list of languages.
+sc_require('xbos/__generated__/_language');
 
-  @extends SC.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._Language
 */
-XM.Language = SC.Record.extend(
-/** @scope XM.Language.prototype */ {
+XM.Language = XM._Language.extend(
+  /** @scope XM.Language.prototype */ {
 
-  className: 'XM.Language',
-  
-  isEditable: NO,
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  abbreviationShort: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  abbreviationLong: SC.Record.attr(String),
-  
-}) ;
+  //..................................................
+  // OBSERVERS
+  //
+
+});
 

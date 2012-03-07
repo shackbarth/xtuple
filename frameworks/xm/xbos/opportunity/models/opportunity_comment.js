@@ -1,29 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/comment/models/comment');
+sc_require('xbos/__generated__/_opportunity_comment');
 
-/** @class
+/**
+  @class
 
-  Comment for Opportunity.
-
-  @extends XM.Comment
+  @extends XM._OpportunityComment
 */
-XM.OpportunityComment = XM.Comment.extend(
-/** @scope XM.OpportunityComment.prototype */ {
+XM.OpportunityComment = XM._OpportunityComment.extend(
+  /** @scope XM.OpportunityComment.prototype */ {
 
-  className: 'XM.OpportunityComment',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.Opportunity
-  */
-  opportunity: SC.Record.toOne('XM.Opportunity', {
-    inverse:  'comments',
-    isMaster: NO,
-  }),
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 

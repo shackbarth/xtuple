@@ -1,5 +1,0 @@
-name: Alarm
-type: xbo
-load: deferred
-core: YES
-

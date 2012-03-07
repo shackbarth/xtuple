@@ -1,0 +1,4 @@
+name: DatabaseInformation
+type: xbo
+load: deferred
+core: YES

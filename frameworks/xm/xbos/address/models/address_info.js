@@ -1,62 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_address_info');
 
-  @extends XM.Record
+/**
+  @class
 
+  @extends XM._AddressInfo
 */
+XM.AddressInfo = XM._AddressInfo.extend(
+  /** @scope XM.AddressInfo.prototype */ {
 
-XM.AddressInfo = XM.Record.extend(
-/** @scope XM.AddressInfo.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className:   'XM.AddressInfo',
-  
-  isEditable: NO,
+  //..................................................
+  // METHODS
+  //
 
-  /*
-  @type String
-  */
-  number:     SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  line1:      SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  line2:      SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  line3:      SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  city:	      SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  state:      SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  postalcode: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  country:    SC.Record.attr(String)
-  
+  //..................................................
+  // OBSERVERS
+  //
+
 });
 

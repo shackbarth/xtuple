@@ -1,20 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_opportunity_image');
 
-  (Document your Model here)
+/**
+  @class
 
-  @extends XM.ImageAssignment
-  @version 0.1
+  @extends XM._OpportunityImage
 */
+XM.OpportunityImage = XM._OpportunityImage.extend(
+  /** @scope XM.OpportunityImage.prototype */ {
 
-XM.OpportunityImage = XM.ImageAssignment.extend( 
-/** @scope XM.OpportunityImage.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.OpportunityImage'
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

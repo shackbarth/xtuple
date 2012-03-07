@@ -1,28 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_user_account_role_privilege_assignment');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._UserAccountRolePrivilegeAssignment
 */
-XM.UserAccountRolePrivilegeAssignment = XM.Record.extend(
-/** @scope XM.UserAccountRolePrivilegeAssignment.prototype */ {
+XM.UserAccountRolePrivilegeAssignment = XM._UserAccountRolePrivilegeAssignment.extend(
+  /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */ {
 
-  className: 'XM.UserAccountRolePrivilegeAssignment',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.UserAccountRole
-  */
-  userAccountRole: SC.Record.toOne('XM.UserAccountRole'),
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Privilege
-  */
-  privilege: SC.Record.toOne('XM.Privilege'),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 

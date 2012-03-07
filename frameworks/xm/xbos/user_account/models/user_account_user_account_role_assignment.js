@@ -1,28 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  @extends XM.Record
-  @version 0.1
+sc_require('xbos/__generated__/_user_account_user_account_role_assignment');
+
+/**
+  @class
+
+  @extends XM._UserAccountUserAccountRoleAssignment
 */
-XM.UserAccountUserAccountRoleAssignment = XM.Record.extend(
-/** @scope XM.UserAccountUserAccountRoleAssignment.prototype */ {
+XM.UserAccountUserAccountRoleAssignment = XM._UserAccountUserAccountRoleAssignment.extend(
+  /** @scope XM.UserAccountUserAccountRoleAssignment.prototype */ {
 
-  className: 'XM.UserAccountUserAccountRoleAssignment',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.UserAccount
-  */
-  userAccount:  SC.Record.toOne('XM.UserAccount'),
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Role
-  */
-  userAccountRole: SC.Record.toOne('XM.UserAccountRoleInfo', {
-    isNested: YES
-  }),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

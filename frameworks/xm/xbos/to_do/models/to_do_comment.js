@@ -1,29 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/comment/models/comment');
+sc_require('xbos/__generated__/_to_do_comment');
 
-/** @class
+/**
+  @class
 
-  Comment for To-Do.
-
-  @extends XM.Comment
+  @extends XM._ToDoComment
 */
-XM.ToDoComment = XM.Comment.extend(
-/** @scope XM.ToDoComment.prototype */ {
+XM.ToDoComment = XM._ToDoComment.extend(
+  /** @scope XM.ToDoComment.prototype */ {
 
-  className: 'XM.ToDoComment',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  type XM.ToDo
-  */
-  toDo: SC.Record.toOne('XM.ToDo', {
-    inverse:  'comments',
-    isMaster: NO,
-  }),
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 

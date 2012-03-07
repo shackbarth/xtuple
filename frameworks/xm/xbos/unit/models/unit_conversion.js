@@ -1,44 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_unit_conversion');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._UnitConversion
 */
+XM.UnitConversion = XM._UnitConversion.extend(
+  /** @scope XM.UnitConversion.prototype */ {
 
-XM.UnitConversion = XM.Record.extend(
-    /** @scope XM.UnitConversion.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.UnitConversion',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Unit
-  */
-  fromUnit: SC.Record.toOne('XM.Unit'),
-  
-  /**
-  @type Number
-  */
-  fromValue: SC.Record.attr(Number),
-  
-  /**
-  @type XM.Unit
-  */
-  toUnit: SC.Record.toOne('XM.Unit'),
-  
-  /**
-  @type Number
-  */
-  toValue: SC.Record.attr(Number),
-  
-  /**
-  @type Boolean
-  */
-  fractional: SC.Record.attr(Boolean),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

@@ -1,28 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/characteristic/models/characteristic_assignment');
+sc_require('xbos/__generated__/_opportunity_characteristic');
 
-/** @class
+/**
+  @class
 
-  (Document your Model here)
-
-  @extends XM.CharacteristicAssignment
+  @extends XM._OpportunityCharacteristic
 */
-XM.OpportunityCharacteristic = XM.CharacteristicAssignment.extend(
-/** @scope XM.OpportunityCharacteristic.prototype */ {
+XM.OpportunityCharacteristic = XM._OpportunityCharacteristic.extend(
+  /** @scope XM.OpportunityCharacteristic.prototype */ {
 
-  className: 'XM.OpportunityCharacteristic',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.Opportunity
-  */
-  opportunity: SC.Record.toOne('XM.Opportunity', {
-    inverse:  'characteristics',
-    isMaster: NO,
-  }),
-  
-}) ;
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
+
+});
+

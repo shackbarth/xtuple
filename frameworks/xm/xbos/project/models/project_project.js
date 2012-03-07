@@ -1,20 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-sc_require('models/project_assignment');
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_project_project');
 
-  @extends XM.ProjectAssignment
-  @version 0.1
+/**
+  @class
+
+  @extends XM._ProjectProject
 */
+XM.ProjectProject = XM._ProjectProject.extend(
+  /** @scope XM.ProjectProject.prototype */ {
 
-XM.ProjectProject = XM.ProjectAssignment.extend( 
-/** @scope XM.ProjectProject.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.ProjectProject'
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

@@ -1,36 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  @extends XM.Record
+sc_require('xbos/__generated__/_incident_severity');
+
+/**
+  @class
+
+  @extends XM._IncidentSeverity
 */
+XM.IncidentSeverity = XM._IncidentSeverity.extend(
+  /** @scope XM.IncidentSeverity.prototype */ {
 
-XM.IncidentSeverity = XM.Record.extend(
-/** @scope XM.IncidentSeverity.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.IncidentSeverity',
+  //..................................................
+  // METHODS
+  //
 
-  createPrivilege: 'MaintainIncidentSeverities',
-  readPrivilege:   'MaintainIncidentSeverities',
-  updatePrivilege: 'MaintainIncidentSeverities',
-  deletePrivilege: 'MaintainIncidentSeverities',
-
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  order: SC.Record.attr(Number),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

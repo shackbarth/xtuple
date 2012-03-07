@@ -1,43 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_user_account_role');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._UserAccountRole
 */
-XM.UserAccountRole = XM.Record.extend(
-/** @scope XM.UserAccountRole.prototype */ {
+XM.UserAccountRole = XM._UserAccountRole.extend(
+  /** @scope XM.UserAccountRole.prototype */ {
 
-  className: 'XM.UserAccountRole',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  createPrivilege: 'MaintainGroups',
-  readPrivilege:   'MaintainGroups',
-  updatePrivilege: 'MaintainGroups',
-  deletePrivilege: 'MaintainGroups',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String, { 
-    isRequired: YES 
-  }),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type XM.UserAccountRolePrivilegeAssignment
-  */
-  privileges: SC.Record.toMany('XM.UserAccountRolePrivilegeAssignment', { 
-    isMaster: NO,
-    inverse: 'userAccountRole'
-  })
-  
-}) ;
+  //..................................................
+  // OBSERVERS
+  //
+
+});
 

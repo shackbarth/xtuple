@@ -1,22 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/incident/models/incident_assignment');
+sc_require('xbos/__generated__/_incident_incident');
 
-/** @class
+/**
+  @class
 
-  (Document your Model here)
-
-  @extends XM.IncidentAssignment
-  @version 0.1
+  @extends XM._IncidentIncident
 */
+XM.IncidentIncident = XM._IncidentIncident.extend(
+  /** @scope XM.IncidentIncident.prototype */ {
 
-XM.IncidentIncident = XM.IncidentAssignment.extend( 
-/** @scope XM.IncidentIncident.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.IncidentIncident'
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

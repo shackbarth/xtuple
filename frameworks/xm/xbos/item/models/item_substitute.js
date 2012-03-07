@@ -1,44 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  Substitute for Item.
+sc_require('xbos/__generated__/_item_substitute');
 
-  @extends XM.Record
+/**
+  @class
+
+  @extends XM._ItemSubstitute
 */
+XM.ItemSubstitute = XM._ItemSubstitute.extend(
+  /** @scope XM.ItemSubstitute.prototype */ {
 
-XM.ItemSubstitute = XM.Record.extend(
-/** @scope XM.ItemSubstitute.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.ItemSubstitute',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Item
-  */
-  rootItem: SC.Record.toOne('XM.Item', {
-    inverse: 'substitutes',
-    isMaster: NO,
-  }),
-  
-  /**
-  @type XM.Item
-  */
-  substituteItem: SC.Record.toOne('XM.ItemInfo', {
-    isNested: YES
-  }),
-  
-  /**
-  @type Number
-  */
-  conversionRatio: SC.Record.attr(Number),
-  
-  /**
-  @type Number
-  */
-  ranking: SC.Record.attr(Number),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 

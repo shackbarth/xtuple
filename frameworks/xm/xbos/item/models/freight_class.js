@@ -1,33 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_freight_class');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._FreightClass
 */
-XM.FreightClass = XM.Record.extend(
+XM.FreightClass = XM._FreightClass.extend(
   /** @scope XM.FreightClass.prototype */ {
 
-  className: 'XM.FreightClass',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  createPrivilege: 'MaintainFreightClasses',
-  readPrivilege:   'ViewFreightClasses',
-  updatePrivilege: 'MaintainFreightClasses',
-  deletePrivilege: 'MaintainFreightClasses',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  code: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
+  //..................................................
+  // OBSERVERS
+  //
 
-}) ;
+});
+

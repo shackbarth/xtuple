@@ -1,51 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  Alias for Item.
+sc_require('xbos/__generated__/_item_alias');
 
-  @extends XM.Record
+/**
+  @class
+
+  @extends XM._ItemAlias
 */
-XM.ItemAlias = XM.Record.extend(
-/** @scope XM.ItemAlias.prototype */ {
+XM.ItemAlias = XM._ItemAlias.extend(
+  /** @scope XM.ItemAlias.prototype */ {
 
-  className: 'XM.ItemAlias',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.Item
-  */
-  item: SC.Record.toOne('XM.Item', {
-    inverse: 'aliases',
-    isMaster: NO,
-  }),
-  
-  /**
-  @type String
-  */
-  number: SC.Record.attr(String),
-  
-  /**
-  @type Boolean
-  */
-  useDescription: SC.Record.attr(Boolean),
-  
-  /**
-  @type String
-  */
-  description1: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description2: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  notes: SC.Record.attr(String),
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 

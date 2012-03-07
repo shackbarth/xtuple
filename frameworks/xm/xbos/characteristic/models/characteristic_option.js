@@ -1,34 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_characteristic_option');
 
-  @extends SC.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._CharacteristicOption
 */
+XM.CharacteristicOption = XM._CharacteristicOption.extend(
+  /** @scope XM.CharacteristicOption.prototype */ {
 
-XM.CharacteristicOption = SC.Record.extend(
-/** @scope XM.CharacteristicOption.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.CharacteristicOption',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type Number
-  */
-  characteristic: SC.Record.attr(Number),
-  
-  /**
-  @type String
-  */
-  value: SC.Record.attr(String),
-  
-  /**
-  @type Number
-  */
-  order: SC.Record.attr(Number),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

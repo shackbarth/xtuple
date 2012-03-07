@@ -1,49 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_comment_type');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._CommentType
 */
+XM.CommentType = XM._CommentType.extend(
+  /** @scope XM.CommentType.prototype */ {
 
-XM.CommentType = XM.Record.extend(
-/** @scope XM.CommentType.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.CommentType',
+  //..................................................
+  // METHODS
+  //
 
-  createPrivilege: 'MaintainCommentTypes',
-  readPrivilege:   'MaintainCommentTypes',
-  updatePrivilege: 'MaintainCommentTypes',
-  deletePrivilege: 'MaintainCommentTypes',
+  //..................................................
+  // OBSERVERS
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type Boolean
-  */
-  isSystem: SC.Record.attr(Boolean),
-  
-  /**
-  @type Boolean
-  */
-  commentsEditable: SC.Record.attr(Boolean),
-  
-  /**
-  @type Number
-  */
-  order: SC.Record.attr(Number),
+});
 
-}) ;

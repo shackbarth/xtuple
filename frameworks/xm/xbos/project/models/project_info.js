@@ -1,35 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_project_info');
 
-  @extends XM.Record
-  @version 0.2
+/**
+  @class
+
+  @extends XM._ProjectInfo
 */
-XM.ProjectInfo = XM.Record.extend(
-    /** @scope XM.ProjectInfo.prototype */ {
+XM.ProjectInfo = XM._ProjectInfo.extend(
+  /** @scope XM.ProjectInfo.prototype */ {
 
-  className: 'XM.ProjectInfo',
-  
-  isEditable: NO,
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type String
-  */
-  number: SC.Record.attr(String),
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  projectStatus: SC.Record.attr(String)
-  
+  //..................................................
+  // OBSERVERS
+  //
+
 });
+

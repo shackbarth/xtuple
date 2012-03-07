@@ -1,28 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/characteristic/models/characteristic_assignment');
+sc_require('xbos/__generated__/_contact_characteristic');
 
-/** @class
+/**
+  @class
 
-  (Document your Model here)
-
-  @extends XM.CharacteristicAssignment
+  @extends XM._ContactCharacteristic
 */
-XM.ContactCharacteristic = XM.CharacteristicAssignment.extend(
-/** @scope XM.ContactCharacteristic.prototype */ {
+XM.ContactCharacteristic = XM._ContactCharacteristic.extend(
+  /** @scope XM.ContactCharacteristic.prototype */ {
 
-  className: 'XM.ContactCharacteristic',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.Contact
-  */
-  contact: SC.Record.toOne('XM.Contact', {
-    inverse:  'comments',
-    isMaster: NO,
-  }),
-  
-}) ;
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
+
+});
+

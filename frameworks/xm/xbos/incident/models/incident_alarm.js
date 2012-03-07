@@ -1,28 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-sc_require('xbos/alarm/models/alarm');
+sc_require('xbos/__generated__/_incident_alarm');
 
-/** @class
+/**
+  @class
 
-  (Document your Model here)
-
-  @extends XM.Alarm
-  @version 0.1
+  @extends XM._IncidentAlarm
 */
+XM.IncidentAlarm = XM._IncidentAlarm.extend(
+  /** @scope XM.IncidentAlarm.prototype */ {
 
-XM.IncidentAlarm = XM.Alarm.extend(
-/** @scope XM.IncidentAlarm.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  /**
-  @type XM.Incident
-  */
-  incident: SC.Record.toOne('XM.Incident', {
-    inverse:  'alarms',
-    isMaster: NO,
-  }),
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

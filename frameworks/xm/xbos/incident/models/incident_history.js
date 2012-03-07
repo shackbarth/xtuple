@@ -1,42 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_incident_history');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._IncidentHistory
 */
+XM.IncidentHistory = XM._IncidentHistory.extend(
+  /** @scope XM.IncidentHistory.prototype */ {
 
-XM.IncidentHistory = XM.Record.extend(
-/** @scope XM.IncidentHistory.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.IncidentHistory',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Incident
-  */
-  incident: SC.Record.toOne('XM.Incident', {
-    inverse:  'history',
-    isMaster: NO
-  }),
-  
-  /**
-  @type SC.DateTime
-  */
-  timestamp: SC.Record.attr(SC.DateTime),
-  
-  /**
-  @type String
-  */
-  username: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description:  SC.Record.attr(String),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

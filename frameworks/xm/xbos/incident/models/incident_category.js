@@ -1,38 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_incident_category');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._IncidentCategory
 */
-XM.IncidentCategory = XM.Record.extend(
-/** @scope XM.IncidentCategory.prototype */ {
+XM.IncidentCategory = XM._IncidentCategory.extend(
+  /** @scope XM.IncidentCategory.prototype */ {
 
-  className: 'XM.IncidentCategory',
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  createPrivilege: 'MaintainIncidentCategories',
-  readPrivilege:   'MaintainIncidentCategories',
-  updatePrivilege: 'MaintainIncidentCategories',
-  deletePrivilege: 'MaintainIncidentCategories',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  description: SC.Record.attr(String),
-  
-  /**
-  @type Number
-  */
-  order: SC.Record.attr(Number),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

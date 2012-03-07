@@ -1,44 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_state');
 
-  @extends XM.Record
-  @version 0.2
+/**
+  @class
+
+  @extends XM._State
 */
+XM.State = XM._State.extend(
+  /** @scope XM.State.prototype */ {
 
-XM.State = XM.Record.extend(
-/** @scope XM.State.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.State',
+  //..................................................
+  // METHODS
+  //
 
-  createPrivilege: 'MaintainStates',
-  readPrivilege:   'MaintainStates',
-  updatePrivilege: 'MaintainStates',
-  deletePrivilege: 'MaintainStates',
+  //..................................................
+  // OBSERVERS
+  //
 
-   
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String, { isRequired: YES }),
-  
-  /**
-  @type String
-  */
-  abbreviation: SC.Record.attr(String, { isRequired: YES }),
-  
-  /**
-  @type XM.Country
-  */
-  country: SC.Record.toOne('XM.Country', {
-    inverse:  'states',
-    isMaster: NO
-  }),
-
-}) ;
+});
 

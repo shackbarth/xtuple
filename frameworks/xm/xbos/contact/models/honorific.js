@@ -1,32 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_honorific');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._Honorific
 */
+XM.Honorific = XM._Honorific.extend(
+  /** @scope XM.Honorific.prototype */ {
 
-XM.Honorific = XM.Record.extend(
-/** @scope XM.Honorific.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.Honorific',
+  //..................................................
+  // METHODS
+  //
 
-  createPrivilege: 'MaintainTitles',
-  readPrivilege:   'ViewTitles',
-  updatePrivilege: 'MaintainTitles',
-  deletePrivilege: 'MaintainTitles',
+  //..................................................
+  // OBSERVERS
+  //
 
-  /**
-  @type String
-  */
-  code: SC.Record.attr(String, { 
-    isRequired: YES 
-  }),
-
-}) ;
+});
 

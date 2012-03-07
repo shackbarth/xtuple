@@ -1,27 +1,31 @@
 // ==========================================================================
-// Project:   xTuple PostBooks - xTuple Business Management Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  Conversion for Item.
+sc_require('xbos/__generated__/_item_conversion');
 
-  @extends XM.Record
+/**
+  @class
+
+  @extends XM._ItemConversion
 */
+XM.ItemConversion = XM._ItemConversion.extend(
+  /** @scope XM.ItemConversion.prototype */ {
 
-XM.ItemConversion = XM.UnitConversion.extend(
-/** @scope XM.ItemConversion.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.ItemConversion',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Item
-  */
-  item: SC.Record.toOne('XM.Item', {
-    inverse: 'conversions',
-    isMaster: NO,
-  }),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 

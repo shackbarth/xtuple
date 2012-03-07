@@ -1,35 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
-/** @class
 
-  (Document your Model here)
+sc_require('xbos/__generated__/_contact_email');
 
-  @extends XM.Record
-  @version 0.1
+/**
+  @class
+
+  @extends XM._ContactEmail
 */
+XM.ContactEmail = XM._ContactEmail.extend(
+  /** @scope XM.ContactEmail.prototype */ {
 
-XM.ContactEmail = XM.Record.extend(
-/** @scope XM.ContactEmail.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.ContactEmail',
+  //..................................................
+  // METHODS
+  //
 
-  /**
-  @type XM.Contact
-  */
-  contact:   SC.Record.toOne('XM.Contact', {
-    inverse:  'email',
-    isMaster: NO
-  }),
-  
-  /**
-  @type String
-  */
-  email:     SC.Record.attr(String, {
-    isRequired: YES
-  }),
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 

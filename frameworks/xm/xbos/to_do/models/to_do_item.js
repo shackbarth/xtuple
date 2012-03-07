@@ -1,20 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_to_do_item');
 
-  (Document your Model here)
+/**
+  @class
 
-  @extends XM.ItemAssignment
-  @version 0.1
+  @extends XM._ToDoItem
 */
+XM.ToDoItem = XM._ToDoItem.extend(
+  /** @scope XM.ToDoItem.prototype */ {
 
-XM.ToDoItem = XM.ItemAssignment.extend( 
-/** @scope XM.ToDoItem.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.ToDoItem'
+  //..................................................
+  // METHODS
+  //
+
+  //..................................................
+  // OBSERVERS
+  //
 
 });
+

@@ -1,54 +1,31 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** @class
+sc_require('xbos/__generated__/_currency');
 
-  (Document your Model here)
+/**
+  @class
 
-  @extends XM.Record
-  @version 0.1
+  @extends XM._Currency
 */
+XM.Currency = XM._Currency.extend(
+  /** @scope XM.Currency.prototype */ {
 
-XM.Currency = XM.Record.extend(
-/** @scope XM.Currency.prototype */ {
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-  className: 'XM.Currency',
+  //..................................................
+  // METHODS
+  //
 
-  createPrivilege: 'CreateNewCurrency',
-  readPrivilege:   'MaintainCurrencies',
-  updatePrivilege: 'MaintainCurrencies',
-  deletePrivilege: 'MaintainCurrencies',
+  //..................................................
+  // OBSERVERS
+  //
 
-  /**
-  @type String
-  */
-  name: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  symbol: SC.Record.attr(String),
-  
-  /**
-  @type String
-  */
-  abbreviation: SC.Record.attr(String),
-  
-  /**
-  @type Boolean
-  */
-  isBase: SC.Record.attr(Boolean),
-  
-  /**
-  @type XM.CurrencyRate
-  */
-  rates: SC.Record.toMany('XM.CurrencyRate', {
-    isNested: YES,
-    inverse: 'currency',
-  }),
-
-}) ;
+});
 

@@ -1,0 +1,5 @@
+name: CreditMemo
+type: xbo
+load: deferred
+core: YES
+
