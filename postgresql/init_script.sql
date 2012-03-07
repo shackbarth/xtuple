@@ -73,8 +73,6 @@
 -- xm/javascript
 \i xm/javascript/address.sql;
 \i xm/javascript/bank_account_reconciliation.sql;
---\i xm/javascript/cash_receipt.sql;
---\i xm/javascript/credit_memo.sql;
 \i xm/javascript/crm.sql;
 \i xm/javascript/fiscal_year.sql;
 \i xm/javascript/general_ledger.sql;
@@ -93,4 +91,5 @@
 \i xm/javascript/invoice.sql;
 \i xm/javascript/period.sql;
 \i xm/javascript/cash_receipt.sql;
+\i xm/javascript/customer.sql;
 -- [ END ] xm
