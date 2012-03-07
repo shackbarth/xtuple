@@ -1,3 +1,5 @@
+drop view if exists xt.unrec cascade;
+
 -- Unreconciled on posted reconciliations
 create or replace view xt.unrec as
 select 

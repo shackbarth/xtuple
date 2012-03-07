@@ -1,3 +1,5 @@
+drop view if exists xt.itemcost cascade;
+
 create view xt.itemcost as 
 
 select 

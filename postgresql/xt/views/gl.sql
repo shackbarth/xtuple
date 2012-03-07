@@ -1,4 +1,4 @@
---drop view xt.gl cascade
+drop view if exists xt.gl cascade;
 
 create or replace view xt.gl as
 
