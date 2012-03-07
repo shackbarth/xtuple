@@ -95,9 +95,9 @@ XM._Opportunity = XM.Record.extend(
   opportunitySource: SC.Record.toOne('XM.OpportunitySource'),
 
   /**
-    @type XM.opportunityType
+    @type XM.OpportunityType
   */
-  opportunityType: SC.Record.toOne('XM.opportunityType'),
+  opportunityType: SC.Record.toOne('XM.OpportunityType'),
 
   /**
     @type Number

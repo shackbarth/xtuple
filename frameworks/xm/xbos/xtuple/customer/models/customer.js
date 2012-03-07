@@ -7,13 +7,17 @@
 
 sc_require('xbos/__generated__/_customer');
 sc_require('mixins/core_documents');
+sc_require('mixins/account_document');
+
 
 /**
   @class
 
   @extends XM._Customer
+  @extends XM.AccountDocument
+  @extends XM.CoreDocuments
 */
-XM.Customer = XM._Customer.extend( XM.CoreDocuments,
+XM.Customer = XM._Customer.extend(XM.AccountDocument, XM.CoreDocuments,
   /** @scope XM.Customer.prototype */ {
 
   // .................................................

@@ -42,6 +42,11 @@ XM._ProjectTaskAlarm = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
+    @type Number
+  */
+  number: SC.Record.attr(Number),
+
+  /**
     @type XM.ProjectTask
   */
   projectTask: SC.Record.toOne('XM.ProjectTask'),

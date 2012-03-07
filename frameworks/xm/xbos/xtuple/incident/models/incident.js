@@ -7,14 +7,16 @@
 
 sc_require('xbos/__generated__/_incident');
 sc_require('mixins/core_documents');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._Incident
   @extends XM.CoreDocuments
+  @extends XM.Document
 */
-XM.Incident = XM._Incident.extend( XM.CoreDocuments,
+XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   /** @scope XM.Incident.prototype */ {
 
   // .................................................

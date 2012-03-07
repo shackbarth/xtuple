@@ -42,14 +42,14 @@ XM._IncidentAlarm = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.Incident
-  */
-  incident: SC.Record.toOne('XM.Incident'),
-
-  /**
     @type Number
   */
   number: SC.Record.attr(Number),
+
+  /**
+    @type XM.Incident
+  */
+  incident: SC.Record.toOne('XM.Incident'),
 
   /**
     @type Boolean

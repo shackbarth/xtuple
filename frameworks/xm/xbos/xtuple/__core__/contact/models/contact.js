@@ -6,6 +6,7 @@
 
 sc_require('xbos/__generated__/_contact');
 sc_require('mixins/core_documents');
+sc_require('mixins/document');
 
 /** @class
 
@@ -13,21 +14,12 @@ sc_require('mixins/core_documents');
 
   @extends XM._Contact
   @extends XM.CoreDocuments
+  @extends XM.Document
   @version 0.1
 */
 
-XM.Contact = XM._Contact.extend( XM.CoreDocuments,
+XM.Contact = XM._Contact.extend(XM.Document, XM.CoreDocuments,
 /** @scope XM.Contact.prototype */ {
-
-  number: SC.Record.attr(String, {
-    isRequired: YES,
-    /** @private */
-    defaultValue: function () {
-      if(arguments[0].get('status') === SC.Record.READY_NEW) {
-        return XM.Record.fetchNumber.call(arguments[0]);
-      }
-    }
-  }),
   
   /**
   A set of all the contact uses on this record.

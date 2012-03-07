@@ -6,13 +6,15 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_receivable');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._Receivable
+  @extends XM.Document
 */
-XM.Receivable = XM._Receivable.extend(
+XM.Receivable = XM._Receivable.extend(XM.Document,
   /** @scope XM.Receivable.prototype */ {
 
   // .................................................

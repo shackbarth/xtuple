@@ -42,6 +42,16 @@ XM._Receivable = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
+    @type String
+  */
+  number: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  documentType: SC.Record.attr(String),
+
+  /**
     @type Date
   */
   documentDate: SC.Record.attr(SC.DateTime, {
@@ -66,16 +76,6 @@ XM._Receivable = XM.Record.extend(
     @type XM.Terms
   */
   terms: SC.Record.toOne('XM.Terms'),
-
-  /**
-    @type String
-  */
-  documentType: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  documentNumber: SC.Record.attr(String),
 
   /**
     @type Number
