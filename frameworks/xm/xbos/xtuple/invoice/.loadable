@@ -1,0 +1,5 @@
+name: Invoice
+type: xbo
+load: deferred
+core: YES
+

@@ -1,29 +1,29 @@
 // ==========================================================================
 // Project:   xTuple Postbooks - Business Management System Framework        
-// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                                
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** 
+/**
   @class
 
-  This code is automatically generated and will be over-written. Do not edit directly. 
+  This code is automatically generated and will be over-written. Do not edit directly.
 
   @extends XM.Record
 */
-
 XM._Address = XM.Record.extend(
-/** @scope XM._Address.prototype */ {
-
+  /** @scope XM._Address.prototype */ {
+  
   className: 'XM.Address',
 
   nestedRecordNamespace: XM,
 
-  // ..........................................................
+  // .................................................
   // PRIVILEGES
   //
 
-  privileges:{
+  privileges: {
     "all": {
       "create": "MaintainAddresses",
       "read": "ViewAddresses",
@@ -32,67 +32,67 @@ XM._Address = XM.Record.extend(
     }
   },
 
-  // ..........................................................
+  //..................................................
   // ATTRIBUTES
   //
   
   /**
-  @type Number
+    @type Number
   */
   guid: SC.Record.attr(Number),
 
   /**
-  @type String
+    @type String
   */
   number: SC.Record.attr(String),
 
   /**
-  @type Boolean
+    @type Boolean
   */
   isActive: SC.Record.attr(Boolean),
 
   /**
-  @type String
+    @type String
   */
   line1: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   line2: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   line3: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   city: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   state: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   postalCode: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   country: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   notes: SC.Record.attr(String),
 
   /**
-  @type XM.AddressComment
+    @type XM.AddressComment
   */
   comments: SC.Record.toMany('XM.AddressComment', {
     isNested: true,
@@ -100,7 +100,7 @@ XM._Address = XM.Record.extend(
   }),
 
   /**
-  @type XM.AddressCharacteristic
+    @type XM.AddressCharacteristic
   */
   characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
     isNested: true,

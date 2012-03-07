@@ -1,0 +1,5 @@
+name: Voucher
+type: xbo
+load: deferred
+core: YES
+

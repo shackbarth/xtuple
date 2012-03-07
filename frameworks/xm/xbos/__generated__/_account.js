@@ -1,29 +1,29 @@
 // ==========================================================================
 // Project:   xTuple Postbooks - Business Management System Framework        
-// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                                
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
+
 /*globals XM */
 
-/** 
+/**
   @class
 
-  This code is automatically generated and will be over-written. Do not edit directly. 
+  This code is automatically generated and will be over-written. Do not edit directly.
 
   @extends XM.Record
 */
-
 XM._Account = XM.Record.extend(
-/** @scope XM._Account.prototype */ {
-
+  /** @scope XM._Account.prototype */ {
+  
   className: 'XM.Account',
 
   nestedRecordNamespace: XM,
 
-  // ..........................................................
+  // .................................................
   // PRIVILEGES
   //
 
-  privileges:{
+  privileges: {
     "all": {
       "create": "MaintainAllCRMAccounts",
       "read": "ViewAllCRMAccounts",
@@ -41,77 +41,77 @@ XM._Account = XM.Record.extend(
     }
   },
 
-  // ..........................................................
+  //..................................................
   // ATTRIBUTES
   //
   
   /**
-  @type Number
+    @type Number
   */
   guid: SC.Record.attr(Number),
 
   /**
-  @type String
+    @type String
   */
   number: SC.Record.attr(String),
 
   /**
-  @type String
+    @type String
   */
   name: SC.Record.attr(String),
 
   /**
-  @type Boolean
+    @type Boolean
   */
   isActive: SC.Record.attr(Boolean),
 
   /**
-  @type String
+    @type String
   */
   type: SC.Record.attr(String),
 
   /**
-  @type XM.AccountInfo
+    @type XM.AccountInfo
   */
   parent: SC.Record.toOne('XM.AccountInfo', {
     isNested: true
   }),
 
   /**
-  @type String
+    @type String
   */
   notes: SC.Record.attr(String),
 
   /**
-  @type XM.ContactInfo
+    @type XM.ContactInfo
   */
   primaryContact: SC.Record.toOne('XM.ContactInfo', {
     isNested: true
   }),
 
   /**
-  @type XM.ContactInfo
+    @type XM.ContactInfo
   */
   secondaryContact: SC.Record.toOne('XM.ContactInfo', {
     isNested: true
   }),
 
   /**
-  @type XM.UserAccountInfo
+    @type XM.UserAccountInfo
   */
   userAccount: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true
   }),
 
   /**
-  @type XM.UserAccountInfo
+    @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true
   }),
 
   /**
-  @type XM.AccountComment
+    @type XM.AccountComment
   */
   comments: SC.Record.toMany('XM.AccountComment', {
     isNested: true,
@@ -119,7 +119,7 @@ XM._Account = XM.Record.extend(
   }),
 
   /**
-  @type XM.AccountCharacteristic
+    @type XM.AccountCharacteristic
   */
   characteristics: SC.Record.toMany('XM.AccountCharacteristic', {
     isNested: true,
@@ -127,7 +127,7 @@ XM._Account = XM.Record.extend(
   }),
 
   /**
-  @type XM.AccountContact
+    @type XM.AccountContact
   */
   contacts: SC.Record.toMany('XM.AccountContact', {
     isNested: true,
@@ -135,7 +135,7 @@ XM._Account = XM.Record.extend(
   }),
 
   /**
-  @type XM.AccountItem
+    @type XM.AccountItem
   */
   items: SC.Record.toMany('XM.AccountItem', {
     isNested: true,
@@ -143,7 +143,7 @@ XM._Account = XM.Record.extend(
   }),
 
   /**
-  @type XM.AccountFile
+    @type XM.AccountFile
   */
   files: SC.Record.toMany('XM.AccountFile', {
     isNested: true,
@@ -151,7 +151,7 @@ XM._Account = XM.Record.extend(
   }),
 
   /**
-  @type XM.AccountImage
+    @type XM.AccountImage
   */
   images: SC.Record.toMany('XM.AccountImage', {
     isNested: true,
@@ -159,7 +159,7 @@ XM._Account = XM.Record.extend(
   }),
 
   /**
-  @type XM.AccountUrl
+    @type XM.AccountUrl
   */
   urls: SC.Record.toMany('XM.AccountUrl', {
     isNested: true,
@@ -167,7 +167,7 @@ XM._Account = XM.Record.extend(
   }),
 
   /**
-  @type XM.AccountAccount
+    @type XM.AccountAccount
   */
   accounts: SC.Record.toMany('XM.AccountAccount', {
     isNested: true,

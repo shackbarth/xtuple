@@ -1,0 +1,4 @@
+name: System
+type: xbo
+load: deferred
+core: YES
