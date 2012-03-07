@@ -89,10 +89,15 @@
 \i xm/javascript/payment.sql;
 \i xm/javascript/purchase_journal.sql;
 \i xm/javascript/receivables.sql;
-\i xm/javascript/general_ledger.sql;
+\i xm/javascript/session.sql;
 \i xm/javascript/sales_journal.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/standard_journal.sql;
 \i xm/javascript/todo.sql;
+\i xm/javascript/contact.sql;
+\i xm/javascript/invoice.sql;
+\i xm/javascript/period.sql;
+\i xm/javascript/cash_receipt.sql;
+\i xm/javascript/customer.sql;
 -- [ END ] xm
