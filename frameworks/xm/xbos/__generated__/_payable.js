@@ -44,12 +44,16 @@ XM._Payable = XM.Record.extend(
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(Date),
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(Date),
+  dueDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type XM.Terms
@@ -129,7 +133,9 @@ XM._Payable = XM.Record.extend(
   /**
     @type Date
   */
-  closeDate: SC.Record.attr(Date),
+  closeDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

@@ -94,11 +94,15 @@ XM._IncidentAlarm = XM.Record.extend(
   /**
     @type Date
   */
-  time: SC.Record.attr(Date),
+  time: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  trigger: SC.Record.attr(Date)
+  trigger: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  })
 
 });

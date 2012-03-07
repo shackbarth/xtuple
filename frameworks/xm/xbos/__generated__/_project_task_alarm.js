@@ -79,12 +79,16 @@ XM._ProjectTaskAlarm = XM.Record.extend(
   /**
     @type Date
   */
-  trigger: SC.Record.attr(Date),
+  trigger: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  time: SC.Record.attr(Date),
+  time: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Number

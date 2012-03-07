@@ -44,7 +44,9 @@ XM._StandardJournalGroup = XM.Record.extend(
   /**
     @type Date
   */
-  name: SC.Record.attr(Date),
+  name: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

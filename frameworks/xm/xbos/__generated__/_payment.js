@@ -49,7 +49,9 @@ XM._Payment = XM.Record.extend(
   /**
     @type Date
   */
-  paymentDate: SC.Record.attr(Date),
+  paymentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Number

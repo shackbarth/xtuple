@@ -81,22 +81,30 @@ XM._ToDo = XM.Record.extend(
   /**
     @type Date
   */
-  startDate: SC.Record.attr(Date),
+  startDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(Date),
+  dueDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  assignDate: SC.Record.attr(Date),
+  assignDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  completeDate: SC.Record.attr(Date),
+  completeDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

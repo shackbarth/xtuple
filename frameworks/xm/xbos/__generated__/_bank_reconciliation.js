@@ -51,12 +51,16 @@ XM._BankReconciliation = XM.Record.extend(
   /**
     @type Date
   */
-  openDate: SC.Record.attr(Date),
+  openDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  endDate: SC.Record.attr(Date),
+  endDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Number
@@ -92,12 +96,16 @@ XM._BankReconciliation = XM.Record.extend(
   /**
     @type Date
   */
-  postDate: SC.Record.attr(Date),
+  postDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  created: SC.Record.attr(Date),
+  created: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

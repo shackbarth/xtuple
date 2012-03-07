@@ -44,12 +44,16 @@ XM._Receivable = XM.Record.extend(
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(Date),
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(Date),
+  dueDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type XM.Customer
@@ -151,11 +155,15 @@ XM._Receivable = XM.Record.extend(
   /**
     @type Date
   */
-  isOpen: SC.Record.attr(Date),
+  isOpen: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  closeDate: SC.Record.attr(Date)
+  closeDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  })
 
 });
