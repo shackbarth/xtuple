@@ -166,10 +166,10 @@
    @returns {Boolean}
   */
   XM.Payable.unapproveAll = function(targetType, target, payableId) {
-    var sqlAll = "select clearPayment(vend_id, {payableId}) as result from apselect where {conditions};",
-    var sqlSelected = "select clearPayment(vend_id, {payableId}) as result from apopen JOIN apselect ON (apselect_apopen_id=apopen_id) where {conditions};",
-    var sqlType = "select clearPayment(vend_id, {payableId}) as result from vendinfo JOIN apopen ON (apopen_vend_id=vend_id) JOIN apselect ON (apselect_apopen_id=apopen_id) where {conditions};",
-	      data = Object.create(XT.Data)
+    var sqlAll = "select clearPayment({payableId}) as result from apselect where {conditions};",
+        sqlSelected = "select clearPayment({payableId}) as result from apopen JOIN apselect ON (apselect_apopen_id=apopen_id) where {conditions};",
+        sqlType = "select clearPayment({payableId}) as result from vendinfo JOIN apopen ON (apopen_vend_id=vend_id) JOIN apselect ON (apselect_apopen_id=apopen_id) where {conditions};",
+	      data = Object.create(XT.Data);
 	      ret, err;
 
 	  if(!data.checkPrivilege("MaintainAPMemos")) err = "Access denied.";

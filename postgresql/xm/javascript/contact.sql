@@ -37,7 +37,6 @@ select xt.install_js('XM','Contact','xtuple', $$
 	  }
 
 	  throw new Error(err);
-		}
   }
 
 	XM.Contact.used = function(contactId) {
@@ -62,7 +61,6 @@ select xt.install_js('XM','Contact','xtuple', $$
 	  }
 
 	  throw new Error(err);
-		}
   }
 	
 	XM.Contact.restore = function(mergeContactId) {
@@ -87,7 +85,6 @@ select xt.install_js('XM','Contact','xtuple', $$
 	  }
 
 	  throw new Error(err);
-		}
   }
 $$ );
 
