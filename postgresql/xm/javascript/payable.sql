@@ -137,4 +137,137 @@
     throw new Error(err);
   }
 
+  /** 
+   Unapprove Payable
+
+   @param {Number}
+   @returns {Number}
+  */
+	XM.Payable.unapprove = function(payableId) {
+	  var ret, sql, err,
+	      data = Object.create(XT.Data);
+
+	  if(!data.checkPrivilege("MaintainAPMemos")) err = "Access denied."
+	  else if(payableId === undefined) err = "No payable specified";
+
+	  if(!err) {
+	    ret = executeSql("select clearPayment($1) AS result;", [payableId])[0].result;
+
+	    return ret;
+	  }
+  
+	  throw new Error(err);
+	}
+
+  /** 
+   Unapprove All
+
+   @param {Number}
+   @returns {Boolean}
+  */
+  XM.Payable.unapproveAll = function(targetType, target, payableId) {
+    var sqlAll = "select clearPayment(vend_id, {payableId}) as result from apselect where {conditions};",
+    var sqlSelected = "select clearPayment(vend_id, {payableId}) as result from apopen JOIN apselect ON (apselect_apopen_id=apopen_id) where {conditions};",
+    var sqlType = "select clearPayment(vend_id, {payableId}) as result from vendinfo JOIN apopen ON (apopen_vend_id=vend_id) JOIN apselect ON (apselect_apopen_id=apopen_id) where {conditions};",
+	      data = Object.create(XT.Data)
+	      ret, err;
+
+	  if(!data.checkPrivilege("MaintainAPMemos")) err = "Access denied.";
+	  else if(targetType !== XM.Payable.SELECT_ALL_VENDORS && target === undefined) 
+	    err = "No Vendor information specified";
+	  else if(payableId === undefined) err = "No payable specified";
+
+	  if(!err) {
+	    switch (targetType)
+	    {
+	      case XM.Payable.SELECT_ALL_VENDORS: 
+	        sqlAll = sql.replace(/{apselect_id}/, payableId)
+	                 .replace(/{conditions}/, 'true');
+	        break;
+	       case XM.Payable.SELECT_VENDOR_TYPE:
+	        sqlType = sql.replace(/{apselect_id}/, payableId)
+	                 .replace(/{conditions}/, 'vend_vendtype_id = ' + target);
+	        break;
+	      case XM.Payable.SELECT_VENDOR_TYPE_PATTERN:
+	        sqlType = sql.replace(/{apselect_id}/, payableId)
+	                 .replace(/{conditions}/, "vend_vendtype_id in "
+	                                          + "(select vendtype_id "
+	                                          + "from vendtype "
+	                                          + "where vendtype_code ~ " + target + ")");
+	        break;
+	      default:
+	        sqlSelected = sql.replace(/{apselect_id}/, payableId)
+	                 .replace(/{conditions}/, 'vend_id = ' + target);
+	    }
+	    return executeSql(sql)[0].result;
+	  }
+  
+    throw new Error(err);
+	}
+
+  /** 
+   Payable On Hold
+
+   @param {Number}
+   @returns {Number}
+  */
+	XM.Payable.setIsOnHold = function(payableId) {
+	  var ret, sql, err,
+	      data = Object.create(XT.Data);
+
+	  if(!data.checkPrivilege("EditAPOpenItem")) err = "Access denied."
+	  else if(payableId === undefined) err = "No payable specified";
+
+	  if(!err) {
+	    ret = executeSql("select apopen_status FROM apopen WHERE apopen_id = $1 as result;", [payableId])[0].result;
+
+	    return ret;
+	  }
+  
+	  throw new Error(err);
+	}
+
+  /** 
+   Apply all credits
+
+   @param {Number}
+   @returns {Number}
+  */
+	XM.Payable.applyAllCredits = function(targetType, target, vendorId) {
+	  var sql = "select applyapcredits(vend_id, {vendorId}) as result from vend where {conditions};",
+	      data = Object.create(XT.Data)
+	      ret, err;
+
+	  if(!data.checkPrivilege("MaintainAPMemos")) err = "Access denied.";
+	  else if(targetType !== XM.Payable.SELECT_ALL_VENDORS && target === undefined) 
+	    err = "No Vendor information specified";
+	  else if(vendorId === undefined) err = "No payable specified";
+
+	  if(!err) {
+	    switch (targetType)
+	    {
+	      case XM.Payable.SELECT_ALL_VENDORS: 
+	        sql = sql.replace(/{vend_id}/, vendorId)
+	                 .replace(/{conditions}/, 'true');
+	        break;
+	       case XM.Payable.SELECT_VENDOR_TYPE:
+	        sql = sql.replace(/{vend_id}/, vendorId)
+	                 .replace(/{conditions}/, 'vend_vendtype_id = ' + target);
+	        break;
+	      case XM.Payable.SELECT_VENDOR_TYPE_PATTERN:
+	        sql = sql.replace(/{vend_id}/, vendorId)
+	                 .replace(/{conditions}/, "vend_vendtype_id in "
+	                                          + "(select vendtype_id "
+	                                          + "from vendtype "
+	                                          + "where vendtype_code ~ " + target + ")");
+	        break;
+	      default:
+	        sql = sql.replace(/{vend_id}/, vendorId)
+	                 .replace(/{conditions}/, 'vend_id = ' + target);
+	    }
+	    return executeSql(sql)[0].result;
+	  }
+  
+	  throw new Error(err);
+	}
 $$ );
