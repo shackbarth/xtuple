@@ -24,27 +24,27 @@ XM.Crm = XM.Object.extend( XM.Settings,
   /**
     @type String
   */  
-  accountNumberGenerationBinding: '*settings.CRMAccountNumberGeneration',
+  accountNumberGenerationBinding: SC.Binding.from('*settings.CRMAccountNumberGeneration').noDelay(),
     
   /**
     @type Number
   */
-  nextAccountNumberBinding: '*settings.NextCRMAccountNumber',
+  nextAccountNumberBinding: SC.Binding.from('*settings.NextCRMAccountNumber').noDelay(),
 
   /**
     @type Number
   */  
-  nextIncidentNumberBinding: '*settings.NextIncidentNumber',
+  nextIncidentNumberBinding: SC.Binding.from('*settings.NextIncidentNumber').noDelay(),
   
   /**
     @type Boolean
   */
-  isUseProjectsBinding: '*settings.UseProjects',
+  isUseProjectsBinding: SC.Binding.from('*settings.UseProjects').noDelay(),
  
   /**
     @type Boolean
   */ 
-  isAutoCreateProjectsForOrdersBinding: '*settings.AutoCreateProjectsForOrders',
+  isAutoCreateProjectsForOrdersBinding: SC.Binding.from('*settings.AutoCreateProjectsForOrders').noDelay(),
   
   /**
     @type Boolean
@@ -56,57 +56,57 @@ XM.Crm = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */
-  isOpportunityChangeLogBinding: '*settings.OpportunityChangeLog',
+  isOpportunityChangeLogBinding: SC.Binding.from('*settings.OpportunityChangeLog').noDelay(),
 
   /**
     @type Boolean
   */  
-  isIncidentsPublicPrivateBinding: '*settings.IncidentsPublicPrivate',
+  isIncidentsPublicPrivateBinding: SC.Binding.from('*settings.IncidentsPublicPrivate').noDelay(),
 
   /**
     @type Boolean
   */  
-  isIncidentPublicDefaultBinding: '*settings.IncidentPublicDefault',
+  isIncidentPublicDefaultBinding: SC.Binding.from('*settings.IncidentPublicDefault').noDelay(),
 
   /**
     @type String
   */  
-  incidentNewColorBinding: '*settings.IncidentNewColor',
+  incidentNewColorBinding: SC.Binding.from('*settings.IncidentNewColor').noDelay(),
   
   /**
     @type String
   */
-  incidentFeedbackColorBinding: '*settings.IncidentFeedbackColor',
+  incidentFeedbackColorBinding: SC.Binding.from('*settings.IncidentFeedbackColor').noDelay(),
 
   /**
     @type String
   */
-  incidentConfirmedColorBinding: '*settings.IncidentConfirmedColor',
+  incidentConfirmedColorBinding: SC.Binding.from('*settings.IncidentConfirmedColor').noDelay(),
 
   /**
     @type String
   */
-  incidentAssignedColorBinding: '*settings.IncidentAssignedColor',
+  incidentAssignedColorBinding: SC.Binding.from('*settings.IncidentAssignedColor').noDelay(),
   
   /**
     @type String
   */
-  incidentResolvedColorBinding: '*settings.IncidentResolvedColor',
+  incidentResolvedColorBinding: SC.Binding.from('*settings.IncidentResolvedColor').noDelay(),
   
   /**
     @type String
   */
-  incidentClosedColorBinding: '*settings.IncidentClosedColor',
+  incidentClosedColorBinding: SC.Binding.from('*settings.IncidentClosedColor').noDelay(),
   
   /**
     @type String
   */
-  isDefaultAddressCountryBinding: '*settings.DefaultAddressCountry',
+  isDefaultAddressCountryBinding: SC.Binding.from('*settings.DefaultAddressCountry').noDelay(),
 
   /**
     @type Boolean
   */
-  isStrictAddressCountryBinding: '*settings.StrictAddressCountry',
+  isStrictAddressCountryBinding: SC.Binding.from('*settings.StrictAddressCountry').noDelay(),
   
   /**
     @type Boolean

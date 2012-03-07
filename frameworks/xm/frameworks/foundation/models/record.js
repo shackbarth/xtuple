@@ -71,7 +71,7 @@ XM.Record = SC.Record.extend(
   */
   validateErrors: null,
   validateErrorsLength: 0,
-  validateErrorsLengthBinding: '.validateErrors.length',
+  validateErrorsLengthBinding: SC.Binding.from('.validateErrors.length').noDelay(),
   
   /**
   State used for data source processing. You should never edit this directly.

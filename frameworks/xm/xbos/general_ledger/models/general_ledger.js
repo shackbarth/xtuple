@@ -43,7 +43,7 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type Number
   */  
-  companySizeBinding: '*settings.GLCompanySize',
+  companySizeBinding: SC.Binding.from('*settings.GLCompanySize').noDelay(),
 
   /**
     @type Boolean
@@ -67,17 +67,17 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */
-  profitSizeBinding: '*settings.GLProfitSize',
+  profitSizeBinding: SC.Binding.from('*settings.GLProfitSize').noDelay(),
   
   /**
     @type String
   */
-  isFreeFormProfitCentersBinding: '*settings.GLFFProfitCenters',
+  isFreeFormProfitCentersBinding: SC.Binding.from('*settings.GLFFProfitCenters').noDelay(),
   
   /**
     @type Number
   */
-  mainSizeBinding: '*settings.GLMainSize',
+  mainSizeBinding: SC.Binding.from('*settings.GLMainSize').noDelay(),
 
   /**
     @type Boolean
@@ -101,27 +101,27 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type Boolean
   */
-  subAccountSizeBinding: '*settings.GLSubaccountSize',
+  subAccountSizeBinding: SC.Binding.from('*settings.GLSubaccountSize').noDelay(),
 
   /**
     @type Boolean
   */  
-  isFreeFormSubAccountsBinding: '*settings.GLFFSubaccounts',
+  isFreeFormSubAccountsBinding: SC.Binding.from('*settings.GLFFSubaccounts').noDelay(),
 
   /**
     @type Boolean
   */  
-  isUseJournalsBinding: '*settings.UseJournals',
+  isUseJournalsBinding: SC.Binding.from('*settings.UseJournals').noDelay(),
   
   /**
     @type String
   */
-  isMandatoryJournalEntryNotesBinding: '*settings.MandatoryGLEntryNotes',
+  isMandatoryJournalEntryNotesBinding: SC.Binding.from('*settings.MandatoryGLEntryNotes').noDelay(),
   
   /**
     @type String
   */
-  isManualForwardUpdateBinding: '*settings.ManualForwardUpdate',
+  isManualForwardUpdateBinding: SC.Binding.from('*settings.ManualForwardUpdate').noDelay(),
   
   /**
     @type Boolean
@@ -133,27 +133,27 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   /**
     @type String
   */  
-  retainedEarningsAccountBinding: '*settings.YearEndEquityAccount',
+  retainedEarningsAccountBinding: SC.Binding.from('*settings.YearEndEquityAccount').noDelay(),
   
   /**
     @type Boolean
   */
-  currencyGainLossAccountBinding: '*settings.CurrencyGainLossAccount',
+  currencyGainLossAccountBinding: SC.Binding.from('*settings.CurrencyGainLossAccount').noDelay(),
 
   /**
     @type Boolean
   */ 
-  journalSeriesDiscrepancyAccountBinding: '*settings.GLSeriesDiscrepancyAccount',
+  journalSeriesDiscrepancyAccountBinding: SC.Binding.from('*settings.GLSeriesDiscrepancyAccount').noDelay(),
 
   /**
     @type String
   */  
-  currencyExchangeSenseBinding: '*settings.CurrencyExchangeSense',
+  currencyExchangeSenseBinding: SC.Binding.from('*settings.CurrencyExchangeSense').noDelay(),
 
   /**
     @type String
   */
-  isInventoryInterfaceEnabledBinding: '*settings.InterfaceToGL', 
+  isInventoryInterfaceEnabledBinding: SC.Binding.from('*settings.InterfaceToGL').noDelay(), 
 
   // ..........................................................
   // PRIVATE

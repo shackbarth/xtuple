@@ -24,57 +24,57 @@ XM.Payables = XM.Object.extend( XM.Settings,
   /**
     @type Number
   */  
-  nextPaybleNumberBinding: '*settings.NextAPMemoNumber',
+  nextPayableNumberBinding: SC.Binding.from('*settings.NextAPMemoNumber').noDelay(),
 
   /**
     @type Boolean
   */
-  isAchEnabledBinding: '*settings.ACHEnabled',
+  isAchEnabledBinding: SC.Binding.from('*settings.ACHEnabled').noDelay(),
 
   /**
     @type String
   */
-  nextACHBatchNumberBinding: '*settings.NextACHBatchNumber',
+  nextACHBatchNumberBinding: SC.Binding.from('*settings.NextACHBatchNumber').noDelay(),
   
   /**
     @type String
   */
-  achCompanyIdBinding: '*settings.ACHCompanyId',
+  achCompanyIdBinding: SC.Binding.from('*settings.ACHCompanyId').noDelay(),
   
   /**
     @type Number
   */
-  achCompanyIdTypeBinding: '*settings.ACHCompanyIdType',
+  achCompanyIdTypeBinding: SC.Binding.from('*settings.ACHCompanyIdType').noDelay(),
 
   /**
     @type Boolean
   */
-  achCompanyNameBinding: '*settings.ACHCompanyName',
+  achCompanyNameBinding: SC.Binding.from('*settings.ACHCompanyName').noDelay(),
 
   /**
     @type Boolean
   */  
-  achDefaultSuffixBinding: '*settings.ACHDefaultSuffix',
+  achDefaultSuffixBinding: SC.Binding.from('*settings.ACHDefaultSuffix').noDelay(),
 
   /**
     @type Boolean
   */  
-  eftRoutingRegexBinding: '*settings.EFTRoutingRegex',
+  eftRoutingRegexBinding: SC.Binding.from('*settings.EFTRoutingRegex').noDelay(),
   
   /**
     @type String
   */
-  eftFunctionBinding: '*settings.EFTFunction',
+  eftFunctionBinding: SC.Binding.from('*settings.EFTFunction').noDelay(),
   
   /**
     @type String
   */  
-  isReqireVendorInvoiceBinding: '*settings.ReqInvMiscVoucher',
+  isReqireVendorInvoiceBinding: SC.Binding.from('*settings.ReqInvMiscVoucher').noDelay(),
 
   /**
     @type Boolean
   */ 
-  recurringVoucherBufferBinding: '*settings.RecurringVoucherBuffer'
+  recurringVoucherBufferBinding: SC.Binding.from('*settings.RecurringVoucherBuffer').noDelay()
   
 }) ;
 
