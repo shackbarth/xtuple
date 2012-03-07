@@ -10,8 +10,8 @@ create or replace function xt.fetch(data_hash text) returns text as $$
   //
 
   var query = JSON.parse(data_hash).query,
-      nameSpace = query.recordType.replace((/\.\w+/i),''),
-      type = query.recordType.replace((/\w+\./i),''),
+      nameSpace = query.recordType.beforeDot(),
+      type = query.recordType.afterDot(),
       table = (nameSpace + '.' + type).decamelize(),
       conditions = query.conditions,
       orderBy = (query.orderBy ? 'order by ' + query.orderBy : '').decamelize(),

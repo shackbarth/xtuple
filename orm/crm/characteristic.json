@@ -1,0 +1,39 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "Characteristic",
+  "table": "char",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "relations": [
+    {
+      "column": "char_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "isIncidents",
+      "attr": {
+        "type": "Boolean",
+        "column": "char_incidents"
+      }
+    },
+    {
+      "name": "isOpportunities",
+      "attr": {
+        "type": "Boolean",
+        "column": "char_opportunity"
+      }
+    },
+    {
+      "name": "isAccounts",
+      "attr": {
+        "type": "Boolean",
+        "column": "char_crmaccounts"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

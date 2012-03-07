@@ -4,6 +4,7 @@
   "type": "CreditMemo",
   "table": "cmhead",
   "idSequenceName": "public.cmhead_cmhead_id_seq",
+  "orderSequence": "CmNumber",
   "comment": "Credit Memo Map",
   "privileges": {
     "all": {

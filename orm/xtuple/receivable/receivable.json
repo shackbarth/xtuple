@@ -3,6 +3,8 @@
   "nameSpace": "XM",
   "type": "Receivable",
   "table": "aropen",
+  "idSequenceName": "aropen_aropen_id_seq",
+  "orderSequence": "ARMemoNumber",
   "comment": "Receivable Map",
   "privileges": {
     "all": {
@@ -19,6 +21,20 @@
         "type": "Number",
         "column": "aropen_id",
         "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "aropen_docnumber"
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "aropen_doctype"
       }
     },
     {
@@ -49,20 +65,6 @@
       "toOne": {
         "type": "Terms",
         "column": "aropen_terms_id"
-      }
-    },
-    {
-      "name": "documentType",
-      "attr": {
-        "type": "String",
-        "column": "aropen_doctype"
-      }
-    },
-    {
-      "name": "documentNumber",
-      "attr": {
-        "type": "String",
-        "column": "aropen_docnumber"
       }
     },
     {

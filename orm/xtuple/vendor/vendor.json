@@ -4,6 +4,7 @@
   "type": "Vendor",
   "table": "vendinfo",
   "idSequenceName": "public.vend_vend_id_seq",
+  "orderSequence": "CRMAccountNumber",
   "comment": "Vendor Map",
   "privileges": {
     "all": {
@@ -185,7 +186,7 @@
     {
       "name": "achRoutingNumber",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "vend_ach_routingnumber",
         "isEncrypted": true
       }
@@ -193,7 +194,7 @@
     {
       "name": "achAccountNumber",
       "attr": {
-        "type": "Bytea",
+        "type": "String",
         "column": "vend_ach_accntnumber",
         "isEncrypted": true
       }

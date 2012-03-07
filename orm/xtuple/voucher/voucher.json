@@ -3,7 +3,8 @@
   "nameSpace": "XM",
   "type": "Voucher",
   "table": "vohead",
-  "idSequenceName": "public.vohead_vohead_id_seq",
+  "idSequenceName": "vohead_vohead_id_seq",
+  "orderSequence": "VcNumber",
   "comment": "Voucher Map",
   "privileges": {
     "all": {

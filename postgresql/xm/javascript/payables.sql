@@ -17,7 +17,6 @@ select xt.install_js('XM','payables','payables', $$
     "EFTAccountRegex",
     "EFTFunction",
     "NextACHBatchNumber",
-    "ReqInvRegVoucher",
     "ReqInvMiscVoucher",
     "RecurringVoucherBuffer"
   ]
@@ -28,7 +27,7 @@ select xt.install_js('XM','payables','payables', $$
   @returns {Object}
   */
   XM.Payables.settings = function() {
-    var keys = XM.Payables.options,
+    var keys = XM.Payables.options.slice(0),
         data = Object.create(XT.Data),
         sql = "select orderseq_number as value "
             + "from orderseq"

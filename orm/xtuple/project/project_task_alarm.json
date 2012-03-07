@@ -4,6 +4,7 @@
   "type": "ProjectTaskAlarm",
   "table": "alarm",
   "idSequenceName": "public.alarm_alarm_id_seq",
+  "orderSequence": "AlarmNumber",
   "comment": "Project Task Alarm Map",
   "privileges": {
     "all": {
@@ -20,6 +21,13 @@
         "type": "Number",
         "column": "alarm_id",
         "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "alarm_number"
       }
     },
     {

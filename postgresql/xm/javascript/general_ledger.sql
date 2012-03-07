@@ -29,7 +29,7 @@
   @returns {Object}
   */
   XM.GeneralLedger.settings = function() {
-    var keys = XM.GeneralLedger.options,
+    var keys = XM.GeneralLedger.options.slice(0),
         data = Object.create(XT.Data);
     
     return data.retrieveMetrics(keys);

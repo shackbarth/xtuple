@@ -4,6 +4,7 @@
   "type": "CashReceipt",
   "table": "cashrcpt",
   "idSequenceName": "public.cashrcpt_cashrcpt_id_seq",
+  "orderSequence": "CashRcptNumber",
   "comment": "Cash Receipt Map",
   "privileges": {
     "all": {
