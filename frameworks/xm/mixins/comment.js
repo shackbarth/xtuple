@@ -3,7 +3,7 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
-/** @class
+/** @mixin
 
   (Document your Model here)
 
@@ -11,15 +11,14 @@
   @version 0.1
 */
 
-XM.Comment = XM.Record.extend(
-/** @scope XM.Comment.prototype */ {
+XM.Comment = {
 
   className: 'XM.Comment',
 
   /**
   @type SC.DateTime
   */
-  date: SC.Record.attr(SC.DateTime, {
+  created: SC.Record.attr(SC.DateTime, {
     /** @private */
     defaultValue: function() {
       return (arguments[0].get('status') === SC.Record.READY_NEW) ? SC.DateTime.create().toFormattedString(SC.DATETIME_ISO8601) : null;
@@ -29,22 +28,19 @@ XM.Comment = XM.Record.extend(
   /**
   @type {String}
   */
-  username: SC.Record.attr(XM.User, {
+  createdBy: SC.Record.attr('XM.UserAccount', {
     /** @private */
     defaultValue: function() {
-      return arguments[0].get('status') === SC.Record.READY_NEW ? XM.currentUser().get('username') : null;
+      if(arguments[0].get('status') === SC.Record.READY_NEW) return XM.DataSource.session.userName;
     }
   }),
   
   /**
-  @type XM.CommentType
+  @type Boolean
   */
-  commentType: SC.Record.toOne('XM.CommentType'),
-  
-  /**
-  @type String
-  */
-  text: SC.Record.attr(String),
+  isEditable: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.property('status', 'commentType').cacheable(),
   
   /**
   @type Boolean
@@ -56,13 +52,19 @@ XM.Comment = XM.Record.extend(
     }
   }),
 
-  /**
-  @type Boolean
-  */
-  canUpdate: SC.Record.attr(String, {
-    defaultValue: YES
-  }),
+  // ..........................................................
+  // METHODS
+  //
 
+  canUpdate: function() {
+    var commentType = this.get('commentType'),
+        createdBy = this.get('createdBy'),
+        status = this.get('status'),
+        canUpdate = arguments.callee.base.apply(this, arguments);
+    
+    return commentType && commentType.get('commentsEditable') && canUpdate;
+  },
+  
   // ..........................................................
   // OBSERVERS
   //
@@ -75,7 +77,7 @@ XM.Comment = XM.Record.extend(
     this.updateErrors(err, SC.none(this.get('commentType')));
 
     return errors;
-  }.observes('commentType'),
+  }.observes('commentType')
 
-});
+}
 
