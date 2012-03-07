@@ -13,7 +13,7 @@
   @param {String, String, String, Number, String} company, profit, subAccnt, accountId, description
   @returns {Number}
   */
-  XM.Address.duplicate = function(company, profit, subAccount, accountId, description) {
+  XM.LedgerAccount.duplicate = function(company, profit, subAccount, accountId, description) {
     var data = Object.create(XT.Data),
         sql = "insert into accnt"
               + "(accnt_number, accnt_descrip,"
