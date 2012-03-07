@@ -13,7 +13,7 @@ select xt.install_js('XM','Customer','xtuple', $$
    @returns {Number}
   */
   XM.Customer.updateLateCreditStatus = function() {
-    var data, ret, err;
+    var data, rec, err;
 
     data = Object.create(XT.Data);
     if(!data.checkPrivilege('UpdateCustomerCreditStatus')) err = "Access Denied.";
@@ -33,10 +33,9 @@ select xt.install_js('XM','Customer','xtuple', $$
             + "WHERE(metric_name='DefaultAutoCreditWarnGraceDays')),30))) > 0) "
             + "AND (cust_autoupdatestatus) "
             + "AND (cust_creditstatus = 'G')) ",
-        ret = executeSql(sql);
-
-    return ret.length ? JSON.stringify(ret[0]) : '{}';
-
+        rec = executeSql(sql);
+    
+    return rec.length ? JSON.stringify (rec) : '{}';
     }
 
     throw new Error(err);
