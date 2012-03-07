@@ -13,8 +13,6 @@
 
 XM.Comment = {
 
-  className: 'XM.Comment',
-
   /**
   @type SC.DateTime
   */
