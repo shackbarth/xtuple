@@ -24,47 +24,47 @@ XM.DatabaseInformation = XM.Object.extend( XM.Settings,
   /**
     @type Number
   */  
-  applicationBinding: '*settings.Application',
+  applicationBinding: SC.Binding.from('*settings.Application').noDelay(),
 
   /**
     @type Boolean
   */
-  registrationKeyBinding: '*settings.RegistrationKey',
+  registrationKeyBinding: SC.Binding.from('*settings.RegistrationKey').noDelay(),
 
   /**
     @type String
   */
-  databaseNameBinding: '*settings.DatabaseName',
+  databaseNameBinding: SC.Binding.from('*settings.DatabaseName').noDelay(),
   
   /**
     @type String
   */
-  databaseCommentsBinding: '*settings.DatabaseComments',
+  databaseCommentsBinding: SC.Binding.from('*settings.DatabaseComments').noDelay(),
   
   /**
     @type Number
   */
-  serverVersionBinding: '*settings.ServerVersion',
+  serverVersionBinding: SC.Binding.from('*settings.ServerVersion').noDelay(),
 
   /**
     @type Boolean
   */
-  serverPatchVersionBinding: '*settings.ServerPatchVersion',
+  serverPatchVersionBinding: SC.Binding.from('*settings.ServerPatchVersion').noDelay(),
 
   /**
     @type Boolean
   */  
-  isNotAallowMismatchClientVersionBinding: '*settings.DisallowMismatchClientVersion',
+  isNotAallowMismatchClientVersionBinding: SC.Binding.from('*settings.DisallowMismatchClientVersion').noDelay(),
 
   /**
     @type Boolean
   */  
-  isForceLicenseLimitBinding: '*settings.ForceLicenseLimit',
+  isForceLicenseLimitBinding: SC.Binding.from('*settings.ForceLicenseLimit').noDelay(),
   
   /**
     @type String
   */
-  allowedUserLoginsBinding: '*settings.AllowedUserLogins'
+  allowedUserLoginsBinding: SC.Binding.from('*settings.AllowedUserLogins').noDelay()
   
 }) ;
 

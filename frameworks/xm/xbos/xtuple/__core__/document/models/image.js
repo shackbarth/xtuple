@@ -5,17 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_account_comment');
-sc_require('mixins/comment');
+sc_require('xbos/__generated__/_image');
 
 /**
   @class
 
-  @extends XM._AccountComment
-  @extends XM.Comment
+  @extends XM._Image
 */
-XM.AccountComment = XM._AccountComment.extend(XM.Comment,
-  /** @scope XM.AccountComment.prototype */ {
+XM.Image = XM._Image.extend(
+  /** @scope XM.Image.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

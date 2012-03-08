@@ -62,6 +62,11 @@ XM._Incident = XM.Record.extend(
   description: SC.Record.attr(String),
 
   /**
+    @type Boolean
+  */
+  isPublic: SC.Record.attr(Boolean),
+
+  /**
     @type XM.AccountInfo
   */
   account: SC.Record.toOne('XM.AccountInfo', {
@@ -74,6 +79,26 @@ XM._Incident = XM.Record.extend(
   contact: SC.Record.toOne('XM.ContactInfo', {
     isNested: true
   }),
+
+  /**
+    @type XM.Priority
+  */
+  priority: SC.Record.toOne('XM.Priority'),
+
+  /**
+    @type String
+  */
+  incidentStatus: SC.Record.attr(String),
+
+  /**
+    @type XM.IncidentResolution
+  */
+  resolution: SC.Record.toOne('XM.IncidentResolution'),
+
+  /**
+    @type XM.IncidentSeverity
+  */
+  severity: SC.Record.toOne('XM.IncidentSeverity'),
 
   /**
     @type XM.UserAccountInfo
@@ -95,29 +120,19 @@ XM._Incident = XM.Record.extend(
   notes: SC.Record.attr(String),
 
   /**
-    @type XM.Priority
+    @type XM.ItemInfo
   */
-  priority: SC.Record.toOne('XM.Priority'),
+  item: SC.Record.toOne('XM.ItemInfo', {
+    isNested: true
+  }),
 
   /**
-    @type String
+    @type XM.IncidentRecurrence
   */
-  incidentStatus: SC.Record.attr(String),
-
-  /**
-    @type Boolean
-  */
-  isPublic: SC.Record.attr(Boolean),
-
-  /**
-    @type XM.IncidentResolution
-  */
-  resolution: SC.Record.toOne('XM.IncidentResolution'),
-
-  /**
-    @type XM.IncidentSeverity
-  */
-  severity: SC.Record.toOne('XM.IncidentSeverity'),
+  recurring: SC.Record.toMany('XM.IncidentRecurrence', {
+    isNested: true,
+    inverse: 'incident'
+  }),
 
   /**
     @type XM.IncidentAlarm

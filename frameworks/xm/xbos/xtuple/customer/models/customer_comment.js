@@ -6,13 +6,15 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_customer_comment');
+sc_require('mixins/comment');
 
 /**
   @class
 
   @extends XM._CustomerComment
+  @extends XM.Comment
 */
-XM.CustomerComment = XM._CustomerComment.extend(
+XM.CustomerComment = XM._CustomerComment.extend(XM.Comment,
   /** @scope XM.CustomerComment.prototype */ {
 
   // .................................................

@@ -24,97 +24,97 @@ XM.Receivables = XM.Object.extend( XM.Settings,
   /**
     @type Number
   */  
-  nextReceivableNumberBinding: '*settings.NextARMemoNumber',
+  nextReceivableNumberBinding: SC.Binding.from('*settings.NextARMemoNumber').noDelay(),
 
   /**
     @type Boolean
   */
-  nextCashRcptNumberBinding: '*settings.NextCashRcptNumber',
+  nextCashRcptNumberBinding: SC.Binding.from('*settings.NextCashRcptNumber').noDelay(),
 
   /**
     @type String
   */
-  isHideApplyToBalanceBinding: '*settings.HideApplyToBalance',
+  isHideApplyToBalanceBinding: SC.Binding.from('*settings.HideApplyToBalance').noDelay(),
   
   /**
     @type String
   */
-  isEnableCustomerDepositsBinding: '*settings.EnableCustomerDeposits',
+  isEnableCustomerDepositsBinding: SC.Binding.from('*settings.EnableCustomerDeposits').noDelay(),
   
   /**
     @type Number
   */
-  isCreditTaxDiscountBinding: '*settings.CreditTaxDiscount',
+  isCreditTaxDiscountBinding: SC.Binding.from('*settings.CreditTaxDiscount').noDelay(),
 
   /**
     @type Boolean
   */
-  remittoNameBinding: '*settings.remitto_name',
+  remittoNameBinding: SC.Binding.from('*settings.remitto_name').noDelay(),
 
   /**
     @type Boolean
   */  
-  remittoAddress1Binding: '*settings.remitto_address1',
+  remittoAddress1Binding: SC.Binding.from('*settings.remitto_address1').noDelay(),
 
   /**
     @type Boolean
   */  
-  remittoAddress2Binding: '*settings.remitto_address2',
+  remittoAddress2Binding: SC.Binding.from('*settings.remitto_address2').noDelay(),
   
   /**
     @type String
   */
-  remittoAddress3Binding: '*settings.remitto_address3',
+  remittoAddress3Binding: SC.Binding.from('*settings.remitto_address3').noDelay(),
   
   /**
     @type String
   */  
-  remittoCityBinding: '*settings.remitto_city',
+  remittoCityBinding: SC.Binding.from('*settings.remitto_city').noDelay(),
 
   /**
     @type Boolean
   */ 
-  remittoStateBinding: '*settings.remitto_state',
+  remittoStateBinding: SC.Binding.from('*settings.remitto_state').noDelay(),
   
   /**
     @type Boolean
   */
-  remittoPostalCodeBinding: '*settings.remitto_zipcode',
+  remittoPostalCodeBinding: SC.Binding.from('*settings.remitto_zipcode').noDelay(),
 
   /**
     @type Boolean
   */  
-  remittoCountryBinding: '*settings.remitto_country',
+  remittoCountryBinding: SC.Binding.from('*settings.remitto_country').noDelay(),
 
   /**
     @type Boolean
   */  
-  remittoPhoneBinding: '*settings.remitto_phone',
+  remittoPhoneBinding: SC.Binding.from('*settings.remitto_phone').noDelay(),
   
   /**
     @type String
   */  
-  isAutoCreditWarnLateCustomersBinding: '*settings.AutoCreditWarnLateCustomers',
+  isAutoCreditWarnLateCustomersBinding: SC.Binding.from('*settings.AutoCreditWarnLateCustomers').noDelay(),
 
   /**
     @type Boolean
   */ 
-  defaultAutoCreditWarnGraceDaysBinding: '*settings.DefaultAutoCreditWarnGraceDays',
+  defaultAutoCreditWarnGraceDaysBinding: SC.Binding.from('*settings.DefaultAutoCreditWarnGraceDays').noDelay(),
   
   /**
     @type String
   */
-  recurringInvoiceBufferBinding: '*settings.RecurringInvoiceBuffer',
+  recurringInvoiceBufferBinding: SC.Binding.from('*settings.RecurringInvoiceBuffer').noDelay(),
   
   /**
     @type Boolean
   */  
-  defaultIncidentStatusBinding: '*settings.DefaultARIncidentStatus',
+  defaultIncidentStatusBinding: SC.Binding.from('*settings.DefaultARIncidentStatus').noDelay(),
 
   /**
     @type Boolean
   */  
-  isAutoCloseIncidentBinding: '*settings.AutoCloseARIncident'
+  isAutoCloseIncidentBinding: SC.Binding.from('*settings.AutoCloseARIncident').noDelay()
   
 }) ;
 
