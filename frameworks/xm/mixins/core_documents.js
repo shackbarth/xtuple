@@ -13,6 +13,10 @@
 
 XM.CoreDocuments = {
   
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
+  
   /**
   A set of all the document assignments on this record
   
@@ -36,31 +40,35 @@ XM.CoreDocuments = {
   _contactsLength: 0,
   
   /* @private */
-  _contactsLengthBinding: '.contacts.length',
+  _contactsLengthBinding: SC.Binding.from('.contacts.length').noDelay(),
   
   /* @private */
   _itemsLength: 0,
   
   /* @private */
-  _itemsLengthBinding: '.items.length',
+  _itemsLengthBinding: SC.Binding.from('.items.length').noDelay(),
   
   /* @private */
   _filesLength: 0,
   
   /* @private */
-  _filesLengthBinding: '.files.length',
+  _filesLengthBinding: SC.Binding.from('.files.length').noDelay(),
   
   /* @private */
   _imagesLength: 0,
   
   /* @private */
-  _imagesLengthBinding: '.urls.length',
+  _imagesLengthBinding: SC.Binding.from('.urls.length').noDelay(),
   
   /* @private */
   _urlsLength: 0,
   
   /* @private */
-  _urlsLengthBinding: '.urls.length',
+  _urlsLengthBinding: SC.Binding.from('.urls.length').noDelay(),
+  
+  //..................................................
+  // OBSERVERS
+  //
   
   /* @private */
   _contactsDidChange: function() {

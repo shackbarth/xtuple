@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._CommentType = XM.Record.extend(
-  /** @scope XM._CommentType.prototype */ {
+XM._ReceivableInfo = XM.Record.extend(
+  /** @scope XM._ReceivableInfo.prototype */ {
   
-  className: 'XM.CommentType',
+  className: 'XM.ReceivableInfo',
 
   
 
@@ -25,10 +25,10 @@ XM._CommentType = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainCommentTypes",
+      "create": false,
       "read": true,
-      "update": "MaintainCommentTypes",
-      "delete": "MaintainCommentTypes"
+      "update": false,
+      "delete": false
     }
   },
 
@@ -44,26 +44,11 @@ XM._CommentType = XM.Record.extend(
   /**
     @type String
   */
-  name: SC.Record.attr(String),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type Boolean
-  */
-  isSystem: SC.Record.attr(Boolean),
-
-  /**
-    @type Boolean
-  */
-  commentsEditable: SC.Record.attr(Boolean),
-
-  /**
-    @type Number
-  */
-  order: SC.Record.attr(Number)
+  documentType: SC.Record.attr(String)
 
 });

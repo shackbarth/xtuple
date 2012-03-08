@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._CommentType = XM.Record.extend(
-  /** @scope XM._CommentType.prototype */ {
+XM._IncidentOpportunity = XM.Record.extend(
+  /** @scope XM._IncidentOpportunity.prototype */ {
   
-  className: 'XM.CommentType',
+  className: 'XM.IncidentOpportunity',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,10 +25,10 @@ XM._CommentType = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainCommentTypes",
+      "create": true,
       "read": true,
-      "update": "MaintainCommentTypes",
-      "delete": "MaintainCommentTypes"
+      "update": false,
+      "delete": true
     }
   },
 
@@ -42,28 +42,20 @@ XM._CommentType = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Incident
   */
-  name: SC.Record.attr(String),
+  source: SC.Record.toOne('XM.Incident'),
+
+  /**
+    @type XM.OpportunityInfo
+  */
+  opportunity: SC.Record.toOne('XM.OpportunityInfo', {
+    isNested: true
+  }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type Boolean
-  */
-  isSystem: SC.Record.attr(Boolean),
-
-  /**
-    @type Boolean
-  */
-  commentsEditable: SC.Record.attr(Boolean),
-
-  /**
-    @type Number
-  */
-  order: SC.Record.attr(Number)
+  purpose: SC.Record.attr(String)
 
 });

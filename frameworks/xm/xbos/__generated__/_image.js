@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._CommentType = XM.Record.extend(
-  /** @scope XM._CommentType.prototype */ {
+XM._Image = XM.Record.extend(
+  /** @scope XM._Image.prototype */ {
   
-  className: 'XM.CommentType',
+  className: 'XM.Image',
 
   
 
@@ -25,10 +25,10 @@ XM._CommentType = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": "MaintainCommentTypes",
+      "create": "MaintainImages",
       "read": true,
-      "update": "MaintainCommentTypes",
-      "delete": "MaintainCommentTypes"
+      "update": "MaintainImages",
+      "delete": "MaintainImages"
     }
   },
 
@@ -52,18 +52,8 @@ XM._CommentType = XM.Record.extend(
   description: SC.Record.attr(String),
 
   /**
-    @type Boolean
+    @type String
   */
-  isSystem: SC.Record.attr(Boolean),
-
-  /**
-    @type Boolean
-  */
-  commentsEditable: SC.Record.attr(Boolean),
-
-  /**
-    @type Number
-  */
-  order: SC.Record.attr(Number)
+  data: SC.Record.attr(String)
 
 });
