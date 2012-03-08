@@ -73,7 +73,7 @@
 -- xm/javascript
 \i xm/javascript/address.sql;
 \i xm/javascript/bank_account_reconciliation.sql;
---\i xm/javascript/cash_receipt.sql;
+\i xm/javascript/cash_receipt.sql;
 \i xm/javascript/crm.sql;
 \i xm/javascript/journal.sql;
 \i xm/javascript/cash_distribution_journal.sql;
