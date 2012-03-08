@@ -80,6 +80,13 @@
       }
     },
     {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "arapply_curr_id"
+      }
+    },
+    {
       "name": "source",
       "toOne": {
         "type": "Receivable",
@@ -94,17 +101,10 @@
       }
     },
     {
-      "name": "userName",
+      "name": "createdBy",
       "attr": {
         "type": "String",
         "column": "arapply_username"
-      }
-    },
-    {
-      "name": "currency",
-      "toOne": {
-        "type": "Currency",
-        "column": "arapply_curr_id"
       }
     }
   ],

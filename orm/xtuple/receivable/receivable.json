@@ -124,13 +124,6 @@
       }
     },
     {
-      "name": "userName",
-      "attr": {
-        "type": "String",
-        "column": "aropen_username"
-      }
-    },
-    {
       "name": "reasonCode",
       "toMany": {
         "isNested": true,
@@ -181,6 +174,13 @@
       "attr": {
         "type": "Date",
         "column": "aropen_closedate"
+      }
+    },
+    {
+      "name": "createdBy",
+      "attr": {
+        "type": "String",
+        "column": "aropen_username"
       }
     }
   ],
