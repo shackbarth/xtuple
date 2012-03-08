@@ -1,4 +1,4 @@
---drop view xt.jrnl cascade
+drop view if exists xt.jrnl cascade;
 
 create or replace view xt.jrnl as
 

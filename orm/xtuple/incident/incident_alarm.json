@@ -4,6 +4,7 @@
   "type": "IncidentAlarm",
   "table": "alarm",
   "idSequenceName": "public.alarm_alarm_id_seq",
+  "orderSequence": "AlarmNumber",
   "comment": "Incident Alarm Map",
   "privileges": {
     "all": {
@@ -23,6 +24,14 @@
       }
     },
     {
+      "name": "number",
+      "attr": {
+        "type": "Number",
+        "column": "alarm_number",
+        "isEditable": false
+      }
+    },
+    {
       "name": "sourceType",
       "attr": {
         "type": "Number",
@@ -36,14 +45,6 @@
       "toOne": {
         "type": "Incident",
         "column": "alarm_source_id",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "number",
-      "attr": {
-        "type": "Number",
-        "column": "alarm_number",
         "isEditable": false
       }
     },

@@ -1,3 +1,5 @@
+drop view if exists xt.docinfo cascade;
+
 create or replace view xt.docinfo as 
 
    select

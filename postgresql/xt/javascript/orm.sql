@@ -224,6 +224,8 @@ select xt.install_js('XT','Orm','xtuple', $$
               isEditable = attr.isEditable !== false ? true : false,
               isPrimaryKey = attr.isPrimaryKey ? true : false;
 
+          if(!attr.type) throw new Error('No type was defined on property ' + props[i].name);
+
           if(isVisible) {
             /* if it is composite, assign the table itself */
             col = attr.type.decamelize() === orm.table ? tblAlias : tblAlias + '.' + attr.column;
@@ -262,10 +264,12 @@ select xt.install_js('XT','Orm','xtuple', $$
         
           var toOne = props[i].toOne,
               table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
-              type = table.replace((/\w+\./i),''),
+              type = table.afterDot(),
               inverse = toOne.inverse ? toOne.inverse.decamelize() : 'guid',
               isEditable = toOne.isEditable !== false ? true : false,
               toOneAlias, join;
+
+          if(!type) throw new Error('No type was defined on property ' + props[i].name);
 
           tbl++;
           toOneAlias = 't' + tbl;
@@ -304,6 +308,8 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(props[i].toMany) {
         
           if(DEBUG) print(NOTICE, 'building toMany');
+
+         if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
         
           var toMany = props[i].toMany,
               table = base.nameSpace + '.' + toMany.type.decamelize(),

@@ -1,9 +1,9 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ImageInfo",
-  "table": "image",
-  "comment": "Image Info Map",
+  "type": "ReceivableInfo",
+  "table": "aropen",
+  "comment": "Receivable Info Map",
   "privileges": {
     "all": {
       "create": false,
@@ -17,24 +17,22 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "image_id",
+        "column": "aropen_id",
         "isPrimaryKey": true
       }
     },
     {
-      "name": "name",
+      "name": "number",
       "attr": {
         "type": "String",
-        "column": "image_name",
-        "isEditable": false
+        "column": "aropen_docnumber"
       }
     },
     {
-      "name": "description",
+      "name": "documentType",
       "attr": {
         "type": "String",
-        "column": "image_descrip",
-        "isEditable": false
+        "column": "aropen_doctype"
       }
     }
   ],

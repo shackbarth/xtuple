@@ -1,4 +1,4 @@
-select xt.install_js('XM','Invoice','xtuple', $$
+﻿select xt.install_js('XM','Invoice','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xtuple.com/CPAL for the full text of the software license. */
 
@@ -131,4 +131,49 @@ select xt.install_js('XM','Invoice','xtuple', $$
 	  throw new Error(err);
 	}  
   
+  /** 
+   Create 1 or more recurring Invoices
+
+   @param {Number} InvoiceId
+   @returns {Number}
+  */
+  XM.Invoice.createRecurring = function(invoiceId) {
+    var sql = "select createrecurringitems({id}, 'I') as result;"
+              .replace(/{id}/, invoiceId === undefined ? null : invoiceId),
+        data = Object.create(XT.Data),
+        err;
+
+    if(!data.checkPrivilege('MaintainMiscInvoicess'))
+      err = "Access Denied.";
+
+    if(!err) {
+      return executeSql(sql)[0].result;
+    }
+
+    throw new Error(err);
+  }
+
+	XM.Invoice.purge = function(cutOffDate, invoiceId) {
+	/**
+	 Purge invoice.
+
+	 @param {date, number}
+	 @returns {number} 
+*/
+	  var ret, sql, err,
+			  data = Object.create(XT.Data);
+
+	  if(!data.checkPrivilege("PurgeInvoices")) err = "Access denied."
+	  else if(cutOffDate === undefined) err = "Not defined";
+	  else if(invoiceId === undefined) err = "Not defined";
+
+	  if(!err) {
+			ret = executeSql("select purgeInvoiceRecord($1,$2) AS result;", [cutOffDate, invoiceId])[0].result;
+
+			return ret;
+	  }
+
+	  throw new Error(err);
+	}
+
 $$ );

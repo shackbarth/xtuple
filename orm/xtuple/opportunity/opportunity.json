@@ -93,7 +93,7 @@
     {
       "name": "opportunityType",
       "toOne": {
-        "type": "opportunityType",
+        "type": "OpportunityType",
         "column": "ophead_optype_id"
       }
     },

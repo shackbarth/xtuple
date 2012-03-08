@@ -95,7 +95,7 @@
       }
     },
     {
-      "name": "userName",
+      "name": "createdBy",
       "attr": {
         "type": "String",
         "column": "apapply_username"

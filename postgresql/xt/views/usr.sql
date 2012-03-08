@@ -1,3 +1,5 @@
+drop view if exists xt.usr cascade;
+
 create or replace view xt.usr as
 
   select 

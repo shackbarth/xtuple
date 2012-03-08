@@ -5,14 +5,13 @@ select xt.install_js('XM','CashReceipt','xtuple', $$
   XM.CashReceipt = {};
   
   XM.CashReceipt.isDispatchable = true;
-  
-	XM.CashReceipt.post = function(cashReceiptId) {
-	/**
+  /**
 	 Post a cash receipt.
 
 	 @param {Number}
 	 @returns {Number} 
 	*/
+	XM.CashReceipt.post = function(cashReceiptId) {
 	  var ret, sql, err,
 			  data = Object.create(XT.Data);
 
@@ -49,14 +48,13 @@ select xt.install_js('XM','CashReceipt','xtuple', $$
 
 	  throw new Error(err);
 	}
-	
-	XM.Invoice.postAll = function(cashReceiptId) {
 	/**
 	 Post a All cash receipts.
 
 	 @param {number}
 	 @returns {boolean} 
-*/
+  */	
+	XM.CashReceipt.postAll = function(cashReceiptId) {
 	  var ret, sql, err,
 			  data = Object.create(XT.Data);
 
@@ -71,14 +69,13 @@ select xt.install_js('XM','CashReceipt','xtuple', $$
 
 	  throw new Error(err);
 	}
-
-	XM.Invoice.void = function(cashReceiptId) {
   /**
    Void a cash receipt.
 
    @param {Number}
    @returns {Number} 
   */
+	XM.CashReceipt.void = function(cashReceiptId) {
 	  var ret, sql, err,
 			  data = Object.create(XT.Data);
 

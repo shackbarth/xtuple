@@ -49,6 +49,13 @@
       }
     },
     {
+      "name": "isPublic",
+      "attr": {
+        "type": "Boolean",
+        "column": "incdt_public"
+      }
+    },
+    {
       "name": "account",
       "toOne": {
         "isNested": true,
@@ -62,6 +69,34 @@
         "isNested": true,
         "type": "ContactInfo",
         "column": "incdt_cntct_id"
+      }
+    },
+    {
+      "name": "priority",
+      "toOne": {
+        "type": "Priority",
+        "column": "incdt_incdtpriority_id"
+      }
+    },
+    {
+      "name": "incidentStatus",
+      "attr": {
+        "type": "String",
+        "column": "incdt_status"
+      }
+    },
+    {
+      "name": "resolution",
+      "toOne": {
+        "type": "IncidentResolution",
+        "column": "incdt_incdtresolution_id"
+      }
+    },
+    {
+      "name": "severity",
+      "toOne": {
+        "type": "IncidentSeverity",
+        "column": "incdt_incdtseverity_id"
       }
     },
     {
@@ -90,38 +125,20 @@
       }
     },
     {
-      "name": "priority",
+      "name": "item",
       "toOne": {
-        "type": "Priority",
-        "column": "incdt_incdtpriority_id"
+        "isNested": true,
+        "type": "ItemInfo",
+        "column": "incdt_item_id"
       }
-    },
+    },  
     {
-      "name": "incidentStatus",
-      "attr": {
-        "type": "String",
-        "column": "incdt_status"
-      }
-    },
-    {
-      "name": "isPublic",
-      "attr": {
-        "type": "Boolean",
-        "column": "incdt_public"
-      }
-    },
-    {
-      "name": "resolution",
-      "toOne": {
-        "type": "IncidentResolution",
-        "column": "incdt_incdtresolution_id"
-      }
-    },
-    {
-      "name": "severity",
-      "toOne": {
-        "type": "IncidentSeverity",
-        "column": "incdt_incdtseverity_id"
+      "name": "recurring",
+      "toMany": {
+        "isNested": true,
+        "type": "IncidentRecurrence",
+        "column": "incdt_id",
+        "inverse": "incident"
       }
     },
     {

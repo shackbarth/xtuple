@@ -209,7 +209,7 @@ create or replace function xt.js_init() returns void as $$
        
     /* load up all active javascript installed in the database */
     /* TODO: What about dependencies? */
-    sql = 'select js_text as "javascript" '
+    sql = 'select js_type, js_text as "javascript" '
         + 'from xt.js '
         + 'where js_active '
         + 'order by js_ext ';
@@ -218,6 +218,8 @@ create or replace function xt.js_init() returns void as $$
 
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
+        if(DEBUG) print(NOTICE, 'loading javascript for type->', res[i].js_type);
+        
         eval(res[i].javascript);
       }
     }

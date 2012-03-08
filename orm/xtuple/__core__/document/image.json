@@ -1,15 +1,15 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ImageInfo",
+  "type": "Image",
   "table": "image",
   "comment": "Image Map",
   "privileges": {
     "all": {
-      "create": false,
+      "create": "MaintainImages",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainImages",
+      "delete": "MaintainImages"
     }
   },
   "properties": [
@@ -25,19 +25,24 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "image_name",
-        "isEditable": false
+        "column": "image_name"
       }
     },
     {
       "name": "description",
       "attr": {
         "type": "String",
-        "column": "image_descrip",
+        "column": "image_descrip"
+      }
+    },
+    {
+      "name": "data",
+      "attr": {
+        "type": "String",
+        "column": "image_data",
         "isEditable": false
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }
