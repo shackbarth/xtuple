@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ToDoToDo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ToDoToDo = XM.Record.extend(
-  /** @scope XM._ToDoToDo.prototype */ {
+  /** @scope XM.ToDoToDo.prototype */ {
   
   className: 'XM.ToDoToDo',
 

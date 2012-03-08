@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ItemInfo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ItemInfo = XM.Record.extend(
-  /** @scope XM._ItemInfo.prototype */ {
+  /** @scope XM.ItemInfo.prototype */ {
   
   className: 'XM.ItemInfo',
 

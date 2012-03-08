@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.UserAccountPrivilegeAssignment
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._UserAccountPrivilegeAssignment = XM.Record.extend(
-  /** @scope XM._UserAccountPrivilegeAssignment.prototype */ {
+  /** @scope XM.UserAccountPrivilegeAssignment.prototype */ {
   
   className: 'XM.UserAccountPrivilegeAssignment',
 

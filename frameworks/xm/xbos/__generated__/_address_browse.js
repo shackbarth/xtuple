@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.AddressBrowse
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._AddressBrowse = XM.Record.extend(
-  /** @scope XM._AddressBrowse.prototype */ {
+  /** @scope XM.AddressBrowse.prototype */ {
   
   className: 'XM.AddressBrowse',
 

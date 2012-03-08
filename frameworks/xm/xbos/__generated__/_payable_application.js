@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.PayableApplication
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._PayableApplication = XM.Record.extend(
-  /** @scope XM._PayableApplication.prototype */ {
+  /** @scope XM.PayableApplication.prototype */ {
   
   className: 'XM.PayableApplication',
 

@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ToDoInfo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ToDoInfo = XM.Record.extend(
-  /** @scope XM._ToDoInfo.prototype */ {
+  /** @scope XM.ToDoInfo.prototype */ {
   
   className: 'XM.ToDoInfo',
 

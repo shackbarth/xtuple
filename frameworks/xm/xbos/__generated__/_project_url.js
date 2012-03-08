@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ProjectUrl
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ProjectUrl = XM.Record.extend(
-  /** @scope XM._ProjectUrl.prototype */ {
+  /** @scope XM.ProjectUrl.prototype */ {
   
   className: 'XM.ProjectUrl',
 

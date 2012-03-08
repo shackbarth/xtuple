@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CustomerFile
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CustomerFile = XM.Record.extend(
-  /** @scope XM._CustomerFile.prototype */ {
+  /** @scope XM.CustomerFile.prototype */ {
   
   className: 'XM.CustomerFile',
 

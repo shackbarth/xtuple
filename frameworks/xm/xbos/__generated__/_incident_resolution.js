@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.IncidentResolution
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._IncidentResolution = XM.Record.extend(
-  /** @scope XM._IncidentResolution.prototype */ {
+  /** @scope XM.IncidentResolution.prototype */ {
   
   className: 'XM.IncidentResolution',
 
