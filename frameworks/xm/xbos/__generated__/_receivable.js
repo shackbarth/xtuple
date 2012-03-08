@@ -118,11 +118,6 @@ XM._Receivable = XM.Record.extend(
   orderNumber: SC.Record.attr(String),
 
   /**
-    @type String
-  */
-  userName: SC.Record.attr(String),
-
-  /**
     @type XM.ReasonCode
   */
   reasonCode: SC.Record.toMany('XM.ReasonCode', {
@@ -164,6 +159,11 @@ XM._Receivable = XM.Record.extend(
   */
   closeDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d'
-  })
+  }),
+
+  /**
+    @type String
+  */
+  createdBy: SC.Record.attr(String)
 
 });

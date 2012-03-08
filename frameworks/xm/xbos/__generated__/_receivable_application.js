@@ -86,6 +86,11 @@ XM._ReceivableApplication = XM.Record.extend(
   applied: SC.Record.attr(Number),
 
   /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency'),
+
+  /**
     @type XM.Receivable
   */
   source: SC.Record.toOne('XM.Receivable'),
@@ -98,11 +103,6 @@ XM._ReceivableApplication = XM.Record.extend(
   /**
     @type String
   */
-  userName: SC.Record.attr(String),
-
-  /**
-    @type XM.Currency
-  */
-  currency: SC.Record.toOne('XM.Currency')
+  createdBy: SC.Record.attr(String)
 
 });

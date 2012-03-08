@@ -100,6 +100,6 @@ XM._PayableApplication = XM.Record.extend(
   /**
     @type String
   */
-  userName: SC.Record.attr(String)
+  createdBy: SC.Record.attr(String)
 
 });
