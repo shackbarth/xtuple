@@ -88,10 +88,27 @@ $(document).ready(function() {
     });
   });
 
+  // generate models
+  $('#generate').click(function(e) {
+    // is generate subclass models checked?
+    var subclass = $('#subclass-models').prop('checked'),
+        types = [];
+    $('input:checkbox:checked', $('.files')).each(function(k, input) {
+      var entry = $(input).closest('.entry');
+      types.push($(entry).attr('name'));
+    });
+    if(types.length <= 0) {
+      log("&lt;error&gt; ", "must have at least one ORM selected to generate a model", 'error');
+      return;
+    }
+    log("generating models " + (subclass ? "and sub-class models " : '') + "for selected ORM's");
+    socket.json.emit('generate', { list: types, subclass: subclass });
+  });
+
   // install functionality
   $('#install').click(function(e) {
     var types = [], pos, controls;
-    $('input:checkbox:checked').each(function(k, input) {
+    $('input:checkbox:checked', $('.files')).each(function(k, input) {
       var entry = $(input).closest('.entry');
       $(entry).addClass('installing');
       types.push($(entry).attr('name'));
