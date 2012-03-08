@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "ImageInfo",
   "table": "image",
-  "comment": "Image Map",
+  "comment": "Image Info Map",
   "privileges": {
     "all": {
       "create": false,
