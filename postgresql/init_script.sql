@@ -30,7 +30,6 @@
 \i xt/functions/is_date.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
-\i xt/functions/sc_model_gen.sql;
 \i xt/functions/starts_with.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
