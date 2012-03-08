@@ -49,12 +49,16 @@ XM._Period = XM.Record.extend(
   /**
     @type Date
   */
-  start: SC.Record.attr(Date),
+  start: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  end: SC.Record.attr(Date),
+  end: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type XM.FiscalYear

@@ -7,14 +7,16 @@
 
 sc_require('xbos/__generated__/_opportunity');
 sc_require('mixins/core_documents');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._Opportunity
   @extends XM.CoreDocuments
+  @extends XM.Document
 */
-XM.Opportunity = XM._Opportunity.extend( XM.CoreDocuments, 
+XM.Opportunity = XM._Opportunity.extend( XM.Document, XM.CoreDocuments, 
   /** @scope XM.Opportunity.prototype */ {
 
   // .................................................

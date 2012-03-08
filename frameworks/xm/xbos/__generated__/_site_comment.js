@@ -70,7 +70,9 @@ XM._SiteComment = XM.Record.extend(
   /**
     @type Date
   */
-  created: SC.Record.attr(Date),
+  created: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

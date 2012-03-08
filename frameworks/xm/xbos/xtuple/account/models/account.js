@@ -6,6 +6,7 @@
 
 sc_require('xbos/__generated__/_account');
 sc_require('mixins/core_documents');
+sc_require('mixins/account_document');
 
 /** @class
 
@@ -13,24 +14,12 @@ sc_require('mixins/core_documents');
 
   @extends XM._Account
   @extends XM.CoreDocuments
+  @extends XM.AccountDocument
   @version 0.2
 */
 
-XM.Account = XM._Account.extend( XM.CoreDocuments,
+XM.Account = XM._Account.extend(XM.AccountDocument, XM.CoreDocuments,
 /** @scope XM.Account.prototype */ {
-
-  number: SC.Record.attr(String, {
-    defaultValue: function() {
-      var autoGen = XM.session.settings.get('CRMAccountNumberGeneration'),
-      status = arguments[0].get('status');
-
-      if((autoGen === 'A' || autoGen === 'O') && 
-          status === SC.Record.READY_NEW) {
-        return XM.Record.fetchNumber.call(arguments[0]);
-      } else return null;
-    },
-    isRequired: YES
-  }),
   
   // ..........................................................
   // DOCUMENT ASSIGNMENTS

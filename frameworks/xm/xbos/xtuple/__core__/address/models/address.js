@@ -5,29 +5,19 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_address');
+sc_require('mixins/document');
 
 /** @class
 
   (Document your Model here)
 
   @extends XM._Address
+  @extends XM.Document
+  @extends SC.Copyable
 */
 
-XM.Address = XM._Address.extend( SC.Copyable,
+XM.Address = XM._Address.extend(XM.Document, SC.Copyable,
 /** @scope XM.Address.prototype */ {
-
-  /*
-  @type String
-  */
-  number: SC.Record.attr(String, {
-    isRequired: YES,
-    defaultValue: function () {
-      if(arguments[0].get('status') === SC.Record.READY_NEW) {
-        XM.Record.fetchNumber.call(arguments[ 0 ]);
-      }
-    }
-  }),
-
   
   /**
   @type String

@@ -64,7 +64,9 @@ XM._PaymentApproval = XM.Record.extend(
   /**
     @type Date
   */
-  date: SC.Record.attr(Date),
+  date: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Number

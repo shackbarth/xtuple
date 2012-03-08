@@ -35,6 +35,17 @@ XM.Record = SC.Record.extend(
       return arguments[0].get('className').replace((/\w+\./i),'');
     }
   }),
+  
+  /**
+    A property that returns the result of canUpdate.
+    
+    @type Boolean
+  */
+  isEditable: function() {
+    var isEditable = arguments.callee.base.apply(this, arguments) 
+    if(isEditable && this.get('status') !== SC.Record.READY_NEW) return this.canUpdate();
+    return isEditable;
+  }.property('status').cacheable(),
 
   /**
   A hash structure that defines data access.
@@ -60,7 +71,7 @@ XM.Record = SC.Record.extend(
   */
   validateErrors: null,
   validateErrorsLength: 0,
-  validateErrorsLengthBinding: '.validateErrors.length',
+  validateErrorsLengthBinding: SC.Binding.from('.validateErrors.length').noDelay(),
   
   /**
   State used for data source processing. You should never edit this directly.
@@ -79,6 +90,30 @@ XM.Record = SC.Record.extend(
     arguments.callee.base.apply(this, arguments);
     this.set('validateErrors', []);
     if(this.getPath('store.isNested')) this.addObserver('isValid', this, '_isValidDidChange');
+  },
+  
+  /**
+    Returns whether the current record can be updated based on privilege settings.
+    
+    @returns Boolean
+  */
+  canUpdate: function() {
+    var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
+        status = this.get('status');
+    
+    return status & SC.Record.READY && recordType.canUpdate(this);
+  },
+
+  /**
+    Returns whether the current record can be deleted based on privilege settings.
+    
+    @returns Boolean
+  */  
+  canDelete: function() {
+    var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
+        status = this.get('status');
+    
+    return status & SC.Record.READY && recordType.canDelete(this);
   },
 
   /**

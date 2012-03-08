@@ -5,17 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_vendor');
-sc_require('mixins/account_document');
+sc_require('xbos/__generated__/_image');
 
 /**
   @class
 
-  @extends XM._Vendor
-  @extends XM.AccountDocument
+  @extends XM._Image
 */
-XM.Vendor = XM._Vendor.extend(XM.AccountDocument,
-  /** @scope XM.Vendor.prototype */ {
+XM.Image = XM._Image.extend(
+  /** @scope XM.Image.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

@@ -56,7 +56,9 @@ XM._BankAccountAdjustment = XM.Record.extend(
   /**
     @type Date
   */
-  created: SC.Record.attr(Date),
+  created: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String
@@ -66,7 +68,9 @@ XM._BankAccountAdjustment = XM.Record.extend(
   /**
     @type Date
   */
-  date: SC.Record.attr(Date),
+  date: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String
@@ -91,7 +95,9 @@ XM._BankAccountAdjustment = XM.Record.extend(
   /**
     @type Date
   */
-  notes: SC.Record.attr(Date),
+  notes: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Number

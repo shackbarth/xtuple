@@ -42,14 +42,14 @@ XM._ToDoAlarm = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.ToDo
-  */
-  toDo: SC.Record.toOne('XM.ToDo'),
-
-  /**
     @type String
   */
   number: SC.Record.attr(String),
+
+  /**
+    @type XM.ToDo
+  */
+  toDo: SC.Record.toOne('XM.ToDo'),
 
   /**
     @type Boolean
@@ -94,11 +94,15 @@ XM._ToDoAlarm = XM.Record.extend(
   /**
     @type Date
   */
-  time: SC.Record.attr(Date),
+  time: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  trigger: SC.Record.attr(Date)
+  trigger: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  })
 
 });

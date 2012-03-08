@@ -61,7 +61,9 @@ XM._Voucher = XM.Record.extend(
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(Date),
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Boolean

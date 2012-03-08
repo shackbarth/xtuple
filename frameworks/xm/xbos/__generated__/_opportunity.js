@@ -95,9 +95,9 @@ XM._Opportunity = XM.Record.extend(
   opportunitySource: SC.Record.toOne('XM.OpportunitySource'),
 
   /**
-    @type XM.opportunityType
+    @type XM.OpportunityType
   */
-  opportunityType: SC.Record.toOne('XM.opportunityType'),
+  opportunityType: SC.Record.toOne('XM.OpportunityType'),
 
   /**
     @type Number
@@ -117,22 +117,30 @@ XM._Opportunity = XM.Record.extend(
   /**
     @type Date
   */
-  startDate: SC.Record.attr(Date),
+  startDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  assignDate: SC.Record.attr(Date),
+  assignDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  targetClose: SC.Record.attr(Date),
+  targetClose: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  actualClose: SC.Record.attr(Date),
+  actualClose: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

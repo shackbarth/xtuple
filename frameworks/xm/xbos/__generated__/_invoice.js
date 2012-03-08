@@ -54,17 +54,23 @@ XM._Invoice = XM.Record.extend(
   /**
     @type Date
   */
-  orderDate: SC.Record.attr(Date),
+  orderDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  invoiceDate: SC.Record.attr(Date),
+  invoiceDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  shipDate: SC.Record.attr(Date),
+  shipDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Boolean

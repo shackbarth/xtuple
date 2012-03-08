@@ -7,30 +7,50 @@
 
 sc_require('xbos/__generated__/_incident');
 sc_require('mixins/core_documents');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._Incident
   @extends XM.CoreDocuments
+  @extends XM.Document
 */
-XM.Incident = XM._Incident.extend( XM.CoreDocuments,
+XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   /** @scope XM.Incident.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
-
+  
   /**
-  @field
-  @type Boolean
+    @type String
   */
-  isActive:  function() {
-    var status = this.get('incidentStatus');
-    if (status) { return status !== 'L'; }
-
-    return NO;
-  }.property('incidentStatus').cacheable(),
+  incidentStatus: SC.Record.attr(String, {
+    defaultValue: 'N'
+  }),
+  
+  /**
+    @type XM.UserAccountInfo
+  */
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    defaultValue: function() {
+      return XM.DataSource.session.userName;
+    }
+  }),
+  
+  /* @private */
+  _accountsLength: 0,
+  
+  /* @private */
+  _accountsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
+  
+  /* @private */
+  _incidentsLength: 0,
+  
+  /* @private */
+  _incidentsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
 
   //..................................................
   // METHODS
@@ -41,10 +61,20 @@ XM.Incident = XM._Incident.extend( XM.CoreDocuments,
   //
   
   /* @private */
-  _incidentsLength: 0,
+  _assignedToDidChange: function() {
+    var assignedTo = this.get('assignedTo'),
+        status = this.get('status');
+     
+    if(status & SC.Record.READY && assignedTo) this.set('incidentStatus','A');
+  }.observes('assignedTo'),
   
   /* @private */
-  _incidentsLengthBinding: '.incidents.length',
+  _accountsDidChange: function() {
+    var documents = this.get('documents'),
+        accounts = this.get('accounts');
+
+    documents.addEach(accounts);    
+  }.observes('accountsLength'),
   
   /* @private */
   _incidentsDidChange: function() {

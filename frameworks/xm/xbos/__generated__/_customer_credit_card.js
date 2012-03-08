@@ -119,7 +119,9 @@ XM._CustomerCreditCard = XM.Record.extend(
   /**
     @type Date
   */
-  created: SC.Record.attr(Date),
+  created: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String
@@ -129,7 +131,9 @@ XM._CustomerCreditCard = XM.Record.extend(
   /**
     @type Date
   */
-  updated: SC.Record.attr(Date),
+  updated: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

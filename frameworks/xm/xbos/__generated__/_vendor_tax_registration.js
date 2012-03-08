@@ -64,12 +64,16 @@ XM._VendorTaxRegistration = XM.Record.extend(
   /**
     @type Date
   */
-  effective: SC.Record.attr(Date),
+  effective: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  expires: SC.Record.attr(Date),
+  expires: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String

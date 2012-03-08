@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._StandardJournalGroupItem = XM.Record.extend(
-  /** @scope XM._StandardJournalGroupItem.prototype */ {
+XM._Image = XM.Record.extend(
+  /** @scope XM._Image.prototype */ {
   
-  className: 'XM.StandardJournalGroupItem',
+  className: 'XM.Image',
 
   
 
@@ -25,10 +25,10 @@ XM._StandardJournalGroupItem = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": true,
+      "create": "MaintainImages",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainImages",
+      "delete": "MaintainImages"
     }
   },
 
@@ -42,32 +42,18 @@ XM._StandardJournalGroupItem = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.StandardJournalGroup
+    @type String
   */
-  standardJournalGroup: SC.Record.toOne('XM.StandardJournalGroup'),
+  name: SC.Record.attr(String),
 
   /**
-    @type XM.StandardJournal
+    @type String
   */
-  standardJournal: SC.Record.toOne('XM.StandardJournal'),
+  description: SC.Record.attr(String),
 
   /**
-    @type Number
+    @type String
   */
-  apply: SC.Record.attr(Number),
-
-  /**
-    @type Date
-  */
-  effective: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  }),
-
-  /**
-    @type Date
-  */
-  expires: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  })
+  data: SC.Record.attr(String)
 
 });

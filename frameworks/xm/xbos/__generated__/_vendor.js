@@ -161,14 +161,14 @@ XM._Vendor = XM.Record.extend(
   achIndividualName: SC.Record.attr(String),
 
   /**
-    @type XM.Bytea
+    @type String
   */
-  achRoutingNumber: SC.Record.attr('XM.Bytea'),
+  achRoutingNumber: SC.Record.attr(String),
 
   /**
-    @type XM.Bytea
+    @type String
   */
-  achAccountNumber: SC.Record.attr('XM.Bytea'),
+  achAccountNumber: SC.Record.attr(String),
 
   /**
     @type XM.TaxZone

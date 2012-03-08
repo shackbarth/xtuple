@@ -12,12 +12,12 @@
 
   @extends XM.Record
 */
-XM._StandardJournalGroupItem = XM.Record.extend(
-  /** @scope XM._StandardJournalGroupItem.prototype */ {
+XM._IncidentOpportunity = XM.Record.extend(
+  /** @scope XM._IncidentOpportunity.prototype */ {
   
-  className: 'XM.StandardJournalGroupItem',
+  className: 'XM.IncidentOpportunity',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -27,7 +27,7 @@ XM._StandardJournalGroupItem = XM.Record.extend(
     "all": {
       "create": true,
       "read": true,
-      "update": true,
+      "update": false,
       "delete": true
     }
   },
@@ -42,32 +42,20 @@ XM._StandardJournalGroupItem = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.StandardJournalGroup
+    @type XM.Incident
   */
-  standardJournalGroup: SC.Record.toOne('XM.StandardJournalGroup'),
+  source: SC.Record.toOne('XM.Incident'),
 
   /**
-    @type XM.StandardJournal
+    @type XM.OpportunityInfo
   */
-  standardJournal: SC.Record.toOne('XM.StandardJournal'),
-
-  /**
-    @type Number
-  */
-  apply: SC.Record.attr(Number),
-
-  /**
-    @type Date
-  */
-  effective: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
+  opportunity: SC.Record.toOne('XM.OpportunityInfo', {
+    isNested: true
   }),
 
   /**
-    @type Date
+    @type String
   */
-  expires: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  })
+  purpose: SC.Record.attr(String)
 
 });

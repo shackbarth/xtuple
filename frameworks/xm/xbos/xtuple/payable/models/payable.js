@@ -6,13 +6,15 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_payable');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._Payable
+  @extends XM.Document
 */
-XM.Payable = XM._Payable.extend(
+XM.Payable = XM._Payable.extend(XM.Document,
   /** @scope XM.Payable.prototype */ {
 
   // .................................................

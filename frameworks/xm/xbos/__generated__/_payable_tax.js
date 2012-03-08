@@ -89,12 +89,16 @@ XM._PayableTax = XM.Record.extend(
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(Date),
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  distributionDate: SC.Record.attr(Date),
+  distributionDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type XM.Currency

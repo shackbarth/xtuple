@@ -44,7 +44,9 @@ XM._ReceivableApplication = XM.Record.extend(
   /**
     @type Date
   */
-  postDate: SC.Record.attr(Date),
+  postDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type XM.Customer

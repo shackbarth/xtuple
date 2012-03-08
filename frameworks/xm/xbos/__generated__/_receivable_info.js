@@ -12,10 +12,10 @@
 
   @extends XM.Record
 */
-XM._StandardJournalGroupItem = XM.Record.extend(
-  /** @scope XM._StandardJournalGroupItem.prototype */ {
+XM._ReceivableInfo = XM.Record.extend(
+  /** @scope XM._ReceivableInfo.prototype */ {
   
-  className: 'XM.StandardJournalGroupItem',
+  className: 'XM.ReceivableInfo',
 
   
 
@@ -25,10 +25,10 @@ XM._StandardJournalGroupItem = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": true,
+      "create": false,
       "read": true,
-      "update": true,
-      "delete": true
+      "update": false,
+      "delete": false
     }
   },
 
@@ -42,32 +42,13 @@ XM._StandardJournalGroupItem = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.StandardJournalGroup
+    @type String
   */
-  standardJournalGroup: SC.Record.toOne('XM.StandardJournalGroup'),
+  number: SC.Record.attr(String),
 
   /**
-    @type XM.StandardJournal
+    @type String
   */
-  standardJournal: SC.Record.toOne('XM.StandardJournal'),
-
-  /**
-    @type Number
-  */
-  apply: SC.Record.attr(Number),
-
-  /**
-    @type Date
-  */
-  effective: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  }),
-
-  /**
-    @type Date
-  */
-  expires: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  })
+  documentType: SC.Record.attr(String)
 
 });

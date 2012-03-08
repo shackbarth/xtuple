@@ -25,10 +25,10 @@ XM._CommentType = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": true,
+      "create": "MaintainCommentTypes",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainCommentTypes",
+      "delete": "MaintainCommentTypes"
     }
   },
 

@@ -42,14 +42,14 @@ XM._IncidentAlarm = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.Incident
-  */
-  incident: SC.Record.toOne('XM.Incident'),
-
-  /**
     @type Number
   */
   number: SC.Record.attr(Number),
+
+  /**
+    @type XM.Incident
+  */
+  incident: SC.Record.toOne('XM.Incident'),
 
   /**
     @type Boolean
@@ -94,11 +94,15 @@ XM._IncidentAlarm = XM.Record.extend(
   /**
     @type Date
   */
-  time: SC.Record.attr(Date),
+  time: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  trigger: SC.Record.attr(Date)
+  trigger: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  })
 
 });

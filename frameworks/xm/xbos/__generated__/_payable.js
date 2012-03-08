@@ -42,14 +42,28 @@ XM._Payable = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type Date
+    @type String
   */
-  documentDate: SC.Record.attr(Date),
+  number: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  documentType: SC.Record.attr(String),
 
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(Date),
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
+
+  /**
+    @type Date
+  */
+  dueDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type XM.Terms
@@ -60,16 +74,6 @@ XM._Payable = XM.Record.extend(
     @type XM.VendorInfo
   */
   vendor: SC.Record.toOne('XM.VendorInfo'),
-
-  /**
-    @type String
-  */
-  documentType: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  ducumentNumber: SC.Record.attr(String),
 
   /**
     @type Number
@@ -129,12 +133,14 @@ XM._Payable = XM.Record.extend(
   /**
     @type Date
   */
-  closeDate: SC.Record.attr(Date),
+  closeDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type String
   */
-  status: SC.Record.attr(String),
+  payableStatus: SC.Record.attr(String),
 
   /**
     @type String
