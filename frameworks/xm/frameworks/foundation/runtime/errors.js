@@ -63,7 +63,13 @@ var ary = [
     description: '_commentTypeIsRequired'.loc() },
   { code: 'xt1004',
     label: '_recordIncomplete'.loc(),
-    description: '_characteristicIsRequired'.loc() }
+    description: '_characteristicIsRequired'.loc() },
+  { code: 'xt1005',
+    label: '_recordIncomplete'.loc(),
+    description: '_contactIsRequired'.loc() },
+  { code: 'xt1006',
+    label: '_recordIncomplete'.loc(),
+    description: '_accountIsRequired'.loc() }
 ];
 
 ary.forEach(function(error) {

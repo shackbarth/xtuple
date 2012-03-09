@@ -60,6 +60,22 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   // OBSERVERS
   //
   
+  validate: function() {
+    var account = this.get('account'),
+        contact = this.get('contact'),
+        errors = this.get('validateErrors'),
+        accountErr = XM.errors.findProperty('code', 'xt1005'),
+        contactErr = XM.errors.findProperty('code', 'xt1006');
+
+    // Validate Account
+    this.updateErrors(accountErr, !(account));
+    
+    // Validate Contact
+    this.updateErrors(contactErr, !(contact));
+
+    return errors;
+  }.observes('account', 'contact'),
+  
   /* @private */
   _assignedToDidChange: function() {
     var assignedTo = this.get('assignedTo'),
