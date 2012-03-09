@@ -6,7 +6,6 @@
 /*globals XM */
 
 /**
-  @scope XM.Incident
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -14,7 +13,7 @@
   @extends XM.Record
 */
 XM._Incident = XM.Record.extend(
-  /** @scope XM.Incident.prototype */ {
+  /** @scope XM._Incident.prototype */ {
   
   className: 'XM.Incident',
 

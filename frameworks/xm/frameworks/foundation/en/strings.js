@@ -1,4 +1,36 @@
+// ==========================================================================
+// Project:   XT` Strings
+// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// ==========================================================================
+/*globals XT */
+
+// Place strings you want to localize here.  In your app, use the key and
+// localize it using "key string".loc().  HINT: For your key names, use the
+// english string with an underscore in front.  This way you can still see
+// how your UI will look and you'll notice right away when something needs a
+// localized string added to this file!
+//
+
 SC.stringsFor("en_US", {
+
+// ********
+// Errors
+// ********
+
+  "_commentTypeIsRequired": "Comment Type is Required",
+  "_characteristicIsRequired": "A Characteristic is required.",
+  "_errorCode":"Error Code",
+  "_errorIsUnknown": "An unknown error has occurred",
+  "_nameIsRequired": "A Name is required",
+  "_numberIsRequired": "Number is a required field for this record",
+  "_recordIncomplete": "Record Incomplete",
+  "_unknownError": "Unknown Error",
+  "_usernameInvalid": "The Username is invalid"
+
+// ********
+// Labels
+// ********
+
   "_account": "Account",
   "_accounting": "Accounting",
   "_accountName": "Account Name",
@@ -173,10 +205,10 @@ SC.stringsFor("en_US", {
   "_newProspect": "New Prospect",
   "_newToDo": "New To Do",
   "_next": "Next",
-  "_noCreatePriv":      "You do not have create privileges for this record.",
-  "_noDeletePriv":      "You do not have delete privileges for this record.",
-  "_noEditPriv":        "You do not have edit privileges for this record.",
-  "_noViewPriv":        "You do not have view privileges for this record.",
+  "_noCreatePriv": "You do not have create privileges for this record.",
+  "_noDeletePriv": "You do not have delete privileges for this record.",
+  "_noEditPriv": "You do not have edit privileges for this record.",
+  "_noViewPriv": "You do not have view privileges for this record.",
   "_noForm": "Form has not been set",
   "_noQuery": "Query has not been set",
   "_noRecordType": "Record type has been set.",
@@ -335,4 +367,9 @@ SC.stringsFor("en_US", {
   "_workOrder": "Work Order",
   "_workOrders": "Work Orders",
   "_yahoo": "Yahoo"
+
+}) ;
+
+
+SC.stringsFor(, {
 }) ;
