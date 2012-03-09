@@ -1,31 +1,23 @@
 {
   "context": "crm",
   "nameSpace": "XM",
-  "type": "Incident",
-  "table": "incdt",
+  "type": "Opportunity",
+  "table": "ophead",
   "isExtension": true,
   "comment": "Extended by Crm",
   "relations": [
     {
-      "column": "cntct_id",
+      "column": "ophead_id",
       "inverse": "guid"
     }
   ],
   "properties": [
     {
-      "name": "project",
-      "toOne": {
-        "isNested": true,
-        "type": "ProjectInfo",
-        "column": "incdt_prj_id"
-      }
-    },
-    {
-      "name": "opportunities",
+      "name": "incidents",
       "toMany": {
         "isNested": true,
-        "type": "IncidentOpportunity",
-        "column": "incdt_id",
+        "type": "OpportunityIncident",
+        "column": "ophead_id",
         "inverse": "source"
       }
     },
@@ -33,8 +25,8 @@
       "name": "projects",
       "toMany": {
         "isNested": true,
-        "type": "IncidentProject",
-        "column": "incdt_id",
+        "type": "OpportunityProject",
+        "column": "ophead_id",
         "inverse": "source"
       }
     },
@@ -42,18 +34,18 @@
       "name": "toDos",
       "toMany": {
         "isNested": true,
-        "type": "IncidentToDo",
-        "column": "incdt_id",
+        "type": "OpportunityToDo",
+        "column": "ophead_id",
         "inverse": "source"
       }
     },
     {
-      "name": "todoRelations",
+      "name": "toDoRelations",
       "toMany": {
         "isNested": true,
         "type": "ToDoInfo",
-        "column": "incdt_id",
-        "inverse": "incident"
+        "column": "ophead_id",
+        "inverse": "opportunity"
       }
     }
   ],
