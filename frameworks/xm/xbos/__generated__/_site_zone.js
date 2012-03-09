@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.SiteZone
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._SiteZone = XM.Record.extend(
-  /** @scope XM._SiteZone.prototype */ {
+  /** @scope XM.SiteZone.prototype */ {
   
   className: 'XM.SiteZone',
 

@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CustomerCreditCard
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CustomerCreditCard = XM.Record.extend(
-  /** @scope XM._CustomerCreditCard.prototype */ {
+  /** @scope XM.CustomerCreditCard.prototype */ {
   
   className: 'XM.CustomerCreditCard',
 

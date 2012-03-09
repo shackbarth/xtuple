@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CharacteristicOption
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CharacteristicOption = XM.Record.extend(
-  /** @scope XM._CharacteristicOption.prototype */ {
+  /** @scope XM.CharacteristicOption.prototype */ {
   
   className: 'XM.CharacteristicOption',
 

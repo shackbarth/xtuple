@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.VoucherDistribution
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._VoucherDistribution = XM.Record.extend(
-  /** @scope XM._VoucherDistribution.prototype */ {
+  /** @scope XM.VoucherDistribution.prototype */ {
   
   className: 'XM.VoucherDistribution',
 

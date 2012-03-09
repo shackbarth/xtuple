@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.VendorAddress
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._VendorAddress = XM.Record.extend(
-  /** @scope XM._VendorAddress.prototype */ {
+  /** @scope XM.VendorAddress.prototype */ {
   
   className: 'XM.VendorAddress',
 

@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.GeneralLedger
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._GeneralLedger = XM.Record.extend(
-  /** @scope XM._GeneralLedger.prototype */ {
+  /** @scope XM.GeneralLedger.prototype */ {
   
   className: 'XM.GeneralLedger',
 

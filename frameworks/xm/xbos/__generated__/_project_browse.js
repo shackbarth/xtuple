@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ProjectBrowse
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ProjectBrowse = XM.Record.extend(
-  /** @scope XM._ProjectBrowse.prototype */ {
+  /** @scope XM.ProjectBrowse.prototype */ {
   
   className: 'XM.ProjectBrowse',
 

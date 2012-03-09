@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ContactItem
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ContactItem = XM.Record.extend(
-  /** @scope XM._ContactItem.prototype */ {
+  /** @scope XM.ContactItem.prototype */ {
   
   className: 'XM.ContactItem',
 

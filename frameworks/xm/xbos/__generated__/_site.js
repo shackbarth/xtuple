@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.Site
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._Site = XM.Record.extend(
-  /** @scope XM._Site.prototype */ {
+  /** @scope XM.Site.prototype */ {
   
   className: 'XM.Site',
 

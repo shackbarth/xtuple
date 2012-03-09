@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CreditMemoInfo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CreditMemoInfo = XM.Record.extend(
-  /** @scope XM._CreditMemoInfo.prototype */ {
+  /** @scope XM.CreditMemoInfo.prototype */ {
   
   className: 'XM.CreditMemoInfo',
 

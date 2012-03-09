@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.OpportunityImage
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._OpportunityImage = XM.Record.extend(
-  /** @scope XM._OpportunityImage.prototype */ {
+  /** @scope XM.OpportunityImage.prototype */ {
   
   className: 'XM.OpportunityImage',
 

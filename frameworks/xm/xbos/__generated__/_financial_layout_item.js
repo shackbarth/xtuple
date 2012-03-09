@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.FinancialLayoutItem
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._FinancialLayoutItem = XM.Record.extend(
-  /** @scope XM._FinancialLayoutItem.prototype */ {
+  /** @scope XM.FinancialLayoutItem.prototype */ {
   
   className: 'XM.FinancialLayoutItem',
 

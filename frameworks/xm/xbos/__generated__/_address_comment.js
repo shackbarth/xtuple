@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.AddressComment
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._AddressComment = XM.Record.extend(
-  /** @scope XM._AddressComment.prototype */ {
+  /** @scope XM.AddressComment.prototype */ {
   
   className: 'XM.AddressComment',
 

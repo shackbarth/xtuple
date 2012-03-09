@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ToDoImage
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ToDoImage = XM.Record.extend(
-  /** @scope XM._ToDoImage.prototype */ {
+  /** @scope XM.ToDoImage.prototype */ {
   
   className: 'XM.ToDoImage',
 

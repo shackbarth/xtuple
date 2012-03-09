@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.VoucherRecurrence
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._VoucherRecurrence = XM.Record.extend(
-  /** @scope XM._VoucherRecurrence.prototype */ {
+  /** @scope XM.VoucherRecurrence.prototype */ {
   
   className: 'XM.VoucherRecurrence',
 

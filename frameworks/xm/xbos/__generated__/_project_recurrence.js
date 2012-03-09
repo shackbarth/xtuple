@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ProjectRecurrence
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ProjectRecurrence = XM.Record.extend(
-  /** @scope XM._ProjectRecurrence.prototype */ {
+  /** @scope XM.ProjectRecurrence.prototype */ {
   
   className: 'XM.ProjectRecurrence',
 

@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.SiteComment
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._SiteComment = XM.Record.extend(
-  /** @scope XM._SiteComment.prototype */ {
+  /** @scope XM.SiteComment.prototype */ {
   
   className: 'XM.SiteComment',
 

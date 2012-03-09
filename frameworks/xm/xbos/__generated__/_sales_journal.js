@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.SalesJournal
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._SalesJournal = XM.Record.extend(
-  /** @scope XM._SalesJournal.prototype */ {
+  /** @scope XM.SalesJournal.prototype */ {
   
   className: 'XM.SalesJournal',
 
