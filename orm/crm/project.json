@@ -1,0 +1,54 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "Project",
+  "table": "prj",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "relations": [
+    {
+      "column": "prj_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "opportunities",
+      "toMany": {
+        "isNested": true,
+        "type": "ProjectOpportunity",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "incidents",
+      "toMany": {
+        "isNested": true,
+        "type": "ProjectIncident",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "toDos",
+      "toMany": {
+        "isNested": true,
+        "type": "ProjectToDo",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "accounts",
+      "toMany": {
+        "isNested": true,
+        "type": "ProjectAccount",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}
