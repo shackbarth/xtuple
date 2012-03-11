@@ -1,0 +1,70 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "OpportunityToDo",
+  "table": "xt.docinfo",
+  "idSequenceName": "docass_docass_id_seq",
+  "comment": "Opportunity ToDo Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "sourceType",
+      "attr": {
+        "type": "String",
+        "column": "source_type",
+        "value": "OPP",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "source",
+      "toOne": {
+        "type": "Opportunity",
+        "column": "source_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "targetType",
+      "attr": {
+        "type": "String",
+        "column": "target_type",
+        "value": "TODO",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "toDo",
+      "toOne": {
+        "isNested": true,
+        "type": "ToDoInfo",
+        "column": "target_id"
+      }
+    },
+    {
+      "name": "purpose",
+      "attr": {
+        "type": "String",
+        "column": "purpose",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
