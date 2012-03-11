@@ -117,6 +117,44 @@
       }
     }
   ],
+  "extensions": [
+    {
+      "table": "shiptoinfo",
+      "relations": [
+        {
+          "column": "shipto_cust_id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "shipto",
+          "toOne": {
+            "isNested": true,
+            "type": "CustomerShipto",
+            "column": "shipto_id"
+          }
+        },
+        {
+          "name": "isDefault",
+          "attr": {
+            "type": "Boolean",
+            "column": "shipto_default",
+            "value": true,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "isActive",
+          "attr": {
+            "type": "Boolean",
+            "column": "shipto_active",
+            "value": true,
+            "isVisible": false
+          }
+        }
+      ]
+    }
+  ],
   "isNestedOnly": true,
   "isSystem": true
 }

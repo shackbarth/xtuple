@@ -125,8 +125,9 @@
       "properties": [
         {
           "name": "shipto",
-          "attr": {
-            "type": "number",
+          "toOne": {
+            "isNested": true,
+            "type": "CustomerShipto",
             "column": "shipto_id"
           }
         },
