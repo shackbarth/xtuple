@@ -16,6 +16,8 @@ sc_require('mixins/document');
 */
 XM.Invoice = XM._Invoice.extend(XM.Document,
   /** @scope XM.Invoice.prototype */ {
+  
+  numberPolicySetting: 'InvcNumberGeneration'
 
   // .................................................
   // CALCULATED PROPERTIES

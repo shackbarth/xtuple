@@ -6,7 +6,7 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_vendor');
-sc_require('mixins/account_document');
+sc_require('mixins/document');
 
 /**
   @class
@@ -14,8 +14,10 @@ sc_require('mixins/account_document');
   @extends XM._Vendor
   @extends XM.AccountDocument
 */
-XM.Vendor = XM._Vendor.extend(XM.AccountDocument,
+XM.Vendor = XM._Vendor.extend(XM.Document,
   /** @scope XM.Vendor.prototype */ {
+
+  numberPolicySetting: 'CRMAccountNumberGeneration'
 
   // .................................................
   // CALCULATED PROPERTIES

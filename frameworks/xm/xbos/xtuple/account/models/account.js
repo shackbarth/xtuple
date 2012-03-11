@@ -18,8 +18,10 @@ sc_require('mixins/account_document');
   @version 0.2
 */
 
-XM.Account = XM._Account.extend(XM.AccountDocument, XM.CoreDocuments,
+XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments,
 /** @scope XM.Account.prototype */ {
+  
+  numberPolicySetting: 'CRMAccountNumberGeneration',
   
   // ..........................................................
   // DOCUMENT ASSIGNMENTS

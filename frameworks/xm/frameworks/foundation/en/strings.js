@@ -25,7 +25,7 @@ SC.stringsFor("en_US", {
   "_numberIsRequired": "Number is a required field for this record",
   "_recordIncomplete": "Record Incomplete",
   "_unknownError": "Unknown Error",
-  "_usernameInvalid": "The Username is invalid"
+  "_usernameInvalid": "The Username is invalid",
 
 // ********
 // Labels
@@ -368,8 +368,4 @@ SC.stringsFor("en_US", {
   "_workOrders": "Work Orders",
   "_yahoo": "Yahoo"
 
-}) ;
-
-
-SC.stringsFor(, {
-}) ;
+});

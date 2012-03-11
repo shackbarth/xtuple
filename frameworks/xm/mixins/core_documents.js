@@ -37,41 +37,41 @@ XM.CoreDocuments = {
   //
   
   /* @private */
-  _contactsLength: 0,
+  contactsLength: 0,
   
   /* @private */
-  _contactsLengthBinding: SC.Binding.from('.contacts.length').noDelay(),
+  contactsLengthBinding: SC.Binding.from('.contacts.length').noDelay(),
   
   /* @private */
-  _itemsLength: 0,
+  itemsLength: 0,
   
   /* @private */
-  _itemsLengthBinding: SC.Binding.from('.items.length').noDelay(),
+  itemsLengthBinding: SC.Binding.from('.items.length').noDelay(),
   
   /* @private */
-  _filesLength: 0,
+  filesLength: 0,
   
   /* @private */
-  _filesLengthBinding: SC.Binding.from('.files.length').noDelay(),
+  filesLengthBinding: SC.Binding.from('.files.length').noDelay(),
   
   /* @private */
-  _imagesLength: 0,
+  imagesLength: 0,
   
   /* @private */
-  _imagesLengthBinding: SC.Binding.from('.urls.length').noDelay(),
+  imagesLengthBinding: SC.Binding.from('.urls.length').noDelay(),
   
   /* @private */
-  _urlsLength: 0,
+  urlsLength: 0,
   
   /* @private */
-  _urlsLengthBinding: SC.Binding.from('.urls.length').noDelay(),
+  urlsLengthBinding: SC.Binding.from('.urls.length').noDelay(),
   
   //..................................................
   // OBSERVERS
   //
   
   /* @private */
-  _contactsDidChange: function() {
+  _xm_contactsDidChange: function() {
     var documents = this.get('documents'),
         contacts = this.get('contacts');
 
@@ -79,7 +79,7 @@ XM.CoreDocuments = {
   }.observes('contactsLength'),
   
   /* @private */
-  _itemsDidChange: function() {
+  _xm_itemsDidChange: function() {
     var documents = this.get('documents'),
         items = this.get('items');
 
@@ -87,7 +87,7 @@ XM.CoreDocuments = {
   }.observes('itemsLength'),
   
   /* @private */
-  _filesDidChange: function() {
+  _xm_filesDidChange: function() {
     var documents = this.get('documents'),
         files = this.get('files');
 
@@ -95,7 +95,7 @@ XM.CoreDocuments = {
   }.observes('filesLength'),
   
   /* @private */
-  _imagesDidChange: function() {
+  _xm_imagesDidChange: function() {
     var documents = this.get('documents'),
         images = this.get('images');
 
@@ -103,7 +103,7 @@ XM.CoreDocuments = {
   }.observes('imagesLength'),
   
   /* @private */
-  _urlsDidChange: function() {
+  _xm_urlsDidChange: function() {
     var documents = this.get('documents'),
         urls = this.get('urls');
 
