@@ -43,6 +43,22 @@
       }
     },
     {
+      "name": "contact",
+      "toOne": {
+        "isNested": true,
+        "type": "ContactInfo",
+        "column": "shipto_cntct_id"
+      }
+    },
+    {
+      "name": "address",
+      "toOne": {
+        "isNested": true,
+        "type": "AddressInfo",
+        "column": "shipto_addr_id"
+      }
+    },
+    {
       "name": "salesRep",
       "toOne": {
         "type": "SalesRep",
