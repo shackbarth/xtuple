@@ -114,7 +114,9 @@ XM.Document = {
       }
       
       // For manually edited numbers, check for conflicts with existing
-      if(!record._numberGen) {
+      if(!record._numberGen && 
+         record._attrCache &&
+         record._attrCache.get('number') != number) {
       
         callback = function(err, result) {
           if(!err) {

@@ -42,6 +42,20 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       return SC.DateTime.create();
     }
   }),
+  
+  currency: SC.Record.toOne('XM.Currency', {
+    defaultValue: function() {
+      return XM.Currency.BASE;
+    }
+  }),
+
+  isPrinted: SC.Record.attr(Boolean, {
+    defaultValue: false  
+  }),
+
+  isPosted: SC.Record.attr(Boolean, {
+    defaultValue: false  
+  }),
 
   freeFormBillto: false,
   
@@ -52,6 +66,12 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   // .................................................
   // CALCULATED PROPERTIES
   //
+
+  /* @private */
+  creditsLength: 0,
+  
+  /* @private */
+  creditsLengthBinding: '.lines.length',
   
   /* @private */
   linesLength: 0,
@@ -72,6 +92,9 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   //
   
   post: function() {
+  },
+  
+  void: function() {
   },
 
   //..................................................
@@ -109,7 +132,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     // Validate Commission
     val = this.get('commission');
     err = XM.errors.findProperty('code', 'xt1016');
-    this.updateErrors(err, isNan(val));
+    this.updateErrors(err, isNaN(val));
 
     // Validate Lines
     val = this.get('linesLength');
@@ -119,7 +142,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     // Validate Freight
     val = this.get('freight');
     err = XM.errors.findProperty('code', 'xt1015');
-    this.updateErrors(err, isNan(val));
+    this.updateErrors(err, isNaN(val));
 
     // Validate Total
     val = this.get('total');
@@ -129,23 +152,22 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     return errors;
   }.observes('number', 'customer', 'linesLength', 'total'),
   
-  
   /**
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
     var customer = this.get('customer'),
         status = this.get('status');
-    
-    this.set('freeFormBillto', customer.get('freeFormBillto'));
-    this.set('freeFormShipto', customer.get('freeFormShipto'));
+
+    this.set('isFreeFormBillto', customer.get('isFreeFormBillto'));
+    this.set('isFreeFormShipto', customer.get('isFreeFormShipto'));
     
     // pass defaults in
     if(status === SC.Record.READY_NEW) {
       if(customer) {
         var address = customer.getPath('billingContact.address');
-            
-        this.set('salesRep', customer.get('salesRep'));
+  
+        this.set('salesRep', customer.getPath('salesRep'));
         this.set('commission', customer.get('commission') * 100);
         this.set('terms', customer.get('terms'));
         this.set('taxZone', customer.get('taxZone'));
@@ -162,8 +184,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
           this.set('billtoCity', address.get('city')); 
           this.set('billtoState', address.get('state'));
           this.set('billtoPostalCode', address.get('postalCode'));
-          this.set('billtoCountry', address.get('country'));
-          this.set('billtoPhone', customer.getPath('billingContact.phone'));
+          this.set('billtoCountry', address.get('country'));  
         }
       } else {
         this.set('salesRep', null);
@@ -200,23 +221,25 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     
     if(status & SC.Record.READY) {
       if(shipto) {
-        var address = shipto.get('address'),
-            contact = shipto.get('contact');
-            
+        var address = shipto.get('address');
+       
         this.set('salesRep', shipto.get('salesRep'));
         this.set('commission', shipto.get('commission') * 100);
         this.set('taxZone', shipto.get('taxZone'));
         this.set('shipCharge', shipto.get('shipCharge'));
-        
         this.set('shiptoName', shipto.get('name'));
-        this.set('shiptoAddress1', address.get('line1'));
-        this.set('shiptoAddress2', address.get('line2'));
-        this.set('shiptoAddress3', address.get('line3'));
-        this.set('shiptoCity', address.get('city')); 
-        this.set('shiptoState', address.get('state'));
-        this.set('shiptoPostalCode', address.get('postalCode'));
-        this.set('shiptoCountry', address.get('country'));
-        this.set('shiptoPhone', customer.getPath('billingContact.phone'));
+        this.set('shiptoPhone', shipto.getPath('contact.phone'));
+        
+        if(address) {
+          this.set('shiptoAddress1', address.get('line1'));
+          this.set('shiptoAddress2', address.get('line2'));
+          this.set('shiptoAddress3', address.get('line3'));
+          this.set('shiptoCity', address.get('city')); 
+          this.set('shiptoState', address.get('state'));
+          this.set('shiptoPostalCode', address.get('postalCode'));
+          this.set('shiptoCountry', address.get('country'));
+        }
+        
       } else if(customer) {
         this.set('salesRep', customer.get('salesRep'));
         this.set('taxZone', customer.get('taxZone'));
@@ -241,7 +264,24 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
         this.set('shiptoPhone', '');
       }
     }
-  }.observes('shipto')
+  }.observes('shipto'),
+  
+  subTotalDidChange: function() {
+  }.observes('linesLength'),
+  
+  taxesDidChange: function() {
+  }.observes('taxZone', 'linesLength', 'taxesLength'),
+  
+  creditsDidChange: function() {
+  }.observes('creditsLength'),
+  
+  isPostedDidChange: function() {
+    var status = this.get('status');
+    
+    // can not change this directly
+    if(status === SC.Record.READY_NEW) this.set('isPosted', false);
+    else if(status & SC.Record.READY) this.set('isPosted', this._attrCache.get('isPosted'));
+  }.observes('isPosted')
 
 });
 
