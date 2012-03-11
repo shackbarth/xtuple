@@ -57,6 +57,7 @@
 -- xt javascript
 \i xt/javascript/data.sql;
 \i xt/javascript/orm.sql;
+\i xt/javascript/record.sql;
 
 -- xt views
 \i xt/views/docinfo.sql; 

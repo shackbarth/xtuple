@@ -7,41 +7,9 @@ select xt.install_js('XM','Session','xtuple', $$
   XM.Session.isDispatchable = true;
 
   /** 
-  Pass in a record type and get the next id for that type 
+    Returns a hash of key, value pairs of locale properties and their selections for the effective user.
 
-  @param {String} record type
-  @returns {Number}
-  */
-  XM.Session.fetchId = function(recordType) { 
-    var nameSpace = recordType.beforeDot(),
-        type = recordType.afterDot(),
-        map = XT.Orm.fetch(nameSpace, type),
-        seq = map.idSequenceName,
-        sql = 'select nextval($1) as result';
-
-    return seq ? executeSql(sql, [seq])[0].result : false;
-  }
-
-  /**
-  Pass in a record type and get the next id for that type 
-
-  @param {String} record type
-  @returns {Number}
-  */
-  XM.Session.fetchNumber = function(recordType) {
-    var nameSpace = recordType.beforeDot(),
-        type = recordType.afterDot(),
-        map = XT.Orm.fetch(nameSpace, type),
-        seq = map.orderSequence,
-        sql = 'select fetchnextnumber($1) as result';
-
-    return seq ? executeSql(sql, [seq])[0].result : false;
-  }
-
-  /** 
-  Returns a hash of key, value pairs of locale properties and their selections for the effective user.
-
-  @returns {hash}
+    @returns {hash}
   */ 
   XM.Session.locale = function() {
     var sql = "select "
@@ -75,9 +43,9 @@ select xt.install_js('XM','Session','xtuple', $$
   }
 
   /** 
-  Returns a hash of key, value pairs of settings and values for the effective user.
+    Returns a hash of key, value pairs of settings and values for the effective user.
 
-  @returns {hash}
+    @returns {hash}
   */ 
   XM.Session.settings = function() {
     var settings = [], regs = XT.settingsRegistrations();
@@ -94,9 +62,9 @@ select xt.install_js('XM','Session','xtuple', $$
   }
 
   /** 
-  Returns a hash of key, value pairs of privileges and their granted state for the effective user.
+    Returns a hash of key, value pairs of privileges and their granted state for the effective user.
 
-  @returns {hash}
+    @returns {hash}
   */ 
   XM.Session.privileges = function() {
     var rec = executeSql( 'select privilege, granted as "isGranted" from privgranted' );

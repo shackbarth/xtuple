@@ -10,12 +10,12 @@ select xt.install_js('XT','Orm','xtuple', $$
   XT.Orm = {};
 
   /** 
-  Pass a record type and return an array that describes the view definition with
-  an array of items representing respective column definitions.
+    Pass a record type and return an array that describes the view definition with
+    an array of items representing respective column definitions.
 
-  @param {String} view name
-  @param {String} schema name
-  @returns {Object} 
+    @param {String} view name
+    @param {String} schema name
+    @returns {Object} 
   */
   XT.Orm.viewDefinition = function(viewName, schemaName) {
     var sql = "select attnum, attname, typname, typcategory "
@@ -32,10 +32,10 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Returns an array of views dependent on the view name passed.
+    Returns an array of views dependent on the view name passed.
 
-  @param {String} view
-  @returns Array
+    @param {String} view
+    @returns Array
   */
   XT.Orm.viewDependencies = function(view) {
     var rec, viewNames = [], 
@@ -74,12 +74,12 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Return an Object Relational Map definition that includes all active extensions.
+    Return an Object Relational Map definition that includes all active extensions.
 
-  @param {String} name space
-  @param {String} type
-  @param {Boolean} indicate whether to force a refresh of the orm cached result
-  @returns {Object}
+    @param {String} name space
+    @param {String} type
+    @param {Boolean} indicate whether to force a refresh of the orm cached result
+    @returns {Object}
   */
   XT.Orm.fetch = function(nameSpace, type, refresh) {
     if(!this._maps) this._maps = [];
@@ -137,10 +137,10 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Returns the primary key name as designated in an ORM map.
+    Returns the primary key name as designated in an ORM map.
 
-  @param {Object} ORM
-  @returns String
+    @param {Object} ORM
+    @returns String
   */
   XT.Orm.primaryKey = function(orm) {
     /* find primary key */
@@ -154,11 +154,11 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /** 
-  Returns matching property from the propreties array in an ORM map.
+    Returns matching property from the propreties array in an ORM map.
 
-  @param {Object} ORM
-  @param {String} property
-  @returns Object
+    @param {Object} ORM
+    @param {String} property
+    @returns Object
   */
   XT.Orm.getProperty = function(orm, property) {
     /* look for property on the first level */
@@ -179,9 +179,9 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Create the PostgreSQL view and associated rules for an ORM.
+    Create the PostgreSQL view and associated rules for an ORM.
 
-  @param {Object} orm
+    @param {Object} orm
   */
   XT.Orm.createView = function(orm) {
     /* constants */
