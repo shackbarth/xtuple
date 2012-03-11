@@ -142,25 +142,51 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     
     // pass defaults in
     if(status === SC.Record.READY_NEW) {
-      this.set('salesRep', customer.get('salesRep'));
-      this.set('commission', customer.get('commission') * 100);
-      this.set('terms', customer.get('terms'));
-      this.set('taxZone', customer.get('taxZone'));
-      this.set('currency', customer.get('currency'));
-      this.set('shipCharge', customer.get('shipCharge'));
-      this.set('shipto', customer.get('shipto'));
-      
-      this.set('billtoName', customer.get('name'));
-      this.set('billtoAddress1', customer.getPath('billingContact.address.line1'));
-      this.set('billtoAddress2', customer.getPath('billingContact.address.line2'));
-      this.set('billtoCity', customer.getPath('billingContact.address.city')); 
-      this.set('billtoState', customer.getPath('billingContact.address.state'));
-      this.set('billtoPostalCode', customer.getPath('billingContact.address.postalCode'));
-      this.set('billtoCountry', customer.getPath('billingContact.address.country'));
-      this.set('billtoPhone', customer.getPath('billingContact.phone'));
-      
+      if(customer) {
+        var address = customer.getPath('billingContact.address');
+            
+        this.set('salesRep', customer.get('salesRep'));
+        this.set('commission', customer.get('commission') * 100);
+        this.set('terms', customer.get('terms'));
+        this.set('taxZone', customer.get('taxZone'));
+        this.set('currency', customer.get('currency'));
+        this.set('shipCharge', customer.get('shipCharge'));
+        this.set('shipto', customer.get('shipto'));
+        this.set('billtoName', customer.get('name'));
+        this.set('billtoPhone', customer.getPath('billingContact.phone'));
+        
+        if(address) {
+          this.set('billtoAddress1', address.get('line1'));
+          this.set('billtoAddress2', address.get('line2'));
+          this.set('billtoAddress3', address.get('line3'));
+          this.set('billtoCity', address.get('city')); 
+          this.set('billtoState', address.get('state'));
+          this.set('billtoPostalCode', address.get('postalCode'));
+          this.set('billtoCountry', address.get('country'));
+          this.set('billtoPhone', customer.getPath('billingContact.phone'));
+        }
+      } else {
+        this.set('salesRep', null);
+        this.set('commission', 0);
+        this.set('terms', null);
+        this.set('taxZone', null);
+        this.set('currency', null);
+        this.set('shipCharge', null);
+        this.set('shipto', null);
+        this.set('billtoName', '');
+        this.set('billtoPhone', '');
+        this.set('billtoAddress1','');
+        this.set('billtoAddress2', '');
+        this.set('billtoAddress3', '');
+        this.set('billtoCity', ''); 
+        this.set('billtoState', '');
+        this.set('billtoPostalCode', '');
+        this.set('billtoCountry', '');
+        this.set('billtoPhone', '');
+      }
+        
     // can not change customer after committing
-    } else if (status & SC.Record.READY)
+    } else if (status & SC.Record.READY) {
       this.set('customer', this._attrCache.get('customer'));
     }
   }.observes('customer'),
@@ -169,15 +195,53 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     Populates shipto defaults when shipto changes.
   */
   shiptoDidChange: function() {
-    var shipto = this.get('shipto');
+    var shipto = this.get('shipto'),
+        customer = this.get('customer');
     
-    if(status & READY) {
-      this.set('salesRep', shipto.get('salesRep'));
-      this.set('commission', shipto.get('commission') * 100);
-      this.set('taxZone', shipto.get('taxZone'));
-      this.set('shipCharge', shipto.get('shipCharge'));
-    }    
-  }.observes('shipto'),
+    if(status & SC.Record.READY) {
+      if(shipto) {
+        var address = shipto.get('address'),
+            contact = shipto.get('contact');
+            
+        this.set('salesRep', shipto.get('salesRep'));
+        this.set('commission', shipto.get('commission') * 100);
+        this.set('taxZone', shipto.get('taxZone'));
+        this.set('shipCharge', shipto.get('shipCharge'));
+        
+        this.set('shiptoName', shipto.get('name'));
+        this.set('shiptoAddress1', address.get('line1'));
+        this.set('shiptoAddress2', address.get('line2'));
+        this.set('shiptoAddress3', address.get('line3'));
+        this.set('shiptoCity', address.get('city')); 
+        this.set('shiptoState', address.get('state'));
+        this.set('shiptoPostalCode', address.get('postalCode'));
+        this.set('shiptoCountry', address.get('country'));
+        this.set('shiptoPhone', customer.getPath('billingContact.phone'));
+      } else if(customer) {
+        this.set('salesRep', customer.get('salesRep'));
+        this.set('taxZone', customer.get('taxZone'));
+        this.set('currency', customer.get('currency'));
+        this.set('shipCharge', customer.get('shipCharge'));
+      } else {
+        this.set('salesRep', null);
+        this.set('commission', 0);
+        this.set('taxZone', null);
+        this.set('shipCharge', null);
+      }  
+      
+      if(!shipto) {
+        this.set('shiptoName', '');
+        this.set('shiptoAddress1', '');
+        this.set('shiptoAddress2', '');
+        this.set('shiptoAddress3', '');
+        this.set('shiptoCity', ''); 
+        this.set('shiptoState', '');
+        this.set('shiptoPostalCode', '');
+        this.set('shiptoCountry', '');
+        this.set('shiptoPhone', '');
+      }
+    }
+  }.observes('shipto')
 
 });
 
