@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.Project
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._Project = XM.Record.extend(
-  /** @scope XM._Project.prototype */ {
+  /** @scope XM.Project.prototype */ {
   
   className: 'XM.Project',
 
@@ -69,22 +70,30 @@ XM._Project = XM.Record.extend(
   /**
     @type Date
   */
-  startDate: SC.Record.attr(Date),
+  startDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(Date),
+  dueDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  assignDate: SC.Record.attr(Date),
+  assignDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type Date
   */
-  completeDate: SC.Record.attr(Date),
+  completeDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d'
+  }),
 
   /**
     @type XM.UserAccountInfo

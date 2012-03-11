@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.OpportunityToDo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._OpportunityToDo = XM.Record.extend(
-  /** @scope XM._OpportunityToDo.prototype */ {
+  /** @scope XM.OpportunityToDo.prototype */ {
   
   className: 'XM.OpportunityToDo',
 

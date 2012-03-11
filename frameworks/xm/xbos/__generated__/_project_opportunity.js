@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ProjectOpportunity
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ProjectOpportunity = XM.Record.extend(
-  /** @scope XM._ProjectOpportunity.prototype */ {
+  /** @scope XM.ProjectOpportunity.prototype */ {
   
   className: 'XM.ProjectOpportunity',
 

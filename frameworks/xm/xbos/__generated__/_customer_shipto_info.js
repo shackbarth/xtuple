@@ -18,7 +18,7 @@ XM._CustomerShiptoInfo = XM.Record.extend(
   
   className: 'XM.CustomerShiptoInfo',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -55,6 +55,40 @@ XM._CustomerShiptoInfo = XM.Record.extend(
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean)
+  isActive: SC.Record.attr(Boolean),
+
+  /**
+    @type XM.ContactInfo
+  */
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: true
+  }),
+
+  /**
+    @type XM.AddressInfo
+  */
+  address: SC.Record.toOne('XM.AddressInfo', {
+    isNested: true
+  }),
+
+  /**
+    @type XM.SalesRep
+  */
+  salesRep: SC.Record.toOne('XM.SalesRep'),
+
+  /**
+    @type Number
+  */
+  commission: SC.Record.attr(Number),
+
+  /**
+    @type XM.TaxZone
+  */
+  taxZone: SC.Record.toOne('XM.TaxZone'),
+
+  /**
+    @type XM.ShipCharge
+  */
+  shipCharge: SC.Record.toOne('XM.ShipCharge')
 
 });

@@ -65,31 +65,6 @@ XM._CustomerBrowse = XM.Record.extend(
   }),
 
   /**
-    @type XM.SalesRep
-  */
-  salesRep: SC.Record.toOne('XM.SalesRep'),
-
-  /**
-    @type Number
-  */
-  commission: SC.Record.attr(Number),
-
-  /**
-    @type String
-  */
-  creditStatus: SC.Record.attr(String),
-
-  /**
-    @type XM.TaxZone
-  */
-  taxZone: SC.Record.toOne('XM.TaxZone'),
-
-  /**
-    @type XM.ShipCharge
-  */
-  shipCharge: SC.Record.toOne('XM.ShipCharge'),
-
-  /**
     @type Boolean
   */
   isFreeFormShipto: SC.Record.attr(Boolean),
@@ -102,6 +77,36 @@ XM._CustomerBrowse = XM.Record.extend(
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency')
+  currency: SC.Record.toOne('XM.Currency'),
+
+  /**
+    @type XM.Terms
+  */
+  terms: SC.Record.toOne('XM.Terms'),
+
+  /**
+    @type String
+  */
+  creditStatus: SC.Record.attr(String),
+
+  /**
+    @type XM.SalesRep
+  */
+  salesRep: SC.Record.toOne('XM.SalesRep'),
+
+  /**
+    @type Number
+  */
+  commission: SC.Record.attr(Number),
+
+  /**
+    @type XM.TaxZone
+  */
+  taxZone: SC.Record.toOne('XM.TaxZone'),
+
+  /**
+    @type XM.ShipCharge
+  */
+  shipCharge: SC.Record.toOne('XM.ShipCharge')
 
 });

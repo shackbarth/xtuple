@@ -74,6 +74,26 @@ XM._CustomerShiptoBrowse = XM.Record.extend(
   */
   address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true
-  })
+  }),
+
+  /**
+    @type XM.SalesRep
+  */
+  salesRep: SC.Record.toOne('XM.SalesRep'),
+
+  /**
+    @type Number
+  */
+  commission: SC.Record.attr(Number),
+
+  /**
+    @type XM.TaxZone
+  */
+  taxZone: SC.Record.toOne('XM.TaxZone'),
+
+  /**
+    @type XM.ShipCharge
+  */
+  shipCharge: SC.Record.toOne('XM.ShipCharge')
 
 });
