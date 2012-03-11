@@ -435,6 +435,39 @@ XM.Record.releaseNumber = function(number) {
   return this;
 };
 
+/**
+   Return a matching record id for a passed user key and value. 
+   If none found returns zero.
+  
+    @param {String} property to search on, typically a user key
+    @param {String} value to search for
+    @param {Function} callback
+  @returns {Object} receiever
+*/
+XM.Record.findExisting = function(key, value, callback) {
+  var self = this,
+      recordType = this.get("className"),
+      dispatch;
+
+  dispatch = XM.Dispatch.create({
+    className: 'XT.Record',
+    functionName: 'findExisting',
+    parameters: [
+      recordType,
+      key,
+      value
+    ],
+    target: self,
+    action: callback
+  });
+
+  console.log("XM.Record.findExisting for: %@".fmt(recordType));
+
+  self.get('store').dispatch(dispatch);
+  
+  return this;
+};
+
 
 
 

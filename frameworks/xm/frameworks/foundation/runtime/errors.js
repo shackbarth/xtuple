@@ -69,7 +69,13 @@ var ary = [
     description: '_contactIsRequired'.loc() },
   { code: 'xt1006',
     label: '_recordIncomplete'.loc(),
-    description: '_accountIsRequired'.loc() }
+    description: '_accountIsRequired'.loc() },
+  { code: 'xt1007',
+    label: '_recordConflict'.loc(),
+    description: '_recordExistsNumber'.loc() },
+  { code: 'xt1008',
+    label: '_recordConflict'.loc(),
+    description: '_recordExistsCode'.loc() }
 ];
 
 ary.forEach(function(error) {

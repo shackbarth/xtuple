@@ -28,13 +28,13 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments,
   // 
   
   /* @private */
-  _accountsLength: 0,
+  accountsLength: 0,
   
   /* @private */
-  _accountsLengthBinding: '.accounts.length',
+  accountsLengthBinding: '.accounts.length',
   
   /* @private */
-  _accountsDidChange: function() {
+  _xm_accountsDidChange: function() {
     var documents = this.get('documents'),
         accounts = this.get('accounts');
 
