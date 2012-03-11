@@ -17,18 +17,27 @@ SC.stringsFor("en_US", {
 // Errors
 // ********
 
-  "_commentTypeIsRequired": "Comment Type is Required",
+  "_commentTypeIsRequired": "Comment Type is required",
+  "_commissionIsRequired": "Commission is required.",
   "_characteristicIsRequired": "A Characteristic is required.",
+  "_currencyIsRequired": "Currency is required.",
+  "_customerIsRequired": "A customer is required.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
+  "_freightIsRequired": "Freight is required.",
+  "_invoiceDateIsRequired": "Invoiced Date is Required.",
   "_nameIsRequired": "A Name is required",
-  "_numberIsRequired": "Number is a required field for this record",
+  "_noLineItems": "This document requires at least one line item.",
+  "_numberIsRequired": "Number is a required field for this record.",
   "_recordConflict": "Record Conflict",
   "_recordExistsCode": "A record already exists with this code.",
   "_recordExistsNumber": "A record already exists with this number.",
+  "_recordInvalid": "Record Invalid",
   "_recordIncomplete": "Record Incomplete",
+  "_termsAreRequired": "Terms are required.",
+  "_totalMustBePositive": "Total Must Be Positive",
   "_unknownError": "Unknown Error",
-  "_usernameInvalid": "The Username is invalid",
+  "_usernameInvalid": "The user name is invalid.",
 
 // ********
 // Labels
