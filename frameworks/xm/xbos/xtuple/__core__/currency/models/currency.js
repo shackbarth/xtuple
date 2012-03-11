@@ -29,3 +29,29 @@ XM.Currency = XM._Currency.extend(
 
 });
 
+XM.Currency.BASE = null;
+
+XM.Currency._fetchBase = function() {
+  var self = this,
+      qry, ary;
+    
+  qry = SC.Query.local(XM.Currency, {
+    conditions: "isBase"
+  });
+  
+  ary = XM.store.find(qry);
+  
+  ary.addObserver('status', ary, function observer() {
+    if (ary.get('status') === SC.Record.READY_CLEAN) {
+      ary.removeObserver('status', ary, observer);
+      XM.Currency.BASE = ary.firstObject().get('id');
+    }
+  })
+}
+
+// TODO: Move this to start up
+XM.DataSource.ready(XM.Currency._fetchBase, this);
+
+
+
+
