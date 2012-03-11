@@ -41,6 +41,34 @@
         "type": "Boolean",
         "column": "shipto_active"
       }
+    },
+    {
+      "name": "salesRep",
+      "toOne": {
+        "type": "SalesRep",
+        "column": "shipto_salesrep_id"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_commission"
+      }
+    },
+    {
+      "name": "taxZone",
+      "toOne": {
+        "type": "TaxZone",
+        "column": "shipto_taxzone_id"
+      }
+    },
+    {
+      "name": "shipCharge",
+      "toOne": {
+        "type": "ShipCharge",
+        "column": "shipto_shipchrg_id"
+      }
     }
   ],
   "isNestedOnly": true,
