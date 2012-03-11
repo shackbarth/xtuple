@@ -50,13 +50,13 @@ select xt.dispatch($${"requestType":"dispatch",
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                           "className":"XM.Session",
+                           "className":"XT.Record",
                            "functionName":"fetchId",
                            "parameters":"XM.Address"
                            }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Session",
+                          "className":"XT.Record",
                           "functionName":"fetchNumber",
                           "parameters":"XM.Incident"
                           }$$);
