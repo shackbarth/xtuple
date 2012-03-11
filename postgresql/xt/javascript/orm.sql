@@ -292,7 +292,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           canCreate = orm.privileges && orm.privileges.all && orm.privileges.all.create ? true : false,
           canUpdate = orm.privileges && orm.privileges.all && orm.privileges.all.update ? true : false,
           canDelete = orm.privileges && orm.privileges.all && orm.privileges.all.delete ? true : false,
-          toOneJoins = [];
+          toOneJoins = [], ormClauses = [];
 
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name.decamelize();
@@ -329,7 +329,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
 
             /* for select */     
-            clauses.push(attr.column + ' = ' + value);
+            ormClauses.push(attr.column + ' = ' + value);
             
             /* for insert */
             insSrcCols.push(value);
@@ -481,6 +481,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               conditions.push(condition);
             }
 
+            conditions = conditions.concat(ormClauses);
             join = join.concat(conditions.join(' and '));
 
             tbls.push(join);
@@ -616,6 +617,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(DEBUG) print(NOTICE, 'process base CRUD');
         
         /* table */
+        clauses = clauses.concat(ormClauses);
         tbls.unshift(orm.table + ' ' + tblAlias);
         tbls = tbls.concat(toOneJoins);
             
