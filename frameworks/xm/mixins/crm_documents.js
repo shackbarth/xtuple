@@ -6,6 +6,8 @@
 
 /** @mixin
 
+  ** Note - Always use as a supplement to XM.CoreDocuments **
+
   Support for crm document assignments on models
   including incidents, projects, opportunities, and toDos.
   
