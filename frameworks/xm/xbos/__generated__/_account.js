@@ -69,7 +69,7 @@ XM._Account = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String),
+  accountType: SC.Record.attr(String),
 
   /**
     @type XM.AccountInfo

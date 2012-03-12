@@ -15,13 +15,6 @@
 XM.Settings = {
   
   /**
-    Required.
-    
-    @type String
-  */
-  className: null,
-  
-  /**
     @type String
   */
   privilege: null,

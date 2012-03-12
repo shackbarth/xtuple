@@ -5,24 +5,57 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_account');
+sc_require('mixins/crm_documents');
 sc_require('mixins/core_documents');
-sc_require('mixins/account_document');
+sc_require('mixins/document');
 
 /** @class
 
   (Document your Model here)
 
   @extends XM._Account
+  @extends XM.CrmDocuments
   @extends XM.CoreDocuments
   @extends XM.AccountDocument
   @version 0.2
 */
 
-XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments,
+XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
 /** @scope XM.Account.prototype */ {
   
+  // ..........................................................
+  // CALCULATED PROPERTIES
+  //
+
   numberPolicySetting: 'CRMAccountNumberGeneration',
   
+  /**
+    @type Boolean 
+  */
+  isActive: SC.Record.attr(Boolean, {
+    defaultValue: true
+  }),
+  
+  /**
+    @type XM.UserAccountInfo
+  */
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    defaultValue: function() {
+      return XM.dataSource.session.userName;
+    }
+  }),
+
+  /**
+  @type String
+  */
+  toDoStatus: SC.Record.attr(String, {
+    /** @private */
+    defaultValue: function() {
+      return XM.ToDo.NEITHER
+    }
+  }),
+
   // ..........................................................
   // DOCUMENT ASSIGNMENTS
   // 
@@ -40,6 +73,10 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments,
 
     documents.addEach(accounts);    
   }.observes('accountsLength'),
+
+  //...........................................................
+  // METHODS
+  //
 
   // ..........................................................
   // OBSERVERS
@@ -60,5 +97,30 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments,
 
     return errors;
   }.observes('number', 'name')
+
+});
+
+
+XM.Account.mixin( /** @scope XM.Account */ {
+
+/**
+  Organization type Account.
+  
+  @static
+  @constant
+  @type String
+  @default O
+*/
+  ORGANIZATION: 'O',
+
+/**
+  Individual type Account.
+  
+  @static
+  @constant
+  @type String
+  @default I
+*/
+  INDIVIDUAL: 'I'
 
 });

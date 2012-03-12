@@ -100,6 +100,12 @@ var ary = [
   { code: 'xt1016',
     label: '_recordIncomplete'.loc(),
     description: '_commissionIsRequired'.loc() },
+  { code: 'xt1017',
+    label: '_recordIncomplete'.loc(),
+    description: '_dueDateIsRequired'.loc() },
+  { code: 'xt1018',
+    label: '_recordIncomplete'.loc(),
+    description: '_assignedToIsRequired'.loc() },
 ];
 
 ary.forEach(function(error) {
