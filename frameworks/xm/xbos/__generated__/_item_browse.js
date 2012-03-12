@@ -65,7 +65,7 @@ XM._ItemBrowse = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String),
+  itemType: SC.Record.attr(String),
 
   /**
     @type String
