@@ -6,7 +6,7 @@
 
 sc_require('xbos/__generated__/_account');
 sc_require('mixins/core_documents');
-sc_require('mixins/account_document');
+sc_require('mixins/document');
 
 /** @class
 
