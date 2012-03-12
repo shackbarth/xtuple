@@ -94,7 +94,6 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
         status = this.get('status');
      
     if(status & SC.Record.READY && assignedTo) this.set('assignDate',function() {
-      format: '%Y-%m-%d',
       return SC.DateTime.create()});
   }.observes('assignedTo'),
   

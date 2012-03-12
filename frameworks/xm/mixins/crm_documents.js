@@ -13,7 +13,7 @@
   
 */
 
-XM.CoreDocuments = {
+XM.CrmDocuments = {
   
   // .................................................
   // CALCULATED PROPERTIES
