@@ -46,6 +46,7 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
     @type SC.DateTime
   */
   startDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
     defaultValue: function() {
       return SC.DateTime.create();
     }
@@ -71,6 +72,32 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   // OBSERVERS
   //
 
+  /* @private */
+  validate: function() {
+    var errors = this.get('validateErrors'), val, err;
+
+    // Validate Name
+    val = this.get('name') ? this.get('name').length : 0;
+    err = XM.errors.findProperty('code', 'xt1002');
+    this.updateErrors(err, !val);
+
+    // Validate Account
+    val = this.get('account') ? this.get('account').length : 0;
+    err = XM.errors.findProperty('code', 'xt1006');
+    this.updateErrors(err, !val);
+
+    return errors;
+  }.observes('name', 'account'),
+  
+  _xm_assignedToDidChange: function() {
+    var assignedTo = this.get('assignedTo'),
+        status = this.get('status');
+     
+    if(status & SC.Record.READY && assignedTo) this.set('assignDate',function() {
+      format: '%Y-%m-%d',
+      return SC.DateTime.create()});
+  }.observes('assignedTo'),
+  
   /* @private */
   _xm_accountsDidChange: function() {
     var documents = this.get('documents'),

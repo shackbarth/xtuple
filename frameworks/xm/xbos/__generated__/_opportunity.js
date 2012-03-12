@@ -6,7 +6,6 @@
 /*globals XM */
 
 /**
-  @scope XM.Opportunity
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -14,7 +13,7 @@
   @extends XM.Record
 */
 XM._Opportunity = XM.Record.extend(
-  /** @scope XM.Opportunity.prototype */ {
+  /** @scope XM._Opportunity.prototype */ {
   
   className: 'XM.Opportunity',
 
@@ -118,30 +117,22 @@ XM._Opportunity = XM.Record.extend(
   /**
     @type Date
   */
-  startDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  }),
+  startDate: SC.Record.attr(Date),
 
   /**
     @type Date
   */
-  assignDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  }),
+  assignDate: SC.Record.attr(Date),
 
   /**
     @type Date
   */
-  targetClose: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  }),
+  targetClose: SC.Record.attr(Date),
 
   /**
     @type Date
   */
-  actualClose: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d'
-  }),
+  actualClose: SC.Record.attr(Date),
 
   /**
     @type String
@@ -214,6 +205,14 @@ XM._Opportunity = XM.Record.extend(
     @type XM.OpportunityUrl
   */
   urls: SC.Record.toMany('XM.OpportunityUrl', {
+    isNested: true,
+    inverse: 'source'
+  }),
+
+  /**
+    @type XM.OpportunityAccount
+  */
+  accounts: SC.Record.toMany('XM.OpportunityAccount', {
     isNested: true,
     inverse: 'source'
   }),
