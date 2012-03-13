@@ -20,6 +20,13 @@
       }
     },
      {
+      "name": "account",
+      "toOne": { 
+        "type": "AccountInfo",
+        "column": "todoitem_crmacct_id"
+      }
+    },
+     {
       "name": "incident",
       "toOne": { 
         "type": "IncidentInfo",

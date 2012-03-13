@@ -44,8 +44,16 @@
         "column": "crmacct_id",
         "inverse": "account"
       }
+    },
+    {
+      "name": "toDoRelations",
+      "toMany": {
+        "isNested": true,
+        "type": "ToDoInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
     }
-
   ],
   "sequence": 0,
   "isSystem": true
