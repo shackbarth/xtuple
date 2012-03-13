@@ -74,6 +74,13 @@
       }
     },
     {
+      "name": "billed",
+      "attr": {
+        "type": "Number",
+        "column": "invcitem_billed"
+      }
+    },
+    {
       "name": "quantityUnit",
       "toOne": {
         "type": "Unit",
@@ -81,17 +88,17 @@
       }
     },
     {
-      "name": "quantityInventoryUnitRatio",
+      "name": "quantityUnitRatio",
       "attr": {
         "type": "Number",
         "column": "invcitem_qty_invuomratio"
       }
     },
     {
-      "name": "billed",
+      "name": "price",
       "attr": {
         "type": "Number",
-        "column": "invcitem_billed"
+        "column": "invcitem_price"
       }
     },
     {
@@ -102,7 +109,7 @@
       }
     },
     {
-      "name": "priceInventoryUnitRatio",
+      "name": "priceUnitRatio",
       "attr": {
         "type": "Number",
         "column": "invcitem_price_invuomratio"
@@ -113,13 +120,6 @@
       "attr": {
         "type": "Number",
         "column": "invcitem_custprice"
-      }
-    },
-    {
-      "name": "price",
-      "attr": {
-        "type": "Number",
-        "column": "invcitem_price"
       }
     },
     {

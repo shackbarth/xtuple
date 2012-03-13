@@ -37,7 +37,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "termsType",
       "attr": {
         "type": "String",
         "column": "terms_type"
