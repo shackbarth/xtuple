@@ -44,7 +44,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "layoutType",
       "attr": {
         "type": "String",
         "column": "flhead_type"

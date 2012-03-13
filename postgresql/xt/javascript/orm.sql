@@ -298,6 +298,8 @@ select xt.install_js('XT','Orm','xtuple', $$
         var col, alias = props[i].name.decamelize();
 
         if(DEBUG) print(NOTICE, 'processing property ->', props[i].name);
+
+        if(props[i].name === 'type') throw new Error("Can not use 'type' as a property name.");
         
         /* process attributes */
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
