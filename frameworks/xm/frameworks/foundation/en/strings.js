@@ -38,6 +38,8 @@ SC.stringsFor("en_US", {
   "_totalMustBePositive": "Total Must Be Positive",
   "_unknownError": "Unknown Error",
   "_usernameInvalid": "The user name is invalid.",
+  "_dueDateIsRequired": "Due Date is Required.",
+  "_assignedToIsRequired": "Assigned To is Required.",
 
 // ********
 // Labels

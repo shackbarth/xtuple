@@ -33,6 +33,15 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   }),
   
   /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency', {
+    defaultValue: function() {
+      return XM.Currency.BASE;
+    }
+  }),
+
+  /**
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
