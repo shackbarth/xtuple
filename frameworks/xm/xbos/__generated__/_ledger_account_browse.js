@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.LedgerAccountBrowse
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM._LedgerAccountBrowse.prototype */ {
+  /** @scope XM.LedgerAccountBrowse.prototype */ {
   
   className: 'XM.LedgerAccountBrowse',
 
@@ -69,6 +70,6 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String)
+  accountType: SC.Record.attr(String)
 
 });

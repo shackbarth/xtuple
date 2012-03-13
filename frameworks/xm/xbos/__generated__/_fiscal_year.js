@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.FiscalYear
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._FiscalYear = XM.Record.extend(
-  /** @scope XM._FiscalYear.prototype */ {
+  /** @scope XM.FiscalYear.prototype */ {
   
   className: 'XM.FiscalYear',
 

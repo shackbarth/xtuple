@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.IncidentRecurrence
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._IncidentRecurrence = XM.Record.extend(
-  /** @scope XM._IncidentRecurrence.prototype */ {
+  /** @scope XM.IncidentRecurrence.prototype */ {
   
   className: 'XM.IncidentRecurrence',
 

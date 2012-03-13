@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.UserAccountRole
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._UserAccountRole = XM.Record.extend(
-  /** @scope XM._UserAccountRole.prototype */ {
+  /** @scope XM.UserAccountRole.prototype */ {
   
   className: 'XM.UserAccountRole',
 

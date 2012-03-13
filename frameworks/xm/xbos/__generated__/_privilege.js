@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.Privilege
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._Privilege = XM.Record.extend(
-  /** @scope XM._Privilege.prototype */ {
+  /** @scope XM.Privilege.prototype */ {
   
   className: 'XM.Privilege',
 

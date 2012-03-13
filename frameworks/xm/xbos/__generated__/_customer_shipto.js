@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CustomerShipto
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CustomerShipto = XM.Record.extend(
-  /** @scope XM._CustomerShipto.prototype */ {
+  /** @scope XM.CustomerShipto.prototype */ {
   
   className: 'XM.CustomerShipto',
 

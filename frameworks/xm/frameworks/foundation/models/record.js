@@ -166,7 +166,7 @@ XM.Record = SC.Record.extend(
   will be set to observe 'isValid' notify the store if the record becomes
   invalid.
   */
-  _isValidDidChange: function() {
+  _xm_isValidDidChange: function() {
     var store = this.get('store'),
     invalidRecords = store.get('invalidRecords'),
     isValid = this.get('isValid'),
@@ -182,7 +182,7 @@ XM.Record = SC.Record.extend(
     Track substates for data source use. Updates dataState property directly 
     so we don't fire events that change the status to dirty.
   */
-  _statusChanged: function() {
+  _xm_statusChanged: function() {
     var status = this.get('status'),
         key = 'dataState',
         value = 'error';
@@ -349,7 +349,7 @@ XM.Record.fetchId = function(prop) {
   }
   
   dispatch = XM.Dispatch.create({
-    className: 'XM.Session',
+    className: 'XT.Record',
     functionName: 'fetchId',
     parameters: recordType,
     target: self,
@@ -381,11 +381,14 @@ XM.Record.fetchNumber = function(prop) {
       dispatch;
   
   callback = function(error, result) {
-    if(!error) self.set(prop, result);
+    if(!error) {
+      self._numberGen = result;
+      self.set(prop, result);
+    };
   }
   
   dispatch = XM.Dispatch.create({
-    className: 'XM.Session',
+    className: 'XT.Record',
     functionName: 'fetchNumber',
     parameters: recordType,
     target: self,
@@ -399,6 +402,71 @@ XM.Record.fetchNumber = function(prop) {
   return this;
 };
 
+/**
+  Releases a number back into the number pool for the record type. Usually
+  would happen when user cancels without saving a new record. 
+  
+  The function will send the class name property of itself to the server
+  which will cross reference the ORM 'orderSequnce' property for the class 
+  to determine which sequence to use.
+  
+  @param {Number} number to release
+  @returns {Object} receiever
+*/
+XM.Record.releaseNumber = function(number) {
+  var self = this,
+      recordType = this.get("className"),
+      dispatch;
+
+  dispatch = XM.Dispatch.create({
+    className: 'XT.Record',
+    functionName: 'releaseNumber',
+    parameters: [
+      recordType,
+      number
+    ],
+    target: self
+  });
+
+  console.log("XM.Record.releaseNumber for: %@".fmt(recordType));
+
+  self.get('store').dispatch(dispatch);
+  
+  return this;
+};
+
+/**
+   Return a matching record id for a passed user key and value. 
+   If none found returns zero.
+  
+    @param {String} property to search on, typically a user key
+    @param {String} value to search for
+    @param {Function} callback
+  @returns {Object} receiever
+*/
+XM.Record.findExisting = function(key, value, callback) {
+  var self = this,
+      recordType = this.get("className"),
+      dispatch;
+
+  dispatch = XM.Dispatch.create({
+    className: 'XT.Record',
+    functionName: 'findExisting',
+    parameters: [
+      recordType,
+      key,
+      value
+    ],
+    target: self,
+    action: callback
+  });
+
+  console.log("XM.Record.findExisting for: %@".fmt(recordType));
+
+  self.get('store').dispatch(dispatch);
+  
+  return this;
+};
 
 
 

@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.OpportunityFile
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._OpportunityFile = XM.Record.extend(
-  /** @scope XM._OpportunityFile.prototype */ {
+  /** @scope XM.OpportunityFile.prototype */ {
   
   className: 'XM.OpportunityFile',
 

@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CustomerBrowse
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CustomerBrowse = XM.Record.extend(
-  /** @scope XM._CustomerBrowse.prototype */ {
+  /** @scope XM.CustomerBrowse.prototype */ {
   
   className: 'XM.CustomerBrowse',
 
@@ -61,6 +62,51 @@ XM._CustomerBrowse = XM.Record.extend(
   */
   billingContact: SC.Record.toOne('XM.ContactInfo', {
     isNested: true
-  })
+  }),
+
+  /**
+    @type Boolean
+  */
+  isFreeFormShipto: SC.Record.attr(Boolean),
+
+  /**
+    @type Boolean
+  */
+  isFreeFormBillto: SC.Record.attr(Boolean),
+
+  /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency'),
+
+  /**
+    @type XM.Terms
+  */
+  terms: SC.Record.toOne('XM.Terms'),
+
+  /**
+    @type String
+  */
+  creditStatus: SC.Record.attr(String),
+
+  /**
+    @type XM.SalesRep
+  */
+  salesRep: SC.Record.toOne('XM.SalesRep'),
+
+  /**
+    @type Number
+  */
+  commission: SC.Record.attr(Number),
+
+  /**
+    @type XM.TaxZone
+  */
+  taxZone: SC.Record.toOne('XM.TaxZone'),
+
+  /**
+    @type XM.ShipCharge
+  */
+  shipCharge: SC.Record.toOne('XM.ShipCharge')
 
 });

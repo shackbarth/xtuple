@@ -41,16 +41,16 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   }),
   
   /* @private */
-  _accountsLength: 0,
+  accountsLength: 0,
   
   /* @private */
-  _accountsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
+  accountsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
   
   /* @private */
-  _incidentsLength: 0,
+  incidentsLength: 0,
   
   /* @private */
-  _incidentsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
+  incidentsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
 
   //..................................................
   // METHODS
@@ -60,8 +60,24 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   // OBSERVERS
   //
   
+  validate: function() {
+    var account = this.get('account'),
+        contact = this.get('contact'),
+        errors = this.get('validateErrors'),
+        accountErr = XM.errors.findProperty('code', 'xt1005'),
+        contactErr = XM.errors.findProperty('code', 'xt1006');
+
+    // Validate Account
+    this.updateErrors(accountErr, !(account));
+    
+    // Validate Contact
+    this.updateErrors(contactErr, !(contact));
+
+    return errors;
+  }.observes('account', 'contact'),
+  
   /* @private */
-  _assignedToDidChange: function() {
+  _xm_assignedToDidChange: function() {
     var assignedTo = this.get('assignedTo'),
         status = this.get('status');
      
@@ -69,7 +85,7 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   }.observes('assignedTo'),
   
   /* @private */
-  _accountsDidChange: function() {
+  _xm_accountsDidChange: function() {
     var documents = this.get('documents'),
         accounts = this.get('accounts');
 
@@ -77,11 +93,11 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   }.observes('accountsLength'),
   
   /* @private */
-  _incidentsDidChange: function() {
+  _xm_incidentsDidChange: function() {
     var documents = this.get('documents'),
         incidents = this.get('incidents');
 
     documents.addEach(incidents);    
-  }.observes('incidentsLength'),
+  }.observes('incidentsLength')
 
 });

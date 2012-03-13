@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.AccountBrowse
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._AccountBrowse = XM.Record.extend(
-  /** @scope XM._AccountBrowse.prototype */ {
+  /** @scope XM.AccountBrowse.prototype */ {
   
   className: 'XM.AccountBrowse',
 

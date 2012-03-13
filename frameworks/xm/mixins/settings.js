@@ -22,7 +22,7 @@ XM.Settings = {
   /** 
     Binding to global settings to which all properties on a settings object should bind to.
   */
-  settingsBinding: 'XM.session.settings',
+  settingsBinding: SC.Binding.from('XM.session.settings').noDelay(),
 
   /** 
     Commit changes to settings properties to the server. Will dispatch to a function with

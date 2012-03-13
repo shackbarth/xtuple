@@ -6,15 +6,18 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_tax_authority');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._TaxAuthority
 */
-XM.TaxAuthority = XM._TaxAuthority.extend(
+XM.TaxAuthority = XM._TaxAuthority.extend(XM.Document,
   /** @scope XM.TaxAuthority.prototype */ {
-
+ 
+  numberPolicySetting: 'CRMAccountNumberGeneration'
+  
   // .................................................
   // CALCULATED PROPERTIES
   //

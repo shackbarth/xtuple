@@ -20,6 +20,10 @@ sc_require('mixins/document');
 
 XM.Contact = XM._Contact.extend(XM.Document, XM.CoreDocuments,
 /** @scope XM.Contact.prototype */ {
+
+  // ..........................................................
+  // CALCULATED PROPERTIES
+  //
   
   /**
   A set of all the contact uses on this record.
@@ -41,10 +45,6 @@ XM.Contact = XM._Contact.extend(XM.Document, XM.CoreDocuments,
     
     return this._uses;
   }.property().cacheable(),
-
-  // ..........................................................
-  // CALCULATED PROPERTIES
-  //
 
   /**
   @type String

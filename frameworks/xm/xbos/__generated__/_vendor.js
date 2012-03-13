@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.Vendor
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._Vendor = XM.Record.extend(
-  /** @scope XM._Vendor.prototype */ {
+  /** @scope XM.Vendor.prototype */ {
   
   className: 'XM.Vendor',
 
@@ -44,6 +45,11 @@ XM._Vendor = XM.Record.extend(
   /**
     @type String
   */
+  number: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
   Name: SC.Record.attr(String),
 
   /**
@@ -55,11 +61,6 @@ XM._Vendor = XM.Record.extend(
     @type String
   */
   notes: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
 
   /**
     @type Boolean
@@ -89,7 +90,7 @@ XM._Vendor = XM.Record.extend(
   /**
     @type XM.VendorType
   */
-  type: SC.Record.toOne('XM.VendorType'),
+  vendorType: SC.Record.toOne('XM.VendorType'),
 
   /**
     @type Boolean

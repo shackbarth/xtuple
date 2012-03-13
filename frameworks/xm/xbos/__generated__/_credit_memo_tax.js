@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CreditMemoTax
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CreditMemoTax = XM.Record.extend(
-  /** @scope XM._CreditMemoTax.prototype */ {
+  /** @scope XM.CreditMemoTax.prototype */ {
   
   className: 'XM.CreditMemoTax',
 

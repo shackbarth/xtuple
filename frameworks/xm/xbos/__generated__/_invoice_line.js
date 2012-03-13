@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.InvoiceLine
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._InvoiceLine = XM.Record.extend(
-  /** @scope XM._InvoiceLine.prototype */ {
+  /** @scope XM.InvoiceLine.prototype */ {
   
   className: 'XM.InvoiceLine',
 
@@ -81,6 +82,11 @@ XM._InvoiceLine = XM.Record.extend(
   ordered: SC.Record.attr(Number),
 
   /**
+    @type Number
+  */
+  billed: SC.Record.attr(Number),
+
+  /**
     @type XM.Unit
   */
   quantityUnit: SC.Record.toOne('XM.Unit'),
@@ -88,12 +94,12 @@ XM._InvoiceLine = XM.Record.extend(
   /**
     @type Number
   */
-  quantityInventoryUnitRatio: SC.Record.attr(Number),
+  quantityUnitRatio: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  billed: SC.Record.attr(Number),
+  price: SC.Record.attr(Number),
 
   /**
     @type XM.Unit
@@ -103,17 +109,12 @@ XM._InvoiceLine = XM.Record.extend(
   /**
     @type Number
   */
-  priceInventoryUnitRatio: SC.Record.attr(Number),
+  priceUnitRatio: SC.Record.attr(Number),
 
   /**
     @type Number
   */
   customerPrice: SC.Record.attr(Number),
-
-  /**
-    @type Number
-  */
-  price: SC.Record.attr(Number),
 
   /**
     @type XM.InvoiceLineTax

@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.BankAccountInfo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._BankAccountInfo = XM.Record.extend(
-  /** @scope XM._BankAccountInfo.prototype */ {
+  /** @scope XM.BankAccountInfo.prototype */ {
   
   className: 'XM.BankAccountInfo',
 

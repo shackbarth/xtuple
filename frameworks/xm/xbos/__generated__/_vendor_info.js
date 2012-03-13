@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.VendorInfo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._VendorInfo = XM.Record.extend(
-  /** @scope XM._VendorInfo.prototype */ {
+  /** @scope XM.VendorInfo.prototype */ {
   
   className: 'XM.VendorInfo',
 

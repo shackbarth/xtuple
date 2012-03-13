@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CustomerCharacteristic
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CustomerCharacteristic = XM.Record.extend(
-  /** @scope XM._CustomerCharacteristic.prototype */ {
+  /** @scope XM.CustomerCharacteristic.prototype */ {
   
   className: 'XM.CustomerCharacteristic',
 

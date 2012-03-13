@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ReceivableApplication
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ReceivableApplication = XM.Record.extend(
-  /** @scope XM._ReceivableApplication.prototype */ {
+  /** @scope XM.ReceivableApplication.prototype */ {
   
   className: 'XM.ReceivableApplication',
 
@@ -86,6 +87,11 @@ XM._ReceivableApplication = XM.Record.extend(
   applied: SC.Record.attr(Number),
 
   /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency'),
+
+  /**
     @type XM.Receivable
   */
   source: SC.Record.toOne('XM.Receivable'),
@@ -98,11 +104,6 @@ XM._ReceivableApplication = XM.Record.extend(
   /**
     @type String
   */
-  userName: SC.Record.attr(String),
-
-  /**
-    @type XM.Currency
-  */
-  currency: SC.Record.toOne('XM.Currency')
+  createdBy: SC.Record.attr(String)
 
 });
