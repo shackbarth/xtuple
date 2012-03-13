@@ -7,7 +7,7 @@
   "comment": "Extended by Crm",
   "relations": [
     {
-      "column": "todoitem_id"
+      "column": "todoitem_id",
       "inverse": "guid"
     }
   ],
