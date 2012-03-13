@@ -26,7 +26,17 @@ XM = global.XM = SC.Object.create(
   /**
     Numbers are automatically generated, but can be over-ridden by the user.
   */
-  AUTO_OVERRIDE_NUMBER: 'O'
+  AUTO_OVERRIDE_NUMBER: 'O',
+  
+  MONEY_SCALE: 2,
+  QTY_SCALE: 6,
+  QTY_PER_SCALE: 6,
+  COST_SCALE: 6,
+  SALES_PRICE_SCALE: 4,
+  PURCH_PRICE_SCALE: 6,
+  EXT_PRICE_SCALE:4,
+  UOM_RATIO_SCALE: 7,
+  PERCENT_SCALE: 4
 
 });
 

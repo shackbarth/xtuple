@@ -51,8 +51,7 @@ XM.Currency._xm_setCurrencyBase = function() {
 }
 
 // TODO: Move this to start up
-XM.DataSource.ready(XM.Currency._xm_setCurrencyBase, this);
-
-
-
+SC.ready(function() {
+  XM.dataSource.ready(XM.Currency._xm_setCurrencyBase, this);
+});
 

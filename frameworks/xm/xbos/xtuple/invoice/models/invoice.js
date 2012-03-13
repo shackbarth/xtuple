@@ -83,54 +83,42 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   
   lineTax: 0,
   
-  lineTaxCodes: [],
+  freightTax: 0,
   
-  freightTaxCodes: [],
+  miscTax: 0,
   
-  miscTaxCodes: [],
+  /**
+    An array of tax codes an with summarized amounts for line items.
+  */
+  lineTaxDetail: [],
+
+  /**
+    An array of tax codes an with amounts for freight.
+  */  
+  freightTaxDetail: [],
+
+  /**
+    An array of tax codes an with amounts for line items.
+  */
+  miscTaxDetail: [],
   
   // .................................................
   // CALCULATED PROPERTIES
   //
   
+  /**
+    Credit allocated to the invoice.
+  */
   credit: function() {
     var credits = this.get('credits'),
-        total = 0;
+        credit = 0;
     
     for(var i = 0; i < credits.get('length'); i++) {
-      total = total + credits.objectAt(i).get('amount');
+      credit = credit + credits.objectAt(i).get('amount');
     }
     
-    return total;
+    return credit;
   }.property('creditsLength').cacheable(),
-  
-  freightTax: function() {    
-    var taxes = this.get('taxes'), freightTax = 0;
-
-    for(var i = 0; i < taxes.get('length'); i++) {
-      var hist = taxes.objectAt(i),
-          type = hist.getPath('taxType.id'),
-          tax = hist.get('tax');
-    
-      freightTax = freightTax + (type === XM.TaxType.FREIGHT ? tax : 0);
-    }
-    
-    return freightTax;
-  }.property('taxesLength').cacheable(),
-  
-  miscTax: function() {    
-    var taxes = this.get('taxes'), adjTax = 0;
-    
-    for(var i = 0; i < taxes.get('length'); i++) {
-      var hist = taxes.objectAt(i),
-          type = hist.getPath('taxType.id'),
-          tax = hist.get('tax');
-        
-      adjTax = adjTax + (type === XM.TaxType.ADJUSTMENT ? tax : 0);
-    }
-    
-    return adjTax;
-  }.property('taxesLength').cacheable(),
   
   totalTax: function() {
     var lineTax = this.get('lineTax'),
@@ -143,10 +131,10 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   total: function() {
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
-        tax = this.get('tax');
-        
-    return subTotal + freight + tax; 
-  }.property('subTotal', 'freight', 'tax').cacheable(),
+        totalTax = this.get('totalTax');
+
+    return subTotal + freight + totalTax; 
+  }.property('subTotal', 'freight', 'totalTax').cacheable(),
   
   //..................................................
   // METHODS
@@ -328,57 +316,95 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       }
     }
   }.observes('shipto'),
-    
+  
+  /**
+    Recalculate line item tax and sales totals.
+  */
   linesDidChange: function() {
     var lines = this.get('lines'),
-        taxes, taxTypes = [], taxCodes = [],
-        taxTotal = 0;
+        taxDetail = [],
+        taxTotal = 0, subTotal = 0;
 
-    // First sub total taxes by tax type
+    // first sub total sales and taxes
     for(var i = 0; i < lines.get('length'); i++) {
-      taxes = lines.objectAt(i).get('taxes');
- 
+      var line = lines.objectAt(i),
+          taxes = line.get('taxes'),
+          billed = line.get('billed'),
+          qtyUnitRatio = line.get('quantityUnitRatio'),
+          price = line.get('price'),
+          priceUnitRatio = line.get('priceUnitRatio');
+
+      // line sub total
+      subTotal = subTotal + SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
+
+      // taxes
       for(var n = 0; n < taxes.get('length'); n++) {
         var lineTax = taxes.objectAt(n),
-            taxType = lineTax.get('taxType'),
             taxCode = lineTax.get('taxCode'),
             tax = lineTax.get('tax') - 0,
-            typeTotal = taxTypes.findProperty('taxType', taxType),
-            codeTotal = codeTypes.findProperty('taxCode', taxCode);
-         
-        // summaryize by tax type
-        if(typeTotal) {
-          typeTotal.tax = typeTotal.tax + tax;
-        } else {
-          typeTotal = {};
-    
-          typeTotal.taxType = taxType;
-          typeTotal.tax = tax;
-          taxTypes.push(typeTotal);
-        }
+            codeTotal = taxDetail.findProperty('taxCode', taxCode);
         
-        // summarize by tax code
+        // summarize by tax code 
         if(codeTotal) {
-          codeTotal.tax = codeCode.tax + tax;
+          codeTotal.tax = codeTotal.tax + tax;
         } else {
           codeTotal = {};
     
           codeTotal.taxCode = taxCode;
           codeTotal.tax = tax;
-          codeTypes.push(codeTotal);
-        }       
+          taxDetail.push(codeTotal);
+        }   
       }
     }
     
-    // next round each tax type total and add to line tax total
-    for(var i = 0; i < taxTypes.length; i++) {
-      var typeTotal = taxTypes.objectAt(i);
+    this.set('subTotal', subTotal);
+    
+    // next round and sum up each tax code total
+    for(var i = 0; i < taxDetail.length; i++) {
+      var codeTotal = taxDetail.objectAt(i);
       
-      taxTotal = taxTotal + Math.round(typeTotal.tax * 100)/100;
+      codeTotal.tax = SC.Math.round(codeTotal.tax, XM.MONEY_SCALE);
+      taxTotal = taxTotal + codeTotal.tax;
     }
     
     this.set('lineTax', taxTotal);
-  }.observes('linesLength'),
+    this.set('lineTaxDetail', taxDetail);
+  }.observes('linesLength', 'taxZone'),
+  
+  taxesDidChange: function() {    
+    var taxes = this.get('taxes'), 
+        miscTaxDetail = [], freightTaxDetail = [],
+        miscTax = 0, freightTax = 0;
+
+    // Loop through header taxes and allocate
+    for(var i = 0; i < taxes.get('length'); i++) {
+      var hist = taxes.objectAt(i),
+          type = hist.getPath('taxType.id'),
+          tax = SC.Math.round(hist.get('tax'), XM.MONEY_SCALE),
+          taxCode = hist.get('taxCode'),
+          codeTax = {};
+
+      if(type === XM.TaxType.ADJUSTMENT) {
+        miscTax = miscTax + tax;
+    
+        codeTax.taxCode = taxCode;
+        codeTax.tax = tax;
+        miscTaxDetail.push(codeTax); 
+  
+      } else if (type === XM.TaxType.FREIGHT) {
+        freightTax = freightTax + tax;
+        
+        codeTax.taxCode = taxCode;
+        codeTax.tax = tax;
+        freightTaxDetail.push(codeTax); 
+      }
+    }
+    
+    this.set('miscTax', miscTax);
+    this.set('miscTaxDetail', miscTaxDetail);
+    this.set('freightTax', freightTax);
+    this.set('freightTaxDetail', freightTaxDetail);
+  }.observes('taxesLength', 'taxZone'),
   
   isPostedDidChange: function() {
     var status = this.get('status');
