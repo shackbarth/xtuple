@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ProjectTaskComment
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ProjectTaskComment = XM.Record.extend(
-  /** @scope XM._ProjectTaskComment.prototype */ {
+  /** @scope XM.ProjectTaskComment.prototype */ {
   
   className: 'XM.ProjectTaskComment',
 

@@ -6,7 +6,7 @@
 
 sc_require('xbos/__generated__/_account');
 sc_require('mixins/core_documents');
-sc_require('mixins/account_document');
+sc_require('mixins/document');
 
 /** @class
 
@@ -18,21 +18,23 @@ sc_require('mixins/account_document');
   @version 0.2
 */
 
-XM.Account = XM._Account.extend(XM.AccountDocument, XM.CoreDocuments,
+XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments,
 /** @scope XM.Account.prototype */ {
+  
+  numberPolicySetting: 'CRMAccountNumberGeneration',
   
   // ..........................................................
   // DOCUMENT ASSIGNMENTS
   // 
   
   /* @private */
-  _accountsLength: 0,
+  accountsLength: 0,
   
   /* @private */
-  _accountsLengthBinding: '.accounts.length',
+  accountsLengthBinding: '.accounts.length',
   
   /* @private */
-  _accountsDidChange: function() {
+  _xm_accountsDidChange: function() {
     var documents = this.get('documents'),
         accounts = this.get('accounts');
 

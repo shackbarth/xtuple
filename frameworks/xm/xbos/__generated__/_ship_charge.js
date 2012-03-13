@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ShipCharge
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ShipCharge = XM.Record.extend(
-  /** @scope XM._ShipCharge.prototype */ {
+  /** @scope XM.ShipCharge.prototype */ {
   
   className: 'XM.ShipCharge',
 

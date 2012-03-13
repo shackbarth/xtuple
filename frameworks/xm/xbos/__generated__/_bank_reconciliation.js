@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.BankReconciliation
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._BankReconciliation = XM.Record.extend(
-  /** @scope XM._BankReconciliation.prototype */ {
+  /** @scope XM.BankReconciliation.prototype */ {
   
   className: 'XM.BankReconciliation',
 

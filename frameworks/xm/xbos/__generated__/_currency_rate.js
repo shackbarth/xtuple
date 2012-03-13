@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CurrencyRate
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CurrencyRate = XM.Record.extend(
-  /** @scope XM._CurrencyRate.prototype */ {
+  /** @scope XM.CurrencyRate.prototype */ {
   
   className: 'XM.CurrencyRate',
 

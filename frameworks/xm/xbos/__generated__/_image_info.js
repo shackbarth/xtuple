@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ImageInfo
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ImageInfo = XM.Record.extend(
-  /** @scope XM._ImageInfo.prototype */ {
+  /** @scope XM.ImageInfo.prototype */ {
   
   className: 'XM.ImageInfo',
 

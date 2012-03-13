@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.AccountImage
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._AccountImage = XM.Record.extend(
-  /** @scope XM._AccountImage.prototype */ {
+  /** @scope XM.AccountImage.prototype */ {
   
   className: 'XM.AccountImage',
 

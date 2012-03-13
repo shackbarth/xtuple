@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.Currency
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._Currency = XM.Record.extend(
-  /** @scope XM._Currency.prototype */ {
+  /** @scope XM.Currency.prototype */ {
   
   className: 'XM.Currency',
 

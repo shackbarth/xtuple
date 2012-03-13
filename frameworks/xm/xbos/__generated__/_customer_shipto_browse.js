@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.CustomerShiptoBrowse
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._CustomerShiptoBrowse = XM.Record.extend(
-  /** @scope XM._CustomerShiptoBrowse.prototype */ {
+  /** @scope XM.CustomerShiptoBrowse.prototype */ {
   
   className: 'XM.CustomerShiptoBrowse',
 
@@ -73,6 +74,26 @@ XM._CustomerShiptoBrowse = XM.Record.extend(
   */
   address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true
-  })
+  }),
+
+  /**
+    @type XM.SalesRep
+  */
+  salesRep: SC.Record.toOne('XM.SalesRep'),
+
+  /**
+    @type Number
+  */
+  commission: SC.Record.attr(Number),
+
+  /**
+    @type XM.TaxZone
+  */
+  taxZone: SC.Record.toOne('XM.TaxZone'),
+
+  /**
+    @type XM.ShipCharge
+  */
+  shipCharge: SC.Record.toOne('XM.ShipCharge')
 
 });

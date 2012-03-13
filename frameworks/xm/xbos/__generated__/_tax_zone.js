@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.TaxZone
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._TaxZone = XM.Record.extend(
-  /** @scope XM._TaxZone.prototype */ {
+  /** @scope XM.TaxZone.prototype */ {
   
   className: 'XM.TaxZone',
 

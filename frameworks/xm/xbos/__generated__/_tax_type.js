@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.TaxType
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._TaxType = XM.Record.extend(
-  /** @scope XM._TaxType.prototype */ {
+  /** @scope XM.TaxType.prototype */ {
   
   className: 'XM.TaxType',
 

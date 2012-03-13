@@ -6,6 +6,7 @@
 /*globals XM */
 
 /**
+  @scope XM.ShipVia
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
@@ -13,7 +14,7 @@
   @extends XM.Record
 */
 XM._ShipVia = XM.Record.extend(
-  /** @scope XM._ShipVia.prototype */ {
+  /** @scope XM.ShipVia.prototype */ {
   
   className: 'XM.ShipVia',
 
