@@ -46,12 +46,14 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
         context = context ? context : null, callbacks;
     if(this.get('isReady')) {
       this.log("ready => flushing request immediately");
-      return callback.apply(context, args);
+      callback.apply(context, args);
+      return YES;
     }
     this.log("ready => queueing a request (%@)".fmt(callback.name || 'anonymous'));
     if(!this._onreadycallbacks) callbacks = this._onreadycallbacks = [];
     else callbacks = this._onreadycallbacks;
     callbacks.push({ callback: callback, context: context, args: args });
+    return YES;
   },
    
   /**
@@ -86,7 +88,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
       the node datasource.
   */
   dispatch: function(store, dispatch) {
-    this.ready(this._dispatch, this, store, dispatch);
+    return this.ready(this._dispatch, this, store, dispatch);
   },
 
   /**
@@ -98,7 +100,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
       node datasource.
   */
   fetch: function(store, query) {
-    this.ready(this._fetch, this, store, query);
+    return this.ready(this._fetch, this, store, query);
   },
 
   /**
@@ -109,7 +111,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
     @param {Number} [id] The numeric id for the record to be retrieved.
   */
   retrieveRecord: function(store, storeKey, id) {
-    this.ready(this._retrieveRecord, this, store, storeKey, id);
+    return this.ready(this._retrieveRecord, this, store, storeKey, id);
   },
 
   /**
@@ -119,7 +121,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
     @param {Number} storeKey The storeKey for the record to commit.
   */
   commitRecord: function(store, storeKey) {
-    this.ready(this._commitRecord, this, store, storeKey);
+    return this.ready(this._commitRecord, this, store, storeKey);
   },
 
   //............................................
