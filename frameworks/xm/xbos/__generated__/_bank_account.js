@@ -65,7 +65,7 @@ XM._BankAccount = XM.Record.extend(
   /**
     @type String
   */
-  bankAccountType: SC.Record.attr(String),
+  type: SC.Record.attr(String),
 
   /**
     @type XM.Currency

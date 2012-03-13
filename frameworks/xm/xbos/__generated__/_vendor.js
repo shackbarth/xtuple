@@ -45,11 +45,6 @@ XM._Vendor = XM.Record.extend(
   /**
     @type String
   */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
   Name: SC.Record.attr(String),
 
   /**
@@ -61,6 +56,11 @@ XM._Vendor = XM.Record.extend(
     @type String
   */
   notes: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  number: SC.Record.attr(String),
 
   /**
     @type Boolean
@@ -90,7 +90,7 @@ XM._Vendor = XM.Record.extend(
   /**
     @type XM.VendorType
   */
-  vendorType: SC.Record.toOne('XM.VendorType'),
+  type: SC.Record.toOne('XM.VendorType'),
 
   /**
     @type Boolean

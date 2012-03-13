@@ -48,7 +48,7 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   startDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     defaultValue: function() {
-      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
+      return SC.DateTime.create();
     }
   }),
 
@@ -91,14 +91,9 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   
   _xm_assignedToDidChange: function() {
     var assignedTo = this.get('assignedTo'),
-        status = this.get('status'),
-        assignedDate = SC.DateTime.create();
-        console.log('assignedDate unformatted: ' + assignedDate);
-        assignedDate = assignedDate.toFormattedString('%Y-%m-%d');
-        console.log('assignedDate formatted: ' + assignedDate);
+        status = this.get('status');
      
-    if(status & SC.Record.READY && assignedTo) this.set('assignDate',function() {
-       return SC.DateTime.create().toFormattedString('%Y-%m-%d')});
+    if(status & SC.Record.READY && assignedTo) this.set('assignDate', SC.DateTime.create());
   }.observes('assignedTo'),
   
   /* @private */
@@ -118,4 +113,3 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   }.observes('opportunitiesLength')
 
 });
-

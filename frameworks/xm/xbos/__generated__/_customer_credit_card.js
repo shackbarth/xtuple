@@ -115,7 +115,7 @@ XM._CustomerCreditCard = XM.Record.extend(
   /**
     @type String
   */
-  cardType: SC.Record.attr(String),
+  type: SC.Record.attr(String),
 
   /**
     @type Date

@@ -95,7 +95,7 @@ XM._Item = XM.Record.extend(
   /**
     @type String
   */
-  itemType: SC.Record.attr(String),
+  type: SC.Record.attr(String),
 
   /**
     @type Number

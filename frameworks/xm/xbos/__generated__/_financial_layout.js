@@ -60,7 +60,7 @@ XM._FinancialLayout = XM.Record.extend(
   /**
     @type String
   */
-  layoutType: SC.Record.attr(String),
+  type: SC.Record.attr(String),
 
   /**
     @type XM.FinancialLayoutGroup

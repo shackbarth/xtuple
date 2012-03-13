@@ -75,7 +75,7 @@ XM._LedgerAccount = XM.Record.extend(
   /**
     @type String
   */
-  accountType: SC.Record.attr(String),
+  type: SC.Record.attr(String),
 
   /**
     @type String
