@@ -7,8 +7,12 @@ XM.Logging = {
     Log for general information.
   */
   log: function(msg) {
+    var args = Array.prototype.slice.call(arguments).slice(1);
     if(this.getPath("logLevels.info") === NO) return;
-    return SC.Logger.info("%@: %@".fmt(this.get("logPrefix"), msg));
+    SC.Logger.info("%@: %@".fmt(this.get("logPrefix"), msg));
+    if(args.length > 0)
+      args.forEach(function(arg) { console.log(arg); });
+    return;
   },
 
   /**

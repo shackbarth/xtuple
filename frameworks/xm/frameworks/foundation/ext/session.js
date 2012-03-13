@@ -148,11 +148,10 @@ XM.session = SC.Object.create({
 
     return YES
   },
-  
+
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    XM.DataSource.ready(this.load, this);  
-  },
+  }
   
 });
 
