@@ -337,36 +337,35 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     // First sub total taxes by tax type
     for(var i = 0; i < lines.get('length'); i++) {
       taxes = lines.objectAt(i).get('taxes');
- 
+
       for(var n = 0; n < taxes.get('length'); n++) {
         var lineTax = taxes.objectAt(n),
             taxType = lineTax.get('taxType'),
             taxCode = lineTax.get('taxCode'),
             tax = lineTax.get('tax') - 0,
             typeTotal = taxTypes.findProperty('taxType', taxType),
-            codeTotal = codeTypes.findProperty('taxCode', taxCode);
-         
+            codeTotal = taxCodes.findProperty('taxCode', taxCode);
+
         // summaryize by tax type
         if(typeTotal) {
           typeTotal.tax = typeTotal.tax + tax;
         } else {
           typeTotal = {};
-    
           typeTotal.taxType = taxType;
           typeTotal.tax = tax;
           taxTypes.push(typeTotal);
         }
         
-        // summarize by tax code
+        // summarize by tax code 
         if(codeTotal) {
-          codeTotal.tax = codeCode.tax + tax;
+          codeTotal.tax = codeTotal.tax + tax;
         } else {
           codeTotal = {};
     
           codeTotal.taxCode = taxCode;
           codeTotal.tax = tax;
-          codeTypes.push(codeTotal);
-        }       
+          taxCodes.push(codeTotal);
+        }   
       }
     }
     
@@ -374,10 +373,19 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     for(var i = 0; i < taxTypes.length; i++) {
       var typeTotal = taxTypes.objectAt(i);
       
-      taxTotal = taxTotal + Math.round(typeTotal.tax * 100)/100;
+      taxTotal = taxTotal + SC.Math.round(typeTotal.tax, XM.MONEY_SCALE);
     }
     
     this.set('lineTax', taxTotal);
+    
+    // next round each tax code total
+    for(var i = 0; i < taxCodes.length; i++) {
+      var codeTotal = taxCodes.objectAt(i);
+      
+      codeTotal.tax = SC.Math.round(codeTotal.tax, XM.SALES_PRICE_SCALE);
+    }
+    
+    this.set('lineTaxCodes', taxCodes);
   }.observes('linesLength'),
   
   isPostedDidChange: function() {
