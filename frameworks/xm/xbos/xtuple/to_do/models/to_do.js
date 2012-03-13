@@ -39,7 +39,7 @@ XM.ToDo = XM._ToDo.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
     defaultValue: function() {
-      return XM.DataSource.session.userName;
+      return XM.dataSource.session.userName;
     }
   }),
 
@@ -49,7 +49,7 @@ XM.ToDo = XM._ToDo.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
     defaultValue: function() {
-      return XM.DataSource.session.userName;
+      return XM.dataSource.session.userName;
     }
   }),
 

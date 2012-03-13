@@ -47,7 +47,7 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
     defaultValue: function() {
-      return XM.DataSource.session.userName;
+      return XM.dataSource.session.userName;
     }
   }),
 
