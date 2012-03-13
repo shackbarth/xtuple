@@ -93,7 +93,7 @@
 \i xm/javascript/database_information.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/standard_journal.sql;
-\i xm/javascript/todo.sql;
+\i xm/javascript/to_do.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/invoice.sql;
 \i xm/javascript/period.sql;
