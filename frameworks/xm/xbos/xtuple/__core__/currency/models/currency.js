@@ -31,7 +31,8 @@ XM.Currency = XM._Currency.extend(
 
 XM.Currency.BASE = null;
 
-XM.Currency._fetchBase = function() {
+/** @private */
+XM.Currency._xm_setCurrencyBase = function() {
   var self = this,
       qry, ary;
     
@@ -50,7 +51,7 @@ XM.Currency._fetchBase = function() {
 }
 
 // TODO: Move this to start up
-XM.DataSource.ready(XM.Currency._fetchBase, this);
+XM.DataSource.ready(XM.Currency._xm_setCurrencyBase, this);
 
 
 
