@@ -55,7 +55,7 @@ XM._Terms = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String),
+  termsType: SC.Record.attr(String),
 
   /**
     @type XM.number
