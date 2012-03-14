@@ -15,10 +15,6 @@ sc_require('xbos/xtuple/__core__/unit/models/unit');
 */
 XM.InvoiceLine = XM._InvoiceLine.extend(
   /** @scope XM.InvoiceLine.prototype */ {
-
-  customerBinding: SC.Binding.from('.invoice.customer').noDelay(),
-  
-  currencyBinding: SC.Binding.from('.invoice.currency').noDelay(),
   
   sellingUnits: [],
   
@@ -32,39 +28,82 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
 
   init: function() {
     arguments.callee.base.apply(this, arguments) ;
-    
     var item = this.get('item');
-    
     if(item) this.itemDidChange();
+  },
+  
+  updateSellingUnits: function() {
+    var self = this,
+        item = self.get('item');
+    if(item) {
+    
+      /* callback */
+      callback = function(err, result) {
+        var units = [], qry,
+            store = self.get('store');
+        qry = SC.Query.local(XM.Unit, {
+          conditions: "guid ANY {units}",
+          parameters: { 
+            units: result.units
+          }
+        });
+        units = store.find(qry);
+        self.set('sellingUnits', units);
+      }
+      
+      /* function call */
+      XM.Item.sellingUnits(item, callback);
+    } else self.set('sellingUnits', []);
+  },
+  
+  updatePrice: function() {
+    var self = this,
+        customer = this.getPath('invoice.customer'),
+        shipto = this.getPath('invoice.shipto'),
+        item = this.get('item'),
+        quantity = this.get('billed'),
+        quantityUnit = this.get('quantityUnit'),
+        priceUnit = this.get('priceUnit'),
+        currency = this.getPath('invoice.currency'),
+        effective = this.getPath('invoice.invoiceDate');
+    if(customer && item && quantity &&
+       quantityUnit && priceUnit && currency && effective) {
+       
+      /* callback */
+      callback = function(err, result) {
+        self.set('price', result);
+      } 
+     
+      /* function call */
+      XM.Customer.price(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
+    }
   },
 
   //..................................................
   // OBSERVERS
   //
   
+  quantityDidChange: function() {
+  /*
+    var item = this.get('item'), status = this.get('status');
+    if(status & SC.Record.READY &&
+       this._attrCache &&
+       this._attrCache.get('item') !== item) {
+      this.updateSellingUnits();
+      this.updatePrice();
+    }
+    */
+  }.observes('billed', 'quantityUnit', 'priceUnit'),
+  
   itemDidChange: function() {
-    var self = this,
-        item = this.get('item');
-
-    if(item) {
-      callback = function(err, result) {
-        var units = [], qry,
-            store = self.get('store');
-
-        qry = SC.Query.local(XM.Unit, {
-          conditions: "guid CONTAINS {units}",
-          parameters: { 
-            units: result 
-          }
-        });
-        
-        units = store.find(qry);
-        
-        self.set('sellingUnits', units);
-      }
-      
-      XM.Item.sellingUnits(item, callback);
-    } else self.set('sellingUnits', []);
+  console.log(this.statusString());
+    var item = this.get('item'), status = this.get('status');
+    if(status & SC.Record.READY &&
+       this._attrCache &&
+       this._attrCache.get('item') !== item) {
+      this.updateSellingUnits();
+      this.updatePrice();
+    }
   }.observes('item'),
   
   quantityUnitDidChange: function() {
@@ -72,7 +111,7 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   
   saleDidChange: function() {
     var ext = 0,
-        item = this.get('item')
+        item = this.get('item');
   }.observes('currency', 'item', 'billed', 'quantityUnit', 'priceUnit'),
 
 });
