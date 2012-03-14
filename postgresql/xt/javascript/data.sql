@@ -147,20 +147,30 @@ select xt.install_js('XT','Data','xtuple', $$
                     record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* if there is no ORM, this isn't a table data type so no check required */
+      if (DEBUG) print(NOTICE, 'orm is ->', JSON.stringify(map, null, 2));
+       
       if(!map) return true;
       
       /* can not access 'nested only' records directly */
+      if(DEBUG) print(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly);
+      
       if(isTopLevel && map.isNestedOnly) return false
         
       /* check privileges - first do we have access to anything? */
       if(privileges) { 
+        if(DEBUG) print(NOTICE, 'privileges found');
+        
         if(committing) {
+          if(DEBUG) print(NOTICE, 'is committing');
+          
           /* check if user has 'all' read privileges */
           isGrantedAll = privileges.all ? this.checkPrivilege(privileges.all[action]) : false;
 
           /* otherwise check for 'personal' read privileges */
           if(!isGrantedAll) isGrantedPersonal =  privileges.personal ? this.checkPrivilege(privileges.personal[action]) : false;
         } else {
+          if(DEBUG) print(NOTICE, 'is NOT committing');
+          
           /* check if user has 'all' read privileges */
           isGrantedAll = privileges.all ? 
                          this.checkPrivilege(privileges.all.read) || 
@@ -172,9 +182,11 @@ select xt.install_js('XT','Data','xtuple', $$
                                                  this.checkPrivilege(privileges.personal.update) : false;
         }
       }
-
+      
       /* if we're checknig an actual record and only have personal privileges, see if the record allows access */
       if(record && !isGrantedAll && isGrantedPersonal) {
+        if(DEBUG) print(NOTICE, 'checking record level personal privileges');
+        
         var that = this,
 
         /* shared checker function that checks 'personal' properties for access rights */
@@ -202,6 +214,8 @@ select xt.install_js('XT','Data','xtuple', $$
           isGrantedPersonal = checkPersonal(record);
         }
       }
+
+      if(DEBUG) print(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);
     
       return isGrantedAll || isGrantedPersonal;
     },
