@@ -73,7 +73,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "accountType",
       "attr": {
         "type": "String",
         "column": "flitem_type"

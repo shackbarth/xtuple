@@ -35,6 +35,24 @@
         "type": "Vendor",
         "column": "crmacct_vend_id"
       }
+    },
+    {
+      "name": "contactRelations",
+      "toMany": {
+        "isNested": true,
+        "type": "ContactInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
+    },
+    {
+      "name": "toDoRelations",
+      "toMany": {
+        "isNested": true,
+        "type": "ToDoInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
     }
   ],
   "sequence": 0,

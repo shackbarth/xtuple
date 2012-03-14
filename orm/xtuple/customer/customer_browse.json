@@ -47,9 +47,109 @@
       "toOne": {
         "isNested": true,
         "type": "ContactInfo",
-        "column": "cust_cntct_id",
-        "inverse": "guid"
+        "column": "cust_cntct_id"
       }
+    },
+    {
+      "name": "isFreeFormShipto",
+      "attr": {
+        "type": "Boolean",
+        "column": "cust_ffshipto"
+      }
+    },
+    {
+      "name": "isFreeFormBillto",
+      "attr": {
+        "type": "Boolean",
+        "column": "cust_ffbillto"
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "cust_curr_id"
+      }
+    },
+    {
+      "name": "terms",
+      "toOne": {
+        "type": "Terms",
+        "column": "cust_terms_id"
+      }
+    },    
+    {
+      "name": "creditStatus",
+      "attr": {
+        "type": "String",
+        "column": "cust_creditstatus"
+      }
+    },
+    {
+      "name": "salesRep",
+      "toOne": {
+        "type": "SalesRep",
+        "column": "cust_salesrep_id"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "cust_commprcnt"
+      }
+    },   
+    {
+      "name": "taxZone",
+      "toOne": {
+        "type": "TaxZone",
+        "column": "cust_taxzone_id"
+      }
+    },
+    {
+      "name": "shipCharge",
+      "toOne": {
+        "type": "ShipCharge",
+        "column": "cust_shipchrg_id"
+      }
+    }
+  ],
+  "extensions": [
+    {
+      "table": "shiptoinfo",
+      "relations": [
+        {
+          "column": "shipto_cust_id"
+        }
+      ],
+      "properties": [
+        {
+          "name": "shipto",
+          "toOne": {
+            "isNested": true,
+            "type": "CustomerShipto",
+            "column": "shipto_id"
+          }
+        },
+        {
+          "name": "isDefault",
+          "attr": {
+            "type": "Boolean",
+            "column": "shipto_default",
+            "value": true,
+            "isVisible": false
+          }
+        },
+        {
+          "name": "isActive",
+          "attr": {
+            "type": "Boolean",
+            "column": "shipto_active",
+            "value": true,
+            "isVisible": false
+          }
+        }
+      ]
     }
   ],
   "isSystem": true

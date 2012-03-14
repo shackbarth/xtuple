@@ -3,19 +3,104 @@ select xt.install_js('XT','Orm','xtuple', $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /**
-  @class
+   @class
 
+   An ORM is an Object Relational Mapping that defines the relationship between object oriented type
+   definitions and relational tables or views in a database. This implementation is currently designed 
+   to apply specifically to a PostgreSQL database, but theoretically could be applied to any database 
+   for which an ORM API is defined to process these definitions.
+   
+   In the xTuple PostgreSQL implmentation the installation of ORM files triggers views to be created 
+   whose structures and rules conform to the definition of the ORM. The ORMs use camel and class case
+   conventions when referencing object attributes and snake case conventions when referencing database 
+   attributes. Because ORMs generates views, these views can in turn be referenced by other ORMs to manage 
+   a class hierachy. To determine the name of a view created by an ORM simply convert the name space 
+   qualified type of the object to a snake case schema and view name like so:
+   
+   Object Name      Datbase Name
+   --------------   ----------------
+   XM.Contact       xm.contact
+   XM.ToDo          xm.to_do
+   XM.ToDoComment   xm.to_do_comment
+   
+   ORMs are specifically designed to be extensible so that a database table can be virtually expanded
+   without changing the original table definition, while presenting the new data through the ORM API 
+   as though it were all one unit. This effectively ensures that "core" database definitions
+   and custom or 3rd party data extensions are effectively encapuslated from one another. In addition
+   ORMs can be activated and deactivated in the xt.orm table so extensions can be "turned off" at
+   any time.
+   
+   The initial ORM is referred to as the "base" ORM. Additional ORMs can be defined against the 
+   original base using the same name space and type but giving them a different context name and 
+   setting the isExtension flag to true. Typically the table on an ORM extension should reside in a 
+   different database schema where you would create a table with colums that contain data you want to 
+   "add" to a table in the original schema. The new table should contain a column relation to associate 
+   with the original (which may also be the primary key for it as well.) When you create an ORM
+   extension the new table will be left joined on the original. Any inserts, updates or delete 
+   actions will propagate results to both the original and the new table automatically.
+   
+   Extensions can be created as both completely independent ORM definitions or added to an 
+   extension array on a base or extension ORM.
   */
   
   XT.Orm = {};
 
-  /** 
-  Pass a record type and return an array that describes the view definition with
-  an array of items representing respective column definitions.
+  /**
+   Installs an orm in the database. Installation triggers the creation or update of the supporting
+   view.
+   
+   @param {String} orm definition
+  */
+  XT.Orm.install = function(json) {
+    var newJson = JSON.parse(json), oldJson,
+        oldOrm, sql, isExtension, sequence,
+        nameSpace = newJson.nameSpace,
+        type = newJson.type,
+        context = newJson.context,
+        sql;
 
-  @param {String} view name
-  @param {String} schema name
-  @returns {Object} 
+    if(!nameSpace) throw new Error("A name space is required");
+    if(!type) throw new Error("A type is required");
+    if(!context) throw new Error("A context is required");
+
+    sql = 'select orm_id as "id", '
+        + '  orm_json as "json", '
+        + '  orm_ext as "isExtension" '
+        + 'from xt.orm '
+        + 'where orm_namespace = $1 '
+        + ' and orm_type = $2 '
+        + ' and orm_context = $3';
+
+    oldOrm = executeSql(sql, [nameSpace, type, context])[0];
+
+    sequence = newJson.sequence ? newJson.sequence : 0;
+    isExtension = newJson.isExtension ? true : false;
+
+    if(oldOrm) {
+      oldJson = JSON.parse(oldOrm.json);
+      if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + nameSpace + '.' + type);
+      if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
+      
+      sql = 'update xt.orm set '
+          + ' orm_json = $1, '
+          + ' orm_seq = $2 '
+          + 'where orm_id = $3';
+
+      executeSql(sql, [json, sequence, oldOrm.id]);   
+    } else { 
+      sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
+
+      executeSql(sql, [nameSpace, type, context, json, sequence, isExtension]); 
+    }
+  }
+
+  /** 
+    Pass a record type and return an array that describes the view definition with
+    an array of items representing respective column definitions.
+
+    @param {String} view name
+    @param {String} schema name
+    @returns {Object} 
   */
   XT.Orm.viewDefinition = function(viewName, schemaName) {
     var sql = "select attnum, attname, typname, typcategory "
@@ -32,10 +117,10 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Returns an array of views dependent on the view name passed.
+    Returns an array of views dependent on the view name passed.
 
-  @param {String} view
-  @returns Array
+    @param {String} view
+    @returns Array
   */
   XT.Orm.viewDependencies = function(view) {
     var rec, viewNames = [], 
@@ -74,12 +159,12 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Return an Object Relational Map definition that includes all active extensions.
+    Return an Object Relational Map definition that includes all active extensions.
 
-  @param {String} name space
-  @param {String} type
-  @param {Boolean} indicate whether to force a refresh of the orm cached result
-  @returns {Object}
+    @param {String} name space
+    @param {String} type
+    @param {Boolean} indicate whether to force a refresh of the orm cached result
+    @returns {Object}
   */
   XT.Orm.fetch = function(nameSpace, type, refresh) {
     if(!this._maps) this._maps = [];
@@ -137,10 +222,10 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Returns the primary key name as designated in an ORM map.
+    Returns the primary key name as designated in an ORM map.
 
-  @param {Object} ORM
-  @returns String
+    @param {Object} ORM
+    @returns String
   */
   XT.Orm.primaryKey = function(orm) {
     /* find primary key */
@@ -154,11 +239,11 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /** 
-  Returns matching property from the propreties array in an ORM map.
+    Returns matching property from the propreties array in an ORM map.
 
-  @param {Object} ORM
-  @param {String} property
-  @returns Object
+    @param {Object} ORM
+    @param {String} property
+    @returns Object
   */
   XT.Orm.getProperty = function(orm, property) {
     /* look for property on the first level */
@@ -179,9 +264,9 @@ select xt.install_js('XT','Orm','xtuple', $$
   }
 
   /**
-  Create the PostgreSQL view and associated rules for an ORM.
+    Create the PostgreSQL view and associated rules for an ORM.
 
-  @param {Object} orm
+    @param {Object} orm
   */
   XT.Orm.createView = function(orm) {
     /* constants */
@@ -207,12 +292,14 @@ select xt.install_js('XT','Orm','xtuple', $$
           canCreate = orm.privileges && orm.privileges.all && orm.privileges.all.create ? true : false,
           canUpdate = orm.privileges && orm.privileges.all && orm.privileges.all.update ? true : false,
           canDelete = orm.privileges && orm.privileges.all && orm.privileges.all.delete ? true : false,
-          toOneJoins = [];
+          toOneJoins = [], ormClauses = [];
 
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name.decamelize();
 
         if(DEBUG) print(NOTICE, 'processing property ->', props[i].name);
+
+        if(props[i].name === 'type') throw new Error("Can not use 'type' as a property name.");
         
         /* process attributes */
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
@@ -244,7 +331,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
 
             /* for select */     
-            clauses.push(attr.column + ' = ' + value);
+            ormClauses.push(attr.column + ' = ' + value);
             
             /* for insert */
             insSrcCols.push(value);
@@ -396,6 +483,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               conditions.push(condition);
             }
 
+            conditions = conditions.concat(ormClauses);
             join = join.concat(conditions.join(' and '));
 
             tbls.push(join);
@@ -531,6 +619,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(DEBUG) print(NOTICE, 'process base CRUD');
         
         /* table */
+        clauses = clauses.concat(ormClauses);
         tbls.unshift(orm.table + ' ' + tblAlias);
         tbls = tbls.concat(toOneJoins);
             

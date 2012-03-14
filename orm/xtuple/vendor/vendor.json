@@ -24,6 +24,14 @@
       }
     },
     {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "vend_number",
+        "isEditable": false
+      }
+    },
+    {
       "name": "Name",
       "attr": {
         "type": "String",
@@ -42,14 +50,6 @@
       "attr": {
         "type": "String",
         "column": "vend_comments"
-      }
-    },
-    {
-      "name": "number",
-      "attr": {
-        "type": "String",
-        "column": "vend_number",
-        "isEditable": false
       }
     },
     {
@@ -88,7 +88,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "vendorType",
       "toOne": {
         "type": "VendorType",
         "column": "vend_vendtype_id"

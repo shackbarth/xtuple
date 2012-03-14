@@ -1,7 +1,7 @@
 {
   "context": "crm",
   "nameSpace": "XM",
-  "type": "ContactBrowse",
+  "type": "ContactInfo",
   "table": "cntct",
   "isExtension": true,
   "comment": "Extended by Crm",
@@ -15,7 +15,6 @@
     {
       "name": "account",
       "toOne": {
-        "isNested": true,
         "type": "AccountInfo",
         "column": "cntct_crmacct_id"
       }

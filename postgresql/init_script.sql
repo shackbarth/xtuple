@@ -30,7 +30,6 @@
 \i xt/functions/is_date.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
-\i xt/functions/sc_model_gen.sql;
 \i xt/functions/starts_with.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
@@ -58,6 +57,7 @@
 -- xt javascript
 \i xt/javascript/data.sql;
 \i xt/javascript/orm.sql;
+\i xt/javascript/record.sql;
 
 -- xt views
 \i xt/views/docinfo.sql; 
@@ -93,7 +93,7 @@
 \i xm/javascript/database_information.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/standard_journal.sql;
-\i xm/javascript/todo.sql;
+\i xm/javascript/to_do.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/invoice.sql;
 \i xm/javascript/period.sql;

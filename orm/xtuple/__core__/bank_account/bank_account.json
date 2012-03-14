@@ -51,7 +51,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "bankAccountType",
       "attr": {
         "type": "String",
         "column": "bankaccnt_type"

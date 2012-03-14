@@ -41,6 +41,50 @@
         "type": "Boolean",
         "column": "shipto_active"
       }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "isNested": true,
+        "type": "ContactInfo",
+        "column": "shipto_cntct_id"
+      }
+    },
+    {
+      "name": "address",
+      "toOne": {
+        "isNested": true,
+        "type": "AddressInfo",
+        "column": "shipto_addr_id"
+      }
+    },
+    {
+      "name": "salesRep",
+      "toOne": {
+        "type": "SalesRep",
+        "column": "shipto_salesrep_id"
+      }
+    },
+    {
+      "name": "commission",
+      "attr": {
+        "type": "Number",
+        "column": "shipto_commission"
+      }
+    },
+    {
+      "name": "taxZone",
+      "toOne": {
+        "type": "TaxZone",
+        "column": "shipto_taxzone_id"
+      }
+    },
+    {
+      "name": "shipCharge",
+      "toOne": {
+        "type": "ShipCharge",
+        "column": "shipto_shipchrg_id"
+      }
     }
   ],
   "isNestedOnly": true,

@@ -131,7 +131,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "cardType",
       "attr": {
         "type": "String",
         "column": "ccard_type"

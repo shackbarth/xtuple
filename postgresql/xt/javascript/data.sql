@@ -3,11 +3,11 @@ select xt.install_js('XT','Data','xtuple', $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /**
-  @class
+    @class
 
-  The XT.Data class includes all functions necessary to process data source requests against the database.
-  It should be instantiated as an object against which its funtion calls are made. This class enforces privilege 
-  control and as such is not and should not be dispatchable.
+    The XT.Data class includes all functions necessary to process data source requests against the database.
+    It should be instantiated as an object against which its funtion calls are made. This class enforces privilege 
+    control and as such is not and should not be dispatchable.
   */
   
   XT.Data = {
@@ -23,17 +23,17 @@ select xt.install_js('XT','Data','xtuple', $$
     DELETED_STATE: 'deleted',
 
     /** 
-    Build a SQL clause based on privileges for name space and type, and conditions and parameters passed. Input 
-    Conditions and parameters are presumed to conform to SproutCore's SC.Query syntax. 
+      Build a SQL clause based on privileges for name space and type, and conditions and parameters passed. Input 
+      Conditions and parameters are presumed to conform to SproutCore's SC.Query syntax. 
 
-    @seealso fetch
-    @seealso http://sproutcore.com/docs/#doc=SC.Query
+      @seealso fetch
+      @seealso http://sproutcore.com/docs/#doc=SC.Query
 
-    @param {String} name space
-    @param {String} type
-    @param {Object} conditions - optional
-    @param {Object} parameters - optional
-    @returns {Boolean}
+      @param {String} name space
+      @param {String} type
+      @param {Object} conditions - optional
+      @param {Object} parameters - optional
+      @returns {Boolean}
     */
     buildClause: function(nameSpace, type, conditions, parameters) {
       var ret = ' true ', cond = '', pcond = '',
@@ -102,10 +102,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Queries whether the current user has been granted the privilege passed.
+      Queries whether the current user has been granted the privilege passed.
 
-    @param {String} privilege
-    @returns {Boolean}
+      @param {String} privilege
+      @returns {Boolean}
     */
     checkPrivilege: function(privilege) {
       var ret = privilege;
@@ -126,14 +126,14 @@ select xt.install_js('XT','Data','xtuple', $$
     },
   
     /**
-    Validate whether user has read access to data. If a record is passed, check personal privileges of
-    that record. 
+      Validate whether user has read access to data. If a record is passed, check personal privileges of
+      that record. 
 
-    @param {String} name space
-    @param {String} type name
-    @param {Object} record - optional
-    @param {Boolean} is top level, default is true
-    @returns {Boolean}
+      @param {String} name space
+      @param {String} type name
+      @param {Object} record - optional
+      @param {Boolean} is top level, default is true
+      @returns {Boolean}
     */
     checkPrivileges: function(nameSpace, type, record, isTopLevel) {
       var isTopLevel = isTopLevel !== false ? true : false,
@@ -207,10 +207,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
     
     /**
-    Commit array columns with their own statements 
-    
-    @param {Object} record object to be committed
-    @param {Object} view definition object
+      Commit array columns with their own statements 
+      
+      @param {Object} record object to be committed
+      @param {Object} view definition object
     */
     commitArrays: function(nameSpace, record, viewdef) {
       for(var prop in record) {
@@ -231,10 +231,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Commit metrics that have changed to the database.
+      Commit metrics that have changed to the database.
 
-    @param {Object} metrics
-    @returns Boolean
+      @param {Object} metrics
+      @returns Boolean
     */
     commitMetrics: function(metrics) {
       for(var key in metrics) {
@@ -250,10 +250,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Commit a record to the database 
+      Commit a record to the database 
 
-    @param {String} name space qualified record type
-    @param {Object} data object
+      @param {String} name space qualified record type
+      @param {Object} data object
     */
     commitRecord: function(key, value, encryptionKey) {
       var nameSpace = key.beforeDot().camelize().toUpperCase(),
@@ -277,10 +277,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Commit insert to the database 
+      Commit insert to the database 
 
-    @param {String} name space qualified record type
-    @param {Object} the record to be committed
+      @param {String} name space qualified record type
+      @param {Object} the record to be committed
     */
     createRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
@@ -353,10 +353,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Commit update to the database 
+      Commit update to the database 
 
-    @param {String} name space qualified record type
-    @param {Object} the record to be committed
+      @param {String} name space qualified record type
+      @param {Object} the record to be committed
     */
     updateRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
@@ -426,10 +426,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Commit deletion to the database 
+      Commit deletion to the database 
 
-    @param {String} name space qualified record type
-    @param {Object} the record to be committed
+      @param {String} name space qualified record type
+      @param {Object} the record to be committed
     */
     deleteRecord: function(key, value) {
       var record = XT.decamelize(value), sql = '',
@@ -447,9 +447,9 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /** 
-    Returns the currently logged in user's username.
-    
-    @returns {String} 
+      Returns the currently logged in user's username.
+      
+      @returns {String} 
     */
     currentUser: function() {
       var res;
@@ -465,13 +465,13 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /** 
-    Adds 'type' and 'dataState' properties and camelizes record property names.
+      Adds 'type' and 'dataState' properties and camelizes record property names.
 
-    @param {String} name space
-    @param {String} type
-    @param {Object} the record to be normalized
-    @param {Object} view definition object
-    @returns {Object} 
+      @param {String} name space
+      @param {String} type
+      @param {Object} the record to be normalized
+      @param {Object} view definition object
+      @returns {Object} 
     */
     normalize: function(nameSpace, type, record, encryptionKey) {
       var schemaName = nameSpace.decamelize(),
@@ -538,13 +538,13 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Retreives a single record from the database. If the user does not have appropriate privileges an
-    error will be thrown.
-    
-    @param {String} namespace qualified record type
-    @param {Number} record id
-    @param {String} encryption key
-    @returns {Object} 
+      Retreives a single record from the database. If the user does not have appropriate privileges an
+      error will be thrown.
+      
+      @param {String} namespace qualified record type
+      @param {Number} record id
+      @param {String} encryption key
+      @returns {Object} 
     */
     retrieveRecord: function(recordType, id, encryptionKey) {
       var nameSpace = recordType.beforeDot(), 
@@ -582,10 +582,10 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
-    Returns a array of key value pairs of metric settings that correspond with an array of passed keys.
-    
-    @param {Array} array of metric names
-    @returns {Array} 
+      Returns a array of key value pairs of metric settings that correspond with an array of passed keys.
+      
+      @param {Array} array of metric names
+      @returns {Array} 
     */
     retrieveMetrics: function(keys) {
       var sql = 'select metric_name as setting, metric_value as value '
@@ -609,11 +609,11 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /** 
-    Convert a record object to PostgresSQL row formatted string.
+      Convert a record object to PostgresSQL row formatted string.
 
-    @param {String} the column type
-    @param {Object} data to convert
-    @returns {String} a string formatted like a postgres RECORD datatype 
+      @param {String} the column type
+      @param {Object} data to convert
+      @returns {String} a string formatted like a postgres RECORD datatype 
     */
     rowify: function(key, value) {
       var viewName = key.afterDot().decamelize(), 
