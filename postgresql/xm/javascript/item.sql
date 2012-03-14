@@ -53,7 +53,7 @@ select xt.install_js('XM','item','xtuple', $$
             + "where uomtype_name=$2 "
             + " and itemuomconv_item_id=$1) as units ";
 
-     return JSON.stringify(executeSql(sql, [itemId, type]));
+     return JSON.stringify(executeSql(sql, [itemId, type])[0]);
   }
 
 $$ );

@@ -58,11 +58,9 @@ select xt.install_js('XT','Orm','xtuple', $$
         type = newJson.type,
         context = newJson.context,
         sql;
-
     if(!nameSpace) throw new Error("A name space is required");
     if(!type) throw new Error("A type is required");
     if(!context) throw new Error("A context is required");
-
     sql = 'select orm_id as "id", '
         + '  orm_json as "json", '
         + '  orm_ext as "isExtension" '
@@ -70,26 +68,20 @@ select xt.install_js('XT','Orm','xtuple', $$
         + 'where orm_namespace = $1 '
         + ' and orm_type = $2 '
         + ' and orm_context = $3';
-
     oldOrm = executeSql(sql, [nameSpace, type, context])[0];
-
     sequence = newJson.sequence ? newJson.sequence : 0;
     isExtension = newJson.isExtension ? true : false;
-
     if(oldOrm) {
       oldJson = JSON.parse(oldOrm.json);
       if(oldJson.isSystem && !newJson.isSystem) throw new Error("A system map already exists for" + nameSpace + '.' + type);
-      if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);
-      
+      if(oldOrm.isExtension !== isExtension) throw new Error("Can not change extension state for " + nameSpace + '.' + type);   
       sql = 'update xt.orm set '
           + ' orm_json = $1, '
           + ' orm_seq = $2 '
           + 'where orm_id = $3';
-
       executeSql(sql, [json, sequence, oldOrm.id]);   
     } else { 
       sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
-
       executeSql(sql, [nameSpace, type, context, json, sequence, isExtension]); 
     }
   }
@@ -112,7 +104,6 @@ select xt.install_js('XT','Orm','xtuple', $$
 	    + "and a.attrelid = c.oid "
 	    + "and a.atttypid = t.oid "
 	    + "order by attnum";
-
     return executeSql(sql, [ viewName, schemaName ]);
   }
 
@@ -135,14 +126,12 @@ select xt.install_js('XT','Orm','xtuple', $$
             + " and (refclassid='pg_class'::regclass) "
             + ' and (refobjid::regclass::text = $1) '
             + " and (nspname || '.' || relname != $1) "
-
     rec = executeSql(sql, [view])
 
     /*  Loop through view dependencies */
     for(var i = 0; i < rec.length; i++) {
       var viewName = rec[i].viewName,
-          res = XT.Orm.viewDependencies(nsp + '.' + viewName);
-   
+          res = XT.Orm.viewDependencies(nsp + '.' + viewName); 
       for(var r = 0; r < res.length; r++) {
         if(viewNames.contains(res[r])) {
           viewNames.splice(viewNames.indexOf(res[r]), 1);
@@ -167,11 +156,9 @@ select xt.install_js('XT','Orm','xtuple', $$
     @returns {Object}
   */
   XT.Orm.fetch = function(nameSpace, type, refresh) {
-    if(!this._maps) this._maps = [];
-    
+    if(!this._maps) this._maps = [];  
     var ret, recordType = nameSpace + '.'+ type,
-        res = refresh ? null : this._maps.findProperty('recordType', recordType);
-    
+        res = refresh ? null : this._maps.findProperty('recordType', recordType);  
     if(res) ret = res.map;
     else {
      /* get base */
@@ -182,14 +169,11 @@ select xt.install_js('XT','Orm','xtuple', $$
               + ' and not orm_ext '
               + ' and orm_active ',
           res = executeSql(sql, [ nameSpace, type ]);
-
       if(!res.length) return false;
-
       ret = JSON.parse(res[0].json);
 
       /* get extensions and merge them into the base */
-      if(!ret.extensions) ret.extensions = [];
-      
+      if(!ret.extensions) ret.extensions = [];     
       sql = 'select orm_json as json '
               + 'from xt.orm '
               + 'where orm_namespace=$1'
@@ -198,11 +182,9 @@ select xt.install_js('XT','Orm','xtuple', $$
               + ' and orm_active '
               + 'order by orm_seq';
       res = executeSql(sql, [ nameSpace, type ]);
-
       for(var i = 0; i < res.length; i++) {
         var orm = JSON.parse(res[i].json),
             ext = {};
-
         ext.context = orm.context;
         ext.comment = orm.comment;
         ext.table = orm.table;
@@ -210,14 +192,12 @@ select xt.install_js('XT','Orm','xtuple', $$
         ext.relations = orm.relations;
         ext.properties = orm.properties;
         ext.order = orm.order;
-
         ret.extensions.push(ext);
       }
 
       /* cache the result so we don't requery needlessly */
       this._maps.push({ "recordType": recordType, "map": ret});
     }
-
     return ret;
   }
 
@@ -234,7 +214,6 @@ select xt.install_js('XT','Orm','xtuple', $$
          orm.properties[i].attr.isPrimaryKey)
         return orm.properties[i].name;
     }
-
     return false;
   }
 
@@ -259,7 +238,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(ret) return ret;
       }
     }
-
     return false;
   }
 
@@ -282,7 +260,6 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     /* internal function for processing orm and it's extensions recursively */
     processOrm = function(orm) {
-
       var props = orm.properties,
           tblAlias = orm.table === base.table ? 't1' : 't' + tbl, 
           pKey = orm.isExtension ? orm.properties.findProperty('name', XT.Orm.primaryKey(orm)) : null,
@@ -293,26 +270,19 @@ select xt.install_js('XT','Orm','xtuple', $$
           canUpdate = orm.privileges && orm.privileges.all && orm.privileges.all.update ? true : false,
           canDelete = orm.privileges && orm.privileges.all && orm.privileges.all.delete ? true : false,
           toOneJoins = [], ormClauses = [];
-
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name.decamelize();
-
         if(DEBUG) print(NOTICE, 'processing property ->', props[i].name);
-
         if(props[i].name === 'type') throw new Error("Can not use 'type' as a property name.");
         
         /* process attributes */
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
-
-          if(DEBUG) print(NOTICE, 'building attribute');
-        
+          if(DEBUG) print(NOTICE, 'building attribute');      
           var attr = props[i].attr ? props[i].attr : props[i].toOne,
               isVisible = attr.isVisible !== false ? true : false,
               isEditable = attr.isEditable !== false ? true : false,
               isPrimaryKey = attr.isPrimaryKey ? true : false;
-
           if(!attr.type) throw new Error('No type was defined on property ' + props[i].name);
-
           if(isVisible) {
             /* if it is composite, assign the table itself */
             col = attr.type.decamelize() === orm.table ? tblAlias : tblAlias + '.' + attr.column;
@@ -346,21 +316,16 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process toOne  */
         if(props[i].toOne && props[i].toOne.isNested) {
- 
-          if(DEBUG) print(NOTICE, 'building toOne');
-        
+          if(DEBUG) print(NOTICE, 'building toOne');       
           var toOne = props[i].toOne,
               table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
               type = table.afterDot(),
               inverse = toOne.inverse ? toOne.inverse.decamelize() : 'guid',
               isEditable = toOne.isEditable !== false ? true : false,
               toOneAlias, join;
-
           if(!type) throw new Error('No type was defined on property ' + props[i].name);
-
           tbl++;
-          toOneAlias = 't' + tbl;
-          
+          toOneAlias = 't' + tbl;        
           join = '{qualified} join {table} as {toOneAlias} on {toOneAlias}.{inverse} = {tableAlias}.{column}'
                  .replace(/{qualified}/, toOne.isChild ? '' : 'left')
                  .replace(/{table}/, table)
@@ -368,9 +333,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                  .replace(/{inverse}/, inverse)
                  .replace(/{tableAlias}/, tblAlias)
                  .replace(/{column}/, toOne.column);
-
-          toOneJoins.push(join);
-            
+          toOneJoins.push(join);           
           col = toOneAlias + ' as  "' + alias + '"';
           cols.push(col);
 
@@ -392,12 +355,9 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* process toMany */
-        if(props[i].toMany) {
-        
+        if(props[i].toMany) {      
           if(DEBUG) print(NOTICE, 'building toMany');
-
-         if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);
-        
+         if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);       
           var toMany = props[i].toMany,
               table = base.nameSpace + '.' + toMany.type.decamelize(),
               type = toMany.type.decamelize(),     
@@ -405,13 +365,11 @@ select xt.install_js('XT','Orm','xtuple', $$
               inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
               sql, col = 'array({select}) as "{alias}"',
               conditions = toMany.column ? type + '.' + inverse + ' = ' + tblAlias + '.' + toMany.column : 'true';
-
           col = col.replace(/{select}/,
              SELECT.replace(/{columns}/, column)
                    .replace(/{table}/, table) 
                    .replace(/{conditions}/, conditions))
-                   .replace(/{alias}/, alias);
-              
+                   .replace(/{alias}/, alias);             
           cols.push(col);
       
           /* build array for delete cascade */
@@ -419,30 +377,24 @@ select xt.install_js('XT','Orm','xtuple', $$
              toMany.deleteDelegate && 
              toMany.deleteDelegate.table && 
              toMany.deleteDelegate.relations) {
-
             var rel = toMany.deleteDelegate.relations,
                 table = toMany.deleteDelegate.table,
                 conditions = [];
-
             for(var n = 0; n < rel.length; n++) {
               var col = rel[n].column,
                   value = rel[n].inverse ? 
                           'old.' + rel[n].inverse : 
                           isNaN(rel[n].value - 0) ? 
                           "'" + rel[n].value + "'" :
-                          rel[n].value;
-                          
+                          rel[n].value;                         
               conditions.push(col + ' = ' + value);
             }
-
             sql = DELETE.replace(/{table}/, table)
                         .replace(/{conditions}/, conditions.join(' and '));
-
             delCascade.push(sql);
           } else if (toMany.isNested) {
             sql = DELETE.replace(/{table}/, table)
-                        .replace(/{conditions}/, type + '.' + inverse  + ' = ' + 'old.{pKeyAlias}'); 
-                        
+                        .replace(/{conditions}/, type + '.' + inverse  + ' = ' + 'old.{pKeyAlias}');                       
             delCascade.push(sql); 
           }
         }
@@ -455,7 +407,6 @@ select xt.install_js('XT','Orm','xtuple', $$
       if(orm.isExtension) {
         var upsTgtCols = [],
             upsSrcCols = [];
-
         if(DEBUG) print(NOTICE, 'process CRUD extension');
 
         /* process relations (if different table) */
@@ -463,14 +414,11 @@ select xt.install_js('XT','Orm','xtuple', $$
           if(orm.relations) {
             var join = orm.isChild ? ' join ' : ' left join ',
                 conditions = [];
-
-            join = join.concat(orm.table, ' ', tblAlias, ' on ');
-      
+            join = join.concat(orm.table, ' ', tblAlias, ' on ');    
             for(var i = 0; i < orm.relations.length; i++) {
               var rel = orm.relations[i], value,
                   inverse = rel.inverse ? rel.inverse : 'guid',
-                  condition; 
-        
+                  condition;       
               for(var i = 0; i < base.properties.length; i++) {
                 if(base.properties[i].name === inverse) {
                   var obj = base.properties[i].attr ? base.properties[i].attr : base.properties[i].toOne;
@@ -478,46 +426,36 @@ select xt.install_js('XT','Orm','xtuple', $$
                   break;
                 }
               }
-
               condition = tblAlias + '.' + rel.column + ' = ' + value;
               conditions.push(condition);
             }
-
             conditions = conditions.concat(ormClauses);
             join = join.concat(conditions.join(' and '));
-
             tbls.push(join);
           }
         }
-
         tbls = tbls.concat(toOneJoins);
         
         /* build rules */
         conditions = [];
-
         if(DEBUG) print(NOTICE, 'process extension relations');
-
-        if(!orm.relations) throw new Error("Extension must have at least one relation defined.");
-          
+        if(!orm.relations) throw new Error("Extension must have at least one relation defined.");         
         for(var i = 0; i < orm.relations.length; i++) {
           var rel = orm.relations[i], value;
-
           if(rel.value) {
             value = isNaN(rel.value - 0) ? "'" + rel.value + "'" : rel.value;
           } else if (rel.inverse) {
             value = '{state}.' + rel.inverse;
           } else {
             value = '{state}.guid';
-          }
-                     
+          }                  
           conditions.push(rel.column + ' = ' + value);
           upsTgtCols.push(rel.column);
           upsSrcCols.push(value);
         }
 
         /* insert rules for extensions */
-        if(DEBUG) print(NOTICE, 'process extension INSERT');
-        
+        if(DEBUG) print(NOTICE, 'process extension INSERT');       
         if(canCreate && insSrcCols.length) {
           if(base.table === orm.table) {
             rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
@@ -539,17 +477,14 @@ select xt.install_js('XT','Orm','xtuple', $$
                               .replace(/{columns}/, upsTgtCols.join(',') + ',' + insTgtCols.join(','))
                               .replace(/{expressions}/, upsSrcCols.join(',')
                               .replace(/{state}/, 'new') + ',' + insSrcCols.join(',')));
-          }
-          
+          }       
           rules.push(rule); 
         }
 
         /* update rules for extensions */
-        if(DEBUG) print(NOTICE, 'process extension UPDATE');
-        
+        if(DEBUG) print(NOTICE, 'process extension UPDATE');     
         if(canUpdate && updCols.length) {
           var rule;
-
           if(!orm.isChild && base.table !== orm.table) {
             /* insert rule for case where record doesn't yet exist */
             rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
@@ -564,8 +499,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                         INSERT.replace(/{table}/, orm.table)
                               .replace(/{columns}/, upsTgtCols.join(',') + ',' + insTgtCols.join(','))
                               .replace(/{expressions}/, upsSrcCols.join(',')
-                              .replace(/{state}/, 'old') + ',' + insSrcCols.join(',')));
-                             
+                              .replace(/{state}/, 'old') + ',' + insSrcCols.join(',')));                            
             rules.push(rule);
 
             /* update rule for case where record does exist */
@@ -597,8 +531,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* only delete where circumstances allow */
-        if(DEBUG) print(NOTICE, 'process extension DELETE');
-        
+        if(DEBUG) print(NOTICE, 'process extension DELETE');      
         if(canDelete && !orm.isChild && base.table !== orm.table) {
           rule = CREATE_RULE.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') 
                             .replace(/{event}/, 'delete')
@@ -607,27 +540,23 @@ select xt.install_js('XT','Orm','xtuple', $$
                             .replace(/{command}/,
                       DELETE.replace(/{table}/, orm.table) 
                             .replace(/{conditions}/, conditions.join(' and '))
-                            .replace(/{state}/, 'old')); 
-                            
+                            .replace(/{state}/, 'old'));                          
           rules.push(rule);
         }
 
       /* base orm */
       } else {
         var rule;
-
         if(DEBUG) print(NOTICE, 'process base CRUD');
         
         /* table */
         clauses = clauses.concat(ormClauses);
         tbls.unshift(orm.table + ' ' + tblAlias);
-        tbls = tbls.concat(toOneJoins);
-            
+        tbls = tbls.concat(toOneJoins);           
         if(orm.privileges || orm.isNestedOnly) {
           
           /* insert rule */
-         if(DEBUG) print(NOTICE, 'process base INSERT');
-          
+         if(DEBUG) print(NOTICE, 'process base INSERT');        
           if(canCreate && insSrcCols.length) {
             rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
                               .replace(/{event}/, 'insert')
@@ -643,13 +572,11 @@ select xt.install_js('XT','Orm','xtuple', $$
                               .replace(/{table}/, viewName)
                               .replace(/{where}/, '')
                               .replace(/{command}/,'nothing');
-          }
-                
+          }              
           rules.push(rule);
 
           /* update rule */
-          if(DEBUG) print(NOTICE, 'process base UPDATE');
-          
+          if(DEBUG) print(NOTICE, 'process base UPDATE');         
           if(canUpdate && pKeyCol && updCols.length) {
             rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                               .replace(/{event}/, 'update')
@@ -666,12 +593,10 @@ select xt.install_js('XT','Orm','xtuple', $$
                               .replace(/{where}/, '')
                               .replace(/{command}/, 'nothing'); 
           }
-
           rules.push(rule); 
 
           /* delete rule */
-          if(DEBUG) print(NOTICE, 'process base DELETE');
-          
+          if(DEBUG) print(NOTICE, 'process base DELETE');       
           if(canDelete && pKeyCol) {
             rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                               .replace(/{event}/, 'delete')
@@ -699,10 +624,8 @@ select xt.install_js('XT','Orm','xtuple', $$
                             .replace(/{event}/, 'insert')
                             .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
-                            .replace(/{command}/, 'nothing'); 
-                            
+                            .replace(/{command}/, 'nothing');                           
           rules.push(rule);
-
           rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                             .replace(/{event}/, 'update')
                             .replace(/{table}/, viewName)
@@ -710,40 +633,32 @@ select xt.install_js('XT','Orm','xtuple', $$
                             .replace(/{command}/, 'nothing'); 
                             
           rules.push(rule);
-
           rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                             .replace(/{event}/, 'delete')
                             .replace(/{table}/, viewName)
                             .replace(/{where}/, '')
-                            .replace(/{command}/, 'nothing'); 
-                            
+                            .replace(/{command}/, 'nothing');                            
           rules.push(rule);
         }
       }
 
       /* process and add order by array */
-      if(DEBUG) print(NOTICE, 'process base order array');
-      
+      if(DEBUG) print(NOTICE, 'process base order array');     
       if(orm.order) {
         for(var i = 0; i < orm.order.length; i++) {
           orm.order[i] = orm.order[i].replace(RegExp(table + ".", "g"), tblAlias + ".");
           orderBy.push(orm.order[i]);
         }
       }
-
       if(orm.comment) comments = comments.concat('\n', orm.comment);
-
       tbl++;
 
       /* add extensions */
-      if(DEBUG) print(NOTICE, 'process base extensions');
-      
+      if(DEBUG) print(NOTICE, 'process base extensions');     
       if(orm.extensions) {
         for(var i = 0; i < orm.extensions.length; i++) {
           var ext = orm.extensions[i];
-
-          ext.isExtension = true;
-         
+          ext.isExtension = true;         
           processOrm(ext);
         }
       }
@@ -771,32 +686,25 @@ select xt.install_js('XT','Orm','xtuple', $$
             .replace(/{tables}/, tbls.join(' '))
             .replace(/{where}/, clauses.length ? 'where ' + clauses.join(' and ') : '')
             .replace(/{order}/, orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
-
     if(DEBUG) print(NOTICE, 'query', query);
-
     executeSql(query);
 
     /* Add comment */
     query = "comment on view {name} is '{comments}'"
             .replace(/{name}/, viewName)
-            .replace(/{comments}/, comments); 
-            
+            .replace(/{comments}/, comments);           
     executeSql(query);
     
     /* Apply the rules */
     for(var i = 0; i < rules.length; i++) {
-      if(DEBUG) print(NOTICE, 'rule', rules[i]);
-      
+      if(DEBUG) print(NOTICE, 'rule', rules[i]);   
       executeSql(rules[i]);
     }
 
     /* Grant access to xtrole */
     query = 'grant all on {view} to xtrole'
-            .replace(/{view}/, viewName);
-            
+            .replace(/{view}/, viewName);           
     executeSql(query); 
-
   }
-
 $$ );
 

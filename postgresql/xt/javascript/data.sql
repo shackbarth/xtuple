@@ -39,38 +39,38 @@ select xt.install_js('XT','Data','xtuple', $$
       var ret = ' true ', cond = '', pcond = '',
           map = XT.Orm.fetch(nameSpace, type),
           privileges = map.privileges;
-
+          
       /* handle passed conditions */
       if(conditions) {
+      
         /* replace special operators */
         cond = conditions.replace('BEGINS_WITH','~^')
                          .replace('ENDS_WITH','~?')
                          .replace('CONTAINS','~')
                          .replace('MATCHES','~')
-                         .replace('ANY', '<@ array')
+                         .replace('ANY', '<@')
                          .decamelize();
 
-        quoteIfString = function(arg) { 
-          if(typeof arg === 'string') { 
-            return "'" + arg + "'"; 
-          }
-
+        /* helper function */
+        format = function(arg) { 
+          var type = XT.typeOf(arg);
+          if(type === 'string') return "'" + arg + "'"; 
+          else if(type === 'array') return "array[" + arg + "]";   
           return arg;
-        }
-        
+        }      
+
+        /* evaluate */
         if(parameters) {
           if(cond.indexOf('%@') > 0) {  /* replace wild card tokens */
             for(var i = 0; i < parameters.length; i++) {
               var n = cond.indexOf('%@'),
                   val =  quoteIfString(parameters[i]);
-
               cond = cond.replace(/%@/,val);
             }
           } else {  /* replace parameterized tokens */
             for(var prop in parameters) {
               var param = '{' + prop.decamelize() + '}',
-                  val = quoteIfString(parameters[prop]);
-              
+                  val = format(parameters[prop]); 
               cond = cond.replace(param, val);
             }
           }
@@ -86,18 +86,14 @@ select xt.install_js('XT','Data','xtuple', $$
           (this.checkPrivilege(privileges.personal.read) || 
            this.checkPrivilege(privileges.personal.update)))) {
         var properties = privileges.personal.properties, conds = [], col;
-
         for(var i = 0; i < properties.length; i++) {
           col = map.properties.findProperty('name', properties[i]).toOne ? "(" + properties[i] + ").username" : properties[i];
           conds.push(col);
         }
-
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
-      }
-      
+      }    
       ret = cond.length ? '(' + cond + ')' : ret;
       ret = pcond.length ? (cond.length ? ret.concat(' and ', pcond) : pcond) : ret;
-
       return ret;
     },
 
@@ -109,19 +105,14 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     checkPrivilege: function(privilege) {
       var ret = privilege;
-
       if (typeof privilege === 'string') {
         if(!this._grantedPrivs) this._grantedPrivs = [];
-
-        if(this._grantedPrivs.contains(privilege)) return true;
-    
+        if(this._grantedPrivs.contains(privilege)) return true;  
         var res = executeSql("select checkPrivilege($1) as is_granted", [ privilege ]),
           ret = res[0].is_granted;
-
         /* cache the result locally so we don't requery needlessly */
         if(ret) this._grantedPrivs.push(privilege);
       }
-
       return ret;
     },
   
@@ -147,19 +138,16 @@ select xt.install_js('XT','Data','xtuple', $$
                     record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* if there is no ORM, this isn't a table data type so no check required */
-      if (DEBUG) print(NOTICE, 'orm is ->', JSON.stringify(map, null, 2));
-       
+      if (DEBUG) print(NOTICE, 'orm is ->', JSON.stringify(map, null, 2));    
       if(!map) return true;
       
       /* can not access 'nested only' records directly */
-      if(DEBUG) print(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly);
-      
+      if(DEBUG) print(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly);    
       if(isTopLevel && map.isNestedOnly) return false
         
       /* check privileges - first do we have access to anything? */
       if(privileges) { 
-        if(DEBUG) print(NOTICE, 'privileges found');
-        
+        if(DEBUG) print(NOTICE, 'privileges found');      
         if(committing) {
           if(DEBUG) print(NOTICE, 'is committing');
           
@@ -185,21 +173,18 @@ select xt.install_js('XT','Data','xtuple', $$
       
       /* if we're checknig an actual record and only have personal privileges, see if the record allows access */
       if(record && !isGrantedAll && isGrantedPersonal) {
-        if(DEBUG) print(NOTICE, 'checking record level personal privileges');
-        
+        if(DEBUG) print(NOTICE, 'checking record level personal privileges');    
         var that = this,
 
         /* shared checker function that checks 'personal' properties for access rights */
         checkPersonal = function(record) {
           var i = 0, isGranted = false,
               props = privileges.personal.properties;
-
           while(!isGranted && i < props.length) {
             var prop = props[i];
             isGranted = record[prop].username === that.currentUser();
             i++;
           }
-
           return isGranted;
         }
         
@@ -207,16 +192,14 @@ select xt.install_js('XT','Data','xtuple', $$
         if(committing && (action === 'update' || action === 'delete')) {
           var pkey = XT.Orm.primaryKey(map),
               old = this.retrieveRecord(nameSpace + '.' + type, record[pkey]);
-
           isGrantedPersonal = checkPersonal(old);
+          
         /* ...otherwise check personal privileges on the record passed */
         } else if(action === 'read') {
           isGrantedPersonal = checkPersonal(record);
         }
       }
-
-      if(DEBUG) print(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);
-    
+      if(DEBUG) print(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);  
       return isGrantedAll || isGrantedPersonal;
     },
     
@@ -236,7 +219,6 @@ select xt.install_js('XT','Data','xtuple', $$
             isNaN(record[prop][0])) {
             var key = nameSpace.toUpperCase() + '.' + coldef['typname'].substring(1).classify(); /* strip underscore from (array) type name */
                 values = record[prop]; 
-
           for(var i in values) {
             this.commitRecord(key, values[i], false);
           }
@@ -252,14 +234,11 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     commitMetrics: function(metrics) {
       for(var key in metrics) {
-        var value = metrics[key]; 
-      
+        var value = metrics[key];      
         if(typeof value === 'boolean') value = value ? 't' : 'f';
-        else if(typeof value === 'number') value = value.toString();
-      
+        else if(typeof value === 'number') value = value.toString();    
         executeSql('select setMetric($1,$2)', [key, value]);
       }
-
       return true;
     },
 
@@ -272,11 +251,8 @@ select xt.install_js('XT','Data','xtuple', $$
     commitRecord: function(key, value, encryptionKey) {
       var nameSpace = key.beforeDot().camelize().toUpperCase(),
           type = key.afterDot().classify();
-
       var hasAccess = this.checkPrivileges(nameSpace, type, value, false);
-
-      if(!hasAccess) throw new Error("Access Denied.");
-      
+      if(!hasAccess) throw new Error("Access Denied.");    
       if(value && value.dataState) {
         if(value.dataState === this.CREATED_STATE) { 
           this.createRecord(key, value, encryptionKey);
@@ -304,10 +280,9 @@ select xt.install_js('XT','Data','xtuple', $$
           record = XT.decamelize(value),
           sql = '', columns, expressions,
           props = [], params = [];
-
       delete record['data_state'];
       delete record['type'];
-
+      
       /* build up the content for insert of this record */
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop),
@@ -322,7 +297,6 @@ select xt.install_js('XT','Data','xtuple', $$
               record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                              .replace(/{value}/, record[prop])
                              .replace(/{encryptionKey}/, encryptionKey);
-
               params.push(record[prop]);
             } else { 
               throw new Error("No encryption key provided.");
@@ -331,13 +305,11 @@ select xt.install_js('XT','Data','xtuple', $$
             if (coldef.typcategory === this.COMPOSITE_TYPE) { 
               if(record[prop] !== null) {
                 var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
-
                 record[prop] = row;
               } else {
                 record[prop] = "null::" + schemaName + '.' + coldef.typname;
               }
-            } 
-            
+            }           
             if(coldef.typcategory === this.STRING_TYPE ||
                coldef.typcategory === this.DATE_TYPE) { 
               params.push("'" + record[prop] + "'");
@@ -349,7 +321,6 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
       }
-
       columns = props.join(', ');
       expressions = params.join(', ');
       sql = 'insert into {recordType} ({columns}) values ({expressions})'
@@ -380,7 +351,6 @@ select xt.install_js('XT','Data','xtuple', $$
           pkey = XT.Orm.primaryKey(orm),
           record = XT.decamelize(value),
           sql = '', expressions, params = [];
-
       delete record['data_state'];
       delete record['type'];
 
@@ -395,7 +365,6 @@ select xt.install_js('XT','Data','xtuple', $$
             record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                            .replace(/{value}/, record[prop])
                            .replace(/{encryptionKey}/, encryptionKey);
-
             params.push(prop.concat(" = ", record[prop]));
           } else {
             throw new Error("No encryption key provided.");
@@ -404,8 +373,7 @@ select xt.install_js('XT','Data','xtuple', $$
           if(record[prop] !== null) { 
             if (coldef.typcategory === this.COMPOSITE_TYPE) {
               if(record[prop] !== null) {
-                var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
-              
+                var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);         
                 record[prop] = row;
               } else {
                 record[prop] = "null::" + schemaName + '.' + coldef.typname;
@@ -428,8 +396,7 @@ select xt.install_js('XT','Data','xtuple', $$
       sql = 'update {recordType} set {expressions} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
             .replace(/{expressions}/, expressions)
-            .replace(/{primaryKey}/, pkey);
-      
+            .replace(/{primaryKey}/, pkey);    
       if(DEBUG) { print(NOTICE, 'sql =', sql); }
       
       /* commit the record */
@@ -449,11 +416,9 @@ select xt.install_js('XT','Data','xtuple', $$
       var record = XT.decamelize(value), sql = '',
           orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
           pkey = XT.Orm.primaryKey(orm);
-
       sql = 'delete from {recordType} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
-            .replace(/{primaryKey}/, pkey);
-      
+            .replace(/{primaryKey}/, pkey);     
       if(DEBUG) { print(NOTICE, 'sql =', sql); }
       
       /* commit the record */
@@ -467,14 +432,12 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     currentUser: function() {
       var res;
-
       if(!this._currentUser) {
         res = executeSql("select getEffectiveXtUser() as curr_user");
 
         /* cache the result locally so we don't requery needlessly */
         this._currentUser = res[0].curr_user;
       }
-
       return this._currentUser;
     },
 
@@ -565,9 +528,7 @@ select xt.install_js('XT','Data','xtuple', $$
           type = recordType.afterDot(),
           map = XT.Orm.fetch(nameSpace, type),
           ret, sql, pkey = XT.Orm.primaryKey(map), i = 0;
-
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
-
       sql = "select * from {schema}.{table} where {primaryKey} = $1;"
             .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{table}/, type.decamelize())
@@ -579,13 +540,10 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* query the map */
       if(DEBUG) print(NOTICE, 'sql = ', sql);
-
       ret = executeSql(sql, [id]);
-
       if(!ret.length) throw new Error('No record found for {recordType} id {id}'
                                       .replace(/{recordType}/, recordType)
                                       .replace(/{id}/, id));
-
       ret = this.normalize(nameSpace, type, ret[0], encryptionKey);
 
       /* check privileges again, this time against record specific criteria where applicable */
@@ -605,11 +563,8 @@ select xt.install_js('XT','Data','xtuple', $$
       var sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
               + 'where metric_name in ({keys})', ret; 
-
       for(var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
-
       sql = sql.replace(/{keys}/, keys.join(','));
-
       ret =  executeSql(sql);
 
       /* recast where applicable */
@@ -618,7 +573,6 @@ select xt.install_js('XT','Data','xtuple', $$
         else if(ret[i].value === 'f') ret[i].value = false
         else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
       }
-
       return ret;
     },
 
@@ -639,7 +593,6 @@ select xt.install_js('XT','Data','xtuple', $$
       /* remove potential fields not part of data definition */
       delete record['data_state'];
       delete record['type'];
-
       for(var prop in record) {
         var coldef = viewdef.findProperty('attname', prop);
         if(prop) {
@@ -659,11 +612,8 @@ select xt.install_js('XT','Data','xtuple', $$
           props.push('null');
         }
       }
-
       ret = ret.concat('(', props.join(','), ')');
-
-      if(DEBUG) { print(NOTICE, 'rowify = ', ret); }
-      
+      if(DEBUG) { print(NOTICE, 'rowify = ', ret); }    
       return ret;
     }
   }
