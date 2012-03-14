@@ -13,7 +13,7 @@ select xt.install_js('XM','item','xtuple', $$
    @returns {Array}
   */
   XM.Item.sellingUnits = function(itemId) {
-     return XT.Item._units(itemId, 'Selling');
+     return XM.Item._units(itemId, 'Selling');
   }
 
   /** 
@@ -23,7 +23,7 @@ select xt.install_js('XM','item','xtuple', $$
    @returns {Array}
   */
   XM.Item.materialIssueUnits = function(itemId) {
-     return XT.Item._units(itemId, '"MaterialIssue"');
+     return XM.Item._units(itemId, '"MaterialIssue"');
   }
   
   /** @private
@@ -33,7 +33,7 @@ select xt.install_js('XM','item','xtuple', $$
    @returns {Array}
   */
   XM.Item._units = function(itemId, type) {
-    var sql = "select * from xm.unit where guid in ("
+    var sql = "select array("
             + "select uom_id "
             + "from item "
             + "  join uom on item_inv_uom_id=uom_id "
@@ -51,7 +51,7 @@ select xt.install_js('XM','item','xtuple', $$
             + "  join itemuom on itemuom_itemuomconv_id=itemuomconv_id "
             + "  join uomtype on uomtype_id=itemuom_uomtype_id "
             + "where uomtype_name=$2 "
-            + " and itemuomconv_item_id=$1) ";
+            + " and itemuomconv_item_id=$1) as units ";
 
      return JSON.stringify(executeSql(sql, [itemId, type]));
   }
