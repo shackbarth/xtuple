@@ -240,6 +240,5 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   
 }) ;
 
-XM.generalLedger = XM.GeneralLedger.create();
-
-
+// DOES NOT WORK
+// XM.ready(function() { setTimeout(function() { XM.generalLedger = XM.GeneralLedger.create(); }, 4000); });
