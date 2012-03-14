@@ -201,7 +201,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     this.updateErrors(err, val < 0);
 
     return errors;
-  }.observes('number', 'customer', 'linesLength', 'total'),
+  }.observes('invoiceDate', 'number', 'customer', 'term', 'commission', 'currency', 'linesLength', 'freight', 'total'),
   
   /**
     Populates customer defaults when customer changes.
