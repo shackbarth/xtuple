@@ -36,7 +36,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "accountType",
       "attr": {
         "type": "String",
         "column": "accnt_type"

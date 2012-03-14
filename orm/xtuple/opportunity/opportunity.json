@@ -235,6 +235,15 @@
       }
     },
     {
+      "name": "accounts",
+      "toMany": {
+        "isNested": true,
+        "type": "OpportunityAccount",
+        "column": "ophead_id",
+        "inverse": "source"
+      }
+    },
+    {
       "name": "opportunities",
       "toMany": {
         "isNested": true,
