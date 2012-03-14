@@ -49,12 +49,18 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   /**
   @type String
   */
-  toDoStatus: SC.Record.attr(String, {
+  accountType: SC.Record.attr(String, {
     /** @private */
     defaultValue: function() {
-      return XM.ToDo.NEITHER
+      return XM.ToDo.ORGANIZATION
     }
   }),
+
+  isUserAccount: function(key, value) {
+    if(value) this._xm_isUserAccount = value;
+      return this._xm_isUserAccount !== undefined ?
+             this._xm_isUserAccount : this.get('userAccount') !== null;
+  }.property('userAccount').cacheable(),
 
   // ..........................................................
   // DOCUMENT ASSIGNMENTS
@@ -83,20 +89,34 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   //
 
   validate: function() {
-    var errors = this.get('validateErrors'), len, err;
+    var errors = this.get('validateErrors'), val, err;
 
     // Validate Number
-    len = this.get('number') ? this.get('number').length : 0;
+    val = this.get('number') ? this.get('number').length : 0;
     err = XM.errors.findProperty('code', 'xt1001');
-    this.updateErrors(err, !len);
+    this.updateErrors(err, !val);
 
     // Validate Name
-    len = this.get('name') ? this.get('name').length : 0;
+    val = this.get('name') ? this.get('name').length : 0;
     err = XM.errors.findProperty('code', 'xt1002');
-    this.updateErrors(err, !len);
+    this.updateErrors(err, !val);
+
+    // Validate Parent
+    if(this.get('parent')) {
+      val = this.get('guid') !== this.get('parent') ? this.get('parent') : 0;
+      err = XM.errors.findProperty('code', 'xt1019');
+      this.updateErrors(err, !val);
+    }
+
+    // Validate User Account
+    if(this.get('isUserAccount')) {
+      val = this.get('userAccount') ? this.get('userAccount') : 0;
+      err = XM.errors.findProperty('code', 'xt1020');
+      this.updateErrors(err, !val);
+    }
 
     return errors;
-  }.observes('number', 'name')
+  }.observes('number', 'name', 'parent', 'isUserAccount', 'userAccount')
 
 });
 

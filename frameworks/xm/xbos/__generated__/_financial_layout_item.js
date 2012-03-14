@@ -82,7 +82,7 @@ XM._FinancialLayoutItem = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String),
+  accountType: SC.Record.attr(String),
 
   /**
     @type String

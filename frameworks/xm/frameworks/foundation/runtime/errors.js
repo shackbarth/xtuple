@@ -106,6 +106,12 @@ var ary = [
   { code: 'xt1018',
     label: '_recordIncomplete'.loc(),
     description: '_assignedToIsRequired'.loc() },
+  { code: 'xt1019',
+    label: '_recordInvalid'.loc(),
+    description: '_parentIsInvalid'.loc() },
+  { code: 'xt1020',
+    label: '_recordIncomplete'.loc(),
+    description: '_userAccountRequired'.loc() },
 ];
 
 ary.forEach(function(error) {

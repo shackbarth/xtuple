@@ -55,6 +55,6 @@ XM._LedgerAccountInfo = XM.Record.extend(
   /**
     @type String
   */
-  type: SC.Record.attr(String)
+  accountType: SC.Record.attr(String)
 
 });

@@ -6,19 +6,19 @@
 /*globals XM */
 
 /**
-  @scope XM.LedgerAccountBrowse
+  @scope XM.ToDoProject
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
 
   @extends XM.Record
 */
-XM._LedgerAccountBrowse = XM.Record.extend(
-  /** @scope XM.LedgerAccountBrowse.prototype */ {
+XM._ToDoProject = XM.Record.extend(
+  /** @scope XM.ToDoProject.prototype */ {
   
-  className: 'XM.LedgerAccountBrowse',
+  className: 'XM.ToDoProject',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -26,10 +26,10 @@ XM._LedgerAccountBrowse = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
       "update": false,
-      "delete": false
+      "delete": true
     }
   },
 
@@ -43,33 +43,20 @@ XM._LedgerAccountBrowse = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.ToDo
   */
-  company: SC.Record.attr(String),
+  source: SC.Record.toOne('XM.ToDo'),
+
+  /**
+    @type XM.ProjectInfo
+  */
+  project: SC.Record.toOne('XM.ProjectInfo', {
+    isNested: true
+  }),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  number: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  subAccount: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  accountType: SC.Record.attr(String)
+  purpose: SC.Record.attr(String)
 
 });
