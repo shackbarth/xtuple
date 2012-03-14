@@ -52,6 +52,7 @@ XM.Item.materialIssueUnits = function(item, callback) {
   return XM.Item._xm_units(item, 'materialIssueUnits', callback);
 }
 
+/** @private */
 XM.Item._xm_units = function(item, type, callback) {
   if(!SC.kindOf(item, XM.Item) &&
      !SC.kindOf(item, XM.ItemInfo) &&

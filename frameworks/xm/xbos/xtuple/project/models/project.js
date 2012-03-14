@@ -18,90 +18,15 @@ sc_require('mixins/document');
   @extends XM.CoreDocuments
   @extends XM.Document
 */
+
 XM.Project = XM._Project.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
+
   /** @scope XM.Project.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-<<<<<<< HEAD
-  /**
-  @field
-  @type Number
-  */
-  dueDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    
-    defaultValue: function() {
-      return SC.DateTime.create();
-    }
-  }),
-
-  /**
-  @field
-  @type Number
-  */
-  startDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    
-    defaultValue: function() {
-      return SC.DateTime.create();
-    }
-  }),
-
-  /**
-  @field
-  @type Number
-  */
-  assignedDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    
-    defaultValue: function() {
-      return SC.DateTime.create();
-    }
-  }),
-
-  /**
-  @field
-  @type Number
-  */
-  completeDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    
-    defaultValue: function() {
-      return SC.DateTime.create();
-    }
-  }),
-
-  /** 1
-  @field
-  @type Number
-  */
-  budgetedHours: function() {
-    //TODO: Write this
-    return 0;
-  }.property(),
-
-  /**1
-  @field
-  @type Number
-=======
-console.log("Here I am");
-
-  /**
-    @type XM.UserAccountInfo
->>>>>>> d3fb0e920abb92deacdb28ef9cbef3690007de28
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.DataSource.session.userName;
-    }
-  }),
-
-console.log("Here I am");
-
   /**
     @type XM.UserAccountInfo
   */
@@ -112,17 +37,6 @@ console.log("Here I am");
     }
   }),
 
-  /**
-    @type XM.UserAccountInfo
-  */
-  assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.DataSource.session.userName;
-    }
-  }),
-
-=======
   /**
     @type XM.UserAccountInfo
   */
@@ -198,22 +112,23 @@ console.log("Here I am");
 	@type Number
 	*/
 	balanceHours: function() {
-	  //TODO: Write this
-	  return 0;
-	}.property(),
+	  var budgetedHours = this.get('budgetedHours'),
+	      actualHours = this.get('actualHours');
+
+	  return budgetedHours - actualHours;
+	}.property('budgetedHours', 'actualHours').cacheable(),
 
 	/**
 	@field
 	@type Number
 	*/
 	balanceExpenses: function() {
-	  //var value = this.get('budgetedExpenses') - this.get('actualExpenses');
-	  return 0;
-	}.property(),
+	  var budgetedExpenses = this.get('budgetedExpenses'),
+	      actualExpenses = this.get('actualExpenses');
 
+	  return budgetedExpenses - actualExpenses;
+	}.property('budgetedExpenses', 'actualExpenses').cacheable(),
 
-
->>>>>>> d3fb0e920abb92deacdb28ef9cbef3690007de28
   //..................................................
   // METHODS
   //
@@ -241,7 +156,7 @@ console.log("Here I am");
   _xm_projectStatusDidChange: function() {
     var status = this.get('status'),
         _projectStatus = this.get('projectStatus');
-console.log(_projectStatus);
+
     if(status & SC.Record.READY) {
       if(_projectStatus === XM.Project.COMPLETED) this.set('completeDate', SC.DateTime.create());    
     }

@@ -22,7 +22,9 @@ XM.session = SC.Object.create({
 
   privileges: null,
   
-  store: XM.store,
+  store: function() {
+    return XM.store;
+  }.property().cacheable(),
 
   /**
   Loads session objects for settings, preferences and privileges into local memory.
@@ -151,6 +153,7 @@ XM.session = SC.Object.create({
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
+    XM.ready(function() { XM.session.load(); });
   }
   
 });
