@@ -94,7 +94,7 @@
       }
     },
     {
-      "name": "type",
+      "name": "itemType",
       "attr": {
         "type": "String",
         "column": "item_type"
