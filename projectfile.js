@@ -12,7 +12,7 @@ var project = BT.Project.create({
   }),
 
   "console": BT.App.create({
-    frameworks: 'foundation datastore xm'.w(),
+    frameworks: 'blossom xm'.w(),
     sourceTree: path.join(__dirname, 'apps/console')
   }),
 
