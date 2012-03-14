@@ -341,5 +341,5 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
     }
     if(SC.isNode) process.emit('sessionReady');
   }.observes('isReady')
-  
+
 });

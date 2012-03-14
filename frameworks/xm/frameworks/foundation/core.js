@@ -40,3 +40,52 @@ XM = global.XM = SC.Object.create(
 
 });
 
+// THE FOLLOWING IS A WORKAROUND TO ALLOW CERTAIN FILES
+// TO LOAD OUT OF ORDER BUT THIS SHOULD NOT BE AN EXCUSE
+// TO NOT CORRECT THE LOAD-ORDER ISSUE -- IT ONLY EXISTS
+// AS THE XBO SYSTEM IS BEING REMOVED TO ALLOW THIS TO
+// CONTINUE TO LIMP ALONG
+SC.mixin(XM, 
+  /** @scope XM */ {
+
+  _xm_readyQueue: [],
+
+  isReady: false,
+
+  ready: function(target, method) {
+    var queue = this._xm_readyQueue;
+    
+    // normalize
+    if (method === undefined) {
+      method = target; target = null ;
+    } else if (SC.typeOf(method) === SC.T_STRING) {
+      method = target[method] ;
+    }
+    
+    if (!method) return this; // nothing to do.
+    
+    // if isReady, execute now.
+    if (this.isReady) return method.call(target || document) ;
+    
+    // otherwise, add to queue.
+    queue.push([target, method]) ;
+    return this ; 
+  },
+
+  run: function() {
+    if(this.isReady) return;
+    this.isReady = true;
+    var handler, ary, idx, len ;
+    do {
+      ary = XM._xm_readyQueue ;
+      XM._xm_readyQueue = [] ; // reset
+      for (idx=0, len=ary.length; idx<len; idx++) {
+        handler = ary[idx] ;
+        var target = handler[0] || document ;
+        var method = handler[1] ;
+        if (method) method.call(target) ;
+      }
+    } while (XM._xm_readyQueue.length > 0) ;
+  }
+
+});
