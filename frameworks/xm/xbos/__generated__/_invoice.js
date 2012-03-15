@@ -150,6 +150,11 @@ XM._Invoice = XM.Record.extend(
   /**
     @type String
   */
+  shiptoName: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
   shiptoAddress1: SC.Record.attr(String),
 
   /**
