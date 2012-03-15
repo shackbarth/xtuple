@@ -103,7 +103,7 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
 
     // Validate Parent
     if(this.get('parent')) {
-      val = this.get('guid') !== this.get('parent') ? this.get('parent') : 0;
+      val = this.get('id') !== this.get('parent') ? this.get('parent') : 0;
       err = XM.errors.findProperty('code', 'xt1019');
       this.updateErrors(err, !val);
     }

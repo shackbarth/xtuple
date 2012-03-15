@@ -22,6 +22,7 @@ SC.stringsFor("en_US", {
   "_commissionIsRequired": "Commission is required.",
   "_characteristicIsRequired": "A Characteristic is required.",
   "_currencyIsRequired": "Currency is required.",
+  "_currSymAbbrRequired": "Either the currency symbol or abbreviation must be supplied.",
   "_customerIsRequired": "A customer is required.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
@@ -42,6 +43,7 @@ SC.stringsFor("en_US", {
   "_unknownError": "Unknown Error",
   "_userAccountRequired": "The User relationship is selected but no appropriate data entered. Either click the User... button to enter the data or deselect the check box.",
   "_usernameInvalid": "The user name is invalid.",
+  "_uniqueNameRequired": "Currency Name must be unique.",
 
 // ********
 // Labels
