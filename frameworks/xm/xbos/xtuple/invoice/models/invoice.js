@@ -252,7 +252,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   */
   customerDidChange: function() {
     var customer = this.get('customer'),
-        isFreeFormBillto = customer.get('isFreeFormBillto');
+        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
     
     // pass defaults in
     this.setFreeFormBillto(true);
@@ -261,12 +261,13 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
           
       // set defaults 
       this.set('salesRep', customer.getPath('salesRep'));
-      this.set('commission', customer.get('commission') * 100);
+      this.set('commission', customer.get('commission'));
       this.set('terms', customer.get('terms'));
       this.set('taxZone', customer.get('taxZone'));
       this.set('currency', customer.get('currency'));
       this.set('shipCharge', customer.get('shipCharge'));
       this.set('shipto', customer.get('shipto'));
+      this.set('shipVia', customer.get('shipVia'));     
       this.set('billtoName', customer.get('name'));
       this.set('billtoPhone', customer.getPath('billingContact.phone'));
       if(address) {
@@ -285,19 +286,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       this.set('commission', 0);
       this.set('terms', null);
       this.set('taxZone', null);
-      this.set('currency', null);
-      this.set('shipCharge', null);
       this.set('shipto', null);
-      this.set('billtoName', '');
-      this.set('billtoPhone', '');
-      this.set('billtoAddress1','');
-      this.set('billtoAddress2', '');
-      this.set('billtoAddress3', '');
-      this.set('billtoCity', ''); 
-      this.set('billtoState', '');
-      this.set('billtoPostalCode', '');
-      this.set('billtoCountry', '');
-      this.set('billtoPhone', '');
     } 
     this.setFreeFormBillto(isFreeFormBillto);
   }.observes('customer'),
@@ -308,7 +297,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   shiptoDidChange: function() {
     var shipto = this.get('shipto'),
         customer = this.get('customer'),
-        isFreeFormShipto = customer.get('isFreeFormShipto');
+        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false;
     
     this.setFreeFormShipto(true);
     if(shipto) {
@@ -316,9 +305,10 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
      
       /* set defaults */
       this.set('salesRep', shipto.get('salesRep'));
-      this.set('commission', shipto.get('commission') * 100);
+      this.set('commission', shipto.get('commission'));
       this.set('taxZone', shipto.get('taxZone'));
       this.set('shipCharge', shipto.get('shipCharge'));
+      this.set('shipVia', shipto.get('shipVia'));  
       this.set('shiptoName', shipto.get('name'));
       this.set('shiptoPhone', shipto.getPath('contact.phone'));
       if(address) {
@@ -335,11 +325,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       this.set('taxZone', customer.get('taxZone'));
       this.set('currency', customer.get('currency'));
       this.set('shipCharge', customer.get('shipCharge'));
-    } else {
-      this.set('salesRep', null);
-      this.set('commission', 0);
-      this.set('taxZone', null);
-      this.set('shipCharge', null);
     }  
     
     /* clear address */
