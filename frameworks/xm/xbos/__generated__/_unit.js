@@ -27,7 +27,7 @@ XM._Unit = XM.Record.extend(
   privileges: {
     "all": {
       "create": "MaintainUOMs",
-      "read": "ViewUOMs",
+      "read": true,
       "update": "MaintainUOMs",
       "delete": "MaintainUOMs"
     }

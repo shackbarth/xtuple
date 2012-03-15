@@ -93,6 +93,31 @@ XM.Record = SC.Record.extend(
   },
   
   /**
+    Returns whether the record has an original data cache retrieved from the 
+    data source.
+    
+    @returns Boolean
+  */
+  isCached: function() {
+    var storeKey = this.get('storeKey'),
+        store = this.get('store');
+    return store._xm_dataCaches && store._xm_dataCaches[storeKey] ? true : false;
+  },
+  
+  /**
+    Return the original cached property value for records retreived from
+    the datasource.
+    
+    @param {String} property
+    @returns Any
+  */
+  getCache: function(key) {
+    var storeKey = this.get('storeKey'),
+        store = this.get('store');
+    return store._xm_dataCaches ? store._xm_dataCaches[storeKey][key] : null;
+  },
+  
+  /**
     Returns whether the current record can be updated based on privilege settings.
     
     @returns Boolean
@@ -186,9 +211,6 @@ XM.Record = SC.Record.extend(
     var status = this.get('status'),
         key = 'dataState',
         value = 'error';
-
-    // cache the current attributes of the record for later reference if they have changed
-    if (status === SC.Record.READY_CLEAN) this._attrCache = this.get('attributes');
     
     // update data state used for server side evaluation
     if (status === SC.Record.READY_NEW)            value = 'created';
