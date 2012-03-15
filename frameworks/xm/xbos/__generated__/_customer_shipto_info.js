@@ -89,6 +89,11 @@ XM._CustomerShiptoInfo = XM.Record.extend(
   /**
     @type XM.ShipCharge
   */
-  shipCharge: SC.Record.toOne('XM.ShipCharge')
+  shipCharge: SC.Record.toOne('XM.ShipCharge'),
+
+  /**
+    @type String
+  */
+  shipVia: SC.Record.attr(String)
 
 });

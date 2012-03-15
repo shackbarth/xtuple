@@ -88,9 +88,9 @@ XM._CustomerShipto = XM.Record.extend(
   taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
-    @type XM.ShipVia
+    @type String
   */
-  shipVia: SC.Record.toOne('XM.ShipVia'),
+  shipVia: SC.Record.attr(String),
 
   /**
     @type XM.ShipCharge
