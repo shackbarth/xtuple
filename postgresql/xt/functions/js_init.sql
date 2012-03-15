@@ -9,10 +9,10 @@ create or replace function xt.js_init() returns void as $$
   //
 
   /**
-  Return whether an array contains an item.
+    Return whether an array contains an item.
 
-  @param {Any}
-  @returns Boolean
+    @param {Any}
+    @returns Boolean
   */
   Array.prototype.contains = function(item) {
     var i = this.length;
@@ -25,10 +25,10 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
-  Return the index of an item in an array 
+    Return the index of an item in an array 
 
-  @param {Any}
-  @returns Any
+    @param {Any}
+    @returns Any
   */
   Array.prototype.indexOf = function(item) {
     var i = this.length;
@@ -41,16 +41,17 @@ create or replace function xt.js_init() returns void as $$
   }
 
   /**
-  Remove an item from an array and return it. 
+    Remove an item from an array and return it. 
 
-  @param {Any}
-  @returns Any
+    @param {Any}
+    @returns Any
   */
   Array.prototype.remove = function(item) {
     return this.contains(item) ? this.splice(this.indexOf(item),1) : false;
   }
 
-  /* Returns an the first item in an array with a property matching the passed value.  
+  /**
+     Returns an the first item in an array with a property matching the passed value.  
 
      @param {String} property name to search on
      @param {Any} value to search for
@@ -64,27 +65,33 @@ create or replace function xt.js_init() returns void as $$
              return this[i];
         }
       }
-    }
-    
+    } 
     return false;
   }
 
-  /* return the text before the first dot */
+  /** 
+    Return the text before the first dot.
+  */
   String.prototype.afterDot = function() {
     return this.replace(/\w+\./i, '');
   }
   
-  /* return the text before the first dot */
+  /** 
+    Return the text before the first dot.
+  */
   String.prototype.beforeDot = function() {
     return this.replace(/\.\w+/i, '');
   }
   
-  /* Trim whitespace from a string */
+  /**
+     Trim whitespace from a string. 
+  */
   String.prototype.trim = function() {
     return this.replace(/^\s+|\s+$/g,"");
   }
 
-  /* Change sting with underscores '_' to camel case.
+  /**
+     Change sting with underscores '_' to camel case.
 
      @returns {String}
   */
@@ -93,14 +100,13 @@ create or replace function xt.js_init() returns void as $$
         ret = self.replace( (/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g), function(self, separater, character) {
           return character ? character.toUpperCase() : '';
     });
-
     var first = ret.charAt(0),
         lower = first.toLowerCase();
-
     return first !== lower ? lower + ret.slice(1) : ret;
   };
 
-  /* Converts the string into a class name. This method will camelize 
+  /**
+     Converts the string into a class name. This method will camelize 
      your string and then capitalize the first letter.
 
      @returns {String}
@@ -109,7 +115,8 @@ create or replace function xt.js_init() returns void as $$
     return this.slice(0,1).toUpperCase() + this.slice(1).camelize();
   }
 
-  /* Change a camel case string to snake case.
+  /**
+     Change a camel case string to snake case.
 
      @returns {String} The argument modified
   */
@@ -123,7 +130,8 @@ create or replace function xt.js_init() returns void as $$
 
   XT = {};
 
-  /* Change properties names on an object with underscores '_' to camel case.
+  /**
+     Change properties names on an object with underscores '_' to camel case.
      Only changes immediate properties, it is not recursive.
 
      @param {Object | String}
@@ -131,18 +139,17 @@ create or replace function xt.js_init() returns void as $$
   */
   XT.camelize = function(obj) {
     var ret = {};
-
     if(typeof obj === "object") {
       for(var prop in obj) {
         for(var prop in obj) ret[prop.camelize()] = obj[prop];
       }
     }
-    else if(typeof obj === "string") return obj.camelize();
-     
+    else if(typeof obj === "string") return obj.camelize(); 
     return ret;
   }
 
-  /* Change camel case property names in an object to snake case.
+  /** 
+    Change camel case property names in an object to snake case.
      Only changes immediate properties, it is not recursive.
 
      @param {Object | String} The object to decamelize
@@ -150,15 +157,29 @@ create or replace function xt.js_init() returns void as $$
   */
   XT.decamelize = function(obj) {
     var ret = {};
-
     if(typeof obj === "object") {
       for(var prop in obj) ret[prop.decamelize()] = obj[prop];
     }
     else if(typeof obj === "string") return obj.decamelize();
-
     return ret;
   }
 
+  /**
+    Extended version of javascript 'typeof' that also recognizes arrays
+  */
+  XT.typeOf = function(value) {
+    var str = typeof value;
+    if (str === 'object') {
+      if (value) {
+        if (typeof value.length === 'number' &&
+            !(value.propertyIsEnumerable('length')) &&
+            typeof value.splice === 'function') {
+          str = 'array';
+        }
+      } else str = 'null';
+    }
+    return str;
+  }
   /**
   Register an action call that will yield an array of key value pairs of settings. This
   provides a way to develop a function call that can use these registrations to return
@@ -170,13 +191,10 @@ create or replace function xt.js_init() returns void as $$
   */
   XT.registerSettings = function(nameSpace, type, action) {
     var reg = {};
-
     if(!this._settingsreg) this._settingsreg = [];
-
     reg.nameSpace = nameSpace,
     reg.type = type,
     reg.action = action;
-
     this._settingsreg.push(reg);
   };
 
@@ -199,9 +217,7 @@ create or replace function xt.js_init() returns void as $$
   sql = 'select distinct js_namespace as "nameSpace" '
         + 'from xt.js '
         + 'where js_active; '
-
   res = executeSql(sql);
-
   if(res.length) {
     for(var i = 0; i < res.length; i++) {
       if(!this[res[i].nameSpace]) this[res[i].nameSpace] = {};
@@ -213,9 +229,7 @@ create or replace function xt.js_init() returns void as $$
         + 'from xt.js '
         + 'where js_active '
         + 'order by js_ext ';
-
     res = executeSql(sql);
-
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
         if(DEBUG) print(NOTICE, 'loading javascript for type->', res[i].js_type);
