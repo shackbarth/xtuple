@@ -37,13 +37,10 @@ XM.Document = {
   */
   numberPolicy: function(key, value) {
     var setting =  this.get('numberPolicySetting');
-    
     if(value === undefined && setting) {
       value = XM.session.get('settings').get(setting);
     }
-    
     this._numberPolicy = value ? value : XM.AUTO_NUMBER;
-    
     return this._numberPolicy;
   }.property().cacheable(),
   
@@ -52,33 +49,29 @@ XM.Document = {
       var record = arguments[0],
           status = record.get('status'),
           numberPolicy = record.get('numberPolicy');
-
       if((numberPolicy === XM.AUTO_NUMBER || 
           numberPolicy === XM.AUTO_OVERRIDE_NUMBER) && 
           status === SC.Record.READY_NEW) {
         XM.Record.fetchNumber.call(record);
       } else return '';
     },
-    
-    isRequired: true,
-    
-    isEditable: true
+  
+    isRequired: true
   }),
 
   // ..........................................................
   // METHODS
   //
-  
+
   destroy: function() {
     var record = this,
         status = this.get('status');
     
-    //release the number if applicable
-    if(status === SC.Record.READY_NEW && record._numberGen) {
-      XM.Record.releaseNumber.call(record, record._numberGen); 
-      record._numberGen = null;
+    /* release the number if applicable */
+    if(status === SC.Record.READY_NEW && record._xm_numberGen) {
+      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
+      record._xm_numberGen = null;
     }
-    
     arguments.callee.base.apply(this, arguments);
   },
 
@@ -88,51 +81,43 @@ XM.Document = {
 
   /** @private */
   _xm_numberPolicyDidChange: function() {
-    //TODO: how can we set an attribute property?
-    //this.setPath('number.isEditable', numberGen !== 'A');
+    var policy = this.get('numberPolicy');
+    this.number.set('isEditable', policy !== 'A');
   }.observes('numberPolicy'),
 
   /** @private */
-  _xm_numberDidChange: function() {
+  _xm_numberDidChange: function() {  
     var record = this;
         status = record.get('status'),
         number = record.get('number'),
-        numberPolicy = record.get('numberPolicy');
-
-    if(status & SC.Record.READY) {     
-      if(this._numberGen &&
-         this._numberGen !== number - 0) {
-        // auto generated numbers can not be changed
-        if(numberPolicy === XM.AUTO_NUMBER) {
-          this.set('number', this._numberGen);
-          
-        // release the fetched number if over-ride allowed
-        } else if(numberPolicy == XM.AUTO_OVERRIDE_NUMBER) {
-          XM.Record.releaseNumber.call(record, record._numberGen); 
-          record._numberGen = null;
-        }
-      }
+        policy = record.get('numberPolicy');   
+   
+    // if generated and automatic, lock it down
+    if(record._xm_numberGen && policy === 'A') this.number.set('isEditable', false);
+   
+    // release the fetched number if applicable 
+    if(record._xm_numberGen && record_xm_numberGen !== number - 0) {
+      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
+      record._xm_numberGen = null;
+    }    
       
-      // For manually edited numbers, check for conflicts with existing
-      if(!record._numberGen && 
-         record._attrCache &&
-         record._attrCache.get('number') != number) {
-      
-        callback = function(err, result) {
-          if(!err) {
-            var err = XM.errors.findProperty('code', 'xt1007'),
-                id = record.get('id'),
-                isConflict = result ? result !== id  : false;
-            
-            record.updateErrors(err, isConflict);
-          }
+    // For manually edited numbers, check for conflicts with existing
+    if(number && !record._xm_numberGen) {
+      // callback
+      callback = function(err, result) {
+        if(!err) {
+          var err = XM.errors.findProperty('code', 'xt1007'),
+              id = record.get('id'),
+              isConflict = result ? result !== id  : false;          
+          record.updateErrors(err, isConflict);
         }
-        
-        XM.Record.findExisting.call(record, 'number', number, callback);
-      }
+      }        
+      
+      // function call
+      XM.Record.findExisting.call(record, 'number', number, callback);
     }
+
   }.observes('number')
-  
 }
 
 

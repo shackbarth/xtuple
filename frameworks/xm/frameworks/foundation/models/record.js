@@ -404,7 +404,7 @@ XM.Record.fetchNumber = function(prop) {
   
   callback = function(error, result) {
     if(!error) {
-      self._numberGen = result;
+      self._xm_numberGen = result;
       self.set(prop, result);
     };
   }
