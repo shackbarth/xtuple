@@ -8,7 +8,8 @@ XM.Logging = {
   */
   log: function(msg) {
     var args = Array.prototype.slice.call(arguments).slice(1);
-    if(this.getPath("logLevels.info") === NO) return;
+    if(XM.getPath("logLevels.info") === NO || 
+      this.get('logLocal') === NO) return;
     SC.Logger.info("%@: %@".fmt(this.get("logPrefix"), msg));
     if(args.length > 0)
       args.forEach(function(arg) { console.log(arg); });
@@ -19,7 +20,7 @@ XM.Logging = {
     Log for non-fatal warnings.
   */
   warn: function(msg) {
-    if(this.getPath("logLevels.warn") === NO) return;
+    if(XM.getPath("logLevels.warn") === NO) return;
     return SC.Logger.warn("WARN %@: %@".fmt(this.get("logPrefix"), msg));
   },
 
@@ -27,7 +28,7 @@ XM.Logging = {
     Log for a fatal error when encountered.
   */
   error: function(msg) {
-    if(this.getPath("logLevels.error") === NO) return;
+    if(XM.getPath("logLevels.error") === NO) return;
     msg = "ERROR %@: %@".fmt(this.get("logPrefix"), msg);
     if(arguments.length > 1 && arguments[1] === YES)
       throw msg;

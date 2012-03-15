@@ -22,6 +22,11 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
   */
   URL: SC.isNode ? 'http://localhost:4020/datasource/data' : '/datasource/data',
 
+  /**
+    Logging for this object?
+  */
+  logLocal: YES,
+
   //............................................
   // METHODS
   //
