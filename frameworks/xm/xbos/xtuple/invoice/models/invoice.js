@@ -112,11 +112,9 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   credit: function() {
     var credits = this.get('credits'),
         credit = 0;
-    
     for(var i = 0; i < credits.get('length'); i++) {
       credit = credit + credits.objectAt(i).get('amount');
     }
-    
     return credit;
   }.property('creditsLength').cacheable(),
   
@@ -124,7 +122,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
-        
     return lineTax + freightTax + miscTax; 
   }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
@@ -132,7 +129,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
         totalTax = this.get('totalTax');
-
     return subTotal + freight + totalTax; 
   }.property('subTotal', 'freight', 'totalTax').cacheable(),
   
@@ -255,16 +251,15 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
-  console.log('customer did change')
     var customer = this.get('customer'),
         isFreeFormBillto = customer.get('isFreeFormBillto');
     
-    /* pass defaults in */
+    // pass defaults in
     this.setFreeFormBillto(true);
     if(customer) {
       var address = customer.getPath('billingContact.address');
           
-      /* set defaults */
+      // set defaults 
       this.set('salesRep', customer.getPath('salesRep'));
       this.set('commission', customer.get('commission') * 100);
       this.set('terms', customer.get('terms'));
@@ -285,7 +280,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       }
     } else {
     
-      /* clear defaults */
+      // clear defaults
       this.set('salesRep', null);
       this.set('commission', 0);
       this.set('terms', null);
@@ -374,13 +369,10 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     for(var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
           taxes = line.get('taxes'),
-          billed = line.get('billed'),
-          qtyUnitRatio = line.get('quantityUnitRatio'),
-          price = line.get('price'),
-          priceUnitRatio = line.get('priceUnitRatio');
+          extendedPrice = line.get('extendedPrice');
 
       // line sub total
-      subTotal = subTotal + SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
+      subTotal = subTotal + extendedPrice;
 
       // taxes
       for(var n = 0; n < taxes.get('length'); n++) {
