@@ -73,7 +73,7 @@ XM.TaxType._xm_setTaxTypeFreight = function() {
 }
 
 // TODO: Move this to start up
-SC.ready(function() {
+XM.ready(function() {
   XM.dataSource.ready(XM.TaxType._xm_setTaxTypeAdjustment, this);
   XM.dataSource.ready(XM.TaxType._xm_setTaxTypeFreight, this);
 });
