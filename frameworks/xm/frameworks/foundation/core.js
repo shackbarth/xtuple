@@ -30,7 +30,7 @@ XM = global.XM = SC.Object.create(
   
   MONEY_SCALE: 2,
   QTY_SCALE: 6,
-  QTY_PER_SCALE: 6,
+  QTY_PER_SCALE: 7,
   COST_SCALE: 6,
   SALES_PRICE_SCALE: 4,
   PURCH_PRICE_SCALE: 6,
