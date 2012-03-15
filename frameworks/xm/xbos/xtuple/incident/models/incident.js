@@ -36,7 +36,7 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
     defaultValue: function() {
-      return XM.DataSource.session.userName;
+      return XM.dataSource.session.userName;
     }
   }),
   
