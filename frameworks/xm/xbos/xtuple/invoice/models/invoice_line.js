@@ -25,11 +25,19 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   //..................................................
   // METHODS
   //
-
+  
+  /**
+    Check to see if cache exists which indicates record has
+    been previously committed. If so take appropriate actions.
+  */
+  checkCache: function() {
+    /* freeze item once it has been committed */
+    this.item.set('isEditable', !this.isCached());
+  },
+  
   init: function() {
-    arguments.callee.base.apply(this, arguments) ;
-    var item = this.get('item');
-    if(item) this.itemDidChange();
+    arguments.callee.base.apply(this, arguments);
+    this.checkCache();
   },
   
   updateSellingUnits: function() {
@@ -82,37 +90,15 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   //..................................................
   // OBSERVERS
   //
-  
-  quantityDidChange: function() {
-  /*
-    var item = this.get('item'), status = this.get('status');
-    if(status & SC.Record.READY &&
-       this._attrCache &&
-       this._attrCache.get('item') !== item) {
-      this.updateSellingUnits();
-      this.updatePrice();
-    }
-    */
-  }.observes('billed', 'quantityUnit', 'priceUnit'),
-  
+
   itemDidChange: function() {
-  console.log(this.statusString());
-    var item = this.get('item'), status = this.get('status');
-    if(status & SC.Record.READY &&
-       this._attrCache &&
-       this._attrCache.get('item') !== item) {
-      this.updateSellingUnits();
-      this.updatePrice();
-    }
+    this.updateSellingUnits();
+    this.updatePrice();
   }.observes('item'),
   
-  quantityUnitDidChange: function() {
-  }.observes('item', 'quantityUnit'),
-  
-  saleDidChange: function() {
-    var ext = 0,
-        item = this.get('item');
-  }.observes('currency', 'item', 'billed', 'quantityUnit', 'priceUnit'),
+  statusDidChange: function() {
+    this.checkCache();
+  }.observes('status')
 
 });
 
