@@ -96,13 +96,13 @@ XM.Document = {
     if(record._xm_numberGen && policy === 'A') this.number.set('isEditable', false);
    
     // release the fetched number if applicable 
-    if(record._xm_numberGen && record_xm_numberGen !== number - 0) {
+    if(record._xm_numberGen && record._xm_numberGen !== number - 0) {
       XM.Record.releaseNumber.call(record, record._xm_numberGen); 
       record._xm_numberGen = null;
     }    
       
     // For manually edited numbers, check for conflicts with existing
-    if(number && !record._xm_numberGen) {
+    if(number && (!record._xm_numberGen || number != record._xm_numberGen)) {
       // callback
       callback = function(err, result) {
         if(!err) {
