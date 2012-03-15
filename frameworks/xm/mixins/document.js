@@ -102,7 +102,10 @@ XM.Document = {
     }    
       
     // For manually edited numbers, check for conflicts with existing
-    if(number && (!record._xm_numberGen || number != record._xm_numberGen)) {
+    if(number && 
+       (!record._xm_numberGen || number != record._xm_numberGen) &&
+       (!record.isCached() || number != record.getCache('number')))  {
+       
       // callback
       callback = function(err, result) {
         if(!err) {
