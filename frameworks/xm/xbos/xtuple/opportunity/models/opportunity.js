@@ -35,7 +35,7 @@ XM.Opportunity = XM._Opportunity.extend( XM.Document, XM.CoreDocuments,
   _opportunitiesLength: 0,
   
   /* @private */
-  _opportunitiesLengthBinding: '.opportunities.length',
+  _opportunitiesLengthBinding: '*opportunities.length',
   
   /* @private */
   _opportunitiesDidChange: function() {

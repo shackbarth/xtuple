@@ -31,7 +31,7 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments,
   accountsLength: 0,
   
   /* @private */
-  accountsLengthBinding: '.accounts.length',
+  accountsLengthBinding: '*accounts.length',
   
   /* @private */
   _xm_accountsDidChange: function() {
