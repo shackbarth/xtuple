@@ -44,6 +44,8 @@ SC.stringsFor("en_US", {
   "_userAccountRequired": "The User relationship is selected but no appropriate data entered. Either click the User... button to enter the data or deselect the check box.",
   "_usernameInvalid": "The user name is invalid.",
   "_uniqueNameRequired": "Currency Name must be unique.",
+  "_dueDateIsRequired": "Due Date is Required.",
+  "_assignedToIsRequired": "Assigned To is Required.",
 
 // ********
 // Labels

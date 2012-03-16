@@ -24,7 +24,14 @@ XM.Contact = XM._Contact.extend(XM.Document, XM.CoreDocuments,
   // ..........................................................
   // CALCULATED PROPERTIES
   //
-  
+
+  /**
+  @type Boolean
+  */
+  isActive: SC.Record.attr(Boolean, {
+    defaultValue: YES
+  }),
+
   /**
   A set of all the contact uses on this record.
   
