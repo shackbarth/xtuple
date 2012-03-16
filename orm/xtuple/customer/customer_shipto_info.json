@@ -85,6 +85,13 @@
         "type": "ShipCharge",
         "column": "shipto_shipchrg_id"
       }
+    },
+    {
+      "name": "shipVia",
+      "attr": {
+        "type": "String",
+        "column": "shipto_shipvia"
+      }
     }
   ],
   "isNestedOnly": true,

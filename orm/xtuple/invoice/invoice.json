@@ -159,6 +159,13 @@
       }
     },
     {
+      "name": "shiptoName",
+      "attr": {
+        "type": "String",
+        "column": "invchead_shipto_name"
+      }
+    },
+    {
       "name": "shiptoAddress1",
       "attr": {
         "type": "String",
