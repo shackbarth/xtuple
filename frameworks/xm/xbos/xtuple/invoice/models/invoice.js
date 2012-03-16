@@ -61,19 +61,19 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   creditsLength: 0,
   
   /* @private */
-  creditsLengthBinding: SC.Binding.from('.credits.length').noDelay(),
+  creditsLengthBinding: SC.Binding.from('*credits.length').noDelay(),
   
   /** @private */
   taxesLength: 0,
   
   /** @private */
-  taxesLengthBinding: SC.Binding.from('.taxes.length').noDelay(),
+  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(),
   
   /* @private */
   linesLength: 0,
   
   /* @private */
-  linesLengthBinding: SC.Binding.from('.lines.length').noDelay(),
+  linesLengthBinding: SC.Binding.from('*lines.length').noDelay(),
   
   subTotal: 0,
   
@@ -433,4 +433,24 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   }.observes('status')
 
 });
+
+/**
+  Post an invoice.
+  
+  @param {XM.Invoice} invoice
+  @returns Number
+*/
+XM.Invoice.post = function(invoice, callback) { 
+  if(!SC.kindOf(invoice, XM.Invoice)) return false; 
+  var self = this, dispatch;
+  dispatch = XM.Dispatch.create({
+    className: 'XM.Invoice',
+    functionName: 'post',
+    parameters: customer.get('id'),
+    target: self,
+    action: callback
+  });
+  customer.get('store').dispatch(dispatch);
+  return this;
+}
 
