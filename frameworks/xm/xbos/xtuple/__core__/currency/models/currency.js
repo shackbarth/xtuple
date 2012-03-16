@@ -11,6 +11,10 @@ sc_require('xbos/__generated__/_currency');
   @class
 
   @extends XM._Currency
+  @extends XM.CrmDocuments
+  @extends XM.CoreDocuments
+  @extends XM.Document
+
 */
 XM.Currency = XM._Currency.extend(
   /** @scope XM.Currency.prototype */ {
@@ -19,13 +23,78 @@ XM.Currency = XM._Currency.extend(
   // CALCULATED PROPERTIES
   //
 
+  /**
+    @type Boolean 
+  */
+  isBase: SC.Record.attr(Boolean, {
+    defaultValue: false
+  }),
+  
+  abbreviation: SC.Record.attr(Boolean, {
+    toType: function(record, key, value) {
+      if(value && value.length > 3) return value.substr(0,3);
+    }
+  }),
+  
   //..................................................
   // METHODS
   //
 
+  // On instantiation, check to see if isBase should be disabled
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.checkBaseCurrency();
+  },
+
+  // Disable isBase if base currency not set
+  checkBaseCurrency: function() {
+    this.isBase.set('isEditable', !XM.Currency.BASE && !this.get('isBase'));
+  },
+
   //..................................................
   // OBSERVERS
   //
+
+  /* @private */
+  validate: function() {
+    var errors = this.get('validateErrors'), 
+        // used for proper object reference during callback function below
+        record = this,
+        status = record.get('status'),
+        name = record.get('name'),
+        val, err;
+
+    // Validate Name
+    val = this.get('name') ? this.get('name').length : 0;
+    err = XM.errors.findProperty('code', 'xt1002');
+    this.updateErrors(err, !val);
+
+    // Validate Symbol OR Abbreviation
+    val = this.get('symbol') || this.get('abbreviation') ? true : false;
+    err = XM.errors.findProperty('code', 'xt1021');
+    this.updateErrors(err, !val);
+
+    // Validate Unique Name
+    if(status & SC.Record.READY) {
+      callback = function(err, result) {
+        if(!err) {
+          var err = XM.errors.findProperty('code', 'xt1022'),
+              id = record.get('id'),
+              isConflict = result ? result !== id  : false;
+            
+          record.updateErrors(err, isConflict);
+        }
+      }
+    }
+    XM.Record.findExisting.call(record, 'name', name, callback);
+  
+    return errors;
+  }.observes('name', 'symbol', 'abbreviation'),
+  
+  // On status change, check to see if isBase should be disabled
+  statusDidChange: function() {
+    this.checkBaseCurrency();
+  }.observes('status')
 
 });
 
@@ -54,4 +123,3 @@ XM.Currency._xm_setCurrencyBase = function() {
 XM.ready(function() {
   XM.dataSource.ready(XM.Currency._xm_setCurrencyBase, this);
 });
-

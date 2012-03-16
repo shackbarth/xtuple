@@ -6,19 +6,19 @@
 /*globals XM */
 
 /**
-  @scope XM.LedgerAccountInfo
+  @scope XM.ToDoOpportunity
   @class
 
   This code is automatically generated and will be over-written. Do not edit directly.
 
   @extends XM.Record
 */
-XM._LedgerAccountInfo = XM.Record.extend(
-  /** @scope XM.LedgerAccountInfo.prototype */ {
+XM._ToDoOpportunity = XM.Record.extend(
+  /** @scope XM.ToDoOpportunity.prototype */ {
   
-  className: 'XM.LedgerAccountInfo',
+  className: 'XM.ToDoOpportunity',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -26,10 +26,10 @@ XM._LedgerAccountInfo = XM.Record.extend(
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
       "update": false,
-      "delete": false
+      "delete": true
     }
   },
 
@@ -43,18 +43,20 @@ XM._LedgerAccountInfo = XM.Record.extend(
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.ToDo
   */
-  name: SC.Record.attr(String),
+  source: SC.Record.toOne('XM.ToDo'),
+
+  /**
+    @type XM.OpportunityInfo
+  */
+  opportunity: SC.Record.toOne('XM.OpportunityInfo', {
+    isNested: true
+  }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String),
-
-  /**
-    @type String
-  */
-  accountType: SC.Record.attr(String)
+  purpose: SC.Record.attr(String)
 
 });

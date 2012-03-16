@@ -219,6 +219,14 @@ XM._Opportunity = XM.Record.extend(
   }),
 
   /**
+    @type XM.OpportunityAccount
+  */
+  accounts: SC.Record.toMany('XM.OpportunityAccount', {
+    isNested: true,
+    inverse: 'source'
+  }),
+
+  /**
     @type XM.OpportunityOpportunity
   */
   opportunities: SC.Record.toMany('XM.OpportunityOpportunity', {
