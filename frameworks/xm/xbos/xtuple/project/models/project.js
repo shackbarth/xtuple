@@ -166,7 +166,7 @@ XM.Project = XM._Project.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   _projectsLength: 0,
   
   /* @private */
-  _projectsLengthBinding: '.projects.length',
+  _projectsLengthBinding: '*projects.length',
   
   /* @private */
   _projectsDidChange: function() {

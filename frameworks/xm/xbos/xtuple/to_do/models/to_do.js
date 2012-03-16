@@ -67,7 +67,7 @@ XM.ToDo = XM._ToDo.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   toDosLength: 0,
   
   /* @private */
-  toDosLengthBinding: '.toDos.length',
+  toDosLengthBinding: '*toDos.length',
   
   //..................................................
   // METHODS
