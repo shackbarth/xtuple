@@ -21,15 +21,14 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   
   invoiceDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
-    
     defaultValue: function() {
       return SC.DateTime.create();
-    }
+    },
+    isRequired: true
   }),
   
   orderDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
-    
     defaultValue: function() {
       return SC.DateTime.create();
     }
@@ -37,7 +36,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   
   shipDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
-    
     defaultValue: function() {
       return SC.DateTime.create();
     }
@@ -46,7 +44,8 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   currency: SC.Record.toOne('XM.Currency', {
     defaultValue: function() {
       return XM.Currency.BASE;
-    }
+    },
+    isRequired: true
   }),
 
   isPrinted: SC.Record.attr(Boolean, {
@@ -54,7 +53,8 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   }),
 
   isPosted: SC.Record.attr(Boolean, {
-    defaultValue: false  
+    defaultValue: false,
+    isRequired: true
   }),
   
   /* @private */
@@ -238,8 +238,13 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   */
   customerDidChange: function() {
     var customer = this.get('customer'),
-        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
-    
+        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false,
+        status = this.get('status');
+
+    // only set defaults if the user made the change  
+    if(status !== SC.Record.READY_NEW && 
+       status !== SC.Record.READY_DIRTY) return
+ 
     // pass defaults in
     this.setFreeFormBilltoEnabled(true);
     if(customer) {
@@ -275,9 +280,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       this.set('shipto', null);
     } 
     this.setFreeFormBilltoEnabled(isFreeFormBillto);
-    
-    // if this was loaded from datasource, lock it down
-    this.customer.set('isEnabled', !this.isCached());
   }.observes('customer'),
   
   /**
@@ -286,13 +288,17 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   shiptoDidChange: function() {
     var shipto = this.get('shipto'),
         customer = this.get('customer'),
-        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false;
-    
+        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false,
+        status = this.get('status');
+
+    // only set defaults if the user made the change    
+    if(status !== SC.Record.READY_NEW && 
+       status !== SC.Record.READY_DIRTY) return
+
+    // set defaults
     this.setFreeFormShiptoEnabled(true);
     if(shipto) {
       var address = shipto.get('address');
-     
-      /* set defaults */
       this.set('salesRep', shipto.get('salesRep'));
       this.set('commission', shipto.get('commission'));
       this.set('taxZone', shipto.get('taxZone'));
@@ -314,10 +320,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       this.set('taxZone', customer.get('taxZone'));
       this.set('currency', customer.get('currency'));
       this.set('shipCharge', customer.get('shipCharge'));
-    }  
-    
-    /* clear address */
-    if(!shipto) {
+    } else if(!shipto) {
       this.set('shiptoName', '');
       this.set('shiptoAddress1', '');
       this.set('shiptoAddress2', '');
@@ -359,8 +362,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
         if(codeTotal) {
           codeTotal.tax = codeTotal.tax + tax;
         } else {
-          codeTotal = {};
-    
+          codeTotal = {};    
           codeTotal.taxCode = taxCode;
           codeTotal.tax = tax;
           taxDetail.push(codeTotal);
@@ -377,7 +379,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       codeTotal.tax = SC.Math.round(codeTotal.tax, XM.MONEY_SCALE);
       taxTotal = taxTotal + codeTotal.tax;
     }
-    
     this.set('lineTax', taxTotal);
     this.set('lineTaxDetail', taxDetail);
   }.observes('linesLength', 'taxZone'),
@@ -394,28 +395,29 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
           tax = SC.Math.round(hist.get('tax'), XM.MONEY_SCALE),
           taxCode = hist.get('taxCode'),
           codeTax = {};
-
       if(type === XM.TaxType.ADJUSTMENT) {
         miscTax = miscTax + tax;
-    
         codeTax.taxCode = taxCode;
         codeTax.tax = tax;
-        miscTaxDetail.push(codeTax); 
-  
+        miscTaxDetail.push(codeTax);   
       } else if (type === XM.TaxType.FREIGHT) {
         freightTax = freightTax + tax;
-        
         codeTax.taxCode = taxCode;
         codeTax.tax = tax;
         freightTaxDetail.push(codeTax); 
       }
-    }
-    
+    }    
     this.set('miscTax', miscTax);
     this.set('miscTaxDetail', miscTaxDetail);
     this.set('freightTax', freightTax);
     this.set('freightTaxDetail', freightTaxDetail);
-  }.observes('taxesLength', 'taxZone')
+  }.observes('taxesLength', 'taxZone'),
+  
+  statusDidChange: function() {
+    if(this.get('status') === SC.Record.READY_CLEAN) {
+      this.customer.set('isEditable', false);
+    }
+  }.observes('status')
 
 });
 
