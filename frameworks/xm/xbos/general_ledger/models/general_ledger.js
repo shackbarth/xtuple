@@ -175,7 +175,7 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   }.property().cacheable(),
   
   /** @private */
-  companyAccountsLengthBinding: '.companyAccounts.length',
+  companyAccountsLengthBinding: '*companyAccounts.length',
   
   /** @private */
   profitCenterAccounts: function() {
@@ -193,7 +193,7 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   }.property().cacheable(),
   
   /** @private */
-  profitCenterAccountsLengthBinding: '.profitCenterAccounts.length',  
+  profitCenterAccountsLengthBinding: '*profitCenterAccounts.length',  
   
   /** @private */
   subAccountAccounts: function() {
@@ -211,7 +211,7 @@ XM.GeneralLedger = XM.Object.extend( XM.Settings,
   }.property().cacheable(),
   
   /** @private */
-  subAccountAccountsLengthBinding: '.subAccountAccounts.length',  
+  subAccountAccountsLengthBinding: '*subAccountAccounts.length',  
   
   // ..........................................................
   // OBSERVERS

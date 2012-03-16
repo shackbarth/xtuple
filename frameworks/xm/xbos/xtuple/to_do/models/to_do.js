@@ -6,20 +6,52 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_to_do');
+sc_require('mixins/crm_documents');
 sc_require('mixins/core_documents');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._ToDo
+  @extends XM.CrmDocuments
   @extends XM.CoreDocuments
+  @extends XM.Document
+
 */
-XM.ToDo = XM._ToDo.extend( XM.CoreDocuments,
+XM.ToDo = XM._ToDo.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ToDo.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
+
+  /**
+    @type Boolean 
+  */
+  isActive: SC.Record.attr(Boolean, {
+    defaultValue: true
+  }),
+  
+  /**
+    @type XM.UserAccountInfo
+  */
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    defaultValue: function() {
+      return XM.dataSource.session.userName;
+    }
+  }),
+
+  /**
+    @type XM.UserAccountInfo
+  */
+  assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    defaultValue: function() {
+      return XM.dataSource.session.userName;
+    }
+  }),
 
   /**
   @type String
@@ -31,6 +63,12 @@ XM.ToDo = XM._ToDo.extend( XM.CoreDocuments,
     }
   }),
 
+  /* @private */
+  toDosLength: 0,
+  
+  /* @private */
+  toDosLengthBinding: '*toDos.length',
+  
   //..................................................
   // METHODS
   //
@@ -40,18 +78,59 @@ XM.ToDo = XM._ToDo.extend( XM.CoreDocuments,
   //
   
   /* @private */
-  _toDosLength: 0,
+  validate: function() {
+    var errors = this.get('validateErrors'), val, err;
+
+    // Validate Name
+    val = this.get('name') ? this.get('name').length : 0;
+    err = XM.errors.findProperty('code', 'xt1002');
+    this.updateErrors(err, !val);
+
+    // Validate Due Date
+    val = this.get('dueDate') ? this.get('dueDate') : 0;
+    err = XM.errors.findProperty('code', 'xt1017');
+    this.updateErrors(err, !val);
+
+    // Validate Assigned To
+    val = this.get('assignedTo') ? this.get('assignedTo').length : 0;
+    err = XM.errors.findProperty('code', 'xt1018');
+    this.updateErrors(err, !val);
+
+    return errors;
+  }.observes('name', 'dueDate', 'assignedTo'),
+  
+  _xm_assignedToDidChange: function() {
+    var assignedTo = this.get('assignedTo'),
+        status = this.get('status');
+     
+    if(status & SC.Record.READY && assignedTo) this.set('assignDate', SC.DateTime.create());
+  }.observes('assignedTo'),
   
   /* @private */
-  _toDosLengthBinding: '.toDos.length',
-  
-  /* @private */
-  _toDosDidChange: function() {
+  _xm_toDosDidChange: function() {
     var documents = this.get('documents'),
         toDos = this.get('toDos');
 
     documents.addEach(toDos);    
-  }.observes('toDosLength')
+  }.observes('toDosLength'),
+
+  /**
+    @private
+
+    If startDate is entered and toDoStatus is 'N' the toDoStatus is changed to 'I' (in-progress).
+
+    If completeDate is entered the toDoStaus is changed to 'C' (complete).
+  */
+  _xm_toDoStatusDidChange: function() {
+    var status = this.get('status'),
+        _toDoStatus = this.get('toDoStatus'),
+        _startDate = this.get('startDate'),
+        _completeDate = this.get('completeDate');
+    if(status & SC.Record.READY) {
+      if(_completeDate && _toDoStatus != XM.ToDo.COMPLETED) this.set('toDoStatus', XM.ToDo.COMPLETED);
+      else if(_startDate && _toDoStatus === XM.ToDo.NEITHER) this.set('toDoStatus', XM.ToDo.INPROGRESS);
+    }
+  }.observes('toDoStatus', 'startDate', 'completeDate')
   
 });
 
@@ -74,7 +153,7 @@ XM.ToDo.mixin( /** @scope XM.ToDo */ {
   @static
   @constant
   @type String
-  @default O
+  @default D
 */
   DEFERRED: 'D',
 
@@ -88,7 +167,16 @@ XM.ToDo.mixin( /** @scope XM.ToDo */ {
   NEITHER: 'N',
 
 /**
-  Completed status for To-Do.
+  In-progress status for To-Do (startDate entered and status is NOT 'P' or 'D').
+  @static
+  @constant
+  @type String
+  @default I
+*/
+  INPROGRESS: 'I',
+
+/**
+  Completed status for To-Do (completeDate is entered).
   @static
   @constant
   @type String
@@ -97,4 +185,3 @@ XM.ToDo.mixin( /** @scope XM.ToDo */ {
   COMPLETED: 'C'
 
 });
-

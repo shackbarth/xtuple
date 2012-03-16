@@ -36,7 +36,7 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
     defaultValue: function() {
-      return XM.DataSource.session.userName;
+      return XM.dataSource.session.userName;
     }
   }),
   
@@ -44,13 +44,13 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   accountsLength: 0,
   
   /* @private */
-  accountsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
+  accountsLengthBinding: SC.Binding.from('*incidents.length').noDelay(),
   
   /* @private */
   incidentsLength: 0,
   
   /* @private */
-  incidentsLengthBinding: SC.Binding.from('.incidents.length').noDelay(),
+  incidentsLengthBinding: SC.Binding.from('*incidents.length').noDelay(),
 
   //..................................................
   // METHODS

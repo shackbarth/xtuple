@@ -15,10 +15,10 @@ XM.Store = SC.Store.extend(XM.Logging,
   // METHODS
   //
 
-  writeDataHash: function(storeKey, hash, status) {
+  dataSourceDidComplete: function(storeKey, dataHash, newId) {
     /* cache the original attributes of the record for later reference */
     if(!this._xm_dataCaches) this._xm_dataCaches = {};
-    if (hash) this._xm_dataCaches[storeKey] = hash;
+    if (dataHash) this._xm_dataCaches[storeKey] = dataHash;
     arguments.callee.base.apply(this, arguments);
   },
 

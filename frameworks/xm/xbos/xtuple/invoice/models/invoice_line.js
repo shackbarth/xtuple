@@ -16,11 +16,29 @@ sc_require('xbos/xtuple/__core__/unit/models/unit');
 XM.InvoiceLine = XM._InvoiceLine.extend(
   /** @scope XM.InvoiceLine.prototype */ {
   
+  /**
+    An XM.Unit array of valid
+  */
   sellingUnits: [],
+  
+  /** @private */
+  taxesLength: 0,
+  
   
   // .................................................
   // CALCULATED PROPERTIES
   //
+  
+  extendedPrice: function() {
+    var billed = this.get('billed'),
+        qtyUnitRatio = this.get('quantityUnitRatio'),
+        price = this.get('price'),
+        priceUnitRatio = this.get('priceUnitRatio');
+    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
+  }.property('billed', 'price').cacheable(),
+  
+  tax: function() {
+  }.property('taxesLength'),
 
   //..................................................
   // METHODS
@@ -45,7 +63,7 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
         item = self.get('item');
     if(item) {
     
-      /* callback */
+      // callback
       callback = function(err, result) {
         var units = [], qry,
             store = self.get('store');
@@ -59,7 +77,7 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
         self.set('sellingUnits', units);
       }
       
-      /* function call */
+      // function call 
       XM.Item.sellingUnits(item, callback);
     } else self.set('sellingUnits', []);
   },
@@ -77,12 +95,12 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
     if(customer && item && quantity &&
        quantityUnit && priceUnit && currency && effective) {
        
-      /* callback */
+      // callback
       callback = function(err, result) {
         self.set('price', result);
       } 
      
-      /* function call */
+      // function call
       XM.Customer.price(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
     }
   },

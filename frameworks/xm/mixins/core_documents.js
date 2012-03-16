@@ -40,31 +40,31 @@ XM.CoreDocuments = {
   contactsLength: 0,
   
   /* @private */
-  contactsLengthBinding: SC.Binding.from('.contacts.length').noDelay(),
+  contactsLengthBinding: SC.Binding.from('*contacts.length').noDelay(),
   
   /* @private */
   itemsLength: 0,
   
   /* @private */
-  itemsLengthBinding: SC.Binding.from('.items.length').noDelay(),
+  itemsLengthBinding: SC.Binding.from('*items.length').noDelay(),
   
   /* @private */
   filesLength: 0,
   
   /* @private */
-  filesLengthBinding: SC.Binding.from('.files.length').noDelay(),
+  filesLengthBinding: SC.Binding.from('*files.length').noDelay(),
   
   /* @private */
   imagesLength: 0,
   
   /* @private */
-  imagesLengthBinding: SC.Binding.from('.urls.length').noDelay(),
+  imagesLengthBinding: SC.Binding.from('*urls.length').noDelay(),
   
   /* @private */
   urlsLength: 0,
   
   /* @private */
-  urlsLengthBinding: SC.Binding.from('.urls.length').noDelay(),
+  urlsLengthBinding: SC.Binding.from('*urls.length').noDelay(),
   
   //..................................................
   // OBSERVERS

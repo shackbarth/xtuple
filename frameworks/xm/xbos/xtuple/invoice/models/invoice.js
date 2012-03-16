@@ -61,19 +61,19 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   creditsLength: 0,
   
   /* @private */
-  creditsLengthBinding: SC.Binding.from('.credits.length').noDelay(),
+  creditsLengthBinding: SC.Binding.from('*credits.length').noDelay(),
   
   /** @private */
   taxesLength: 0,
   
   /** @private */
-  taxesLengthBinding: SC.Binding.from('.taxes.length').noDelay(),
+  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(),
   
   /* @private */
   linesLength: 0,
   
   /* @private */
-  linesLengthBinding: SC.Binding.from('.lines.length').noDelay(),
+  linesLengthBinding: SC.Binding.from('*lines.length').noDelay(),
   
   subTotal: 0,
   
@@ -112,11 +112,9 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   credit: function() {
     var credits = this.get('credits'),
         credit = 0;
-    
     for(var i = 0; i < credits.get('length'); i++) {
       credit = credit + credits.objectAt(i).get('amount');
     }
-    
     return credit;
   }.property('creditsLength').cacheable(),
   
@@ -124,7 +122,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
-        
     return lineTax + freightTax + miscTax; 
   }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
@@ -132,7 +129,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
         totalTax = this.get('totalTax');
-
     return subTotal + freight + totalTax; 
   }.property('subTotal', 'freight', 'totalTax').cacheable(),
   
@@ -257,21 +253,22 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   customerDidChange: function() {
   console.log('customer did change')
     var customer = this.get('customer'),
-        isFreeFormBillto = customer.get('isFreeFormBillto');
+        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
     
-    /* pass defaults in */
+    // pass defaults in
     this.setFreeFormBillto(true);
     if(customer) {
       var address = customer.getPath('billingContact.address');
           
-      /* set defaults */
+      // set defaults 
       this.set('salesRep', customer.getPath('salesRep'));
-      this.set('commission', customer.get('commission') * 100);
+      this.set('commission', customer.get('commission'));
       this.set('terms', customer.get('terms'));
       this.set('taxZone', customer.get('taxZone'));
       this.set('currency', customer.get('currency'));
       this.set('shipCharge', customer.get('shipCharge'));
       this.set('shipto', customer.get('shipto'));
+      this.set('shipVia', customer.get('shipVia'));     
       this.set('billtoName', customer.get('name'));
       this.set('billtoPhone', customer.getPath('billingContact.phone'));
       if(address) {
@@ -285,24 +282,12 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       }
     } else {
     
-      /* clear defaults */
+      // clear defaults
       this.set('salesRep', null);
       this.set('commission', 0);
       this.set('terms', null);
       this.set('taxZone', null);
-      this.set('currency', null);
-      this.set('shipCharge', null);
       this.set('shipto', null);
-      this.set('billtoName', '');
-      this.set('billtoPhone', '');
-      this.set('billtoAddress1','');
-      this.set('billtoAddress2', '');
-      this.set('billtoAddress3', '');
-      this.set('billtoCity', ''); 
-      this.set('billtoState', '');
-      this.set('billtoPostalCode', '');
-      this.set('billtoCountry', '');
-      this.set('billtoPhone', '');
     } 
     this.setFreeFormBillto(isFreeFormBillto);
   }.observes('customer'),
@@ -313,7 +298,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   shiptoDidChange: function() {
     var shipto = this.get('shipto'),
         customer = this.get('customer'),
-        isFreeFormShipto = customer.get('isFreeFormShipto');
+        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false;
     
     this.setFreeFormShipto(true);
     if(shipto) {
@@ -321,9 +306,10 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
      
       /* set defaults */
       this.set('salesRep', shipto.get('salesRep'));
-      this.set('commission', shipto.get('commission') * 100);
+      this.set('commission', shipto.get('commission'));
       this.set('taxZone', shipto.get('taxZone'));
       this.set('shipCharge', shipto.get('shipCharge'));
+      this.set('shipVia', shipto.get('shipVia'));  
       this.set('shiptoName', shipto.get('name'));
       this.set('shiptoPhone', shipto.getPath('contact.phone'));
       if(address) {
@@ -340,11 +326,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       this.set('taxZone', customer.get('taxZone'));
       this.set('currency', customer.get('currency'));
       this.set('shipCharge', customer.get('shipCharge'));
-    } else {
-      this.set('salesRep', null);
-      this.set('commission', 0);
-      this.set('taxZone', null);
-      this.set('shipCharge', null);
     }  
     
     /* clear address */
@@ -374,13 +355,10 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     for(var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
           taxes = line.get('taxes'),
-          billed = line.get('billed'),
-          qtyUnitRatio = line.get('quantityUnitRatio'),
-          price = line.get('price'),
-          priceUnitRatio = line.get('priceUnitRatio');
+          extendedPrice = line.get('extendedPrice');
 
       // line sub total
-      subTotal = subTotal + SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
+      subTotal = subTotal + extendedPrice;
 
       // taxes
       for(var n = 0; n < taxes.get('length'); n++) {
@@ -456,4 +434,24 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   }.observes('status')
 
 });
+
+/**
+  Post an invoice.
+  
+  @param {XM.Invoice} invoice
+  @returns Number
+*/
+XM.Invoice.post = function(invoice, callback) { 
+  if(!SC.kindOf(invoice, XM.Invoice)) return false; 
+  var self = this, dispatch;
+  dispatch = XM.Dispatch.create({
+    className: 'XM.Invoice',
+    functionName: 'post',
+    parameters: customer.get('id'),
+    target: self,
+    action: callback
+  });
+  customer.get('store').dispatch(dispatch);
+  return this;
+}
 
