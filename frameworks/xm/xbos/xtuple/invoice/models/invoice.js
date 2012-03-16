@@ -136,20 +136,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   // METHODS
   //
   
-  /**
-    Check to see if cache exists which indicates record has
-    been previously committed. If so take appropriate actions.
-  */
-  checkCache: function() {
-    /* freeze customer once it has been committed */
-    this.customer.set('isEditable', !this.isCached());
-  },
-  
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-    this.statusDidChange();
-  },
-  
   post: function() {
     return false;
   },
@@ -163,11 +149,11 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   //
   
   /**
-    Set the isEditable state of billto attributes.
+    Set the enabled state of billto attributes.
     
     @param {Boolean) is editable
   */
-  setFreeFormBillto: function(isEditable) {
+  setFreeFormBilltoEnabled: function(isEditable) {
     this.billtoName.set('isEditable', isEditable);
     this.billtoPhone.set('isEditable', isEditable);
     this.billtoAddress1.set('isEditable', isEditable);
@@ -180,11 +166,11 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   },
 
   /**
-    Set the isEditable state of billto attributes.
+    Set the enabled state of billto attributes.
     
     @param {Boolean) iseditable
   */  
-  setFreeFormShipto: function(isEditable) {
+  setFreeFormShiptoEnabled: function(isEditable) {
     this.shiptoName.set('isEditable', isEditable);
     this.shiptoPhone.set('isEditable', isEditable);
     this.shiptoAddress1.set('isEditable', isEditable);
@@ -251,12 +237,11 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
-  console.log('customer did change')
     var customer = this.get('customer'),
         isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
     
     // pass defaults in
-    this.setFreeFormBillto(true);
+    this.setFreeFormBilltoEnabled(true);
     if(customer) {
       var address = customer.getPath('billingContact.address');
           
@@ -289,7 +274,10 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       this.set('taxZone', null);
       this.set('shipto', null);
     } 
-    this.setFreeFormBillto(isFreeFormBillto);
+    this.setFreeFormBilltoEnabled(isFreeFormBillto);
+    
+    // if this was loaded from datasource, lock it down
+    this.customer.set('isEnabled', !this.isCached());
   }.observes('customer'),
   
   /**
@@ -300,7 +288,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
         customer = this.get('customer'),
         isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false;
     
-    this.setFreeFormShipto(true);
+    this.setFreeFormShiptoEnabled(true);
     if(shipto) {
       var address = shipto.get('address');
      
@@ -340,7 +328,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
       this.set('shiptoCountry', '');
       this.set('shiptoPhone', '');
     }
-    this.setFreeFormShipto(isFreeFormShipto);
+    this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
   
   /**
@@ -382,7 +370,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     
     this.set('subTotal', subTotal);
     
-    // next round and sum up each tax code total
+    // next round and sum up each tax code for total
     for(var i = 0; i < taxDetail.length; i++) {
       var codeTotal = taxDetail.objectAt(i);
       
@@ -427,11 +415,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     this.set('miscTaxDetail', miscTaxDetail);
     this.set('freightTax', freightTax);
     this.set('freightTaxDetail', freightTaxDetail);
-  }.observes('taxesLength', 'taxZone'),
-  
-  statusDidChange: function() {
-    this.checkCache();
-  }.observes('status')
+  }.observes('taxesLength', 'taxZone')
 
 });
 
