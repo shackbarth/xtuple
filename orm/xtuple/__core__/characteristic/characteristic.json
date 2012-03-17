@@ -27,6 +27,7 @@
       "attr": {
         "type": "String",
         "column": "char_name"
+        "isRequired": true,
       }
     },
     {
@@ -34,7 +35,8 @@
       "attr": {
         "type": "Number",
         "column": "char_type",
-        "isEditable": false
+        "isEditable": false,
+        "defaultValue": 0
       }
     },
     {
@@ -42,6 +44,7 @@
       "attr": {
         "type": "Number",
         "column": "char_order"
+        "defaultValue": 0
       }
     },
     {
