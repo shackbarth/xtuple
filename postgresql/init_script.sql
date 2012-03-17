@@ -85,6 +85,7 @@
 \i xm/javascript/general_ledger.sql;
 \i xm/javascript/incident.sql;
 \i xm/javascript/invoice.sql;
+\i xm/javascript/invoice_line.sql;
 \i xm/javascript/item.sql;
 \i xm/javascript/journal.sql;
 \i xm/javascript/ledger_account.sql;
@@ -98,5 +99,6 @@
 \i xm/javascript/sales_journal.sql;
 \i xm/javascript/session.sql;
 \i xm/javascript/standard_journal.sql;
+\i xm/javascript/tax.sql;
 \i xm/javascript/to_do.sql;
 -- [ END ] xm

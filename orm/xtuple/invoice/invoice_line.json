@@ -25,7 +25,8 @@
       "name": "invoice",
       "toOne": {
         "type": "Invoice",
-        "column": "invcitem_invchead_id"
+        "column": "invcitem_invchead_id",
+        "defaultValue": "parentRecord"
       }
     },
     {
@@ -46,9 +47,22 @@
     {
       "name": "site",
       "toOne": {
-        "isNested": true,
         "type": "SiteInfo",
         "column": "invcitem_warehous_id"
+      }
+    },
+    {
+      "name": "itemNumber",
+      "attr": {
+        "type": "String",
+        "column": "invcitem_number"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "invcitem_descrip"
       }
     },
     {
@@ -120,15 +134,6 @@
       "attr": {
         "type": "Number",
         "column": "invcitem_custprice"
-      }
-    },
-    {
-      "name": "taxes",
-      "toMany": {
-        "isNested": true,
-        "type": "InvoiceLineTax",
-        "column": "invcitem_id",
-        "inverse": "invoiceLine"
       }
     },
     {
