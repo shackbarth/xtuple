@@ -209,7 +209,7 @@ XM.Record = SC.Record.extend(
         value = 'error';
     
     // cache data
-    if(status = SC.Record.READY_CLEAN) this._xm_dataCache = this.get('attributes');
+    if (status === SC.Record.READY_CLEAN) this._xm_dataCache = this.get('attributes');
     
     // update data state used for server side evaluation
     if (status === SC.Record.READY_NEW)            value = 'created';
