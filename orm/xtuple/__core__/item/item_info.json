@@ -60,7 +60,15 @@
         "column": "item_inv_uom_id",
         "isEditable": false
       }
+    },
+    {
+      "name": "listPrice",
+      "attr": {
+        "type": "Number",
+        "column": "item_listprice"
+      }
     }
+
   ],
   "isNestedOnly": true,
   "isSystem": true
