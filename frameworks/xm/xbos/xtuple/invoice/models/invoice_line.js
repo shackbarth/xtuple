@@ -24,6 +24,9 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   /** @private */
   taxesLength: 0,
   
+  /** @private */
+  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(), 
+  
   
   // .................................................
   // CALCULATED PROPERTIES
@@ -43,20 +46,6 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   //..................................................
   // METHODS
   //
-  
-  /**
-    Check to see if cache exists which indicates record has
-    been previously committed. If so take appropriate actions.
-  */
-  checkCache: function() {
-    /* freeze item once it has been committed */
-    this.item.set('isEditable', !this.isCached());
-  },
-  
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-    this.checkCache();
-  },
   
   updateSellingUnits: function() {
     var self = this,
@@ -91,7 +80,14 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
         quantityUnit = this.get('quantityUnit'),
         priceUnit = this.get('priceUnit'),
         currency = this.getPath('invoice.currency'),
-        effective = this.getPath('invoice.invoiceDate');
+        effective = this.getPath('invoice.invoiceDate'),
+        status = this.get('status');
+
+    // only do this in legitimate editing states    
+    if(status !== SC.Record.READY_NEW && 
+       status !== SC.Record.READY_DIRTY) return;
+       
+    // if we have everything we need, get a price from the server
     if(customer && item && quantity &&
        quantityUnit && priceUnit && currency && effective) {
        
@@ -110,12 +106,14 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   //
 
   itemDidChange: function() {
-    this.updateSellingUnits();
-    this.updatePrice();
+   // this.updateSellingUnits();
+   // this.updatePrice();
   }.observes('item'),
   
   statusDidChange: function() {
-    this.checkCache();
+    if(this.get('status') === SC.Record.READY_CLEAN) {
+      this.customer.set('isEditable', false);
+    }
   }.observes('status')
 
 });
