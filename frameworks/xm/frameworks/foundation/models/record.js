@@ -99,9 +99,7 @@ XM.Record = SC.Record.extend(
     @returns Boolean
   */
   isCached: function() {
-    var storeKey = this.get('storeKey'),
-        store = this.get('store');
-    return store._xm_dataCaches && store._xm_dataCaches[storeKey] ? true : false;
+    return this._xm_dataCache ? true : false;
   },
   
   /**
@@ -112,9 +110,7 @@ XM.Record = SC.Record.extend(
     @returns Any
   */
   getCache: function(key) {
-    var storeKey = this.get('storeKey'),
-        store = this.get('store');
-    return store._xm_dataCaches ? store._xm_dataCaches[storeKey][key] : null;
+    return this._xm_dataCache ? this._xm_dataCache(key) : null;
   },
   
   /**
@@ -211,6 +207,9 @@ XM.Record = SC.Record.extend(
     var status = this.get('status'),
         key = 'dataState',
         value = 'error';
+    
+    // cache data
+    if (status === SC.Record.READY_CLEAN) this._xm_dataCache = this.get('attributes');
     
     // update data state used for server side evaluation
     if (status === SC.Record.READY_NEW)            value = 'created';

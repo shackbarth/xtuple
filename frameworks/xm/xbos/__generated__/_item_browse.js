@@ -75,6 +75,11 @@ XM._ItemBrowse = XM.Record.extend(
   /**
     @type Boolean
   */
-  isSold: SC.Record.attr(Boolean)
+  isSold: SC.Record.attr(Boolean),
+
+  /**
+    @type Number
+  */
+  listPrice: SC.Record.attr(Number)
 
 });
