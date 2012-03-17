@@ -103,6 +103,7 @@ XM.Document = {
       
     // For manually edited numbers, check for conflicts with existing
     if(number && 
+       (status === SC.Record.READY_NEW || status === SC.Record.READY_CLEAN) && 
        (!record._xm_numberGen || number != record._xm_numberGen) &&
        (!record.isCached() || number != record.getCache('number')))  {
        
