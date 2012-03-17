@@ -48,14 +48,14 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   //
   
   updateSellingUnits: function() {
-    var self = this,
-        item = self.get('item');
+    var that = this,
+        item = that.get('item');
     if(item) {
-    
+  
       // callback
       callback = function(err, result) {
         var units = [], qry,
-            store = self.get('store');
+            store = that.get('store');
         qry = SC.Query.local(XM.Unit, {
           conditions: "guid ANY {units}",
           parameters: { 
@@ -63,16 +63,16 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
           }
         });
         units = store.find(qry);
-        self.set('sellingUnits', units);
+        that.set('sellingUnits', units);
       }
       
       // function call 
       XM.Item.sellingUnits(item, callback);
-    } else self.set('sellingUnits', []);
+    } else that.set('sellingUnits', []);
   },
   
   updatePrice: function() {
-    var self = this,
+    var that = this,
         customer = this.getPath('invoice.customer'),
         shipto = this.getPath('invoice.shipto'),
         item = this.get('item'),
@@ -83,17 +83,18 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
         effective = this.getPath('invoice.invoiceDate'),
         status = this.get('status');
 
-    // only do this in legitimate editing states    
+    // only update in legitimate editing states    
     if(status !== SC.Record.READY_NEW && 
        status !== SC.Record.READY_DIRTY) return;
        
     // if we have everything we need, get a price from the server
-    if(customer && item && quantity &&
+    if (customer && item && quantity &&
        quantityUnit && priceUnit && currency && effective) {
        
       // callback
       callback = function(err, result) {
-        self.set('price', result);
+        that.set('price', result);
+        that.set('customerPrice', result);
       } 
      
       // function call
@@ -105,14 +106,20 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
   // OBSERVERS
   //
 
+  extendendPrice: function() {
+    var invoice = this.get('invoice');
+    if (invoice) invoice.linesDidChange();
+  }.observes('extendedPrice'),
+  
   itemDidChange: function() {
-   // this.updateSellingUnits();
-   // this.updatePrice();
+    this.updateSellingUnits();
+    this.updatePrice();
   }.observes('item'),
   
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
-      this.customer.set('isEditable', false);
+      this.item.set('isEditable', false);
+      this.updateSellingUnits();
     }
   }.observes('status')
 
