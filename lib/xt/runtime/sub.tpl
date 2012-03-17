@@ -5,7 +5,9 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_{fileName}');
+// PLACE ME IN {targetDirectory}
+
+sc_require('models/_{fileName}');
 
 /**
   @class
