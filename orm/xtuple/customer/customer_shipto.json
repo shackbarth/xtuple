@@ -88,8 +88,8 @@
     },
     {
       "name": "shipVia",
-      "toOne": {
-        "type": "ShipVia",
+      "attr": {
+        "type": "String",
         "column": "shipto_shipvia"
       }
     },

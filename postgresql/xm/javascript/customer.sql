@@ -21,8 +21,8 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer.price = function(customerId, shiptoId, itemId, quantity, quantityUnitId, priceUnitId, currencyId, effective) {
     var shiptoId = shiptoId ? shiptoId : -1,
         sql = 'select itemPrice($1, $2, $3, $4, $5, $6, $7, $8::date) as price',
-        ret = executeSql(sql,[itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective])[0];
-    return JSON.stringify(ret);
+        ret = executeSql(sql,[itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective])[0].price;
+    return ret;
   }
   
   /** 
