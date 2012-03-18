@@ -32,7 +32,7 @@ select xt.install_js('XM','InvoiceLine','xtuple', $$
       taxDetail.tax = res[i].tax;
       ret.push(taxDetail);
     }
-    return JSON.stringify(ret, null, 2);
+    return JSON.stringify(ret);
   }
 
 $$ );

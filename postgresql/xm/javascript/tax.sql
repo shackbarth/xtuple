@@ -33,9 +33,10 @@ select xt.install_js('XM','Tax','xtuple', $$
 
    @param {String} type - table name
    @param {Number} parent id 
+   @param {Number} tax type id - optional
    @returns Array 
   */
-  XM.Tax.history = function(type, id) {
+  XM.Tax.history = function(type, id, taxTypeId) {
     var ret,
         sql = 'select taxhist_id as "id", taxhist_parent_id as "parent", '
             + '  tax_type as "taxType", tx as "taxCode", '
@@ -49,7 +50,9 @@ select xt.install_js('XM','Tax','xtuple', $$
             + '  left join xm.tax_type on tax_type.guid=taxhist_taxtype_id '
             + 'where taxhist.tableoid::regclass::text=$1 '
             + '  and taxhist_parent_id=$2'
-            + 'order by sequence, tx.code;'
+            + '  and {typeClause} '
+            + 'order by sequence, tx.code;';
+    sql = sql.replace(/{typeClause}/, taxTypeId ? 'taxhist_taxtype_id=' + taxTypeId : 'true');
     ret = executeSql(sql, [type, id]);
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
     return ret;
