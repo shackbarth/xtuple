@@ -62,9 +62,17 @@ XM._InvoiceLine = XM.Record.extend(
   /**
     @type XM.SiteInfo
   */
-  site: SC.Record.toOne('XM.SiteInfo', {
-    isNested: true
-  }),
+  site: SC.Record.toOne('XM.SiteInfo'),
+
+  /**
+    @type String
+  */
+  itemNumber: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  description: SC.Record.attr(String),
 
   /**
     @type XM.SalesCategory
@@ -117,12 +125,9 @@ XM._InvoiceLine = XM.Record.extend(
   customerPrice: SC.Record.attr(Number),
 
   /**
-    @type XM.InvoiceLineTax
+    @type XM.TaxType
   */
-  taxes: SC.Record.toMany('XM.InvoiceLineTax', {
-    isNested: true,
-    inverse: 'invoiceLine'
-  }),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
     @type String
