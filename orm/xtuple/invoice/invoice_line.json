@@ -137,6 +137,13 @@
       }
     },
     {
+      "name": "taxType",
+      "toOne": {
+        "type": "TaxType",
+        "column": "invcitem_taxtype_id"
+      }
+    },    
+    {
       "name": "notes",
       "attr": {
         "type": "String",
