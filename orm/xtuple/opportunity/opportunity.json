@@ -111,7 +111,8 @@
       "name": "currency",
       "toOne": {
         "type": "Currency",
-        "column": "ophead_curr_id"
+        "column": "ophead_curr_id",
+        "defaultValue": "XM.Currency.BASE"
       }
     },
     {
@@ -125,7 +126,8 @@
       "name": "startDate",
       "attr": {
         "type": "Date",
-        "column": "ophead_start_date"
+        "column": "ophead_start_date",
+        "defaultValue": "currentDate"
       }
     },
     {
@@ -162,7 +164,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "ophead_owner_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {

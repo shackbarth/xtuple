@@ -60,7 +60,8 @@
       "name": "accountType",
       "attr": {
         "type": "String",
-        "column": "crmacct_type"
+        "column": "crmacct_type",
+        "defaultValue": "XM.ToDo.ORGANIZATION"
       }
     },
     {
@@ -113,7 +114,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "crmacct_owner_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {

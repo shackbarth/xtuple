@@ -43,7 +43,7 @@
       "name": "order",
       "attr": {
         "type": "Number",
-        "column": "char_order"
+        "column": "char_order",
         "defaultValue": 0
       }
     },

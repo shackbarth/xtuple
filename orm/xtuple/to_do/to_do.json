@@ -120,7 +120,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "todoitem_owner_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {
@@ -130,7 +131,8 @@
         "type": "UserAccountInfo",
         "column": "todoitem_username",
         "inverse": "username",
-        "isRequired": true
+        "isRequired": true,
+        "defaultValue": "currentUser"
       }
     },
     {
