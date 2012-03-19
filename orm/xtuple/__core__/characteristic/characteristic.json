@@ -26,8 +26,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "char_name"
-        "isRequired": true,
+        "column": "char_name",
+        "isRequired": true
       }
     },
     {

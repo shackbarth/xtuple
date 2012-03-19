@@ -36,21 +36,24 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "crmacct_number"
+        "column": "crmacct_number",
+        "isRequired": true
       }
     },
     {
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "crmacct_name"
+        "column": "crmacct_name",
+        "isRequired": true
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "crmacct_active"
+        "column": "crmacct_active",
+        "defaultValue": true
       }
     },
     {
@@ -100,7 +103,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "crmacct_usr_username",
-        "inverse": "username"
+        "inverse": "username",
+        "isRequired": true
       }
     },
     {

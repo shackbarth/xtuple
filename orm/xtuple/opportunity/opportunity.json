@@ -43,14 +43,16 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "ophead_name"
+        "column": "ophead_name",
+        "isRequired": true
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "ophead_active"
+        "column": "ophead_active",
+        "defaultValue": true
       }
     },
     {
@@ -58,7 +60,8 @@
       "toOne": {
         "isNested": true,
         "type": "AccountInfo",
-        "column": "ophead_crmacct_id"
+        "column": "ophead_crmacct_id",
+        "isRequired": true
       }
     },
     {
