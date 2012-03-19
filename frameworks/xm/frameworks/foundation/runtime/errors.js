@@ -54,7 +54,7 @@ var ary = [
     description: '_errorIsUnknown'.loc() },
   { code: 'xt1001',
     label: '_recordIncomplete'.loc(),
-    description: '_numberIsRequired'.loc() },
+    description: '_requiredFieldsEmpty'.loc() },
   { code: 'xt1002',
     label: '_recordIncomplete'.loc(),
     description: '_nameIsRequired'.loc() },
