@@ -19,6 +19,10 @@ XM.ReasonCode = XM._ReasonCode.extend(
   // CALCULATED PROPERTIES
   //
 
+  // TODO: implement the below statement (using required mixin/base class)
+  //       to check for existing duplicate codes
+  //documentKey = code;
+
   //..................................................
   // METHODS
   //
@@ -29,3 +33,38 @@ XM.ReasonCode = XM._ReasonCode.extend(
 
 });
 
+// TODO: move this mixin, as necessary to the associated extension(s)
+
+//XM.ReasonCode.mixin( /** @scope XM.ReasonCode */ {
+
+/**
+  Selected Document Type - A/R Credit Memo.
+  
+  @static
+  @constant
+  @type String
+  @default P
+*/
+//  CREDIT_MEMO: 'ARCM',
+
+/**
+  Selected Document Type - A/R Debit Memo.
+  
+  @static
+  @constant
+  @type String
+  @default D
+*/
+//  DEBIT_MEMO: 'ARDM',
+
+/**
+  Selected Document Type - Return Authorization
+
+  @static
+  @constant
+  @type String
+  @default N
+*/
+//  RETURN_AUTH: 'RA'
+
+//});

@@ -20,7 +20,7 @@ XM.ExpenseCategory = XM._ExpenseCategory.extend(
   //
 
   // TODO: implement the below statement (using required mixin/base class)
-  //       to check for duplicate codes
+  //       to check for existing duplicate codes
   //documentKey = code;
 
   //..................................................
@@ -32,4 +32,3 @@ XM.ExpenseCategory = XM._ExpenseCategory.extend(
   //
 
 });
-
