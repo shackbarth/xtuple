@@ -7,14 +7,14 @@
 
 // PLACE ME IN {targetDirectory}
 
-sc_require('models/_{fileName}');
+sc_require('mixins/_{fileName}');
 
 /**
   @class
 
   @extends {className}
 */
-{className2} = {className}.extend(
+{className2} = XM.Record.extend({className},
   /** @scope {className2}.prototype */ {
 
   // .................................................
