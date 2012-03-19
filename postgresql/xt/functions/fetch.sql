@@ -5,41 +5,17 @@ create or replace function xt.fetch(data_hash text) returns text as $$
   /* initialize plv8 if needed */
   if(!this.isInitialized) executeSql('select xt.js_init()');
 
-  // ..........................................................
-  // PROCESS
-  //
-
   var query = JSON.parse(data_hash).query,
-      nameSpace = query.recordType.beforeDot(),
-      type = query.recordType.afterDot(),
-      table = (nameSpace + '.' + type).decamelize(),
+      recordType = query.recordType
       conditions = query.conditions,
-      orderBy = (query.orderBy ? 'order by ' + query.orderBy : '').decamelize(),
+      orderBy = query.orderBy,
       parameters = query.parameters,
-      limit = query.rowLimit ? 'limit ' + query.rowLimit : '';
-      offset = query.rowOffset ? 'offset ' + query.rowOffset : '',
+      rowLimit = query.rowLimit;
+      rowOffset = query.rowOffset,
       data = Object.create(XT.Data), recs = null, 
-      conditions = data.buildClause(nameSpace, type, conditions, parameters),
-      prettyPrint = query.prettyPrint ? 2 : null, 
-      sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+      prettyPrint = query.prettyPrint ? 2 : null;
 
-  /* validate - don't bother running the query if the user has no privileges */
-  if(!data.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
-
-  /* query the model */
-  sql = sql.replace('{table}', table)
-           .replace('{conditions}', conditions)
-           .replace('{orderBy}', orderBy)
-           .replace('{limit}', limit)
-           .replace('{offset}', offset);
-       
-  if(DEBUG) { print(NOTICE, 'sql = ', sql); }
-
-  recs = executeSql(sql);
-
-  for (var i = 0; i < recs.length; i++) {  	
-    recs[i] = data.normalize(nameSpace, type, recs[i]);	  	
-  };
+  recs = data.fetch(recordType, conditions, parameters, orderBy, rowLimit, rowOffset);
  
   /* return the results */
   return JSON.stringify(recs, null, prettyPrint);

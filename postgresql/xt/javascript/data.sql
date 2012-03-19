@@ -515,13 +515,52 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /**
+      Fetch an array of records from the database.
+
+      @param {String} record type
+      @param {Object} conditions
+      @param {Object} parameters
+      @param {String} order by - optional
+      @param {Number} row limit - optional
+      @param {Number} row offset - optional
+      @returns Array
+    */
+    fetch: function(recordType, conditions, parameters, orderBy, rowLimit, rowOffset) {
+      var nameSpace = recordType.beforeDot(),
+          type = recordType.afterDot(),
+          table = (nameSpace + '.' + type).decamelize(),
+          orderBy = (orderBy ? 'order by ' + orderBy : '').decamelize(),
+          limit = rowLimit ? 'limit ' + rowLimit : '';
+          offset = rowOffset ? 'offset ' + rowOffset : '',
+          recs = null, 
+          conditions = this.buildClause(nameSpace, type, conditions, parameters),
+          sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+
+      /* validate - don't bother running the query if the user has no privileges */
+      if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
+
+      /* query the model */
+      sql = sql.replace('{table}', table)
+               .replace('{conditions}', conditions)
+               .replace('{orderBy}', orderBy)
+               .replace('{limit}', limit)
+               .replace('{offset}', offset);     
+      if(DEBUG) { print(NOTICE, 'sql = ', sql); }
+      recs = executeSql(sql);
+      for (var i = 0; i < recs.length; i++) {  	
+        recs[i] = this.normalize(nameSpace, type, recs[i]);	  	
+      }
+      return recs;
+    },
+
+    /**
       Retreives a single record from the database. If the user does not have appropriate privileges an
       error will be thrown.
       
       @param {String} namespace qualified record type
       @param {Number} record id
       @param {String} encryption key
-      @returns {Object} 
+      @returns Object
     */
     retrieveRecord: function(recordType, id, encryptionKey) {
       var nameSpace = recordType.beforeDot(), 

@@ -70,6 +70,13 @@
         "type": "Boolean",
         "column": "item_sold"
       }
+    },
+    {
+      "name": "listPrice",
+      "attr": {
+        "type": "Number",
+        "column": "item_listprice"
+      }
     }
   ],
   "isSystem": true

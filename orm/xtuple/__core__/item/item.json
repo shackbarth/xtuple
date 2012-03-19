@@ -27,7 +27,8 @@
       "attr": {
         "type": "Number",
         "column": "item_number",
-        "isEditable": false
+        "isEditable": false,
+        "isRequired": true
       }
     },
     {
@@ -62,7 +63,8 @@
       "name": "inventoryUnit",
       "toOne": {
         "type": "Unit",
-        "column": "item_inv_uom_id"
+        "column": "item_inv_uom_id",
+        "isRequired": true
       }
     },
     {
@@ -118,7 +120,8 @@
       "name": "productCategory",
       "toOne": {
         "type": "ProductCategory",
-        "column": "item_prodcat_id"
+        "column": "item_prodcat_id",
+        "isRequired": true
       }
     },
     {
@@ -140,13 +143,6 @@
       "toOne": {
         "type": "Unit",
         "column": "item_price_uom_id"
-      }
-    },
-    {
-      "name": "isConfigured",
-      "attr": {
-        "type": "Boolean",
-        "column": "item_config"
       }
     },
     {

@@ -27,7 +27,8 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "invchead_invcnumber"
+        "column": "invchead_invcnumber",
+        "isRequired": true
       }
     },
     {
@@ -41,14 +42,16 @@
       "name": "orderDate",
       "attr": {
         "type": "Date",
-        "column": "invchead_orderdate"
+        "column": "invchead_orderdate",
+        "defaultValue": "currentDate"
       }
     },
     {
       "name": "invoiceDate",
       "attr": {
         "type": "Date",
-        "column": "invchead_invcdate"
+        "column": "invchead_invcdate",
+        "defaultValue": "currentDate"
       }
     },
     {
@@ -62,21 +65,24 @@
       "name": "isPrinted",
       "attr": {
         "type": "Boolean",
-        "column": "invchead_printed"
+        "column": "invchead_printed",
+        "defaultValue": false
       }
     },
     {
       "name": "isPosted",
       "attr": {
         "type": "Boolean",
-        "column": "invchead_posted"
+        "column": "invchead_posted",
+        "defaultValue": false
       }
     },
     {
       "name": "isVoid",
       "attr": {
         "type": "Boolean",
-        "column": "invchead_void"
+        "column": "invchead_void",
+        "defaultValue": false
       }
     },		
     {
@@ -84,7 +90,8 @@
       "toOne": {
         "isNested": true,
         "type": "CustomerInfo",
-        "column": "invchead_cust_id"
+        "column": "invchead_cust_id",
+        "isRequired": true
       }
     },
     {
@@ -281,7 +288,9 @@
       "name": "currency",
       "toOne": {
         "type": "Currency",
-        "column": "invchead_curr_id"
+        "column": "invchead_curr_id",
+        "defaultValue": "baseCurrency",
+        "isRequired": true
       }
     },
     {
