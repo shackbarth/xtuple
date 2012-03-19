@@ -145,27 +145,3 @@ XM.Account.mixin( /** @scope XM.Account */ {
 
 });
 
-
-XM.Account.mixin( /** @scope XM.Account */ {
-
-/**
-  Organization type Account.
-  
-  @static
-  @constant
-  @type String
-  @default O
-*/
-  ORGANIZATION: 'O',
-
-/**
-  Individual type Account.
-  
-  @static
-  @constant
-  @type String
-  @default I
-*/
-  INDIVIDUAL: 'I'
-
-});

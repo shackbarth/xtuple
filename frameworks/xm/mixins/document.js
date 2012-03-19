@@ -14,6 +14,15 @@
 XM.Document = {
 
   /**
+    The unique property for the document, typically a number, code or name. 
+    This property will be checked when a user edits it to ensure it has not already 
+    been used by another record of the same type.
+    
+    @default number
+  */
+  documentKey: 'number',
+
+  /**
     If set, the number Policy property will be set based on the number
     generation policy on this setting.
   */
@@ -24,7 +33,7 @@ XM.Document = {
   //
   
   /**
-    Number generation method that can be one of three constants:
+    Number generation method for the document key that can be one of three constants:
       XM.MANUAL_NUMBER
       XM.AUTO_NUMBER
       XM.AUTO_OVERRIDE_NUMBER
@@ -33,26 +42,27 @@ XM.Document = {
     if it is set.
     
     @seealso numberPolicySetting
-    @default XM.AUTO_NUMBER
+    @default XM.MANUAL_NUMBER
   */
   numberPolicy: function(key, value) {
     var setting =  this.get('numberPolicySetting');
     if(value === undefined && setting) {
       value = XM.session.get('settings').get(setting);
     }
-    this._numberPolicy = value ? value : XM.AUTO_NUMBER;
+    this._numberPolicy = value ? value : XM.MANUAL_NUMBER;
     return this._numberPolicy;
   }.property().cacheable(),
   
   number: SC.Record.attr(String, {
     defaultValue: function() {
       var record = arguments[0],
+          docKey = record.get('documentKey'),
           status = record.get('status'),
           numberPolicy = record.get('numberPolicy');
       if((numberPolicy === XM.AUTO_NUMBER || 
           numberPolicy === XM.AUTO_OVERRIDE_NUMBER) && 
           status === SC.Record.READY_NEW) {
-        XM.Record.fetchNumber.call(record);
+        XM.Record.fetchNumber.call(record, docKey);
       } else return '';
     },
   
@@ -62,6 +72,12 @@ XM.Document = {
   // ..........................................................
   // METHODS
   //
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    var docKey = this.get('documentKey');
+    this.addObserver(docKey, this._xm_keyDidChange);
+  },
 
   destroy: function() {
     var record = this,
@@ -86,27 +102,26 @@ XM.Document = {
   }.observes('numberPolicy'),
 
   /** @private */
-  _xm_numberDidChange: function() {  
+  _xm_keyDidChange: function() {  
     var record = this;
         status = record.get('status'),
-        number = record.get('number'),
+        docKey = record.get('documentKey'),
+        number = record.get(docKey),
         policy = record.get('numberPolicy');   
-   
+
     // if generated and automatic, lock it down
     if(record._xm_numberGen && policy === 'A') this.number.set('isEditable', false);
    
     // release the fetched number if applicable 
-    if(record._xm_numberGen && record._xm_numberGen !== number - 0) {
+    if(record._xm_numberGen && record._xm_numberGen != number) {
       XM.Record.releaseNumber.call(record, record._xm_numberGen); 
       record._xm_numberGen = null;
     }    
-      
+
     // For manually edited numbers, check for conflicts with existing
-    if(number && 
-       (status === SC.Record.READY_NEW || status === SC.Record.READY_CLEAN) && 
-       (!record._xm_numberGen || number != record._xm_numberGen) &&
-       (!record.isCached() || number != record.getCache('number')))  {
-       
+    if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_CLEAN))  {
+      if(this._xm_numberGen && this._xm_numberGen == number) return;
+
       // callback
       callback = function(err, result) {
         if(!err) {
@@ -118,10 +133,9 @@ XM.Document = {
       }        
       
       // function call
-      XM.Record.findExisting.call(record, 'number', number, callback);
+      XM.Record.findExisting.call(record, docKey, number, callback);
     }
-
-  }.observes('number')
+  }
 }
 
 
