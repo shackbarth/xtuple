@@ -15,11 +15,38 @@ sc_require('xbos/xtuple/__core__/unit/models/unit');
 */
 XM.InvoiceLine = XM._InvoiceLine.extend(
   /** @scope XM.InvoiceLine.prototype */ {
+
+
+  /** 
+    Inovice Customer
+  */
+  customerBinding: SC.Binding.from('*invoice.customer').noDelay(), 
+    
+  /** 
+    Invoice currency
+  */
+  currencyBinding: SC.Binding.from('*invoice.currency').noDelay(), 
+
+  /** 
+    Invoice date
+  */
+  invoiceDateBinding: SC.Binding.from('*invoice.invoiceDate').noDelay(), 
+
+  invoice: SC.Record.toOne('XM.Invoice', {
+    defaultValue: function() {
+      return arguments[0] ? arguments[0].get('parentRecord') : null;
+    }
+  }),
   
   /**
     An XM.Unit array of valid
   */
   sellingUnits: [],
+  
+  /** 
+    Invoice currency
+  */
+  shiptoBinding: SC.Binding.from('*invoice.shipto').noDelay(), 
   
   /**
     Tax detail
@@ -36,16 +63,6 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
     Tax Zone
   */
   taxZoneBinding: SC.Binding.from('*invoice.taxZone').noDelay(), 
-  
-  /** 
-    Invoice date
-  */
-  invoiceDateBinding: SC.Binding.from('*invoice.invoiceDate').noDelay(), 
-  
-  /** 
-    Invoice currency
-  */
-  currencyBinding: SC.Binding.from('*invoice.currency').noDelay(), 
   
   // .................................................
   // CALCULATED PROPERTIES
@@ -94,8 +111,29 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
       XM.Item.sellingUnits(item, callback);
     } else that.setIfChanged('sellingUnits', []);
   },
+
+  //..................................................
+  // OBSERVERS
+  //
+
+  extendendPriceDidChange: function() {
+    var invoice = this.get('invoice');
+    if (invoice) invoice.linesDidChange();
+  }.observes('extendedPrice'),
+
+  itemDidChange: function() {
+    this.updateSellingUnits();
+    this.updatePrice();
+  }.observes('item'),
   
-  updatePrice: function() {
+  statusDidChange: function() {
+    if(this.get('status') === SC.Record.READY_CLEAN) {
+      this.item.set('isEditable', false);
+      this.updateSellingUnits();
+    }
+  }.observes('status'),
+
+  priceCriteriaDidChange: function() {
     var that = this,
         customer = this.getPath('invoice.customer'),
         shipto = this.getPath('invoice.shipto'),
@@ -124,28 +162,7 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
       // function call
       XM.Customer.price(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
     }
-  },
-
-  //..................................................
-  // OBSERVERS
-  //
-
-  extendendPriceDidChange: function() {
-    var invoice = this.get('invoice');
-    if (invoice) invoice.linesDidChange();
-  }.observes('extendedPrice'),
-
-  itemDidChange: function() {
-    this.updateSellingUnits();
-    this.updatePrice();
-  }.observes('item'),
-  
-  statusDidChange: function() {
-    if(this.get('status') === SC.Record.READY_CLEAN) {
-      this.item.set('isEditable', false);
-      this.updateSellingUnits();
-    }
-  }.observes('status'),
+  },//.observes('customer','shipto','billed','quantity','quantityUnit','priceUnit','invoiceDate','currency'),
 
   taxCriteriaDidChange: function() {
     var that = this;
@@ -182,31 +199,31 @@ XM.InvoiceLine = XM._InvoiceLine.extend(
     
     // request for stored result
     } else XM.InvoiceLine.taxDetail(that.get('id'), callback);
-  }.observes('status', 'extendedPrice', 'taxZone', 'taxType', 'invoiceDate', 'currency')
+  },//.observes('status', 'extendedPrice', 'taxZone', 'taxType', 'invoiceDate', 'currency'),
 
 });
 
-  /**
-   Return the tax detail for line items based on input. 
-   
-   Signature for requesting estimated tax detail records
-   XM.InvoiceLine.taxDetail(taxZoneId, taxTypeId, effective, currency, amount, callback)
+/**
+  Return the tax detail for line items based on input. 
 
-   @param {Number} tax zone id - optional
-   @param {Number} tax type id - optional
-   @param {Number} currency id
-   @param {Date} effective date
-   @param {Number} amount
-   @param {Function} callback
-   
-   Signature for requesting actual tax detail records
-   XM.InvoiceLine.taxDetail(invoiceId, callback)
-   
-   @param {Number} invoice line id
-   @param {Function} callback
-   
-   @returns Number 
-  */
+  Signature for requesting estimated tax detail records
+  XM.InvoiceLine.taxDetail(taxZoneId, taxTypeId, effective, currency, amount, callback)
+
+  @param {Number} tax zone id - optional
+  @param {Number} tax type id - optional
+  @param {Number} currency id
+  @param {Date} effective date
+  @param {Number} amount
+  @param {Function} callback
+
+  Signature for requesting actual tax detail records
+  XM.InvoiceLine.taxDetail(invoiceId, callback)
+
+  @param {Number} invoice line id
+  @param {Function} callback
+
+  @returns Number 
+*/
 XM.InvoiceLine.taxDetail = function(taxZoneId, taxTypeId, effective, currency, amount, callback) {
   var that = this, dispatch, store = XM.store, params;
   if(typeof arguments[1] === 'function') {
