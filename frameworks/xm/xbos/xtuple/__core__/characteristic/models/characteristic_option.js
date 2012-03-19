@@ -19,13 +19,6 @@ XM.CharacteristicOption = XM._CharacteristicOption.extend(
   // CALCULATED PROPERTIES
   //
 
-  /**
-    @type Number
-  */
-  order: SC.Record.attr(Number, {
-    defaultValue: 0
-  }),
-
   //..................................................
   // METHODS
   //

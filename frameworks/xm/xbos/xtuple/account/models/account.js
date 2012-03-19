@@ -29,33 +29,6 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
 
   numberPolicySetting: 'CRMAccountNumberGeneration',
   
-  /**
-    @type Boolean 
-  */
-  isActive: SC.Record.attr(Boolean, {
-    defaultValue: true
-  }),
-  
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.dataSource.session.userName;
-    }
-  }),
-
-  /**
-  @type String
-  */
-  accountType: SC.Record.attr(String, {
-    /** @private */
-    defaultValue: function() {
-      return XM.ToDo.ORGANIZATION
-    }
-  }),
-
   isUserAccount: function(key, value) {
     if(value) this._xm_isUserAccount = value;
       return this._xm_isUserAccount !== undefined ?
@@ -91,27 +64,10 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   validate: function() {
     var errors = this.get('validateErrors'), val, err;
 
-    // Validate Number
-    val = this.get('number') ? this.get('number').length : 0;
-    err = XM.errors.findProperty('code', 'xt1001');
-    this.updateErrors(err, !val);
-
-    // Validate Name
-    val = this.get('name') ? this.get('name').length : 0;
-    err = XM.errors.findProperty('code', 'xt1002');
-    this.updateErrors(err, !val);
-
     // Validate Parent
     if(this.get('parent')) {
       val = this.get('id') !== this.get('parent') ? this.get('parent') : 0;
       err = XM.errors.findProperty('code', 'xt1019');
-      this.updateErrors(err, !val);
-    }
-
-    // Validate User Account
-    if(this.get('isUserAccount')) {
-      val = this.get('userAccount') ? this.get('userAccount') : 0;
-      err = XM.errors.findProperty('code', 'xt1020');
       this.updateErrors(err, !val);
     }
 

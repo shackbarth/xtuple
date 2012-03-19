@@ -25,42 +25,6 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   // CALCULATED PROPERTIES
   //
 
-  /**
-    @type Boolean 
-  */
-  isActive: SC.Record.attr(Boolean, {
-    defaultValue: true
-  }),
-  
-  /**
-    @type XM.Currency
-  */
-  currency: SC.Record.toOne('XM.Currency', {
-    defaultValue: function() {
-      return XM.Currency.BASE;
-    }
-  }),
-
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.dataSource.session.userName;
-    }
-  }),
-
-  /**
-    @type SC.DateTime
-  */
-  startDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    defaultValue: function() {
-      return SC.DateTime.create();
-    }
-  }),
-
   /* @private */
   accountsLength: 0,
   
@@ -84,16 +48,6 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
   /* @private */
   validate: function() {
     var errors = this.get('validateErrors'), val, err;
-
-    // Validate Name
-    val = this.get('name') ? this.get('name').length : 0;
-    err = XM.errors.findProperty('code', 'xt1002');
-    this.updateErrors(err, !val);
-
-    // Validate Account
-    val = this.get('account') ? this.get('account').length : 0;
-    err = XM.errors.findProperty('code', 'xt1006');
-    this.updateErrors(err, !val);
 
     return errors;
   }.observes('name', 'account'),

@@ -19,6 +19,10 @@ XM.ExpenseCategory = XM._ExpenseCategory.extend(
   // CALCULATED PROPERTIES
   //
 
+  // TODO: implement the below statement (using required mixin/base class)
+  //       to check for duplicate codes
+  //documentKey = code;
+
   //..................................................
   // METHODS
   //
