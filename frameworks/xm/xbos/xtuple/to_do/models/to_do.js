@@ -19,19 +19,16 @@ sc_require('mixins/document');
   @extends XM.Document
 
 */
-XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
+XM.ToDo = XM._ToDo.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ToDo.prototype */ {
   
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  /* @private */
-  toDosLength: 0,
-  
-  /* @private */
-  toDosLengthBinding: '*toDos.length',
-  
+  // see document mixin for object behavior(s)
+  documentKey = 'name';
+
   //..................................................
   // METHODS
   //
@@ -39,6 +36,12 @@ XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
   //..................................................
   // OBSERVERS
   //
+  
+  /* @private */
+  toDosLength: 0,
+  
+  /* @private */
+  toDosLengthBinding: '*toDos.length',
   
   /* @private */
   validate: function() {

@@ -6,22 +6,22 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_reason_code');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._ReasonCode
 */
-XM.ReasonCode = XM._ReasonCode.extend(
+XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   /** @scope XM.ReasonCode.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  // TODO: implement the below statement (using required mixin/base class)
-  //       to check for existing duplicate codes
-  //documentKey = code;
+  // see document mixin for object behavior(s)
+  documentKey = 'code';
 
   //..................................................
   // METHODS
@@ -33,7 +33,7 @@ XM.ReasonCode = XM._ReasonCode.extend(
 
 });
 
-// TODO: move this mixin, as necessary to the associated extension(s)
+// TODO: move this mixin, as necessary, to the associated extension(s)
 
 //XM.ReasonCode.mixin( /** @scope XM.ReasonCode */ {
 
