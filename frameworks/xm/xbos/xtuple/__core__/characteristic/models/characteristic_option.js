@@ -19,6 +19,13 @@ XM.CharacteristicOption = XM._CharacteristicOption.extend(
   // CALCULATED PROPERTIES
   //
 
+  /**
+    @type Number
+  */
+  order: SC.Record.attr(Number, {
+    defaultValue: 0
+  }),
+
   //..................................................
   // METHODS
   //
@@ -26,6 +33,12 @@ XM.CharacteristicOption = XM._CharacteristicOption.extend(
   //..................................................
   // OBSERVERS
   //
+
+  // On value change, check for duplicates
+  _xm_valueDidChange: function() {
+    var _xm_characteristic = this.get('characteristic');
+    _xm_characteristic.validate();
+  }.observes('value')
 
 });
 

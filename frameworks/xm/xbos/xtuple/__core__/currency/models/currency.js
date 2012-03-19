@@ -11,9 +11,6 @@ sc_require('xbos/__generated__/_currency');
   @class
 
   @extends XM._Currency
-  @extends XM.CrmDocuments
-  @extends XM.CoreDocuments
-  @extends XM.Document
 
 */
 XM.Currency = XM._Currency.extend(
