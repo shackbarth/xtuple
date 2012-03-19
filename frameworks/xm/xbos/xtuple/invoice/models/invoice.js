@@ -34,13 +34,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     }
   }),
   
-  shipDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    defaultValue: function() {
-      return SC.DateTime.create();
-    }
-  }),
-  
   currency: SC.Record.toOne('XM.Currency', {
     defaultValue: function() {
       return XM.Currency.BASE;
@@ -183,47 +176,13 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   },
   
   validate: function() {
-    var errors = this.get('validateErrors'), val, err;
-
-    // Validate Number
-    val = this.get('number') ? this.get('number').length : 0;
-    err = XM.errors.findProperty('code', 'xt1001');
-    this.updateErrors(err, !val);
-
-    // Validate Invoice Date
-    val = this.get('invoiceDate');
-    err = XM.errors.findProperty('code', 'xt1012');
-    this.updateErrors(err, !val);
-    
-    // Validate Customer
-    val = this.get('customer');
-    err = XM.errors.findProperty('code', 'xt1011');
-    this.updateErrors(err, !val);
-
-    // Validate Currency
-    val = this.get('currency');
-    err = XM.errors.findProperty('code', 'xt1014');
-    this.updateErrors(err, !val);
-
-    // Validate Terms
-    val = this.get('terms');
-    err = XM.errors.findProperty('code', 'xt1013');
-    this.updateErrors(err, !val);
-
-    // Validate Commission
-    val = this.get('commission');
-    err = XM.errors.findProperty('code', 'xt1016');
-    this.updateErrors(err, isNaN(val));
+    var errors = arguments.callee.base.apply(this, arguments), 
+        val, err;
 
     // Validate Lines
     val = this.get('linesLength');
     err = XM.errors.findProperty('code', 'xt1010');
     this.updateErrors(err, !val);
-
-    // Validate Freight
-    val = this.get('freight');
-    err = XM.errors.findProperty('code', 'xt1015');
-    this.updateErrors(err, isNaN(val));
 
     // Validate Total
     val = this.get('total');
@@ -338,6 +297,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     Recalculate line item tax and sales totals.
   */
   linesDidChange: function() {
+  /*
     var lines = this.get('lines'),
         taxDetail = [],
         taxTotal = 0, subTotal = 0;
@@ -381,8 +341,9 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     }
     this.set('lineTax', taxTotal);
     this.set('lineTaxDetail', taxDetail);
+    */
   }.observes('linesLength', 'taxZone'),
-  
+  /*
   taxesDidChange: function() {    
     var taxes = this.get('taxes'), 
         miscTaxDetail = [], freightTaxDetail = [],
@@ -412,7 +373,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     this.set('freightTax', freightTax);
     this.set('freightTaxDetail', freightTaxDetail);
   }.observes('taxesLength', 'taxZone'),
-  
+  */
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.customer.set('isEditable', false);
@@ -428,16 +389,17 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   @returns Number
 */
 XM.Invoice.post = function(invoice, callback) { 
-  if(!SC.kindOf(invoice, XM.Invoice)) return false; 
-  var self = this, dispatch;
+  if(!SC.kindOf(invoice, XM.Invoice) ||
+     invoice.get('isPosted')) return false; 
+  var that = this, dispatch;
   dispatch = XM.Dispatch.create({
     className: 'XM.Invoice',
     functionName: 'post',
-    parameters: customer.get('id'),
-    target: self,
+    parameters: invoice.get('id'),
+    target: that,
     action: callback
   });
-  customer.get('store').dispatch(dispatch);
+  invoice.get('store').dispatch(dispatch);
   return this;
 }
 

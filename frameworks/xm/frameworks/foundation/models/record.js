@@ -396,30 +396,31 @@ XM.Record.fetchId = function(prop) {
   @returns {Object} receiever
 */
 XM.Record.fetchNumber = function(prop) {
-  var self = this,
+  var that = this,
       prop = prop ? prop : 'number',
       recordType = this.get("className"),
       dispatch;
-  
+      
+  // call back funtion
   callback = function(error, result) {
     if(!error) {
-      self._xm_numberGen = result;
-      self.set(prop, result);
+      that._xm_numberGen = result;
+      that.set(prop, result);
     };
   }
   
+  // the request
   dispatch = XM.Dispatch.create({
     className: 'XT.Record',
     functionName: 'fetchNumber',
     parameters: recordType,
-    target: self,
+    target: that,
     action: callback
   });
-
   console.log("XM.Record.fetchNumber for: %@".fmt(recordType));
-
-  self.get('store').dispatch(dispatch);
   
+  // do it
+  that.get('store').dispatch(dispatch);
   return this;
 };
 

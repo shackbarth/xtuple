@@ -6,19 +6,22 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_characteristic');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._Characteristic
 */
-XM.Characteristic = XM._Characteristic.extend(
+XM.Characteristic = XM._Characteristic.extend(XM.Document,
   /** @scope XM.Characteristic.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
+  documentKey: 'name',
+  
   //..................................................
   // METHODS
   //
