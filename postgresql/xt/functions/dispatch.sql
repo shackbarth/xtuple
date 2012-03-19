@@ -75,16 +75,37 @@ select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Session",
                           "functionName":"privileges"
                           }$$);    
+                          
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Invoice",
                           "functionName":"post",
                           "parameters":[137]
-                          }$$);    
+                          }$$);  
+                            
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Invoice",
                           "functionName":"postALl",
                           "parameters":[false]
-                          }$$);     
+                          }$$); 
+                          
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.InvoiceLine",
+                          "functionName":"taxDetail",
+                          "parameters":154
+                          }$$);
+                          
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Invoice",
+                          "functionName":"freightTax",
+                          "parameters":79
+                          }$$);
+
+select xt.dispatch($${"requestType":"dispatch",
+                          "className":"XM.Invoice",
+                          "functionName":"freightTax",
+                          "parameters":[1,"01-01-2011", 1, 125]
+                          }$$);
+                              
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Invoice",
                           "functionName":"void",
