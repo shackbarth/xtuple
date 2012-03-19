@@ -26,14 +26,16 @@
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "salescat_active"
+        "column": "salescat_active",
+        "defaultValue": true
       }
     },
     {
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "salescat_name"
+        "column": "salescat_name",
+        "isRequired": true
       }
     },
     {
