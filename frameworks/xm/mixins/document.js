@@ -52,9 +52,15 @@ XM.Document = {
     this._numberPolicy = value ? value : XM.MANUAL_NUMBER;
     return this._numberPolicy;
   }.property().cacheable(),
+
+  // ..........................................................
+  // METHODS
+  //
   
-  number: SC.Record.attr(String, {
-    defaultValue: function() {
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    var docKey = this.get('documentKey');
+    dv = function() {
       var record = arguments[0],
           docKey = record.get('documentKey'),
           status = record.get('status'),
@@ -64,18 +70,9 @@ XM.Document = {
           status === SC.Record.READY_NEW) {
         XM.Record.fetchNumber.call(record, docKey);
       } else return '';
-    },
-  
-    isRequired: true
-  }),
-
-  // ..........................................................
-  // METHODS
-  //
-  
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-    var docKey = this.get('documentKey');
+    }
+    this[docKey].defaultValue = dv;
+    this[docKey].set('isRequired', true);
     this.addObserver(docKey, this._xm_keyDidChange);
   },
 

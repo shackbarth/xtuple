@@ -19,6 +19,8 @@ sc_require('mixins/document');
 XM.Address = XM._Address.extend(XM.Document, SC.Copyable,
 /** @scope XM.Address.prototype */ {
   
+  numberPolicy: XM.AUTO_NUMBER,
+  
   /**
   @type String
   */

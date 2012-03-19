@@ -19,9 +19,9 @@ sc_require('mixins/document');
   @extends XM.Document
 
 */
-XM.ToDo = XM._ToDo.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
+XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ToDo.prototype */ {
-
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
