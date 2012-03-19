@@ -102,6 +102,8 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
 
 });
 
+XM.Characteristic.mixin( /** @scope XM.Characteristic */ {
+
 /**
   @static
   @constant
@@ -125,3 +127,5 @@ XM.Characteristic.LIST = 1;
   @default 2
 */
 XM.Characteristic.DATE = 2;
+
+});
