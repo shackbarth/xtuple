@@ -19,6 +19,8 @@ sc_require('mixins/document');
 XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   /** @scope XM.Incident.prototype */ {
 
+  numberPolicy: XM.AUTO_NUMBER,
+
   // .................................................
   // CALCULATED PROPERTIES
   //

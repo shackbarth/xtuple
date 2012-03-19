@@ -17,6 +17,8 @@ sc_require('mixins/document');
 XM.Voucher = XM._Voucher.extend(XM.Document,
   /** @scope XM.Voucher.prototype */ {
 
+  numberPolicy: XM.AUTO_NUMBER,
+  
   // .................................................
   // CALCULATED PROPERTIES
   //

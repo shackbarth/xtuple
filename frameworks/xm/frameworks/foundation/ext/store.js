@@ -15,13 +15,6 @@ XM.Store = SC.Store.extend(XM.Logging,
   // METHODS
   //
 
-  dataSourceDidComplete: function(storeKey, dataHash, newId) {
-    /* cache the original attributes of the record for later reference */
-    if(!this._xm_dataCaches) this._xm_dataCaches = {};
-    if (dataHash) this._xm_dataCaches[storeKey] = dataHash;
-    arguments.callee.base.apply(this, arguments);
-  },
-
   /**
     Dispatch a call to the node datasource to process a function.
 

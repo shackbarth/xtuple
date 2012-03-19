@@ -65,6 +65,11 @@ XM._ItemInfo = XM.Record.extend(
   /**
     @type XM.Unit
   */
-  inventoryUnit: SC.Record.toOne('XM.Unit')
+  inventoryUnit: SC.Record.toOne('XM.Unit'),
+
+  /**
+    @type Number
+  */
+  listPrice: SC.Record.attr(Number)
 
 });

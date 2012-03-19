@@ -99,9 +99,7 @@ XM.Record = SC.Record.extend(
     @returns Boolean
   */
   isCached: function() {
-    var storeKey = this.get('storeKey'),
-        store = this.get('store');
-    return store._xm_dataCaches && store._xm_dataCaches[storeKey] ? true : false;
+    return this._xm_dataCache ? true : false;
   },
   
   /**
@@ -112,9 +110,7 @@ XM.Record = SC.Record.extend(
     @returns Any
   */
   getCache: function(key) {
-    var storeKey = this.get('storeKey'),
-        store = this.get('store');
-    return store._xm_dataCaches ? store._xm_dataCaches[storeKey][key] : null;
+    return this._xm_dataCache ? this._xm_dataCache(key) : null;
   },
   
   /**
@@ -166,9 +162,33 @@ XM.Record = SC.Record.extend(
 
   */
   validate: function() {
-    return this.get('validateErrors');
+    var errors = this.get('validateErrors'),
+        primaryKey = this.primaryKey,
+        recordId   = this.get('id'),
+        store      = this.get('store'),
+        storeKey   = this.get('storeKey'),
+        key, valueForKey, typeClass, isErr = false;
+    
+    // check to see that required fields are filled
+    for (key in this) {
+      // make sure property is a record attribute.
+      valueForKey = this[key];
+      if (valueForKey) {
+        typeClass = valueForKey.typeClass;
+        if (typeClass) {
+          isToMany =  SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
+                      SC.kindOf(valueForKey, SC.ManyAttribute);
+          if (!isToMany && this[key].isRequired && !this.get(key)) {
+            isErr = true;
+          }
+        }
+      }
+    }
+    err = XM.errors.findProperty('code', 'xt1001');
+    this.updateErrors(err, isErr);
+    return errors;
   },
-
+  
   /**
   Convienience function for updating validateErrors list.
   Checks whether errors are in list before adding and removing
@@ -211,6 +231,9 @@ XM.Record = SC.Record.extend(
     var status = this.get('status'),
         key = 'dataState',
         value = 'error';
+    
+    // cache data
+    if (status === SC.Record.READY_CLEAN) this._xm_dataCache = this.get('attributes');
     
     // update data state used for server side evaluation
     if (status === SC.Record.READY_NEW)            value = 'created';
@@ -397,30 +420,31 @@ XM.Record.fetchId = function(prop) {
   @returns {Object} receiever
 */
 XM.Record.fetchNumber = function(prop) {
-  var self = this,
+  var that = this,
       prop = prop ? prop : 'number',
       recordType = this.get("className"),
       dispatch;
-  
+      
+  // call back funtion
   callback = function(error, result) {
     if(!error) {
-      self._xm_numberGen = result;
-      self.set(prop, result);
+      that._xm_numberGen = result;
+      that.set(prop, result);
     };
   }
   
+  // the request
   dispatch = XM.Dispatch.create({
     className: 'XT.Record',
     functionName: 'fetchNumber',
     parameters: recordType,
-    target: self,
+    target: that,
     action: callback
   });
-
   console.log("XM.Record.fetchNumber for: %@".fmt(recordType));
-
-  self.get('store').dispatch(dispatch);
   
+  // do it
+  that.get('store').dispatch(dispatch);
   return this;
 };
 

@@ -49,7 +49,7 @@ XM.Customer = XM._Customer.extend(XM.Document, XM.CoreDocuments,
   @returns Number
 */
 XM.Customer.price = function(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
-  var self = this, dispatch;
+  var that = this, dispatch;
   dispatch = XM.Dispatch.create({
     className: 'XM.Customer',
     functionName: 'price',
@@ -63,7 +63,7 @@ XM.Customer.price = function(customer, shipto, item, quantity, quantityUnit, pri
       currency.get('id'),
       effective.toFormattedString('%Y-%m-%d')
     ],
-    target: self,
+    target: that,
     action: callback
   });
   customer.get('store').dispatch(dispatch);
