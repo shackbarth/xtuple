@@ -25,7 +25,7 @@ XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
   //
 
   // see document mixin for object behavior(s)
-  documentKey = 'name',
+  documentKey: 'name',
 
   //..................................................
   // METHODS
