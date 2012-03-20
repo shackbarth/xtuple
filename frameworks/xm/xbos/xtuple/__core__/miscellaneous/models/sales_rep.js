@@ -36,5 +36,8 @@ XM.SalesRep = XM._SalesRep.extend(XM.Document,
   // OBSERVERS
   //
 
-});
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('name')
 
+});

@@ -33,6 +33,10 @@ XM.Priority = XM._Priority.extend(XM.Document,
   // OBSERVERS
   //
 
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('name')
+
 });
 
 XM.Priority.mixin( /** @scope XM.Priority */ {
