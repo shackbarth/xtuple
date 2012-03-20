@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_address_browse');
+sc_require('mixins/_address_browse');
 
 /**
   @class
 
   @extends XM._AddressBrowse
 */
-XM.AddressBrowse = XM._AddressBrowse.extend(
+XM.AddressBrowse = XM.Record.extend(XM._AddressBrowse,
   /** @scope XM.AddressBrowse.prototype */ {
 
   // .................................................

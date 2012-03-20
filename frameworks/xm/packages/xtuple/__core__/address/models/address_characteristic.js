@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_address_characteristic');
+sc_require('mixins/_address_characteristic');
 
 /**
   @class
 
   @extends XM._AddressCharacteristic
 */
-XM.AddressCharacteristic = XM._AddressCharacteristic.extend(
+XM.AddressCharacteristic = XM.Record.extend(XM._AddressCharacteristic,
   /** @scope XM.AddressCharacteristic.prototype */ {
 
   // .................................................

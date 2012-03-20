@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_country');
+sc_require('mixins/_country');
 
 /**
   @class
 
   @extends XM._Country
 */
-XM.Country = XM._Country.extend(
+XM.Country = XM.Record.extend(XM._Country,
   /** @scope XM.Country.prototype */ {
 
   // .................................................

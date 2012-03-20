@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_state');
+sc_require('mixins/_state');
 
 /**
   @class
 
   @extends XM._State
 */
-XM.State = XM._State.extend(
+XM.State = XM.Record.extend(XM._State,
   /** @scope XM.State.prototype */ {
 
   // .................................................

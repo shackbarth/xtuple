@@ -5,8 +5,7 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_address_comment');
-sc_require('mixins/comment');
+sc_require('mixins/_address_comment');
 
 /**
   @class
@@ -14,7 +13,7 @@ sc_require('mixins/comment');
   @extends XM._AddressComment
   @extends XM.Comment
 */
-XM.AddressComment = XM._AddressComment.extend(XM.Comment,
+XM.AddressComment = XM.Comment.extend(XM._AddressComment,
   /** @scope XM.AddressComment.prototype */ {
 
   // .................................................

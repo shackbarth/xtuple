@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_address_info');
+sc_require('mixins/_address_info');
 
 /**
   @class
 
   @extends XM._AddressInfo
 */
-XM.AddressInfo = XM._AddressInfo.extend(
+XM.AddressInfo = XM.Record.extend(XM._AddressInfo,
   /** @scope XM.AddressInfo.prototype */ {
 
   // .................................................

@@ -4,10 +4,7 @@
 // ==========================================================================
 /*globals XM */
 
-sc_require('xbos/__generated__/_address');
-sc_require('mixins/document');
-
-/** @class
+sc_require('mixins/_address');
 
   (Document your Model here)
 
@@ -16,7 +13,7 @@ sc_require('mixins/document');
   @extends SC.Copyable
 */
 
-XM.Address = XM._Address.extend(XM.Document, SC.Copyable,
+XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
 /** @scope XM.Address.prototype */ {
   
   numberPolicy: XM.AUTO_NUMBER,
