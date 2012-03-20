@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_user_account');
+sc_require('mixins/_user_account');
 
 /**
   @class
 
-  @extends XM._UserAccount
+  @extends XM.Record
 */
-XM.UserAccount = XM._UserAccount.extend(
+XM.UserAccount = XM.Record.extend(XM._UserAccount,
   /** @scope XM.UserAccount.prototype */ {
 
   // .................................................

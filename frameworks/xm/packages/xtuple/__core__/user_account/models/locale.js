@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_locale');
+sc_require('mixins/_locale');
 
 /**
   @class
 
-  @extends XM._Locale
+  @extends XM.Record
 */
-XM.Locale = XM._Locale.extend(
+XM.Locale = XM.Record.extend(XM._Locale,
   /** @scope XM.Locale.prototype */ {
 
   // .................................................

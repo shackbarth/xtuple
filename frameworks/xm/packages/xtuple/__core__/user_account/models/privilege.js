@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_privilege');
+sc_require('mixins/_privilege');
 
 /**
   @class
 
-  @extends XM._Privilege
+  @extends XM.Record
 */
-XM.Privilege = XM._Privilege.extend(
+XM.Privilege = XM.Record.extend(XM._Privilege,
   /** @scope XM.Privilege.prototype */ {
 
   // .................................................

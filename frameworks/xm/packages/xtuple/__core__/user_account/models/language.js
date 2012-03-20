@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_language');
+sc_require('mixins/_language');
 
 /**
   @class
 
-  @extends XM._Language
+ @extends XM.Record
 */
-XM.Language = XM._Language.extend(
+XM.Language = XM.Record.extend(XM._Language,
   /** @scope XM.Language.prototype */ {
 
   // .................................................

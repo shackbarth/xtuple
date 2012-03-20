@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_user_account_role_info');
+sc_require('mixins/_user_account_role_info');
 
 /**
   @class
 
-  @extends XM._UserAccountRoleInfo
+  @extends XM.Record
 */
-XM.UserAccountRoleInfo = XM._UserAccountRoleInfo.extend(
+XM.UserAccountRoleInfo = XM.Record.extend(XM._UserAccountRoleInfo,
   /** @scope XM.UserAccountRoleInfo.prototype */ {
 
   // .................................................
