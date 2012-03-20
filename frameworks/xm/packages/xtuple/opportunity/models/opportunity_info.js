@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_opportunity_info');
+sc_require('mixins/_opportunity_info');
 
 /**
   @class
 
-  @extends XM._OpportunityInfo
+  @extends XM.Record
 */
-XM.OpportunityInfo = XM._OpportunityInfo.extend(
+XM.OpportunityInfo = XM.Record.extend(XM._OpportunityInfo,
   /** @scope XM.OpportunityInfo.prototype */ {
 
   // .................................................

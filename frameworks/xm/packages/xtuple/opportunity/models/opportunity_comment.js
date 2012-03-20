@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_opportunity_comment');
-sc_require('mixins/comment');
+sc_require('mixins/_opportunity_comment');
 
 /**
   @class
 
-  @extends XM._OpportunityComment
   @extends XM.Comment
 */
-XM.OpportunityComment = XM._OpportunityComment.extend(XM.Comment,
+XM.OpportunityComment = XM.Comment.extend(XM._OpportunityComment,
   /** @scope XM.OpportunityComment.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_opportunity_contact');
+sc_require('mixins/_opportunity_contact');
 
 /**
   @class
 
-  @extends XM._OpportunityContact
+  @extends XM.Record
 */
-XM.OpportunityContact = XM._OpportunityContact.extend(
+XM.OpportunityContact = XM.Record.extend(XM._OpportunityContact,
   /** @scope XM.OpportunityContact.prototype */ {
 
   // .................................................

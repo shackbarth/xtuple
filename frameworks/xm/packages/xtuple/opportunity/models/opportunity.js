@@ -5,20 +5,17 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_opportunity');
+sc_require('mixins/_opportunity');
 sc_require('mixins/crm_documents');
-sc_require('mixins/core_documents');
-sc_require('mixins/document');
 
 /**
   @class
 
-  @extends XM._Opportunity
-  @extends XM.CrmDocuments
-  @extends XM.CoreDocuments
   @extends XM.Document
+  @extends XM.CoreDocuments
+  @extends XM.CrmDocuments
 */
-XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
+XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.Opportunity.prototype */ {
 
   numberPolicy: XM.AUTO_NUMBER,

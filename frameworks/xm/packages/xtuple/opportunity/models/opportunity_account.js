@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_opportunity_account');
+sc_require('mixins/_opportunity_account');
 
 /**
   @class
 
-  @extends XM._OpportunityAccount
+  sc_require('mixins/crm_documents');
 */
-XM.OpportunityAccount = XM._OpportunityAccount.extend(
+XM.OpportunityAccount = XM.Record.extend(XM._OpportunityAccount,
   /** @scope XM.OpportunityAccount.prototype */ {
 
   // .................................................
