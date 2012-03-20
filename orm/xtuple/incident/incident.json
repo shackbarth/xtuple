@@ -38,14 +38,16 @@
       "attr": {
         "type": "Number",
         "column": "incdt_number",
-        "isEditable": false
+        "isEditable": false,
+        "isRequired": true
       }
     },
     {
       "name": "description",
       "attr": {
         "type": "String",
-        "column": "incdt_summary"
+        "column": "incdt_summary",
+        "isRequired": true
       }
     },
     {
@@ -60,7 +62,8 @@
       "toOne": {
         "isNested": true,
         "type": "AccountInfo",
-        "column": "incdt_crmacct_id"
+        "column": "incdt_crmacct_id",
+        "isRequired": true
       }
     },
     {
@@ -68,7 +71,8 @@
       "toOne": {
         "isNested": true,
         "type": "ContactInfo",
-        "column": "incdt_cntct_id"
+        "column": "incdt_cntct_id",
+        "isRequired": true
       }
     },
     {
@@ -82,7 +86,8 @@
       "name": "incidentStatus",
       "attr": {
         "type": "String",
-        "column": "incdt_status"
+        "column": "incdt_status",
+        "defaultValue": "N"
       }
     },
     {
@@ -105,7 +110,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "incdt_owner_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {

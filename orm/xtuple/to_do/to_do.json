@@ -36,7 +36,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "todoitem_name"
+        "column": "todoitem_name",
+        "isRequired": true
       }
     },
     {
@@ -58,14 +59,16 @@
       "name": "toDoStatus",
       "attr": {
         "type": "String",
-        "column": "todoitem_status"
+        "column": "todoitem_status",
+        "defaultValue": "N"
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "todoitem_active"
+        "column": "todoitem_active",
+        "defaultValue": true
       }
     },
     {
@@ -79,7 +82,8 @@
       "name": "dueDate",
       "attr": {
         "type": "Date",
-        "column": "todoitem_due_date"
+        "column": "todoitem_due_date",
+        "isRequired": true
       }
     },
     {
@@ -116,7 +120,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "todoitem_owner_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {
@@ -125,7 +130,9 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "todoitem_username",
-        "inverse": "username"
+        "inverse": "username",
+        "isRequired": true,
+        "defaultValue": "currentUser"
       }
     },
     {

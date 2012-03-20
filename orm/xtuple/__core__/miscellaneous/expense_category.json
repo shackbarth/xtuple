@@ -26,7 +26,8 @@
       "name": "code",
       "attr": {
         "type": "String",
-        "column": "expcat_code"
+        "column": "expcat_code",
+        "isRequired": true
       }
     },
     {
@@ -40,7 +41,8 @@
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "expcat_active"
+        "column": "expcat_active",
+        "defaultValue": true
       }
     }
   ],

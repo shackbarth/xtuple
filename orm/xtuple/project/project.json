@@ -37,7 +37,8 @@
       "attr": {
         "type": "String",
         "column": "prj_number",
-        "isEditable": false
+        "isEditable": false,
+        "isRequired": true
       }
     },
     {
@@ -65,7 +66,8 @@
       "name": "dueDate",
       "attr": {
         "type": "Date",
-        "column": "prj_due_date"
+        "column": "prj_due_date",
+        "isRequired": true
       }
     },
     {
@@ -88,7 +90,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "prj_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {
@@ -104,7 +107,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "prj_owner_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {

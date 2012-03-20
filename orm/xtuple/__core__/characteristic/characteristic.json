@@ -26,8 +26,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "char_name"
-        "isRequired": true,
+        "column": "char_name",
+        "isRequired": true
       }
     },
     {
@@ -43,7 +43,7 @@
       "name": "order",
       "attr": {
         "type": "Number",
-        "column": "char_order"
+        "column": "char_order",
         "defaultValue": 0
       }
     },
