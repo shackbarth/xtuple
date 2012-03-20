@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_cash_receipt_application');
+sc_require('mixins/_cash_receipt_application');
 
 /**
   @class
 
   @extends XM._CashReceiptApplication
 */
-XM.CashReceiptApplication = XM._CashReceiptApplication.extend(
+XM.CashReceiptApplication = XM.Record.extend(XM._CashReceiptApplication,
   /** @scope XM.CashReceiptApplication.prototype */ {
 
   // .................................................

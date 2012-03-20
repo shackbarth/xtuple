@@ -5,8 +5,7 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_cash_receipt');
-sc_require('mixins/document');
+sc_require('mixins/_cash_receipt');
 
 /**
   @class
@@ -14,7 +13,7 @@ sc_require('mixins/document');
   @extends XM._CashReceipt
   @extends XM.Document
 */
-XM.CashReceipt = XM._CashReceipt.extend(XM.Document,
+XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /** @scope XM.CashReceipt.prototype */ {
 
   numberPolicy: XM.AUTO_NUMBER
