@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_incident_vendor');
+sc_require('mixins/_tax_authority_payment');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.IncidentVendor = XM.Record.extend(XM._IncidentVendor,
-  /** @scope XM.IncidentVendor.prototype */ {
+XM.TaxAuthorityPayment = XM.Record.extend(XM._TaxAuthorityPayment,
+  /** @scope XM.TaxAuthorityPayment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

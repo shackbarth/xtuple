@@ -14,10 +14,10 @@ sc_require('mixins/settings');
   @version 0.1
 */
 
-XM.Payables = XM.Object.extend( XM.Settings,
+XM.PayablesSettings = XM.Object.extend( XM.Settings,
 /** @scope XM.Payables.prototype */ {
 
-  className: 'XM.Payables',
+  className: 'XM.PayablesSettings',
   
   privilege: 'ConfigureGL',
 
