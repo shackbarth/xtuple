@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_tax_assignment');
+sc_require('mixins/_tax_assignment');
 
 /**
   @class
 
-  @extends XM._TaxAssignment
+  @extends XM.Record
 */
-XM.TaxAssignment = XM._TaxAssignment.extend(
+XM.TaxAssignment = XM.Record.extend(XM._TaxAssignment,
   /** @scope XM.TaxAssignment.prototype */ {
 
   // .................................................

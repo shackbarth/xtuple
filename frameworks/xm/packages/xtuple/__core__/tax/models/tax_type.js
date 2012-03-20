@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_tax_type');
+sc_require('mixins/_tax_type');
 
 /**
   @class
 
-  @extends XM._TaxType
+  @extends XM.Record
 */
-XM.TaxType = XM._TaxType.extend(
+XM.TaxType = XM.Record.extend(XM._TaxType,
   /** @scope XM.TaxType.prototype */ {
 
   // .................................................

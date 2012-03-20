@@ -5,15 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_tax_authority');
-sc_require('mixins/document');
+sc_require('mixins/_tax_authority');
 
 /**
   @class
 
-  @extends XM._TaxAuthority
+  @extends XM.Document
 */
-XM.TaxAuthority = XM._TaxAuthority.extend(XM.Document,
+XM.TaxAuthority = XM.Document.extend(XM._TaxAuthority,
   /** @scope XM.TaxAuthority.prototype */ {
  
   numberPolicySetting: 'CRMAccountNumberGeneration'
