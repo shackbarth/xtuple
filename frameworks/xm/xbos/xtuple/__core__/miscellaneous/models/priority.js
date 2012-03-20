@@ -18,12 +18,12 @@ sc_require('mixins/document');
 XM.Priority = XM._Priority.extend(XM.Document,
   /** @scope XM.Priority.prototype */ {
 
+  // see document mixin for object behavior(s)
+  documentKey = 'name';
+
   // .................................................
   // CALCULATED PROPERTIES
   //
-
-  // see document mixin for object behavior(s)
-  documentKey = 'name';
 
   //..................................................
   // METHODS
@@ -32,10 +32,6 @@ XM.Priority = XM._Priority.extend(XM.Document,
   //..................................................
   // OBSERVERS
   //
-
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('name')
 
 });
 

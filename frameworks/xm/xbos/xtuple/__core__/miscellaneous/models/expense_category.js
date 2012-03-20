@@ -16,12 +16,12 @@ sc_require('mixins/document');
 XM.ExpenseCategory = XM._ExpenseCategory.extend(XM.Document,
   /** @scope XM.ExpenseCategory.prototype */ {
 
+  // see document mixin for object behavior(s)
+  documentKey = 'code';
+
   // .................................................
   // CALCULATED PROPERTIES
   //
-
-  // see document mixin for object behavior(s)
-  documentKey = 'code';
 
   //..................................................
   // METHODS
@@ -30,9 +30,5 @@ XM.ExpenseCategory = XM._ExpenseCategory.extend(XM.Document,
   //..................................................
   // OBSERVERS
   //
-
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('code')
 
 });
