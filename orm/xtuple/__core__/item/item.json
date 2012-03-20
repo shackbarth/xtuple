@@ -35,7 +35,8 @@
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "item_active"
+        "column": "item_active",
+        "defaultValue": true
       }
     },
     {
@@ -56,7 +57,8 @@
       "name": "classCode",
       "toOne": {
         "type": "ClassCode",
-        "column": "item_classcode_id"
+        "column": "item_classcode_id",
+        "isRequired": true
       }
     },
     {
@@ -71,7 +73,8 @@
       "name": "isPicklist",
       "attr": {
         "type": "Boolean",
-        "column": "item_picklist"
+        "column": "item_picklist",
+        "defaultValue": true
       }
     },
     {
@@ -85,7 +88,8 @@
       "name": "isSold",
       "attr": {
         "type": "Boolean",
-        "column": "item_sold"
+        "column": "item_sold",
+        "defaultValue": true
       }
     },
     {
@@ -142,7 +146,8 @@
       "name": "priceUnit",
       "toOne": {
         "type": "Unit",
-        "column": "item_price_uom_id"
+        "column": "item_price_uom_id",
+        "isRequired": true
       }
     },
     {
