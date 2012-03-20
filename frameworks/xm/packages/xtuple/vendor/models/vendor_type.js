@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_vendor_type');
+sc_require('mixins/_vendor_type');
 
 /**
   @class
 
-  @extends XM._VendorType
+  @extends XM.Record
 */
-XM.VendorType = XM._VendorType.extend(
+XM.VendorType = XM.Record.extend(XM._VendorType,
   /** @scope XM.VendorType.prototype */ {
 
   // .................................................

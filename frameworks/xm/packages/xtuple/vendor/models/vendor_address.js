@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_vendor_address');
+sc_require('mixins/_vendor_address');
 
 /**
   @class
 
-  @extends XM._VendorAddress
+  @extends XM.Record
 */
-XM.VendorAddress = XM._VendorAddress.extend(
+XM.VendorAddress = XM.Record.extend(XM._VendorAddress,
   /** @scope XM.VendorAddress.prototype */ {
 
   // .................................................
