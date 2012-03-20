@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_unit_conversion');
+sc_require('mixins/_unit_conversion');
 
 /**
   @class
 
-  @extends XM._UnitConversion
+  @extends XM.Record
 */
-XM.UnitConversion = XM._UnitConversion.extend(
+XM.UnitConversion = XM.Record.extend(XM._UnitConversion,
   /** @scope XM.UnitConversion.prototype */ {
 
   // .................................................

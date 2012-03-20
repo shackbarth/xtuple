@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_unit');
+sc_require('mixins/_unit');
 
 /**
   @class
 
-  @extends XM._Unit
+  @extends XM.Record
 */
-XM.Unit = XM._Unit.extend(
+XM.Unit = XM.Record.extend(XM._Unit,
   /** @scope XM.Unit.prototype */ {
 
   // .................................................
