@@ -19,7 +19,7 @@ XM.Priority = XM._Priority.extend(XM.Document,
   /** @scope XM.Priority.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'name';
+  documentKey = 'name',
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -56,7 +56,7 @@ XM.Priority.mixin( /** @scope XM.Priority */ {
   @type Number
   @default 2
 */
-  HIGH: '2',
+  HIGH: 2,
 
 /**
   Normal

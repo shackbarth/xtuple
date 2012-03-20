@@ -17,7 +17,7 @@ XM.ShipCharge = XM._ShipCharge.extend(XM.Document,
   /** @scope XM.ShipCharge.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'name';
+  documentKey = 'name',
 
   // .................................................
   // CALCULATED PROPERTIES

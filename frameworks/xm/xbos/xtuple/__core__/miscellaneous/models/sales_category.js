@@ -17,7 +17,7 @@ XM.SalesCategory = XM._SalesCategory.extend(XM.Document,
   /** @scope XM.SalesCategory.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'name';
+  documentKey = 'name',
 
   // .................................................
   // CALCULATED PROPERTIES

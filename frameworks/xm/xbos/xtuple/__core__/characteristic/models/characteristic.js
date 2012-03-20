@@ -16,12 +16,13 @@ sc_require('mixins/document');
 XM.Characteristic = XM._Characteristic.extend(XM.Document,
   /** @scope XM.Characteristic.prototype */ {
 
+  // see document mixin for object behavior(s)
+  documentKey = 'name',
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  documentKey: 'name',
-  
   //..................................................
   // METHODS
   //

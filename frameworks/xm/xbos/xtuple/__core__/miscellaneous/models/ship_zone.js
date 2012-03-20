@@ -17,7 +17,7 @@ XM.ShipZone = XM._ShipZone.extend(XM.Document
   /** @scope XM.ShipZone.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'name';
+  documentKey = 'name',
 
   // .................................................
   // CALCULATED PROPERTIES

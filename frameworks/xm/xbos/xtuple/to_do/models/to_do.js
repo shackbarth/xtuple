@@ -8,7 +8,6 @@
 sc_require('xbos/__generated__/_to_do');
 sc_require('mixins/crm_documents');
 sc_require('mixins/core_documents');
-sc_require('mixins/document');
 
 /**
   @class
@@ -16,10 +15,9 @@ sc_require('mixins/document');
   @extends XM._ToDo
   @extends XM.CrmDocuments
   @extends XM.CoreDocuments
-  @extends XM.Document
 
 */
-XM.ToDo = XM._ToDo.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
+XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ToDo.prototype */ {
   
   // .................................................
@@ -27,7 +25,7 @@ XM.ToDo = XM._ToDo.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   //
 
   // see document mixin for object behavior(s)
-  documentKey = 'name';
+  documentKey = 'name',
 
   //..................................................
   // METHODS
@@ -45,10 +43,7 @@ XM.ToDo = XM._ToDo.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   
   /* @private */
   validate: function() {
-    var errors = arguments.callee.base.apply(this, arguments),
-        isValid, err;
-
-    return errors;
+    return arguments.callee.base.apply(this, arguments);
   }.observes('name', 'dueDate', 'assignedTo'),
   
   _xm_assignedToDidChange: function() {
@@ -73,7 +68,7 @@ XM.ToDo = XM._ToDo.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
 
     If completeDate is entered the toDoStaus is changed to 'C' (complete).
   */
-  _xm_toDoStatusDidChange: function() {
+  statusDidChange: function() {
     var status = this.get('status'),
         _toDoStatus = this.get('toDoStatus'),
         _startDate = this.get('startDate'),
