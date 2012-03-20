@@ -17,7 +17,7 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
   /** @scope XM.Characteristic.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'name',
+  documentKey: 'name',
   
   // .................................................
   // CALCULATED PROPERTIES

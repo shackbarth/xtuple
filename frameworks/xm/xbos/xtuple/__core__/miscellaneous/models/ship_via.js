@@ -17,7 +17,7 @@ XM.ShipVia = XM._ShipVia.extend(XM.Document,
   /** @scope XM.ShipVia.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'code',
+  documentKey: 'code',
 
   // .................................................
   // CALCULATED PROPERTIES

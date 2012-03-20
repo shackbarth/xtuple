@@ -17,7 +17,7 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   /** @scope XM.ReasonCode.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'code',
+  documentKey: 'code',
 
   // .................................................
   // CALCULATED PROPERTIES
