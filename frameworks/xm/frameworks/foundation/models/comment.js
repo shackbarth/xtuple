@@ -3,15 +3,15 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
-/** @mixin
+/** @clas
 
   (Document your Model here)
 
   @extends XM.Record
-  @version 0.1
 */
 
-XM.Comment = {
+XM.Comment = XM.Record.extend(
+/** @scope XM.Comment.prototype */ {
 
   /**
   @type SC.DateTime
@@ -77,5 +77,5 @@ XM.Comment = {
     return errors;
   }.observes('commentType')
 
-}
+});
 

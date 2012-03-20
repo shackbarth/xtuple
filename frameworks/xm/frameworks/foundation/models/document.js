@@ -4,14 +4,15 @@
 // ==========================================================================
 /*globals XM */
 
-/** @mixin
+/** @class
 
   Provides special number handling capabilities for documents.
 
-  @version 0.1
+  @extends XM.Record
 */
 
-XM.Document = {
+XM.Document = XM.Record.extend(
+/** @scope XM.Document.prototype */ {
 
   /**
     The unique property for the document, typically a number, code or name. 
@@ -133,7 +134,7 @@ XM.Document = {
       XM.Record.findExisting.call(record, docKey, number, callback);
     }
   }
-}
+});
 
 
 
