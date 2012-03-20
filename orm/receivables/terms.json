@@ -15,7 +15,8 @@
       "name": "usedByReceievables",
       "attr": {
         "type": "Boolean",
-        "column": "terms_ar"
+        "column": "terms_ar",
+        "defaultValue": false
       }
     }
   ],
