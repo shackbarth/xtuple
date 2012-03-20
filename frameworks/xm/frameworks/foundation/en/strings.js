@@ -17,6 +17,7 @@ SC.stringsFor("en_US", {
 // Errors
 // ********
 
+  "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",

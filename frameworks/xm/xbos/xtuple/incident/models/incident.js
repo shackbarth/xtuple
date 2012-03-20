@@ -32,16 +32,6 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
     defaultValue: 'N'
   }),
   
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.dataSource.session.userName;
-    }
-  }),
-  
   /* @private */
   accountsLength: 0,
   
@@ -63,20 +53,16 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
   //
   
   validate: function() {
-    var account = this.get('account'),
-        contact = this.get('contact'),
-        errors = this.get('validateErrors'),
-        accountErr = XM.errors.findProperty('code', 'xt1005'),
-        contactErr = XM.errors.findProperty('code', 'xt1006');
-
-    // Validate Account
-    this.updateErrors(accountErr, !(account));
+    var isErr, errors = arguments.callee.base.apply(this, arguments);
     
-    // Validate Contact
-    this.updateErrors(contactErr, !(contact));
-
+    // Validate assignee
+    isErr = this.get('incidentStatus') === XM.Incident.STATUS_ASSIGNED &&
+            !this.get('assignedTo');
+    err = XM.errors.findProperty('code', 'xt1025');
+    this.updateErrors(err, isErr);
+    
     return errors;
-  }.observes('account', 'contact'),
+  }.observes('account', 'contact', 'description', 'assignedTo', 'incidentStatus'),
   
   /* @private */
   _xm_assignedToDidChange: function() {
@@ -101,5 +87,69 @@ XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
 
     documents.addEach(incidents);    
   }.observes('incidentsLength')
+
+});
+
+XM.Incident.mixin( /** @scope XM.Incident */ {
+
+/**
+  New status.
+  
+  @static
+  @constant
+  @type String
+  @default N
+*/
+  STATUS_NEW: 'N',
+
+/**
+  Feedback status.
+  
+  @static
+  @constant
+  @type String
+  @default F
+*/
+  STATUS_FEEDBACK: 'F',
+
+/**
+  Confirmed Status.
+  
+  @static
+  @constant
+  @type String
+  @default I
+*/
+  STATUS_CONFIRMED: 'C',
+
+/**
+  Assigned status.
+  
+  @static
+  @constant
+  @type String
+  @default A
+*/
+  STATUS_ASSIGNED: 'A',
+  
+/**
+  Resolved status.
+  
+  @static
+  @constant
+  @type String
+  @default R
+*/
+  STATUS_RESOLVED: 'R',
+
+/**
+  Closed status.
+  
+  @static
+  @constant
+  @type String
+  @default L
+*/
+  STATUS_CLOSED: 'L'
 
 });

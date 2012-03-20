@@ -115,6 +115,9 @@ var ary = [
   { code: 'xt1024',
     label: '_recordIncomplete'.loc(),
     description: '_charTypeIsRequired'.loc() },
+  { code: 'xt1025',
+    label: '_recordIncomplete'.loc(),
+    description: '_assignedToRequiredForAssigned'.loc() }
 ];
 
 ary.forEach(function(error) {
