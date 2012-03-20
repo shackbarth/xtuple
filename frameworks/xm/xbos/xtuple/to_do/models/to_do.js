@@ -19,56 +19,16 @@ sc_require('mixins/document');
   @extends XM.Document
 
 */
-XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
+XM.ToDo = XM._ToDo.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ToDo.prototype */ {
   
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  /**
-    @type Boolean 
-  */
-  isActive: SC.Record.attr(Boolean, {
-    defaultValue: true
-  }),
-  
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.dataSource.session.userName;
-    }
-  }),
+  // see document mixin for object behavior(s)
+  documentKey = 'name';
 
-  /**
-    @type XM.UserAccountInfo
-  */
-  assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.dataSource.session.userName;
-    }
-  }),
-
-  /**
-  @type String
-  */
-  toDoStatus: SC.Record.attr(String, {
-    /** @private */
-    defaultValue: function() {
-      return XM.ToDo.NEITHER
-    }
-  }),
-
-  /* @private */
-  toDosLength: 0,
-  
-  /* @private */
-  toDosLengthBinding: '*toDos.length',
-  
   //..................................................
   // METHODS
   //
@@ -78,23 +38,15 @@ XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
   //
   
   /* @private */
+  toDosLength: 0,
+  
+  /* @private */
+  toDosLengthBinding: '*toDos.length',
+  
+  /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'), val, err;
-
-    // Validate Name
-    val = this.get('name') ? this.get('name').length : 0;
-    err = XM.errors.findProperty('code', 'xt1002');
-    this.updateErrors(err, !val);
-
-    // Validate Due Date
-    val = this.get('dueDate') ? this.get('dueDate') : 0;
-    err = XM.errors.findProperty('code', 'xt1017');
-    this.updateErrors(err, !val);
-
-    // Validate Assigned To
-    val = this.get('assignedTo') ? this.get('assignedTo').length : 0;
-    err = XM.errors.findProperty('code', 'xt1018');
-    this.updateErrors(err, !val);
+    var errors = arguments.callee.base.apply(this, arguments),
+        isValid, err;
 
     return errors;
   }.observes('name', 'dueDate', 'assignedTo'),
