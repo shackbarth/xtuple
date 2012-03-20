@@ -16,12 +16,12 @@ sc_require('mixins/document');
 XM.ShipCharge = XM._ShipCharge.extend(XM.Document,
   /** @scope XM.ShipCharge.prototype */ {
 
+  // see document mixin for object behavior(s)
+  documentKey = 'name',
+
   // .................................................
   // CALCULATED PROPERTIES
   //
-
-  // see document mixin for object behavior(s)
-  documentKey = 'name';
 
   //..................................................
   // METHODS
@@ -30,9 +30,5 @@ XM.ShipCharge = XM._ShipCharge.extend(XM.Document,
   //..................................................
   // OBSERVERS
   //
-
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('name')
 
 });

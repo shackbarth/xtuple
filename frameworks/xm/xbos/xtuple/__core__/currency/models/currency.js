@@ -6,6 +6,7 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_currency');
+sc_require('mixins/document');
 
 /**
   @class
@@ -13,20 +14,16 @@ sc_require('xbos/__generated__/_currency');
   @extends XM._Currency
 
 */
-XM.Currency = XM._Currency.extend(
+XM.Currency = XM._Currency.extend(XM.Document,
   /** @scope XM.Currency.prototype */ {
 
+  // see document mixin for object behavior(s)
+  documentKey: 'name',
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  /**
-    @type Boolean 
-  */
-  isBase: SC.Record.attr(Boolean, {
-    defaultValue: false
-  }),
-  
   abbreviation: SC.Record.attr(Boolean, {
     toType: function(record, key, value) {
       if(value && value.length > 3) return value.substr(0,3);
@@ -58,7 +55,7 @@ XM.Currency = XM._Currency.extend(
         // used for proper object reference during callback function below
         record = this,
         status = record.get('status'),
-        name = record.get('name'),
+        abbr = record.get('abbreviation'),
         isValid, err;
 
     // Validate Symbol OR Abbreviation
@@ -78,7 +75,7 @@ XM.Currency = XM._Currency.extend(
         }
       }
     }
-    XM.Record.findExisting.call(record, 'name', name, callback);
+    XM.Record.findExisting.call(record, 'abbreviation', abbr, callback);
   
     return errors;
   }.observes('name', 'symbol', 'abbreviation'),

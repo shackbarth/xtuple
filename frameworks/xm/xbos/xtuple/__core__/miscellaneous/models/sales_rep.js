@@ -16,12 +16,12 @@ sc_require('mixins/document');
 XM.SalesRep = XM._SalesRep.extend(XM.Document,
   /** @scope XM.SalesRep.prototype */ {
   
+  numberPolicySetting: 'CRMAccountNumberGeneration',
+
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  numberPolicySetting: 'CRMAccountNumberGeneration',
-  
   isAccount: function(key, value) {
     if(value) this._xm_isAccount = value;
       return this._xm_isAccount !== undefined ?
@@ -35,9 +35,5 @@ XM.SalesRep = XM._SalesRep.extend(XM.Document,
   //..................................................
   // OBSERVERS
   //
-
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('name')
 
 });
