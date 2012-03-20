@@ -10,7 +10,7 @@ sc_require('mixins/_financial_layout_group');
 /**
   @class
 
-  @extends XM._FinancialLayoutGroup
+  @extends XM.Record
 */
 XM.FinancialLayoutGroup = XM.Record.extend(XM._FinancialLayoutGroup,
   /** @scope XM.FinancialLayoutGroup.prototype */ {

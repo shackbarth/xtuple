@@ -10,7 +10,7 @@ sc_require('mixins/_ledger_account');
 /**
   @class
 
-  @extends XM._LedgerAccount
+  @extends XM.Record
 */
 XM.LedgerAccount = XM.Record.extend(XM._LedgerAccount,
   /** @scope XM.LedgerAccount.prototype */ {

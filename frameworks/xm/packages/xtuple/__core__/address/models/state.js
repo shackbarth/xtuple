@@ -10,7 +10,7 @@ sc_require('mixins/_state');
 /**
   @class
 
-  @extends XM._State
+  @extends XM.Record
 */
 XM.State = XM.Record.extend(XM._State,
   /** @scope XM.State.prototype */ {

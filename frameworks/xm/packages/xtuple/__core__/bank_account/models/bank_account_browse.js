@@ -12,7 +12,7 @@ sc_require('mixins/_bank_account_browse');
 /**
   @class
 
-  @extends XM._BankAccountBrowse
+  @extends XM.Record
 */
 XM.BankAccountBrowse = XM.Record.extend(XM._BankAccountBrowse,
   /** @scope XM.BankAccountBrowse.prototype */ {

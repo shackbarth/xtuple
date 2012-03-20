@@ -10,7 +10,7 @@ sc_require('mixins/_standard_journal');
 /**
   @class
 
-  @extends XM._StandardJournal
+  @extends XM.Record
 */
 XM.StandardJournal = XM.Record.extend(XM._StandardJournal,
   /** @scope XM.StandardJournal.prototype */ {

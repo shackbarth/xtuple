@@ -12,11 +12,9 @@ sc_require('mixins/_account');
 
   (Document your Model here)
 
-  @extends XM._Account
   @extends XM.CrmDocuments
   @extends XM.CoreDocuments
-  @extends XM.AccountDocument
-  @version 0.2
+  @extends XM.Document
 */
 
 XM.Account = XM.Document.extend(XM.CoreDocuments, XM.CrmDocuments, XM._Account,

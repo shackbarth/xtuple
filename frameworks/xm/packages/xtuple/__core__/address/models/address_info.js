@@ -10,7 +10,7 @@ sc_require('mixins/_address_info');
 /**
   @class
 
-  @extends XM._AddressInfo
+  @extends XM.Record
 */
 XM.AddressInfo = XM.Record.extend(XM._AddressInfo,
   /** @scope XM.AddressInfo.prototype */ {

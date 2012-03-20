@@ -10,7 +10,7 @@ sc_require('mixins/_cash_receipt_distribution');
 /**
   @class
 
-  @extends XM._CashReceiptDistribution
+  @extends XM.Record
 */
 XM.CashReceiptDistribution = XM.Record.extend(XM._CashReceiptDistribution,
   /** @scope XM.CashReceiptDistribution.prototype */ {

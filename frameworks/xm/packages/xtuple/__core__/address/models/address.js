@@ -6,9 +6,9 @@
 
 sc_require('mixins/_address');
 
+/**
   (Document your Model here)
 
-  @extends XM._Address
   @extends XM.Document
   @extends SC.Copyable
 */

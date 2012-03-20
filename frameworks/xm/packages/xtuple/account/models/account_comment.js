@@ -10,7 +10,6 @@ sc_require('mixins/_account_comment');
 /**
   @class
 
-  @extends XM._AccountComment
   @extends XM.Comment
 */
 XM.AccountComment = XM.Comment.extend(XM._AccountComment,

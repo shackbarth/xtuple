@@ -10,7 +10,7 @@ sc_require('mixins/_address_browse');
 /**
   @class
 
-  @extends XM._AddressBrowse
+  @extends XM.Record
 */
 XM.AddressBrowse = XM.Record.extend(XM._AddressBrowse,
   /** @scope XM.AddressBrowse.prototype */ {

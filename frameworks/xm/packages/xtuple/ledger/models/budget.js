@@ -10,7 +10,7 @@ sc_require('mixins/_budget');
 /**
   @class
 
-  @extends XM._Budget
+  @extends XM.Record
 */
 XM.Budget = XM.Record.extend(XM._Budget,
   /** @scope XM.Budget.prototype */ {

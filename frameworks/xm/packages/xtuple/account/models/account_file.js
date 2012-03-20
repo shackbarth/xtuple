@@ -10,7 +10,7 @@ sc_require('mixins/_account_file');
 /**
   @class
 
-  @extends XM._AccountFile
+  @extends XM.Record
 */
 XM.AccountFile = XM.Record.extend(XM._AccountFile,
   /** @scope XM.AccountFile.prototype */ {

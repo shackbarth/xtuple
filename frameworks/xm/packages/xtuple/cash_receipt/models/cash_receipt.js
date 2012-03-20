@@ -10,7 +10,6 @@ sc_require('mixins/_cash_receipt');
 /**
   @class
 
-  @extends XM._CashReceipt
   @extends XM.Document
 */
 XM.CashReceipt = XM.Document.extend(XM._CashReceipt,

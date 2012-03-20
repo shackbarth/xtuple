@@ -10,7 +10,6 @@ sc_require('mixins/_address_comment');
 /**
   @class
 
-  @extends XM._AddressComment
   @extends XM.Comment
 */
 XM.AddressComment = XM.Comment.extend(XM._AddressComment,

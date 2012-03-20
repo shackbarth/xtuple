@@ -10,7 +10,6 @@ sc_require('mixins/_characteristic_option');
 /**
   @class
 
-  @extends XM._CharacteristicOption
   @extends XM.Record
 */
 XM.CharacteristicOption = XM.Record.extend(XM._CharacteristicOption,

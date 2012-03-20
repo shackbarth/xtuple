@@ -10,7 +10,6 @@ sc_require('mixins/_characteristic');
 /**
   @class
 
-  @extends XM._Characteristic
   @extends XM.Document
 */
 XM.Characteristic = XM.Document.extend(XM._Characteristic,

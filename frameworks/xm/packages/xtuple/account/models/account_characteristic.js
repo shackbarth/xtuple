@@ -10,7 +10,7 @@ sc_require('mixins/_account_characteristic');
 /**
   @class
 
-  @extends XM._AccountCharacteristic
+  @extends XM.Record
 */
 XM.AccountCharacteristic = XM.Record.extend(XM._AccountCharacteristic,
   /** @scope XM.AccountCharacteristic.prototype */ {

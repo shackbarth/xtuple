@@ -10,7 +10,7 @@ sc_require('mixins/_country');
 /**
   @class
 
-  @extends XM._Country
+  @extends XM.Record
 */
 XM.Country = XM.Record.extend(XM._Country,
   /** @scope XM.Country.prototype */ {

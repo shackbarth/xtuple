@@ -11,7 +11,6 @@ sc_require('mixins/settings');
   (Document your Model here)
 
   @extends XM.Object
-  @version 0.1
 */
 
 XM.GeneralLedgerSettings = XM.Object.extend( XM.Settings,

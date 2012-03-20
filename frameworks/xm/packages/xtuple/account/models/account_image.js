@@ -10,7 +10,7 @@ sc_require('mixins/_account_image');
 /**
   @class
 
-  @extends XM._AccountImage
+  @extends XM.Record
 */
 XM.AccountImage = XM.Record.extend(XM._AccountImage,
   /** @scope XM.AccountImage.prototype */ {
