@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_voucher_recurrence');
+sc_require('mixins/_voucher_recurrence');
 
 /**
   @class
 
-  @extends XM._VoucherRecurrence
+  @extends XM.Record
 */
-XM.VoucherRecurrence = XM._VoucherRecurrence.extend(
+XM.VoucherRecurrence = XM.Record.extend(XM._VoucherRecurrence,
   /** @scope XM.VoucherRecurrence.prototype */ {
 
   // .................................................

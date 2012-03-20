@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_voucher_distribution');
+sc_require('mixins/_voucher_distribution');
 
 /**
   @class
 
-  @extends XM._VoucherDistribution
+  @extends XM.Record
 */
-XM.VoucherDistribution = XM._VoucherDistribution.extend(
+XM.VoucherDistribution = XM.Record.extend(XM._VoucherDistribution,
   /** @scope XM.VoucherDistribution.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_voucher_tax');
+sc_require('mixins/_voucher_tax');
 
 /**
   @class
 
-  @extends XM._VoucherTax
+  @extends XM.Record
 */
-XM.VoucherTax = XM._VoucherTax.extend(
+XM.VoucherTax = XM.Record.extend(XM._VoucherTax,
   /** @scope XM.VoucherTax.prototype */ {
 
   // .................................................

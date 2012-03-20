@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_voucher');
-sc_require('mixins/document');
+sc_require('mixins/_voucher');
 
 /**
   @class
 
-  @extends XM._Voucher
   @extends XM.Document
 */
-XM.Voucher = XM._Voucher.extend(XM.Document,
+XM.Voucher = XM.Document.extend(XM._Voucher,
   /** @scope XM.Voucher.prototype */ {
 
   numberPolicy: XM.AUTO_NUMBER,
