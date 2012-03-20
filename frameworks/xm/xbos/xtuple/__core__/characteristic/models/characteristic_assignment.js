@@ -54,15 +54,4 @@ XM.CharacteristicAssignment = XM._CharacteristicAssignment.extend(
 
   }.observes('characeteristic'),
 
-  validate: function() {
-    var characteristic = this.get('characteristic');
-    errors = this.get('validateErrors');
-    nameErr = XT.errors.findProperty('code', 'xt1004');
-
-    // Validate Characteristic
-    this.updateErrors(nameErr, SC.none(characteristic));
-
-    return errors;
-  }.observes('characteristic')
-
 }) ;

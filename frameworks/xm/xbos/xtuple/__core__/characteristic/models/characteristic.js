@@ -68,7 +68,7 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
 
   /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'),
+    var errors = arguments.callee.base.apply(this, arguments),
         optLength = this.getPath('options.length'),
         isValid, err;
 

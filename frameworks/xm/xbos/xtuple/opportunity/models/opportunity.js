@@ -49,7 +49,7 @@ XM.Opportunity = XM._Opportunity.extend(XM.Document, XM.CoreDocuments, XM.CrmDoc
 
   /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'), val, err;
+    var errors = arguments.callee.base.apply(this, arguments);
 
     return errors;
   }.observes('name', 'account'),

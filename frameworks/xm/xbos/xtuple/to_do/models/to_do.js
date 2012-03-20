@@ -45,7 +45,8 @@ XM.ToDo = XM._ToDo.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   
   /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'), val, err;
+    var errors = arguments.callee.base.apply(this, arguments),
+        isValid, err;
 
     return errors;
   }.observes('name', 'dueDate', 'assignedTo'),
