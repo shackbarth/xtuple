@@ -128,11 +128,6 @@ XM._Item = XM.Record.extend(
   priceUnit: SC.Record.toOne('XM.Unit'),
 
   /**
-    @type Boolean
-  */
-  isConfigured: SC.Record.attr(Boolean),
-
-  /**
     @type String
   */
   extendedDescription: SC.Record.attr(String),

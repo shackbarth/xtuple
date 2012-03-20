@@ -5,9 +5,6 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_expense_category');
-sc_require('mixins/document');
-
 /**
   @scope XM.SalesCategory
   @class

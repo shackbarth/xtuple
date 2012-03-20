@@ -13,7 +13,7 @@ sc_require('mixins/document');
 
   @extends XM._ShipZone
 */
-XM.ShipZone = XM._ShipZone.extend(XM.Document
+XM.ShipZone = XM._ShipZone.extend(XM.Document,
   /** @scope XM.ShipZone.prototype */ {
 
   // see document mixin for object behavior(s)

@@ -96,9 +96,9 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
   }.observes('characteristicType'),
 
   statusDidChange: function() {
-    var = this.get('status');
+    var status = this.get('status');
 
-    if status !== SC.Record.READY_NEW) {
+    if (status !== SC.Record.READY_NEW) {
       this.characteristicType.set('isEditable', false);
     }
   }.observes('status')
@@ -113,7 +113,7 @@ XM.Characteristic.mixin( /** @scope XM.Characteristic */ {
   @type Number
   @default 0
 */
-XM.Characteristic.TEXT = 0;
+  TEXT: 0,
 
 /**
   @static
@@ -121,7 +121,7 @@ XM.Characteristic.TEXT = 0;
   @type Number
   @default 1
 */
-XM.Characteristic.LIST = 1;
+  LIST: 1,
 
 /**
   @static
@@ -129,6 +129,6 @@ XM.Characteristic.LIST = 1;
   @type Number
   @default 2
 */
-XM.Characteristic.DATE = 2;
+  DATE: 2
 
 });
