@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_account_file');
+sc_require('mixins/_account_file');
 
 /**
   @class
 
   @extends XM._AccountFile
 */
-XM.AccountFile = XM._AccountFile.extend(
+XM.AccountFile = XM.Record.extend(XM._AccountFile,
   /** @scope XM.AccountFile.prototype */ {
 
   // .................................................

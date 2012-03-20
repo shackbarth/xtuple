@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_account_characteristic');
+sc_require('mixins/_account_characteristic');
 
 /**
   @class
 
   @extends XM._AccountCharacteristic
 */
-XM.AccountCharacteristic = XM._AccountCharacteristic.extend(
+XM.AccountCharacteristic = XM.Record.extend(XM._AccountCharacteristic,
   /** @scope XM.AccountCharacteristic.prototype */ {
 
   // .................................................

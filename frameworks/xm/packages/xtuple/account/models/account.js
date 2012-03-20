@@ -6,8 +6,7 @@
 
 sc_require('xbos/__generated__/_account');
 sc_require('mixins/crm_documents');
-sc_require('mixins/core_documents');
-sc_require('mixins/document');
+sc_require('mixins/_account');
 
 /** @class
 
@@ -20,7 +19,7 @@ sc_require('mixins/document');
   @version 0.2
 */
 
-XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
+XM.Account = XM.Document.extend(XM.CoreDocuments, XM.CrmDocuments, XM._Account,
 /** @scope XM.Account.prototype */ {
   
   // ..........................................................

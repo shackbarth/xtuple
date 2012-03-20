@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_account_contact');
+sc_require('mixins/_account_contact');
 
 /**
   @class
 
   @extends XM._AccountContact
 */
-XM.AccountContact = XM._AccountContact.extend(
+XM.AccountContact = XM.Record.extend(XM._AccountContact,
   /** @scope XM.AccountContact.prototype */ {
 
   // .................................................

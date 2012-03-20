@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_account_url');
+sc_require('mixins/_account_url');
 
 /**
   @class
 
   @extends XM._AccountUrl
 */
-XM.AccountUrl = XM._AccountUrl.extend(
+XM.AccountUrl = XM.Record.extend(XM._AccountUrl,
   /** @scope XM.AccountUrl.prototype */ {
 
   // .................................................
