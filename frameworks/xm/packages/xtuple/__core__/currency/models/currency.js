@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_currency');
-sc_require('mixins/document');
+sc_require('mixins/_currency');
 
 /**
   @class
 
-  @extends XM._Currency
-
+  @extends XM.Document
 */
-XM.Currency = XM._Currency.extend(XM.Document,
+XM.Currency = XM.Document.extend(XM._Currency,
   /** @scope XM.Currency.prototype */ {
 
   // see document mixin for object behavior(s)

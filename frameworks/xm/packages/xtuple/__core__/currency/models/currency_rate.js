@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_currency_rate');
+sc_require('mixins/_currency_rate');
 
 /**
   @class
 
   @extends XM._CurrencyRate
 */
-XM.CurrencyRate = XM._CurrencyRate.extend(
+XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
   /** @scope XM.CurrencyRate.prototype */ {
 
   // .................................................
