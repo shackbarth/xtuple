@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_image_info');
+sc_require('mixins/_image_info');
 
 /**
   @class
 
-  @extends XM._ImageInfo
+  @extends XM.Record
 */
-XM.ImageInfo = XM._ImageInfo.extend(
+XM.ImageInfo = XM.Record.extend(XM._ImageInfo,
   /** @scope XM.ImageInfo.prototype */ {
 
   // .................................................

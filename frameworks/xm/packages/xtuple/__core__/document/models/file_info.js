@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_file_info');
+sc_require('mixins/_file_info');
 
 /**
   @class
 
-  @extends XM._FileInfo
+  @extends XM.Record
 */
-XM.FileInfo = XM._FileInfo.extend(
+XM.FileInfo = XM.Record.extend(XM._FileInfo,
   /** @scope XM.FileInfo.prototype */ {
 
   // .................................................
