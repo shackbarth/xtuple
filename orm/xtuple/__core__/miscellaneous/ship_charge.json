@@ -26,7 +26,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "shipchrg_name"
+        "column": "shipchrg_name",
+        "isRequired": true
       }
     },
     {
