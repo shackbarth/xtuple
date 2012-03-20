@@ -13,11 +13,11 @@ sc_require('mixins/document');
 
   @extends XM._Terms
 */
-XM.Terms = XM._Terms.extend(XM.Document
+XM.Terms = XM._Terms.extend(XM.Document,
   /** @scope XM.Terms.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'code',
+  documentKey: 'code',
 
   // .................................................
   // CALCULATED PROPERTIES

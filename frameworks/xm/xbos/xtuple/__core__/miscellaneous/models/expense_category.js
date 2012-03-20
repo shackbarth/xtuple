@@ -17,7 +17,7 @@ XM.ExpenseCategory = XM._ExpenseCategory.extend(XM.Document,
   /** @scope XM.ExpenseCategory.prototype */ {
 
   // see document mixin for object behavior(s)
-  documentKey = 'code',
+  documentKey: 'code',
 
   // .................................................
   // CALCULATED PROPERTIES
