@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_alarm');
+sc_require('mixins/_to_do_alarm');
 
 /**
   @class
 
-  @extends XM._ToDoAlarm
+  @extends XM.Record
 */
-XM.ToDoAlarm = XM._ToDoAlarm.extend(
+XM.ToDoAlarm = XM.Record.extend(XM._ToDoAlarm,
   /** @scope XM.ToDoAlarm.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_image');
+sc_require('mixins/_to_do_image');
 
 /**
   @class
 
-  @extends XM._ToDoImage
+  @extends XM.Record
 */
-XM.ToDoImage = XM._ToDoImage.extend(
+XM.ToDoImage = XM.Record.extend(XM._ToDoImage,
   /** @scope XM.ToDoImage.prototype */ {
 
   // .................................................

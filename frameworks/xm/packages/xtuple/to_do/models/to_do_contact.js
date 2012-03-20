@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_contact');
+sc_require('mixins/_to_do_contact');
 
 /**
   @class
 
-  @extends XM._ToDoContact
+  @extends XM.Record
 */
-XM.ToDoContact = XM._ToDoContact.extend(
+XM.ToDoContact = XM.Record.extend(XM._ToDoContact,
   /** @scope XM.ToDoContact.prototype */ {
 
   // .................................................

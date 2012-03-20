@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_comment');
-sc_require('mixins/comment');
+sc_require('mixins/_to_do_comment');
 
 /**
   @class
 
-  @extends XM._ToDoComment
   @extends XM.Comment
 */
-XM.ToDoComment = XM._ToDoComment.extend(XM.Comment,
+XM.ToDoComment = XM.Comment.extend(XM._ToDoComment,
   /** @scope XM.ToDoComment.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_recurrence');
+sc_require('mixins/_to_do_recurrence');
 
 /**
   @class
 
-  @extends XM._ToDoRecurrence
+  @extends XM.Record
 */
-XM.ToDoRecurrence = XM._ToDoRecurrence.extend(
+XM.ToDoRecurrence = XM.Record.extend(XM._ToDoRecurrence,
   /** @scope XM.ToDoRecurrence.prototype */ {
 
   // .................................................

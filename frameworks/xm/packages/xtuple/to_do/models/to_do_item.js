@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_item');
+sc_require('mixins/_to_do_item');
 
 /**
   @class
 
-  @extends XM._ToDoItem
+  @extends XM.Record
 */
-XM.ToDoItem = XM._ToDoItem.extend(
+XM.ToDoItem = XM.Record.extend(XM._ToDoItem,
   /** @scope XM.ToDoItem.prototype */ {
 
   // .................................................

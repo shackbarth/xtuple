@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_url');
+sc_require('mixins/_to_do_url');
 
 /**
   @class
 
-  @extends XM._ToDoUrl
+  @extends XM.Record
 */
-XM.ToDoUrl = XM._ToDoUrl.extend(
+XM.ToDoUrl = XM.Record.extend(XM._ToDoUrl,
   /** @scope XM.ToDoUrl.prototype */ {
 
   // .................................................

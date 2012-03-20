@@ -5,19 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do');
+sc_require('mixins/_to_do');
 sc_require('mixins/crm_documents');
-sc_require('mixins/core_documents');
 
 /**
   @class
 
   @extends XM._ToDo
-  @extends XM.CrmDocuments
-  @extends XM.CoreDocuments
-
 */
-XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
+XM.ToDo = XM.Record.extend(XM._ToDo, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ToDo.prototype */ {
   
   // .................................................

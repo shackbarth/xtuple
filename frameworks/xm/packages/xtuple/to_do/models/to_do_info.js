@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_to_do_info');
+sc_require('mixins/_to_do_info');
 
 /**
   @class
 
-  @extends XM._ToDoInfo
+  @extends XM.Record
 */
-XM.ToDoInfo = XM._ToDoInfo.extend(
+XM.ToDoInfo = XM.Record.extend(XM._ToDoInfo,
   /** @scope XM.ToDoInfo.prototype */ {
 
   // .................................................
