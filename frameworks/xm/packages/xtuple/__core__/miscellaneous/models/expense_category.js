@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_expense_category');
-sc_require('mixins/document');
+sc_require('mixins/_expense_category');
 
 /**
   @class
 
-  @extends XM._ExpenseCategory
+  @extends XM.Document
 */
-XM.ExpenseCategory = XM._ExpenseCategory.extend(XM.Document,
+XM.ExpenseCategory = XM.Document.extend(XM._ExpenseCategory,
   /** @scope XM.ExpenseCategory.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'code',
 
   // .................................................

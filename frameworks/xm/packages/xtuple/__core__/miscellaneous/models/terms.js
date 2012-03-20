@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_terms');
-sc_require('mixins/document');
+sc_require('mixins/_terms');
 
 /**
   @class
 
-  @extends XM._Terms
+  @extends XM.Document
 */
-XM.Terms = XM._Terms.extend(XM.Document,
+XM.Terms = XM.Document.extend(XM._Terms,
   /** @scope XM.Terms.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'code',
 
   // .................................................

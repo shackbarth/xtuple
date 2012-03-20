@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_ship_zone');
-sc_require('mixins/document');
+sc_require('mixins/_ship_zone');
 
 /**
   @class
 
-  @extends XM._ShipZone
+  @extends XM.Document
 */
-XM.ShipZone = XM._ShipZone.extend(XM.Document,
+XM.ShipZone = XM.Document.extend(XM._ShipZone,
   /** @scope XM.ShipZone.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'name',
 
   // .................................................

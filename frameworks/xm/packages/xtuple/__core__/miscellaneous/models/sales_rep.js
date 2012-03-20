@@ -5,15 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_sales_rep');
-sc_require('mixins/document');
+sc_require('mixins/_sales_rep');
 
 /**
   @class
 
-  @extends XM._SalesRep
+  @extends XM.Document
 */
-XM.SalesRep = XM._SalesRep.extend(XM.Document,
+XM.SalesRep = XM.Document.extend(XM._SalesRep,
   /** @scope XM.SalesRep.prototype */ {
   
   numberPolicySetting: 'CRMAccountNumberGeneration',

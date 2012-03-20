@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_sales_category');
-sc_require('mixins/document');
+sc_require('mixins/_sales_category');
 
 /**
   @class
 
-  @extends XM._SalesCategory
+  @extends XM.Document
 */
-XM.SalesCategory = XM._SalesCategory.extend(XM.Document,
+XM.SalesCategory = XM.Document.extend(XM._SalesCategory,
   /** @scope XM.SalesCategory.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'name',
 
   // .................................................

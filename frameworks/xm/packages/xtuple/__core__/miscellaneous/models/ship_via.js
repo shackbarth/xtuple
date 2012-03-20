@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_ship_via');
-sc_require('mixins/document');
+sc_require('mixins/_ship_via');
 
 /**
   @class
 
-  @extends XM._ShipVia
+  @extends XM.Document
 */
-XM.ShipVia = XM._ShipVia.extend(XM.Document,
+XM.ShipVia = XM.Document.extend(XM._ShipVia,
   /** @scope XM.ShipVia.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'code',
 
   // .................................................

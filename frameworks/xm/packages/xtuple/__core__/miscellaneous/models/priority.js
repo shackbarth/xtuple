@@ -5,20 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_priority');
-sc_require('mixins/document');
+sc_require('mixins/_priority');
 
 /**
   @class
 
-  @extends XM._Priority
   @extends XM.Document
-
 */
-XM.Priority = XM._Priority.extend(XM.Document,
+XM.Priority = XM.Document.extend(XM._Priority,
   /** @scope XM.Priority.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'name',
 
   // .................................................

@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_ship_charge');
-sc_require('mixins/document');
+sc_require('mixins/_ship_charge');
 
 /**
   @class
 
-  @extends XM._ShipCharge
+  @extends XM.Document
 */
-XM.ShipCharge = XM._ShipCharge.extend(XM.Document,
+XM.ShipCharge = XM.Document.extend(XM._ShipCharge,
   /** @scope XM.ShipCharge.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'name',
 
   // .................................................

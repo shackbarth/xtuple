@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_reason_code');
-sc_require('mixins/document');
+sc_require('mixins/_reason_code');
 
 /**
   @class
 
-  @extends XM._ReasonCode
+  @extends XM.Document
 */
-XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
+XM.ReasonCode = XM.Document.extend(XM._ReasonCode,
   /** @scope XM.ReasonCode.prototype */ {
 
-  // see document mixin for object behavior(s)
   documentKey: 'code',
 
   // .................................................
