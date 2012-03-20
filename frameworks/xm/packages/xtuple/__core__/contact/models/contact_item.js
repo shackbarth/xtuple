@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_contact_item');
+sc_require('mixins/_contact_item');
 
 /**
   @class
 
-  @extends XM._ContactItem
+  @extends XM.Record
 */
-XM.ContactItem = XM._ContactItem.extend(
+XM.ContactItem = XM.Record.extend(XM._ContactItem,
   /** @scope XM.ContactItem.prototype */ {
 
   // .................................................

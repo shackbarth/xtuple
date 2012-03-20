@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_honorific');
+sc_require('mixins/_honorific');
 
 /**
   @class
 
-  @extends XM._Honorific
+  @extends XM.Record
 */
-XM.Honorific = XM._Honorific.extend(
+XM.Honorific = XM.Record.extend(XM._Honorific,
   /** @scope XM.Honorific.prototype */ {
 
   // .................................................

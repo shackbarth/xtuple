@@ -4,21 +4,16 @@
 // ==========================================================================
 /*globals XM */
 
-sc_require('xbos/__generated__/_contact');
-sc_require('mixins/core_documents');
-sc_require('mixins/document');
+sc_require('mixins/_contact');
 
 /** @class
 
   (Document your Model here)
 
-  @extends XM._Contact
   @extends XM.CoreDocuments
   @extends XM.Document
-  @version 0.1
 */
-
-XM.Contact = XM._Contact.extend(XM.Document, XM.CoreDocuments,
+XM.Contact = XM.Document.extend(XM._Contact, XM.CoreDocuments,
 /** @scope XM.Contact.prototype */ {
 
   // ..........................................................
