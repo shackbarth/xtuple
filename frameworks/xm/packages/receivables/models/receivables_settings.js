@@ -14,10 +14,10 @@ sc_require('mixins/settings');
   @version 0.1
 */
 
-XM.Receivables = XM.Object.extend( XM.Settings,
-/** @scope XM.Receivables.prototype */ {
+XM.ReceivablesSettings = XM.Object.extend( XM.Settings,
+/** @scope XM.ReceivablesSettings.prototype */ {
 
-  className: 'XM.Receivables',
+  className: 'XM.ReceivablesSettings',
   
   privilege: 'ConfigureGL',
 
@@ -118,6 +118,6 @@ XM.Receivables = XM.Object.extend( XM.Settings,
   
 }) ;
 
-XM.receivables = XM.Receivables.create();
+XM.receivablesSettings = XM.ReceivablesSettings.create();
 
 

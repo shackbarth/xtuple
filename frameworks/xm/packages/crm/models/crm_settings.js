@@ -13,7 +13,7 @@
 */
 
 XM.CrmSettings = XM.Object.extend(XM.Settings,
-/** @scope XM.Crm.prototype */ {
+/** @scope XM.CrmSettings.prototype */ {
   
   className: 'XM.CrmSettings',
   

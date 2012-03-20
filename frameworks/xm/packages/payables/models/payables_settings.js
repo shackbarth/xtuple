@@ -15,7 +15,7 @@ sc_require('mixins/settings');
 */
 
 XM.PayablesSettings = XM.Object.extend( XM.Settings,
-/** @scope XM.Payables.prototype */ {
+/** @scope XM.PayablesSettings.prototype */ {
 
   className: 'XM.PayablesSettings',
   
@@ -78,6 +78,6 @@ XM.PayablesSettings = XM.Object.extend( XM.Settings,
   
 }) ;
 
-XM.payables = XM.Payables.create();
+XM.payablesSettings = XM.PayablesSettings.create();
 
 

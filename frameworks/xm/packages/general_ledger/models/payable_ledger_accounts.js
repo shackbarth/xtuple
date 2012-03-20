@@ -5,17 +5,17 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/receivables
+// PLACE ME IN ../client/frameworks/xm/packages/general_ledger
 
-sc_require('mixins/_incident_customer');
+sc_require('mixins/_payable_ledger_accounts');
 
 /**
   @class
 
-  @extends XM._IncidentCustomer
+  @extends XM._PayableLedgerAccounts
 */
-XM.IncidentCustomer = XM.Record.extend(XM._IncidentCustomer,
-  /** @scope XM.IncidentCustomer.prototype */ {
+XM.PayableLedgerAccounts = XM.Record.extend(XM._PayableLedgerAccounts,
+  /** @scope XM.PayableLedgerAccounts.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
