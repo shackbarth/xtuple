@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_profit_center');
+sc_require('mixins/_profit_center');
 
 /**
   @class
 
   @extends XM._ProfitCenter
 */
-XM.ProfitCenter = XM._ProfitCenter.extend(
+XM.ProfitCenter = XM.Record.extend(XM._ProfitCenter,
   /** @scope XM.ProfitCenter.prototype */ {
 
   // .................................................

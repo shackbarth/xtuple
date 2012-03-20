@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_trial_balance');
+sc_require('mixins/_trial_balance');
 
 /**
   @class
 
   @extends XM._TrialBalance
 */
-XM.TrialBalance = XM._TrialBalance.extend(
+XM.TrialBalance = XM.Record.extend(XM._TrialBalance,
   /** @scope XM.TrialBalance.prototype */ {
 
   // .................................................

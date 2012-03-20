@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_financial_layout');
+sc_require('mixins/_financial_layout');
 
 /**
   @class
 
   @extends XM._FinancialLayout
 */
-XM.FinancialLayout = XM._FinancialLayout.extend(
+XM.FinancialLayout = XM.Record.extend(XM._FinancialLayout,
   /** @scope XM.FinancialLayout.prototype */ {
 
   // .................................................

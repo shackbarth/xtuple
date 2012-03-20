@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_budget');
+sc_require('mixins/_budget');
 
 /**
   @class
 
   @extends XM._Budget
 */
-XM.Budget = XM._Budget.extend(
+XM.Budget = XM.Record.extend(XM._Budget,
   /** @scope XM.Budget.prototype */ {
 
   // .................................................

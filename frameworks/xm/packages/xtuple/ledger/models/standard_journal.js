@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_standard_journal');
+sc_require('mixins/_standard_journal');
 
 /**
   @class
 
   @extends XM._StandardJournal
 */
-XM.StandardJournal = XM._StandardJournal.extend(
+XM.StandardJournal = XM.Record.extend(XM._StandardJournal,
   /** @scope XM.StandardJournal.prototype */ {
 
   // .................................................

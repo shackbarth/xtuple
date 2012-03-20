@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_period');
+sc_require('mixins/_period');
 
 /**
   @class
 
   @extends XM._Period
 */
-XM.Period = XM._Period.extend(
+XM.Period = XM.Record.extend(XM._Period,
   /** @scope XM.Period.prototype */ {
 
   // .................................................

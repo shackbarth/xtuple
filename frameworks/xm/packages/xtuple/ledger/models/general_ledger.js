@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_general_ledger');
+sc_require('mixins/_general_ledger');
 
 /**
   @class
 
   @extends XM._GeneralLedger
 */
-XM.GeneralLedger = XM._GeneralLedger.extend(
+XM.GeneralLedger = XM.Record.extend(XM._GeneralLedger,
   /** @scope XM.GeneralLedger.prototype */ {
 
   // .................................................

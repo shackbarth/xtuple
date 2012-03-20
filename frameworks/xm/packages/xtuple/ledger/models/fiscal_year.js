@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_fiscal_year');
+sc_require('mixins/_fiscal_year');
 
 /**
   @class
 
   @extends XM._FiscalYear
 */
-XM.FiscalYear = XM._FiscalYear.extend(
+XM.FiscalYear = XM.Record.extend(XM._FiscalYear,
   /** @scope XM.FiscalYear.prototype */ {
 
   // .................................................

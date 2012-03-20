@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_ledger_account_info');
+sc_require('mixins/_ledger_account_info');
 
 /**
   @class
 
   @extends XM._LedgerAccountInfo
 */
-XM.LedgerAccountInfo = XM._LedgerAccountInfo.extend(
+XM.LedgerAccountInfo = XM.Record.extend(XM._LedgerAccountInfo,
   /** @scope XM.LedgerAccountInfo.prototype */ {
 
   // .................................................

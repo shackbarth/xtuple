@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_company');
+sc_require('mixins/_company');
 
 /**
   @class
 
   @extends XM._Company
 */
-XM.Company = XM._Company.extend(
+XM.Company = XM.Record.extend(XM._Company,
   /** @scope XM.Company.prototype */ {
 
   // .................................................
