@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_comment_type');
+sc_require('mixins/_comment_type');
 
 /**
   @class
 
-  @extends XM._CommentType
+  @extends XM.Record
 */
-XM.CommentType = XM._CommentType.extend(
+XM.CommentType = XM.Record.extend(XM._CommentType,
   /** @scope XM.CommentType.prototype */ {
 
   // .................................................
