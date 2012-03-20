@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_site_comment');
+sc_require('mixins/_site_comment');
 
 /**
   @class
 
-  @extends XM._SiteComment
+  @extends XM.Record
 */
-XM.SiteComment = XM._SiteComment.extend(
+XM.SiteComment = XM.Record.extend(XM._SiteComment,
   /** @scope XM.SiteComment.prototype */ {
 
   // .................................................
