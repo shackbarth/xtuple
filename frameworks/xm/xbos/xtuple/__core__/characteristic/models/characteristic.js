@@ -95,7 +95,9 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
   }.observes('characteristicType'),
 
   statusDidChange: function() {
-    if(this.get('status') === SC.Record.READY_CLEAN) {
+    var = this.get('status');
+
+    if status !== SC.Record.READY_NEW) {
       this.characteristicType.set('isEditable', false);
     }
   }.observes('status')
