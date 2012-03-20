@@ -20,31 +20,16 @@ sc_require('mixins/document');
 */
 
 XM.Project = XM._Project.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
-
   /** @scope XM.Project.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.DataSource.session.userName;
-    }
-  }),
-
-  /**
-    @type XM.UserAccountInfo
-  */
-  assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.DataSource.session.userName;
-    }
+  number: SC.Record.attr(Number, {
+   toType: function(record, key, value) {
+    if(value) return value.toUpperCase();
+   }
   }),
 
 	/** 
@@ -138,27 +123,17 @@ XM.Project = XM._Project.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
   //
 
   validate: function() {
-    var errors = this.get('validateErrors'), val, err;
-
-    // Validate Number
-    val = this.get('number') ? this.get('number').length : 0;
-    err = XM.errors.findProperty('code', 'xt1001');
-    this.updateErrors(err, !val);
-
-    // Validate Due Date
-    val = this.get('dueDate') ? this.get('dueDate') : 0;
-    err = XM.errors.findProperty('code', 'xt1000');
-    this.updateErrors(err, !val);
+    var errors = arguments.callee.base.apply(this, arguments);
     
     return errors;
-  }.observes('number', 'dueDate'),
+  }.observes('dueDate'),
 
   _xm_projectStatusDidChange: function() {
     var status = this.get('status'),
-        _projectStatus = this.get('projectStatus');
+        projectStatus = this.get('projectStatus');
 
     if(status & SC.Record.READY) {
-      if(_projectStatus === XM.Project.COMPLETED) this.set('completeDate', SC.DateTime.create());    
+      if(projectStatus === XM.Project.COMPLETED) this.set('completeDate', SC.DateTime.create());    
     }
   }.observes('projectStatus'),
 

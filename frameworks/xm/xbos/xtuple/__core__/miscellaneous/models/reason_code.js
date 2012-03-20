@@ -23,6 +23,9 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   // CALCULATED PROPERTIES
   //
 
+  // see document mixin for object behavior(s)
+  documentKey = 'code';
+
   //..................................................
   // METHODS
   //
@@ -30,6 +33,10 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   //..................................................
   // OBSERVERS
   //
+
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('code')
 
 });
 
