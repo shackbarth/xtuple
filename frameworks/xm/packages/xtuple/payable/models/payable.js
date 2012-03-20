@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_payable');
-sc_require('mixins/document');
+sc_require('mixins/_payable');
 
 /**
   @class
 
-  @extends XM._Payable
-  @extends XM.Document
+  @extends XM.Record
 */
-XM.Payable = XM._Payable.extend(XM.Document,
+XM.Payable = XM.Document.extend(XM._Payable,
   /** @scope XM.Payable.prototype */ {
 
   numberPolicy: XM.AUTO_OVERRIDE_NUMBER

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_receivable_application');
+sc_require('mixins/_receivable_application');
 
 /**
   @class
 
-  @extends XM._ReceivableApplication
+  @extends XM.Record
 */
-XM.ReceivableApplication = XM._ReceivableApplication.extend(
+XM.ReceivableApplication = XM.Record.extend(XM._ReceivableApplication,
   /** @scope XM.ReceivableApplication.prototype */ {
 
   // .................................................

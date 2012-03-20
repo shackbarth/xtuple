@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_receivable');
-sc_require('mixins/document');
+sc_require('mixins/_receivable');
 
 /**
   @class
 
-  @extends XM._Receivable
   @extends XM.Document
 */
-XM.Receivable = XM._Receivable.extend(XM.Document,
+XM.Receivable = XM.Document.extend(XM._Receivable,
   /** @scope XM.Receivable.prototype */ {
 
   numberPolicy: XM.AUTO_OVERRIDE_NUMBER

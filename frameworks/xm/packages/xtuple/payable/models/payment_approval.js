@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_receivable_ledger_accounts');
+sc_require('mixins/_payment_approval');
 
 /**
   @class
 
-  @extends XM._ReceivableLedgerAccounts
+  @extends XM.Record
 */
-XM.ReceivableLedgerAccounts = XM._ReceivableLedgerAccounts.extend(
-  /** @scope XM.ReceivableLedgerAccounts.prototype */ {
+XM.PaymentApproval = XM.Record.extend(XM._PaymentApproval,
+  /** @scope XM.PaymentApproval.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

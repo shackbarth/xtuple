@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_receivable_tax');
+sc_require('mixins/_receivable_tax');
 
 /**
   @class
 
-  @extends XM._ReceivableTax
+  @extends XM.Record
 */
-XM.ReceivableTax = XM._ReceivableTax.extend(
+XM.ReceivableTax = XM.Record.extend(XM._ReceivableTax,
   /** @scope XM.ReceivableTax.prototype */ {
 
   // .................................................

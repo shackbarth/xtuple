@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_payable_tax');
+sc_require('mixins/_payable_tax');
 
 /**
   @class
 
-  @extends XM._PayableTax
+  @extends XM.Record
 */
-XM.PayableTax = XM._PayableTax.extend(
+XM.PayableTax = XM.Record.extend(XM._PayableTax,
   /** @scope XM.PayableTax.prototype */ {
 
   // .................................................
