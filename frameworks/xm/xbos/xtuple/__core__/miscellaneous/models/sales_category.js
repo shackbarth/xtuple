@@ -31,5 +31,8 @@ XM.SalesCategory = XM._SalesCategory.extend(XM.Document,
   // OBSERVERS
   //
 
-});
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('name')
 
+});

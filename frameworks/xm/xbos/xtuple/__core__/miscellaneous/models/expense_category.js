@@ -31,4 +31,8 @@ XM.ExpenseCategory = XM._ExpenseCategory.extend(XM.Document,
   // OBSERVERS
   //
 
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('code')
+
 });

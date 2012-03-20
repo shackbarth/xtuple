@@ -31,11 +31,15 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   // OBSERVERS
   //
 
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('code')
+
 });
 
 // TODO: move this mixin, as necessary, to the associated extension(s)
 
-//XM.ReasonCode.mixin( /** @scope XM.ReasonCode */ {
+XM.ReasonCode.mixin( /** @scope XM.ReasonCode */ {
 
 /**
   Selected Document Type - A/R Credit Memo.
@@ -45,7 +49,7 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   @type String
   @default P
 */
-//  CREDIT_MEMO: 'ARCM',
+  CREDIT_MEMO: 'ARCM',
 
 /**
   Selected Document Type - A/R Debit Memo.
@@ -55,7 +59,7 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   @type String
   @default D
 */
-//  DEBIT_MEMO: 'ARDM',
+  DEBIT_MEMO: 'ARDM',
 
 /**
   Selected Document Type - Return Authorization
@@ -65,6 +69,6 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   @type String
   @default N
 */
-//  RETURN_AUTH: 'RA'
+  RETURN_AUTH: 'RA'
 
-//});
+});
