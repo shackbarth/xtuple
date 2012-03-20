@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_credit_memo_info');
+sc_require('mixins/_credit_memo_info');
 
 /**
   @class
 
-  @extends XM._CreditMemoInfo
+  @extends XM.Record
 */
-XM.CreditMemoInfo = XM._CreditMemoInfo.extend(
+XM.CreditMemoInfo = XM.Record.extend(XM._CreditMemoInfo,
   /** @scope XM.CreditMemoInfo.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_credit_memo_tax');
+sc_require('mixins/_credit_memo_tax');
 
 /**
   @class
 
-  @extends XM._CreditMemoTax
+  @extends XM.Record
 */
-XM.CreditMemoTax = XM._CreditMemoTax.extend(
+XM.CreditMemoTax = XM.Record.extend(XM._CreditMemoTax,
   /** @scope XM.CreditMemoTax.prototype */ {
 
   // .................................................

@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_credit_memo');
-sc_require('mixins/document');
+sc_require('mixins/_credit_memo');
 
 /**
   @class
 
-  @extends XM._CreditMemo
   @extends XM.Document
 */
-XM.CreditMemo = XM._CreditMemo.extend(XM.Document,
+XM.CreditMemo = XM.Document.extend(XM._CreditMemo,
   /** @scope XM.CreditMemo.prototype */ {
 
   // .................................................
