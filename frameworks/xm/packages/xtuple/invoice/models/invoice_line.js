@@ -5,15 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_invoice_line');
-sc_require('xbos/xtuple/__core__/unit/models/unit');
+sc_require('mixins/_invoice_line');
 
 /**
   @class
 
-  @extends XM._InvoiceLine
+  @extends XM.Record
 */
-XM.InvoiceLine = XM._InvoiceLine.extend(
+XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   /** @scope XM.InvoiceLine.prototype */ {
 
 

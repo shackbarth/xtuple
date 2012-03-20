@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_invoice_tax');
+sc_require('mixins/_invoice_tax');
 
 /**
   @class
 
-  @extends XM._InvoiceTax
+  @extends XM.Record
 */
-XM.InvoiceTax = XM._InvoiceTax.extend(
+XM.InvoiceTax = XM.Record.extend(XM._InvoiceTax,
   /** @scope XM.InvoiceTax.prototype */ {
 
   // .................................................

@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_invoice');
-sc_require('mixins/document');
+sc_require('mixins/_invoice');
 
 /**
   @class
 
-  @extends XM._Invoice
   @extends XM.Document
 */
-XM.Invoice = XM._Invoice.extend(XM.Document,
+XM.Invoice = XM.Document.extend(XM._Invoice,
   /** @scope XM.Invoice.prototype */ {
   
   numberPolicySetting: 'InvcNumberGeneration',

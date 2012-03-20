@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_invoice_info');
+sc_require('mixins/_invoice_info');
 
 /**
   @class
 
-  @extends XM._InvoiceInfo
+  @extends XM.Record
 */
-XM.InvoiceInfo = XM._InvoiceInfo.extend(
+XM.InvoiceInfo = XM.Record.extend(XM._InvoiceInfo,
   /** @scope XM.InvoiceInfo.prototype */ {
 
   // .................................................

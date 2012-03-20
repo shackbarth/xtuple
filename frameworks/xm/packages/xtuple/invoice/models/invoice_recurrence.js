@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_invoice_recurrence');
+sc_require('mixins/_invoice_recurrence');
 
 /**
   @class
 
-  @extends XM._InvoiceRecurrence
+  @extends XM.Record
 */
-XM.InvoiceRecurrence = XM._InvoiceRecurrence.extend(
+XM.InvoiceRecurrence = XM.Record.extend(XM._InvoiceRecurrence,
   /** @scope XM.InvoiceRecurrence.prototype */ {
 
   // .................................................
