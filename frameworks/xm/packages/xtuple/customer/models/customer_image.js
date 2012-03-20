@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_image');
+sc_require('mixins/_customer_image');
 
 /**
   @class
 
-  @extends XM._CustomerImage
+  @extends XM.Record
 */
-XM.CustomerImage = XM._CustomerImage.extend(
+XM.CustomerImage = XM.Record.extend(XM._CustomerImage,
   /** @scope XM.CustomerImage.prototype */ {
 
   // .................................................

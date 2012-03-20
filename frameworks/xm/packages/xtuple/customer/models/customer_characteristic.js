@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_characteristic');
+sc_require('mixins/_customer_characteristic');
 
 /**
   @class
 
   @extends XM._CustomerCharacteristic
 */
-XM.CustomerCharacteristic = XM._CustomerCharacteristic.extend(
+XM.CustomerCharacteristic = XM.Record.extend(XM._CustomerCharacteristic,
   /** @scope XM.CustomerCharacteristic.prototype */ {
 
   // .................................................

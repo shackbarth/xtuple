@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_file');
+sc_require('mixins/_customer_file');
 
 /**
   @class
 
-  @extends XM._CustomerFile
+  @extends XM.Record
 */
-XM.CustomerFile = XM._CustomerFile.extend(
+XM.CustomerFile = XM.Record.extend(XM._CustomerFile,
   /** @scope XM.CustomerFile.prototype */ {
 
   // .................................................

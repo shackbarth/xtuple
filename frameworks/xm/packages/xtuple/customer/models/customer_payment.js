@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_payment');
+sc_require('mixins/_customer_payment');
 
 /**
   @class
 
-  @extends XM._CustomerPayment
+  @extends XM.Record
 */
-XM.CustomerPayment = XM._CustomerPayment.extend(
+XM.CustomerPayment = XM.Record.extend(XM._CustomerPayment,
   /** @scope XM.CustomerPayment.prototype */ {
 
   // .................................................

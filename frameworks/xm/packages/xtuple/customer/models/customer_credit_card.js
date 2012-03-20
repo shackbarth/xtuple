@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_credit_card');
+sc_require('mixins/_customer_credit_card');
 
 /**
   @class
 
-  @extends XM._CustomerCreditCard
+  @extends XM.Record
 */
-XM.CustomerCreditCard = XM._CustomerCreditCard.extend(
+XM.CustomerCreditCard = XM.Record.extend(XM._CustomerCreditCard,
   /** @scope XM.CustomerCreditCard.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_shipto_browse');
+sc_require('mixins/_customer_shipto_browse');
 
 /**
   @class
 
-  @extends XM._CustomerShiptoBrowse
+  @extends XM.Record
 */
-XM.CustomerShiptoBrowse = XM._CustomerShiptoBrowse.extend(
+XM.CustomerShiptoBrowse = XM.Record.extend(XM._CustomerShiptoBrowse,
   /** @scope XM.CustomerShiptoBrowse.prototype */ {
 
   // .................................................

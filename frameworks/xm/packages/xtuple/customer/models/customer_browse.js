@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_browse');
+sc_require('mixins/_customer_browse');
 
 /**
   @class
 
   @extends XM._CustomerBrowse
 */
-XM.CustomerBrowse = XM._CustomerBrowse.extend(
+XM.CustomerBrowse = XM.Record.extend(XM._CustomerBrowse,
   /** @scope XM.CustomerBrowse.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer_tax_registration');
+sc_require('mixins/_customer_tax_registration');
 
 /**
   @class
 
-  @extends XM._CustomerTaxRegistration
+  @extends XM.Record
 */
-XM.CustomerTaxRegistration = XM._CustomerTaxRegistration.extend(
+XM.CustomerTaxRegistration = XM.Record.extend(XM._CustomerTaxRegistration,
   /** @scope XM.CustomerTaxRegistration.prototype */ {
 
   // .................................................

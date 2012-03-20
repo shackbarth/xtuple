@@ -5,19 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_customer');
-sc_require('mixins/core_documents');
-sc_require('mixins/document');
 
+sc_require('mixins/_customer');
 
 /**
   @class
 
-  @extends XM._Customer
-  @extends XM.AccountDocument
+  @extends XM.Document
   @extends XM.CoreDocuments
 */
-XM.Customer = XM._Customer.extend(XM.Document, XM.CoreDocuments,
+XM.Customer = XM.Document.extend(XM.CoreDocuments, XM._Customer,
   /** @scope XM.Customer.prototype */ {
 
   numberPolicySetting: 'CRMAccountNumberGeneration'
