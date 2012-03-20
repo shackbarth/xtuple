@@ -162,9 +162,33 @@ XM.Record = SC.Record.extend(
 
   */
   validate: function() {
-    return this.get('validateErrors');
+    var errors = this.get('validateErrors'),
+        primaryKey = this.primaryKey,
+        recordId   = this.get('id'),
+        store      = this.get('store'),
+        storeKey   = this.get('storeKey'),
+        key, valueForKey, typeClass, isErr = false;
+    
+    // check to see that required fields are filled
+    for (key in this) {
+      // make sure property is a record attribute.
+      valueForKey = this[key];
+      if (valueForKey) {
+        typeClass = valueForKey.typeClass;
+        if (typeClass) {
+          isToMany =  SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
+                      SC.kindOf(valueForKey, SC.ManyAttribute);
+          if (!isToMany && this[key].isRequired && !this.get(key)) {
+            isErr = true;
+          }
+        }
+      }
+    }
+    err = XM.errors.findProperty('code', 'xt1001');
+    this.updateErrors(err, isErr);
+    return errors;
   },
-
+  
   /**
   Convienience function for updating validateErrors list.
   Checks whether errors are in list before adding and removing
