@@ -112,7 +112,7 @@
       "toOne": {
         "type": "Currency",
         "column": "ophead_curr_id",
-        "defaultValue": "XM.Currency.BASE"
+        "defaultValue": "baseCurrency"
       }
     },
     {
