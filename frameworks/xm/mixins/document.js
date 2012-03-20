@@ -116,7 +116,7 @@ XM.Document = {
     }    
 
     // For manually edited numbers, check for conflicts with existing
-    if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_CLEAN))  {
+    if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY))  {
       if(this._xm_numberGen && this._xm_numberGen == number) return;
 
       // callback

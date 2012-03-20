@@ -17,15 +17,15 @@ SC.stringsFor("en_US", {
 // Errors
 // ********
 
+  "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
   "_noLineItems": "This document requires at least one line item.",
-  "_optionExistsValue": "A Option already exists with this Value.",
+  "_optionExistsValue": "A option already exists with this Value.",
   "_parentIsInvalid": "This CRM Account cannot be a parent to itself.",
   "_recordConflict": "Record Conflict",
-  "_recordExistsCode": "A record already exists with this code.",
-  "_recordExistsNumber": "A record already exists with this number.",
+  "_recordExistsKey": "A record already exists with the specified document key.",
   "_recordInvalid": "Record Invalid",
   "_recordIncomplete": "Record Incomplete",
   "_requiredFieldsEmpty": "Required field(s) are empty",

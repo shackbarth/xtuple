@@ -66,20 +66,20 @@ XM.Account = XM._Account.extend(XM.Document, XM.CoreDocuments, XM.CrmDocuments,
 
     // Validate Parent
     if(this.get('parent')) {
-      val = this.get('id') !== this.get('parent') ? this.get('parent') : 0;
+      isValid = this.get('id') !== this.get('parent') ? this.get('parent') : 0;
       err = XM.errors.findProperty('code', 'xt1019');
-      this.updateErrors(err, !val);
+      this.updateErrors(err, !isValid);
     }
 
     // Validate User Account
     if(this.get('isUserAccount')) {
-      val = this.get('userAccount') ? this.get('userAccount') : 0;
+      isValid = this.get('userAccount') ? this.get('userAccount') : 0;
       err = XM.errors.findProperty('code', 'xt1020');
-      this.updateErrors(err, !val);
+      this.updateErrors(err, !isValid);
     }
 
     return errors;
-  }.observes('number', 'name', 'parent', 'isUserAccount', 'userAccount')
+  }.observes('name', 'parent', 'isUserAccount', 'userAccount')
 
 });
 

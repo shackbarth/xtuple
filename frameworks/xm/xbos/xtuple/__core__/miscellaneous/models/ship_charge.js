@@ -6,18 +6,22 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_ship_charge');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._ShipCharge
 */
-XM.ShipCharge = XM._ShipCharge.extend(
+XM.ShipCharge = XM._ShipCharge.extend(XM.Document,
   /** @scope XM.ShipCharge.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
+
+  // see document mixin for object behavior(s)
+  documentKey = 'name';
 
   //..................................................
   // METHODS
@@ -27,5 +31,8 @@ XM.ShipCharge = XM._ShipCharge.extend(
   // OBSERVERS
   //
 
-});
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('name')
 
+});

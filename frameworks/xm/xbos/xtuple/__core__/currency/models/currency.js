@@ -54,22 +54,17 @@ XM.Currency = XM._Currency.extend(
 
   /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'), 
+    var errors = arguments.callee.base.apply(this, arguments), 
         // used for proper object reference during callback function below
         record = this,
         status = record.get('status'),
         name = record.get('name'),
-        val, err;
-
-    // Validate Name
-    val = this.get('name') ? this.get('name').length : 0;
-    err = XM.errors.findProperty('code', 'xt1002');
-    this.updateErrors(err, !val);
+        isValid, err;
 
     // Validate Symbol OR Abbreviation
-    val = this.get('symbol') || this.get('abbreviation') ? true : false;
+    isValid = this.get('symbol') || this.get('abbreviation') ? true : false;
     err = XM.errors.findProperty('code', 'xt1021');
-    this.updateErrors(err, !val);
+    this.updateErrors(err, !isValid);
 
     // Validate Unique Name
     if(status & SC.Record.READY) {

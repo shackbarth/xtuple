@@ -6,18 +6,22 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_sales_category');
+sc_require('mixins/document');
 
 /**
   @class
 
   @extends XM._SalesCategory
 */
-XM.SalesCategory = XM._SalesCategory.extend(
+XM.SalesCategory = XM._SalesCategory.extend(XM.Document,
   /** @scope XM.SalesCategory.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
+
+  // see document mixin for object behavior(s)
+  documentKey = 'name';
 
   //..................................................
   // METHODS
@@ -27,5 +31,8 @@ XM.SalesCategory = XM._SalesCategory.extend(
   // OBSERVERS
   //
 
-});
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments);
+  }.observes('name')
 
+});
