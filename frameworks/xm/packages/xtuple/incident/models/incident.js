@@ -5,18 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_incident');
-sc_require('mixins/core_documents');
-sc_require('mixins/document');
+sc_require('mixins/_incident');
 
 /**
   @class
 
-  @extends XM._Incident
-  @extends XM.CoreDocuments
   @extends XM.Document
+  @extends XM.CoreDocuments
 */
-XM.Incident = XM._Incident.extend(XM.Document, XM.CoreDocuments,
+XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments, 
   /** @scope XM.Incident.prototype */ {
 
   numberPolicy: XM.AUTO_NUMBER,

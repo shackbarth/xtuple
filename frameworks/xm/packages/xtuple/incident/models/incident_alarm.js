@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_incident_alarm');
+sc_require('mixins/_incident_alarm');
 
 /**
   @class
 
-  @extends XM._IncidentAlarm
+  @extends XM.Record
 */
-XM.IncidentAlarm = XM._IncidentAlarm.extend(
+XM.IncidentAlarm = XM.Record.extend(XM._IncidentAlarm,
   /** @scope XM.IncidentAlarm.prototype */ {
 
   // .................................................

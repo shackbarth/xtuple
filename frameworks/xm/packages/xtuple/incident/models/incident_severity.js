@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_incident_severity');
+sc_require('mixins/_incident_severity');
 
 /**
   @class
 
-  @extends XM._IncidentSeverity
+  @extends XM.Record
 */
-XM.IncidentSeverity = XM._IncidentSeverity.extend(
+XM.IncidentSeverity = XM.Record.extend(XM._IncidentSeverity,
   /** @scope XM.IncidentSeverity.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_incident_browse');
+sc_require('mixins/_incident_browse');
 
 /**
   @class
 
-  @extends XM._IncidentBrowse
+  @extends XM.Record
 */
-XM.IncidentBrowse = XM._IncidentBrowse.extend(
+XM.IncidentBrowse = XM.Record.extend(XM._IncidentBrowse,
   /** @scope XM.IncidentBrowse.prototype */ {
 
   // .................................................

@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_incident_info');
+sc_require('mixins/_incident_info');
 
 /**
   @class
 
-  @extends XM._IncidentInfo
+  @extends XM.Record
 */
-XM.IncidentInfo = XM._IncidentInfo.extend(
+XM.IncidentInfo = XM.Record.extend(XM._IncidentInfo,
   /** @scope XM.IncidentInfo.prototype */ {
 
   // .................................................

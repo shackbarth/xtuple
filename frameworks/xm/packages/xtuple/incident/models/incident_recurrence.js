@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_incident_recurrence');
+sc_require('mixins/_incident_recurrence');
 
 /**
   @class
 
-  @extends XM._IncidentRecurrence
+  @extends XM.Record
 */
-XM.IncidentRecurrence = XM._IncidentRecurrence.extend(
+XM.IncidentRecurrence = XM.Record.extend(XM._IncidentRecurrence,
   /** @scope XM.IncidentRecurrence.prototype */ {
 
   // .................................................
