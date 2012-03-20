@@ -6,6 +6,7 @@
 /*globals XM */
 
 sc_require('xbos/__generated__/_currency');
+sc_require('mixins/document');
 
 /**
   @class
@@ -13,20 +14,16 @@ sc_require('xbos/__generated__/_currency');
   @extends XM._Currency
 
 */
-XM.Currency = XM._Currency.extend(
+XM.Currency = XM._Currency.extend(XM.Document,
   /** @scope XM.Currency.prototype */ {
 
+  // see document mixin for object behavior(s)
+  documentKey: 'name',
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  /**
-    @type Boolean 
-  */
-  isBase: SC.Record.attr(Boolean, {
-    defaultValue: false
-  }),
-  
   abbreviation: SC.Record.attr(Boolean, {
     toType: function(record, key, value) {
       if(value && value.length > 3) return value.substr(0,3);
@@ -54,22 +51,17 @@ XM.Currency = XM._Currency.extend(
 
   /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'), 
+    var errors = arguments.callee.base.apply(this, arguments), 
         // used for proper object reference during callback function below
         record = this,
         status = record.get('status'),
-        name = record.get('name'),
-        val, err;
-
-    // Validate Name
-    val = this.get('name') ? this.get('name').length : 0;
-    err = XM.errors.findProperty('code', 'xt1002');
-    this.updateErrors(err, !val);
+        abbr = record.get('abbreviation'),
+        isValid, err;
 
     // Validate Symbol OR Abbreviation
-    val = this.get('symbol') || this.get('abbreviation') ? true : false;
+    isValid = this.get('symbol') || this.get('abbreviation') ? true : false;
     err = XM.errors.findProperty('code', 'xt1021');
-    this.updateErrors(err, !val);
+    this.updateErrors(err, !isValid);
 
     // Validate Unique Name
     if(status & SC.Record.READY) {
@@ -83,7 +75,7 @@ XM.Currency = XM._Currency.extend(
         }
       }
     }
-    XM.Record.findExisting.call(record, 'name', name, callback);
+    XM.Record.findExisting.call(record, 'abbreviation', abbr, callback);
   
     return errors;
   }.observes('name', 'symbol', 'abbreviation'),

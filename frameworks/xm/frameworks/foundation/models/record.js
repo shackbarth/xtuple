@@ -24,6 +24,8 @@ XM.Record = SC.Record.extend(
   */
   className: 'XM.Record',
   
+  ignoreUnknownProperties: true,
+  
   /**
   The data type name. The same as the class name without the namespace.
   Used by nested records.

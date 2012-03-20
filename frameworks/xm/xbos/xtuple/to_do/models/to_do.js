@@ -8,7 +8,6 @@
 sc_require('xbos/__generated__/_to_do');
 sc_require('mixins/crm_documents');
 sc_require('mixins/core_documents');
-sc_require('mixins/document');
 
 /**
   @class
@@ -16,7 +15,6 @@ sc_require('mixins/document');
   @extends XM._ToDo
   @extends XM.CrmDocuments
   @extends XM.CoreDocuments
-  @extends XM.Document
 
 */
 XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
@@ -26,49 +24,9 @@ XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
   // CALCULATED PROPERTIES
   //
 
-  /**
-    @type Boolean 
-  */
-  isActive: SC.Record.attr(Boolean, {
-    defaultValue: true
-  }),
-  
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.dataSource.session.userName;
-    }
-  }),
+  // see document mixin for object behavior(s)
+  documentKey: 'name',
 
-  /**
-    @type XM.UserAccountInfo
-  */
-  assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      return XM.dataSource.session.userName;
-    }
-  }),
-
-  /**
-  @type String
-  */
-  toDoStatus: SC.Record.attr(String, {
-    /** @private */
-    defaultValue: function() {
-      return XM.ToDo.NEITHER
-    }
-  }),
-
-  /* @private */
-  toDosLength: 0,
-  
-  /* @private */
-  toDosLengthBinding: '*toDos.length',
-  
   //..................................................
   // METHODS
   //
@@ -78,25 +36,14 @@ XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
   //
   
   /* @private */
+  toDosLength: 0,
+  
+  /* @private */
+  toDosLengthBinding: '*toDos.length',
+  
+  /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'), val, err;
-
-    // Validate Name
-    val = this.get('name') ? this.get('name').length : 0;
-    err = XM.errors.findProperty('code', 'xt1002');
-    this.updateErrors(err, !val);
-
-    // Validate Due Date
-    val = this.get('dueDate') ? this.get('dueDate') : 0;
-    err = XM.errors.findProperty('code', 'xt1017');
-    this.updateErrors(err, !val);
-
-    // Validate Assigned To
-    val = this.get('assignedTo') ? this.get('assignedTo').length : 0;
-    err = XM.errors.findProperty('code', 'xt1018');
-    this.updateErrors(err, !val);
-
-    return errors;
+    return arguments.callee.base.apply(this, arguments);
   }.observes('name', 'dueDate', 'assignedTo'),
   
   _xm_assignedToDidChange: function() {
@@ -121,7 +68,7 @@ XM.ToDo = XM._ToDo.extend(XM.CoreDocuments, XM.CrmDocuments,
 
     If completeDate is entered the toDoStaus is changed to 'C' (complete).
   */
-  _xm_toDoStatusDidChange: function() {
+  statusDidChange: function() {
     var status = this.get('status'),
         _toDoStatus = this.get('toDoStatus'),
         _startDate = this.get('startDate'),

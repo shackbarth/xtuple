@@ -16,25 +16,12 @@ sc_require('mixins/document');
 XM.Characteristic = XM._Characteristic.extend(XM.Document,
   /** @scope XM.Characteristic.prototype */ {
 
+  // see document mixin for object behavior(s)
+  documentKey: 'name',
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
-
-  documentKey: 'name',
-
-  /**
-    @type Number
-  */
-  characteristicType: SC.Record.attr(Number, {
-    defaultValue: 0
-  }),
-
-  /**
-    @type Number
-  */
-  order: SC.Record.attr(Number, {
-    defaultValue: 0
-  }),
 
   //..................................................
   // METHODS
@@ -82,7 +69,7 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
 
   /* @private */
   validate: function() {
-    var errors = this.get('validateErrors'),
+    var errors = arguments.callee.base.apply(this, arguments),
         optLength = this.getPath('options.length'),
         isValid, err;
 
@@ -109,12 +96,16 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
   }.observes('characteristicType'),
 
   statusDidChange: function() {
-    if(this.get('status') === SC.Record.READY_CLEAN) {
+    var status = this.get('status');
+
+    if (status !== SC.Record.READY_NEW) {
       this.characteristicType.set('isEditable', false);
     }
   }.observes('status')
 
 });
+
+XM.Characteristic.mixin( /** @scope XM.Characteristic */ {
 
 /**
   @static
@@ -122,7 +113,7 @@ XM.Characteristic = XM._Characteristic.extend(XM.Document,
   @type Number
   @default 0
 */
-XM.Characteristic.TEXT = 0;
+  TEXT: 0,
 
 /**
   @static
@@ -130,7 +121,7 @@ XM.Characteristic.TEXT = 0;
   @type Number
   @default 1
 */
-XM.Characteristic.LIST = 1;
+  LIST: 1,
 
 /**
   @static
@@ -138,4 +129,6 @@ XM.Characteristic.LIST = 1;
   @type Number
   @default 2
 */
-XM.Characteristic.DATE = 2;
+  DATE: 2
+
+});

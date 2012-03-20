@@ -19,37 +19,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
   
   numberPolicySetting: 'InvcNumberGeneration',
   
-  invoiceDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    defaultValue: function() {
-      return SC.DateTime.create();
-    },
-    isRequired: true
-  }),
-  
-  orderDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    defaultValue: function() {
-      return SC.DateTime.create();
-    }
-  }),
-  
-  currency: SC.Record.toOne('XM.Currency', {
-    defaultValue: function() {
-      return XM.Currency.BASE;
-    },
-    isRequired: true
-  }),
-
-  isPrinted: SC.Record.attr(Boolean, {
-    defaultValue: false  
-  }),
-
-  isPosted: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    isRequired: true
-  }),
-  
   /* @private */
   creditsLength: 0,
   
@@ -190,7 +159,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     this.updateErrors(err, val < 0);
 
     return errors;
-  }.observes('invoiceDate', 'number', 'customer', 'term', 'commission', 'currency', 'linesLength', 'freight', 'total'),
+  }.observes('customer', 'currency', 'linesLength', 'total'),
   
   /**
     Populates customer defaults when customer changes.
@@ -297,7 +266,6 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     Recalculate line item tax and sales totals.
   */
   linesDidChange: function() {
-  /*
     var lines = this.get('lines'),
         taxDetail = [],
         taxTotal = 0, subTotal = 0;
@@ -341,9 +309,8 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     }
     this.set('lineTax', taxTotal);
     this.set('lineTaxDetail', taxDetail);
-    */
   }.observes('linesLength', 'taxZone'),
-  /*
+
   taxesDidChange: function() {    
     var taxes = this.get('taxes'), 
         miscTaxDetail = [], freightTaxDetail = [],
@@ -373,7 +340,7 @@ XM.Invoice = XM._Invoice.extend(XM.Document,
     this.set('freightTax', freightTax);
     this.set('freightTaxDetail', freightTaxDetail);
   }.observes('taxesLength', 'taxZone'),
-  */
+
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.customer.set('isEditable', false);
