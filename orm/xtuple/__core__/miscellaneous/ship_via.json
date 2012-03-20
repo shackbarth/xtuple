@@ -26,7 +26,8 @@
       "name": "code",
       "attr": {
         "type": "String",
-        "column": "shipvia_code"
+        "column": "shipvia_code",
+        "isRequired": true
       }
     },
     {
