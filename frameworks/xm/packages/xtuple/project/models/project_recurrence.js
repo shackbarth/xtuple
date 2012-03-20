@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_project_recurrence');
+sc_require('mixins/_project_recurrence');
 
 /**
   @class
 
-  @extends XM._ProjectRecurrence
+  @extends XM.Record
 */
-XM.ProjectRecurrence = XM._ProjectRecurrence.extend(
+XM.ProjectRecurrence = XM.Record.extend(XM._ProjectRecurrence,
   /** @scope XM.ProjectRecurrence.prototype */ {
 
   // .................................................

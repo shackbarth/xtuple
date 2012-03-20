@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_project_task_alarm');
+sc_require('mixins/_project_task_alarm');
 
 /**
   @class
 
-  @extends XM._ProjectTaskAlarm
+  @extends XM.Record
 */
-XM.ProjectTaskAlarm = XM._ProjectTaskAlarm.extend(
+XM.ProjectTaskAlarm = XM.Record.extend(XM._ProjectTaskAlarm,
   /** @scope XM.ProjectTaskAlarm.prototype */ {
 
   // .................................................

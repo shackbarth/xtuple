@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_project_browse');
+sc_require('mixins/_project_browse');
 
 /**
   @class
 
-  @extends XM._ProjectBrowse
+  @extends XM.Record
 */
-XM.ProjectBrowse = XM._ProjectBrowse.extend(
+XM.ProjectBrowse = XM.Record.extend(XM._ProjectBrowse,
   /** @scope XM.ProjectBrowse.prototype */ {
 
   // .................................................

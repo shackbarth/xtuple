@@ -5,21 +5,17 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_project');
+sc_require('mixins/_project');
 sc_require('mixins/crm_documents');
-sc_require('mixins/core_documents');
-sc_require('mixins/document');
 
 /**
   @class
 
-  @extends XM._Project
-  @extends XM.CrmDocuments
-  @extends XM.CoreDocuments
   @extends XM.Document
+  @extends XM.CoreDocuments
+  @extends XM.CrmDocuments
 */
-
-XM.Project = XM._Project.extend( XM.Document, XM.CoreDocuments, XM.CrmDocuments,
+XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.Project.prototype */ {
 
   // .................................................

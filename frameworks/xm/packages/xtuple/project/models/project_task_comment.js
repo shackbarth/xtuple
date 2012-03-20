@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_project_task_comment');
-sc_require('mixins/comment');
+sc_require('mixins/_project_task_comment');
 
 /**
   @class
 
-  @extends XM._ProjectTaskComment
   @extends XM.Comment
 */
-XM.ProjectTaskComment = XM._ProjectTaskComment.extend(XM.Comment,
+XM.ProjectTaskComment = XM.Comment.extend(XM._ProjectTaskComment,
   /** @scope XM.ProjectTaskComment.prototype */ {
 
   // .................................................
