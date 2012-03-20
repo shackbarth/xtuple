@@ -23,9 +23,6 @@ XM.ReasonCode = XM._ReasonCode.extend(XM.Document,
   // CALCULATED PROPERTIES
   //
 
-  // see document mixin for object behavior(s)
-  documentKey = 'code';
-
   //..................................................
   // METHODS
   //
