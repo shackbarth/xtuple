@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_characteristic');
-sc_require('mixins/document');
+sc_require('mixins/_characteristic');
 
 /**
   @class
 
   @extends XM._Characteristic
+  @extends XM.Document
 */
-XM.Characteristic = XM._Characteristic.extend(XM.Document,
+XM.Characteristic = XM.Document.extend(XM._Characteristic,
   /** @scope XM.Characteristic.prototype */ {
 
   // see document mixin for object behavior(s)

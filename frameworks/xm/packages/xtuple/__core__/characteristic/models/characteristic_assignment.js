@@ -5,14 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_characteristic_assignment');
+sc_require('mixins/_characteristic_assignment');
 
 /**
   @class
 
   @extends XM._CharacteristicAssignment
+  @extends XM.Record
 */
-XM.CharacteristicAssignment = XM._CharacteristicAssignment.extend(
+XM.CharacteristicAssignment = XM.Record.extend(XM._CharacteristicAssignment,
   /** @scope XM.CharacteristicAssignment.prototype */ {
 
   // .................................................

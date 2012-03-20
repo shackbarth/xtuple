@@ -5,14 +5,15 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_characteristic_option');
+sc_require('mixins/_characteristic_option');
 
 /**
   @class
 
   @extends XM._CharacteristicOption
+  @extends XM.Record
 */
-XM.CharacteristicOption = XM._CharacteristicOption.extend(
+XM.CharacteristicOption = XM.Record.extend(XM._CharacteristicOption,
   /** @scope XM.CharacteristicOption.prototype */ {
 
   // .................................................
