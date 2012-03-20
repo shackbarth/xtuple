@@ -5,14 +5,12 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/general_ledger
-
 sc_require('mixins/_receivable_ledger_accounts');
 
 /**
   @class
 
-  @extends XM._ReceivableLedgerAccounts
+  @extends XM.Record
 */
 XM.ReceivableLedgerAccounts = XM.Record.extend(XM._ReceivableLedgerAccounts,
   /** @scope XM.ReceivableLedgerAccounts.prototype */ {

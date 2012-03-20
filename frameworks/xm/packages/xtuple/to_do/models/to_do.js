@@ -11,7 +11,7 @@ sc_require('mixins/crm_documents');
 /**
   @class
 
-  @extends XM._ToDo
+  @extends XM.Record
 */
 XM.ToDo = XM.Record.extend(XM._ToDo, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ToDo.prototype */ {

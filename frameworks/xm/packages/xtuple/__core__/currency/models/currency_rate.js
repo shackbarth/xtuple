@@ -10,7 +10,7 @@ sc_require('mixins/_currency_rate');
 /**
   @class
 
-  @extends XM._CurrencyRate
+  @extends XM.Record
 */
 XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
   /** @scope XM.CurrencyRate.prototype */ {

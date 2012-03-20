@@ -5,14 +5,12 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/receivables
-
 sc_require('mixins/_incident_customer');
 
 /**
   @class
 
-  @extends XM._IncidentCustomer
+  @extends XM.Record
 */
 XM.IncidentCustomer = XM.Record.extend(XM._IncidentCustomer,
   /** @scope XM.IncidentCustomer.prototype */ {

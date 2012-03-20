@@ -5,8 +5,6 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/__core__/bank_account
-
 sc_require('mixins/_bank_account_info');
 
 /**

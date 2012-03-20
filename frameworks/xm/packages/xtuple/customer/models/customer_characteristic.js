@@ -10,7 +10,7 @@ sc_require('mixins/_customer_characteristic');
 /**
   @class
 
-  @extends XM._CustomerCharacteristic
+  @extends XM.Record
 */
 XM.CustomerCharacteristic = XM.Record.extend(XM._CustomerCharacteristic,
   /** @scope XM.CustomerCharacteristic.prototype */ {

@@ -10,7 +10,7 @@ sc_require('mixins/_bank_account_adjustment_type');
 /**
   @class
 
-  @extends XM._BankAccountAdjustmentType
+  @extends XM.Record
 */
 XM.BankAccountAdjustmentType = XM.Record.extend(XM._BankAccountAdjustmentType,
   /** @scope XM.BankAccountAdjustmentType.prototype */ {
