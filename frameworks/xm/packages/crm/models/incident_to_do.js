@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_incident_to_do');
+sc_require('mixins/_incident_to_do');
 
 /**
   @class
 
-  @extends XM._IncidentToDo
+  @extends XM.Record
 */
-XM.IncidentToDo = XM._IncidentToDo.extend(
+XM.IncidentToDo = XM.Record.extend(XM._IncidentToDo,
   /** @scope XM.IncidentToDo.prototype */ {
 
   // .................................................

@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_incident_opportunity');
+sc_require('mixins/_opportunity_incident');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.IncidentOpportunity = XM.Record.extend(XM._IncidentOpportunity,
-  /** @scope XM.IncidentOpportunity.prototype */ {
+XM.OpportunityIncident = XM.Record.extend(XM._OpportunityIncident,
+  /** @scope XM.OpportunityIncident.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

@@ -4,8 +4,6 @@
 // ==========================================================================
 /*globals XM */
 
-sc_require('mixins/settings');
-
 /** @class
 
   (Document your Model here)
@@ -14,10 +12,10 @@ sc_require('mixins/settings');
   @version 0.1
 */
 
-XM.Crm = XM.Object.extend( XM.Settings,
+XM.CrmSettings = XM.Object.extend(XM.Settings,
 /** @scope XM.Crm.prototype */ {
-
-  className: 'XM.Crm',
+  
+  className: 'XM.CrmSettings',
   
   privilege: 'ConfigureCRM',
   
@@ -139,6 +137,6 @@ XM.Crm = XM.Object.extend( XM.Settings,
   
 }) ;
 
-XM.crm = XM.Crm.create();
+XM.crmSettings = XM.CrmSettings.create();
 
 
