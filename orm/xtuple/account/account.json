@@ -106,7 +106,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "crmacct_usr_username",
-        "inverse": "username"
+        "inverse": "username",
+        "isRequired": true
       }
     },
     {

@@ -26,14 +26,16 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "incdtpriority_name"
+        "column": "incdtpriority_name",
+        "isRequired": true
       }
     },
     {
       "name": "order",
       "attr": {
         "type": "Number",
-        "column": "incdtpriority_order"
+        "column": "incdtpriority_order",
+        "defaultValue": 0
       }
     },
     {

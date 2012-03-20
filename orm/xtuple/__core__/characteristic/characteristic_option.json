@@ -40,7 +40,8 @@
       "name": "order",
       "attr": {
         "type": "Number",
-        "column": "charopt_order"
+        "column": "charopt_order",
+        "defaultValue": 0
       }
     }
   ],

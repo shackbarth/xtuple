@@ -25,7 +25,8 @@
       "name": "code",
       "attr": {
         "type": "String",
-        "column": "rsncode_code"
+        "column": "rsncode_code",
+        "isRequired": true
       }
     },
     {
