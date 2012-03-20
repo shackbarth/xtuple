@@ -5,15 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_item');
-sc_require('mixins/core_documents');
+sc_require('mixins/_item');
 
 /**
   @class
 
-  @extends XM._Item
+  @extends XM.Record
 */
-XM.Item = XM._Item.extend( XM.CoreDocuments,
+XM.Item = XM.Record.extend(XM._Item, XM.CoreDocuments
   /** @scope XM.Item.prototype */ {
 
   // .................................................

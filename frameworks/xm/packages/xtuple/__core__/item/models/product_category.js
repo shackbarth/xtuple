@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_product_category');
+sc_require('mixins/_product_category');
 
 /**
   @class
 
-  @extends XM._ProductCategory
+  @extends XM.Record
 */
-XM.ProductCategory = XM._ProductCategory.extend(
+XM.ProductCategory = XM.Record.extend(XM._ProductCategory,
   /** @scope XM.ProductCategory.prototype */ {
 
   // .................................................

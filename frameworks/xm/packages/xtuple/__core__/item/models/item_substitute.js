@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_item_substitute');
+sc_require('mixins/_item_substitute');
 
 /**
   @class
 
-  @extends XM._ItemSubstitute
+  @extends XM.Record
 */
-XM.ItemSubstitute = XM._ItemSubstitute.extend(
+XM.ItemSubstitute = XM.Record.extend(XM._ItemSubstitute,
   /** @scope XM.ItemSubstitute.prototype */ {
 
   // .................................................

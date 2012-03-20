@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_item_info');
+sc_require('mixins/_item_info');
 
 /**
   @class
 
-  @extends XM._ItemInfo
+  @extends XM.Record
 */
-XM.ItemInfo = XM._ItemInfo.extend(
+XM.ItemInfo = XM.Record.extend(XM._ItemInfo,
   /** @scope XM.ItemInfo.prototype */ {
 
   // .................................................

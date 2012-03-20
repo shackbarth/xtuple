@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_class_code');
+sc_require('mixins/_class_code');
 
 /**
   @class
 
-  @extends XM._ClassCode
+  @extends XM.Record
 */
-XM.ClassCode = XM._ClassCode.extend(
+XM.ClassCode = XM.Record.extend(XM._ClassCode,
   /** @scope XM.ClassCode.prototype */ {
 
   // .................................................

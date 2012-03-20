@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_item_conversion');
+sc_require('mixins/_item_conversion');
 
 /**
   @class
 
-  @extends XM._ItemConversion
+  @extends XM.Record
 */
-XM.ItemConversion = XM._ItemConversion.extend(
+XM.ItemConversion = XM.Record.extend(XM._ItemConversion,
   /** @scope XM.ItemConversion.prototype */ {
 
   // .................................................

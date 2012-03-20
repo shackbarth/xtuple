@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_freight_class');
+sc_require('mixins/_freight_class');
 
 /**
   @class
 
-  @extends XM._FreightClass
+  @extends XM.Record
 */
-XM.FreightClass = XM._FreightClass.extend(
+XM.FreightClass = XM.Record.extend(XM._FreightClass,
   /** @scope XM.FreightClass.prototype */ {
 
   // .................................................
