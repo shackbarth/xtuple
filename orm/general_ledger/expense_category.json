@@ -15,28 +15,32 @@
       "name": "expenseLedgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "expcat_exp_accnt_id"
+        "column": "expcat_exp_accnt_id",
+        "isRequired": true
       }
     },
     {
       "name": "liabilityLedgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "expcat_liability_accnt_id"
+        "column": "expcat_liability_accnt_id",
+        "isRequired": true
       }
     },
     {
       "name": "varianceLedgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "expcat_purchprice_accnt_id"
+        "column": "expcat_purchprice_accnt_id",
+        "isRequired": true
       }
     },
     {
       "name": "freightLedgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "expcat_freight_accnt_id"
+        "column": "expcat_freight_accnt_id",
+        "isRequired": true
       }
     }
   ],

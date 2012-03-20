@@ -15,21 +15,24 @@
       "name": "salesLedgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "salescat_sales_accnt_id"
+        "column": "salescat_sales_accnt_id",
+        "isRequired": true
       }
     },
     {
       "name": "prepaidLedgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "salescat_prepaid_accnt_id"
+        "column": "salescat_prepaid_accnt_id",
+        "isRequired": true
       }
     },
     {
       "name": "receivableLedgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "salescat_ar_accnt_id"
+        "column": "salescat_ar_accnt_id",
+        "isRequired": true
       }
     }
   ],

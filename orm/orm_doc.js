@@ -285,6 +285,11 @@
         */   
         "isPrimaryKey": true,
         
+        /**
+        Use to indicate a mandatory property.
+        */
+        "isRequired": true,
+        
         /** 
         Indicates a fixed value on which to filter all table reads and set as default on 
         new inserts. It can not be updated. 
@@ -318,7 +323,18 @@
         @type {Boolean}
         @default {true}
         */
-        "isEncrypted": false
+        "isEncrypted": false,
+        
+        /**
+        Default value specifies initial value you want populated in the property. Can be a 
+        string, number or boolean. 
+        
+        There is also support for special keywords "currentDate", 
+        "currentUser" and "baseCurrency" which will generate correct default value functions
+        on client side generated code using the xTuple datasource model generator.
+        */
+        "defaultValue": "O"        
+        
       },
       
       /** 

@@ -69,7 +69,7 @@ select xt.install_js('XT','Record','xtuple', $$
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
         pKey = XT.Orm.primaryKey(map),
-        sql = 'select {primaryKey} as id from {table} where {userKey}::text=$1'
+        sql = 'select {primaryKey} as id from {table} where {userKey}::text=$1::text'
               .replace(/{primaryKey}/, pKey)
               .replace(/{table}/, table)
               .replace(/{userKey}/, key)

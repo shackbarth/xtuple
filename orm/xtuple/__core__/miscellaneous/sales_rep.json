@@ -26,14 +26,16 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "salesrep_number"
+        "column": "salesrep_number",
+        "isRequired": true
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "salesrep_active"
+        "column": "salesrep_active",
+        "defaultValue": true
       }
     },
     {
@@ -47,7 +49,8 @@
       "name": "commission",
       "attr": {
         "type": "Number",
-        "column": "salesrep_commission"
+        "column": "salesrep_commission",
+        "defaultValue": 0.00
       }
     }
   ],
