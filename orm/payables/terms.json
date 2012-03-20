@@ -15,7 +15,8 @@
       "name": "usedByPayables",
       "attr": {
         "type": "Boolean",
-        "column": "terms_ap"
+        "column": "terms_ap",
+        "defaultValue": false
       }
     }
   ],
