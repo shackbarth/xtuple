@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_cash_receipt_distribution');
+sc_require('mixins/_cash_receipt_distribution');
 
 /**
   @class
 
   @extends XM._CashReceiptDistribution
 */
-XM.CashReceiptDistribution = XM._CashReceiptDistribution.extend(
+XM.CashReceiptDistribution = XM.Record.extend(XM._CashReceiptDistribution,
   /** @scope XM.CashReceiptDistribution.prototype */ {
 
   // .................................................

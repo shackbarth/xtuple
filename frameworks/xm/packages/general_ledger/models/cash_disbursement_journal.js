@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_cash_disbursement_journal');
+sc_require('mixins/_cash_disbursement_journal');
 
 /**
   @class
 
   @extends XM._CashDisbursementJournal
 */
-XM.CashDisbursementJournal = XM._CashDisbursementJournal.extend(
+XM.CashDisbursementJournal = XM.Record.extend(XM._CashDisbursementJournal,
   /** @scope XM.CashDisbursementJournal.prototype */ {
 
   // .................................................

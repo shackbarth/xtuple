@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_bank_account_adjustment');
+sc_require('mixins/_bank_account_adjustment');
 
 /**
   @class
 
   @extends XM._BankAccountAdjustment
 */
-XM.BankAccountAdjustment = XM._BankAccountAdjustment.extend(
+XM.BankAccountAdjustment = XM.Record.extend(XM._BankAccountAdjustment,
   /** @scope XM.BankAccountAdjustment.prototype */ {
 
   // .................................................

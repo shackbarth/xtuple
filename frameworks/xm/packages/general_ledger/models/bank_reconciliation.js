@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_bank_reconciliation');
+sc_require('mixins/_bank_reconciliation');
 
 /**
   @class
 
   @extends XM._BankReconciliation
 */
-XM.BankReconciliation = XM._BankReconciliation.extend(
+XM.BankReconciliation = XM.Record.extend(XM._BankReconciliation,
   /** @scope XM.BankReconciliation.prototype */ {
 
   // .................................................

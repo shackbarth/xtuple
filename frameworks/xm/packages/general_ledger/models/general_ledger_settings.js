@@ -14,8 +14,8 @@ sc_require('mixins/settings');
   @version 0.1
 */
 
-XM.GeneralLedger = XM.Object.extend( XM.Settings,
-/** @scope XM.GeneralLedger.prototype */ {
+XM.GeneralLedgerSettings = XM.Object.extend( XM.Settings,
+/** @scope XM.GeneralLedgerSettings.prototype */ {
 
   className: 'XM.GeneralLedger',
   
