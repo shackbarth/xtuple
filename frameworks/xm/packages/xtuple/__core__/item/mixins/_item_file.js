@@ -1,0 +1,65 @@
+// ==========================================================================
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
+// ==========================================================================
+
+/*globals XM */
+
+/**
+  @scope XM.ItemFile
+  @mixin
+
+  This code is automatically generated and will be over-written. Do not edit directly.
+*/
+XM._ItemFile = {
+  /** @scope XM.ItemFile.prototype */
+  
+  className: 'XM.ItemFile',
+
+  nestedRecordNamespace: XM,
+
+  // .................................................
+  // PRIVILEGES
+  //
+
+  privileges: {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": false,
+      "delete": true
+    }
+  },
+
+  //..................................................
+  // ATTRIBUTES
+  //
+  
+  /**
+    @type Number
+  */
+  guid: SC.Record.attr(Number),
+
+  /**
+    @type Number
+  */
+  source: SC.Record.attr(Number, {
+    label: '_source'.loc()
+  }),
+
+  /**
+    @type XM.FileInfo
+  */
+  file: SC.Record.toOne('XM.FileInfo', {
+    isNested: true,
+    label: '_file'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  purpose: SC.Record.attr(String, {
+    label: '_purpose'.loc()
+  })
+
+};
