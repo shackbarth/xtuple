@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.Terms
+  @scope XM.CustomerType
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._Terms = {
-  /** @scope XM.Terms.prototype */
+XM._CustomerType = {
+  /** @scope XM.CustomerType.prototype */
   
-  className: 'XM.Terms',
+  className: 'XM.CustomerType',
 
   
 
@@ -24,10 +24,10 @@ XM._Terms = {
 
   privileges: {
     "all": {
-      "create": "MaintainTerms",
+      "create": "MaintainCustomerTypes",
       "read": true,
-      "update": "MaintainTerms",
-      "delete": "MaintainTerms"
+      "update": "MaintainCustomerTypes",
+      "delete": "MaintainCustomerTypes"
     }
   },
 
@@ -44,7 +44,6 @@ XM._Terms = {
     @type String
   */
   code: SC.Record.attr(String, {
-    isRequired: true,
     label: '_code'.loc()
   }),
 
@@ -53,42 +52,6 @@ XM._Terms = {
   */
   description: SC.Record.attr(String, {
     label: '_description'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  termsType: SC.Record.attr(String, {
-    defaultValue: 'D',
-    label: '_termsType'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  dueDays: SC.Record.attr(Number, {
-    label: '_dueDays'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  discountDays: SC.Record.attr(Number, {
-    label: '_discountDays'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  discountPercent: SC.Record.attr(Number, {
-    label: '_discountPercent'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  cutOffDay: SC.Record.attr(Number, {
-    label: '_cutOffDay'.loc()
   })
 
 };

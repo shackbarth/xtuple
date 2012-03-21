@@ -75,7 +75,7 @@ XM.Account = XM.Document.extend(XM.CoreDocuments, XM.CrmDocuments, XM._Account,
     }
 
     return errors;
-  }.observes('name', 'parent', 'isUserAccount', 'userAccount')
+  }.observes('parent', 'isUserAccount', 'userAccount')
 
 });
 

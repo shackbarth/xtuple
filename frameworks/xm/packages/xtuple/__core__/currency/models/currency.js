@@ -61,7 +61,7 @@ XM.Currency = XM.Document.extend(XM._Currency,
     err = XM.errors.findProperty('code', 'xt1021');
     this.updateErrors(err, !isValid);
 
-    // Validate Unique Name
+    // Validate Unique Abbreviation
     if(status & SC.Record.READY) {
       callback = function(err, result) {
         if(!err) {

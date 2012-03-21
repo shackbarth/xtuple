@@ -29,10 +29,6 @@ XM.ReasonCode = XM.Document.extend(XM._ReasonCode,
   // OBSERVERS
   //
 
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('code')
-
 });
 
 // TODO: move this mixin, as necessary, to the associated extension(s)

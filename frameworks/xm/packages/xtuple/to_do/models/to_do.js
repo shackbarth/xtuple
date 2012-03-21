@@ -37,11 +37,6 @@ XM.ToDo = XM.Record.extend(XM._ToDo, XM.CoreDocuments, XM.CrmDocuments,
   /* @private */
   toDosLengthBinding: '*toDos.length',
   
-  /* @private */
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('name', 'dueDate', 'assignedTo'),
-  
   _xm_assignedToDidChange: function() {
     var assignedTo = this.get('assignedTo'),
         status = this.get('status');
