@@ -1,0 +1,26 @@
+{
+  "context": "payables",
+  "nameSpace": "XM",
+  "type": "Account",
+  "table": "crmacct",
+  "isExtension": true,
+  "comment": "Extended by Receivables",
+  "relations": [
+    {
+      "column": "crmacct_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "vendor",
+      "toOne": {
+        "isNested": true,
+        "type": "Vendor",
+        "column": "crmacct_vend_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

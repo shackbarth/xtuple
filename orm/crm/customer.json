@@ -2,7 +2,7 @@
   "context": "crm",
   "nameSpace": "XM",
   "type": "Customer",
-  "table": "crmacct",
+  "table": "custinfo",
   "isExtension": true,
   "comment": "Extended by Crm",
   "isChild": true,
@@ -18,7 +18,40 @@
       "toOne": {
         "isNested": true,
         "type": "AccountInfo",
-        "column": "crmacct_id"
+        "column": "crmacct_id",
+        "inverse": "customer"
+      }
+    },
+    {
+      "name": "contactRelations",
+      "toMany": {
+        "type": "ContactInfo",
+        "column": "custinfo_id",
+        "inverse": "customer"
+      }
+    },
+    {
+      "name": "incidentRelations",
+      "toMany": {
+        "type": "IncidentInfo",
+        "column": "custinfo_id",
+        "inverse": "customer"
+      }
+    },
+    {
+      "name": "opportunityRelations",
+      "toMany": {
+        "type": "OpportunityInfo",
+        "column": "custinfo_id",
+        "inverse": "customer"
+      }
+    },
+    {
+      "name": "toDoRelations",
+      "toMany": {
+        "type": "ToDoInfo",
+        "column": "custinfo_id",
+        "inverse": "customer"
       }
     }
   ],

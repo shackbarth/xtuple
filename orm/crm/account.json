@@ -13,42 +13,25 @@
   ],
   "properties": [
     {
-      "name": "customer",
-      "toOne": {
-        "isNested": true,
-        "type": "CustomerInfo",
-        "column": "crmacct_cust_id"
-      }
-    },
-    {
-      "name": "salesRep",
-      "toOne": {
-        "isNested": true,
-        "type": "CustomerInfo",
-        "column": "crmacct_salesrep_id"
-      }
-    },
-    {
-      "name": "taxAuthority",
-      "toOne": {
-        "isNested": true,
-        "type": "TaxAuthority",
-        "column": "crmacct_taxauth_id"
-      }
-    },
-    {
-      "name": "vendor",
-      "toOne": {
-        "isNested": true,
-        "type": "Vendor",
-        "column": "crmacct_vend_id"
-      }
-    },
-    {
       "name": "contactRelations",
       "toMany": {
-        "isNested": true,
         "type": "ContactInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
+    },
+    {
+      "name": "incidentRelations",
+      "toMany": {
+        "type": "IncidentInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
+    },
+    {
+      "name": "opportunityRelations",
+      "toMany": {
+        "type": "OpportunityInfo",
         "column": "crmacct_id",
         "inverse": "account"
       }
@@ -56,10 +39,16 @@
     {
       "name": "toDoRelations",
       "toMany": {
-        "isNested": true,
         "type": "ToDoInfo",
         "column": "crmacct_id",
         "inverse": "account"
+      }
+    },
+    {
+      "name": "customer",
+      "toOne": {
+        "type": "CustomerInfo",
+        "column": "crmacct_id"
       }
     }
   ],
