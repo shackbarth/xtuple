@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_priority');
+sc_require('packages/xtuple/__core__/miscellaneous/mixins/_priority');
 
 /**
   @class

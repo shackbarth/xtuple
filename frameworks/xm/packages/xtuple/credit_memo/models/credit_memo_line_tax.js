@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_credit_memo_line_tax');
+sc_require('packages/xtuple/credit_memo/mixins/_credit_memo_line_tax');
 
 /**
   @class

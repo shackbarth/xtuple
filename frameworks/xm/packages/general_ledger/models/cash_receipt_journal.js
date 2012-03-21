@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_cash_receipt_journal');
+sc_require('packages/general_ledger/mixins/_cash_receipt_journal');
 
 /**
   @class

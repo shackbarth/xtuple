@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_profit_center');
+sc_require('packages/xtuple/ledger/mixins/_profit_center');
 
 /**
   @class

@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_user_account_privilege_assignment');
+sc_require('packages/xtuple/__core__/user_account/mixins/_user_account_privilege_assignment');
 
 /**
   @class

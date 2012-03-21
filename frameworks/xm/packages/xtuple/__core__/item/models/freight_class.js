@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_freight_class');
+sc_require('packages/xtuple/__core__/item/mixins/_freight_class');
 
 /**
   @class

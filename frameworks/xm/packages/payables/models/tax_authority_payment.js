@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_tax_authority_payment');
+sc_require('packages/payables/mixins/_tax_authority_payment');
 
 /**
   @class

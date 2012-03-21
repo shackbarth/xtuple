@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_purchase_journal');
+sc_require('packages/general_ledger/mixins/_purchase_journal');
 
 /**
   @class

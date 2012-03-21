@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_opportunity_file');
+sc_require('packages/xtuple/opportunity/mixins/_opportunity_file');
 
 /**
   @class

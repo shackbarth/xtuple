@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('mixins/_item');
+sc_require('packages/xtuple/__core__/item/mixins/_item');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.Item = XM.Record.extend(XM._Item, XM.CoreDocuments
+XM.Item = XM.Record.extend(XM._Item, XM.CoreDocuments,
   /** @scope XM.Item.prototype */ {
 
   // .................................................

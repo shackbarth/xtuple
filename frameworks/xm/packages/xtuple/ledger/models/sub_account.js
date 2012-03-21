@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_sub_account');
+sc_require('packages/xtuple/ledger/mixins/_sub_account');
 
 /**
   @class

@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_item_conversion_type_assignment');
+sc_require('packages/xtuple/__core__/item/mixins/_item_conversion_type_assignment');
 
 /**
   @class

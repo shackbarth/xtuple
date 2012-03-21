@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_bank_reconciliation_unreconciled');
+sc_require('packages/general_ledger/mixins/_bank_reconciliation_unreconciled');
 
 /**
   @class

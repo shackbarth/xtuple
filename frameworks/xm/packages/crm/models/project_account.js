@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_project_account');
+sc_require('packages/crm/mixins/_project_account');
 
 /**
   @class

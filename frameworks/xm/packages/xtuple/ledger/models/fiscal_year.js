@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_fiscal_year');
+sc_require('packages/xtuple/ledger/mixins/_fiscal_year');
 
 /**
   @class

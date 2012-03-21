@@ -6,7 +6,7 @@
 /*globals XM */
 
 
-sc_require('mixins/_customer');
+sc_require('packages/xtuple/customer/mixins/_customer');
 
 /**
   @class

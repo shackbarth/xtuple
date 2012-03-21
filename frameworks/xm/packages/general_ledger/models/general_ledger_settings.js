@@ -4,8 +4,6 @@
 // ==========================================================================
 /*globals XM */
 
-sc_require('mixins/settings');
-
 /** @class
 
   (Document your Model here)

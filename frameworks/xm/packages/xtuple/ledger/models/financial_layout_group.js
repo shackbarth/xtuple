@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_financial_layout_group');
+sc_require('packages/xtuple/ledger/mixins/_financial_layout_group');
 
 /**
   @class

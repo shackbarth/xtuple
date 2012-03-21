@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_period');
+sc_require('packages/xtuple/ledger/mixins/_period');
 
 /**
   @class

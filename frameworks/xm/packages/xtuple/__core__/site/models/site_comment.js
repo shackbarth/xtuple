@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_site_comment');
+sc_require('packages/xtuple/__core__/site/mixins/_site_comment');
 
 /**
   @class

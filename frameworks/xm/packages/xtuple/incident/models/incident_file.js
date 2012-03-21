@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_incident_file');
+sc_require('packages/xtuple/incident/mixins/_incident_file');
 
 /**
   @class

@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_voucher_tax');
+sc_require('packages/xtuple/voucher/mixins/_voucher_tax');
 
 /**
   @class

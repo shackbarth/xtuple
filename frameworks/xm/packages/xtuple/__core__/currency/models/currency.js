@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_currency');
+sc_require('packages/xtuple/__core__/currency/mixins/_currency');
 
 /**
   @class

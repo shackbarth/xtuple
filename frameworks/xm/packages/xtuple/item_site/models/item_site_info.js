@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_customer_payment');
+sc_require('packages/xtuple/item_site/mixins/_item_site_info');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.CustomerPayment = XM.Record.extend(XM._CustomerPayment,
-  /** @scope XM.CustomerPayment.prototype */ {
+XM.ItemSiteInfo = XM.Record.extend(XM._ItemSiteInfo,
+  /** @scope XM.ItemSiteInfo.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

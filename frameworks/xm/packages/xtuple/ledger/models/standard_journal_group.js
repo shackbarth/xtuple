@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_standard_journal_group');
+sc_require('packages/xtuple/ledger/mixins/_standard_journal_group');
 
 /**
   @class

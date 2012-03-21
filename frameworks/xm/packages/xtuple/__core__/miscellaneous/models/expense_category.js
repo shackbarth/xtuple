@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_expense_category');
+sc_require('packages/xtuple/__core__/miscellaneous/mixins/_expense_category');
 
 /**
   @class

@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('mixins/_tax_registration');
+sc_require('packages/xtuple/__core__/tax/mixins/_tax_registration');
 
 /**
   @class
