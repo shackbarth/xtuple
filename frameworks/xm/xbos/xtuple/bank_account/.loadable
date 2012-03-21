@@ -1,5 +1,0 @@
-name: BankAccount
-type: xbo
-load: deferred
-core: YES
-
