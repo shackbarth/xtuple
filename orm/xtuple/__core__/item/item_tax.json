@@ -1,0 +1,52 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemTax",
+  "table": "itemtax",
+  "idSequenceName": "public.itemtax_itemtax_id_seq",
+  "comment": "Item Tax Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "itemtax_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "itemTax",
+      "attr": {
+        "type": "Number",
+        "column": "itemtax_item_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "itemTaxType",
+      "attr": {
+        "type": "Number",
+        "column": "itemtax_taxtype_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "itemTaxZone",
+      "attr": {
+        "type": "Number",
+        "column": "itemtax_taxzone_id",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
