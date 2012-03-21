@@ -15,7 +15,6 @@
     {
       "name": "account",
       "toOne": { 
-        "isNested": true,
         "type": "AccountInfo",
         "column": "todoitem_crmacct_id"
       }
