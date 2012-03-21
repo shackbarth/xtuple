@@ -48,7 +48,7 @@
     {
       "name": "dueDays",
       "attr": {
-        "type": "number",
+        "type": "Number",
         "column": "terms_duedays",
         "defaultValue": 0
       }
