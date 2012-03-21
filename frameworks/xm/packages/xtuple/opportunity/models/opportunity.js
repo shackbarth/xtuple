@@ -43,13 +43,6 @@ XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.CoreDocuments, XM.CrmDoc
   //..................................................
   // OBSERVERS
   //
-
-  /* @private */
-  validate: function() {
-    var errors = arguments.callee.base.apply(this, arguments);
-
-    return errors;
-  }.observes('name', 'account'),
   
   _xm_assignedToDidChange: function() {
     var assignedTo = this.get('assignedTo'),

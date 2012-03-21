@@ -118,12 +118,6 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments, XM.CrmDocuments,
   // OBSERVERS
   //
 
-  validate: function() {
-    var errors = arguments.callee.base.apply(this, arguments);
-    
-    return errors;
-  }.observes('dueDate'),
-
   _xm_projectStatusDidChange: function() {
     var status = this.get('status'),
         projectStatus = this.get('projectStatus');
