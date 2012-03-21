@@ -121,24 +121,6 @@
       }
     },
     {
-      "name": "salesRep",
-      "toOne": {
-        "isNested": true,
-        "type": "SalesRep",
-        "column": "crmacct_salesrep_id",
-        "inverse": "guid"
-      }
-    },
-    {
-      "name": "taxAuthority",
-      "toOne": {
-        "isNested": true,
-        "type": "TaxAuthority",
-        "column": "crmacct_taxauth_id",
-        "inverse": "guid"
-      }
-    },
-    {
       "name": "comments",
       "toMany": {
         "isNested": true,
