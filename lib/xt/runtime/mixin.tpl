@@ -7,14 +7,12 @@
 
 /**
   @scope {className2}
-  @class
+  @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
-
-  @extends XM.Record
 */
-{className} = XM.Record.extend(
-  /** @scope {className2}.prototype */ {
+{className} = {
+  /** @scope {className2}.prototype */
   
   className: '{className2}',
 
@@ -31,4 +29,4 @@
   //
   {attributes}
 
-});
+};
