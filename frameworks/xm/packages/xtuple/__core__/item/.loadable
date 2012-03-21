@@ -1,5 +1,0 @@
-name: Item
-type: xbo
-load: deferred
-core: YES
-

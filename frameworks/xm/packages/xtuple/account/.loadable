@@ -1,5 +1,0 @@
-name: Account
-type: xbo
-load: deferred
-core: YES
-
