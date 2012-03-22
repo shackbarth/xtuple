@@ -16,7 +16,7 @@ XM._Currency = {
   
   className: 'XM.Currency',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -68,15 +68,6 @@ XM._Currency = {
   */
   isBase: SC.Record.attr(Boolean, {
     label: '_isBase'.loc()
-  }),
-
-  /**
-    @type XM.CurrencyRate
-  */
-  rates: SC.Record.toMany('XM.CurrencyRate', {
-    isNested: true,
-    inverse: 'currency',
-    label: '_rates'.loc()
   })
 
 };

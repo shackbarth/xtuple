@@ -19,6 +19,28 @@ XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
   // CALCULATED PROPERTIES
   //
 
+  /** @private
+ 
+    Array of XM.CurrencyRate records that have effective - expires
+    date conflicts...
+  */
+  dateOverlaps: function() {
+    if(!this._xm_dateOverlaps) {
+      var _xm_effective = this.get('effective'),
+          qry = this._xm_qry;
+
+      if(!qry) {
+        qry = this._xm_qry = SC.Query.local(XM.CurrencyRate, {
+          conditions: "effective = {effective}",
+          parameters: {effective: _xm_effective}
+        });
+      }
+      this._xm_dateOverlaps = XM.store.find(qry);
+    }
+    
+    return this._xm_dateOverlaps;
+  }.property('effective').cacheable(),
+  
   //..................................................
   // METHODS
   //

@@ -24,10 +24,10 @@ XM._CurrencyRate = {
 
   privileges: {
     "all": {
-      "create": true,
-      "read": true,
-      "update": true,
-      "delete": true
+      "create": "MaintainCurrencyRates",
+      "read": "ViewCurrencyRates",
+      "update": "MaintainCurrencyRates",
+      "delete": "MaintainCurrencyRates"
     }
   },
 
@@ -44,6 +44,7 @@ XM._CurrencyRate = {
     @type XM.Currency
   */
   currency: SC.Record.toOne('XM.Currency', {
+    isRequired: true,
     label: '_currency'.loc()
   }),
 
@@ -51,6 +52,7 @@ XM._CurrencyRate = {
     @type Number
   */
   rate: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_rate'.loc()
   }),
 
@@ -59,6 +61,7 @@ XM._CurrencyRate = {
   */
   effective: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    isRequired: true,
     label: '_effective'.loc()
   }),
 
@@ -67,6 +70,7 @@ XM._CurrencyRate = {
   */
   expires: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    isRequired: true,
     label: '_expires'.loc()
   })
 
