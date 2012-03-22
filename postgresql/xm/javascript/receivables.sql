@@ -25,7 +25,17 @@ select xt.install_js('XM','receivables','receivables', $$
     "DefaultAutoCreditWarnGraceDays",
     "DefaultARIncidentStatus",
     "AutoCloseARIncident",
-    "RecurringInvoiceBuffer"
+    "RecurringInvoiceBuffer",
+    "DefaultCustType",
+    "DefaultSalesRep",
+    "DefaultShipViaId",
+    "DefaultTerms",
+    "DefaultBalanceMethod",
+    "DefaultPartialShip",
+    "DefaultBackOrders",
+    "DefaultFreeFormShiptos",
+    "SOCreditLimit",
+    "SOCreditRate"
   ]
 
   /* 
