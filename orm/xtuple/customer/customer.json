@@ -27,28 +27,32 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "cust_number"
+        "column": "cust_number",
+        "isRequired": true
       }
     },
     {
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "cust_name"
+        "column": "cust_name",
+        "isRequired": true
       }
     },
     {
       "name": "customerType",
       "toOne": {
         "type": "Customer",
-        "column": "cust_custtype_id"
+        "column": "cust_custtype_id",
+        "isRequired": true
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "cust_active"
+        "column": "cust_active",
+        "defaultValue": true
       }
     },
     {
@@ -80,7 +84,8 @@
       "name": "salesRep",
       "toOne": {
         "type": "SalesRep",
-        "column": "cust_salesrep_id"
+        "column": "cust_salesrep_id",
+        "isRequired": true
       }
     },
     {
@@ -129,42 +134,48 @@
       "name": "isFreeFormBillto",
       "attr": {
         "type": "Boolean",
-        "column": "cust_ffbillto"
+        "column": "cust_ffbillto",
+        "defaultValue": false
       }
     },
     {
       "name": "terms",
       "toOne": {
         "type": "Customer",
-        "column": "cust_terms_id"
+        "column": "cust_terms_id",
+        "isRequired": true
       }
     },
     {
       "name": "discount",
       "attr": {
         "type": "Number",
-        "column": "cust_discntprcnt"
+        "column": "cust_discntprcnt",
+        "defaultValue": 0.00
       }
     },
     {
       "name": "currency",
       "toOne": {
         "type": "Currency",
-        "column": "cust_curr_id"
+        "column": "cust_curr_id",
+        "defalutValue": "baseCurrency"
       }
     },
     {
       "name": "creditStatus",
       "attr": {
         "type": "String",
-        "column": "cust_creditstatus"
+        "column": "cust_creditstatus",
+        "defaultValue": "G"
       }
     },
     {
       "name": "balanceMethod",
       "attr": {
         "type": "String",
-        "column": "cust_balmethod"
+        "column": "cust_balmethod",
+        "defaultValue": "B"
       }
     },
     {
@@ -178,7 +189,8 @@
       "name": "creditLimitCurrency",
       "toOne": {
         "type": "Customer",
-        "column": "cust_creditlmt_curr_id"
+        "column": "cust_creditlmt_curr_id",
+        "defaultValue": "baseCurrency"
       }
     },
     {

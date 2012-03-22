@@ -1,8 +1,11 @@
--- [ START ] initdb
+﻿-- [ START ] initdb
 
 -- create schemas
 \i create_xt_schema.sql;
 \i create_xm_schema.sql;
+
+-- drop xm views
+\i drop_xm_views.sql;
 
 -- create languages
 \i create_plv8.sql;

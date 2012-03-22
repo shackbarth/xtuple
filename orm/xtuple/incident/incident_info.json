@@ -36,6 +36,13 @@
         "column": "incdt_summary",
         "isEditable": false
       }
+    },
+    {
+      "name": "account",
+      "toOne": { 
+        "type": "AccountInfo",
+        "column": "incdt_crmacct_id"
+      }
     }
   ],
   "isNestedOnly": true,
