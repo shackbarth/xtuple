@@ -383,11 +383,11 @@ select xt.install_js('XT','Data','xtuple', $$
             record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                            .replace(/{value}/, record[prop])
                            .replace(/{encryptionKey}/, encryptionKey);
-            params.push(prop.concat(" = ", record[prop]));
+            params.push(qprop.concat(" = ", record[prop]));
           } else {
             throw new Error("No encryption key provided.");
           }
-        } else if (!ormp.toMany) {
+        } else if (!ormp.toMany && ormp.name !== pkey) {
           if(record[prop] !== null) {
             if (ormp.toOne && ormp.toOne.isNested) {
               var row = this.rowify(schemaName + '.' + ormp.toOne.type, record[prop]);         
