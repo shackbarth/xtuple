@@ -253,6 +253,9 @@ select xt.install_js('XT','Orm','xtuple', $$
         var col, alias = props[i].name;
         if(DEBUG) print(NOTICE, 'processing property ->', props[i].name);
         if(props[i].name === 'type') throw new Error("Can not use 'type' as a property name.");
+        if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
+        if(props[i].name === 'status') throw new Error("Can not use 'status' as a property name.");
+        if(props[i].name === 'id') throw new Error("Can not use 'id' as a property name.");
         
         /* process attributes */
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
@@ -294,7 +297,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process toOne  */
         if(props[i].toOne && props[i].toOne.isNested) {
-          if(DEBUG) print(NOTICE, 'building toOne');       
+          if(DEBUG) print(NOTICE, 'building toOne');     
           var toOne = props[i].toOne,
               table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
               type = table.afterDot(),
