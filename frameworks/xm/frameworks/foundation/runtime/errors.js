@@ -57,7 +57,7 @@ var ary = [
     description: '_requiredFieldsEmpty'.loc() },
   { code: 'xt1002',
     label: '_recordIncomplete'.loc(),
-    description: '_firstAndLastNameRequired'.loc() },
+    description: '_firstOrLastNameRequired'.loc() },
   { code: 'xt1007',
     label: '_recordConflict'.loc(),
     description: '_recordExistsKey'.loc() },
