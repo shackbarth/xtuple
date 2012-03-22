@@ -13,15 +13,6 @@
   ],
   "properties": [
     {
-      "name": "incidents",
-      "toMany": {
-        "isNested": true,
-        "type": "OpportunityIncident",
-        "column": "ophead_id",
-        "inverse": "source"
-      }
-    },
-    {
       "name": "projects",
       "toMany": {
         "isNested": true,

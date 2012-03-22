@@ -20,7 +20,6 @@ $$ language plv8;
 select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
-      "dataState":"created",
       "guid":12171,
       "number":"14832",
       "honorific":"Mr.",
@@ -37,35 +36,40 @@ select xt.commit_record(
       "webAddress":"www.xtuple.com",
       "notes":"A famous person",
       "owner":{
-        "dataState":"read",
         "username":"admin",
         "isActive":true,
-        "propername":"administrator"
+        "propername":"administrator",
+        "type": "UserAccount",
+        "dataState":"created"
       },
       "primaryEmail":"jdr@gmail.com",
       "address": null,
       "comments":[{
-        "dataState":"created",
         "guid":739893,
         "contact":12171,
-        "date":"2011-12-21 12:47:12.756437-05",
-        "username":"admin", 
-        "comment_type":"3",
+        "created":"2011-12-21 12:47:12.756437-05",
+        "createdBy":"admin", 
+        "commentType":"3",
         "text":"booya!",
-        "isPublic":false
+        "isPublic":false,
+        "type": "ContactComment",
+        "dataState":"created"
         },{
-        "dataState":"created",
         "guid":739894,
         "contact":12171,
-        "date":"2011-12-21 12:47:12.756437-05",
-        "username":"admin", 
-        "comment_type":"3",
+        "created":"2011-12-21 12:47:12.756437-05",
+        "createdBy":"admin", 
+        "commentType":"3",
         "text":"Now is the time for all good men...",
-        "isPublic":false
+        "isPublic":false,
+        "type": "ContactComment",
+        "dataState":"created"
         }
       ],
       "characteristics":[],
-      "email":[]
+      "email":[],
+      "type": "Contact",
+      "dataState":"created"
     }
   }'
 );
@@ -73,7 +77,6 @@ select xt.commit_record(
 select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
-      "dataState":"updated",
       "guid":12171,
       "number":"14832",
       "honorific":"Mrs.",
@@ -91,14 +94,14 @@ select xt.commit_record(
       "www.xtuple.com",
       "notes":"A distinguished person",
       "owner":{
-        "dataState":"read",
         "username":"postgres",
         "isActive":true,
-        "propername":""
+        "propername":"",
+        "type": "UserAccountInfo",
+        "dataState":"read"
       },
       "primaryEmail":"jane@gmail.com",
       "address":{
-        "dataState":"read",
         "guid":1,
         "line1":"Tremendous Toys Inc.",
         "line2":"101 Toys Place",
@@ -106,29 +109,33 @@ select xt.commit_record(
         "city":"Walnut Hills",
         "state":"VA",
         "postalcode":"22209",
-        "country":"United States"
+        "country":"United States",
+        "type": "AddressInfo",
+        "dataState":"read"
       },
       "comments":[{
-        "dataState":"updated",
         "guid":739893,
         "contact":12171,
-        "date":"2011-12-21 12:47:12.756437-05",
-        "username":"admin", 
-        "comment_type":"3",
+        "created":"2011-12-21 12:47:12.756437-05",
+        "createdBy":"admin", 
+        "commentType":"3",
         "text":"booya!",
         "isPublic":false
         },{
-        "dataState":"updated",
         "guid":739894,
         "contact":12171,
-        "date":"2011-12-21 12:47:12.756437-05",
-        "username":"admin", 
-        "comment_type":"3",
-        "text":"Now is the time for all good men...",
-        "isPublic":false
+        "created":"2011-12-21 12:47:12.756437-05",
+        "createdBy":"admin", 
+        "commentType":"3",
+        "text":"Now is NOT the time for all good men...",
+        "isPublic":false,
+        "type": "ContactComment",
+        "dataState":"updated"
       }],
       "characteristics":[],
-      "email":[]
+      "email":[],
+      "type": "Contact",
+      "dataState":"updated"
     }
   }'
 );
@@ -136,7 +143,6 @@ select xt.commit_record(
 select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
-      "dataState":"deleted",
       "guid":12171,
       "number":"14832",
       "honorific":"Mrs.",
@@ -154,14 +160,14 @@ select xt.commit_record(
       "www.xtuple.com",
       "notes":"A distinguished person",
       "owner":{
-        "dataState":"deleted",
         "username":"postgres",
         "isActive":true,
-        "propername":""
+        "propername":"",
+        "type": "UserAccountInfo",
+        "dataState":"read"
       },
       "primaryEmail":"jane@gmail.com",
       "address":{
-        "dataState":"deleted",
         "guid":1,
         "line1":"Tremendous Toys Inc.",
         "line2":"101 Toys Place",
@@ -169,17 +175,21 @@ select xt.commit_record(
         "city":"Walnut Hills",
         "state":"VA",
         "postalcode":"22209",
-        "country":"United States"
+        "country":"United States",
+        "type": "AddressInfo",
+        "dataState":"read"
       },
       "comments":[{
         "dataState":"deleted",
         "guid":739893,
         "contact":12171,
-        "date":"2011-12-21 12:47:12.756437-05",
-        "username":"admin", 
-        "comment_type":"3",
+        "created":"2011-12-21 12:47:12.756437-05",
+        "createdBy":"admin", 
+        "commentType":"3",
         "text":"booya!",
-        "isPublic":false
+        "isPublic":false,
+        "type": "ContactComment",
+        "dataState":"read"
         },{
         "dataState":"deleted",
         "guid":739894,
@@ -188,10 +198,14 @@ select xt.commit_record(
         "username":"admin", 
         "comment_type":"3",
         "text":"Now is the time for all good men...",
-        "isPublic":false
+        "isPublic":false,
+        "type": "ContactComment",
+        "dataState":"read"
       }],
       "characteristics":[],
-      "email":[]
+      "email":[],
+      "type": "Contact",
+      "dataState":"deleted"
     }
   }'
 );

@@ -24,7 +24,7 @@
     {
       "name": "number",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "crmacct_number",
         "isEditable": false
       }
@@ -32,7 +32,7 @@
     {
       "name": "name",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "crmacct_name",
         "isEditable": false
       }

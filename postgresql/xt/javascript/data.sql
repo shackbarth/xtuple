@@ -48,8 +48,10 @@ select xt.install_js('XT','Data','xtuple', $$
                          .replace('ENDS_WITH','~?')
                          .replace('CONTAINS','~')
                          .replace('MATCHES','~')
-                         .replace('ANY', '<@')
-                         .decamelize();
+                         .replace('ANY', '<@');
+
+        /* quote found properties */
+        cond = this.quoteProperties(map, cond);
 
         /* helper function */
         format = function(arg) { 
@@ -64,12 +66,12 @@ select xt.install_js('XT','Data','xtuple', $$
           if(cond.indexOf('%@') > 0) {  /* replace wild card tokens */
             for(var i = 0; i < parameters.length; i++) {
               var n = cond.indexOf('%@'),
-                  val =  quoteIfString(parameters[i]);
+                  val =  format(parameters[i]);
               cond = cond.replace(/%@/,val);
             }
           } else {  /* replace parameterized tokens */
             for(var prop in parameters) {
-              var param = '{' + prop.decamelize() + '}',
+              var param = '{' + prop + '}',
                   val = format(parameters[prop]); 
               cond = cond.replace(param, val);
             }
@@ -95,6 +97,28 @@ select xt.install_js('XT','Data','xtuple', $$
       ret = cond.length ? '(' + cond + ')' : ret;
       ret = pcond.length ? (cond.length ? ret.concat(' and ', pcond) : pcond) : ret;
       return ret;
+    },
+
+    /** 
+      Replace strings that match properties found in an orm
+      properties array with quoted equivilents, so long as they
+      are not bounded by curly braces.
+
+      @param {Object} orm
+      @param {String} string
+      @returns String
+    */
+    quoteProperties: function(orm, str) {
+      for (var i = 0; i < orm.properties.length; i++) {
+        var regExp = new RegExp(orm.properties[i].name + "(?!})", "g");
+        str = str.replace(regExp, '"' + orm.properties[i].name + '"');
+      }
+      if (!orm.extensions) {
+        for (var i = 0; i < orm.extensions.length; i++) {
+          str = this.quoteProperties(orm.extensions[i], str);
+        }
+      }
+      return str;
     },
 
     /**
@@ -209,17 +233,15 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} record object to be committed
       @param {Object} view definition object
     */
-    commitArrays: function(nameSpace, record, viewdef) {
+    commitArrays: function(nameSpace, record, orm) {
       for(var prop in record) {
-        var coldef = viewdef.findProperty('attname', prop);
+        var ormp = XT.Orm.getProperty(orm, prop);
 
         /* if the property is an array of objects they must be records so commit them */
-        if (record[prop] instanceof Array && 
-            record[prop].length &&
-            isNaN(record[prop][0])) {
-            var key = nameSpace.toUpperCase() + '.' + coldef['typname'].substring(1).classify(); /* strip underscore from (array) type name */
+        if (ormp.toMany && ormp.toMany.isNested) {
+            var key = nameSpace.toUpperCase() + '.' + ormp.toMany.type,
                 values = record[prop]; 
-          for(var i in values) {
+          for (var i = 0; i < values.length; i++) {
             this.commitRecord(key, values[i], false);
           }
         }
@@ -275,21 +297,19 @@ select xt.install_js('XT','Data','xtuple', $$
     createRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),    
-          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
           orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-          record = XT.decamelize(value),
+          record = value,
           sql = '', columns, expressions,
           props = [], params = [];
-      delete record['data_state'];
+      delete record['dataState'];
       delete record['type'];
-      
+
       /* build up the content for insert of this record */
       for(var prop in record) {
-        var coldef = viewdef.findProperty('attname', prop),
-            ormp = XT.Orm.getProperty(orm, prop.camelize());
-
-        if (coldef.typcategory !== this.ARRAY_TYPE) { 
-          props.push(prop);
+        var ormp = XT.Orm.getProperty(orm, prop),
+            type = ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type;
+        if (!ormp.toMany) { 
+          props.push('"' + prop + '"');
 
           /* handle encryption if applicable */
           if(ormp && ormp.attr && ormp.attr.isEncrypted) {
@@ -302,16 +322,14 @@ select xt.install_js('XT','Data','xtuple', $$
               throw new Error("No encryption key provided.");
             }
           } else if(record[prop] !== null) { 
-            if (coldef.typcategory === this.COMPOSITE_TYPE) { 
+            if (ormp && ormp.toOne && ormp.toOne.isNested) { 
               if(record[prop] !== null) {
-                var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);
-                record[prop] = row;
+                var row = this.rowify(schemaName + '.' + ormp.toOne.type, record[prop]);
+                params.push(row);
               } else {
-                record[prop] = "null::" + schemaName + '.' + coldef.typname;
+                record[prop] = "null::" + schemaName + '.' + ormp.toOne.type;
               }
-            }           
-            if(coldef.typcategory === this.STRING_TYPE ||
-               coldef.typcategory === this.DATE_TYPE) { 
+            } else if(type === 'String' || type === 'Date') { 
               params.push("'" + record[prop] + "'");
             } else {
               params.push(record[prop]);
@@ -334,7 +352,7 @@ select xt.install_js('XT','Data','xtuple', $$
       executeSql(sql); 
 
       /* okay, now lets handle arrays */
-      this.commitArrays(schemaName, record, viewdef);
+      this.commitArrays(schemaName, record, orm);
     },
 
     /**
@@ -346,18 +364,18 @@ select xt.install_js('XT','Data','xtuple', $$
     updateRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
           schemaName = key.beforeDot().decamelize(),
-          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
           orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
           pkey = XT.Orm.primaryKey(orm),
-          record = XT.decamelize(value),
+          record = value,
           sql = '', expressions, params = [];
-      delete record['data_state'];
+      delete record['dataState'];
       delete record['type'];
 
       /* build up the content for update of this record */
       for(var prop in record) {
-        var coldef = viewdef.findProperty('attname', prop),
-            ormp = XT.Orm.getProperty(orm, prop.camelize());
+        var ormp = XT.Orm.getProperty(orm, prop),
+            type = ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type,
+            qprop = '"' + prop + '"';
 
         /* handle encryption if applicable */
         if(ormp && ormp.attr && ormp.attr.isEncrypted) {
@@ -365,29 +383,22 @@ select xt.install_js('XT','Data','xtuple', $$
             record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                            .replace(/{value}/, record[prop])
                            .replace(/{encryptionKey}/, encryptionKey);
-            params.push(prop.concat(" = ", record[prop]));
+            params.push(qprop.concat(" = ", record[prop]));
           } else {
             throw new Error("No encryption key provided.");
           }
-        } else if (coldef.typcategory !== this.ARRAY_TYPE) {
-          if(record[prop] !== null) { 
-            if (coldef.typcategory === this.COMPOSITE_TYPE) {
-              if(record[prop] !== null) {
-                var row = this.rowify(schemaName + '.' + coldef.typname, record[prop]);         
-                record[prop] = row;
-              } else {
-                record[prop] = "null::" + schemaName + '.' + coldef.typname;
-              }
-            } 
-          
-            if(coldef.typcategory === this.STRING_TYPE ||
-               coldef.typcategory === this.DATE_TYPE) { 
-              params.push(prop.concat(" = '", record[prop], "'"));
+        } else if (!ormp.toMany && ormp.name !== pkey) {
+          if(record[prop] !== null) {
+            if (ormp.toOne && ormp.toOne.isNested) {
+              var row = this.rowify(schemaName + '.' + ormp.toOne.type, record[prop]);         
+              params.push(qprop.concat(" = ", row));
+            } else if (type === 'String' || type === 'Date') { 
+              params.push(qprop.concat(" = '", record[prop], "'"));
             } else {
-              params.push(prop.concat(" = ", record[prop]));
+              params.push(qprop.concat(" = ", record[prop]));
             }
           } else {
-            params.push(prop.concat(' = null'));
+            params.push(qprop.concat(' = null'));
           }
         }
       }
@@ -403,7 +414,7 @@ select xt.install_js('XT','Data','xtuple', $$
       executeSql(sql, [record[pkey]]); 
 
       /* okay, now lets handle arrays */
-      this.commitArrays(schemaName, record, viewdef); 
+      this.commitArrays(schemaName, record, orm); 
     },
 
     /**
@@ -419,7 +430,7 @@ select xt.install_js('XT','Data','xtuple', $$
       sql = 'delete from {recordType} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
             .replace(/{primaryKey}/, pkey);     
-      if(DEBUG) { print(NOTICE, 'sql =', sql); }
+      if(DEBUG) print(NOTICE, 'sql =', sql);
       
       /* commit the record */
       executeSql(sql, [record[pkey]]); 
@@ -442,76 +453,34 @@ select xt.install_js('XT','Data','xtuple', $$
     },
 
     /** 
-      Adds 'type' and 'dataState' properties and camelizes record property names.
+      Decrypts properties where applicable.
 
       @param {String} name space
       @param {String} type
-      @param {Object} the record to be normalized
-      @param {Object} view definition object
+      @param {Object} record
+      @param {Object} encryption key
       @returns {Object} 
     */
-    normalize: function(nameSpace, type, record, encryptionKey) {
-      var schemaName = nameSpace.decamelize(),
-          viewName = type.decamelize(),
-          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
-          orm = XT.Orm.fetch(nameSpace, type);
-
-      /* set data type property */
-      record['type'] = type.classify();
-
-      /* set data state property */
-      record['dataState'] = this.READ_STATE;
+    decrypt: function(nameSpace, type, record, encryptionKey) {
+      var orm = XT.Orm.fetch(nameSpace, type);
       for(var prop in record) {
-        if (record.hasOwnProperty(prop)) {
-          var coldef = viewdef.findProperty('attname', prop),
-          value, result, sql = '',
-          ormp = XT.Orm.getProperty(orm, prop.camelize());
+        var ormp = XT.Orm.getProperty(orm, prop.camelize());
 
-          /* handle encryption if applicable */
-          if(ormp && ormp.attr && ormp.attr.isEncrypted) {
-            if(encryptionKey) {
-              sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
-              record[prop] = executeSql(sql, [record[prop], encryptionKey])[0].result;
-            } else {
-              record[prop] = '**********'
-            }
+        /* decrypt property if applicable */
+        if(ormp && ormp.attr && ormp.attr.isEncrypted) {
+          if(encryptionKey) {
+            sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
+            record[prop] = executeSql(sql, [record[prop], encryptionKey])[0].result;
+          } else {
+            record[prop] = '**********'
           }
-
-          /* if it's a composite type, add a type property */
-          if (coldef['typcategory'] === this.COMPOSITE_TYPE && record[prop]) {
-            var typeName = coldef['typname'].classify();
-
-            /* if no privileges remove the data */
-            if(this.checkPrivileges(nameSpace, typeName, null, false)) {
-              record[prop]['type'] = typeName;
-              record[prop]['dataState'] = this.READ_STATE;
-              record[prop] = XT.camelize(record[prop]);
-            } else {
-              delete record[prop];
-            }
             
-          /* if it's an array convert each row into an object */
-          } else if (coldef['typcategory'] === this.ARRAY_TYPE && 
-                     record[prop].length &&
-                     isNaN(record[prop][0])) {
-            var key = coldef['typname'].substring(1).classify(); /* strip off the leading underscore */
-
-            /* if no privileges remove the data */  
-            if(this.checkPrivileges(nameSpace, key, null, false)) {
-              for (var i = 0; i < record[prop].length; i++) {
-                var value = record[prop][i];
-
-                value['type'] = key;
-                value['dataState'] = this.READ_STATE;
-                record[prop][i] = this.normalize(nameSpace, key, value);
-              }
-            } else {
-              delete record[prop];    
-            }
-          }
+        /* check recursively */
+        } else if (ormp.toMany && ormp.toMany.isNested) {
+          this.decrypt(nameSpace, ormp.toMany.type, record[prop][i]);
         }
       }
-      return XT.camelize(record);
+      return record;
     },
 
     /**
@@ -529,7 +498,8 @@ select xt.install_js('XT','Data','xtuple', $$
       var nameSpace = recordType.beforeDot(),
           type = recordType.afterDot(),
           table = (nameSpace + '.' + type).decamelize(),
-          orderBy = (orderBy ? 'order by ' + orderBy : '').decamelize(),
+          orm = XT.Orm.fetch(nameSpace, type),
+          orderBy = (orderBy ? 'order by ' + this.quoteProperties(orm, orderBy) : ''),
           limit = rowLimit ? 'limit ' + rowLimit : '';
           offset = rowOffset ? 'offset ' + rowOffset : '',
           recs = null, 
@@ -548,7 +518,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if(DEBUG) { print(NOTICE, 'sql = ', sql); }
       recs = executeSql(sql);
       for (var i = 0; i < recs.length; i++) {  	
-        recs[i] = this.normalize(nameSpace, type, recs[i]);	  	
+        recs[i] = this.decrypt(nameSpace, type, recs[i]);	  	
       }
       return recs;
     },
@@ -583,7 +553,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if(!ret.length) throw new Error('No record found for {recordType} id {id}'
                                       .replace(/{recordType}/, recordType)
                                       .replace(/{id}/, id));
-      ret = this.normalize(nameSpace, type, ret[0], encryptionKey);
+      ret = this.decrypt(nameSpace, type, ret[0], encryptionKey);
 
       /* check privileges again, this time against record specific criteria where applicable */
       if(!this.checkPrivileges(nameSpace, type, ret)) throw new Error("Access Denied.");
@@ -623,26 +593,25 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {String} a string formatted like a postgres RECORD datatype 
     */
     rowify: function(key, value) {
-      var viewName = key.afterDot().decamelize(), 
-          schemaName = key.beforeDot().decamelize(),
-          viewdef = XT.Orm.viewDefinition(viewName, schemaName),
-          record = XT.decamelize(value),
+      var type = key.afterDot().classify(), 
+          nameSpace = key.beforeDot().toUpperCase(),
+          orm = XT.Orm.fetch(nameSpace, type),
+          record = value,
           props = [], ret = '';
 
       /* remove potential fields not part of data definition */
-      delete record['data_state'];
-      delete record['type'];
       for(var prop in record) {
-        var coldef = viewdef.findProperty('attname', prop);
+        var ormp = XT.Orm.getProperty(orm, prop),
+        type = ormp ? (ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type) : 'String';
         if(prop) {
-          if(coldef.typcategory === this.ARRAY_TYPE) { 
+          if(ormp.toMany) { 
             /* orm rules ignore arrays, but we need this place holder so type signatures match */
             props.push("'{}'");  
-          } else if(coldef.typcategory === this.COMPOSITE_TYPE) { 
-            record[prop] = this.rowify(schemaName + '.' + coldef.attname, record[prop]);
+          } else if(ormp.toOne && ormp.toOne.isNested) { 
+            record[prop] = this.rowify(nameSpace + '.' + ormp.name, record[prop]);
             props.push(record[prop]); 
-          } else if(coldef.typcategory === this.STRING_TYPE ||
-                    coldef.typcategory === this.DATE_TYPE) {
+          } else if(type === 'String' ||
+                    type === 'Date') {
             props.push("'" + record[prop] + "'"); 
           } else {
             props.push(record[prop]);

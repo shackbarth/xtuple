@@ -25,7 +25,7 @@
       "name": "targetType",
       "attr": {
         "type": "String",
-        "column": "target_type",
+        "column": "targetType",
         "value": "ADDR",
         "isVisible": false
       }
