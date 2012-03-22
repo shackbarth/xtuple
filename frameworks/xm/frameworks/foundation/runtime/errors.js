@@ -73,6 +73,9 @@ var ary = [
   { code: 'xt1023',
     label: '_recordInvalid'.loc(),
     description: '_optionExistsValue'.loc() },
+  { code: 'xt1024', 	
+    label: '_recordIncomplete'.loc(),  	
+    description: '_charAssignIsRequired'.loc() },
   { code: 'xt1025',
     label: '_recordIncomplete'.loc(),
     description: '_assignedToRequiredForAssigned'.loc() }

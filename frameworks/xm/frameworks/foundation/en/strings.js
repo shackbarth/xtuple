@@ -18,6 +18,7 @@ SC.stringsFor("en_US", {
 // ********
 
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
+  "_charAssignIsRequired": "Characteristics must be assigned to at least one document type.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
