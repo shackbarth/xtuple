@@ -10,12 +10,10 @@ sc_require('packages/xtuple/__core__/tax/mixins/_tax_authority');
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.AccountDocument
 */
-XM.TaxAuthority = XM.Document.extend(XM._TaxAuthority,
+XM.TaxAuthority = XM.AccountDocument.extend(XM._TaxAuthority,
   /** @scope XM.TaxAuthority.prototype */ {
- 
-  numberPolicySetting: 'CRMAccountNumberGeneration'
   
   // .................................................
   // CALCULATED PROPERTIES

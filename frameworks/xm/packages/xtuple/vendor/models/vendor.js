@@ -10,12 +10,10 @@ sc_require('packages/xtuple/vendor/mixins/_vendor');
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.AccountDocument
 */
-XM.Vendor = XM.Document.extend(XM._Vendor,
+XM.Vendor = XM.AccountDocument.extend(XM._Vendor,
   /** @scope XM.Vendor.prototype */ {
-
-  numberPolicySetting: 'CRMAccountNumberGeneration'
 
   // .................................................
   // CALCULATED PROPERTIES
