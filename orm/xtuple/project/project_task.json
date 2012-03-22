@@ -39,7 +39,8 @@
       "attr": {
         "type": "String",
         "column": "prjtask_number",
-        "isEditable": false
+        "isEditable": false,
+        "isRequired": true
       }
     },
     {
@@ -53,7 +54,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "prjtask_name"
+        "column": "prjtask_name",
+        "isRequired": true
       }
     },
     {
@@ -132,7 +134,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "prjtask_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {
@@ -141,7 +144,8 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "prjtask_owner_username",
-        "inverse": "username"
+        "inverse": "username",
+        "defaultValue": "currentUser"
       }
     },
     {
