@@ -1,10 +1,10 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ItemCharacteristic",
-  "table": "xm.characteristic_assignment",
-  "idSequenceName": "public.charass_charass_id_seq",
-  "comment": "Item Characteristic Map",
+  "type": "ItemTax",
+  "table": "itemtax",
+  "idSequenceName": "public.itemtax_itemtax_id_seq",
+  "comment": "Item Tax Map",
   "privileges": {
     "all": {
       "create": true,
@@ -18,40 +18,32 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "guid",
+        "column": "itemtax_id",
         "isPrimaryKey": true
       }
     },
     {
-      "name": "targetType",
-      "attr": {
-        "type": "String",
-        "column": "targetType",
-        "value": "I",
-        "isVisible": false
-      }
-    },
-    {
-      "name": "item",
+      "name": "itemTax",
       "attr": {
         "type": "Number",
-        "column": "target",
+        "column": "itemtax_item_id",
         "isEditable": false
       }
     },
     {
-      "name": "characteristic",
+      "name": "itemTaxType",
       "attr": {
-        "type": "Characteristic",
-        "column": "characteristic",
+        "type": "Number",
+        "column": "itemtax_taxtype_id",
         "isEditable": false
       }
     },
     {
-      "name": "value",
+      "name": "itemTaxZone",
       "attr": {
         "type": "Number",
-        "column": "value"
+        "column": "itemtax_taxzone_id",
+        "isEditable": false
       }
     }
   ],

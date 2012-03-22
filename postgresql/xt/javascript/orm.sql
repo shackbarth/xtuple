@@ -86,27 +86,6 @@ select xt.install_js('XT','Orm','xtuple', $$
     }
   }
 
-  /** 
-    Pass a record type and return an array that describes the view definition with
-    an array of items representing respective column definitions.
-
-    @param {String} view name
-    @param {String} schema name
-    @returns {Object} 
-  */
-  XT.Orm.viewDefinition = function(viewName, schemaName) {
-    var sql = "select attnum, attname, typname, typcategory "
-            + "from pg_class c, pg_namespace n, pg_attribute a, pg_type t "
-            + "where c.relname = $1 "
-            + "and n.nspname = $2 "
-	    + "and n.oid = c.relnamespace "
-	    + "and a.attnum > 0 "
-	    + "and a.attrelid = c.oid "
-	    + "and a.atttypid = t.oid "
-	    + "order by attnum";
-    return executeSql(sql, [ viewName, schemaName ]);
-  }
-
   /**
     Returns an array of views dependent on the view name passed.
 
@@ -271,9 +250,12 @@ select xt.install_js('XT','Orm','xtuple', $$
           canDelete = orm.privileges && orm.privileges.all && orm.privileges.all.delete ? true : false,
           toOneJoins = [], ormClauses = [];
       for(var i = 0; i < props.length; i++) {
-        var col, alias = props[i].name.decamelize();
+        var col, alias = props[i].name;
         if(DEBUG) print(NOTICE, 'processing property ->', props[i].name);
         if(props[i].name === 'type') throw new Error("Can not use 'type' as a property name.");
+        if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
+        if(props[i].name === 'status') throw new Error("Can not use 'status' as a property name.");
+        if(props[i].name === 'id') throw new Error("Can not use 'id' as a property name.");
         
         /* process attributes */
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
@@ -284,8 +266,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               isPrimaryKey = attr.isPrimaryKey ? true : false;
           if(!attr.type) throw new Error('No type was defined on property ' + props[i].name);
           if(isVisible) {
-            /* if it is composite, assign the table itself */
-            col = attr.type.decamelize() === orm.table ? tblAlias : tblAlias + '.' + attr.column;
+            col = tblAlias + '.' + attr.column;
             col = col.concat(' as "', alias, '"');
             cols.push(col);
           }
@@ -301,26 +282,26 @@ select xt.install_js('XT','Orm','xtuple', $$
             var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
 
             /* for select */     
-            ormClauses.push(attr.column + ' = ' + value);
+            ormClauses.push('"' + attr.column + '" = ' + value);
             
             /* for insert */
             insSrcCols.push(value);
-          } else insSrcCols.push('new.' + alias);
+          } else insSrcCols.push('new."' + alias + '"');
 
           /* for insert rule */
-          insTgtCols.push(attr.column);
+          insTgtCols.push('"' + attr.column + '"');
 
           /* for update rule */
-          if(isVisible && isEditable && !isPrimaryKey) updCols.push(attr.column + ' = new.' + alias);
+          if(isVisible && isEditable && !isPrimaryKey) updCols.push(attr.column + ' = new."' + alias + '"');
         }
 
         /* process toOne  */
         if(props[i].toOne && props[i].toOne.isNested) {
-          if(DEBUG) print(NOTICE, 'building toOne');       
+          if(DEBUG) print(NOTICE, 'building toOne');     
           var toOne = props[i].toOne,
               table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
               type = table.afterDot(),
-              inverse = toOne.inverse ? toOne.inverse.decamelize() : 'guid',
+              inverse = toOne.inverse ? toOne.inverse : 'guid',
               isEditable = toOne.isEditable !== false ? true : false,
               toOneAlias, join;
           if(!type) throw new Error('No type was defined on property ' + props[i].name);
@@ -346,12 +327,12 @@ select xt.install_js('XT','Orm','xtuple', $$
 
           /* for insert rule */
           if(isEditable) {
-            insTgtCols.push(toOne.column);
-            insSrcCols.push('(new.' + alias + ').' + inverse);
+            insTgtCols.push('"' + toOne.column + '"');
+            insSrcCols.push('(new."' + alias + '").' + inverse);
           }
 
           /* for update rule */
-          if(isEditable) updCols.push(toOne.column + ' = (new.' + alias + ').' + inverse );
+          if(isEditable) updCols.push(toOne.column + ' = (new."' + alias + '").' + inverse );
         }
 
         /* process toMany */
@@ -362,9 +343,9 @@ select xt.install_js('XT','Orm','xtuple', $$
               table = base.nameSpace + '.' + toMany.type.decamelize(),
               type = toMany.type.decamelize(),     
               column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(base.nameSpace, toMany.type)),
-              inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
+              inverse = toMany.inverse ? toMany.inverse.camelize() : 'guid',
               sql, col = 'array({select}) as "{alias}"',
-              conditions = toMany.column ? type + '.' + inverse + ' = ' + tblAlias + '.' + toMany.column : 'true';
+              conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
           col = col.replace(/{select}/,
              SELECT.replace(/{columns}/, column)
                    .replace(/{table}/, table) 
@@ -394,7 +375,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             delCascade.push(sql);
           } else if (toMany.isNested) {
             sql = DELETE.replace(/{table}/, table)
-                        .replace(/{conditions}/, type + '.' + inverse  + ' = ' + 'old.{pKeyAlias}');                       
+                        .replace(/{conditions}/, type + '."' + inverse  + '" = ' + 'old."{pKeyAlias}"');                       
             delCascade.push(sql); 
           }
         }
@@ -548,6 +529,10 @@ select xt.install_js('XT','Orm','xtuple', $$
       } else {
         var rule;
         if(DEBUG) print(NOTICE, 'process base CRUD');
+
+       /* add static values */
+       cols.push("'" + orm.type + "' as \"type\"");
+       cols.push("'read' as \"dataState\"");
         
         /* table */
         clauses = clauses.concat(ormClauses);
@@ -585,7 +570,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                               .replace(/{command}/, 
                         UPDATE.replace(/{table}/, orm.table) 
                               .replace(/{expressions}/, updCols.join(','))
-                              .replace(/{conditions}/, pKeyCol + ' = old.' + pKeyAlias)); 
+                              .replace(/{conditions}/, '"' + pKeyCol + '" = old."' + pKeyAlias + '"')); 
           } else {
             rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                               .replace(/{event}/, 'update')
@@ -605,7 +590,7 @@ select xt.install_js('XT','Orm','xtuple', $$
                               .replace(/{command}/, '(' + delCascade.join(' ')
                               .replace(/{pKeyAlias}/g, pKeyAlias) +
                         DELETE.replace(/{table}/, orm.table) 
-                              .replace(/{conditions}/, pKeyCol + ' = old.' + pKeyAlias) + ')');  
+                              .replace(/{conditions}/, '"' + pKeyCol + '" = old."' + pKeyAlias + '"') + ')');  
           } else {
             rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                               .replace(/{event}/, 'delete')
