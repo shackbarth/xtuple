@@ -124,7 +124,7 @@
       "name": "salesRep",
       "toOne": {
         "isNested": true,
-        "type": "CustomerInfo",
+        "type": "SalesRep",
         "column": "crmacct_salesrep_id",
         "inverse": "guid"
       }
