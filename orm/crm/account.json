@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "IncidentRelations",
+      "name": "incidentRelations",
       "toMany": {
         "type": "IncidentInfo",
         "column": "crmacct_id",
@@ -30,7 +30,7 @@
       }
     },
     {
-      "name": "OpportunitytRelations",
+      "name": "opportunitytRelations",
       "toMany": {
         "type": "OpportunityInfo",
         "column": "crmacct_id",

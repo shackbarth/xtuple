@@ -113,7 +113,6 @@
     {
       "name": "owner",
       "toOne": {
-        "isNested": true,
         "type": "UserAccountInfo",
         "column": "crmacct_owner_username",
         "inverse": "username",
@@ -123,7 +122,6 @@
     {
       "name": "salesRep",
       "toOne": {
-        "isNested": true,
         "type": "CustomerInfo",
         "column": "crmacct_salesrep_id",
         "inverse": "guid"
@@ -132,7 +130,6 @@
     {
       "name": "taxAuthority",
       "toOne": {
-        "isNested": true,
         "type": "TaxAuthority",
         "column": "crmacct_taxauth_id",
         "inverse": "guid"
