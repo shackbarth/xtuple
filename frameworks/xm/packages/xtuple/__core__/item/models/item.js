@@ -16,7 +16,7 @@ sc_require('mixins/crm_documents');
   @extends XM.CoreDocuments
   @extends XM.Document
 */
-XM.Item = XM._Item.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
+XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.Item.prototype */ {
 
   // .................................................
@@ -28,6 +28,14 @@ XM.Item = XM._Item.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
     if(value) return value.toUpperCase();
    }
   }),
+  inventoryUnit: function(key, value) {
+    if(value) this._xm_inventoryUnit = value;
+      return // uomidFrom = param.toInt();
+             // ignoreSignals = true;
+             this.XM.ItemConversion.fromUnit = setId(_uomidFrom);
+             this.XM.ItemConversion.toUnit = setId(_uomidFrom);
+             // ignoreSignals = true;
+  }.property('inventoryUnit').cacheable(),
   // item_tax 
   // item_tax_recoverable sets a true flag when a new item is created in the parent | make sure to update the orm to pull this in 
 
@@ -44,7 +52,7 @@ XM.Item = XM._Item.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
     var status = this.get('status'),
         inventoryUnit = this.get('inventoryUnit');
     if(status & SC.Record.READY) {
-         this.set('priceUnit', inventoryUnit);       
+         this.set('priceUnit', this.get('inventoryUnit'));       
     }
   }.observes('inventoryUnit'),
   _xm_itemTypeDidChange: function() {

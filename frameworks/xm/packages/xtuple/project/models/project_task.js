@@ -6,13 +6,14 @@
 /*globals XM */
 
 sc_require('packages/xtuple/project/mixins/_project_task');
+sc_require('mixins/crm_documents');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.ProjectTask = XM.Record.extend(XM._ProjectTask,
+XM.ProjectTask = XM.Record.extend(XM._ProjectTask, XM.CoreDocuments, XM.CrmDocuments,
   /** @scope XM.ProjectTask.prototype */ {
 
   // .................................................
