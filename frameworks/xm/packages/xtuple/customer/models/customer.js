@@ -53,7 +53,7 @@ XM.Customer = XM.Document.extend(XM.CoreDocuments, XM._Customer,
     defaultValue: function() {
       return XM.session.getPath('settings.DefaultTerms');
     }
-  ),
+  }),
 
   /**
     @type String

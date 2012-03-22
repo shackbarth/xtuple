@@ -135,6 +135,22 @@ XM._Account = {
   }),
 
   /**
+    @type XM.SalesRep
+  */
+  salesRep: SC.Record.toOne('XM.SalesRep', {
+    isNested: true,
+    label: '_salesRep'.loc()
+  }),
+
+  /**
+    @type XM.TaxAuthority
+  */
+  taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
+    isNested: true,
+    label: '_taxAuthority'.loc()
+  }),
+
+  /**
     @type XM.AccountComment
   */
   comments: SC.Record.toMany('XM.AccountComment', {

@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.BankAccountBrowse
+  @scope XM.CustomerType
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._BankAccountBrowse = {
-  /** @scope XM.BankAccountBrowse.prototype */
+XM._CustomerType = {
+  /** @scope XM.CustomerType.prototype */
   
-  className: 'XM.BankAccountBrowse',
+  className: 'XM.CustomerType',
 
   
 
@@ -24,10 +24,10 @@ XM._BankAccountBrowse = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": "MaintainCustomerTypes",
       "read": true,
-      "update": false,
-      "delete": false
+      "update": "MaintainCustomerTypes",
+      "delete": "MaintainCustomerTypes"
     }
   },
 
@@ -43,8 +43,8 @@ XM._BankAccountBrowse = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  code: SC.Record.attr(String, {
+    label: '_code'.loc()
   }),
 
   /**
