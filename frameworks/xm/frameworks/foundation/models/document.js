@@ -91,9 +91,9 @@ XM.Document = XM.Record.extend(
         docKey = record.get('documentKey'),
         number = record.get(docKey),
         policy = record.get('numberPolicy');   
-console.log('key changed')
+
     // if generated and automatic, lock it down
-    if(record._xm_numberGen && policy === 'A') this.number.set('isEditable', false);
+    if(record._xm_numberGen && policy === 'A') this[docKey].set('isEditable', false);
    
     // release the fetched number if applicable 
     if(record._xm_numberGen && record._xm_numberGen != number) {
@@ -104,7 +104,7 @@ console.log('key changed')
     // For manually edited numbers, check for conflicts with existing
     if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY))  {
       if(this._xm_numberGen && this._xm_numberGen == number) return;
-console.log('eh?')
+
       // callback
       callback = function(err, result) {
         if(!err) {
@@ -138,9 +138,10 @@ console.log('eh?')
 
   /** @private */
   _xm_numberPolicyDidChange: function() {
-    var policy = this.get('numberPolicy');
-    this.number.set('isEditable', policy !== 'A');
-  }.observes('numberPolicy'),
+    var policy = this.get('numberPolicy'),
+        docKey = this.get('documentKey');
+    this[docKey].set('isEditable', policy !== 'A');
+  }.observes('numberPolicy')
 
 });
 
