@@ -71,7 +71,7 @@ XM.Contact = XM.Document.extend(XM._Contact, XM.CoreDocuments,
     var flen = this.get('firstName') ? this.get('firstName').length : 0,
         llen = this.get('lastName') ? this.get('lastName').length : 0,
         errors = arguments.callee.base.apply(this, arguments),
-        nameErr = XT.errors.findProperty('code', 'xt1002');
+        nameErr = XM.errors.findProperty('code', 'xt1002');
 
     // Validate Name
     this.updateErrors(nameErr, !(flen || llen));
