@@ -52,6 +52,13 @@ XM._IncidentInfo = {
   */
   description: SC.Record.attr(String, {
     label: '_description'.loc()
+  }),
+
+  /**
+    @type XM.AccountInfo
+  */
+  account: SC.Record.toOne('XM.AccountInfo', {
+    label: '_account'.loc()
   })
 
 };

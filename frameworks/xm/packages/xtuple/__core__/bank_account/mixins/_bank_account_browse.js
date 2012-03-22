@@ -25,7 +25,7 @@ XM._BankAccountBrowse = {
   privileges: {
     "all": {
       "create": false,
-      "read": "true",
+      "read": true,
       "update": false,
       "delete": false
     }

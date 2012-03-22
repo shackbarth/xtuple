@@ -59,6 +59,13 @@ XM._OpportunityInfo = {
   */
   isActive: SC.Record.attr(Boolean, {
     label: '_isActive'.loc()
+  }),
+
+  /**
+    @type XM.AccountInfo
+  */
+  account: SC.Record.toOne('XM.AccountInfo', {
+    label: '_account'.loc()
   })
 
 };
