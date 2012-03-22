@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/miscellaneous/mixins/_sales_rep');
+sc_require('packages/xtuple/customer/mixins/_customer_type');
 
 /**
   @class
 
-  @extends XM.AccountDocument
+  @extends XM.Record
 */
-XM.SalesRep = XM.AccountDocument.extend(XM._SalesRep,
-  /** @scope XM.SalesRep.prototype */ {
+XM.CustomerType = XM.Record.extend(XM._CustomerType,
+  /** @scope XM.CustomerType.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -28,3 +28,4 @@ XM.SalesRep = XM.AccountDocument.extend(XM._SalesRep,
   //
 
 });
+

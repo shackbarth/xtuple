@@ -1,5 +1,0 @@
-name: Vendor
-type: xbo
-load: deferred
-core: YES
-

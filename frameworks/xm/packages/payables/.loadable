@@ -1,5 +1,0 @@
-name: Payables
-type: xbo
-load: deferred
-core: YES
-

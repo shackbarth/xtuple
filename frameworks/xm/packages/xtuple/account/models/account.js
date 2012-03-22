@@ -13,17 +13,15 @@ sc_require('packages/xtuple/account/mixins/_account');
 
   @extends XM.CrmDocuments
   @extends XM.CoreDocuments
-  @extends XM.Document
+  @extends XM.AccountDocument
 */
 
-XM.Account = XM.Document.extend(XM.CoreDocuments, XM.CrmDocuments, XM._Account,
+XM.Account = XM.AccountDocument.extend(XM.CoreDocuments, XM.CrmDocuments, XM._Account,
 /** @scope XM.Account.prototype */ {
   
   // ..........................................................
   // CALCULATED PROPERTIES
   //
-
-  numberPolicySetting: 'CRMAccountNumberGeneration',
 
   isUserAccount: function(key, value) {
     if(value) this._xm_isUserAccount = value;
