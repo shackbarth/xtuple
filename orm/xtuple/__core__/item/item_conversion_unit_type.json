@@ -1,0 +1,44 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ItemConversionUnitType",
+  "table": "itemuom",
+  "idSequenceName": "public.itemuom_itemuom_id_seq",
+  "comment": "Item Conversion Unit Type Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "itemuom_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "itemUnitConversion",
+      "toOne": {
+        "type": "ItemConversion",
+        "column": "itemuom_itemuomconv_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "itemUnitType",
+      "attr": {
+        "type": "Number",
+        "column": "itemuom_uomtype_id",
+        "isEditable": false
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
