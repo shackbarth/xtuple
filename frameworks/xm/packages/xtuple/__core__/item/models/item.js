@@ -42,21 +42,11 @@ XM.Item = XM._Item.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
 
   _xm_itemConversionDidChange: function() {
     var status = this.get('status'),
-        classCode = this.get('classCode'),
-        inventoryUnit = this.get('inventoryUnit'),
-        priceUnit = this.get('priceUnit');
+        inventoryUnit = this.get('inventoryUnit');
     if(status & SC.Record.READY) {
-       //Goes here
-       if(classCode === value && inventoryUnit === value) {
-         this.set('priceUnit', this.get('inventoryUnit'));   
-       }else if() {
-         //Do Something
-       }
-      //if(projectStatus === XM.Project.COMPLETED) this.set('completeDate', SC.DateTime.create());    
+         this.set('priceUnit', inventoryUnit);       
     }
-  }.observes('classCode','inventoryUnit'),
-
-
+  }.observes('inventoryUnit'),
   _xm_itemTypeDidChange: function() {
    var status = this.get('status'),
        itemType = this.get('itemType'),
