@@ -109,9 +109,13 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns String
     */
     quoteProperties: function(orm, str) {
+      /* TODO: The door is open here for conflicts i.e. properties "item" and "itemType" on the same orm 
+          will break this. Need a more robust solution. Maybe draw in SC.Query tokenizer logic? */ 
       for (var i = 0; i < orm.properties.length; i++) {
-        var regExp = new RegExp(orm.properties[i].name + "(?!})", "g");
-        str = str.replace(regExp, '"' + orm.properties[i].name + '"');
+          var pval = orm.properties[i].name;
+              regExp = new RegExp(pval + "+(?=[^{}]*(\{|$))", "g");
+              rval = '"' + pval + '"'
+          str = str.replace(regExp, rval);
       }
       if (!orm.extensions) {
         for (var i = 0; i < orm.extensions.length; i++) {
