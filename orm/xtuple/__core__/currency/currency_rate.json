@@ -7,10 +7,10 @@
   "comment": "Currency Rate Map",
   "privileges": {
     "all": {
-      "create": true,
-      "read": true,
-      "update": true,
-      "delete": true
+      "create": "MaintainCurrencyRates",
+      "read": "ViewCurrencyRates",
+      "update": "MaintainCurrencyRates",
+      "delete": "MaintainCurrencyRates"
     }
   },
   "properties": [
@@ -27,31 +27,33 @@
       "toOne": {
         "type": "Currency",
         "column": "curr_id",
-        "isEditable": false
+       "isRequired": true
       }
     },
     {
       "name": "rate",
       "attr": {
         "type": "Number",
-        "column": "curr_rate"
+        "column": "curr_rate",
+        "isRequired": true
       }
     },
     {
       "name": "effective",
       "attr": {
         "type": "Date",
-        "column": "curr_effective"
+        "column": "curr_effective",
+        "isRequired": true
       }
     },
     {
       "name": "expires",
       "attr": {
         "type": "Date",
-        "column": "curr_expires"
+        "column": "curr_expires",
+        "isRequired": true
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }
