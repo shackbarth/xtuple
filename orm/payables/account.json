@@ -15,7 +15,6 @@
     {
       "name": "vendor",
       "toOne": {
-        "isNested": true,
         "type": "Vendor",
         "column": "crmacct_vend_id"
       }

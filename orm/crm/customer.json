@@ -16,9 +16,40 @@
     {
       "name": "account",
       "toOne": {
-        "isNested": true,
         "type": "AccountInfo",
         "column": "crmacct_id"
+      }
+    },
+    {
+      "name": "contactRelations",
+      "toMany": {
+        "type": "ContactInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
+    },
+    {
+      "name": "incidentRelations",
+      "toMany": {
+        "type": "IncidentInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
+    },
+    {
+      "name": "opportunitytRelations",
+      "toMany": {
+        "type": "OpportunityInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
+      }
+    },
+    {
+      "name": "toDoRelations",
+      "toMany": {
+        "type": "ToDoInfo",
+        "column": "crmacct_id",
+        "inverse": "account"
       }
     }
   ],
