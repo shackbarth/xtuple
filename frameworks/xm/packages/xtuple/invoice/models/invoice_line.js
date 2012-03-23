@@ -19,12 +19,12 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   /** 
     Inovice Customer
   */
-  customerBinding: SC.Binding.from('*invoice.customer').noDelay(), 
+ // customerBinding: SC.Binding.from('*invoice.customer').noDelay(), 
     
   /** 
     Invoice currency
   */
-  currencyBinding: SC.Binding.from('*invoice.currency').noDelay(), 
+ // currencyBinding: SC.Binding.from('*invoice.currency').noDelay(), 
 
   /** 
     Invoice date
@@ -45,23 +45,25 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   /** 
     Invoice currency
   */
-  shiptoBinding: SC.Binding.from('*invoice.shipto').noDelay(), 
+ // shiptoBinding: SC.Binding.from('*invoice.shipto').noDelay(), 
+  
+  taxTotal: 0,
   
   /**
     Tax detail
   */
-  taxes: [],
+  taxDetail: [],
   
   /** @private */
   taxesLength: 0,
   
   /** @private */
-  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(), 
+//  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(), 
   
   /**
     Tax Zone
   */
-  taxZoneBinding: SC.Binding.from('*invoice.taxZone').noDelay(), 
+ // taxZoneBinding: SC.Binding.from('*invoice.taxZone').noDelay(), 
   
   // .................................................
   // CALCULATED PROPERTIES
@@ -73,15 +75,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         price = this.get('price') || 0,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
     return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
-  }.property('billed', 'price').cacheable(),
-
-  tax: function() {
-    var taxes = this.get('taxes'), tax = 0;
-    for(var i = 0; i < taxes.get('length'); i++) {
-      tax = tax + taxes[i].get('tax');
-    }
-    return tax;
-  }.property('taxesLength'),
+  },//.property('billed', 'price').cacheable(),
 
   //..................................................
   // METHODS
@@ -118,19 +112,19 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   extendendPriceDidChange: function() {
     var invoice = this.get('invoice');
     if (invoice) invoice.linesDidChange();
-  }.observes('extendedPrice'),
+  },//.observes('extendedPrice'),
 
   itemDidChange: function() {
     this.updateSellingUnits();
     this.updatePrice();
-  }.observes('item'),
+  },//.observes('item'),
   
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.item.set('isEditable', false);
       this.updateSellingUnits();
     }
-  }.observes('status'),
+  },//.observes('status'),
 
   priceCriteriaDidChange: function() {
     var that = this,
@@ -164,30 +158,35 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   },//.observes('customer','shipto','billed','quantity','quantityUnit','priceUnit','invoiceDate','currency'),
 
   taxCriteriaDidChange: function() {
-    var that = this;
-    
-      // callback
-    callback = function(err, result) {
-      var store = that.get('store'),
-          taxes = [];
-
-      for(var i = 0; i < result.get('length'); i++) {
-        var storeKey, taxCode, detail,
-            store = that.get('store');
-        storeKey = store.loadRecord(XM.TaxCode, result[i].taxCode);
-        taxCode = store.materializeRecord(storeKey);
-        detail = SC.Object.create({ 
-          taxCode: taxCode, 
-          tax: result[i].tax 
-        });
-        taxes.push(detail);
-      }
-      that.setIfChanged('taxes', taxes);
-    }
-    
-    if(status === SC.Record.READY_NEW || 
-       status === SC.Record.READY_DIRTY) 
+    var that = this,
+        status = that.get('status'),
+        taxDetail;
+   debugger
+console.log('1')
+    if(status == SC.Record.READY_NEW || 
+       status == SC.Record.READY_DIRTY) 
     {
+      // request a calculated estimate
+console.log('not here')      
+      // callback
+      callback = function(err, result) {
+        var store = that.get('store'),
+            taxes = [];
+
+        for(var i = 0; i < result.get('length'); i++) {
+          var storeKey, taxCode, detail,
+              store = that.get('store');
+          storeKey = store.loadRecord(XM.TaxCode, result[i].taxCode);
+          taxCode = store.materializeRecord(storeKey);
+          detail = SC.Object.create({ 
+            taxCode: taxCode, 
+            tax: result[i].tax 
+          });
+          taxes.push(detail);
+        }
+        that.setIfChanged('taxDetail', taxDetail);
+      }
+    
       // request for calculated result
       var taxZone = that.getPath('invoice.taxZone.id'),
           taxType = that.getPath('taxType.id'),
@@ -195,18 +194,39 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
           currency = that.getPath('invoice.currency.id'),
           amount = that.get('extendedPrice');
       XM.InvoiceLine.taxDetail(taxZone, taxType, effective, currency, amount, callback);
-    
-    // request for stored result
-    } else XM.InvoiceLine.taxDetail(that.get('id'), callback);
+    } else {
+console.log('2')
+      // add up stored result
+      var taxes = this.get('taxes'),
+          taxDetail = [],
+          taxTotal = 0;
+console.log('3')
+      // Loop through header taxes and allocate
+      for(var i = 0; i < taxes.get('length'); i++) {
+        var hist = taxes.objectAt(i),
+            tax = hist.get('tax'),
+            taxCode = hist.get('taxCode'),
+            codeTax = {};
+console.log('4', tax)
+        taxTotal = taxTotal + tax;
+    console.log('5', taxTotal)
+        codeTax.taxCode = taxCode;
+  console.log('6')
+        codeTax.tax = tax;
+  console.log('7')
+        taxDetail.push(codeTax);  
+console.log('8')
+      }    
+      this.set('taxDetail', taxDetail);
+      this.set('taxTotal', taxTotal);
+    }
+    console.log('30')
   },//.observes('status', 'extendedPrice', 'taxZone', 'taxType', 'invoiceDate', 'currency'),
 
 });
 
 /**
-  Return the tax detail for line items based on input. 
-
-  Signature for requesting estimated tax detail records
-  XM.InvoiceLine.taxDetail(taxZoneId, taxTypeId, effective, currency, amount, callback)
+  Return the estimated tax detail for line items based on input. 
 
   @param {Number} tax zone id - optional
   @param {Number} tax type id - optional
@@ -214,28 +234,16 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   @param {Date} effective date
   @param {Number} amount
   @param {Function} callback
-
-  Signature for requesting actual tax detail records
-  XM.InvoiceLine.taxDetail(invoiceId, callback)
-
-  @param {Number} invoice line id
-  @param {Function} callback
-
   @returns Number 
 */
 XM.InvoiceLine.taxDetail = function(taxZoneId, taxTypeId, effective, currency, amount, callback) {
   var that = this, dispatch, store = XM.store, params;
-  if(typeof arguments[1] === 'function') {
-    params = arguments[0];
-    callback = arguments[1];
-  }
-  else params = [taxZoneId, taxTypeId, effective, currency, amount];
   
   // define call
   dispatch = XM.Dispatch.create({
     className: 'XM.InvoiceLine',
     functionName: 'taxDetail',
-    parameters: params,
+    parameters: [taxZoneId, taxTypeId, effective, currency, amount],
     target: that,
     action: callback
   });
