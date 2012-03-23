@@ -35,7 +35,8 @@ select xt.install_js('XM','receivables','receivables', $$
     "DefaultBackOrders",
     "DefaultFreeFormShiptos",
     "SOCreditLimit",
-    "SOCreditRate"
+    "SOCreditRate",
+    "InvcNumberGeneration"
   ]
 
   /* 

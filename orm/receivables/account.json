@@ -15,7 +15,6 @@
     {
       "name": "customer",
       "toOne": {
-        "isNested": true,
         "type": "CustomerInfo",
         "column": "crmacct_cust_id"
       }

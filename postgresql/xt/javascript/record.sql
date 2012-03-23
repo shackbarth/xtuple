@@ -63,18 +63,19 @@ select xt.install_js('XT','Record','xtuple', $$
     @param {Number} value
     @returns Number
   */
-  XT.Record.findExisting = function(recordType, key, value) {
+  XT.Record.findExisting = function(recordType, key, value, id) {
     var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
         table = recordType.decamelize(),
         pKey = XT.Orm.primaryKey(map),
-        sql = 'select {primaryKey} as id from {table} where {userKey}::text=$1::text'
-              .replace(/{primaryKey}/, pKey)
+        sql = 'select {primaryKey} as id from {table} where {userKey}::text=$1::text and {primaryKey} != $2'
+              .replace(/{primaryKey}/g, pKey)
               .replace(/{table}/, table)
               .replace(/{userKey}/, key)
-              .replace(/{value}/, value),
-        result = executeSql(sql, [value])[0];
+              .replace(/{value}/, value)
+              .replace(/{id}/, id),
+        result = executeSql(sql, [value, id])[0];
 
     return result ? result.id : 0;
   }
