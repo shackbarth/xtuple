@@ -55,7 +55,7 @@
       "name": "customer",
       "toOne": {
         "isNested" : true,
-        "type": "Customer",
+        "type": "CustomerInfo",
         "column": "aropen_cust_id",
         "inverse" : "guid"
       }

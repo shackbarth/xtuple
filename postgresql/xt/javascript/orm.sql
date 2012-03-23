@@ -343,16 +343,26 @@ select xt.install_js('XT','Orm','xtuple', $$
               table = base.nameSpace + '.' + toMany.type.decamelize(),
               type = toMany.type.decamelize(),     
               column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(base.nameSpace, toMany.type)),
-              inverse = toMany.inverse ? toMany.inverse.camelize() : 'guid',
-              sql, col = 'array({select}) as "{alias}"',
-              conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';
+              iorm = XT.Orm.fetch(base.nameSpace, toMany.type),
+              inverse, ormp, sql, col = 'array({select}) as "{alias}"', conditions;
+
+           /* handle inverse */
+          inverse = toMany.inverse ? toMany.inverse.camelize() : 'guid';
+          ormp = XT.Orm.getProperty(iorm, inverse);
+          if(ormp && ormp.toOne && ormp.toOne.isNested) {
+            conditions = toMany.column ? '(' + type + '."' + inverse + '").guid = ' + tblAlias + '.' + toMany.column : 'true';
+          } else {
+            conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';  
+          }
+
+          /* build select */          
           col = col.replace(/{select}/,
              SELECT.replace(/{columns}/, column)
                    .replace(/{table}/, table) 
                    .replace(/{conditions}/, conditions))
                    .replace(/{alias}/, alias);             
           cols.push(col);
-      
+          
           /* build array for delete cascade */
           if(toMany.isNested &&
              toMany.deleteDelegate && 
