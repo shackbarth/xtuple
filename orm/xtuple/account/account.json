@@ -122,7 +122,7 @@
     {
       "name": "salesRep",
       "toOne": {
-        "type": "CustomerInfo",
+        "type": "SalesRep",
         "column": "crmacct_salesrep_id",
         "inverse": "guid"
       }
