@@ -60,7 +60,7 @@
       "attr": {
         "type": "String",
         "column": "todoitem_status",
-        "defaultValue": "XM.ToDo.NEITHER"
+        "defaultValue": "N"
       }
     },
     {
