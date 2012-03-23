@@ -74,33 +74,18 @@ XM.Document = XM.Record.extend(
     }
     this[docKey].defaultValue = dv;
     this[docKey].set('isRequired', true);
-    this.addObserver(docKey, this._xm_keyDidChange);
+    this.addObserver(docKey, this.keyDidChange);
   },
-
-  destroy: function() {
-    var record = this,
-        status = this.get('status');
-    
-    /* release the number if applicable */
-    if(status === SC.Record.READY_NEW && record._xm_numberGen) {
-      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
-      record._xm_numberGen = null;
-    }
-    arguments.callee.base.apply(this, arguments);
-  },
-
-  // ..........................................................
-  // OBSERVERS
-  //
-
-  /** @private */
-  _xm_numberPolicyDidChange: function() {
-    var policy = this.get('numberPolicy');
-    this.number.set('isEditable', policy !== 'A');
-  }.observes('numberPolicy'),
-
-  /** @private */
-  _xm_keyDidChange: function() {  
+  
+  /**
+    Called whenever the document key property changes. Does the following:
+      * Locks editing when number has been set and number policy is XM.AUTO_NUMBER
+      * Releases a generated number if user has over-ridden an auto generated number
+      * Checks for duplicate key violitions by calling findExisting().
+      
+    @seealso XM.Document.findExisting()
+  */
+  keyDidChange: function() {  
     var record = this;
         status = record.get('status'),
         docKey = record.get('documentKey'),
@@ -108,7 +93,7 @@ XM.Document = XM.Record.extend(
         policy = record.get('numberPolicy');   
 
     // if generated and automatic, lock it down
-    if(record._xm_numberGen && policy === 'A') this.number.set('isEditable', false);
+    if(record._xm_numberGen && policy === 'A') this[docKey].set('isEditable', false);
    
     // release the fetched number if applicable 
     if(record._xm_numberGen && record._xm_numberGen != number) {
@@ -133,7 +118,31 @@ XM.Document = XM.Record.extend(
       // function call
       XM.Record.findExisting.call(record, docKey, number, callback);
     }
-  }
+  },
+
+  destroy: function() {
+    var record = this,
+        status = this.get('status');
+    
+    /* release the number if applicable */
+    if(status === SC.Record.READY_NEW && record._xm_numberGen) {
+      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
+      record._xm_numberGen = null;
+    }
+    arguments.callee.base.apply(this, arguments);
+  },
+
+  // ..........................................................
+  // OBSERVERS
+  //
+
+  /** @private */
+  _xm_numberPolicyDidChange: function() {
+    var policy = this.get('numberPolicy'),
+        docKey = this.get('documentKey');
+    this[docKey].set('isEditable', policy !== 'A');
+  }.observes('numberPolicy')
+
 });
 
 

@@ -43,8 +43,8 @@ XM._TaxAuthority = {
   /**
     @type String
   */
-  code: SC.Record.attr(String, {
-    label: '_code'.loc()
+  number: SC.Record.attr(String, {
+    label: '_number'.loc()
   }),
 
   /**

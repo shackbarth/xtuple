@@ -76,21 +76,21 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
       credit = credit + credits.objectAt(i).get('amount');
     }
     return credit;
-  }.property('creditsLength').cacheable(),
+  },//.property('creditsLength').cacheable(),
   
   totalTax: function() {
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
     return lineTax + freightTax + miscTax; 
-  }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
+  },//.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
   total: function() {
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
         totalTax = this.get('totalTax');
     return subTotal + freight + totalTax; 
-  }.property('subTotal', 'freight', 'totalTax').cacheable(),
+  },//.property('subTotal', 'freight', 'totalTax').cacheable(),
   
   //..................................................
   // METHODS
@@ -157,7 +157,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     this.updateErrors(err, val < 0);
 
     return errors;
-  }.observes('linesLength', 'total'),
+  },//.observes('linesLength', 'total'),
   
   /**
     Populates customer defaults when customer changes.
@@ -206,7 +206,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
       this.set('shipto', null);
     } 
     this.setFreeFormBilltoEnabled(isFreeFormBillto);
-  }.observes('customer'),
+  },//.observes('customer'),
   
   /**
     Populates shipto defaults when shipto changes.
@@ -258,7 +258,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
       this.set('shiptoPhone', '');
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
-  }.observes('shipto'),
+  },//.observes('shipto'),
   
   /**
     Recalculate line item tax and sales totals.
@@ -307,7 +307,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     }
     this.set('lineTax', taxTotal);
     this.set('lineTaxDetail', taxDetail);
-  }.observes('linesLength', 'taxZone'),
+  },//.observes('linesLength', 'taxZone'),
 
   taxesDidChange: function() {    
     var taxes = this.get('taxes'), 
@@ -337,13 +337,13 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     this.set('miscTaxDetail', miscTaxDetail);
     this.set('freightTax', freightTax);
     this.set('freightTaxDetail', freightTaxDetail);
-  }.observes('taxesLength', 'taxZone'),
+  },//.observes('taxesLength', 'taxZone'),
 
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.customer.set('isEditable', false);
     }
-  }.observes('status')
+  },//.observes('status')
 
 });
 

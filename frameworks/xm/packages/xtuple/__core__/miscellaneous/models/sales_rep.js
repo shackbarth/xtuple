@@ -10,22 +10,14 @@ sc_require('packages/xtuple/__core__/miscellaneous/mixins/_sales_rep');
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.AccountDocument
 */
-XM.SalesRep = XM.Document.extend(XM._SalesRep,
+XM.SalesRep = XM.AccountDocument.extend(XM._SalesRep,
   /** @scope XM.SalesRep.prototype */ {
-  
-  numberPolicySetting: 'CRMAccountNumberGeneration',
 
   // .................................................
   // CALCULATED PROPERTIES
   //
-
-  isAccount: function(key, value) {
-    if(value) this._xm_isAccount = value;
-      return this._xm_isAccount !== undefined ?
-             this._xm_isAccount : this.get('account') !== null;
-  }.property('account').cacheable(),
 
   //..................................................
   // METHODS

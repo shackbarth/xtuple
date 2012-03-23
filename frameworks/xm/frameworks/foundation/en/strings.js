@@ -18,9 +18,11 @@ SC.stringsFor("en_US", {
 // ********
 
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
+  "_charAssignIsRequired": "Characteristics must be assigned to at least one document type.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
+  "_firstOrLastNameRequired": "First or last name is required",
   "_noLineItems": "This document requires at least one line item.",
   "_optionExistsValue": "A option already exists with this Value.",
   "_parentIsInvalid": "This CRM Account cannot be a parent to itself.",

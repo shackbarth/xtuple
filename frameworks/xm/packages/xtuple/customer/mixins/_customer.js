@@ -44,6 +44,7 @@ XM._Customer = {
     @type String
   */
   number: SC.Record.attr(String, {
+    isRequired: true,
     label: '_number'.loc()
   }),
 
@@ -51,6 +52,7 @@ XM._Customer = {
     @type String
   */
   name: SC.Record.attr(String, {
+    isRequired: true,
     label: '_name'.loc()
   }),
 
@@ -58,6 +60,7 @@ XM._Customer = {
     @type XM.Customer
   */
   customerType: SC.Record.toOne('XM.Customer', {
+    isRequired: true,
     label: '_customerType'.loc()
   }),
 
@@ -65,6 +68,7 @@ XM._Customer = {
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
+    defaultValue: true,
     label: '_isActive'.loc()
   }),
 
@@ -95,6 +99,7 @@ XM._Customer = {
     @type XM.SalesRep
   */
   salesRep: SC.Record.toOne('XM.SalesRep', {
+    isRequired: true,
     label: '_salesRep'.loc()
   }),
 
@@ -151,6 +156,7 @@ XM._Customer = {
     @type XM.Customer
   */
   terms: SC.Record.toOne('XM.Customer', {
+    isRequired: true,
     label: '_terms'.loc()
   }),
 
@@ -172,6 +178,7 @@ XM._Customer = {
     @type String
   */
   creditStatus: SC.Record.attr(String, {
+    defaultValue: 'G',
     label: '_creditStatus'.loc()
   }),
 
@@ -179,6 +186,7 @@ XM._Customer = {
     @type String
   */
   balanceMethod: SC.Record.attr(String, {
+    defaultValue: 'B',
     label: '_balanceMethod'.loc()
   }),
 
@@ -193,6 +201,9 @@ XM._Customer = {
     @type XM.Customer
   */
   creditLimitCurrency: SC.Record.toOne('XM.Customer', {
+    defaultValue: function() {
+      return XM.Currency.BASE;
+    },
     label: '_creditLimitCurrency'.loc()
   }),
 

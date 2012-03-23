@@ -197,9 +197,9 @@ XM.Record = SC.Record.extend(
     be removed if present.
   */
   updateErrors: function(error, isError) {
+    if (!error) throw "no error provided";
     var errors = this.get('validateErrors'),
     idx = errors.lastIndexOf(error);
-
     if(isError && idx === -1) errors.pushObject(error);
     else if(!isError && idx > -1) errors.removeAt(idx);
   },
@@ -218,7 +218,6 @@ XM.Record = SC.Record.extend(
     invalidRecords = store.get('invalidRecords'),
     isValid = this.get('isValid'),
     idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
-
     if(store.get('isNested')) {
       if(isValid && idx > -1) invalidRecords.removeAt(idx);
       else if(!isValid && idx === -1) invalidRecords.pushObject(this);
@@ -492,7 +491,8 @@ XM.Record.releaseNumber = function(number) {
 XM.Record.findExisting = function(key, value, callback) {
   var self = this,
       recordType = this.get("className"),
-      dispatch;
+      dispatch,
+      id = this.get('id') || -1;
 
   dispatch = XM.Dispatch.create({
     className: 'XT.Record',
@@ -500,7 +500,8 @@ XM.Record.findExisting = function(key, value, callback) {
     parameters: [
       recordType,
       key,
-      value
+      value,
+      id
     ],
     target: self,
     action: callback
