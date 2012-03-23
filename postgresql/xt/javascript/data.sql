@@ -72,8 +72,9 @@ select xt.install_js('XT','Data','xtuple', $$
           } else {  /* replace parameterized tokens */
             for(var prop in parameters) {
               var param = '{' + prop + '}',
-                  val = format(parameters[prop]); 
-              cond = cond.replace(param, val);
+                  val = format(parameters[prop]),
+                  regExp = new RegExp(param, "g"); 
+              cond = cond.replace(regExp, val);
             }
           }
         }
