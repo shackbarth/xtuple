@@ -1,5 +1,0 @@
-name: CashReceipt
-type: xbo
-load: deferred
-core: YES
-
