@@ -1,6 +1,11 @@
 {
   "type": "lazy",
   "dependencies": [
-    "__core__"
+    "__core__",
+    "account",
+    "incident",
+    "opportunity",
+    "project",
+    "to_do"
   ]
 }

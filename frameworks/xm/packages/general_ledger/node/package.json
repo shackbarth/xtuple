@@ -1,6 +1,7 @@
 {
   "type": "lazy",
   "dependencies": [
-    "__core__"
+    "__core__",
+    "ledger"
   ]
 }

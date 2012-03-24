@@ -1,6 +1,10 @@
 {
   "type": "lazy",
   "dependencies": [
-    "__core__"
+    "__core__",
+    "payable",
+    "payment",
+    "vendor",
+    "voucher"
   ]
 }

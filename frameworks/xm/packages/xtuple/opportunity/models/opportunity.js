@@ -13,9 +13,8 @@ sc_require('mixins/_opportunity');
 
   @extends XM.Document
   @extends XM.CoreDocuments
-  @extends XM.CrmDocuments
 */
-XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.CoreDocuments, XM.CrmDocuments,
+XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.CoreDocuments,
   /** @scope XM.Opportunity.prototype */ {
 
   numberPolicy: XM.AUTO_NUMBER,
