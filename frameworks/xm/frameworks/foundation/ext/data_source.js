@@ -278,9 +278,17 @@ console.log('committed record')
   _fetch: function _fetch(store, query) {
     var payload = {}, qp = query.get('parameters'), params = {};
     
+query.parse;
+console.log(query._tokenList);
     // convert any any regular expressions to text
-    for(var prop in qp)
-      params[prop] = qp[prop].source === undefined ? qp[prop] : qp[prop].source;
+    for(var prop in qp) {
+      if(SC.kindOf(qp[prop], SC.DateTime))
+        params[prop] = qp[prop].toFormattedString('%Y-%m-%d');
+      else if(SC.kindOf(qp[prop], SC.Record))
+        params[prop] = qp[prop].get('id');
+      else
+        params[prop] = qp[prop].source === undefined ? qp[prop] : qp[prop].source;
+    }
     payload.requestType = 'fetch';
     payload.query = {};
     payload.query.recordType = query.get('recordType').prototype.className;

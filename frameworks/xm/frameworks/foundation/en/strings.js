@@ -19,6 +19,8 @@ SC.stringsFor("en_US", {
 
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
   "_charAssignIsRequired": "Characteristics must be assigned to at least one document type.",
+  "_currRateDateRangeInvalid": "The date range overlaps with another date range.",
+  "_currRateExpireDateInvalid": "The Start Date for this exchange rate is later than the End Date.",
   "_currSymbAbbrRequired": "Either the currency symbol or abbreviation must be supplied.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
