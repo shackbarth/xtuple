@@ -25,7 +25,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
   /**
     Logging for this object?
   */
-  logLocal: YES,
+  logLocal: NO,
 
   //............................................
   // METHODS
