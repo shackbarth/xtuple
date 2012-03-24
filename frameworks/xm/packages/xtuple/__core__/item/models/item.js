@@ -28,17 +28,28 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
     if(value) return value.toUpperCase();
    }
   }),
-  inventoryUnit: function(key, value) {
-    if(value) this._xm_inventoryUnit = value;
-      return // uomidFrom = param.toInt();
-             // ignoreSignals = true;
-             this.XM.ItemConversion.fromUnit = setId(_uomidFrom);
-             this.XM.ItemConversion.toUnit = setId(_uomidFrom);
-             // ignoreSignals = true;
-  }.property('inventoryUnit').cacheable(),
-  // item_tax 
-  // item_tax_recoverable sets a true flag when a new item is created in the parent | make sure to update the orm to pull this in 
-
+  unitAvailableTypes: function(){
+    var unitType = this.get('unitType'),
+        fromValue = this.get('fromValue'),
+        toValue = this.get('toValue'),
+        fromUnit = this.get('fromUnit'),
+        toUnit = this.get('toUnit');
+    if(unitType) {
+      //check to see if multiple if they have the type push in
+      //selling(guid 1), capacity(2), altcapacity(3), materialissue(4) 
+      //selling can be used multiple time but 2,3,4 can only be used once per item of given unit type
+      return;
+    }
+  },
+  itemTaxTypes: function() {
+    var itemTaxType = this.get('itemTaxType'),
+        itemTaxZone = this.get('itemTaxZone'),
+    if(itemTaxZone) {
+      // item_tax 
+      // item_tax_recoverable sets a true flag when a new item is created in the parent | make sure to update the orm to pull this in 
+      return;
+    }
+  },
 
   //..................................................
   // METHODS
@@ -47,8 +58,19 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
   //..................................................
   // OBSERVERS
   //
-
-  _xm_itemConversionDidChange: function() {
+  _xm_unitSelectedTypeDidChange: function(){
+    var status = this.get('status'),
+        toUnit = this.get('toUnit');
+    if(status & SC.Record.READY) {
+      //if selected type is removed reevaluate the selected values and send to Available types
+    }
+  }.observes('toUnit'),
+  _xm_itemUnitDidChange: function() {
+    if(this.get('status') === SC.Record.READY_CLEAN) {
+      this.item.set('isEditable', false);
+    }
+  },//.observes('status')
+  _xm_itemInventoryConversionDidChange: function() {
     var status = this.get('status'),
         inventoryUnit = this.get('inventoryUnit');
     if(status & SC.Record.READY) {
@@ -136,51 +158,3 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
   }
   }.observes('itemType'),
 });
-
-/**
-  Request the selling units of measure for an item.
-  
-  @param {XM.Item|XM.ItemInfo|XM.ItemBrowse} item
-  @param {Function} callback
-  @returns receiver
-*/
-XM.Item.sellingUnits = function(item, callback) {
-  return XM.Item._xm_units(item, 'sellingUnits', callback);
-}
-
-/**
-  Request the selling units of measure for an item.
-  
-  @param {XM.Item|XM.ItemInfo|XM.ItemBrowse} item
-  @param {Function} callback
-  @returns receiver
-*/
-XM.Item.materialIssueUnits = function(item, callback) {
-  return XM.Item._xm_units(item, 'materialIssueUnits', callback);
-}
-
-/** @private */
-XM.Item._xm_units = function(item, type, callback) {
-  if(!SC.kindOf(item, XM.Item) &&
-     !SC.kindOf(item, XM.ItemInfo) &&
-     !SC.kindOf(item, XM.ItemBrowse)) return false;
-  
-  var self = this,
-      id = item.get('id'),
-      dispatch;
-
-  dispatch = XM.Dispatch.create({
-    className: 'XM.Item',
-    functionName: type,
-    parameters: id,
-    target: self,
-    action: callback
-  });
-
-  console.log("XM.Item.%@ for: %@".fmt(type, id));
-
-  item.get('store').dispatch(dispatch);
-  
-  return this;
-}
-
