@@ -18,17 +18,19 @@ XM.Record = SC.Record.extend(
 /** @scope XM.Record.prototype */ {
 
   /*
-  The full path name of this class. Should be set in every subclass.
-  
-  @type String
+    The full path name of this class. Should be set in every subclass.
+    
+    @type String
   */
   className: 'XM.Record',
   
-  /**
-  The data type name. The same as the class name without the namespace.
-  Used by nested records.
+  ignoreUnknownProperties: true,
   
-  @type String
+  /**
+    The data type name. The same as the class name without the namespace.
+    Used by nested records.
+    
+    @type String
   */
   type: SC.Record.attr(String, {
     defaultValue: function() {
@@ -48,35 +50,35 @@ XM.Record = SC.Record.extend(
   }.property('status').cacheable(),
 
   /**
-  A hash structure that defines data access.
-  
-  @property
-  @type Hash
+    A hash structure that defines data access.
+    
+    @property
+    @type Hash
   */
   privileges: null,
   
   /**
-  Indicates whether the record is in a valid state to be saved. Will be false if any
-  errors exist in validateErrors.
-  
-  @property
-  @type Boolean
+    Indicates whether the record is in a valid state to be saved. Will be false if any
+    errors exist in validateErrors.
+    
+    @property
+    @type Boolean
   */
   isValid: function() {
     return this.getPath('validateErrors.length') === 0;
   }.property('validateErrorsLength'),
 
   /**
-  An array of SC.Error objects populated by the validate function.
+    An array of SC.Error objects populated by the validate function.
   */
-  validateErrors: null,
+  validateErrors: [],
   validateErrorsLength: 0,
-  validateErrorsLengthBinding: SC.Binding.from('.validateErrors.length').noDelay(),
+  validateErrorsLengthBinding: SC.Binding.from('*validateErrors.length').noDelay(),
   
   /**
-  State used for data source processing. You should never edit this directly.
-  
-  @property
+    State used for data source processing. You should never edit this directly.
+    
+    @property
   */
   dataState: SC.Record.attr(String, { 
     defaultValue: 'created' 
@@ -88,33 +90,10 @@ XM.Record = SC.Record.extend(
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    this.set('validateErrors', []);
+    var required = this.requiredAttributes();
+    // validate all required fields
+    for(var i = 0; i < required.get('length'); i++) this.addObserver(required[i], this.validate);
     if(this.getPath('store.isNested')) this.addObserver('isValid', this, '_isValidDidChange');
-  },
-  
-  /**
-    Returns whether the record has an original data cache retrieved from the 
-    data source.
-    
-    @returns Boolean
-  */
-  isCached: function() {
-    var storeKey = this.get('storeKey'),
-        store = this.get('store');
-    return store._xm_dataCaches && store._xm_dataCaches[storeKey] ? true : false;
-  },
-  
-  /**
-    Return the original cached property value for records retreived from
-    the datasource.
-    
-    @param {String} property
-    @returns Any
-  */
-  getCache: function(key) {
-    var storeKey = this.get('storeKey'),
-        store = this.get('store');
-    return store._xm_dataCaches ? store._xm_dataCaches[storeKey][key] : null;
   },
   
   /**
@@ -140,44 +119,87 @@ XM.Record = SC.Record.extend(
     
     return status & SC.Record.READY && recordType.canDelete(this);
   },
-
+  
   /**
-  The validate function determines if there are any problems with the record that would cause
-  it to be invalid and adds or subtracts errors found on the validateErrors array as
-  appropriate and returns the array.
-
-  The default implementation only returns the validateErrors array that is
-  empty by default. Subclasses should implement this function to do real validaiton.
-  Observers should be attached to properties that require validation, and the subclasses
-  should use the updateErrors helper method:
-
-    var errors = this.get('validateErrors');
-    myErr = XM.errors.findProperty('code', 1234),
-    myProperty = this.get('myProperty'),
-    isError = (myProperty === null);
-
-    this.upadteErrors(myErr, isError);
-
-    return errors;
-
-  Subclasses should pass errors defined and created in the XM.errors array to updateErrors.
-  If an appropriate error code required by the subclass does not exist in XM.errors it
-  should be added to the XM.errors definition file.
-
+    Returns an array of property names for all required attributes.
   */
-  validate: function() {
-    return this.get('validateErrors');
+  requiredAttributes: function() {
+    var required = [], typeClass,
+        key, valueForKey, isToMany;
+    for (key in this) {
+      // make sure property is a record attribute.
+      valueForKey = this[key];
+      if (valueForKey) {
+        typeClass = valueForKey.typeClass;
+        if (typeClass) {
+          isToMany =  SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
+                      SC.kindOf(valueForKey, SC.ManyAttribute);
+          if (!isToMany && this[key].isRequired) {
+            required.push(key);
+          }
+        }
+      }
+    }
+    return required;
   },
 
   /**
-  Convienience function for updating validateErrors list.
-  Checks whether errors are in list before adding and removing
-  to prevent duplicates.
+    The validate function determines if there are any problems with the record that would cause
+    it to be invalid, updates the validateErrors array as appropriate and returns the array. 
+    
+    By default observers are automatically added to all required attributes against validate() 
+    which checks to ensure these attributes are populated.
+
+    Subclasses should re-implement this function if additional validaiton is required.
+    Observers should be attached to properties that require validation, and the subclasses
+    should use the updateErrors helper method:
+
+    validate: function() {
+      // call the original super class function
+      var errors = arguments.callee.base.apply(this, arguments),
+      
+      // get the error code you want to invoke
+          myErr = XM.errors.findProperty('code', 1234);
+         
+      // determine whether a property is in an error state
+      isError = this.get('myProperty') !== "my expected value";
+      
+      // update the errors array accordingly
+      this.upadteErrors(myErr, isError);
+      
+      // return the errors array
+      return errors;
+    }.observes('myProperty')
+
+    Subclasses should pass errors defined and created in the XM.errors array to updateErrors.
+    If an appropriate error code required by the subclass does not exist in XM.errors it
+    should be added to the XM.errors definition file.
+    
+    @seealso XM.errors
+    @seealso XM.Record.updateErrors
+    @returns Array
+  */
+  validate: function() {
+    var required = this.requiredAttributes(),
+        err = XM.errors.findProperty('code', 'xt1001'), 
+        isErr = false;
+    for(var i = 0; i < required.get('length'); i++) {
+      if (!this.get(required[i])) isErr = true;
+    }
+    this.updateErrors(err, isErr);
+    return this.get('validateErrors');
+  },
+  
+  /**
+    Convienience function for updating validateErrors list. If an error is
+    passed with isError is true, the error code will be added to the array
+    if it is not already present. If isError is false, the error code will
+    be removed if present.
   */
   updateErrors: function(error, isError) {
+    if (!error) throw "no error provided";
     var errors = this.get('validateErrors'),
     idx = errors.lastIndexOf(error);
-
     if(isError && idx === -1) errors.pushObject(error);
     else if(!isError && idx > -1) errors.removeAt(idx);
   },
@@ -187,16 +209,15 @@ XM.Record = SC.Record.extend(
   //
 
   /** @private
-  If the store is nested when this record is initialized, this function
-  will be set to observe 'isValid' notify the store if the record becomes
-  invalid.
+    If the store is nested when this record is initialized, this function
+    will be set to observe 'isValid' notify the store if the record becomes
+    invalid.
   */
   _xm_isValidDidChange: function() {
     var store = this.get('store'),
     invalidRecords = store.get('invalidRecords'),
     isValid = this.get('isValid'),
     idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
-
     if(store.get('isNested')) {
       if(isValid && idx > -1) invalidRecords.removeAt(idx);
       else if(!isValid && idx === -1) invalidRecords.pushObject(this);
@@ -304,16 +325,16 @@ XM.Record.canRead = function() {
 };
 
 /**
-Returns whether a user has access to update a record of this type. If a record is passed that involves
-personal privileges, it will validate whether that particular record is updatable.
+  Returns whether a user has access to update a record of this type. If a record is passed that involves
+  personal privileges, it will validate whether that particular record is updatable.
 */
 XM.Record.canUpdate = function(record) {
   return XM.Record._canDo.call(this, 'update', record);
 };
 
 /**
-Returns whether a user has access to delete a record of this type. If a record is passed that involves
-personal privileges, it will validate whether that particular record is deletable.
+  Returns whether a user has access to delete a record of this type. If a record is passed that involves
+  personal privileges, it will validate whether that particular record is deletable.
 */
 XM.Record.canDelete = function(record) {
   return XM.Record._canDo.call(this, 'delete', record);
@@ -397,30 +418,31 @@ XM.Record.fetchId = function(prop) {
   @returns {Object} receiever
 */
 XM.Record.fetchNumber = function(prop) {
-  var self = this,
+  var that = this,
       prop = prop ? prop : 'number',
       recordType = this.get("className"),
       dispatch;
-  
+      
+  // call back funtion
   callback = function(error, result) {
     if(!error) {
-      self._numberGen = result;
-      self.set(prop, result);
+      that._xm_numberGen = result;
+      that.set(prop, result);
     };
   }
   
+  // the request
   dispatch = XM.Dispatch.create({
     className: 'XT.Record',
     functionName: 'fetchNumber',
     parameters: recordType,
-    target: self,
+    target: that,
     action: callback
   });
-
   console.log("XM.Record.fetchNumber for: %@".fmt(recordType));
-
-  self.get('store').dispatch(dispatch);
   
+  // do it
+  that.get('store').dispatch(dispatch);
   return this;
 };
 
@@ -469,7 +491,8 @@ XM.Record.releaseNumber = function(number) {
 XM.Record.findExisting = function(key, value, callback) {
   var self = this,
       recordType = this.get("className"),
-      dispatch;
+      dispatch,
+      id = this.get('id') || -1;
 
   dispatch = XM.Dispatch.create({
     className: 'XT.Record',
@@ -477,7 +500,8 @@ XM.Record.findExisting = function(key, value, callback) {
     parameters: [
       recordType,
       key,
-      value
+      value,
+      id
     ],
     target: self,
     action: callback
