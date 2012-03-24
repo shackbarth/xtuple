@@ -165,6 +165,15 @@ XM._InvoiceLine = {
   */
   notes: SC.Record.attr(String, {
     label: '_notes'.loc()
+  }),
+
+  /**
+    @type XM.InvoiceLineTax
+  */
+  taxes: SC.Record.toMany('XM.InvoiceLineTax', {
+    isNested: true,
+    inverse: 'invoiceLine',
+    label: '_taxes'.loc()
   })
 
 };

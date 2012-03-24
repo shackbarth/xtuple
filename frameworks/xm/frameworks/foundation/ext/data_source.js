@@ -114,6 +114,15 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
     return this.ready(this._retrieveRecord, this, store, storeKey, id);
   },
 
+  commitRecords: function(store, createStoreKeys, updateStoreKeys, destroyStoreKeys, params) {
+    var storeKeys = createStoreKeys.concat(updateStoreKeys).concat(destroyStoreKeys),
+        ret = true;
+    for(var i = 0; i < storeKeys.get('length'); i++) {
+      if(!this.commitRecord(store, storeKeys[i])) { ret = false; }
+    }
+    return ret;
+  },
+
   /**
     Commit a record to the node datasource.
 
@@ -228,6 +237,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
     @param {Number} storeKey The storeKey for the record that was committed.
   */
   didCommitRecord: function(response, store, storeKey) {
+console.log('committed record')
     var error, dataHash;
     if (SC.ok(response)) {
       if(response.get("body").error) {
@@ -303,6 +313,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
 
   /** @private */
   _commitRecord: function _commitRecord(store, storeKey) {
+console.log('committing…')
     var recordType = store.recordTypeFor(storeKey).prototype.className, 
         payload = {},
         record = store.materializeRecord(storeKey);
@@ -315,6 +326,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
       .header({ 'Accept': 'application/json' }).json()
       .notify(this, 'didCommitRecord', store, storeKey)
       .send(payload);
+console.log('commit sent');
   },
 
   //............................................
