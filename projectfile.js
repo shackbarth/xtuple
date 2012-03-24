@@ -31,8 +31,8 @@ var project = BT.Project.create({
   }),
 
   "data": BT.Proxy.create({
-    // proxyHost: '127.0.0.1',
-    proxyHost: 'aurora.xtuple.com',
+     proxyHost: '127.0.0.1',
+   // proxyHost: 'aurora.xtuple.com',
     proxyPort: 9000,
     proxyPrefix: '/data'
   })
