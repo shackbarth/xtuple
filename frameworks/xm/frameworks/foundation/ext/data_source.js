@@ -313,7 +313,6 @@ console.log('committed record')
 
   /** @private */
   _commitRecord: function _commitRecord(store, storeKey) {
-console.log('committing…')
     var recordType = store.recordTypeFor(storeKey).prototype.className, 
         payload = {},
         record = store.materializeRecord(storeKey);
@@ -326,7 +325,6 @@ console.log('committing…')
       .header({ 'Accept': 'application/json' }).json()
       .notify(this, 'didCommitRecord', store, storeKey)
       .send(payload);
-console.log('commit sent');
   },
 
   //............................................
