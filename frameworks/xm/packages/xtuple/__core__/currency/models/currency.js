@@ -50,10 +50,6 @@ XM.Currency = XM.Document.extend(XM._Currency,
   /* @private */
   validate: function() {
     var errors = arguments.callee.base.apply(this, arguments), 
-        // used for proper object reference during callback function below
-        record = this,
-        status = record.get('status'),
-        abbr = record.get('abbreviation'),
         isValid, err;
 
     // Validate Symbol OR Abbreviation
@@ -61,7 +57,19 @@ XM.Currency = XM.Document.extend(XM._Currency,
     err = XM.errors.findProperty('code', 'xt1021');
     this.updateErrors(err, !isValid);
 
-    // Validate Unique Abbreviation
+    return errors;
+  }.observes('name', 'symbol'),
+  
+  // On status change, check to see if isBase should be disabled
+  statusDidChange: function() {
+    this.checkBaseCurrency();
+  }.observes('status'),
+
+  abbreviationDidChange: function() {
+    var record = this,
+        status = record.get('status'),
+        abbr = record.get('abbreviation');
+
     if(status & SC.Record.READY) {
       callback = function(err, result) {
         if(!err) {
@@ -74,15 +82,8 @@ XM.Currency = XM.Document.extend(XM._Currency,
       }
     }
     XM.Record.findExisting.call(record, 'abbreviation', abbr, callback);
+  }.observes('abbreviation')
   
-    return errors;
-  }.observes('name', 'symbol', 'abbreviation'),
-  
-  // On status change, check to see if isBase should be disabled
-  statusDidChange: function() {
-    this.checkBaseCurrency();
-  }.observes('status')
-
 });
 
 XM.Currency.BASE = null;

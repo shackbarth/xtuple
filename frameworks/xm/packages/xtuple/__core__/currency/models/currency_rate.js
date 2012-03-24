@@ -22,24 +22,38 @@ XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
   /** @private
  
     Array of XM.CurrencyRate records that have effective - expires
-    date conflicts...
+    date(s) conflicts...
   */
   dateOverlaps: function() {
     if(!this._xm_dateOverlaps) {
-      var _xm_effective = this.get('effective'),
-          qry = this._xm_qry;
+      var effectiveDate = this.get('effective'),
+          expiresDate = this.get('expires'),
+          currencyRec = this.get('currency'),
+          currencyRateId = this.get('id'),
+          qry;
 
-      if(!qry) {
-        qry = this._xm_qry = SC.Query.local(XM.CurrencyRate, {
-          conditions: "effective = {effective}",
-          parameters: {effective: _xm_effective}
-        });
-      }
+      qry = SC.Query.local(XM.CurrencyRate, {
+        conditions: "((currency = {currency}) AND (id != {id})) "
+                    + "AND ( "
+                    + "     (((effective >= {effective}) AND (effective <= {expires})) OR"
+                    + "      ((expires >= {effective}) AND (expires <= {expires}))) "
+                    + "    OR "
+                    + "     ((effective <= {effective}) AND "
+                    + "      (expires >= {expires})) "
+                    + "    )",
+        parameters: {  currency: currencyRec,
+                             id: currencyRateId,
+                      effective: effectiveDate,
+                        expires: expiresDate }
+      });
       this._xm_dateOverlaps = XM.store.find(qry);
     }
     
     return this._xm_dateOverlaps;
-  }.property('effective').cacheable(),
+  }.property('effective', 'expires').cacheable(),
+
+  /** @private */
+  dateOverlapsLengthBinding: '*dateOverlaps.length',
   
   //..................................................
   // METHODS
@@ -49,5 +63,23 @@ XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
   // OBSERVERS
   //
 
+  /* @private */
+  validate: function() {
+    var errors = arguments.callee.base.apply(this, arguments),
+        isValid, err;
+
+    // Validate effective and expires date range
+    isValid = this.get('dateOverlapsLength') <= 0 ? true : false;
+    err = XM.errors.findProperty('code', 'xt1003');
+    this.updateErrors(err, !isValid);
+
+    // Validate expires date is NOT before effective date
+    isValid = this.get('effective') <= this.get('expires') ? true : false;
+    err = XM.errors.findProperty('code', 'xt1004');
+    this.updateErrors(err, !isValid);
+
+    return errors;
+  }.observes('dateOverlapsLength', 'effective', 'expires')
+  
 });
 
