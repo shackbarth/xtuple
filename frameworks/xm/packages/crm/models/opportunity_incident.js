@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/crm/mixins/_opportunity_incident');
+sc_require('mixins/_opportunity_incident');
 
 /**
   @class

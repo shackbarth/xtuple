@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/general_ledger/mixins/_bank_account_adjustment_type');
+sc_require('mixins/_bank_account_adjustment_type');
 
 /**
   @class

@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/address/mixins/_address_characteristic');
+sc_require('mixins/_address_characteristic');
 
 /**
   @class

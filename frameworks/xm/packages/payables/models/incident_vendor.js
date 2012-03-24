@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/payables/mixins/_incident_vendor');
+sc_require('mixins/_incident_vendor');
 
 /**
   @class

@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/tax/mixins/_tax_code');
+sc_require('mixins/_tax_code');
 
 /**
   @class

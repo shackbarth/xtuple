@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/cash_receipt/mixins/_cash_receipt_application');
+sc_require('mixins/_cash_receipt_application');
 
 /**
   @class

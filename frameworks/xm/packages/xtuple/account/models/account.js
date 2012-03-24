@@ -3,9 +3,7 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
-;
-sc_require('mixins/crm_documents');
-sc_require('packages/xtuple/account/mixins/_account');
+sc_require('mixins/_account');
 
 /** @class
 

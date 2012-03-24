@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/bank_account/mixins/_bank_account_info');
+sc_require('mixins/_bank_account_info');
 
 /**
   @class
