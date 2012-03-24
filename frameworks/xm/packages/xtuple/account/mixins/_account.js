@@ -127,7 +127,6 @@ XM._Account = {
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
     defaultValue: function() {
       return XM.dataSource.session.userName;
     },
@@ -138,7 +137,6 @@ XM._Account = {
     @type XM.SalesRep
   */
   salesRep: SC.Record.toOne('XM.SalesRep', {
-    isNested: true,
     label: '_salesRep'.loc()
   }),
 
@@ -146,7 +144,6 @@ XM._Account = {
     @type XM.TaxAuthority
   */
   taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
-    isNested: true,
     label: '_taxAuthority'.loc()
   }),
 

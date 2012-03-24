@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.AccountInfo
+  @scope XM.ItemTax
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._AccountInfo = {
-  /** @scope XM.AccountInfo.prototype */
+XM._ItemTax = {
+  /** @scope XM.ItemTax.prototype */
   
-  className: 'XM.AccountInfo',
+  className: 'XM.ItemTax',
 
   
 
@@ -24,10 +24,10 @@ XM._AccountInfo = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,24 +41,24 @@ XM._AccountInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type Number
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
+  itemTax: SC.Record.attr(Number, {
+    label: '_itemTax'.loc()
   }),
 
   /**
-    @type String
+    @type Number
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  itemTaxType: SC.Record.attr(Number, {
+    label: '_itemTaxType'.loc()
   }),
 
   /**
-    @type Boolean
+    @type Number
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
+  itemTaxZone: SC.Record.attr(Number, {
+    label: '_itemTaxZone'.loc()
   })
 
 };

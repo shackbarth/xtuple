@@ -19,6 +19,7 @@ SC.stringsFor("en_US", {
 
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
   "_charAssignIsRequired": "Characteristics must be assigned to at least one document type.",
+  "_currSymbAbbrRequired": "Either the currency symbol or abbreviation must be supplied.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
@@ -33,6 +34,7 @@ SC.stringsFor("en_US", {
   "_requiredFieldsEmpty": "Required field(s) are empty",
   "_totalMustBePositive": "Total Must Be Positive",
   "_unknownError": "Unknown Error",
+  "_uniqueNameRequired": "A Currency type already exists with this Abbreviation.",
   "_usernameInvalid": "The user name is invalid.",
 
 // ********
