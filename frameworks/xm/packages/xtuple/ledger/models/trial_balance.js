@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/ledger/mixins/_trial_balance');
+sc_require('mixins/_trial_balance');
 
 /**
   @class

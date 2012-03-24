@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/address/mixins/_address');
+sc_require('mixins/_address');
 
 /**
   (Document your Model here)

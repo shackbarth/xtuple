@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/general_ledger/mixins/_payable_ledger_accounts');
+sc_require('mixins/_payable_ledger_accounts');
 
 /**
   @class

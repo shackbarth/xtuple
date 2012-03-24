@@ -40,13 +40,17 @@ XM = global.XM = SC.Object.create(
 
 });
 
-// THE FOLLOWING IS A WORKAROUND TO ALLOW CERTAIN FILES
-// TO LOAD OUT OF ORDER BUT THIS SHOULD NOT BE AN EXCUSE
-// TO NOT CORRECT THE LOAD-ORDER ISSUE -- IT ONLY EXISTS
-// AS THE XBO SYSTEM IS BEING REMOVED TO ALLOW THIS TO
-// CONTINUE TO LIMP ALONG
 SC.mixin(XM, 
   /** @scope XM */ {
+
+  //...................................................
+  //
+  // THE FOLLOWING IS A WORKAROUND TO ALLOW CERTAIN FILES
+  // TO LOAD OUT OF ORDER BUT THIS SHOULD NOT BE AN EXCUSE
+  // TO NOT CORRECT THE LOAD-ORDER ISSUE -- IT ONLY EXISTS
+  // AS THE XBO SYSTEM IS BEING REMOVED TO ALLOW THIS TO
+  // CONTINUE TO LIMP ALONG
+  // THE CODE IS MERELY COPIED FROM THE SC RUNLOOP STUFF
 
   _xm_readyQueue: [],
 
@@ -86,6 +90,27 @@ SC.mixin(XM,
         if (method) method.call(target) ;
       }
     } while (XM._xm_readyQueue.length > 0) ;
-  }
+  },
+
+  //
+  // END HACKY STUFF
+  //...................................................
+
+
+
+
+  //...................................................
+  // LOGGING
+  //
+
+  /**
+    @note Placeholder for real logging mechanism
+  */
+  logLevels: SC.Object.create(
+    /** @scope XM.logLevels */ {
+    warn: YES,
+    error: YES,
+    info: YES 
+  }),
 
 });

@@ -52,6 +52,7 @@ XM._Item = {
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
+    defaultValue: true,
     label: '_isActive'.loc()
   }),
 
@@ -73,6 +74,7 @@ XM._Item = {
     @type XM.ClassCode
   */
   classCode: SC.Record.toOne('XM.ClassCode', {
+    isRequired: true,
     label: '_classCode'.loc()
   }),
 
@@ -88,6 +90,7 @@ XM._Item = {
     @type Boolean
   */
   isPicklist: SC.Record.attr(Boolean, {
+    defaultValue: true,
     label: '_isPicklist'.loc()
   }),
 
@@ -102,6 +105,7 @@ XM._Item = {
     @type Boolean
   */
   isSold: SC.Record.attr(Boolean, {
+    defaultValue: true,
     label: '_isSold'.loc()
   }),
 
@@ -159,6 +163,7 @@ XM._Item = {
     @type XM.Unit
   */
   priceUnit: SC.Record.toOne('XM.Unit', {
+    isRequired: true,
     label: '_priceUnit'.loc()
   }),
 

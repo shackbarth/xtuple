@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/ledger/mixins/_budget_item');
+sc_require('mixins/_budget_item');
 
 /**
   @class

@@ -71,9 +71,9 @@ XM._Receivable = {
   }),
 
   /**
-    @type XM.Customer
+    @type XM.CustomerInfo
   */
-  customer: SC.Record.toOne('XM.Customer', {
+  customer: SC.Record.toOne('XM.CustomerInfo', {
     isNested: true,
     label: '_customer'.loc()
   }),

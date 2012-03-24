@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.AccountInfo
+  @scope XM.ItemConversionUnitType
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._AccountInfo = {
-  /** @scope XM.AccountInfo.prototype */
+XM._ItemConversionUnitType = {
+  /** @scope XM.ItemConversionUnitType.prototype */
   
-  className: 'XM.AccountInfo',
+  className: 'XM.ItemConversionUnitType',
 
   
 
@@ -24,10 +24,10 @@ XM._AccountInfo = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,24 +41,17 @@ XM._AccountInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.ItemConversion
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
+  itemUnitConversion: SC.Record.toOne('XM.ItemConversion', {
+    label: '_itemUnitConversion'.loc()
   }),
 
   /**
-    @type String
+    @type Number
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
-
-  /**
-    @type Boolean
-  */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
+  itemUnitType: SC.Record.attr(Number, {
+    label: '_itemUnitType'.loc()
   })
 
 };

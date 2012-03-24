@@ -1,3 +1,6 @@
 {
-  "type": "lazy"
+  "type": "lazy",
+  "dependencies": [
+    "__core__"
+  ]
 }

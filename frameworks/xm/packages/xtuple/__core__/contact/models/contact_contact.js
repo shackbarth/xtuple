@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/contact/mixins/_contact_contact');
+sc_require('mixins/_contact_contact');
 
 /**
   @class

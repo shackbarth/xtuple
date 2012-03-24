@@ -5,8 +5,8 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/project/mixins/_project');
-sc_require('mixins/crm_documents');
+sc_require('mixins/_project');
+
 
 /**
   @class

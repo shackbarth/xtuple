@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/account/mixins/_account_image');
+sc_require('mixins/_account_image');
 
 /**
   @class

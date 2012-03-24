@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/vendor/mixins/_vendor');
+sc_require('mixins/_vendor');
 
 /**
   @class
