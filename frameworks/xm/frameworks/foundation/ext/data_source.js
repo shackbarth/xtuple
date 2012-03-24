@@ -278,8 +278,6 @@ console.log('committed record')
   _fetch: function _fetch(store, query) {
     var payload = {}, qp = query.get('parameters'), params = {};
     
-query.parse;
-console.log(query._tokenList);
     // convert any any regular expressions to text
     for(var prop in qp) {
       if(SC.kindOf(qp[prop], SC.DateTime))
