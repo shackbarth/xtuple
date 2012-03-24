@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/to_do/mixins/_to_do');
+sc_require('mixins/_to_do');
 sc_require('mixins/crm_documents');
 
 /**

@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/receivable/mixins/_receivable_tax');
+sc_require('mixins/_receivable_tax');
 
 /**
   @class

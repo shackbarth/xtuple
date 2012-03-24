@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/payment/mixins/_payment');
+sc_require('mixins/_payment');
 
 /**
   @class

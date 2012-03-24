@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/miscellaneous/mixins/_sales_rep');
+sc_require('mixins/_sales_rep');
 
 /**
   @class

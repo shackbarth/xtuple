@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/ledger/mixins/_company');
+sc_require('mixins/_company');
 
 /**
   @class
