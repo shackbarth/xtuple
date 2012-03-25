@@ -5,14 +5,16 @@
 
 /*globals XM */
 
-sc_require('xbos/__generated__/_{fileName}');
+// PLACE ME IN {targetDirectory}/models
+
+sc_require('mixins/_{fileName}');
 
 /**
   @class
 
-  @extends {className}
+  @extends XM.Record
 */
-{className2} = {className}.extend(
+{className2} = XM.Record.extend({className},
   /** @scope {className2}.prototype */ {
 
   // .................................................
