@@ -142,7 +142,7 @@ XM._ToDo = {
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
     defaultValue: function() {
-      return XM.dataSource.session.userName;
+      return arguments[0].getPath("store.dataSource").session.userName;
     },
     label: '_owner'.loc()
   }),
@@ -154,7 +154,7 @@ XM._ToDo = {
     isNested: true,
     isRequired: true,
     defaultValue: function() {
-      return XM.dataSource.session.userName;
+      return arguments[0].getPath("store.dataSource").session.userName;
     },
     label: '_assignedTo'.loc()
   }),

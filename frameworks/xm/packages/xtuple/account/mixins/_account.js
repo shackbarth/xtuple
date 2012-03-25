@@ -128,7 +128,7 @@ XM._Account = {
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     defaultValue: function() {
-      return XM.dataSource.session.userName;
+      return arguments[0].getPath("store.dataSource").session.userName;
     },
     label: '_owner'.loc()
   }),
