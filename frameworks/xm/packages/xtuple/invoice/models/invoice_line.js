@@ -15,9 +15,8 @@ sc_require('mixins/_invoice_line');
 XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   /** @scope XM.InvoiceLine.prototype */ {
 
-
   /** 
-    Inovice Customer
+    Inovice customer
   */
   customerBinding: SC.Binding.from('*invoice.customer').noDelay(), 
     
@@ -30,23 +29,21 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
     Invoice date
   */
   invoiceDateBinding: SC.Binding.from('*invoice.invoiceDate').noDelay(), 
-
-  invoice: SC.Record.toOne('XM.Invoice', {
-    defaultValue: function() {
-      return arguments[0] ? arguments[0].get('parentRecord') : null;
-    }
-  }),
+  
+  /**
+    Invoice tax zone
+  */
+  taxZoneBinding: SC.Binding.from('*invoice.taxZone').noDelay(), 
+  
+  /** 
+    Invoice shipto
+  */
+  shiptoBinding: SC.Binding.from('*invoice.shipto').noDelay(), 
   
   /**
     An XM.Unit array of valid
   */
   sellingUnits: [],
-  
-  /** 
-    Invoice currency
-  */
-  shiptoBinding: SC.Binding.from('*invoice.shipto').noDelay(), 
-  
   
   /** @private */
   taxesLength: 0,
@@ -56,23 +53,11 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   
   taxDetail: [],
   
+  /** private */
   taxDetailLength: 0,
   
+  /** private */
   taxDetailLengthBinding: SC.Binding.from('*taxDetail.length').noDelay(),
-  
-  taxTotal: function() {
-    var taxDetail = this.get('taxDetail'),
-        taxTotal = 0;
-    for(var i = 0; i < taxDetail.length; i++) {
-      taxTotal = taxTotal + taxDetail[i].get('tax');
-    }
-    return taxTotal;
-  }.property('taxDetailLength').cacheable(),
-  
-  /**
-    Tax Zone
-  */
- // taxZoneBinding: SC.Binding.from('*invoice.taxZone').noDelay(), 
   
   // .................................................
   // CALCULATED PROPERTIES
@@ -85,6 +70,15 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
     return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
   }.property('billed', 'price').cacheable(),
+  
+  taxTotal: function() {
+    var taxDetail = this.get('taxDetail'),
+        taxTotal = 0;
+    for(var i = 0; i < taxDetail.length; i++) {
+      taxTotal = taxTotal + taxDetail[i].get('tax');
+    }
+    return taxTotal;
+  }.property('taxDetailLength').cacheable(),
 
   //..................................................
   // METHODS
@@ -121,7 +115,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   extendendPriceDidChange: function() {
     var invoice = this.get('invoice');
     if (invoice) invoice.linesDidChange();
-  },//.observes('extendedPrice'),
+  }.observes('extendedPrice'),
 
   itemDidChange: function() {
     this.updateSellingUnits();
@@ -136,6 +130,9 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   },//.observes('status'),
 
   priceCriteriaDidChange: function() {
+    // only update in legitimate editing states    
+    if(status !== SC.Record.READY_NEW && 
+       status !== SC.Record.READY_DIRTY) return;
     var that = this,
         customer = this.getPath('invoice.customer'),
         shipto = this.getPath('invoice.shipto'),
@@ -146,10 +143,6 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         currency = this.getPath('invoice.currency'),
         effective = this.getPath('invoice.invoiceDate'),
         status = this.get('status');
-
-    // only update in legitimate editing states    
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return;
        
     // if we have everything we need, get a price from the server
     if (customer && item && quantity &&
@@ -162,9 +155,9 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       } 
      
       // function call
-      XM.Customer.price(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
+      customer.price(shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
     }
-  },//.observes('customer','shipto','billed','quantity','quantityUnit','priceUnit','invoiceDate','currency'),
+  }.observes('customer','shipto','billed','quantity','quantityUnit','priceUnit','invoiceDate','currency'),
 
   taxCriteriaDidChange: function() {
     var that = this,
@@ -225,6 +218,6 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       }    
       this.setIfChanged('taxDetail', taxDetail);
     }
-  },//.observes('status', 'extendedPrice', 'taxZone', 'taxType', 'invoiceDate', 'currency'),
+  }//.observes('status', 'extendedPrice', 'taxZone', 'taxType', 'invoiceDate', 'currency'),
 
 });

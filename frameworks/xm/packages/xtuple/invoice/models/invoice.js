@@ -163,13 +163,12 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
-    console.log("***** CUSTOMER CHANGED ****"); 
-    var customer = this.get('customer'),
-        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false,
-        status = this.get('status');
     // only set defaults if the user made the change  
     if(status != SC.Record.READY_NEW && 
        status != SC.Record.READY_DIRTY) return
+    var customer = this.get('customer'),
+        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false,
+        status = this.get('status');
 
     // pass defaults in
     this.setFreeFormBilltoEnabled(true);
