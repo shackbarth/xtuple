@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/incident/mixins/_incident');
+sc_require('mixins/_incident');
 
 /**
   @class
@@ -59,7 +59,7 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments,
     this.updateErrors(err, isErr);
     
     return errors;
-  }.observes('account', 'contact', 'description', 'assignedTo', 'incidentStatus'),
+  }.observes('assignedTo', 'incidentStatus'),
   
   /* @private */
   _xm_assignedToDidChange: function() {

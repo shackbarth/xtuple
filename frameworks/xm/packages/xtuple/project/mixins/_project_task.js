@@ -56,6 +56,7 @@ XM._ProjectTask = {
     @type String
   */
   number: SC.Record.attr(String, {
+    isRequired: true,
     label: '_number'.loc()
   }),
 
@@ -70,6 +71,7 @@ XM._ProjectTask = {
     @type String
   */
   name: SC.Record.attr(String, {
+    isRequired: true,
     label: '_name'.loc()
   }),
 
@@ -152,6 +154,9 @@ XM._ProjectTask = {
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
+    defaultValue: function() {
+      return arguments[0].getPath("store.dataSource").session.userName;
+    },
     label: '_assignedTo'.loc()
   }),
 
@@ -160,6 +165,9 @@ XM._ProjectTask = {
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
+    defaultValue: function() {
+      return arguments[0].getPath("store.dataSource").session.userName;
+    },
     label: '_owner'.loc()
   }),
 

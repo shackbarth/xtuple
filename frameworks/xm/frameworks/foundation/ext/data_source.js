@@ -22,6 +22,11 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
   */
   URL: SC.isNode ? 'http://localhost:4020/datasource/data' : '/datasource/data',
 
+  /**
+    Logging for this object?
+  */
+  logLocal: NO,
+
   //............................................
   // METHODS
   //
@@ -112,6 +117,15 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
   */
   retrieveRecord: function(store, storeKey, id) {
     return this.ready(this._retrieveRecord, this, store, storeKey, id);
+  },
+
+  commitRecords: function(store, createStoreKeys, updateStoreKeys, destroyStoreKeys, params) {
+    var storeKeys = createStoreKeys.concat(updateStoreKeys).concat(destroyStoreKeys),
+        ret = true;
+    for(var i = 0; i < storeKeys.get('length'); i++) {
+      if(!this.commitRecord(store, storeKeys[i])) { ret = false; }
+    }
+    return ret;
   },
 
   /**
@@ -266,15 +280,68 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
 
   /** @private */
   _fetch: function _fetch(store, query) {
-    var payload = {}, qp = query.get('parameters'), params = {};
-    
-    // convert any any regular expressions to text
-    for(var prop in qp)
-      params[prop] = qp[prop].source === undefined ? qp[prop] : qp[prop].source;
+    var payload = {}, qp = query.get('parameters'), 
+        conditions = query.get('conditions'),
+        language = query.get('queryLanguage'),
+        list, conds = [], params = {};
+        
+    // massage conditions so they are compatible with the data source
+    list = query.tokenizeString(conditions, language);
+    for (var i = 0; i < list.get('length'); i++) {
+      var tokenValue;
+      switch (list[i].tokenType) {
+        case "PROPERTY":
+          tokenValue = list[i].tokenValue === "id" ? '"guid"' : '"' + list[i].tokenValue + '"';
+          break;
+        case "BEGINS_WITH":
+          tokenValue = '~^';
+          break;
+        case "ENDS_WITH":
+          tokenValue = '~?';
+          break;
+        case "CONTAINS":
+        case "MATCHES":
+          tokenValue = '~';
+          break;
+        case "ANY":
+          tokenValue = '<@';
+          break;
+        case "PARAMETER":
+          tokenValue =  '{' + list[i].tokenValue + '}';
+          break;
+        case "%@":
+          tokenValue = list[i].tokenType;
+          break;
+        default:
+          tokenValue = list[i].tokenValue;
+      }
+      conds.push(tokenValue);
+    }
+
+    /* helper function to convert parameters to data source friendly formats */
+    format = function(value) {
+      // format date if applicable
+      if (SC.kindOf(value, SC.DateTime)) {
+        return value.toFormattedString('%Y-%m-%d');
+      // format record if applicable
+      } else if (SC.kindOf(value, SC.Record)) {
+        return value.get('id');
+      }      
+      // return regex source if regex
+      return value;
+      //return value.source === undefined ? value : value.source;
+    }
+
+    // massage parameters so they are compatible with the data source
+    if (qp instanceof Array) {
+      for (var i = 0; i < qp.length; i++) qp[i] = format(qp[i]);
+    } else {
+      for (var prop in qp) params[prop] = format(qp[prop]);
+    }
     payload.requestType = 'fetch';
     payload.query = {};
     payload.query.recordType = query.get('recordType').prototype.className;
-    payload.query.conditions = query.get('conditions');
+    payload.query.conditions = conds.join(' ');
     payload.query.parameters = params;
     payload.query.orderBy = query.get('orderBy');
     this.log("fetch => payload: ", payload);

@@ -1,0 +1,10 @@
+{
+  "type": "lazy",
+  "dependencies": [
+    "__core__",
+    "cash_receipt",
+    "customer",
+    "invoice",
+    "receivable"
+  ]
+}

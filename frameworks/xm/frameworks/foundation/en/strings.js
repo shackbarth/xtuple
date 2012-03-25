@@ -18,9 +18,14 @@ SC.stringsFor("en_US", {
 // ********
 
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
+  "_charAssignIsRequired": "Characteristics must be assigned to at least one document type.",
+  "_currRateDateRangeInvalid": "The date range overlaps with another date range.",
+  "_currRateExpireDateInvalid": "The Start Date for this exchange rate is later than the End Date.",
+  "_currSymbAbbrRequired": "Either the currency symbol or abbreviation must be supplied.",
   "_dueDateIsRequired": "Due Date is Required.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
+  "_firstOrLastNameRequired": "First or last name is required",
   "_noLineItems": "This document requires at least one line item.",
   "_optionExistsValue": "A option already exists with this Value.",
   "_parentIsInvalid": "This CRM Account cannot be a parent to itself.",
@@ -31,6 +36,7 @@ SC.stringsFor("en_US", {
   "_requiredFieldsEmpty": "Required field(s) are empty",
   "_totalMustBePositive": "Total Must Be Positive",
   "_unknownError": "Unknown Error",
+  "_uniqueNameRequired": "A Currency type already exists with this Abbreviation.",
   "_usernameInvalid": "The user name is invalid.",
 
 // ********

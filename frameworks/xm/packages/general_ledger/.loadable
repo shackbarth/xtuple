@@ -1,5 +1,0 @@
-name: GeneralLedger
-type: xbo
-load: deferred
-core: YES
-

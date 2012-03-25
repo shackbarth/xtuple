@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/general_ledger/mixins/_cash_disbursement_journal');
+sc_require('mixins/_cash_disbursement_journal');
 
 /**
   @class

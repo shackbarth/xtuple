@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/invoice/mixins/_invoice');
+sc_require('mixins/_invoice');
 
 /**
   @class
@@ -157,53 +157,53 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     this.updateErrors(err, val < 0);
 
     return errors;
-  }.observes('customer', 'currency', 'linesLength', 'total'),
+  }.observes('linesLength', 'total'),
   
   /**
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
+    console.log("***** CUSTOMER CHANGED ****"); 
     var customer = this.get('customer'),
         isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false,
         status = this.get('status');
-
     // only set defaults if the user made the change  
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return
- 
+    if(status != SC.Record.READY_NEW && 
+       status != SC.Record.READY_DIRTY) return
+
     // pass defaults in
     this.setFreeFormBilltoEnabled(true);
     if(customer) {
       var address = customer.getPath('billingContact.address');
           
       // set defaults 
-      this.set('salesRep', customer.getPath('salesRep'));
-      this.set('commission', customer.get('commission'));
-      this.set('terms', customer.get('terms'));
-      this.set('taxZone', customer.get('taxZone'));
-      this.set('currency', customer.get('currency'));
-      this.set('shipCharge', customer.get('shipCharge'));
-      this.set('shipto', customer.get('shipto'));
-      this.set('shipVia', customer.get('shipVia'));     
-      this.set('billtoName', customer.get('name'));
-      this.set('billtoPhone', customer.getPath('billingContact.phone'));
+      this.setIfChanged('salesRep', customer.getPath('salesRep'));
+      this.setIfChanged('commission', customer.get('commission'));
+      this.setIfChanged('terms', customer.get('terms'));
+      this.setIfChanged('taxZone', customer.get('taxZone'));
+      this.setIfChanged('currency', customer.get('currency'));
+      this.setIfChanged('shipCharge', customer.get('shipCharge'));
+      this.setIfChanged('shipto', customer.get('shipto'));
+      this.setIfChanged('shipVia', customer.get('shipVia'));     
+      this.setIfChanged('billtoName', customer.get('name'));
+      this.setIfChanged('billtoPhone', customer.getPath('billingContact.phone'));
       if(address) {
-        this.set('billtoAddress1', address.get('line1'));
-        this.set('billtoAddress2', address.get('line2'));
-        this.set('billtoAddress3', address.get('line3'));
-        this.set('billtoCity', address.get('city')); 
-        this.set('billtoState', address.get('state'));
-        this.set('billtoPostalCode', address.get('postalCode'));
-        this.set('billtoCountry', address.get('country'));
+        this.setIfChanged('billtoAddress1', address.get('line1'));
+        this.setIfChanged('billtoAddress2', address.get('line2'));
+        this.setIfChanged('billtoAddress3', address.get('line3'));
+        this.setIfChanged('billtoCity', address.get('city')); 
+        this.setIfChanged('billtoState', address.get('state'));
+        this.setIfChanged('billtoPostalCode', address.get('postalCode'));
+        this.setIfChanged('billtoCountry', address.get('country'));
       }
     } else {
     
       // clear defaults
-      this.set('salesRep', null);
-      this.set('commission', 0);
-      this.set('terms', null);
-      this.set('taxZone', null);
-      this.set('shipto', null);
+      this.setIfChanged('salesRep', null);
+      this.setIfChanged('commission', 0);
+      this.setIfChanged('terms', null);
+      this.setIfChanged('taxZone', null);
+      this.setIfChanged('shipto', null);
     } 
     this.setFreeFormBilltoEnabled(isFreeFormBillto);
   }.observes('customer'),
@@ -225,37 +225,37 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     this.setFreeFormShiptoEnabled(true);
     if(shipto) {
       var address = shipto.get('address');
-      this.set('salesRep', shipto.get('salesRep'));
-      this.set('commission', shipto.get('commission'));
-      this.set('taxZone', shipto.get('taxZone'));
-      this.set('shipCharge', shipto.get('shipCharge'));
-      this.set('shipVia', shipto.get('shipVia'));  
-      this.set('shiptoName', shipto.get('name'));
-      this.set('shiptoPhone', shipto.getPath('contact.phone'));
+      this.setIfChanged('salesRep', shipto.get('salesRep'));
+      this.setIfChanged('commission', shipto.get('commission'));
+      this.setIfChanged('taxZone', shipto.get('taxZone'));
+      this.setIfChanged('shipCharge', shipto.get('shipCharge'));
+      this.setIfChange('shipVia', shipto.get('shipVia'));  
+      this.setIfChange('shiptoName', shipto.get('name'));
+      this.setIfChange('shiptoPhone', shipto.getPath('contact.phone'));
       if(address) {
-        this.set('shiptoAddress1', address.get('line1'));
-        this.set('shiptoAddress2', address.get('line2'));
-        this.set('shiptoAddress3', address.get('line3'));
-        this.set('shiptoCity', address.get('city')); 
-        this.set('shiptoState', address.get('state'));
-        this.set('shiptoPostalCode', address.get('postalCode'));
-        this.set('shiptoCountry', address.get('country'));
+        this.setIfChange('shiptoAddress1', address.get('line1'));
+        this.setIfChange('shiptoAddress2', address.get('line2'));
+        this.setIfChange('shiptoAddress3', address.get('line3'));
+        this.setIfChange('shiptoCity', address.get('city')); 
+        this.setIfChange('shiptoState', address.get('state'));
+        this.setIfChange('shiptoPostalCode', address.get('postalCode'));
+        this.setIfChange('shiptoCountry', address.get('country'));
       }
     } else if(customer) {
-      this.set('salesRep', customer.get('salesRep'));
-      this.set('taxZone', customer.get('taxZone'));
-      this.set('currency', customer.get('currency'));
-      this.set('shipCharge', customer.get('shipCharge'));
+      this.setIfChange('salesRep', customer.get('salesRep'));
+      this.setIfChange('taxZone', customer.get('taxZone'));
+      this.setIfChange('currency', customer.get('currency'));
+      this.setIfChange('shipCharge', customer.get('shipCharge'));
     } else if(!shipto) {
-      this.set('shiptoName', '');
-      this.set('shiptoAddress1', '');
-      this.set('shiptoAddress2', '');
-      this.set('shiptoAddress3', '');
-      this.set('shiptoCity', ''); 
-      this.set('shiptoState', '');
-      this.set('shiptoPostalCode', '');
-      this.set('shiptoCountry', '');
-      this.set('shiptoPhone', '');
+      this.setIfChange('shiptoName', '');
+      this.setIfChange('shiptoAddress1', '');
+      this.setIfChange('shiptoAddress2', '');
+      this.setIfChange('shiptoAddress3', '');
+      this.setIfChange('shiptoCity', ''); 
+      this.setIfChange('shiptoState', '');
+      this.setIfChange('shiptoPostalCode', '');
+      this.setIfChange('shiptoCountry', '');
+      this.setIfChange('shiptoPhone', '');
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
@@ -296,7 +296,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
       }
     }
     
-    this.set('subTotal', subTotal);
+    this.setIfChanged('subTotal', subTotal);
     
     // next round and sum up each tax code for total
     for(var i = 0; i < taxDetail.length; i++) {
@@ -305,8 +305,8 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
       codeTotal.tax = SC.Math.round(codeTotal.tax, XM.MONEY_SCALE);
       taxTotal = taxTotal + codeTotal.tax;
     }
-    this.set('lineTax', taxTotal);
-    this.set('lineTaxDetail', taxDetail);
+    this.setIfChanged('lineTax', taxTotal);
+    this.setIfChanged('lineTaxDetail', taxDetail);
   }.observes('linesLength', 'taxZone'),
 
   taxesDidChange: function() {    
@@ -333,10 +333,10 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
         freightTaxDetail.push(codeTax); 
       }
     }    
-    this.set('miscTax', miscTax);
-    this.set('miscTaxDetail', miscTaxDetail);
-    this.set('freightTax', freightTax);
-    this.set('freightTaxDetail', freightTaxDetail);
+    this.setIfChanged('miscTax', miscTax);
+    this.setIfChanged('miscTaxDetail', miscTaxDetail);
+    this.setIfChanged('freightTax', freightTax);
+    this.setIfChanged('freightTaxDetail', freightTaxDetail);
   }.observes('taxesLength', 'taxZone'),
 
   statusDidChange: function() {

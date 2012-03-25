@@ -3,27 +3,22 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
-;
-sc_require('mixins/crm_documents');
-sc_require('packages/xtuple/account/mixins/_account');
+sc_require('mixins/_account');
 
 /** @class
 
   (Document your Model here)
 
-  @extends XM.CrmDocuments
   @extends XM.CoreDocuments
-  @extends XM.Document
+  @extends XM.AccountDocument
 */
 
-XM.Account = XM.Document.extend(XM.CoreDocuments, XM.CrmDocuments, XM._Account,
+XM.Account = XM.AccountDocument.extend(XM.CoreDocuments, XM._Account,
 /** @scope XM.Account.prototype */ {
   
   // ..........................................................
   // CALCULATED PROPERTIES
   //
-
-  numberPolicySetting: 'CRMAccountNumberGeneration',
 
   isUserAccount: function(key, value) {
     if(value) this._xm_isUserAccount = value;
@@ -75,7 +70,7 @@ XM.Account = XM.Document.extend(XM.CoreDocuments, XM.CrmDocuments, XM._Account,
     }
 
     return errors;
-  }.observes('name', 'parent', 'isUserAccount', 'userAccount')
+  }.observes('parent', 'isUserAccount', 'userAccount')
 
 });
 

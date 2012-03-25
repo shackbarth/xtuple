@@ -5,17 +5,16 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/project/mixins/_project');
-sc_require('mixins/crm_documents');
+sc_require('mixins/_project');
+
 
 /**
   @class
 
   @extends XM.Document
   @extends XM.CoreDocuments
-  @extends XM.CrmDocuments
 */
-XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments, XM.CrmDocuments,
+XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
   /** @scope XM.Project.prototype */ {
 
   // .................................................
@@ -117,12 +116,6 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments, XM.CrmDocuments,
   //..................................................
   // OBSERVERS
   //
-
-  validate: function() {
-    var errors = arguments.callee.base.apply(this, arguments);
-    
-    return errors;
-  }.observes('dueDate'),
 
   _xm_projectStatusDidChange: function() {
     var status = this.get('status'),

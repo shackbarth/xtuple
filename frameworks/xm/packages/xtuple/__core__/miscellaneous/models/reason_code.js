@@ -5,7 +5,7 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/__core__/miscellaneous/mixins/_reason_code');
+sc_require('mixins/_reason_code');
 
 /**
   @class
@@ -28,10 +28,6 @@ XM.ReasonCode = XM.Document.extend(XM._ReasonCode,
   //..................................................
   // OBSERVERS
   //
-
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('code')
 
 });
 

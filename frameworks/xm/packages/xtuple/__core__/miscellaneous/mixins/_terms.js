@@ -64,9 +64,9 @@ XM._Terms = {
   }),
 
   /**
-    @type XM.number
+    @type Number
   */
-  dueDays: SC.Record.attr('XM.number', {
+  dueDays: SC.Record.attr(Number, {
     label: '_dueDays'.loc()
   }),
 

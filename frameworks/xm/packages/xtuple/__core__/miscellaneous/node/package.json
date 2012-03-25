@@ -1,0 +1,6 @@
+{
+  "type": "lazy",
+  "dependencies": [
+    "document"
+  ]
+}

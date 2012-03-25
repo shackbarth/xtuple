@@ -51,6 +51,7 @@ XM._ItemConversionTypeAssignment = {
     @type XM.Unit
   */
   unitType: SC.Record.toOne('XM.Unit', {
+    isRequired: true,
     label: '_unitType'.loc()
   })
 

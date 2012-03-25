@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('packages/xtuple/to_do/mixins/_to_do');
-sc_require('mixins/crm_documents');
+sc_require('mixins/_to_do');
+
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.ToDo = XM.Record.extend(XM._ToDo, XM.CoreDocuments, XM.CrmDocuments,
+XM.ToDo = XM.Record.extend(XM._ToDo, XM.CoreDocuments,
   /** @scope XM.ToDo.prototype */ {
   
   // .................................................
@@ -36,11 +36,6 @@ XM.ToDo = XM.Record.extend(XM._ToDo, XM.CoreDocuments, XM.CrmDocuments,
   
   /* @private */
   toDosLengthBinding: '*toDos.length',
-  
-  /* @private */
-  validate: function() {
-    return arguments.callee.base.apply(this, arguments);
-  }.observes('name', 'dueDate', 'assignedTo'),
   
   _xm_assignedToDidChange: function() {
     var assignedTo = this.get('assignedTo'),

@@ -1,0 +1,7 @@
+{
+  "type": "lazy",
+  "dependencies": [
+    "__core__",
+    "ledger"
+  ]
+}
