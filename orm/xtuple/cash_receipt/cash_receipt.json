@@ -33,7 +33,8 @@
     {
       "name": "customer",
       "toOne": {
-        "type": "Customer",
+        "isNested": true,
+        "type": "CustomerInfo",
         "column": "cashrcpt_cust_id"
       }
     },
