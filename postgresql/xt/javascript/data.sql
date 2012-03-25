@@ -42,17 +42,6 @@ select xt.install_js('XT','Data','xtuple', $$
           
       /* handle passed conditions */
       if(conditions) {
-      
-        /* replace special operators */
-        cond = conditions.replace('BEGINS_WITH','~^')
-                         .replace('ENDS_WITH','~?')
-                         .replace('CONTAINS','~')
-                         .replace('MATCHES','~')
-                         .replace('ANY', '<@');
-
-        /* quote found properties */
-        cond = this.quoteProperties(map, cond);
-
         /* helper function */
         format = function(arg) { 
           var type = XT.typeOf(arg);
@@ -67,14 +56,14 @@ select xt.install_js('XT','Data','xtuple', $$
             for(var i = 0; i < parameters.length; i++) {
               var n = cond.indexOf('%@'),
                   val =  format(parameters[i]);
-              cond = cond.replace(/%@/,val);
+              conditions = conditions.replace(/%@/,val);
             }
           } else {  /* replace parameterized tokens */
             for(var prop in parameters) {
               var param = '{' + prop + '}',
                   val = format(parameters[prop]),
                   regExp = new RegExp(param, "g"); 
-              cond = cond.replace(regExp, val);
+              conditions = conditions.replace(regExp, val);
             }
           }
         }
@@ -95,35 +84,9 @@ select xt.install_js('XT','Data','xtuple', $$
         }
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
       }    
-      ret = cond.length ? '(' + cond + ')' : ret;
-      ret = pcond.length ? (cond.length ? ret.concat(' and ', pcond) : pcond) : ret;
+      ret = conditions.length ? '(' + conditions + ')' : ret;
+      ret = pcond.length ? (conditions.length ? ret.concat(' and ', pcond) : pcond) : ret;
       return ret;
-    },
-
-    /** 
-      Replace strings that match properties found in an orm
-      properties array with quoted equivilents, so long as they
-      are not bounded by curly braces.
-
-      @param {Object} orm
-      @param {String} string
-      @returns String
-    */
-    quoteProperties: function(orm, str) {
-      /* TODO: The door is open here for conflicts i.e. properties "item" and "itemType" on the same orm 
-          will break this. Need a more robust solution. Maybe draw in SC.Query tokenizer logic? */ 
-      for (var i = 0; i < orm.properties.length; i++) {
-          var pval = orm.properties[i].name;
-              regExp = new RegExp(pval + "+(?=[^{}]*(\{|$))", "g");
-              rval = '"' + pval + '"'
-          str = str.replace(regExp, rval);
-      }
-      if (!orm.extensions) {
-        for (var i = 0; i < orm.extensions.length; i++) {
-          str = this.quoteProperties(orm.extensions[i], str);
-        }
-      }
-      return str;
     },
 
     /**
