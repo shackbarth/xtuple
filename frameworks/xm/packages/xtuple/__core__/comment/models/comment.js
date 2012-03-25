@@ -14,6 +14,11 @@ XM.Comment = XM.Record.extend(
 /** @scope XM.Comment.prototype */ {
 
   /**
+    Walk like a duck.
+  */
+  isComment: true,
+  
+  /**
   @type SC.DateTime
   */
   created: SC.Record.attr(SC.DateTime, {

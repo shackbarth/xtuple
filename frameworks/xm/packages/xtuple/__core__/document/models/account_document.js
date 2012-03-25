@@ -14,6 +14,11 @@
 XM.AccountDocument = XM.Document.extend(
 /** @scope XM.Document.prototype */ {
 
+  /**
+    Walk like a duck.
+  */
+  isAccountDocument: true,
+  
   numberPolicySetting: 'CRMAccountNumberGeneration',
   
   // ..........................................................

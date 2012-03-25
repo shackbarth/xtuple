@@ -15,6 +15,11 @@ XM.Document = XM.Record.extend(
 /** @scope XM.Document.prototype */ {
 
   /**
+    Walk like a duck.
+  */
+  isDocument: true,
+
+  /**
     The unique property for the document, typically a number, code or name. 
     This property will be checked when a user edits it to ensure it has not already 
     been used by another record of the same type.
