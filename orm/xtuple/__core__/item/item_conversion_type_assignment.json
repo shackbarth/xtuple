@@ -35,7 +35,8 @@
       "toOne": {
         "type": "Unit",
         "column": "itemuom_uomtype_id",
-        "isEditable": false
+        "isEditable": false,
+        "isRequired": true
       }
     }
   ],
