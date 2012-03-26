@@ -14,31 +14,6 @@ sc_require('mixins/_invoice_line');
 */
 XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   /** @scope XM.InvoiceLine.prototype */ {
-
-  /** 
-    Inovice customer
-  */
-  customerBinding: SC.Binding.from('*invoice.customer').noDelay(), 
-    
-  /** 
-    Invoice currency
-  */
-  currencyBinding: SC.Binding.from('*invoice.currency').noDelay(), 
-
-  /** 
-    Invoice date
-  */
-  invoiceDateBinding: SC.Binding.from('*invoice.invoiceDate').noDelay(), 
-  
-  /**
-    Invoice tax zone
-  */
-  taxZoneBinding: SC.Binding.from('*invoice.taxZone').noDelay(), 
-  
-  /** 
-    Invoice shipto
-  */
-  shiptoBinding: SC.Binding.from('*invoice.shipto').noDelay(), 
   
   /**
     An XM.Unit array of valid
@@ -114,25 +89,31 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
 
   extendendPriceDidChange: function() {
     var invoice = this.get('invoice');
-    if (invoice) invoice.linesDidChange();
+    if (invoice) invoice.updateSubTotal();
   }.observes('extendedPrice'),
+  
+  taxTotalDidChange: function() {
+    var invoice = this.get('invoice');
+    if (invoice) invoice.updateLineTaxTotal();
+  }.observes('taxTotal'),
 
   itemDidChange: function() {
     this.updateSellingUnits();
-    this.updatePrice();
-  },//.observes('item'),
+  }.observes('item'),
   
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.item.set('isEditable', false);
       this.updateSellingUnits();
     }
-  },//.observes('status'),
+  }.observes('status'),
 
   priceCriteriaDidChange: function() {
-    // only update in legitimate editing states    
+    // only update in legitimate editing states
+    var status = this.get('status');    
     if(status !== SC.Record.READY_NEW && 
        status !== SC.Record.READY_DIRTY) return;
+       
     var that = this,
         customer = this.getPath('invoice.customer'),
         shipto = this.getPath('invoice.shipto'),
@@ -143,28 +124,28 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         currency = this.getPath('invoice.currency'),
         effective = this.getPath('invoice.invoiceDate'),
         status = this.get('status');
-       
+
     // if we have everything we need, get a price from the server
     if (customer && item && quantity &&
-       quantityUnit && priceUnit && currency && effective) {
-       
+        quantityUnit && priceUnit && currency && effective) {
+   
       // callback
       callback = function(err, result) {
         that.setIfChanged('price', result);
         that.setIfChanged('customerPrice', result);
-      } 
+      }
      
       // function call
-      customer.price(shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
+      XM.Customer.price(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
     }
-  }.observes('customer','shipto','billed','quantity','quantityUnit','priceUnit','invoiceDate','currency'),
+  }.observes('item', 'billed','quantity','quantityUnit','priceUnit'),
 
   taxCriteriaDidChange: function() {
     var that = this,
         status = that.get('status'),
         taxDetail = [];
-    if(status == SC.Record.READY_NEW || 
-       status == SC.Record.READY_DIRTY) 
+    if(status === SC.Record.READY_NEW || 
+       status === SC.Record.READY_DIRTY) 
     {
       // request a calculated estimate 
       var taxZone = that.getPath('invoice.taxZone.id'),
@@ -178,8 +159,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       callback = function(err, result) {
         var store = that.get('store');
         for(var i = 0; i < result.get('length'); i++) {
-          var storeKey, taxCode, detail,
-              store = that.get('store');
+          var storeKey, taxCode, detail;
           storeKey = store.loadRecord(XM.TaxCode, result[i].taxCode);
           taxCode = store.materializeRecord(storeKey);
           detail = SC.Object.create({ 
@@ -218,6 +198,6 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       }    
       this.setIfChanged('taxDetail', taxDetail);
     }
-  }//.observes('status', 'extendedPrice', 'taxZone', 'taxType', 'invoiceDate', 'currency'),
+  }.observes('extendedPrice', 'taxType'),
 
 });
