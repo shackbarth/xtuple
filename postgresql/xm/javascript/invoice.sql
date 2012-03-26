@@ -7,26 +7,21 @@ select xt.install_js('XM','Invoice','xtuple', $$
   XM.Invoice.isDispatchable = true;
 
   /**
-   Return freight tax data for an invoice based on input. Pass an
-   invoice id in as the one and only argument to get tax records stored
-   on the database. Pass in tax zone, effective date, currency and amount 
-   to return estimated tax results.
+   Return estimated freight tax data for an invoice based on input. 
 
-   @param {Number} invoice or tax zone id
+   @param {Number} tax zone id
    @param {Number} currency id
    @param {Date} effective date
    @param {Number} amount
    @returns Number 
   */
-  XM.Invoice.freightTax = function(id, effective, currencyId, amount) {
+  XM.Invoice.calculateFreightTax = function(taxZoneId, effective, currencyId, amount) {
     var ret = {}, sql, res, freightTypeID,
         data = Object.create(XT.Data),
         conditions = 'name = {name}',
         parameters = { name: 'Freight' };
     freightTypeId = data.fetch('XM.TaxType', conditions, parameters)[0].guid;
-    res = arguments.length > 1 ? 
-          XM.Tax.calculate(id, freightTypeId, effective, currencyId, amount)[0] :
-          XM.Tax.history('invcheadtax', id, freightTypeId)[0];
+    res = XM.Tax.calculate(taxZoneId, freightTypeId, effective, currencyId, amount)[0];
     ret.taxCode = res.taxCode;
     ret.tax = res.tax;
     return JSON.stringify(ret);
