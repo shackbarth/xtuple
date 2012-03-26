@@ -148,7 +148,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   //
 
   /**
-    Return the price for an item for a customer.
+    Retrieve the price for an item for this customer. Must be used with a callback.
     
     @param {Number} shipto (optional)
     @param {Number} item
@@ -156,27 +156,11 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
     @param {Number} quantity unit
     @param {Number} currency
     @param {Date} effective date
-    @returns Number
+    @param {Function} callback
+    @returns Receiver
   */
   price: function(shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
-    var that = this, dispatch;
-    dispatch = XM.Dispatch.create({
-      className: 'XM.Customer',
-      functionName: 'price',
-      parameters: [
-        this.get('id'),
-        shipto ? shipto.get('id') : null,
-        item.get('id'),
-        quantity,
-        quantityUnit.get('id'),
-        priceUnit.get('id'),
-        currency.get('id'),
-        effective.toFormattedString('%Y-%m-%d')
-      ],
-      target: that,
-      action: callback
-    });
-    customer.get('store').dispatch(dispatch);
+    XM.Customer.price(this, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
     return this;
   }
 
@@ -185,6 +169,42 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   //
 
 });
+
+/**
+  Retrieve the price for an item for a customer. Must be used with a callback.
+  
+  @param {Number} customer
+  @param {Number} shipto (optional)
+  @param {Number} item
+  @param {Number} quantity
+  @param {Number} quantity unit
+  @param {Number} currency
+  @param {Date} effective date
+  @param {Receiver} callback
+  @returns Receiver
+*/
+XM.Customer.price = function(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
+  var that = this, dispatch;
+  dispatch = XM.Dispatch.create({
+    className: 'XM.Customer',
+    functionName: 'price',
+    parameters: [
+      customer.get('id'),
+      shipto ? shipto.get('id') : null,
+      item.get('id'),
+      quantity,
+      quantityUnit.get('id'),
+      priceUnit.get('id'),
+      currency.get('id'),
+      effective.toFormattedString('%Y-%m-%d')
+    ],
+    target: that,
+    action: callback
+  });
+  customer.get('store').dispatch(dispatch);
+  return this;
+}
+
 
 XM.Customer.mixin( /** @scope XM.Customer */ {
 
