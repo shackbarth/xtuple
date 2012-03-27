@@ -93,8 +93,9 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   itemDidChange: function() {
     this.updateSellingUnits();
   }.observes('item'),
-  
+
   statusDidChange: function() {
+    var status = this.get('status');
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.item.set('isEditable', false);
       this.updateSellingUnits();
@@ -153,6 +154,9 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
           amount = that.get('extendedPrice'), dispatch,
           store = that.get('store');
 
+      taxZone = taxZone ? taxZone : -1;
+      taxType = taxType ? taxType : -1;
+      
       // callback
       callback = function(err, result) {
         var store = that.get('store');
@@ -204,5 +208,22 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       this.setIfChanged('tax', taxTotal);
     }
   }.observes('extendedPrice', 'taxType'),
+  /*
+  invoiceDidChange: function() {
+    var status = this.get('status'),
+        lineNumber = this.get('lineNumber')
+    if (status === SC.Record.READY_NEW && !lineNumber) {
+      var lines = this.getPath('invoice'),
+           maxNumber = 0;
+       
+      for (var i = 0; i < lines.get('length'); i++) {
+        var num = lines.objectAt(i).get('lineNumber');
+        maxNumber = num > nextNumber ? num : maxNumber;
+      }
+      
+    }
+    this.set('lineNumber', maxNumber + 1);
+  }.observes('invoice')
+  */
 
 });

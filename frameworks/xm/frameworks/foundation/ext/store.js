@@ -66,7 +66,47 @@ XM.Store = SC.Store.extend(XM.Logging,
       dispatch.callback(error);
     }
     return this;
-  }
+  },
+
+  registerChildToParent: function(parentStoreKey, childStoreKey, path){
+    var prs, crs, oldPk, oldChildren, pkRef, rec;
+    // Check the child to see if it has a parent
+    crs = this.childRecords || {};
+    prs = this.parentRecords || {};
+    // first rid of the old parent
+    oldPk = crs[childStoreKey];
+    if (oldPk && oldPk === parentStoreKey) return;
+    else if (oldPk){
+      oldChildren = prs[oldPk];
+      delete oldChildren[childStoreKey];
+      // this.recordDidChange(null, null, oldPk, key);
+    }
+    pkRef = prs[parentStoreKey] || {};
+    pkRef[childStoreKey] = path || true;
+    prs[parentStoreKey] = pkRef;
+    crs[childStoreKey] = parentStoreKey;
+    rec = this.records[childStoreKey]; 
+    if (rec) rec.notifyPropertyChange('status');
+    this.childRecords = crs;
+    this.parentRecords = prs;
+  },
+  
+  writeDataHash: function(storeKey, hash, status) {
+
+    // update dataHashes and optionally status.
+    if (hash) this.dataHashes[storeKey] = hash;
+    if (status) this.statuses[storeKey] = status ;
+
+    // also note that this hash is now editable
+    var editables = this.editables;
+    if (!editables) editables = this.editables = [];
+    editables[storeKey] = 1 ; // use number for dense array support
+
+    var that = this;
+
+    return this ;
+  },
+
 
 });
 

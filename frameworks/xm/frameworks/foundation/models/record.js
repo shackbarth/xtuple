@@ -44,7 +44,7 @@ XM.Record = SC.Record.extend(
     @type Boolean
   */
   isEditable: function() {
-    var isEditable = arguments.callee.base.apply(this, arguments) 
+    var isEditable = arguments.callee.base.apply(this, arguments); 
     if(isEditable && this.get('status') !== SC.Record.READY_NEW) return this.canUpdate();
     return isEditable;
   }.property('status').cacheable(),
@@ -202,6 +202,108 @@ XM.Record = SC.Record.extend(
     idx = errors.lastIndexOf(error);
     if(isError && idx === -1) errors.pushObject(error);
     else if(!isError && idx > -1) errors.removeAt(idx);
+  },
+  
+  /**
+    Registers a child record with this parent record.
+
+    If the parent already knows about the child record, return the cached
+    instance. If not, create the child record instance and add it to the child
+    record cache.
+
+    @param {Hash} value The hash of attributes to apply to the child record.
+    @param {Integer} key The store key that we are asking for
+    @param {String} path The property path of the child record
+    @returns {SC.Record} the child record that was registered
+   */
+  registerNestedRecord: function(value, key, path) {
+    var store, psk, csk, childRecord, recordType;
+
+    // if no path is entered it must be the key
+    if (SC.none(path)) path = key;
+    // if a record instance is passed, simply use the storeKey.  This allows
+    // you to pass a record from a chained store to get the same record in the
+    // current store.
+    if (value && value.get && value.get('isRecord')) {
+      childRecord = value;
+    }
+    else {
+      recordType = this._materializeNestedRecordType(value, key);
+      childRecord = this.loadNestedRecord(recordType, value);
+    }
+    if (childRecord){
+      this.isParentRecord = true;
+      store = this.get('store');
+      psk = this.get('storeKey');
+      csk = childRecord.get('storeKey');
+      store.registerChildToParent(psk, csk, path);
+    }
+
+    return childRecord;
+  },
+  
+  /**
+    Loads a new nested record instance.
+
+    @param {SC.Record} recordType The type of the nested record to load.
+    @param {Hash} hash The hash of attributes to apply to the child record.
+    (may be null)
+    @returns {SC.Record} the nested record created
+  */
+  loadNestedRecord: function(recordType, hash) {
+    var store, id, sk, pk, cr = null, store = this.get('store');
+    
+    SC.run(function() {
+      hash = hash || {}; // init if needed
+      pk = recordType.prototype.primaryKey
+      id = hash[pk];
+      sk = id ? store.storeKeyExists(recordType, id) : null;
+      if (sk) store.writeDataHash(sk, hash);
+      else sk = store.pushRetrieve(recordType, id, hash);
+      cr = store.materializeRecord(sk);
+    }, this);
+
+    return cr;
+  },
+  
+  /**
+    Creates a new nested record instance.
+
+    @param {SC.Record} recordType The type of the nested record to create.
+    @param {Hash} hash The hash of attributes to apply to the child record.
+    (may be null)
+    @returns {SC.Record} the nested record created
+   */
+  createNestedRecord: function(recordType, hash, path) {
+    var store, id, sk, pk, cr = null, store = this.get('store');
+
+    // create or materialize record
+    SC.run(function() {
+      hash = hash || {}; // init if needed
+      pk = recordType.prototype.primaryKey
+      id = hash[pk];
+      sk = id ? store.storeKeyExists(recordType, id) : null;
+      if (sk){
+        store.writeDataHash(sk, hash);
+        cr = store.materializeRecord(sk);
+      } else {
+        cr = store.createRecord(recordType, hash) ;
+      }
+    }, this);
+
+    // register the new child, set this to parent and mark dirty.
+    if (cr) {
+      var store = this.get('store'),
+          psk = this.get('storeKey'),
+          csk = cr.get('storeKey'),
+          path;
+      this.isParentRecord = true;
+      store.registerChildToParent(psk, csk, path);
+      path = store.parentRecords[psk][csk];
+      this.recordDidChange(path);
+    }
+    
+    return cr;
   },
 
   // ..........................................................

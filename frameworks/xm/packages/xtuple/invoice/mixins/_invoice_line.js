@@ -44,6 +44,9 @@ XM._InvoiceLine = {
     @type XM.Invoice
   */
   invoice: SC.Record.toOne('XM.Invoice', {
+    defaultValue: function() {
+      return arguments[0].getPath("parentRecord.id");
+    },
     label: '_invoice'.loc()
   }),
 
