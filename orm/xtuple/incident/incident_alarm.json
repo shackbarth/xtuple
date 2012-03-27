@@ -49,73 +49,68 @@
       }
     },
     {
-      "name": "email",
+      "name": "isEvent",
       "attr": {
         "type": "Boolean",
-        "column": "alarm_email"
-      }
-    },
-    {
-      "name": "emailRecipient",
-      "attr": {
-        "type": "String",
-        "column": "alarm_email_recipient"
-      }
-    },
-    {
-      "name": "event",
-      "attr": {
-        "type": "Boolean",
-        "column": "alarm_event"
+        "column": "alarm_event",
+        "defaultValue": false
       }
     },
     {
       "name": "eventRecipient",
       "attr": {
         "type": "String",
-        "column": "alarm_event_recipient"
+        "column": "alarm_event_recipient",
+        "defaultValue": "currentUser"
       }
     },
     {
-      "name": "message",
+      "name": "isMessage",
       "attr": {
         "type": "Boolean",
-        "column": "alarm_sysmsg"
+        "column": "alarm_sysmsg",
+        "defaultValue": false
       }
     },
     {
       "name": "messageRecipient",
       "attr": {
         "type": "String",
-        "column": "alarm_sysmsg_recipient"
+        "column": "alarm_sysmsg_recipient",
+        "defaultValue": "currentUser"
       }
     },
     {
       "name": "offset",
       "attr": {
         "type": "Number",
-        "column": "alarm_time_offset"
+        "column": "alarm_time_offset",
+        "defaultValue": 15
       }
     },
     {
       "name": "qualifier",
       "attr": {
         "type": "String",
-        "column": "alarm_time_qualifier"
+        "column": "alarm_time_qualifier",
+        "defaultValue": "MB"
       }
     },
     {
       "name": "time",
       "attr": {
         "type": "Date",
-        "column": "alarm_time"
+        "column": "alarm_time",
+        "defaultValue": "currentTime",
+        "useIsoDate": true
       }
     },
     {
       "name": "trigger",
       "attr": {
         "type": "Date",
-        "column": "alarm_trigger"
+        "column": "alarm_trigger",
+        "useIsoDate": true
       }
     }
   ],
