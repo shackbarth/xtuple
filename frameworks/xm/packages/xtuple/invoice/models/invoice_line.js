@@ -20,6 +20,8 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   */
   sellingUnits: [],
   
+  tax: 0,
+  
   /** @private */
   taxesLength: 0,
   
@@ -45,15 +47,6 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
     return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
   }.property('billed', 'price').cacheable(),
-  
-  taxTotal: function() {
-    var taxDetail = this.get('taxDetail'),
-        taxTotal = 0;
-    for(var i = 0; i < taxDetail.length; i++) {
-      taxTotal = taxTotal + taxDetail[i].get('tax');
-    }
-    return taxTotal;
-  }.property('taxDetailLength').cacheable(),
 
   //..................................................
   // METHODS
@@ -92,10 +85,10 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
     if (invoice) invoice.updateSubTotal();
   }.observes('extendedPrice'),
   
-  taxTotalDidChange: function() {
+  taxDidChange: function() {
     var invoice = this.get('invoice');
-    if (invoice) invoice.updateLineTaxTotal();
-  }.observes('taxTotal'),
+    if (invoice) invoice.updateLineTax();
+  }.observes('tax'),
 
   itemDidChange: function() {
     this.updateSellingUnits();
@@ -105,6 +98,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.item.set('isEditable', false);
       this.updateSellingUnits();
+      this.taxCriteriaDidChange();
     }
   }.observes('status'),
 
@@ -143,7 +137,8 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
   taxCriteriaDidChange: function() {
     var that = this,
         status = that.get('status'),
-        taxDetail = [];
+        taxTotal = 0, taxDetail = [];
+   
     if(status === SC.Record.READY_NEW || 
        status === SC.Record.READY_DIRTY) 
     {
@@ -160,6 +155,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         var store = that.get('store');
         for(var i = 0; i < result.get('length'); i++) {
           var storeKey, taxCode, detail;
+          taxTotal = taxTotal + result[i].tax;
           storeKey = store.loadRecord(XM.TaxCode, result[i].taxCode);
           taxCode = store.materializeRecord(storeKey);
           detail = SC.Object.create({ 
@@ -168,6 +164,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
           });
           taxDetail.push(detail);
         }
+        that.setIfChanged('tax', taxTotal);
         that.setIfChanged('taxDetail', taxDetail);
       }
 
@@ -191,11 +188,15 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         var hist = taxes.objectAt(i),
             tax = hist.get('tax'),
             taxCode = hist.get('taxCode'),
-            codeTax = {};
-        codeTax.taxCode = taxCode;
-        codeTax.tax = tax;
+            codeTax;
+        taxTotal = taxTotal + tax;
+        codeTax = SC.Object.create({
+          taxCode: taxCode,
+          tax: tax
+        });
         taxDetail.push(codeTax);  
       }    
+      this.setIfChanged('tax', taxTotal);
       this.setIfChanged('taxDetail', taxDetail);
     }
   }.observes('extendedPrice', 'taxType'),

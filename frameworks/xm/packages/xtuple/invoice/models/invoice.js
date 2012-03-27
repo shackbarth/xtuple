@@ -159,13 +159,13 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
   },
   
   /**
-    Recalculate line item tax totals.
+    Recalculate line item tax detail and totals.
   */
-  updatelineTaxTotal: function() {
+  updateLineTax: function() {
     var lines = this.get('lines'),
         taxDetail = [],
         taxTotal = 0;
-        
+
     // first sub total sales and taxes
     for (var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
@@ -176,27 +176,29 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
         var lineTax = taxes.objectAt(n),
             taxCode = lineTax.get('taxCode'),
             tax = lineTax.get('tax'),
-            codeTotal = taxDetail.findProperty('taxCode', taxCode) || {};
-        
+            codeTotal = taxDetail.findProperty('taxCode', taxCode);
+    
         // summarize by tax code 
         if(codeTotal) {
-          codeTotal.tax = codeTotal.tax + tax;
+          codeTotal.set('tax', codeTotal.get('tax') + tax);
         } else {   
-          codeTotal.taxCode = taxCode;
-          codeTotal.tax = tax;
+          codeTotal = SC.Object.create({
+            taxCode: taxCode,
+            tax: tax
+          });
           taxDetail.push(codeTotal);
         }   
       }
     }
 
     // next round and sum up each tax code for total
-    for(var i = 0; i < taxDetail.length; i++) {
-      var codeTotal = taxDetail.objectAt(i);
-      
-      codeTotal.tax = SC.Math.round(codeTotal.tax, XM.MONEY_SCALE);
-      taxTotal = taxTotal + codeTotal.tax;
+    for(var i = 0; i < taxDetail.get('length'); i++) {
+      var codeTotal = taxDetail.objectAt(i),
+          rtax = SC.Math.round(codeTotal.get('tax'), XM.MONEY_SCALE);
+      codeTotal.set('tax', rtax);
+      taxTotal = taxTotal + rtax;
     }
-    this.setIfChanged('lineTax', taxTotal);
+    this.setIfChanged('lineTax',  SC.Math.round(taxTotal, XM.MONEY_SCALE));
     this.setIfChanged('lineTaxDetail', taxDetail);
   },
 
@@ -225,12 +227,13 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
-    // only set defaults if the user made the change  
+    // only set defaults if the user made the change 
+    var status = this.get('status');
     if(status !== SC.Record.READY_NEW && 
        status !== SC.Record.READY_DIRTY) return
+       
     var customer = this.get('customer'),
-        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false,
-        status = this.get('status');
+        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
 
     // pass defaults in
     this.setFreeFormBilltoEnabled(true);
@@ -273,14 +276,14 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     Populates shipto defaults when shipto changes.
   */
   shiptoDidChange: function() {
-    var shipto = this.get('shipto'),
-        customer = this.get('customer'),
-        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false,
-        status = this.get('status');
-
-    // only set defaults if the user made the change    
+    // only set defaults if the user made the change
+    var status = this.get('status');    
     if(status !== SC.Record.READY_NEW && 
        status !== SC.Record.READY_DIRTY) return
+       
+    var shipto = this.get('shipto'),
+        customer = this.get('customer'),
+        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false;
 
     // set defaults
     this.setFreeFormShiptoEnabled(true);
@@ -331,13 +334,12 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
         miscTaxDetail = [], freightTaxDetail = [],
         miscTax = 0, freightTax = 0;
 
-    // Loop through header taxes and allocate
+    // request a calculated estimate for freight if changed
     if(isFreightChanged) {
-      // request a calculated estimate for freight 
-      var taxZone = that.getPath('taxZone.id'),
+      var taxZone = that.getPath('taxZone.id') || -1,
           effective = that.getPath('invoiceDate').toFormattedString('%Y-%m-%d'),
           currency = that.getPath('currency.id'),
-          amount = that.get('freight'), dispatch,
+          amount = that.get('freight') || 0, dispatch,
           store = that.get('store');
           
       // callback
@@ -408,6 +410,9 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.customer.set('isEditable', false);
+      this.updateSubTotal();
+      this.updateLineTax();
+      this.taxesDidChange();
     }
   }.observes('status')
 
