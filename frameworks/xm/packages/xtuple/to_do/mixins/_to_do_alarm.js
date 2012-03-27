@@ -110,7 +110,7 @@ XM._ToDoAlarm = {
   time: SC.Record.attr(SC.DateTime, {
     useIsoDate: true,
     defaultValue: function() {
-      return SC.DateTime.create().toFormattedString(SC.DATETIME_ISO8601);
+      return SC.DateTime.create();
     },
     label: '_time'.loc()
   }),
