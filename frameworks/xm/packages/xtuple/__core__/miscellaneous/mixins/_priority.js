@@ -52,6 +52,7 @@ XM._Priority = {
     @type Number
   */
   order: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_order'.loc()
   }),
 

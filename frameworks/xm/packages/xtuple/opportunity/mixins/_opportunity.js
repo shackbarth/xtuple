@@ -148,7 +148,7 @@ XM._Opportunity = {
     format: '%Y-%m-%d',
     useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create();
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_startDate'.loc()
   }),

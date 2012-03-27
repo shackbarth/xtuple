@@ -62,7 +62,7 @@ XM._Invoice = {
     format: '%Y-%m-%d',
     useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create();
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_orderDate'.loc()
   }),
@@ -74,7 +74,7 @@ XM._Invoice = {
     format: '%Y-%m-%d',
     useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create();
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_invoiceDate'.loc()
   }),
@@ -92,6 +92,7 @@ XM._Invoice = {
     @type Boolean
   */
   isPrinted: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isPrinted'.loc()
   }),
 
@@ -99,6 +100,7 @@ XM._Invoice = {
     @type Boolean
   */
   isPosted: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isPosted'.loc()
   }),
 
@@ -106,6 +108,7 @@ XM._Invoice = {
     @type Boolean
   */
   isVoid: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isVoid'.loc()
   }),
 

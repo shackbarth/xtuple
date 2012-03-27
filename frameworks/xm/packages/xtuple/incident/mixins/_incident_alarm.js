@@ -58,6 +58,7 @@ XM._IncidentAlarm = {
     @type Boolean
   */
   isEvent: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isEvent'.loc()
   }),
 
@@ -75,6 +76,7 @@ XM._IncidentAlarm = {
     @type Boolean
   */
   isMessage: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isMessage'.loc()
   }),
 
@@ -110,7 +112,7 @@ XM._IncidentAlarm = {
   time: SC.Record.attr(SC.DateTime, {
     useIsoDate: true,
     defaultValue: function() {
-      return SC.DateTime.create();
+      return SC.DateTime.create().toFormattedString(SC.DATETIME_ISO8601);
     },
     label: '_time'.loc()
   }),

@@ -149,6 +149,7 @@ XM._Customer = {
     @type Boolean
   */
   isFreeFormBillto: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isFreeFormBillto'.loc()
   }),
 
@@ -164,6 +165,7 @@ XM._Customer = {
     @type Number
   */
   discount: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_discount'.loc()
   }),
 

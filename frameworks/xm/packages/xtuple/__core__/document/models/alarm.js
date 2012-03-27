@@ -10,15 +10,20 @@
   @extends XM.Record
 */
 
-XM.Alarm = XM.Record.extend(
+XM.Alarm = XM.Document.extend(
 /** @scope XM.Alarm.prototype */ {
 
   /**
     Walk like a duck.
   */
-  isAlarm: true
+  isAlarm: true,
+
+  /**
+    Auto-generated number from server.
+  */
+  numberPolicy: XM.AUTO_NUMBER,
   
- // .................................................
+  // .................................................
   // CALCULATED PROPERTIES
   //
 

@@ -12,7 +12,7 @@ sc_require('mixins/_to_do_alarm');
 
   @extends XM.Record
 */
-XM.ToDoAlarm = XM.Record.extend(XM._ToDoAlarm,
+XM.ToDoAlarm = XM.Alarm.extend(XM._ToDoAlarm,
   /** @scope XM.ToDoAlarm.prototype */ {
 
   // .................................................
