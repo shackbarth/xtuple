@@ -88,14 +88,14 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
-    return lineTax + freightTax + miscTax; 
+    return SC.Math.round(lineTax + freightTax + miscTax, XM.MONEY_SCALE); 
   }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
   total: function() {
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
         totalTax = this.get('taxTotal');
-    return subTotal + freight + totalTax; 
+    return SC.Math.round(subTotal + freight + totalTax, XM.MONEY_SCALE); 
   }.property('subTotal', 'freight', 'taxTotal').cacheable(),
   
   //..................................................
@@ -177,7 +177,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
             taxCode = lineTax.get('taxCode'),
             tax = lineTax.get('tax'),
             codeTotal = taxDetail.findProperty('taxCode', taxCode);
-    
+
         // summarize by tax code 
         if(codeTotal) {
           codeTotal.set('tax', codeTotal.get('tax') + tax);

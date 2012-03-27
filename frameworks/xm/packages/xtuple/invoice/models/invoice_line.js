@@ -45,7 +45,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         qtyUnitRatio = this.get('quantityUnitRatio') || 1,
         price = this.get('price') || 0,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
-    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), 2);
+    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XM.MONEY_SCALE);
   }.property('billed', 'price').cacheable(),
 
   //..................................................
@@ -152,7 +152,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
           currency = that.getPath('invoice.currency.id'),
           amount = that.get('extendedPrice'), dispatch,
           store = that.get('store');
-             
+
       // callback
       callback = function(err, result) {
         var store = that.get('store');
@@ -168,8 +168,8 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
           });
           taxDetail.push(detail);
         }
-        that.setIfChanged('tax', taxTotal);
         that.setIfChanged('taxDetail', taxDetail);
+        that.setIfChanged('tax', taxTotal);
       }
 
       // define call
@@ -200,8 +200,8 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         });
         taxDetail.push(codeTax);  
       }    
-      this.setIfChanged('tax', taxTotal);
       this.setIfChanged('taxDetail', taxDetail);
+      this.setIfChanged('tax', taxTotal);
     }
   }.observes('extendedPrice', 'taxType'),
 
