@@ -166,7 +166,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
         taxDetail = [],
         taxTotal = 0;
 
-    // first sub total sales and taxes
+    // first sub total taxes
     for (var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
           taxes = line.get('taxDetail');

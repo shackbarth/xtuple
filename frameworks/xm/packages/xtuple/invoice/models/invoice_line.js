@@ -119,7 +119,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
         effective = this.getPath('invoice.invoiceDate'),
         status = this.get('status');
 
-    // if we have everything we need, get a price from the server
+    // if we have everything we need, get a price from the data source
     if (customer && item && quantity &&
         quantityUnit && priceUnit && currency && effective) {
    
@@ -134,6 +134,9 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
     }
   }.observes('item', 'billed','quantity','quantityUnit','priceUnit'),
 
+  /**
+    Recalculate tax.
+  */
   taxCriteriaDidChange: function() {
     var that = this,
         status = that.get('status'),
@@ -154,13 +157,14 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       callback = function(err, result) {
         var store = that.get('store');
         for(var i = 0; i < result.get('length'); i++) {
-          var storeKey, taxCode, detail;
-          taxTotal = taxTotal + result[i].tax;
+          var storeKey, taxCode, detail,
+              tax = SC.Math.round(result[i].tax, XM.SALES_PRICE_SCALE);
+          taxTotal = taxTotal + tax,
           storeKey = store.loadRecord(XM.TaxCode, result[i].taxCode);
           taxCode = store.materializeRecord(storeKey);
           detail = SC.Object.create({ 
             taxCode: taxCode, 
-            tax: result[i].tax 
+            tax: tax 
           });
           taxDetail.push(detail);
         }
@@ -183,10 +187,10 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       // add up stored result
       var taxes = this.get('taxes');
 
-      // Loop through header taxes and allocate
+      // Loop through tax detail
       for(var i = 0; i < taxes.get('length'); i++) {
         var hist = taxes.objectAt(i),
-            tax = hist.get('tax'),
+            tax = SC.Math.round(hist.get('tax'), XM.SALES_PRICE_SCALE),
             taxCode = hist.get('taxCode'),
             codeTax;
         taxTotal = taxTotal + tax;
