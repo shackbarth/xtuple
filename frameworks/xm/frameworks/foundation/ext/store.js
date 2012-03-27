@@ -67,30 +67,13 @@ XM.Store = SC.Store.extend(XM.Logging,
     }
     return this;
   },
-
-  registerChildToParent: function(parentStoreKey, childStoreKey, path){
-    var prs, crs, oldPk, oldChildren, pkRef, rec;
-    // Check the child to see if it has a parent
-    crs = this.childRecords || {};
-    prs = this.parentRecords || {};
-    // first rid of the old parent
-    oldPk = crs[childStoreKey];
-    if (oldPk && oldPk === parentStoreKey) return;
-    else if (oldPk){
-      oldChildren = prs[oldPk];
-      delete oldChildren[childStoreKey];
-      // this.recordDidChange(null, null, oldPk, key);
-    }
-    pkRef = prs[parentStoreKey] || {};
-    pkRef[childStoreKey] = path || true;
-    prs[parentStoreKey] = pkRef;
-    crs[childStoreKey] = parentStoreKey;
-    rec = this.records[childStoreKey]; 
-    if (rec) rec.notifyPropertyChange('status');
-    this.childRecords = crs;
-    this.parentRecords = prs;
-  },
   
+  /**
+    Reimplemented from SC.Store. 
+    
+    Removes parents updating children
+    with parent status when we don't need or want that behavior.
+  */
   writeDataHash: function(storeKey, hash, status) {
 
     // update dataHashes and optionally status.
@@ -106,8 +89,42 @@ XM.Store = SC.Store.extend(XM.Logging,
 
     return this ;
   },
+  
+  /**
+    Reimplemented from SC.Store. 
+    
+    Eliminates redudant status updates.
+  */
+  dataSourceDidComplete: function(storeKey, dataHash, newId) {
+    var status = this.readStatus(storeKey), K = SC.Record, statusOnly;
+
+    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
+    // DESTROYED_DIRTY
+    if (!(status & K.BUSY)) {
+      throw K.BAD_STATE_ERROR; // should never be called in this state
+    }
+
+    // otherwise, determine proper state transition
+    if(status===K.BUSY_DESTROYING) {
+      throw K.BAD_STATE_ERROR ;
+    } else status = K.READY_CLEAN ;
+
+    this.writeStatus(storeKey, status) ;
+    if (dataHash) this.writeDataHash(storeKey, dataHash, status) ;
+    if (newId) SC.Store.replaceIdFor(storeKey, newId);
+
+    statusOnly = dataHash || newId ? false : true;
+    this.dataHashDidChange(storeKey, null, statusOnly);
+
+    // Force record to refresh its cached properties based on store key
+    var record = this.materializeRecord(storeKey);
+
+    //update callbacks
+    this._retreiveCallbackForStoreKey(storeKey);
+
+    return this ;
+  },
 
 
 });
 
-// XM.set('store', XM.Store.create().from('XM.DataSource'));

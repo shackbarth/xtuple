@@ -411,7 +411,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.customer.set('isEditable', false);
       this.updateSubTotal();
-      this.updateLineTax();
       this.taxesDidChange();
     }
   }.observes('status')

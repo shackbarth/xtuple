@@ -205,17 +205,13 @@ XM.Record = SC.Record.extend(
   },
   
   /**
-    Registers a child record with this parent record.
-
-    If the parent already knows about the child record, return the cached
-    instance. If not, create the child record instance and add it to the child
-    record cache.
-
-    @param {Hash} value The hash of attributes to apply to the child record.
-    @param {Integer} key The store key that we are asking for
-    @param {String} path The property path of the child record
-    @returns {SC.Record} the child record that was registered
-   */
+    Reimplimented from SC.Record. 
+    
+    This version calls loadNestedRecord instead of createNestedRecord so 
+    we get a record with correct status from the start.
+    
+    @seealso loadNestedRecord
+  */
   registerNestedRecord: function(value, key, path) {
     var store, psk, csk, childRecord, recordType;
 
@@ -243,12 +239,9 @@ XM.Record = SC.Record.extend(
   },
   
   /**
-    Loads a new nested record instance.
-
-    @param {SC.Record} recordType The type of the nested record to load.
-    @param {Hash} hash The hash of attributes to apply to the child record.
-    (may be null)
-    @returns {SC.Record} the nested record created
+    Loads a new nested record instance into the store.
+    
+    @seealso registerNestedRecord
   */
   loadNestedRecord: function(recordType, hash) {
     var store, id, sk, pk, cr = null, store = this.get('store');
@@ -267,12 +260,11 @@ XM.Record = SC.Record.extend(
   },
   
   /**
-    Creates a new nested record instance.
-
-    @param {SC.Record} recordType The type of the nested record to create.
-    @param {Hash} hash The hash of attributes to apply to the child record.
-    (may be null)
-    @returns {SC.Record} the nested record created
+    Reimplemented from SC.Record. 
+    
+    This version registers the child and marks
+    the parent as dirty. Use this function any time you want to create a new
+    record that is nested.
    */
   createNestedRecord: function(recordType, hash, path) {
     var store, id, sk, pk, cr = null, store = this.get('store');

@@ -108,7 +108,8 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
     var status = this.get('status');    
     if(status !== SC.Record.READY_NEW && 
        status !== SC.Record.READY_DIRTY) return;
-       
+     
+    // recalculate price
     var that = this,
         customer = this.getPath('invoice.customer'),
         shipto = this.getPath('invoice.shipto'),
@@ -208,22 +209,6 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       this.setIfChanged('tax', taxTotal);
     }
   }.observes('extendedPrice', 'taxType'),
-  /*
-  invoiceDidChange: function() {
-    var status = this.get('status'),
-        lineNumber = this.get('lineNumber')
-    if (status === SC.Record.READY_NEW && !lineNumber) {
-      var lines = this.getPath('invoice'),
-           maxNumber = 0;
-       
-      for (var i = 0; i < lines.get('length'); i++) {
-        var num = lines.objectAt(i).get('lineNumber');
-        maxNumber = num > nextNumber ? num : maxNumber;
-      }
-      
-    }
-    this.set('lineNumber', maxNumber + 1);
-  }.observes('invoice')
-  */
+
 
 });
