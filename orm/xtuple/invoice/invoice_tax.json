@@ -4,7 +4,7 @@
   "type": "InvoiceTax",
   "table": "invcheadtax",
   "idSequenceName": "taxhist_taxhist_id_seq",
-  "comment": "Invoice Tax Map (A",
+  "comment": "Invoice Tax Map",
   "privileges": {
     "all": {
       "create": true,
@@ -105,29 +105,6 @@
         "type": "Number",
         "column": "taxhist_curr_rate"
       }
-    }
-  ],
-  "extensions": [
-    {
-      "table": "taxtype",
-      "isChild": true,
-      "relations": [
-        {
-          "column": "taxtype_id",
-          "inverse": "taxType"
-        }
-      ],
-      "properties": [
-        {
-          "name": "taxTypeName",
-          "attr": {
-            "type": "String",
-            "column": "taxtype_name",
-            "value": "Adjustment",
-            "isVisible": false
-          }
-        }
-      ]
     }
   ],
 	"isNestedOnly": true,
