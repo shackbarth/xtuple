@@ -4,6 +4,7 @@
   "type": "InvoiceLine",
   "table": "invcitem",
   "comment": "Invoice Line Map",
+  "idSequenceName": "invcitem_invcitem_id_seq",
   "privileges": {
     "all": {
       "create": true,
@@ -25,7 +26,8 @@
       "name": "invoice",
       "toOne": {
         "type": "Invoice",
-        "column": "invcitem_invchead_id"
+        "column": "invcitem_invchead_id",
+        "defaultValue": "parentRecord"
       }
     },
     {
