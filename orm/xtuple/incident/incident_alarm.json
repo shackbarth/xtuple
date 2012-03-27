@@ -101,7 +101,7 @@
       "attr": {
         "type": "Date",
         "column": "alarm_time",
-        "defaultValue": "currentTime",
+        "defaultValue": "currentDate",
         "useIsoDate": true
       }
     },

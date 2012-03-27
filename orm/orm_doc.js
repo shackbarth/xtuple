@@ -335,6 +335,18 @@
         */
         "defaultValue": "O"        
         
+        /**
+        SC.RecordAttribute property. Indicates whether a "Date" type will use the ISO8601
+        format.
+
+        Even though it defaults to true in the Client, the xTuple datasource model generator
+        will override this condition if not explicitly expressed.
+           
+        @type {Boolean}
+        @default {false}
+        */
+        "useIsoDate": true,
+        
       },
       
       /** 
