@@ -60,6 +60,7 @@ XM._Invoice = {
   */
   orderDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     defaultValue: function() {
       return SC.DateTime.create();
     },
@@ -71,6 +72,7 @@ XM._Invoice = {
   */
   invoiceDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     defaultValue: function() {
       return SC.DateTime.create();
     },
@@ -82,6 +84,7 @@ XM._Invoice = {
   */
   shipDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_shipDate'.loc()
   }),
 

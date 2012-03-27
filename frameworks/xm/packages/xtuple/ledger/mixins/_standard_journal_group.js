@@ -45,6 +45,7 @@ XM._StandardJournalGroup = {
   */
   name: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_name'.loc()
   }),
 

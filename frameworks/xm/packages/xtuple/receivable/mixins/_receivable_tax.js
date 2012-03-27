@@ -108,6 +108,7 @@ XM._ReceivableTax = {
   */
   documentDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_documentDate'.loc()
   }),
 

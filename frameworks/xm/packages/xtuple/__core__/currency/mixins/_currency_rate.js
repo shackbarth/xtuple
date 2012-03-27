@@ -61,6 +61,7 @@ XM._CurrencyRate = {
   */
   effective: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     isRequired: true,
     label: '_effective'.loc()
   }),
@@ -70,6 +71,7 @@ XM._CurrencyRate = {
   */
   expires: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     isRequired: true,
     label: '_expires'.loc()
   })

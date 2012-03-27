@@ -57,65 +57,42 @@ XM._ProjectTaskAlarm = {
   /**
     @type Boolean
   */
-  event: SC.Record.attr(Boolean, {
-    label: '_event'.loc()
+  isEvent: SC.Record.attr(Boolean, {
+    label: '_isEvent'.loc()
   }),
 
   /**
     @type String
   */
   eventRecipient: SC.Record.attr(String, {
+    defaultValue: function() {
+      return arguments[0].getPath("store.dataSource").session.userName;
+    },
     label: '_eventRecipient'.loc()
   }),
 
   /**
     @type Boolean
   */
-  email: SC.Record.attr(Boolean, {
-    label: '_email'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  emailRecipient: SC.Record.attr(String, {
-    label: '_emailRecipient'.loc()
-  }),
-
-  /**
-    @type Boolean
-  */
-  message: SC.Record.attr(Boolean, {
-    label: '_message'.loc()
+  isMessage: SC.Record.attr(Boolean, {
+    label: '_isMessage'.loc()
   }),
 
   /**
     @type String
   */
   messageRecipient: SC.Record.attr(String, {
+    defaultValue: function() {
+      return arguments[0].getPath("store.dataSource").session.userName;
+    },
     label: '_messageRecipient'.loc()
-  }),
-
-  /**
-    @type Date
-  */
-  trigger: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    label: '_trigger'.loc()
-  }),
-
-  /**
-    @type Date
-  */
-  time: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    label: '_time'.loc()
   }),
 
   /**
     @type Number
   */
   offset: SC.Record.attr(Number, {
+    defaultValue: 15,
     label: '_offset'.loc()
   }),
 
@@ -123,7 +100,27 @@ XM._ProjectTaskAlarm = {
     @type String
   */
   qualifier: SC.Record.attr(String, {
+    defaultValue: 'MB',
     label: '_qualifier'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  time: SC.Record.attr(SC.DateTime, {
+    useIsoDate: true,
+    defaultValue: function() {
+      return SC.DateTime.create().toFormattedString(SC.DATETIME_ISO8601);
+    },
+    label: '_time'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  trigger: SC.Record.attr(SC.DateTime, {
+    useIsoDate: true,
+    label: '_trigger'.loc()
   })
 
 };
