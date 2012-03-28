@@ -150,6 +150,7 @@ XM._CustomerCreditCard = {
   */
   created: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_created'.loc()
   }),
 
@@ -165,6 +166,7 @@ XM._CustomerCreditCard = {
   */
   updated: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_updated'.loc()
   }),
 

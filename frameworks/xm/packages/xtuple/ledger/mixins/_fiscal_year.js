@@ -45,6 +45,7 @@ XM._FiscalYear = {
   */
   start: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_start'.loc()
   }),
 
@@ -53,6 +54,7 @@ XM._FiscalYear = {
   */
   end: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_end'.loc()
   }),
 

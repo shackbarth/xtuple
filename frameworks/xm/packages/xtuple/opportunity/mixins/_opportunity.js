@@ -146,8 +146,9 @@ XM._Opportunity = {
   */
   startDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create();
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_startDate'.loc()
   }),
@@ -157,6 +158,7 @@ XM._Opportunity = {
   */
   assignDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_assignDate'.loc()
   }),
 
@@ -165,6 +167,7 @@ XM._Opportunity = {
   */
   targetClose: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_targetClose'.loc()
   }),
 
@@ -173,6 +176,7 @@ XM._Opportunity = {
   */
   actualClose: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_actualClose'.loc()
   }),
 

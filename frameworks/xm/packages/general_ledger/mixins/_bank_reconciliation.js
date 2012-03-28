@@ -53,6 +53,7 @@ XM._BankReconciliation = {
   */
   openDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_openDate'.loc()
   }),
 
@@ -61,6 +62,7 @@ XM._BankReconciliation = {
   */
   endDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_endDate'.loc()
   }),
 
@@ -108,6 +110,7 @@ XM._BankReconciliation = {
   */
   postDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_postDate'.loc()
   }),
 
@@ -116,6 +119,7 @@ XM._BankReconciliation = {
   */
   created: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_created'.loc()
   }),
 

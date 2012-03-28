@@ -12,7 +12,7 @@ sc_require('mixins/_invoice_line');
 
   @extends XM.Record
 */
-XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
+XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
   /** @scope XM.InvoiceLine.prototype */ {
   
   /**
@@ -160,21 +160,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
       
       // callback
       callback = function(err, result) {
-        var store = that.get('store');
-        for(var i = 0; i < result.get('length'); i++) {
-          var storeKey, taxCode, detail,
-              tax = SC.Math.round(result[i].tax, XM.SALES_PRICE_SCALE);
-          taxTotal = taxTotal + tax,
-          storeKey = store.loadRecord(XM.TaxCode, result[i].taxCode);
-          taxCode = store.materializeRecord(storeKey);
-          detail = SC.Object.create({ 
-            taxCode: taxCode, 
-            tax: tax 
-          });
-          taxDetail.push(detail);
-        }
-        that.setIfChanged('taxDetail', taxDetail);
-        that.setIfChanged('tax', taxTotal);
+        that.setTaxDetail(result, 'taxDetail', 'tax');
       }
 
       // define call
@@ -191,22 +177,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine,
     } else {
       // add up stored result
       var taxes = this.get('taxes');
-
-      // Loop through tax detail
-      for(var i = 0; i < taxes.get('length'); i++) {
-        var hist = taxes.objectAt(i),
-            tax = SC.Math.round(hist.get('tax'), XM.SALES_PRICE_SCALE),
-            taxCode = hist.get('taxCode'),
-            codeTax;
-        taxTotal = taxTotal + tax;
-        codeTax = SC.Object.create({
-          taxCode: taxCode,
-          tax: tax
-        });
-        taxDetail.push(codeTax);  
-      }    
-      this.setIfChanged('taxDetail', taxDetail);
-      this.setIfChanged('tax', taxTotal);
+      that.setTaxDetail(taxes, 'taxDetail', 'tax');
     }
   }.observes('extendedPrice', 'taxType'),
 

@@ -60,8 +60,9 @@ XM._Invoice = {
   */
   orderDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create();
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_orderDate'.loc()
   }),
@@ -71,8 +72,9 @@ XM._Invoice = {
   */
   invoiceDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create();
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_invoiceDate'.loc()
   }),
@@ -82,6 +84,7 @@ XM._Invoice = {
   */
   shipDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_shipDate'.loc()
   }),
 
@@ -89,6 +92,7 @@ XM._Invoice = {
     @type Boolean
   */
   isPrinted: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isPrinted'.loc()
   }),
 
@@ -96,6 +100,7 @@ XM._Invoice = {
     @type Boolean
   */
   isPosted: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isPosted'.loc()
   }),
 
@@ -103,6 +108,7 @@ XM._Invoice = {
     @type Boolean
   */
   isVoid: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isVoid'.loc()
   }),
 
@@ -342,12 +348,21 @@ XM._Invoice = {
   }),
 
   /**
-    @type XM.InvoiceTax
+    @type XM.InvoiceTaxFreight
   */
-  taxes: SC.Record.toMany('XM.InvoiceTax', {
+  freightTaxes: SC.Record.toMany('XM.InvoiceTaxFreight', {
     isNested: true,
     inverse: 'invoice',
-    label: '_taxes'.loc()
+    label: '_freightTaxes'.loc()
+  }),
+
+  /**
+    @type XM.InvoiceTaxAdjustment
+  */
+  adjustmentTaxes: SC.Record.toMany('XM.InvoiceTaxAdjustment', {
+    isNested: true,
+    inverse: 'invoice',
+    label: '_adjustmentTaxes'.loc()
   }),
 
   /**

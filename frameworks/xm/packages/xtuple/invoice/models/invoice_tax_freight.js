@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_incident_alarm');
+sc_require('mixins/_invoice_tax_freight');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.IncidentAlarm = XM.Alarm.extend(XM._IncidentAlarm,
-  /** @scope XM.IncidentAlarm.prototype */ {
+XM.InvoiceTaxFreight = XM.Record.extend(XM._InvoiceTaxFreight,
+  /** @scope XM.InvoiceTaxFreight.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

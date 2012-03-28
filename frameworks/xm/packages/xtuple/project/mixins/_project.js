@@ -77,6 +77,7 @@ XM._Project = {
   */
   startDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_startDate'.loc()
   }),
 
@@ -85,6 +86,7 @@ XM._Project = {
   */
   dueDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     isRequired: true,
     label: '_dueDate'.loc()
   }),
@@ -94,6 +96,7 @@ XM._Project = {
   */
   assignDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_assignDate'.loc()
   }),
 
@@ -102,6 +105,7 @@ XM._Project = {
   */
   completeDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_completeDate'.loc()
   }),
 

@@ -67,6 +67,7 @@ XM._SalesRep = {
     @type Number
   */
   commission: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_commission'.loc()
   })
 
