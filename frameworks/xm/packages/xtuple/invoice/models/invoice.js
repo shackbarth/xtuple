@@ -81,21 +81,21 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     for(var i = 0; i < credits.get('length'); i++) {
       credit = credit + credits.objectAt(i).get('amount');
     }
-    return credit;
+    return SC.Math.round(credit, XM.MONEY_SCALE);
   }.property('creditsLength').cacheable(),
   
   taxTotal: function() {
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
-    return lineTax + freightTax + miscTax; 
+    return SC.Math.round(lineTax + freightTax + miscTax, XM.MONEY_SCALE); 
   }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
   total: function() {
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
         totalTax = this.get('taxTotal');
-    return subTotal + freight + totalTax; 
+    return SC.Math.round(subTotal + freight + totalTax, XM.MONEY_SCALE); 
   }.property('subTotal', 'freight', 'taxTotal').cacheable(),
   
   //..................................................
@@ -177,7 +177,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
             taxCode = lineTax.get('taxCode'),
             tax = lineTax.get('tax'),
             codeTotal = taxDetail.findProperty('taxCode', taxCode);
-    
+
         // summarize by tax code 
         if(codeTotal) {
           codeTotal.set('tax', codeTotal.get('tax') + tax);
@@ -222,6 +222,33 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
 
     return errors;
   }.observes('linesLength', 'total'),
+  
+  linesLengthDidChange: function() {
+    this.currency.set('isEditable', this.get('linesLength') > 0);
+  }.observes('linesLength'),
+  
+  taxCriteriaDidChange: function() {
+    // only recalculate if the user made a change 
+    var status = this.get('status');
+    if(status !== SC.Record.READY_NEW && 
+       status !== SC.Record.READY_DIRTY) return
+    
+    // mark lines dirty and recalculate line tax
+    var lines = this.get('lines'),
+        store = this.get('store'),
+        status = this.get('status');
+
+    for (var i = 0; i < lines.get('length'); i++) {
+      var line = lines.objectAt(i),
+          storeKey = line.get('storeKey');
+      store.writeDataHash(storeKey, null, status);
+      line.recordDidChange('status');
+      line.taxCriteriaDidChange();
+    }
+    
+    // kick over freight tax recalc
+    this.set('isFreightChanged', true); 
+  }.observes('taxZone', 'invoiceDate'),
   
   /**
     Populates customer defaults when customer changes.
@@ -345,14 +372,16 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
       // callback
       callback = function(err, result) {
         var storeKey, taxCode, detail;
-        storeKey = store.loadRecord(XM.TaxCode, result.taxCode);
-        taxCode = store.materializeRecord(storeKey);
-        detail = SC.Object.create({ 
-          taxCode: taxCode, 
-          tax: result.tax 
-        });
-        that.setIfChanged('freightTax', result.tax);
-        that.setIfChanged('freightTaxDetail', detail);
+        if(result.taxCode) {
+          storeKey = store.loadRecord(XM.TaxCode, result.taxCode);
+          taxCode = store.materializeRecord(storeKey);
+          detail = SC.Object.create({ 
+            taxCode: taxCode, 
+            tax: result.tax 
+          });
+        }
+        that.setIfChanged('freightTax', result.tax ? result.tax : 0);
+        that.setIfChanged('freightTaxDetail', detail ? detail : null);
       }
 
       // define call
@@ -411,7 +440,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.customer.set('isEditable', false);
       this.updateSubTotal();
-      this.updateLineTax();
       this.taxesDidChange();
     }
   }.observes('status')
