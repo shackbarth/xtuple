@@ -14,7 +14,7 @@ sc_require('mixins/_project');
   @extends XM.Document
   @extends XM.CoreDocuments
 */
-XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
+XM.Project = XM.Document.extend(XM._Project, XM.ProjectTask, XM.CoreDocuments,
   /** @scope XM.Project.prototype */ {
 
   // .................................................
@@ -43,6 +43,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
   }
   return SC.Math.round(total, XM.QTY_SCALE);
   }.property('actualHours').cacheable(),
+
   budgetedExpenses: function() {
   var budgetedExpenses = this.get('budgetedExpenses'),
       total = 0;
@@ -51,6 +52,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
   }
   return SC.Math.round(total, XM.MONEY_SCALE);
   }.property('budgetedExpenses').cacheable(),
+
   actualExpenses: function() {
   var actualExpenses = this.get('actualExpenses'),
       total = 0;
@@ -59,6 +61,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
   }
   return SC.Math.round(total, XM.MONEY_SCALE);
   }.property('actualExpenses').cacheable(),
+
   balanceHours: function() {
   var budgetedHours = this.get('budgetedHours'),
       actualHours = this.get('actualHours');
@@ -79,15 +82,19 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
   // OBSERVERS
   //
 
-  _xm_projectStatusDidChange: function() {
+  projectStatusDidChange: function() {
     var status = this.get('status'),
         projectStatus = this.get('projectStatus');
 
-    if(status & SC.Record.READY) {
+    if(status & SC.Record.READY_NEW) {
       if(projectStatus === XM.Project.COMPLETED) this.set('completeDate', SC.DateTime.create());    
     }
   }.observes('projectStatus'),
-
+  projectNumberDidChange: function() {
+    if(this.get('status') === SC.Record.READY_DIRTY) {
+      this.number.set('isEditable', false);
+    }
+  },//.observes('status')
    /* @private */
   _projectsLength: 0,
   
@@ -100,7 +107,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
         projects = this.get('projects');
 
     documents.addEach(projects);    
-  }.observes('projectsLength'),
+  }.observes('projects'),
 });
 
 XM.Project.mixin( /** @scope XM.Project */ {
