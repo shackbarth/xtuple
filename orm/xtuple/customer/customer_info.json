@@ -24,7 +24,7 @@
     {
       "name": "number",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "cust_number",
         "isEditable": false
       }

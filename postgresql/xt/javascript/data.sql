@@ -567,19 +567,18 @@ select xt.install_js('XT','Data','xtuple', $$
           record = value,
           props = [], ret = '';
 
-      /* remove potential fields not part of data definition */
-      for(var prop in record) {
+      for (var prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop),
         type = ormp ? (ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type) : 'String';
-        if(prop) {
-          if(ormp.toMany) { 
+        if (prop) {
+          if (ormp.toMany) { 
             /* orm rules ignore arrays, but we need this place holder so type signatures match */
             props.push("'{}'");  
-          } else if(ormp.toOne && ormp.toOne.isNested) { 
-            record[prop] = this.rowify(nameSpace + '.' + ormp.name, record[prop]);
+          } else if (ormp.toOne && ormp.toOne.isNested) { 
+            record[prop] = this.rowify(nameSpace + '.' + type, record[prop]);
             props.push(record[prop]); 
-          } else if(type === 'String' ||
-                    type === 'Date') {
+          } else if (type === 'String' ||
+                     type === 'Date') {
             props.push("'" + record[prop] + "'"); 
           } else {
             props.push(record[prop]);
