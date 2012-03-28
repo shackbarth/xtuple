@@ -3,11 +3,14 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
+
+sc_require('models/document');
+
 /** @class
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XM.Document
 */
 
 XM.Alarm = XM.Document.extend(
@@ -47,7 +50,6 @@ XM.Alarm = XM.Document.extend(
         case 'MA':
           if(alarmQualifier.indexOf('B') !== -1) {
             this.set('trigger', alarmTime.advance({minute: - alarmOffset}));
-debugger;
           } else this.set('trigger', alarmTime.advance({minute: + alarmOffset}));
           break;
         case 'HB':
