@@ -1,6 +1,6 @@
 // ==========================================================================
-// Project:   XM.Record
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
 /*globals XM */
 
@@ -254,7 +254,8 @@ XM.Record = SC.Record.extend(
     @seealso loadNestedRecord
   */
   registerNestedRecord: function(value, key, path) {
-    var store, psk, csk, childRecord, recordType;
+    var psk, csk, childRecord, recordType,
+        store = this.get('store');
 
     // if no path is entered it must be the key
     if (SC.none(path)) path = key;
@@ -263,89 +264,33 @@ XM.Record = SC.Record.extend(
     // current store.
     if (value && value.get && value.get('isRecord')) {
       childRecord = value;
-    }
-    else {
+      csk = childRecord.get('storeKey');
+    } else {
       recordType = this._materializeNestedRecordType(value, key);
-      childRecord = this.loadNestedRecord(recordType, value);
+      SC.run(function() {
+        var hash = value || {}, // init if needed
+            pk = recordType.prototype.primaryKey,
+            id = hash[pk];
+        csk = id ? store.storeKeyExists(recordType, id) : null;
+        if (csk) {
+          store.writeDataHash(csk, hash);
+          childRecord = store.materializeRecord(csk);
+        } else {
+          csk = store.pushRetrieve(recordType, id, hash);
+          childRecord = store.materializeRecord(csk);
+          childRecord.notifyPropertyChange('status');
+        }
+      }, this);
     }
     if (childRecord){
       this.isParentRecord = true;
-      store = this.get('store');
       psk = this.get('storeKey');
-      csk = childRecord.get('storeKey');
       store.registerChildToParent(psk, csk, path);
     }
 
     return childRecord;
   },
-  
-  /**
-    Loads a new nested record instance into the store.
-    
-    @seealso registerNestedRecord
-  */
-  loadNestedRecord: function(recordType, hash) {
-    var store, id, sk, pk, cr = null, 
-        store = this.get('store');
-    
-    SC.run(function() {
-      hash = hash || {}; // init if needed
-      pk = recordType.prototype.primaryKey
-      id = hash[pk];
-      sk = id ? store.storeKeyExists(recordType, id) : null;
-      if (sk) {
-        store.writeDataHash(sk, hash);
-        cr = store.materializeRecord(sk);
-      } else {
-        sk = store.pushRetrieve(recordType, id, hash);
-        cr = store.materializeRecord(sk);
-        cr.notifyPropertyChange('status');
-      }
-
-    }, this);
-
-    return cr;
-  },
-  
-  /**
-    Reimplemented from SC.Record. 
-    
-    This version registers the child and marks
-    the parent as dirty. Use this function any time you want to create a new
-    record that is nested.
-   */
-  createNestedRecord: function(recordType, hash, path) {
-    var store, id, sk, pk, cr = null, store = this.get('store');
-
-    // create or materialize record
-    SC.run(function() {
-      hash = hash || {}; // init if needed
-      pk = recordType.prototype.primaryKey
-      id = hash[pk];
-      sk = id ? store.storeKeyExists(recordType, id) : null;
-      if (sk){
-        store.writeDataHash(sk, hash);
-        cr = store.materializeRecord(sk);
-      } else {
-        cr = store.createRecord(recordType, hash) ;
-      }
-    }, this);
-
-    // register the new child, set this to parent and mark dirty.
-    if (cr) {
-      var store = this.get('store'),
-          psk = this.get('storeKey'),
-          csk = cr.get('storeKey'),
-          path;
-      this.isParentRecord = true;
-      store.registerChildToParent(psk, csk, path);
-      path = store.parentRecords[psk][csk];
-      this.recordDidChange(path);
-    }
-    
-    return cr;
-  },
-  
+   
   /**
     Reimplemented from SC.Record.
 
