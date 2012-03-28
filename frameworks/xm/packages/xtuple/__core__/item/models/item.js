@@ -22,12 +22,13 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
   // .................................................
   // CALCULATED PROPERTIES
   //
-
+/*
   number: SC.Record.attr(Number, {
    toType: function(record, key, value) {
     if(value) return value.toUpperCase();
    }
   }),
+
   unitAvailableTypes: function(){
     var unitType = this.get('unitType'),
         fromUnit = this.get('fromUnit'), //LB
@@ -38,12 +39,11 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
       //selling(guid 1), capacity(2), altcapacity(3), materialissue(4) 
       //selling can be used multiple time but 2,3,4 can only be used once per item of given unit type
        this.set('value'),
-       return;
-    }else if(multiple === false){
+    } else if(multiple === false) {
       this.set('value'),
-      return;
     }
   },
+
   itemTaxTypes: function() {
     var itemTaxType = this.get('itemTaxType'),
         itemTaxZone = this.get('itemTaxZone'),
@@ -53,7 +53,7 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
       return;
     }
   },
-
+*/
   //..................................................
   // METHODS
   //
