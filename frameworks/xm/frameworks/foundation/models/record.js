@@ -285,16 +285,23 @@ XM.Record = SC.Record.extend(
     @seealso registerNestedRecord
   */
   loadNestedRecord: function(recordType, hash) {
-    var store, id, sk, pk, cr = null, store = this.get('store');
+    var store, id, sk, pk, cr = null, 
+        store = this.get('store');
     
     SC.run(function() {
       hash = hash || {}; // init if needed
       pk = recordType.prototype.primaryKey
       id = hash[pk];
       sk = id ? store.storeKeyExists(recordType, id) : null;
-      if (sk) store.writeDataHash(sk, hash);
-      else sk = store.pushRetrieve(recordType, id, hash);
-      cr = store.materializeRecord(sk);
+      if (sk) {
+        store.writeDataHash(sk, hash);
+        cr = store.materializeRecord(sk);
+      } else {
+        sk = store.pushRetrieve(recordType, id, hash);
+        cr = store.materializeRecord(sk);
+        cr.notifyPropertyChange('status');
+      }
+
     }, this);
 
     return cr;
@@ -337,6 +344,35 @@ XM.Record = SC.Record.extend(
     }
     
     return cr;
+  },
+  
+  /**
+    Reimplemented from SC.Record.
+
+    Don't destroy the parent.
+  */
+  destroy: function() {
+    var store = this.get('store'), rec,
+        sk = this.get('storeKey');
+
+    store.destroyRecord(null, null, sk);
+    this.notifyPropertyChange('status');
+    // If there are any aggregate records, we might need to propagate our new
+    // status to them.
+    this.propagateToAggregates();
+
+    // If we have a parent, they changed too!
+    var p = this.get('parentRecord');
+    if (p) {
+      var psk = p.get('storeKey'),
+          csk = this.get('storeKey'),
+          store = this.get('store'),
+          path = store.parentRecords[psk][csk];
+  
+      p.recordDidChange(path);
+    }
+
+    return this ;
   },
 
   // ..........................................................
