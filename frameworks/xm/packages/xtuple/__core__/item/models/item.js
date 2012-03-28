@@ -38,10 +38,8 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
       //selling(guid 1), capacity(2), altcapacity(3), materialissue(4) 
       //selling can be used multiple time but 2,3,4 can only be used once per item of given unit type
        this.set('value'),
-       return;
-    }else if(multiple === false){
+    } else if(multiple === false) {
       this.set('value'),
-      return;
     }
   },
   itemTaxTypes: function() {
