@@ -26,86 +26,48 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
     if(value) return value.toUpperCase();
    }
   }),
-
-  /** 
-  @field
-  @type Number
-  */
   budgetedHours: function() {
-  var _budgetedHours = this.get('budgetedHours'),
+  var budgetedHours = this.get('budgetedHours'),
       total = 0;
-
-  for(var i = 0; i < _budgetedHours.get('length'); i++) {
-    total = total + _budgetedHours.objectAt(i).get('budgetedHours');
+  for(var i = 0; i < budgetedHours.get('length'); i++) {
+    total = total + budgetedHours.objectAt(i).get('budgetedHours');
   }
+  return SC.Math.round(total, XM.QTY_SCALE);
+  }.property('budgetedHours').cacheable(),
 
-  return total;
-  }.property('_budgetedHoursLength').cacheable(),
-
-  /**
-  @field
-  @type Number
-  */
   actualHours: function() {
-  var _actualHours = this.get('actualHours'),
+  var actualHours = this.get('actualHours'),
       total = 0;
-
-  for(var i = 0; i < _actualHours.get('length'); i++) {
-    total = total + _actualHours.objectAt(i).get('actualHours');
+  for(var i = 0; i < actualHours.get('length'); i++) {
+    total = total + actualHours.objectAt(i).get('actualHours');
   }
-
-  return total;
-  }.property('_actualHoursLength').cacheable(),
-
-  /**
-  @field
-  @type Number
-  */
+  return SC.Math.round(total, XM.QTY_SCALE);
+  }.property('actualHours').cacheable(),
   budgetedExpenses: function() {
-  var _budgetedExpenses = this.get('budgetedExpenses'),
+  var budgetedExpenses = this.get('budgetedExpenses'),
       total = 0;
-
-  for(var i = 0; i < _budgetedExpenses.get('length'); i++) {
-    total = total + _budgetedExpenses.objectAt(i).get('budgetedExpenses');
+  for(var i = 0; i < budgetedExpenses.get('length'); i++) {
+    total = total + budgetedExpenses.objectAt(i).get('budgetedExpenses');
   }
-
-  return total;
-  }.property('_budgetedExpensesLength').cacheable(),
-
-  /**
-  @field
-  @type Number
-  */
+  return SC.Math.round(total, XM.MONEY_SCALE);
+  }.property('budgetedExpenses').cacheable(),
   actualExpenses: function() {
-  var _actualExpenses = this.get('actualExpenses'),
+  var actualExpenses = this.get('actualExpenses'),
       total = 0;
-
-  for(var i = 0; i < _actualExpenses.get('length'); i++) {
-    total = total + _actualExpenses.objectAt(i).get('actualExpenses');
+  for(var i = 0; i < actualExpenses.get('length'); i++) {
+    total = total + actualExpenses.objectAt(i).get('actualExpenses');
   }
-
-  return total;
-  }.property('_actualExpensesLength').cacheable(),
-
-  /**
-  @field
-  @type Number
-  */
+  return SC.Math.round(total, XM.MONEY_SCALE);
+  }.property('actualExpenses').cacheable(),
   balanceHours: function() {
   var budgetedHours = this.get('budgetedHours'),
       actualHours = this.get('actualHours');
-
   return budgetedHours - actualHours;
   }.property('budgetedHours', 'actualHours').cacheable(),
 
-  /**
-  @field
-  @type Number
-  */
   balanceExpenses: function() {
   var budgetedExpenses = this.get('budgetedExpenses'),
       actualExpenses = this.get('actualExpenses');
-
   return budgetedExpenses - actualExpenses;
   }.property('budgetedExpenses', 'actualExpenses').cacheable(),
 
