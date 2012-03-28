@@ -67,6 +67,7 @@ XM._Terms = {
     @type Number
   */
   dueDays: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_dueDays'.loc()
   }),
 
@@ -74,6 +75,7 @@ XM._Terms = {
     @type Number
   */
   discountDays: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_discountDays'.loc()
   }),
 
@@ -81,6 +83,7 @@ XM._Terms = {
     @type Number
   */
   discountPercent: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_discountPercent'.loc()
   }),
 
@@ -88,6 +91,7 @@ XM._Terms = {
     @type Number
   */
   cutOffDay: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_cutOffDay'.loc()
   })
 

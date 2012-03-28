@@ -94,6 +94,7 @@ XM._ToDo = {
   */
   startDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_startDate'.loc()
   }),
 
@@ -102,6 +103,7 @@ XM._ToDo = {
   */
   dueDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     isRequired: true,
     label: '_dueDate'.loc()
   }),
@@ -111,6 +113,7 @@ XM._ToDo = {
   */
   assignDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_assignDate'.loc()
   }),
 
@@ -119,6 +122,7 @@ XM._ToDo = {
   */
   completeDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_completeDate'.loc()
   }),
 

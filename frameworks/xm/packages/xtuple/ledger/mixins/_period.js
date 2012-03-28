@@ -52,6 +52,7 @@ XM._Period = {
   */
   start: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_start'.loc()
   }),
 
@@ -60,6 +61,7 @@ XM._Period = {
   */
   end: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_end'.loc()
   }),
 

@@ -79,6 +79,7 @@ XM._ItemComment = {
   */
   created: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_created'.loc()
   }),
 
