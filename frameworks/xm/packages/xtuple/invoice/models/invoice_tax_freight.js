@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_item_site_info');
+sc_require('mixins/_invoice_tax_freight');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.ItemSiteInfo = XM.Record.extend(XM._ItemSiteInfo,
-  /** @scope XM.ItemSiteInfo.prototype */ {
+XM.InvoiceTaxFreight = XM.Record.extend(XM._InvoiceTaxFreight,
+  /** @scope XM.InvoiceTaxFreight.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

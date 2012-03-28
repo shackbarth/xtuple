@@ -348,12 +348,21 @@ XM._Invoice = {
   }),
 
   /**
-    @type XM.InvoiceTax
+    @type XM.InvoiceTaxFreight
   */
-  taxes: SC.Record.toMany('XM.InvoiceTax', {
+  freightTaxes: SC.Record.toMany('XM.InvoiceTaxFreight', {
     isNested: true,
     inverse: 'invoice',
-    label: '_taxes'.loc()
+    label: '_freightTaxes'.loc()
+  }),
+
+  /**
+    @type XM.InvoiceTaxAdjustment
+  */
+  adjustmentTaxes: SC.Record.toMany('XM.InvoiceTaxAdjustment', {
+    isNested: true,
+    inverse: 'invoice',
+    label: '_adjustmentTaxes'.loc()
   }),
 
   /**

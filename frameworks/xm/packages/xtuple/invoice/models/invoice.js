@@ -12,7 +12,7 @@ sc_require('mixins/_invoice');
 
   @extends XM.Document
 */
-XM.Invoice = XM.Document.extend(XM._Invoice,
+XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /** @scope XM.Invoice.prototype */ {
   
   numberPolicySetting: 'InvcNumberGeneration',
@@ -35,28 +35,52 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
   /* @private */
   linesLengthBinding: SC.Binding.from('*lines.length').noDelay(),
   
+  /**
+    Total of line item sales.
+    
+    @type Number
+  */
   subTotal: 0,
   
+  /**
+    Total of line item taxes. May be either estimated or actual
+    depending on whether line item detail has changed.
+    
+    @type Number
+  */
   lineTax: 0,
-  
-  freightTax: 0,
-  
-  miscTax: 0,
   
   /**
     An array of tax codes an with summarized amounts for line items.
+    May be either estimated or actual depending on whether line item detail 
+    has changed.
+    
+    @type Array
   */
   lineTaxDetail: [],
+  
+  /**
+    Total of miscellaneous tax adjustments.
+    
+    @type Number
+  */
+  miscTax: 0,
+  
+  /**
+    Calculated total of freight taxes. May be either estimated or actual
+    depending on whether freight or tax zone has changed.
+    
+    @type Number
+  */
+  freightTax: 0,
 
   /**
-    An array of tax codes an with amounts for freight.
+    An array of tax codes an with amounts for freight. May be either
+    estimated or actual. freightTaxes, if any, are always actual.
+    
+    @type Array
   */  
   freightTaxDetail: [],
-
-  /**
-    An array of tax codes an with amounts for line items.
-  */
-  miscTaxDetail: [],
   
   isPosted: SC.Record.attr(Boolean, {
     isEditable: false,
@@ -67,7 +91,9 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
   //
   
   /**
-    Credit allocated to the invoice.
+    Total credit allocated to the invoice.
+    
+    @type Number
   */
   credit: function() {
     var credits = this.get('credits'),
@@ -75,22 +101,32 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     for(var i = 0; i < credits.get('length'); i++) {
       credit = credit + credits.objectAt(i).get('amount');
     }
-    return credit;
+    return SC.Math.round(credit, XM.MONEY_SCALE);
   }.property('creditsLength').cacheable(),
   
-  totalTax: function() {
+  /**
+    Total invoice taxes.
+    
+    @type Number
+  */
+  taxTotal: function() {
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
-    return lineTax + freightTax + miscTax; 
+    return SC.Math.round(lineTax + freightTax + miscTax, XM.MONEY_SCALE); 
   }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
+  /**
+    Total invoice amount.
+    
+    @type Number
+  */
   total: function() {
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
-        totalTax = this.get('totalTax');
-    return subTotal + freight + totalTax; 
-  }.property('subTotal', 'freight', 'totalTax').cacheable(),
+        totalTax = this.get('taxTotal');
+    return SC.Math.round(subTotal + freight + totalTax, XM.MONEY_SCALE); 
+  }.property('subTotal', 'freight', 'taxTotal').cacheable(),
   
   //..................................................
   // METHODS
@@ -103,10 +139,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
   void: function() {
     return false;
   },
-
-  //..................................................
-  // OBSERVERS
-  //
   
   /**
     Set the enabled state of billto attributes.
@@ -142,16 +174,127 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     this.shiptoCountry.set('isEditable', isEditable);
   },
   
+  /**
+    Recalculate line item sales totals.
+  */
+  updateSubTotal: function() {
+    var lines = this.get('lines'),
+        subTotal = 0;
+    for(var i = 0; i < lines.get('length'); i++) {
+      var line = lines.objectAt(i),
+          extendedPrice = line.get('extendedPrice');
+      subTotal = subTotal + extendedPrice;
+    }
+    this.setIfChanged('subTotal', subTotal);
+  },
+  
+  /**
+    Recalculate line item tax detail and totals.
+  */
+  updateLineTax: function() {
+    var lines = this.get('lines'),
+        taxDetail = [],
+        taxTotal = 0;
+
+    // first sub total taxes
+    for (var i = 0; i < lines.get('length'); i++) {
+      var line = lines.objectAt(i),
+          taxes = line.get('taxDetail');
+
+      // taxes
+      for (var n = 0; n < taxes.get('length'); n++) {
+        var lineTax = taxes.objectAt(n),
+            taxCode = lineTax.get('taxCode'),
+            tax = lineTax.get('tax'),
+            codeTotal = taxDetail.findProperty('taxCode', taxCode);
+
+        // summarize by tax code 
+        if(codeTotal) {
+          codeTotal.set('tax', codeTotal.get('tax') + tax);
+        } else {   
+          codeTotal = SC.Object.create({
+            taxCode: taxCode,
+            tax: tax
+          });
+          taxDetail.push(codeTotal);
+        }   
+      }
+    }
+
+    // next round and sum up each tax code for total
+    for(var i = 0; i < taxDetail.get('length'); i++) {
+      var codeTotal = taxDetail.objectAt(i),
+          rtax = SC.Math.round(codeTotal.get('tax'), XM.MONEY_SCALE);
+      codeTotal.set('tax', rtax);
+      taxTotal = taxTotal + rtax;
+    }
+    this.setIfChanged('lineTax',  SC.Math.round(taxTotal, XM.MONEY_SCALE));
+    this.setIfChanged('lineTaxDetail', taxDetail);
+  },
+  
+  /**
+    Recaclulate freight tax totals.
+  */
+  updateFreightTax: function(isEstimate) {  
+    // request a calculated estimate for freight
+    if(isEstimate) {
+      var that = this,
+          taxZone = that.getPath('taxZone.id') || -1,
+          effective = that.getPath('invoiceDate').toFormattedString('%Y-%m-%d'),
+          currency = that.getPath('currency.id'),
+          amount = that.get('freight') || 0, dispatch,
+          store = that.get('store');
+          
+      // callback
+      callback = function(err, result) {
+        this.setTaxDetail(result, 'freightTaxDetail', 'freightTax');
+      }
+
+      // define call
+      dispatch = XM.Dispatch.create({
+        className: 'XM.Invoice',
+        functionName: 'calculateFreightTax',
+        parameters: [taxZone, effective, currency, amount],
+        target: that,
+        action: callback
+      });
+      
+      // do it
+      store.dispatch(dispatch);
+      
+    // total up freight taxes recorded in the data source
+    } else {
+      var taxes = this.get('freightTaxes');
+      this.setTaxDetail(taxes, 'freightTaxDetail', 'freightTax');
+    }
+  },
+  
+  /**
+    Recaclulate tax adjustment total.
+  */
+  updateMiscTax: function() {  
+    var taxes = this.get('adjustmentTaxes'),
+        miscTax = 0;
+    for(var i = 0; i < taxes.get('length'); i++) {
+      miscTax = miscTax + taxes.objectAt(i).get('tax'); 
+    } 
+    this.setIfChanged('miscTax', SC.Math.round(miscTax, XM.MONEY_SCALE));
+  },
+
+  //..................................................
+  // OBSERVERS
+  //
+    
   validate: function() {
     var errors = arguments.callee.base.apply(this, arguments), 
         val, err;
 
-    // Validate Lines
+    // validate Lines
     val = this.get('linesLength');
     err = XM.errors.findProperty('code', 'xt1010');
     this.updateErrors(err, !val);
 
-    // Validate Total
+    // validate Total
     val = this.get('total');
     err = XM.errors.findProperty('code', 'xt1009');
     this.updateErrors(err, val < 0);
@@ -159,17 +302,58 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     return errors;
   }.observes('linesLength', 'total'),
   
+  linesLengthDidChange: function() {
+    this.currency.set('isEditable', this.get('linesLength') > 0);
+  }.observes('linesLength'),
+  
+  /**
+    Recalculate all line taxes.
+  */
+  lineTaxCriteriaDidChange: function() {
+    // only recalculate if the user made a change 
+    var status = this.get('status');
+    if(status !== SC.Record.READY_NEW && 
+       status !== SC.Record.READY_DIRTY) return
+    
+    // recalculate line tax
+    var lines = this.get('lines'),
+        store = this.get('store'),
+        status = this.get('status');
+
+    for (var i = 0; i < lines.get('length'); i++) {
+      var line = lines.objectAt(i),
+          lineStatus = line.get('status'),
+          storeKey = line.get('storeKey');
+      if (lineStatus === SC.Record.READY_CLEAN) {
+        store.writeDataHash(storeKey, null, SC.Record.READY_DIRTY);
+        line.recordDidChange('status');
+      }
+      line.taxCriteriaDidChange();
+    }
+  }.observes('taxZone', 'invoiceDate'),
+  
+  /**
+    Recacalculate freight tax.
+  */
+  freightTaxCriteriaDidChange: function() {
+    var status = this.get('status');
+    if (status === SC.Record.READY_NEW || 
+        status === SC.Record.READY_DIRTY) {
+      this.updateFreightTax(true);
+    }
+  }.observes('freight', 'taxZone', 'invoiceDate'),
+  
   /**
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
-    console.log("***** CUSTOMER CHANGED ****"); 
+    // only set defaults if the user made the change 
+    var status = this.get('status');
+    if(status !== SC.Record.READY_NEW && 
+       status !== SC.Record.READY_DIRTY) return
+       
     var customer = this.get('customer'),
-        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false,
-        status = this.get('status');
-    // only set defaults if the user made the change  
-    if(status != SC.Record.READY_NEW && 
-       status != SC.Record.READY_DIRTY) return
+        isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
 
     // pass defaults in
     this.setFreeFormBilltoEnabled(true);
@@ -212,14 +396,14 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     Populates shipto defaults when shipto changes.
   */
   shiptoDidChange: function() {
-    var shipto = this.get('shipto'),
-        customer = this.get('customer'),
-        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false,
-        status = this.get('status');
-
-    // only set defaults if the user made the change    
+    // only set defaults if the user made the change
+    var status = this.get('status');    
     if(status !== SC.Record.READY_NEW && 
        status !== SC.Record.READY_DIRTY) return
+       
+    var shipto = this.get('shipto'),
+        customer = this.get('customer'),
+        isFreeFormShipto = customer ? customer.get('isFreeFormShipto') : false;
 
     // set defaults
     this.setFreeFormShiptoEnabled(true);
@@ -259,89 +443,16 @@ XM.Invoice = XM.Document.extend(XM._Invoice,
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
-  
+
   /**
-    Recalculate line item tax and sales totals.
+    Disable the customer if loaded from the database.
   */
-  linesDidChange: function() {
-    var lines = this.get('lines'),
-        taxDetail = [],
-        taxTotal = 0, subTotal = 0;
-
-    // first sub total sales and taxes
-    for(var i = 0; i < lines.get('length'); i++) {
-      var line = lines.objectAt(i),
-          taxes = line.get('taxes'),
-          extendedPrice = line.get('extendedPrice');
-
-      // line sub total
-      subTotal = subTotal + extendedPrice;
-
-      // taxes
-      for(var n = 0; n < taxes.get('length'); n++) {
-        var lineTax = taxes.objectAt(n),
-            taxCode = lineTax.get('taxCode'),
-            tax = lineTax.get('tax') - 0,
-            codeTotal = taxDetail.findProperty('taxCode', taxCode);
-        
-        // summarize by tax code 
-        if(codeTotal) {
-          codeTotal.tax = codeTotal.tax + tax;
-        } else {
-          codeTotal = {};    
-          codeTotal.taxCode = taxCode;
-          codeTotal.tax = tax;
-          taxDetail.push(codeTotal);
-        }   
-      }
-    }
-    
-    this.setIfChanged('subTotal', subTotal);
-    
-    // next round and sum up each tax code for total
-    for(var i = 0; i < taxDetail.length; i++) {
-      var codeTotal = taxDetail.objectAt(i);
-      
-      codeTotal.tax = SC.Math.round(codeTotal.tax, XM.MONEY_SCALE);
-      taxTotal = taxTotal + codeTotal.tax;
-    }
-    this.setIfChanged('lineTax', taxTotal);
-    this.setIfChanged('lineTaxDetail', taxDetail);
-  }.observes('linesLength', 'taxZone'),
-
-  taxesDidChange: function() {    
-    var taxes = this.get('taxes'), 
-        miscTaxDetail = [], freightTaxDetail = [],
-        miscTax = 0, freightTax = 0;
-
-    // Loop through header taxes and allocate
-    for(var i = 0; i < taxes.get('length'); i++) {
-      var hist = taxes.objectAt(i),
-          type = hist.getPath('taxType.id'),
-          tax = SC.Math.round(hist.get('tax'), XM.MONEY_SCALE),
-          taxCode = hist.get('taxCode'),
-          codeTax = {};
-      if(type === XM.TaxType.ADJUSTMENT) {
-        miscTax = miscTax + tax;
-        codeTax.taxCode = taxCode;
-        codeTax.tax = tax;
-        miscTaxDetail.push(codeTax);   
-      } else if (type === XM.TaxType.FREIGHT) {
-        freightTax = freightTax + tax;
-        codeTax.taxCode = taxCode;
-        codeTax.tax = tax;
-        freightTaxDetail.push(codeTax); 
-      }
-    }    
-    this.setIfChanged('miscTax', miscTax);
-    this.setIfChanged('miscTaxDetail', miscTaxDetail);
-    this.setIfChanged('freightTax', freightTax);
-    this.setIfChanged('freightTaxDetail', freightTaxDetail);
-  }.observes('taxesLength', 'taxZone'),
-
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.customer.set('isEditable', false);
+      this.updateSubTotal();
+      this.updateFreightTax();
+      this.updateMiscTax();
     }
   }.observes('status')
 
