@@ -55,6 +55,8 @@ create or replace view xt.usr as
     false,
     false
   from xt.useracct;
+
+grant all on table xt.usr to xtrole;
      
 -- Rules
 

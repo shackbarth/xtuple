@@ -329,11 +329,28 @@
         Default value specifies initial value you want populated in the property. Can be a 
         string, number or boolean. 
         
-        There is also support for special keywords "currentDate", 
-        "currentUser" and "baseCurrency" which will generate correct default value functions
+        There is also support for special keywords: 
+          * "currentDate", 
+          * "currentUser"
+          * "baseCurrency" 
+          * "parentRecord"
+          
+        Each of these will generate correct default value functions
         on client side generated code using the xTuple datasource model generator.
         */
         "defaultValue": "O"        
+        
+        /**
+        SC.RecordAttribute property. Indicates whether a "Date" type will use the ISO8601
+        format.
+
+        Even though it defaults to true in the Client, the xTuple datasource model generator
+        will override this condition if not explicitly expressed.
+           
+        @type {Boolean}
+        @default {false}
+        */
+        "useIsoDate": true,
         
       },
       

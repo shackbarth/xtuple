@@ -1,16 +1,15 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "InvoiceTax",
+  "type": "InvoiceTaxFreight",
   "table": "invcheadtax",
-  "idSequenceName": "taxhist_taxhist_id_seq",
-  "comment": "Invoice Tax Map (A",
+  "comment": "Invoice Freight Tax Map",
   "privileges": {
     "all": {
-      "create": true,
+      "create": false,
       "read": true,
-      "update": true,
-      "delete": true
+      "update": false,
+      "delete": false
     }
   },
   "properties": [
@@ -33,7 +32,8 @@
       "name": "taxType",
       "toOne": {
         "type": "TaxType",
-        "column": "taxhist_taxtype_id"
+        "column": "taxhist_taxtype_id",
+        "isVisible": false
       }
     },
     {
@@ -44,38 +44,10 @@
       }
     },
     {
-      "name": "basis",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_basis"
-      }
-    },
-    {
-      "name": "basisTaxCode",
-      "toOne": {
-        "type": "TaxCode",
-        "column": "taxhist_basis_tax_id"
-      }
-    },
-    {
       "name": "sequence",
       "attr": {
         "type": "Number",
         "column": "taxhist_sequence"
-      }
-    },
-    {
-      "name": "percent",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_percent"
-      }
-    },
-    {
-      "name": "amount",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_amount"
       }
     },
     {
@@ -90,20 +62,6 @@
       "attr": {
         "type": "Date",
         "column": "taxhist_docdate"
-      }
-    },
-    {
-      "name": "currency",
-      "toOne": {
-        "type": "Currency",
-        "column": "taxhist_curr_id"
-      }
-    },
-    {
-      "name": "currencyRate",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_curr_rate"
       }
     }
   ],
@@ -123,7 +81,7 @@
           "attr": {
             "type": "String",
             "column": "taxtype_name",
-            "value": "Adjustment",
+            "value": "Freight",
             "isVisible": false
           }
         }

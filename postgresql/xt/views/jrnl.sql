@@ -62,6 +62,8 @@ where gltrans_source in ('G/L','A/R','A/P','W/O','P/D','I/M','S/R')
  and gltrans_doctype != 'JP'
 order by jrnl_date, jrnl_sequence, jrnl_sense desc;
 
+grant all on table xt.jrnl to xtrole;
+
 create or replace rule "_INSERT" as on insert to xt.jrnl do instead nothing;
 
 create or replace rule "_UPDATE" as on update to xt.jrnl do instead nothing;
