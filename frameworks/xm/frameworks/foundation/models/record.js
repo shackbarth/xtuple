@@ -39,17 +39,6 @@ XM.Record = SC.Record.extend(
   }),
   
   /**
-    A property that returns the result of canUpdate.
-    
-    @type Boolean
-  */
-  isEditable: function() {
-    var isEditable = arguments.callee.base.apply(this, arguments); 
-    if(isEditable && this.get('status') !== SC.Record.READY_NEW) return this.canUpdate();
-    return isEditable;
-  }.property('status').cacheable(),
-
-  /**
     A hash structure that defines data access.
     
     @property
@@ -85,6 +74,56 @@ XM.Record = SC.Record.extend(
   }),
   
   // ..........................................................
+  // COMPUTED PROPERTIES
+  //
+  
+  /**
+    Returns only attribute records that have changed.
+    
+    @type {Hash}
+    @property
+  */
+  changeSet: function() {
+    var attributes = this.get('attributes');
+
+    // recursive function that does the work
+    changedOnly = function(attrs) {
+      var ret = null;
+      if (attrs.dataState !== 'read') {
+        ret = {};
+        for (var prop in attrs) {
+          if (attrs[prop] instanceof Array) {
+            ret[prop] = [];
+            // loop through array and only include dirty items
+            for (var i = 0; i < attrs[prop].length; i++) {
+              var val = changedOnly(attrs[prop][i]);
+              if (val) ret[prop].push(val);
+            }
+          } else {
+            ret[prop] = attrs[prop];
+          }  
+        }
+      }
+      return ret;
+    }
+    
+    // do the work
+    return changedOnly(attributes);
+    // TODO: get this to reduce to only changed fields!
+  }.property(),
+  
+  /**
+    A property that returns the result of canUpdate.
+    
+    @type Boolean
+  */
+  isEditable: function() {
+    var isEditable = arguments.callee.base.apply(this, arguments); 
+    if(isEditable && this.get('status') !== SC.Record.READY_NEW) return this.canUpdate();
+    return isEditable;
+  }.property('status').cacheable(),
+  
+  // ..........................................................
   // METHODS
   //
 
@@ -99,7 +138,7 @@ XM.Record = SC.Record.extend(
   /**
     Returns whether the current record can be updated based on privilege settings.
     
-    @returns Boolean
+    @returns {Boolean}
   */
   canUpdate: function() {
     var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
@@ -111,7 +150,7 @@ XM.Record = SC.Record.extend(
   /**
     Returns whether the current record can be deleted based on privilege settings.
     
-    @returns Boolean
+    @returns {Boolean}
   */  
   canDelete: function() {
     var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
@@ -122,6 +161,8 @@ XM.Record = SC.Record.extend(
   
   /**
     Returns an array of property names for all required attributes.
+    
+    @returns {Array}
   */
   requiredAttributes: function() {
     var required = [], typeClass,
@@ -177,7 +218,7 @@ XM.Record = SC.Record.extend(
     
     @seealso XM.errors
     @seealso XM.Record.updateErrors
-    @returns Array
+    @returns {Array}
   */
   validate: function() {
     var required = this.requiredAttributes(),
