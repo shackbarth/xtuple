@@ -60,6 +60,8 @@ where not jrnl_rec
   and not this.bankrec_posted
   and not coalesce(checkhead_void, false);
 
+grant all on table xt.unrec to xtrole;
+
 create or replace rule "_INSERT" as on insert to xt.unrec do instead nothing;
 
 create or replace rule "_UPDATE" as on update to xt.unrec do instead nothing;

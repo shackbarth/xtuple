@@ -35,6 +35,8 @@ create or replace view xt.docinfo as
     imageass_purpose as purpose
    from imageass;
 
+grant all on table xt.docinfo to xtrole;
+
 -- insert rules
 
 create or replace rule "_CREATE" as on insert to xt.docinfo

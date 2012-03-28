@@ -319,10 +319,19 @@
       }
     },
     {
-      "name": "taxes",
+      "name": "freightTaxes",
       "toMany": {
         "isNested": true,
-        "type": "InvoiceTax",
+        "type": "InvoiceTaxFreight",
+        "column": "invchead_id",
+        "inverse": "invoice"
+      }
+    },
+    {
+      "name": "adjustmentTaxes",
+      "toMany": {
+        "isNested": true,
+        "type": "InvoiceTaxAdjustment",
         "column": "invchead_id",
         "inverse": "invoice"
       }

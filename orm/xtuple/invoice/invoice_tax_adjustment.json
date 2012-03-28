@@ -1,10 +1,10 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "InvoiceTax",
-  "table": "invcheadtax",
+  "type": "InvoiceTaxAdjustment",
+  "table": "xt.invcheadtaxadj",
   "idSequenceName": "taxhist_taxhist_id_seq",
-  "comment": "Invoice Tax Map",
+  "comment": "Invoice Tax Adjustment Map",
   "privileges": {
     "all": {
       "create": true,
@@ -30,13 +30,6 @@
       }
     },
     {
-      "name": "taxType",
-      "toOne": {
-        "type": "TaxType",
-        "column": "taxhist_taxtype_id"
-      }
-    },
-    {
       "name": "taxCode",
       "toOne": {
         "type": "TaxCode",
@@ -44,38 +37,11 @@
       }
     },
     {
-      "name": "basis",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_basis"
-      }
-    },
-    {
-      "name": "basisTaxCode",
-      "toOne": {
-        "type": "TaxCode",
-        "column": "taxhist_basis_tax_id"
-      }
-    },
-    {
       "name": "sequence",
       "attr": {
         "type": "Number",
-        "column": "taxhist_sequence"
-      }
-    },
-    {
-      "name": "percent",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_percent"
-      }
-    },
-    {
-      "name": "amount",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_amount"
+        "column": "taxhist_sequence",
+        "isEditable": false
       }
     },
     {
@@ -90,20 +56,6 @@
       "attr": {
         "type": "Date",
         "column": "taxhist_docdate"
-      }
-    },
-    {
-      "name": "currency",
-      "toOne": {
-        "type": "Currency",
-        "column": "taxhist_curr_id"
-      }
-    },
-    {
-      "name": "currencyRate",
-      "attr": {
-        "type": "Number",
-        "column": "taxhist_curr_rate"
       }
     }
   ],

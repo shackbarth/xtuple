@@ -1,0 +1,93 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "InvoiceTaxFreight",
+  "table": "invcheadtax",
+  "comment": "Invoice Freight Tax Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "invoice",
+      "toOne": {
+        "type": "Invoice",
+        "column": "taxhist_parent_id"
+      }
+    },
+    {
+      "name": "taxType",
+      "toOne": {
+        "type": "TaxType",
+        "column": "taxhist_taxtype_id",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "taxCode",
+      "toOne": {
+        "type": "TaxCode",
+        "column": "taxhist_tax_id"
+      }
+    },
+    {
+      "name": "sequence",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_sequence"
+      }
+    },
+    {
+      "name": "tax",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_tax"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_docdate"
+      }
+    }
+  ],
+  "extensions": [
+    {
+      "table": "taxtype",
+      "isChild": true,
+      "relations": [
+        {
+          "column": "taxtype_id",
+          "inverse": "taxType"
+        }
+      ],
+      "properties": [
+        {
+          "name": "taxTypeName",
+          "attr": {
+            "type": "String",
+            "column": "taxtype_name",
+            "value": "Freight",
+            "isVisible": false
+          }
+        }
+      ]
+    }
+  ],
+	"isNestedOnly": true,
+  "isSystem": true
+}

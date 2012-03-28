@@ -16,14 +16,20 @@ select xt.install_js('XM','Invoice','xtuple', $$
    @returns Number 
   */
   XM.Invoice.calculateFreightTax = function(taxZoneId, effective, currencyId, amount) {
-    var ret = {}, sql, res, freightTypeID,
+    var ret = [], sql, res, freightTypeID,
         data = Object.create(XT.Data),
         conditions = 'name = {name}',
         parameters = { name: 'Freight' };
     freightTypeId = data.fetch('XM.TaxType', conditions, parameters)[0].guid;
-    res = XM.Tax.calculate(taxZoneId, freightTypeId, effective, currencyId, amount)[0];
-    ret.taxCode = res.taxCode;
-    ret.tax = res.tax;
+    res = XM.Tax.calculate(taxZoneId, freightTypeId, effective, currencyId, amount);
+    
+    /* reduce the result set */
+    for (var i = 0; i < res.length; i++) {
+      var taxDetail = {};
+      taxDetail.taxCode = res[i].taxCode;
+      taxDetail.tax = res[i].tax;
+      ret.push(taxDetail);
+    }
     return JSON.stringify(ret);
   }
 

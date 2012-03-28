@@ -16,6 +16,8 @@ select
 from gltrans
 order by gl_accnt_id, gl_date, gl_sense, gl_journalnumber;
 
+grant all on table xt.gl to xtrole;
+
 create or replace rule "_INSERT" as on insert to xt.gl do instead nothing;
 
 create or replace rule "_UPDATE" as on update to xt.gl do instead nothing;
