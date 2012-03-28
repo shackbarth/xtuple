@@ -102,6 +102,7 @@ XM._CashReceipt = {
   */
   documentDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_documentDate'.loc()
   }),
 
@@ -117,6 +118,7 @@ XM._CashReceipt = {
   */
   applyDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_applyDate'.loc()
   }),
 

@@ -52,6 +52,7 @@ XM._Characteristic = {
     @type Number
   */
   characteristicType: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_characteristicType'.loc()
   }),
 
@@ -59,6 +60,7 @@ XM._Characteristic = {
     @type Number
   */
   order: SC.Record.attr(Number, {
+    defaultValue: 0,
     label: '_order'.loc()
   }),
 

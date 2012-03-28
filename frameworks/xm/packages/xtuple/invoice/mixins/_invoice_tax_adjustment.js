@@ -6,17 +6,17 @@
 /*globals XM */
 
 /**
-  @scope XM.ItemSiteInfo
+  @scope XM.InvoiceTaxAdjustment
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ItemSiteInfo = {
-  /** @scope XM.ItemSiteInfo.prototype */
+XM._InvoiceTaxAdjustment = {
+  /** @scope XM.InvoiceTaxAdjustment.prototype */
   
-  className: 'XM.ItemSiteInfo',
+  className: 'XM.InvoiceTaxAdjustment',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -24,10 +24,10 @@ XM._ItemSiteInfo = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,26 +41,40 @@ XM._ItemSiteInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.ItemInfo
+    @type XM.Invoice
   */
-  item: SC.Record.toOne('XM.ItemInfo', {
-    isNested: true,
-    label: '_item'.loc()
+  invoice: SC.Record.toOne('XM.Invoice', {
+    label: '_invoice'.loc()
   }),
 
   /**
-    @type XM.SiteInfo
+    @type XM.TaxCode
   */
-  site: SC.Record.toOne('XM.SiteInfo', {
-    isNested: true,
-    label: '_site'.loc()
+  taxCode: SC.Record.toOne('XM.TaxCode', {
+    label: '_taxCode'.loc()
   }),
 
   /**
-    @type Boolean
+    @type Number
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
+  sequence: SC.Record.attr(Number, {
+    label: '_sequence'.loc()
+  }),
+
+  /**
+    @type Number
+  */
+  tax: SC.Record.attr(Number, {
+    label: '_tax'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    label: '_documentDate'.loc()
   })
 
 };

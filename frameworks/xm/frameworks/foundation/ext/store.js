@@ -66,8 +66,65 @@ XM.Store = SC.Store.extend(XM.Logging,
       dispatch.callback(error);
     }
     return this;
-  }
+  },
+  
+  /**
+    Reimplemented from SC.Store. 
+    
+    Removes parents updating children
+    with parent status when we don't need or want that behavior.
+  */
+  writeDataHash: function(storeKey, hash, status) {
+
+    // update dataHashes and optionally status.
+    if (hash) this.dataHashes[storeKey] = hash;
+    if (status) this.statuses[storeKey] = status ;
+
+    // also note that this hash is now editable
+    var editables = this.editables;
+    if (!editables) editables = this.editables = [];
+    editables[storeKey] = 1 ; // use number for dense array support
+
+    var that = this;
+
+    return this ;
+  },
+  
+  /**
+    Reimplemented from SC.Store. 
+    
+    Eliminates redudant status updates.
+  */
+  dataSourceDidComplete: function(storeKey, dataHash, newId) {
+    var status = this.readStatus(storeKey), K = SC.Record, statusOnly;
+
+    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
+    // DESTROYED_DIRTY
+    if (!(status & K.BUSY)) {
+      throw K.BAD_STATE_ERROR; // should never be called in this state
+    }
+
+    // otherwise, determine proper state transition
+    if(status===K.BUSY_DESTROYING) {
+      throw K.BAD_STATE_ERROR ;
+    } else status = K.READY_CLEAN ;
+
+    this.writeStatus(storeKey, status) ;
+    if (dataHash) this.writeDataHash(storeKey, dataHash, status) ;
+    if (newId) SC.Store.replaceIdFor(storeKey, newId);
+
+    statusOnly = dataHash || newId ? false : true;
+    this.dataHashDidChange(storeKey, null, statusOnly);
+
+    // Force record to refresh its cached properties based on store key
+    var record = this.materializeRecord(storeKey);
+
+    //update callbacks
+    this._retreiveCallbackForStoreKey(storeKey);
+
+    return this ;
+  },
+
 
 });
 
-// XM.set('store', XM.Store.create().from('XM.DataSource'));

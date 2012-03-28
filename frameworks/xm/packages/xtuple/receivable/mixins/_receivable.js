@@ -59,6 +59,7 @@ XM._Receivable = {
   */
   documentDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_documentDate'.loc()
   }),
 
@@ -67,6 +68,7 @@ XM._Receivable = {
   */
   dueDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_dueDate'.loc()
   }),
 
@@ -184,6 +186,7 @@ XM._Receivable = {
   */
   isOpen: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_isOpen'.loc()
   }),
 
@@ -192,6 +195,7 @@ XM._Receivable = {
   */
   closeDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_closeDate'.loc()
   }),
 

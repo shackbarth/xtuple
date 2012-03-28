@@ -45,6 +45,7 @@ XM._GeneralJournal = {
   */
   date: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_date'.loc()
   }),
 

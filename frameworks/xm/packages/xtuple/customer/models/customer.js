@@ -147,6 +147,23 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   // METHODS
   //
 
+  /**
+    Retrieve the price for an item for this customer. Must be used with a callback.
+    
+    @param {Number} shipto (optional)
+    @param {Number} item
+    @param {Number} quantity
+    @param {Number} quantity unit
+    @param {Number} currency
+    @param {Date} effective date
+    @param {Function} callback
+    @returns Receiver
+  */
+  price: function(shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
+    XM.Customer.price(this, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
+    return this;
+  }
+
   //..................................................
   // OBSERVERS
   //
@@ -154,7 +171,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
 });
 
 /**
-  Return the price for an item for a customer.
+  Retrieve the price for an item for a customer. Must be used with a callback.
   
   @param {Number} customer
   @param {Number} shipto (optional)
@@ -163,7 +180,8 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   @param {Number} quantity unit
   @param {Number} currency
   @param {Date} effective date
-  @returns Number
+  @param {Receiver} callback
+  @returns Receiver
 */
 XM.Customer.price = function(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
   var that = this, dispatch;
@@ -186,6 +204,7 @@ XM.Customer.price = function(customer, shipto, item, quantity, quantityUnit, pri
   customer.get('store').dispatch(dispatch);
   return this;
 }
+
 
 XM.Customer.mixin( /** @scope XM.Customer */ {
 

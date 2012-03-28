@@ -67,6 +67,7 @@ XM._Currency = {
     @type Boolean
   */
   isBase: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isBase'.loc()
   })
 

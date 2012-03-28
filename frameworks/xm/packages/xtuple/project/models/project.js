@@ -27,87 +27,87 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
    }
   }),
 
-	/** 
-	@field
-	@type Number
-	*/
-	budgetedHours: function() {
-	  var _budgetedHours = this.get('budgetedHours'),
-	      total = 0;
+  /** 
+  @field
+  @type Number
+  */
+  budgetedHours: function() {
+  var _budgetedHours = this.get('budgetedHours'),
+      total = 0;
 
-	  for(var i = 0; i < _budgetedHours.get('length'); i++) {
-	    total = total + _budgetedHours.objectAt(i).get('budgetedHours');
-	  }
+  for(var i = 0; i < _budgetedHours.get('length'); i++) {
+    total = total + _budgetedHours.objectAt(i).get('budgetedHours');
+  }
 
-	  return total;
-	}.property('_budgetedHoursLength').cacheable(),
+  return total;
+  }.property('_budgetedHoursLength').cacheable(),
 
-	/**
-	@field
-	@type Number
-	*/
-	actualHours: function() {
-	  var _actualHours = this.get('actualHours'),
-	      total = 0;
+  /**
+  @field
+  @type Number
+  */
+  actualHours: function() {
+  var _actualHours = this.get('actualHours'),
+      total = 0;
 
-	  for(var i = 0; i < _actualHours.get('length'); i++) {
-	    total = total + _actualHours.objectAt(i).get('actualHours');
-	  }
+  for(var i = 0; i < _actualHours.get('length'); i++) {
+    total = total + _actualHours.objectAt(i).get('actualHours');
+  }
 
-	  return total;
-	}.property('_actualHoursLength').cacheable(),
+  return total;
+  }.property('_actualHoursLength').cacheable(),
 
-	/**
-	@field
-	@type Number
-	*/
-	budgetedExpenses: function() {
-	  var _budgetedExpenses = this.get('budgetedExpenses'),
-	      total = 0;
+  /**
+  @field
+  @type Number
+  */
+  budgetedExpenses: function() {
+  var _budgetedExpenses = this.get('budgetedExpenses'),
+      total = 0;
 
-	  for(var i = 0; i < _budgetedExpenses.get('length'); i++) {
-	    total = total + _budgetedExpenses.objectAt(i).get('budgetedExpenses');
-	  }
+  for(var i = 0; i < _budgetedExpenses.get('length'); i++) {
+    total = total + _budgetedExpenses.objectAt(i).get('budgetedExpenses');
+  }
 
-	  return total;
-	}.property('_budgetedExpensesLength').cacheable(),
+  return total;
+  }.property('_budgetedExpensesLength').cacheable(),
 
-	/**
-	@field
-	@type Number
-	*/
-	actualExpenses: function() {
-	  var _actualExpenses = this.get('actualExpenses'),
-	      total = 0;
+  /**
+  @field
+  @type Number
+  */
+  actualExpenses: function() {
+  var _actualExpenses = this.get('actualExpenses'),
+      total = 0;
 
-	  for(var i = 0; i < _actualExpenses.get('length'); i++) {
-	    total = total + _actualExpenses.objectAt(i).get('actualExpenses');
-	  }
+  for(var i = 0; i < _actualExpenses.get('length'); i++) {
+    total = total + _actualExpenses.objectAt(i).get('actualExpenses');
+  }
 
-	  return total;
-	}.property('_actualExpensesLength').cacheable(),
+  return total;
+  }.property('_actualExpensesLength').cacheable(),
 
-	/**
-	@field
-	@type Number
-	*/
-	balanceHours: function() {
-	  var budgetedHours = this.get('budgetedHours'),
-	      actualHours = this.get('actualHours');
+  /**
+  @field
+  @type Number
+  */
+  balanceHours: function() {
+  var budgetedHours = this.get('budgetedHours'),
+      actualHours = this.get('actualHours');
 
-	  return budgetedHours - actualHours;
-	}.property('budgetedHours', 'actualHours').cacheable(),
+  return budgetedHours - actualHours;
+  }.property('budgetedHours', 'actualHours').cacheable(),
 
-	/**
-	@field
-	@type Number
-	*/
-	balanceExpenses: function() {
-	  var budgetedExpenses = this.get('budgetedExpenses'),
-	      actualExpenses = this.get('actualExpenses');
+  /**
+  @field
+  @type Number
+  */
+  balanceExpenses: function() {
+  var budgetedExpenses = this.get('budgetedExpenses'),
+      actualExpenses = this.get('actualExpenses');
 
-	  return budgetedExpenses - actualExpenses;
-	}.property('budgetedExpenses', 'actualExpenses').cacheable(),
+  return budgetedExpenses - actualExpenses;
+  }.property('budgetedExpenses', 'actualExpenses').cacheable(),
 
   //..................................................
   // METHODS

@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.ProjectComment
+  @scope XM.InvoiceTaxFreight
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ProjectComment = {
-  /** @scope XM.ProjectComment.prototype */
+XM._InvoiceTaxFreight = {
+  /** @scope XM.InvoiceTaxFreight.prototype */
   
-  className: 'XM.ProjectComment',
+  className: 'XM.InvoiceTaxFreight',
 
   
 
@@ -24,16 +24,10 @@ XM._ProjectComment = {
 
   privileges: {
     "all": {
-      "create": true,
+      "create": false,
       "read": true,
-      "update": "EditOthersComments",
+      "update": false,
       "delete": false
-    },
-    "personal": {
-      "update": "EditOwnComments",
-      "properties": [
-        "createdBy"
-      ]
     }
   },
 
@@ -47,47 +41,40 @@ XM._ProjectComment = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.Project
+    @type XM.Invoice
   */
-  project: SC.Record.toOne('XM.Project', {
-    label: '_project'.loc()
+  invoice: SC.Record.toOne('XM.Invoice', {
+    label: '_invoice'.loc()
   }),
 
   /**
-    @type XM.CommentType
+    @type XM.TaxCode
   */
-  commentType: SC.Record.toOne('XM.CommentType', {
-    label: '_commentType'.loc()
+  taxCode: SC.Record.toOne('XM.TaxCode', {
+    label: '_taxCode'.loc()
   }),
 
   /**
-    @type String
+    @type Number
   */
-  text: SC.Record.attr(String, {
-    label: '_text'.loc()
+  sequence: SC.Record.attr(Number, {
+    label: '_sequence'.loc()
   }),
 
   /**
-    @type Boolean
+    @type Number
   */
-  isPublic: SC.Record.attr(Boolean, {
-    label: '_isPublic'.loc()
+  tax: SC.Record.attr(Number, {
+    label: '_tax'.loc()
   }),
 
   /**
     @type Date
   */
-  created: SC.Record.attr(SC.DateTime, {
+  documentDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    label: '_created'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
+    label: '_documentDate'.loc()
   })
 
 };
