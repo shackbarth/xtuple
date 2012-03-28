@@ -10,9 +10,9 @@ sc_require('mixins/_opportunity_item');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.OpportunityItem = XM.Record.extend(XM._OpportunityItem,
+XM.OpportunityItem = XM.DocumentAssignment.extend(XM._OpportunityItem,
   /** @scope XM.OpportunityItem.prototype */ {
 
   // .................................................

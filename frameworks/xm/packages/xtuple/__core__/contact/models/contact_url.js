@@ -10,9 +10,9 @@ sc_require('mixins/_contact_url');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.ContactUrl = XM.Record.extend(XM._ContactUrl,
+XM.ContactUrl = XM.DocumentAssignment.extend(XM._ContactUrl,
   /** @scope XM.ContactUrl.prototype */ {
 
   // .................................................

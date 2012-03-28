@@ -10,9 +10,9 @@ sc_require('mixins/_opportunity_image');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.OpportunityImage = XM.Record.extend(XM._OpportunityImage,
+XM.OpportunityImage = XM.DocumentAssignment.extend(XM._OpportunityImage,
   /** @scope XM.OpportunityImage.prototype */ {
 
   // .................................................

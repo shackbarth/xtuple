@@ -10,9 +10,9 @@ sc_require('mixins/_account_url');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.AccountUrl = XM.Record.extend(XM._AccountUrl,
+XM.AccountUrl = XM.DocumentAssignment.extend(XM._AccountUrl,
   /** @scope XM.AccountUrl.prototype */ {
 
   // .................................................
