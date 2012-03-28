@@ -22,12 +22,13 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
   // .................................................
   // CALCULATED PROPERTIES
   //
-
+/*
   number: SC.Record.attr(Number, {
    toType: function(record, key, value) {
     if(value) return value.toUpperCase();
    }
   }),
+
   unitAvailableTypes: function(){
     var unitType = this.get('unitType'),
         fromUnit = this.get('fromUnit'), //LB
@@ -42,6 +43,7 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
       this.set('value'),
     }
   },
+
   itemTaxTypes: function() {
     var itemTaxType = this.get('itemTaxType'),
         itemTaxZone = this.get('itemTaxZone'),
@@ -51,7 +53,7 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
       return;
     }
   },
-
+*/
   //..................................................
   // METHODS
   //
