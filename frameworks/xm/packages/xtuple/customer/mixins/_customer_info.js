@@ -41,9 +41,9 @@ XM._CustomerInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type String
   */
-  number: SC.Record.attr(Number, {
+  number: SC.Record.attr(String, {
     label: '_number'.loc()
   }),
 

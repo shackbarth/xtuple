@@ -80,7 +80,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
   // OBSERVERS
   //
 
-  extendendPriceDidChange: function() {
+  extendedPriceDidChange: function() {
     var invoice = this.get('invoice');
     if (invoice) invoice.updateSubTotal();
   }.observes('extendedPrice'),
@@ -96,10 +96,13 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
 
   statusDidChange: function() {
     var status = this.get('status');
-    if(this.get('status') === SC.Record.READY_CLEAN) {
+    if(status === SC.Record.READY_CLEAN) {
       this.item.set('isEditable', false);
       this.updateSellingUnits();
       this.taxCriteriaDidChange();
+    } else if (status & SC.Record.DESTROYED) {
+      this.extendedPriceDidChange();
+      this.taxDidChange();
     }
   }.observes('status'),
 

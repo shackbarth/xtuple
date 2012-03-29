@@ -375,7 +375,7 @@ XM.DataSource = SC.DataSource.extend(XM.Logging,
         record = store.materializeRecord(storeKey);
     payload.requestType = 'commitRecord';
     payload.recordType = recordType;
-    payload.dataHash = record.get('attributes');
+    payload.dataHash = record.get('changeSet');
     this.log("commitRecord => payload: ", payload);
     XM.Request
       .postUrl(this.URL)
