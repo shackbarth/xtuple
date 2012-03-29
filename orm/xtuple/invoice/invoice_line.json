@@ -161,6 +161,9 @@
       }	  	
     }
   ],
+  "order": [
+    "invcitem_linenumber"
+  ],
 	"isNestedOnly": true,
-	 "isSystem": true
+  "isSystem": true
 }
