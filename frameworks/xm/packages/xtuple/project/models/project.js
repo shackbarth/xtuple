@@ -14,7 +14,7 @@ sc_require('mixins/_project');
   @extends XM.Document
   @extends XM.CoreDocuments
 */
-XM.Project = XM.Document.extend(XM._Project, XM.ProjectTask, XM.CoreDocuments, 
+XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments, 
  /** @scope XM.Project.prototype */ {
 
   // .................................................
@@ -73,6 +73,8 @@ XM.Project = XM.Document.extend(XM._Project, XM.ProjectTask, XM.CoreDocuments,
 		}
 	this.setIfChanged('value', SC.Math.round(value, XM.MONEY_SCALE));
 	},
+	
+	//this.get('tasks').objectAt(0).get('owner')
 	
 	summaryActualExpenses: function() {
 	  var actualExpenses = this.get('actualExpenses'),
