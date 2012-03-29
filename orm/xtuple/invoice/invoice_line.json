@@ -26,8 +26,7 @@
       "name": "invoice",
       "toOne": {
         "type": "Invoice",
-        "column": "invcitem_invchead_id",
-        "defaultValue": "parentRecord"
+        "column": "invcitem_invchead_id"
       }
     },
     {
