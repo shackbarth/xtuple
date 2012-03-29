@@ -84,7 +84,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         qtyUnitRatio = this.get('quantityUnitRatio') || 1,
         price = this.get('price') || 0,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
-    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XM.MONEY_SCALE);
+    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XT.MONEY_SCALE);
   }.property('billed', 'price').cacheable(),
 
   //..................................................
@@ -240,7 +240,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       }
 
       // define call
-      dispatch = XM.Dispatch.create({
+      dispatch = XT.Dispatch.create({
         className: 'XM.InvoiceLine',
         functionName: 'calculateTax',
         parameters: [taxZone, taxType, effective, currency, amount],

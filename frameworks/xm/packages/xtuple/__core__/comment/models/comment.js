@@ -51,7 +51,7 @@ XM.Comment = XT.Record.extend(
   isPublic: SC.Record.attr(Boolean, {
     /** @private */
     defaultValue: function() {
-      return XM.session.settings ? XM.session.settings.get('CommentPublicDefault') : NO;
+      return XT.session.settings ? XT.session.settings.get('CommentPublicDefault') : NO;
     }
   }),
 

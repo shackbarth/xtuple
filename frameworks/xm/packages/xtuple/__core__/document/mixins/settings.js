@@ -32,11 +32,11 @@ XM.Settings = {
   */
   commitSettings: function() {  
     var self = this,
-        globalChanged = XM.session.getPath('settings.changed');
+        globalChanged = XT.session.getPath('settings.changed');
         changed = {},
         privilege = this.get('privilege');
         
-    if(!XM.session.get('privileges').get(privilege)) return NO;
+    if(!XT.session.get('privileges').get(privilege)) return NO;
 
     for(var i = 0; i < self.getPath('_bindings.length'); i++) {
       var prop = self.get('_bindings').objectAt(i),
@@ -56,7 +56,7 @@ XM.Settings = {
       }
     }
     
-    dispatch = XM.Dispatch.create({
+    dispatch = XT.Dispatch.create({
       className: self.get('className'),
       functionName: 'commitSettings',
       parameters: changed,

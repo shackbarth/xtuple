@@ -53,7 +53,7 @@ XM.Document = XT.Record.extend(
   numberPolicy: function(key, value) {
     var setting =  this.get('numberPolicySetting');
     if(value === undefined && setting) {
-      value = XM.session.get('settings').get(setting);
+      value = XT.session.get('settings').get(setting);
     }
     this._numberPolicy = value ? value : XM.MANUAL_NUMBER;
     return this._numberPolicy;

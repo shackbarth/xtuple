@@ -193,7 +193,7 @@ XM.Item._xm_units = function(item, type, callback) {
       id = item.get('id'),
       dispatch;
 
-  dispatch = XM.Dispatch.create({
+  dispatch = XT.Dispatch.create({
     className: 'XM.Item',
     functionName: type,
     parameters: id,
