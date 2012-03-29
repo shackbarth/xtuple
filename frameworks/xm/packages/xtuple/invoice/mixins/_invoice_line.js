@@ -44,9 +44,6 @@ XM._InvoiceLine = {
     @type XM.Invoice
   */
   invoice: SC.Record.toOne('XM.Invoice', {
-    defaultValue: function() {
-      return arguments[0].getPath("parentRecord.id");
-    },
     label: '_invoice'.loc()
   }),
 
@@ -63,13 +60,6 @@ XM._InvoiceLine = {
   item: SC.Record.toOne('XM.ItemInfo', {
     isNested: true,
     label: '_item'.loc()
-  }),
-
-  /**
-    @type XM.SiteInfo
-  */
-  site: SC.Record.toOne('XM.SiteInfo', {
-    label: '_site'.loc()
   }),
 
   /**
@@ -90,6 +80,7 @@ XM._InvoiceLine = {
     @type XM.SalesCategory
   */
   salesCategory: SC.Record.toOne('XM.SalesCategory', {
+    defaultValue: -1,
     label: '_salesCategory'.loc()
   }),
 

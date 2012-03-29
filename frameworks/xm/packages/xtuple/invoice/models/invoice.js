@@ -23,12 +23,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /* @private */
   creditsLengthBinding: SC.Binding.from('*credits.length').noDelay(),
   
-  /** @private */
-  taxesLength: 0,
-  
-  /** @private */
-  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(),
-  
   /* @private */
   linesLength: 0,
   
@@ -132,6 +126,34 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   // METHODS
   //
   
+  destroy: function() {
+    var lines = this.get('lines'),
+        credits = this.get('credits'),
+        recurrences = this.get('recurrences'),
+        isPosted = this.get('isPosted');
+        
+    // Can't delete a posted invoice
+    if (isPosted) return;
+   
+    // first destroy line items...
+    for (var i = 0; i < lines.get('length'); i++) {
+      lines.objectAt(i).destroy();
+    }
+    
+    // destroy credits ...
+    for (var i = 0; i < credits.get('length'); i++) {
+      credits.objectAt(i).destroy();
+    }
+    
+    // destroy recurrences
+    for (var i = 0; i < recurrences.get('length'); i++) {
+      recurrences.objectAt(i).destroy();
+    }
+      
+    // now destroy the header
+    arguments.callee.base.apply(this, arguments);
+  },
+  
   post: function() {
     return false;
   },
@@ -182,7 +204,8 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
         subTotal = 0;
     for(var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
-          extendedPrice = line.get('extendedPrice');
+          status = line.get('status'),
+          extendedPrice = status & SC.Record.DESTROYED ? 0 : line.get('extendedPrice');
       subTotal = subTotal + extendedPrice;
     }
     this.setIfChanged('subTotal', subTotal);
@@ -199,25 +222,27 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     // first sub total taxes
     for (var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
-          taxes = line.get('taxDetail');
+          taxes = line.get('taxDetail'),
+          status = line.get('status');
 
-      // taxes
-      for (var n = 0; n < taxes.get('length'); n++) {
-        var lineTax = taxes.objectAt(n),
-            taxCode = lineTax.get('taxCode'),
-            tax = lineTax.get('tax'),
-            codeTotal = taxDetail.findProperty('taxCode', taxCode);
+      if (status & SC.Record.DESTROYED === false) {
+        for (var n = 0; n < taxes.get('length'); n++) {
+          var lineTax = taxes.objectAt(n),
+              taxCode = lineTax.get('taxCode'),
+              tax = lineTax.get('tax'),
+              codeTotal = taxDetail.findProperty('taxCode', taxCode);
 
-        // summarize by tax code 
-        if(codeTotal) {
-          codeTotal.set('tax', codeTotal.get('tax') + tax);
-        } else {   
-          codeTotal = SC.Object.create({
-            taxCode: taxCode,
-            tax: tax
-          });
-          taxDetail.push(codeTotal);
-        }   
+          // summarize by tax code 
+          if(codeTotal) {
+            codeTotal.set('tax', codeTotal.get('tax') + tax);
+          } else {   
+            codeTotal = SC.Object.create({
+              taxCode: taxCode,
+              tax: tax
+            });
+            taxDetail.push(codeTotal);
+          }   
+        }
       }
     }
 
@@ -276,6 +301,9 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     var taxes = this.get('adjustmentTaxes'),
         miscTax = 0;
     for(var i = 0; i < taxes.get('length'); i++) {
+      var misc = taxes.objectAt(i),
+          status = misc.get('status'),
+          tax = status & SC.Record.DESTROYED ? 0 : misc.get('tax');
       miscTax = miscTax + taxes.objectAt(i).get('tax'); 
     } 
     this.setIfChanged('miscTax', SC.Math.round(miscTax, XM.MONEY_SCALE));
@@ -303,7 +331,18 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   }.observes('linesLength', 'total'),
   
   linesLengthDidChange: function() {
+    // lock down currency if applicable
     this.currency.set('isEditable', this.get('linesLength') > 0);
+    
+    // handle line numbering
+    var lines = this.get('lines'),
+        max = 0, lineNumber, line;
+    for (var i = 0; i < lines.get('length'); i++) {
+      line = lines.objectAt(i);
+      lineNumber = line.get('lineNumber');
+      if (lineNumber) max = lineNumber > max ? lineNumber : max;
+      else line.set('lineNumber', max + 1);
+    }
   }.observes('linesLength'),
   
   /**
