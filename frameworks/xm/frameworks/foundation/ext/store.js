@@ -174,7 +174,7 @@ XM.Store = SC.Store.extend(XM.Logging,
     // Force record to refresh its cached properties based on store key
     var record = this.materializeRecord(storeKey);
 
-    // update children status where applicable
+    // update affected children
     if (statusOnly) {
       var that = this;
       this._propagateToChildren(storeKey, function(storeKey) {
@@ -216,12 +216,12 @@ XM.Store = SC.Store.extend(XM.Logging,
     // Force record to refresh its cached properties based on store key
     var record = this.materializeRecord(storeKey);
 
-    // update all children
+    // update affected children
     var that = this;
     this._propagateToChildren(storeKey, function(storeKey) {
       var status = that.peekStatus(storeKey);
       if (status & SC.Record.BUSY) {
-        var newStatus = K.BUSY_DESTROYING;
+        var newStatus = K.DESTROYED_CLEAN;
         that.writeStatus(storeKey, newStatus);
         that.dataHashDidChange(storeKey, null, true);
       }
@@ -259,7 +259,7 @@ XM.Store = SC.Store.extend(XM.Logging,
     // Force record to refresh its cached properties based on store key
     var record = this.materializeRecord(storeKey);
 
-    // update all children of error status
+    // update affected children
     var that = this;
     this._propagateToChildren(storeKey, function(storeKey) {
       var status = that.peekStatus(storeKey);
@@ -376,6 +376,53 @@ XM.Store = SC.Store.extend(XM.Logging,
       }
     }
     return ret ;
+  },
+  
+  /**
+    Reimplemented from SC.Store. 
+    
+    Don't destroy children automatically.
+  */
+  destroyRecord: function(recordType, id, storeKey) {
+    if (storeKey === undefined) storeKey = recordType.storeKeyFor(id);
+    var status = this.readStatus(storeKey), changelog, K = SC.Record;
+
+    // handle status - ignore if destroying or destroyed
+    if ((status === K.BUSY_DESTROYING) || (status & K.DESTROYED)) {
+      return this; // nothing to do
+
+    // error out if empty
+    } else if (status === K.EMPTY) {
+      throw K.NOT_FOUND_ERROR ;
+
+    // error out if busy
+    } else if (status & K.BUSY) {
+      throw K.BUSY_ERROR ;
+
+    // if new status, destroy but leave in clean state
+    } else if (status === K.READY_NEW) {
+      status = K.DESTROYED_CLEAN ;
+
+    // otherwise, destroy in dirty state
+    } else status = K.DESTROYED_DIRTY ;
+
+    // remove the data hash, set new status
+    this.writeStatus(storeKey, status);
+    this.dataHashDidChange(storeKey);
+
+    // add/remove change log
+    changelog = this.changelog;
+    if (!changelog) changelog = this.changelog = SC.Set.create();
+
+    ((status & K.DIRTY) ? changelog.add(storeKey) : changelog.remove(storeKey));
+    this.changelog=changelog;
+
+    // if commit records is enabled
+    if(this.get('commitRecordsAutomatically')){
+      this.invokeLast(this.commitRecords);
+    }
+
+    return this ;
   },
 
 
