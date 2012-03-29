@@ -36,6 +36,45 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
   /** private */
   taxDetailLengthBinding: SC.Binding.from('*taxDetail.length').noDelay(),
   
+  /**
+    Flag whether an actual item is used, or a miscellaneous description.  
+  */
+  isItem: true,
+  
+  /**
+    @type XM.ItemInfo
+  */
+  item: SC.Record.toOne('XM.ItemInfo', {
+    isNested: true,
+    label: '_item'.loc(),
+    isRequired: true,
+    isEditable: true
+  }),
+
+  /**
+    @type String
+  */
+  itemNumber: SC.Record.attr(String, {
+    label: '_itemNumber'.loc(),
+    isEditable: false,
+  }),
+
+  /**
+    @type String
+  */
+  description: SC.Record.attr(String, {
+    label: '_description'.loc(),
+    isEditable: false,
+  }),
+
+  /**
+    @type XM.SalesCategory
+  */
+  salesCategory: SC.Record.toOne('XM.SalesCategory', {
+    label: '_salesCategory'.loc(),
+    isEditable: false
+  }),
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -80,6 +119,30 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
   // OBSERVERS
   //
 
+  validate: function() {
+    return arguments.callee.base.apply(this, arguments); 
+  }.observes('item', 'itemNumber', 'itemDescription', 'salesCategory'),
+
+  isItemDidChange: function() {
+    var isItem = this.get('isItem'),
+        isPosted = this.getPath('invoice.isPosted');
+    if (isItem) {
+      this.setIfChanged('itemNumber', ''),
+      this.setIfChanged('description', ''),
+      this.setIfChanged('salesCategory', -1)
+    } else {
+      this.setIfChanged('item', null);
+    }
+    this.item.set('isRequired', isItem);
+    this.item.set('isEditable', isItem && !isPosted);
+    this.itemNumber.set('isRequired', !isItem);
+    this.itemNumber.set('isEditable', !isItem && !isPosted);   
+    this.description.set('isRequired', !isItem);
+    this.description.set('isEditable', !isItem && !isPosted);
+    this.salesCategory.set('isRequired', !isItem);
+    this.salesCategory.set('isEditable', !isItem && !isPosted);
+  }.observes('isItem'),
+
   extendedPriceDidChange: function() {
     var invoice = this.get('invoice');
     if (invoice) invoice.updateSubTotal();
@@ -97,7 +160,6 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
   statusDidChange: function() {
     var status = this.get('status');
     if(status === SC.Record.READY_CLEAN) {
-      this.item.set('isEditable', false);
       this.updateSellingUnits();
       this.taxCriteriaDidChange();
     } else if (status & SC.Record.DESTROYED) {
@@ -183,6 +245,12 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
       that.setTaxDetail(taxes, 'taxDetail', 'tax');
     }
   }.observes('extendedPrice', 'taxType'),
+  
+  testMe: function() {
+    debugger
+    line = XM.store.createRecord(XM.InvoiceItem, {});
+    
+  }
 
 
 });

@@ -23,12 +23,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /* @private */
   creditsLengthBinding: SC.Binding.from('*credits.length').noDelay(),
   
-  /** @private */
-  taxesLength: 0,
-  
-  /** @private */
-  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(),
-  
   /* @private */
   linesLength: 0,
   
@@ -131,6 +125,34 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   //..................................................
   // METHODS
   //
+  
+  destroy: function() {
+    var lines = this.get('lines'),
+        credits = this.get('credits'),
+        recurrences = this.get('recurrences'),
+        isPosted = this.get('isPosted');
+        
+    // Can't delete a posted invoice
+    if (isPosted) return;
+   
+    // first destroy line items...
+    for (var i = 0; i < lines.get('length'); i++) {
+      lines.objectAt(i).destroy();
+    }
+    
+    // destroy credits ...
+    for (var i = 0; i < credits.get('length'); i++) {
+      credits.objectAt(i).destroy();
+    }
+    
+    // destroy recurrences
+    for (var i = 0; i < recurrences.get('length'); i++) {
+      recurrences.objectAt(i).destroy();
+    }
+      
+    // now destroy the header
+    arguments.callee.base.apply(this, arguments);
+  },
   
   post: function() {
     return false;

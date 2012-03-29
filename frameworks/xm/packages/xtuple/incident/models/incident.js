@@ -66,7 +66,9 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments,
     var assignedTo = this.get('assignedTo'),
         status = this.get('status');
      
-    if(status & SC.Record.READY && assignedTo) this.set('incidentStatus','A');
+    if(assignedTo &&
+      (status == SC.Record.READY_DIRTY || status == SC.Record.READY_NEW))
+      this.set('incidentStatus','A');
   }.observes('assignedTo'),
   
   /* @private */

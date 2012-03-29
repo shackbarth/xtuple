@@ -63,13 +63,6 @@ XM._InvoiceLine = {
   }),
 
   /**
-    @type XM.SiteInfo
-  */
-  site: SC.Record.toOne('XM.SiteInfo', {
-    label: '_site'.loc()
-  }),
-
-  /**
     @type String
   */
   itemNumber: SC.Record.attr(String, {
@@ -87,6 +80,7 @@ XM._InvoiceLine = {
     @type XM.SalesCategory
   */
   salesCategory: SC.Record.toOne('XM.SalesCategory', {
+    defaultValue: -1,
     label: '_salesCategory'.loc()
   }),
 
