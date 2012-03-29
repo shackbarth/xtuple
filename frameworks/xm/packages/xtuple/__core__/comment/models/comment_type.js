@@ -10,9 +10,9 @@ sc_require('mixins/_comment_type');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CommentType = XM.Record.extend(XM._CommentType,
+XM.CommentType = XT.Record.extend(XM._CommentType,
   /** @scope XM.CommentType.prototype */ {
 
   // .................................................

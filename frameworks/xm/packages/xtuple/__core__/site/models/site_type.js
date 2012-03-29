@@ -10,9 +10,9 @@ sc_require('mixins/_site_type');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.SiteType = XM.Record.extend(XM._SiteType,
+XM.SiteType = XT.Record.extend(XM._SiteType,
   /** @scope XM.SiteType.prototype */ {
 
   // .................................................

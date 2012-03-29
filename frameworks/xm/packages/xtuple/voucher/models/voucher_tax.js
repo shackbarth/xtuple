@@ -10,9 +10,9 @@ sc_require('mixins/_voucher_tax');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.VoucherTax = XM.Record.extend(XM._VoucherTax,
+XM.VoucherTax = XT.Record.extend(XM._VoucherTax,
   /** @scope XM.VoucherTax.prototype */ {
 
   // .................................................

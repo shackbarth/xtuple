@@ -10,9 +10,9 @@ sc_require('mixins/_vendor_info');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.VendorInfo = XM.Record.extend(XM._VendorInfo,
+XM.VendorInfo = XT.Record.extend(XM._VendorInfo,
   /** @scope XM.VendorInfo.prototype */ {
 
   // .................................................

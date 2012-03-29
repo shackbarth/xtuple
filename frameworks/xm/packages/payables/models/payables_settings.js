@@ -8,11 +8,11 @@
 
   (Document your Model here)
 
-  @extends XM.Object
+  @extends XT.Object
   @version 0.1
 */
 
-XM.PayablesSettings = XM.Object.extend( XM.Settings,
+XM.PayablesSettings = XT.Object.extend( XM.Settings,
 /** @scope XM.PayablesSettings.prototype */ {
 
   className: 'XM.PayablesSettings',

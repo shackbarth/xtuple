@@ -10,9 +10,9 @@ sc_require('mixins/_tax_assignment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.TaxAssignment = XM.Record.extend(XM._TaxAssignment,
+XM.TaxAssignment = XT.Record.extend(XM._TaxAssignment,
   /** @scope XM.TaxAssignment.prototype */ {
 
   // .................................................

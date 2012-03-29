@@ -10,9 +10,9 @@ sc_require('mixins/_account_contact');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.AccountContact = XM.Record.extend(XM._AccountContact,
+XM.AccountContact = XT.Record.extend(XM._AccountContact,
   /** @scope XM.AccountContact.prototype */ {
 
   // .................................................

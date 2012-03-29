@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_image');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ToDoImage = XM.Record.extend(XM._ToDoImage,
+XM.ToDoImage = XT.Record.extend(XM._ToDoImage,
   /** @scope XM.ToDoImage.prototype */ {
 
   // .................................................

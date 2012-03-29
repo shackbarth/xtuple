@@ -12,7 +12,7 @@ sc_require('mixins/_opportunity_account');
 
   
 */
-XM.OpportunityAccount = XM.Record.extend(XM._OpportunityAccount,
+XM.OpportunityAccount = XT.Record.extend(XM._OpportunityAccount,
   /** @scope XM.OpportunityAccount.prototype */ {
 
   // .................................................

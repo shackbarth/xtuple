@@ -10,9 +10,9 @@ sc_require('mixins/_incident_to_do');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.IncidentToDo = XM.Record.extend(XM._IncidentToDo,
+XM.IncidentToDo = XT.Record.extend(XM._IncidentToDo,
   /** @scope XM.IncidentToDo.prototype */ {
 
   // .................................................

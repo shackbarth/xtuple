@@ -55,7 +55,7 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments,
     // Validate assignee
     isErr = this.get('incidentStatus') === XM.Incident.STATUS_ASSIGNED &&
             !this.get('assignedTo');
-    err = XM.errors.findProperty('code', 'xt1025');
+    err = XT.errors.findProperty('code', 'xt1025');
     this.updateErrors(err, isErr);
     
     return errors;

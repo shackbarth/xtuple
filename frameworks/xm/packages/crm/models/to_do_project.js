@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_project');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ToDoProject = XM.Record.extend(XM._ToDoProject,
+XM.ToDoProject = XT.Record.extend(XM._ToDoProject,
   /** @scope XM.ToDoProject.prototype */ {
 
   // .................................................

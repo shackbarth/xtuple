@@ -10,9 +10,9 @@ sc_require('mixins/_image_info');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ImageInfo = XM.Record.extend(XM._ImageInfo,
+XM.ImageInfo = XT.Record.extend(XM._ImageInfo,
   /** @scope XM.ImageInfo.prototype */ {
 
   // .................................................

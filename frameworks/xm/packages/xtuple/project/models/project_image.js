@@ -10,9 +10,9 @@ sc_require('mixins/_project_image');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ProjectImage = XM.Record.extend(XM._ProjectImage,
+XM.ProjectImage = XT.Record.extend(XM._ProjectImage,
   /** @scope XM.ProjectImage.prototype */ {
 
   // .................................................

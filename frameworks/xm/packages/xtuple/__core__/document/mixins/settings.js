@@ -22,7 +22,7 @@ XM.Settings = {
   /** 
     Binding to global settings to which all properties on a settings object should bind to.
   */
-  settingsBinding: SC.Binding.from('XM.session.settings').noDelay(),
+  settingsBinding: SC.Binding.from('XT.session.settings').noDelay(),
 
   /** 
     Commit changes to settings properties to the server. Will dispatch to a function with
@@ -43,7 +43,7 @@ XM.Settings = {
           key = self.get(prop)._fromPropertyKey.replace(/\w+\./i, '');
 
       if(key !== 'settings' && globalChanged.indexOf(key) > -1) {
-        changed[key] = XM.session.settings.get(key);
+        changed[key] = XT.session.settings.get(key);
       }
     }
     
@@ -64,7 +64,7 @@ XM.Settings = {
       action: callback
     });
 
-    XM.store.dispatch(dispatch);
+    XT.store.dispatch(dispatch);
     
     return this;
   }

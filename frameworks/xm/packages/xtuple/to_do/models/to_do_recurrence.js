@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_recurrence');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ToDoRecurrence = XM.Record.extend(XM._ToDoRecurrence,
+XM.ToDoRecurrence = XT.Record.extend(XM._ToDoRecurrence,
   /** @scope XM.ToDoRecurrence.prototype */ {
 
   // .................................................

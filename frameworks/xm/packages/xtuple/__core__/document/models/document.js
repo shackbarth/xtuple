@@ -8,10 +8,10 @@
 
   Provides special number handling capabilities for documents.
 
-  @extends XM.Record
+  @extends XT.Record
 */
 
-XM.Document = XM.Record.extend(
+XM.Document = XT.Record.extend(
 /** @scope XM.Document.prototype */ {
 
   /**
@@ -74,7 +74,7 @@ XM.Document = XM.Record.extend(
       if((numberPolicy === XM.AUTO_NUMBER || 
           numberPolicy === XM.AUTO_OVERRIDE_NUMBER) && 
           status === SC.Record.READY_NEW) {
-        XM.Record.fetchNumber.call(record, docKey);
+        XT.Record.fetchNumber.call(record, docKey);
       } else return '';
     }
     this[docKey].defaultValue = dv;
@@ -102,7 +102,7 @@ XM.Document = XM.Record.extend(
    
     // release the fetched number if applicable 
     if(record._xm_numberGen && record._xm_numberGen != number) {
-      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
+      XT.Record.releaseNumber.call(record, record._xm_numberGen); 
       record._xm_numberGen = null;
     }    
 
@@ -113,7 +113,7 @@ XM.Document = XM.Record.extend(
       // callback
       callback = function(err, result) {
         if(!err) {
-          var err = XM.errors.findProperty('code', 'xt1007'),
+          var err = XT.errors.findProperty('code', 'xt1007'),
               id = record.get('id'),
               isConflict = result ? result !== id  : false;          
           record.updateErrors(err, isConflict);
@@ -121,7 +121,7 @@ XM.Document = XM.Record.extend(
       }        
       
       // function call
-      XM.Record.findExisting.call(record, docKey, number, callback);
+      XT.Record.findExisting.call(record, docKey, number, callback);
     }
   },
 
@@ -131,7 +131,7 @@ XM.Document = XM.Record.extend(
     
     /* release the number if applicable */
     if(status === SC.Record.READY_NEW && record._xm_numberGen) {
-      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
+      XT.Record.releaseNumber.call(record, record._xm_numberGen); 
       record._xm_numberGen = null;
     }
     arguments.callee.base.apply(this, arguments);

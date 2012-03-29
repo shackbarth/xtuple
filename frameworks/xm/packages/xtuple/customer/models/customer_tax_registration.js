@@ -10,9 +10,9 @@ sc_require('mixins/_customer_tax_registration');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CustomerTaxRegistration = XM.Record.extend(XM._CustomerTaxRegistration,
+XM.CustomerTaxRegistration = XT.Record.extend(XM._CustomerTaxRegistration,
   /** @scope XM.CustomerTaxRegistration.prototype */ {
 
   // .................................................

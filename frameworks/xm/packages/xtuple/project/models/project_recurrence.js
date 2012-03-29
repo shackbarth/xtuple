@@ -10,9 +10,9 @@ sc_require('mixins/_project_recurrence');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ProjectRecurrence = XM.Record.extend(XM._ProjectRecurrence,
+XM.ProjectRecurrence = XT.Record.extend(XM._ProjectRecurrence,
   /** @scope XM.ProjectRecurrence.prototype */ {
 
   // .................................................

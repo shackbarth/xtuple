@@ -10,9 +10,9 @@ sc_require('mixins/_privilege');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.Privilege = XM.Record.extend(XM._Privilege,
+XM.Privilege = XT.Record.extend(XM._Privilege,
   /** @scope XM.Privilege.prototype */ {
 
   // .................................................

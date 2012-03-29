@@ -10,9 +10,9 @@ sc_require('mixins/_contact_file');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ContactFile = XM.Record.extend(XM._ContactFile,
+XM.ContactFile = XT.Record.extend(XM._ContactFile,
   /** @scope XM.ContactFile.prototype */ {
 
   // .................................................

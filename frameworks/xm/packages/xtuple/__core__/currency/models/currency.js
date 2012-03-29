@@ -54,7 +54,7 @@ XM.Currency = XM.Document.extend(XM._Currency,
 
     // Validate Symbol OR Abbreviation if data changed
     isValid = this.get('symbol') || this.get('abbreviation') ? true : false;
-    err = XM.errors.findProperty('code', 'xt1021');
+    err = XT.errors.findProperty('code', 'xt1021');
     this.updateErrors(err, !isValid);
 
     // Validate abbreviation - only check if changed
@@ -65,7 +65,7 @@ XM.Currency = XM.Document.extend(XM._Currency,
         
       callback = function(err, result) {
         if(!err) {
-          var err = XM.errors.findProperty('code', 'xt1022'),
+          var err = XT.errors.findProperty('code', 'xt1022'),
               id = record.get('id'),
               isConflict = result ? result !== id  : false;
             
@@ -73,7 +73,7 @@ XM.Currency = XM.Document.extend(XM._Currency,
         }
       }
       
-      XM.Record.findExisting.call(record, 'abbreviation', abbr, callback);
+      XT.Record.findExisting.call(record, 'abbreviation', abbr, callback);
     }
     return errors;
   }.observes('name', 'symbol'),
@@ -97,7 +97,7 @@ XM.Currency._xm_setCurrencyBase = function() {
     conditions: "isBase"
   });
   
-  ary = XM.store.find(qry);
+  ary = XT.store.find(qry);
   
   ary.addObserver('status', ary, function observer() {
     if (ary.get('status') === SC.Record.READY_CLEAN) {
@@ -108,6 +108,6 @@ XM.Currency._xm_setCurrencyBase = function() {
 }
 
 // TODO: Move this to start up
-XM.ready(function() {
-  XM.dataSource.ready(XM.Currency._xm_setCurrencyBase, this);
+XT.ready(function() {
+  XT.dataSource.ready(XM.Currency._xm_setCurrencyBase, this);
 });

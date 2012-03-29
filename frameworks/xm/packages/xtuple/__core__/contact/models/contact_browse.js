@@ -10,9 +10,9 @@ sc_require('mixins/_contact_browse');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ContactBrowse = XM.Record.extend(XM._ContactBrowse,
+XM.ContactBrowse = XT.Record.extend(XM._ContactBrowse,
   /** @scope XM.ContactBrowse.prototype */ {
 
   // .................................................
