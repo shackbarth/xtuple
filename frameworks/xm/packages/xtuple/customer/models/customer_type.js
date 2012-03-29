@@ -10,9 +10,9 @@ sc_require('mixins/_customer_type');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CustomerType = XM.Record.extend(XM._CustomerType,
+XM.CustomerType = XT.Record.extend(XM._CustomerType,
   /** @scope XM.CustomerType.prototype */ {
 
   // .................................................

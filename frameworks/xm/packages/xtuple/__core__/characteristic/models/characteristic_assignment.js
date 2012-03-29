@@ -10,9 +10,9 @@ sc_require('mixins/_characteristic_assignment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CharacteristicAssignment = XM.Record.extend(XM._CharacteristicAssignment,
+XM.CharacteristicAssignment = XT.Record.extend(XM._CharacteristicAssignment,
   /** @scope XM.CharacteristicAssignment.prototype */ {
 
   // .................................................

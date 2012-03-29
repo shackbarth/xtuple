@@ -10,9 +10,9 @@ sc_require('mixins/_general_ledger');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.GeneralLedger = XM.Record.extend(XM._GeneralLedger,
+XM.GeneralLedger = XT.Record.extend(XM._GeneralLedger,
   /** @scope XM.GeneralLedger.prototype */ {
 
   // .................................................

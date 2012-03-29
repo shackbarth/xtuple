@@ -10,7 +10,7 @@ sc_require('mixins/_incident_alarm');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 XM.IncidentAlarm = XM.Alarm.extend(XM._IncidentAlarm,
   /** @scope XM.IncidentAlarm.prototype */ {

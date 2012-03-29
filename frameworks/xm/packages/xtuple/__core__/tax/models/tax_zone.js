@@ -10,9 +10,9 @@ sc_require('mixins/_tax_zone');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.TaxZone = XM.Record.extend(XM._TaxZone,
+XM.TaxZone = XT.Record.extend(XM._TaxZone,
   /** @scope XM.TaxZone.prototype */ {
 
   // .................................................

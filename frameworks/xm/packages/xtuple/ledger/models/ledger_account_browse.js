@@ -10,9 +10,9 @@ sc_require('mixins/_ledger_account_browse');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.LedgerAccountBrowse = XM.Record.extend(XM._LedgerAccountBrowse,
+XM.LedgerAccountBrowse = XT.Record.extend(XM._LedgerAccountBrowse,
   /** @scope XM.LedgerAccountBrowse.prototype */ {
 
   // .................................................

@@ -10,9 +10,9 @@ sc_require('mixins/_incident_url');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.IncidentUrl = XM.Record.extend(XM._IncidentUrl,
+XM.IncidentUrl = XT.Record.extend(XM._IncidentUrl,
   /** @scope XM.IncidentUrl.prototype */ {
 
   // .................................................

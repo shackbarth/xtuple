@@ -8,10 +8,10 @@
 
   (Document your Model here)
 
-  @extends XM.Object
+  @extends XT.Object
 */
 
-XM.GeneralLedgerSettings = XM.Object.extend( XM.Settings,
+XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
 /** @scope XM.GeneralLedgerSettings.prototype */ {
 
   className: 'XM.GeneralLedgerSettings',
@@ -165,7 +165,7 @@ XM.GeneralLedgerSettings = XM.Object.extend( XM.Settings,
         conditions: "company MATCHES {regexp}",
         parameters: { regexp: regExp }
       });
-      this._companyAccounts = XM.store.find(qry);
+      this._companyAccounts = XT.store.find(qry);
     }
     
     return this._companyAccounts;
@@ -183,7 +183,7 @@ XM.GeneralLedgerSettings = XM.Object.extend( XM.Settings,
         conditions: "profitCenter MATCHES {regexp}",
         parameters: { regexp: regExp }
       });
-      this._profitCenterAccounts = XM.store.find(qry);
+      this._profitCenterAccounts = XT.store.find(qry);
     }
     
     return this._profitCenterAccounts;
@@ -201,7 +201,7 @@ XM.GeneralLedgerSettings = XM.Object.extend( XM.Settings,
         conditions: "subAccount MATCHES {regexp}",
         parameters: { regexp: regExp }
       });
-      this._subAccountAccounts = XM.store.find(qry);
+      this._subAccountAccounts = XT.store.find(qry);
     }
     
     return this._subAccountAccounts;
@@ -238,4 +238,4 @@ XM.GeneralLedgerSettings = XM.Object.extend( XM.Settings,
 }) ;
 
 // DOES NOT WORK
-// XM.ready(function() { setTimeout(function() { XM.generalLedger = XM.GeneralLedger.create(); }, 4000); });
+// XT.ready(function() { setTimeout(function() { XM.generalLedger = XM.GeneralLedger.create(); }, 4000); });

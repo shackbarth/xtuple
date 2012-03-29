@@ -8,7 +8,7 @@
 
   Provides special number handling capabilities for documents.
 
-  @extends XM.Record
+  @extends XT.Record
 */
 
 XM.AccountDocument = XM.Document.extend(

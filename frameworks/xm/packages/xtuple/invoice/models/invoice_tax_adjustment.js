@@ -10,9 +10,9 @@ sc_require('mixins/_invoice_tax_adjustment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.InvoiceTaxAdjustment = XM.Record.extend(XM._InvoiceTaxAdjustment,
+XM.InvoiceTaxAdjustment = XT.Record.extend(XM._InvoiceTaxAdjustment,
   /** @scope XM.InvoiceTaxAdjustment.prototype */ {
 
   // .................................................

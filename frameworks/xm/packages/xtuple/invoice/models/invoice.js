@@ -319,12 +319,12 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
 
     // validate Lines
     val = this.get('linesLength');
-    err = XM.errors.findProperty('code', 'xt1010');
+    err = XT.errors.findProperty('code', 'xt1010');
     this.updateErrors(err, !val);
 
     // validate Total
     val = this.get('total');
-    err = XM.errors.findProperty('code', 'xt1009');
+    err = XT.errors.findProperty('code', 'xt1009');
     this.updateErrors(err, val < 0);
 
     return errors;

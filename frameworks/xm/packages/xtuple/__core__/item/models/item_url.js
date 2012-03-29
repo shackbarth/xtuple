@@ -10,9 +10,9 @@ sc_require('mixins/_item_url');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ItemUrl = XM.Record.extend(XM._ItemUrl,
+XM.ItemUrl = XT.Record.extend(XM._ItemUrl,
   /** @scope XM.ItemUrl.prototype */ {
 
   // .................................................

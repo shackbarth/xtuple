@@ -10,9 +10,9 @@ sc_require('mixins/_item_contact');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ItemContact = XM.Record.extend(XM._ItemContact,
+XM.ItemContact = XT.Record.extend(XM._ItemContact,
   /** @scope XM.ItemContact.prototype */ {
 
   // .................................................

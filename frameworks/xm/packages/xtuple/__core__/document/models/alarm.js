@@ -7,7 +7,7 @@
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XT.Record
 */
 
 XM.Alarm = XM.Document.extend(

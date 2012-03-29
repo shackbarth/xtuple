@@ -10,9 +10,9 @@ sc_require('mixins/_class_code');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ClassCode = XM.Record.extend(XM._ClassCode,
+XM.ClassCode = XT.Record.extend(XM._ClassCode,
   /** @scope XM.ClassCode.prototype */ {
 
   // .................................................

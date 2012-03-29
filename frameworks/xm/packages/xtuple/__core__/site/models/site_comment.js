@@ -10,9 +10,9 @@ sc_require('mixins/_site_comment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.SiteComment = XM.Record.extend(XM._SiteComment,
+XM.SiteComment = XT.Record.extend(XM._SiteComment,
   /** @scope XM.SiteComment.prototype */ {
 
   // .................................................

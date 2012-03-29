@@ -7,10 +7,10 @@
 
   (Document your Model here)
 
-  @extends XM.Record
+  @extends XT.Record
 */
 
-XM.Comment = XM.Record.extend(
+XM.Comment = XT.Record.extend(
 /** @scope XM.Comment.prototype */ {
 
   /**
@@ -76,7 +76,7 @@ XM.Comment = XM.Record.extend(
     var errors = this.get('validateErrors'), err;
 
     // Validate Comment Type
-    err = XM.errors.findProperty('code', 'xt1003');
+    err = XT.errors.findProperty('code', 'xt1003');
     this.updateErrors(err, SC.none(this.get('commentType')));
 
     return errors;

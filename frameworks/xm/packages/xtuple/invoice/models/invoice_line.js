@@ -10,9 +10,9 @@ sc_require('mixins/_invoice_line');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
+XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   /** @scope XM.InvoiceLine.prototype */ {
   
   /**

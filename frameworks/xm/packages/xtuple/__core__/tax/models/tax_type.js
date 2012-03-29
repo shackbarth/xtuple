@@ -10,9 +10,9 @@ sc_require('mixins/_tax_type');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.TaxType = XM.Record.extend(XM._TaxType,
+XM.TaxType = XT.Record.extend(XM._TaxType,
   /** @scope XM.TaxType.prototype */ {
 
   // .................................................
@@ -52,7 +52,7 @@ XM.TaxType._xm_setTaxTypeConstant = function(name) {
     }
   });
 
-  ary = XM.store.find(qry);
+  ary = XT.store.find(qry);
   
   ary.addObserver('status', ary, function observer() {
     if (ary.get('status') === SC.Record.READY_CLEAN) {
@@ -73,8 +73,8 @@ XM.TaxType._xm_setTaxTypeFreight = function() {
 }
 
 // TODO: Move this to start up
-XM.ready(function() {
-  XM.dataSource.ready(XM.TaxType._xm_setTaxTypeAdjustment, this);
-  XM.dataSource.ready(XM.TaxType._xm_setTaxTypeFreight, this);
+XT.ready(function() {
+  XT.dataSource.ready(XM.TaxType._xm_setTaxTypeAdjustment, this);
+  XT.dataSource.ready(XM.TaxType._xm_setTaxTypeFreight, this);
 });
 

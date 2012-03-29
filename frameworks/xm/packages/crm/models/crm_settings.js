@@ -8,11 +8,11 @@
 
   (Document your Model here)
 
-  @extends XM.Object
+  @extends XT.Object
   @version 0.1
 */
 
-XM.CrmSettings = XM.Object.extend(XM.Settings,
+XM.CrmSettings = XT.Object.extend(XM.Settings,
 /** @scope XM.CrmSettings.prototype */ {
   
   className: 'XM.CrmSettings',

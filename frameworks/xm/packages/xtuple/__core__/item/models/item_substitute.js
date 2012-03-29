@@ -10,9 +10,9 @@ sc_require('mixins/_item_substitute');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ItemSubstitute = XM.Record.extend(XM._ItemSubstitute,
+XM.ItemSubstitute = XT.Record.extend(XM._ItemSubstitute,
   /** @scope XM.ItemSubstitute.prototype */ {
 
   // .................................................

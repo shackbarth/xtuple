@@ -10,9 +10,9 @@ sc_require('mixins/_user_account_info');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.UserAccountInfo = XM.Record.extend(XM._UserAccountInfo,
+XM.UserAccountInfo = XT.Record.extend(XM._UserAccountInfo,
   /** @scope XM.UserAccountInfo.prototype */ {
 
   // .................................................

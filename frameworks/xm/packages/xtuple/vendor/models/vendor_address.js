@@ -10,9 +10,9 @@ sc_require('mixins/_vendor_address');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.VendorAddress = XM.Record.extend(XM._VendorAddress,
+XM.VendorAddress = XT.Record.extend(XM._VendorAddress,
   /** @scope XM.VendorAddress.prototype */ {
 
   // .................................................

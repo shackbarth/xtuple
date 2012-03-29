@@ -10,9 +10,9 @@ sc_require('mixins/_currency_rate');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
+XM.CurrencyRate = XT.Record.extend(XM._CurrencyRate,
   /** @scope XM.CurrencyRate.prototype */ {
 
   // .................................................
@@ -48,7 +48,7 @@ XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
           expires: expiresDate 
         }
       });
-      this._xm_dateOverlaps = XM.store.find(qry);
+      this._xm_dateOverlaps = XT.store.find(qry);
     }    
     return this._xm_dateOverlaps || [];
   }.property('effective', 'expires').cacheable(),
@@ -74,14 +74,14 @@ XM.CurrencyRate = XM.Record.extend(XM._CurrencyRate,
 
     // validate effective and expires date range
     isErr = this.get('dateOverlapsLength') > 0 ? true : false;
-    err = XM.errors.findProperty('code', 'xt1003');
+    err = XT.errors.findProperty('code', 'xt1003');
     this.updateErrors(err, isErr);
 
     // validate expires date is after effective date
     var effective = this.get('effective'),
         expires = this.get('expires');
     isErr = SC.DateTime.compareDate(effective, expires) > 0;
-    err = XM.errors.findProperty('code', 'xt1004');
+    err = XT.errors.findProperty('code', 'xt1004');
     this.updateErrors(err, isErr);
     
     // return errors array
