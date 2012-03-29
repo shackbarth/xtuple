@@ -45,13 +45,6 @@
       }
     },
     {
-      "name": "site",
-      "toOne": {
-        "type": "SiteInfo",
-        "column": "invcitem_warehous_id"
-      }
-    },
-    {
       "name": "itemNumber",
       "attr": {
         "type": "String",
@@ -70,7 +63,8 @@
       "toOne": {
         "type": "SalesCategory",
         "column": "invcitem_salescat_id",
-        "inverse" : "guid"
+        "inverse" : "guid",
+        "defaultValue": -1
       }
     },
     {
