@@ -8,6 +8,8 @@
 
   Provides special number handling capabilities for documents.
 
+  Will automatically handle each type of document assignment to the documents array.
+
   @extends XM.Record
 */
 
@@ -33,6 +35,11 @@ XM.Document = XM.Record.extend(
     generation policy on this setting.
   */
   numberPolicySetting: null,
+
+  /**
+  Holds all of the document assignments.
+  */
+  documents: [],
   
   // ..........................................................
   // CALCULATED PROPERTIES
@@ -80,6 +87,12 @@ XM.Document = XM.Record.extend(
     this[docKey].defaultValue = dv;
     this[docKey].set('isRequired', true);
     this.addObserver(docKey, this.keyDidChange);
+
+    /**
+    */
+    for(prop in this) {
+      console.log(prop + " is a " + SC.typeOf(prop));
+    }
   },
   
   /**
@@ -135,6 +148,13 @@ XM.Document = XM.Record.extend(
       record._xm_numberGen = null;
     }
     arguments.callee.base.apply(this, arguments);
+  },
+
+  /**
+    Called whenever the length of a document type array changes.
+  */
+  _xm_assignmentDidChange: function() {
+
   },
 
   // ..........................................................
