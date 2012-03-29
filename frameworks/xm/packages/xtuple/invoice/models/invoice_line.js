@@ -126,17 +126,28 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
   isItemDidChange: function() {
     var isItem = this.get('isItem'),
         isPosted = this.getPath('invoice.isPosted');
+        
+    // clear unused fields
     if (isItem) {
-      this.setIfChanged('itemNumber', ''),
-      this.setIfChanged('description', ''),
-      this.setIfChanged('salesCategory', -1)
+      this.setIfChanged('itemNumber', '');
+      this.setIfChanged('description', '');
+      this.setIfChanged('salesCategory', -1);
     } else {
       this.setIfChanged('item', null);
+      this.setIfChanged('quantityUnit', null);
+      this.setIfChanged('priceUnit', null);
+      this.setIfChanged('sellingUnits', []);
     }
+    
+    // item related settings
     this.item.set('isRequired', isItem);
     this.item.set('isEditable', isItem && !isPosted);
+    this.quantityUnit.set('isRequired', isItem);
+    this.priceUnit.set('isRequired', isItem);
+    
+    // misc related settings
     this.itemNumber.set('isRequired', !isItem);
-    this.itemNumber.set('isEditable', !isItem && !isPosted);   
+    this.itemNumber.set('isEditable', !isItem && !isPosted); 
     this.description.set('isRequired', !isItem);
     this.description.set('isEditable', !isItem && !isPosted);
     this.salesCategory.set('isRequired', !isItem);
