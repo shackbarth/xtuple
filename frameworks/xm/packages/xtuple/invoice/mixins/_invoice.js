@@ -92,6 +92,7 @@ XM._Invoice = {
     @type Boolean
   */
   isPrinted: SC.Record.attr(Boolean, {
+    isRequired: true,
     defaultValue: false,
     label: '_isPrinted'.loc()
   }),
@@ -100,6 +101,7 @@ XM._Invoice = {
     @type Boolean
   */
   isPosted: SC.Record.attr(Boolean, {
+    isRequired: true,
     defaultValue: false,
     label: '_isPosted'.loc()
   }),
@@ -266,6 +268,8 @@ XM._Invoice = {
     @type Number
   */
   commission: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
     label: '_commission'.loc()
   }),
 
@@ -326,6 +330,8 @@ XM._Invoice = {
     @type Number
   */
   freight: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
     label: '_freight'.loc()
   }),
 

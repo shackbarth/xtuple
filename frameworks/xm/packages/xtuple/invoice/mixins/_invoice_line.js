@@ -44,6 +44,7 @@ XM._InvoiceLine = {
     @type XM.Invoice
   */
   invoice: SC.Record.toOne('XM.Invoice', {
+    isRequired: true,
     label: '_invoice'.loc()
   }),
 
@@ -51,6 +52,7 @@ XM._InvoiceLine = {
     @type Number
   */
   lineNumber: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_lineNumber'.loc()
   }),
 
@@ -95,6 +97,7 @@ XM._InvoiceLine = {
     @type Number
   */
   ordered: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_ordered'.loc()
   }),
 
@@ -102,6 +105,7 @@ XM._InvoiceLine = {
     @type Number
   */
   billed: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_billed'.loc()
   }),
 
@@ -116,6 +120,8 @@ XM._InvoiceLine = {
     @type Number
   */
   quantityUnitRatio: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 1,
     label: '_quantityUnitRatio'.loc()
   }),
 
@@ -123,6 +129,7 @@ XM._InvoiceLine = {
     @type Number
   */
   price: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_price'.loc()
   }),
 
@@ -137,6 +144,8 @@ XM._InvoiceLine = {
     @type Number
   */
   priceUnitRatio: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 1,
     label: '_priceUnitRatio'.loc()
   }),
 

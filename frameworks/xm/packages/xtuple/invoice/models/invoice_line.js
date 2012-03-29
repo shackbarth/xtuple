@@ -244,13 +244,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
       var taxes = this.get('taxes');
       that.setTaxDetail(taxes, 'taxDetail', 'tax');
     }
-  }.observes('extendedPrice', 'taxType'),
-  
-  testMe: function() {
-    debugger
-    line = XM.store.createRecord(XM.InvoiceItem, {});
-    
-  }
+  }.observes('extendedPrice', 'taxType')
 
 
 });
