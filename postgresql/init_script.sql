@@ -1,4 +1,4 @@
-﻿-- [ START ] initdb
+-- [ START ] initdb
 
 -- create schemas
 \i create_xt_schema.sql;
@@ -64,6 +64,7 @@
 \i xt/javascript/data.sql;
 \i xt/javascript/orm.sql;
 \i xt/javascript/record.sql;
+\i xt/javascript/session.sql;
 
 -- xt views
 \i xt/views/docinfo.sql; 
@@ -103,7 +104,6 @@
 \i xm/javascript/purchase_journal.sql;
 \i xm/javascript/receivables.sql;
 \i xm/javascript/sales_journal.sql;
-\i xm/javascript/session.sql;
 \i xm/javascript/standard_journal.sql;
 \i xm/javascript/tax.sql;
 \i xm/javascript/to_do.sql;
