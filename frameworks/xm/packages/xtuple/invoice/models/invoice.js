@@ -309,7 +309,18 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   }.observes('linesLength', 'total'),
   
   linesLengthDidChange: function() {
+    // lock down currency if applicable
     this.currency.set('isEditable', this.get('linesLength') > 0);
+    
+    // handle line numbering
+    var lines = this.get('lines'),
+        max = 0, lineNumber, line;
+    for (var i = 0; i < lines.get('length'); i++) {
+      line = lines.objectAt(i);
+      lineNumber = line.get('lineNumber');
+      if (lineNumber) max = lineNumber > max ? lineNumber : max;
+      else line.set('lineNumber', max + 1);
+    }
   }.observes('linesLength'),
   
   /**
