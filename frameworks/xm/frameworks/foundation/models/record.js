@@ -4,15 +4,14 @@
 // ==========================================================================
 /*globals XM */
 
-/** @class XM.Record
+/** 
+  @class XM.Record
 
   The XM.Record is an extension of the SC.Record class that adds
-  xTuple-specific functionality. This includes both properties and
-  methods.
-
-  - Every record is expected to have an integer primary key called id.
-™
-  @version 0.1
+  xTuple-specific functionality including validation, state, and nested
+  record handling.
+  
+  @extends SC.Record
 */
 XM.Record = SC.Record.extend(
 /** @scope XM.Record.prototype */ {
@@ -236,6 +235,9 @@ XM.Record = SC.Record.extend(
     passed with isError is true, the error code will be added to the array
     if it is not already present. If isError is false, the error code will
     be removed if present.
+    
+    @param {Object} SC.Error
+    @param {Boolean} is error
   */
   updateErrors: function(error, isError) {
     if (!error) throw "no error provided";
@@ -248,10 +250,8 @@ XM.Record = SC.Record.extend(
   /**
     Reimplimented from SC.Record. 
     
-    This version calls loadNestedRecord instead of createNestedRecord so 
-    we get a record with correct status from the start.
-    
-    @seealso loadNestedRecord
+    This version materializes and register nested records differently 
+    so we get a record with correct status from the start.
   */
   registerNestedRecord: function(value, key, path) {
     var psk, csk, childRecord, recordType,
@@ -377,6 +377,8 @@ XM.Record.extend = function() {
   Auto-executed from XM.Record.extend overloaded function. Features that need
   to be executed across all XM.Records but are dependent on the individual prototype
   need to happen here.
+  
+  @returns {Object} receiver
 */
 XM.Record.setup = function() {
 
@@ -405,7 +407,9 @@ XM.Record.setup = function() {
 };
 
 /**
-Use this function to find out whether a user can create records before instantiating one.
+  Use this function to find out whether a user can create records before instantiating one.
+  
+  @returns {Boolean}
 */
 XM.Record.canCreate = function() {
   var privileges = this.prototype.privileges,
@@ -422,7 +426,9 @@ XM.Record.canCreate = function() {
 };
 
 /**
-Use this function to find out whether a user can read this record type before any have been loaded.
+  Use this function to find out whether a user can read this record type before any have been loaded.
+  
+  @returns {Boolean}
 */
 XM.Record.canRead = function() {
   var privileges = this.prototype.privileges,
@@ -443,6 +449,8 @@ XM.Record.canRead = function() {
 /**
   Returns whether a user has access to update a record of this type. If a record is passed that involves
   personal privileges, it will validate whether that particular record is updatable.
+  
+  @returns {Boolean}
 */
 XM.Record.canUpdate = function(record) {
   return XM.Record._canDo.call(this, 'update', record);
@@ -451,6 +459,8 @@ XM.Record.canUpdate = function(record) {
 /**
   Returns whether a user has access to delete a record of this type. If a record is passed that involves
   personal privileges, it will validate whether that particular record is deletable.
+  
+  @returns {Boolean}
 */
 XM.Record.canDelete = function(record) {
   return XM.Record._canDo.call(this, 'delete', record);
@@ -596,12 +606,12 @@ XM.Record.releaseNumber = function(number) {
 };
 
 /**
-   Return a matching record id for a passed user key and value. 
-   If none found returns zero.
+  Return a matching record id for a passed user key and value. 
+  If none found returns zero.
   
-    @param {String} property to search on, typically a user key
-    @param {String} value to search for
-    @param {Function} callback
+  @param {String} property to search on, typically a user key
+  @param {String} value to search for
+  @param {Function} callback
   @returns {Object} receiever
 */
 XM.Record.findExisting = function(key, value, callback) {
