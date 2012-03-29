@@ -1,6 +1,6 @@
 // ==========================================================================
-// Project:   XM.Record
-// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// Project:   xTuple Postbooks - Business Management System Framework        
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
 /*globals XM */
 
@@ -39,17 +39,6 @@ XM.Record = SC.Record.extend(
   }),
   
   /**
-    A property that returns the result of canUpdate.
-    
-    @type Boolean
-  */
-  isEditable: function() {
-    var isEditable = arguments.callee.base.apply(this, arguments); 
-    if(isEditable && this.get('status') !== SC.Record.READY_NEW) return this.canUpdate();
-    return isEditable;
-  }.property('status').cacheable(),
-
-  /**
     A hash structure that defines data access.
     
     @property
@@ -85,6 +74,56 @@ XM.Record = SC.Record.extend(
   }),
   
   // ..........................................................
+  // COMPUTED PROPERTIES
+  //
+  
+  /**
+    Returns only attribute records that have changed.
+    
+    @type {Hash}
+    @property
+  */
+  changeSet: function() {
+    var attributes = this.get('attributes');
+
+    // recursive function that does the work
+    changedOnly = function(attrs) {
+      var ret = null;
+      if (attrs.dataState !== 'read') {
+        ret = {};
+        for (var prop in attrs) {
+          if (attrs[prop] instanceof Array) {
+            ret[prop] = [];
+            // loop through array and only include dirty items
+            for (var i = 0; i < attrs[prop].length; i++) {
+              var val = changedOnly(attrs[prop][i]);
+              if (val) ret[prop].push(val);
+            }
+          } else {
+            ret[prop] = attrs[prop];
+          }  
+        }
+      }
+      return ret;
+    }
+    
+    // do the work
+    return changedOnly(attributes);
+    // TODO: get this to reduce to only changed fields!
+  }.property(),
+  
+  /**
+    A property that returns the result of canUpdate.
+    
+    @type Boolean
+  */
+  isEditable: function() {
+    var isEditable = arguments.callee.base.apply(this, arguments); 
+    if(isEditable && this.get('status') !== SC.Record.READY_NEW) return this.canUpdate();
+    return isEditable;
+  }.property('status').cacheable(),
+  
+  // ..........................................................
   // METHODS
   //
 
@@ -99,7 +138,7 @@ XM.Record = SC.Record.extend(
   /**
     Returns whether the current record can be updated based on privilege settings.
     
-    @returns Boolean
+    @returns {Boolean}
   */
   canUpdate: function() {
     var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
@@ -111,7 +150,7 @@ XM.Record = SC.Record.extend(
   /**
     Returns whether the current record can be deleted based on privilege settings.
     
-    @returns Boolean
+    @returns {Boolean}
   */  
   canDelete: function() {
     var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
@@ -122,6 +161,8 @@ XM.Record = SC.Record.extend(
   
   /**
     Returns an array of property names for all required attributes.
+    
+    @returns {Array}
   */
   requiredAttributes: function() {
     var required = [], typeClass,
@@ -177,7 +218,7 @@ XM.Record = SC.Record.extend(
     
     @seealso XM.errors
     @seealso XM.Record.updateErrors
-    @returns Array
+    @returns {Array}
   */
   validate: function() {
     var required = this.requiredAttributes(),
@@ -213,7 +254,8 @@ XM.Record = SC.Record.extend(
     @seealso loadNestedRecord
   */
   registerNestedRecord: function(value, key, path) {
-    var store, psk, csk, childRecord, recordType;
+    var psk, csk, childRecord, recordType,
+        store = this.get('store');
 
     // if no path is entered it must be the key
     if (SC.none(path)) path = key;
@@ -222,80 +264,60 @@ XM.Record = SC.Record.extend(
     // current store.
     if (value && value.get && value.get('isRecord')) {
       childRecord = value;
-    }
-    else {
+      csk = childRecord.get('storeKey');
+    } else {
       recordType = this._materializeNestedRecordType(value, key);
-      childRecord = this.loadNestedRecord(recordType, value);
+      SC.run(function() {
+        var hash = value || {}, // init if needed
+            pk = recordType.prototype.primaryKey,
+            id = hash[pk];
+        csk = id ? store.storeKeyExists(recordType, id) : null;
+        if (csk) {
+          store.writeDataHash(csk, hash);
+          childRecord = store.materializeRecord(csk);
+        } else {
+          csk = store.pushRetrieve(recordType, id, hash);
+          childRecord = store.materializeRecord(csk);
+          childRecord.notifyPropertyChange('status');
+        }
+      }, this);
     }
     if (childRecord){
       this.isParentRecord = true;
-      store = this.get('store');
       psk = this.get('storeKey');
-      csk = childRecord.get('storeKey');
       store.registerChildToParent(psk, csk, path);
     }
 
     return childRecord;
   },
-  
+   
   /**
-    Loads a new nested record instance into the store.
-    
-    @seealso registerNestedRecord
+    Reimplemented from SC.Record.
+
+    Don't destroy the parent.
   */
-  loadNestedRecord: function(recordType, hash) {
-    var store, id, sk, pk, cr = null, store = this.get('store');
-    
-    SC.run(function() {
-      hash = hash || {}; // init if needed
-      pk = recordType.prototype.primaryKey
-      id = hash[pk];
-      sk = id ? store.storeKeyExists(recordType, id) : null;
-      if (sk) store.writeDataHash(sk, hash);
-      else sk = store.pushRetrieve(recordType, id, hash);
-      cr = store.materializeRecord(sk);
-    }, this);
+  destroy: function() {
+    var store = this.get('store'), rec,
+        sk = this.get('storeKey');
 
-    return cr;
-  },
+    store.destroyRecord(null, null, sk);
+    this.notifyPropertyChange('status');
+    // If there are any aggregate records, we might need to propagate our new
+    // status to them.
+    this.propagateToAggregates();
+
+    // If we have a parent, they changed too!
+    var p = this.get('parentRecord');
+    if (p) {
+      var psk = p.get('storeKey'),
+          csk = this.get('storeKey'),
+          store = this.get('store'),
+          path = store.parentRecords[psk][csk];
   
-  /**
-    Reimplemented from SC.Record. 
-    
-    This version registers the child and marks
-    the parent as dirty. Use this function any time you want to create a new
-    record that is nested.
-   */
-  createNestedRecord: function(recordType, hash, path) {
-    var store, id, sk, pk, cr = null, store = this.get('store');
-
-    // create or materialize record
-    SC.run(function() {
-      hash = hash || {}; // init if needed
-      pk = recordType.prototype.primaryKey
-      id = hash[pk];
-      sk = id ? store.storeKeyExists(recordType, id) : null;
-      if (sk){
-        store.writeDataHash(sk, hash);
-        cr = store.materializeRecord(sk);
-      } else {
-        cr = store.createRecord(recordType, hash) ;
-      }
-    }, this);
-
-    // register the new child, set this to parent and mark dirty.
-    if (cr) {
-      var store = this.get('store'),
-          psk = this.get('storeKey'),
-          csk = cr.get('storeKey'),
-          path;
-      this.isParentRecord = true;
-      store.registerChildToParent(psk, csk, path);
-      path = store.parentRecords[psk][csk];
-      this.recordDidChange(path);
+      p.recordDidChange(path);
     }
-    
-    return cr;
+
+    return this ;
   },
 
   // ..........................................................
