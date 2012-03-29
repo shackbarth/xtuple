@@ -23,12 +23,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /* @private */
   creditsLengthBinding: SC.Binding.from('*credits.length').noDelay(),
   
-  /** @private */
-  taxesLength: 0,
-  
-  /** @private */
-  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(),
-  
   /* @private */
   linesLength: 0,
   
