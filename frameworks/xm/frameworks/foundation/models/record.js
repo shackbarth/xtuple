@@ -359,6 +359,9 @@ XM.Record = SC.Record.extend(
       // You cannot write attributes once an object is fully destroyed.
       this.writeAttribute(key, value, YES);
     }
+    
+    console.log('Change status %@:%@ to %@'
+                .fmt(this.get('className'),this.get('id'), this.statusString()));
   }.observes('status')
 
 });
