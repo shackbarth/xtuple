@@ -25,7 +25,7 @@
     {
       "name": "number",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "item_number",
         "isEditable": false,
         "isRequired": true

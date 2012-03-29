@@ -66,7 +66,8 @@
       "attr": {
         "type": "Boolean",
         "column": "invchead_printed",
-        "defaultValue": false
+        "defaultValue": false,
+        "isRequired": true
       }
     },
     {
@@ -74,7 +75,9 @@
       "attr": {
         "type": "Boolean",
         "column": "invchead_posted",
-        "defaultValue": false
+        "defaultValue": false,
+        "isRequired": true,
+        "isEditable": false
       }
     },
     {
@@ -82,7 +85,9 @@
       "attr": {
         "type": "Boolean",
         "column": "invchead_void",
-        "defaultValue": false
+        "defaultValue": false,
+        "isRequired": false,
+        "isEditable": false
       }
     },		
     {
@@ -239,7 +244,9 @@
       "name": "commission",
       "attr": {
         "type": "Number",
-        "column": "invchead_commission"
+        "column": "invchead_commission",
+        "defaultValue": 0,
+        "isRequired": true
       }
     },
     {
@@ -297,7 +304,9 @@
       "name": "freight",
       "attr": {
         "type": "Number",
-        "column": "invchead_freight"
+        "column": "invchead_freight",
+        "defaultValue": 0,
+        "isRequired": true
       }
     },
     {

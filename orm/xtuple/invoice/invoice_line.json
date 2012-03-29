@@ -26,14 +26,16 @@
       "name": "invoice",
       "toOne": {
         "type": "Invoice",
-        "column": "invcitem_invchead_id"
+        "column": "invcitem_invchead_id",
+        "isRequired": true
       }
     },
     {
       "name": "lineNumber",
       "attr": {
         "type": "Number",
-        "column": "invcitem_linenumber"
+        "column": "invcitem_linenumber",
+        "isRequired": true
       }
     },
     {
@@ -78,14 +80,16 @@
       "name": "ordered",
       "attr": {
         "type": "Number",
-        "column": "invcitem_ordered"
+        "column": "invcitem_ordered",
+        "isRequired": true
       }
     },
     {
       "name": "billed",
       "attr": {
         "type": "Number",
-        "column": "invcitem_billed"
+        "column": "invcitem_billed",
+        "isRequired": true
       }
     },
     {
@@ -99,14 +103,17 @@
       "name": "quantityUnitRatio",
       "attr": {
         "type": "Number",
-        "column": "invcitem_qty_invuomratio"
+        "column": "invcitem_qty_invuomratio",
+        "defaultValue": 1,
+        "isRequired": true
       }
     },
     {
       "name": "price",
       "attr": {
         "type": "Number",
-        "column": "invcitem_price"
+        "column": "invcitem_price",
+        "isRequired": true
       }
     },
     {
@@ -120,7 +127,9 @@
       "name": "priceUnitRatio",
       "attr": {
         "type": "Number",
-        "column": "invcitem_price_invuomratio"
+        "column": "invcitem_price_invuomratio",
+        "defaultValue": 1,
+        "isRequired": true
       }
     },
     {
