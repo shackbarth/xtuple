@@ -180,9 +180,7 @@ XM.Store = SC.Store.extend(XM.Logging,
       this._propagateToChildren(storeKey, function(storeKey) {
         var status = that.peekStatus(storeKey);
         if (status & SC.Record.BUSY) {
-          var newStatus = status != K.BUSY_DESTROYING ?
-                          SC.Record.READY_CLEAN :
-                          SC.Record.DESTROYED_CLEAN;
+          var newStatus = status != K.BUSY_DESTROYING ? K.READY_CLEAN : K.DESTROYED_CLEAN;
           that.writeStatus(storeKey, newStatus);
           that.dataHashDidChange(storeKey, null, true);
         }
@@ -192,6 +190,48 @@ XM.Store = SC.Store.extend(XM.Logging,
     //update callbacks
     this._retreiveCallbackForStoreKey(storeKey);
 
+    return this ;
+  },
+  
+  /**
+    Converts the passed record into an error object.
+
+    @param {Number} storeKey record store key to error
+    @param {SC.Error} error [optional] an SC.Error instance to associate with storeKey
+    @returns {SC.Store} receiver
+  */
+  dataSourceDidError: function(storeKey, error) {
+    var status = this.readStatus(storeKey), errors = this.recordErrors, K = SC.Record;
+
+    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
+    // DESTROYED_DIRTY
+    if (!(status & K.BUSY)) { throw K.BAD_STATE_ERROR; }
+
+    // otherwise, determine proper state transition
+    else status = K.ERROR ;
+
+    // Add the error to the array of record errors (for lookup later on if necessary).
+    if (error && error.isError) {
+      if (!errors) errors = this.recordErrors = [];
+      errors[storeKey] = error;
+    }
+
+    this.writeStatus(storeKey, status) ;
+    this.dataHashDidChange(storeKey, null, true);
+
+    // Force record to refresh its cached properties based on store key
+    var record = this.materializeRecord(storeKey);
+
+    // update all children of error status
+    var that = this;
+    this._propagateToChildren(storeKey, function(storeKey) {
+        var status = K.ERROR;
+        that.writeStatus(storeKey, status);
+        that.dataHashDidChange(storeKey, null, true);
+    });
+
+    // update callbacks
+    this._retreiveCallbackForStoreKey(storeKey);
     return this ;
   },
   
