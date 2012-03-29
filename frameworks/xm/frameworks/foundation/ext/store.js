@@ -194,11 +194,48 @@ XM.Store = SC.Store.extend(XM.Logging,
   },
   
   /**
-    Converts the passed record into an error object.
+    Reimplemented from SC.Store. 
+    
+    Change status of child records to destroyed, and remove duplicate notice on parent.
+  */
+  dataSourceDidDestroy: function(storeKey) {
+    var status = this.readStatus(storeKey), K = SC.Record;
 
-    @param {Number} storeKey record store key to error
-    @param {SC.Error} error [optional] an SC.Error instance to associate with storeKey
-    @returns {SC.Store} receiver
+    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
+    // DESTROYED_DIRTY
+    if (!(status & K.BUSY)) {
+      throw K.BAD_STATE_ERROR; // should never be called in this state
+    }
+    // otherwise, determine proper state transition
+    else{
+      status = K.DESTROYED_CLEAN ;
+    }
+    this.removeDataHash(storeKey, status) ;
+    this.dataHashDidChange(storeKey);
+
+    // Force record to refresh its cached properties based on store key
+    var record = this.materializeRecord(storeKey);
+
+    // update all children
+    var that = this;
+    this._propagateToChildren(storeKey, function(storeKey) {
+      var status = that.peekStatus(storeKey);
+      if (status & SC.Record.BUSY) {
+        var newStatus = K.BUSY_DESTROYING;
+        that.writeStatus(storeKey, newStatus);
+        that.dataHashDidChange(storeKey, null, true);
+      }
+    });
+
+    this._retreiveCallbackForStoreKey(storeKey);
+
+    return this ;
+  },
+  
+  /**
+    Reimplemented from SC.Store. 
+    
+    Change status of child records to error, and remove duplicate notice on parent.
   */
   dataSourceDidError: function(storeKey, error) {
     var status = this.readStatus(storeKey), errors = this.recordErrors, K = SC.Record;
@@ -225,11 +262,14 @@ XM.Store = SC.Store.extend(XM.Logging,
     // update all children of error status
     var that = this;
     this._propagateToChildren(storeKey, function(storeKey) {
-        var status = K.ERROR;
-        that.writeStatus(storeKey, status);
+      var status = that.peekStatus(storeKey);
+      if (status & SC.Record.BUSY) {
+        var newStatus = K.ERROR;
+        that.writeStatus(storeKey, newStatus);
         that.dataHashDidChange(storeKey, null, true);
+      }
     });
-
+    
     // update callbacks
     this._retreiveCallbackForStoreKey(storeKey);
     return this ;
