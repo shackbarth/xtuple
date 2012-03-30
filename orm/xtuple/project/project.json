@@ -151,6 +151,15 @@
       }
     },
     {
+      "name": "accounts",
+      "toMany": {
+        "isNested": true,
+        "type": "ProjectAccount",
+        "column": "prj_id",
+        "inverse": "source"
+      }
+    },
+    {
       "name": "contacts",
       "toMany": {
         "isNested": true,

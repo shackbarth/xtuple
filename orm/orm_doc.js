@@ -333,7 +333,6 @@
           * "currentDate", 
           * "currentUser"
           * "baseCurrency" 
-          * "parentRecord"
           
         Each of these will generate correct default value functions
         on client side generated code using the xTuple datasource model generator.

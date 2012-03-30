@@ -31,97 +31,83 @@
       }
     },
     {
-      "name": "number",
+      "name": "name",
       "attr": {
         "type": "String",
-        "column": "cntct_number",
-        "isEditable":false
+        "column": "cntct_name",
+        "isEditable": false
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "cntct_active"
-      }
-    },
-    {
-      "name": "firstName",
-      "attr": {
-        "type": "String",
-        "column": "cntct_first_name"
-      }
-    },
-    {
-      "name": "middleName",
-      "attr": {
-        "type": "String",
-        "column": "cntct_middle"
-      }
-    },
-    {
-      "name": "lastName",
-      "attr": {
-        "type": "String",
-        "column": "cntct_last_name"
-      }
-    },
-    {
-      "name": "suffix",
-      "attr": {
-        "type": "String",
-        "column": "cntct_suffix"
+        "column": "cntct_active",
+        "isEditable": false
       }
     },
     {
       "name": "jobTitle",
       "attr": {
         "type": "String",
-        "column": "cntct_title"
+        "column": "cntct_title",
+        "isEditable": false
       }
     },
     {
       "name": "phone",
       "attr": {
         "type": "String",
-        "column": "cntct_phone"
+        "column": "cntct_phone",
+        "isEditable": false
       }
     },
     {
       "name": "alternate",
       "attr": {
         "type": "String",
-        "column": "cntct_phone2"
+        "column": "cntct_phone2",
+        "isEditable": false
       }
     },
     {
       "name": "fax",
       "attr": {
         "type": "String",
-        "column": "cntct_fax"
+        "column": "cntct_fax",
+        "isEditable": false
       }
     },
     {
       "name": "primaryEmail",
       "attr": {
         "type": "String",
-        "column": "cntct_email"
+        "column": "cntct_email",
+        "isEditable": false
       }
     },
     {
       "name": "webAddress",
       "attr": {
         "type": "String",
-        "column": "cntct_webaddr"
+        "column": "cntct_webaddr",
+        "isEditable": false
       }
     },
     {
-      "name": "owner",
+      "name": "address",
       "toOne": {
         "isNested": true,
-        "type": "UserAccountInfo",
-        "column": "cntct_owner_username",
-        "inverse": "username"
+        "type": "AddressInfo",
+        "column": "cntct_addr_id"
+      }
+    },
+    {
+      "name": "account",
+      "toOne": {
+        "isNested": true,
+        "type": "AccountInfo",
+        "column": "cntct_crmacct_id"
       }
     }
   ],

@@ -205,16 +205,18 @@ select xt.install_js('XT','Orm','xtuple', $$
   */
   XT.Orm.getProperty = function(orm, property) {
     /* look for property on the first level */
-    for(var i = 0; i < orm.properties.length; i++) {
-      if(orm.properties[i].name === property)
-        return orm.properties[i];
-    }
+    if(orm) {
+      for(var i = 0; i < orm.properties.length; i++) {
+        if(orm.properties[i].name === property)
+          return orm.properties[i];
+      }
 
-    /* look recursively for property on extensions */
-    if(orm.extensions) {
-      for(var i = 0; i < orm.extensions.length; i++) {
-        var ret = XT.Orm.getProperty(orm.extensions[i], property);
-        if(ret) return ret;
+      /* look recursively for property on extensions */
+      if(orm.extensions) {
+        for(var i = 0; i < orm.extensions.length; i++) {
+          var ret = XT.Orm.getProperty(orm.extensions[i], property);
+          if(ret) return ret;
+        }
       }
     }
     return false;
@@ -384,9 +386,14 @@ select xt.install_js('XT','Orm','xtuple', $$
                         .replace(/{conditions}/, conditions.join(' and '));
             delCascade.push(sql);
           } else if (toMany.isNested) {
-            sql = DELETE.replace(/{table}/, table)
-                        .replace(/{conditions}/, type + '."' + inverse  + '" = ' + 'old."{pKeyAlias}"');                       
-            delCascade.push(sql); 
+            if(ormp && ormp.toOne && ormp.toOne.isNested) {
+              sql = DELETE.replace(/{table}/, table)
+                          .replace(/{conditions}/, '(' + type + '."' + inverse  + '").guid = ' + 'old."{pKeyAlias}"');   
+            } else {
+              sql = DELETE.replace(/{table}/, table)
+                          .replace(/{conditions}/, type + '."' + inverse  + '" = ' + 'old."{pKeyAlias}"');                        
+            }
+            delCascade.push(sql);
           }
         }
       }

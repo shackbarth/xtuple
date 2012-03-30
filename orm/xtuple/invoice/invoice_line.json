@@ -27,14 +27,15 @@
       "toOne": {
         "type": "Invoice",
         "column": "invcitem_invchead_id",
-        "defaultValue": "parentRecord"
+        "isRequired": true
       }
     },
     {
       "name": "lineNumber",
       "attr": {
         "type": "Number",
-        "column": "invcitem_linenumber"
+        "column": "invcitem_linenumber",
+        "isRequired": true
       }
     },
     {
@@ -43,13 +44,6 @@
         "isNested": true,
         "type": "ItemInfo",
         "column": "invcitem_item_id"
-      }
-    },
-    {
-      "name": "site",
-      "toOne": {
-        "type": "SiteInfo",
-        "column": "invcitem_warehous_id"
       }
     },
     {
@@ -71,7 +65,8 @@
       "toOne": {
         "type": "SalesCategory",
         "column": "invcitem_salescat_id",
-        "inverse" : "guid"
+        "inverse" : "guid",
+        "defaultValue": -1
       }
     },
     {
@@ -85,14 +80,16 @@
       "name": "ordered",
       "attr": {
         "type": "Number",
-        "column": "invcitem_ordered"
+        "column": "invcitem_ordered",
+        "isRequired": true
       }
     },
     {
       "name": "billed",
       "attr": {
         "type": "Number",
-        "column": "invcitem_billed"
+        "column": "invcitem_billed",
+        "isRequired": true
       }
     },
     {
@@ -106,14 +103,17 @@
       "name": "quantityUnitRatio",
       "attr": {
         "type": "Number",
-        "column": "invcitem_qty_invuomratio"
+        "column": "invcitem_qty_invuomratio",
+        "defaultValue": 1,
+        "isRequired": true
       }
     },
     {
       "name": "price",
       "attr": {
         "type": "Number",
-        "column": "invcitem_price"
+        "column": "invcitem_price",
+        "isRequired": true
       }
     },
     {
@@ -127,7 +127,9 @@
       "name": "priceUnitRatio",
       "attr": {
         "type": "Number",
-        "column": "invcitem_price_invuomratio"
+        "column": "invcitem_price_invuomratio",
+        "defaultValue": 1,
+        "isRequired": true
       }
     },
     {
@@ -161,6 +163,9 @@
       }	  	
     }
   ],
+  "order": [
+    "invcitem_linenumber"
+  ],
 	"isNestedOnly": true,
-	 "isSystem": true
+  "isSystem": true
 }

@@ -25,7 +25,7 @@
     {
       "name": "number",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "item_number",
         "isEditable": false,
         "isRequired": true
@@ -235,12 +235,12 @@
       }
     },
     {
-      "name": "substitutes",
+      "name": "accounts",
       "toMany": {
-        "type": "ItemSubstitute",
+        "type": "ContactAccount",
         "column": "item_id",
-	    	"inverse": "item",        
-	    	"isNested": "true"
+        "inverse": "source",
+        "isNested": true
       }
     },
     {
