@@ -25,6 +25,18 @@ select xt.install_js('XM','item','xtuple', $$
   XM.Item.materialIssueUnits = function(itemId) {
      return XM.Item._units(itemId, '"MaterialIssue"');
   }
+
+  /**
+    Returns a tax type id for a given item and tax zone.
+    
+    @param {Number} item id
+    @param {Number} tax zone id
+    @returns {Number} tax type id
+  */
+  XM.Item.taxType = function(itemId, taxZoneId) {
+    var sql = 'select getItemTaxType($1, $2) as "taxType";'
+    return executeSql(sql, [itemId, taxZoneId])[0].taxType;
+  }
   
   /** @private
    Return the units of measure for a given item id and type.
