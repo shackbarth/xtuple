@@ -115,12 +115,12 @@ XM._Account = {
   }),
 
   /**
-    @type XM.UserAccountInfo
+    @type XM.ContactInfo
   */
-  userAccount: SC.Record.toOne('XM.UserAccountInfo', {
+  contactRelations: SC.Record.toMany('XM.ContactInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_userAccount'.loc()
+    inverse: 'account',
+    label: '_contactRelations'.loc()
   }),
 
   /**
@@ -134,6 +134,14 @@ XM._Account = {
   }),
 
   /**
+    @type XM.UserAccountInfo
+  */
+  userAccount: SC.Record.toOne('XM.UserAccountInfo', {
+    isRequired: true,
+    label: '_userAccount'.loc()
+  }),
+
+  /**
     @type XM.SalesRep
   */
   salesRep: SC.Record.toOne('XM.SalesRep', {
@@ -141,9 +149,9 @@ XM._Account = {
   }),
 
   /**
-    @type XM.TaxAuthority
+    @type XM.TaxAuthorityInfo
   */
-  taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
+  taxAuthority: SC.Record.toOne('XM.TaxAuthorityInfo', {
     label: '_taxAuthority'.loc()
   }),
 

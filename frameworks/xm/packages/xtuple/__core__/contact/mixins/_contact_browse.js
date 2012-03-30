@@ -52,8 +52,8 @@ XM._ContactBrowse = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
+  name: SC.Record.attr(String, {
+    label: '_name'.loc()
   }),
 
   /**
@@ -61,34 +61,6 @@ XM._ContactBrowse = {
   */
   isActive: SC.Record.attr(Boolean, {
     label: '_isActive'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  firstName: SC.Record.attr(String, {
-    label: '_firstName'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  middleName: SC.Record.attr(String, {
-    label: '_middleName'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  lastName: SC.Record.attr(String, {
-    label: '_lastName'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  suffix: SC.Record.attr(String, {
-    label: '_suffix'.loc()
   }),
 
   /**
@@ -134,11 +106,19 @@ XM._ContactBrowse = {
   }),
 
   /**
-    @type XM.UserAccountInfo
+    @type XM.AddressInfo
   */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
+  address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true,
-    label: '_owner'.loc()
+    label: '_address'.loc()
+  }),
+
+  /**
+    @type XM.AccountInfo
+  */
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: true,
+    label: '_account'.loc()
   })
 
 };

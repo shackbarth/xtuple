@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_item_substitute');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/__core__/contact/models
+
+sc_require('mixins/_contact_account');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.ItemSubstitute = XT.Record.extend(XM._ItemSubstitute,
-  /** @scope XM.ItemSubstitute.prototype */ {
+XM.ContactAccount = XT.Record.extend(XM._ContactAccount,
+  /** @scope XM.ContactAccount.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

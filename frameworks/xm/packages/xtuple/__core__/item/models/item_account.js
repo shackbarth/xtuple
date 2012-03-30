@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_opportunity_account');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/__core__/item/models
+
+sc_require('mixins/_item_account');
 
 /**
   @class
 
-  @extends XM.DocumentAssignment
+  @extends XM.Record
 */
-XM.OpportunityAccount = XM.DocumentAssignment.extend(XM._OpportunityAccount,
-  /** @scope XM.OpportunityAccount.prototype */ {
+XM.ItemAccount = XT.Record.extend(XM._ItemAccount,
+  /** @scope XM.ItemAccount.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

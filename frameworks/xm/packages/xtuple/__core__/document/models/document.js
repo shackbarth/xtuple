@@ -109,17 +109,17 @@ XM.Document = XT.Record.extend(
         policy = record.get('numberPolicy');   
 
     // if generated and automatic, lock it down
-    if(record._xm_numberGen && policy === 'A') this[docKey].set('isEditable', false);
+    if(record._xt_numberGen && policy === 'A') this[docKey].set('isEditable', false);
    
     // release the fetched number if applicable 
-    if(record._xm_numberGen && record._xm_numberGen != number) {
-      XT.Record.releaseNumber.call(record, record._xm_numberGen); 
-      record._xm_numberGen = null;
+    if(record._xt_numberGen && record._xt_numberGen != number) {
+      XT.Record.releaseNumber.call(record, record._xt_numberGen); 
+      record._xt_numberGen = null;
     }    
 
     // For manually edited numbers, check for conflicts with existing
     if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY))  {
-      if(this._xm_numberGen && this._xm_numberGen == number) return;
+      if(this._xt_numberGen && this._xt_numberGen == number) return;
 
       // callback
       callback = function(err, result) {
@@ -141,9 +141,9 @@ XM.Document = XT.Record.extend(
         status = this.get('status');
     
     /* release the number if applicable */
-    if(status === SC.Record.READY_NEW && record._xm_numberGen) {
-      XT.Record.releaseNumber.call(record, record._xm_numberGen); 
-      record._xm_numberGen = null;
+    if(status === SC.Record.READY_NEW && record._xt_numberGen) {
+      XT.Record.releaseNumber.call(record, record._xt_numberGen); 
+      record._xt_numberGen = null;
     }
     arguments.callee.base.apply(this, arguments);
   },

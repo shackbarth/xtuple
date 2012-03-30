@@ -148,6 +148,14 @@ XM._Contact = {
   }),
 
   /**
+    @type XM.AccountInfo
+  */
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: true,
+    label: '_account'.loc()
+  }),
+
+  /**
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
@@ -195,6 +203,15 @@ XM._Contact = {
     isNested: true,
     inverse: 'contact',
     label: '_characteristics'.loc()
+  }),
+
+  /**
+    @type XM.ContactAccount
+  */
+  accounts: SC.Record.toMany('XM.ContactAccount', {
+    isNested: true,
+    inverse: 'source',
+    label: '_accounts'.loc()
   }),
 
   /**
