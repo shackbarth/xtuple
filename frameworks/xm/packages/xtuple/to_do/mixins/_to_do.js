@@ -182,6 +182,15 @@ XM._ToDo = {
   }),
 
   /**
+    @type XM.ToDoAccount
+  */
+  accounts: SC.Record.toMany('XM.ToDoAccount', {
+    isNested: true,
+    inverse: 'source',
+    label: '_accounts'.loc()
+  }),
+
+  /**
     @type XM.ToDoContact
   */
   contacts: SC.Record.toMany('XM.ToDoContact', {

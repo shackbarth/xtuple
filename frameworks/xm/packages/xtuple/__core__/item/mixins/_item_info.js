@@ -76,6 +76,20 @@ XM._ItemInfo = {
   }),
 
   /**
+    @type String
+  */
+  barcode: SC.Record.attr(String, {
+    label: '_barcode'.loc()
+  }),
+
+  /**
+    @type Boolean
+  */
+  isSold: SC.Record.attr(Boolean, {
+    label: '_isSold'.loc()
+  }),
+
+  /**
     @type Number
   */
   listPrice: SC.Record.attr(Number, {

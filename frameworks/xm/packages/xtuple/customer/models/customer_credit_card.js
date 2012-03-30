@@ -10,9 +10,9 @@ sc_require('mixins/_customer_credit_card');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CustomerCreditCard = XM.Record.extend(XM._CustomerCreditCard,
+XM.CustomerCreditCard = XT.Record.extend(XM._CustomerCreditCard,
   /** @scope XM.CustomerCreditCard.prototype */ {
 
   // .................................................

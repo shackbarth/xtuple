@@ -10,9 +10,9 @@ sc_require('mixins/_language');
 /**
   @class
 
- @extends XM.Record
+ @extends XT.Record
 */
-XM.Language = XM.Record.extend(XM._Language,
+XM.Language = XT.Record.extend(XM._Language,
   /** @scope XM.Language.prototype */ {
 
   // .................................................

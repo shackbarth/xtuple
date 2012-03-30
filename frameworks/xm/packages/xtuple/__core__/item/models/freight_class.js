@@ -10,9 +10,9 @@ sc_require('mixins/_freight_class');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.FreightClass = XM.Record.extend(XM._FreightClass,
+XM.FreightClass = XT.Record.extend(XM._FreightClass,
   /** @scope XM.FreightClass.prototype */ {
 
   // .................................................

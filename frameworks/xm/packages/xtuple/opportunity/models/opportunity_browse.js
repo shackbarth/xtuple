@@ -10,9 +10,9 @@ sc_require('mixins/_opportunity_browse');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.OpportunityBrowse = XM.Record.extend(XM._OpportunityBrowse,
+XM.OpportunityBrowse = XT.Record.extend(XM._OpportunityBrowse,
   /** @scope XM.OpportunityBrowse.prototype */ {
 
   // .................................................

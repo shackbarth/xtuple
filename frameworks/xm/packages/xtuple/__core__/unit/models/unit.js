@@ -10,9 +10,9 @@ sc_require('mixins/_unit');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.Unit = XM.Record.extend(XM._Unit,
+XM.Unit = XT.Record.extend(XM._Unit,
   /** @scope XM.Unit.prototype */ {
 
   // .................................................

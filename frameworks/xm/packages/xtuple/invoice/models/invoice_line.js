@@ -10,9 +10,9 @@ sc_require('mixins/_invoice_line');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
+XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   /** @scope XM.InvoiceLine.prototype */ {
   
   /**
@@ -84,7 +84,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
         qtyUnitRatio = this.get('quantityUnitRatio') || 1,
         price = this.get('price') || 0,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
-    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XM.MONEY_SCALE);
+    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XT.MONEY_SCALE);
   }.property('billed', 'price').cacheable(),
 
   //..................................................
@@ -93,8 +93,9 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
 
   updateSellingUnits: function() {
     var that = this,
-        item = that.get('item');
-    if(item) {
+        item = that.get('item'),
+        isItem = that.get('isItem');
+    if(isItem && item) {
   
       // callback
       callback = function(err, result) {
@@ -126,17 +127,29 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
   isItemDidChange: function() {
     var isItem = this.get('isItem'),
         isPosted = this.getPath('invoice.isPosted');
+        
+    // clear unused fields
     if (isItem) {
-      this.setIfChanged('itemNumber', ''),
-      this.setIfChanged('description', ''),
-      this.setIfChanged('salesCategory', -1)
+      this.setIfChanged('itemNumber', '');
+      this.setIfChanged('description', '');
+      this.setIfChanged('salesCategory', -1);
     } else {
-      this.setIfChanged('item', null);
+      this.setIfChanged('item', XM.ItemInfo.none());
+      this.setIfChanged('quantityUnit', null);
+      this.setIfChanged('priceUnit', null);
+      this.setIfChanged('sellingUnits', []);
+      this.setIfChanged('customerPrice', 0);
     }
+    
+    // item related settings
     this.item.set('isRequired', isItem);
     this.item.set('isEditable', isItem && !isPosted);
+    this.quantityUnit.set('isRequired', isItem);
+    this.priceUnit.set('isRequired', isItem);
+    
+    // misc related settings
     this.itemNumber.set('isRequired', !isItem);
-    this.itemNumber.set('isEditable', !isItem && !isPosted);   
+    this.itemNumber.set('isEditable', !isItem && !isPosted); 
     this.description.set('isRequired', !isItem);
     this.description.set('isEditable', !isItem && !isPosted);
     this.salesCategory.set('isRequired', !isItem);
@@ -229,7 +242,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
       }
 
       // define call
-      dispatch = XM.Dispatch.create({
+      dispatch = XT.Dispatch.create({
         className: 'XM.InvoiceLine',
         functionName: 'calculateTax',
         parameters: [taxZone, taxType, effective, currency, amount],
@@ -244,13 +257,7 @@ XM.InvoiceLine = XM.Record.extend(XM._InvoiceLine, XM.Taxable,
       var taxes = this.get('taxes');
       that.setTaxDetail(taxes, 'taxDetail', 'tax');
     }
-  }.observes('extendedPrice', 'taxType'),
-  
-  testMe: function() {
-    debugger
-    line = XM.store.createRecord(XM.InvoiceItem, {});
-    
-  }
+  }.observes('extendedPrice', 'taxType')
 
 
 });

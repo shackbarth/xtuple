@@ -10,7 +10,7 @@ sc_require('mixins/_project_task_alarm');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 XM.ProjectTaskAlarm = XM.Alarm.extend(XM._ProjectTaskAlarm,
   /** @scope XM.ProjectTaskAlarm.prototype */ {

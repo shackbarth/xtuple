@@ -23,7 +23,7 @@ XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
   */
   country: SC.Record.attr(String, {
     defaultValue: function() {
-      var country = XM.session.settings.get('DefaultAddressCountry');
+      var country = XT.session.settings.get('DefaultAddressCountry');
       return country ? country : null;
     }
   }),
@@ -98,7 +98,7 @@ XM.Address.findExisting = function(address, callback) {
   if(!SC.kindOf(address, XM.Address) || 
      address.get('status') !== SC.Record.READY_NEW) return NO;
 
-  var dispatch = XM.Dispatch.create({
+  var dispatch = XT.Dispatch.create({
     className: 'XM.Address',
     functionName: 'findExisting',
     parameters: {
@@ -195,7 +195,7 @@ XM.Address.format = function() {
 XM.Address.useCount = function(address, callback) {
   if(!SC.kindOf(address, XM.Address)) return NO;
 
-  var dispatch = XM.Dispatch.create({
+  var dispatch = XT.Dispatch.create({
     className: 'XM.Address',
     functionName: 'useCount',
     parameters: address.get('id'),

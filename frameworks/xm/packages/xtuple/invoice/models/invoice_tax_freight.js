@@ -10,9 +10,9 @@ sc_require('mixins/_invoice_tax_freight');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.InvoiceTaxFreight = XM.Record.extend(XM._InvoiceTaxFreight,
+XM.InvoiceTaxFreight = XT.Record.extend(XM._InvoiceTaxFreight,
   /** @scope XM.InvoiceTaxFreight.prototype */ {
 
   // .................................................

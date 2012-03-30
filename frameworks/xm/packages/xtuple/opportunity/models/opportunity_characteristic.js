@@ -10,9 +10,9 @@ sc_require('mixins/_opportunity_characteristic');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.OpportunityCharacteristic = XM.Record.extend(XM._OpportunityCharacteristic,
+XM.OpportunityCharacteristic = XT.Record.extend(XM._OpportunityCharacteristic,
   /** @scope XM.OpportunityCharacteristic.prototype */ {
 
   // .................................................

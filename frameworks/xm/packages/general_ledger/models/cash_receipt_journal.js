@@ -10,9 +10,9 @@ sc_require('mixins/_cash_receipt_journal');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CashReceiptJournal = XM.Record.extend(XM._CashReceiptJournal,
+XM.CashReceiptJournal = XT.Record.extend(XM._CashReceiptJournal,
   /** @scope XM.CashReceiptJournal.prototype */ {
 
   // .................................................

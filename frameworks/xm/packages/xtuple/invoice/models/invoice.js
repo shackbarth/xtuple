@@ -95,7 +95,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     for(var i = 0; i < credits.get('length'); i++) {
       credit = credit + credits.objectAt(i).get('amount');
     }
-    return SC.Math.round(credit, XM.MONEY_SCALE);
+    return SC.Math.round(credit, XT.MONEY_SCALE);
   }.property('creditsLength').cacheable(),
   
   /**
@@ -107,7 +107,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
-    return SC.Math.round(lineTax + freightTax + miscTax, XM.MONEY_SCALE); 
+    return SC.Math.round(lineTax + freightTax + miscTax, XT.MONEY_SCALE); 
   }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
   /**
@@ -119,7 +119,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
         totalTax = this.get('taxTotal');
-    return SC.Math.round(subTotal + freight + totalTax, XM.MONEY_SCALE); 
+    return SC.Math.round(subTotal + freight + totalTax, XT.MONEY_SCALE); 
   }.property('subTotal', 'freight', 'taxTotal').cacheable(),
   
   //..................................................
@@ -249,11 +249,11 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     // next round and sum up each tax code for total
     for(var i = 0; i < taxDetail.get('length'); i++) {
       var codeTotal = taxDetail.objectAt(i),
-          rtax = SC.Math.round(codeTotal.get('tax'), XM.MONEY_SCALE);
+          rtax = SC.Math.round(codeTotal.get('tax'), XT.MONEY_SCALE);
       codeTotal.set('tax', rtax);
       taxTotal = taxTotal + rtax;
     }
-    this.setIfChanged('lineTax',  SC.Math.round(taxTotal, XM.MONEY_SCALE));
+    this.setIfChanged('lineTax',  SC.Math.round(taxTotal, XT.MONEY_SCALE));
     this.setIfChanged('lineTaxDetail', taxDetail);
   },
   
@@ -276,7 +276,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       }
 
       // define call
-      dispatch = XM.Dispatch.create({
+      dispatch = XT.Dispatch.create({
         className: 'XM.Invoice',
         functionName: 'calculateFreightTax',
         parameters: [taxZone, effective, currency, amount],
@@ -306,7 +306,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
           tax = status & SC.Record.DESTROYED ? 0 : misc.get('tax');
       miscTax = miscTax + taxes.objectAt(i).get('tax'); 
     } 
-    this.setIfChanged('miscTax', SC.Math.round(miscTax, XM.MONEY_SCALE));
+    this.setIfChanged('miscTax', SC.Math.round(miscTax, XT.MONEY_SCALE));
   },
 
   //..................................................
@@ -319,12 +319,12 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
 
     // validate Lines
     val = this.get('linesLength');
-    err = XM.errors.findProperty('code', 'xt1010');
+    err = XT.errors.findProperty('code', 'xt1010');
     this.updateErrors(err, !val);
 
     // validate Total
     val = this.get('total');
-    err = XM.errors.findProperty('code', 'xt1009');
+    err = XT.errors.findProperty('code', 'xt1009');
     this.updateErrors(err, val < 0);
 
     return errors;
@@ -507,7 +507,7 @@ XM.Invoice.post = function(invoice, callback) {
   if(!SC.kindOf(invoice, XM.Invoice) ||
      invoice.get('isPosted')) return false; 
   var that = this, dispatch;
-  dispatch = XM.Dispatch.create({
+  dispatch = XT.Dispatch.create({
     className: 'XM.Invoice',
     functionName: 'post',
     parameters: invoice.get('id'),

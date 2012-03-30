@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_contact');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.ToDoContact = XM.Record.extend(XM._ToDoContact,
+XM.ToDoContact = XM.DocumentAssignment.extend(XM._ToDoContact,
   /** @scope XM.ToDoContact.prototype */ {
 
   // .................................................

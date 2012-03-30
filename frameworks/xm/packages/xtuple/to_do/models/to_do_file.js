@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_file');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.ToDoFile = XM.Record.extend(XM._ToDoFile,
+XM.ToDoFile = XM.DocumentAssignment.extend(XM._ToDoFile,
   /** @scope XM.ToDoFile.prototype */ {
 
   // .................................................

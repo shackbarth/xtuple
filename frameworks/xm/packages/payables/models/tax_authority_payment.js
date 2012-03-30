@@ -10,9 +10,9 @@ sc_require('mixins/_tax_authority_payment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.TaxAuthorityPayment = XM.Record.extend(XM._TaxAuthorityPayment,
+XM.TaxAuthorityPayment = XT.Record.extend(XM._TaxAuthorityPayment,
   /** @scope XM.TaxAuthorityPayment.prototype */ {
 
   // .................................................

@@ -160,6 +160,15 @@ XM._Project = {
   }),
 
   /**
+    @type XM.ProjectAccount
+  */
+  accounts: SC.Record.toMany('XM.ProjectAccount', {
+    isNested: true,
+    inverse: 'source',
+    label: '_accounts'.loc()
+  }),
+
+  /**
     @type XM.ProjectContact
   */
   contacts: SC.Record.toMany('XM.ProjectContact', {

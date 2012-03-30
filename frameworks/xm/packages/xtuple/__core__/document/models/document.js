@@ -8,10 +8,10 @@
 
   Provides special number handling capabilities for documents.
 
-  @extends XM.Record
+  @extends XT.Record
 */
 
-XM.Document = XM.Record.extend(
+XM.Document = XT.Record.extend(
 /** @scope XM.Document.prototype */ {
 
   /**
@@ -33,6 +33,11 @@ XM.Document = XM.Record.extend(
     generation policy on this setting.
   */
   numberPolicySetting: null,
+
+  /**
+  Holds all of the document assignments.
+  */
+  documents: [],
   
   // ..........................................................
   // CALCULATED PROPERTIES
@@ -53,7 +58,7 @@ XM.Document = XM.Record.extend(
   numberPolicy: function(key, value) {
     var setting =  this.get('numberPolicySetting');
     if(value === undefined && setting) {
-      value = XM.session.get('settings').get(setting);
+      value = XT.session.get('settings').get(setting);
     }
     this._numberPolicy = value ? value : XM.MANUAL_NUMBER;
     return this._numberPolicy;
@@ -74,12 +79,18 @@ XM.Document = XM.Record.extend(
       if((numberPolicy === XM.AUTO_NUMBER || 
           numberPolicy === XM.AUTO_OVERRIDE_NUMBER) && 
           status === SC.Record.READY_NEW) {
-        XM.Record.fetchNumber.call(record, docKey);
+        XT.Record.fetchNumber.call(record, docKey);
       } else return '';
     }
     this[docKey].defaultValue = dv;
     this[docKey].set('isRequired', true);
     this.addObserver(docKey, this.keyDidChange);
+
+    /**
+      Build observers for document assignment properties 
+    */
+
+
   },
   
   /**
@@ -98,22 +109,22 @@ XM.Document = XM.Record.extend(
         policy = record.get('numberPolicy');   
 
     // if generated and automatic, lock it down
-    if(record._xm_numberGen && policy === 'A') this[docKey].set('isEditable', false);
+    if(record._xt_numberGen && policy === 'A') this[docKey].set('isEditable', false);
    
     // release the fetched number if applicable 
-    if(record._xm_numberGen && record._xm_numberGen != number) {
-      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
-      record._xm_numberGen = null;
+    if(record._xt_numberGen && record._xt_numberGen != number) {
+      XT.Record.releaseNumber.call(record, record._xt_numberGen); 
+      record._xt_numberGen = null;
     }    
 
     // For manually edited numbers, check for conflicts with existing
     if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY))  {
-      if(this._xm_numberGen && this._xm_numberGen == number) return;
+      if(this._xt_numberGen && this._xt_numberGen == number) return;
 
       // callback
       callback = function(err, result) {
         if(!err) {
-          var err = XM.errors.findProperty('code', 'xt1007'),
+          var err = XT.errors.findProperty('code', 'xt1007'),
               id = record.get('id'),
               isConflict = result ? result !== id  : false;          
           record.updateErrors(err, isConflict);
@@ -121,7 +132,7 @@ XM.Document = XM.Record.extend(
       }        
       
       // function call
-      XM.Record.findExisting.call(record, docKey, number, callback);
+      XT.Record.findExisting.call(record, docKey, number, callback);
     }
   },
 
@@ -130,11 +141,32 @@ XM.Document = XM.Record.extend(
         status = this.get('status');
     
     /* release the number if applicable */
-    if(status === SC.Record.READY_NEW && record._xm_numberGen) {
-      XM.Record.releaseNumber.call(record, record._xm_numberGen); 
-      record._xm_numberGen = null;
+    if(status === SC.Record.READY_NEW && record._xt_numberGen) {
+      XT.Record.releaseNumber.call(record, record._xt_numberGen); 
+      record._xt_numberGen = null;
     }
     arguments.callee.base.apply(this, arguments);
+  },
+
+  /**
+    Called to determine XM.DocumentAssignment attributes.
+  */
+  _xm_getAssignmentProperties: function() {
+    var assignmentProperties = this._assignmentProperties;
+
+    if(!assignmentProperties) {
+      for(prop in this) {
+        
+      }
+    }
+    return assignmentProperties;
+  },
+
+  /**
+    Called whenever the length of a document type array changes.
+  */
+  _xm_assignmentDidChange: function() {
+
   },
 
   // ..........................................................

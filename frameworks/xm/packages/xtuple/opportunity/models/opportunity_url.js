@@ -10,9 +10,9 @@ sc_require('mixins/_opportunity_url');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.OpportunityUrl = XM.Record.extend(XM._OpportunityUrl,
+XM.OpportunityUrl = XM.DocumentAssignment.extend(XM._OpportunityUrl,
   /** @scope XM.OpportunityUrl.prototype */ {
 
   // .................................................

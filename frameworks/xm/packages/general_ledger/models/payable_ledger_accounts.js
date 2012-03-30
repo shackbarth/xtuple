@@ -10,9 +10,9 @@ sc_require('mixins/_payable_ledger_accounts');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.PayableLedgerAccounts = XM.Record.extend(XM._PayableLedgerAccounts,
+XM.PayableLedgerAccounts = XT.Record.extend(XM._PayableLedgerAccounts,
   /** @scope XM.PayableLedgerAccounts.prototype */ {
 
   // .................................................

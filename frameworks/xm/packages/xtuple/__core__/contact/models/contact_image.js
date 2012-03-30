@@ -10,9 +10,9 @@ sc_require('mixins/_contact_image');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.ContactImage = XM.Record.extend(XM._ContactImage,
+XM.ContactImage = XM.DocumentAssignment.extend(XM._ContactImage,
   /** @scope XM.ContactImage.prototype */ {
 
   // .................................................

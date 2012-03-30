@@ -41,9 +41,9 @@ XM._Item = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type String
   */
-  number: SC.Record.attr(Number, {
+  number: SC.Record.attr(String, {
     isRequired: true,
     label: '_number'.loc()
   }),
@@ -239,12 +239,12 @@ XM._Item = {
   }),
 
   /**
-    @type XM.ItemSubstitute
+    @type XM.ContactAccount
   */
-  substitutes: SC.Record.toMany('XM.ItemSubstitute', {
+  accounts: SC.Record.toMany('XM.ContactAccount', {
     isNested: true,
-    inverse: 'item',
-    label: '_substitutes'.loc()
+    inverse: 'source',
+    label: '_accounts'.loc()
   }),
 
   /**

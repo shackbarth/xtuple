@@ -10,9 +10,9 @@ sc_require('mixins/_profit_center');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ProfitCenter = XM.Record.extend(XM._ProfitCenter,
+XM.ProfitCenter = XT.Record.extend(XM._ProfitCenter,
   /** @scope XM.ProfitCenter.prototype */ {
 
   // .................................................

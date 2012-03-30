@@ -10,9 +10,9 @@ sc_require('mixins/_bank_reconciliation_unreconciled');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.BankReconciliationUnreconciled = XM.Record.extend(XM._BankReconciliationUnreconciled,
+XM.BankReconciliationUnreconciled = XT.Record.extend(XM._BankReconciliationUnreconciled,
   /** @scope XM.BankReconciliationUnreconciled.prototype */ {
 
   // .................................................
