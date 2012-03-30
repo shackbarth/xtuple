@@ -13,5 +13,6 @@
   "encryption-key-file": "lib/key.txt",
   "orm-installer-debugging": false,
   "generated-models-directory": "../client/frameworks/xm/packages",
-  "generated-subclass-models-directory": "../generated_template_models"
+  "generated-subclass-models-directory": "../generated_template_models",
+  "mode": "develop"
 }
