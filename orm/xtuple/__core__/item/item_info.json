@@ -17,7 +17,7 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "item_id ",
+        "column": "item_id",
         "isPrimaryKey": true
       }
     },
@@ -25,40 +25,49 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "item_number ",
-        "isEditable": false
+        "column": "item_number"
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "item_active ",
-        "isEditable": false
+        "column": "item_active"
       }
     },
     {
       "name": "description1",
       "attr": {
         "type": "String",
-        "column": "item_descrip1",
-        "isEditable": false
+        "column": "item_descrip1"
       }
     },
     {
       "name": "description2",
       "attr": {
         "type": "String",
-        "column": "item_descrip2",
-        "isEditable": false
+        "column": "item_descrip2"
       }
     },
     {
       "name": "inventoryUnit",
       "toOne": {
         "type": "Unit",
-        "column": "item_inv_uom_id",
-        "isEditable": false
+        "column": "item_inv_uom_id"
+      }
+    },
+    {
+      "name": "barcode",
+      "attr": {
+        "type": "String",
+        "column": "item_upccode"
+      }
+    },
+    {
+      "name": "isSold",
+      "attr": {
+        "type": "Boolean",
+        "column": "item_sold"
       }
     },
     {
@@ -68,7 +77,6 @@
         "column": "item_listprice"
       }
     }
-
   ],
   "isNestedOnly": true,
   "isSystem": true

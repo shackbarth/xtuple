@@ -205,16 +205,18 @@ select xt.install_js('XT','Orm','xtuple', $$
   */
   XT.Orm.getProperty = function(orm, property) {
     /* look for property on the first level */
-    for(var i = 0; i < orm.properties.length; i++) {
-      if(orm.properties[i].name === property)
-        return orm.properties[i];
-    }
+    if(orm) {
+      for(var i = 0; i < orm.properties.length; i++) {
+        if(orm.properties[i].name === property)
+          return orm.properties[i];
+      }
 
-    /* look recursively for property on extensions */
-    if(orm.extensions) {
-      for(var i = 0; i < orm.extensions.length; i++) {
-        var ret = XT.Orm.getProperty(orm.extensions[i], property);
-        if(ret) return ret;
+      /* look recursively for property on extensions */
+      if(orm.extensions) {
+        for(var i = 0; i < orm.extensions.length; i++) {
+          var ret = XT.Orm.getProperty(orm.extensions[i], property);
+          if(ret) return ret;
+        }
       }
     }
     return false;
