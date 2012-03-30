@@ -9,6 +9,6 @@ fi
 
 # will only install them if they need to be installed or
 # updated
-cd lib/xt; npm install; cd ../..; node ./lib/main.js $@
+cd lib/xt; npm install --force; cd ../..; node ./lib/main.js $@
 
 exit 0

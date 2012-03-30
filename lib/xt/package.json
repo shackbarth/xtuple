@@ -17,7 +17,7 @@
   , "dependencies": {
         "async": "0.1.18"
       , "colors": "0.6.0-1"
-      , "connect": "1.0.1"
+      , "connect": "1.8.6"
       , "diveSync": "0.2.0"
       , "optimist": "0.3.1"
       , "pg": "0.6.12"
