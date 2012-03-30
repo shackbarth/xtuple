@@ -32,19 +32,21 @@ XM.Taxable = {
     for(var i = 0; i < value.get('length'); i++) {
       var storeKey, taxCode, detail,
           item = isSCobj ? value.objectAt(i) : value[i],
-          tax = isSCobj ? item.get('tax') : item.tax,
-          tc = isSCobj ? item.get('taxCode') : item.taxCode;
+          tax = isSCobj ? item.get('tax') : item.tax;
+      if (isSCobj) taxCode = item.get('taxCode')
+      else {
+        storeKey = store.loadRecord(XM.TaxCode, item.taxCode);
+        taxCode = store.materializeRecord(storeKey);
+      }
       taxTotal = taxTotal + tax,
-      storeKey = store.loadRecord(XM.TaxCode, tc);
-      taxCode = store.materializeRecord(storeKey);
       detail = SC.Object.create({ 
         taxCode: taxCode, 
-        tax: tax 
+        tax: SC.Math.round(tax, XT.MONEY_SCALE) 
       });
       taxDetail.push(detail);
     }
     this.setIfChanged(taxDetailProperty, taxDetail);
-    this.setIfChanged(taxTotalProperty, SC.Math.round(taxTotal, XT.MONEY_SCALE));
+    this.setIfChanged(taxTotalProperty, SC.Math.round(taxTotal, XT.SALES_PRICE_SCALE));
   }
 
 };
