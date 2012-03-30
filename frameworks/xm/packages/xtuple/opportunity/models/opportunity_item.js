@@ -13,11 +13,6 @@ sc_require('mixins/_opportunity_item');
   @extends XM.DocumentAssignment
 */
 XM.OpportunityItem = XM.DocumentAssignment.extend(XM._OpportunityItem,
-=======
-  @extends XT.Record
-*/
-XM.OpportunityItem = XT.Record.extend(XM._OpportunityItem,
->>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.OpportunityItem.prototype */ {
 
   // .................................................

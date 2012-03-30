@@ -10,7 +10,7 @@
   @extends XM.Record
 */
 
-XM.DocumentAssignment = XM.Record.extend(
+XM.DocumentAssignment = XT.Record.extend(
 /** @scope XM.DocumentAssignment.prototype */ {
 
   /**
