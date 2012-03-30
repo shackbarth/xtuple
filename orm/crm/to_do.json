@@ -61,15 +61,6 @@
         "column": "todoitem_id",
         "inverse": "source"
       }
-    },
-    {
-      "name": "accounts",
-      "toMany": {
-        "isNested": true,
-        "type": "ToDoAccount",
-        "column": "todoitem_id",
-        "inverse": "source"
-      }
     }
   ],
   "sequence": 0,

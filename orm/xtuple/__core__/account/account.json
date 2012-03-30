@@ -101,13 +101,12 @@
       }
     },
     {
-      "name": "userAccount",
-      "toOne": {
+      "name": "contactRelations",
+      "toMany": {
+        "type": "ContactInfo",
         "isNested": true,
-        "type": "UserAccountInfo",
-        "column": "crmacct_usr_username",
-        "inverse": "username",
-        "isRequired": true
+        "column": "crmacct_id",
+        "inverse": "account"
       }
     },
     {
@@ -117,6 +116,15 @@
         "column": "crmacct_owner_username",
         "inverse": "username",
         "defaultValue": "currentUser"
+      }
+    },
+    {
+      "name": "userAccount",
+      "toOne": {
+        "type": "UserAccountInfo",
+        "column": "crmacct_usr_username",
+        "inverse": "username",
+        "isRequired": true
       }
     },
     {
@@ -130,7 +138,7 @@
     {
       "name": "taxAuthority",
       "toOne": {
-        "type": "TaxAuthority",
+        "type": "TaxAuthorityInfo",
         "column": "crmacct_taxauth_id",
         "inverse": "guid"
       }
