@@ -10,9 +10,14 @@ sc_require('mixins/_to_do_item');
 /**
   @class
 
+  @extends XM.DocumentAssignment
+*/
+XM.ToDoItem = XM.DocumentAssignment.extend(XM._ToDoItem,
+=======
   @extends XT.Record
 */
 XM.ToDoItem = XT.Record.extend(XM._ToDoItem,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.ToDoItem.prototype */ {
 
   // .................................................

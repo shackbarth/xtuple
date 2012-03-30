@@ -10,9 +10,12 @@ sc_require('mixins/_opportunity_account');
 /**
   @class
 
-  
+  @extends XM.DocumentAssignment
 */
+XM.OpportunityAccount = XM.DocumentAssignment.extend(XM._OpportunityAccount,
+=======
 XM.OpportunityAccount = XT.Record.extend(XM._OpportunityAccount,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.OpportunityAccount.prototype */ {
 
   // .................................................

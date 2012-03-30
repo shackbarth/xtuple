@@ -10,9 +10,9 @@ sc_require('mixins/_customer_item');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.DocumentAssignment
 */
-XM.CustomerItem = XT.Record.extend(XM._CustomerItem,
+XM.CustomerItem = XM.DocumentAssignment.extend(XM._CustomerItem,
   /** @scope XM.CustomerItem.prototype */ {
 
   // .................................................

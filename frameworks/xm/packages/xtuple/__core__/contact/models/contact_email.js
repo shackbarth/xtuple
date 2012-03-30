@@ -10,9 +10,9 @@ sc_require('mixins/_contact_email');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.DocumentAssignment
 */
-XM.ContactEmail = XT.Record.extend(XM._ContactEmail,
+XM.ContactEmail = XM.DocumentAssignment.extend(XM._ContactEmail,
   /** @scope XM.ContactEmail.prototype */ {
 
   // .................................................

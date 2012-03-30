@@ -10,9 +10,9 @@ sc_require('mixins/_item_image');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.DocumentAssignment
 */
-XM.ItemImage = XT.Record.extend(XM._ItemImage,
+XM.ItemImage = XM.DocumentAssignment.extend(XM._ItemImage,
   /** @scope XM.ItemImage.prototype */ {
 
   // .................................................

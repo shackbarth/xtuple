@@ -10,9 +10,9 @@ sc_require('mixins/_incident_contact');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.DocumentAssignment
 */
-XM.IncidentContact = XT.Record.extend(XM._IncidentContact,
+XM.IncidentContact = XM.DocumentAssignment.extend(XM._IncidentContact,
   /** @scope XM.IncidentContact.prototype */ {
 
   // .................................................

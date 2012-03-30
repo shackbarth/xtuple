@@ -10,9 +10,14 @@ sc_require('mixins/_to_do_url');
 /**
   @class
 
+  @extends XM.DocumentAssignment
+*/
+XM.ToDoUrl = XM.DocumentAssignment.extend(XM._ToDoUrl,
+=======
   @extends XT.Record
 */
 XM.ToDoUrl = XT.Record.extend(XM._ToDoUrl,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.ToDoUrl.prototype */ {
 
   // .................................................

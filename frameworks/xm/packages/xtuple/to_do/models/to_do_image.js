@@ -10,9 +10,14 @@ sc_require('mixins/_to_do_image');
 /**
   @class
 
+  @extends XM.DocumentAssignment
+*/
+XM.ToDoImage = XM.DocumentAssignment.extend(XM._ToDoImage,
+=======
   @extends XT.Record
 */
 XM.ToDoImage = XT.Record.extend(XM._ToDoImage,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.ToDoImage.prototype */ {
 
   // .................................................

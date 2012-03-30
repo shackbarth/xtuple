@@ -33,6 +33,11 @@ XM.Document = XT.Record.extend(
     generation policy on this setting.
   */
   numberPolicySetting: null,
+
+  /**
+  Holds all of the document assignments.
+  */
+  documents: [],
   
   // ..........................................................
   // CALCULATED PROPERTIES
@@ -80,6 +85,12 @@ XM.Document = XT.Record.extend(
     this[docKey].defaultValue = dv;
     this[docKey].set('isRequired', true);
     this.addObserver(docKey, this.keyDidChange);
+
+    /**
+      Build observers for document assignment properties 
+    */
+
+
   },
   
   /**
@@ -135,6 +146,27 @@ XM.Document = XT.Record.extend(
       record._xm_numberGen = null;
     }
     arguments.callee.base.apply(this, arguments);
+  },
+
+  /**
+    Called to determine XM.DocumentAssignment attributes.
+  */
+  _xm_getAssignmentProperties: function() {
+    var assignmentProperties = this._assignmentProperties;
+
+    if(!assignmentProperties) {
+      for(prop in this) {
+        
+      }
+    }
+    return assignmentProperties;
+  },
+
+  /**
+    Called whenever the length of a document type array changes.
+  */
+  _xm_assignmentDidChange: function() {
+
   },
 
   // ..........................................................
