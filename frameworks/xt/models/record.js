@@ -174,7 +174,7 @@ XT.Record = SC.Record.extend(
         if (typeClass) {
           isToMany =  SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
                       SC.kindOf(valueForKey, SC.ManyAttribute);
-          if (!isToMany && this[key].isRequired) {
+          if (!isToMany && this[key].get('isRequired')) {
             required.push(key);
           }
         }

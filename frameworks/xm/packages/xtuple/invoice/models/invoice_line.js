@@ -93,8 +93,9 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
 
   updateSellingUnits: function() {
     var that = this,
-        item = that.get('item');
-    if(item) {
+        item = that.get('item'),
+        isItem = that.get('isItem');
+    if(isItem && item) {
   
       // callback
       callback = function(err, result) {
@@ -133,10 +134,11 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       this.setIfChanged('description', '');
       this.setIfChanged('salesCategory', -1);
     } else {
-      this.setIfChanged('item', null);
+      this.setIfChanged('item', XM.ItemInfo.none());
       this.setIfChanged('quantityUnit', null);
       this.setIfChanged('priceUnit', null);
       this.setIfChanged('sellingUnits', []);
+      this.setIfChanged('customerPrice', 0);
     }
     
     // item related settings
