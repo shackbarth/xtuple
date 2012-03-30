@@ -89,10 +89,10 @@ XM.Document = XM.Record.extend(
     this.addObserver(docKey, this.keyDidChange);
 
     /**
+      Build observers for document assignment properties 
     */
-    for(prop in this) {
-      console.log(prop + " is a " + SC.typeOf(prop));
-    }
+
+
   },
   
   /**
@@ -148,6 +148,20 @@ XM.Document = XM.Record.extend(
       record._xm_numberGen = null;
     }
     arguments.callee.base.apply(this, arguments);
+  },
+
+  /**
+    Called to determine XM.DocumentAssignment attributes.
+  */
+  _xm_getAssignmentProperties: function() {
+    var assignmentProperties = this._assignmentProperties;
+
+    if(!assignmentProperties) {
+      for(prop in this) {
+        
+      }
+    }
+    return assignmentProperties;
   },
 
   /**
