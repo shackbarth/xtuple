@@ -62,17 +62,17 @@ select xt.dispatch($${"requestType":"dispatch",
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Session",
+                          "className":"XT.Session",
                           "functionName":"locale"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Session",
+                          "className":"XT.Session",
                           "functionName":"settings"
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XM.Session",
+                          "className":"XT.Session",
                           "functionName":"privileges"
                           }$$);    
                           
