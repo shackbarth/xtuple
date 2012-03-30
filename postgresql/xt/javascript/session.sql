@@ -1,17 +1,17 @@
-select xt.install_js('XM','Session','xtuple', $$
+select xt.install_js('XT','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XM.Session = {};
+  XT.Session = {};
   
-  XM.Session.isDispatchable = true;
+  XT.Session.isDispatchable = true;
 
   /** 
     Returns a hash of key, value pairs of locale properties and their selections for the effective user.
 
     @returns {hash}
   */ 
-  XM.Session.locale = function() {
+  XT.Session.locale = function() {
     var sql = "select "
             + "locale_id as id, "
             + "locale_code as code, "
@@ -47,7 +47,7 @@ select xt.install_js('XM','Session','xtuple', $$
 
     @returns {hash}
   */ 
-  XM.Session.settings = function() {
+  XT.Session.settings = function() {
     var settings = [], regs = XT.settingsRegistrations();
 
     for(var i = 0; i < regs.length; i++) {
@@ -66,7 +66,7 @@ select xt.install_js('XM','Session','xtuple', $$
 
     @returns {hash}
   */ 
-  XM.Session.privileges = function() {
+  XT.Session.privileges = function() {
     var rec = executeSql( 'select privilege, granted as "isGranted" from privgranted' );
 
     return rec.length ? JSON.stringify (rec) : '{}';

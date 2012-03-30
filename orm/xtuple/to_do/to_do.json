@@ -167,6 +167,15 @@
       }
     },
     {
+      "name": "accounts",
+      "toMany": {
+        "isNested": true,
+        "type": "ToDoAccount",
+        "column": "todoitem_id",
+        "inverse": "source"
+      }
+    },
+    {
       "name": "contacts",
       "toMany": {
         "isNested": true,

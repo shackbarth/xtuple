@@ -50,7 +50,7 @@ create or replace rule "_UPDATE" as
   where taxhist_id=old.taxhist_id;
 
 create or replace rule "_DELETE" as
-  on update to xt.invcheadtaxadj do instead
+  on delete to xt.invcheadtaxadj do instead
 
   delete from taxhist
   where taxhist_id=old.taxhist_id;

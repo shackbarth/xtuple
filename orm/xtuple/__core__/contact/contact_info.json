@@ -92,6 +92,14 @@
         "type": "AddressInfo",
         "column": "cntct_addr_id"
       }
+    },
+    {
+      "name": "account",
+      "toOne": {
+        "isNested": true,
+        "type": "AccountInfo",
+        "column": "cntct_crmacct_id"
+      }
     }
   ],
   "isNestedOnly": true,
