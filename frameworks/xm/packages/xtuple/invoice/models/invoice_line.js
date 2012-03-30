@@ -26,7 +26,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   taxesLength: 0,
   
   /** @private */
-  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(), 
+  taxesLengthBinding: SC.Binding.from('*taxes.length').oneWay().noDelay(), 
   
   taxDetail: [],
   
@@ -34,7 +34,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   taxDetailLength: 0,
   
   /** private */
-  taxDetailLengthBinding: SC.Binding.from('*taxDetail.length').noDelay(),
+  taxDetailLengthBinding: SC.Binding.from('*taxDetail.length').oneWay().noDelay(),
   
   /**
     Flag whether an actual item is used, or a miscellaneous description.  

@@ -17,17 +17,27 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   
   numberPolicySetting: 'InvcNumberGeneration',
   
-  /* @private */
+  /** @private */
   creditsLength: 0,
   
-  /* @private */
-  creditsLengthBinding: SC.Binding.from('*credits.length').noDelay(),
+  /** @private */
+  creditsLengthBinding: SC.Binding.from('*credits.length').oneWay().noDelay(),
   
-  /* @private */
+  /** @private */
   linesLength: 0,
   
-  /* @private */
-  linesLengthBinding: SC.Binding.from('*lines.length').noDelay(),
+  /** @private */
+  linesLengthBinding: SC.Binding.from('*lines.length').oneWay().noDelay(),
+  
+  /**
+    Bound to ship charge, determines whether freight field is editable.
+  
+    @type Boolean
+  */
+  isCustomerPayFreight: true,
+  
+  /** @private */
+  isCustomerPayFreightBinding: SC.Binding.from('*shipCharge.isCustomerPay').oneWay().noDelay(),
   
   /**
     Total credit allocated to the invoice.
@@ -99,21 +109,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   //
   
   /**
-    Copy the billto address to the shipto address.
-  */
-  copyToShipto: function() {
-    this.setIfChanged('shiptoName', this.get('billtoName'));
-    this.setIfChanged('shiptoPhone', this.get('billtoPhone'));
-    this.setIfChanged('shiptoAddress1', this.get('billtoAddress1'));
-    this.setIfChanged('shiptoAddress2', this.get('billtoAddress2'));
-    this.setIfChanged('shiptoAddress3', this.get('billtoAddress3'));
-    this.setIfChanged('shiptoCity', this.get('billtoCity')); 
-    this.setIfChanged('shiptoState', this.get('billtoState'));
-    this.setIfChanged('shiptoPostalCode', this.get('billtoPostalCode'));
-    this.setIfChanged('shiptoCountry', this.get('billtoCountry'));
-  },
-  
-  /**
     Total invoice taxes.
     
     @type Number
@@ -141,6 +136,24 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   // METHODS
   //
   
+  /**
+    Copy the billto address to the shipto address.
+  */
+  copyToShipto: function() {
+    this.setIfChanged('shiptoName', this.get('billtoName'));
+    this.setIfChanged('shiptoPhone', this.get('billtoPhone'));
+    this.setIfChanged('shiptoAddress1', this.get('billtoAddress1'));
+    this.setIfChanged('shiptoAddress2', this.get('billtoAddress2'));
+    this.setIfChanged('shiptoAddress3', this.get('billtoAddress3'));
+    this.setIfChanged('shiptoCity', this.get('billtoCity')); 
+    this.setIfChanged('shiptoState', this.get('billtoState'));
+    this.setIfChanged('shiptoPostalCode', this.get('billtoPostalCode'));
+    this.setIfChanged('shiptoCountry', this.get('billtoCountry'));
+  },
+  
+  /**
+    Destroy child records first.
+  */
   destroy: function() {
     var lines = this.get('lines'),
         credits = this.get('credits'),
@@ -557,6 +570,10 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
+  
+  isCustomerPayFreightDidChange: function() {
+    this.freight.set('isEnabled', this.get('isCustomerPayFreight'));
+  }.observes('isCustomerPayFreight'),
 
   /**
     Disable the customer if loaded from the database.
