@@ -10,9 +10,9 @@ sc_require('mixins/_characteristic_option');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.CharacteristicOption = XM.Record.extend(XM._CharacteristicOption,
+XM.CharacteristicOption = XT.Record.extend(XM._CharacteristicOption,
   /** @scope XM.CharacteristicOption.prototype */ {
 
   // .................................................

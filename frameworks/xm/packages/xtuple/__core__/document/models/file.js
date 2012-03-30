@@ -10,9 +10,9 @@ sc_require('mixins/_file');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.File = XM.Record.extend(XM._File,
+XM.File = XT.Record.extend(XM._File,
   /** @scope XM.File.prototype */ {
 
   // .................................................

@@ -10,9 +10,9 @@ sc_require('mixins/_invoice_recurrence');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.InvoiceRecurrence = XM.Record.extend(XM._InvoiceRecurrence,
+XM.InvoiceRecurrence = XT.Record.extend(XM._InvoiceRecurrence,
   /** @scope XM.InvoiceRecurrence.prototype */ {
 
   // .................................................

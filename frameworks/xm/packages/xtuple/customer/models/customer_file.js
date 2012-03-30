@@ -10,9 +10,9 @@ sc_require('mixins/_customer_file');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.CustomerFile = XM.Record.extend(XM._CustomerFile,
+XM.CustomerFile = XM.DocumentAssignment.extend(XM._CustomerFile,
   /** @scope XM.CustomerFile.prototype */ {
 
   // .................................................

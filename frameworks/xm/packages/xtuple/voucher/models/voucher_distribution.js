@@ -10,9 +10,9 @@ sc_require('mixins/_voucher_distribution');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.VoucherDistribution = XM.Record.extend(XM._VoucherDistribution,
+XM.VoucherDistribution = XT.Record.extend(XM._VoucherDistribution,
   /** @scope XM.VoucherDistribution.prototype */ {
 
   // .................................................

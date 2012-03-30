@@ -10,9 +10,9 @@ sc_require('mixins/_receivable_ledger_accounts');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ReceivableLedgerAccounts = XM.Record.extend(XM._ReceivableLedgerAccounts,
+XM.ReceivableLedgerAccounts = XT.Record.extend(XM._ReceivableLedgerAccounts,
   /** @scope XM.ReceivableLedgerAccounts.prototype */ {
 
   // .................................................

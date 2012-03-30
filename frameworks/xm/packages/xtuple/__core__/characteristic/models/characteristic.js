@@ -74,7 +74,7 @@ XM.Characteristic = XM.Document.extend(XM._Characteristic,
 
     // Validate isItems OR isContacts OR isAddresses
     isValid = this.get('isItems') || this.get('isContacts') || this.get('isAddresses') ? true : false;
-    err = XM.errors.findProperty('code', 'xt1024');
+    err = XT.errors.findProperty('code', 'xt1024');
     this.updateErrors(err, !isValid);
 
     // Validate Options List Values for duplicates
@@ -83,7 +83,7 @@ XM.Characteristic = XM.Document.extend(XM._Characteristic,
         isValid = this.get('options').objectAt(i).get('value') !== this.get('options').objectAt(j).get('value') ? true : false;
       }
     }
-    err = XM.errors.findProperty('code', 'xt1023');
+    err = XT.errors.findProperty('code', 'xt1023');
     this.updateErrors(err, !isValid);
 
     return errors;

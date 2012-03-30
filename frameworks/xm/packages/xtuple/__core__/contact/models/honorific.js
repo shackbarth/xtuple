@@ -10,9 +10,9 @@ sc_require('mixins/_honorific');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.Honorific = XM.Record.extend(XM._Honorific,
+XM.Honorific = XT.Record.extend(XM._Honorific,
   /** @scope XM.Honorific.prototype */ {
 
   // .................................................

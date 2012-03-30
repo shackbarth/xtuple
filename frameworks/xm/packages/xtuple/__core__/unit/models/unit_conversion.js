@@ -10,9 +10,9 @@ sc_require('mixins/_unit_conversion');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.UnitConversion = XM.Record.extend(XM._UnitConversion,
+XM.UnitConversion = XT.Record.extend(XM._UnitConversion,
   /** @scope XM.UnitConversion.prototype */ {
 
   // .................................................

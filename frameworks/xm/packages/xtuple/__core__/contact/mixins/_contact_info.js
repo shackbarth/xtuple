@@ -102,6 +102,14 @@ XM._ContactInfo = {
   address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true,
     label: '_address'.loc()
+  }),
+
+  /**
+    @type XM.AccountInfo
+  */
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: true,
+    label: '_account'.loc()
   })
 
 };

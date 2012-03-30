@@ -24,7 +24,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   customerType: SC.Record.toOne('XM.Customer', {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultCustType');
+      return XT.session.getPath('settings.DefaultCustType');
     }
   }),
 
@@ -33,7 +33,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   salesRep: SC.Record.toOne('XM.SalesRep', {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultSalesRep');
+      return XT.session.getPath('settings.DefaultSalesRep');
     }
   }),
 
@@ -42,7 +42,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   shipVia: SC.Record.attr(String, {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultShipViaId');
+      return XT.session.getPath('settings.DefaultShipViaId');
     }
   }),
 
@@ -51,7 +51,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   terms: SC.Record.toOne('XM.Customer', {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultTerms');
+      return XT.session.getPath('settings.DefaultTerms');
     }
   }),
 
@@ -60,7 +60,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   balanceMethod: SC.Record.attr(String, {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultBalanceMethod');
+      return XT.session.getPath('settings.DefaultBalanceMethod');
     }
   }),
 
@@ -69,7 +69,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   isAcceptsPartialShip: SC.Record.attr(Boolean, {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultPartialShip');
+      return XT.session.getPath('settings.DefaultPartialShip');
     }
   }),
 
@@ -78,7 +78,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   isAcceptsBackorders: SC.Record.attr(Boolean, {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultBackOrders');
+      return XT.session.getPath('settings.DefaultBackOrders');
     }
   }),
 
@@ -87,7 +87,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   isFreeFormShipto: SC.Record.attr(Boolean, {
     defaultValue: function() {
-      return XM.session.getPath('settings.DefaultFreeFormShiptos');
+      return XT.session.getPath('settings.DefaultFreeFormShiptos');
     }
   }),
 
@@ -96,7 +96,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   creditLimit: SC.Record.attr(Number, {
     defaultValue: function() {
-      return XM.session.getPath('settings.SOCreditLimit');
+      return XT.session.getPath('settings.SOCreditLimit');
     }
   }),
 
@@ -105,7 +105,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   creditRating: SC.Record.attr(String, {
     defaultValue: function() {
-      return XM.session.getPath('settings.SOCreditRate');
+      return XT.session.getPath('settings.SOCreditRate');
     }
   }),
 
@@ -120,7 +120,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
   */
   isAlternateLateGraceDays: function(key, value) {
     if(value !== undefined) {
-      var defaultGraceDays = XM.session.getPath('settings.DefaultAutoCreditWarnGraceDays');
+      var defaultGraceDays = XT.session.getPath('settings.DefaultAutoCreditWarnGraceDays');
       this.setIfChanged('graceDays', value ? defaultGraceDays : null);
     }
     return this.get('graceDays') ? true : false;
@@ -139,7 +139,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
       this.setIfChanged('graceDays', value);
     }
     var graceDays = this.get('graceDays'),
-        defaultGraceDays = XM.session.getPath('settings.DefaultAutoCreditWarnGraceDays');
+        defaultGraceDays = XT.session.getPath('settings.DefaultAutoCreditWarnGraceDays');
     return graceDays ? graceDays : defaultGraceDays ? defaultGraceDays : 0;
   }.property('graceDays').cacheable(),
 
@@ -185,7 +185,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
 */
 XM.Customer.price = function(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
   var that = this, dispatch;
-  dispatch = XM.Dispatch.create({
+  dispatch = XT.Dispatch.create({
     className: 'XM.Customer',
     functionName: 'price',
     parameters: [

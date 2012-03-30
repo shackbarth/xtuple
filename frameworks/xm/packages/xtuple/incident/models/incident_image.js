@@ -10,9 +10,9 @@ sc_require('mixins/_incident_image');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.IncidentImage = XM.Record.extend(XM._IncidentImage,
+XM.IncidentImage = XM.DocumentAssignment.extend(XM._IncidentImage,
   /** @scope XM.IncidentImage.prototype */ {
 
   // .................................................

@@ -1,0 +1,8 @@
+{
+  "type": "lazy",
+  "dependencies": [
+    "document",
+    "comment",
+    "miscellaneous"
+  ]
+}

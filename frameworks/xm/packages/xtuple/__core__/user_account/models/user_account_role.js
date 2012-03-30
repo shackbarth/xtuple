@@ -10,9 +10,9 @@ sc_require('mixins/_user_account_role');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.UserAccountRole = XM.Record.extend(XM._UserAccountRole,
+XM.UserAccountRole = XT.Record.extend(XM._UserAccountRole,
   /** @scope XM.UserAccountRole.prototype */ {
 
   // .................................................

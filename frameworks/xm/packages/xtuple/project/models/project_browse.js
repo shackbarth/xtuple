@@ -10,9 +10,9 @@ sc_require('mixins/_project_browse');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ProjectBrowse = XM.Record.extend(XM._ProjectBrowse,
+XM.ProjectBrowse = XT.Record.extend(XM._ProjectBrowse,
   /** @scope XM.ProjectBrowse.prototype */ {
 
   // .................................................

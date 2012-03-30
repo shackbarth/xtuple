@@ -8,11 +8,11 @@
 
   (Document your Model here)
 
-  @extends XM.Object
+  @extends XT.Object
   @version 0.1
 */
 
-XM.ReceivablesSettings = XM.Object.extend( XM.Settings,
+XM.ReceivablesSettings = XT.Object.extend( XM.Settings,
 /** @scope XM.ReceivablesSettings.prototype */ {
 
   className: 'XM.ReceivablesSettings',

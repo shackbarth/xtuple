@@ -10,7 +10,7 @@ sc_require('mixins/_payable');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 XM.Payable = XM.Document.extend(XM._Payable,
   /** @scope XM.Payable.prototype */ {

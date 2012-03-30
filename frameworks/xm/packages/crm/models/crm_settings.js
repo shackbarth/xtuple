@@ -8,11 +8,11 @@
 
   (Document your Model here)
 
-  @extends XM.Object
+  @extends XT.Object
   @version 0.1
 */
 
-XM.CrmSettings = XM.Object.extend(XM.Settings,
+XM.CrmSettings = XT.Object.extend(XM.Settings,
 /** @scope XM.CrmSettings.prototype */ {
   
   className: 'XM.CrmSettings',
@@ -111,7 +111,7 @@ XM.CrmSettings = XM.Object.extend(XM.Settings,
   */
   isStrictAddressCountryEnabled: function() {
     var isStrict = this.get('isStrictAddressCountry'),
-        isChanged = XM.session.getPath('settings.changed').indexOf('StrictAddressCountry') > 0;
+        isChanged = XT.session.getPath('settings.changed').indexOf('StrictAddressCountry') > 0;
     
     // strict setting is irreversible once turned on and committed
     return isStrict && !isChanged ? false : true;
@@ -129,7 +129,7 @@ XM.CrmSettings = XM.Object.extend(XM.Settings,
   /** @private */
   _isStrictAddressCountryDidChange: function() {
     var isStrict = this.get('isStrictAddressCountry'),
-        isChanged = XM.session.getPath('settings.changed').indexOf('StrictAddressCountry') > 0;
+        isChanged = XT.session.getPath('settings.changed').indexOf('StrictAddressCountry') > 0;
     
     // strict setting is irreversible once turned on and committed
     if(isStrict && !isChanged) this.set('isStrictAddressCountry', true);

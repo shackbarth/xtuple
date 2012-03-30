@@ -22,7 +22,7 @@ XM.Settings = {
   /** 
     Binding to global settings to which all properties on a settings object should bind to.
   */
-  settingsBinding: SC.Binding.from('XM.session.settings').noDelay(),
+  settingsBinding: SC.Binding.from('XT.session.settings').noDelay(),
 
   /** 
     Commit changes to settings properties to the server. Will dispatch to a function with
@@ -32,18 +32,18 @@ XM.Settings = {
   */
   commitSettings: function() {  
     var self = this,
-        globalChanged = XM.session.getPath('settings.changed');
+        globalChanged = XT.session.getPath('settings.changed');
         changed = {},
         privilege = this.get('privilege');
         
-    if(!XM.session.get('privileges').get(privilege)) return NO;
+    if(!XT.session.get('privileges').get(privilege)) return NO;
 
     for(var i = 0; i < self.getPath('_bindings.length'); i++) {
       var prop = self.get('_bindings').objectAt(i),
           key = self.get(prop)._fromPropertyKey.replace(/\w+\./i, '');
 
       if(key !== 'settings' && globalChanged.indexOf(key) > -1) {
-        changed[key] = XM.session.settings.get(key);
+        changed[key] = XT.session.settings.get(key);
       }
     }
     
@@ -56,7 +56,7 @@ XM.Settings = {
       }
     }
     
-    dispatch = XM.Dispatch.create({
+    dispatch = XT.Dispatch.create({
       className: self.get('className'),
       functionName: 'commitSettings',
       parameters: changed,
@@ -64,7 +64,7 @@ XM.Settings = {
       action: callback
     });
 
-    XM.store.dispatch(dispatch);
+    XT.store.dispatch(dispatch);
     
     return this;
   }

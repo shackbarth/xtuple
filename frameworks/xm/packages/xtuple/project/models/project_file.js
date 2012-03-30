@@ -10,9 +10,9 @@ sc_require('mixins/_project_file');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.ProjectFile = XM.Record.extend(XM._ProjectFile,
+XM.ProjectFile = XM.DocumentAssignment.extend(XM._ProjectFile,
   /** @scope XM.ProjectFile.prototype */ {
 
   // .................................................

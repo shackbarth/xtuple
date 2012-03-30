@@ -41,9 +41,9 @@ XM._ItemBrowse = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type String
   */
-  number: SC.Record.attr(Number, {
+  number: SC.Record.attr(String, {
     label: '_number'.loc()
   }),
 
@@ -69,10 +69,10 @@ XM._ItemBrowse = {
   }),
 
   /**
-    @type String
+    @type XM.Unit
   */
-  itemType: SC.Record.attr(String, {
-    label: '_itemType'.loc()
+  inventoryUnit: SC.Record.toOne('XM.Unit', {
+    label: '_inventoryUnit'.loc()
   }),
 
   /**

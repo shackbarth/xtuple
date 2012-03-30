@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_to_do');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.DocumentAssignment
 */
-XM.ToDoToDo = XM.Record.extend(XM._ToDoToDo,
+XM.ToDoToDo = XM.DocumentAssignment.extend(XM._ToDoToDo,
   /** @scope XM.ToDoToDo.prototype */ {
 
   // .................................................

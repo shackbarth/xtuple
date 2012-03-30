@@ -10,9 +10,9 @@ sc_require('mixins/_vendor_payment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.VendorPayment = XM.Record.extend(XM._VendorPayment,
+XM.VendorPayment = XT.Record.extend(XM._VendorPayment,
   /** @scope XM.VendorPayment.prototype */ {
 
   // .................................................

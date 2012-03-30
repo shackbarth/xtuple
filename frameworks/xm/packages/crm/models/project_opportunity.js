@@ -10,9 +10,9 @@ sc_require('mixins/_project_opportunity');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ProjectOpportunity = XM.Record.extend(XM._ProjectOpportunity,
+XM.ProjectOpportunity = XT.Record.extend(XM._ProjectOpportunity,
   /** @scope XM.ProjectOpportunity.prototype */ {
 
   // .................................................
