@@ -85,6 +85,21 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   //
   
   /**
+    Copy the billto address to the shipto address.
+  */
+  copyToShipto: function() {
+    this.setIfChanged('shiptoName', this.get('billtoName'));
+    this.setIfChanged('shiptoPhone', this.get('billtoPhone'));
+    this.setIfChanged('shiptoAddress1', this.get('billtoAddress1'));
+    this.setIfChanged('shiptoAddress2', this.get('billtoAddress2'));
+    this.setIfChanged('shiptoAddress3', this.get('billtoAddress3'));
+    this.setIfChanged('shiptoCity', this.get('billtoCity')); 
+    this.setIfChanged('shiptoState', this.get('billtoState'));
+    this.setIfChanged('shiptoPostalCode', this.get('billtoPostalCode'));
+    this.setIfChanged('shiptoCountry', this.get('billtoCountry'));
+  },
+  
+  /**
     Total credit allocated to the invoice.
     
     @type Number
@@ -452,33 +467,33 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('commission', shipto.get('commission'));
       this.setIfChanged('taxZone', shipto.get('taxZone'));
       this.setIfChanged('shipCharge', shipto.get('shipCharge'));
-      this.setIfChange('shipVia', shipto.get('shipVia'));  
-      this.setIfChange('shiptoName', shipto.get('name'));
-      this.setIfChange('shiptoPhone', shipto.getPath('contact.phone'));
+      this.setIfChanged('shipVia', shipto.get('shipVia'));  
+      this.setIfChanged('shiptoName', shipto.get('name'));
+      this.setIfChanged('shiptoPhone', shipto.getPath('contact.phone'));
       if(address) {
-        this.setIfChange('shiptoAddress1', address.get('line1'));
-        this.setIfChange('shiptoAddress2', address.get('line2'));
-        this.setIfChange('shiptoAddress3', address.get('line3'));
-        this.setIfChange('shiptoCity', address.get('city')); 
-        this.setIfChange('shiptoState', address.get('state'));
-        this.setIfChange('shiptoPostalCode', address.get('postalCode'));
-        this.setIfChange('shiptoCountry', address.get('country'));
+        this.setIfChanged('shiptoAddress1', address.get('line1'));
+        this.setIfChanged('shiptoAddress2', address.get('line2'));
+        this.setIfChanged('shiptoAddress3', address.get('line3'));
+        this.setIfChanged('shiptoCity', address.get('city')); 
+        this.setIfChanged('shiptoState', address.get('state'));
+        this.setIfChanged('shiptoPostalCode', address.get('postalCode'));
+        this.setIfChanged('shiptoCountry', address.get('country'));
       }
     } else if(customer) {
-      this.setIfChange('salesRep', customer.get('salesRep'));
-      this.setIfChange('taxZone', customer.get('taxZone'));
-      this.setIfChange('currency', customer.get('currency'));
-      this.setIfChange('shipCharge', customer.get('shipCharge'));
+      this.setIfChanged('salesRep', customer.get('salesRep'));
+      this.setIfChanged('taxZone', customer.get('taxZone'));
+      this.setIfChanged('currency', customer.get('currency'));
+      this.setIfChanged('shipCharge', customer.get('shipCharge'));
     } else if(!shipto) {
-      this.setIfChange('shiptoName', '');
-      this.setIfChange('shiptoAddress1', '');
-      this.setIfChange('shiptoAddress2', '');
-      this.setIfChange('shiptoAddress3', '');
-      this.setIfChange('shiptoCity', ''); 
-      this.setIfChange('shiptoState', '');
-      this.setIfChange('shiptoPostalCode', '');
-      this.setIfChange('shiptoCountry', '');
-      this.setIfChange('shiptoPhone', '');
+      this.setIfChanged('shiptoName', '');
+      this.setIfChanged('shiptoAddress1', '');
+      this.setIfChanged('shiptoAddress2', '');
+      this.setIfChanged('shiptoAddress3', '');
+      this.setIfChanged('shiptoCity', ''); 
+      this.setIfChanged('shiptoState', '');
+      this.setIfChanged('shiptoPostalCode', '');
+      this.setIfChanged('shiptoCountry', '');
+      this.setIfChanged('shiptoPhone', '');
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
