@@ -44,7 +44,7 @@ XM.Taxable = {
       taxDetail.push(detail);
     }
     this.setIfChanged(taxDetailProperty, taxDetail);
-    this.setIfChanged(taxTotalProperty, SC.Math.round(taxTotal, XM.MONEY_SCALE));
+    this.setIfChanged(taxTotalProperty, SC.Math.round(taxTotal, XT.MONEY_SCALE));
   }
 
 };
