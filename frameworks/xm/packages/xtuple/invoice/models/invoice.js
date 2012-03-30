@@ -30,6 +30,20 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   linesLengthBinding: SC.Binding.from('*lines.length').noDelay(),
   
   /**
+    Total credit allocated to the invoice.
+    
+    @type Number
+  */
+  allocatedCredit: 0,
+  
+  /**
+    Outstanding credit.
+    
+    @type Number
+  */
+  outstandingCredit: 0,
+  
+  /**
     Total of line item sales.
     
     @type Number
@@ -98,20 +112,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     this.setIfChanged('shiptoPostalCode', this.get('billtoPostalCode'));
     this.setIfChanged('shiptoCountry', this.get('billtoCountry'));
   },
-  
-  /**
-    Total credit allocated to the invoice.
-    
-    @type Number
-  */
-  credit: function() {
-    var credits = this.get('credits'),
-        credit = 0;
-    for(var i = 0; i < credits.get('length'); i++) {
-      credit = credit + credits.objectAt(i).get('amount');
-    }
-    return SC.Math.round(credit, XT.MONEY_SCALE);
-  }.property('creditsLength').cacheable(),
   
   /**
     Total invoice taxes.
@@ -211,6 +211,18 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     this.shiptoCountry.set('isEditable', isEditable);
   },
   
+  updateAllocatedCredit: function() {
+    var credits = this.get('credits'),
+        credit = 0;
+    for(var i = 0; i < credits.get('length'); i++) {
+      var status = credits.objectAt(i).get('status');
+      if (status & SC.Record.DESTROYED > 0) {
+        credit = credit + credits.objectAt(i).get('amount');
+      }
+    }
+    this.setIfChanged('allocatedCredit', SC.Math.round(credit, XT.MONEY_SCALE));
+  },
+  
   /**
     Recalculate line item sales totals.
   */
@@ -220,7 +232,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     for(var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
           status = line.get('status'),
-          extendedPrice = status & SC.Record.DESTROYED ? 0 : line.get('extendedPrice');
+          extendedPrice = status & SC.Record.DESTROYED > 0 ? line.get('extendedPrice') : 0;
       subTotal = subTotal + extendedPrice;
     }
     this.setIfChanged('subTotal', subTotal);
@@ -240,7 +252,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
           taxes = line.get('taxDetail'),
           status = line.get('status');
 
-      if (status & SC.Record.DESTROYED === false) {
+      if (status & SC.Record.DESTROYED > 0) {
         for (var n = 0; n < taxes.get('length'); n++) {
           var lineTax = taxes.objectAt(n),
               taxCode = lineTax.get('taxCode'),
@@ -344,6 +356,54 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
 
     return errors;
   }.observes('linesLength', 'total'),
+  
+  creditsLengthDidChange: function() {
+    this.updateAllocatedCredit();
+  }.observes('creditsLength'),
+  
+  outstandingCreditCriteriaDidChange: function() {
+    var customer = this.get('customer'),
+        currency = this.get('currency'),
+        invoiceDate = this.get('invoiceDate'),
+        credit = this.get('credit'),
+        that = this;
+    
+    // if we have everything we need and data has changed, 
+    // get credit balance from the data source
+    if (customer && currency && invoiceDate && credit &&
+        (this._xm_cacheCust != customer ||
+         this._xm_cacheCurr != currency ||
+         this._xm_cacheDate != invoiceDate) ||
+         this._xm_cacheCredit != credit) {
+   
+      // callback
+      callback = function(err, result) {
+        var credits = that.get('credits'),
+            value = result;
+            
+        // account for unsaved changes
+        for (var i = 0; i < credits.get('length'); i++) {
+          var credit = credits.objectAt(i)
+              status = credit.get('status'),
+              amount = credit.get('amount');
+          if (status == SC.Record.READY_NEW) value = value - amount;
+          else if (status == SC.Record.DESTROYED_DIRTY) value = value + amount;
+        }
+        
+        // update the value
+        that.setIfChanged('outstandingCredit', value);
+      }
+     
+      // function call
+      XM.Customer.outstandingCredit(customer, currency, invoiceDate, callback);
+      
+      // cache variables to prevent redundant server calls
+      this._xm_cacheCust = customer;
+      this._xm_cacheCurr = currency;
+      this._xm_cacheDate = invoiceDate,
+      this._xm_cacheCredit = credit;
+    }
+  }.observes('customer', 'currency', 'invoiceDate', 'credit'),
   
   linesLengthDidChange: function() {
     // lock down currency if applicable
