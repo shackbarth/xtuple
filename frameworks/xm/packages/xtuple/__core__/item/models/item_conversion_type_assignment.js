@@ -10,9 +10,9 @@ sc_require('mixins/_item_conversion_type_assignment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ItemConversionTypeAssignment = XM.Record.extend(XM._ItemConversionTypeAssignment,
+XM.ItemConversionTypeAssignment = XT.Record.extend(XM._ItemConversionTypeAssignment,
   /** @scope XM.ItemConversionTypeAssignment.prototype */ {
 
   // .................................................

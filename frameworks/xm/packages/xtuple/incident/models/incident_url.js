@@ -13,6 +13,11 @@ sc_require('mixins/_incident_url');
   @extends XM.DocumentAssignment
 */
 XM.IncidentUrl = XM.DocumentAssignment.extend(XM._IncidentUrl,
+=======
+  @extends XT.Record
+*/
+XM.IncidentUrl = XT.Record.extend(XM._IncidentUrl,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.IncidentUrl.prototype */ {
 
   // .................................................

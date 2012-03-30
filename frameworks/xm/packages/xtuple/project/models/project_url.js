@@ -13,6 +13,11 @@ sc_require('mixins/_project_url');
   @extends XM.DocumentAssignment
 */
 XM.ProjectUrl = XM.DocumentAssignment.extend(XM._ProjectUrl,
+=======
+  @extends XT.Record
+*/
+XM.ProjectUrl = XT.Record.extend(XM._ProjectUrl,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.ProjectUrl.prototype */ {
 
   // .................................................

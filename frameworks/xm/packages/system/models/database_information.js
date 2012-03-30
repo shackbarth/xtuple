@@ -8,11 +8,11 @@
 
   (Document your Model here)
 
-  @extends XM.Object
+  @extends XT.Object
   @version 0.1
 */
 
-XM.DatabaseInformation = XM.Object.extend( XM.Settings,
+XM.DatabaseInformation = XT.Object.extend( XM.Settings,
 /** @scope XM.DatabaseInformation.prototype */ {
 
   className: 'XM.DatabaseInformation',

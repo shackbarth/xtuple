@@ -10,9 +10,9 @@ sc_require('mixins/_receivable_info');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ReceivableInfo = XM.Record.extend(XM._ReceivableInfo,
+XM.ReceivableInfo = XT.Record.extend(XM._ReceivableInfo,
   /** @scope XM.ReceivableInfo.prototype */ {
 
   // .................................................

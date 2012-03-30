@@ -10,9 +10,9 @@ sc_require('mixins/_fiscal_year');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.FiscalYear = XM.Record.extend(XM._FiscalYear,
+XM.FiscalYear = XT.Record.extend(XM._FiscalYear,
   /** @scope XM.FiscalYear.prototype */ {
 
   // .................................................

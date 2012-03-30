@@ -10,9 +10,9 @@ sc_require('mixins/_trial_balance');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.TrialBalance = XM.Record.extend(XM._TrialBalance,
+XM.TrialBalance = XT.Record.extend(XM._TrialBalance,
   /** @scope XM.TrialBalance.prototype */ {
 
   // .................................................

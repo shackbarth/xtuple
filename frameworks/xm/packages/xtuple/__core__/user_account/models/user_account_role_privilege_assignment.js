@@ -10,9 +10,9 @@ sc_require('mixins/_user_account_role_privilege_assignment');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.UserAccountRolePrivilegeAssignment = XM.Record.extend(XM._UserAccountRolePrivilegeAssignment,
+XM.UserAccountRolePrivilegeAssignment = XT.Record.extend(XM._UserAccountRolePrivilegeAssignment,
   /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */ {
 
   // .................................................

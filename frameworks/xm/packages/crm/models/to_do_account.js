@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_account');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ToDoAccount = XM.Record.extend(XM._ToDoAccount,
+XM.ToDoAccount = XT.Record.extend(XM._ToDoAccount,
   /** @scope XM.ToDoAccount.prototype */ {
 
   // .................................................

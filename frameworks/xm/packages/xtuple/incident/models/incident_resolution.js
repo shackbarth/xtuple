@@ -10,9 +10,9 @@ sc_require('mixins/_incident_resolution');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.IncidentResolution = XM.Record.extend(XM._IncidentResolution,
+XM.IncidentResolution = XT.Record.extend(XM._IncidentResolution,
   /** @scope XM.IncidentResolution.prototype */ {
 
   // .................................................

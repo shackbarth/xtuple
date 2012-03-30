@@ -10,9 +10,9 @@ sc_require('mixins/_incident_recurrence');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.IncidentRecurrence = XM.Record.extend(XM._IncidentRecurrence,
+XM.IncidentRecurrence = XT.Record.extend(XM._IncidentRecurrence,
   /** @scope XM.IncidentRecurrence.prototype */ {
 
   // .................................................

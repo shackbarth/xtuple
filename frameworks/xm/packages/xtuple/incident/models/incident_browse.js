@@ -10,9 +10,9 @@ sc_require('mixins/_incident_browse');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.IncidentBrowse = XM.Record.extend(XM._IncidentBrowse,
+XM.IncidentBrowse = XT.Record.extend(XM._IncidentBrowse,
   /** @scope XM.IncidentBrowse.prototype */ {
 
   // .................................................

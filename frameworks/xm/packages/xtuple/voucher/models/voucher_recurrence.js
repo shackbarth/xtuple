@@ -10,9 +10,9 @@ sc_require('mixins/_voucher_recurrence');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.VoucherRecurrence = XM.Record.extend(XM._VoucherRecurrence,
+XM.VoucherRecurrence = XT.Record.extend(XM._VoucherRecurrence,
   /** @scope XM.VoucherRecurrence.prototype */ {
 
   // .................................................

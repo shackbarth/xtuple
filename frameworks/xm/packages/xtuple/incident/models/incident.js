@@ -55,7 +55,7 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments,
     // Validate assignee
     isErr = this.get('incidentStatus') === XM.Incident.STATUS_ASSIGNED &&
             !this.get('assignedTo');
-    err = XM.errors.findProperty('code', 'xt1025');
+    err = XT.errors.findProperty('code', 'xt1025');
     this.updateErrors(err, isErr);
     
     return errors;
@@ -66,7 +66,9 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments,
     var assignedTo = this.get('assignedTo'),
         status = this.get('status');
      
-    if(status & SC.Record.READY && assignedTo) this.set('incidentStatus','A');
+    if(assignedTo &&
+      (status == SC.Record.READY_DIRTY || status == SC.Record.READY_NEW))
+      this.set('incidentStatus','A');
   }.observes('assignedTo'),
   
   /* @private */

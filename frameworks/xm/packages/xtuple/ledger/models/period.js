@@ -10,9 +10,9 @@ sc_require('mixins/_period');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.Period = XM.Record.extend(XM._Period,
+XM.Period = XT.Record.extend(XM._Period,
   /** @scope XM.Period.prototype */ {
 
   // .................................................

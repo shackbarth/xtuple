@@ -13,6 +13,11 @@ sc_require('mixins/_project_contact');
   @extends XM.DocumentAssignment
 */
 XM.ProjectContact = XM.DocumentAssignment.extend(XM._ProjectContact,
+=======
+  @extends XT.Record
+*/
+XM.ProjectContact = XT.Record.extend(XM._ProjectContact,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.ProjectContact.prototype */ {
 
   // .................................................

@@ -10,9 +10,9 @@ sc_require('mixins/_product_category');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ProductCategory = XM.Record.extend(XM._ProductCategory,
+XM.ProductCategory = XT.Record.extend(XM._ProductCategory,
   /** @scope XM.ProductCategory.prototype */ {
 
   // .................................................

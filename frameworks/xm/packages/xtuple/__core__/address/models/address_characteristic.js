@@ -10,9 +10,9 @@ sc_require('mixins/_address_characteristic');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.AddressCharacteristic = XM.Record.extend(XM._AddressCharacteristic,
+XM.AddressCharacteristic = XT.Record.extend(XM._AddressCharacteristic,
   /** @scope XM.AddressCharacteristic.prototype */ {
 
   // .................................................

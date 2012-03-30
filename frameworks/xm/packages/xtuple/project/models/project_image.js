@@ -13,6 +13,11 @@ sc_require('mixins/_project_image');
   @extends XM.DocumentAssignment
 */
 XM.ProjectImage = XM.DocumentAssignment.extend(XM._ProjectImage,
+=======
+  @extends XT.Record
+*/
+XM.ProjectImage = XT.Record.extend(XM._ProjectImage,
+>>>>>>> JROGELSTADCLIENT/master
   /** @scope XM.ProjectImage.prototype */ {
 
   // .................................................

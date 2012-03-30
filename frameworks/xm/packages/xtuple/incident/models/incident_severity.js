@@ -10,9 +10,9 @@ sc_require('mixins/_incident_severity');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.IncidentSeverity = XM.Record.extend(XM._IncidentSeverity,
+XM.IncidentSeverity = XT.Record.extend(XM._IncidentSeverity,
   /** @scope XM.IncidentSeverity.prototype */ {
 
   // .................................................

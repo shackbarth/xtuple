@@ -10,9 +10,9 @@ sc_require('mixins/_tax_code');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.TaxCode = XM.Record.extend(XM._TaxCode,
+XM.TaxCode = XT.Record.extend(XM._TaxCode,
   /** @scope XM.TaxCode.prototype */ {
 
   // .................................................

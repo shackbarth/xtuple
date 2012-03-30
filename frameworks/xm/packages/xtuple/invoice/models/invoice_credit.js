@@ -10,9 +10,9 @@ sc_require('mixins/_invoice_credit');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.InvoiceCredit = XM.Record.extend(XM._InvoiceCredit,
+XM.InvoiceCredit = XT.Record.extend(XM._InvoiceCredit,
   /** @scope XM.InvoiceCredit.prototype */ {
 
   // .................................................

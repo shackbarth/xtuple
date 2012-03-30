@@ -10,9 +10,9 @@ sc_require('mixins/_tax_class');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.TaxClass = XM.Record.extend(XM._TaxClass,
+XM.TaxClass = XT.Record.extend(XM._TaxClass,
   /** @scope XM.TaxClass.prototype */ {
 
   // .................................................

@@ -10,9 +10,9 @@ sc_require('mixins/_contact_characteristic');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ContactCharacteristic = XM.Record.extend(XM._ContactCharacteristic,
+XM.ContactCharacteristic = XT.Record.extend(XM._ContactCharacteristic,
   /** @scope XM.ContactCharacteristic.prototype */ {
 
   // .................................................

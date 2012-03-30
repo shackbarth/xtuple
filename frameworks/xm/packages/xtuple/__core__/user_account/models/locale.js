@@ -10,9 +10,9 @@ sc_require('mixins/_locale');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.Locale = XM.Record.extend(XM._Locale,
+XM.Locale = XT.Record.extend(XM._Locale,
   /** @scope XM.Locale.prototype */ {
 
   // .................................................

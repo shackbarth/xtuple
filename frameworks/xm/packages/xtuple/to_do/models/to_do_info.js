@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_info');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.ToDoInfo = XM.Record.extend(XM._ToDoInfo,
+XM.ToDoInfo = XT.Record.extend(XM._ToDoInfo,
   /** @scope XM.ToDoInfo.prototype */ {
 
   // .................................................

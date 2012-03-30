@@ -10,9 +10,9 @@ sc_require('mixins/_company');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
-XM.Company = XM.Record.extend(XM._Company,
+XM.Company = XT.Record.extend(XM._Company,
   /** @scope XM.Company.prototype */ {
 
   // .................................................

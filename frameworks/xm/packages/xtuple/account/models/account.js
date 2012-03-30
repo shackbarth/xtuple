@@ -58,14 +58,14 @@ XM.Account = XM.AccountDocument.extend(XM.CoreDocuments, XM._Account,
     // Validate Parent
     if(this.get('parent')) {
       isValid = this.get('id') !== this.get('parent') ? this.get('parent') : 0;
-      err = XM.errors.findProperty('code', 'xt1019');
+      err = XT.errors.findProperty('code', 'xt1019');
       this.updateErrors(err, !isValid);
     }
 
     // Validate User Account
     if(this.get('isUserAccount')) {
       isValid = this.get('userAccount') ? this.get('userAccount') : 0;
-      err = XM.errors.findProperty('code', 'xt1020');
+      err = XT.errors.findProperty('code', 'xt1020');
       this.updateErrors(err, !isValid);
     }
 
