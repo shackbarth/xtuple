@@ -89,7 +89,7 @@ XM.Document = XT.Record.extend(
     /**
       Build observers for document assignment properties 
     */
-
+    this.getAssignmentProperties();
 
   },
   
@@ -152,14 +152,21 @@ XM.Document = XT.Record.extend(
     Called to determine XM.DocumentAssignment attributes.
   */
   _xm_getAssignmentProperties: function() {
-    var assignmentProperties = this._assignmentProperties;
+    if(!this._assignmentProperties) {
+      var prop, propType, obj;
 
-    if(!assignmentProperties) {
-      for(prop in this) {
-        
+      for(key in this) {
+        prop = this[key];
+        if(prop && prop.isRecordAttribute) {
+          propType = this.prop.get('type');
+          obj = SC.objectForPropertyPath(propType);
+          if(obj && obj.isDocumentAssignment) {
+            this._assignmentProperties.push(key);
+          }
+        }
       }
     }
-    return assignmentProperties;
+    return this_assignmentProperties;
   },
 
   /**
