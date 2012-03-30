@@ -386,9 +386,14 @@ select xt.install_js('XT','Orm','xtuple', $$
                         .replace(/{conditions}/, conditions.join(' and '));
             delCascade.push(sql);
           } else if (toMany.isNested) {
-            sql = DELETE.replace(/{table}/, table)
-                        .replace(/{conditions}/, type + '."' + inverse  + '" = ' + 'old."{pKeyAlias}"');                       
-            delCascade.push(sql); 
+            if(ormp && ormp.toOne && ormp.toOne.isNested) {
+              sql = DELETE.replace(/{table}/, table)
+                          .replace(/{conditions}/, '(' + type + '."' + inverse  + '").guid = ' + 'old."{pKeyAlias}"');   
+            } else {
+              sql = DELETE.replace(/{table}/, table)
+                          .replace(/{conditions}/, type + '."' + inverse  + '" = ' + 'old."{pKeyAlias}"');                        
+            }
+            delCascade.push(sql);
           }
         }
       }

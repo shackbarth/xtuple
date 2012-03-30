@@ -132,6 +132,14 @@
       }
     },
     {
+      "name": "account",
+      "toOne": {
+        "isNested": true,
+        "type": "AccountInfo",
+        "column": "cntct_crmacct_id"
+      }
+    },
+    {
       "name": "owner",
       "toOne": {
         "isNested": true,
@@ -192,6 +200,15 @@
         "type": "ContactCharacteristic",
         "column": "cntct_id",
         "inverse": "contact",
+        "isNested": true
+      }
+    },
+    {
+      "name": "accounts",
+      "toMany": {
+        "type": "ContactAccount",
+        "column": "cntct_id",
+        "inverse": "source",
         "isNested": true
       }
     },
