@@ -10,10 +10,10 @@ sc_require('mixins/_contact');
 
   (Document your Model here)
 
-  @extends XM.CoreDocuments
+  @extends XM.Documents
   @extends XM.Document
 */
-XM.Contact = XM.Document.extend(XM._Contact, XM.CoreDocuments,
+XM.Contact = XM.Document.extend(XM._Contact, XM.Documents,
 /** @scope XM.Contact.prototype */ {
 
   // ..........................................................
@@ -35,8 +35,6 @@ XM.Contact = XM.Document.extend(XM._Contact, XM.CoreDocuments,
   Append values to this property with plugins by
   adding a new property for each use type with
   observers that add objects to this property.
-  See 'XM.CoreDocuments' mixin for example of the
-  implementation technique.
   
   @type SC.Set
   */

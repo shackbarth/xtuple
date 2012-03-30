@@ -12,9 +12,9 @@ sc_require('mixins/_customer');
   @class
 
   @extends XM.AccountDocument
-  @extends XM.CoreDocuments
+  @extends XM.Documents
 */
-XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
+XM.Customer = XM.AccountDocument.extend(XM.Documents, XM._Customer,
   /** @scope XM.Customer.prototype */ {
 
   numberPolicySetting: 'CRMAccountNumberGeneration',

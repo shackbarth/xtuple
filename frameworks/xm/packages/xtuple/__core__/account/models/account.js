@@ -9,11 +9,11 @@ sc_require('mixins/_account');
 
   (Document your Model here)
 
-  @extends XM.CoreDocuments
+  @extends XM.Documents
   @extends XM.AccountDocument
 */
 
-XM.Account = XM.AccountDocument.extend(XM.CoreDocuments, XM._Account,
+XM.Account = XM.AccountDocument.extend(XM.Documents, XM._Account,
 /** @scope XM.Account.prototype */ {
   
   // ..........................................................

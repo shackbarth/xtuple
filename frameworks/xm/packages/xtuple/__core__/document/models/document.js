@@ -86,12 +86,6 @@ XM.Document = XT.Record.extend(
     this[docKey].set('isRequired', true);
     this.addObserver(docKey, this.keyDidChange);
 
-    /**
-      Build observers for document assignment properties 
-    */
-    propArray = this._xm_getAssignmentProperties();
-    console.log(propArray);
-
   },
   
   /**
@@ -147,38 +141,6 @@ XM.Document = XT.Record.extend(
       record._xt_numberGen = null;
     }
     arguments.callee.base.apply(this, arguments);
-  },
-
-  /**
-    Called to determine which properties are type XM.DocumentAssignment.
-  */
-  _xm_getAssignmentProperties: function() {
-    if(!this._assignmentProperties) {
-      var key, keyValue, keyValueType;
-
-      this._assignmentProperties = [];
-      for(key in this) {
-        keyValue = this[key];
-        if(keyValue && keyValue.isRecordAttribute) {
-          keyValueType = this[key].type;
-          if(SC.typeOf(keyValueType) === SC.T_STRING) {
-            keyValueType = SC.objectForPropertyPath(keyValueType);
-          }
-          if(SC.kindOf(keyValueType, XM.DocumentAssignment)) {
-            this._assignmentProperties.push(key);
-          }
-        }
-      }
-
-    }
-    return this._assignmentProperties;
-  },
-
-  /**
-    Called whenever the length of a document type array changes.
-  */
-  _xm_assignmentDidChange: function() {
-
   },
 
   // ..........................................................
