@@ -6,17 +6,17 @@
 /*globals XM */
 
 /**
-  @scope XM.ItemSubstitute
+  @scope XM.ItemAccount
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ItemSubstitute = {
-  /** @scope XM.ItemSubstitute.prototype */
+XM._ItemAccount = {
+  /** @scope XM.ItemAccount.prototype */
   
-  className: 'XM.ItemSubstitute',
+  className: 'XM.ItemAccount',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -26,7 +26,7 @@ XM._ItemSubstitute = {
     "all": {
       "create": true,
       "read": true,
-      "update": true,
+      "update": false,
       "delete": true
     }
   },
@@ -41,31 +41,25 @@ XM._ItemSubstitute = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.Item
+    @type XM.Account
   */
-  item: SC.Record.toOne('XM.Item', {
-    label: '_item'.loc()
+  source: SC.Record.toOne('XM.Account', {
+    label: '_source'.loc()
   }),
 
   /**
-    @type XM.Item
+    @type XM.AccountInfo
   */
-  substituteItem: SC.Record.toOne('XM.Item', {
-    label: '_substituteItem'.loc()
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: true,
+    label: '_account'.loc()
   }),
 
   /**
-    @type Number
+    @type String
   */
-  conversionRatio: SC.Record.attr(Number, {
-    label: '_conversionRatio'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  rank: SC.Record.attr(Number, {
-    label: '_rank'.loc()
+  purpose: SC.Record.attr(String, {
+    label: '_purpose'.loc()
   })
 
 };

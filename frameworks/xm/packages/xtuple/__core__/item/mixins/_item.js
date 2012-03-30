@@ -239,12 +239,12 @@ XM._Item = {
   }),
 
   /**
-    @type XM.ItemSubstitute
+    @type XM.ContactAccount
   */
-  substitutes: SC.Record.toMany('XM.ItemSubstitute', {
+  accounts: SC.Record.toMany('XM.ContactAccount', {
     isNested: true,
-    inverse: 'item',
-    label: '_substitutes'.loc()
+    inverse: 'source',
+    label: '_accounts'.loc()
   }),
 
   /**

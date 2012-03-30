@@ -3,6 +3,6 @@
   "dependencies": [
     "document",
     "comment",
-    "account"
+    "miscellaneous"
   ]
 }

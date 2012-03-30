@@ -1,6 +1,7 @@
 {
   "type": "lazy",
   "dependencies": [
-    "document"
+    "document",
+    "account"
   ]
 }
