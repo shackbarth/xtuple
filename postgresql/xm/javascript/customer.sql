@@ -7,6 +7,51 @@ select xt.install_js('XM','Customer','xtuple', $$
   XM.Customer.isDispatchable = true;
 
   /**
+    An array of privilege strings. Users that have access to any of these may run the outstandingCredit function.
+
+    @seealso outStandingCredit
+  */
+  XM.Customer.outstandingCreditPrivileges = [
+    'ViewMiscInvoices',
+    'MaintainMiscInvoices'
+  ];
+  
+  /**
+    Return the price for an item for a customer.
+    
+    @param {Number} customer id
+    @param {Number} currency id
+    @param {String} date
+    @returns Number
+  */
+  XM.Customer.outstandingCredit = function(customerId, currencyId, effective) {
+    var privileges = XM.Customer.outstandingCreditPrivileges, 
+        data = Object.create(XT.Data),
+        isGranted = true, i = 0, sql;
+
+    /* determine if we have privileges to do this */
+    while (i < privileges.length && !isGranted) {
+      isGranted = data.checkPrivilege(privileges[i]);
+      i++;
+    }
+    if (!isGranted) throw new Error('Access Denied');
+
+    /* query the result */
+    sql = "select coalesce(sum(amount),0) as amount "
+        + "from (select aropen_id, "
+	+ "        currToCurr(aropen_curr_id, $2,"
+        + "                   noNeg(aropen_amount - aropen_paid - sum(coalesce(aropenalloc_amount,0))), "
+	+ "                   $3::date) as amount "
+        + "      from aropen "
+        + "        left join aropenalloc on (aropenalloc_aropen_id=aropen_id) "
+        + "      where ((aropen_cust_id=$1) "
+        + "        and  (aropen_doctype in ('C', 'R')) "
+        + "        and  (aropen_open)) "
+        + "      group by aropen_id, aropen_amount, aropen_paid, aropen_curr_id) as data;";
+    return executeSql(sql,[customerId, currencyId, effective])[0].amount;
+  }
+
+  /**
     Return the price for an item for a customer.
     
     @param {Number} customer id
@@ -15,7 +60,7 @@ select xt.install_js('XM','Customer','xtuple', $$
     @param {Number} quantity
     @param {Number} quantity unit id
     @param {Number} currency id
-    @param {Date} effective date
+    @param {String} effective date
     @returns Number
   */
   XM.Customer.price = function(customerId, shiptoId, itemId, quantity, quantityUnitId, priceUnitId, currencyId, effective) {
