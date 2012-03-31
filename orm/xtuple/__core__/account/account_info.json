@@ -7,9 +7,18 @@
   "privileges": {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewAllCRMAccounts",
       "update": false,
       "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": true,
+      "properties": [
+        "owner"
+       ]
     }
   },
   "properties": [
@@ -44,8 +53,25 @@
         "column": "crmacct_active",
         "isEditable": false
       }
+    },
+    {
+      "name": "primaryContact",
+      "toOne": {
+        "isNested": true,
+        "type": "AccountContactInfo",
+        "column": "crmacct_cntct_id_1",
+        "inverse": "guid"
+      }
+    },
+    {
+      "name": "owner",
+      "toOne": {
+        "isNested": true,
+        "type": "UserAccountInfo",
+        "column": "crmacct_owner_username",
+        "inverse": "username"
+      }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }

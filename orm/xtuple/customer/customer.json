@@ -264,6 +264,14 @@
       }
     },
     {
+      "name": "creditCardPayments",
+      "toMany": {
+        "type": "CustomerCreditCardPayment",
+        "column": "cust_id",
+        "inverse": "customer"
+      }
+    },
+    {
       "name": "contacts",
       "toMany": {
         "isNested": true,
