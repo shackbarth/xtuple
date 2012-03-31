@@ -7,9 +7,18 @@
   "privileges": {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewAllContacts",
       "update": false,
       "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false,
+      "properties": [
+        "owner"
+       ]
     }
   },
   "properties": [
@@ -94,6 +103,15 @@
       }
     },
     {
+      "name": "owner",
+      "toOne": {
+        "isNested": true,
+        "type": "UserAccountInfo",
+        "column": "cntct_owner_username",
+        "inverse": "username"
+      }
+    },
+    {
       "name": "account",
       "toOne": {
         "isNested": true,
@@ -102,6 +120,5 @@
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }

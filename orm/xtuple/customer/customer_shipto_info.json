@@ -22,6 +22,14 @@
       }
     },
     {
+      "name": "customer",
+      "toOne": {
+        "type": "Customer",
+        "column": "shipto_cust_id",
+        "isEditable": false
+      }
+    },
+    {
       "name": "number",
       "attr": {
         "type": "String",
@@ -94,6 +102,5 @@
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }
