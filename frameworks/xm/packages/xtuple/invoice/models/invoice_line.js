@@ -192,6 +192,23 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     }
   }.observes('status'),
 
+  /**
+    If the quantity unit of measure is not the item's inventory unit of measure, 
+    then the price unit of measure is forced to be the inventory unit of measure 
+    and disabled.
+  */
+  quantityUnitDidChange: function() {
+    var isItem = this.get('isItem'),
+        item = this.get('item'),
+        quantityUnit, isChanged = false;
+    if(isItem && item) {
+      quantityUnit = this.get('quantityUnit');
+      isChanged = quantityUnit !== item.get('inventoryUnit');
+      if (isChanged) this.setIfChanged('priceUnit', quantityUnit); 
+    }
+    this.priceUnit.set('isEditable', !isChanged);
+  }.observes('quantityUnit'),
+
   priceCriteriaDidChange: function() {;    
     if (this.isNotDirty()) return;
      
