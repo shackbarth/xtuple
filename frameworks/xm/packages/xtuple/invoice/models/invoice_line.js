@@ -204,6 +204,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         inventoryUnit = item.get('inventoryUnit'),
         isChanged = quantityUnit !== inventoryUnit,
         that = this;
+        
     if(isItem && item && this.isDirty()) {
       if (isChanged) {
         // set the price unit equal to the quantity unit
@@ -233,6 +234,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         inventoryUnit = item.get('inventoryUnit'),
         isChanged = priceUnit !== inventoryUnit,
         that = this;
+        
     if(isItem && item && this.isDirty()) {
       if (isChanged) {
         // get the unit of measure conversion from the data source
@@ -248,35 +250,27 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     }
   }.observes('priceUnit'),
 
+  /**
+    Sets default price based on item list price minus customer discount.
+    Overload this function for more comprehensive price schedule support.
+  */
   priceCriteriaDidChange: function() {;    
     if (this.isNotDirty()) return;
      
     // recalculate price
     var that = this,
-        customer = this.getPath('invoice.customer'),
-        shipto = this.getPath('invoice.shipto'),
+        isItem = this.get('isItem'),
         item = this.get('item'),
-        quantity = this.get('billed'),
-        quantityUnit = this.get('quantityUnit'),
-        priceUnit = this.get('priceUnit'),
-        currency = this.getPath('invoice.currency'),
-        effective = this.getPath('invoice.invoiceDate'),
-        status = this.get('status');
-
-    // if we have everything we need, get a price from the data source
-    if (customer && item && quantity &&
-        quantityUnit && priceUnit && currency && effective) {
-   
-      // callback
-      callback = function(err, result) {
-        that.setIfChanged('price', result);
-        that.setIfChanged('customerPrice', result);
-      }
-     
-      // function call
-      XM.Customer.price(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
+        customer = this.getPath('invoice.customer');
+        
+    if (isItem && item && customer) {
+      var listPrice = item.get('listPrice'),
+          discount = customer.get('discount'),
+          price = listPrice * (1 - discount / 100);
+      this.setIfChanged('price', price);
+      this.setIfChanged('customerPrice', price);
     }
-  }.observes('item', 'billed','quantity','quantityUnit','priceUnit'),
+  }.observes('item'),
 
   /**
     Recalculate tax.
@@ -351,7 +345,6 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   taxDidChange: function() {
     var invoice = this.get('invoice');
     if (invoice) invoice.updateLineTax();
-  }.observes('tax'),
-
+  }.observes('tax')
 
 });

@@ -197,43 +197,6 @@ XM.Customer.outstandingCredit = function(customer, currency, effective, callback
   return this;
 }
 
-/**
-  Retrieve the price for an item for a customer. Must be used with a callback.
-  
-  @param {XM.Customer|XM.CustomerInfo} customer
-  @param {XM.CustomerShipto} shipto (optional)
-  @param {XM.Item|XM.ItemInfo} item
-  @param {Number} quantity
-  @param {Number} quantity unit
-  @param {XM.Currency} currency
-  @param {Date} effective date
-  @param {Function} callback
-  @returns Receiver
-*/
-XM.Customer.price = function(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
-  var that = this, dispatch;
-  dispatch = XT.Dispatch.create({
-    className: 'XM.Customer',
-    functionName: 'price',
-    parameters: [
-      customer.get('id'),
-      shipto ? shipto.get('id') : null,
-      item.get('id'),
-      quantity,
-      quantityUnit.get('id'),
-      priceUnit.get('id'),
-      currency.get('id'),
-      effective.toFormattedString('%Y-%m-%d')
-    ],
-    target: that,
-    action: callback
-  });  
-  console.log("XM.Customer.price for: %@".fmt(customer.get('id')));
-  customer.get('store').dispatch(dispatch);
-  return this;
-}
-
-
 XM.Customer.mixin( /** @scope XM.Customer */ {
 
 /**
