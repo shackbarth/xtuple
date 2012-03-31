@@ -7,9 +7,6 @@
 -- drop xm views
 \i drop_xm_views.sql;
 
--- delete system orms
-\i delete_system_orms.sql;
-
 -- create languages
 \i create_plv8.sql;
 
@@ -73,6 +70,9 @@
 \i xt/views/jrnl.sql;
 \i xt/views/unrec.sql;
 \i xt/views/usr.sql;
+
+-- delete system orms
+\i delete_system_orms.sql;
 
 -- [ END ] xt
 
