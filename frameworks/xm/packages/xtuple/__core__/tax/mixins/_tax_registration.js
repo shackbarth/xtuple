@@ -24,10 +24,10 @@ XM._TaxRegistration = {
 
   privileges: {
     "all": {
-      "create": "MaintainChartOfAccounts",
+      "create": "MaintainTaxRegistrations",
       "read": true,
-      "update": "MaintainChartOfAccounts",
-      "delete": "MaintainChartOfAccounts"
+      "update": "MaintainTaxRegistrations",
+      "delete": "MaintainTaxRegistrations"
     }
   },
 
