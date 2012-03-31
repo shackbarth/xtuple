@@ -41,7 +41,7 @@ XM.Taxable = {
       taxTotal = taxTotal + tax,
       detail = SC.Object.create({ 
         taxCode: taxCode, 
-        tax: SC.Math.round(tax, XT.MONEY_SCALE) 
+        tax: SC.Math.round(tax, XT.SALES_PRICE_SCALE) 
       });
       taxDetail.push(detail);
     }
