@@ -22,6 +22,15 @@ XM.InvoiceCredit = XT.Record.extend(XM._InvoiceCredit,
   //..................................................
   // METHODS
   //
+  
+  /**
+    Tell the parent to recalculate.
+  */
+  destroy: function() {
+    arguments.callee.base.apply(this, arguments);
+    var parentRecord = this.get('parentRecord');
+    if (parentRecord) parentRecord.updateAllocatedCredit();
+  }
 
   //..................................................
   // OBSERVERS

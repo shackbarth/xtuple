@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.AccountBrowse
+  @scope XM.AccountContactInfo
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._AccountBrowse = {
-  /** @scope XM.AccountBrowse.prototype */
+XM._AccountContactInfo = {
+  /** @scope XM.AccountContactInfo.prototype */
   
-  className: 'XM.AccountBrowse',
+  className: 'XM.AccountContactInfo',
 
   nestedRecordNamespace: XM,
 
@@ -25,7 +25,7 @@ XM._AccountBrowse = {
   privileges: {
     "all": {
       "create": false,
-      "read": "ViewAllCRMAccounts",
+      "read": "ViewAllContacts",
       "update": false,
       "delete": false
     },
@@ -33,7 +33,7 @@ XM._AccountBrowse = {
       "create": false,
       "read": true,
       "update": false,
-      "delete": true,
+      "delete": false,
       "properties": [
         "owner"
       ]
@@ -52,13 +52,6 @@ XM._AccountBrowse = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
-
-  /**
-    @type String
-  */
   name: SC.Record.attr(String, {
     label: '_name'.loc()
   }),
@@ -71,11 +64,53 @@ XM._AccountBrowse = {
   }),
 
   /**
-    @type XM.ContactInfo
+    @type String
   */
-  primaryContact: SC.Record.toOne('XM.ContactInfo', {
+  jobTitle: SC.Record.attr(String, {
+    label: '_jobTitle'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  phone: SC.Record.attr(String, {
+    label: '_phone'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  alternate: SC.Record.attr(String, {
+    label: '_alternate'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  fax: SC.Record.attr(String, {
+    label: '_fax'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  primaryEmail: SC.Record.attr(String, {
+    label: '_primaryEmail'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  webAddress: SC.Record.attr(String, {
+    label: '_webAddress'.loc()
+  }),
+
+  /**
+    @type XM.AddressInfo
+  */
+  address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true,
-    label: '_primaryContact'.loc()
+    label: '_address'.loc()
   }),
 
   /**

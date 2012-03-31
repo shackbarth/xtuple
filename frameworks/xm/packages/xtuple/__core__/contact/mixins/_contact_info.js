@@ -25,9 +25,18 @@ XM._ContactInfo = {
   privileges: {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewAllContacts",
       "update": false,
       "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false,
+      "properties": [
+        "owner"
+      ]
     }
   },
 
@@ -102,6 +111,14 @@ XM._ContactInfo = {
   address: SC.Record.toOne('XM.AddressInfo', {
     isNested: true,
     label: '_address'.loc()
+  }),
+
+  /**
+    @type XM.UserAccountInfo
+  */
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    label: '_owner'.loc()
   }),
 
   /**

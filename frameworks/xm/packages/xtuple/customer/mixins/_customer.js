@@ -267,6 +267,13 @@ XM._Customer = {
   }),
 
   /**
+    @type XM.CustomerCreditCardPayment
+  */
+  creditCardPayments: SC.Record.toMany('XM.CustomerCreditCardPayment', {
+    label: '_creditCardPayments'.loc()
+  }),
+
+  /**
     @type XM.CustomerContact
   */
   contacts: SC.Record.toMany('XM.CustomerContact', {

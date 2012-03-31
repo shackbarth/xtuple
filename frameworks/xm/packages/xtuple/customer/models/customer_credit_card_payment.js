@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_project_browse');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/customer/models
+
+sc_require('mixins/_customer_credit_card_payment');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.ProjectBrowse = XT.Record.extend(XM._ProjectBrowse,
-  /** @scope XM.ProjectBrowse.prototype */ {
+XM.CustomerCreditCardPayment = XT.Record.extend(XM._CustomerCreditCardPayment,
+  /** @scope XM.CustomerCreditCardPayment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
