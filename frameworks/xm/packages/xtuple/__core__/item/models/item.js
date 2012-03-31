@@ -78,87 +78,8 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
     if(status & SC.Record.READY) {
          this.set('priceUnit', this.get('inventoryUnit'));       
     }
-  }.observes('inventoryUnit'),
-  _xm_itemTypeDidChange: function() {
-   var status = this.get('status'),
-       itemType = this.get('itemType'),
-       isPickList = false,
-       isSold = false,
-       weight = false,
-       config = false,
-       shipUOM = false,
-       capUOM = false,
-       planType = false,
-       purchased = false,
-       freight = false;
-   if(status & SC.Record.READY) {
-    switch(itemType) {
-    case "P" :
-    case "M" :
-     this.set('isPicklist', true),
-     this.set('isSold', true),
-     this.set('weight', true),
-     this.set('config', true),
-     this.set('shipUOM', true),
-     this.set('capUOM', true),
-     this.set('planType', true),
-     this.set('purchased', true),
-     this.set('freight', true);
-    break;
-    case "F" : 
-     this.set('planType', true);
-    break;
-    case "B" :
-     this.set('capUOM', true),
-     this.set('planType', true),
-     this.set('purchased', true),
-     this.set('freight', true);
-    break;
-    case "C" :
-    case "Y" :
-     this.set('isPicklist', true),
-     this.set('isSold', true),
-     this.set('weight', true),
-     this.set('capUOM', true),
-     this.set('shipUOM', true),
-     this.set('planType', true),
-     this.set('freight', true);
-    break;
-    case "R" :
-     this.set('isSold', true),
-     this.set('weight', true),
-     this.set('capUOM', true),
-     this.set('shipUOM', true),
-     this.set('freight', true),
-     this.set('config', true);
-    break;
-    case "T" :
-     this.set('isPicklist', true),
-     this.set('weight', true),
-     this.set('capUOM', true),
-     this.set('shipUOM', true),
-     this.set('freight', true),
-     this.set('purchased', true),
-     this.set('isSold', true);
-    break;
-    case "O" :
-     this.set('capUOM', true),
-     this.set('planType', true),
-     this.set('purchased', true), 
-     this.set('freight', true);
-    break;
-    case "A" :
-     this.set('isSold', true),
-     this.set('planType', true),
-     this.set('freight', true);
-    break;
-    case "K" :
-     this.set('isSold', true),
-     this.set('weight', true);
-    break;
-    }
-  }
-  }.observes('itemType'),
+  }.observes('inventoryUnit')
+
 });
 
 /**
@@ -183,26 +104,56 @@ XM.Item.materialIssueUnits = function(item, callback) {
   return XM.Item._xm_units(item, 'materialIssueUnits', callback);
 }
 
+/**
+  Request the tax type for an item in a given tax zone.
+  
+  @param {XM.Item|XM.ItemInfo|XM.ItemBrowse} item
+  @param {XM.TaxZone}
+  @param {Function} callback
+  @returns receiver
+*/
+XM.Item.taxType = function(item, taxZone, callback) {
+  if((!SC.kindOf(item, XM.Item) &&
+     !SC.kindOf(item, XM.ItemInfo) &&
+     !SC.kindOf(item, XM.ItemBrowse)) ||
+     !SC.kindOf(taxZone, XM.TaxZone)) return false;
+     
+  var that = this, dispatch;
+  
+  dispatch = XT.Dispatch.create({
+    className: 'XM.Item',
+    functionName: 'taxType',
+    parameters: [
+      item.get('id'),
+      taxZone.get('id')
+    ],
+    target: that,
+    action: callback
+  });
+  console.log("XM.TaxType for: %@".fmt(item.get('id')));
+  item.get('store').dispatch(dispatch);
+  
+  return this;
+}
+
 /** @private */
 XM.Item._xm_units = function(item, type, callback) {
   if(!SC.kindOf(item, XM.Item) &&
      !SC.kindOf(item, XM.ItemInfo) &&
      !SC.kindOf(item, XM.ItemBrowse)) return false;
-  
-  var self = this,
+     
+  var that = this,
       id = item.get('id'),
       dispatch;
-
+      
   dispatch = XT.Dispatch.create({
     className: 'XM.Item',
     functionName: type,
     parameters: id,
-    target: self,
+    target: that,
     action: callback
   });
-
-  console.log("XM.Item.%@ for: %@".fmt(type, id));
-
+  console.log("XM.Units.%@ for: %@".fmt(type, id));
   item.get('store').dispatch(dispatch);
   
   return this;

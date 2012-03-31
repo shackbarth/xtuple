@@ -229,7 +229,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
         credit = 0;
     for(var i = 0; i < credits.get('length'); i++) {
       var status = credits.objectAt(i).get('status');
-      if (status & SC.Record.DESTROYED > 0) {
+      if ((status & SC.Record.DESTROYED) == 0) {
         credit = credit + credits.objectAt(i).get('amount');
       }
     }
@@ -244,8 +244,9 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
         subTotal = 0;
     for(var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
-          status = line.get('status'),
-          extendedPrice = status & SC.Record.DESTROYED > 0 ? line.get('extendedPrice') : 0;
+          status = line.get('status');
+
+     var extendedPrice = (status & SC.Record.DESTROYED) == 0 ? line.get('extendedPrice') : 0;
       subTotal = subTotal + extendedPrice;
     }
     this.setIfChanged('subTotal', subTotal);
@@ -265,7 +266,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
           taxes = line.get('taxDetail'),
           status = line.get('status');
 
-      if (status & SC.Record.DESTROYED > 0) {
+      if ((status & SC.Record.DESTROYED) == 0) {
         for (var n = 0; n < taxes.get('length'); n++) {
           var lineTax = taxes.objectAt(n),
               taxCode = lineTax.get('taxCode'),
@@ -436,7 +437,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /**
     Recalculate all line taxes.
   */
-  lineTaxCriteriaDidChange: function() {
+  lineTaxTypeCriteriaDidChange: function() {
     // only recalculate if the user made a change 
     var status = this.get('status');
     if(status !== SC.Record.READY_NEW && 
@@ -447,6 +448,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
         store = this.get('store'),
         status = this.get('status');
 
+    // mark lines as dirty to force a recalculation
     for (var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
           lineStatus = line.get('status'),
@@ -455,10 +457,10 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
         store.writeDataHash(storeKey, null, SC.Record.READY_DIRTY);
         line.recordDidChange('status');
       }
-      line.taxCriteriaDidChange();
+      line.taxTypeCriteriaDidChange();
     }
-  }.observes('taxZone', 'invoiceDate'),
-  
+  }.observes('invoiceDate', 'taxZone'),
+
   /**
     Recacalculate freight tax.
   */
