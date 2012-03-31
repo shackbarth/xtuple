@@ -160,6 +160,9 @@ XM._Contact = {
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
+    defaultValue: function() {
+      return arguments[0].getPath("store.dataSource").session.userName;
+    },
     label: '_owner'.loc()
   }),
 
