@@ -174,7 +174,7 @@ select xt.install_js('XT','Data','xtuple', $$
               props = privileges.personal.properties;
           while(!isGranted && i < props.length) {
             var prop = props[i];
-            isGranted = record[prop].username === that.currentUser();
+            isGranted = record[prop] && record[prop].username === that.currentUser();
             i++;
           }
           return isGranted;

@@ -1,9 +1,9 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ContactBrowse",
+  "type": "AccountContactInfo",
   "table": "cntct",
-  "comment": "Contact Browse Map",
+  "comment": "Account Contact Info Map (necessary to avoid circular dependencies)",
   "privileges": {
     "all": {
       "create": false,
@@ -103,11 +103,12 @@
       }
     },
     {
-      "name": "account",
+      "name": "owner",
       "toOne": {
         "isNested": true,
-        "type": "AccountInfo",
-        "column": "cntct_crmacct_id"
+        "type": "UserAccountInfo",
+        "column": "cntct_owner_username",
+        "inverse": "username"
       }
     }
   ],

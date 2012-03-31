@@ -22,6 +22,34 @@
       }
     },
     {
+      "name": "company",
+      "attr": {
+        "type": "String",
+        "column": "accnt_company"
+      }
+    },
+    {
+      "name": "profitCenter",
+      "attr": {
+        "type": "String",
+        "column": "accnt_profit"
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "accnt_number"
+      }
+    },
+    {
+      "name": "subAccount",
+      "attr": {
+        "type": "String",
+        "column": "accnt_sub"
+      }
+    },
+    {
       "name": "name",
       "attr": {
         "type": "String",

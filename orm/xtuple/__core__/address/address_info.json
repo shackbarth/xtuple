@@ -22,6 +22,20 @@
       }
     },
     {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "addr_number"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "addr_active"
+      }
+    },
+    {
       "name": "line1",
       "attr": {
         "type": "String",
@@ -78,6 +92,5 @@
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }

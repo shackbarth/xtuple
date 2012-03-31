@@ -25,24 +25,21 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "cust_number",
-        "isEditable": false
+        "column": "cust_number"
       }
     },
     {
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "cust_name",
-        "isEditable": false
+        "column": "cust_name"
       }
     },
     {
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "cust_active",
-        "isEditable": false
+        "column": "cust_active"
       }
     },
     {
@@ -101,7 +98,7 @@
         "type": "Number",
         "column": "cust_commprcnt"
       }
-    },
+    },   
     {
       "name": "taxZone",
       "toOne": {
@@ -155,6 +152,5 @@
       ]
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }
