@@ -44,8 +44,7 @@
         "isNested": true,
         "type": "Characteristic",
         "isChild": true,
-        "column": "charass_char_id",
-        "isRequired": true
+        "column": "charass_char_id"
       }
     },
     {
