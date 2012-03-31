@@ -26,15 +26,15 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   taxesLength: 0,
   
   /** @private */
-  taxesLengthBinding: SC.Binding.from('*taxes.length').noDelay(), 
+  taxesLengthBinding: SC.Binding.from('*taxes.length').oneWay().noDelay(), 
   
   taxDetail: [],
   
-  /** private */
+  /** @private */
   taxDetailLength: 0,
   
-  /** private */
-  taxDetailLengthBinding: SC.Binding.from('*taxDetail.length').noDelay(),
+  /** @private */
+  taxDetailLengthBinding: SC.Binding.from('*taxDetail.length').oneWay().noDelay(),
   
   /**
     Flag whether an actual item is used, or a miscellaneous description.  
@@ -95,6 +95,8 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     var that = this,
         item = that.get('item'),
         isItem = that.get('isItem');
+        
+    // request selling units from the server if we can
     if(isItem && item) {
   
       // callback
@@ -113,7 +115,11 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       
       // function call 
       XM.Item.sellingUnits(item, callback);
-    } else that.setIfChanged('sellingUnits', []);
+    } else {
+      this.setIfChanged('quantityUnit', null);
+      this.setIfChanged('priceUnit', null);
+      this.setIfChanged('sellingUnits', []);
+    }
   },
 
   //..................................................
@@ -126,13 +132,17 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
 
   isItemDidChange: function() {
     var isItem = this.get('isItem'),
-        isPosted = this.getPath('invoice.isPosted');
+        isPosted = this.getPath('invoice.isPosted'),
+        item = this.get('item');
         
     // clear unused fields
     if (isItem) {
       this.setIfChanged('itemNumber', '');
       this.setIfChanged('description', '');
       this.setIfChanged('salesCategory', -1);
+      if (item && item.get('id') == -1) {
+        this.set('item', null);
+      }
     } else {
       this.setIfChanged('item', XM.ItemInfo.none());
       this.setIfChanged('quantityUnit', null);
@@ -160,14 +170,15 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     var invoice = this.get('invoice');
     if (invoice) invoice.updateSubTotal();
   }.observes('extendedPrice'),
-  
-  taxDidChange: function() {
-    var invoice = this.get('invoice');
-    if (invoice) invoice.updateLineTax();
-  }.observes('tax'),
 
   itemDidChange: function() {
+    var item = this.get('item'),
+        isItem = this.get('isItem');
     this.updateSellingUnits();
+    if (isItem && item) {
+      this.setIfChanged('quantityUnit', item.get('inventoryUnit'));
+      this.setIfChanged('priceUnit', item.get('priceUnit'));
+    }
   }.observes('item'),
 
   statusDidChange: function() {
@@ -181,11 +192,8 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     }
   }.observes('status'),
 
-  priceCriteriaDidChange: function() {
-    // only update in legitimate editing states
-    var status = this.get('status');    
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return;
+  priceCriteriaDidChange: function() {;    
+    if (this.isNotDirty()) return;
      
     // recalculate price
     var that = this,
@@ -219,12 +227,9 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   */
   taxCriteriaDidChange: function() {
     var that = this,
-        status = that.get('status'),
         taxTotal = 0, taxDetail = [];
-   
-    if(status === SC.Record.READY_NEW || 
-       status === SC.Record.READY_DIRTY) 
-    {
+
+    if (this.isDirty()) {
       // request a calculated estimate 
       var taxZone = that.getPath('invoice.taxZone.id'),
           taxType = that.getPath('taxType.id'),
@@ -251,13 +256,46 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       });
       
       // do it
+      console.log("XM.InvoiceTax for: %@".fmt(this.get('id')));
       store.dispatch(dispatch);
     } else {
       // add up stored result
       var taxes = this.get('taxes');
       that.setTaxDetail(taxes, 'taxDetail', 'tax');
     }
-  }.observes('extendedPrice', 'taxType')
+  }.observes('extendedPrice', 'taxType'),
+  
+  /**
+    Called when item or invoice tax zone changes.
+  */
+
+  taxTypeCriteriaDidChange: function() {
+    if (this.isNotDirty()) return;
+       
+    var isItem = this.get('isItem'),
+        item = this.get('item'),
+        taxZone = this.getPath('invoice.taxZone'),
+        that = this;
+        
+    // update tax type if we can
+    if (isItem && item && taxZone) {
+    
+      // callback
+      callback = function(err, result) {
+        var store = that.get('store'),
+            taxType = store.find('XM.TaxType', result);
+        that.set('taxType', taxType);
+      }
+
+      // make the request
+      XM.Item.taxType(item, taxZone, callback);
+    }
+  }.observes('item'),
+
+  taxDidChange: function() {
+    var invoice = this.get('invoice');
+    if (invoice) invoice.updateLineTax();
+  }.observes('tax'),
 
 
 });

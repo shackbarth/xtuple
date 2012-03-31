@@ -17,17 +17,41 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   
   numberPolicySetting: 'InvcNumberGeneration',
   
-  /* @private */
+  /** @private */
   creditsLength: 0,
   
-  /* @private */
-  creditsLengthBinding: SC.Binding.from('*credits.length').noDelay(),
+  /** @private */
+  creditsLengthBinding: SC.Binding.from('*credits.length').oneWay().noDelay(),
   
-  /* @private */
+  /** @private */
   linesLength: 0,
   
-  /* @private */
-  linesLengthBinding: SC.Binding.from('*lines.length').noDelay(),
+  /** @private */
+  linesLengthBinding: SC.Binding.from('*lines.length').oneWay().noDelay(),
+  
+  /**
+    Bound to ship charge, determines whether freight field is editable.
+  
+    @type Boolean
+  */
+  isCustomerPayFreight: true,
+  
+  /** @private */
+  isCustomerPayFreightBinding: SC.Binding.from('*shipCharge.isCustomerPay').oneWay().noDelay(),
+  
+  /**
+    Total credit allocated to the invoice.
+    
+    @type Number
+  */
+  allocatedCredit: 0,
+  
+  /**
+    Outstanding credit.
+    
+    @type Number
+  */
+  outstandingCredit: 0,
   
   /**
     Total of line item sales.
@@ -85,20 +109,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   //
   
   /**
-    Total credit allocated to the invoice.
-    
-    @type Number
-  */
-  credit: function() {
-    var credits = this.get('credits'),
-        credit = 0;
-    for(var i = 0; i < credits.get('length'); i++) {
-      credit = credit + credits.objectAt(i).get('amount');
-    }
-    return SC.Math.round(credit, XT.MONEY_SCALE);
-  }.property('creditsLength').cacheable(),
-  
-  /**
     Total invoice taxes.
     
     @type Number
@@ -126,6 +136,24 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   // METHODS
   //
   
+  /**
+    Copy the billto address to the shipto address.
+  */
+  copyToShipto: function() {
+    this.setIfChanged('shiptoName', this.get('billtoName'));
+    this.setIfChanged('shiptoPhone', this.get('billtoPhone'));
+    this.setIfChanged('shiptoAddress1', this.get('billtoAddress1'));
+    this.setIfChanged('shiptoAddress2', this.get('billtoAddress2'));
+    this.setIfChanged('shiptoAddress3', this.get('billtoAddress3'));
+    this.setIfChanged('shiptoCity', this.get('billtoCity')); 
+    this.setIfChanged('shiptoState', this.get('billtoState'));
+    this.setIfChanged('shiptoPostalCode', this.get('billtoPostalCode'));
+    this.setIfChanged('shiptoCountry', this.get('billtoCountry'));
+  },
+  
+  /**
+    Destroy child records first.
+  */
   destroy: function() {
     var lines = this.get('lines'),
         credits = this.get('credits'),
@@ -140,12 +168,12 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       lines.objectAt(i).destroy();
     }
     
-    // destroy credits ...
+    // destroy credits...
     for (var i = 0; i < credits.get('length'); i++) {
       credits.objectAt(i).destroy();
     }
     
-    // destroy recurrences
+    // destroy recurrences...
     for (var i = 0; i < recurrences.get('length'); i++) {
       recurrences.objectAt(i).destroy();
     }
@@ -196,6 +224,18 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     this.shiptoCountry.set('isEditable', isEditable);
   },
   
+  updateAllocatedCredit: function() {
+    var credits = this.get('credits'),
+        credit = 0;
+    for(var i = 0; i < credits.get('length'); i++) {
+      var status = credits.objectAt(i).get('status');
+      if ((status & SC.Record.DESTROYED) == 0) {
+        credit = credit + credits.objectAt(i).get('amount');
+      }
+    }
+    this.setIfChanged('allocatedCredit', SC.Math.round(credit, XT.MONEY_SCALE));
+  },
+  
   /**
     Recalculate line item sales totals.
   */
@@ -204,8 +244,9 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
         subTotal = 0;
     for(var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
-          status = line.get('status'),
-          extendedPrice = status & SC.Record.DESTROYED ? 0 : line.get('extendedPrice');
+          status = line.get('status');
+
+     var extendedPrice = (status & SC.Record.DESTROYED) == 0 ? line.get('extendedPrice') : 0;
       subTotal = subTotal + extendedPrice;
     }
     this.setIfChanged('subTotal', subTotal);
@@ -225,7 +266,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
           taxes = line.get('taxDetail'),
           status = line.get('status');
 
-      if (status & SC.Record.DESTROYED === false) {
+      if ((status & SC.Record.DESTROYED) == 0) {
         for (var n = 0; n < taxes.get('length'); n++) {
           var lineTax = taxes.objectAt(n),
               taxCode = lineTax.get('taxCode'),
@@ -330,6 +371,54 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     return errors;
   }.observes('linesLength', 'total'),
   
+  creditsLengthDidChange: function() {
+    this.updateAllocatedCredit();
+  }.observes('creditsLength'),
+  
+  outstandingCreditCriteriaDidChange: function() {
+    var customer = this.get('customer'),
+        currency = this.get('currency'),
+        invoiceDate = this.get('invoiceDate'),
+        credit = this.get('credit'),
+        that = this;
+    
+    // if we have everything we need and data has changed, 
+    // get credit balance from the data source
+    if (customer && currency && invoiceDate && credit &&
+        (this._xm_cacheCust != customer ||
+         this._xm_cacheCurr != currency ||
+         this._xm_cacheDate != invoiceDate) ||
+         this._xm_cacheCredit != credit) {
+   
+      // callback
+      callback = function(err, result) {
+        var credits = that.get('credits'),
+            value = result;
+            
+        // account for unsaved changes
+        for (var i = 0; i < credits.get('length'); i++) {
+          var credit = credits.objectAt(i)
+              status = credit.get('status'),
+              amount = credit.get('amount');
+          if (status == SC.Record.READY_NEW) value = value - amount;
+          else if (status == SC.Record.DESTROYED_DIRTY) value = value + amount;
+        }
+        
+        // update the value
+        that.setIfChanged('outstandingCredit', value);
+      }
+     
+      // function call
+      XM.Customer.outstandingCredit(customer, currency, invoiceDate, callback);
+      
+      // cache variables to prevent redundant server calls
+      this._xm_cacheCust = customer;
+      this._xm_cacheCurr = currency;
+      this._xm_cacheDate = invoiceDate,
+      this._xm_cacheCredit = credit;
+    }
+  }.observes('customer', 'currency', 'invoiceDate', 'credit'),
+  
   linesLengthDidChange: function() {
     // lock down currency if applicable
     this.currency.set('isEditable', this.get('linesLength') > 0);
@@ -348,17 +437,15 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /**
     Recalculate all line taxes.
   */
-  lineTaxCriteriaDidChange: function() {
-    // only recalculate if the user made a change 
-    var status = this.get('status');
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return
+  lineTaxTypeCriteriaDidChange: function() {
+    if (this.isNotDirty()) return
     
     // recalculate line tax
     var lines = this.get('lines'),
         store = this.get('store'),
         status = this.get('status');
 
+    // mark lines as dirty to force a recalculation
     for (var i = 0; i < lines.get('length'); i++) {
       var line = lines.objectAt(i),
           lineStatus = line.get('status'),
@@ -367,29 +454,22 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
         store.writeDataHash(storeKey, null, SC.Record.READY_DIRTY);
         line.recordDidChange('status');
       }
-      line.taxCriteriaDidChange();
+      line.taxTypeCriteriaDidChange();
     }
-  }.observes('taxZone', 'invoiceDate'),
-  
+  }.observes('invoiceDate', 'taxZone'),
+
   /**
     Recacalculate freight tax.
   */
   freightTaxCriteriaDidChange: function() {
-    var status = this.get('status');
-    if (status === SC.Record.READY_NEW || 
-        status === SC.Record.READY_DIRTY) {
-      this.updateFreightTax(true);
-    }
+    if (this.isDirty()) this.updateFreightTax(true);
   }.observes('freight', 'taxZone', 'invoiceDate'),
   
   /**
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
-    // only set defaults if the user made the change 
-    var status = this.get('status');
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return
+    if (this.isNotDirty()) return;
        
     var customer = this.get('customer'),
         isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
@@ -434,11 +514,8 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /**
     Populates shipto defaults when shipto changes.
   */
-  shiptoDidChange: function() {
-    // only set defaults if the user made the change
-    var status = this.get('status');    
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return
+  shiptoDidChange: function() {   
+    if(this.isNotDirty()) return;
        
     var shipto = this.get('shipto'),
         customer = this.get('customer'),
@@ -452,36 +529,40 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('commission', shipto.get('commission'));
       this.setIfChanged('taxZone', shipto.get('taxZone'));
       this.setIfChanged('shipCharge', shipto.get('shipCharge'));
-      this.setIfChange('shipVia', shipto.get('shipVia'));  
-      this.setIfChange('shiptoName', shipto.get('name'));
-      this.setIfChange('shiptoPhone', shipto.getPath('contact.phone'));
+      this.setIfChanged('shipVia', shipto.get('shipVia'));  
+      this.setIfChanged('shiptoName', shipto.get('name'));
+      this.setIfChanged('shiptoPhone', shipto.getPath('contact.phone'));
       if(address) {
-        this.setIfChange('shiptoAddress1', address.get('line1'));
-        this.setIfChange('shiptoAddress2', address.get('line2'));
-        this.setIfChange('shiptoAddress3', address.get('line3'));
-        this.setIfChange('shiptoCity', address.get('city')); 
-        this.setIfChange('shiptoState', address.get('state'));
-        this.setIfChange('shiptoPostalCode', address.get('postalCode'));
-        this.setIfChange('shiptoCountry', address.get('country'));
+        this.setIfChanged('shiptoAddress1', address.get('line1'));
+        this.setIfChanged('shiptoAddress2', address.get('line2'));
+        this.setIfChanged('shiptoAddress3', address.get('line3'));
+        this.setIfChanged('shiptoCity', address.get('city')); 
+        this.setIfChanged('shiptoState', address.get('state'));
+        this.setIfChanged('shiptoPostalCode', address.get('postalCode'));
+        this.setIfChanged('shiptoCountry', address.get('country'));
       }
     } else if(customer) {
-      this.setIfChange('salesRep', customer.get('salesRep'));
-      this.setIfChange('taxZone', customer.get('taxZone'));
-      this.setIfChange('currency', customer.get('currency'));
-      this.setIfChange('shipCharge', customer.get('shipCharge'));
+      this.setIfChanged('salesRep', customer.get('salesRep'));
+      this.setIfChanged('taxZone', customer.get('taxZone'));
+      this.setIfChanged('currency', customer.get('currency'));
+      this.setIfChanged('shipCharge', customer.get('shipCharge'));
     } else if(!shipto) {
-      this.setIfChange('shiptoName', '');
-      this.setIfChange('shiptoAddress1', '');
-      this.setIfChange('shiptoAddress2', '');
-      this.setIfChange('shiptoAddress3', '');
-      this.setIfChange('shiptoCity', ''); 
-      this.setIfChange('shiptoState', '');
-      this.setIfChange('shiptoPostalCode', '');
-      this.setIfChange('shiptoCountry', '');
-      this.setIfChange('shiptoPhone', '');
+      this.setIfChanged('shiptoName', '');
+      this.setIfChanged('shiptoAddress1', '');
+      this.setIfChanged('shiptoAddress2', '');
+      this.setIfChanged('shiptoAddress3', '');
+      this.setIfChanged('shiptoCity', ''); 
+      this.setIfChanged('shiptoState', '');
+      this.setIfChanged('shiptoPostalCode', '');
+      this.setIfChanged('shiptoCountry', '');
+      this.setIfChanged('shiptoPhone', '');
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
+  
+  isCustomerPayFreightDidChange: function() {
+    this.freight.set('isEnabled', this.get('isCustomerPayFreight'));
+  }.observes('isCustomerPayFreight'),
 
   /**
     Disable the customer if loaded from the database.

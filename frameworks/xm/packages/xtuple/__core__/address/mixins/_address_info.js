@@ -43,6 +43,20 @@ XM._AddressInfo = {
   /**
     @type String
   */
+  number: SC.Record.attr(String, {
+    label: '_number'.loc()
+  }),
+
+  /**
+    @type Boolean
+  */
+  isActive: SC.Record.attr(Boolean, {
+    label: '_isActive'.loc()
+  }),
+
+  /**
+    @type String
+  */
   line1: SC.Record.attr(String, {
     label: '_line1'.loc()
   }),
