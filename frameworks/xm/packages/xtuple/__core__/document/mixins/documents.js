@@ -29,8 +29,12 @@ XM.Documents = {
     var assignmentProperties = [],
         documentAssignment = [],
         record = this,
-        arrayLength, key, keyValue, keyValueType;
+        propsLength, key, keyValue, keyValueType;
 
+      /**
+        Loop through object properties and build array
+        of type XM.DocumentAssignment.
+      */
       for(key in this) {
         keyValue = this[key];
         if(keyValue && keyValue.isRecordAttribute) {
@@ -45,33 +49,33 @@ XM.Documents = {
       }
 
     /**
-      Build observers for XM.DocumentAssignment properties length
+      Build observers for XM.DocumentAssignment property
+      arrays.
     */
     if(assignmentProperties.length) {
-      arrayLength = assignmentProperties.length;
-      for(var i = 0; i < arrayLength; i++) {
+      propsLength = assignmentProperties.length;
+      for(var i = 0; i < propsLength; i++) {
         documentAssignment = this.get(assignmentProperties[i]);
         documentAssignment.addObserver('[]', function() {
-          
+          var docAssLength = this.get('length'),
+              docs = record.documents,
+              childRec, indx, status;
+
+          /**
+            Loop through child records and add any 
+            non-DESTROYED records (that don't already exist)
+            to documents[].
+          */
+          for(var j = 0; j < docAssLength; j++) {
+            childRec = this.objectAt(j);
+            idx = docs.lastIndexOf(childRec);
+            status = childRec.get('status');
+            if((status & SC.Record.DESTROYED) == 0 && idx === -1) {
+              record.documents.push(childRec);
+            }
+          }
         });
       }
-    }
-  },
-
-  /**
-    Called whenever the length of an XM.DocumentAssignment property 
-    type array changes.
-  */
-  _xm_assignmentPropertyDidChange: function() {
-    var propertyArray = [],
-        documentAssignment = [],
-        arrayLength;
-
-    propertyArray = this._xm_getAssignmentProperties();
-    arrayLength = propertyArray.length;
-    for(var i = 0; i < arrayLength; i++) {
-      documentAssignment = this.get(propertyArray[i]);
-      this.documents.concat(documentAssignment);
     }
   },
 
