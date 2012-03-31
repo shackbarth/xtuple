@@ -26,24 +26,11 @@ XM.Documents = {
   //
   
   initMixin: function() {
-    var propertyArray = [];
+    var assignmentProperties = [],
+        documentAssignment = [],
+        record = this,
+        arrayLength, key, keyValue, keyValueType;
 
-    /**
-      Build observers for document assignment properties 
-    */
-    propertyArray = this._xm_getAssignmentProperties();
-    console.log(propertyArray);
-
-  },
-
-  /**
-    Called to determine which properties are type XM.DocumentAssignment.
-  */
-  _xm_getAssignmentProperties: function() {
-    if(!this._assignmentProperties) {
-      var key, keyValue, keyValueType;
-
-      this._assignmentProperties = [];
       for(key in this) {
         keyValue = this[key];
         if(keyValue && keyValue.isRecordAttribute) {
@@ -52,20 +39,40 @@ XM.Documents = {
             keyValueType = SC.objectForPropertyPath(keyValueType);
           }
           if(SC.kindOf(keyValueType, XM.DocumentAssignment)) {
-            this._assignmentProperties.push(key);
+            assignmentProperties.push(key);
           }
         }
       }
 
+    /**
+      Build observers for XM.DocumentAssignment properties length
+    */
+    if(assignmentProperties.length) {
+      arrayLength = assignmentProperties.length;
+      for(var i = 0; i < arrayLength; i++) {
+        documentAssignment = this.get(assignmentProperties[i]);
+        documentAssignment.addObserver('[]', function() {
+          
+        });
+      }
     }
-    return this._assignmentProperties;
   },
 
   /**
-    Called whenever the length of a document type array changes.
+    Called whenever the length of an XM.DocumentAssignment property 
+    type array changes.
   */
   _xm_assignmentPropertyDidChange: function() {
+    var propertyArray = [],
+        documentAssignment = [],
+        arrayLength;
 
+    propertyArray = this._xm_getAssignmentProperties();
+    arrayLength = propertyArray.length;
+    for(var i = 0; i < arrayLength; i++) {
+      documentAssignment = this.get(propertyArray[i]);
+      this.documents.concat(documentAssignment);
+    }
   },
 
   //..................................................
