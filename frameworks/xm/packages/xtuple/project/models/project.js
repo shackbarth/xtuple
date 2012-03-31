@@ -16,6 +16,18 @@ sc_require('mixins/_project');
 */
 XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments, 
  /** @scope XM.Project.prototype */ {
+ /**
+    To-Do as of 03/31/2012
+		ORM - CRM Account and Contact should be added as standard associations for Project (Add to Parent of Project)
+		Add additional filters to Project List (Don't Due just check)
+		Observes - The assigned date should automatically populate on a Project or Project Task when the document is assigned
+		Observes - The completed date should automatically populate on a Project or Project Task when the document status is changed to completed
+		Project and Project Task should be modified to be able to keep track of date changes by whom and when (Handle by db check it)
+		Method - Add the ability to copy Projects
+		Observes - balanceHours subtract calc
+		Observes - balanceExpenses subtract calc
+		
+ */
  //budgetedHours: 0,
  
  //actualHours: 0,
@@ -37,7 +49,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
           hours = status & SC.Record.DESTROYED ? 0 : task.get('budgetedHours');
       budgetedHours = budgetedHours + hours;
     }
-    this.setIfChanged('budgetedHours', SC.Math.round(budgetedHours, XM.QTY_SCALE));
+    this.setIfChanged('budgetedHours', SC.Math.round(budgetedHours, XT.QTY_SCALE));
   },	
 	
   updateActualHours: function() {
@@ -49,7 +61,31 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
           hours = status & SC.Record.DESTROYED ? 0 : task.get('actualHours');
       actualHours = actualHours + hours;
     }
-    this.setIfChanged('actualHours', SC.Math.round(actualHours, XM.QTY_SCALE));
+    this.setIfChanged('actualHours', SC.Math.round(actualHours, XT.QTY_SCALE));
+  },	
+	
+  updateBudgetedExpenses: function() {
+    var tasks = this.get('tasks'),
+        budgetedExpenses = 0;
+    for(var i = 0; i < tasks.get('length'); i++) {
+      var task = tasks.objectAt(i),
+          status = task.get('status'),
+          expenses = status & SC.Record.DESTROYED ? 0 : task.get('budgetedExpenses');
+      budgetedExpenses = budgetedExpenses + expenses;
+    }
+    this.setIfChanged('budgetedExpenses', SC.Math.round(budgetedExpenses, XT.MONEY_SCALE));
+  },	
+	
+  updateActualExpenses: function() {
+    var tasks = this.get('tasks'),
+        actualExpenses = 0;
+    for(var i = 0; i < tasks.get('length'); i++) {
+      var task = tasks.objectAt(i),
+          status = task.get('status'),
+          expenses = status & SC.Record.DESTROYED ? 0 : task.get('actualExpenses');
+      actualExpenses = actualExpenses + expenses;
+    }
+    this.setIfChanged('actualExpenses', SC.Math.round(actualExpenses, XT.MONEY_SCALE));
   },	
 	/*
   balanceHours: function() {
@@ -58,46 +94,6 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
 				balanceHours = budgetedHours - actualHours;
 	this.setIfChanged('balanceHours', SC.Math.round(balanceHours, XM.QTY_SCALE));
   }.observes('budgetedHours','actualHours'),
-	*/
-	/**
-	 Recalulate total hours budgets, total hours actual, balance hours, 
-							total expense budgeted, total expense actual, balance expense.
-	*/
-/*
-	
-	summarybalanceHours: function() {
-	  var budgetedHours = this.get('budgetedHours'),
-		    actualhours = this.get('actualHours');
-				value = budgetedHours - actualHours;
-		return value;
-	this.setIfChanged('value', SC.Math.round(value, XM.QTY_SCALE));
-	},
-	
-	summaryBudgetedExpenses: function() {
-	  var budgetedExpenses = this.get('budgetedExpenses'),
-				total = 0;
-		for ( var i = 0; i < budgetedExpenses.get('length'); i++ ) {
-		  var budgeted = budgetedExpenses.objectAt(i),
-			    status = budgeted.get('status'),
-					amount = status & SC.Record.DESTROYED ? 0 : budgeted.get('amount');
-			value = value + budgetedExpenses.objectAt(i).get('budgetedExpenses');
-		}
-	this.setIfChanged('value', SC.Math.round(value, XM.MONEY_SCALE));
-	},
-	
-	//this.get('tasks').objectAt(0).get('owner')
-	
-	summaryActualExpenses: function() {
-	  var actualExpenses = this.get('actualExpenses'),
-				total = 0;
-		for ( var i = 0; i < actualExpenses.get('length'); i++ ) {
-		  var budgeted = actualExpenses.objectAt(i),
-			    status = budgeted.get('status'),
-					amount = status & SC.Record.DESTROYED ? 0 : budgeted.get('amount');
-			value = value + actualExpenses.objectAt(i).get('actualExpenses');
-		}
-	this.setIfChanged('value', SC.Math.round(value, XM.MONEY_SCALE));
-	},
 	
 	summaryBalanceExpenses: function() {
 	  var budgetedExpenses = this.get('budgetedExpenses'),
@@ -106,7 +102,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
 		return value;
 	this.setIfChanged('value', SC.Math.round(value, XM.MONEY_SCALE));
 	},
-*/
+  */
   //..................................................
   // METHODS
   //
