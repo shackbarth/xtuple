@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_invoice_credit');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/customer/models
+
+sc_require('mixins/_customer_credit_card_payment');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.InvoiceCredit = XT.Record.extend(XM._InvoiceCredit,
-  /** @scope XM.InvoiceCredit.prototype */ {
+XM.CustomerCreditCardPayment = XT.Record.extend(XM._CustomerCreditCardPayment,
+  /** @scope XM.CustomerCreditCardPayment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -22,15 +24,6 @@ XM.InvoiceCredit = XT.Record.extend(XM._InvoiceCredit,
   //..................................................
   // METHODS
   //
-  
-  /**
-    Tell the parent to recalculate.
-  */
-  destroy: function() {
-    arguments.callee.base.apply(this, arguments);
-    var parentRecord = this.get('parentRecord');
-    if (parentRecord) parentRecord.updateAllocatedCredit();
-  }
 
   //..................................................
   // OBSERVERS
