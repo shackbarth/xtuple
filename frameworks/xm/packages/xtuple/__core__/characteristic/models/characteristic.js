@@ -26,14 +26,14 @@ XM.Characteristic = XM.Document.extend(XM._Characteristic,
   // METHODS
   //
 
-  // On instantiation, check Type to disable unassociated fields
+  // On instantiation, check characteristicType to disable unassociated properties
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    this.checkType();
+    this.checkCharacteristicType();
   },
 
-  // Check Type to disable unassociated properties
-  checkType: function() {
+  // Check characteristicType to disable unassociated properties
+  checkCharacteristicType: function() {
     var type = this.get('characteristicType');
 
     switch(type) {
@@ -49,6 +49,7 @@ XM.Characteristic = XM.Document.extend(XM._Characteristic,
         this.validator.set('isEditable', false);
         this.options.set('isEditable', true);
         break;
+      // Use neither
       default:
         this.options.set('isEditable', false);
         this.mask.set('isEditable', false);
@@ -89,9 +90,9 @@ XM.Characteristic = XM.Document.extend(XM._Characteristic,
     return errors;
   }.observes('isItems', 'isContacts', 'isAddresses', '_xm_optionsLength'),
   
-  // On Type change, disable unassociated properties
-  typeDidChange: function() {
-    this.checkType();
+  // On characteristicType change, disable unassociated properties
+  characteristicTypeDidChange: function() {
+    this.checkcharacteristicType();
   }.observes('characteristicType'),
 
   statusDidChange: function() {

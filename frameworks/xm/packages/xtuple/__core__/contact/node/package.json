@@ -2,6 +2,7 @@
   "type": "lazy",
   "dependencies": [
     "document",
-    "comment"
+    "comment",
+    "characteristic"
   ]
 }
