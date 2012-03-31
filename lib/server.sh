@@ -7,8 +7,21 @@ if [ -d "lib/node_modules" ]; then
   echo -ne "...done\\n"
 fi 
 
+# npm takes too long when using a dependency from git
+# so it was removed from the package.json for now
+# if the blossom directory doesn't exist go grab it
+if [ ! -d "lib/xt/node_modules/blossom" ]; then
+  cd lib/xt/node_modules
+  git clone git@github.com:clinuz/blossom.git
+  cd blossom
+  npm install
+  cd ../../..
+fi
+
 # will only install them if they need to be installed or
 # updated
+# we use force here because of (as of node 0.7.2) incompatible
+# connect module version but it works (1.8.6)
 cd lib/xt; npm install --force; cd ../..; node ./lib/main.js $@
 
 exit 0
