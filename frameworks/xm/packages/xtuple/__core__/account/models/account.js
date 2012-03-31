@@ -30,20 +30,6 @@ XM.Account = XM.AccountDocument.extend(XM.Documents, XM._Account,
   // DOCUMENT ASSIGNMENTS
   // 
   
-  /* @private */
-  accountsLength: 0,
-  
-  /* @private */
-  accountsLengthBinding: '*accounts.length',
-  
-  /* @private */
-  _xm_accountsDidChange: function() {
-    var documents = this.get('documents'),
-        accounts = this.get('accounts');
-
-    documents.addEach(accounts);    
-  }.observes('accountsLength'),
-
   //...........................................................
   // METHODS
   //
