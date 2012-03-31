@@ -135,6 +135,22 @@ XT.Record = SC.Record.extend(
   },
   
   /**
+    Returns true when READY_NEW or READY dirty.
+  */
+  isDirty: function() {
+    var status = this.get('status');    
+    return (status == SC.Record.READY_NEW && status == SC.Record.READY_DIRTY);
+  },
+  
+  /**
+    Returns true when not READY_NEW or READY_DIRTY.
+  */
+  isNotDirty: function() { 
+    var status = this.get('status');    
+    return (status != SC.Record.READY_NEW && status != SC.Record.READY_DIRTY);
+  },
+  
+  /**
     Returns whether the current record can be updated based on privilege settings.
     
     @returns {Boolean}

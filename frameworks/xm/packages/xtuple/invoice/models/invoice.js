@@ -168,12 +168,12 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       lines.objectAt(i).destroy();
     }
     
-    // destroy credits ...
+    // destroy credits...
     for (var i = 0; i < credits.get('length'); i++) {
       credits.objectAt(i).destroy();
     }
     
-    // destroy recurrences
+    // destroy recurrences...
     for (var i = 0; i < recurrences.get('length'); i++) {
       recurrences.objectAt(i).destroy();
     }
@@ -438,10 +438,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     Recalculate all line taxes.
   */
   lineTaxTypeCriteriaDidChange: function() {
-    // only recalculate if the user made a change 
-    var status = this.get('status');
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return
+    if (this.isNotDirty()) return
     
     // recalculate line tax
     var lines = this.get('lines'),
@@ -465,21 +462,14 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     Recacalculate freight tax.
   */
   freightTaxCriteriaDidChange: function() {
-    var status = this.get('status');
-    if (status === SC.Record.READY_NEW || 
-        status === SC.Record.READY_DIRTY) {
-      this.updateFreightTax(true);
-    }
+    if (this.isDirty()) this.updateFreightTax(true);
   }.observes('freight', 'taxZone', 'invoiceDate'),
   
   /**
     Populates customer defaults when customer changes.
   */
   customerDidChange: function() {
-    // only set defaults if the user made the change 
-    var status = this.get('status');
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return
+    if (this.isNotDirty()) return;
        
     var customer = this.get('customer'),
         isFreeFormBillto = customer ? customer.get('isFreeFormBillto') : false;
@@ -524,11 +514,8 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   /**
     Populates shipto defaults when shipto changes.
   */
-  shiptoDidChange: function() {
-    // only set defaults if the user made the change
-    var status = this.get('status');    
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return
+  shiptoDidChange: function() {   
+    if(this.isNotDirty()) return;
        
     var shipto = this.get('shipto'),
         customer = this.get('customer'),

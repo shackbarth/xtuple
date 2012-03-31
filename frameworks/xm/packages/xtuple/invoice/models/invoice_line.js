@@ -172,7 +172,13 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   }.observes('extendedPrice'),
 
   itemDidChange: function() {
+    var item = this.get('item'),
+        isItem = this.get('isItem');
     this.updateSellingUnits();
+    if (isItem && item) {
+      this.setIfChanged('quantityUnit', item.get('inventoryUnit'));
+      this.setIfChanged('priceUnit', item.get('priceUnit'));
+    }
   }.observes('item'),
 
   statusDidChange: function() {
@@ -186,11 +192,8 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     }
   }.observes('status'),
 
-  priceCriteriaDidChange: function() {
-    // only update in legitimate editing states
-    var status = this.get('status');    
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return;
+  priceCriteriaDidChange: function() {;    
+    if (this.isNotDirty()) return;
      
     // recalculate price
     var that = this,
@@ -224,12 +227,9 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   */
   taxCriteriaDidChange: function() {
     var that = this,
-        status = that.get('status'),
         taxTotal = 0, taxDetail = [];
 
-    if(status === SC.Record.READY_NEW || 
-       status === SC.Record.READY_DIRTY) {
-    
+    if (this.isDirty()) {
       // request a calculated estimate 
       var taxZone = that.getPath('invoice.taxZone.id'),
           taxType = that.getPath('taxType.id'),
@@ -270,10 +270,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   */
 
   taxTypeCriteriaDidChange: function() {
-    // only update in legitimate editing states
-    var status = this.get('status');    
-    if(status !== SC.Record.READY_NEW && 
-       status !== SC.Record.READY_DIRTY) return;
+    if (this.isNotDirty()) return;
        
     var isItem = this.get('isItem'),
         item = this.get('item'),
