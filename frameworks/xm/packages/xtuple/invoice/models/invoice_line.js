@@ -192,6 +192,62 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     }
   }.observes('status'),
 
+  /**
+    If the quantity unit of measure is not the item's inventory unit of measure, 
+    then the price unit of measure is forced to be the inventory unit of measure 
+    and disabled. Update the unit of measure ratio if applicable.
+  */
+  quantityUnitDidChange: function() {
+    var isItem = this.get('isItem'),
+        item = this.get('item'),
+        quantityUnit = this.get('quantityUnit'),
+        inventoryUnit = item.get('inventoryUnit'),
+        isChanged = quantityUnit !== inventoryUnit,
+        that = this;
+    if(isItem && item && this.isDirty()) {
+      if (isChanged) {
+        // set the price unit equal to the quantity unit
+        this.setIfChanged('priceUnit', quantityUnit); 
+        
+        // get the unit of measure conversion from the data source
+        callback = function(err, result) {
+          that.setIfChanged('quantityUnitRatio', result);
+        }
+    
+        // function call
+        XM.Item.unitToUnitRatio(item, quantityUnit, inventoryUnit, callback);
+      } else {
+        this.setIfChanged('quantityUnitRatio', 1);
+      }
+    }
+    this.priceUnit.set('isEditable', !isChanged);
+  }.observes('quantityUnit'),
+  
+  /**
+    Update the unit of measure ratio if applicable.
+  */
+  priceUnitDidChange: function() {
+    var isItem = this.get('isItem'),
+        item = this.get('item'),
+        priceUnit = this.get('priceUnit'),
+        inventoryUnit = item.get('inventoryUnit'),
+        isChanged = priceUnit !== inventoryUnit,
+        that = this;
+    if(isItem && item && this.isDirty()) {
+      if (isChanged) {
+        // get the unit of measure conversion from the data source
+        callback = function(err, result) {
+          that.setIfChanged('priceUnitRatio', result);
+        }
+    
+        // function call
+        XM.Item.unitToUnitRatio(item, priceUnit, inventoryUnit, callback);
+      } else {
+        this.setIfChanged('priceUnitRatio', 1);
+      }
+    }
+  }.observes('priceUnit'),
+
   priceCriteriaDidChange: function() {;    
     if (this.isNotDirty()) return;
      

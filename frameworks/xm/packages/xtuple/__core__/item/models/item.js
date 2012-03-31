@@ -105,6 +105,41 @@ XM.Item.materialIssueUnits = function(item, callback) {
 }
 
 /**
+  Requests a unit of measure conversion ratio for a given item, from unit 
+  and to unit.
+  
+  @param {Number} item
+  @param {Number} from unit
+  @param {Number} to unit
+  @param {Function} callback
+  @returns receiver
+*/
+XM.Item.unitToUnitRatio = function(item, fromUnit, toUnit, callback) {
+  if((!SC.kindOf(item, XM.Item) &&
+      !SC.kindOf(item, XM.ItemInfo)) ||
+      !SC.kindOf(fromUnit, XM.Unit) ||
+      !SC.kindOf(toUnit, XM.Unit)) return false;
+     
+  var that = this, dispatch;
+  
+  dispatch = XT.Dispatch.create({
+    className: 'XM.Item',
+    functionName: 'unitToUnitRatio',
+    parameters: [
+      item.get('id'),
+      fromUnit.get('id'),
+      toUnit.get('id')
+    ],
+    target: that,
+    action: callback
+  });
+  console.log("Unit Conversion Ratio for: %@".fmt(item.get('id')));
+  item.get('store').dispatch(dispatch);
+  
+  return this;
+}
+
+/**
   Request the tax type for an item in a given tax zone.
   
   @param {XM.Item|XM.ItemInfo} item

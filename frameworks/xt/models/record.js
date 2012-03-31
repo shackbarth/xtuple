@@ -139,7 +139,7 @@ XT.Record = SC.Record.extend(
   */
   isDirty: function() {
     var status = this.get('status');    
-    return (status == SC.Record.READY_NEW && status == SC.Record.READY_DIRTY);
+    return (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY);
   },
   
   /**
