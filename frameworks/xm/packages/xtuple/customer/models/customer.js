@@ -173,7 +173,7 @@ XM.Customer = XM.AccountDocument.extend(XM.CoreDocuments, XM._Customer,
 /**
   Retrieve the outstanding credit for a customer. Must be used with a callback.
   
-  @param {XM.Customer|XM.CustomerInfo|XM.CustomerBrowse} customer
+  @param {XM.Customer|XM.CustomerInfo} customer
   @param {XM.Currency} currency
   @param {Date} effective date
   @param {Function} callback
@@ -200,9 +200,9 @@ XM.Customer.outstandingCredit = function(customer, currency, effective, callback
 /**
   Retrieve the price for an item for a customer. Must be used with a callback.
   
-  @param {XM.Customer|XM.CustomerInfo|XM.CustomerBrowse} customer
+  @param {XM.Customer|XM.CustomerInfo} customer
   @param {XM.CustomerShipto} shipto (optional)
-  @param {XM.Item|XM.ItemInfo|XM.ItemBrowse} item
+  @param {XM.Item|XM.ItemInfo} item
   @param {Number} quantity
   @param {Number} quantity unit
   @param {XM.Currency} currency

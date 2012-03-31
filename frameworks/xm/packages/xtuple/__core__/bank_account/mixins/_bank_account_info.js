@@ -26,7 +26,7 @@ XM._BankAccountInfo = {
     "all": {
       "create": false,
       "read": true,
-      "update": "MaintainBankAccounts",
+      "update": false,
       "delete": false
     }
   },

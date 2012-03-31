@@ -41,6 +41,13 @@ XM._CustomerShiptoInfo = {
   guid: SC.Record.attr(Number),
 
   /**
+    @type XM.Customer
+  */
+  customer: SC.Record.toOne('XM.Customer', {
+    label: '_customer'.loc()
+  }),
+
+  /**
     @type String
   */
   number: SC.Record.attr(String, {

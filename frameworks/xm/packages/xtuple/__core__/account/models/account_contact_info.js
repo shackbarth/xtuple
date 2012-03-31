@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_bank_account_browse');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/__core__/account/models
+
+sc_require('mixins/_account_contact_info');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.BankAccountBrowse = XT.Record.extend(XM._BankAccountBrowse,
-  /** @scope XM.BankAccountBrowse.prototype */ {
+XM.AccountContactInfo = XT.Record.extend(XM._AccountContactInfo,
+  /** @scope XM.AccountContactInfo.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

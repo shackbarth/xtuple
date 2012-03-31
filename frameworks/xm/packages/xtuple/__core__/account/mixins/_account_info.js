@@ -16,7 +16,7 @@ XM._AccountInfo = {
   
   className: 'XM.AccountInfo',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,9 +25,18 @@ XM._AccountInfo = {
   privileges: {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewAllCRMAccounts",
       "update": false,
       "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": true,
+      "properties": [
+        "owner"
+      ]
     }
   },
 
@@ -59,6 +68,22 @@ XM._AccountInfo = {
   */
   isActive: SC.Record.attr(Boolean, {
     label: '_isActive'.loc()
+  }),
+
+  /**
+    @type XM.AccountContactInfo
+  */
+  primaryContact: SC.Record.toOne('XM.AccountContactInfo', {
+    isNested: true,
+    label: '_primaryContact'.loc()
+  }),
+
+  /**
+    @type XM.UserAccountInfo
+  */
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    label: '_owner'.loc()
   })
 
 };

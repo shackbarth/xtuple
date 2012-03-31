@@ -16,7 +16,7 @@ XM._ProjectInfo = {
   
   className: 'XM.ProjectInfo',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -25,9 +25,19 @@ XM._ProjectInfo = {
   privileges: {
     "all": {
       "create": false,
-      "read": true,
+      "read": "ViewAllProjects",
       "update": false,
       "delete": false
+    },
+    "personal": {
+      "create": false,
+      "read": true,
+      "update": false,
+      "delete": false,
+      "properties": [
+        "owner",
+        "assignedTo"
+      ]
     }
   },
 
@@ -59,6 +69,22 @@ XM._ProjectInfo = {
   */
   projectStatus: SC.Record.attr(String, {
     label: '_projectStatus'.loc()
+  }),
+
+  /**
+    @type XM.UserAccountInfo
+  */
+  assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    label: '_assignedTo'.loc()
+  }),
+
+  /**
+    @type XM.UserAccountInfo
+  */
+  owner: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true,
+    label: '_owner'.loc()
   })
 
 };

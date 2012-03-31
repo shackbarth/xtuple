@@ -85,7 +85,7 @@ XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
 /**
   Request the selling units of measure for an item.
   
-  @param {XM.Item|XM.ItemInfo|XM.ItemBrowse} item
+  @param {XM.Item|XM.ItemInfo} item
   @param {Function} callback
   @returns receiver
 */
@@ -96,7 +96,7 @@ XM.Item.sellingUnits = function(item, callback) {
 /**
   Request the selling units of measure for an item.
   
-  @param {XM.Item|XM.ItemInfo|XM.ItemBrowse} item
+  @param {XM.Item|XM.ItemInfo} item
   @param {Function} callback
   @returns receiver
 */
@@ -107,15 +107,14 @@ XM.Item.materialIssueUnits = function(item, callback) {
 /**
   Request the tax type for an item in a given tax zone.
   
-  @param {XM.Item|XM.ItemInfo|XM.ItemBrowse} item
+  @param {XM.Item|XM.ItemInfo} item
   @param {XM.TaxZone}
   @param {Function} callback
   @returns receiver
 */
 XM.Item.taxType = function(item, taxZone, callback) {
   if((!SC.kindOf(item, XM.Item) &&
-     !SC.kindOf(item, XM.ItemInfo) &&
-     !SC.kindOf(item, XM.ItemBrowse)) ||
+     !SC.kindOf(item, XM.ItemInfo)) ||
      !SC.kindOf(taxZone, XM.TaxZone)) return false;
      
   var that = this, dispatch;
@@ -139,8 +138,7 @@ XM.Item.taxType = function(item, taxZone, callback) {
 /** @private */
 XM.Item._xm_units = function(item, type, callback) {
   if(!SC.kindOf(item, XM.Item) &&
-     !SC.kindOf(item, XM.ItemInfo) &&
-     !SC.kindOf(item, XM.ItemBrowse)) return false;
+     !SC.kindOf(item, XM.ItemInfo)) return false;
      
   var that = this,
       id = item.get('id'),

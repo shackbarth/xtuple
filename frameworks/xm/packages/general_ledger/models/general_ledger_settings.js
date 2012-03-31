@@ -161,7 +161,7 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
     if(!this._companyAccounts) {
       var qry, regExp = new RegExp('.');
       
-      qry = SC.Query.local(XM.LedgerAccountBrowse, {
+      qry = SC.Query.local(XM.LedgerAccountInfo, {
         conditions: "company MATCHES {regexp}",
         parameters: { regexp: regExp }
       });
@@ -179,7 +179,7 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
     if(!this._profitCenterAccounts) {
       var qry, regExp = new RegExp('.');
       
-      qry = SC.Query.local(XM.LedgerAccountBrowse, {
+      qry = SC.Query.local(XM.LedgerAccountInfo, {
         conditions: "profitCenter MATCHES {regexp}",
         parameters: { regexp: regExp }
       });
@@ -197,7 +197,7 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
     if(!this._subAccountAccounts) {
       var qry, regExp = new RegExp('.');
       
-      qry = SC.Query.local(XM.LedgerAccountBrowse, {
+      qry = SC.Query.local(XM.LedgerAccountInfo, {
         conditions: "subAccount MATCHES {regexp}",
         parameters: { regexp: regExp }
       });

@@ -43,6 +43,34 @@ XM._LedgerAccountInfo = {
   /**
     @type String
   */
+  company: SC.Record.attr(String, {
+    label: '_company'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  profitCenter: SC.Record.attr(String, {
+    label: '_profitCenter'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  number: SC.Record.attr(String, {
+    label: '_number'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  subAccount: SC.Record.attr(String, {
+    label: '_subAccount'.loc()
+  }),
+
+  /**
+    @type String
+  */
   name: SC.Record.attr(String, {
     label: '_name'.loc()
   }),
