@@ -31,9 +31,9 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
 		
  */
 	
-	budgetedHours: 0,
+	summaryBudgetedHours: 0,
    
-	actualHours: 0,
+	summaryActualHours: 0,
 	 
 	budgetedExpenses: 0,
   
@@ -104,19 +104,19 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
   //..................................................
   // OBSERVERS
   //
+  statusDidChange: function(){
+	 var status = this.get('status');
+	 if(status === SC.Record.READY_CLEAN) {
+	   this.updateActualHours(),
+		 this.updateBudgetedHours();
+		}
+	}.observes('status'),
 
-  balanceHoursDidChange: function() {
-    var tasks = this.get('tasks');
-        balHours = 0;
-    for(var i = 0; i < tasks.get('length'); i++) {
-      var task = tasks.objectAt(i),
-          status = task.get('status'),
-          balance = status & SC.Record.DESTROYED ? 0 : task.get('actualHours') - task.get('budgetedHours');
-      balHours = balHours - balance;
-    }
-    this.setIfChanged('summaryBalanceHours', SC.Math.round(balHours, XT.QTY_SCALE));
-  }.observes('actualHours','budgetedHours'),
-
+  balanceHoursTotal: function() {
+    var value = this.get('summaryBudgetedHours') - this.get('summaryActualHours');
+				return SC.Math.round(value, XT.QTY_SCALE);
+  }.property('summaryBudgetedHours','summaryActualHours'),
+/*
   balanceExpensesDidChange: function() {
     var tasks = this.get('tasks');
         balExpenses = 0;
@@ -128,12 +128,12 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
     }
     this.setIfChanged('summaryBalanceExpenses', SC.Math.round(balExpenses, XT.MONEY_SCALE));
   }.observes('actualExpenses','budgetedExpenses'),
-	
+	*/
   inProcessStatusDidChange: function() {
     var status = this.get('status'),
         projectStatus = this.get('projectStatus');
 
-    if(status & SC.Record.READY_NEW) {
+    if(this.isDirty()) {
       if(projectStatus === XM.Project.IN_PROCESS) this.set('assignDate', SC.DateTime.create());    
     }
   }.observes('projectStatus'),
@@ -142,7 +142,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
     var status = this.get('status'),
         projectStatus = this.get('projectStatus');
 
-    if(status & SC.Record.READY_NEW) {
+    if(this.isDirty()) {
       if(projectStatus === XM.Project.COMPLETED) this.set('completeDate', SC.DateTime.create());    
     }
   }.observes('projectStatus'),
@@ -152,19 +152,6 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
       this.number.set('isEditable', false);
     }
   },//.observes('status')
-   /* @private */
-  _projectsLength: 0,
-  
-  /* @private */
-  _projectsLengthBinding: '*projects.length',
-  
-  /* @private */
-  _projectsDidChange: function() {
-    var documents = this.get('documents'),
-        projects = this.get('projects');
-
-    documents.addEach(projects);    
-  }.observes('projects'),
 });
 
 XM.Project.mixin( /** @scope XM.Project */ {
