@@ -83,9 +83,9 @@ XM._InvoiceLineTax = {
   }),
 
   /**
-    @type Number
+    @type Percent
   */
-  percent: SC.Record.attr(Number, {
+  percent: SC.Record.attr(Percent, {
     label: '_percent'.loc()
   }),
 
@@ -97,9 +97,9 @@ XM._InvoiceLineTax = {
   }),
 
   /**
-    @type Number
+    @type SalesPrice
   */
-  tax: SC.Record.attr(Number, {
+  tax: SC.Record.attr(SalesPrice, {
     label: '_tax'.loc()
   }),
 
