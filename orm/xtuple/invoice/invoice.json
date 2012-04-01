@@ -156,7 +156,7 @@
       }
     },
     {
-      "name": "billtoPhone",
+      "name": "billtoContactPhone",
       "attr": {
         "type": "String",
         "column": "invchead_billto_phone"
@@ -227,7 +227,7 @@
       }
     },
     {
-      "name": "shiptoPhone",
+      "name": "shiptoContactPhone",
       "attr": {
         "type": "String",
         "column": "invchead_shipto_phone"
