@@ -11,9 +11,9 @@ sc_require('mixins/_incident');
   @class
 
   @extends XM.Document
-  @extends XM.CoreDocuments
+  @extends XM.Documents
 */
-XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments, 
+XM.Incident = XM.Document.extend(XM._Incident, XM.Documents, 
   /** @scope XM.Incident.prototype */ {
 
   numberPolicy: XM.AUTO_NUMBER,
@@ -29,18 +29,6 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments,
     defaultValue: 'N'
   }),
   
-  /* @private */
-  accountsLength: 0,
-  
-  /* @private */
-  accountsLengthBinding: SC.Binding.from('*incidents.length').noDelay(),
-  
-  /* @private */
-  incidentsLength: 0,
-  
-  /* @private */
-  incidentsLengthBinding: SC.Binding.from('*incidents.length').noDelay(),
-
   //..................................................
   // METHODS
   //
@@ -71,22 +59,6 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.CoreDocuments,
       this.set('incidentStatus','A');
   }.observes('assignedTo'),
   
-  /* @private */
-  _xm_accountsDidChange: function() {
-    var documents = this.get('documents'),
-        accounts = this.get('accounts');
-
-    documents.addEach(accounts);    
-  }.observes('accountsLength'),
-  
-  /* @private */
-  _xm_incidentsDidChange: function() {
-    var documents = this.get('documents'),
-        incidents = this.get('incidents');
-
-    documents.addEach(incidents);    
-  }.observes('incidentsLength')
-
 });
 
 XM.Incident.mixin( /** @scope XM.Incident */ {

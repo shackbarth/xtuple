@@ -13,7 +13,7 @@ sc_require('mixins/_to_do');
 
   @extends XT.Record
 */
-XM.ToDo = XT.Record.extend(XM._ToDo, XM.CoreDocuments,
+XM.ToDo = XT.Record.extend(XM._ToDo, XM.Documents,
   /** @scope XM.ToDo.prototype */ {
   
   // .................................................

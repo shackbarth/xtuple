@@ -5,24 +5,22 @@
 
 /*globals XM */
 
-sc_require('mixins/_characteristic_assignment');
-
 /**
   @class
 
   @extends XT.Record
 */
-XM.CharacteristicAssignment = XT.Record.extend(XM._CharacteristicAssignment,
+XM.CharacteristicAssignment = XT.Record.extend(
   /** @scope XM.CharacteristicAssignment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  value:          SC.Record.attr(String, {
+  value: SC.Record.attr(String, {
     toType: function(record, key, value) {
       if(value) {
-        var type = record.getPath('characteristic.type');
+        var type = record.getPath('characteristic.characteristicType');
         if(type && type === XM.Characteristic.DATE) {
           value = SC.DateTime.parse(value, '%Y-%m-%d');
         }
@@ -31,7 +29,7 @@ XM.CharacteristicAssignment = XT.Record.extend(XM._CharacteristicAssignment,
     },
     fromType: function(record, key, value) {
       if(value) {
-        var type = record.getPath('characteristic.type');
+        var type = record.getPath('characteristic.characteristicType');
         if(type && type === XM.Characteristic.DATE) {
           value = value.toFormattedString('%Y-%m-%d'); }
       }

@@ -11,11 +11,10 @@ sc_require('mixins/_item');
   @class
 
   @extends XM._Item
-  @extends XM.CrmDocuments
-  @extends XM.CoreDocuments
+  @extends XM.Documents
   @extends XM.Document
 */
-XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
+XM.Item = XM.Document.extend(XM._Item, XM.Documents,
   /** @scope XM.Item.prototype */ {
 
   // .................................................

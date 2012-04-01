@@ -51,6 +51,7 @@ XM._AddressCharacteristic = {
     @type XM.Characteristic
   */
   characteristic: SC.Record.attr('XM.Characteristic', {
+    isRequired: true,
     label: '_characteristic'.loc()
   }),
 

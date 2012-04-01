@@ -16,7 +16,7 @@ XM.DocumentAssignment = XT.Record.extend(
   /**
     Walk like a duck.
   */
-  isDocumentAssignment: true
+  isDocumentAssignment: true,
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -25,6 +25,18 @@ XM.DocumentAssignment = XT.Record.extend(
   // ..........................................................
   // METHODS
   //
+
+  /**
+    If status changes to DESTROYED, remove object from documents 
+    array on the parent record.
+  */
+  destroy: function() {
+    var record = this.get('parentRecord'),
+        docs;
+
+    docs = record.get('documents');
+    docs.removeObject(this);
+  }
 
   // ..........................................................
   // OBSERVERS

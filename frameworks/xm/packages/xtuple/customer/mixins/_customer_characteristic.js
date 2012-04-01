@@ -51,6 +51,7 @@ XM._CustomerCharacteristic = {
     @type XM.Characteristic
   */
   characteristic: SC.Record.attr('XM.Characteristic', {
+    isRequired: true,
     label: '_characteristic'.loc()
   }),
 
