@@ -67,21 +67,21 @@
     {
       "name": "percent",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "taxhist_percent"
       }
     },
     {
       "name": "amount",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "taxhist_amount"
       }
     },
     {
       "name": "tax",
       "attr": {
-        "type": "Number",
+        "type": "SalesPrice",
         "column": "taxhist_tax"
       }
     },

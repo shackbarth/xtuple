@@ -79,7 +79,7 @@
     {
       "name": "ordered",
       "attr": {
-        "type": "Number",
+        "type": "Quantity",
         "column": "invcitem_ordered",
         "isRequired": true
       }
@@ -87,7 +87,7 @@
     {
       "name": "billed",
       "attr": {
-        "type": "Number",
+        "type": "Quantity",
         "column": "invcitem_billed",
         "isRequired": true
       }
@@ -102,7 +102,7 @@
     {
       "name": "quantityUnitRatio",
       "attr": {
-        "type": "Number",
+        "type": "UnitRatio",
         "column": "invcitem_qty_invuomratio",
         "defaultValue": 1,
         "isRequired": true
@@ -111,7 +111,7 @@
     {
       "name": "price",
       "attr": {
-        "type": "Number",
+        "type": "SalesPrice",
         "column": "invcitem_price",
         "isRequired": true
       }
@@ -126,7 +126,7 @@
     {
       "name": "priceUnitRatio",
       "attr": {
-        "type": "Number",
+        "type": "UnitRatio",
         "column": "invcitem_price_invuomratio",
         "defaultValue": 1,
         "isRequired": true
@@ -135,7 +135,7 @@
     {
       "name": "customerPrice",
       "attr": {
-        "type": "Number",
+        "type": "SalesPrice",
         "column": "invcitem_custprice"
       }
     },

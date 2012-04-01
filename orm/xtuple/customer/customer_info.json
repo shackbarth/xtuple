@@ -95,10 +95,17 @@
     {
       "name": "commission",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "cust_commprcnt"
       }
-    },   
+    },
+    {
+      "name": "discount",
+      "attr": {
+        "type": "Percent",
+        "column": "cust_discntprcnt"
+      }
+    },      
     {
       "name": "taxZone",
       "toOne": {

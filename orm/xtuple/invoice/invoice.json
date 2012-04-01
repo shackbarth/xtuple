@@ -156,7 +156,7 @@
       }
     },
     {
-      "name": "billtoPhone",
+      "name": "billtoContactPhone",
       "attr": {
         "type": "String",
         "column": "invchead_billto_phone"
@@ -227,7 +227,7 @@
       }
     },
     {
-      "name": "shiptoPhone",
+      "name": "shiptoContactPhone",
       "attr": {
         "type": "String",
         "column": "invchead_shipto_phone"
@@ -243,7 +243,7 @@
     {
       "name": "commission",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "invchead_commission",
         "defaultValue": 0,
         "isRequired": true
@@ -303,7 +303,7 @@
     {
       "name": "freight",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "invchead_freight",
         "defaultValue": 0,
         "isRequired": true

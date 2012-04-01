@@ -42,7 +42,8 @@
       "name": "characteristic",
       "attr": {
         "type": "Characteristic",
-        "column": "characteristic"
+        "column": "characteristic",
+        "isRequired": true
       }
     },
     {

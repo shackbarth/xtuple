@@ -91,7 +91,7 @@
     {
       "name": "commission",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "cust_commprcnt"
       }
     },
@@ -149,9 +149,9 @@
     {
       "name": "discount",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "cust_discntprcnt",
-        "defaultValue": 0.00
+        "defaultValue": 0
       }
     },
     {

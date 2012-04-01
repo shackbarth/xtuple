@@ -7,10 +7,10 @@
   "comment": "Tax Registration Map",
   "privileges": {
     "all": {
-      "create": "MaintainChartOfAccounts",
+      "create": "MaintainTaxRegistrations",
       "read": true,
-      "update": "MaintainChartOfAccounts",
-      "delete": "MaintainChartOfAccounts"
+      "update": "MaintainTaxRegistrations",
+      "delete": "MaintainTaxRegistrations"
     }
   },
   "properties": [

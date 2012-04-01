@@ -37,6 +37,19 @@ select xt.install_js('XM','item','xtuple', $$
     var sql = 'select getItemTaxType($1, $2) as "taxType";'
     return executeSql(sql, [itemId, taxZoneId])[0].taxType;
   }
+
+  /**
+    Returns a unit of measure conversion ratio for a given item, from unit and to unit.
+    
+    @param {Number} item id
+    @param {Number} from unit id
+    @param {Number} to unit id
+    @returns {Number} conversion ratio
+  */
+  XM.Item.unitToUnitRatio = function(itemId, fromUnitId, toUnitId) {
+    var sql = 'select itemUomToUomRatio($1, $2, $3) as "ratio"';
+    return executeSql(sql, [itemId, fromUnitId, toUnitId])[0].ratio;
+  }
   
   /** @private
    Return the units of measure for a given item id and type.

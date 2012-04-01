@@ -50,25 +50,6 @@ select xt.install_js('XM','Customer','xtuple', $$
         + "      group by aropen_id, aropen_amount, aropen_paid, aropen_curr_id) as data;";
     return executeSql(sql,[customerId, currencyId, effective])[0].amount;
   }
-
-  /**
-    Return the price for an item for a customer.
-    
-    @param {Number} customer id
-    @param {Number} shipto id (optional)
-    @param {Number} item id
-    @param {Number} quantity
-    @param {Number} quantity unit id
-    @param {Number} currency id
-    @param {String} effective date
-    @returns Number
-  */
-  XM.Customer.price = function(customerId, shiptoId, itemId, quantity, quantityUnitId, priceUnitId, currencyId, effective) {
-    var shiptoId = shiptoId ? shiptoId : -1,
-        sql = 'select itemPrice($1, $2, $3, $4, $5, $6, $7, $8::date) as price',
-        ret = executeSql(sql,[itemId, customerId, shiptoId, quantity, quantityUnitId, priceUnitId, currencyId, effective])[0].price;
-    return ret;
-  }
   
   /** 
    Update late credit status.

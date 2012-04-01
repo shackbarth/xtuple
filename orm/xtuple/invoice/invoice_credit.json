@@ -40,7 +40,7 @@
     {
       "name": "amount",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "aropenalloc_amount"
       }
     },

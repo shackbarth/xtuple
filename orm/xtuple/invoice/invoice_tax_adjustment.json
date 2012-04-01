@@ -47,7 +47,7 @@
     {
       "name": "tax",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "taxhist_tax"
       }
     },
