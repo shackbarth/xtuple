@@ -183,11 +183,11 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   },
   
   post: function() {
-    return false;
+    return XM.Invoice.post(this);
   },
   
   void: function() {
-    return false;
+    return XM.Invoice.void(this);
   },
   
   /**
@@ -591,15 +591,26 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
 });
 
 /**
-  Post an invoice.
+  Post an invoice. If no alternative callback provided, invoice 
+  will be automatically refreshed.
   
   @param {XM.Invoice} invoice
-  @returns Number
+  @param {Function} callback - default refreshes invoice
+  @returns Receiver
 */
 XM.Invoice.post = function(invoice, callback) { 
   if(!SC.kindOf(invoice, XM.Invoice) ||
      invoice.get('isPosted')) return false; 
   var that = this, dispatch;
+  
+  // define default callback if not passed
+  if (callback === undefined) {
+    callback = function(err, result) {
+      invoice.refresh();
+    }
+  }
+  
+  // set up
   dispatch = XT.Dispatch.create({
     className: 'XM.Invoice',
     functionName: 'post',
@@ -607,6 +618,44 @@ XM.Invoice.post = function(invoice, callback) {
     target: that,
     action: callback
   });
+  console.log("Post Invoice: %@".fmt(invoice.get('id')));
+  
+  // do it
+  invoice.get('store').dispatch(dispatch);
+  return this;
+}
+
+/**
+  Void an invoice. If no alternative callback provided, invoice 
+  will be automatically refreshed.
+  
+  @param {XM.Invoice} invoice
+  @param {Function} callback - default refreshes invoice
+  @returns Receiver
+*/
+XM.Invoice.void = function(invoice, callback) { 
+  if(!SC.kindOf(invoice, XM.Invoice) ||
+     !invoice.get('isPosted')) return false; 
+  var that = this, dispatch;
+  
+  // define default callback if not passed
+  if (callback === undefined) {
+    callback = function(err, result) {
+      invoice.refresh();
+    }
+  }
+  
+  // set up
+  dispatch = XT.Dispatch.create({
+    className: 'XM.Invoice',
+    functionName: 'void',
+    parameters: invoice.get('id'),
+    target: that,
+    action: callback
+  });
+  console.log("Void Invoice: %@".fmt(invoice.get('id')));
+  
+  // do it
   invoice.get('store').dispatch(dispatch);
   return this;
 }
