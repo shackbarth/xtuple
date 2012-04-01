@@ -76,10 +76,10 @@ XM._ItemInfo = {
   }),
 
   /**
-    @type String
+    @type Boolean
   */
-  barcode: SC.Record.attr(String, {
-    label: '_barcode'.loc()
+  isFractional: SC.Record.attr(Boolean, {
+    label: '_isFractional'.loc()
   }),
 
   /**
@@ -94,6 +94,14 @@ XM._ItemInfo = {
   */
   listPrice: SC.Record.attr(Number, {
     label: '_listPrice'.loc()
+  }),
+
+  /**
+    @type XM.Unit
+  */
+  priceUnit: SC.Record.toOne('XM.Unit', {
+    isRequired: true,
+    label: '_priceUnit'.loc()
   })
 
 };
