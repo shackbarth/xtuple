@@ -91,7 +91,7 @@
         "type": "UserAccountInfo",
         "column": "prj_username",
         "inverse": "username",
-        "defaultValue": "currentUser"
+        "defaultValue": true
       }
     },
     {
@@ -108,7 +108,7 @@
         "type": "UserAccountInfo",
         "column": "prj_owner_username",
         "inverse": "username",
-        "defaultValue": "currentUser"
+        "defaultValue": true
       }
     },
     {
