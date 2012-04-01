@@ -60,6 +60,7 @@ XM._Item = {
     @type String
   */
   description1: SC.Record.attr(String, {
+    isRequired: true,
     label: '_description1'.loc()
   }),
 
@@ -67,6 +68,7 @@ XM._Item = {
     @type String
   */
   description2: SC.Record.attr(String, {
+    isRequired: true,
     label: '_description2'.loc()
   }),
 
@@ -123,6 +125,7 @@ XM._Item = {
     @type Number
   */
   listPrice: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_listPrice'.loc()
   }),
 

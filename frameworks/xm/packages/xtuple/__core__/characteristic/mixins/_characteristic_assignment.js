@@ -59,7 +59,6 @@ XM._CharacteristicAssignment = {
   */
   characteristic: SC.Record.toOne('XM.Characteristic', {
     isNested: true,
-    isRequired: true,
     label: '_characteristic'.loc()
   }),
 
