@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "Item",
   "table": "item",
-  "idSequenceName": "public.item_item_id_seq",
+  "idSequenceName": "item_item_id_seq",
   "comment": "Item Map",
   "privileges": {
     "all": {
@@ -43,14 +43,16 @@
       "name": "description1",
       "attr": {
         "type": "String",
-        "column": "item_descrip1"
+        "column": "item_descrip1",
+        "isRequired": true
       }
     },
     {
       "name": "description2",
       "attr": {
         "type": "String",
-        "column": "item_descrip2"
+        "column": "item_descrip2",
+        "isRequired": true
       }
     },
     {
@@ -70,11 +72,12 @@
       }
     },
     {
-      "name": "isPicklist",
+      "name": "isFractional",
       "attr": {
         "type": "Boolean",
-        "column": "item_picklist",
-        "defaultValue": true
+        "column": "item_fractional",
+        "isRequired": true,
+        "defaultValue": false
       }
     },
     {
@@ -93,53 +96,20 @@
       }
     },
     {
-      "name": "isFractional",
-      "attr": {
-        "type": "Boolean",
-        "column": "item_fractional"
-      }
-    },
-    {
-      "name": "itemType",
-      "attr": {
-        "type": "String",
-        "column": "item_type"
-      }
-    },
-    {
-      "name": "productWeight",
-      "attr": {
-        "type": "Number",
-        "column": "item_prodweight"
-      }
-    },
-    {
-      "name": "packageWeight",
-      "attr": {
-        "type": "Number",
-        "column": "item_packweight"
-      }
-    },
-    {
       "name": "productCategory",
       "toOne": {
         "type": "ProductCategory",
         "column": "item_prodcat_id",
-        "isRequired": true
-      }
-    },
-    {
-      "name": "isExclusive",
-      "attr": {
-        "type": "Boolean",
-        "column": "item_exclusive"
+        "isRequired": true,
+        "defaultValue": -1
       }
     },
     {
       "name": "listPrice",
       "attr": {
         "type": "Number",
-        "column": "item_listprice"
+        "column": "item_listprice",
+        "isRequired": true
       }
     },
     {
@@ -155,34 +125,6 @@
       "attr": {
         "type": "String",
         "column": "item_extdescrip"
-      }
-    },
-    {
-      "name": "barcode",
-      "attr": {
-        "type": "String",
-        "column": "item_upccode"
-      }
-    },
-    {
-      "name": "warrantyDays",
-      "attr": {
-        "type": "Number",
-        "column": "item_warrdays"
-      }
-    },
-    {
-      "name": "freightClass",
-      "toOne": {
-        "type": "FreightClass",
-        "column": "item_freightclass_id"
-      }
-    },
-    {
-      "name": "maxCost",
-      "attr": {
-        "type": "Number",
-        "column": "item_maxcost"
       }
     },
     {
