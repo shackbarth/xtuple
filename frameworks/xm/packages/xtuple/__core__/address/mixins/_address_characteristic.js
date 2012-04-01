@@ -16,7 +16,7 @@ XM._AddressCharacteristic = {
   
   className: 'XM.AddressCharacteristic',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -50,7 +50,8 @@ XM._AddressCharacteristic = {
   /**
     @type XM.Characteristic
   */
-  characteristic: SC.Record.attr('XM.Characteristic', {
+  characteristic: SC.Record.toOne('XM.Characteristic', {
+    isNested: true,
     isRequired: true,
     label: '_characteristic'.loc()
   }),

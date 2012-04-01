@@ -16,7 +16,7 @@ XM._OpportunityCharacteristic = {
   
   className: 'XM.OpportunityCharacteristic',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -50,7 +50,8 @@ XM._OpportunityCharacteristic = {
   /**
     @type XM.Characteristic
   */
-  characteristic: SC.Record.attr('XM.Characteristic', {
+  characteristic: SC.Record.toOne('XM.Characteristic', {
+    isNested: true,
     isRequired: true,
     label: '_characteristic'.loc()
   }),
