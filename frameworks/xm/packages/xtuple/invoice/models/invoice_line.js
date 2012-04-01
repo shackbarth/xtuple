@@ -41,9 +41,6 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   */
   isItem: true,
   
-  /**
-    @type XM.ItemInfo
-  */
   item: SC.Record.toOne('XM.ItemInfo', {
     isNested: true,
     label: '_item'.loc(),
@@ -51,28 +48,45 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     isEditable: true
   }),
 
-  /**
-    @type String
-  */
   itemNumber: SC.Record.attr(String, {
     label: '_itemNumber'.loc(),
     isEditable: false,
   }),
 
-  /**
-    @type String
-  */
   description: SC.Record.attr(String, {
     label: '_description'.loc(),
     isEditable: false,
   }),
 
-  /**
-    @type XM.SalesCategory
-  */
   salesCategory: SC.Record.toOne('XM.SalesCategory', {
     label: '_salesCategory'.loc(),
     isEditable: false
+  }),
+  
+  ordered: SC.Record.attr(Quantity, {
+    /** @ private - truncate number if not fractional */
+    fromType: function(record, key, value) {
+      var fractional = true;
+      if(value) {
+        var isItem = record.get('isItem'),
+            item = record.get('item'),
+        fractional = isItem && item ? item.get('fractional') : false;
+      }
+      return fractional ? value : Math.floor(value);
+    }
+  }),
+  
+  billed: SC.Record.attr(Quantity, {
+    /** @ private - truncate number if not fractional */
+    fromType: function(record, key, value) {
+      var fractional = true;
+      if(value) {
+        var isItem = record.get('isItem'),
+            item = record.get('item'),
+        fractional = isItem && item ? item.get('fractional') : false;
+      }
+      return fractional ? value : Math.floor(value);
+    }
   }),
   
   // .................................................
@@ -84,7 +98,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         qtyUnitRatio = this.get('quantityUnitRatio') || 1,
         price = this.get('price') || 0,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
-    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XT.MONEY_SCALE);
+    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XT.EXTENDED_PRICE_SCALE);
   }.property('billed', 'price').cacheable(),
 
   //..................................................
