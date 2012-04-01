@@ -143,7 +143,7 @@ XT.Record = SC.Record.extend(
   },
   
   /**
-    Returns true when not READY_NEW or READY_DIRTY.
+    Returns true when not READY_NEW and not READY_DIRTY.
   */
   isNotDirty: function() { 
     var status = this.get('status');    
@@ -310,12 +310,21 @@ XT.Record = SC.Record.extend(
   /**
     Reimplemented from SC.Record.
 
-    Don't destroy the parent.
+    Destroy many children, but don't destroy the parent.
   */
   destroy: function() {
     var store = this.get('store'), rec,
         sk = this.get('storeKey');
-
+    // Lord Vader... rise
+    for (var key in this) {
+      if (this[key] && this[key].isChildrenAttribute && this[key].isNested) {
+        for (var i = 0; i < this.get(key).get('length'); i++) {
+          this.get(key).objectAt(i).destroy();
+        }
+      }
+    }
+    
+    // now self destruct ("you underestimate my power!")
     store.destroyRecord(null, null, sk);
     this.notifyPropertyChange('status');
     // If there are any aggregate records, we might need to propagate our new

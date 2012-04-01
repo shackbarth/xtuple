@@ -152,33 +152,11 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   },
   
   /**
-    Destroy child records first.
+    Check posted status first.
   */
   destroy: function() {
-    var lines = this.get('lines'),
-        credits = this.get('credits'),
-        recurrences = this.get('recurrences'),
-        isPosted = this.get('isPosted');
-        
-    // Can't delete a posted invoice
-    if (isPosted) return;
-   
-    // first destroy line items...
-    for (var i = 0; i < lines.get('length'); i++) {
-      lines.objectAt(i).destroy();
-    }
-    
-    // destroy credits...
-    for (var i = 0; i < credits.get('length'); i++) {
-      credits.objectAt(i).destroy();
-    }
-    
-    // destroy recurrences...
-    for (var i = 0; i < recurrences.get('length'); i++) {
-      recurrences.objectAt(i).destroy();
-    }
-      
-    // now destroy the header
+    // Can't destroy a posted invoice
+    if (this.get('isPosted')) return;
     arguments.callee.base.apply(this, arguments);
   },
   
