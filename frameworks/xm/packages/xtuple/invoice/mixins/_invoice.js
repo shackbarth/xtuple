@@ -182,8 +182,8 @@ XM._Invoice = {
   /**
     @type String
   */
-  billtoPhone: SC.Record.attr(String, {
-    label: '_billtoPhone'.loc()
+  billtoContactPhone: SC.Record.attr(String, {
+    label: '_billtoContactPhone'.loc()
   }),
 
   /**
@@ -253,8 +253,8 @@ XM._Invoice = {
   /**
     @type String
   */
-  shiptoPhone: SC.Record.attr(String, {
-    label: '_shiptoPhone'.loc()
+  shiptoContactPhone: SC.Record.attr(String, {
+    label: '_shiptoContactPhone'.loc()
   }),
 
   /**

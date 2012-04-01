@@ -141,7 +141,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   */
   copyToShipto: function() {
     this.setIfChanged('shiptoName', this.get('billtoName'));
-    this.setIfChanged('shiptoPhone', this.get('billtoPhone'));
+    this.setIfChanged('shiptoContactPhone', this.get('billtoContactPhone'));
     this.setIfChanged('shiptoAddress1', this.get('billtoAddress1'));
     this.setIfChanged('shiptoAddress2', this.get('billtoAddress2'));
     this.setIfChanged('shiptoAddress3', this.get('billtoAddress3'));
@@ -197,7 +197,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   */
   setFreeFormBilltoEnabled: function(isEditable) {
     this.billtoName.set('isEditable', isEditable);
-    this.billtoPhone.set('isEditable', isEditable);
+    this.billtoContactPhone.set('isEditable', isEditable);
     this.billtoAddress1.set('isEditable', isEditable);
     this.billtoAddress2.set('isEditable', isEditable);
     this.billtoAddress3.set('isEditable', isEditable);
@@ -214,7 +214,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   */  
   setFreeFormShiptoEnabled: function(isEditable) {
     this.shiptoName.set('isEditable', isEditable);
-    this.shiptoPhone.set('isEditable', isEditable);
+    this.shiptoContactPhone.set('isEditable', isEditable);
     this.shiptoAddress1.set('isEditable', isEditable);
     this.shiptoAddress2.set('isEditable', isEditable);
     this.shiptoAddress3.set('isEditable', isEditable);
@@ -489,7 +489,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('shipto', customer.get('shipto'));
       this.setIfChanged('shipVia', customer.get('shipVia'));     
       this.setIfChanged('billtoName', customer.get('name'));
-      this.setIfChanged('billtoPhone', customer.getPath('billingContact.phone'));
+      this.setIfChanged('billtoContactPhone', customer.getPath('billingContact.phone'));
       if(address) {
         this.setIfChanged('billtoAddress1', address.get('line1'));
         this.setIfChanged('billtoAddress2', address.get('line2'));
@@ -531,7 +531,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('shipCharge', shipto.get('shipCharge'));
       this.setIfChanged('shipVia', shipto.get('shipVia'));  
       this.setIfChanged('shiptoName', shipto.get('name'));
-      this.setIfChanged('shiptoPhone', shipto.getPath('contact.phone'));
+      this.setIfChanged('shiptoContactPhone', shipto.getPath('contact.phone'));
       if(address) {
         this.setIfChanged('shiptoAddress1', address.get('line1'));
         this.setIfChanged('shiptoAddress2', address.get('line2'));
@@ -555,7 +555,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('shiptoState', '');
       this.setIfChanged('shiptoPostalCode', '');
       this.setIfChanged('shiptoCountry', '');
-      this.setIfChanged('shiptoPhone', '');
+      this.setIfChanged('shiptoContactPhone', '');
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
