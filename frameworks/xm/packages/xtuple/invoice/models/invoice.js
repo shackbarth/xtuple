@@ -565,17 +565,29 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   }.observes('isCustomerPayFreight'),
 
   /**
-    Disable the customer if loaded from the database.
+    Calculate totals and disable controles where applicable.
   */
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
-      this.customer.set('isEditable', false);
+      // calculate totals
       this.updateSubTotal();
       this.updateFreightTax();
       this.updateMiscTax();
+      
+      // disable controls
+      this.customer.set('isEditable', false);
+      this.number.set('isEnabled', false);
+      if (this.get('isPosted')) {
+        this.invoiceDate.set('isEnabled', false);
+        this.terms.set('isEnabled', false);
+        this.salesRep.set('isEnabled', false);
+        this.commission.set('isEnabled', false);
+        this.taxZone.set('isEnabled', false);
+        this.shipCharge.set('isEnabled', false);
+        this.freight.set('isEnabled', false);
+      }
     }
   }.observes('status')
-
 });
 
 /**

@@ -200,6 +200,19 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     if(status === SC.Record.READY_CLEAN) {
       this.updateSellingUnits();
       this.taxCriteriaDidChange();
+      if (this.getPath('invoice.isPosted')) {
+        this.item.set('isEnabled', false);
+        this.ordered.set('isEnabled', false);
+        this.billed.set('isEnabled', false);
+        this.priceUnit.set('isEnabled', false);
+        this.customerPrice.set('isEnabled', false);
+        this.salesCategory.set('isEnabled', false);
+        this.quantityUnit.set('isEnabled', false);
+        this.quantityUnitRatio.set('isEnabled', false);
+        this.priceUnit.set('isEnabled', false);
+        this.priceUnitRatio.set('isEnabled', false);
+        this.taxType.set('isEnabled', false);
+      }
     } else if (status & SC.Record.DESTROYED) {
       this.extendedPriceDidChange();
       this.taxDidChange();
