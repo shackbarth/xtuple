@@ -14,23 +14,13 @@ sc_require('mixins/_project');
   @extends XM.Document
   @extends XM.Documents
 */
-XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments, 
- /** @scope XM.Project.prototype */ {
  /**
     To-Do as of 03/31/2012
-		1A = ORM - CRM Account and Contact should be added as standard associations for Project (Add to Parent of Project)
-		(Done) 3C = Observes - The assigned date should automatically populate on a Project or Project Task when the document is assigned
-		           Status is In-Process[ O ] - look at mixin
-		(Done) 4D = Observes - The completed date should automatically populate on a Project or Project Task when the document status is changed to completed
-		5E = Project and Project Task should be modified to be able to keep track of date changes by whom and when (Handle by db check it)
 		6F = Method - Add the ability to copy Projects
-		   6F1 = ORM add New Item Number and Off-set number
-		(Done) 7G = Observes - balanceHours subtract calc
-		(Done) 8H = Observes - balanceExpenses subtract calc
-		9I = Project task on save show zero in plan if not set 0.0000
-		
+		6F1 = ORM add New Item Number and Off-set number	
  */
-	
+XM.Project = XM.Document.extend(XM._Project, XM.Documents, 
+ /** @scope XM.Project.prototype */ {	
 	summaryBudgetedHours: 0,
    
 	summaryActualHours: 0,
@@ -38,10 +28,6 @@ XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
 	summaryBudgetedExpenses: 0,
   
 	summaryActualExpenses: 0,
-  
-	// .................................................
-XM.Project = XM.Document.extend(XM._Project, XM.Documents,
-  /** @scope XM.Project.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -53,56 +39,68 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
     }
   }),
 	
+  balanceHoursTotal: function() {
+    var hours = this.get('summaryBudgetedHours') - this.get('summaryActualHours');
+				return SC.Math.round(hours, XT.QTY_SCALE);
+  }.property('summaryBudgetedHours','summaryActualHours'),
+	
+  balanceActualExpensesTotal: function() {
+    var expenses = this.get('budgetedExpenses') - this.get('actualExpenses');
+				return SC.Math.round(expenses, XT.MONEY_SCALE);
+  }.property('summaryBudgetedExpenses','summaryActualExpenses'),
+	
+	copy: function() { return XM.Project.copy(this) },
+	
   //..................................................
   // METHODS
   //
 	
   updateBudgetedHours: function() {
     var tasks = this.get('tasks'),
-        budHours = 0;
+        budgetedHours = 0;
     for(var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
           hours = status & SC.Record.DESTROYED ? 0 : task.get('budgetedHours');
-      budHours = budHours + hours;
+      budgetedHours = budgetedHours + hours;
     }
-    this.setIfChanged('summaryBudgetedHours', SC.Math.round(budHours, XT.QTY_SCALE));
+    this.setIfChanged('summaryBudgetedHours', SC.Math.round(budgetedHours, XT.QTY_SCALE));
   },	
 	
   updateActualHours: function() {
     var tasks = this.get('tasks'),
-        actHours = 0;
+        actualHours = 0;
     for(var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
           hours = status & SC.Record.DESTROYED ? 0 : task.get('actualHours');
-      actHours = actHours + hours;
+      actualHours = actualHours + hours;
     }
-    this.setIfChanged('summaryActualHours', SC.Math.round(actHours, XT.QTY_SCALE));
+    this.setIfChanged('summaryActualHours', SC.Math.round(actualHours, XT.QTY_SCALE));
   },	
 	
   updateBudgetedExpenses: function() {
     var tasks = this.get('tasks'),
-        budExpenses = 0;
+        budgetedExpenses = 0;
     for(var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
           expenses = status & SC.Record.DESTROYED ? 0 : task.get('budgetedExpenses');
-      budExpenses = budExpenses + expenses;
+      budgetedExpenses = budgetedExpenses + expenses;
     }
-    this.setIfChanged('summaryBudgetedExpenses', SC.Math.round(budExpenses, XT.MONEY_SCALE));
+    this.setIfChanged('summaryBudgetedExpenses', SC.Math.round(budgetedExpenses, XT.MONEY_SCALE));
   },	
 	
   updateActualExpenses: function() {
     var tasks = this.get('tasks'),
-        actExpenses = 0;
+        actualExpenses = 0;
     for(var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
           expenses = status & SC.Record.DESTROYED ? 0 : task.get('actualExpenses');
-      actExpenses = actExpenses + expenses;
+      actualExpenses = actualExpenses + expenses;
     }
-    this.setIfChanged('summaryActualExpenses', SC.Math.round(actExpenses, XT.MONEY_SCALE));
+    this.setIfChanged('summaryActualExpenses', SC.Math.round(actualExpenses, XT.MONEY_SCALE));
   },	
 
   //..................................................
@@ -117,14 +115,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 		 this.updateBudgetedExpenses();
 		}
 	}.observes('status'),
-  balanceHoursTotal: function() {
-    var value = this.get('summaryBudgetedHours') - this.get('summaryActualHours');
-				return SC.Math.round(value, XT.QTY_SCALE);
-  }.property('summaryBudgetedHours','summaryActualHours'),
-  balanceActualExpensesTotal: function() {
-    var value = this.get('budgetedExpenses') - this.get('actualExpenses');
-				return SC.Math.round(value, XT.MONEY_SCALE);
-  }.property('summaryBudgetedExpenses','summaryActualExpenses'),
+	
   inProcessStatusDidChange: function() {
     var status = this.get('status'),
         projectStatus = this.get('projectStatus');
@@ -149,6 +140,19 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
     }
   },//.observes('status')
 });
+
+XM.Project.copy = function(project) {
+  if(!SC.kindOf(project, XM.Project)) return NO;
+
+  var store = address.get('id'),
+  hash = project.get('attributes');
+
+  delete hash.guid;
+  delete hash.number;
+  delete hash.notes;
+
+  return store.createRecord(XM.Address, hash).normalize();
+}
 
 XM.Project.mixin( /** @scope XM.Project */ {
 
