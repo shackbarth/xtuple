@@ -63,7 +63,8 @@
       "toOne": {
         "type": "Currency",
         "column": "bankaccnt_curr_id",
-        "defaultValue": "baseCurrency"
+        "defaultValue": "baseCurrency",
+        "isEditable": true
       }
     },
     {
