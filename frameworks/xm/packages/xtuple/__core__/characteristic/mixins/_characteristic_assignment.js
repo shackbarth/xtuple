@@ -16,7 +16,7 @@ XM._CharacteristicAssignment = {
   
   className: 'XM.CharacteristicAssignment',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -55,10 +55,9 @@ XM._CharacteristicAssignment = {
   }),
 
   /**
-    @type XM.Characteristic
+    @type Number
   */
-  characteristic: SC.Record.toOne('XM.Characteristic', {
-    isNested: true,
+  characteristic: SC.Record.attr(Number, {
     label: '_characteristic'.loc()
   }),
 

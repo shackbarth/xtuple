@@ -41,9 +41,6 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   */
   isItem: true,
   
-  /**
-    @type XM.ItemInfo
-  */
   item: SC.Record.toOne('XM.ItemInfo', {
     isNested: true,
     label: '_item'.loc(),
@@ -51,28 +48,45 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     isEditable: true
   }),
 
-  /**
-    @type String
-  */
   itemNumber: SC.Record.attr(String, {
     label: '_itemNumber'.loc(),
     isEditable: false,
   }),
 
-  /**
-    @type String
-  */
   description: SC.Record.attr(String, {
     label: '_description'.loc(),
     isEditable: false,
   }),
 
-  /**
-    @type XM.SalesCategory
-  */
   salesCategory: SC.Record.toOne('XM.SalesCategory', {
     label: '_salesCategory'.loc(),
     isEditable: false
+  }),
+  
+  ordered: SC.Record.attr(Quantity, {
+    /** @ private - truncate number if not fractional */
+    fromType: function(record, key, value) {
+      var fractional = true;
+      if(value) {
+        var isItem = record.get('isItem'),
+            item = record.get('item'),
+        fractional = isItem && item ? item.get('fractional') : false;
+      }
+      return fractional ? value : Math.floor(value);
+    }
+  }),
+  
+  billed: SC.Record.attr(Quantity, {
+    /** @ private - truncate number if not fractional */
+    fromType: function(record, key, value) {
+      var fractional = true;
+      if(value) {
+        var isItem = record.get('isItem'),
+            item = record.get('item'),
+        fractional = isItem && item ? item.get('fractional') : false;
+      }
+      return fractional ? value : Math.floor(value);
+    }
   }),
   
   // .................................................
@@ -84,7 +98,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         qtyUnitRatio = this.get('quantityUnitRatio') || 1,
         price = this.get('price') || 0,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
-    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XT.MONEY_SCALE);
+    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XT.EXTENDED_PRICE_SCALE);
   }.property('billed', 'price').cacheable(),
 
   //..................................................
@@ -186,41 +200,104 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     if(status === SC.Record.READY_CLEAN) {
       this.updateSellingUnits();
       this.taxCriteriaDidChange();
+      if (this.getPath('invoice.isPosted')) {
+        this.item.set('isEnabled', false);
+        this.ordered.set('isEnabled', false);
+        this.billed.set('isEnabled', false);
+        this.priceUnit.set('isEnabled', false);
+        this.customerPrice.set('isEnabled', false);
+        this.salesCategory.set('isEnabled', false);
+        this.quantityUnit.set('isEnabled', false);
+        this.quantityUnitRatio.set('isEnabled', false);
+        this.priceUnit.set('isEnabled', false);
+        this.priceUnitRatio.set('isEnabled', false);
+        this.taxType.set('isEnabled', false);
+      }
     } else if (status & SC.Record.DESTROYED) {
       this.extendedPriceDidChange();
       this.taxDidChange();
     }
   }.observes('status'),
 
+  /**
+    If the quantity unit of measure is not the item's inventory unit of measure, 
+    then the price unit of measure is forced to be the inventory unit of measure 
+    and disabled. Update the unit of measure ratio if applicable.
+  */
+  quantityUnitDidChange: function() {
+    var isItem = this.get('isItem'),
+        item = this.get('item'),
+        quantityUnit = this.get('quantityUnit'),
+        inventoryUnit = item.get('inventoryUnit'),
+        isChanged = quantityUnit !== inventoryUnit,
+        that = this;
+        
+    if(isItem && item && this.isDirty()) {
+      if (isChanged) {
+        // set the price unit equal to the quantity unit
+        this.setIfChanged('priceUnit', quantityUnit); 
+        
+        // get the unit of measure conversion from the data source
+        callback = function(err, result) {
+          that.setIfChanged('quantityUnitRatio', result);
+        }
+    
+        // function call
+        XM.Item.unitToUnitRatio(item, quantityUnit, inventoryUnit, callback);
+      } else {
+        this.setIfChanged('quantityUnitRatio', 1);
+      }
+    }
+    this.priceUnit.set('isEditable', !isChanged);
+  }.observes('quantityUnit'),
+  
+  /**
+    Update the unit of measure ratio if applicable.
+  */
+  priceUnitDidChange: function() {
+    var isItem = this.get('isItem'),
+        item = this.get('item'),
+        priceUnit = this.get('priceUnit'),
+        inventoryUnit = item.get('inventoryUnit'),
+        isChanged = priceUnit !== inventoryUnit,
+        that = this;
+        
+    if(isItem && item && this.isDirty()) {
+      if (isChanged) {
+        // get the unit of measure conversion from the data source
+        callback = function(err, result) {
+          that.setIfChanged('priceUnitRatio', result);
+        }
+    
+        // function call
+        XM.Item.unitToUnitRatio(item, priceUnit, inventoryUnit, callback);
+      } else {
+        this.setIfChanged('priceUnitRatio', 1);
+      }
+    }
+  }.observes('priceUnit'),
+
+  /**
+    Sets default price based on item list price minus customer discount.
+    Overload this function for more comprehensive price schedule support.
+  */
   priceCriteriaDidChange: function() {;    
     if (this.isNotDirty()) return;
      
     // recalculate price
     var that = this,
-        customer = this.getPath('invoice.customer'),
-        shipto = this.getPath('invoice.shipto'),
+        isItem = this.get('isItem'),
         item = this.get('item'),
-        quantity = this.get('billed'),
-        quantityUnit = this.get('quantityUnit'),
-        priceUnit = this.get('priceUnit'),
-        currency = this.getPath('invoice.currency'),
-        effective = this.getPath('invoice.invoiceDate'),
-        status = this.get('status');
-
-    // if we have everything we need, get a price from the data source
-    if (customer && item && quantity &&
-        quantityUnit && priceUnit && currency && effective) {
-   
-      // callback
-      callback = function(err, result) {
-        that.setIfChanged('price', result);
-        that.setIfChanged('customerPrice', result);
-      }
-     
-      // function call
-      XM.Customer.price(customer, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
+        customer = this.getPath('invoice.customer');
+        
+    if (isItem && item && customer) {
+      var listPrice = item.get('listPrice'),
+          discount = customer.get('discount'),
+          price = listPrice * (1 - discount / 100);
+      this.setIfChanged('price', price);
+      this.setIfChanged('customerPrice', price);
     }
-  }.observes('item', 'billed','quantity','quantityUnit','priceUnit'),
+  }.observes('item'),
 
   /**
     Recalculate tax.
@@ -295,7 +372,6 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   taxDidChange: function() {
     var invoice = this.get('invoice');
     if (invoice) invoice.updateLineTax();
-  }.observes('tax'),
-
+  }.observes('tax')
 
 });

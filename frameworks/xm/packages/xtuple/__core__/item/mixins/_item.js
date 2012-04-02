@@ -60,6 +60,7 @@ XM._Item = {
     @type String
   */
   description1: SC.Record.attr(String, {
+    isRequired: true,
     label: '_description1'.loc()
   }),
 
@@ -67,6 +68,7 @@ XM._Item = {
     @type String
   */
   description2: SC.Record.attr(String, {
+    isRequired: true,
     label: '_description2'.loc()
   }),
 
@@ -89,9 +91,10 @@ XM._Item = {
   /**
     @type Boolean
   */
-  isPicklist: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isPicklist'.loc()
+  isFractional: SC.Record.attr(Boolean, {
+    isRequired: true,
+    defaultValue: false,
+    label: '_isFractional'.loc()
   }),
 
   /**
@@ -110,52 +113,19 @@ XM._Item = {
   }),
 
   /**
-    @type Boolean
-  */
-  isFractional: SC.Record.attr(Boolean, {
-    label: '_isFractional'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  itemType: SC.Record.attr(String, {
-    label: '_itemType'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  productWeight: SC.Record.attr(Number, {
-    label: '_productWeight'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  packageWeight: SC.Record.attr(Number, {
-    label: '_packageWeight'.loc()
-  }),
-
-  /**
     @type XM.ProductCategory
   */
   productCategory: SC.Record.toOne('XM.ProductCategory', {
     isRequired: true,
+    defaultValue: -1,
     label: '_productCategory'.loc()
-  }),
-
-  /**
-    @type Boolean
-  */
-  isExclusive: SC.Record.attr(Boolean, {
-    label: '_isExclusive'.loc()
   }),
 
   /**
     @type Number
   */
   listPrice: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_listPrice'.loc()
   }),
 
@@ -172,34 +142,6 @@ XM._Item = {
   */
   extendedDescription: SC.Record.attr(String, {
     label: '_extendedDescription'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  barcode: SC.Record.attr(String, {
-    label: '_barcode'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  warrantyDays: SC.Record.attr(Number, {
-    label: '_warrantyDays'.loc()
-  }),
-
-  /**
-    @type XM.FreightClass
-  */
-  freightClass: SC.Record.toOne('XM.FreightClass', {
-    label: '_freightClass'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  maxCost: SC.Record.attr(Number, {
-    label: '_maxCost'.loc()
   }),
 
   /**

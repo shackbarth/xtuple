@@ -12,9 +12,9 @@ sc_require('mixins/_project');
   @class
 
   @extends XM.Document
-  @extends XM.CoreDocuments
+  @extends XM.Documents
 */
-XM.Project = XM.Document.extend(XM._Project, XM.CoreDocuments,
+XM.Project = XM.Document.extend(XM._Project, XM.Documents,
   /** @scope XM.Project.prototype */ {
 
   // .................................................

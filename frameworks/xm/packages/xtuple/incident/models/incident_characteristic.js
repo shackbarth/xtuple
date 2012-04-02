@@ -10,9 +10,9 @@ sc_require('mixins/_incident_characteristic');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.CharacteristicAssignment
 */
-XM.IncidentCharacteristic = XT.Record.extend(XM._IncidentCharacteristic,
+XM.IncidentCharacteristic = XM.CharacteristicAssignment.extend(XM._IncidentCharacteristic,
   /** @scope XM.IncidentCharacteristic.prototype */ {
 
   // .................................................

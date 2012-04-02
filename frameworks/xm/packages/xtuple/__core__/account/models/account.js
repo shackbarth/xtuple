@@ -9,11 +9,11 @@ sc_require('mixins/_account');
 
   (Document your Model here)
 
-  @extends XM.CoreDocuments
+  @extends XM.Documents
   @extends XM.AccountDocument
 */
 
-XM.Account = XM.AccountDocument.extend(XM.CoreDocuments, XM._Account,
+XM.Account = XM.AccountDocument.extend(XM.Documents, XM._Account,
 /** @scope XM.Account.prototype */ {
   
   // ..........................................................
@@ -30,20 +30,6 @@ XM.Account = XM.AccountDocument.extend(XM.CoreDocuments, XM._Account,
   // DOCUMENT ASSIGNMENTS
   // 
   
-  /* @private */
-  accountsLength: 0,
-  
-  /* @private */
-  accountsLengthBinding: '*accounts.length',
-  
-  /* @private */
-  _xm_accountsDidChange: function() {
-    var documents = this.get('documents'),
-        accounts = this.get('accounts');
-
-    documents.addEach(accounts);    
-  }.observes('accountsLength'),
-
   //...........................................................
   // METHODS
   //

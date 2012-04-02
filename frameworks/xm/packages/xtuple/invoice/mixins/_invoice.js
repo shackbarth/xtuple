@@ -182,8 +182,8 @@ XM._Invoice = {
   /**
     @type String
   */
-  billtoPhone: SC.Record.attr(String, {
-    label: '_billtoPhone'.loc()
+  billtoContactPhone: SC.Record.attr(String, {
+    label: '_billtoContactPhone'.loc()
   }),
 
   /**
@@ -253,8 +253,8 @@ XM._Invoice = {
   /**
     @type String
   */
-  shiptoPhone: SC.Record.attr(String, {
-    label: '_shiptoPhone'.loc()
+  shiptoContactPhone: SC.Record.attr(String, {
+    label: '_shiptoContactPhone'.loc()
   }),
 
   /**
@@ -265,9 +265,9 @@ XM._Invoice = {
   }),
 
   /**
-    @type Number
+    @type Percent
   */
-  commission: SC.Record.attr(Number, {
+  commission: SC.Record.attr(Percent, {
     isRequired: true,
     defaultValue: 0,
     label: '_commission'.loc()
@@ -327,9 +327,9 @@ XM._Invoice = {
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  freight: SC.Record.attr(Number, {
+  freight: SC.Record.attr(Money, {
     isRequired: true,
     defaultValue: 0,
     label: '_freight'.loc()

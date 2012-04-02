@@ -11,11 +11,10 @@ sc_require('mixins/_item');
   @class
 
   @extends XM._Item
-  @extends XM.CrmDocuments
-  @extends XM.CoreDocuments
+  @extends XM.Documents
   @extends XM.Document
 */
-XM.Item = XM.Document.extend(XM._Item, XM.CoreDocuments, XM.CrmDocuments,
+XM.Item = XM.Document.extend(XM._Item, XM.Documents,
   /** @scope XM.Item.prototype */ {
 
   // .................................................
@@ -102,6 +101,41 @@ XM.Item.sellingUnits = function(item, callback) {
 */
 XM.Item.materialIssueUnits = function(item, callback) {
   return XM.Item._xm_units(item, 'materialIssueUnits', callback);
+}
+
+/**
+  Requests a unit of measure conversion ratio for a given item, from unit 
+  and to unit.
+  
+  @param {Number} item
+  @param {Number} from unit
+  @param {Number} to unit
+  @param {Function} callback
+  @returns receiver
+*/
+XM.Item.unitToUnitRatio = function(item, fromUnit, toUnit, callback) {
+  if((!SC.kindOf(item, XM.Item) &&
+      !SC.kindOf(item, XM.ItemInfo)) ||
+      !SC.kindOf(fromUnit, XM.Unit) ||
+      !SC.kindOf(toUnit, XM.Unit)) return false;
+     
+  var that = this, dispatch;
+  
+  dispatch = XT.Dispatch.create({
+    className: 'XM.Item',
+    functionName: 'unitToUnitRatio',
+    parameters: [
+      item.get('id'),
+      fromUnit.get('id'),
+      toUnit.get('id')
+    ],
+    target: that,
+    action: callback
+  });
+  console.log("Unit Conversion Ratio for: %@".fmt(item.get('id')));
+  item.get('store').dispatch(dispatch);
+  
+  return this;
 }
 
 /**
