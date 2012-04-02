@@ -147,23 +147,6 @@ XM.Customer = XM.AccountDocument.extend(XM.Documents, XM._Customer,
   // METHODS
   //
 
-  /**
-    Retrieve the price for an item for this customer. Must be used with a callback.
-    
-    @param {Number} shipto (optional)
-    @param {Number} item
-    @param {Number} quantity
-    @param {Number} quantity unit
-    @param {Number} currency
-    @param {Date} effective date
-    @param {Function} callback
-    @returns Receiver
-  */
-  price: function(shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback) {  
-    XM.Customer.price(this, shipto, item, quantity, quantityUnit, priceUnit, currency, effective, callback);
-    return this;
-  }
-
   //..................................................
   // OBSERVERS
   //
