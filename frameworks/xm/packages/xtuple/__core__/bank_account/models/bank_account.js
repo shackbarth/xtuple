@@ -45,25 +45,25 @@ XM.BankAccount.mixin( /** @scope XM.BankAccount */ {
 /**
   @static
   @constant
-  @type Number
+  @type String
   @default 0
 */
-  CHECKING: 0,
+  CHECKING: K,
 
 /**
   @static
   @constant
-  @type Number
+  @type String
   @default 1
 */
-  CASH: 1,
+  CASH: C,
 
 /**
   @static
   @constant
-  @type Number
+  @type String
   @default 2
 */
-  CREDIT_CARD: 2
+  CREDIT_CARD: R
 
 });
