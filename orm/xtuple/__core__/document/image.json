@@ -3,6 +3,7 @@
   "nameSpace": "XM",
   "type": "Image",
   "table": "image",
+  "idSequenceName": "public.image_image_id_seq",
   "comment": "Image Map",
   "privileges": {
     "all": {
@@ -40,7 +41,8 @@
       "attr": {
         "type": "String",
         "column": "image_data",
-        "isEditable": false
+        "isEditable": false,
+        "isRequired": true
       }
     }
   ],
