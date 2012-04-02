@@ -40,3 +40,30 @@ XM.BankAccount = XM.Document.extend(XM._BankAccount,
 
 });
 
+XM.BankAccount.mixin( /** @scope XM.BankAccount */ {
+
+/**
+  @static
+  @constant
+  @type Number
+  @default 0
+*/
+  CHECKING: 0,
+
+/**
+  @static
+  @constant
+  @type Number
+  @default 1
+*/
+  CASH: 1,
+
+/**
+  @static
+  @constant
+  @type Number
+  @default 2
+*/
+  CREDIT_CARD: 2
+
+});
