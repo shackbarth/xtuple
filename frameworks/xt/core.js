@@ -40,7 +40,6 @@ XT = global.XT = SC.Object.create(
     @constant
     @type Number
     @default O
-*/
   */
   AUTO_OVERRIDE_NUMBER: 'O',
   
