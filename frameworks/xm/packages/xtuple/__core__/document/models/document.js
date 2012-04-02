@@ -45,22 +45,22 @@ XM.Document = XT.Record.extend(
   
   /**
     Number generation method for the document key that can be one of three constants:
-      XM.MANUAL_NUMBER
-      XM.AUTO_NUMBER
-      XM.AUTO_OVERRIDE_NUMBER
+      XT.MANUAL_NUMBER
+      XT.AUTO_NUMBER
+      XT.AUTO_OVERRIDE_NUMBER
     
     Can be inferred from the setting that controls this for a given record type
     if it is set.
     
     @seealso numberPolicySetting
-    @default XM.MANUAL_NUMBER
+    @default XT.MANUAL_NUMBER
   */
   numberPolicy: function(key, value) {
     var setting =  this.get('numberPolicySetting');
     if(value === undefined && setting) {
       value = XT.session.get('settings').get(setting);
     }
-    this._numberPolicy = value ? value : XM.MANUAL_NUMBER;
+    this._numberPolicy = value ? value : XT.MANUAL_NUMBER;
     return this._numberPolicy;
   }.property().cacheable(),
 
@@ -76,8 +76,8 @@ XM.Document = XT.Record.extend(
           docKey = record.get('documentKey'),
           status = record.get('status'),
           numberPolicy = record.get('numberPolicy');
-      if((numberPolicy === XM.AUTO_NUMBER || 
-          numberPolicy === XM.AUTO_OVERRIDE_NUMBER) && 
+      if((numberPolicy === XT.AUTO_NUMBER || 
+          numberPolicy === XT.AUTO_OVERRIDE_NUMBER) && 
           status === SC.Record.READY_NEW) {
         XT.Record.fetchNumber.call(record, docKey);
       } else return '';
@@ -90,11 +90,11 @@ XM.Document = XT.Record.extend(
   
   /**
     Called whenever the document key property changes. Does the following:
-      * Locks editing when number has been set and number policy is XM.AUTO_NUMBER
+      * Locks editing when number has been set and number policy is XT.AUTO_NUMBER
       * Releases a generated number if user has over-ridden an auto generated number
       * Checks for duplicate key violitions by calling findExisting().
       
-    @seealso XM.Document.findExisting()
+    @seealso XT.Document.findExisting()
   */
   keyDidChange: function() {  
     var record = this;

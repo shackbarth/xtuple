@@ -44,6 +44,7 @@ XM._BankAccount = {
     @type String
   */
   name: SC.Record.attr(String, {
+    isRequired: true,
     label: '_name'.loc()
   }),
 
@@ -79,6 +80,9 @@ XM._BankAccount = {
     @type XM.Currency
   */
   currency: SC.Record.toOne('XM.Currency', {
+    defaultValue: function() {
+      return XM.Currency.BASE;
+    },
     label: '_currency'.loc()
   }),
 
