@@ -26,7 +26,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "bankaccnt_name"
+        "column": "bankaccnt_name",
+        "isRequired": true
       }
     },
     {
@@ -61,7 +62,8 @@
       "name": "currency",
       "toOne": {
         "type": "Currency",
-        "column": "bankaccnt_curr_id"
+        "column": "bankaccnt_curr_id",
+        "defaultValue": "baseCurrency"
       }
     },
     {

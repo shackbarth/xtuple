@@ -17,7 +17,8 @@
       "toOne": { 
         "isNested": true,
         "type": "LedgerAccountInfo",
-        "column": "bankaccnt_accnt_id"
+        "column": "bankaccnt_accnt_id",
+        "isRequired": true
       }
     }
   ],
