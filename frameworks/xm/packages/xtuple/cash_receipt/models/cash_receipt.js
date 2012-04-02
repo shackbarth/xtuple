@@ -15,7 +15,7 @@ sc_require('mixins/_cash_receipt');
 XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /** @scope XM.CashReceipt.prototype */ {
 
-  numberPolicy: XM.AUTO_NUMBER
+  numberPolicy: XT.AUTO_NUMBER
   
   // .................................................
   // CALCULATED PROPERTIES
