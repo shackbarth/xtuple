@@ -12,9 +12,9 @@ sc_require('mixins/_opportunity');
   @class
 
   @extends XM.Document
-  @extends XM.CoreDocuments
+  @extends XM.Documents
 */
-XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.CoreDocuments,
+XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.Documents,
   /** @scope XM.Opportunity.prototype */ {
 
   numberPolicy: XM.AUTO_NUMBER,
@@ -22,18 +22,6 @@ XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.CoreDocuments,
   // .................................................
   // CALCULATED PROPERTIES
   //
-
-  /* @private */
-  accountsLength: 0,
-  
-  /* @private */
-  accountsLengthBinding: SC.Binding.from('*opportunities.length').noDelay(),
-  
-  /* @private */
-  opportunitiesLength: 0,
-  
-  /* @private */
-  opportunitiesLengthBinding: SC.Binding.from('*opportunities.length').noDelay(),
 
   //..................................................
   // METHODS
@@ -50,20 +38,4 @@ XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.CoreDocuments,
     if(status & SC.Record.READY && assignedTo) this.set('assignDate', SC.DateTime.create());
   }.observes('assignedTo'),
   
-  /* @private */
-  _xm_accountsDidChange: function() {
-    var documents = this.get('documents'),
-        accounts = this.get('accounts');
-
-    documents.addEach(accounts);    
-  }.observes('accountsLength'),
-  
-  /* @private */
-  _xm_opportunitiesDidChange: function() {
-    var documents = this.get('documents'),
-        opportunities = this.get('opportunities');
-
-    documents.addEach(opportunities);    
-  }.observes('opportunitiesLength')
-
 });

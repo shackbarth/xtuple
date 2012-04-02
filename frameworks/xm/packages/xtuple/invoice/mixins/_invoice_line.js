@@ -94,17 +94,17 @@ XM._InvoiceLine = {
   }),
 
   /**
-    @type Number
+    @type Quantity
   */
-  ordered: SC.Record.attr(Number, {
+  ordered: SC.Record.attr(Quantity, {
     isRequired: true,
     label: '_ordered'.loc()
   }),
 
   /**
-    @type Number
+    @type Quantity
   */
-  billed: SC.Record.attr(Number, {
+  billed: SC.Record.attr(Quantity, {
     isRequired: true,
     label: '_billed'.loc()
   }),
@@ -117,18 +117,18 @@ XM._InvoiceLine = {
   }),
 
   /**
-    @type Number
+    @type UnitRatio
   */
-  quantityUnitRatio: SC.Record.attr(Number, {
+  quantityUnitRatio: SC.Record.attr(UnitRatio, {
     isRequired: true,
     defaultValue: 1,
     label: '_quantityUnitRatio'.loc()
   }),
 
   /**
-    @type Number
+    @type SalesPrice
   */
-  price: SC.Record.attr(Number, {
+  price: SC.Record.attr(SalesPrice, {
     isRequired: true,
     label: '_price'.loc()
   }),
@@ -141,18 +141,18 @@ XM._InvoiceLine = {
   }),
 
   /**
-    @type Number
+    @type UnitRatio
   */
-  priceUnitRatio: SC.Record.attr(Number, {
+  priceUnitRatio: SC.Record.attr(UnitRatio, {
     isRequired: true,
     defaultValue: 1,
     label: '_priceUnitRatio'.loc()
   }),
 
   /**
-    @type Number
+    @type SalesPrice
   */
-  customerPrice: SC.Record.attr(Number, {
+  customerPrice: SC.Record.attr(SalesPrice, {
     label: '_customerPrice'.loc()
   }),
 

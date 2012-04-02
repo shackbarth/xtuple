@@ -112,10 +112,17 @@ XM._CustomerInfo = {
   }),
 
   /**
-    @type Number
+    @type Percent
   */
-  commission: SC.Record.attr(Number, {
+  commission: SC.Record.attr(Percent, {
     label: '_commission'.loc()
+  }),
+
+  /**
+    @type Percent
+  */
+  discount: SC.Record.attr(Percent, {
+    label: '_discount'.loc()
   }),
 
   /**

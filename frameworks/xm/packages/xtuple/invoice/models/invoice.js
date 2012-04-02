@@ -141,7 +141,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   */
   copyToShipto: function() {
     this.setIfChanged('shiptoName', this.get('billtoName'));
-    this.setIfChanged('shiptoPhone', this.get('billtoPhone'));
+    this.setIfChanged('shiptoContactPhone', this.get('billtoContactPhone'));
     this.setIfChanged('shiptoAddress1', this.get('billtoAddress1'));
     this.setIfChanged('shiptoAddress2', this.get('billtoAddress2'));
     this.setIfChanged('shiptoAddress3', this.get('billtoAddress3'));
@@ -152,42 +152,20 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   },
   
   /**
-    Destroy child records first.
+    Check posted status first.
   */
   destroy: function() {
-    var lines = this.get('lines'),
-        credits = this.get('credits'),
-        recurrences = this.get('recurrences'),
-        isPosted = this.get('isPosted');
-        
-    // Can't delete a posted invoice
-    if (isPosted) return;
-   
-    // first destroy line items...
-    for (var i = 0; i < lines.get('length'); i++) {
-      lines.objectAt(i).destroy();
-    }
-    
-    // destroy credits...
-    for (var i = 0; i < credits.get('length'); i++) {
-      credits.objectAt(i).destroy();
-    }
-    
-    // destroy recurrences...
-    for (var i = 0; i < recurrences.get('length'); i++) {
-      recurrences.objectAt(i).destroy();
-    }
-      
-    // now destroy the header
+    // Can't destroy a posted invoice
+    if (this.get('isPosted')) return;
     arguments.callee.base.apply(this, arguments);
   },
   
   post: function() {
-    return false;
+    return XM.Invoice.post(this);
   },
   
   void: function() {
-    return false;
+    return XM.Invoice.void(this);
   },
   
   /**
@@ -197,7 +175,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   */
   setFreeFormBilltoEnabled: function(isEditable) {
     this.billtoName.set('isEditable', isEditable);
-    this.billtoPhone.set('isEditable', isEditable);
+    this.billtoContactPhone.set('isEditable', isEditable);
     this.billtoAddress1.set('isEditable', isEditable);
     this.billtoAddress2.set('isEditable', isEditable);
     this.billtoAddress3.set('isEditable', isEditable);
@@ -214,7 +192,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   */  
   setFreeFormShiptoEnabled: function(isEditable) {
     this.shiptoName.set('isEditable', isEditable);
-    this.shiptoPhone.set('isEditable', isEditable);
+    this.shiptoContactPhone.set('isEditable', isEditable);
     this.shiptoAddress1.set('isEditable', isEditable);
     this.shiptoAddress2.set('isEditable', isEditable);
     this.shiptoAddress3.set('isEditable', isEditable);
@@ -489,7 +467,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('shipto', customer.get('shipto'));
       this.setIfChanged('shipVia', customer.get('shipVia'));     
       this.setIfChanged('billtoName', customer.get('name'));
-      this.setIfChanged('billtoPhone', customer.getPath('billingContact.phone'));
+      this.setIfChanged('billtoContactPhone', customer.getPath('billingContact.phone'));
       if(address) {
         this.setIfChanged('billtoAddress1', address.get('line1'));
         this.setIfChanged('billtoAddress2', address.get('line2'));
@@ -531,7 +509,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('shipCharge', shipto.get('shipCharge'));
       this.setIfChanged('shipVia', shipto.get('shipVia'));  
       this.setIfChanged('shiptoName', shipto.get('name'));
-      this.setIfChanged('shiptoPhone', shipto.getPath('contact.phone'));
+      this.setIfChanged('shiptoContactPhone', shipto.getPath('contact.phone'));
       if(address) {
         this.setIfChanged('shiptoAddress1', address.get('line1'));
         this.setIfChanged('shiptoAddress2', address.get('line2'));
@@ -555,7 +533,7 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setIfChanged('shiptoState', '');
       this.setIfChanged('shiptoPostalCode', '');
       this.setIfChanged('shiptoCountry', '');
-      this.setIfChanged('shiptoPhone', '');
+      this.setIfChanged('shiptoContactPhone', '');
     }
     this.setFreeFormShiptoEnabled(isFreeFormShipto);
   }.observes('shipto'),
@@ -565,29 +543,52 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
   }.observes('isCustomerPayFreight'),
 
   /**
-    Disable the customer if loaded from the database.
+    Calculate totals and disable controles where applicable.
   */
   statusDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
-      this.customer.set('isEditable', false);
+      // calculate totals
       this.updateSubTotal();
       this.updateFreightTax();
       this.updateMiscTax();
+      
+      // disable controls
+      this.customer.set('isEditable', false);
+      this.number.set('isEnabled', false);
+      if (this.get('isPosted')) {
+        this.invoiceDate.set('isEnabled', false);
+        this.terms.set('isEnabled', false);
+        this.salesRep.set('isEnabled', false);
+        this.commission.set('isEnabled', false);
+        this.taxZone.set('isEnabled', false);
+        this.shipCharge.set('isEnabled', false);
+        this.freight.set('isEnabled', false);
+      }
     }
   }.observes('status')
-
 });
 
 /**
-  Post an invoice.
+  Post an invoice. If no alternative callback provided, invoice 
+  will be automatically refreshed.
   
   @param {XM.Invoice} invoice
-  @returns Number
+  @param {Function} callback - default refreshes invoice
+  @returns Receiver
 */
 XM.Invoice.post = function(invoice, callback) { 
   if(!SC.kindOf(invoice, XM.Invoice) ||
      invoice.get('isPosted')) return false; 
   var that = this, dispatch;
+  
+  // define default callback if not passed
+  if (callback === undefined) {
+    callback = function(err, result) {
+      invoice.refresh();
+    }
+  }
+  
+  // set up
   dispatch = XT.Dispatch.create({
     className: 'XM.Invoice',
     functionName: 'post',
@@ -595,6 +596,44 @@ XM.Invoice.post = function(invoice, callback) {
     target: that,
     action: callback
   });
+  console.log("Post Invoice: %@".fmt(invoice.get('id')));
+  
+  // do it
+  invoice.get('store').dispatch(dispatch);
+  return this;
+}
+
+/**
+  Void an invoice. If no alternative callback provided, invoice 
+  will be automatically refreshed.
+  
+  @param {XM.Invoice} invoice
+  @param {Function} callback - default refreshes invoice
+  @returns Receiver
+*/
+XM.Invoice.void = function(invoice, callback) { 
+  if(!SC.kindOf(invoice, XM.Invoice) ||
+     !invoice.get('isPosted')) return false; 
+  var that = this, dispatch;
+  
+  // define default callback if not passed
+  if (callback === undefined) {
+    callback = function(err, result) {
+      invoice.refresh();
+    }
+  }
+  
+  // set up
+  dispatch = XT.Dispatch.create({
+    className: 'XM.Invoice',
+    functionName: 'void',
+    parameters: invoice.get('id'),
+    target: that,
+    action: callback
+  });
+  console.log("Void Invoice: %@".fmt(invoice.get('id')));
+  
+  // do it
   invoice.get('store').dispatch(dispatch);
   return this;
 }
