@@ -239,11 +239,11 @@ select xt.install_js('XT','Orm','xtuple', $$
     // METHODS
     //
 
-    /* internal function for processing orm and it's extensions recursively */
+    /* internal function for processing orm and its extensions recursively */
     processOrm = function(orm) {
-      var props = orm.properties,
+      var props = orm.properties ? orm.properties : [],
           tblAlias = orm.table === base.table ? 't1' : 't' + tbl, 
-          pKey = orm.isExtension ? orm.properties.findProperty('name', XT.Orm.primaryKey(orm)) : null,
+          pKey = orm.isExtension && orm.properties ? orm.properties.findProperty('name', XT.Orm.primaryKey(orm)) : null,
           pKeyCol = pKey ? pKey.attr.column : null, 
           pKeyAlias = pKey ? pKey.name : null,
           insTgtCols = [], insSrcCols = [], updCols = [], delCascade = [], 
