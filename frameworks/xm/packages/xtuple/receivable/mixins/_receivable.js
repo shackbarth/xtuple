@@ -44,6 +44,7 @@ XM._Receivable = {
     @type String
   */
   number: SC.Record.attr(String, {
+    isRequired: true,
     label: '_number'.loc()
   }),
 
@@ -51,6 +52,7 @@ XM._Receivable = {
     @type String
   */
   documentType: SC.Record.attr(String, {
+    isRequired: true,
     label: '_documentType'.loc()
   }),
 
@@ -60,6 +62,7 @@ XM._Receivable = {
   documentDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
+    isRequired: true,
     label: '_documentDate'.loc()
   }),
 
@@ -69,6 +72,7 @@ XM._Receivable = {
   dueDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
+    isRequired: true,
     label: '_dueDate'.loc()
   }),
 
@@ -77,6 +81,7 @@ XM._Receivable = {
   */
   customer: SC.Record.toOne('XM.CustomerInfo', {
     isNested: true,
+    isRequired: true,
     label: '_customer'.loc()
   }),
 
@@ -84,20 +89,23 @@ XM._Receivable = {
     @type XM.Terms
   */
   terms: SC.Record.toOne('XM.Terms', {
+    isRequired: true,
+    defaultValue: -1,
     label: '_terms'.loc()
   }),
 
   /**
-    @type Number
+    @type XM.Money
   */
-  amount: SC.Record.attr(Number, {
+  amount: SC.Record.attr('XM.Money', {
+    isRequired: true,
     label: '_amount'.loc()
   }),
 
   /**
-    @type Number
+    @type XM.Money
   */
-  paid: SC.Record.attr(Number, {
+  paid: SC.Record.attr('XM.Money', {
     label: '_paid'.loc()
   }),
 
@@ -105,6 +113,7 @@ XM._Receivable = {
     @type XM.Currency
   */
   currency: SC.Record.toOne('XM.Currency', {
+    isRequired: true,
     label: '_currency'.loc()
   }),
 
@@ -120,13 +129,6 @@ XM._Receivable = {
   */
   notes: SC.Record.attr(String, {
     label: '_notes'.loc()
-  }),
-
-  /**
-    @type Boolean
-  */
-  isPosted: SC.Record.attr(Boolean, {
-    label: '_isPosted'.loc()
   }),
 
   /**
@@ -146,9 +148,9 @@ XM._Receivable = {
   /**
     @type XM.ReasonCode
   */
-  reasonCode: SC.Record.toMany('XM.ReasonCode', {
-    isNested: true,
-    inverse: 'guid',
+  reasonCode: SC.Record.toOne('XM.ReasonCode', {
+    isRequired: true,
+    defaultValue: -1,
     label: '_reasonCode'.loc()
   }),
 
@@ -156,14 +158,17 @@ XM._Receivable = {
     @type XM.SalesCategory
   */
   salesCategory: SC.Record.toOne('XM.SalesCategory', {
-    isNested: true,
+    isRequired: true,
+    defaultValue: -1,
     label: '_salesCategory'.loc()
   }),
 
   /**
-    @type Number
+    @type XM.Percent
   */
-  commission: SC.Record.attr(Number, {
+  commission: SC.Record.attr('XM.Percent', {
+    isRequired: true,
+    defaultValue: 0,
     label: '_commission'.loc()
   }),
 
@@ -171,14 +176,8 @@ XM._Receivable = {
     @type Boolean
   */
   isCommissionPaid: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isCommissionPaid'.loc()
-  }),
-
-  /**
-    @type Boolean
-  */
-  discount: SC.Record.attr(Boolean, {
-    label: '_discount'.loc()
   }),
 
   /**
@@ -187,6 +186,7 @@ XM._Receivable = {
   isOpen: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
+    defaultValue: true,
     label: '_isOpen'.loc()
   }),
 

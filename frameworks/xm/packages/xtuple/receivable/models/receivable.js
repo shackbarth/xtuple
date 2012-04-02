@@ -15,7 +15,7 @@ sc_require('mixins/_receivable');
 XM.Receivable = XM.Document.extend(XM._Receivable,
   /** @scope XM.Receivable.prototype */ {
 
-  numberPolicy: XM.AUTO_OVERRIDE_NUMBER
+  numberPolicy: XT.AUTO_OVERRIDE_NUMBER
 
   // .................................................
   // CALCULATED PROPERTIES

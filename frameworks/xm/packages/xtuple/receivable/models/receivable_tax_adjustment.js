@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_receivable_tax');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/receivable/models
+
+sc_require('mixins/_receivable_tax_adjustment');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.ReceivableTax = XT.Record.extend(XM._ReceivableTax,
-  /** @scope XM.ReceivableTax.prototype */ {
+XM.ReceivableTaxAdjustment = XT.Record.extend(XM._ReceivableTaxAdjustment,
+  /** @scope XM.ReceivableTaxAdjustment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
