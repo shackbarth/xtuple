@@ -30,5 +30,13 @@ XM.BankAccount = XM.Document.extend(XM._BankAccount,
   // OBSERVERS
   //
 
+  statusDidChange: function() {
+    var status = this.get('status');
+
+    if (status !== SC.Record.READY_NEW) {
+      this.currency.set('isEditable', false);
+    }
+  }.observes('status')
+
 });
 
