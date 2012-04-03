@@ -26,7 +26,8 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "taxauth_code"
+        "column": "taxauth_code",
+        "isRequired": true
       }
     },
     {
