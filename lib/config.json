@@ -1,8 +1,5 @@
 {
-  "user": "admin",
   "port": 5432,
-  "password": "admin",
-  "database": "380postbooks",
   "host": "aurora.xtuple.com",
   "debug": true,
   "server-port": 9000,
