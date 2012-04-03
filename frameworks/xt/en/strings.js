@@ -23,6 +23,7 @@ SC.stringsFor("en_US", {
   "_currRateExpireDateInvalid": "The Start Date for this exchange rate is later than the End Date.",
   "_currSymbAbbrRequired": "Either the currency symbol or abbreviation must be supplied.",
   "_dueDateIsRequired": "Due Date is Required.",
+  "_duplicateTaxRegistration": "A Tax Registration already exists for the parameters specified.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
   "_firstOrLastNameRequired": "First or last name is required",
