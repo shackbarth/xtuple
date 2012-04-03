@@ -26,6 +26,15 @@
         "type": "LedgerAccount",
         "column": "aropen_accnt_id"
       }
+    },
+    {
+      "name": "salesCategory",
+      "toOne": {
+        "type": "SalesCategory",
+        "column": "aropen_salescat_id",
+        "isRequired": true,
+        "defaultValue": -1
+      }
     }
   ],
   "sequence": 0,
