@@ -15,6 +15,8 @@ sc_require('mixins/_url');
 XM.Url = XT.Record.extend(XM._Url,
   /** @scope XM.Url.prototype */ {
 
+  numberPolicy: XT.AUTO_NUMBER,
+
   // .................................................
   // CALCULATED PROPERTIES
   //
