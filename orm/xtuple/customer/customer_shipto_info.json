@@ -76,7 +76,7 @@
     {
       "name": "commission",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "shipto_commission"
       }
     },
