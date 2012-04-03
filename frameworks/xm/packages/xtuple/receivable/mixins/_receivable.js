@@ -161,9 +161,9 @@ XM._Receivable = {
   }),
 
   /**
-    @type Percent
+    @type Money
   */
-  commissionDue: SC.Record.attr(Percent, {
+  commissionDue: SC.Record.attr(Money, {
     isRequired: true,
     defaultValue: 0,
     label: '_commissionDue'.loc()

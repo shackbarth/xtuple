@@ -53,12 +53,15 @@ XM.Receivable = XM.TaxableDocument.extend(XM._Receivable,
       // update status of this record
       store.writeStatus(storeKey, SC.Record.BUSY_CREATING);
       store.dataHashDidChange(storeKey, rev, true);
+      this.notifyPropertyChange('status');
         
       // update status of children
       store._propagateToChildren(storeKey, function(storeKey) {
-        var rev = SC.Store.generateStoreKey();
+        var rev = SC.Store.generateStoreKey(),
+            rec = store.materializeRecord(storeKey);
         store.writeStatus(storeKey, SC.Record.BUSY_CREATING);
         store.dataHashDidChange(storeKey, rev, true);
+        rec.notifyPropertyChange('status');
       });
       
       // callback - notify store of results
@@ -158,6 +161,49 @@ XM.Receivable = XM.TaxableDocument.extend(XM._Receivable,
       this.currency.set('isEditable', false);
     }
   }.observes('status')
+  
+});
+
+XM.Receivable.mixin( /** @scope XM.Receivable */ {
+
+/**
+  Credit Memo document type.
+  
+  @static
+  @constant
+  @type String
+  @default C
+*/
+  CREDIT_MEMO: 'C',
+
+/**
+  Debit Memo document type.
+  
+  @static
+  @constant
+  @type String
+  @default D
+*/
+  DEBIT_MEMO: 'D',
+
+/**
+  Invoice document type.
+  
+  @static
+  @constant
+  @type String
+  @default I
+*/
+  INVOICE: 'I',
+
+/**
+  Customer Deposit document type.
+  @static
+  @constant
+  @type String
+  @default R
+*/
+  CUSTOMER_DEPOSIT: 'R'
 
 });
 
