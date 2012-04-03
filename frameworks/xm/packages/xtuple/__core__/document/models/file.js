@@ -15,8 +15,6 @@ sc_require('mixins/_file');
 XM.File = XT.Record.extend(XM._File,
   /** @scope XM.File.prototype */ {
 
-  numberPolicy: XT.AUTO_NUMBER,
-
   // .................................................
   // CALCULATED PROPERTIES
   //

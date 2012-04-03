@@ -15,8 +15,6 @@ sc_require('mixins/_image');
 XM.Image = XT.Record.extend(XM._Image,
   /** @scope XM.Image.prototype */ {
 
-  numberPolicy: XT.AUTO_NUMBER,
-
   // .................................................
   // CALCULATED PROPERTIES
   //
