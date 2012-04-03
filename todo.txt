@@ -1,8 +1,0 @@
-- need log and log manager
-- need admin interface to view logs and interact with datasource
-- response needs to handle multiple header types
-- fix warning not being thrown by faulty parsing of json in xt.json
-- property functions ('.property()') need to be registered observers
-- the database abstraction layer needs to be built out and include security
-- add cert/key management to require use of SSL/TLS
-- MetaSQL needs to be added back into the stack
