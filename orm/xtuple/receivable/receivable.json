@@ -151,7 +151,7 @@
     {
       "name": "commissionDue",
       "attr": {
-        "type": "Percent",
+        "type": "Money",
         "column": "aropen_commission_due",
         "isRequired": true,
         "defaultValue": 0

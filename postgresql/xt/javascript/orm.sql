@@ -328,10 +328,8 @@ select xt.install_js('XT','Orm','xtuple', $$
           } 
 
           /* for insert rule */
-          if(isEditable) {
-            insTgtCols.push('"' + toOne.column + '"');
-            insSrcCols.push('(new."' + alias + '").' + inverse);
-          }
+          insTgtCols.push('"' + toOne.column + '"');
+          insSrcCols.push('(new."' + alias + '").' + inverse);
 
           /* for update rule */
           if(isEditable) updCols.push(toOne.column + ' = (new."' + alias + '").' + inverse );
