@@ -193,7 +193,7 @@ XT.Record = SC.Record.extend(
           isToMany =  SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
                       SC.kindOf(valueForKey, SC.ManyAttribute);
           if (!isToMany && this[key].get('isRequired')) {
-            if (!emptyOnly || SC.none(this.get(key))) required.push(key);
+            if (!emptyOnly || SC.none(this.readAttribute(key))) required.push(key);
           }
         }
       }
