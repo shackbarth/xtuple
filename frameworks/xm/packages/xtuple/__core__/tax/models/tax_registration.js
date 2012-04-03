@@ -71,7 +71,7 @@ XM.TaxRegistration = XM.Document.extend(XM._TaxRegistration,
 
     // validate existing record conflicts
     isErr = this.get('recordConflictsLength') > 0 ? true : false;
-    err = XT.errors.findProperty('code', 'xt1005');
+    err = XT.errors.findProperty('code', 'xt1006');
     this.updateErrors(err, isErr);
 
     // validate expires date is after effective date
