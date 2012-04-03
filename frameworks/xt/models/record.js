@@ -425,10 +425,10 @@ XT.Record.setup = function() {
 
   if(this.prototype.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
-
       defaultValue: function () {
         if(arguments[0]) XT.Record.fetchId.call(arguments[0]);
-      }
+      },
+      isRequired: true
     })
   }
 
