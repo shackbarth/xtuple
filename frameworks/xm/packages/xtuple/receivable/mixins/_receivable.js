@@ -118,9 +118,9 @@ XM._Receivable = {
   }),
 
   /**
-    @type XM.Money
+    @type Money
   */
-  amount: SC.Record.attr('XM.Money', {
+  amount: SC.Record.attr(Money, {
     isRequired: true,
     label: '_amount'.loc()
   }),
@@ -144,9 +144,9 @@ XM._Receivable = {
   }),
 
   /**
-    @type XM.Money
+    @type Money
   */
-  paid: SC.Record.attr('XM.Money', {
+  paid: SC.Record.attr(Money, {
     defaultValue: 0,
     label: '_paid'.loc()
   }),
@@ -161,9 +161,9 @@ XM._Receivable = {
   }),
 
   /**
-    @type XM.Percent
+    @type Percent
   */
-  commissionDue: SC.Record.attr('XM.Percent', {
+  commissionDue: SC.Record.attr(Percent, {
     isRequired: true,
     defaultValue: 0,
     label: '_commissionDue'.loc()

@@ -62,9 +62,9 @@ XM._ReceivableTaxAdjustment = {
   }),
 
   /**
-    @type XM.Money
+    @type Money
   */
-  tax: SC.Record.attr('XM.Money', {
+  tax: SC.Record.attr(Money, {
     label: '_tax'.loc()
   }),
 
