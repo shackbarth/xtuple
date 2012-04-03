@@ -144,14 +144,6 @@ XM._Receivable = {
   }),
 
   /**
-    @type Money
-  */
-  paid: SC.Record.attr(Money, {
-    defaultValue: 0,
-    label: '_paid'.loc()
-  }),
-
-  /**
     @type XM.ReceivableTaxAdjustment
   */
   adjustmentTaxes: SC.Record.toMany('XM.ReceivableTaxAdjustment', {
@@ -174,6 +166,15 @@ XM._Receivable = {
   */
   notes: SC.Record.attr(String, {
     label: '_notes'.loc()
+  }),
+
+  /**
+    @type XM.ReceivableApplication
+  */
+  applications: SC.Record.toMany('XM.ReceivableApplication', {
+    isNested: true,
+    inverse: 'receivable',
+    label: '_applications'.loc()
   }),
 
   /**

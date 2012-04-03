@@ -16,18 +16,51 @@ XM.Receivable = XM.TaxableDocument.extend(XM._Receivable,
   /** @scope XM.Receivable.prototype */ {
 
   numberPolicy: XT.AUTO_OVERRIDE_NUMBER,
+  
+  /**
+    Aging control for paid and balance values.
+    
+    @type SC.DateTime
+    @default currentDate
+  */
+  asOf: null,
+  
+  /** @private */
+  applicationsLength: 0,
+  
+  /** @private */
+  applicationsLengthBinding: SC.Binding.from('*applications.length').oneWay().noDelay(),
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
+  paid: function() {
+    var asOf = this.get('asOf'),
+        applications = this.get('applications'),
+        paid = 0;
+    for (var i = 0; i < applications.get('length'); i++) {
+      var application = applications.objectAt(i); 
+          postDate = application.get('postDate');
+      if (SC.DateTime.compare(asOf, postDate) >= 0) {
+        paid = paid + application.get('targetApplied');
+      }
+    }
+    return SC.Math.round(paid, XT.MONEY_SCALE);
+  }.property('applicationsLength', 'asOf').cacheable(),
+
   /**
     @type Number
   */
   balance: function() {
-    var amount = this.get('amount') || 0,
-        paid = this.get('paid') || 0;
-    return SC.Math.round(amount - paid, XT.MONEY_SCALE);
+    var asOf = this.get('asOf'),
+        documentDate = this.get('documentDate'),
+        amount = this.get('amount') || 0,
+        paid = this.get('paid') || 0, ret = 0;
+    if (SC.DateTime.compare(asOf, documentDate) >= 0) {
+      ret = SC.Math.round(amount - paid, XT.MONEY_SCALE);
+    }
+    return ret;
   }.property('amount', 'paid').cacheable(),
 
   //..................................................
@@ -99,10 +132,10 @@ XM.Receivable = XM.TaxableDocument.extend(XM._Receivable,
   
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    this.paid.set('isEditable', false);
     this.currencyRate.set('isEditable', false);
     this.closeDate.set('isEditable', false);
     this.createdBy.set('isEditable', false);
+    if (!this.get('asOf')) this.set('asOf', SC.DateTime.create());
   },
 
   //..................................................

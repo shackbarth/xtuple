@@ -16,7 +16,7 @@ XM._ReceivableApplication = {
   
   className: 'XM.ReceivableApplication',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -41,20 +41,17 @@ XM._ReceivableApplication = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Date
+    @type XM.Customer
   */
-  postDate: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_postDate'.loc()
+  customer: SC.Record.toOne('XM.Customer', {
+    label: '_customer'.loc()
   }),
 
   /**
     @type XM.Customer
   */
-  customer: SC.Record.toOne('XM.Customer', {
-    isNested: true,
-    label: '_customer'.loc()
+  receivable: SC.Record.toOne('XM.Customer', {
+    label: '_receivable'.loc()
   }),
 
   /**
@@ -72,24 +69,12 @@ XM._ReceivableApplication = {
   }),
 
   /**
-    @type String
+    @type Date
   */
-  documentTargetType: SC.Record.attr(String, {
-    label: '_documentTargetType'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  fundsType: SC.Record.attr(String, {
-    label: '_fundsType'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  referenceNumber: SC.Record.attr(String, {
-    label: '_referenceNumber'.loc()
+  postDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    label: '_postDate'.loc()
   }),
 
   /**
@@ -107,17 +92,10 @@ XM._ReceivableApplication = {
   }),
 
   /**
-    @type XM.Receivable
+    @type Number
   */
-  source: SC.Record.toOne('XM.Receivable', {
-    label: '_source'.loc()
-  }),
-
-  /**
-    @type XM.Receivable
-  */
-  target: SC.Record.toOne('XM.Receivable', {
-    label: '_target'.loc()
+  targetApplied: SC.Record.attr(Number, {
+    label: '_targetApplied'.loc()
   }),
 
   /**
