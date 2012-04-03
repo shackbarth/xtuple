@@ -43,7 +43,7 @@ XM.Receivable = XM.TaxableDocument.extend(XM._Receivable,
       var application = applications.objectAt(i); 
           postDate = application.get('postDate');
       if (SC.DateTime.compare(asOf, postDate) >= 0) {
-        paid = paid + application.get('targetApplied');
+        paid = paid + application.get('paid');
       }
     }
     return SC.Math.round(paid, XT.MONEY_SCALE);

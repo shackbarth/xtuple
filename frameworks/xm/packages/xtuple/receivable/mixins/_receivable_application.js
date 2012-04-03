@@ -48,9 +48,9 @@ XM._ReceivableApplication = {
   }),
 
   /**
-    @type XM.Customer
+    @type XM.Receivable
   */
-  receivable: SC.Record.toOne('XM.Customer', {
+  receivable: SC.Record.toOne('XM.Receivable', {
     label: '_receivable'.loc()
   }),
 
@@ -80,8 +80,8 @@ XM._ReceivableApplication = {
   /**
     @type Number
   */
-  applied: SC.Record.attr(Number, {
-    label: '_applied'.loc()
+  amount: SC.Record.attr(Number, {
+    label: '_amount'.loc()
   }),
 
   /**
@@ -94,8 +94,8 @@ XM._ReceivableApplication = {
   /**
     @type Number
   */
-  targetApplied: SC.Record.attr(Number, {
-    label: '_targetApplied'.loc()
+  paid: SC.Record.attr(Number, {
+    label: '_paid'.loc()
   }),
 
   /**
