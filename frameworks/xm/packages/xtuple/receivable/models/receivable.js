@@ -35,10 +35,66 @@ XM.Receivable = XM.TaxableDocument.extend(XM._Receivable,
   //
   
   /**
-    Commit record dispatches a function here that handles the two
-    step process of creating the record, then posting it.
+    For new records this dispatches a function here that handles the two
+    step process of creating the record, then posting it. Otherwise it
+    commits normally.
   */
   commitRecord: function() {
+    var status = this.get('status');
+    
+    // if new dispatch post function
+    if (status === SC.Record.READY_NEW) {
+      var receivable = this.get('changeSet'),
+          store = this.get('store'),
+          storeKey = this.get('storeKey'),
+          rev = SC.Store.generateStoreKey(),
+          that = this;
+      
+      // update status of this record
+      store.writeStatus(storeKey, SC.Record.BUSY_CREATING);
+      store.dataHashDidChange(storeKey, rev, true);
+      this.notifyPropertyChange('status');
+        
+      // update status of children
+      store._propagateToChildren(storeKey, function(storeKey) {
+        var rev = SC.Store.generateStoreKey(),
+            rec = store.materializeRecord(storeKey);
+        store.writeStatus(storeKey, SC.Record.BUSY_CREATING);
+        store.dataHashDidChange(storeKey, rev, true);
+        rec.notifyPropertyChange('status');
+      });
+      
+      // callback - notify store of results
+      callback = function(err, result) {
+        if (err) store.dataSourceDidError(storeKey, err);
+        else store.dataSourceDidComplete(storeKey);
+      }
+
+      // define call
+      dispatch = XT.Dispatch.create({
+        className: 'XM.Receivable',
+        functionName: 'post',
+        parameters: receivable,
+        target: that,
+        action: callback
+      });
+      
+      // do it
+      store.dispatch(dispatch);
+      return this;
+    }
+    return arguments.callee.base.apply(this, arguments);
+  },
+  
+  /**
+    Only new records may be destroyed.
+  */
+  destroy: function() {
+    var status = this.get('status');
+    if (status === SC.Record.READY_NEW) {
+      return arguments.callee.base.apply(this, arguments);
+    }
+    return false;
   },
   
   init: function() {
@@ -105,6 +161,49 @@ XM.Receivable = XM.TaxableDocument.extend(XM._Receivable,
       this.currency.set('isEditable', false);
     }
   }.observes('status')
+  
+});
+
+XM.Receivable.mixin( /** @scope XM.Receivable */ {
+
+/**
+  Credit Memo document type.
+  
+  @static
+  @constant
+  @type String
+  @default C
+*/
+  CREDIT_MEMO: 'C',
+
+/**
+  Debit Memo document type.
+  
+  @static
+  @constant
+  @type String
+  @default D
+*/
+  DEBIT_MEMO: 'D',
+
+/**
+  Invoice document type.
+  
+  @static
+  @constant
+  @type String
+  @default I
+*/
+  INVOICE: 'I',
+
+/**
+  Customer Deposit document type.
+  @static
+  @constant
+  @type String
+  @default R
+*/
+  CUSTOMER_DEPOSIT: 'R'
 
 });
 

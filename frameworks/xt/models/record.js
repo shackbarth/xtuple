@@ -177,11 +177,13 @@ XT.Record = SC.Record.extend(
   /**
     Returns an array of property names for all required attributes.
     
+    @param {Boolean} optional - only return required attributes that are empty.
     @returns {Array}
   */
-  requiredAttributes: function() {
+  requiredAttributes: function(emptyOnly) {
     var required = [], typeClass,
         key, valueForKey, isToMany;
+    if (emptyOnly === undefined) emptyOnly = false;
     for (key in this) {
       // make sure property is a record attribute.
       valueForKey = this[key];
@@ -191,7 +193,7 @@ XT.Record = SC.Record.extend(
           isToMany =  SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
                       SC.kindOf(valueForKey, SC.ManyAttribute);
           if (!isToMany && this[key].get('isRequired')) {
-            required.push(key);
+            if (!emptyOnly || SC.none(this.readAttribute(key))) required.push(key);
           }
         }
       }
@@ -423,10 +425,10 @@ XT.Record.setup = function() {
 
   if(this.prototype.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
-
       defaultValue: function () {
         if(arguments[0]) XT.Record.fetchId.call(arguments[0]);
-      }
+      },
+      isRequired: true
     })
   }
 

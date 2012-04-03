@@ -172,9 +172,9 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     if(SC.ok(response)) {
       if(response.get("body").error) {
         error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+          code: 'xt1014',
+          label: '_datasourceError'.loc(),
+          message: '_dispatchError'.loc() + ': ' + response.get("body").message
         });
         store.dataSourceDidErrorDispatch(dispatch, error);
       } else {
@@ -194,10 +194,10 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
   didFetch: function(response, store, query) {
     if(SC.ok(response)) {
       if(response.get("body").error ) {
-        var error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+        error = SC.Error.create({ 
+          code: 'xt1012',
+          label: '_datasourceError'.loc(),
+          message: '_fetchError'.loc() + ': ' + response.get("body").message
         });
         store.dataSourceDidErrorQuery(query, error);
       } else {
@@ -224,9 +224,9 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     if(SC.ok(response)) {
       if(response.get("body").error) {
         error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+          code: 'xt1011',
+          label: '_datasourceError'.loc(),
+          message: '_retrieveError'.loc() + ': ' + response.get("body").message
         });
         store.dataSourceDidError(storeKey, error);
       } else {
@@ -248,10 +248,11 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     if (SC.ok(response)) {
       if(response.get("body").error) {
         error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+          code: 'xt1013',
+          label: '_datasourceError'.loc(),
+          message: '_commitError'.loc() + ': ' + response.get("body").message
         });
+        error.set('message') = error.get('message') + ': ' + response.get("body").message;
         store.dataSourceDidError(storeKey, error);
       } else {
         store.peekStatus(storeKey) !== SC.Record.BUSY_DESTROYING ?
