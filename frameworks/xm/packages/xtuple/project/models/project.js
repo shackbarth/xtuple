@@ -110,7 +110,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 	 var status = this.get('status');
 	 if(status === SC.Record.READY_CLEAN) {
 	   this.updateActualHours(),
-		 this.updateBudgetedHours(),
+		 this.updateBudgetedHours();
 		 this.updateActualExpenses(),
 		 this.updateBudgetedExpenses();
 		}
@@ -218,7 +218,16 @@ XM.Project.copy = function(project) {
 
   var store = project.get('store'),
   hash = project.get('attributes');
-
+  
+	for(var i = 0; i < hash.length); i++) {
+    var offset = hash.offset,
+		    tasks = hash.Project.task;
+		if(offset > 0){
+			this.set('trigger', alarmTime.advance({day: + alarmOffset}))
+		} else {
+			this.set('trigger', alarmTime);
+		}
+	}
   delete hash.guid;
   delete hash.number;
   delete hash.notes;
