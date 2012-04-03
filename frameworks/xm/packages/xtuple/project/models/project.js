@@ -139,11 +139,61 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
       this.number.set('isEditable', false);
     }
   },//.observes('status')
-});
+/*	
+  XM.Project.copy: function(project) {
+	  if(!SC.kindOf(project, XM.Project)) return NO;
+    var tasks = this.get('tasks');
+    for(var i = 0; i < tasks.get('length'); i++) {
+      var task = tasks.objectAt(i),
+          status = task.get('status'),
+					
+					
+	
+					
+									
+    var alarmOffset = this.get('offset'), 
+        alarmQualifier = this.get('qualifier'), 
+        alarmTime = this.get('time');
 
-XM.Project.copy = function(project) {
+    if(alarmOffset > 0) {
+      switch(alarmQualifier) {
+        case 'MB':
+        case 'MA':
+          if(alarmQualifier.indexOf('B') !== -1) {
+            this.set('trigger', alarmTime.advance({minute: - alarmOffset}));
+          } else this.set('trigger', alarmTime.advance({minute: + alarmOffset}));
+          break;
+        case 'HB':
+        case 'HA':
+          if(alarmQualifier.indexOf('B') !== -1) {
+            this.set('trigger', alarmTime.advance({hour: - alarmOffset}));
+          } else this.set('trigger', alarmTime.advance({hour: + alarmOffset}));
+          break;
+        default:
+          if(alarmQualifier.indexOf('B') !== -1) {
+            this.set('trigger', alarmTime.advance({day: - alarmOffset}));
+          } else this.set('trigger', alarmTime.advance({day: + alarmOffset}));
+          break;
+      }
+    } else {
+      this.set('trigger', alarmTime);
+    }
+					
+					
+					
+					
+					
+					
+					
+					
+          expenses = status & SC.Record.DESTROYED ? 0 : task.get('actualExpenses');
+      actualExpenses = actualExpenses + expenses;
+    }
+    this.setIfChanged('summaryActualExpenses', SC.Math.round(actualExpenses, XT.MONEY_SCALE));
+  },
+	XM.Project.copy = function(project) { //Could change spots
   if(!SC.kindOf(project, XM.Project)) return NO;
-
+  //need to loop through the project and project task date to offset based on set value
   var store = address.get('id'),
   hash = project.get('attributes');
 
@@ -153,6 +203,10 @@ XM.Project.copy = function(project) {
 
   return store.createRecord(XM.Address, hash).normalize();
 }
+	*/
+	
+});
+
 
 XM.Project.mixin( /** @scope XM.Project */ {
 
