@@ -207,6 +207,24 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 	
 });
 
+/**
+  A utility function to copy an project.
+
+  @param {XM.Project} project
+  @return {XM.Project} copy of the project
+*/
+XM.Project.copy = function(project) {
+  if(!SC.kindOf(project, XM.Project)) return NO;
+
+  var store = project.get('store'),
+  hash = project.get('attributes');
+
+  delete hash.guid;
+  delete hash.number;
+  delete hash.notes;
+
+  return store.createRecord(XM.Project, hash).normalize();
+}
 
 XM.Project.mixin( /** @scope XM.Project */ {
 
