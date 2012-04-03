@@ -15,7 +15,7 @@ sc_require('mixins/_payable');
 XM.Payable = XM.Document.extend(XM._Payable,
   /** @scope XM.Payable.prototype */ {
 
-  numberPolicy: XM.AUTO_OVERRIDE_NUMBER
+  numberPolicy: XT.AUTO_OVERRIDE_NUMBER
   
   // .................................................
   // CALCULATED PROPERTIES
