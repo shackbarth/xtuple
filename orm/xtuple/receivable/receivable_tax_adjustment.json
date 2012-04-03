@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ReceivableTaxAdjustment",
-  "table": "taxhist",
+  "table": "aropentax",
   "idSequenceName": "taxhist_taxhist_id_seq",
   "comment": "Receivable Tax Adjustment Map",
   "privileges": {

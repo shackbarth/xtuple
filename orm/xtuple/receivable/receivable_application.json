@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ReceivableApplication",
-  "table": "arapply",
+  "table": "xt.arapply",
   "comment": "Receivable Application Map",
   "privileges": {
     "all": {
@@ -22,18 +22,18 @@
       }
     },
     {
-      "name": "postDate",
-      "attr": {
-        "type": "Date",
-        "column": "arapply_postdate"
+      "name": "customer",
+      "toOne": {
+        "type": "Customer",
+        "column": "arapply_cust_id",
+        "inverse" : "guid"
       }
     },
     {
-      "name": "customer",
+      "name": "receivable",
       "toOne": {
-	    "isNested" : true,
-        "type": "Customer",
-        "column": "arapply_cust_id",
+        "type": "Receivable",
+        "column": "aropen_id",
         "inverse" : "guid"
       }
     },
@@ -41,39 +41,25 @@
       "name": "documentType",
       "attr": {
         "type": "String",
-        "column": "arapply_source_doctype"
+        "column": "doctype"
       }
     },
     {
       "name": "documentNumber",
       "attr": {
         "type": "String",
-        "column": "arapply_source_docnumber"
+        "column": "docnumber"
       }
     },
     {
-      "name": "documentTargetType",
+      "name": "postDate",
       "attr": {
-        "type": "String",
-        "column": "arapply_target_doctype"
+        "type": "Date",
+        "column": "arapply_postdate"
       }
     },
     {
-      "name": "fundsType",
-      "attr": {
-        "type": "String",
-        "column": "arapply_fundstype"
-      }
-    },
-    {
-      "name": "referenceNumber",
-      "attr": {
-        "type": "String",
-        "column": "arapply_refnumber"
-      }
-    },
-    {
-      "name": "applied",
+      "name": "amount",
       "attr": {
         "type": "Number",
         "column": "arapply_applied"
@@ -87,19 +73,12 @@
       }
     },
     {
-      "name": "source",
-      "toOne": {
-        "type": "Receivable",
-        "column": "arapply_source_aropen_id"
+      "name": "paid",
+      "attr": {
+        "type": "Number",
+        "column": "arapply_target_paid"
       }
-    },
-    {
-      "name": "target",
-      "toOne": {
-        "type": "Receivable",
-        "column": "arapply_target_aropen_id"
-      }
-    },
+    },    
     {
       "name": "createdBy",
       "attr": {
