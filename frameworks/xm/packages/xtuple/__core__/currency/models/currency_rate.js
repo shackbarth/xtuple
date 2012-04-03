@@ -32,23 +32,25 @@ XM.CurrencyRate = XT.Record.extend(XM._CurrencyRate,
           currencyRec = this.get('currency'),
           currencyRateId = this.get('id'),
           qry;
-      qry = SC.Query.local(XM.CurrencyRate, {
-        conditions: "((currency = {currency}) AND (id != {id})) "
-                    + "AND ( "
-                    + "     (((effective >= {effective}) AND (effective <= {expires})) OR"
-                    + "      ((expires >= {effective}) AND (expires <= {expires}))) "
-                    + "    OR "
-                    + "     ((effective <= {effective}) AND "
-                    + "      (expires >= {expires})) "
-                    + "    )",
-        parameters: {  
-          currency: currencyRec,
-          id: currencyRateId,
-          effective: effectiveDate,
-          expires: expiresDate 
-        }
-      });
-      this._xm_dateOverlaps = XT.store.find(qry);
+      if (effectiveDate && expiresDate && currencyRec) {
+        qry = SC.Query.local(XM.CurrencyRate, {
+          conditions: "((currency = {currency}) AND (id != {id})) "
+                      + "AND ( "
+                      + "     (((effective >= {effective}) AND (effective <= {expires})) OR"
+                      + "      ((expires >= {effective}) AND (expires <= {expires}))) "
+                      + "    OR "
+                      + "     ((effective <= {effective}) AND "
+                      + "      (expires >= {expires})) "
+                      + "    )",
+          parameters: {  
+            currency: currencyRec,
+            id: currencyRateId,
+            effective: effectiveDate,
+            expires: expiresDate 
+          }
+        });
+        this._xm_dateOverlaps = XT.store.find(qry);
+      }
     }    
     return this._xm_dateOverlaps || [];
   }.property('effective', 'expires').cacheable(),
@@ -80,11 +82,9 @@ XM.CurrencyRate = XT.Record.extend(XM._CurrencyRate,
     // validate expires date is after effective date
     var effective = this.get('effective'),
         expires = this.get('expires');
-    if (effective && expires) {
       isErr = SC.DateTime.compareDate(effective, expires) > 0;
       err = XT.errors.findProperty('code', 'xt1004');
       this.updateErrors(err, isErr);
-    }
     
     // return errors array
     return errors;

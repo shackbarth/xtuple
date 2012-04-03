@@ -33,19 +33,21 @@ XM.TaxRegistration = XM.Document.extend(XM._TaxRegistration,
           number = this.get('number'),
           id = this.get('id'),
           qry;
-      qry = SC.Query.local(XM.TaxRegistration, {
-        conditions: "taxZone = {taxzone} "
-                    + "AND taxAuthority = {taxAuthority} "
-                    + "AND number = {number} "
-                    + "AND id != {id} ",
-        parameters: {  
-          taxZone: taxZone,
-          taxAuthority: taxAuthority,
-          number: number,
-          id: id
-        }
-      });
-      this._xm_recordConflicts = XT.store.find(qry);
+      if(taxZone && taxAuthority && number) {
+        qry = SC.Query.local(XM.TaxRegistration, { 
+          conditions: "id != {id} "
+                      + "AND taxZone = {taxZone} "
+                      + "AND taxAuthority = {taxAuthority} "
+                      + "AND number = {number} ", 
+          parameters: { 
+            id: id,
+            taxZone: taxZone,
+            taxAuthority: taxAuthority,
+            number: number
+          } 
+        });
+        this._xm_recordConflicts = XT.store.find(qry);
+      }
     }    
     return this._xm_recordConflicts || [];
   }.property('taxZone', 'taxAuthority', 'number').cacheable(),
