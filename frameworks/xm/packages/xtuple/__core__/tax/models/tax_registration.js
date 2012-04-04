@@ -26,14 +26,13 @@ XM.TaxRegistration = XM.Document.extend(XM._TaxRegistration,
     Array of XM.TaxRegistration records that have taxZone AND taxAuthority AND number property conflicts...
   */
   recordConflicts: function() {
-    var status = this.get('status');
-    if(status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY) {
+    if(this.isDirty()) {
       var taxZone = this.get('taxZone'),
           taxAuthority = this.get('taxAuthority'),
           number = this.get('number'),
           id = this.get('id'),
           qry;
-      if(taxZone && taxAuthority && number) {
+      if(taxZone && taxAuthority && number && id) {
         qry = SC.Query.local(XM.TaxRegistration, { 
           conditions: "id != {id} "
                       + "AND taxZone = {taxZone} "
@@ -50,7 +49,7 @@ XM.TaxRegistration = XM.Document.extend(XM._TaxRegistration,
       }
     }    
     return this._xm_recordConflicts || [];
-  }.property('taxZone', 'taxAuthority', 'number').cacheable(),
+  }.property('taxZone', 'taxAuthority', 'number', 'id').cacheable(),
   
   /** @private */
   recordConflictsLength: 0,
