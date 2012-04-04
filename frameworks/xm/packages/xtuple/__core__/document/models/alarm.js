@@ -24,7 +24,7 @@ XM.Alarm = XM.Document.extend(
   /**
     Auto-generated number from server.
   */
-  numberPolicy: XM.AUTO_NUMBER,
+  numberPolicy: XT.AUTO_NUMBER,
   
   // .................................................
   // CALCULATED PROPERTIES

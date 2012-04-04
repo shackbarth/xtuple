@@ -5,18 +5,16 @@
 
 /*globals XM */
 
-sc_require('mixins/_cash_receipt');
+sc_require('mixins/_payable_tax_adjustment');
 
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.TaxAdjustment
 */
-XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
-  /** @scope XM.CashReceipt.prototype */ {
+XM.PayableTaxAdjustment = XM.TaxAdjustment.extend(XM._PayableTaxAdjustment,
+  /** @scope XM.PayableTaxAdjustment.prototype */ {
 
-  numberPolicy: XT.AUTO_NUMBER
-  
   // .................................................
   // CALCULATED PROPERTIES
   //

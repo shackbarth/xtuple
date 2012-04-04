@@ -20,7 +20,7 @@ XM.Contact = XM.Document.extend(XM._Contact, XM.Documents,
   // CALCULATED PROPERTIES
   //
 
-  numberPolicy: XM.AUTO_NUMBER,
+  numberPolicy: XT.AUTO_NUMBER,
 
   /**
   @type Boolean

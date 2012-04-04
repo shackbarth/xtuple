@@ -63,7 +63,7 @@ XT.Store = SC.Store.extend(XT.Logging,
       errors[SC.guidFor(dispatch)] = error;
       dispatch.callback(error);
     }
-    return this;
+    action.call(target, error, null);
   },
   
   /**

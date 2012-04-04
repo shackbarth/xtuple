@@ -92,9 +92,9 @@ XM._CustomerShiptoInfo = {
   }),
 
   /**
-    @type Number
+    @type Percent
   */
-  commission: SC.Record.attr(Number, {
+  commission: SC.Record.attr(Percent, {
     label: '_commission'.loc()
   }),
 

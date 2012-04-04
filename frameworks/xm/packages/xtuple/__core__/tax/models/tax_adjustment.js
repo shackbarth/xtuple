@@ -5,15 +5,16 @@
 
 /*globals XM */
 
-sc_require('mixins/_payable_tax');
-
 /**
   @class
+  
+  Supports TaxableDocument
 
+  @seealso XM.TaxableDocument
   @extends XT.Record
 */
-XM.PayableTax = XT.Record.extend(XM._PayableTax,
-  /** @scope XM.PayableTax.prototype */ {
+XM.TaxAdjustment = XT.Record.extend(
+  /** @scope XM.TaxAdjustment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -22,6 +23,15 @@ XM.PayableTax = XT.Record.extend(XM._PayableTax,
   //..................................................
   // METHODS
   //
+  
+  /**
+    Tell the parent taxable document to recalculate total.
+  */
+  destroy: function() {
+    arguments.callee.base.apply(this, arguments);
+    var parentRecord = this.get('parentRecord');
+    if (parentRecord) parentRecord.updateMiscTax();
+  }
 
   //..................................................
   // OBSERVERS

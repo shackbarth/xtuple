@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.ReceivableTax
+  @scope XM.ReceivableTaxAdjustment
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ReceivableTax = {
-  /** @scope XM.ReceivableTax.prototype */
+XM._ReceivableTaxAdjustment = {
+  /** @scope XM.ReceivableTaxAdjustment.prototype */
   
-  className: 'XM.ReceivableTax',
+  className: 'XM.ReceivableTaxAdjustment',
 
   
 
@@ -24,10 +24,10 @@ XM._ReceivableTax = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -48,31 +48,10 @@ XM._ReceivableTax = {
   }),
 
   /**
-    @type XM.TaxType
-  */
-  taxType: SC.Record.toOne('XM.TaxType', {
-    label: '_taxType'.loc()
-  }),
-
-  /**
     @type XM.TaxCode
   */
   taxCode: SC.Record.toOne('XM.TaxCode', {
     label: '_taxCode'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  basis: SC.Record.attr(Number, {
-    label: '_basis'.loc()
-  }),
-
-  /**
-    @type XM.TaxCode
-  */
-  basisTaxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_basisTaxCode'.loc()
   }),
 
   /**
@@ -83,23 +62,9 @@ XM._ReceivableTax = {
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  percent: SC.Record.attr(Number, {
-    label: '_percent'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  tax: SC.Record.attr(Number, {
+  tax: SC.Record.attr(Money, {
     label: '_tax'.loc()
   }),
 
@@ -110,20 +75,6 @@ XM._ReceivableTax = {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_documentDate'.loc()
-  }),
-
-  /**
-    @type XM.Currency
-  */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
   })
 
 };

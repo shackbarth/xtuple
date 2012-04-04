@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.VendorInfo
+  @scope XM.PayablePendingApplication
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._VendorInfo = {
-  /** @scope XM.VendorInfo.prototype */
+XM._PayablePendingApplication = {
+  /** @scope XM.PayablePendingApplication.prototype */
   
-  className: 'XM.VendorInfo',
+  className: 'XM.PayablePendingApplication',
 
   
 
@@ -41,38 +41,31 @@ XM._VendorInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Payment
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  payment: SC.Record.toOne('XM.Payment', {
+    label: '_payment'.loc()
   }),
 
   /**
-    @type String
+    @type XM.Payable
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
+  payable: SC.Record.toOne('XM.Payable', {
+    label: '_payable'.loc()
   }),
 
   /**
-    @type Boolean
+    @type Number
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
+  amount: SC.Record.attr(Number, {
+    label: '_amount'.loc()
   }),
 
   /**
-    @type XM.Terms
+    @type Number
   */
-  terms: SC.Record.toOne('XM.Terms', {
-    label: '_terms'.loc()
-  }),
-
-  /**
-    @type XM.Currency
-  */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
+  discount: SC.Record.attr(Number, {
+    label: '_discount'.loc()
   })
 
 };

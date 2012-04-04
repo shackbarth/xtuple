@@ -5,18 +5,18 @@
 
 /*globals XM */
 
-sc_require('mixins/_cash_receipt');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/payable/models
+
+sc_require('mixins/_payable_pending_application');
 
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.Record
 */
-XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
-  /** @scope XM.CashReceipt.prototype */ {
+XM.PayablePendingApplication = XT.Record.extend(XM._PayablePendingApplication,
+  /** @scope XM.PayablePendingApplication.prototype */ {
 
-  numberPolicy: XT.AUTO_NUMBER
-  
   // .................................................
   // CALCULATED PROPERTIES
   //

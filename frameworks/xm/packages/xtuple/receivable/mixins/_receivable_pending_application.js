@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.VendorInfo
+  @scope XM.ReceivablePendingApplication
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._VendorInfo = {
-  /** @scope XM.VendorInfo.prototype */
+XM._ReceivablePendingApplication = {
+  /** @scope XM.ReceivablePendingApplication.prototype */
   
-  className: 'XM.VendorInfo',
+  className: 'XM.ReceivablePendingApplication',
 
   
 
@@ -24,10 +24,10 @@ XM._VendorInfo = {
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "false",
+      "read": "true",
+      "update": "false",
+      "delete": "false"
     }
   },
 
@@ -41,38 +41,32 @@ XM._VendorInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.CashReceipt
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  cashReceipt: SC.Record.toOne('XM.CashReceipt', {
+    label: '_cashReceipt'.loc()
   }),
 
   /**
-    @type String
+    @type XM.Receivable
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
+  receivable: SC.Record.toOne('XM.Receivable', {
+    label: '_receivable'.loc()
   }),
 
   /**
-    @type Boolean
+    @type Number
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
+  amount: SC.Record.attr(Number, {
+    label: '_amount'.loc()
   }),
 
   /**
-    @type XM.Terms
+    @type Number
   */
-  terms: SC.Record.toOne('XM.Terms', {
-    label: '_terms'.loc()
-  }),
-
-  /**
-    @type XM.Currency
-  */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
+  discount: SC.Record.attr(Number, {
+    isRequired: true,
+    label: '_discount'.loc()
   })
 
 };

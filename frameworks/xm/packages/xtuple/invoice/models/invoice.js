@@ -10,9 +10,9 @@ sc_require('mixins/_invoice');
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.TaxableDocument
 */
-XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
+XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
   /** @scope XM.Invoice.prototype */ {
   
   numberPolicySetting: 'InvcNumberGeneration',
@@ -76,13 +76,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
     @type Array
   */
   lineTaxDetail: [],
-  
-  /**
-    Total of miscellaneous tax adjustments.
-    
-    @type Number
-  */
-  miscTax: 0,
   
   /**
     Calculated total of freight taxes. May be either estimated or actual
@@ -312,21 +305,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       this.setTaxDetail(taxes, 'freightTaxDetail', 'freightTax');
     }
   },
-  
-  /**
-    Recaclulate tax adjustment total.
-  */
-  updateMiscTax: function() {  
-    var taxes = this.get('adjustmentTaxes'),
-        miscTax = 0;
-    for(var i = 0; i < taxes.get('length'); i++) {
-      var misc = taxes.objectAt(i),
-          status = misc.get('status'),
-          tax = status & SC.Record.DESTROYED ? 0 : misc.get('tax');
-      miscTax = miscTax + taxes.objectAt(i).get('tax'); 
-    } 
-    this.setIfChanged('miscTax', SC.Math.round(miscTax, XT.MONEY_SCALE));
-  },
 
   //..................................................
   // OBSERVERS
@@ -550,7 +528,6 @@ XM.Invoice = XM.Document.extend(XM._Invoice, XM.Taxable,
       // calculate totals
       this.updateSubTotal();
       this.updateFreightTax();
-      this.updateMiscTax();
       
       // disable controls
       this.customer.set('isEditable', false);
