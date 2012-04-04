@@ -64,6 +64,8 @@
 \i xt/javascript/session.sql;
 
 -- xt views
+\i xt/views/apapply.sql;
+\i xt/views/arapply.sql;
 \i xt/views/docinfo.sql; 
 \i xt/views/gl.sql;
 \i xt/views/invcheadtaxadj.sql;

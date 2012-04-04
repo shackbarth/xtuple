@@ -1,4 +1,4 @@
-﻿select xt.install_js('XM','Payable','xtuple', $$
+select xt.install_js('XM','Payable','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
@@ -10,6 +10,44 @@
   XM.Payable.SELECT_VENDOR = 1,
   XM.Payable.SELECT_VENDOR_TYPE = 2,
   XM.Payable.SELECT_VENDOR_TYPE_PATTERN = 3,
+
+  /**
+   Commit and post a payable in a single transaction. Only debit memos and credit memos 
+   may be posted with this function.
+
+   @param {Hash} payable
+   @returns {Boolean} 
+  */
+  XM.Payable.post = function(payable) {
+    var ret, sql, err,
+        docType = payable.documentType,
+        ledgerAccount = payable.ledgerAccount ? payable.ledgerAccount : -1,
+        data = Object.create(XT.Data);
+
+    /* validate */
+    if(!data.checkPrivilege("MaintainAPMemos")) err = "Access denied.";
+    else if(docType !== 'C' && docType !== 'D') err = "Invalid document type";
+
+    /* commit the record(s). need to do this first to get taxes committed if necessary */
+    else data.commitRecord('XM.Payable', payable);
+
+    /* post the document */
+    if(!err) {
+
+      /* sql for debit and credit memos - not really 'creating' here, this actually posts the document. needs reduction */
+      if (docType === 'D') {
+        sql = "select createAPDebitMemo($1::integer,$2::integer, NULL::integer, $3::text, $4, $5::date, $6::numeric, $7, $8, $9::date, $10, $11) as result";
+      } else {
+        sql = "select createAPCreditMemo($1::integer ,$2::integer, NULL::integer, $3::text, $4, $5::date, $6::numeric, $7, $8, $9::date, $10, $11) as result";;
+      }
+      ret = executeSql(sql, [payable.guid, payable.vendor.guid, payable.number, payable.orderNumber,
+                             payable.documentDate, payable.amount, payable.notes, ledgerAccount, 
+                             payable.dueDate, payable.terms, payable.currency])[0].result;
+      if (ret === 0) err = "Amount must be greater than zero.";
+      else return ret;
+    }
+    throw new Error(err);
+  }
 
   /**
    Approve a payable for payment.
