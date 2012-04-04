@@ -52,8 +52,9 @@ XM.SubLedger = XM.TaxableDocument.extend(
     for (var i = 0; i < applications.get('length'); i++) {
       var application = applications.objectAt(i),
           amount = application.get('amount'),
+          discount = application.get('discount'),
           currencyRate = application.get('currencyRate') || 1;
-      pending = SC.Math.round(pending + amount * currencyRate, XT.MONEY_SCALE);
+      pending = SC.Math.round(pending + (amount + discount) * currencyRate, XT.MONEY_SCALE);
     }
     return SC.Math.round(pending, XT.MONEY_SCALE);
   }.property('pendingApplicationsLength', 'asOf').cacheable(),
