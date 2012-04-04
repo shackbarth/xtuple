@@ -59,14 +59,16 @@
       "name": "effective",
       "attr": {
         "type": "Date",
-        "column": "taxreg_effective"
+        "column": "taxreg_effective",
+        "defaultValue": "startOfTime"
       }
     },
     {
       "name": "expires",
       "attr": {
         "type": "Date",
-        "column": "taxreg_expires"
+        "column": "taxreg_expires",
+        "defaultValue": "endOfTime"
       }
     },
     {

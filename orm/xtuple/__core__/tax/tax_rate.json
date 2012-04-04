@@ -56,14 +56,16 @@
       "name": "effective",
       "attr": {
         "type": "Date",
-        "column": "taxrate_effective"
+        "column": "taxrate_effective",
+        "defaultValue": "startOfTime"
       }
     },
     {
       "name": "expires",
       "attr": {
         "type": "Date",
-        "column": "taxrate_expires"
+        "column": "taxrate_expires",
+        "defaultValue": "endOfTime"
       }
     }
   ],
