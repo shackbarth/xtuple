@@ -68,6 +68,9 @@ XM._TaxRegistration = {
   effective: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
+    defaultValue: function() {
+      return XT.startOfTime();
+    },
     label: '_effective'.loc()
   }),
 
@@ -77,6 +80,9 @@ XM._TaxRegistration = {
   expires: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
+    defaultValue: function() {
+      return XT.endOfTime();
+    },
     label: '_expires'.loc()
   }),
 

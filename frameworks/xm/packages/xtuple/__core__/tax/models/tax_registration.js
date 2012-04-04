@@ -25,7 +25,7 @@ XM.TaxRegistration = XM.Document.extend(XM._TaxRegistration,
  
     Array of XM.TaxRegistration records that have taxZone AND taxAuthority AND number property conflicts...
   */
-  recordConflicts: function() {console.log('Entered recordConflicts!!!!!');
+  recordConflicts: function() {
     var status = this.get('status');
     if(status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY) {
       var taxZone = this.get('taxZone'),
