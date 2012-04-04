@@ -176,7 +176,7 @@
     {
       "name": "isOpen",
       "attr": {
-        "type": "Date",
+        "type": "Boolean",
         "column": "aropen_open",
         "defaultValue": true,
         "isEditable": false

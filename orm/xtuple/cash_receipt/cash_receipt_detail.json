@@ -1,16 +1,16 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "CashReceiptApplication",
+  "type": "CashReceiptDetail",
   "table": "cashrcptitem",
   "idSequenceName": "cashrcptitem_cashrcptitem_id_seq",
-  "comment": "Cash Receipt Application Map",
+  "comment": "Cash Receipt Detail Map",
   "privileges": {
     "all": {
-      "create": "false",
+      "create": "true",
       "read": "true",
-      "update": "false",
-      "delete": "false"
+      "update": "true",
+      "delete": "true"
     }
   },
   "properties": [
@@ -26,28 +26,33 @@
       "name": "cashReceipt",
       "toOne": {
         "type": "CashReceipt",
-        "column": "cashrcptitem_cashrcpt_id"
+        "column": "cashrcptitem_cashrcpt_id",
+        "isRequired": true
       }
     },
     {
       "name": "receivable",
       "toOne": {
         "type": "Receivable",
-        "column": "cashrcptitem_aropen_id"
+        "column": "cashrcptitem_aropen_id",
+        "isRequired": true
       }
     },
     {
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "cashrcptitem_amount"
+        "column": "cashrcptitem_amount",
+        "isRequired": true
       }
     },
     {
       "name": "discount",
       "attr": {
         "type": "Number",
-        "column": "cashrcptitem_discount"
+        "column": "cashrcptitem_discount",
+        "isRequired": true,
+        "defaultValue": 0
       }
     }
   ],
