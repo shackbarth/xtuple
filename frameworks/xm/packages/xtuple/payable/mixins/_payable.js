@@ -102,9 +102,11 @@ XM._Payable = {
   }),
 
   /**
-    @type XM.SalesRep
+    @type String
   */
-  payableStatus: SC.Record.toOne('XM.SalesRep', {
+  payableStatus: SC.Record.toOne(String, {
+    isRequired: true,
+    defaultValue: 'O',
     label: '_payableStatus'.loc()
   }),
 
@@ -139,7 +141,7 @@ XM._Payable = {
   */
   adjustmentTaxes: SC.Record.toMany('XM.PayableTaxAdjustment', {
     isNested: true,
-    inverse: 'receivable',
+    inverse: 'payable',
     label: '_adjustmentTaxes'.loc()
   }),
 
@@ -155,7 +157,7 @@ XM._Payable = {
   */
   applications: SC.Record.toMany('XM.PayableApplication', {
     isNested: true,
-    inverse: 'receivable',
+    inverse: 'payable',
     label: '_applications'.loc()
   }),
 

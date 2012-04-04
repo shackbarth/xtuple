@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_payable_tax');
+sc_require('mixins/_payable_tax_adjustment');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.TaxAdjustment
 */
-XM.PayableTax = XT.Record.extend(XM._PayableTax,
-  /** @scope XM.PayableTax.prototype */ {
+XM.PayableTaxAdjustment = XM.TaxAdjustment.extend(XM._PayableTaxAdjustment,
+  /** @scope XM.PayableTaxAdjustment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
