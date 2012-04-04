@@ -48,16 +48,16 @@ XM._TaxRate = {
   }),
 
   /**
-    @type Number
+    @type Percent
   */
-  percent: SC.Record.attr(Number, {
+  percent: SC.Record.attr(Percent, {
     label: '_percent'.loc()
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  amount: SC.Record.attr(Number, {
+  amount: SC.Record.attr(Money, {
     label: '_amount'.loc()
   }),
 
@@ -66,6 +66,9 @@ XM._TaxRate = {
   */
   currency: SC.Record.toOne('XM.Currency', {
     isNested: true,
+    defaultValue: function() {
+      return XM.Currency.BASE;
+    },
     label: '_currency'.loc()
   }),
 
