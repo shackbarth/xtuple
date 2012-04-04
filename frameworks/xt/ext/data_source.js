@@ -286,6 +286,7 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     var payload = {}, qp = query.get('parameters'), 
         conditions = query.get('conditions'),
         language = query.get('queryLanguage'),
+        recordType = query.get('recordType'),
         list, conds = [], params = {};
         
     // massage conditions so they are compatible with the data source
@@ -294,7 +295,18 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
       var tokenValue;
       switch (list[i].tokenType) {
         case "PROPERTY":
-          tokenValue = list[i].tokenValue === "id" ? '"guid"' : '"' + list[i].tokenValue + '"';
+          var value = list[i].tokenValue,
+              proto = recordType.prototype;
+          // format nested records to array query format
+          if (proto[value] && proto[value].isChildAttribute && proto[value].isNested) {
+            tokenValue = '("' + value + '").guid';
+          } else tokenValue = value === "id" ? '"guid"' : '"' + value + '"';
+          break;
+        case "YES":
+          tokenValue = "true";
+          break;
+        case "NO":
+          tokenValue = "false";
           break;
         case "BEGINS_WITH":
           tokenValue = '~^';
@@ -321,7 +333,7 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
       conds.push(tokenValue);
     }
 
-    /* helper function to convert parameters to data source friendly formats */
+    // helper function to convert parameters to data source friendly formats 
     format = function(value) {
       // format date if applicable
       if (SC.kindOf(value, SC.DateTime)) {
@@ -331,8 +343,7 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
         return value.get('id');
       }      
       // return regex source if regex
-      return value;
-      //return value.source === undefined ? value : value.source;
+      return value.source === undefined ? value : value.source;
     }
 
     // massage parameters so they are compatible with the data source

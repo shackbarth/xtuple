@@ -187,11 +187,9 @@ XM._Receivable = {
   }),
 
   /**
-    @type Date
+    @type Boolean
   */
-  isOpen: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    useIsoDate: false,
+  isOpen: SC.Record.attr(Boolean, {
     defaultValue: true,
     label: '_isOpen'.loc()
   }),

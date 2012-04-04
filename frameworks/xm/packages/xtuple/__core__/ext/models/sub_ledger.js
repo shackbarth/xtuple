@@ -88,11 +88,11 @@ XM.SubLedger = XM.TaxableDocument.extend(
         documentDate = this.get('documentDate'),
         amount = this.get('amount') || 0,
         paid = this.get('paid') || 0, ret = 0;
-    if (SC.DateTime.compareDate(asOf, documentDate) >= 0) {
+    if (documentDate && SC.DateTime.compareDate(asOf, documentDate) >= 0) {
       ret = SC.Math.round(amount - paid, XT.MONEY_SCALE);
     }
     return ret;
-  }.property('amount', 'paid').cacheable(),
+  }.property('amount', 'paid', 'documentDate').cacheable(),
 
   //..................................................
   // METHODS
@@ -189,6 +189,7 @@ XM.SubLedger = XM.TaxableDocument.extend(
   }.observes('amount', 'miscTax'),
   
   termsDidChange: function() {
+    if (this.isNotDirty()) return;
     var documentDate = this.get('documentDate'),
         dueDate = this.get('dueDate'),
         terms = this.get('terms');

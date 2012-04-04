@@ -5,27 +5,46 @@
 
 /*globals XM */
 
-sc_require('mixins/_cash_receipt_application');
-
 /**
   @class
 
   @extends XT.Record
 */
-XM.CashReceiptApplication = XT.Record.extend(XM._CashReceiptApplication,
+XM.CashReceiptApplicationController = SC.Object.extend(
   /** @scope XM.CashReceiptApplication.prototype */ {
+  
+  /**
+    @type XM.Receivable
+  */
+  receivable: null,
+  
+  /**
+    @type XM.CashReceiptDetail
+  */
+  cashReceiptDetail: null,
 
-  // .................................................
-  // CALCULATED PROPERTIES
-  //
-
-  //..................................................
-  // METHODS
-  //
-
-  //..................................................
-  // OBSERVERS
-  //
-
+  /**
+    @type XM.Money
+  */  
+  balance: null,
+  
+  /**
+    @type XM.Money
+  */  
+  applied: null,
+    
+  /**
+    @type XM.Money
+  */
+  pending: null,
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.set('balance', XM.Money.create());
+    this.set('applied', XM.Money.create());
+    this.set('pending', XM.Money.create());
+  }
+  
+  
 });
 

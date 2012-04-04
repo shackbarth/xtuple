@@ -44,6 +44,7 @@ XM._CashReceipt = {
     @type String
   */
   number: SC.Record.attr(String, {
+    isRequired: true,
     label: '_number'.loc()
   }),
 
@@ -52,6 +53,7 @@ XM._CashReceipt = {
   */
   customer: SC.Record.toOne('XM.CustomerInfo', {
     isNested: true,
+    isRequired: true,
     label: '_customer'.loc()
   }),
 
@@ -59,6 +61,7 @@ XM._CashReceipt = {
     @type Number
   */
   amount: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_amount'.loc()
   }),
 
@@ -66,6 +69,7 @@ XM._CashReceipt = {
     @type XM.Currency
   */
   currency: SC.Record.toOne('XM.Currency', {
+    isRequired: true,
     label: '_currency'.loc()
   }),
 
@@ -80,21 +84,34 @@ XM._CashReceipt = {
     @type String
   */
   fundsType: SC.Record.attr(String, {
+    isRequired: true,
     label: '_fundsType'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  documentNumber: SC.Record.attr(String, {
+    isRequired: true,
+    label: '_documentNumber'.loc()
   }),
 
   /**
     @type XM.SalesCategory
   */
   salesCategory: SC.Record.toOne('XM.SalesCategory', {
+    isRequired: true,
+    defaultValue: false,
     label: '_salesCategory'.loc()
   }),
 
   /**
     @type Boolean
   */
-  useCustomerDeposit: SC.Record.attr(Boolean, {
-    label: '_useCustomerDeposit'.loc()
+  isUseCustomerDeposit: SC.Record.attr(Boolean, {
+    isRequired: true,
+    defaultValue: false,
+    label: '_isUseCustomerDeposit'.loc()
   }),
 
   /**
@@ -110,6 +127,7 @@ XM._CashReceipt = {
     @type XM.BankAccount
   */
   bankAccount: SC.Record.toOne('XM.BankAccount', {
+    isRequired: true,
     label: '_bankAccount'.loc()
   }),
 
@@ -126,6 +144,8 @@ XM._CashReceipt = {
     @type Boolean
   */
   isPosted: SC.Record.attr(Boolean, {
+    isRequired: true,
+    defaultValue: false,
     label: '_isPosted'.loc()
   }),
 
@@ -133,16 +153,18 @@ XM._CashReceipt = {
     @type Boolean
   */
   isVoid: SC.Record.attr(Boolean, {
+    isRequired: true,
+    defaultValue: false,
     label: '_isVoid'.loc()
   }),
 
   /**
-    @type XM.CashReceiptApplication
+    @type XM.CashReceiptDetail
   */
-  applications: SC.Record.toMany('XM.CashReceiptApplication', {
+  detail: SC.Record.toMany('XM.CashReceiptDetail', {
     isNested: true,
     inverse: 'cashReceipt',
-    label: '_applications'.loc()
+    label: '_detail'.loc()
   }),
 
   /**
@@ -150,6 +172,22 @@ XM._CashReceipt = {
   */
   notes: SC.Record.attr(String, {
     label: '_notes'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  posted: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    label: '_posted'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  postedBy: SC.Record.attr(String, {
+    label: '_postedBy'.loc()
   })
 
 };
