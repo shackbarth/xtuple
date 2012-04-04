@@ -26,6 +26,12 @@ XM.SubLedger = XM.TaxableDocument.extend(
   asOf: null,
   
   /** @private */
+  pendingApplicationsLength: 0,
+  
+  /** @private */
+  pendingApplicationsLengthBinding: SC.Binding.from('*pendingApplications.length').oneWay().noDelay(),
+  
+  /** @private */
   applicationsLength: 0,
   
   /** @private */
@@ -34,13 +40,35 @@ XM.SubLedger = XM.TaxableDocument.extend(
   // .................................................
   // CALCULATED PROPERTIES
   //
+  
+  /**
+    Total value of applications that have been created, but not posted.
+    
+    @type Number
+  */
+  pending: function() {
+    var applications = this.get('pendingApplications'),
+        pending = 0;
+    for (var i = 0; i < applications.get('length'); i++) {
+      var application = applications.objectAt(i),
+          amount = application.get('amount'),
+          currencyRate = application.get('currencyRate') || 1;
+      pending = SC.Math.round(pending + amount * currencyRate, XT.MONEY_SCALE);
+    }
+    return SC.Math.round(pending, XT.MONEY_SCALE);
+  }.property('pendingApplicationsLength', 'asOf').cacheable(),
 
+  /**
+    Total value of all posted applications.
+    
+    @type Number
+  */
   paid: function() {
     var asOf = this.get('asOf'),
         applications = this.get('applications'),
         paid = 0;
     for (var i = 0; i < applications.get('length'); i++) {
-      var application = applications.objectAt(i); 
+      var application = applications.objectAt(i), 
           postDate = application.get('postDate');
       if (SC.DateTime.compare(asOf, postDate) >= 0) {
         paid = paid + application.get('paid');
@@ -50,6 +78,8 @@ XM.SubLedger = XM.TaxableDocument.extend(
   }.property('applicationsLength', 'asOf').cacheable(),
 
   /**
+    Total due remaining.
+    
     @type Number
   */
   balance: function() {
@@ -57,7 +87,7 @@ XM.SubLedger = XM.TaxableDocument.extend(
         documentDate = this.get('documentDate'),
         amount = this.get('amount') || 0,
         paid = this.get('paid') || 0, ret = 0;
-    if (SC.DateTime.compare(asOf, documentDate) >= 0) {
+    if (SC.DateTime.compareDate(asOf, documentDate) >= 0) {
       ret = SC.Math.round(amount - paid, XT.MONEY_SCALE);
     }
     return ret;
