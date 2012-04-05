@@ -50,6 +50,16 @@ XM._CashReceiptReceivable = {
   /**
     @type Date
   */
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    isRequired: true,
+    label: '_documentDate'.loc()
+  }),
+
+  /**
+    @type Date
+  */
   dueDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
@@ -105,6 +115,15 @@ XM._CashReceiptReceivable = {
   */
   currencyRate: SC.Record.attr(Number, {
     label: '_currencyRate'.loc()
+  }),
+
+  /**
+    @type XM.ReceivableApplication
+  */
+  applications: SC.Record.toMany('XM.ReceivableApplication', {
+    isNested: true,
+    inverse: 'receivable',
+    label: '_applications'.loc()
   }),
 
   /**

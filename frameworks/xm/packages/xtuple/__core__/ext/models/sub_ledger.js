@@ -3,6 +3,7 @@
 // Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
 sc_require('models/taxable_document');
+sc_require('mixins/sub_ledger_mixin');
 /*globals XM */
 
 /**
@@ -11,64 +12,16 @@ sc_require('models/taxable_document');
   An abstract superclass for Accounts Payable and Accounts Receivable.
 
   @extends XM.TaxableDocument
+  @extends XM.SubLedgerMixin
 */
-XM.SubLedger = XM.TaxableDocument.extend(
+XM.SubLedger = XM.TaxableDocument.extend(XM.SubLedgerMixin,
   /** @scope XM.Subledger.prototype */ {
   
   numberPolicy: XT.AUTO_OVERRIDE_NUMBER,
-  
-  /**
-    Aging control for paid and balance values.
-    
-    @type SC.DateTime
-    @default currentDate
-  */
-  asOf: null,
-  
-  /** @private */
-  applicationsLength: 0,
-  
-  /** @private */
-  applicationsLengthBinding: SC.Binding.from('*applications.length').oneWay().noDelay(),
 
   // .................................................
   // CALCULATED PROPERTIES
   //
-  
-  /**
-    Total value of all posted applications.
-    
-    @type Number
-  */
-  paid: function() {
-    var asOf = this.get('asOf'),
-        applications = this.get('applications'),
-        paid = 0;
-    for (var i = 0; i < applications.get('length'); i++) {
-      var application = applications.objectAt(i), 
-          postDate = application.get('postDate');
-      if (SC.DateTime.compare(asOf, postDate) >= 0) {
-        paid = paid + application.get('paid');
-      }
-    }
-    return SC.Math.round(paid, XT.MONEY_SCALE);
-  }.property('applicationsLength', 'asOf').cacheable(),
-
-  /**
-    Total due remaining.
-    
-    @type Number
-  */
-  balance: function() {
-    var asOf = this.get('asOf'),
-        documentDate = this.get('documentDate'),
-        amount = this.get('amount') || 0,
-        paid = this.get('paid') || 0, ret = 0;
-    if (documentDate && SC.DateTime.compareDate(asOf, documentDate) >= 0) {
-      ret = SC.Math.round(amount - paid, XT.MONEY_SCALE);
-    }
-    return ret;
-  }.property('amount', 'paid', 'documentDate').cacheable(),
 
   //..................................................
   // METHODS
@@ -145,7 +98,6 @@ XM.SubLedger = XM.TaxableDocument.extend(
     this.currencyRate.set('isEditable', false);
     this.closeDate.set('isEditable', false);
     this.createdBy.set('isEditable', false);
-    if (!this.get('asOf')) this.set('asOf', SC.DateTime.create());
   },
 
   //..................................................

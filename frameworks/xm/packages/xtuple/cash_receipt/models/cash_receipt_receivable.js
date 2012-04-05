@@ -10,9 +10,9 @@ sc_require('mixins/_cash_receipt_receivable');
 /**
   @class
 
-  @extends XM.Record
+  @extends XM.SubLedger
 */
-XM.CashReceiptReceivable = XT.Record.extend(XM._CashReceiptReceivable,
+XM.CashReceiptReceivable = XT.Record.extend(XM._CashReceiptReceivable, XM.SubLedgerMixin,
   /** @scope XM.CashReceiptReceivable.prototype */ {
 
   // .................................................
