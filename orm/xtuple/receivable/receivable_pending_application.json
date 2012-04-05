@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "receivablePendingApplcationType",
+      "name": "receivablePendingApplicationType",
       "toOne": {
         "type": "String",
         "column": "arpending_type"
