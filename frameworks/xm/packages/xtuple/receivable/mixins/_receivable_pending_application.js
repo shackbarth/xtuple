@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.BankAccountInfo
+  @scope XM.ReceivablePendingApplication
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._BankAccountInfo = {
-  /** @scope XM.BankAccountInfo.prototype */
+XM._ReceivablePendingApplication = {
+  /** @scope XM.ReceivablePendingApplication.prototype */
   
-  className: 'XM.BankAccountInfo',
+  className: 'XM.ReceivablePendingApplication',
 
   
 
@@ -24,10 +24,10 @@ XM._BankAccountInfo = {
 
   privileges: {
     "all": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false
+      "create": "false",
+      "read": "true",
+      "update": "false",
+      "delete": "false"
     }
   },
 
@@ -43,22 +43,22 @@ XM._BankAccountInfo = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  receivablePendingApplcationType: SC.Record.toOne(String, {
+    label: '_receivablePendingApplcationType'.loc()
   }),
 
   /**
-    @type String
+    @type XM.Receivable
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
+  receivable: SC.Record.toOne('XM.Receivable', {
+    label: '_receivable'.loc()
   }),
 
   /**
-    @type XM.Currency
+    @type Number
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
+  amount: SC.Record.attr(Number, {
+    label: '_amount'.loc()
   })
 
 };

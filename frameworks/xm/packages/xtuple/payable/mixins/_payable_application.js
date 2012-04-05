@@ -16,7 +16,7 @@ XM._PayableApplication = {
   
   className: 'XM.PayableApplication',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -48,56 +48,33 @@ XM._PayableApplication = {
   }),
 
   /**
+    @type XM.Payable
+  */
+  payable: SC.Record.toOne('XM.Payable', {
+    label: '_payable'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  documentType: SC.Record.attr(String, {
+    label: '_documentType'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  documentNumber: SC.Record.attr(String, {
+    label: '_documentNumber'.loc()
+  }),
+
+  /**
     @type Date
   */
   postDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_postDate'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  sourceDocumentType: SC.Record.attr(String, {
-    label: '_sourceDocumentType'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  sourceDocumentNumber: SC.Record.attr(String, {
-    label: '_sourceDocumentNumber'.loc()
-  }),
-
-  /**
-    @type XM.Payable
-  */
-  source: SC.Record.toOne('XM.Payable', {
-    isNested: true,
-    label: '_source'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  targetDocumentType: SC.Record.attr(String, {
-    label: '_targetDocumentType'.loc()
-  }),
-
-  /**
-    @type String
-  */
-  targetDocumentNumber: SC.Record.attr(String, {
-    label: '_targetDocumentNumber'.loc()
-  }),
-
-  /**
-    @type XM.Payable
-  */
-  target: SC.Record.toOne('XM.Payable', {
-    isNested: true,
-    label: '_target'.loc()
   }),
 
   /**
@@ -112,6 +89,13 @@ XM._PayableApplication = {
   */
   currency: SC.Record.toOne('XM.Currency', {
     label: '_currency'.loc()
+  }),
+
+  /**
+    @type Number
+  */
+  paid: SC.Record.attr(Number, {
+    label: '_paid'.loc()
   }),
 
   /**

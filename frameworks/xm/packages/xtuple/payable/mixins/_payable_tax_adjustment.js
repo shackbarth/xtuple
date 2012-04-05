@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.ReceivableTax
+  @scope XM.PayableTaxAdjustment
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ReceivableTax = {
-  /** @scope XM.ReceivableTax.prototype */
+XM._PayableTaxAdjustment = {
+  /** @scope XM.PayableTaxAdjustment.prototype */
   
-  className: 'XM.ReceivableTax',
+  className: 'XM.PayableTaxAdjustment',
 
   
 
@@ -24,10 +24,10 @@ XM._ReceivableTax = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,17 +41,10 @@ XM._ReceivableTax = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.Receivable
+    @type XM.Payable
   */
-  receivable: SC.Record.toOne('XM.Receivable', {
-    label: '_receivable'.loc()
-  }),
-
-  /**
-    @type XM.TaxType
-  */
-  taxType: SC.Record.toOne('XM.TaxType', {
-    label: '_taxType'.loc()
+  payable: SC.Record.toOne('XM.Payable', {
+    label: '_payable'.loc()
   }),
 
   /**
@@ -64,42 +57,14 @@ XM._ReceivableTax = {
   /**
     @type Number
   */
-  basis: SC.Record.attr(Number, {
-    label: '_basis'.loc()
-  }),
-
-  /**
-    @type XM.TaxCode
-  */
-  basisTaxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_basisTaxCode'.loc()
-  }),
-
-  /**
-    @type Number
-  */
   sequence: SC.Record.attr(Number, {
     label: '_sequence'.loc()
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  percent: SC.Record.attr(Number, {
-    label: '_percent'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  tax: SC.Record.attr(Number, {
+  tax: SC.Record.attr(Money, {
     label: '_tax'.loc()
   }),
 
@@ -110,20 +75,6 @@ XM._ReceivableTax = {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_documentDate'.loc()
-  }),
-
-  /**
-    @type XM.Currency
-  */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
   })
 
 };

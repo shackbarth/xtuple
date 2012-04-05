@@ -41,13 +41,6 @@ XM._TaxRegistration = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
-  */
-  relationType: SC.Record.attr(String, {
-    label: '_relationType'.loc()
-  }),
-
-  /**
     @type XM.TaxAuthority
   */
   taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
@@ -58,6 +51,7 @@ XM._TaxRegistration = {
     @type String
   */
   number: SC.Record.attr(String, {
+    isRequired: true,
     label: '_number'.loc()
   }),
 
@@ -74,6 +68,9 @@ XM._TaxRegistration = {
   effective: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
+    defaultValue: function() {
+      return XT.startOfTime();
+    },
     label: '_effective'.loc()
   }),
 
@@ -83,6 +80,9 @@ XM._TaxRegistration = {
   expires: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
+    defaultValue: function() {
+      return XT.endOfTime();
+    },
     label: '_expires'.loc()
   }),
 

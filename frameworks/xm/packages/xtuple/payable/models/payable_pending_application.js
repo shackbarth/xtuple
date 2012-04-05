@@ -5,17 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_unit');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/payable/models
+
+sc_require('mixins/_payable_pending_application');
 
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.Record
 */
-XM.Unit = XM.Document.extend(XM._Unit,
-  /** @scope XM.Unit.prototype */ {
-
-  documentKey: 'name',
+XM.PayablePendingApplication = XT.Record.extend(XM._PayablePendingApplication,
+  /** @scope XM.PayablePendingApplication.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

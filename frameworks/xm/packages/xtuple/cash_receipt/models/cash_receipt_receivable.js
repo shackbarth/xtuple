@@ -5,17 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_unit');
+sc_require('mixins/_cash_receipt_receivable');
 
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.Record
 */
-XM.Unit = XM.Document.extend(XM._Unit,
-  /** @scope XM.Unit.prototype */ {
-
-  documentKey: 'name',
+XM.CashReceiptReceivable = XT.Record.extend(XM._CashReceiptReceivable,
+  /** @scope XM.CashReceiptReceivable.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.Url
+  @scope XM.CashReceiptDetail
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._Url = {
-  /** @scope XM.Url.prototype */
+XM._CashReceiptDetail = {
+  /** @scope XM.CashReceiptDetail.prototype */
   
-  className: 'XM.Url',
+  className: 'XM.CashReceiptDetail',
 
   
 
@@ -24,10 +24,10 @@ XM._Url = {
 
   privileges: {
     "all": {
-      "create": true,
-      "read": true,
-      "update": false,
-      "delete": true
+      "create": "true",
+      "read": "true",
+      "update": "true",
+      "delete": "true"
     }
   },
 
@@ -41,18 +41,36 @@ XM._Url = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.CashReceipt
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  cashReceipt: SC.Record.toOne('XM.CashReceipt', {
+    isRequired: true,
+    label: '_cashReceipt'.loc()
   }),
 
   /**
-    @type String
+    @type XM.CashReceiptReceivable
   */
-  path: SC.Record.attr(String, {
+  receivable: SC.Record.toOne('XM.CashReceiptReceivable', {
     isRequired: true,
-    label: '_path'.loc()
+    label: '_receivable'.loc()
+  }),
+
+  /**
+    @type Number
+  */
+  amount: SC.Record.attr(Number, {
+    isRequired: true,
+    label: '_amount'.loc()
+  }),
+
+  /**
+    @type Number
+  */
+  discount: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
+    label: '_discount'.loc()
   })
 
 };

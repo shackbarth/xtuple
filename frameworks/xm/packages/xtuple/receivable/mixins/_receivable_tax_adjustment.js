@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.CashReceiptApplication
+  @scope XM.ReceivableTaxAdjustment
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._CashReceiptApplication = {
-  /** @scope XM.CashReceiptApplication.prototype */
+XM._ReceivableTaxAdjustment = {
+  /** @scope XM.ReceivableTaxAdjustment.prototype */
   
-  className: 'XM.CashReceiptApplication',
+  className: 'XM.ReceivableTaxAdjustment',
 
   
 
@@ -24,10 +24,10 @@ XM._CashReceiptApplication = {
 
   privileges: {
     "all": {
-      "create": "false",
-      "read": "true",
-      "update": "false",
-      "delete": "false"
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,13 +41,6 @@ XM._CashReceiptApplication = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.CashReceipt
-  */
-  cashReceipt: SC.Record.toOne('XM.CashReceipt', {
-    label: '_cashReceipt'.loc()
-  }),
-
-  /**
     @type XM.Receivable
   */
   receivable: SC.Record.toOne('XM.Receivable', {
@@ -55,17 +48,33 @@ XM._CashReceiptApplication = {
   }),
 
   /**
-    @type Number
+    @type XM.TaxCode
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
+  taxCode: SC.Record.toOne('XM.TaxCode', {
+    label: '_taxCode'.loc()
   }),
 
   /**
     @type Number
   */
-  discount: SC.Record.attr(Number, {
-    label: '_discount'.loc()
+  sequence: SC.Record.attr(Number, {
+    label: '_sequence'.loc()
+  }),
+
+  /**
+    @type Money
+  */
+  tax: SC.Record.attr(Money, {
+    label: '_tax'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    label: '_documentDate'.loc()
   })
 
 };

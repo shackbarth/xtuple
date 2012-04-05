@@ -5,17 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_unit');
+sc_require('mixins/_payable_tax_adjustment');
 
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.TaxAdjustment
 */
-XM.Unit = XM.Document.extend(XM._Unit,
-  /** @scope XM.Unit.prototype */ {
-
-  documentKey: 'name',
+XM.PayableTaxAdjustment = XM.TaxAdjustment.extend(XM._PayableTaxAdjustment,
+  /** @scope XM.PayableTaxAdjustment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

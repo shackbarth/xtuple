@@ -10,10 +10,12 @@ sc_require('mixins/_tax_class');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Document
 */
-XM.TaxClass = XT.Record.extend(XM._TaxClass,
+XM.TaxClass = XM.Document.extend(XM._TaxClass,
   /** @scope XM.TaxClass.prototype */ {
+
+  documentKey: 'code',
 
   // .................................................
   // CALCULATED PROPERTIES

@@ -69,11 +69,12 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
       username/password are arbitrarily handed to it. This is not
       the end-design goal but for development only.
   */
-  getSession: function(username, password) {
+  getSession: function(username, password, company) {
     if(!SC.none(this.session)) return;
     this.log("getSession => requesting a session");
     if(SC.none(username)) username = 'admin';
     if(SC.none(password)) password = 'admin';
+    if(SC.none(company)) company = '380postbooks';
     XT.Request
       .postUrl(this.URL)
       .header({ 'Accept': 'application/json' })
@@ -81,7 +82,8 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
       .send({ 
         requestType: 'requestSession',
         userName: username,
-        password: password
+        password: password,
+        company: company
       });
   },
 
@@ -170,9 +172,9 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     if(SC.ok(response)) {
       if(response.get("body").error) {
         error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+          code: 'xt1014',
+          label: '_datasourceError'.loc(),
+          message: '_dispatchError'.loc() + ': ' + response.get("body").message
         });
         store.dataSourceDidErrorDispatch(dispatch, error);
       } else {
@@ -192,10 +194,10 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
   didFetch: function(response, store, query) {
     if(SC.ok(response)) {
       if(response.get("body").error ) {
-        var error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+        error = SC.Error.create({ 
+          code: 'xt1012',
+          label: '_datasourceError'.loc(),
+          message: '_fetchError'.loc() + ': ' + response.get("body").message
         });
         store.dataSourceDidErrorQuery(query, error);
       } else {
@@ -222,9 +224,9 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     if(SC.ok(response)) {
       if(response.get("body").error) {
         error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+          code: 'xt1011',
+          label: '_datasourceError'.loc(),
+          message: '_retrieveError'.loc() + ': ' + response.get("body").message
         });
         store.dataSourceDidError(storeKey, error);
       } else {
@@ -246,10 +248,11 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     if (SC.ok(response)) {
       if(response.get("body").error) {
         error = SC.Error.create({ 
-          code: 'Error',
-          label: 'Datasource Error',
-          message: response.get("body").message
+          code: 'xt1013',
+          label: '_datasourceError'.loc(),
+          message: '_commitError'.loc() + ': ' + response.get("body").message
         });
+        error.set('message') = error.get('message') + ': ' + response.get("body").message;
         store.dataSourceDidError(storeKey, error);
       } else {
         store.peekStatus(storeKey) !== SC.Record.BUSY_DESTROYING ?
@@ -283,6 +286,7 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
     var payload = {}, qp = query.get('parameters'), 
         conditions = query.get('conditions'),
         language = query.get('queryLanguage'),
+        recordType = query.get('recordType'),
         list, conds = [], params = {};
         
     // massage conditions so they are compatible with the data source
@@ -291,7 +295,18 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
       var tokenValue;
       switch (list[i].tokenType) {
         case "PROPERTY":
-          tokenValue = list[i].tokenValue === "id" ? '"guid"' : '"' + list[i].tokenValue + '"';
+          var value = list[i].tokenValue,
+              proto = recordType.prototype;
+          // format nested records to array query format
+          if (proto[value] && proto[value].isChildAttribute && proto[value].isNested) {
+            tokenValue = '("' + value + '").guid';
+          } else tokenValue = value === "id" ? '"guid"' : '"' + value + '"';
+          break;
+        case "YES":
+          tokenValue = "true";
+          break;
+        case "NO":
+          tokenValue = "false";
           break;
         case "BEGINS_WITH":
           tokenValue = '~^';
@@ -318,7 +333,7 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
       conds.push(tokenValue);
     }
 
-    /* helper function to convert parameters to data source friendly formats */
+    // helper function to convert parameters to data source friendly formats 
     format = function(value) {
       // format date if applicable
       if (SC.kindOf(value, SC.DateTime)) {
@@ -328,8 +343,7 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
         return value.get('id');
       }      
       // return regex source if regex
-      return value;
-      //return value.source === undefined ? value : value.source;
+      return value.source === undefined ? value : value.source;
     }
 
     // massage parameters so they are compatible with the data source

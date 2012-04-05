@@ -5,19 +5,18 @@
 
 /*globals XM */
 
-sc_require('mixins/_bank_account');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/receivable/models
+
+sc_require('mixins/_receivable_pending_application');
 
 /**
   @class
 
-  @extends XM.Document
+  @extends XM.Record
 */
-XM.BankAccount = XM.Document.extend(XM._BankAccount,
-  /** @scope XM.BankAccount.prototype */ { 
+XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplication,
+  /** @scope XM.ReceivablePendingApplication.prototype */ {
 
-  // see document mixin for object behavior(s)
-  documentKey: 'name',
-  
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -30,40 +29,30 @@ XM.BankAccount = XM.Document.extend(XM._BankAccount,
   // OBSERVERS
   //
 
-  statusDidChange: function() {
-    var status = this.get('status');
-
-    if (status !== SC.Record.READY_NEW) {
-      this.currency.set('isEditable', false);
-    }
-  }.observes('status')
-
 });
 
-XM.BankAccount.mixin( /** @scope XM.BankAccount */ {
+XM.ReceivablePendingApplication.mixin( 
+  /** @scope XM.ReceivablePendingApplication */ {
 
 /**
-  @static
-  @constant
-  @type String
-  @default K
-*/
-  CHECKING: 'K',
-
-/**
-  @static
-  @constant
-  @type String
-  @default C
-*/
-  CASH: 'C',
-
-/**
+  Cash Receipt application type.
+  
   @static
   @constant
   @type String
   @default R
 */
-  CREDIT_CARD: 'R'
+  CASH_RECEIPT: 'R',
+
+/**
+  Credit Memo application type.
+  
+  @static
+  @constant
+  @type String
+  @default C
+*/
+  CREDIT: 'C'
 
 });
+
