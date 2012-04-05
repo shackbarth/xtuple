@@ -20,38 +20,15 @@ XM.Item = XM.Document.extend(XM._Item, XM.Documents,
   // .................................................
   // CALCULATED PROPERTIES
   //
-/*
+	
+	/**
+		Uppercase item number.
+	*/	
   number: SC.Record.attr(Number, {
    toType: function(record, key, value) {
     if(value) return value.toUpperCase();
    }
   }),
-
-  unitAvailableTypes: function(){
-    var unitType = this.get('unitType'),
-        fromUnit = this.get('fromUnit'), //LB
-        toUnit = this.get('toUnit'), //EA
-        multiple = this.get('multiple'); //Bool flag true for selling than false for cap, alt cap and material issue
-    if(multiple === true) { //Look at itemuomtouom function in public on postgresql
-      //check to see if multiple if they have the type push in
-      //selling(guid 1), capacity(2), altcapacity(3), materialissue(4) 
-      //selling can be used multiple time but 2,3,4 can only be used once per item of given unit type
-       this.set('value'),
-    } else if(multiple === false) {
-      this.set('value'),
-    }
-  },
-
-  itemTaxTypes: function() {
-    var itemTaxType = this.get('itemTaxType'),
-        itemTaxZone = this.get('itemTaxZone'),
-    if(itemTaxZone) {
-      // item_tax 
-      // item_tax_recoverable sets a true flag when a new item is created in the parent | make sure to update the orm to pull this in 
-      return;
-    }
-  },
-*/
   //..................................................
   // METHODS
   //
@@ -59,18 +36,32 @@ XM.Item = XM.Document.extend(XM._Item, XM.Documents,
   //..................................................
   // OBSERVERS
   //
-  _xm_unitSelectedTypeDidChange: function(){
-    var status = this.get('status'),
-        toUnit = this.get('toUnit');
-    if(status & SC.Record.READY) {
-      //if selected type is removed reevaluate the selected values and send to Available types
-    }
-  }.observes('toUnit'),
+	
+	/**
+		Change flag to true for item type R.
+	*/	
+  _xm_itemTypeDidChange: function() {
+   var status = this.get('status'),
+       itemType = this.get('itemType');
+   if(status & SC.Record.READY) {
+	   if(itemType === 'R'){
+		   this.set('isSold', true);
+		 } 
+  }
+  }.observes('itemType'),
+	
+	/**
+		Check item unit did change set to false.
+	*/	
   _xm_itemUnitDidChange: function() {
     if(this.get('status') === SC.Record.READY_CLEAN) {
       this.item.set('isEditable', false);
     }
   },//.observes('status')
+	
+	/**
+		Select inventory uom than change price uom to the same.
+	*/		
   _xm_itemInventoryConversionDidChange: function() {
     var status = this.get('status'),
         inventoryUnit = this.get('inventoryUnit');

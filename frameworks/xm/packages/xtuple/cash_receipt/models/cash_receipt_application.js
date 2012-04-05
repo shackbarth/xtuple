@@ -17,25 +17,25 @@ XM.CashReceiptApplication = SC.Object.extend(
   
   receivable: null,
   
-  cashReceiptdetail: null,
+  cashReceiptDetail: null,
   
   /** @private */
   amount: 0,
   
   /** @private */
-  amountBinding: SC.Binding.from('*cashReceiptDetail.amount').oneWay().noDelay(),
+  appliedBinding: SC.Binding.from('*cashReceiptDetail.amount').oneWay().noDelay(),
+/*
+  amountDidChange: function() {
+console.log('hello')
+    this.set('amount', this.getPath('cashReceiptDetail.amount'));
+  }.observes('cashReceiptDetail'),
+*/
   
   /** @private */
-  discount: 0,
+  discountAmount: 0,
   
   /** @private */
-  discountBinding: SC.Binding.from('*cashReceiptDetail.discount').oneWay().noDelay(),
-  
-  /** @private */
-  currency: XM.Currency.BASE,
-  
-  /** @private */
-  currencyBinding: SC.Binding.from('*cashReceiptDetail.cashReceipt.currency').oneWay().noDelay(),
+  discountAmountBinding: SC.Binding.from('*cashReceiptDetail.discount').oneWay().noDelay(),
   
   /** @private */
   currencyRate: 1,
@@ -54,44 +54,88 @@ XM.CashReceiptApplication = SC.Object.extend(
   //
   
   /**
-    Total value of applications that have been created, but not posted.
+    The amount to be applied to the associated receivable.
+    
+    @type Number
+  */
+  applied: function() {
+    return this.get('amount') || 0;
+  }.property('amount'),
+
+  /**
+    The discount to be applied to the associated receivable.
+    
+    @type Number
+  */
+  discount: function() {
+    return this.get('discountAmount') || 0;
+  }.property('discountAmount'),
+  
+  /**
+    Total applied amount of this cash receipt in the currency of the receivable.
+    
+    @type Number
+  */
+  receivableApplied: function() {
+    var applied = this.get('applied'),
+        discount = this.get('discount'),
+        crCurrencyRate = this.get('currencyRate') || 1,
+        arCurrencyRate = this.getPath('receivable.currencyRate');
+    return SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE);
+  }.property('applied', 'discount', 'currencyRate'),
+  
+  /**
+    Total value of applications that have been created, but not posted, on the receivable
+    in the receivable's currency.
     
     @type Number
   */
   pending: function() {
     var applications = this.getPath('receivable.pendingApplications'),
-        detail = this.getPath('detail'),
+        id = this.getPath('cashReceiptDetail.id') || -1,
+        receivableApplied = this.get('receivableApplied'), 
         pending = 0;
+    
+    // loop through all pending applications and add them up
     for (var i = 0; i < applications.get('length'); i++) {
       var application = applications.objectAt(i),
-          amount = application.get('amount'),
-          discount = application.get('discount'),
-          currencyRate = application.get('currencyRate') || 1
-      if (application.get('id') !== detailId) {
-        pending = SC.Math.round(pending + (amount + discount) * currencyRate, XT.MONEY_SCALE);
+          pendingApplicationType = application.get('receivablePendingApplicationType'),
+          amount = application.get('amount');
+          
+      // only include pending applications that are not the application from _this_ receipt
+      if (pendingApplicationType !== XM.ReceivablePendingApplication.CASH_RECEIPT || 
+          application.get('id') !== id) {
+        pending += amount;
       }
     }
+    
+    // now add the amount applied from this application
+    pending += receivableApplied;
     return SC.Math.round(pending, XT.MONEY_SCALE);
-  }.property('pendingApplicationsLength', 'amount', 'discount', 'currency', 'currencyRate'),
+  }.property('pendingApplicationsLength', 'receivableApplied'),
 
   /**
     @type Number
   */  
   balance: function() {
-    if (!this._xm_balance) this._xm_balance = XM.Money.create({ isPosted: true });
     var balance = this.getPath('receivable.balance'),
-        pending = this.getPath('receivable.pending'),
-        currency = this.getPath('receivable.currency'),
-        currencyRate
-        applied = statusthis.get('applied');
-    
-    // update the applied money object
-    this._xm_balance.setIfChanged('currency', currency);
-    this._xm_balance.setIfChanged('currencyRate', currencyRate);
-    this._xm_balance.setIfChanged('localValue', applied);
-    
-    return this._xm_applied;
-  }.property('pending')
+        pending = this.get('pending');
+    return SC.Math.round(balance - pending, XT.MONEY_SCALE);
+  }.property('pending'),
+  
+  // .................................................
+  // METHODS
+  //
+  
+  clear: function() {
+    var detail = this.get('cashReceiptDetail');
+    if (detail) detail.destroy();
+    this.set('cashReceiptDetail', null);
+  }
+  
+  // .................................................
+  // OBSERVERS
+  //
   
 });
 
