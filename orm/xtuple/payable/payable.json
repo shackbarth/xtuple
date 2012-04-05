@@ -149,15 +149,6 @@
       }
     },   
     {
-      "name": "pendingApplications",
-      "toMany": {
-        "isNested": true,
-        "type": "PayablePendingApplication",
-        "column": "apopen_id",
-        "inverse": "payable"
-      }
-    }, 
-    {
       "name": "isOpen",
       "attr": {
         "type": "Date",

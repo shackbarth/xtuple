@@ -165,15 +165,6 @@
       }
     },  
     {
-      "name": "pendingApplications",
-      "toMany": {
-        "isNested": true,
-        "type": "ReceivablePendingApplication",
-        "column": "aropen_id",
-        "inverse": "receivable"
-      }
-    },   
-    {
       "name": "isOpen",
       "attr": {
         "type": "Boolean",

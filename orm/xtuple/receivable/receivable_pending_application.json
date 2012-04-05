@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ReceivablePendingApplication",
-  "table": "cashrcptitem",
+  "table": "xt.arpending",
   "comment": "Receivable Pending Application Map",
   "privileges": {
     "all": {
@@ -17,84 +17,30 @@
       "name": "guid",
       "attr": {
         "type": "Number",
-        "column": "cashrcptitem_id",
+        "column": "arpending_id",
         "isPrimaryKey": true
       }
     },
     {
-      "name": "cashReceipt",
+      "name": "receivablePendingApplcationType",
       "toOne": {
-        "type": "CashReceipt",
-        "column": "cashrcptitem_cashrcpt_id"
+        "type": "String",
+        "column": "arpending_type"
       }
     },
     {
       "name": "receivable",
       "toOne": {
         "type": "Receivable",
-        "column": "cashrcptitem_aropen_id"
+        "column": "arpending_aropen_id"
       }
     },
     {
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "cashrcptitem_amount"
+        "column": "arpending_amount"
       }
-    },
-    {
-      "name": "discount",
-      "attr": {
-        "type": "Number",
-        "column": "cashrcptitem_discount",
-        "isRequired": true
-      }
-    }
-  ],
-  "extensions": [
-    {
-      "table": "cashrcpt",
-      "isChild": true,
-      "relations": [
-        {
-          "column": "cashrcpt_id",
-          "inverse": "cashReceipt"
-        }
-      ],
-      "properties": [
-        {
-          "name": "isPosted",
-          "attr": {
-            "type": "Boolean",
-            "column": "cashrcpt_posted",
-            "value": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "isVoid",
-          "attr": {
-            "type": "Boolean",
-            "column": "cashrcpt_void",
-            "value": false,
-            "isVisible": false
-          }
-        },
-        {
-          "name": "currency",
-          "toOne": {
-            "type": "Currency",
-            "column": "cashrcpt_curr_id"
-          }
-        },
-        {
-          "name": "currencyRate",
-          "attr": {
-            "type": "Number",
-            "column": "cashrcpt_curr_rate"
-          }
-        }
-      ]
     }
   ],
   "isNestedOnly": true,

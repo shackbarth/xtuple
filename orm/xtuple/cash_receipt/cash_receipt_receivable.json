@@ -1,0 +1,118 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "CashReceiptReceivable",
+  "table": "aropen",
+  "comment": "Cash Receipt Receivable Map",
+  "privileges": {
+    "all": {
+      "create": false,
+      "read": "ViewCashReceipts",
+      "update": "MaintainCashReceipts",
+      "delete": false
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "customer",
+      "toOne": {
+        "type": "CustomerInfo",
+        "column": "aropen_cust_id",
+        "inverse" : "guid",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "dueDate",
+      "attr": {
+        "type": "Date",
+        "column": "aropen_duedate",
+        "isRequired": true,
+        "isEditable": false
+      }
+    },
+    {
+      "name": "documentType",
+      "attr": {
+        "type": "String",
+        "column": "aropen_doctype",
+        "isRequired": true,
+        "isEditable": false
+      }
+    },
+    {
+      "name": "number",
+      "attr": {
+        "type": "String",
+        "column": "aropen_docnumber",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "orderNumber",
+      "attr": {
+        "type": "String",
+        "column": "aropen_ordernumber",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "terms",
+      "toOne": {
+        "type": "Terms",
+        "column": "aropen_terms_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Money",
+        "column": "aropen_amount",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "aropen_curr_id",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "currencyRate",
+      "attr": {
+        "type": "Number",
+        "column": "aropen_curr_rate",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "pendingApplications",
+      "toMany": {
+        "isNested": true,
+        "type": "ReceivablePendingApplication",
+        "column": "aropen_id",
+        "inverse": "receivable"
+      }
+    },   
+    {
+      "name": "isOpen",
+      "attr": {
+        "type": "Boolean",
+        "column": "aropen_open",
+        "isEditable": false
+      }
+    }
+  ],
+  "isSystem": true
+}

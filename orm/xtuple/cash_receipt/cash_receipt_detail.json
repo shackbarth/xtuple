@@ -33,7 +33,7 @@
     {
       "name": "receivable",
       "toOne": {
-        "type": "Receivable",
+        "type": "CashReceiptReceivable",
         "column": "cashrcptitem_aropen_id",
         "isRequired": true
       }

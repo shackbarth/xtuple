@@ -140,7 +140,7 @@
       }
     },
     {
-      "name": "detail",
+      "name": "details",
       "toMany": {
         "isNested": true,
         "type": "CashReceiptDetail",
