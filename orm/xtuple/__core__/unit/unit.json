@@ -26,7 +26,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "uom_name"
+        "column": "uom_name",
+        "isRequired": true
       }
     },
     {

@@ -26,7 +26,8 @@
       "name": "code",
       "attr": {
         "type": "String",
-        "column": "taxclass_code"
+        "column": "taxclass_code",
+        "isRequired": true
       }
     },
     {

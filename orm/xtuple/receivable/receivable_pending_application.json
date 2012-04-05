@@ -1,0 +1,48 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "ReceivablePendingApplication",
+  "table": "xt.arpending",
+  "comment": "Receivable Pending Application Map",
+  "privileges": {
+    "all": {
+      "create": "false",
+      "read": "true",
+      "update": "false",
+      "delete": "false"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "arpending_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "receivablePendingApplcationType",
+      "toOne": {
+        "type": "String",
+        "column": "arpending_type"
+      }
+    },
+    {
+      "name": "receivable",
+      "toOne": {
+        "type": "Receivable",
+        "column": "arpending_aropen_id"
+      }
+    },
+    {
+      "name": "amount",
+      "attr": {
+        "type": "Number",
+        "column": "arpending_amount"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}

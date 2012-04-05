@@ -261,7 +261,21 @@
       */
       "attr": {
         /** 
-        The expected type of the property. Should be Number, String or Date.
+        The expected type of the property. Can be any of the following: 
+          * String
+          * Date
+          * Boolean
+          * Number
+          * Money
+          * Quantity
+          * QuantityPer
+          * Cost
+          * SalesPrice
+          * PurchasePrice
+          * ExtendedPrice
+          * UnitRatio
+          * Percent
+          * Weight
            
         @type {String}
         */

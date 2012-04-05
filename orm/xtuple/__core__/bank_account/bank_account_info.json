@@ -35,6 +35,13 @@
         "type": "String",
         "column": "bankaccnt_descrip"
       }
+    },
+    {
+      "name": "currency",
+      "toOne": {
+        "type": "Currency",
+        "column": "bankaccnt_curr_id"
+      }
     }
   ],
   "isSystem": true

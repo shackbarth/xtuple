@@ -280,7 +280,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           }
 
           /* handle fixed value */
-          if(attr.value) {
+          if(attr.value !== undefined) {
             var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
 
             /* for select */     
@@ -328,10 +328,8 @@ select xt.install_js('XT','Orm','xtuple', $$
           } 
 
           /* for insert rule */
-          if(isEditable) {
-            insTgtCols.push('"' + toOne.column + '"');
-            insSrcCols.push('(new."' + alias + '").' + inverse);
-          }
+          insTgtCols.push('"' + toOne.column + '"');
+          insSrcCols.push('(new."' + alias + '").' + inverse);
 
           /* for update rule */
           if(isEditable) updCols.push(toOne.column + ' = (new."' + alias + '").' + inverse );

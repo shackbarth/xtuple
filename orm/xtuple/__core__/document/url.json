@@ -33,7 +33,8 @@
       "name": "path",
       "attr": {
         "type": "String",
-        "column": "url_url"
+        "column": "url_url",
+        "isRequired": true
       }
     }
   ],

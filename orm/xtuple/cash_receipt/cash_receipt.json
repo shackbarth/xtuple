@@ -3,7 +3,7 @@
   "nameSpace": "XM",
   "type": "CashReceipt",
   "table": "cashrcpt",
-  "idSequenceName": "public.cashrcpt_cashrcpt_id_seq",
+  "idSequenceName": "cashrcpt_cashrcpt_id_seq",
   "orderSequence": "CashRcptNumber",
   "comment": "Cash Receipt Map",
   "privileges": {
@@ -27,7 +27,8 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "cashrcpt_number"
+        "column": "cashrcpt_number",
+        "isRequired": true
       }
     },
     {
@@ -35,21 +36,24 @@
       "toOne": {
         "isNested": true,
         "type": "CustomerInfo",
-        "column": "cashrcpt_cust_id"
+        "column": "cashrcpt_cust_id",
+        "isRequired": true
       }
     },
     {
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "cashrcpt_amount"
+        "column": "cashrcpt_amount",
+        "isRequired": true
       }
     },
     {
       "name": "currency",
       "toOne": {
         "type": "Currency",
-        "column": "cashrcpt_curr_id"
+        "column": "cashrcpt_curr_id",
+        "isRequired": true
       }
     },
     {
@@ -63,21 +67,34 @@
       "name": "fundsType",
       "attr": {
         "type": "String",
-        "column": "cashrcpt_docnumber"
+        "column": "cashrcpt_fundstype",
+        "isRequired": true
+      }
+    },
+    {
+      "name": "documentNumber",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_docnumber",
+        "isRequired": true
       }
     },
     {
       "name": "salesCategory",
       "toOne": {
         "type": "SalesCategory",
-        "column": "cashrcpt_salescat_id"
+        "column": "cashrcpt_salescat_id",
+        "isRequired": true,
+        "defaultValue": false
       }
     },
     {
-      "name": "useCustomerDeposit",
+      "name": "isUseCustomerDeposit",
       "attr": {
         "type": "Boolean",
-        "column": "cashrcpt_usecustdeposit"
+        "column": "cashrcpt_usecustdeposit",
+        "isRequired": true,
+        "defaultValue": false
       }
     },
     {
@@ -91,7 +108,8 @@
       "name": "bankAccount",
       "toOne": {
         "type": "BankAccount",
-        "column": "cashrcpt_bankaccnt_id"
+        "column": "cashrcpt_bankaccnt_id",
+        "isRequired": true
       }
     },
     {
@@ -105,21 +123,27 @@
       "name": "isPosted",
       "attr": {
         "type": "Boolean",
-        "column": "cashrcpt_posted"
+        "column": "cashrcpt_posted",
+        "isRequired": true,
+        "defaultValue": false,
+        "isEditable": false
       }
     },
     {
       "name": "isVoid",
       "attr": {
         "type": "Boolean",
-        "column": "cashrcpt_void"
+        "column": "cashrcpt_void",
+        "isRequired": true,
+        "defaultValue": false,
+        "isEditable": false
       }
     },
     {
-      "name": "applications",
+      "name": "details",
       "toMany": {
         "isNested": true,
-        "type": "CashReceiptApplication",
+        "type": "CashReceiptDetail",
         "column": "cashrcpt_id",
         "inverse": "cashReceipt"
       }
@@ -129,6 +153,20 @@
       "attr": {
         "type": "String",
         "column": "cashrcpt_notes"
+      }
+    },
+    {
+      "name": "posted",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_posteddate"
+      }
+    },
+    {
+      "name": "postedBy",
+      "attr": {
+        "type": "String",
+        "column": "cashrcpt_postedby"
       }
     }
   ],

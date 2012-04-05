@@ -15,7 +15,8 @@
       "name": "useByReceivables",
       "attr": {
         "type": "Boolean",
-        "column": "bankaccnt_ar"
+        "column": "bankaccnt_ar",
+        "defaultValue": false
       }
     }
   ],

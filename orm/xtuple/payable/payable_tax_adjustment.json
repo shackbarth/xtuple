@@ -1,0 +1,64 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "PayableTaxAdjustment",
+  "table": "apopentax",
+  "idSequenceName": "taxhist_taxhist_id_seq",
+  "comment": "Payable Tax Adjustment Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "payable",
+      "toOne": {
+        "type": "Payable",
+        "column": "taxhist_parent_id"
+      }
+    },
+    {
+      "name": "taxCode",
+      "toOne": {
+        "type": "TaxCode",
+        "column": "taxhist_tax_id"
+      }
+    },
+    {
+      "name": "sequence",
+      "attr": {
+        "type": "Number",
+        "column": "taxhist_sequence",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "tax",
+      "attr": {
+        "type": "Money",
+        "column": "taxhist_tax"
+      }
+    },
+    {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "taxhist_docdate"
+      }
+    }
+  ],
+	"isNestedOnly": true,
+  "isSystem": true
+}

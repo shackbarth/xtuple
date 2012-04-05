@@ -64,6 +64,9 @@
 \i xt/javascript/session.sql;
 
 -- xt views
+\i xt/views/apapply.sql;
+\i xt/views/arapply.sql;
+\i xt/views/arpending.sql;
 \i xt/views/docinfo.sql; 
 \i xt/views/gl.sql;
 \i xt/views/invcheadtaxadj.sql;
@@ -103,6 +106,7 @@
 \i xm/javascript/period.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/purchase_journal.sql;
+\i xm/javascript/receivable.sql;
 \i xm/javascript/receivables.sql;
 \i xm/javascript/sales_journal.sql;
 \i xm/javascript/standard_journal.sql;
