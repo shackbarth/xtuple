@@ -1,3 +1,7 @@
 {
-  "type": "lazy"
+  "type": "lazy",
+  "dependencies": [
+    "document"
+  ]
+
 }
