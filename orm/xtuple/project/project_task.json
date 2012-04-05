@@ -134,8 +134,7 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "prjtask_username",
-        "inverse": "username",
-        "defaultValue": "currentUser"
+        "inverse": "username"
       }
     },
     {
@@ -144,8 +143,7 @@
         "isNested": true,
         "type": "UserAccountInfo",
         "column": "prjtask_owner_username",
-        "inverse": "username",
-        "defaultValue": "currentUser"
+        "inverse": "username"
       }
     },
     {
