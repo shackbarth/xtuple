@@ -114,7 +114,9 @@ XM._Project = {
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
-    defaultValue: true,
+    defaultValue: function() {
+      return arguments[0].getPath("store.dataSource").session.userName;
+    },
     label: '_assignedTo'.loc()
   }),
 
@@ -130,7 +132,9 @@ XM._Project = {
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true,
-    defaultValue: true,
+    defaultValue: function() {
+      return arguments[0].getPath("store.dataSource").session.userName;
+    },
     label: '_owner'.loc()
   }),
 

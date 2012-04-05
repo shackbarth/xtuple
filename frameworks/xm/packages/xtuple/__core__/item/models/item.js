@@ -15,60 +15,48 @@ sc_require('mixins/_item');
   @extends XM.Document
 */
 XM.Item = XM.Document.extend(XM._Item, XM.Documents,
-  /** @scope XM.Item.prototype */ {
+/** @scope XM.Item.prototype */ {
 
-  // .................................................
-  // CALCULATED PROPERTIES
-  //
-	
-	/**
-		Uppercase item number.
-	*/	
-  number: SC.Record.attr(Number, {
-   toType: function(record, key, value) {
-    if(value) return value.toUpperCase();
-   }
-  }),
-  //..................................................
-  // METHODS
-  //
+// .................................................
+// CALCULATED PROPERTIES
+//
 
-  //..................................................
-  // OBSERVERS
-  //
-	
-	/**
-		Change flag to true for item type R.
-	*/	
-  _xm_itemTypeDidChange: function() {
-   var status = this.get('status'),
-       itemType = this.get('itemType');
-   if(status & SC.Record.READY) {
-	   if(itemType === 'R'){
-		   this.set('isSold', true);
-		 } 
+number: SC.Record.attr(Number, {
+  toType: function(record, key, value) {
+  if(value) return value.toUpperCase();
   }
-  }.observes('itemType'),
-	
-	/**
-		Check item unit did change set to false.
-	*/	
-  _xm_itemUnitDidChange: function() {
-    if(this.get('status') === SC.Record.READY_CLEAN) {
-      this.item.set('isEditable', false);
-    }
-  },//.observes('status')
-	
-	/**
-		Select inventory uom than change price uom to the same.
-	*/		
-  _xm_itemInventoryConversionDidChange: function() {
-    var status = this.get('status'),
-        inventoryUnit = this.get('inventoryUnit');
-    if(status & SC.Record.READY) {
-         this.set('priceUnit', this.get('inventoryUnit'));       
-    }
-  }.observes('inventoryUnit')
+}),
+//..................................................
+// METHODS
+//
+
+//..................................................
+// OBSERVERS
+//
+
+_xm_itemTypeDidChange: function() {
+  var status = this.get('status'),
+  itemType = this.get('itemType');
+  if(status & SC.Record.READY) {
+    if (itemType === 'R'){
+       this.set('isSold', true);
+    } 
+  }
+}.observes('itemType'),
+
+_xm_itemUnitDidChange: function() {
+  if (this.get('status') === SC.Record.READY_CLEAN) {
+     this.item.set('isEditable', false);
+  }
+},//.observes('status')
+
+_xm_itemInventoryConversionDidChange: function() {
+  var status = this.get('status'),
+      inventoryUnit = this.get('inventoryUnit');
+  if (status & SC.Record.READY) {
+     this.set('priceUnit', this.get('inventoryUnit'));       
+  }
+}.observes('inventoryUnit')
 
 });
 
