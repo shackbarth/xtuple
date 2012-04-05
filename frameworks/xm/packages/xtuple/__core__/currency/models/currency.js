@@ -60,7 +60,6 @@ XM.Currency = XM.Document.extend(XM._Currency,
     // Validate abbreviation - only check if changed
     if(status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY) {
       var record = this,
-          status = record.get('status'),
           abbr = record.get('abbreviation');
         
       callback = function(err, result) {

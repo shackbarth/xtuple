@@ -218,4 +218,22 @@ SC.mixin(XT,
     info: YES 
   }),
 
+  //...................................................
+  // DateTime convenience functions
+  //
+
+  /**
+    returns SC.DateTime object set to '1971-01-01'
+  */
+  startOfTime: function() {
+    return SC.DateTime.create(0);
+  },
+
+  /**
+    returns SC.DateTime object set to '2100-01-01'
+  */
+  endOfTime: function() {
+    return SC.DateTime.parse('2100-01-01 00:00:00', '%Y-%m-%d %H:%M:%S');
+  },
+
 });

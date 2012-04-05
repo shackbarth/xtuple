@@ -10,10 +10,12 @@ sc_require('mixins/_unit');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Document
 */
-XM.Unit = XT.Record.extend(XM._Unit,
+XM.Unit = XM.Document.extend(XM._Unit,
   /** @scope XM.Unit.prototype */ {
+
+  documentKey: 'name',
 
   // .................................................
   // CALCULATED PROPERTIES
