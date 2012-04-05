@@ -1,0 +1,128 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "LayoutIncomeStatementGroup",
+  "table": "flgrp",
+  "idSequenceName": "flgrp_flgrp_id_seq",
+  "comment": "Layout Income Statement Group Map",
+  "privileges": {
+    "all": {
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "flgrp_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "layoutIncomeStatement",
+      "toOne": {
+        "type": "LayoutIncomeStatement",
+        "column": "flgrp_flhead_id"
+      }
+    },
+    {
+      "name": "layoutIncomeStatementGroup",
+      "toOne": {
+        "type": "LayoutIncomeStatementGroup",
+        "column": "flgrp_flgrp_id"
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "flgrp_name"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "flgrp_descrip"
+      }
+    },
+    {
+      "name": "isShowSubtotal",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_subtotal"
+      }
+    },
+    {
+      "name": "isAlternateSubtotal",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_usealtsubtotal",
+        "defaultValue": false
+      }
+    },
+    {
+      "name": "alternateSubtotalLabel",
+      "attr": {
+        "type": "String",
+        "column": "flgrp_altsubtotal",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "percentLayoutIncomeStatementGroup",
+      "toOne": {
+        "type": "FinancialLayoutGroup",
+        "column": "flgrp_prcnt_flgrp_id"
+      }
+    },
+    {
+      "name": "isSummarize",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_summarize"
+      }
+    },
+    {
+      "name": "isSubtract",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_subtract"
+      }
+    },
+    {
+      "name": "isShowBudget",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_showbudget"
+      }
+    },
+    {
+      "name": "isShowBudgetPercent",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_showbudgetprcnt"
+      }
+    },
+    {
+      "name": "isShowDifference",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_showdiff"
+      }
+    },
+    {
+      "name": "isShowDifferencePercent",
+      "attr": {
+        "type": "Boolean",
+        "column": "flgrp_showdiffprcnt"
+      }
+    }
+  ],
+  "isNestedOnly": true,
+  "isSystem": true
+}
