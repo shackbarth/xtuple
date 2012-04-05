@@ -31,6 +31,15 @@
       }
     },
     {
+      "name": "documentDate",
+      "attr": {
+        "type": "Date",
+        "column": "aropen_docdate",
+        "isRequired": true,
+        "isEditable": false
+      }
+    },
+    {
       "name": "dueDate",
       "attr": {
         "type": "Date",
@@ -96,6 +105,15 @@
         "isEditable": false
       }
     },
+    {
+      "name": "applications",
+      "toMany": {
+        "isNested": true,
+        "type": "ReceivableApplication",
+        "column": "aropen_id",
+        "inverse": "receivable"
+      }
+    },  
     {
       "name": "pendingApplications",
       "toMany": {
