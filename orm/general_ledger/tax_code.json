@@ -15,7 +15,8 @@
       "name": "ledgerAccount",
       "toOne": {
         "type": "LedgerAccount",
-        "column": "tax_sales_accnt_id"
+        "column": "tax_sales_accnt_id",
+        "isRequired": true
       }
     }
   ],

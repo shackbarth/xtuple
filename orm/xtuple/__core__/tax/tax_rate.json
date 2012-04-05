@@ -32,14 +32,14 @@
     {
       "name": "percent",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "taxrate_percent"
       }
     },
     {
       "name": "amount",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "taxrate_amount"
       }
     },
@@ -48,21 +48,24 @@
       "toOne": {
         "isNested": true,
         "type": "Currency",
-        "column": "taxrate_curr_id"
+        "column": "taxrate_curr_id",
+        "defaultValue": "baseCurrency"
       }
     },
     {
       "name": "effective",
       "attr": {
         "type": "Date",
-        "column": "taxrate_effective"
+        "column": "taxrate_effective",
+        "defaultValue": "startOfTime"
       }
     },
     {
       "name": "expires",
       "attr": {
         "type": "Date",
-        "column": "taxrate_expires"
+        "column": "taxrate_expires",
+        "defaultValue": "endOfTime"
       }
     }
   ],

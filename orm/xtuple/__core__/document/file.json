@@ -34,7 +34,8 @@
       "attr": {
         "type": "String",
         "column": "file_stream",
-        "isEditable": false
+        "isEditable": false,
+        "isRequired": true
       }
     }
   ],

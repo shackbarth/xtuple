@@ -26,7 +26,8 @@
       "name": "code",
       "attr": {
         "type": "String",
-        "column": "taxzone_code"
+        "column": "taxzone_code",
+        "isRequired": true
       }
     },
     {
