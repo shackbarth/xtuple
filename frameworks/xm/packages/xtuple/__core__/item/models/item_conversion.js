@@ -19,6 +19,18 @@ XM.ItemConversion = XT.Record.extend(XM._ItemConversion,
   // CALCULATED PROPERTIES
   //
 
+	/**
+		Unit conversion.
+	*/	
+	unitAvailableTypes: function(){
+    var fromUnit = this.get('fromUnit'),
+        toUnit = this.get('toUnit'),
+				unitType = this.get('unitType');
+		if(unitType === 2 || 3 || 4){
+			 this.set('toUnit') = this.get('toUnit');
+		}
+	},
+	
   //..................................................
   // METHODS
   //
