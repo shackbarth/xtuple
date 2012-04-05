@@ -45,7 +45,7 @@ XM.Item = XM.Document.extend(XM._Item, XM.Documents,
        itemType = this.get('itemType');
    if(status & SC.Record.READY) {
 	   if(itemType === 'R'){
-		   this.set('isSold', true),
+		   this.set('isSold', true);
 		 } 
   }
   }.observes('itemType'),
