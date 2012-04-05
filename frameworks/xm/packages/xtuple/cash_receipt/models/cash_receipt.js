@@ -32,9 +32,28 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /** @private */
   receivablesLengthBinding: SC.Binding.from('*receivables.length').oneWay().noDelay(),
   
+  /**
+    Total amount applied.
+  */
+  applied: 0,
+  
+  /**
+    Total discount taken.
+    
+    @type Number
+  */
+  discount: 0,
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
+  
+  /**
+    Total unapplied.
+  */
+  balance: function() {
+    return SC.Math.round(this.get('amount') || 0 - this.get('applied') || 0, XT.MONEY_SCALE);
+  }.property('applied'),
   
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
@@ -55,11 +74,34 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     } 
     return [];
   }.property('customer', 'isPosted').cacheable(),
-
   
   //..................................................
   // METHODS
   //
+  
+  /**
+    Update the amount applied.
+    
+    @param {Number} amount to add
+    @returns Number
+  */
+  updateApplied: function(amount) {
+    var applied = SC.Math.round(this.get('applied') + amount, XT.MONEY_SCALE);
+    this.set('applied', applied);
+    return applied;
+  },
+
+  /**
+    Update the discount taken.
+    
+    @param {Number} amount to add
+    @returns Number
+  */  
+  updateDiscount: function(amount) {
+    var discount = SC.Math.round(this.get('discount') + amount, XT.MONEY_SCALE);
+    this.set('discount', discount);
+    return discount;
+  },
 
   //..................................................
   // OBSERVERS
@@ -71,25 +113,36 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   detailsLengthDidChange: function() {
     var details = this.get('details'),
-        applications = this.get('applications');
-    
+        applications = this.get('applications'),
+        isUpdated = false;
+
     // process
     for (var i = 0; i < details.get('length'); i++) {
       var detail = details.objectAt(i),
           receivable = detail.get('receivable'),
-          application = applications.findProperty('receivable', receivable);
+          application = applications.findProperty('receivable', receivable),
+          status = detail.get('status');
           
       // if not found make one
-      if (!application) {
-        application = XM.CashReceiptApplication.create({
-          cashReceiptDetail: detail,
-          receivable: receivable
-        });
-        applications.pushObject(application);
+      if ((status & SC.Record.DESTROYED) === 0) {
+        if (!application) {
+          application = XM.CashReceiptApplication.create();
+          application.set('cashReceiptDetail', detail),
+          application.set('receivable', receivable),
+          applications.pushObject(application);
+          isUpdated = true;
+          
+        // if found, add detail if necessary
+        } else if (!application.get('cashReceiptDetail')) {
+          application.set('cashReceiptDetail', detail);
+          isUpdated = true;
+        }
         
-      // if found, add detail if necessary
-      } else if (!application.get('cashReceiptDetail')) {
-        application.set('cashReceiptDetail', detail);
+        // Update the cash receipt totals
+        if (isUpdated) {
+          this.updateApplied(application.get('applied'));
+          this.updateDiscount(application.get('discount'));
+        }
       }
     }
   }.observes('detailsLength').cacheable(),
