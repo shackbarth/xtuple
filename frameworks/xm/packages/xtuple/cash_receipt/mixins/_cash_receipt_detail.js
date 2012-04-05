@@ -49,9 +49,9 @@ XM._CashReceiptDetail = {
   }),
 
   /**
-    @type XM.Receivable
+    @type XM.CashReceiptReceivable
   */
-  receivable: SC.Record.toOne('XM.Receivable', {
+  receivable: SC.Record.toOne('XM.CashReceiptReceivable', {
     isRequired: true,
     label: '_receivable'.loc()
   }),

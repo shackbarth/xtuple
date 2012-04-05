@@ -26,12 +26,6 @@ XM.SubLedger = XM.TaxableDocument.extend(
   asOf: null,
   
   /** @private */
-  pendingApplicationsLength: 0,
-  
-  /** @private */
-  pendingApplicationsLengthBinding: SC.Binding.from('*pendingApplications.length').oneWay().noDelay(),
-  
-  /** @private */
   applicationsLength: 0,
   
   /** @private */
@@ -41,24 +35,6 @@ XM.SubLedger = XM.TaxableDocument.extend(
   // CALCULATED PROPERTIES
   //
   
-  /**
-    Total value of applications that have been created, but not posted.
-    
-    @type Number
-  */
-  pending: function() {
-    var applications = this.get('pendingApplications'),
-        pending = 0;
-    for (var i = 0; i < applications.get('length'); i++) {
-      var application = applications.objectAt(i),
-          amount = application.get('amount'),
-          discount = application.get('discount'),
-          currencyRate = application.get('currencyRate') || 1;
-      pending = SC.Math.round(pending + (amount + discount) * currencyRate, XT.MONEY_SCALE);
-    }
-    return SC.Math.round(pending, XT.MONEY_SCALE);
-  }.property('pendingApplicationsLength', 'asOf').cacheable(),
-
   /**
     Total value of all posted applications.
     

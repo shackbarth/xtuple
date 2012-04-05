@@ -6,7 +6,7 @@
 /*globals XM */
 
 sc_require('mixins/_cash_receipt');
-sc_require('models/cash_receipt application');
+sc_require('models/cash_receipt_application');
 
 /**
   @class
@@ -18,11 +18,13 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 
   numberPolicy: XT.AUTO_NUMBER,
 
+  applications: [],
+
   /** @private */
-  detailLength: 0,
+  detailsLength: 0,
   
   /** @private */
-  detailLengthBinding: SC.Binding.from('*detail.length').oneWay().noDelay(),
+  detailsLengthBinding: SC.Binding.from('*details.length').oneWay().noDelay(),
   
   /** @private */
   receivablesLength: 0,
@@ -35,72 +37,25 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //
   
   receivables: function() {
-    if (!this._xm_receviables) this._xm_receivables = [];
+    if (!this._xm_receivables) this._xm_receivables = [];
     var customer = this.get('customer'),
         isPosted = this.get('posted'),
-        conditions, parameters;
+        store = this.get('store');
         
-    // build a query to get all the open receivables   
-    if (customer && !isPosted) {
-      var store = this.get('store');
-      
-      // define the query
-      qry = SC.Query.local(XM.Receivable, {
-        conditions: "customer = {customer} AND isOpen = YES",
-        parameters: {
-          customer: customer 
-        }
-      });
-    
-      // do it
-      this._xm_receivables = store.find(qry);
-    } else this._xm_receivables = [];
-        
-    return this._xm_receivables;
-  }.property('customer'),
-  
-  /**
-    @type SC.Array
-  */
-  applications: function() {
-    if (!this._xm_applications) this._xm_applications = [];
-    var receivables = this.get('receivables'),
-        detail = this.get('detail');
-    
-    // process receivables
-    for (var i = 0; i < receivables; i++) {
-      var receivable = receivables.objectAt(i),
-          application = this._xm_applications.findProperty('receivable', receivable);
-          
-      // if not found make one
-      if (!application) {
-        application = XM.CashReceiptApplication.create({
-          receivable: receivable
-        });
-        this._xm_applications.pushObject(application);
+    // get receivables according to situation   
+    if (customer && isPosted === false) {
+      if (!this._xm_query) {
+        this._xm_query = SC.Query.local(XM.CashReceiptReceiavble, {
+          conditions: "customer = {customer} AND isOpen = YES"
+        })
       }
-    }
-    
-    // process detail
-    for (var i = 0; i < detail; i++) {
-      var detail = detail.objectAt(i),
-          receivable = detail.get('receivable'),
-          application = this._xm_applications.findProperty('receivable', receivable);
-          
-      // if not found make one
-      if (!application) {
-        application = XM.CashReceiptApplication.create({
-          cashReceiptDetail: detail,
-          receivable: receivable
-        });
-        this._xm_applications.pushObject();
-        
-      // if found, add detail if necessary
-      } else if (!application.get('cashReceiptDetail')) {
-        application.set('cashReceiptDetail', detail);
-      }
-    }
-  }.property('detailLength', 'receivablesLength'),
+      this._xm_query.setIfChanged('parameters', { customer: customer });
+      this._xm_receivables = store.find(this._xm_query);
+      return this._xm_receivables;
+    } 
+    return [];
+  }.property('customer', 'isPosted').cacheable(),
+
   
   //..................................................
   // METHODS
@@ -112,7 +67,52 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   customerDidChange: function() {
     if (this.get('customer')) this.customer.set('isEditable', false);
-  }.observes('customer')
+  }.observes('customer'),
+  
+  detailsLengthDidChange: function() {
+    var details = this.get('details'),
+        applications = this.get('applications');
+    
+    // process
+    for (var i = 0; i < details.get('length'); i++) {
+      var detail = details.objectAt(i),
+          receivable = detail.get('receivable'),
+          application = applications.findProperty('receivable', receivable);
+          
+      // if not found make one
+      if (!application) {
+        application = XM.CashReceiptApplication.create({
+          cashReceiptDetail: detail,
+          receivable: receivable
+        });
+        applications.pushObject(application);
+        
+      // if found, add detail if necessary
+      } else if (!application.get('cashReceiptDetail')) {
+        application.set('cashReceiptDetail', detail);
+      }
+    }
+  }.observes('detailsLength').cacheable(),
+
+  receivablesLengthDidChange: function() {
+    var receivables = this.get('receivables'),
+        applications = this.get('applications');
+    
+    // process
+    for (var i = 0; i < receivables.get('length'); i++) {
+      var receivable = receivables.objectAt(i),
+          application = applications.findProperty('receivable', receivable);
+          
+      // if not found make one
+      if (!application) {
+        application = XM.CashReceiptApplication.create({
+          cashReceiptDetail: detail,
+          receivable: receivable
+        });
+        applications.pushObject(application);
+      }
+    }
+  }.observes('receivablesLength').cacheable(),
 
 });
 

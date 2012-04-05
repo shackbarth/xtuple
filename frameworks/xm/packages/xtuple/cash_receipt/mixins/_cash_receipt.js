@@ -161,10 +161,10 @@ XM._CashReceipt = {
   /**
     @type XM.CashReceiptDetail
   */
-  detail: SC.Record.toMany('XM.CashReceiptDetail', {
+  details: SC.Record.toMany('XM.CashReceiptDetail', {
     isNested: true,
     inverse: 'cashReceipt',
-    label: '_detail'.loc()
+    label: '_details'.loc()
   }),
 
   /**
