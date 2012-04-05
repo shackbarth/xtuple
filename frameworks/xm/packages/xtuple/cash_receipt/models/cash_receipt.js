@@ -39,13 +39,13 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
     var customer = this.get('customer'),
-        isPosted = this.get('posted'),
+        isPosted = this.get('isPosted'),
         store = this.get('store');
         
     // get receivables according to situation   
     if (customer && isPosted === false) {
       if (!this._xm_query) {
-        this._xm_query = SC.Query.local(XM.CashReceiptReceiavble, {
+        this._xm_query = SC.Query.local(XM.CashReceiptReceivable, {
           conditions: "customer = {customer} AND isOpen = YES"
         })
       }
@@ -106,7 +106,6 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       // if not found make one
       if (!application) {
         application = XM.CashReceiptApplication.create({
-          cashReceiptDetail: detail,
           receivable: receivable
         });
         applications.pushObject(application);
