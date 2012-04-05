@@ -1,0 +1,132 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "LayoutIncomeStatement",
+  "table": "flhead",
+  "idSequenceName": "flhead_flhead_id_seq",
+  "comment": "Layout Income Statement Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainFinancialLayouts",
+      "read": "MaintainFinancialLayouts",
+      "update": "MaintainFinancialLayouts",
+      "delete": "MaintainFinancialLayouts"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "flhead_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "name",
+      "attr": {
+        "type": "String",
+        "column": "flhead_name",
+        "isRequired": true
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "flhead_descrip"
+      }
+    },
+    {
+      "name": "isActive",
+      "attr": {
+        "type": "Boolean",
+        "column": "flhead_active",
+        "defaultValue": true
+      }
+    },
+    {
+      "name": "layoutType",
+      "attr": {
+        "type": "String",
+        "column": "flhead_type",
+        "value": "I",
+        "isVisible": false
+      }
+    },
+    {
+      "name": "groups",
+      "toMany": {
+        "isNested": true,
+        "type": "LayoutIncomeStatementGroup",
+        "column": "flhead_id",
+        "inverse": "layoutIncomeStatement"
+      }
+    },
+    {
+      "name": "details",
+      "toMany": {
+        "isNested": true,
+        "type": "LayoutIncomeStatementDetail",
+        "column": "flhead_id",
+        "inverse": "layoutIncomeStatement"
+      }
+    },
+    {
+      "name": "notes",
+      "attr": {
+        "type": "String",
+        "column": "flhead_notes"
+      }
+    },
+    {
+      "name": "isShowTotal",
+      "attr": {
+        "type": "Boolean",
+        "column": "flhead_showtotal",
+        "defaultValue": false
+      }
+    },
+    {
+      "name": "isAlternateBudget",
+      "attr": {
+        "type": "Boolean",
+        "column": "flhead_usealtbudget",
+        "defaultValue": false
+      }
+    },
+    {
+      "name": "budgetLabel",
+      "attr": {
+        "type": "String",
+        "column": "flhead_altbudget",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isAlternateTotal",
+      "attr": {
+        "type": "Boolean",
+        "column": "flhead_usealttotal",
+        "defaultValue": false,
+        "isEditable": false
+      }
+    },
+    {
+      "name": "alternateTotalLabel",
+      "attr": {
+        "type": "String",
+        "column": "flhead_alttotal",
+        "isEditable": false
+      }
+    },
+    {
+      "name": "isSystem",
+      "attr": {
+        "type": "Boolean",
+        "column": "flhead_sys"
+      }
+    }
+  ],
+  "isSystem": true
+}
