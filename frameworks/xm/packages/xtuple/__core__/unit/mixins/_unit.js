@@ -44,6 +44,7 @@ XM._Unit = {
     @type String
   */
   name: SC.Record.attr(String, {
+    isRequired: true,
     label: '_name'.loc()
   }),
 
