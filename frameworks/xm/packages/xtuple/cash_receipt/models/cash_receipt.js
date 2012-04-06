@@ -44,6 +44,14 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   */
   discount: 0,
   
+  /**
+    Indicates whether to include outstanding credit memos in applications array.
+    
+    @type Boolean
+    @default false
+  */
+  includeCredits: false,
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -149,22 +157,31 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 
   receivablesLengthDidChange: function() {
     var receivables = this.get('receivables'),
-        applications = this.get('applications');
-    
+        applications = this.get('applications'),
+        includeCredits = this.get('includeCredits');
+
     // process
     for (var i = 0; i < receivables.get('length'); i++) {
       var receivable = receivables.objectAt(i),
-          application = applications.findProperty('receivable', receivable);
+          application = applications.findProperty('receivable', receivable),
+          documentType = receivable.get('documentType'),
+          detail = application ? application.get('cashReceiptDetail') : false,
+          isCredit = documentType === XM.Receivable.CREDIT_MEMO || 
+                     documentType === XM.Receivable.CUSTOMER_DEPOSIT;
           
       // if not found make one
-      if (!application) {
+      if (!application  && (includeCredits || !isCredit)) {
         application = XM.CashReceiptApplication.create({
           receivable: receivable
         });
         applications.pushObject(application);
+        
+      // if shouldn't be here, take it out
+      } else if (application && !detail && !includeCredits && isCredit) {
+        applications.removeObject(application);
       }
     }
-  }.observes('receivablesLength').cacheable(),
+  }.observes('receivablesLength', 'includeCredits').cacheable(),
 
 });
 
