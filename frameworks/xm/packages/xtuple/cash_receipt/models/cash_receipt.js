@@ -60,8 +60,11 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     Total unapplied.
   */
   balance: function() {
-    return SC.Math.round(this.get('amount') || 0 - this.get('applied') || 0, XT.MONEY_SCALE);
-  }.property('applied'),
+    var amount = this.get('amount') || 0,
+        applied = this.get('applied');
+        
+    return SC.Math.round(amount - applied, XT.MONEY_SCALE);
+  }.property('amount', 'applied').cacheable(),
   
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];

@@ -20,24 +20,6 @@ XM.CashReceiptApplication = SC.Object.extend(
   cashReceiptDetail: null,
   
   /** @private */
-  amount: 0,
-  
-  /** @private */
-  amountBinding: SC.Binding.from('*cashReceiptDetail.amount').oneWay().noDelay(),
-  
-  /** @private */
-  discountAmount: 0,
-  
-  /** @private */
-  discountAmountBinding: SC.Binding.from('*cashReceiptDetail.discount').oneWay().noDelay(),
-  
-  /** @private */
-  currencyRate: 1,
-  
-  /** @private */
-  currencyRateBinding: SC.Binding.from('*cashReceiptDetail.cashReceipt.currencyRate').oneWay().noDelay(),
-  
-  /** @private */
   pendingApplicationsLength: 0,
   
   /** @private */
@@ -54,7 +36,7 @@ XM.CashReceiptApplication = SC.Object.extend(
   */
   applied: function() {
     return this.getPath('cashReceiptDetail.amount') || 0;
-  }.property('amount').cacheable(),
+  }.property('*cashReceiptDetail.amount').cacheable(),
 
   /**
     The discount to be applied to the associated receivable.
@@ -63,7 +45,7 @@ XM.CashReceiptApplication = SC.Object.extend(
   */
   discount: function() {
     return this.getPath('cashReceiptDetail.discount') || 0;
-  }.property('discountAmount').cacheable(),
+  }.property('*cashReceiptDetail.discount').cacheable(),
   
   /**
     Total applied amount of this cash receipt in the currency of the receivable.
@@ -73,10 +55,10 @@ XM.CashReceiptApplication = SC.Object.extend(
   receivableApplied: function() {
     var applied = this.get('applied'),
         discount = this.get('discount'),
-        crCurrencyRate = this.get('currencyRate') || 1,
+        crCurrencyRate = this.getPath('cashReceiptDetail.cashReceipt.currencyRate') || 1,
         arCurrencyRate = this.getPath('receivable.currencyRate');
     return SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE);
-  }.property('applied', 'discount', 'currencyRate'),
+  }.property('applied', 'discount', '*cashReceiptDetail.cashReceipt.currencyRate').cacheable(),
   
   /**
     Total value of applications that have been created, but not posted, on the receivable
@@ -106,7 +88,7 @@ XM.CashReceiptApplication = SC.Object.extend(
     // now add the amount applied from this application
     pending += receivableApplied;
     return SC.Math.round(pending, XT.MONEY_SCALE);
-  }.property('pendingApplicationsLength', 'receivableApplied'),
+  }.property('pendingApplicationsLength', 'receivableApplied').cacheable(),
 
   /**
     @type Number
@@ -115,7 +97,7 @@ XM.CashReceiptApplication = SC.Object.extend(
     var balance = this.getPath('receivable.balance'),
         allPending = this.get('allPending');
     return SC.Math.round(balance - allPending, XT.MONEY_SCALE);
-  }.property('allPending'),
+  }.property('allPending').cacheable(),
   
   // .................................................
   // METHODS
