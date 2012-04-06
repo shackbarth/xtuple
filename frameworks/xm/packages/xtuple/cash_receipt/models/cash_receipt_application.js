@@ -23,13 +23,7 @@ XM.CashReceiptApplication = SC.Object.extend(
   amount: 0,
   
   /** @private */
-  appliedBinding: SC.Binding.from('*cashReceiptDetail.amount').oneWay().noDelay(),
-/*
-  amountDidChange: function() {
-console.log('hello')
-    this.set('amount', this.getPath('cashReceiptDetail.amount'));
-  }.observes('cashReceiptDetail'),
-*/
+  amountBinding: SC.Binding.from('*cashReceiptDetail.amount').oneWay().noDelay(),
   
   /** @private */
   discountAmount: 0,
@@ -59,8 +53,8 @@ console.log('hello')
     @type Number
   */
   applied: function() {
-    return this.get('amount') || 0;
-  }.property('amount'),
+    return this.getPath('cashReceiptDetail.amount') || 0;
+  }.property('amount').cacheable(),
 
   /**
     The discount to be applied to the associated receivable.
@@ -68,8 +62,8 @@ console.log('hello')
     @type Number
   */
   discount: function() {
-    return this.get('discountAmount') || 0;
-  }.property('discountAmount'),
+    return this.getPath('cashReceiptDetail.discount') || 0;
+  }.property('discountAmount').cacheable(),
   
   /**
     Total applied amount of this cash receipt in the currency of the receivable.
@@ -90,7 +84,7 @@ console.log('hello')
     
     @type Number
   */
-  pending: function() {
+  allPending: function() {
     var applications = this.getPath('receivable.pendingApplications'),
         id = this.getPath('cashReceiptDetail.id') || -1,
         receivableApplied = this.get('receivableApplied'), 
@@ -119,9 +113,9 @@ console.log('hello')
   */  
   balance: function() {
     var balance = this.getPath('receivable.balance'),
-        pending = this.get('pending');
-    return SC.Math.round(balance - pending, XT.MONEY_SCALE);
-  }.property('pending'),
+        allPending = this.get('allPending');
+    return SC.Math.round(balance - allPending, XT.MONEY_SCALE);
+  }.property('allPending'),
   
   // .................................................
   // METHODS

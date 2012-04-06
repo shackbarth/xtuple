@@ -43,7 +43,7 @@ XM._ReceivablePendingApplication = {
   /**
     @type String
   */
-  receivablePendingApplicationType: SC.Record.toOne(String, {
+  receivablePendingApplicationType: SC.Record.attr(String, {
     label: '_receivablePendingApplicationType'.loc()
   }),
 
