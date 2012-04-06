@@ -32,9 +32,8 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
       sync option labels' isEditable properties with 
       associated boolean flag's default state
     */
-    this.budgetLabel.set('isEditable', false);
-    this.isAlternateTotal.set('isEditable', false);
-    this.alternateTotalLabel.set('isEditable', false);
+    this.setOptions('isShowTotal');
+    this.setOptions('isAlternateBudget');
   },
 
   /**
