@@ -29,7 +29,7 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
     arguments.callee.base.apply(this, arguments);
 
     /**
-      sync option labels' isEditable properties with 
+      sync 'options' labels' isEditable properties with 
       associated boolean flag's default state
     */
     this.setOptions('isShowTotal');
@@ -37,7 +37,7 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
   },
 
   /**
-    when an income statement option flag changes state, 
+    when an income statement 'options' flag changes state, 
     keep all associated options properties in sync
   */
   setOptions: function(key) {
@@ -81,7 +81,7 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
   //
 
   /**
-    call setOptions() when an associated boolean flag changes
+    call setOptions() when an 'options' boolean flag changes
   */
   optionsDidChange: function() {
     var prop = arguments[1];
@@ -90,4 +90,3 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
   }.observes('isShowTotal', 'isAlternateBudget', 'isAlternateTotal'),
 
 });
-
