@@ -19,23 +19,24 @@ XM.ItemConversion = XT.Record.extend(XM._ItemConversion,
 // CALCULATED PROPERTIES
 //
 
-
-
-//Observe on to unit and update property think about it like project 
 //bool true or false 1 True and 2,3,4 False
 
-unitAvailableTypes: function(add,remove) {
-  var status = this.get('status'),
-	    multiple = this.getPath('UnitType.multiple'),
-			unitType = this.getPath('ItemConversionTypeAssignment.unitType');
-	if (status == SC.Record.READY_CLEAN) {
-	  if (multiple === true){
-		   this.set('unitType', this.getPath('ItemConversionTypeAssignment.unitType'));
-		} else if (multiple === false) {
-		   this.set('unitType', this.getPath('ItemConversionTypeAssignment.unitType'));
-		}
-	}
-},
+availableTypes: function() {
+  var selectedTypes = this.get('selectedTypes'),
+	    allTypes = XM.UnitType.fetch();
+  for (var i = 0; i < allTypes.get('length'); i++) {
+	debugger;
+		var unitAvailableTypes = selectedTypes.findProperty('guid', allTypes.objectAt(i).get('guid'));
+		return this.unitAvailableTypes;
+  }	
+}.property('selectedTypes').cachable();
+
+
+selectedTypes: function() {
+  var unitTypeId = this.getPath('ItemConversionTypeAssignment.unitType');
+	debugger;
+  this.set('selectedTypes', unitTypeId);
+}
 
 //..................................................
 // METHODS
@@ -44,6 +45,7 @@ unitAvailableTypes: function(add,remove) {
 //..................................................
 // OBSERVERS
 //
+
 fromUnitDidChange: function() {
 if (this.get('status') === SC.Record.READY_DIRTY) {
 	this.fromUnit.set('isEditable', false);
@@ -51,6 +53,13 @@ if (this.get('status') === SC.Record.READY_DIRTY) {
 }
 },//.observes('status')
 
-
 });
 
+XM.UnitType.fetch() {
+  if (!this._xm_types) {
+	  this._xm_types = XT.store.find(XM.UnitType);
+		debugger;
+	}
+  return this.xm_types;
+	debugger;
+}
