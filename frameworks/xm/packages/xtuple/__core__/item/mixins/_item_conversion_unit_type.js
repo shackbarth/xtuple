@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.UnitConversion
+  @scope XM.ItemConversionUnitType
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._UnitConversion = {
-  /** @scope XM.UnitConversion.prototype */
+XM._ItemConversionUnitType = {
+  /** @scope XM.ItemConversionUnitType.prototype */
   
-  className: 'XM.UnitConversion',
+  className: 'XM.ItemConversionUnitType',
 
   
 
@@ -24,10 +24,10 @@ XM._UnitConversion = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,33 +41,17 @@ XM._UnitConversion = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.Unit
+    @type XM.ItemConversion
   */
-  fromUnit: SC.Record.toOne('XM.Unit', {
-    label: '_fromUnit'.loc()
+  itemUnitConversion: SC.Record.toOne('XM.ItemConversion', {
+    label: '_itemUnitConversion'.loc()
   }),
 
   /**
-    @type UnitRatio
+    @type Number
   */
-  fromValue: SC.Record.attr(UnitRatio, {
-    defaultValue: 1,
-    label: '_fromValue'.loc()
-  }),
-
-  /**
-    @type XM.Unit
-  */
-  toUnit: SC.Record.toOne('XM.Unit', {
-    label: '_toUnit'.loc()
-  }),
-
-  /**
-    @type UnitRatio
-  */
-  toValue: SC.Record.attr(UnitRatio, {
-    defaultValue: 1,
-    label: '_toValue'.loc()
+  itemUnitType: SC.Record.attr(Number, {
+    label: '_itemUnitType'.loc()
   })
 
 };
