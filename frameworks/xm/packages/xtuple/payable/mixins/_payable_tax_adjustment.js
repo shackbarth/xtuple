@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.BankAccountInfo
+  @scope XM.PayableTaxAdjustment
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._BankAccountInfo = {
-  /** @scope XM.BankAccountInfo.prototype */
+XM._PayableTaxAdjustment = {
+  /** @scope XM.PayableTaxAdjustment.prototype */
   
-  className: 'XM.BankAccountInfo',
+  className: 'XM.PayableTaxAdjustment',
 
   
 
@@ -24,10 +24,10 @@ XM._BankAccountInfo = {
 
   privileges: {
     "all": {
-      "create": false,
+      "create": true,
       "read": true,
-      "update": false,
-      "delete": false
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,24 +41,40 @@ XM._BankAccountInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Payable
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  payable: SC.Record.toOne('XM.Payable', {
+    label: '_payable'.loc()
   }),
 
   /**
-    @type String
+    @type XM.TaxCode
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
+  taxCode: SC.Record.toOne('XM.TaxCode', {
+    label: '_taxCode'.loc()
   }),
 
   /**
-    @type XM.Currency
+    @type Number
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
+  sequence: SC.Record.attr(Number, {
+    label: '_sequence'.loc()
+  }),
+
+  /**
+    @type Money
+  */
+  tax: SC.Record.attr(Money, {
+    label: '_tax'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  documentDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    label: '_documentDate'.loc()
   })
 
 };

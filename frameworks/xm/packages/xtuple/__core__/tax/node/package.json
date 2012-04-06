@@ -1,7 +1,6 @@
 {
   "type": "lazy",
   "dependencies": [
-    "document",
     "comment",
     "account"
   ]

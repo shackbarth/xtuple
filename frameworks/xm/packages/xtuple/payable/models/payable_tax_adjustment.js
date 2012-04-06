@@ -5,32 +5,20 @@
 
 /*globals XM */
 
-sc_require('mixins/_item_conversion');
+sc_require('mixins/_payable_tax_adjustment');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.TaxAdjustment
 */
-XM.ItemConversion = XT.Record.extend(XM._ItemConversion,
-  /** @scope XM.ItemConversion.prototype */ {
+XM.PayableTaxAdjustment = XM.TaxAdjustment.extend(XM._PayableTaxAdjustment,
+  /** @scope XM.PayableTaxAdjustment.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-	/**
-		Unit conversion.
-	*/	
-	unitAvailableTypes: function(){
-    var fromUnit = this.get('fromUnit'),
-        toUnit = this.get('toUnit'),
-				unitType = this.get('unitType');
-		if(unitType === 2 || 3 || 4){
-			 this.set('toUnit') = this.get('toUnit');
-		}
-	},
-	
   //..................................................
   // METHODS
   //

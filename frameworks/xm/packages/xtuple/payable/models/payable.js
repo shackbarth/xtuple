@@ -10,13 +10,11 @@ sc_require('mixins/_payable');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.SubLedger
 */
-XM.Payable = XM.Document.extend(XM._Payable,
+XM.Payable = XM.SubLedger.extend(XM._Payable,
   /** @scope XM.Payable.prototype */ {
 
-  numberPolicy: XT.AUTO_OVERRIDE_NUMBER
-  
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -24,10 +22,31 @@ XM.Payable = XM.Document.extend(XM._Payable,
   //..................................................
   // METHODS
   //
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.payableStatus.set('isEditable', false);
+  },
 
   //..................................................
   // OBSERVERS
   //
-
+  
+  vendorDidChange: function() {
+    if (this.isNotDirty()) return;
+    var vendor = this.get('vendor');
+    if (vendor) {
+      this.setIfChanged('terms', vendor.get('terms'));
+      this.setIfChanged('currency', vendor.get('currency'));
+    }
+  }.observes('vendor'),
+  
+  statusDidChange: function() {
+    arguments.callee.base.apply(this, arguments);
+    if (this.get('status') == SC.Record.READY_CLEAN) {
+      this.vendor.set('isEditable', false);
+    }
+  }.observes('status')
+  
 });
 

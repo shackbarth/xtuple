@@ -5,32 +5,22 @@
 
 /*globals XM */
 
-sc_require('mixins/_item_conversion');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/payable/models
+
+sc_require('mixins/_payable_pending_application');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.ItemConversion = XT.Record.extend(XM._ItemConversion,
-  /** @scope XM.ItemConversion.prototype */ {
+XM.PayablePendingApplication = XT.Record.extend(XM._PayablePendingApplication,
+  /** @scope XM.PayablePendingApplication.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-	/**
-		Unit conversion.
-	*/	
-	unitAvailableTypes: function(){
-    var fromUnit = this.get('fromUnit'),
-        toUnit = this.get('toUnit'),
-				unitType = this.get('unitType');
-		if(unitType === 2 || 3 || 4){
-			 this.set('toUnit') = this.get('toUnit');
-		}
-	},
-	
   //..................................................
   // METHODS
   //

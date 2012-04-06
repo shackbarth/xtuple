@@ -5,32 +5,20 @@
 
 /*globals XM */
 
-sc_require('mixins/_item_conversion');
+sc_require('mixins/_cash_receipt_receivable');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.SubLedger
 */
-XM.ItemConversion = XT.Record.extend(XM._ItemConversion,
-  /** @scope XM.ItemConversion.prototype */ {
+XM.CashReceiptReceivable = XT.Record.extend(XM._CashReceiptReceivable, XM.SubLedgerMixin,
+  /** @scope XM.CashReceiptReceivable.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-	/**
-		Unit conversion.
-	*/	
-	unitAvailableTypes: function(){
-    var fromUnit = this.get('fromUnit'),
-        toUnit = this.get('toUnit'),
-				unitType = this.get('unitType');
-		if(unitType === 2 || 3 || 4){
-			 this.set('toUnit') = this.get('toUnit');
-		}
-	},
-	
   //..................................................
   // METHODS
   //

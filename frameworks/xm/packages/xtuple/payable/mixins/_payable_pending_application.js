@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.BankAccountInfo
+  @scope XM.PayablePendingApplication
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._BankAccountInfo = {
-  /** @scope XM.BankAccountInfo.prototype */
+XM._PayablePendingApplication = {
+  /** @scope XM.PayablePendingApplication.prototype */
   
-  className: 'XM.BankAccountInfo',
+  className: 'XM.PayablePendingApplication',
 
   
 
@@ -41,24 +41,31 @@ XM._BankAccountInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
+    @type XM.Payment
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
+  payment: SC.Record.toOne('XM.Payment', {
+    label: '_payment'.loc()
   }),
 
   /**
-    @type String
+    @type XM.Payable
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
+  payable: SC.Record.toOne('XM.Payable', {
+    label: '_payable'.loc()
   }),
 
   /**
-    @type XM.Currency
+    @type Number
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
+  amount: SC.Record.attr(Number, {
+    label: '_amount'.loc()
+  }),
+
+  /**
+    @type Number
+  */
+  discount: SC.Record.attr(Number, {
+    label: '_discount'.loc()
   })
 
 };
