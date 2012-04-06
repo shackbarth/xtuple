@@ -107,13 +107,14 @@ XM.Document = XT.Record.extend(
     if(record._xt_numberGen && policy === 'A') this[docKey].set('isEditable', false);
    
     // release the fetched number if applicable 
-    if(record._xt_numberGen && record._xt_numberGen != number) {
+    if(status == SC.Record.READY_NEW &&
+       record._xt_numberGen && record._xt_numberGen != number) {
       XT.Record.releaseNumber.call(record, record._xt_numberGen); 
       record._xt_numberGen = null;
     }    
 
     // For manually edited numbers, check for conflicts with existing
-    if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY))  {
+    if(number && this.isDirty())  {
       if(this._xt_numberGen && this._xt_numberGen == number) return;
 
       // callback
