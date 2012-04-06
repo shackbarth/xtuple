@@ -51,6 +51,7 @@ XM._Url = {
     @type String
   */
   path: SC.Record.attr(String, {
+    isRequired: true,
     label: '_path'.loc()
   })
 

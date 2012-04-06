@@ -51,6 +51,7 @@ XM._File = {
     @type String
   */
   data: SC.Record.attr(String, {
+    isRequired: true,
     label: '_data'.loc()
   })
 

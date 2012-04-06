@@ -41,10 +41,10 @@ XM._ReceivablePendingApplication = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.CashReceipt
+    @type String
   */
-  cashReceipt: SC.Record.toOne('XM.CashReceipt', {
-    label: '_cashReceipt'.loc()
+  receivablePendingApplicationType: SC.Record.toOne(String, {
+    label: '_receivablePendingApplicationType'.loc()
   }),
 
   /**
@@ -59,14 +59,6 @@ XM._ReceivablePendingApplication = {
   */
   amount: SC.Record.attr(Number, {
     label: '_amount'.loc()
-  }),
-
-  /**
-    @type Number
-  */
-  discount: SC.Record.attr(Number, {
-    isRequired: true,
-    label: '_discount'.loc()
   })
 
 };

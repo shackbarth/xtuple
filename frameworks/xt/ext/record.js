@@ -426,7 +426,9 @@ XT.Record.setup = function() {
   if(this.prototype.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
       defaultValue: function () {
-        if(arguments[0]) XT.Record.fetchId.call(arguments[0]);
+        if(arguments[0] && arguments[0].get('status') === SC.Record.READY_NEW) {
+          XT.Record.fetchId.call(arguments[0]);
+        }
       },
       isRequired: true
     })

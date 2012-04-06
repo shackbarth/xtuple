@@ -13,29 +13,37 @@ sc_require('mixins/_project_task');
   @extends XT.Record
 */
 XM.ProjectTask = XT.Record.extend(XM._ProjectTask,
-/** @scope XM.ProjectTask.prototype */ {
+  /** @scope XM.ProjectTask.prototype */ {
 
-// .................................................
-// CALCULATED PROPERTIES
-//
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
+  
+  /**
+    @field
+    @type Number
+  */
+  balanceHours: function() {
+    var value = this.get('budgetedHours') - this.get('actualHours');
+    return SC.Math.round(value, XT.QTY_SCALE);
+  }.property('budgetedHours','actualHours'),
 
-balanceHours: function() {
-  var value = this.get('budgetedHours') - this.get('actualHours');
-  return SC.Math.round(value, XT.QTY_SCALE);
-}.property('budgetedHours','actualHours'),
+  /**
+    @field
+    @type Number
+  */
+  balanceExpenses: function() {
+    var value = this.get('budgetedExpenses') - this.get('actualExpenses');
+    return SC.Math.round(value, XT.MONEY_SCALE);
+  }.property('budgetedExpenses','actualExpenses'),
+  
+  //..................................................
+  // METHODS
+  //
 
-balanceExpenses: function() {
-  var value = this.get('budgetedExpenses') - this.get('actualExpenses');
-  return SC.Math.round(value, XT.MONEY_SCALE);
-}.property('budgetedExpenses','actualExpenses'),
-
-//..................................................
-// METHODS
-//
-
-//..................................................
-// OBSERVERS
-//
+  //..................................................
+  // OBSERVERS
+  //
 
 newProjectTask: function() {
   var status = this.get('status');

@@ -162,15 +162,6 @@ XM._Payable = {
   }),
 
   /**
-    @type XM.PayablePendingApplication
-  */
-  pendingApplications: SC.Record.toMany('XM.PayablePendingApplication', {
-    isNested: true,
-    inverse: 'payable',
-    label: '_pendingApplications'.loc()
-  }),
-
-  /**
     @type Date
   */
   isOpen: SC.Record.attr(SC.DateTime, {

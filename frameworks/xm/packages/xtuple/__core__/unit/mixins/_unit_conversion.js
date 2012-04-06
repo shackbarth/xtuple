@@ -48,9 +48,10 @@ XM._UnitConversion = {
   }),
 
   /**
-    @type Number
+    @type UnitRatio
   */
-  fromValue: SC.Record.attr(Number, {
+  fromValue: SC.Record.attr(UnitRatio, {
+    defaultValue: 1,
     label: '_fromValue'.loc()
   }),
 
@@ -62,9 +63,10 @@ XM._UnitConversion = {
   }),
 
   /**
-    @type Number
+    @type UnitRatio
   */
-  toValue: SC.Record.attr(Number, {
+  toValue: SC.Record.attr(UnitRatio, {
+    defaultValue: 1,
     label: '_toValue'.loc()
   })
 

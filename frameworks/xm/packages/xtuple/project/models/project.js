@@ -122,9 +122,9 @@ projectStatusDidChange: function() {
       projectStatus = this.get('projectStatus');
   if (this.isDirty()) {
     if (projectStatus === XM.Project.IN_PROCESS) {
-      this.set('startDate', SC.DateTime.create());
+      this.set('assignDate', SC.DateTime.create());
     } else if (projectStatus === XM.Project.COMPLETED) {
-      this.set('completeDate', SC.DateTime.create());
+	    this.set('completeDate', SC.DateTime.create());
     }
   }
 }.observes('projectStatus'),

@@ -31,3 +31,28 @@ XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplicat
 
 });
 
+XM.ReceivablePendingApplication.mixin( 
+  /** @scope XM.ReceivablePendingApplication */ {
+
+/**
+  Cash Receipt application type.
+  
+  @static
+  @constant
+  @type String
+  @default R
+*/
+  CASH_RECEIPT: 'R',
+
+/**
+  Credit Memo application type.
+  
+  @static
+  @constant
+  @type String
+  @default C
+*/
+  CREDIT: 'C'
+
+});
+

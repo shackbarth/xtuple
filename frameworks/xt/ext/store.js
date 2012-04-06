@@ -41,7 +41,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   dataSourceDidDispatch: function(dispatch, result) {
     var target = dispatch.get('target'),
         action = dispatch.get('action');
-    action.call(target, null, result);
+    if (action) action.call(target, null, result);
   },
   
   /**
@@ -54,7 +54,9 @@ XT.Store = SC.Store.extend(XT.Logging,
     @returns {SC.Store} receiver
   */
   dataSourceDidErrorDispatch: function(dispatch, error) {
-    var errors = this.dispatchErrors;
+    var errors = this.dispatchErrors,
+        target = dispatch.get('target'),
+        action = dispatch.get('action');
 
     // Add the error to the array of dispatch errors 
     // (for lookup later on if necessary).
@@ -63,7 +65,7 @@ XT.Store = SC.Store.extend(XT.Logging,
       errors[SC.guidFor(dispatch)] = error;
       dispatch.callback(error);
     }
-    action.call(target, error, null);
+    if (action) action.call(target, error, null);
   },
   
   /**

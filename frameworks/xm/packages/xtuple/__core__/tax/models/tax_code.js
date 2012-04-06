@@ -10,10 +10,14 @@ sc_require('mixins/_tax_code');
 /**
   @class
 
-  @extends XT.Record
+  @extends XT.Document
 */
-XM.TaxCode = XT.Record.extend(XM._TaxCode,
+XM.TaxCode = XM.Document.extend(XM._TaxCode,
   /** @scope XM.TaxCode.prototype */ {
+
+  documentKey: 'code',
+
+  basisTaxCodeList: [],
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -23,9 +27,37 @@ XM.TaxCode = XT.Record.extend(XM._TaxCode,
   // METHODS
   //
 
+  updateBasisTaxCodeList: function() {
+    var taxClass = this.get('taxClass');
+
+    if(taxClass) {
+      var id = this.get('id'),
+          store = this.get('store'),
+          basis = [],
+          qry;
+
+      qry = SC.Query.local(XM.TaxCode, {
+        conditions: "taxClass = {taxClass} "
+                    + "AND id != {id} ",
+        parameters: {
+          taxClass: taxClass,
+          id: id
+        }
+      });
+      basis = store.find(qry);
+      this.set('basisTaxCodeList', basis);
+    } else {
+      this.set('basisTaxCodeList', []);
+    }
+  },
+
   //..................................................
   // OBSERVERS
   //
+
+  taxClassDidChange: function() {
+    this.updateBasisTaxCodeList();
+  }.observes('taxClass')
 
 });
 

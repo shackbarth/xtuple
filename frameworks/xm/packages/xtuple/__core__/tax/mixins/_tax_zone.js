@@ -44,6 +44,7 @@ XM._TaxZone = {
     @type String
   */
   code: SC.Record.attr(String, {
+    isRequired: true,
     label: '_code'.loc()
   }),
 

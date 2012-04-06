@@ -26,6 +26,7 @@ SC.stringsFor("en_US", {
   "_dataSourceError": "Data Source Error.",
   "_dispatchError": "Dispatch Error",
   "_dueDateIsRequired": "Due Date is Required.",
+  "_duplicateTaxRegistration": "A Tax Registration already exists for the parameters specified.",
   "_errorCode":"Error Code",
   "_errorIsUnknown": "An unknown error has occurred",
   "_fetchError": "Fetch Error",

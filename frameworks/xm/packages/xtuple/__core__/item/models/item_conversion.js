@@ -19,7 +19,6 @@ XM.ItemConversion = XT.Record.extend(XM._ItemConversion,
 // CALCULATED PROPERTIES
 //
 
-//bool true or false 1 True and 2,3,4 False
 
 availableTypes: function() {
   var selectedTypes = this.get('selectedTypes'),

@@ -52,6 +52,13 @@ XM._BankAccountInfo = {
   */
   description: SC.Record.attr(String, {
     label: '_description'.loc()
+  }),
+
+  /**
+    @type XM.Currency
+  */
+  currency: SC.Record.toOne('XM.Currency', {
+    label: '_currency'.loc()
   })
 
 };

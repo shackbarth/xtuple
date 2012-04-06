@@ -64,6 +64,14 @@ XM.Money = XT.Object.extend(
   */
   isPosted: false,
   
+  /**
+    Store to run queries against.
+    
+    @type {SC.Store}
+    @default XT.store
+  */
+  store: XT.store,
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -99,7 +107,8 @@ XM.Money = XT.Object.extend(
     
     // return base currency if not otherwise defined
     if (!this._xm_currency) {
-      this._xm_currency = XT.store.find(XM.Currency, XM.Currency.BASE);
+      var store = this.get('store');
+      this._xm_currency = store.find(XM.Currency, XM.Currency.BASE);
     }
     return this._xm_currency
   }.property(),
@@ -160,7 +169,8 @@ XM.Money = XT.Object.extend(
       
     // fetch the value
     var that = this,
-        ary = XT.store.find(qry);
+        store = this.get('store'),
+        ary = store.find(qry);
       
     // set the exchange rate once we have it
     ary.addObserver('status', ary, function observer() {

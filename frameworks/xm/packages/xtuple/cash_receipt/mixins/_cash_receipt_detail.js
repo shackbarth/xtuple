@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.CashReceiptApplication
+  @scope XM.CashReceiptDetail
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._CashReceiptApplication = {
-  /** @scope XM.CashReceiptApplication.prototype */
+XM._CashReceiptDetail = {
+  /** @scope XM.CashReceiptDetail.prototype */
   
-  className: 'XM.CashReceiptApplication',
+  className: 'XM.CashReceiptDetail',
 
   
 
@@ -24,10 +24,10 @@ XM._CashReceiptApplication = {
 
   privileges: {
     "all": {
-      "create": "false",
+      "create": "true",
       "read": "true",
-      "update": "false",
-      "delete": "false"
+      "update": "true",
+      "delete": "true"
     }
   },
 
@@ -44,13 +44,15 @@ XM._CashReceiptApplication = {
     @type XM.CashReceipt
   */
   cashReceipt: SC.Record.toOne('XM.CashReceipt', {
+    isRequired: true,
     label: '_cashReceipt'.loc()
   }),
 
   /**
-    @type XM.Receivable
+    @type XM.CashReceiptReceivable
   */
-  receivable: SC.Record.toOne('XM.Receivable', {
+  receivable: SC.Record.toOne('XM.CashReceiptReceivable', {
+    isRequired: true,
     label: '_receivable'.loc()
   }),
 
@@ -58,6 +60,7 @@ XM._CashReceiptApplication = {
     @type Number
   */
   amount: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_amount'.loc()
   }),
 
@@ -65,6 +68,8 @@ XM._CashReceiptApplication = {
     @type Number
   */
   discount: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
     label: '_discount'.loc()
   })
 
