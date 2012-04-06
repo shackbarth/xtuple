@@ -19,23 +19,19 @@ XM.ItemConversion = XT.Record.extend(XM._ItemConversion,
 // CALCULATED PROPERTIES
 //
 
-
 availableTypes: function() {
   var selectedTypes = this.get('selectedTypes'),
-	    allTypes = XM.UnitType.fetch();
+	    allTypes = this.get('XMunitTypeFetch');
   for (var i = 0; i < allTypes.get('length'); i++) {
-	debugger;
 		var unitAvailableTypes = selectedTypes.findProperty('guid', allTypes.objectAt(i).get('guid'));
 		return this.unitAvailableTypes;
   }	
-}.property('selectedTypes').cachable();
-
+}.property('selectedTypes').cacheable(),
 
 selectedTypes: function() {
   var unitTypeId = this.getPath('ItemConversionTypeAssignment.unitType');
-	debugger;
   this.set('selectedTypes', unitTypeId);
-}
+},
 
 //..................................................
 // METHODS
@@ -45,6 +41,13 @@ selectedTypes: function() {
 // OBSERVERS
 //
 
+statusDidChange: function(){
+  var status = this.get('status');
+  if (status === SC.Record.READY_CLEAN) {
+    this.availableTypes();
+  }
+}.observes('status'),
+
 fromUnitDidChange: function() {
 if (this.get('status') === SC.Record.READY_DIRTY) {
 	this.fromUnit.set('isEditable', false);
@@ -52,13 +55,17 @@ if (this.get('status') === SC.Record.READY_DIRTY) {
 }
 },//.observes('status')
 
-});
+//IF STATUS READY NEW OR READY CLEAN OR READY DIRTY
 
-XM.UnitType.fetch() {
+
+XMunitTypeFetch: function() {
+  var _xm_types;
   if (!this._xm_types) {
 	  this._xm_types = XT.store.find(XM.UnitType);
-		debugger;
 	}
-  return this.xm_types;
-	debugger;
-}
+  return this._xm_types;
+},
+
+});
+
+
