@@ -16,24 +16,6 @@ sc_require('mixins/_contact');
 XM.Contact = XM.Document.extend(XM._Contact, XM.Documents,
 /** @scope XM.Contact.prototype */ {
 
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    defaultValue: function() {
-      var record = arguments[0],
-          status = record.get('status'),
-          ret;
-      if (status = SC.Record.READY_NEW) {
-        XM.UserAccountInfo.setCurrentUser(record, 'owner');
-        ret = '_loading'.loc();
-      }
-      return ret;
-    },
-    label: '_owner'.loc()
-  }),
-
   // ..........................................................
   // CALCULATED PROPERTIES
   //

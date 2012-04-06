@@ -44,7 +44,7 @@ XM.UserAccountInfo.setCurrentUser = function(record, property) {
   res.addObserver('status', res, function observer() {
     if (res.get('status') === SC.Record.READY_CLEAN) {
       res.removeObserver('status', res, observer);
-      record.set('owner', res.get('attributes'));
+      record.set(property, res.get('attributes'));
     }
   });
   return this;
