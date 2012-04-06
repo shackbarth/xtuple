@@ -69,35 +69,45 @@
       "name": "projectTaskStatus",
       "attr": {
         "type": "String",
-        "column": "prjtask_status"
+        "column": "prjtask_status",
+        "isRequired": true,
+        "defaultValue": "P"
       }
     },
     {
       "name": "budgetedHours",
       "attr": {
         "type": "Number",
-        "column": "prjtask_hours_budget"
+        "column": "prjtask_hours_budget",
+        "isRequired": true,
+        "defaultValue": 0
       }
     },
     {
       "name": "actualHours",
       "attr": {
         "type": "Number",
-        "column": "prjtask_hours_actual"
+        "column": "prjtask_hours_actual",
+        "isRequired": true,
+        "defaultValue": 0
       }
     },
     {
       "name": "budgetedExpenses",
       "attr": {
         "type": "Number",
-        "column": "prjtask_exp_budget"
+        "column": "prjtask_exp_budget",
+        "isRequired": true,
+        "defaultValue": 0
       }
     },
     {
       "name": "actualExpenses",
       "attr": {
         "type": "Number",
-        "column": "prjtask_exp_actual"
+        "column": "prjtask_exp_actual",
+        "isRequired": true,
+        "defaultValue": 0
       }
     },
     {
