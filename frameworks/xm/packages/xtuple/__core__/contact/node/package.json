@@ -3,6 +3,7 @@
   "dependencies": [
     "document",
     "comment",
-    "characteristic"
+    "characteristic",
+    "user_account"
   ]
 }
