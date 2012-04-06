@@ -18,7 +18,7 @@
       "attr": {
         "type": "String",
         "column": "usr_username",
-        "isPrimaryKey": false
+        "isPrimaryKey": true
       }
     },
     {
