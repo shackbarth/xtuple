@@ -1,0 +1,50 @@
+{
+  "context": "xtuple",
+  "nameSpace": "XM",
+  "type": "SubAccountType",
+  "table": "subaccnttype",
+  "idSequenceName": "subaccnttype_subaccnttype_id_seq",
+  "comment": "Sub Account Type Map",
+  "privileges": {
+    "all": {
+      "create": "MaintainChartOfAccounts",
+      "read": true,
+      "update": "MaintainChartOfAccounts",
+      "delete": "MaintainChartOfAccounts"
+    }
+  },
+  "properties": [
+    {
+      "name": "guid",
+      "attr": {
+        "type": "Number",
+        "column": "subaccnttype_id",
+        "isPrimaryKey": true
+      }
+    },
+    {
+      "name": "accountType",
+      "attr": {
+        "type": "String",
+        "column": "subaccnttype_accnt_type"
+      }
+    },
+    {
+      "name": "code",
+      "attr": {
+        "type": "String",
+        "column": "subaccnttype_code"
+      }
+    },
+    {
+      "name": "description",
+      "attr": {
+        "type": "String",
+        "column": "subaccnttype_descrip"
+      }
+    }
+  ],
+  "isSystem": true
+}
+
+
