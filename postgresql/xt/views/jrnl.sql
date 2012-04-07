@@ -10,8 +10,7 @@ select
     when sltrans_doctype = 'CK' then 'CD'
     when sltrans_source = 'A/P' then 'P'
     when sltrans_source = 'A/R' then 'S'
-    when sltrans_source in ('I/M','S/R','P/D') then 'I'
-    when sltrans_source = 'W/O' then 'M'
+    when sltrans_source in ('I/M','S/R','P/D', 'W/O') then 'I'
     else 'ERR'
   end as jrnl_type,
   sltrans_date as jrnl_date,
