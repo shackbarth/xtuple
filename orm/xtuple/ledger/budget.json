@@ -40,7 +40,7 @@
     {
       "name": "items",
       "toMany": {
-        "type": "BudgetItem",
+        "type": "BudgetDetail",
         "column": "budghead_id",
         "inverse": "budget"
       }
