@@ -382,7 +382,7 @@ XT.Record = SC.Record.extend(
     else if (status === SC.Record.DESTROYED_DIRTY) value = 'deleted';
     else if (status & SC.Record.DIRTY)             value = 'updated';
 
-    if (status !== SC.Record.DESTROYED_CLEAN) {
+    if (status !== SC.Record.DESTROYED_CLEAN && status !== SC.Record.ERROR) {
       // You cannot write attributes once an object is fully destroyed.
       this.writeAttribute(key, value, YES);
     }
