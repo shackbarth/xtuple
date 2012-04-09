@@ -30,13 +30,10 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
   
   /**
-    Called by a data source when a dispatch result has been returned.  Passing an
-    optional id will remap the `storeKey` to the new record id. This is
-    required when you commit a record that does not have an id yet.
+    Called by a data source when a dispatch result has been returned.
 
     @param {XT.Dispatch} dispatch The dispatch originally called.
     @param {Hash} dataHash The result hash.
-    @returns {SC.Store} receiver
   */
   dataSourceDidDispatch: function(dispatch, result) {
     var target = dispatch.get('target'),
@@ -46,12 +43,11 @@ XT.Store = SC.Store.extend(XT.Logging,
   
   /**
     Called by your data source if it encountered an error dispatching a 
-    function call. This will put the query into an error state until you 
-    try to refresh it again.
+    function call. The dispatch will pass the error back throug the
+    original callback action if one has been defined.
 
     @param {XT.Dispatch} dispatch The dispatch that generated the error.
-    @param {SC.Error} [error] SC.Error instance to associate with the query.
-    @returns {SC.Store} receiver
+    @param {SC.Error} [error] SC.Error instance to associate with the dispatch.
   */
   dataSourceDidErrorDispatch: function(dispatch, error) {
     var errors = this.dispatchErrors,
@@ -63,7 +59,6 @@ XT.Store = SC.Store.extend(XT.Logging,
     if (error && error.isError) {
       if (!errors) errors = this.dispatchErrors = {};
       errors[SC.guidFor(dispatch)] = error;
-      dispatch.callback(error);
     }
     if (action) action.call(target, error, null);
   },
