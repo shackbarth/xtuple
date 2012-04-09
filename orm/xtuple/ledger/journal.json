@@ -95,7 +95,7 @@
     {
       "name": "created",
       "attr": {
-        "type": "String",
+        "type": "Date",
         "column": "jrnl_created"
       }
     }, 
