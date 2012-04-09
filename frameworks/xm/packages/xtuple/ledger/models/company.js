@@ -13,19 +13,25 @@ sc_require('mixins/_company');
   @extends XT.Record
 */
 XM.Company = XT.Record.extend(XM._Company,
-  /** @scope XM.Company.prototype */ {
+/** @scope XM.Company.prototype */ {
 
-  // .................................................
-  // CALCULATED PROPERTIES
-  //
+// .................................................
+// CALCULATED PROPERTIES
+//
 
-  //..................................................
-  // METHODS
-  //
+number: SC.Record.attr(Number, {
+  toType: function(record, key, value) {
+  if(value) return value.get('length') <= 2 ? value : null;
+  }
+}),
 
-  //..................................................
-  // OBSERVERS
-  //
+//..................................................
+// METHODS
+//
+
+//..................................................
+// OBSERVERS
+//
 
 });
 
