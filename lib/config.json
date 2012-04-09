@@ -1,8 +1,5 @@
 {
-  "user": "admin",
   "port": 5432,
-  "password": "admin",
-  "database": "380postbooks",
   "host": "aurora.xtuple.com",
   "debug": true,
   "server-port": 9000,
@@ -13,5 +10,8 @@
   "encryption-key-file": "lib/key.txt",
   "orm-installer-debugging": false,
   "generated-models-directory": "../client/frameworks/xm/packages",
-  "generated-subclass-models-directory": "../generated_template_models"
+  "generated-subclass-models-directory": "../generated_template_models",
+  "mode": "develop",
+  "target-app": "console",
+  "app-port": 4020
 }
