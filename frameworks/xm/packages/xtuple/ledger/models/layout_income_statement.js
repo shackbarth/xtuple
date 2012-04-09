@@ -25,68 +25,43 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
   // METHODS
   //
 
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-
-    /**
-      sync 'options' labels' isEditable properties with 
-      associated boolean flag's default state
-    */
-    this.setOptions('isShowTotal');
-    this.setOptions('isAlternateBudget');
-  },
-
-  /**
-    when an income statement 'options' flag changes state, 
-    keep all associated options properties in sync
-  */
-  setOptions: function(key) {
-    switch(key) {
-      case 'isShowTotal':
-        var isShowTotal = this.get('isShowTotal');
-
-        if(isShowTotal) {
-          this.isAlternateTotal.set('isEditable', true);
-        } else {
-          this.set('isAlternateTotal', false);
-          this.isAlternateTotal.set('isEditable', false);
-        }
-        break;
-      case 'isAlternateBudget':
-        var isAlternateBudget = this.get('isAlternateBudget');
-
-        if(isAlternateBudget) {
-          this.budgetLabel.set('isEditable', true);
-        } else {
-          this.budgetLabel.set('isEditable', false);
-        }
-        break;
-
-      /**
-        case isAlternateTotal:
-      */
-      default:
-        var isAlternateTotal = this.get('isAlternateTotal');
-
-        if(isAlternateTotal) {
-          this.alternateTotalLabel.set('isEditable', true);
-        } else {
-          this.alternateTotalLabel.set('isEditable', false);
-        }
-    }
-  },
-
   //..................................................
   // OBSERVERS
   //
 
   /**
-    call setOptions() when an 'options' boolean flag changes
+    when an income statement 'options' flag changes state, 
+    keep all associated options properties in sync
   */
-  optionsDidChange: function() {
-    var prop = arguments[1];
+  isShowTotalDidChange: function() {
+    var isShowTotal = this.get('isShowTotal');
 
-    this.setOptions(prop);
-  }.observes('isShowTotal', 'isAlternateBudget', 'isAlternateTotal'),
+    this.isAlternateTotal.set('isEditable', isShowTotal);
+  },
+
+  isAlternateBudgetDidChange: function() {
+    var isAlternateBudget = this.get('isAlternateBudget');
+
+    this.budgetLabel.set('isEditable', isAlternateBudget);
+  },
+
+  isAlternateTotalDidChange: function() {
+    var isAlternateTotal = this.get('isAlternateTotal');
+
+    this.alternateTotalLabel.set('isEditable', isAlternateTotal);
+  },
+
+  statusDidChange: function() {
+    var status = this.get('status');
+
+    /**
+      sync 'options' labels' isEditable properties with 
+      associated boolean flag's default state
+    */
+    if(status === SC.Record.READY_NEW) {
+      this.isShowTotalDidChange();
+      this.isAlternateBudgetDidChange();
+    }
+  }.observes('status'),
 
 });
