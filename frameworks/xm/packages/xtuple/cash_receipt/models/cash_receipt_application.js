@@ -20,30 +20,6 @@ XM.CashReceiptApplication = SC.Object.extend(
   cashReceiptDetail: null,
   
   /** @private */
-  amount: 0,
-  
-  /** @private */
-  appliedBinding: SC.Binding.from('*cashReceiptDetail.amount').oneWay().noDelay(),
-/*
-  amountDidChange: function() {
-console.log('hello')
-    this.set('amount', this.getPath('cashReceiptDetail.amount'));
-  }.observes('cashReceiptDetail'),
-*/
-  
-  /** @private */
-  discountAmount: 0,
-  
-  /** @private */
-  discountAmountBinding: SC.Binding.from('*cashReceiptDetail.discount').oneWay().noDelay(),
-  
-  /** @private */
-  currencyRate: 1,
-  
-  /** @private */
-  currencyRateBinding: SC.Binding.from('*cashReceiptDetail.cashReceipt.currencyRate').oneWay().noDelay(),
-  
-  /** @private */
   pendingApplicationsLength: 0,
   
   /** @private */
@@ -59,8 +35,8 @@ console.log('hello')
     @type Number
   */
   applied: function() {
-    return this.get('amount') || 0;
-  }.property('amount'),
+    return this.getPath('cashReceiptDetail.amount') || 0;
+  }.property('*cashReceiptDetail.amount').cacheable(),
 
   /**
     The discount to be applied to the associated receivable.
@@ -68,8 +44,8 @@ console.log('hello')
     @type Number
   */
   discount: function() {
-    return this.get('discountAmount') || 0;
-  }.property('discountAmount'),
+    return this.getPath('cashReceiptDetail.discount') || 0;
+  }.property('*cashReceiptDetail.discount').cacheable(),
   
   /**
     Total applied amount of this cash receipt in the currency of the receivable.
@@ -79,10 +55,10 @@ console.log('hello')
   receivableApplied: function() {
     var applied = this.get('applied'),
         discount = this.get('discount'),
-        crCurrencyRate = this.get('currencyRate') || 1,
+        crCurrencyRate = this.getPath('cashReceiptDetail.cashReceipt.currencyRate') || 1,
         arCurrencyRate = this.getPath('receivable.currencyRate');
     return SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE);
-  }.property('applied', 'discount', 'currencyRate'),
+  }.property('applied', 'discount', '*cashReceiptDetail.cashReceipt.currencyRate').cacheable(),
   
   /**
     Total value of applications that have been created, but not posted, on the receivable
@@ -90,7 +66,7 @@ console.log('hello')
     
     @type Number
   */
-  pending: function() {
+  allPending: function() {
     var applications = this.getPath('receivable.pendingApplications'),
         id = this.getPath('cashReceiptDetail.id') || -1,
         receivableApplied = this.get('receivableApplied'), 
@@ -112,16 +88,16 @@ console.log('hello')
     // now add the amount applied from this application
     pending += receivableApplied;
     return SC.Math.round(pending, XT.MONEY_SCALE);
-  }.property('pendingApplicationsLength', 'receivableApplied'),
+  }.property('pendingApplicationsLength', 'receivableApplied').cacheable(),
 
   /**
     @type Number
   */  
   balance: function() {
     var balance = this.getPath('receivable.balance'),
-        pending = this.get('pending');
-    return SC.Math.round(balance - pending, XT.MONEY_SCALE);
-  }.property('pending'),
+        allPending = this.get('allPending');
+    return SC.Math.round(balance - allPending, XT.MONEY_SCALE);
+  }.property('allPending').cacheable(),
   
   // .................................................
   // METHODS

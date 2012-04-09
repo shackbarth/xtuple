@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.GeneralJournal
+  @scope XM.Journal
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._GeneralJournal = {
-  /** @scope XM.GeneralJournal.prototype */
+XM._Journal = {
+  /** @scope XM.Journal.prototype */
   
-  className: 'XM.GeneralJournal',
+  className: 'XM.Journal',
 
   nestedRecordNamespace: XM,
 
@@ -54,6 +54,13 @@ XM._GeneralJournal = {
   */
   series: SC.Record.attr(Number, {
     label: '_series'.loc()
+  }),
+
+  /**
+    @type String
+  */
+  source: SC.Record.attr(String, {
+    label: '_source'.loc()
   }),
 
   /**
@@ -107,9 +114,11 @@ XM._GeneralJournal = {
   }),
 
   /**
-    @type String
+    @type Date
   */
-  created: SC.Record.attr(String, {
+  created: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_created'.loc()
   }),
 

@@ -178,15 +178,6 @@ XM._Receivable = {
   }),
 
   /**
-    @type XM.ReceivablePendingApplication
-  */
-  pendingApplications: SC.Record.toMany('XM.ReceivablePendingApplication', {
-    isNested: true,
-    inverse: 'receivable',
-    label: '_pendingApplications'.loc()
-  }),
-
-  /**
     @type Boolean
   */
   isOpen: SC.Record.attr(Boolean, {

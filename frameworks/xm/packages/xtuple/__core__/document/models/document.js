@@ -71,6 +71,8 @@ XM.Document = XT.Record.extend(
   init: function() {
     arguments.callee.base.apply(this, arguments);
     var docKey = this.get('documentKey');
+    
+    // create and set default value function for document key
     dv = function() {
       var record = arguments[0],
           docKey = record.get('documentKey'),
@@ -80,6 +82,7 @@ XM.Document = XT.Record.extend(
           numberPolicy === XT.AUTO_OVERRIDE_NUMBER) && 
           status === SC.Record.READY_NEW) {
         XT.Record.fetchNumber.call(record, docKey);
+        return '_loading'.loc(); // prevents coming back here
       } else return '';
     }
     this[docKey].defaultValue = dv;
@@ -93,8 +96,6 @@ XM.Document = XT.Record.extend(
       * Locks editing when number has been set and number policy is XT.AUTO_NUMBER
       * Releases a generated number if user has over-ridden an auto generated number
       * Checks for duplicate key violitions by calling findExisting().
-      
-    @seealso XT.Document.findExisting()
   */
   keyDidChange: function() {  
     var record = this;
@@ -107,13 +108,14 @@ XM.Document = XT.Record.extend(
     if(record._xt_numberGen && policy === 'A') this[docKey].set('isEditable', false);
    
     // release the fetched number if applicable 
-    if(record._xt_numberGen && record._xt_numberGen != number) {
+    if(status == SC.Record.READY_NEW &&
+       record._xt_numberGen && record._xt_numberGen != number) {
       XT.Record.releaseNumber.call(record, record._xt_numberGen); 
       record._xt_numberGen = null;
     }    
 
     // For manually edited numbers, check for conflicts with existing
-    if(number && (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY))  {
+    if(number && this.isDirty())  {
       if(this._xt_numberGen && this._xt_numberGen == number) return;
 
       // callback
