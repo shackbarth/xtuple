@@ -7,5 +7,4 @@ XT.hex = function() {
   if (knowns.indexOf(hex) >= 0) return XT.hex();
   knowns.push(hex);
   return hex;
-} ;
-
+};
