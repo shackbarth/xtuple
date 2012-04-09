@@ -99,8 +99,7 @@
       "name": "budgetLabel",
       "attr": {
         "type": "String",
-        "column": "flhead_altbudget",
-        "isEditable": false
+        "column": "flhead_altbudget"
       }
     },
     {
@@ -108,16 +107,14 @@
       "attr": {
         "type": "Boolean",
         "column": "flhead_usealttotal",
-        "defaultValue": false,
-        "isEditable": false
+        "defaultValue": false
       }
     },
     {
       "name": "alternateTotalLabel",
       "attr": {
         "type": "String",
-        "column": "flhead_alttotal",
-        "isEditable": false
+        "column": "flhead_alttotal"
       }
     },
     {
