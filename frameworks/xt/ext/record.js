@@ -382,7 +382,7 @@ XT.Record = SC.Record.extend(
     else if (status === SC.Record.DESTROYED_DIRTY) value = 'deleted';
     else if (status & SC.Record.DIRTY)             value = 'updated';
 
-    if (status !== SC.Record.DESTROYED_CLEAN) {
+    if (status !== SC.Record.DESTROYED_CLEAN && status !== SC.Record.ERROR) {
       // You cannot write attributes once an object is fully destroyed.
       this.writeAttribute(key, value, YES);
     }
@@ -426,7 +426,9 @@ XT.Record.setup = function() {
   if(this.prototype.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
       defaultValue: function () {
-        if(arguments[0]) XT.Record.fetchId.call(arguments[0]);
+        if(arguments[0] && arguments[0].get('status') === SC.Record.READY_NEW) {
+          XT.Record.fetchId.call(arguments[0]);
+        }
       },
       isRequired: true
     })

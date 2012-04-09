@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_budget_item');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/ledger/models
+
+sc_require('mixins/_layout_income_statement_detail');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.BudgetItem = XT.Record.extend(XM._BudgetItem,
-  /** @scope XM.BudgetItem.prototype */ {
+XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetail,
+  /** @scope XM.LayoutIncomeStatementDetail.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

@@ -8,7 +8,7 @@ sc_require('ext/request');
 
 /** @class
 */
-XT.DataSource = SC.DataSource.extend(XT.Logging, 
+XT.DataSource = SC.Object.extend(XT.Logging, 
   /** @scope XT.DataSource.prototype */ {
 
   //............................................
@@ -108,6 +108,19 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
   */
   fetch: function(store, query) {
     return this.ready(this._fetch, this, store, query);
+  },
+  
+  /**
+    Called by the store whenever it needs to load a specific set of store
+    keys.  
+
+    @param {SC.Store} store the requesting store
+    @param {Array} storeKeys
+    @param {Array} ids - optional
+    @returns {Boolean} true if handled, false otherwise
+  */
+  retrieveRecords: function(store, storeKeys, ids) {
+    return this._handleEach(store, storeKeys, this.retrieveRecord, ids);
   },
 
   /**
@@ -265,6 +278,27 @@ XT.DataSource = SC.DataSource.extend(XT.Logging,
   //............................................
   // PRIVATE METHODS
   //
+  
+  /** @private
+    invokes the named action for each store key.  returns proper value
+  */
+  _handleEach: function(store, storeKeys, action, ids, params) {
+    var len = storeKeys.length, idx, ret, cur, idOrParams;
+
+    for(idx=0;idx<len;idx++) {
+      idOrParams = ids ? ids[idx] : params;
+
+      cur = action.call(this, store, storeKeys[idx], idOrParams);
+      if (ret === undefined) {
+        ret = cur ;
+      } else if (ret === true) {
+        ret = (cur === true) ? true : SC.MIXED_STATE ;
+      } else if (ret === false) {
+        ret = (cur === false) ? false : SC.MIXED_STATE ;
+      }
+    }
+    return !SC.none(ret) ? ret : null ;
+  },
 
   /** @private */
   _dispatch: function _dispatch(store, dispatch) {

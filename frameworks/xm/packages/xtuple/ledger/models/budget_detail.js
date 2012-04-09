@@ -5,15 +5,17 @@
 
 /*globals XM */
 
-sc_require('mixins/_cash_disbursement_journal');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/ledger/models
+
+sc_require('mixins/_budget_detail');
 
 /**
   @class
 
- @extends XT.Record
+  @extends XM.Record
 */
-XM.CashDisbursementJournal = XT.Record.extend(XM._CashDisbursementJournal,
-  /** @scope XM.CashDisbursementJournal.prototype */ {
+XM.BudgetDetail = XT.Record.extend(XM._BudgetDetail,
+  /** @scope XM.BudgetDetail.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

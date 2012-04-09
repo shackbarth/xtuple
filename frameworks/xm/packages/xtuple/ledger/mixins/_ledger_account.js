@@ -58,6 +58,7 @@ XM._LedgerAccount = {
     @type String
   */
   number: SC.Record.attr(String, {
+    isRequired: true,
     label: '_number'.loc()
   }),
 
@@ -86,6 +87,7 @@ XM._LedgerAccount = {
     @type String
   */
   accountType: SC.Record.attr(String, {
+    defaultValue: true,
     label: '_accountType'.loc()
   }),
 
@@ -100,6 +102,7 @@ XM._LedgerAccount = {
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
+    defaultValue: true,
     label: '_isActive'.loc()
   }),
 

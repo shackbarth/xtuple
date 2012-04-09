@@ -13,19 +13,25 @@ sc_require('mixins/_profit_center');
   @extends XT.Record
 */
 XM.ProfitCenter = XT.Record.extend(XM._ProfitCenter,
-  /** @scope XM.ProfitCenter.prototype */ {
+/** @scope XM.ProfitCenter.prototype */ {
 
-  // .................................................
-  // CALCULATED PROPERTIES
-  //
+// .................................................
+// CALCULATED PROPERTIES
+//
 
-  //..................................................
-  // METHODS
-  //
+number: SC.Record.attr(Number, {
+  toType: function(record, key, value) {
+  if(value) return value.get('length') <= 2 ? value : null;
+  }
+}),
 
-  //..................................................
-  // OBSERVERS
-  //
+//..................................................
+// METHODS
+//
+
+//..................................................
+// OBSERVERS
+//
 
 });
 
