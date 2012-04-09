@@ -26,7 +26,8 @@
       "name": "accountType",
       "attr": {
         "type": "String",
-        "column": "subaccnttype_accnt_type"
+        "column": "subaccnttype_accnt_type",
+        "defaultValue": true
       }
     },
     {

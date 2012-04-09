@@ -26,7 +26,8 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "company_number"
+        "column": "company_number",
+				"isRequired": true
       }
     },
     {
