@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework        
 // Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
-
+sc_require('models/financial_statement');
 /*globals XM */
 
 /**
