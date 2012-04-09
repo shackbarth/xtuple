@@ -1,4 +1,7 @@
-/*globals XT */
+/*globals global */
+
+var Money, Quantity, QuantityPer, Cost, SalesPrice, PurchasePrice, Percent,
+    UnitRatio, Weight, SharedNumericPrototoype;
 
 /** 
   @class 
@@ -6,120 +9,43 @@
   Special number objects used for number formatting in transforms.
 */
 
-function Money(val) { 
-  this.val = val;
-  var self = this;
-
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
+SharedNumericPrototoype = {
+  valueOf: function()  {  return this.val; },
+  toString: function() {  return "" + this.val; }
 };
 
-function Quantity(val) { 
-  this.val = val;
-  var self = this;
+Money = global.Money = function(val) { this.val = val; };
+Money.prototype = SC.beget(SharedNumericPrototoype);
+Money.prototype.constructor = Money;
 
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
+Quantity = global.Quantity = function(val) { this.val = val; };
+Quantity.prototype = SC.beget(SharedNumericPrototoype);
+Quantity.prototype.constructor = Quantity;
 
-function QuantityPer(val) { 
-  this.val = val;
-  var self = this;
+QuantityPer = global.QuantityPer = function(val) { this.val = val; };
+QuantityPer.prototype = SC.beget(SharedNumericPrototoype);
+QuantityPer.prototype.constructor = QuantityPer;
 
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
+Cost = global.Cost = function(val) { this.val = val; };
+Cost.prototype = SC.beget(SharedNumericPrototoype);
+Cost.prototype.constructor = Cost;
 
-function Cost(val) { 
-  this.val = val;
-  var self = this;
+SalesPrice = global.SalesPrice = function(val) { this.val = val; };
+SalesPrice.prototype = SC.beget(SharedNumericPrototoype);
+SalesPrice.prototype.constructor = SalesPrice;
 
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
+PurchasePrice = global.PurchasePrice = function(val) { this.val = val; };
+PurchasePrice.prototype = SC.beget(SharedNumericPrototoype);
+PurchasePrice.prototype.constructor = PurchasePrice;
 
-function SalesPrice(val) { 
-  this.val = val;
-  var self = this;
+Percent = global.Percent = function(val) { this.val = val; };
+Percent.prototype = SC.beget(SharedNumericPrototoype);
+Percent.prototype.constructor = Percent;
 
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
+UnitRatio = global.UnitRatio = function(val) { this.val = val; };
+UnitRatio.prototype = SC.beget(SharedNumericPrototoype);
+UnitRatio.prototype.constructor = UnitRatio;
 
-function PurchasePrice(val) { 
-  this.val = val;
-  var self = this;
-
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
-
-function Percent(val) { 
-  this.val = val;
-  var self = this;
-
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
-
-function UnitRatio(val) { 
-  this.val = val;
-  var self = this;
-
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
-
-function Weight(val) { 
-  this.val = val;
-  var self = this;
-
-  self.valueOf = function() { 
-    return this.val; 
-  }
-  
-  self.toString = function() { 
-    return "" + this.val; 
-  }
-};
-
+Weight = global.Weight = function(val) { this.val = val; };
+Weight.prototype = SC.beget(SharedNumericPrototoype);
+Weight.prototype.constructor = Weight;

@@ -1,34 +1,34 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework        
-// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
 
-/** 
+/**
   @class XT.Record
 
   The XT.Record is an extension of the SC.Record class that adds
   xTuple-specific functionality including validation, state, and nested
   record handling.
-  
+
   @extends SC.Record
 */
 XT.Record = SC.Record.extend(
-/** @scope XT.Record.prototype */ {
+  /** @scope XT.Record.prototype */ {
 
   /*
     The full path name of this class. Should be set in every subclass.
-    
+
     @type String
   */
   className: 'XT.Record',
-  
+
   ignoreUnknownProperties: true,
-  
+
   /**
     The data type name. The same as the class name without the namespace.
     Used by nested records.
-    
+
     @type String
   */
   type: SC.Record.attr(String, {
@@ -36,19 +36,19 @@ XT.Record = SC.Record.extend(
       return arguments[0].get('className').replace((/\w+\./i),'');
     }
   }),
-  
+
   /**
     A hash structure that defines data access.
-    
+
     @property
     @type Hash
   */
   privileges: null,
-  
+
   /**
-    Indicates whether the record is in a valid state to be saved. Will be false if any
-    errors exist in validateErrors.
-    
+    Indicates whether the record is in a valid state to be saved. Will be
+    `false` if any errors exist in `validateErrors`.
+
     @property
     @type Boolean
   */
@@ -62,31 +62,33 @@ XT.Record = SC.Record.extend(
   validateErrors: [],
   validateErrorsLength: 0,
   validateErrorsLengthBinding: SC.Binding.from('*validateErrors.length').noDelay(),
-  
+
   /**
-    State used for data source processing. You should never edit this directly.
-    
+    State used for data source processing. You should never edit this
+    directly.
+
     @property
+    @type String
   */
-  dataState: SC.Record.attr(String, { 
-    defaultValue: 'created' 
+  dataState: SC.Record.attr(String, {
+    defaultValue: 'created'
   }),
-  
+
   // ..........................................................
   // COMPUTED PROPERTIES
   //
-  
+
   /**
     Returns only attribute records that have changed.
-    
-    @type {Hash}
+
     @property
+    @type Hash
   */
   changeSet: function() {
     var attributes = this.get('attributes');
 
     // recursive function that does the work
-    changedOnly = function(attrs) {
+    var changedOnly = function(attrs) {
       var ret = null;
       if (attrs.dataState !== 'read') {
         ret = {};
@@ -100,28 +102,32 @@ XT.Record = SC.Record.extend(
             }
           } else {
             ret[prop] = attrs[prop];
-          }  
+          }
         }
       }
       return ret;
-    }
-    
+    };
+
     // do the work
     return changedOnly(attributes);
     // TODO: get this to reduce to only changed fields!
   }.property(),
-  
+
   /**
     A property that returns the result of canUpdate.
-    
+
     @type Boolean
   */
   isEditable: function() {
-    var isEditable = arguments.callee.base.apply(this, arguments); 
-    if(isEditable && this.get('status') !== SC.Record.READY_NEW) return this.canUpdate();
-    return isEditable;
+    var isEditable = arguments.callee.base.apply(this, arguments);
+
+    if (isEditable && this.get('status') !== SC.Record.READY_NEW) {
+      return this.canUpdate();
+    } else {
+      return isEditable;
+    }
   }.property('status').cacheable(),
-  
+
   // ..........................................................
   // METHODS
   //
@@ -129,117 +135,135 @@ XT.Record = SC.Record.extend(
   init: function() {
     arguments.callee.base.apply(this, arguments);
     var required = this.requiredAttributes();
-    // validate all required fields
-    for(var i = 0; i < required.get('length'); i++) this.addObserver(required[i], this.validate);
-    if(this.getPath('store.isNested')) this.addObserver('isValid', this, '_isValidDidChange');
+
+    // Validate all required fields.
+    for (var i = 0; i < required.get('length'); i++) {
+      this.addObserver(required[i], this.validate);
+    }
+
+    if (this.getPath('store.isNested')) {
+      this.addObserver('isValid', this, '_isValidDidChange');
+    }
   },
-  
+
   /**
     Returns true when READY_NEW or READY dirty.
   */
   isDirty: function() {
-    var status = this.get('status');    
-    return (status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY);
+    var status = this.get('status'), K = SC.Record;
+    return (status == K.READY_NEW || status == K.READY_DIRTY);
   },
-  
+
   /**
     Returns true when not READY_NEW and not READY_DIRTY.
   */
-  isNotDirty: function() { 
-    var status = this.get('status');    
-    return (status != SC.Record.READY_NEW && status != SC.Record.READY_DIRTY);
+  isNotDirty: function() {
+    var status = this.get('status'), K = SC.Record;
+    return (status != K.READY_NEW && status != K.READY_DIRTY);
   },
-  
+
   /**
-    Returns whether the current record can be updated based on privilege settings.
-    
+    Returns whether the current record can be updated based on privilege
+    settings.
+
     @returns {Boolean}
   */
   canUpdate: function() {
     var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
         status = this.get('status');
-    
+
     return status & SC.Record.READY && recordType.canUpdate(this);
   },
 
   /**
-    Returns whether the current record can be deleted based on privilege settings.
-    
+    Returns whether the current record can be deleted based on privilege
+    settings.
+
     @returns {Boolean}
-  */  
+  */
   canDelete: function() {
     var recordType = this.get('store').recordTypeFor(this.get('storeKey')),
         status = this.get('status');
-    
+
     return status & SC.Record.READY && recordType.canDelete(this);
   },
-  
+
   /**
     Returns an array of property names for all required attributes.
-    
-    @param {Boolean} optional - only return required attributes that are empty.
+
+    @param {Boolean} [optional] only return required attributes that are empty.
     @returns {Array}
   */
   requiredAttributes: function(emptyOnly) {
     var required = [], typeClass,
         key, valueForKey, isToMany;
+
     if (emptyOnly === undefined) emptyOnly = false;
+
     for (key in this) {
-      // make sure property is a record attribute.
+      // Make sure property is a record attribute.
       valueForKey = this[key];
       if (valueForKey) {
         typeClass = valueForKey.typeClass;
+
         if (typeClass) {
-          isToMany =  SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
-                      SC.kindOf(valueForKey, SC.ManyAttribute);
+          isToMany = SC.kindOf(valueForKey, SC.ChildrenAttribute) ||
+                     SC.kindOf(valueForKey, SC.ManyAttribute);
+
           if (!isToMany && this[key].get('isRequired')) {
-            if (!emptyOnly || SC.none(this.readAttribute(key))) required.push(key);
+            if (!emptyOnly || SC.none(this.readAttribute(key))) {
+              required.push(key);
+            }
           }
         }
       }
     }
+
     return required;
   },
 
   /**
-    The validate function determines if there are any problems with the record that would cause
-    it to be invalid, updates the validateErrors array as appropriate and returns the array. 
-    
-    By default observers are automatically added to all required attributes against validate() 
-    which checks to ensure these attributes are populated.
+    The `validate` function determines if there are any problems with the
+    record that would cause it to be invalid, updates the `validateErrors`
+    array as appropriate and returns the array.
 
-    Subclasses should re-implement this function if additional validaiton is required.
-    Observers should be attached to properties that require validation, and the subclasses
-    should use the updateErrors helper method:
+    By default observers are automatically added to all required attributes
+    against `validate()` which checks to ensure these attributes are
+    populated.
 
-    validate: function() {
-      // call the original super class function
-      var errors = arguments.callee.base.apply(this, arguments),
-      
-      // get the error code you want to invoke
-          myErr = XT.errors.findProperty('code', 1234);
-         
-      // determine whether a property is in an error state
-      isError = this.get('myProperty') !== "my expected value";
-      
-      // update the errors array accordingly
-      this.upadteErrors(myErr, isError);
-      
-      // return the errors array
-      return errors;
-    }.observes('myProperty')
+    Subclasses should re-implement this function if additional validaiton is
+    required. Observers should be attached to properties that require
+    validation, and the subclasses should use the updateErrors helper method:
 
-    Subclasses should pass errors defined and created in the XT.errors array to updateErrors.
-    If an appropriate error code required by the subclass does not exist in XT.errors it
-    should be added to the XT.errors definition file.
-    
+        validate: function() {
+          // Call the original super class function.
+          var errors = arguments.callee.base.apply(this, arguments);
+
+          // Get the error code you want to invoke.
+          var myErr = XT.errors.findProperty('code', 1234);
+
+          // Determine whether a property is in an error state.
+          isError = this.get('myProperty') !== "my expected value";
+
+          // Update the errors array accordingly.
+          this.upadteErrors(myErr, isError);
+
+          // Return the errors array.
+          return errors;
+        }.observes('myProperty')
+
+    Subclasses should pass errors defined and created in the `XT.errors`
+    array to `updateErrors`. If an appropriate error code required by the
+    subclass does not exist in `XT.errors` it, should be added to the
+    `XT.errors` definition file.
+
     @seealso XT.errors
     @seealso XT.Record.updateErrors
     @returns {Array}
   */
   validate: function() {
     var required = this.requiredAttributes(),
-        err = XT.errors.findProperty('code', 'xt1001'), 
+        err = XT.errors.findProperty('code', 'xt1001'),
         isErr = false;
     for(var i = 0; i < required.get('length'); i++) {
       if (!this.get(required[i])) isErr = true;
@@ -247,39 +271,40 @@ XT.Record = SC.Record.extend(
     this.updateErrors(err, isErr);
     return this.get('validateErrors');
   },
-  
+
   /**
-    Convienience function for updating validateErrors list. If an error is
-    passed with isError is true, the error code will be added to the array
-    if it is not already present. If isError is false, the error code will
-    be removed if present.
-    
+    Convienience function for updating the `validateErrors` array. If an
+    `error` is passed with `isError` equal to `true`, the error code will be
+    added to the array if it is not already present. If `isError` is falsey,
+    the error code will be removed if present.
+
     @param {Object} SC.Error
-    @param {Boolean} is error
+    @param {Boolean} isError
   */
   updateErrors: function(error, isError) {
     if (!error) throw "no error provided";
     var errors = this.get('validateErrors'),
     idx = errors.lastIndexOf(error);
-    if(isError && idx === -1) errors.pushObject(error);
-    else if(!isError && idx > -1) errors.removeAt(idx);
+    if (isError && idx === -1) errors.pushObject(error);
+    else if (!isError && idx > -1) errors.removeAt(idx);
   },
-  
+
   /**
-    Reimplimented from SC.Record. 
-    
-    This version materializes and register nested records differently 
-    so we get a record with correct status from the start.
+    Reimplimented from `SC.Record`.
+
+    This version materializes and register nested records differently so we
+    get a record with correct status from the start.
   */
   registerNestedRecord: function(value, key, path) {
     var psk, csk, childRecord, recordType,
         store = this.get('store');
 
-    // if no path is entered it must be the key
+    // If no path is entered it must be the key.
     if (SC.none(path)) path = key;
-    // if a record instance is passed, simply use the storeKey.  This allows
-    // you to pass a record from a chained store to get the same record in the
-    // current store.
+
+    // If a record instance is passed, simply use the storeKey.  This allows
+    // you to pass a record from a chained store to get the same record in
+    // the current store.
     if (value && value.get && value.get('isRecord')) {
       childRecord = value;
       csk = childRecord.get('storeKey');
@@ -289,7 +314,9 @@ XT.Record = SC.Record.extend(
         var hash = value || {}, // init if needed
             pk = recordType.prototype.primaryKey,
             id = hash[pk];
+
         csk = id ? store.storeKeyExists(recordType, id) : null;
+
         if (csk) {
           store.writeDataHash(csk, hash);
           childRecord = store.materializeRecord(csk);
@@ -308,7 +335,7 @@ XT.Record = SC.Record.extend(
 
     return childRecord;
   },
-   
+
   /**
     Reimplemented from SC.Record.
 
@@ -317,7 +344,8 @@ XT.Record = SC.Record.extend(
   destroy: function() {
     var store = this.get('store'), rec,
         sk = this.get('storeKey');
-    // Lord Vader... rise
+
+    // Lord Vader... rise.
     for (var key in this) {
       if (this[key] && this[key].isChildrenAttribute && this[key].isNested) {
         for (var i = 0; i < this.get(key).get('length'); i++) {
@@ -325,10 +353,11 @@ XT.Record = SC.Record.extend(
         }
       }
     }
-    
-    // now self destruct ("you underestimate my power!")
+
+    // Now self destruct ("you underestimate my power!").
     store.destroyRecord(null, null, sk);
     this.notifyPropertyChange('status');
+
     // If there are any aggregate records, we might need to propagate our new
     // status to them.
     this.propagateToAggregates();
@@ -337,10 +366,11 @@ XT.Record = SC.Record.extend(
     var p = this.get('parentRecord');
     if (p) {
       var psk = p.get('storeKey'),
-          csk = this.get('storeKey'),
-          store = this.get('store'),
-          path = store.parentRecords[psk][csk];
-  
+          csk = this.get('storeKey'), path;
+
+      store = this.get('store');
+      path = store.parentRecords[psk][csk];
+
       p.recordDidChange(path);
     }
 
@@ -358,130 +388,139 @@ XT.Record = SC.Record.extend(
   */
   _xt_isValidDidChange: function() {
     var store = this.get('store'),
-    invalidRecords = store.get('invalidRecords'),
-    isValid = this.get('isValid'),
-    idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
-    if(store.get('isNested')) {
-      if(isValid && idx > -1) invalidRecords.removeAt(idx);
-      else if(!isValid && idx === -1) invalidRecords.pushObject(this);
+        invalidRecords = store.get('invalidRecords'),
+        isValid = this.get('isValid'),
+        idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
+
+    if (store.get('isNested')) {
+      if (isValid && idx > -1) invalidRecords.removeAt(idx);
+      else if (!isValid && idx === -1) invalidRecords.pushObject(this);
     }
   },
-  
-  /** @private 
-    Track substates for data source use. Updates dataState property directly 
+
+  /** @private
+    Track substates for data source use. Updates dataState property directly
     so we don't fire events that change the status to dirty.
   */
   _xt_statusChanged: function() {
     var status = this.get('status'),
         key = 'dataState',
-        value = 'error';
-    
-    // update data state used for server side evaluation
-    if (status === SC.Record.READY_NEW)            value = 'created';
-    else if (status === SC.Record.READY_CLEAN)     value = 'read';
-    else if (status === SC.Record.DESTROYED_DIRTY) value = 'deleted';
-    else if (status & SC.Record.DIRTY)             value = 'updated';
+        value = 'error',
+        K = SC.Record;
 
-    if (status !== SC.Record.DESTROYED_CLEAN && status !== SC.Record.ERROR) {
+    // update data state used for server side evaluation
+    if (status === K.READY_NEW)            value = 'created';
+    else if (status === K.READY_CLEAN)     value = 'read';
+    else if (status === K.DESTROYED_DIRTY) value = 'deleted';
+    else if (status & K.DIRTY)             value = 'updated';
+
+    if (status !== K.DESTROYED_CLEAN && status !== K.ERROR) {
       // You cannot write attributes once an object is fully destroyed.
       this.writeAttribute(key, value, YES);
     }
-    
+
+    // FIXME: Should use XT.Logging.
     console.log('Change status %@:%@ to %@'
                 .fmt(this.get('className'),this.get('id'), this.statusString()));
   }.observes('status')
 
 });
 
+XT.Record.ignoreUnknownProperties = true;
+
 /**
-  Overload of `.extend()` to automatically call XT.Record.setup()
-  on all extended XT.Record.constructors/subclasses
+  Overload of `.extend()` to automatically call `XT.Record.setup()` on all
+  extended `XT.Record.constructor`s/subclasses.
 */
 XT.Record.extend = function() {
   var ret = SC.Object.extend.apply(this, arguments).setup();
   SC.Query._scq_didDefineRecordType(ret);
-  return ret ;
+  return ret;
 };
 
 /**
-  Auto-executed from XT.Record.extend overloaded function. Features that need
-  to be executed across all XT.Records but are dependent on the individual prototype
-  need to happen here.
-  
+  Auto-executed from `XT.Record.extend` overloaded function. Features that
+  need to be executed across all `XT.Record`s but are dependent on the
+  individual prototype need to happen here.
+
   @returns {Object} receiver
 */
 XT.Record.setup = function() {
 
-  // reference to `this` where `this` is a reference to the newly
-  // created constructor (the return from SC.Record.extend)
+  // Reference to `this` where `this` is a reference to the newly created
+  // constructor (the return from `SC.Record.extend`).
   var self = this;
 
-  // as an example of use, the prototype of `this` is the uninstanced
-  // object constructor for the new XT.Record that was extended
+  // As an example of use, the prototype of `this` is the uninstanced
+  // object constructor for the new `XT.Record` that was extended.
 
-  // this will create an entry for `guid` on the XT.Record that
-  // defines the attribute as type String and adds a defaultValue
-  // function that will return the correct type automatically
+  // This will create an entry for `guid` on the `XT.Record` that defines the
+  // attribute as type `String` and adds a `defaultValue` function that will
+  // return the correct type automatically.
 
-  if(this.prototype.primaryKey === 'guid') {
+  if (this.prototype.primaryKey === 'guid') {
     this.prototype.guid = SC.Record.attr(String, {
       defaultValue: function () {
-        if(arguments[0] && arguments[0].get('status') === SC.Record.READY_NEW) {
+        if (arguments[0] && arguments[0].get('status') === SC.Record.READY_NEW) {
           XT.Record.fetchId.call(arguments[0]);
         }
       },
       isRequired: true
-    })
+    });
   }
 
-  // return the original reference (!important)
+  // Return the original reference (!important).
   return this;
 };
 
 /**
   Use this function to find out whether a user can create records before instantiating one.
-  
+
   @returns {Boolean}
 */
 XT.Record.canCreate = function() {
   var privileges = this.prototype.privileges,
       sessionPrivs = XT.session.privileges,
       isGranted = false;
-      
-  if(sessionPrivs) {
-    isGranted = privileges.all && privileges.all.create && sessionPrivs.get(privileges.all.create) ? true : 
+
+  // TODO: This is pretty awkward to read.
+  if (sessionPrivs) {
+    isGranted = privileges.all && privileges.all.create && sessionPrivs.get(privileges.all.create) ? true :
                (privileges.personal && privileges.personal.create && sessionPrivs.get(privileges.personal.create) ? true : false);
-  
+
   }
 
   return isGranted;
 };
 
 /**
-  Use this function to find out whether a user can read this record type before any have been loaded.
-  
+  Use this function to find out whether a user can read this record type
+  before any have been loaded.
+
   @returns {Boolean}
 */
 XT.Record.canRead = function() {
   var privileges = this.prototype.privileges,
       sessionPrivs = XT.session.privileges,
       isGranted = false;
-      
-  if(sessionPrivs) {
-    isGranted = privileges.all && privileges.all.read && sessionPrivs.get(privileges.all.read) ? true : 
+
+  // TODO: This is pretty awkward to read.
+  if (sessionPrivs) {
+    isGranted = privileges.all && privileges.all.read && sessionPrivs.get(privileges.all.read) ? true :
                (privileges.all && privileges.all.update && sessionPrivs.get(privileges.all.update) ? true :
                (privileges.personal && privileges.personal.read && sessionPrivs.get(privileges.personal.read) ? true :
                (privileges.personal && privileges.personal.update && sessionPrivs.get(privileges.personal.update) ? true : false)));
-  
+
   }
 
   return isGranted;
 };
 
 /**
-  Returns whether a user has access to update a record of this type. If a record is passed that involves
-  personal privileges, it will validate whether that particular record is updatable.
-  
+  Returns whether a user has access to update a record of this type. If a
+  record is passed that involves personal privileges, it will validate
+  whether that particular record is updatable.
+
   @returns {Boolean}
 */
 XT.Record.canUpdate = function(record) {
@@ -489,9 +528,10 @@ XT.Record.canUpdate = function(record) {
 };
 
 /**
-  Returns whether a user has access to delete a record of this type. If a record is passed that involves
-  personal privileges, it will validate whether that particular record is deletable.
-  
+  Returns whether a user has access to delete a record of this type. If a
+  record is passed that involves personal privileges, it will validate
+  whether that particular record is deletable.
+
   @returns {Boolean}
 */
 XT.Record.canDelete = function(record) {
@@ -506,21 +546,24 @@ XT.Record._canDo = function(action, record) {
       isGrantedPersonal = false,
       userName = XT.DataSource.session.userName;
 
-  if(sessionPrivs) {
+  // TODO: This is pretty awkward to read.
+  if (sessionPrivs) {
     isGrantedAll = privileges.all && privileges.all[action] ? sessionPrivs.get(privileges.all[action]) : false;
-               
-    isGrantedPersonal = isGrantedAll ? true : 
+
+    isGrantedPersonal = isGrantedAll ? true :
                        (privileges.personal && privileges.personal[action] ? sessionPrivs.get(privileges.personal[action]) : false);
-  
+
   }
-  
-  // if only personal privileges, check the original attribute cache to see if this was it was updatable
-  if(!isGrantedAll && isGrantedPersonal && record && this._attrCache) {
+
+  // If only personal privileges, check the original attribute cache to see
+  // if this was it was updatable
+  // TODO: This is pretty awkward to read.
+  if (!isGrantedAll && isGrantedPersonal && record && this._attrCache) {
     var i = 0, props = privileges.personal && privileges.personal.properties ? privileges.personal.properties : [];
-    
+
     isGrantedPersonal = false;
-    while(!isGrantedPersonal && i < props.length) {
-      isGrantedPersonal = this._attrCache[prop[i]] === XT.DataSource.session.userName;
+    while (!isGrantedPersonal && i < props.length) {
+      isGrantedPersonal = this._attrCache[props[i]] === XT.DataSource.session.userName;
       i++;
     }
   }
@@ -529,26 +572,27 @@ XT.Record._canDo = function(action, record) {
 };
 
 /**
-  A utility function to sets the next sequential id on a record. 
-  Accepts a number property to set when the server responds. 
-  
+  A utility function to sets the next sequential id on a record. Accepts a
+  `Number` property to set when the server responds.
+
   The function will send the class name property of itself to the server
-  which will cross reference the ORM 'idSequnceName' property for the class 
+  which will cross reference the ORM 'idSequnceName' property for the class
   to determine which sequence to use.
-  
+
   @param {String} id property to set, defaults to 'guid'
   @returns {Object} receiever
 */
 XT.Record.fetchId = function(prop) {
   var self = this,
-      prop = prop ? prop : 'guid',
       recordType = this.get("className"),
       dispatch;
-  
-  callback = function(error, result) {
-    if(!error) self.set(prop, result);
-  }
-  
+
+  prop = prop ? prop : 'guid';
+
+  var callback = function(error, result) {
+    if (!error) self.set(prop, result);
+  };
+
   dispatch = XT.Dispatch.create({
     className: 'XT.Record',
     functionName: 'fetchId',
@@ -557,39 +601,39 @@ XT.Record.fetchId = function(prop) {
     action: callback
   });
 
+  // FIXME: Should use XT.Logging.
   console.log("XT.Record.fetchId for: %@".fmt(recordType));
 
   self.get('store').dispatch(dispatch);
-  
+
   return this;
 };
 
 /**
-  A utility function to sets the next sequential number on a record. 
-  Accepts a number property to set when the server responds. 
-  
+  A utility function to sets the next sequential number on a record.
+  Accepts a number property to set when the server responds.
+
   The function will send the class name property of itself to the server
-  which will cross reference the ORM 'orderSequnce' property for the class 
+  which will cross reference the ORM 'orderSequnce' property for the class
   to determine which sequence to use.
-  
+
   @param {String} number property to set, defaults to 'number'
   @returns {Object} receiever
 */
 XT.Record.fetchNumber = function(prop) {
   var that = this,
-      prop = prop ? prop : 'number',
       recordType = this.get("className"),
       dispatch;
-      
-  // call back funtion
-  callback = function(error, result) {
-    if(!error) {
+
+  prop = prop ? prop : 'number';
+
+  var callback = function(error, result) {
+    if (!error) {
       that._xt_numberGen = result;
       that.set(prop, result);
-    };
-  }
-  
-  // the request
+    }
+  };
+
   dispatch = XT.Dispatch.create({
     className: 'XT.Record',
     functionName: 'fetchNumber',
@@ -597,21 +641,23 @@ XT.Record.fetchNumber = function(prop) {
     target: that,
     action: callback
   });
+
+  // FIXME: Should use XT.Logging.
   console.log("XT.Record.fetchNumber for: %@".fmt(recordType));
-  
-  // do it
+
   that.get('store').dispatch(dispatch);
+
   return this;
 };
 
 /**
   Releases a number back into the number pool for the record type. Usually
-  would happen when user cancels without saving a new record. 
-  
+  would happen when user cancels without saving a new record.
+
   The function will send the class name property of itself to the server
-  which will cross reference the ORM 'orderSequnce' property for the class 
+  which will cross reference the ORM 'orderSequnce' property for the class
   to determine which sequence to use.
-  
+
   @param {Number} number to release
   @returns {Object} receiever
 */
@@ -630,17 +676,18 @@ XT.Record.releaseNumber = function(number) {
     target: self
   });
 
+  // FIXME: Should use XT.Logging.
   console.log("XT.Record.releaseNumber for: %@".fmt(recordType));
 
   self.get('store').dispatch(dispatch);
-  
+
   return this;
 };
 
 /**
-  Return a matching record id for a passed user key and value. 
-  If none found returns zero.
-  
+  Return a matching record id for a passed user `key` and `value`. If none
+  found, returns zero.
+
   @param {String} property to search on, typically a user key
   @param {String} value to search for
   @param {Function} callback
@@ -665,13 +712,10 @@ XT.Record.findExisting = function(key, value, callback) {
     action: callback
   });
 
+  // FIXME: Should use XT.Logging.
   console.log("XT.Record.findExisting for: %@".fmt(recordType));
 
   self.get('store').dispatch(dispatch);
-  
+
   return this;
 };
-
-
-
-
