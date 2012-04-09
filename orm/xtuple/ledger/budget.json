@@ -26,7 +26,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "budghead_name"
+        "column": "budghead_name",
+        "isRequired": true
       }
     },
     {
@@ -39,7 +40,7 @@
     {
       "name": "items",
       "toMany": {
-        "type": "BudgetItem",
+        "type": "BudgetDetail",
         "column": "budghead_id",
         "inverse": "budget"
       }

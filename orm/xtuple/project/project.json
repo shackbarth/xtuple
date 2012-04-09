@@ -45,7 +45,8 @@
       "name": "name",
       "attr": {
         "type": "String",
-        "column": "prj_name"
+        "column": "prj_name",
+        "isRequired": true
       }
     },
     {
@@ -98,7 +99,9 @@
       "name": "projectStatus",
       "attr": {
         "type": "String",
-        "column": "prj_status"
+        "column": "prj_status",
+        "isRequired": true,
+        "defaultValue": "P"
       }
     },
     {

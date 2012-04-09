@@ -23,7 +23,7 @@
     },
     {
       "name": "receivablePendingApplicationType",
-      "toOne": {
+      "attr": {
         "type": "String",
         "column": "arpending_type"
       }
