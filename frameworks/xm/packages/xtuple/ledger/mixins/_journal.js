@@ -114,9 +114,11 @@ XM._Journal = {
   }),
 
   /**
-    @type String
+    @type Date
   */
-  created: SC.Record.attr(String, {
+  created: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_created'.loc()
   }),
 
