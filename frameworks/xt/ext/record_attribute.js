@@ -1,7 +1,9 @@
 // ==========================================================================
-// Project:   xTuple Postbooks - Business Management System Framework        
-// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
+/*globals XT Money Quantity QuantityPer Cost SalesPrice PurchasePrice Percent
+          UnitRatio Weight */
 
 // Contributions from SC.RecordAttribute:
 // ==========================================================================
@@ -14,20 +16,22 @@
 sc_require('ext/numeric');
 
 /** @private
-  xtuple converter for SC.Record-type records
-  treat -1 same as null
+  xTuple converter for SC.Record-type records.
+  Treat -1 same as null.
  */
 SC.RecordAttribute.registerTransform(SC.Record, {
 
   /** @private - convert a record id to a record instance */
   to: function(id, attr, recordType, parentRecord) {
     var store = parentRecord.get('store');
+
     if (SC.none(id) || (id==="") || id < 0) return null;
     else return store.find(recordType, id);
   },
 
   /** @private - convert a record instance to a record id */
   from: function(record) { return record ? record.get('id') : null; }
+
 });
 
 /** @private - xtuple converter for database form of money */
@@ -38,10 +42,11 @@ SC.RecordAttribute.registerTransform(Money, {
     return SC.none(val) ? null : SC.Math.round(val, XT.MONEY_SCALE);
   },
 
-  /** @private  */
-  from: function(val) { 
+  /** @private */
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.MONEY_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of quantity */
@@ -53,9 +58,10 @@ SC.RecordAttribute.registerTransform(Quantity, {
   },
 
   /** @private  */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.QTY_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of quantity per */
@@ -67,9 +73,10 @@ SC.RecordAttribute.registerTransform(QuantityPer, {
   },
 
   /** @private  */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.QTY_PER_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of cost */
@@ -81,9 +88,10 @@ SC.RecordAttribute.registerTransform(Cost, {
   },
 
   /** @private  */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.COST_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of sales price */
@@ -95,9 +103,10 @@ SC.RecordAttribute.registerTransform(SalesPrice, {
   },
 
   /** @private */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.SALES_PRICE_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of purchase price */
@@ -109,9 +118,10 @@ SC.RecordAttribute.registerTransform(PurchasePrice, {
   },
 
   /** @private  */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.PURCHASE_PRICE_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of quantity per */
@@ -123,9 +133,10 @@ SC.RecordAttribute.registerTransform(UnitRatio, {
   },
 
   /** @private  */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.UNIT_RATIO_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of percent */
@@ -137,9 +148,10 @@ SC.RecordAttribute.registerTransform(Percent, {
   },
 
   /** @private - convert a percent to a number for persistent storage */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val / 100, XT.PERCENT_SCALE);
   }
+
 });
 
 /** @private - xtuple converter for database form of quantity per */
@@ -151,8 +163,8 @@ SC.RecordAttribute.registerTransform(Weight, {
   },
 
   /** @private  */
-  from: function(val) { 
+  from: function(val) {
     return SC.none(val) ? null : SC.Math.round(val, XT.WEIGHT_SCALE);
   }
-});
 
+});
