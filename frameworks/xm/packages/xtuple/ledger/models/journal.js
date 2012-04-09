@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_general_journal');
+sc_require('mixins/_journal');
 
 /**
   @class
 
   @extends XT.Record
 */
-XM.GeneralJournal = XT.Record.extend(XM._GeneralJournal,
-  /** @scope XM.GeneralJournal.prototype */ {
+XM.Journal = XT.Record.extend(XM._Journal,
+  /** @scope XM.Journal.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES

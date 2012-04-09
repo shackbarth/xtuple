@@ -86,6 +86,8 @@ XM._ProjectTask = {
     @type String
   */
   projectTaskStatus: SC.Record.attr(String, {
+    isRequired: true,
+    defaultValue: 'P',
     label: '_projectTaskStatus'.loc()
   }),
 
@@ -93,6 +95,8 @@ XM._ProjectTask = {
     @type Number
   */
   budgetedHours: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
     label: '_budgetedHours'.loc()
   }),
 
@@ -100,6 +104,8 @@ XM._ProjectTask = {
     @type Number
   */
   actualHours: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
     label: '_actualHours'.loc()
   }),
 
@@ -107,6 +113,8 @@ XM._ProjectTask = {
     @type Number
   */
   budgetedExpenses: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
     label: '_budgetedExpenses'.loc()
   }),
 
@@ -114,6 +122,8 @@ XM._ProjectTask = {
     @type Number
   */
   actualExpenses: SC.Record.attr(Number, {
+    isRequired: true,
+    defaultValue: 0,
     label: '_actualExpenses'.loc()
   }),
 

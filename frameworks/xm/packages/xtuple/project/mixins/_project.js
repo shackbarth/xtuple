@@ -62,6 +62,7 @@ XM._Project = {
     @type String
   */
   name: SC.Record.attr(String, {
+    isRequired: true,
     label: '_name'.loc()
   }),
 
@@ -130,6 +131,8 @@ XM._Project = {
     @type String
   */
   projectStatus: SC.Record.attr(String, {
+    isRequired: true,
+    defaultValue: 'P',
     label: '_projectStatus'.loc()
   }),
 
