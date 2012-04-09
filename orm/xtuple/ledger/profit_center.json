@@ -26,7 +26,8 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "prftcntr_number"
+        "column": "prftcntr_number",
+        "isRequired": true
       }
     },
     {
