@@ -14,7 +14,7 @@
   @extends SC.Record
 */
 XT.Record = SC.Record.extend(
-/** @scope XT.Record.prototype */ {
+  /** @scope XT.Record.prototype */ {
 
   /*
     The full path name of this class. Should be set in every subclass.
