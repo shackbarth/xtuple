@@ -89,8 +89,7 @@ Postbooks.LoadUserInterface = function() {
   }
   console.log('XM has', count, 'non-generated XT.Record subclasses.');
 
-  // TODO: Find out why CashReceipt and CreditMemo have permission errors.
-  var crmClasses = 'Account Address Contact Incident Opportunity Project ToDo'.w();
+  var crmClasses = 'Account Address CashReceipt Contact Incident Opportunity Project ToDo'.w();
   console.log("There are", crmClasses.length, "root CRM classes.");
 
   var crmItems = [];
