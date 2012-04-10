@@ -76,6 +76,7 @@
     {
       "name": "terms",
       "toOne": {
+        "isNested": true,
         "type": "Terms",
         "column": "aropen_terms_id",
         "isEditable": false

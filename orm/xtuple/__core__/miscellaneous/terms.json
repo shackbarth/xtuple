@@ -64,7 +64,7 @@
     {
       "name": "discountPercent",
       "attr": {
-        "type": "Number",
+        "type": "Percent",
         "column": "terms_discprcnt",
         "defaultValue": 0.00
       }
