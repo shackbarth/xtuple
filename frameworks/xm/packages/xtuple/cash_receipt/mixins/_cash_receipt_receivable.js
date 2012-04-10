@@ -93,6 +93,7 @@ XM._CashReceiptReceivable = {
     @type XM.Terms
   */
   terms: SC.Record.toOne('XM.Terms', {
+    isNested: true,
     label: '_terms'.loc()
   }),
 
