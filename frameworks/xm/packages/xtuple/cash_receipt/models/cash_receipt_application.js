@@ -86,6 +86,7 @@ XM.CashReceiptApplication = SC.Object.extend(
         detail = this.get('cashReceiptDetail'),
         receivable = this.get('receivable'),
         arCurrencyRate = receivable.get('currencyRate'),
+        documentType = receivable.get('documentType'),
         pending = receivable.get('pending'),
         applied = detail ? detail.get('amount') : 0,
         balance = receivable.get('balance') - pending,
@@ -96,6 +97,13 @@ XM.CashReceiptApplication = SC.Object.extend(
     discount = discount || 0;
     if (amount < 0 || discount < 0 || 
         amount + discount - applied > balance) return false;
+  
+    // credits need sense reversed
+    if (documentType === XM.Receivable.CREDIT_MEMO || 
+        documentType === XM.Receivable.CUSTOMER_DEPOSIT) {
+      amount = amount * -1;
+      discount = 0; // should never be a discount on credit
+    }
   
     // destroy the old detail
     if (detail) { 
@@ -115,13 +123,13 @@ XM.CashReceiptApplication = SC.Object.extend(
     // associate detail to this application
     this.set('cashReceiptDetail', detail);
     
-    // fetching the id is asynchronous, so we'll have to finish when that comes
+    // fetching the id is asynchronous, so we'll have to finish later
     detail.addObserver('id', detail, function observer() {
       if (!isNaN(detail.get('id'))) {
         detail.removeObserver('id', detail, observer);
         id = detail.get('id');
         
-        // create a pending application record (info only, this won't be committed)
+        // create a pending application record (info only, the datasource will ignore this)
         pending = store.createRecord(XM.PendingApplication, { guid: id });
         pending.set('pendingApplicationType', XM.PendingApplication.CASH_RECEIPT)
                .set('receivable', receivable)
@@ -175,7 +183,7 @@ XM.CashReceiptApplication = SC.Object.extend(
         discount = SC.Math.round((amount / (1 - discountPercent)) - amount, XT.MONEY_SCALE);
       }
     } else {
-      amount = SC.Math.round(arBalance * -1, XT.MONEY_SCALE);
+      amount = arBalance;
     }
     if (amount) return this.apply(amount, discount);
     
