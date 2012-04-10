@@ -1,7 +1,6 @@
 {
   "type": "lazy",
   "dependencies": [
-    "__core__",
-    "receivable"
+    "__core__"
   ]
 }

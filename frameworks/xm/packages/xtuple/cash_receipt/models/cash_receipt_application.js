@@ -15,15 +15,11 @@
 XM.CashReceiptApplication = SC.Object.extend(
   /** @scope XM.CashReceiptApplication.prototype */ {
   
-  receivable: null,
+  cashReceipt: null,
   
   cashReceiptDetail: null,
   
-  /** @private */
-  pendingApplicationsLength: 0,
-  
-  /** @private */
-  pendingApplicationsLengthBinding: SC.Binding.from('*receivable.pendingApplications.length').oneWay().noDelay(),
+  receivable: null,
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -55,10 +51,10 @@ XM.CashReceiptApplication = SC.Object.extend(
   receivableApplied: function() {
     var applied = this.get('applied'),
         discount = this.get('discount'),
-        crCurrencyRate = this.getPath('cashReceiptDetail.cashReceipt.currencyRate') || 1,
+        crCurrencyRate = this.getPath('cashReceipt.currencyRate') || 1,
         arCurrencyRate = this.getPath('receivable.currencyRate');
     return SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE);
-  }.property('applied', 'discount', '*cashReceiptDetail.cashReceipt.currencyRate').cacheable(),
+  }.property('applied', 'discount').cacheable(),
   
   /**
     Total value of applications that have been created, but not posted, on the receivable
@@ -88,9 +84,11 @@ XM.CashReceiptApplication = SC.Object.extend(
     // now add the amount applied from this application
     pending += receivableApplied;
     return SC.Math.round(pending, XT.MONEY_SCALE);
-  }.property('pendingApplicationsLength', 'receivableApplied').cacheable(),
+  }.property('*receivable.pendingApplications.length', 'receivableApplied').cacheable(),
 
   /**
+    The balance due on the receivable in the receivable's currency.
+    
     @type Number
   */  
   balance: function() {
@@ -102,6 +100,55 @@ XM.CashReceiptApplication = SC.Object.extend(
   // .................................................
   // METHODS
   //
+  
+  /**
+    Apply an amount from the cash receipt associated with this application
+    to the receivable associtated with this application.
+    
+    @param {Number} amount
+    @param {Number} discount
+    returns XM.CashReceiptDetail
+  */
+  apply: function(amount, discount) {
+    var cashReceipt = this.get('cashReceipt'),
+        detail = this.get('cashReceiptDetail'),
+        receivable = this.get('receivable'),
+        applied = detail ? detail.get('amount') : 0,
+        balance = receivable.get('balance'),
+        store = receivable.get('store'),
+        discount = 0; 
+    
+    // values must be valid
+    discount = discount || 0;
+    if (amount < 0 || discount < 0 || 
+        amount + discount - applied > balance) return false;
+  
+    // update the detail
+    if (detail) {
+      detail.set('amount', amount);
+      detail.set('discount', discount);
+
+    // create the detail
+    } else {
+      detail = store.createRecord(XM.CashReceiptDetail, {});
+      detail.set('receivable', receivable)
+            .set('amount', amount)
+            .set('discount', discount)
+            .normalize();
+      cashReceipt.get('details').pushObject(detail);
+      
+      // associate detail to this application
+      this.set('cashReceiptDetail', detail);
+      
+      // associate detail to pending applications
+      receivable.get('pendingApplications').pushObject(detail);
+    }
+    
+    return detail;
+  },
+  
+  applyBalance: function() {
+  },
   
   clear: function() {
     var detail = this.get('cashReceiptDetail');

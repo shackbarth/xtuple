@@ -125,9 +125,14 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   detailsLengthDidChange: function() {
     var details = this.get('details'),
         applications = this.get('applications'),
-        isUpdated = false;
+        isUpdated = false,
+        isNotFixedCurrency = details.get('length') ? false : true;
 
-    // process
+    // currency is only editable when no detail
+    this.currency.set('isEditable', isNotFixedCurrency);
+    this.currencyRate.set('isEditable', isNotFixedCurrency);
+    
+    // process detail
     for (var i = 0; i < details.get('length'); i++) {
       var detail = details.objectAt(i),
           receivable = detail.get('receivable'),
@@ -138,6 +143,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       if ((status & SC.Record.DESTROYED) === 0) {
         if (!application) {
           application = XM.CashReceiptApplication.create();
+          application.set('cashReceipt', this),
           application.set('cashReceiptDetail', detail),
           application.set('receivable', receivable),
           applications.pushObject(application);
@@ -175,6 +181,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       // if not found make one
       if (!application  && (includeCredits || !isCredit)) {
         application = XM.CashReceiptApplication.create({
+          cashReceipt: this,
           receivable: receivable
         });
         applications.pushObject(application);
