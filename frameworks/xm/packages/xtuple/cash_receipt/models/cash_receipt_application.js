@@ -158,9 +158,7 @@ XM.CashReceiptApplication = SC.Object.extend(
 
       // get id
       detail.normalize();
-      return detail;
     }
-    
     return detail;
   },
   
