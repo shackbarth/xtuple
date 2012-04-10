@@ -24,7 +24,23 @@ XM.Terms = XM.Document.extend(XM._Terms,
   //..................................................
   // METHODS
   //
+
+  /**
+    Calculate a discount date based on a given document date.
+    
+    @param {SC.DateTime} document date.
+    @returns SC.DateTime
+  */
+  calculateDiscountDate: function(date) {
+    return XM.Terms.calculateDiscountDate(this, date);
+  },
   
+  /**
+    Calculate a due date based on a given document date.
+    
+    @param {SC.DateTime} document date.
+    @returns SC.DateTime
+  */
   calculateDueDate: function(date) {
     return XM.Terms.calculateDueDate(this, date);
   }
@@ -36,6 +52,17 @@ XM.Terms = XM.Document.extend(XM._Terms,
 });
 
 /**
+  Calculate a discount date based on a given document date.
+  
+  @param {XM.Terms} terms
+  @param {SC.DateTime} document date.
+  @returns SC.DateTime
+*/
+XM.Terms.calculateDiscountDate = function(terms, date) {
+  return XM.Terms._calculateDate(terms, date, 'discountDays');
+}
+
+/**
   Calculate a due date based on a given document date.
   
   @param {XM.Terms} terms
@@ -43,21 +70,35 @@ XM.Terms = XM.Document.extend(XM._Terms,
   @returns SC.DateTime
 */
 XM.Terms.calculateDueDate = function(terms, date) {
-  if (!SC.kindOf(terms, XM.Terms)) return date;
+  return XM.Terms._calculateDate(terms, date, 'dueDays');
+}
+
+/** @private
+  Calculate a date to advance based on a given document date
+  and advancement basis.
+  
+  @param {XM.Terms} terms
+  @param {SC.DateTime} document date.
+  @param {String} due date or discount date basis
+  @returns SC.DateTime
+*/
+XM.Terms._calculateDate = function(terms, date, basis) {
+  if (!SC.kindOf(date, SC.DateTime)) return false;
+  else if (!SC.kindOf(terms, XM.Terms)) return date;
   var termsType = terms.get('termsType'),
-      dueDays = terms.get('dueDays'),
+      advanceDays = terms.get(basis),
       cutOffDay = terms.get('cutOffDay'),
       result = date;
       
   // handle days
   if (termsType === 'D') {
-    result = date.advance({ day: dueDays });
+    result = date.advance({ day: advanceDays });
     
   // handle proximo (day of month)
   } else if (termsType === 'P') {
     result = SC.DateTime.create({ 
       month: date.get('month'), 
-      day: dueDays, 
+      day: advanceDays, 
       year: date.get('year')
     });
     
