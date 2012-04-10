@@ -5,8 +5,6 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/ledger/models
-
 sc_require('mixins/_layout_income_statement_group');
 
 /**
@@ -17,6 +15,11 @@ sc_require('mixins/_layout_income_statement_group');
 XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   /** @scope XM.LayoutIncomeStatementGroup.prototype */ {
 
+  /**
+    Stores parent-group records for view layer drop down.
+    Selected value will set the percentLayoutIncomeStatementGroup
+    property.
+  */
   layoutGroupRecords: [],
 
   // .................................................
@@ -27,15 +30,32 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   // METHODS
   //
 
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.getLayoutGroupRecords();
+  },
+
+  /**
+    Called on instantiation and when the layoutIncomeStatementGroup
+    property changes.
+    Will push parent-group records into layoutGroupRecords
+    property.
+  */
   getLayoutGroupRecords: function() {
-    var layoutGroupRec = this.get('layoutIncomeStatementGroup');
+    var layoutGroupRec = this.get('layoutIncomeStatementGroup'),
+        idx;
 
     while(layoutGroupRec) {
-      console.log("group id: " + layoutGroupRec.get('id'));
-      console.log("next group id: " + layoutGroupRec.get('layoutIncomeStatementGroup'));
-      this.layoutGroupRecords.push(layoutGroupRec);
-      layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
-      console.log("post-assignment");
+
+      /**
+        Fail-safe to prevent duplicate records from being pushed
+        into layoutGroupRecords array.
+      */
+      idx = this.layoutGroupRecords.lastIndexOf(layoutGroupRec);
+      if(idx === -1) {
+        this.layoutGroupRecords.push(layoutGroupRec);
+        layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
+      }
     }
   },
 
@@ -45,6 +65,6 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
 
   layoutIncomeStatementGroupDidChange: function() {
     this.getLayoutGroupRecords();
-  }.observes('layoutIncomeStatementGroup', 'status'),
+  }.observes('layoutIncomeStatementGroup'),
 
 });
