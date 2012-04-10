@@ -6,7 +6,6 @@
 
 sc_require('ext/store');
 sc_require('ext/dispatch');
-sc_require('ext/data_source');
 
 /** @instance
 
