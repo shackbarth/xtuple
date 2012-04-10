@@ -82,6 +82,7 @@ XM.CashReceiptApplication = SC.Object.extend(
   */
   apply: function(amount, discount) {
     var cashReceipt = this.get('cashReceipt'),
+        isPosted = cashReceipt.get('isPosted'),
         crCurrencyRate = cashReceipt.get('currencyRate'),
         detail = this.get('cashReceiptDetail'),
         receivable = this.get('receivable'),
@@ -96,7 +97,8 @@ XM.CashReceiptApplication = SC.Object.extend(
     // values must be valid
     discount = discount || 0;
     if (amount < 0 || discount < 0 || 
-        amount + discount - applied > balance) return false;
+        amount + discount - applied > balance ||
+        isPosted) return false;
   
     // credits need sense reversed
     if (documentType === XM.Receivable.CREDIT_MEMO || 
@@ -123,7 +125,7 @@ XM.CashReceiptApplication = SC.Object.extend(
     // associate detail to this application
     this.set('cashReceiptDetail', detail);
     
-    // fetching the id is asynchronous, so we'll have to finish later
+    // fetching the id is asynchronous, so we'll have to finish when that comes
     detail.addObserver('id', detail, function observer() {
       if (!isNaN(detail.get('id'))) {
         detail.removeObserver('id', detail, observer);

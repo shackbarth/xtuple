@@ -32,6 +32,7 @@ SC.stringsFor("en_US", {
   "_fetchError": "Fetch Error",
   "_firstOrLastNameRequired": "First or last name is required",
   "_noLineItems": "This document requires at least one line item.",
+  "_noResultsFound": "No results were returned for the query.",
   "_optionExistsValue": "A option already exists with this Value.",
   "_parentIsInvalid": "This CRM Account cannot be a parent to itself.",
   "_recordConflict": "Record Conflict",
