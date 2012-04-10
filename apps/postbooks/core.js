@@ -95,16 +95,16 @@ Postbooks.RenderModelHierarchy = function() {
   // for (var key in XM) {
   //   if (key.slice(0,1) === '_') continue;
   //   var klass = XM[key];
-  //   if (klass && klass.isClass && klass.subclassOf(XM.Record)) classes.push(klass);
+  //   if (klass && klass.isClass && klass.subclassOf(XT.Record)) classes.push(klass);
   // }
 
   var count = 0;
   for (var key in XM) {
     if (key.slice(0,1) === '_') continue;
     var klass = XM[key];
-    if (klass && klass.isClass && klass.subclassOf(XM.Record)) count++;
+    if (klass && klass.isClass && klass.subclassOf(XT.Record)) count++;
   }
-  console.log('XM has', count, 'non-generated XM.Record subclasses.');
+  console.log('XM has', count, 'non-generated XT.Record subclasses.');
 
   // TODO: Find out why CashReceipt and CreditMemo have permission errors.
   // var xtupleClasses = 'Account BankAccount CashReceipt CreditMemo Customer Incident Invoice LedgerAccount Opportunity Payable Payment Receivable ToDo Vendor Voucher Project'.w();
@@ -115,7 +115,7 @@ Postbooks.RenderModelHierarchy = function() {
     var klass = XM[className];
     sc_assert(klass);
     sc_assert(klass.isClass);
-    sc_assert(klass.subclassOf(XM.Record));
+    sc_assert(klass.subclassOf(XT.Record));
 
     var li = document.createElement('li');
     ul.appendChild(li);

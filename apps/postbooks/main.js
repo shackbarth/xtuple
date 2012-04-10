@@ -6,18 +6,21 @@
 
 SC.ENABLE_CSS_TRANSITIONS = false;
 
-XM.DataSource.prototype.logLevels = SC.Object.create({
+XT.DataSource.prototype.logLevels = SC.Object.create({
   warn:  false,
   info:  false,
   error: false
 });
 
 function main() {
-  XM.dataSource = XM.DataSource.create({ name: 'XM.dataSource' });
-  XM.store = XM.Store.create().from(XM.dataSource);
-  XM.dataSource.getSession();
-  XM.run();
+  XT.dataSource = XT.DataSource.create({ name: 'XT.dataSource' });
+  XT.store = XT.Store.create().from(XT.dataSource);
+  XT.dataSource.getSession();
 
-  // setTimeout(Postbooks.RenderModelHierarchy, 0);
-  Postbooks.LoadUserInterface();
+  // Use the new package system out of the box for now.
+  XT.package = SC.Package.create();
+  XT.run();
+
+  setTimeout(Postbooks.RenderModelHierarchy, 0);
+  // Postbooks.LoadUserInterface();
 }
