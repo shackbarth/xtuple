@@ -17,6 +17,8 @@ sc_require('mixins/_layout_income_statement_group');
 XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   /** @scope XM.LayoutIncomeStatementGroup.prototype */ {
 
+  layoutGroupRecords: [],
+
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -25,9 +27,24 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   // METHODS
   //
 
+  getLayoutGroupRecords: function() {
+    var layoutGroupRec = this.get('layoutIncomeStatementGroup');
+
+    while(layoutGroupRec) {
+      console.log("group id: " + layoutGroupRec.get('id'));
+      console.log("next group id: " + layoutGroupRec.get('layoutIncomeStatementGroup'));
+      this.layoutGroupRecords.push(layoutGroupRec);
+      layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
+      console.log("post-assignment");
+    }
+  },
+
   //..................................................
   // OBSERVERS
   //
 
-});
+  layoutIncomeStatementGroupDidChange: function() {
+    this.getLayoutGroupRecords();
+  }.observes('layoutIncomeStatementGroup', 'status'),
 
+});

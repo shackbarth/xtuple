@@ -13,19 +13,25 @@ sc_require('mixins/_ledger_account');
   @extends XT.Record
 */
 XM.LedgerAccount = XT.Record.extend(XM._LedgerAccount,
-  /** @scope XM.LedgerAccount.prototype */ {
+/** @scope XM.LedgerAccount.prototype */ {
 
-  // .................................................
-  // CALCULATED PROPERTIES
-  //
+// .................................................
+// CALCULATED PROPERTIES
+//
 
-  //..................................................
-  // METHODS
-  //
+number: SC.Record.attr(Number, {
+  toType: function(record, key, value) {
+  if(value) return value.get('length') <= 4 ? value : null;
+  }
+}),
 
-  //..................................................
-  // OBSERVERS
-  //
+//..................................................
+// METHODS
+//
+
+//..................................................
+// OBSERVERS
+//
 
 });
 

@@ -7,7 +7,6 @@
 /**
   @class
 
-
   @extends SC.Object
 */
 
@@ -23,7 +22,7 @@ XT.Dispatch = SC.Object.extend(
 
     @type Boolean
   */
-  isDispatch: YES,
+  isDispatch: true,
 
   /**
     The record type making the call.
@@ -46,21 +45,17 @@ XT.Dispatch = SC.Object.extend(
     @type Hash
   */
   parameters: null,
-  
+
   /**
     The target object.
   */
   target: null,
-  
+
   /**
     Callback
-    
+
     @type function
   */
   action: null
 
 })
-
-
-
-

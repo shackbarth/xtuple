@@ -6,17 +6,17 @@
 /*globals XM */
 
 /**
-  @scope XM.ItemConversionUnitType
+  @scope XM.BudgetDetail
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ItemConversionUnitType = {
-  /** @scope XM.ItemConversionUnitType.prototype */
+XM._BudgetDetail = {
+  /** @scope XM.BudgetDetail.prototype */
   
-  className: 'XM.ItemConversionUnitType',
+  className: 'XM.BudgetDetail',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -41,17 +41,25 @@ XM._ItemConversionUnitType = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.ItemConversion
+    @type Number
   */
-  itemUnitConversion: SC.Record.toOne('XM.ItemConversion', {
-    label: '_itemUnitConversion'.loc()
+  budget: SC.Record.toOne(Number, {
+    label: '_budget'.loc()
   }),
 
   /**
-    @type Number
+    @type XM.Period
   */
-  itemUnitType: SC.Record.attr(Number, {
-    label: '_itemUnitType'.loc()
+  period: SC.Record.toOne('XM.Period', {
+    label: '_period'.loc()
+  }),
+
+  /**
+    @type XM.LedgerAccountInfo
+  */
+  ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
+    isNested: true,
+    label: '_ledgerAccount'.loc()
   })
 
 };

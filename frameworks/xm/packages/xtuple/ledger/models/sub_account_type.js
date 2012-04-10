@@ -5,25 +5,21 @@
 
 /*globals XM */
 
-sc_require('mixins/_sub_account');
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/ledger/models
+
+sc_require('mixins/_sub_account_type');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.SubAccount = XT.Record.extend(XM._SubAccount,
-/** @scope XM.SubAccount.prototype */ {
+XM.SubAccountType = XT.Record.extend(XM._SubAccountType,
+/** @scope XM.SubAccountType.prototype */ {
 
 // .................................................
 // CALCULATED PROPERTIES
 //
-
-number: SC.Record.attr(Number, {
-  toType: function(record, key, value) {
-  if(value) return value.get('length') <= 2 ? value : null;
-  }
-}),
 
 //..................................................
 // METHODS
