@@ -115,8 +115,7 @@ XM.CashReceiptApplication = SC.Object.extend(
         receivable = this.get('receivable'),
         applied = detail ? detail.get('amount') : 0,
         balance = receivable.get('balance'),
-        store = receivable.get('store'),
-        discount = 0; 
+        store = receivable.get('store'); 
     
     // values must be valid
     discount = discount || 0;
