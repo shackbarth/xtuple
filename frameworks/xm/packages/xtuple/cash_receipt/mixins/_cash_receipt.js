@@ -100,15 +100,6 @@ XM._CashReceipt = {
   }),
 
   /**
-    @type XM.SalesCategory
-  */
-  salesCategory: SC.Record.toOne('XM.SalesCategory', {
-    isRequired: true,
-    defaultValue: -1,
-    label: '_salesCategory'.loc()
-  }),
-
-  /**
     @type Boolean
   */
   isUseCustomerDeposit: SC.Record.attr(Boolean, {
