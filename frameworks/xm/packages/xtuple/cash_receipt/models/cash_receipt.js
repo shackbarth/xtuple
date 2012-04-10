@@ -76,7 +76,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     if (customer && isPosted === false) {
       if (!this._xm_query) {
         this._xm_query = SC.Query.local(XM.CashReceiptReceivable, {
-          conditions: "customer = {customer} AND isOpen = YES"
+          conditions: "customer = {customer} AND isOpen = YES",
+          orderBy: "dueDate"
         })
       }
       this._xm_query.setIfChanged('parameters', { customer: customer });
