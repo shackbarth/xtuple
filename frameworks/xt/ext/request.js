@@ -32,6 +32,9 @@ XT.Request = SC.Request.extend({
     @param {SC.Response} response The generated (empty) response object.
   */
   willSend: function(request, response) {
+
+    console.log("willSend() session => ", this.get('session'));
+
     SC.mixin(request.body, this.get('session'));
   },
 

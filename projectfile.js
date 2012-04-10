@@ -24,18 +24,21 @@ var project = BT.Project.create({
   "xt": require('./frameworks/xt/node/buildfile'),
 
   "datasource": BT.Proxy.create({
-    proxyHost: 'aurora.xtuple.com',
+    // proxyHost: 'aurora.xtuple.com',
+    proxyHost: 'localhost',
     proxyPort: 9000,
     proxyPrefix: '/'
   }),
 
   "data": BT.Proxy.create({
-    proxyHost: 'aurora.xtuple.com',
+    // proxyHost: 'aurora.xtuple.com',
+    proxyHost: 'localhost',
     proxyPort: 9000,
     proxyPrefix: '/data'
   })
 });
 
 BT.Server.create({
-  project: project
+  project: project,
+  port: 4050
 });
