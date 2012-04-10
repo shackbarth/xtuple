@@ -35,7 +35,7 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
   */
   isShowTotalDidChange: function() {
     var isShowTotal = this.get('isShowTotal');
-
+    if(!isShowTotal) this.set('isAlternateTotal', isShowTotal);
     this.isAlternateTotal.set('isEditable', isShowTotal);
   }.observes('isShowTotal'),
 
