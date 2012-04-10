@@ -7,7 +7,7 @@ XT.Logging = {
     Log for general information.
   */
   log: function(msg) {
-    var args = Array.prototype.slice.call(arguments).slice(1);
+    var args = SC.A(arguments).slice(1);
 
     if (XT.getPath("logLevels.info") === NO || this.get('logLocal') === NO) {
       return;
