@@ -37,19 +37,19 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
     var isShowTotal = this.get('isShowTotal');
 
     this.isAlternateTotal.set('isEditable', isShowTotal);
-  },
+  }.observes('isShowTotal'),
 
   isAlternateBudgetDidChange: function() {
     var isAlternateBudget = this.get('isAlternateBudget');
 
     this.budgetLabel.set('isEditable', isAlternateBudget);
-  },
+  }.observes('isAlternateBudget'),
 
   isAlternateTotalDidChange: function() {
     var isAlternateTotal = this.get('isAlternateTotal');
 
     this.alternateTotalLabel.set('isEditable', isAlternateTotal);
-  },
+  }.observes('isAlternateTotal'),
 
   statusDidChange: function() {
     var status = this.get('status');
