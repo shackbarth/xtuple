@@ -70,14 +70,14 @@ XT.DataSource = SC.Object.extend(XT.Logging,
       username/password are arbitrarily handed to it. This is not
       the end-design goal but for development only.
   */
-  getSession: function(username, password, company) {
+  getSession: function(username, password, organization) {
     if (!SC.none(this.session)) return;
 
     this.log("getSession => requesting a session");
 
     if (SC.none(username)) username = 'admin';
     if (SC.none(password)) password = 'admin';
-    if (SC.none(company))  company  = '380postbooks';
+    if (SC.none(organization))  organization  = '380postbooks';
 
     XT.Request
       .postUrl(this.URL)
@@ -87,7 +87,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
         requestType: 'requestSession',
         userName: username,
         password: password,
-        company: company
+        organization: organization
       });
   },
 
