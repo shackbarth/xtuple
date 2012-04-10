@@ -75,9 +75,17 @@ XT.DataSource = SC.Object.extend(XT.Logging,
 
     this.log("getSession => requesting a session");
 
-    if (SC.none(username)) username = 'admin';
-    if (SC.none(password)) password = 'admin';
-    if (SC.none(organization))  organization  = '380postbooks';
+    var needs = [];
+
+    if (SC.none(username)) needs.push("username");
+    if (SC.none(password)) needs.push("password");
+    if (SC.none(organization)) needs.push("organization");
+
+    if (needs.length > 0) {
+      SC.Logger.error("The following are missing fields in order to acquire a session: " +
+        needs.join(", ")); 
+      return false;
+    }
 
     XT.Request
       .postUrl(this.URL)
