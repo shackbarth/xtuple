@@ -49,7 +49,7 @@ XT.Request = SC.Request.extend({
     var body = response.get('body');
 
     if (SC.typeOf(body) === SC.T_HASH && body.error) {
-      console.log("\n\n**** ERROR RESPONSE FROM SERVER: %@\n\n".fmt(body.message || "NO MESSAGE"));
+      SC.Logger.warn("\n\n**** ERROR RESPONSE FROM SERVER: %@\n\n".fmt(body.message || "NO MESSAGE"));
     }
   }
 

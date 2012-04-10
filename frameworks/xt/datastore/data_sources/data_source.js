@@ -42,8 +42,8 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     @param {...} [arguments] Any additional arguments are supplied to the callback method.
   */
   ready: function(callback, context) {
-    var args = Array.prototype.slice.call(arguments),
-        callbacks;
+    var args = SC.A(arguments);
+    var callbacks;
 
     args = args.length > 2 ? args.slice(2) : [];
     context = context ? context : null;
