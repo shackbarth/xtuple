@@ -157,6 +157,22 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   // OBSERVERS
   //
   
+  currencyDidChange: function() {
+    var applyDate = this.get('applyDate'),
+        currency = this.get('currency'),
+        that = this;
+
+    if (applyDate && currency) {
+      // define the callback
+      callback = function(err, currencyRate) {
+        if (!err) that.set('currencyRate', currencyRate.get('rate'));
+      }
+      
+      // request a rate
+      XM.Currency.rate(currency, applyDate, callback);
+    }
+  }.observes('currency', 'applyDate'),
+  
   customerDidChange: function() {
     if (this.get('customer')) this.customer.set('isEditable', false);
   }.observes('customer'),
@@ -167,7 +183,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         isUpdated = false,
         isNotFixedCurrency = details.get('length') ? false : true;
 
-    // currency is only editable when no detail
+    // things that affect exchange rate are only editable when no detail
+    this.applyDate.set('isEditable', isNotFixedCurrency);
     this.currency.set('isEditable', isNotFixedCurrency);
     this.currencyRate.set('isEditable', isNotFixedCurrency);
     
