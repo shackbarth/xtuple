@@ -118,7 +118,7 @@
       "name": "pendingApplications",
       "toMany": {
         "isNested": true,
-        "type": "ReceivablePendingApplication",
+        "type": "PendingApplication",
         "column": "aropen_id",
         "inverse": "receivable"
       }

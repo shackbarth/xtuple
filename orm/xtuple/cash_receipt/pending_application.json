@@ -1,9 +1,9 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "ReceivablePendingApplication",
+  "type": "PendingApplication",
   "table": "xt.arpending",
-  "comment": "Receivable Pending Application Map",
+  "comment": "Pending Application Map",
   "privileges": {
     "all": {
       "create": "false",
@@ -22,7 +22,7 @@
       }
     },
     {
-      "name": "receivablePendingApplicationType",
+      "name": "pendingApplicationType",
       "attr": {
         "type": "String",
         "column": "arpending_type"
@@ -31,7 +31,7 @@
     {
       "name": "receivable",
       "toOne": {
-        "type": "Receivable",
+        "type": "CashReceiptReceivable",
         "column": "arpending_aropen_id"
       }
     },
