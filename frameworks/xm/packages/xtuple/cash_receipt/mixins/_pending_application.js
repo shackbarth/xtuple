@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.ReceivablePendingApplication
+  @scope XM.PendingApplication
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ReceivablePendingApplication = {
-  /** @scope XM.ReceivablePendingApplication.prototype */
+XM._PendingApplication = {
+  /** @scope XM.PendingApplication.prototype */
   
-  className: 'XM.ReceivablePendingApplication',
+  className: 'XM.PendingApplication',
 
   
 
@@ -43,14 +43,14 @@ XM._ReceivablePendingApplication = {
   /**
     @type String
   */
-  receivablePendingApplicationType: SC.Record.attr(String, {
-    label: '_receivablePendingApplicationType'.loc()
+  pendingApplicationType: SC.Record.attr(String, {
+    label: '_pendingApplicationType'.loc()
   }),
 
   /**
-    @type XM.Receivable
+    @type XM.CashReceiptReceivable
   */
-  receivable: SC.Record.toOne('XM.Receivable', {
+  receivable: SC.Record.toOne('XM.CashReceiptReceivable', {
     label: '_receivable'.loc()
   }),
 

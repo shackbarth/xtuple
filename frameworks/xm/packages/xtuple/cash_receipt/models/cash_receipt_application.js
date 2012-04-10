@@ -67,15 +67,15 @@ XM.CashReceiptApplication = SC.Object.extend(
         id = this.getPath('cashReceiptDetail.id') || -1,
         receivableApplied = this.get('receivableApplied'), 
         pending = 0;
-    
+  
     // loop through all pending applications and add them up
     for (var i = 0; i < applications.get('length'); i++) {
       var application = applications.objectAt(i),
-          pendingApplicationType = application.get('receivablePendingApplicationType'),
+          pendingApplicationType = application.get('pendingApplicationType'),
           amount = application.get('amount');
           
       // only include pending applications that are not the application from _this_ receipt
-      if (pendingApplicationType !== XM.ReceivablePendingApplication.CASH_RECEIPT || 
+      if (pendingApplicationType !== XM.PendingApplication.CASH_RECEIPT || 
           application.get('id') !== id) {
         pending += amount;
       }
@@ -115,7 +115,8 @@ XM.CashReceiptApplication = SC.Object.extend(
         receivable = this.get('receivable'),
         applied = detail ? detail.get('amount') : 0,
         balance = receivable.get('balance'),
-        store = receivable.get('store'); 
+        store = receivable.get('store'),
+        pending; 
     
     // values must be valid
     discount = discount || 0;
@@ -132,15 +133,32 @@ XM.CashReceiptApplication = SC.Object.extend(
       detail = store.createRecord(XM.CashReceiptDetail, {});
       detail.set('receivable', receivable)
             .set('amount', amount)
-            .set('discount', discount)
-            .normalize();
+            .set('discount', discount);
       cashReceipt.get('details').pushObject(detail);
-      
+                
       // associate detail to this application
       this.set('cashReceiptDetail', detail);
       
-      // associate detail to pending applications
-      receivable.get('pendingApplications').pushObject(detail);
+      // fetching the id is asynchronous, so we'll have to finish when that comes
+      detail.addObserver('id', detail, function observer() {
+        if (!isNaN(detail.get('id'))) {
+          detail.removeObserver('id', detail, observer);
+          id = detail.get('id');
+          
+          // create a pending application record (info only, this won't be committed)
+          pending = store.createRecord(XM.PendingApplication, { guid: id });
+          pending.set('pendingApplicationType', XM.PendingApplication.CASH_RECEIPT)
+                 .set('receivable', receivable)
+                 .set('amount', amount + discount);
+          
+          // associate detail to pending applications
+          receivable.get('pendingApplications').pushObject(pending);
+        }
+      })
+
+      // get id
+      detail.normalize();
+      return detail;
     }
     
     return detail;

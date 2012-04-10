@@ -5,16 +5,14 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/receivable/models
-
-sc_require('mixins/_receivable_pending_application');
+sc_require('mixins/_pending_application');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplication,
+XM.PendingApplication = XT.Record.extend(XM._PendingApplication,
   /** @scope XM.ReceivablePendingApplication.prototype */ {
 
   // .................................................
@@ -31,8 +29,8 @@ XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplicat
 
 });
 
-XM.ReceivablePendingApplication.mixin( 
-  /** @scope XM.ReceivablePendingApplication */ {
+XM.PendingApplication.mixin( 
+  /** @scope XM.PendingApplication */ {
 
 /**
   Cash Receipt application type.
