@@ -163,6 +163,34 @@ XM.CashReceiptApplication = SC.Object.extend(
   },
   
   applyBalance: function() {
+    var applied = this.get('applied'),
+        amount = this.getPath('cashReceipt.balance') + applied,
+        receivable = this.get('receivable'),
+        balance = receivable.get('balance') + applied,
+        documentDate = receivable.get('documentDate'),
+        terms = receivable.get('terms'),
+        discountDate = terms.calculateDiscountDate(documentDate),
+        discountPercent = terms.get('discountPercent') / 100,
+        discount = 0;
+        
+    // bail out if nothing to do
+    if (balance === 0 || amount === 0) return this.get('detail');
+    
+    // calculate discount if we qualify for one
+    if (balance > 0 && SC.DateTime.compareDate(documentDate, discountDate) <= 0) {
+      discount = SC.Math.round(balance * discountPercent, XT.MONEY_SCALE);
+    }
+    
+    // adjust the amount or discount as appropriate and apply
+    if (balance <= amount + discount) {
+      amount = balance - discount;
+    } else {
+      discount = SC.Math.round((amount / (1 - discountPercent)) - amount, XT.MONEY_SCALE);
+    }
+    if (amount) return this.apply(amount, discount);
+    
+    // if there was nothing to apply
+    return false;
   },
   
   clear: function() {
