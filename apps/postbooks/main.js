@@ -21,6 +21,6 @@ function main() {
   XT.package = SC.Package.create();
   XT.run();
 
-  setTimeout(Postbooks.RenderModelHierarchy, 0);
-  // Postbooks.LoadUserInterface();
+  // setTimeout(Postbooks.RenderModelHierarchy, 0);
+  Postbooks.LoadUserInterface();
 }

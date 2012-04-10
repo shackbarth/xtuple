@@ -85,9 +85,9 @@ Postbooks.LoadUserInterface = function() {
   for (var key in XM) {
     if (key.slice(0,1) === '_') continue;
     var klass = XM[key];
-    if (klass && klass.isClass && klass.subclassOf(XM.Record)) count++;
+    if (klass && klass.isClass && klass.subclassOf(XT.Record)) count++;
   }
-  console.log('XM has', count, 'non-generated XM.Record subclasses.');
+  console.log('XM has', count, 'non-generated XT.Record subclasses.');
 
   // TODO: Find out why CashReceipt and CreditMemo have permission errors.
   var crmClasses = 'Account Address Contact Incident Opportunity Project ToDo'.w();
@@ -115,13 +115,13 @@ Postbooks.LoadUserInterface = function() {
     var browseClass = XM[className+'Browse'] || baseClass;
     sc_assert(baseClass);
     sc_assert(baseClass.isClass);
-    sc_assert(baseClass.subclassOf(XM.Record));
+    sc_assert(baseClass.subclassOf(XT.Record));
     sc_assert(browseClass);
     sc_assert(browseClass.isClass);
-    sc_assert(browseClass.subclassOf(XM.Record));
+    sc_assert(browseClass.subclassOf(XT.Record));
 
     Postbooks[className+'ListController'] = SC.ArrayController.create({
-      content: XM.store.find(browseClass),
+      content: XT.store.find(browseClass),
       allowsEmptySelection: true
     });
 
@@ -145,7 +145,7 @@ Postbooks.LoadUserInterface = function() {
             next = tray.get('subsurfaces')[1],
             carousel = tray.get('carousel');
 
-        controller.set('content', XM.store.find(baseClass, Number(object.get('guid'))));
+        controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
         if (next) carousel.makeSurfaceVisible(next);
       },
 
@@ -235,13 +235,13 @@ Postbooks.LoadUserInterface = function() {
     var browseClass = XM[className+'Browse'] || baseClass;
     sc_assert(baseClass);
     sc_assert(baseClass.isClass);
-    sc_assert(baseClass.subclassOf(XM.Record));
+    sc_assert(baseClass.subclassOf(XT.Record));
     sc_assert(browseClass);
     sc_assert(browseClass.isClass);
-    sc_assert(browseClass.subclassOf(XM.Record));
+    sc_assert(browseClass.subclassOf(XT.Record));
 
     Postbooks[className+'ListController'] = SC.ArrayController.create({
-      content: XM.store.find(browseClass),
+      content: XT.store.find(browseClass),
       allowsEmptySelection: true
     });
 
@@ -265,7 +265,7 @@ Postbooks.LoadUserInterface = function() {
             next = tray.get('subsurfaces')[1],
             carousel = tray.get('carousel');
 
-        controller.set('content', XM.store.find(baseClass, Number(object.get('guid'))));
+        controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
         if (next) carousel.makeSurfaceVisible(next);
       },
 
