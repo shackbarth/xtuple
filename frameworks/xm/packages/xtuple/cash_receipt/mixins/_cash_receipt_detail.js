@@ -24,10 +24,10 @@ XM._CashReceiptDetail = {
 
   privileges: {
     "all": {
-      "create": "true",
-      "read": "true",
-      "update": "true",
-      "delete": "true"
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
     }
   },
 

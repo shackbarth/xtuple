@@ -275,7 +275,7 @@ XT.Record = SC.Record.extend(
   /**
     Convienience function for updating the `validateErrors` array. If an
     `error` is passed with `isError` equal to `true`, the error code will be
-    added to the array if it is not already present. If `isError` is falsey,
+    added to the array if it is not already present. If `isError` is false,
     the error code will be removed if present.
 
     @param {Object} SC.Error
@@ -463,6 +463,7 @@ XT.Record.setup = function() {
       defaultValue: function () {
         if (arguments[0] && arguments[0].get('status') === SC.Record.READY_NEW) {
           XT.Record.fetchId.call(arguments[0]);
+          return '_loading'.loc();
         }
       },
       isRequired: true
