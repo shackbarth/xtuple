@@ -95,6 +95,20 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
     var isAlternateSubtotal = this.get('isAlternateSubtotal');
 
     this.alternateSubtotalLabel.set('isEditable', isAlternateSubtotal);
-  .observes('isAlternateSubtotal'),
+  }.observes('isAlternateSubtotal'),
+
+  isSummarizeDidChange: function() {
+    var isSummarize = this.get('isSummarize'),
+        isShowSubtotal = this.get('isShowSubtotal');
+
+    if(isSummarize) this.set('isAlternateSubtotal', false);
+    this.isShowSubtotal.set('isEditable', false);
+    if(!isShowSubtotal) {
+      this.set('isShowDifference', isSummarize);
+      this.set('isShowBudget', isSummarize);
+    } else {
+      this.isAlternateSubtotal.set('isEditable', false);
+    }
+  }.observes('isSummarize'),
 
 });
