@@ -73,13 +73,16 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.property('amount', 'applied').cacheable(),
   
   /**
-    Return filtered applications result determined by 'includeCredits' property.
+    Return filtered applications result determined by 'includeCredits' property
+    and sorted by due date.
   */
   filteredApplications: function() {
     var applications = this.get('applications'),
-        includeCredits = this.get('includeCredits');
+        includeCredits = this.get('includeCredits'),
+        ret;
         
-    return applications.filter(function(application) {
+    // filter results
+    ret = applications.filter(function(application) {
       var documentType = application.getPath('receivable.documentType');
 
       return application.get('applied') > 0 || 
@@ -87,6 +90,15 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
              documentType === XM.Receivable.INVOICE ||
              documentType === XM.Receivable.DEBIT_MEMO;
     }, this);
+    
+    // define sort on due date
+    sortfunc = function(a,b) {
+      var aDate = a.getPath('receivable.dueDate'),
+          bDate = b.getPath('receivable.dueDate');
+      return SC.DateTime.compareDate(aDate, bDate);
+    }
+    
+    return ret.sort(sortfunc);
   }.property('includeCredits', 'applicationsLength').cacheable(),
   
   /**
