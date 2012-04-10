@@ -20,7 +20,7 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
     Selected value will set the percentLayoutIncomeStatementGroup
     property.
   */
-  layoutGroupRecords: [],
+  layoutGroupRecords: null,
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -32,6 +32,7 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
+    this.layoutGroupRecords = [];
     this.getLayoutGroupRecords();
   },
 
@@ -43,19 +44,19 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   */
   getLayoutGroupRecords: function() {
     var layoutGroupRec = this.get('layoutIncomeStatementGroup'),
+        recs = this.get('layoutGroupRecords'),
         idx;
 
     while(layoutGroupRec) {
-
       /**
         Fail-safe to prevent duplicate records from being pushed
         into layoutGroupRecords array.
       */
-      idx = this.layoutGroupRecords.lastIndexOf(layoutGroupRec);
+      idx = recs.lastIndexOf(layoutGroupRec);
       if(idx === -1) {
-        this.layoutGroupRecords.push(layoutGroupRec);
-        layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
+        recs.push(layoutGroupRec);
       }
+      layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
     }
   },
 
