@@ -1,9 +1,11 @@
+// ==========================================================================
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// ==========================================================================
+/*globals XT */
 
-Postbooks.main = function main() {
+function main() {
 
-  XT.PostbooksStatechart.initStatechart();
+  // Implement me!
 
-  Postbooks.getPath("mainPage.mainPane").attach();
-};
-
-function main() { Postbooks.main(); }
+}

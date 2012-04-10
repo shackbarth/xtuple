@@ -1,14 +1,18 @@
-
-/*globals Postbooks */
+// ==========================================================================
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// ==========================================================================
+/*globals global Postbooks */
 
 /** @namespace
-  
-  @extends SC.Object
+
+  @extends SC.Application
 */
-Postbooks = SC.Application.create(
+var Postbooks;
+Postbooks = global.Postbooks = SC.Application.create(
   /** @scope Postbooks.prototype */ {
 
   NAMESPACE: 'Postbooks',
-  VERSION: '0.1.0',
+  VERSION: '{{{POSTBOOKS_VERSION}}}'
 
-}) ;
+});
