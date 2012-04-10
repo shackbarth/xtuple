@@ -72,6 +72,7 @@ XM._LayoutIncomeStatementGroup = {
     @type Boolean
   */
   isShowSubtotal: SC.Record.attr(Boolean, {
+    defaultValue: false,
     label: '_isShowSubtotal'.loc()
   }),
 

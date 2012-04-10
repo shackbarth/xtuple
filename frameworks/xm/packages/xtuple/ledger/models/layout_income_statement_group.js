@@ -64,8 +64,37 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   // OBSERVERS
   //
 
+  statusDidChange: function() {
+    var status = this.get('status');
+
+    /**
+      Make sure labels' isEditable property is 
+      synced with the associated boolean flag
+      condition.
+    */
+    if(status === SC.Record.READY_NEW) {
+      this.isShowSubtotalDidChange();
+      this.isAlternateSubtotalDidChange();
+    }
+  }.observes('status'),
+
   layoutIncomeStatementGroupDidChange: function() {
     this.getLayoutGroupRecords();
   }.observes('layoutIncomeStatementGroup'),
+
+  isShowSubtotalDidChange: function() {
+    var isShowSubtotal = this.get('isShowSubtotal');
+
+    this.set('isShowDifference', isShowSubtotal);
+    this.set('isShowBudget', isShowSubtotal);
+    if(!isShowSubtotal) this.set('isAlternateSubtotal', isShowSubtotal);
+    this.isAlternateSubtotal.set('isEditable', isShowSubtotal);
+  }.observes('isShowSubtotal'),
+
+  isAlternateSubtotalDidChange: function() {
+    var isAlternateSubtotal = this.get('isAlternateSubtotal');
+
+    this.alternateSubtotalLabel.set('isEditable', isAlternateSubtotal);
+  .observes('isAlternateSubtotal'),
 
 });
