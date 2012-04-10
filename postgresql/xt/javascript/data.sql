@@ -467,7 +467,7 @@ select xt.install_js('XT','Data','xtuple', $$
           type = recordType.afterDot(),
           table = (nameSpace + '.' + type).decamelize(),
           orm = XT.Orm.fetch(nameSpace, type),
-          orderBy = (orderBy ? 'order by ' + this.quoteProperties(orm, orderBy) : ''),
+          orderBy = (orderBy ? 'order by ' + orderBy : ''),
           limit = rowLimit ? 'limit ' + rowLimit : '';
           offset = rowOffset ? 'offset ' + rowOffset : '',
           recs = null, 
