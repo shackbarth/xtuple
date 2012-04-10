@@ -54,7 +54,8 @@
       "name": "isShowSubtotal",
       "attr": {
         "type": "Boolean",
-        "column": "flgrp_subtotal"
+        "column": "flgrp_subtotal",
+        "defaultValue": false
       }
     },
     {
