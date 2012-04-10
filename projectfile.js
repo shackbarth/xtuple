@@ -7,12 +7,12 @@ var path = require('path');
 var project = BT.Project.create({
 
   "postbooks": BT.App.create({
-    frameworks: 'blossom xm xt'.w(),
+    frameworks: 'blossom xt xm'.w(),
     sourceTree: path.join(__dirname, 'apps/postbooks')
   }),
 
   "console": BT.App.create({
-    frameworks: 'blossom xm'.w(),
+    frameworks: 'blossom xt xm'.w(),
     sourceTree: path.join(__dirname, 'apps/console')
   }),
 
