@@ -44,8 +44,7 @@
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "cashrcpt_amount",
-        "isRequired": true
+        "column": "cashrcpt_amount"
       }
     },
     {
@@ -53,14 +52,17 @@
       "toOne": {
         "type": "Currency",
         "column": "cashrcpt_curr_id",
-        "isRequired": true
+        "isRequired": true,
+        "defaultValue": "baseCurrency"
       }
     },
     {
       "name": "currencyRate",
       "attr": {
         "type": "Number",
-        "column": "cashrcpt_curr_rate"
+        "column": "cashrcpt_curr_rate",
+        "isRequried": true,
+        "defaultValue": 1
       }
     },
     {
@@ -85,7 +87,7 @@
         "type": "SalesCategory",
         "column": "cashrcpt_salescat_id",
         "isRequired": true,
-        "defaultValue": false
+        "defaultValue": -1
       }
     },
     {
@@ -116,7 +118,8 @@
       "name": "applyDate",
       "attr": {
         "type": "Date",
-        "column": "cashrcpt_applydate"
+        "column": "cashrcpt_applydate",
+        "defaultValue": "currentDate"
       }
     },
     {
