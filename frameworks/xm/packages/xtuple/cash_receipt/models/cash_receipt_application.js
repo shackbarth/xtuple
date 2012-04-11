@@ -85,19 +85,22 @@ XM.CashReceiptApplication = SC.Object.extend(
         isPosted = cashReceipt.get('isPosted'),
         crCurrencyRate = cashReceipt.get('currencyRate'),
         detail = this.get('cashReceiptDetail'),
+        applied = detail ? detail.get('amount') : 0,
         receivable = this.get('receivable'),
         arCurrencyRate = receivable.get('currencyRate'),
+        arBalance = receivable.get('balance') - pending,
         documentType = receivable.get('documentType'),
         pending = receivable.get('pending'),
-        applied = detail ? detail.get('amount') : 0,
-        balance = receivable.get('balance') - pending,
         store = receivable.get('store'),
         storeKey, pending; 
+        
+    // calculate balance in cash receipt currency
+    arBalance = SC.Math.round(arBalance * crCurrencyRate / arCurrencyRate + applied, XT.MONEY_SCALE);
   
     // values must be valid
     discount = discount || 0;
     if (amount < 0 || discount < 0 || 
-        amount + discount - applied > balance ||
+        amount + discount - applied > arBalance ||
         isPosted) return false;
   
     // credits need sense reversed
@@ -158,7 +161,7 @@ XM.CashReceiptApplication = SC.Object.extend(
         discountDate = terms ? terms.calculateDiscountDate(documentDate) : null,
         discountPercent = terms ? terms.get('discountPercent') / 100 : 0,
         discount = 0, amount;
-        
+
     // determine balance we could apply in cash receipt currency
     amount = SC.Math.round(crBalance + applied, XT.MONEY_SCALE);  
     arBalance = SC.Math.round(arBalance * crCurrencyRate / arCurrencyRate + applied, XT.MONEY_SCALE);
