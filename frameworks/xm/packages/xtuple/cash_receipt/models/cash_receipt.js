@@ -91,14 +91,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
              documentType === XM.Receivable.DEBIT_MEMO;
     }, this);
     
-    // define sort on due date
-    sortfunc = function(a,b) {
-      var aDate = a.getPath('receivable.dueDate'),
-          bDate = b.getPath('receivable.dueDate');
-      return SC.DateTime.compareDate(aDate, bDate);
-    }
-    
-    return ret.sort(sortfunc);
+    return ret.sort(this._xm_sort);
   }.property('includeCredits', 'applicationsLength').cacheable(),
   
   /**
@@ -130,6 +123,46 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //
   
   /**
+    Apply the balance of the cash receipt to as many open receivables
+    as possible. Credits are applied first if `includeCredits` is true,
+    the balance is then applied to receivables ordered by date.
+  */
+  applyBalance: function() {
+    if (this.get('isPosted')) return;
+    var includeCredits = this.get('includeCredits'),
+        applications = this.get('applications'), list;
+       
+    // loop through credits first
+    if (includeCredits) {
+      // create a filtered list
+      list = applications.filter(function(application) {
+        var documentType = application.getPath('receivable.documentType');
+        return documentType === XM.Receivable.CREDIT_MEMO ||
+               documentType === XM.Receivable.CUSTOMER_DEPOSIT;
+      }, this);
+      
+      // loop through and apply
+      for (var i = 0; i < list.get('length'); i++) {
+        list.objectAt(i).applyBalance();
+      }
+    }
+  
+    // now process debits
+    list = applications.filter(function(application) {
+      var documentType = application.getPath('receivable.documentType');
+      return documentType === XM.Receivable.INVOICE ||
+             documentType === XM.Receivable.DEBIT_MEMO;
+    }, this).sort(this._xm_sort);
+    
+    // loop through and apply
+    var n = 0;
+    while (n < list.get('length') && this.get('balance') > 0) {
+      list.objectAt(n).applyBalance();
+      n++;
+    }
+  },
+  
+  /**
     Update the amount applied.
     
     @param {Number} amount to add
@@ -151,6 +184,15 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     var discount = SC.Math.round(this.get('discount') + amount, XT.MONEY_SCALE);
     this.set('discount', discount);
     return discount;
+  },
+  
+  /** @private
+    sort array on due date
+  */
+  _xm_sort: function(a,b) {
+    var aDate = a.getPath('receivable.dueDate'),
+        bDate = b.getPath('receivable.dueDate');
+    return SC.DateTime.compareDate(aDate, bDate);
   },
 
   //..................................................

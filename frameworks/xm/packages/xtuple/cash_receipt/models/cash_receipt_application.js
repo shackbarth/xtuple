@@ -92,7 +92,7 @@ XM.CashReceiptApplication = SC.Object.extend(
         applied = detail ? detail.get('amount') : 0,
         balance = receivable.get('balance') - pending,
         store = receivable.get('store'),
-        pending; 
+        storeKey, pending; 
   
     // values must be valid
     discount = discount || 0;
@@ -124,26 +124,22 @@ XM.CashReceiptApplication = SC.Object.extend(
               
     // associate detail to this application
     this.set('cashReceiptDetail', detail);
+ 
+    // create a pending application record (info only, the datasource will ignore this)
+    storeKey = store.loadRecord(XM.PendingApplication, {
+      guid: detail.get('id'),
+      pendingApplicationType: XM.PendingApplication.CASH_RECEIPT,
+      receivable: receivable,
+      amount: (amount + discount) * arCurrencyRate / crCurrencyRate
+    });
+    pending = store.materializeRecord(storeKey);
     
-    // fetching the id is asynchronous, so we'll have to finish when that comes
-    detail.addObserver('id', detail, function observer() {
-      if (!isNaN(detail.get('id'))) {
-        detail.removeObserver('id', detail, observer);
-        id = detail.get('id');
-        
-        // create a pending application record (info only, the datasource will ignore this)
-        pending = store.createRecord(XM.PendingApplication, { guid: id });
-        pending.set('pendingApplicationType', XM.PendingApplication.CASH_RECEIPT)
-               .set('receivable', receivable)
-               .set('amount', (amount + discount) * arCurrencyRate / crCurrencyRate);
-        
-        // associate detail to pending applications
-        receivable.get('pendingApplications').pushObject(pending);
-      }
-    })
-
-    // get id
-    detail.normalize();
+    // bind the ids of detail (which may have a temporory id at this time)
+    // and pending in case detail gets destroyed in the same session
+    SC.Binding.from('id', detail).to('id', pending).oneWay().noDelay().connect();
+    
+    // associate detail to pending applications
+    receivable.get('pendingApplications').pushObject(pending);
 
     return detail;
   },
@@ -186,6 +182,7 @@ XM.CashReceiptApplication = SC.Object.extend(
       }
     } else {
       amount = arBalance;
+      discount = 0;
     }
     if (amount) return this.apply(amount, discount);
     
