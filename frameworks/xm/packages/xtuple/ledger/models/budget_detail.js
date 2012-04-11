@@ -5,17 +5,17 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/receivable/models
+// PLACE ME IN ../client/frameworks/xm/packages/xtuple/ledger/models
 
-sc_require('mixins/_receivable_pending_application');
+sc_require('mixins/_budget_detail');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplication,
-  /** @scope XM.ReceivablePendingApplication.prototype */ {
+XM.BudgetDetail = XT.Record.extend(XM._BudgetDetail,
+  /** @scope XM.BudgetDetail.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -28,31 +28,6 @@ XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplicat
   //..................................................
   // OBSERVERS
   //
-
-});
-
-XM.ReceivablePendingApplication.mixin( 
-  /** @scope XM.ReceivablePendingApplication */ {
-
-/**
-  Cash Receipt application type.
-  
-  @static
-  @constant
-  @type String
-  @default R
-*/
-  CASH_RECEIPT: 'R',
-
-/**
-  Credit Memo application type.
-  
-  @static
-  @constant
-  @type String
-  @default C
-*/
-  CREDIT: 'C'
 
 });
 

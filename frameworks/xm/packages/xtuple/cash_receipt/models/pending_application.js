@@ -5,15 +5,15 @@
 
 /*globals XM */
 
-sc_require('mixins/_budget_item');
+sc_require('mixins/_pending_application');
 
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.Record
 */
-XM.BudgetItem = XT.Record.extend(XM._BudgetItem,
-  /** @scope XM.BudgetItem.prototype */ {
+XM.PendingApplication = XT.Record.extend(XM._PendingApplication,
+  /** @scope XM.ReceivablePendingApplication.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -26,6 +26,31 @@ XM.BudgetItem = XT.Record.extend(XM._BudgetItem,
   //..................................................
   // OBSERVERS
   //
+
+});
+
+XM.PendingApplication.mixin( 
+  /** @scope XM.PendingApplication */ {
+
+/**
+  Cash Receipt application type.
+  
+  @static
+  @constant
+  @type String
+  @default R
+*/
+  CASH_RECEIPT: 'R',
+
+/**
+  Credit Memo application type.
+  
+  @static
+  @constant
+  @type String
+  @default C
+*/
+  CREDIT: 'C'
 
 });
 

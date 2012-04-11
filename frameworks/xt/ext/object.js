@@ -1,7 +1,7 @@
 /*globals XT */
 
-sc_require("mixins/logging");
-sc_require("runtime/common");
+sc_require('mixins/logging');
+sc_require('runtime/common');
 
 /** @class */
 XT.Object = SC.Object.extend(XT.Logging,

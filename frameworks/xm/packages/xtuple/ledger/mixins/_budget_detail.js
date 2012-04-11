@@ -6,17 +6,17 @@
 /*globals XM */
 
 /**
-  @scope XM.ReceivablePendingApplication
+  @scope XM.BudgetDetail
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ReceivablePendingApplication = {
-  /** @scope XM.ReceivablePendingApplication.prototype */
+XM._BudgetDetail = {
+  /** @scope XM.BudgetDetail.prototype */
   
-  className: 'XM.ReceivablePendingApplication',
+  className: 'XM.BudgetDetail',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -24,10 +24,10 @@ XM._ReceivablePendingApplication = {
 
   privileges: {
     "all": {
-      "create": "false",
-      "read": "true",
-      "update": "false",
-      "delete": "false"
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
     }
   },
 
@@ -41,24 +41,25 @@ XM._ReceivablePendingApplication = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type String
-  */
-  receivablePendingApplicationType: SC.Record.attr(String, {
-    label: '_receivablePendingApplicationType'.loc()
-  }),
-
-  /**
-    @type XM.Receivable
-  */
-  receivable: SC.Record.toOne('XM.Receivable', {
-    label: '_receivable'.loc()
-  }),
-
-  /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
+  budget: SC.Record.toOne(Number, {
+    label: '_budget'.loc()
+  }),
+
+  /**
+    @type XM.Period
+  */
+  period: SC.Record.toOne('XM.Period', {
+    label: '_period'.loc()
+  }),
+
+  /**
+    @type XM.LedgerAccountInfo
+  */
+  ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
+    isNested: true,
+    label: '_ledgerAccount'.loc()
   })
 
 };

@@ -80,9 +80,9 @@ XM._Terms = {
   }),
 
   /**
-    @type Number
+    @type Percent
   */
-  discountPercent: SC.Record.attr(Number, {
+  discountPercent: SC.Record.attr(Percent, {
     defaultValue: 0,
     label: '_discountPercent'.loc()
   }),

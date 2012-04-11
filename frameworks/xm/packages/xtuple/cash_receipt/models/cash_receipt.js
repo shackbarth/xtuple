@@ -19,6 +19,12 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   numberPolicy: XT.AUTO_NUMBER,
 
   applications: [],
+  
+  /** @private */
+  applicationsLength: 0,
+  
+  /** @private */
+  applicationsLengthBinding: SC.Binding.from('*applications.length').oneWay().noDelay(),
 
   /** @private */
   detailsLength: 0,
@@ -66,17 +72,50 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     return SC.Math.round(amount - applied, XT.MONEY_SCALE);
   }.property('amount', 'applied').cacheable(),
   
+  /**
+    Return filtered applications result determined by 'includeCredits' property
+    and sorted by due date.
+  */
+  filteredApplications: function() {
+    var applications = this.get('applications'),
+        includeCredits = this.get('includeCredits'),
+        ret;
+        
+    // filter results
+    ret = applications.filter(function(application) {
+      var documentType = application.getPath('receivable.documentType');
+
+      return application.get('applied') > 0 || 
+             includeCredits ||
+             documentType === XM.Receivable.INVOICE ||
+             documentType === XM.Receivable.DEBIT_MEMO;
+    }, this);
+    
+    // define sort on due date
+    sortfunc = function(a,b) {
+      var aDate = a.getPath('receivable.dueDate'),
+          bDate = b.getPath('receivable.dueDate');
+      return SC.DateTime.compareDate(aDate, bDate);
+    }
+    
+    return ret.sort(sortfunc);
+  }.property('includeCredits', 'applicationsLength').cacheable(),
+  
+  /**
+    
+  */
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
     var customer = this.get('customer'),
         isPosted = this.get('isPosted'),
         store = this.get('store');
-        
+
     // get receivables according to situation   
     if (customer && isPosted === false) {
       if (!this._xm_query) {
         this._xm_query = SC.Query.local(XM.CashReceiptReceivable, {
-          conditions: "customer = {customer} AND isOpen = YES"
+          conditions: "customer = {customer} AND isOpen = YES",
+          orderBy: "dueDate"
         })
       }
       this._xm_query.setIfChanged('parameters', { customer: customer });
@@ -118,6 +157,22 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   // OBSERVERS
   //
   
+  currencyDidChange: function() {
+    var applyDate = this.get('applyDate'),
+        currency = this.get('currency'),
+        that = this;
+
+    if (applyDate && currency) {
+      // define the callback
+      callback = function(err, currencyRate) {
+        if (!err) that.set('currencyRate', currencyRate.get('rate'));
+      }
+      
+      // request a rate
+      XM.Currency.rate(currency, applyDate, callback);
+    }
+  }.observes('currency', 'applyDate'),
+  
   customerDidChange: function() {
     if (this.get('customer')) this.customer.set('isEditable', false);
   }.observes('customer'),
@@ -125,9 +180,15 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   detailsLengthDidChange: function() {
     var details = this.get('details'),
         applications = this.get('applications'),
-        isUpdated = false;
+        isUpdated = false,
+        isNotFixedCurrency = details.get('length') ? false : true;
 
-    // process
+    // things that affect exchange rate are only editable when no detail
+    this.applyDate.set('isEditable', isNotFixedCurrency);
+    this.currency.set('isEditable', isNotFixedCurrency);
+    this.currencyRate.set('isEditable', isNotFixedCurrency);
+    
+    // process detail
     for (var i = 0; i < details.get('length'); i++) {
       var detail = details.objectAt(i),
           receivable = detail.get('receivable'),
@@ -138,6 +199,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       if ((status & SC.Record.DESTROYED) === 0) {
         if (!application) {
           application = XM.CashReceiptApplication.create();
+          application.set('cashReceipt', this),
           application.set('cashReceiptDetail', detail),
           application.set('receivable', receivable),
           applications.pushObject(application);
@@ -160,31 +222,22 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 
   receivablesLengthDidChange: function() {
     var receivables = this.get('receivables'),
-        applications = this.get('applications'),
-        includeCredits = this.get('includeCredits');
+        applications = this.get('applications');
 
     // process
     for (var i = 0; i < receivables.get('length'); i++) {
       var receivable = receivables.objectAt(i),
-          application = applications.findProperty('receivable', receivable),
-          documentType = receivable.get('documentType'),
-          detail = application ? application.get('cashReceiptDetail') : false,
-          isCredit = documentType === XM.Receivable.CREDIT_MEMO || 
-                     documentType === XM.Receivable.CUSTOMER_DEPOSIT;
+          application = applications.findProperty('receivable', receivable);
           
       // if not found make one
-      if (!application  && (includeCredits || !isCredit)) {
-        application = XM.CashReceiptApplication.create({
-          receivable: receivable
-        });
+      if (!application) {
+        application = XM.CashReceiptApplication.create();
+        application.set('cashReceipt', this);
+        application.set('receivable', receivable);
         applications.pushObject(application);
-        
-      // if shouldn't be here, take it out
-      } else if (application && !detail && !includeCredits && isCredit) {
-        applications.removeObject(application);
       }
     }
-  }.observes('receivablesLength', 'includeCredits').cacheable(),
+  }.observes('receivablesLength').cacheable()
 
 });
 

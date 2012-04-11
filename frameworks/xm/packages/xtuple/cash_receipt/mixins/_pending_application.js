@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.ItemConversionUnitType
+  @scope XM.PendingApplication
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._ItemConversionUnitType = {
-  /** @scope XM.ItemConversionUnitType.prototype */
+XM._PendingApplication = {
+  /** @scope XM.PendingApplication.prototype */
   
-  className: 'XM.ItemConversionUnitType',
+  className: 'XM.PendingApplication',
 
   
 
@@ -24,10 +24,10 @@ XM._ItemConversionUnitType = {
 
   privileges: {
     "all": {
-      "create": true,
-      "read": true,
-      "update": true,
-      "delete": true
+      "create": "false",
+      "read": "true",
+      "update": "false",
+      "delete": "false"
     }
   },
 
@@ -41,17 +41,24 @@ XM._ItemConversionUnitType = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type XM.ItemConversion
+    @type String
   */
-  itemUnitConversion: SC.Record.toOne('XM.ItemConversion', {
-    label: '_itemUnitConversion'.loc()
+  pendingApplicationType: SC.Record.attr(String, {
+    label: '_pendingApplicationType'.loc()
+  }),
+
+  /**
+    @type XM.CashReceiptReceivable
+  */
+  receivable: SC.Record.toOne('XM.CashReceiptReceivable', {
+    label: '_receivable'.loc()
   }),
 
   /**
     @type Number
   */
-  itemUnitType: SC.Record.attr(Number, {
-    label: '_itemUnitType'.loc()
+  amount: SC.Record.attr(Number, {
+    label: '_amount'.loc()
   })
 
 };

@@ -85,6 +85,51 @@ XM.Currency = XM.Document.extend(XM._Currency,
   
 });
 
+/**
+  Returns a currency rate for a currency on a given date. The callback
+  should accept an error code and 'XM.CurrencyRate' as expected response
+  values.
+  
+  @param {XM.Currency} currency
+  @param {SC.DateTime} effective date
+  @param {Function} callback
+  @returns Receiver
+*/
+XM.Currency.rate = function(currency, effective, callback) {
+  if (!SC.kindOf(currency, XM.Currency) ||
+      !SC.kindOf(effective, SC.DateTime)) return false;
+  var that = this,
+      store = currency.get('store'),
+      qry, ary;
+    
+  // build the query
+  qry = SC.Query.local(XM.CurrencyRate, {
+    conditions: "currency = {currency} "
+              + "AND effective <= {effective} "
+              + "AND expires >= {effective} ",
+    parameters: {
+      currency: currency,
+      effective: effective
+    }
+  });
+  ary = store.find(qry);
+  
+  // add an observer to make the callback
+  ary.addObserver('status', ary, function observer() {
+    if (ary.get('status') === SC.Record.READY_CLEAN) {
+      ary.removeObserver('status', ary, observer);
+      if (ary.get('length')) {
+        callback(null, ary.firstObject());
+      } else {
+        var err = XT.errors.findProperty('code', 'xt1008');
+        callback(err);
+      }
+    }
+  })
+  
+  return this;
+}
+
 XM.Currency.BASE = null;
 
 /** @private */

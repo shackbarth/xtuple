@@ -13,19 +13,25 @@ sc_require('mixins/_sub_account');
   @extends XT.Record
 */
 XM.SubAccount = XT.Record.extend(XM._SubAccount,
-  /** @scope XM.SubAccount.prototype */ {
+/** @scope XM.SubAccount.prototype */ {
 
-  // .................................................
-  // CALCULATED PROPERTIES
-  //
+// .................................................
+// CALCULATED PROPERTIES
+//
 
-  //..................................................
-  // METHODS
-  //
+number: SC.Record.attr(Number, {
+  toType: function(record, key, value) {
+  if(value) return value.get('length') <= 2 ? value : null;
+  }
+}),
 
-  //..................................................
-  // OBSERVERS
-  //
+//..................................................
+// METHODS
+//
+
+//..................................................
+// OBSERVERS
+//
 
 });
 

@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals XT */
 
-sc_require("mixins/logging");
+sc_require('mixins/logging');
 
 /** @class
 */
@@ -23,71 +23,66 @@ XT.Store = SC.Store.extend(XT.Logging,
   */
   dispatch: function(dispatch) {
     if (!dispatch) throw new Error("dispatch() requires a dispatch");
+
     var source = this._getDataSource();
-    if (source && source.dispatch)
+    if (source && source.dispatch) {
       source.dispatch.call(source, this, dispatch);
+    }
+
     return this;
   },
   
   /**
-    Called by a data source when a dispatch result has been returned.  Passing an
-    optional id will remap the `storeKey` to the new record id. This is
-    required when you commit a record that does not have an id yet.
+    Called by a data source when a dispatch result has been returned.
 
     @param {XT.Dispatch} dispatch The dispatch originally called.
     @param {Hash} dataHash The result hash.
-    @returns {SC.Store} receiver
   */
   dataSourceDidDispatch: function(dispatch, result) {
     var target = dispatch.get('target'),
         action = dispatch.get('action');
     if (action) action.call(target, null, result);
   },
-  
+
   /**
     Called by your data source if it encountered an error dispatching a 
-    function call. This will put the query into an error state until you 
-    try to refresh it again.
+    function call. The dispatch will pass the error back throug the
+    original callback action if one has been defined.
 
     @param {XT.Dispatch} dispatch The dispatch that generated the error.
-    @param {SC.Error} [error] SC.Error instance to associate with the query.
-    @returns {SC.Store} receiver
+    @param {SC.Error} [error] SC.Error instance to associate with the dispatch.
   */
   dataSourceDidErrorDispatch: function(dispatch, error) {
     var errors = this.dispatchErrors,
         target = dispatch.get('target'),
         action = dispatch.get('action');
 
-    // Add the error to the array of dispatch errors 
-    // (for lookup later on if necessary).
+    // Add the error to the array of dispatch errors (for lookup later on if
+    // necessary).
     if (error && error.isError) {
       if (!errors) errors = this.dispatchErrors = {};
       errors[SC.guidFor(dispatch)] = error;
-      dispatch.callback(error);
     }
     if (action) action.call(target, error, null);
   },
-  
+
   /**
-    Reimplemented from SC.Store. 
-    
-    Removes parents updating children
-    with parent status when we don't need or want that behavior.
+    Reimplemented from SC.Store.
+
+    Removes parents updating children with parent status when we don't need
+    or want that behavior.
   */
   writeDataHash: function(storeKey, hash, status) {
-
-    // update dataHashes and optionally status.
+    // Update dataHashes and optionally status.
     if (hash) this.dataHashes[storeKey] = hash;
-    if (status) this.statuses[storeKey] = status ;
+    if (status) this.statuses[storeKey] = status;
 
-    // also note that this hash is now editable
+    // Also note that this hash is now editable.
     var editables = this.editables;
     if (!editables) editables = this.editables = [];
-    editables[storeKey] = 1 ; // use number for dense array support
+    editables[storeKey] = 1; // Use number for dense array support.
 
-    var that = this;
-
-    return this ;
+    return this;
   },
 
   /**
@@ -96,9 +91,8 @@ XT.Store = SC.Store.extend(XT.Logging,
     Don't notify children here.
   */
   dataHashDidChange: function(storeKeys, rev, statusOnly, key) {
-
-    // update the revision for storeKey.  Use generateStoreKey() because that
-    // guarantees a universally (to this store hierarchy anyway) unique
+    // Update the revision for `storeKey`.  Use `generateStoreKey()` because
+    // that guarantees a universally (to this store hierarchy anyway) unique
     // key value.
     if (!rev) rev = SC.Store.generateStoreKey();
     var isArray, len, idx, storeKey;
@@ -112,33 +106,36 @@ XT.Store = SC.Store.extend(XT.Logging,
     }
 
     var that = this;
-    for(idx=0;idx<len;idx++) {
+    for (idx=0; idx<len; ++idx) {
       if (isArray) storeKey = storeKeys[idx];
       this.revisions[storeKey] = rev;
       this._notifyRecordPropertyChange(storeKey, statusOnly, key);
     }
 
-    return this ;
+    return this;
   },
-  
+
   /**
     Reimplemented from SC.Store.
-    
+
     Don't notify status here.
   */
-  registerChildToParent: function(parentStoreKey, childStoreKey, path){
+  registerChildToParent: function(parentStoreKey, childStoreKey, path) {
     var prs, crs, oldPk, oldChildren, pkRef, rec;
-    // Check the child to see if it has a parent
+
+    // Check the child to see if it has a parent.
     crs = this.childRecords || {};
     prs = this.parentRecords || {};
     oldPk = crs[childStoreKey];
-    
-    // determine what to do
+
+    // Determine what to do.
     if (oldPk && oldPk === parentStoreKey) return;
-    else if (oldPk){
+
+    if (oldPk){
       oldChildren = prs[oldPk];
       delete oldChildren[childStoreKey];
     }
+
     pkRef = prs[parentStoreKey] || {};
     pkRef[childStoreKey] = path || true;
     prs[parentStoreKey] = pkRef;
@@ -146,10 +143,10 @@ XT.Store = SC.Store.extend(XT.Logging,
     this.childRecords = crs;
     this.parentRecords = prs;
   },
-  
+
   /**
-    Reimplemented from SC.Store. 
-    
+    Reimplemented from SC.Store.
+
     Update children only when appropriate with the proper status.
   */
   dataSourceDidComplete: function(storeKey, dataHash, newId) {
@@ -194,11 +191,12 @@ XT.Store = SC.Store.extend(XT.Logging,
 
     return this ;
   },
-  
+
   /**
-    Reimplemented from SC.Store. 
-    
-    Change status of child records to destroyed, and remove duplicate notice on parent.
+    Reimplemented from SC.Store.
+
+    Change status of child records to destroyed, and remove duplicate notice
+    on parent.
   */
   dataSourceDidDestroy: function(storeKey) {
     var status = this.readStatus(storeKey), K = SC.Record;
@@ -233,11 +231,12 @@ XT.Store = SC.Store.extend(XT.Logging,
 
     return this ;
   },
-  
+
   /**
-    Reimplemented from SC.Store. 
-    
-    Change status of child records to error, and remove duplicate notice on parent.
+    Reimplemented from SC.Store.
+
+    Change status of child records to error, and remove duplicate notice on
+    parent.
   */
   dataSourceDidError: function(storeKey, error) {
     var status = this.readStatus(storeKey), errors = this.recordErrors, K = SC.Record;
@@ -249,7 +248,8 @@ XT.Store = SC.Store.extend(XT.Logging,
     // otherwise, determine proper state transition
     else status = K.ERROR ;
 
-    // Add the error to the array of record errors (for lookup later on if necessary).
+    // Add the error to the array of record errors (for lookup later on if
+    // necessary).
     if (error && error.isError) {
       if (!errors) errors = this.recordErrors = [];
       errors[storeKey] = error;
@@ -271,15 +271,15 @@ XT.Store = SC.Store.extend(XT.Logging,
         that.dataHashDidChange(storeKey, null, true);
       }
     });
-    
+
     // update callbacks
     this._retreiveCallbackForStoreKey(storeKey);
     return this ;
   },
-  
+
   /**
-    Reimplemented from SC.Store. 
-    
+    Reimplemented from SC.Store.
+
     Change status of child records to busy.
   */
   commitRecords: function(recordTypes, ids, storeKeys, params, callbacks) {
@@ -321,7 +321,7 @@ XT.Store = SC.Store.extend(XT.Logging,
         throw K.NOT_FOUND_ERROR ;
       }
       else {
-        if(status==K.READY_NEW) {
+        if (status==K.READY_NEW) {
           this.writeStatus(storeKey, K.BUSY_CREATING);
           this.dataHashDidChange(storeKey, rev, true);
           retCreate.push(storeKey);
@@ -341,13 +341,13 @@ XT.Store = SC.Store.extend(XT.Logging,
         }
         // ignore K.READY_CLEAN, K.BUSY_LOADING, K.BUSY_CREATING, K.BUSY_COMMITTING,
         // K.BUSY_REFRESH_CLEAN, K_BUSY_REFRESH_DIRTY, KBUSY_DESTROYING
-        
+
         // update status of modified children
         var that = this;
         this._propagateToChildren(storeKey, function(storeKey) {
           var status = that.readStatus(storeKey),
               rev = SC.Store.generateStoreKey();
-          if(status==K.READY_NEW) {
+          if (status==K.READY_NEW) {
             that.writeStatus(storeKey, K.BUSY_CREATING);
             that.dataHashDidChange(storeKey, rev, true);
           } else if (status==K.READY_DIRTY) {
@@ -379,10 +379,10 @@ XT.Store = SC.Store.extend(XT.Logging,
     }
     return ret ;
   },
-  
+
   /**
-    Reimplemented from SC.Store. 
-    
+    Reimplemented from SC.Store.
+
     Don't destroy children automatically.
   */
   destroyRecord: function(recordType, id, storeKey) {
@@ -425,8 +425,6 @@ XT.Store = SC.Store.extend(XT.Logging,
     }
 
     return this ;
-  },
-
+  }
 
 });
-

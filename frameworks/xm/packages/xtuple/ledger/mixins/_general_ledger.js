@@ -86,16 +86,18 @@ XM._GeneralLedger = {
   }),
 
   /**
-    @type Number
+    @type Date
   */
-  created: SC.Record.attr(Number, {
+  created: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
     label: '_created'.loc()
   }),
 
   /**
-    @type Number
+    @type String
   */
-  createdBy: SC.Record.attr(Number, {
+  createdBy: SC.Record.attr(String, {
     label: '_createdBy'.loc()
   }),
 

@@ -6,17 +6,17 @@
 /*globals XM */
 
 /**
-  @scope XM.BudgetItem
+  @scope XM.SubAccountType
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._BudgetItem = {
-  /** @scope XM.BudgetItem.prototype */
+XM._SubAccountType = {
+  /** @scope XM.SubAccountType.prototype */
   
-  className: 'XM.BudgetItem',
+  className: 'XM.SubAccountType',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -24,10 +24,10 @@ XM._BudgetItem = {
 
   privileges: {
     "all": {
-      "create": true,
+      "create": "MaintainChartOfAccounts",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainChartOfAccounts",
+      "delete": "MaintainChartOfAccounts"
     }
   },
 
@@ -41,25 +41,25 @@ XM._BudgetItem = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type String
   */
-  budget: SC.Record.toOne(Number, {
-    label: '_budget'.loc()
+  accountType: SC.Record.attr(String, {
+    defaultValue: true,
+    label: '_accountType'.loc()
   }),
 
   /**
-    @type XM.Period
+    @type String
   */
-  period: SC.Record.toOne('XM.Period', {
-    label: '_period'.loc()
+  code: SC.Record.attr(String, {
+    label: '_code'.loc()
   }),
 
   /**
-    @type XM.LedgerAccountInfo
+    @type String
   */
-  ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_ledgerAccount'.loc()
+  description: SC.Record.attr(String, {
+    label: '_description'.loc()
   })
 
 };
