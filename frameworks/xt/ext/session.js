@@ -4,6 +4,7 @@
 // ==========================================================================
 /*globals XT */
 
+sc_require('ext/request');
 sc_require('ext/dispatch');
 sc_require('delegates/session_delegate');
 
@@ -34,41 +35,22 @@ XT.session = SC.Object.create(
       forceNew: !! forceNew
     };
 
-    // get the socket to the datasource
-    var socket = this.get('socket');
-
-    if (!socket) throw "Cannot communicate with datasource via socket " +
-      "to request a session, socket not available";
-
     // let the delegate know we're about to request a new session
     delegate.willAcquireSession(session);
 
-    // send the request
-    socket.json.emit('requestSession', session);
+    // issue the actual request
+    XT.Request
+      .issue('session/request')
+      .notify(this, 'didAcquireSession', delegate)
+      .json().send(session);
   },
 
-  //...........................................
-  // SOCKET
-  //
-
-  /** 
-  */
-  _xt_socket: null,
-
   /**
   */
-  _xt_socketIsEnabled: false,
-
-  /**
-  */
-  socket: function() {
-    var enabled = this.get('_xt_socketIsEnabled');
-    return enabled ? this.get('_xt_socket') : null;
-  }.property('_xt_socketIsEnabled').cacheable(),
-
-  //
-  // END SOCKET
-  //...........................................
+  didAcquireSession: function(response, delegate) {
+    SC.Logger.info("didAcquireSession() with response", response);
+    console.log(response);
+  },
 
   //...........................................
   // PROPERTIES
@@ -92,6 +74,29 @@ XT.session = SC.Object.create(
   store: function() {
     return XT.store;
   }.property().cacheable(),
+
+  /**
+  */
+  payloadAttributes: function() {
+    var sid = this.get('sid');
+    var username = this.get('username');
+    var lastModified = this.get('lastModified');
+    var created = this.get('created');
+    var organization = this.get('organization');
+    return {
+      sid: sid,
+      username: username,
+      lastModified: lastModified,
+      created: created,
+      organization: organization
+    };
+  }.property(),
+
+  sid: null,
+  username: null,
+  lastModified: null,
+  created: null,
+  organization: null,
 
   /**
     Loads session objects for settings, preferences and privileges into local
@@ -209,35 +214,6 @@ XT.session = SC.Object.create(
     this.set('locale', response);
 
     return true;
-  },
-
-  /** @private */
-  init: function() {
-
-    // boring normal stuff
-    arguments.callee.base.apply(this, arguments);
-
-    var self = this;
-
-    // grab a fucking socket now thats interesting!
-    // the socket.io package is loaded inlined so
-    // we know its available, go ahead and setup the
-    // socket we want for session communication
-
-    // this...is ugly...?
-    XT.ready(function() {
-
-      // TODO: The underlying node datasource url will have to be exposed...
-      var socket = io.connect(/** REPLACE ME */ 'http://localhost:9000' + '/session');
-
-      // provide an update mechanism...
-      socket.on('connect', function() {
-        self.set('_xt_socketIsEnabled', true);
-      });
-
-      // set the property for future reference
-      self._xt_socket = socket;
-    });
   },
 
 });
