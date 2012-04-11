@@ -73,8 +73,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.property('amount', 'applied').cacheable(),
   
   /**
-    Return filtered applications result determined by 'includeCredits' property
-    and sorted by due date.
+    Return an array of applications filtered by the `includeCredits` 
+    property and sorted by due date.
   */
   filteredApplications: function() {
     var applications = this.get('applications'),
@@ -95,7 +95,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.property('includeCredits', 'applicationsLength').cacheable(),
   
   /**
-    
+    An array of open receivables for the selected `customer`. If the
+    the cash receipt is posted this will return no results.
   */
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
@@ -123,7 +124,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //
   
   /**
-    Apply the balance of the cash receipt to as many open receivables
+    Apply the balance of the cash receipt to as many open `receivables`
     as possible. Credits are applied first if `includeCredits` is true,
     the balance is then applied to receivables ordered by date.
   */
