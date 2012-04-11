@@ -102,7 +102,7 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
         isShowSubtotal = this.get('isShowSubtotal');
 
     if(isSummarize) this.set('isAlternateSubtotal', false);
-    this.isShowSubtotal.set('isEditable', false);
+    this.isShowSubtotal.set('isEditable', !isSummarize);
     if(!isShowSubtotal) {
       this.set('isShowDifference', isSummarize);
       this.set('isShowBudget', isSummarize);
