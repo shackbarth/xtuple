@@ -16,7 +16,7 @@
 XT.Record = SC.Record.extend(
   /** @scope XT.Record.prototype */ {
 
-  /*
+  /**
     The full path name of this class. Should be set in every subclass.
 
     @type String
@@ -24,6 +24,15 @@ XT.Record = SC.Record.extend(
   className: 'XT.Record',
 
   ignoreUnknownProperties: true,
+  
+  /**
+    Default primary key.
+    
+    @type String
+  */
+  guid: SC.Record.attr(Number, {
+    isRequired: true
+  }),
 
   /**
     The data type name. The same as the class name without the namespace.
@@ -262,6 +271,7 @@ XT.Record = SC.Record.extend(
     @returns {Array}
   */
   validate: function() {
+    // Validate required attributes
     var required = this.requiredAttributes(),
         err = XT.errors.findProperty('code', 'xt1001'),
         isErr = false;
@@ -269,6 +279,15 @@ XT.Record = SC.Record.extend(
       if (!this.get(required[i])) isErr = true;
     }
     this.updateErrors(err, isErr);
+
+    // Validate id. Primary key of `guid` must be a number (not the temporary key), 
+    // any other primary key type must simply be some value.
+    var pkey = this.get('primaryKey'),
+        id = this.get('id') || -1;
+    err = XT.errors.findProperty('code', 'xt1015'),
+    isErr = pkey === 'guid' ? id < 0 : SC.none(id);
+    this.updateErrors(err, isErr);
+    
     return this.get('validateErrors');
   },
 
@@ -455,52 +474,6 @@ XT.Record = SC.Record.extend(
 });
 
 XT.Record.ignoreUnknownProperties = true;
-
-/**
-  Overload of `.extend()` to automatically call `XT.Record.setup()` on all
-  extended `XT.Record.constructor`s/subclasses.
-*/
-XT.Record.extend = function() {
-  var ret = SC.Object.extend.apply(this, arguments).setup();
-  SC.Query._scq_didDefineRecordType(ret);
-  return ret;
-};
-
-/**
-  Auto-executed from `XT.Record.extend` overloaded function. Features that
-  need to be executed across all `XT.Record`s but are dependent on the
-  individual prototype need to happen here.
-
-  @returns {Object} receiver
-*/
-XT.Record.setup = function() {
-
-  // Reference to `this` where `this` is a reference to the newly created
-  // constructor (the return from `SC.Record.extend`).
-  var self = this;
-
-  // As an example of use, the prototype of `this` is the uninstanced
-  // object constructor for the new `XT.Record` that was extended.
-
-  // This will create an entry for `guid` on the `XT.Record` that defines the
-  // attribute as type `String` and adds a `defaultValue` function that will
-  // return the correct type automatically.
-
-  if (this.prototype.primaryKey === 'guid') {
-    this.prototype.guid = SC.Record.attr(String, {
-      defaultValue: function () {
-        if (arguments[0] && arguments[0].get('status') === SC.Record.READY_NEW) {
-          XT.Record.fetchId.call(arguments[0]);
-          return '_loading'.loc();
-        }
-      },
-      isRequired: true
-    });
-  }
-
-  // Return the original reference (!important).
-  return this;
-};
 
 /**
   Use this function to find out whether a user can create records before instantiating one.

@@ -67,7 +67,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Removes parents updating children with parent status when we don't need
     or want that behavior.
@@ -86,7 +86,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Don't notify children here.
   */
@@ -114,9 +114,45 @@ XT.Store = SC.Store.extend(XT.Logging,
 
     return this;
   },
+  
+  // ..........................................................
+  // REIMPLEMENTED METHODS
+  //
+  // The methods in this section re-implement standard SC.Store methods with modifictions.
+  
+  /**
+    Reimplemented from `SC.Store`.
+
+    After creating a record create a temporary id, then fetch one asynchronously from 
+    the data source.
+  */
+  createRecord: function(recordType, dataHash, id) {
+    var primaryKey = recordType.prototype.primaryKey,
+        args = SC.A(arguments);
+
+    // Create a temporary id (negative of store key) if none passed
+    if (primaryKey === 'guid' && SC.none(dataHash.guid)) {
+      var storeKey = SC.Store.generateStoreKey(),
+          id = storeKey * -1;
+      SC.Store.replaceRecordTypeFor(storeKey, recordType);
+      SC.Store.replaceIdFor(storeKey, id);
+      dataHash.guid = id;
+      args[1] = dataHash;
+    }
+
+    // Do the standard thing
+    var ret = arguments.callee.base.apply(this, args);
+    
+    // If primary key is guid and id is temporary, fetch a real one asynchronously
+    if (primaryKey === 'guid' && ret.get('id') < 0) {
+      XT.Record.fetchId.call(ret);
+    }
+
+    return ret
+  },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Don't notify status here.
   */
@@ -145,7 +181,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Update children only when appropriate with the proper status.
   */
@@ -193,7 +229,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Change status of child records to destroyed, and remove duplicate notice
     on parent.
@@ -233,7 +269,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Change status of child records to error, and remove duplicate notice on
     parent.
@@ -278,7 +314,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Change status of child records to busy.
   */
@@ -381,7 +417,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Don't destroy children automatically.
   */
