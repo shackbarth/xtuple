@@ -21,7 +21,7 @@ XM.LedgerAccount = XT.Record.extend(XM._LedgerAccount,
 
 number: SC.Record.attr(Number, {
   toType: function(record, key, value) {
-  if(value) return value.get('length') <= 4 ? value : null;
+  if(value) return (value.get && value.get('length') <= 4) ? value : null;
   }
 }),
 

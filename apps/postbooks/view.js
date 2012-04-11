@@ -25,7 +25,7 @@ var green =    "#859900";
 var white =    "white";
 
 /** Builds an SC.View subcass that can edit properties of the record class. */
-Postbooks.PropertiesEditorForClass = function(klass, controller) {
+Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
   var view = SC.View.create({
         layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
         hasHorizontalScroller: false,
@@ -72,7 +72,7 @@ Postbooks.PropertiesEditorForClass = function(klass, controller) {
     var property = proto[key],
         left = 200, right = 40;
 
-   if (property && property.isChildrenAttribute) {
+   if (property && !stop && (property.isChildrenAttribute || property.isManyAttribute)) {
      var arrayKlass = property.get('typeClass');
 
      items.push({
@@ -87,7 +87,7 @@ Postbooks.PropertiesEditorForClass = function(klass, controller) {
 
      tabSurfaces[key + 'Surface'] = Postbooks.ListViewForClass(arrayKlass, arrayController);
 
-   } else if (property && property.isChildAttribute) {
+   } else if (property && !stop && (property.isChildAttribute || property.isSingleAttribute)) {
       var objectKlass = property.get('typeClass');
 
       items.push({
@@ -100,11 +100,13 @@ Postbooks.PropertiesEditorForClass = function(klass, controller) {
         contentBinding: SC.Binding.from(key, controller).single().oneWay()
       });
 
-      tabSurfaces[key + 'Surface'] = Postbooks.PropertiesEditorForClass(objectKlass, objectController);
+      tabSurfaces[key + 'Surface'] = Postbooks.PropertiesEditorForClass(objectKlass, objectController, property.isSingleAttribute);
 
     } else if (property && property.isRecordAttribute) {
-      if (property.isChildrenAttribute) continue;
-      else if (property.isChildAttribute) continue;
+      if (property.isChildrenAttribute)    continue;
+      else if (property.isChildAttribute)  continue;
+      else if (property.isManyAttribute)   continue;
+      else if (property.isSingleAttribute) continue;
       else if (property.isRecordAttribute) {
         var label = null, widget = null,
             typeClass = property.get('typeClass');
@@ -133,6 +135,32 @@ Postbooks.PropertiesEditorForClass = function(klass, controller) {
             }).from(key, controller)
           });
           y += 24;
+        } else if (typeClass.isNumeric) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 0, height: 24, width: left - 6 },
+            textAlign: 'right',
+            value: key.titleize() + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.transform(function(val) {
+              return String(val);
+            }).from(key, controller)
+          });
+          y += 24;
+        } else if (typeClass === SC.DateTime) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 0, height: 24, width: left - 6 },
+            textAlign: 'right',
+            value: key.titleize() + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.transform(function(val) {
+              return val? val.toISO8601() : "no date set";
+            }).from(key, controller)
+          });
+          y += 24;
         } else if (typeClass === Boolean) {
           widget = SC.CheckboxWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -147,7 +175,7 @@ Postbooks.PropertiesEditorForClass = function(klass, controller) {
         } else if (typeClass === Object) {
           console.log('Unknown property type', 'Object');          
         } else {
-          console.log('Unknown property type', typeClass);          
+          console.log('Unknown property type', typeClass.displayName? typeClass.displayName : typeClass);          
         }
 
         if (label)  layers.pushObject(label);

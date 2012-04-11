@@ -25,62 +25,6 @@ var green =    "#859900";
 var white =    "white";
 
 Postbooks.LoadUserInterface = function() {
-  var handleChildAttribute, handleRecordAttribute, processRecordClass,
-      relationships = 0;
-
-  handleChildAttribute = function(key, attribute, parentElement) {
-    // console.log('handleChildAttribute', key);
-    var p = document.createElement('p'),
-        ul = document.createElement('ul'),
-        li = document.createElement('li'),
-        typeClass = attribute.get('typeClass');
-
-    relationships++;
-
-    p.innerText = "(%@) %@:".fmt(attribute.isChildrenAttribute? 'to many' : 'to one', key);
-    parentElement.appendChild(p);
-    parentElement.appendChild(ul);
-
-    ul.appendChild(li);
-    processRecordClass(typeClass, li);
-  };
-
-  handleRecordAttribute = function(key, attribute, parentElement) {
-    // console.log('handleRecordAttribute', key);
-    var typeClass = attribute.get('typeClass');
-
-    if (typeClass === String) typeClass = 'String';
-    else if (typeClass === Number) typeClass = 'Number';
-    else if (typeClass === Boolean) typeClass = 'Boolean';
-    else if (typeClass === Array) typeClass = 'Array';
-    else if (typeClass === Object) typeClass = 'Hash';
-
-    parentElement.innerText = "%@: %@ (%@)".fmt(key, typeClass, attribute.get('isEditable')? 'editable' : 'not editable');
-  };
-
-  processRecordClass = function(klass, parentElement) {
-    // console.log('processRecordClass', klass.prototype.className);
-    var p = document.createElement('p'),
-        ul = document.createElement('ul');
-
-    p.innerText = klass.prototype.className;
-    parentElement.appendChild(p);
-    parentElement.appendChild(ul);
-
-    var proto = klass.prototype;
-    for (var key in proto) {
-      var property = proto[key];
-      if (property && property.isRecordAttribute) {
-        var li = document.createElement('li');
-        ul.appendChild(li);
-
-        if (property.isChildrenAttribute) handleChildAttribute(key, property, li);
-        else if (property.isChildAttribute) handleChildAttribute(key, property, li);
-        else if (property.isRecordAttribute) handleRecordAttribute(key, property, li);
-      }
-    }
-  };
-
   var count = 0;
   for (var key in XM) {
     if (key.slice(0,1) === '_') continue;
@@ -89,7 +33,8 @@ Postbooks.LoadUserInterface = function() {
   }
   console.log('XM has', count, 'non-generated XT.Record subclasses.');
 
-  var crmClasses = 'Account Address CashReceipt Contact Incident Opportunity Project ToDo'.w();
+  // var crmClasses = 'Account Address CashReceipt Contact Incident Opportunity Project ToDo'.w();
+  var crmClasses = 'Account Address CashReceipt Contact Incident Project'.w();
   console.log("There are", crmClasses.length, "root CRM classes.");
 
   var crmItems = [];
@@ -373,6 +318,4 @@ Postbooks.LoadUserInterface = function() {
     accountingTabs: accountingTabs
   });
   SC.app.set('ui', ui);
-
-  // console.log("There are", relationships, "child relationships.");
 };
