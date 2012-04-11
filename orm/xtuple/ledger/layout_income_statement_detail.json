@@ -125,6 +125,15 @@
       }
     },
     {
+      "name": "customSource",
+      "attr": {
+        "type": "Boolean",
+        "column": "flitem_custom_source",
+        "value": "S",
+        "isVisible": false
+      }
+    },
+    {
       "name": "percentlayoutIncomeStatementGroup",
       "toOne": {
         "type": "LayoutIncomeStatementGroup",
