@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM sc_assert */
+/*globals Postbooks XT XM sc_assert */
 
 sc_require('carousel');
 
@@ -24,7 +24,7 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.LoadUserInterface = function() {
+Postbooks.LoadModule = function(name) {
   var count = 0;
   for (var key in XM) {
     if (key.slice(0,1) === '_') continue;
@@ -297,7 +297,25 @@ Postbooks.LoadUserInterface = function() {
   // accountingCarousel.getPath('tray.subsurfaces').pushObject(SC.View.create());
   accountingTabs.get('subsurfaces').pushObject(MyTabSurface.create(accountingTabSurfaces));
 
-  var ui = SC.TabSurface.create({
+  var module = SC.LayoutSurface.create();
+  
+  var topbar = SC.View.create({
+    layout: { top: 0, left: 0, right: 0, height: 44 },
+
+    willRenderLayers: function(ctx) {
+      ctx.fillStyle = base3;
+      ctx.font = "16pt Calibri";
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = "rgba(0,0,0,0)";
+      ctx.fillText(name, ctx.width/2, ctx.height/2);
+    }
+  });
+  topbar.set('backgroundColor', base03);
+
+  var contentArea = SC.TabSurface.create({
+    layout: { top: 44, left: 0, right: 0, bottom: 0 },
     value: 'crmTabs',
     items: [{
       title: 'CRM',
@@ -317,5 +335,8 @@ Postbooks.LoadUserInterface = function() {
     crmTabs: crmTabs,
     accountingTabs: accountingTabs
   });
-  SC.app.set('ui', ui);
+
+  module.get('subsurfaces').pushObjects([topbar, contentArea]);
+
+  SC.app.get('ui').pushSurface(module);
 };

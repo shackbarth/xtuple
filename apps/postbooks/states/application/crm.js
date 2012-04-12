@@ -11,7 +11,7 @@ Postbooks.CRM = SC.State.design({
     // Postbooks.set('mainViewShowing', 'secure');
     // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
     // 
-    // Postbooks.set('currentNav', 'secure');
+    Postbooks.LoadModule("CRM");
   }
 
   // ACTIONS

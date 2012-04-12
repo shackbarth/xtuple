@@ -23,7 +23,8 @@ Postbooks.APPLICATION = SC.State.design({
     } else SC.routes.trigger(); // ensures we will enter a substate
 
     // setTimeout(Postbooks.RenderModelHierarchy, 0);
-    Postbooks.LoadUserInterface();
+    // Postbooks.LoadModule();
+    Postbooks.LoadDashboard();
   },
 
   exitState: function() {

@@ -15,7 +15,18 @@
 */
 Postbooks.Carousel = SC.CompositeSurface.extend({
 
+  updateDisplay: function() {
+    
+  },
+
   _sc_visibleSurface: null,
+
+  pushSurface: function(surface) {
+    this._sc_tray.get('subsurfaces').pushObject(surface);
+    this.updateTrayLayout();
+    this.makeSurfaceVisible(surface);
+  },
+
   makeSurfaceVisible: function(surface) {
     var tray = this._sc_tray,
         subsurfaces =  tray.get('subsurfaces'),
@@ -43,7 +54,7 @@ Postbooks.Carousel = SC.CompositeSurface.extend({
     div.style.overflowY = 'hidden';
   },
 
-  updateLayout: function() {
+  updateTrayLayout: function() {
     var tray = this._sc_tray,
         frame = SC.MakeRect(this.get('frame'));
 
@@ -52,7 +63,10 @@ Postbooks.Carousel = SC.CompositeSurface.extend({
 
     frame[2]/*width*/ = frame[2]/*width*/ * slides;
     tray.set('frame', frame);
+  },
 
+  updateLayout: function() {
+    this.updateTrayLayout();
     if (this._sc_visibleSurface) this.makeSurfaceVisible(this._sc_visibleSurface);
   },
 
@@ -72,6 +86,7 @@ Postbooks.InternalCarouselTray = SC.CompositeSurface.extend({
   }.property(),
 
   updateLayout: function() {
+    console.log('Postbooks.InternalCarouselTray#updateLayout()');
     var subsurfaces = this.get('subsurfaces'),
         frame = SC.MakeRect(this.get('frame')),
         totalWidth = frame.width,
