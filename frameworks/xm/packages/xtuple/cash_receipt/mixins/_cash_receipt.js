@@ -61,6 +61,7 @@ XM._CashReceipt = {
     @type Number
   */
   amount: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_amount'.loc()
   }),
 
