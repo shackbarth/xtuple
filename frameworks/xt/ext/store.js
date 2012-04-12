@@ -69,25 +69,6 @@ XT.Store = SC.Store.extend(XT.Logging,
   /**
     Reimplemented from `SC.Store`.
 
-    Removes parents updating children with parent status when we don't need
-    or want that behavior.
-  */
-  writeDataHash: function(storeKey, hash, status) {
-    // Update dataHashes and optionally status.
-    if (hash) this.dataHashes[storeKey] = hash;
-    if (status) this.statuses[storeKey] = status;
-
-    // Also note that this hash is now editable.
-    var editables = this.editables;
-    if (!editables) editables = this.editables = [];
-    editables[storeKey] = 1; // Use number for dense array support.
-
-    return this;
-  },
-
-  /**
-    Reimplemented from `SC.Store`.
-
     Don't notify children here.
   */
   dataHashDidChange: function(storeKeys, rev, statusOnly, key) {
@@ -150,6 +131,55 @@ XT.Store = SC.Store.extend(XT.Logging,
 
     return ret
   },
+  
+  /**
+    Reimplemented from `SC.Store`.
+
+    Don't destroy children automatically.
+    Remove dataHash immediately if READY_NEW.
+  */
+  destroyRecord: function(recordType, id, storeKey) {
+    if (storeKey === undefined) storeKey = recordType.storeKeyFor(id);
+    var status = this.readStatus(storeKey), changelog, K = SC.Record;
+
+    // handle status - ignore if destroying or destroyed
+    if ((status === K.BUSY_DESTROYING) || (status & K.DESTROYED)) {
+      return this; // nothing to do
+
+    // error out if empty
+    } else if (status === K.EMPTY) {
+      throw K.NOT_FOUND_ERROR ;
+
+    // error out if busy
+    } else if (status & K.BUSY) {
+      throw K.BUSY_ERROR ;
+
+    // if new status, destroy but leave in clean state
+    } else if (status === K.READY_NEW) {
+      status = K.DESTROYED_CLEAN ;
+      this.removeDataHash(storeKey, status);
+
+    // otherwise, destroy in dirty state
+    } else status = K.DESTROYED_DIRTY ;
+
+    // remove the data hash, set new status
+    this.writeStatus(storeKey, status);
+    this.dataHashDidChange(storeKey);
+
+    // add/remove change log
+    changelog = this.changelog;
+    if (!changelog) changelog = this.changelog = SC.Set.create();
+
+    ((status & K.DIRTY) ? changelog.add(storeKey) : changelog.remove(storeKey));
+    this.changelog=changelog;
+
+    // if commit records is enabled
+    if(this.get('commitRecordsAutomatically')){
+      this.invokeLast(this.commitRecords);
+    }
+
+    return this ;
+  },
 
   /**
     Reimplemented from `SC.Store`.
@@ -178,6 +208,128 @@ XT.Store = SC.Store.extend(XT.Logging,
     crs[childStoreKey] = parentStoreKey;
     this.childRecords = crs;
     this.parentRecords = prs;
+  },
+
+  /**
+    Reimplemented from `SC.Store`.
+
+    Removes parents updating children with parent status when we don't need
+    or want that behavior.
+  */
+  writeDataHash: function(storeKey, hash, status) {
+    // Update dataHashes and optionally status.
+    if (hash) this.dataHashes[storeKey] = hash;
+    if (status) this.statuses[storeKey] = status;
+
+    // Also note that this hash is now editable.
+    var editables = this.editables;
+    if (!editables) editables = this.editables = [];
+    editables[storeKey] = 1; // Use number for dense array support.
+
+    return this;
+  },
+  
+  /**
+    Reimplemented from `SC.Store`.
+
+    Change status of child records to busy.
+  */
+  commitRecords: function(recordTypes, ids, storeKeys, params, callbacks) {
+    var source    = this._getDataSource(),
+        isArray   = SC.typeOf(recordTypes) === SC.T_ARRAY,
+        hasCallbackArray = SC.typeOf(callbacks) === SC.T_ARRAY,
+        retCreate= [], retUpdate= [], retDestroy = [],
+        rev       = SC.Store.generateStoreKey(),
+        K         = SC.Record,
+        recordType, idx, storeKey, status, key, ret, len, callback;
+
+    // If no params are passed, look up storeKeys in the changelog property.
+    // Remove any committed records from changelog property.
+
+    if(!recordTypes && !ids && !storeKeys){
+      storeKeys = this.changelog;
+    }
+
+    len = storeKeys ? storeKeys.get('length') : (ids ? ids.get('length') : 0);
+
+    for(idx=0;idx<len;idx++) {
+
+      // collect store key
+      if (storeKeys) {
+        storeKey = storeKeys[idx];
+      } else {
+        if (isArray) recordType = recordTypes[idx] || SC.Record;
+        else recordType = recordTypes;
+        storeKey = recordType.storeKeyFor(ids[idx]);
+      }
+
+      //collect the callback
+      callback = hasCallbackArray ? callbacks[idx] : callbacks;
+
+      // collect status and process
+      status = this.readStatus(storeKey);
+
+      if ((status == K.EMPTY) || (status == K.ERROR)) {
+        throw K.NOT_FOUND_ERROR ;
+      }
+      else {
+        if (status==K.READY_NEW) {
+          this.writeStatus(storeKey, K.BUSY_CREATING);
+          this.dataHashDidChange(storeKey, rev, true);
+          retCreate.push(storeKey);
+          this._setCallbackForStoreKey(storeKey, callback, hasCallbackArray, storeKeys);
+        } else if (status==K.READY_DIRTY) {
+          this.writeStatus(storeKey, K.BUSY_COMMITTING);
+          this.dataHashDidChange(storeKey, rev, true);
+          retUpdate.push(storeKey);
+          this._setCallbackForStoreKey(storeKey, callback, hasCallbackArray, storeKeys);
+        } else if (status==K.DESTROYED_DIRTY) {
+          this.writeStatus(storeKey, K.BUSY_DESTROYING);
+          this.dataHashDidChange(storeKey, rev, true);
+          retDestroy.push(storeKey);
+          this._setCallbackForStoreKey(storeKey, callback, hasCallbackArray, storeKeys);
+        } else if (status==K.DESTROYED_CLEAN) {
+          this.dataHashDidChange(storeKey, rev, true);
+        }
+        // ignore K.READY_CLEAN, K.BUSY_LOADING, K.BUSY_CREATING, K.BUSY_COMMITTING,
+        // K.BUSY_REFRESH_CLEAN, K_BUSY_REFRESH_DIRTY, KBUSY_DESTROYING
+
+        // update status of modified children
+        var that = this;
+        this._propagateToChildren(storeKey, function(storeKey) {
+          var status = that.readStatus(storeKey),
+              rev = SC.Store.generateStoreKey();
+          if (status==K.READY_NEW) {
+            that.writeStatus(storeKey, K.BUSY_CREATING);
+            that.dataHashDidChange(storeKey, rev, true);
+          } else if (status==K.READY_DIRTY) {
+            that.writeStatus(storeKey, K.BUSY_COMMITTING);
+            that.dataHashDidChange(storeKey, rev, true);
+          } else if (status==K.DESTROYED_DIRTY) {
+            that.writeStatus(storeKey, K.BUSY_DESTROYING);
+            that.dataHashDidChange(storeKey, rev, true);
+          } else if (status==K.DESTROYED_CLEAN) {
+            that.dataHashDidChange(storeKey, rev, true);
+          }
+        });
+      }
+    }
+
+    // now commit storekeys to dataSource
+    if (source && (len>0 || params)) {
+      ret = source.commitRecords.call(source, this, retCreate, retUpdate, retDestroy, params);
+    }
+
+    //remove all committed changes from changelog
+    if (ret && !recordTypes && !ids) {
+      if (storeKeys === this.changelog) {
+        this.changelog = null;
+      }
+      else {
+        this.changelog.removeEach(storeKeys);
+      }
+    }
+    return ret ;
   },
 
   /**
@@ -311,158 +463,6 @@ XT.Store = SC.Store.extend(XT.Logging,
 
     // update callbacks
     this._retreiveCallbackForStoreKey(storeKey);
-    return this ;
-  },
-
-  /**
-    Reimplemented from `SC.Store`.
-
-    Change status of child records to busy.
-  */
-  commitRecords: function(recordTypes, ids, storeKeys, params, callbacks) {
-    var source    = this._getDataSource(),
-        isArray   = SC.typeOf(recordTypes) === SC.T_ARRAY,
-        hasCallbackArray = SC.typeOf(callbacks) === SC.T_ARRAY,
-        retCreate= [], retUpdate= [], retDestroy = [],
-        rev       = SC.Store.generateStoreKey(),
-        K         = SC.Record,
-        recordType, idx, storeKey, status, key, ret, len, callback;
-
-    // If no params are passed, look up storeKeys in the changelog property.
-    // Remove any committed records from changelog property.
-
-    if(!recordTypes && !ids && !storeKeys){
-      storeKeys = this.changelog;
-    }
-
-    len = storeKeys ? storeKeys.get('length') : (ids ? ids.get('length') : 0);
-
-    for(idx=0;idx<len;idx++) {
-
-      // collect store key
-      if (storeKeys) {
-        storeKey = storeKeys[idx];
-      } else {
-        if (isArray) recordType = recordTypes[idx] || SC.Record;
-        else recordType = recordTypes;
-        storeKey = recordType.storeKeyFor(ids[idx]);
-      }
-
-      //collect the callback
-      callback = hasCallbackArray ? callbacks[idx] : callbacks;
-
-      // collect status and process
-      status = this.readStatus(storeKey);
-
-      if ((status == K.EMPTY) || (status == K.ERROR)) {
-        throw K.NOT_FOUND_ERROR ;
-      }
-      else {
-        if (status==K.READY_NEW) {
-          this.writeStatus(storeKey, K.BUSY_CREATING);
-          this.dataHashDidChange(storeKey, rev, true);
-          retCreate.push(storeKey);
-          this._setCallbackForStoreKey(storeKey, callback, hasCallbackArray, storeKeys);
-        } else if (status==K.READY_DIRTY) {
-          this.writeStatus(storeKey, K.BUSY_COMMITTING);
-          this.dataHashDidChange(storeKey, rev, true);
-          retUpdate.push(storeKey);
-          this._setCallbackForStoreKey(storeKey, callback, hasCallbackArray, storeKeys);
-        } else if (status==K.DESTROYED_DIRTY) {
-          this.writeStatus(storeKey, K.BUSY_DESTROYING);
-          this.dataHashDidChange(storeKey, rev, true);
-          retDestroy.push(storeKey);
-          this._setCallbackForStoreKey(storeKey, callback, hasCallbackArray, storeKeys);
-        } else if (status==K.DESTROYED_CLEAN) {
-          this.dataHashDidChange(storeKey, rev, true);
-        }
-        // ignore K.READY_CLEAN, K.BUSY_LOADING, K.BUSY_CREATING, K.BUSY_COMMITTING,
-        // K.BUSY_REFRESH_CLEAN, K_BUSY_REFRESH_DIRTY, KBUSY_DESTROYING
-
-        // update status of modified children
-        var that = this;
-        this._propagateToChildren(storeKey, function(storeKey) {
-          var status = that.readStatus(storeKey),
-              rev = SC.Store.generateStoreKey();
-          if (status==K.READY_NEW) {
-            that.writeStatus(storeKey, K.BUSY_CREATING);
-            that.dataHashDidChange(storeKey, rev, true);
-          } else if (status==K.READY_DIRTY) {
-            that.writeStatus(storeKey, K.BUSY_COMMITTING);
-            that.dataHashDidChange(storeKey, rev, true);
-          } else if (status==K.DESTROYED_DIRTY) {
-            that.writeStatus(storeKey, K.BUSY_DESTROYING);
-            that.dataHashDidChange(storeKey, rev, true);
-          } else if (status==K.DESTROYED_CLEAN) {
-            that.dataHashDidChange(storeKey, rev, true);
-          }
-        });
-      }
-    }
-
-    // now commit storekeys to dataSource
-    if (source && (len>0 || params)) {
-      ret = source.commitRecords.call(source, this, retCreate, retUpdate, retDestroy, params);
-    }
-
-    //remove all committed changes from changelog
-    if (ret && !recordTypes && !ids) {
-      if (storeKeys === this.changelog) {
-        this.changelog = null;
-      }
-      else {
-        this.changelog.removeEach(storeKeys);
-      }
-    }
-    return ret ;
-  },
-
-  /**
-    Reimplemented from `SC.Store`.
-
-    Don't destroy children automatically.
-    Remove dataHash immediately if READY_NEW.
-  */
-  destroyRecord: function(recordType, id, storeKey) {
-    if (storeKey === undefined) storeKey = recordType.storeKeyFor(id);
-    var status = this.readStatus(storeKey), changelog, K = SC.Record;
-
-    // handle status - ignore if destroying or destroyed
-    if ((status === K.BUSY_DESTROYING) || (status & K.DESTROYED)) {
-      return this; // nothing to do
-
-    // error out if empty
-    } else if (status === K.EMPTY) {
-      throw K.NOT_FOUND_ERROR ;
-
-    // error out if busy
-    } else if (status & K.BUSY) {
-      throw K.BUSY_ERROR ;
-
-    // if new status, destroy but leave in clean state
-    } else if (status === K.READY_NEW) {
-      status = K.DESTROYED_CLEAN ;
-      this.removeDataHash(storeKey, status);
-
-    // otherwise, destroy in dirty state
-    } else status = K.DESTROYED_DIRTY ;
-
-    // remove the data hash, set new status
-    this.writeStatus(storeKey, status);
-    this.dataHashDidChange(storeKey);
-
-    // add/remove change log
-    changelog = this.changelog;
-    if (!changelog) changelog = this.changelog = SC.Set.create();
-
-    ((status & K.DIRTY) ? changelog.add(storeKey) : changelog.remove(storeKey));
-    this.changelog=changelog;
-
-    // if commit records is enabled
-    if(this.get('commitRecordsAutomatically')){
-      this.invokeLast(this.commitRecords);
-    }
-
     return this ;
   }
 
