@@ -86,7 +86,7 @@ Postbooks.InternalCarouselTray = SC.CompositeSurface.extend({
   }.property(),
 
   updateLayout: function() {
-    console.log('Postbooks.InternalCarouselTray#updateLayout()');
+    // console.log('Postbooks.InternalCarouselTray#updateLayout()');
     var subsurfaces = this.get('subsurfaces'),
         frame = SC.MakeRect(this.get('frame')),
         totalWidth = frame.width,

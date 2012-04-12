@@ -11,7 +11,7 @@ Postbooks.RECEIVABLES = SC.State.design({
     // Postbooks.set('mainViewShowing', 'secure');
     // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
     // 
-    // Postbooks.set('currentNav', 'secure');
+    Postbooks.LoadModule("Receivables", 'Customer Invoice Receivable CashReceipt CustomerCreditCard'.w());
   }
 
   // ACTIONS

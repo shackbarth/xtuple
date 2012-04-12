@@ -11,7 +11,8 @@ Postbooks.CRM = SC.State.design({
     // Postbooks.set('mainViewShowing', 'secure');
     // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
     // 
-    Postbooks.LoadModule("CRM");
+    // Postbooks.LoadModule("CRM", 'Contact Account Opportunity Incident Project'.w());
+    Postbooks.LoadModule("CRM", 'Contact Account Incident Project'.w()); // FIXME: Opporunity hangs the app.
   }
 
   // ACTIONS

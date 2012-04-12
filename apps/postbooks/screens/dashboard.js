@@ -86,7 +86,7 @@ Postbooks.LoadDashboard = function() {
     color: violet,
     name: "Receivables",
     target: 'Postbooks.statechart',
-    action: 'showReceivable'
+    action: 'showReceivables'
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
