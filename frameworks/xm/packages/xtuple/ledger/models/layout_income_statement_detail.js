@@ -58,14 +58,6 @@ XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetai
   // METHODS
   //
 
-  init: function() {
-    this.subAccounts = XM.SubAccountType();
-  },
-
-  updateSubAccountTypes: function() {
-    
-  },
-
   //..................................................
   // OBSERVERS
   //

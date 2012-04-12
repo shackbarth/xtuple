@@ -22,7 +22,7 @@ XM.Currency = XM.Document.extend(XM._Currency,
   // CALCULATED PROPERTIES
   //
 
-  abbreviation: SC.Record.attr(Boolean, {
+  abbreviation: SC.Record.attr(String, {
     toType: function(record, key, value) {
       if(value && value.length > 3) return value.substr(0,3);
     }
