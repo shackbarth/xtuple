@@ -44,7 +44,8 @@
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "cashrcpt_amount"
+        "column": "cashrcpt_amount",
+        "isRequired": true
       }
     },
     {
@@ -77,8 +78,7 @@
       "name": "documentNumber",
       "attr": {
         "type": "String",
-        "column": "cashrcpt_docnumber",
-        "isRequired": true
+        "column": "cashrcpt_docnumber"
       }
     },
     {
@@ -106,7 +106,15 @@
       }
     },
     {
-      "name": "applyDate",
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_distdate",
+        "defaultValue": "currentDate"
+      }
+    },
+    {
+      "name": "applicationDate",
       "attr": {
         "type": "Date",
         "column": "cashrcpt_applydate",
