@@ -35,3 +35,46 @@ number: SC.Record.attr(Number, {
 
 });
 
+XM.LayoutIncomeStatementDetail.mixin( /** @scope XM.LayoutIncomeStatementDetail */ {
+
+/**
+  @static
+  @constant
+  @type String
+  @default A
+*/
+  ASSET: 'A',
+
+/**
+  @static
+  @constant
+  @type String
+  @default E
+*/
+  EXPENSE: 'E',
+
+/**
+  @static
+  @constant
+  @type String
+  @default L
+*/
+  LIABILITY: 'L',
+
+/**
+  @static
+  @constant
+  @type String
+  @default Q
+*/
+  EQUITY: 'Q',
+
+/**
+  @static
+  @constant
+  @type String
+  @default R
+*/
+  REVENUE: 'R'
+
+});

@@ -6,6 +6,7 @@
 /*globals XM */
 
 sc_require('mixins/_layout_income_statement_detail');
+sc_require('model/ledger_account');
 
 /**
   @class
@@ -68,49 +69,5 @@ XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetai
   //..................................................
   // OBSERVERS
   //
-
-});
-
-XM.LayoutIncomeStatementDetail.mixin( /** @scope XM.LayoutIncomeStatementDetail */ {
-
-/**
-  @static
-  @constant
-  @type String
-  @default A
-*/
-  ASSET: A,
-
-/**
-  @static
-  @constant
-  @type String
-  @default E
-*/
-  EXPENSE: E,
-
-/**
-  @static
-  @constant
-  @type String
-  @default L
-*/
-  LIABILITY: L,
-
-/**
-  @static
-  @constant
-  @type String
-  @default Q
-*/
-  EQUITY: Q,
-
-/**
-  @static
-  @constant
-  @type String
-  @default R
-*/
-  REVENUE: R
 
 });
