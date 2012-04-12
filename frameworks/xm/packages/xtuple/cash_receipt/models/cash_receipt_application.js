@@ -204,10 +204,11 @@ XM.CashReceiptApplication = SC.Object.extend(
         details = cashReceipt.get('details'),
         detail = this.get('cashReceiptDetail'),
         applied = this.get('applied') * -1,
-        discount = this.get('discount') * -1;
+        discount = this.get('discount') * -1,
+        status = detail.get('status'), K = SC.Record;
     if (detail) {
+      if (status == K.READY_NEW) details.removeObject(detail);
       detail.destroy();
-      details.removeObject(detail);
       cashReceipt.updateApplied(applied);
       cashReceipt.updateDiscount(discount);
     }
