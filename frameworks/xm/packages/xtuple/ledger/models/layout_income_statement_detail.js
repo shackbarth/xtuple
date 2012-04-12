@@ -21,22 +21,6 @@ XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetai
   // CALCULATED PROPERTIES
   //
 
-  /**
-    TODO: move to XM.SubAccountType as a function 
-          mixin
-
-  XM.SubAccountType.getTypes = function() {
-    if(!this._subAccountTypes) {
-      var qry = SC.Query.local(XM.SubAccountType),
-          store = this.get('store');
-
-      this._subAccountTypes = store.find(qry);
-    }
-    return this._subAccountTypes;
-  }
-
-  */
-
   filteredSubAccounts: function() {
     var subAccountTypes = XM.SubAccountType.getTypes(),
         accountType = record.get('accountType'),

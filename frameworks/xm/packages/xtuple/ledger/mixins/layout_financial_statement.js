@@ -24,8 +24,7 @@ XM.LayoutFinancialStatement = {
   // METHODS
   //
   
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
+  initMixin: function() {
 
     /**
       must be defined this way to prevent 
@@ -34,6 +33,7 @@ XM.LayoutFinancialStatement = {
     */
     this.layoutGroupRecords = [];
     this.getLayoutGroupRecords();
+
   },
 
   /**
@@ -48,6 +48,7 @@ XM.LayoutFinancialStatement = {
         idx;
 
     while(layoutGroupRec) {
+
       /**
         Fail-safe to prevent duplicate records from being pushed
         into layoutGroupRecords array.

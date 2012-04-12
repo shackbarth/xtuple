@@ -40,6 +40,11 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
       this.isShowSubtotalDidChange();
       this.isAlternateSubtotalDidChange();
     }
+
+    if(status === SC.Record.READY_CLEAN) {
+console.log('here!!!!');
+this.refresh();
+    }
   }.observes('status'),
 
   isShowSubtotalDidChange: function() {

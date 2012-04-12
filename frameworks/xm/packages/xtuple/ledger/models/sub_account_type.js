@@ -17,19 +17,28 @@ sc_require('mixins/_sub_account_type');
 XM.SubAccountType = XM.Document.extend(XM._SubAccountType,
 /** @scope XM.SubAccountType.prototype */ {
 
-documentKey: 'code',
+  documentKey: 'code',
 
-// .................................................
-// CALCULATED PROPERTIES
-//
+  // .................................................
+  // CALCULATED PROPERTIES
+  //
 
-//..................................................
-// METHODS
-//
+  //..................................................
+  // METHODS
+  //
 
-//..................................................
-// OBSERVERS
-//
+  //..................................................
+  // OBSERVERS
+  //
 
 });
 
+XM.SubAccountType.getTypes = function() {
+   if(!this._subAccountTypes) {
+     var qry = SC.Query.local(XM.SubAccountType),
+         store = this.get('store');
+
+     this._subAccountTypes = store.find(qry);
+   }
+   return this._subAccountTypes;
+}
