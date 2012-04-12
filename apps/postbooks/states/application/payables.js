@@ -8,13 +8,23 @@ Postbooks.PAYABLES = SC.State.design({
 
   enterState: function() {
     SC.routes.set('location', 'payables');
-    // Postbooks.set('mainViewShowing', 'secure');
-    // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
-    // 
+
     Postbooks.LoadModule("Payables", 'Vendor Voucher Payable PaymentApproval Payment'.w());
-  }
+  },
+
+  exitState: function() {
+    SC.app.get('ui').popSurface();
+  },
 
   // ACTIONS
+
+  showPayables: function() {
+    // Do nothing.
+  },
+
+  showDashboard: function() {
+    this.gotoState('DASHBOARD');
+  }
 
 
   // SUBSTATES

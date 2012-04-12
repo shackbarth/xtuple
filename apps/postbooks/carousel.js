@@ -27,6 +27,14 @@ Postbooks.Carousel = SC.CompositeSurface.extend({
     this.makeSurfaceVisible(surface);
   },
 
+  popSurface: function() {
+    var subsurfaces = this._sc_tray.get('subsurfaces');
+
+    subsurfaces.popObject();
+    this.updateTrayLayout();
+    this.makeSurfaceVisible(subsurfaces.objectAt(subsurfaces.get('length') - 1));
+  },
+
   makeSurfaceVisible: function(surface) {
     var tray = this._sc_tray,
         subsurfaces =  tray.get('subsurfaces'),

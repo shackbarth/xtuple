@@ -12,6 +12,12 @@ Postbooks.DASHBOARD = SC.State.design({
     // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
     // 
     // Postbooks.set('currentNav', 'overview');
+  },
+
+  // ACTIONS
+
+  showDashboard: function() {
+    // Do nothing.
   }
 
 });

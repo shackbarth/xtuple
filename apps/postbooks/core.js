@@ -31,27 +31,24 @@ Postbooks = global.Postbooks = SC.Application.create(
   },
 
   routeHandler: function(route) {
-    var tab = route.tab,
-        settings = route.settings === 'settings';
+    var tab = route.tab;
 
     switch (tab) {
-      case 'track':
-        Postbooks.statechart.sendAction('showTrack');
+      case 'crm':
+        Postbooks.statechart.sendAction('showCRM');
         break;
-      case 'secure':
-        Postbooks.statechart.sendAction('showSecure');
+      case 'receivables':
+        Postbooks.statechart.sendAction('showReceivables');
         break;
-      case 'backups':
-        if (settings) Postbooks.statechart.sendAction('showBackupsSettings');
-        else Postbooks.statechart.sendAction('showBackups');
+      case 'payables':
+        Postbooks.statechart.sendAction('showPayables');
         break;
-      case 'monitoring':
-        if (settings) Postbooks.statechart.sendAction('showMonitoringSettings');
-        else Postbooks.statechart.sendAction('showMonitoring');
+      case 'general-ledger':
+        Postbooks.statechart.sendAction('showGeneralLedger');
         break;
-      // case 'overview':
+      // case 'dashboard':
       default:
-        Postbooks.statechart.sendAction('showOverview');
+        Postbooks.statechart.sendAction('showDashboard');
         break;
     }
   },

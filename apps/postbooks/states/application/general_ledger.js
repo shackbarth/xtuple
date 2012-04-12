@@ -8,13 +8,23 @@ Postbooks.GENERAL_LEDGER = SC.State.design({
 
   enterState: function() {
     SC.routes.set('location', 'general-ledger');
-    // Postbooks.set('mainViewShowing', 'secure');
-    // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
-    // 
+
     Postbooks.LoadModule("General Ledger", 'Journal GeneralLedger TrialBalance Budget FinancialStatement BankAccount'.w());
-  }
+  },
+
+  exitState: function() {
+    SC.app.get('ui').popSurface();
+  },
 
   // ACTIONS
+
+  showGeneralLedger: function() {
+    // Do nothing.
+  },
+
+  showDashboard: function() {
+    this.gotoState('DASHBOARD');
+  }
 
 
   // SUBSTATES

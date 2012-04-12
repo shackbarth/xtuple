@@ -8,13 +8,23 @@ Postbooks.RECEIVABLES = SC.State.design({
 
   enterState: function() {
     SC.routes.set('location', 'receivables');
-    // Postbooks.set('mainViewShowing', 'secure');
-    // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
-    // 
+
     Postbooks.LoadModule("Receivables", 'Customer Invoice Receivable CashReceipt CustomerCreditCard'.w());
-  }
+  },
+
+  exitState: function() {
+    SC.app.get('ui').popSurface();
+  },
 
   // ACTIONS
+
+  showReceivables: function() {
+    // Do nothing.
+  },
+
+  showDashboard: function() {
+    this.gotoState('DASHBOARD');
+  }
 
 
   // SUBSTATES

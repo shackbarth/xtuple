@@ -24,6 +24,33 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
+var BackButton = SC.ButtonWidget.extend({
+
+  name: "Back",
+
+  cornerRadius: 5,
+
+  dragPoint: null,
+
+  render: function(ctx) {
+    console.log('IconLayer.render()', SC.guidFor(this));
+    ctx.beginPath();
+    this.renderHitTestPath(ctx);
+    ctx.fillStyle = base02;
+    ctx.fill();
+
+    // Draw some text.
+    ctx.fillStyle = base3;
+    ctx.font = "13pt Calibri";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = "rgba(0,0,0,0)";
+    ctx.fillText(this.get('name'), ctx.width/2, ctx.height/2);
+  }
+
+});
+
 Postbooks.LoadModule = function(name, classes) {
   var items = [];
   classes.forEach(function(className, idx) {
@@ -155,7 +182,7 @@ Postbooks.LoadModule = function(name, classes) {
 
     willRenderLayers: function(ctx) {
       ctx.fillStyle = base3;
-      ctx.font = "16pt Calibri";
+      ctx.font = "13pt Calibri";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -164,6 +191,11 @@ Postbooks.LoadModule = function(name, classes) {
     }
   });
   topbar.set('backgroundColor', base03);
+  topbar.get('layers').pushObject(BackButton.create({
+    layout: { left: 20, centerY: 0, width: 100, height: 24 },
+    target: 'Postbooks.statechart',
+    action: 'showDashboard'
+  }));
 
   module.get('subsurfaces').pushObjects([topbar, MyTabSurface.create(tabSurfaces)]);
 
