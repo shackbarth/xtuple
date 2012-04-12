@@ -28,6 +28,15 @@ XM.SubLedger = XM.TaxableDocument.extend(XM.SubLedgerMixin,
   //
   
   /**
+    Same as `commitRecord`.
+    
+    @seealso `commitRecord`
+  */
+  post: function() {
+    return this.commitRecord();
+  },
+  
+  /**
     For new records this dispatches a post function that handles the two
     step process of creating the record, then posting it. Otherwise it
     commits normally. A function by the name of [className].post(dataHash), where
