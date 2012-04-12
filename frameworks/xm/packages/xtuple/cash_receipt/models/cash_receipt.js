@@ -73,8 +73,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.property('amount', 'applied').cacheable(),
   
   /**
-    Return filtered applications result determined by 'includeCredits' property
-    and sorted by due date.
+    Return an array of applications filtered by the `includeCredits` 
+    property and sorted by due date.
   */
   filteredApplications: function() {
     var applications = this.get('applications'),
@@ -91,18 +91,12 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
              documentType === XM.Receivable.DEBIT_MEMO;
     }, this);
     
-    // define sort on due date
-    sortfunc = function(a,b) {
-      var aDate = a.getPath('receivable.dueDate'),
-          bDate = b.getPath('receivable.dueDate');
-      return SC.DateTime.compareDate(aDate, bDate);
-    }
-    
-    return ret.sort(sortfunc);
+    return ret.sort(this._xm_sort);
   }.property('includeCredits', 'applicationsLength').cacheable(),
   
   /**
-    
+    An array of open receivables for the selected `customer`. If the
+    the cash receipt is posted this will return no results.
   */
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
@@ -130,6 +124,111 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //
   
   /**
+    Apply the balance of the cash receipt to as many open `receivables`
+    as possible. Credits are applied first if `includeCredits` is true,
+    the balance is then applied to receivables ordered by date.
+  */
+  applyBalance: function() {
+    if (this.get('isPosted')) return;
+    var includeCredits = this.get('includeCredits'),
+        applications = this.get('applications'), list;
+       
+    // loop through credits first
+    if (includeCredits) {
+      // create a filtered list
+      list = applications.filter(function(application) {
+        var documentType = application.getPath('receivable.documentType');
+        return documentType === XM.Receivable.CREDIT_MEMO ||
+               documentType === XM.Receivable.CUSTOMER_DEPOSIT;
+      }, this);
+      
+      // loop through and apply
+      for (var i = 0; i < list.get('length'); i++) {
+        list.objectAt(i).applyBalance();
+      }
+    }
+  
+    // now process debits
+    list = applications.filter(function(application) {
+      var documentType = application.getPath('receivable.documentType');
+      return documentType === XM.Receivable.INVOICE ||
+             documentType === XM.Receivable.DEBIT_MEMO;
+    }, this).sort(this._xm_sort);
+    
+    // loop through and apply
+    var n = 0;
+    while (n < list.get('length') && this.get('balance') > 0) {
+      list.objectAt(n).applyBalance();
+      n++;
+    }
+  },
+  
+  /**
+    Post a cash receipt. If the cash receipt is 
+    in a dirty state, this function will return false.
+
+    @returns Receiver
+  */
+  post: function() { 
+    if(this.get('isPosted') ||
+       this.isDirty()) return false; 
+    var that = this, dispatch,
+        id = this.get('id');
+    
+    // define callback
+    callback = function(err, result) {
+      that.refresh();
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.CashReceipt',
+      functionName: 'post',
+      parameters: id,
+      target: that,
+      action: callback
+    });
+    console.log("Post Cash Receipt: %@".fmt(id));
+    
+    // do it
+    this.get('store').dispatch(dispatch);
+    return this;
+  },
+  
+  /**
+    Void a Cash Receipt. If the document is in a dirty state, this 
+    function will return false.
+    
+    @returns Receiver
+  */
+  void: function() { 
+    if(!this.get('isPosted') ||
+       this.get('isVoid') ||
+       this.isDirty()) return false; 
+    var that = this, dispatch,
+        id = this.get('id');
+    
+    // define callback
+    callback = function(err, result) {
+      that.refresh();
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.CashReceipt',
+      functionName: 'void',
+      parameters: id,
+      target: that,
+      action: callback
+    });
+    console.log("Void Cash Receipt: %@".fmt(id));
+    
+    // do it
+    this.get('store').dispatch(dispatch);
+    return this;
+  },
+  
+  /**
     Update the amount applied.
     
     @param {Number} amount to add
@@ -152,26 +251,35 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     this.set('discount', discount);
     return discount;
   },
+  
+  /** @private
+    sort array on due date
+  */
+  _xm_sort: function(a,b) {
+    var aDate = a.getPath('receivable.dueDate'),
+        bDate = b.getPath('receivable.dueDate');
+    return SC.DateTime.compareDate(aDate, bDate);
+  },
 
   //..................................................
   // OBSERVERS
   //
   
   currencyDidChange: function() {
-    var applyDate = this.get('applyDate'),
+    var distributionDate = this.get('distributionDate'),
         currency = this.get('currency'),
         that = this;
 
-    if (applyDate && currency) {
+    if (distributionDate && currency) {
       // define the callback
       callback = function(err, currencyRate) {
         if (!err) that.set('currencyRate', currencyRate.get('rate'));
       }
       
       // request a rate
-      XM.Currency.rate(currency, applyDate, callback);
+      XM.Currency.rate(currency, distributionDate, callback);
     }
-  }.observes('currency', 'applyDate'),
+  }.observes('currency', 'distributionDate'),
   
   customerDidChange: function() {
     if (this.get('customer')) this.customer.set('isEditable', false);
@@ -184,7 +292,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         isNotFixedCurrency = details.get('length') ? false : true;
 
     // things that affect exchange rate are only editable when no detail
-    this.applyDate.set('isEditable', isNotFixedCurrency);
+    this.distributionDate.set('isEditable', isNotFixedCurrency);
     this.currency.set('isEditable', isNotFixedCurrency);
     this.currencyRate.set('isEditable', isNotFixedCurrency);
     
@@ -241,103 +349,110 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 
 });
 
+// class constants and methods
 XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
 
-/**
-  Check funds type.
-  
-  @static
-  @constant
-  @type String
-  @default C
-*/
+  //..................................................
+  // CONSTANTS
+  //
+
+  /**
+    Check funds type.
+    
+    @static
+    @constant
+    @type String
+    @default C
+  */
   CHECK: 'C',
 
-/**
-  Certified Check funds type.
-  
-  @static
-  @constant
-  @type String
-  @default T
-*/
+  /**
+    Certified Check funds type.
+    
+    @static
+    @constant
+    @type String
+    @default T
+  */
   CERTIFIED_CHECK: 'T',
 
-/**
-  Master Card funds type.
-  
-  @static
-  @constant
-  @type String
-  @default M
-*/
+  /**
+    Master Card funds type.
+    
+    @static
+    @constant
+    @type String
+    @default M
+  */
   MASTER_CARD: 'M',
   
-/**
-  Visa funds type.
-  
-  @static
-  @constant
-  @type String
-  @default V
-*/
+  /**
+    Visa funds type.
+    
+    @static
+    @constant
+    @type String
+    @default V
+  */
   VISA: 'V',
 
-/**
-  American Express funds type.
-  @static
-  @constant
-  @type String
-  @default A
-*/
+  /**
+    American Express funds type.
+    @static
+    @constant
+    @type String
+    @default A
+  */
   AMERICAN_EXPRESS: 'A',
   
-/**
-  Discover card funds type.
-  
-  @static
-  @constant
-  @type String
-  @default D
-*/
+  /**
+    Discover card funds type.
+    
+    @static
+    @constant
+    @type String
+    @default D
+  */
   DISCOVER_CARD: 'D',
 
-/**
-  Other credit card funds type.
-  @static
-  @constant
-  @type String
-  @default R
-*/
+  /**
+    Other credit card funds type.
+    @static
+    @constant
+    @type String
+    @default R
+  */
   OTHER_CREDIT_CARD: 'R',
   
-/**
-  Cash funds type.
-  
-  @static
-  @constant
-  @type String
-  @default K
-*/
+  /**
+    Cash funds type.
+    
+    @static
+    @constant
+    @type String
+    @default K
+  */
   CASH: 'K',
 
-/**
-  Customer Deposit document type.
-  @static
-  @constant
-  @type String
-  @default W
-*/
+  /**
+    Customer Deposit document type.
+    @static
+    @constant
+    @type String
+    @default W
+  */
   WIRE_TRANSFER: 'W',
   
-/**
-  Other funds type.
-  @static
-  @constant
-  @type String
-  @default O
-*/
+  /**
+    Other funds type.
+    @static
+    @constant
+    @type String
+    @default O
+  */
   OTHER: 'O'
 
 });
+
+
 

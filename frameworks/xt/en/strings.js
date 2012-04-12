@@ -31,6 +31,7 @@ SC.stringsFor("en_US", {
   "_errorIsUnknown": "An unknown error has occurred",
   "_fetchError": "Fetch Error",
   "_firstOrLastNameRequired": "First or last name is required",
+  "_idInvalid": "The record requries a valid id issued from the data source.",
   "_noLineItems": "This document requires at least one line item.",
   "_noResultsFound": "No results were returned for the query.",
   "_optionExistsValue": "A option already exists with this Value.",
