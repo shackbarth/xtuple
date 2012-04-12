@@ -52,27 +52,7 @@ select xt.install_js('XM','CashReceipt','xtuple', $$
     if (err) throw new Error(err);
     return true
   }
-  /**
-   Post a All cash receipts.
 
-   @param {number}
-   @returns {boolean} 
-  */	
-  XM.CashReceipt.postAll = function(cashReceiptId) {
-    var ret, sql, err,
-        data = Object.create(XT.Data);
-
-    if(!data.checkPrivilege("PostCashReceipts")) err = "Access denied."
-    else if(cashReceiptId === undefined) err = "Post unprinted not defined";
-
-    if(!err) {
-      ret = executeSql("select postinvoices($1) AS result;", [cashReceiptId])[0].result;
-
-      return ret;
-    }
-
-    throw new Error(err);
-  }
   /**
    Void a cash receipt.
 
