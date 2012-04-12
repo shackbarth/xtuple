@@ -3,7 +3,7 @@
 // Copyright: ©2012 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XT */
-
+sc_require('mixins/logging');
 /**
   @class XT.Record
 
@@ -13,9 +13,11 @@
 
   @extends SC.Record
 */
-XT.Record = SC.Record.extend(
+XT.Record = SC.Record.extend(XT.Logging,
   /** @scope XT.Record.prototype */ {
 
+  logLocal: true,
+  
   /**
     The full path name of this class. Should be set in every subclass.
 
@@ -466,9 +468,9 @@ XT.Record = SC.Record.extend(
       this.writeAttribute(key, value, YES);
     }
 
-    // FIXME: Should use XT.Logging.
-    console.log('Change status %@:%@ to %@'
-                .fmt(this.get('className'),this.get('id'), this.statusString()));
+
+    this.log('Change status %@:%@ to %@'
+             .fmt(this.get('className'),this.get('id'), this.statusString()));
   }.observes('status')
 
 });
@@ -603,8 +605,7 @@ XT.Record.fetchId = function(prop) {
     action: callback
   });
 
-  // FIXME: Should use XT.Logging.
-  console.log("XT.Record.fetchId for: %@".fmt(recordType));
+  this.log("XT.Record.fetchId for: %@".fmt(recordType));
 
   self.get('store').dispatch(dispatch);
 
@@ -644,8 +645,7 @@ XT.Record.fetchNumber = function(prop) {
     action: callback
   });
 
-  // FIXME: Should use XT.Logging.
-  console.log("XT.Record.fetchNumber for: %@".fmt(recordType));
+  this.log("XT.Record.fetchNumber for: %@".fmt(recordType));
 
   that.get('store').dispatch(dispatch);
 
@@ -678,8 +678,7 @@ XT.Record.releaseNumber = function(number) {
     target: self
   });
 
-  // FIXME: Should use XT.Logging.
-  console.log("XT.Record.releaseNumber for: %@".fmt(recordType));
+  this.log("XT.Record.releaseNumber for: %@".fmt(recordType));
 
   self.get('store').dispatch(dispatch);
 
@@ -714,8 +713,7 @@ XT.Record.findExisting = function(key, value, callback) {
     action: callback
   });
 
-  // FIXME: Should use XT.Logging.
-  console.log("XT.Record.findExisting for: %@".fmt(recordType));
+  this.log("XT.Record.findExisting for: %@".fmt(recordType));
 
   self.get('store').dispatch(dispatch);
 

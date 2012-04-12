@@ -204,7 +204,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       target: that,
       action: callback
     });
-    console.log("Post Cash Receipt: %@".fmt(id));
+    this.log("Post Cash Receipt: %@".fmt(id));
     
     // do it
     this.get('store').dispatch(dispatch);
@@ -237,7 +237,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       target: that,
       action: callback
     });
-    console.log("Void Cash Receipt: %@".fmt(id));
+    this.log("Void Cash Receipt: %@".fmt(id));
     
     // do it
     this.get('store').dispatch(dispatch);
@@ -382,7 +382,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 });
 
 // class constants and methods
-XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
+XM.CashReceipt.mixin(
+   /** @scope XM.CashReceipt */ {
 
   //..................................................
   // CONSTANTS
