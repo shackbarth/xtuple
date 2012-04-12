@@ -482,7 +482,52 @@ XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
     @type String
     @default O
   */
-  OTHER: 'O'
+  OTHER: 'O',
+  
+  //..................................................
+  // METHODS
+  //
+  
+  /**
+    Post an array of cash receipts. If any of the cash receipts passed 
+    are posted or in a dirty state, this function will return false.
+
+    @params {SC.Array} array of cash receipts
+    @returns Receiver
+  */
+  post: function(cashReceipts) { 
+    var that = this, dispatch,
+        ids = [];
+        
+    if(!cashReceipts || !cashReceipts.get('length')) return false;
+    
+    for(var i = 0; i < cashReceipts.get('length'); i++) {
+      var cashReceipt = cashReceipts.objectAt(i);
+      if(cashReceipt.get('isPosted') || cashReceipt.isDirty()) return false;
+      ids.push(cashReceipt.get('id'));
+    }
+    
+    // define callback
+    callback = function(err, result) {
+      for(var i = 0; i < cashReceipts.get('length'); i++) {
+        cashReceipts.objectAt(i).refresh();
+      }
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.CashReceipt',
+      functionName: 'post',
+      parameters: [ids],
+      target: that,
+      action: callback
+    });
+    console.log("Post Cash Receipts: %@".fmt(ids));
+    
+    // do it
+    cashReceipts.firstObject().get('store').dispatch(dispatch);
+    return this;
+  },
 
 });
 
