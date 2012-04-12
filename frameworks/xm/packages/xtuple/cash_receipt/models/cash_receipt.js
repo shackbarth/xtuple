@@ -201,20 +201,20 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //
   
   currencyDidChange: function() {
-    var applyDate = this.get('applyDate'),
+    var distributionDate = this.get('distributionDate'),
         currency = this.get('currency'),
         that = this;
 
-    if (applyDate && currency) {
+    if (distributionDate && currency) {
       // define the callback
       callback = function(err, currencyRate) {
         if (!err) that.set('currencyRate', currencyRate.get('rate'));
       }
       
       // request a rate
-      XM.Currency.rate(currency, applyDate, callback);
+      XM.Currency.rate(currency, distributionDate, callback);
     }
-  }.observes('currency', 'applyDate'),
+  }.observes('currency', 'distributionDate'),
   
   customerDidChange: function() {
     if (this.get('customer')) this.customer.set('isEditable', false);
@@ -227,7 +227,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         isNotFixedCurrency = details.get('length') ? false : true;
 
     // things that affect exchange rate are only editable when no detail
-    this.applyDate.set('isEditable', isNotFixedCurrency);
+    this.distributionDate.set('isEditable', isNotFixedCurrency);
     this.currency.set('isEditable', isNotFixedCurrency);
     this.currencyRate.set('isEditable', isNotFixedCurrency);
     
@@ -383,4 +383,75 @@ XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
   OTHER: 'O'
 
 });
+
+/**
+  Post an Cash Receipt. If no alternative callback is provided, the
+  Cash Receipt will be automatically refreshed.
+  
+  @param {XM.CashReceipt} cash receipt
+  @param {Function} callback - default refreshes cash receipt
+  @returns Receiver
+*/
+XM.CashReceipt.post = function(cashReceipt, callback) { 
+  if(!SC.kindOf(cashReceipt, XM.CashReceipt) ||
+     cashReceipt.get('isPosted')) return false; 
+  var that = this, dispatch;
+  
+  // define default callback if not passed
+  if (callback === undefined) {
+    callback = function(err, result) {
+      cashReceipt.refresh();
+    }
+  }
+  
+  // set up
+  dispatch = XT.Dispatch.create({
+    className: 'XM.CashReceipt',
+    functionName: 'post',
+    parameters: cashReceipt.get('id'),
+    target: that,
+    action: callback
+  });
+  console.log("Post Cash Receipt: %@".fmt(cashReceipt.get('id')));
+  
+  // do it
+  cashReceipt.get('store').dispatch(dispatch);
+  return this;
+}
+
+/**
+  Void a Cash Receipt. If no alternative callback is provided,
+  the Cash Receipt will be automatically refreshed.
+  
+  @param {XM.CashReceipt} cash receipt
+  @param {Function} callback - default refreshes cash receipt
+  @returns Receiver
+*/
+XM.CashReceipt.void = function(cashReceipt, callback) { 
+  if(!SC.kindOf(cashReceipt, XM.CashReceipt) ||
+     !cashReceipt.get('isPosted')) return false; 
+  var that = this, dispatch;
+  
+  // define default callback if not passed
+  if (callback === undefined) {
+    callback = function(err, result) {
+      cashReceipt.refresh();
+    }
+  }
+  
+  // set up
+  dispatch = XT.Dispatch.create({
+    className: 'XM.CashReceipt',
+    functionName: 'void',
+    parameters: cashReceipt.get('id'),
+    target: that,
+    action: callback
+  });
+  console.log("Void Cash Receipt: %@".fmt(cashReceipt.get('id')));
+  
+  // do it
+  cashReceipt.get('store').dispatch(dispatch);
+  return this;
+}
+
 
