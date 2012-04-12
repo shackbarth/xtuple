@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals XT XM Postbooks */
 
-SC.ENABLE_CSS_TRANSITIONS = false;
+SC.ENABLE_CSS_TRANSITIONS = true;
 
 XT.DataSource.prototype.logLevels = SC.Object.create({
   warn:  false,
