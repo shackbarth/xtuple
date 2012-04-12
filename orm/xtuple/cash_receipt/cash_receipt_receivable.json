@@ -76,6 +76,7 @@
     {
       "name": "terms",
       "toOne": {
+        "isNested": true,
         "type": "Terms",
         "column": "aropen_terms_id",
         "isEditable": false
@@ -118,7 +119,7 @@
       "name": "pendingApplications",
       "toMany": {
         "isNested": true,
-        "type": "ReceivablePendingApplication",
+        "type": "PendingApplication",
         "column": "aropen_id",
         "inverse": "receivable"
       }

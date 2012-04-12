@@ -7,10 +7,10 @@
   "comment": "Cash Receipt Detail Map",
   "privileges": {
     "all": {
-      "create": "true",
-      "read": "true",
-      "update": "true",
-      "delete": "true"
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
     }
   },
   "properties": [

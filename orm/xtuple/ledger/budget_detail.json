@@ -1,10 +1,10 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "BudgetItem",
+  "type": "BudgetDetail",
   "table": "budgitem",
   "idSequenceName": "budgitem_budgitem_id_seq",
-  "comment": "Budget Item Map",
+  "comment": "Budget Detail Map",
   "privileges": {
     "all": {
       "create": true,

@@ -67,14 +67,14 @@
     {
       "name": "created",
       "attr": {
-        "type": "Number",
+        "type": "Date",
         "column": "gl_created"
       }
     },
     {
       "name": "createdBy",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "gl_username"
       }
     },

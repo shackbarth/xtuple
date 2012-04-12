@@ -40,7 +40,8 @@
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "accnt_number"
+        "column": "accnt_number",
+        "isRequired": true
       }
     },
     {
@@ -68,7 +69,8 @@
       "name": "accountType",
       "attr": {
         "type": "String",
-        "column": "accnt_type"
+        "column": "accnt_type",
+        "defaultValue": true
       }
     },
     {
@@ -82,7 +84,8 @@
       "name": "isActive",
       "attr": {
         "type": "Boolean",
-        "column": "accnt_active"
+        "column": "accnt_active",
+        "defaultValue": true
       }
     },
     {
