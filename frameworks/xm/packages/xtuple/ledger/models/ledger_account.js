@@ -35,7 +35,7 @@ number: SC.Record.attr(Number, {
 
 });
 
-XM.LayoutIncomeStatementDetail.mixin( /** @scope XM.LayoutIncomeStatementDetail */ {
+XM.LedgerAccount.mixin( /** @scope XM.LayoutIncomeStatementDetail */ {
 
 /**
   @static
