@@ -164,6 +164,71 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   },
   
   /**
+    Post a cash receipt. If the cash receipt is 
+    in a dirty state, this function will return false.
+
+    @returns Receiver
+  */
+  post: function() { 
+    if(this.get('isPosted') ||
+       this.isDirty()) return false; 
+    var that = this, dispatch,
+        id = this.get('id');
+    
+    // define callback
+    callback = function(err, result) {
+      that.refresh();
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.CashReceipt',
+      functionName: 'post',
+      parameters: id,
+      target: that,
+      action: callback
+    });
+    console.log("Post Cash Receipt: %@".fmt(id));
+    
+    // do it
+    this.get('store').dispatch(dispatch);
+    return this;
+  },
+  
+  /**
+    Void a Cash Receipt. If the document is in a dirty state, this 
+    function will return false.
+    
+    @returns Receiver
+  */
+  void: function() { 
+    if(!this.get('isPosted') ||
+       this.get('isVoid') ||
+       this.isDirty()) return false; 
+    var that = this, dispatch,
+        id = this.get('id');
+    
+    // define callback
+    callback = function(err, result) {
+      that.refresh();
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.CashReceipt',
+      functionName: 'void',
+      parameters: id,
+      target: that,
+      action: callback
+    });
+    console.log("Void Cash Receipt: %@".fmt(id));
+    
+    // do it
+    this.get('store').dispatch(dispatch);
+    return this;
+  },
+  
+  /**
     Update the amount applied.
     
     @param {Number} amount to add
@@ -284,174 +349,110 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 
 });
 
+// class constants and methods
 XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
 
-/**
-  Check funds type.
-  
-  @static
-  @constant
-  @type String
-  @default C
-*/
+  //..................................................
+  // CONSTANTS
+  //
+
+  /**
+    Check funds type.
+    
+    @static
+    @constant
+    @type String
+    @default C
+  */
   CHECK: 'C',
 
-/**
-  Certified Check funds type.
-  
-  @static
-  @constant
-  @type String
-  @default T
-*/
+  /**
+    Certified Check funds type.
+    
+    @static
+    @constant
+    @type String
+    @default T
+  */
   CERTIFIED_CHECK: 'T',
 
-/**
-  Master Card funds type.
-  
-  @static
-  @constant
-  @type String
-  @default M
-*/
+  /**
+    Master Card funds type.
+    
+    @static
+    @constant
+    @type String
+    @default M
+  */
   MASTER_CARD: 'M',
   
-/**
-  Visa funds type.
-  
-  @static
-  @constant
-  @type String
-  @default V
-*/
+  /**
+    Visa funds type.
+    
+    @static
+    @constant
+    @type String
+    @default V
+  */
   VISA: 'V',
 
-/**
-  American Express funds type.
-  @static
-  @constant
-  @type String
-  @default A
-*/
+  /**
+    American Express funds type.
+    @static
+    @constant
+    @type String
+    @default A
+  */
   AMERICAN_EXPRESS: 'A',
   
-/**
-  Discover card funds type.
-  
-  @static
-  @constant
-  @type String
-  @default D
-*/
+  /**
+    Discover card funds type.
+    
+    @static
+    @constant
+    @type String
+    @default D
+  */
   DISCOVER_CARD: 'D',
 
-/**
-  Other credit card funds type.
-  @static
-  @constant
-  @type String
-  @default R
-*/
+  /**
+    Other credit card funds type.
+    @static
+    @constant
+    @type String
+    @default R
+  */
   OTHER_CREDIT_CARD: 'R',
   
-/**
-  Cash funds type.
-  
-  @static
-  @constant
-  @type String
-  @default K
-*/
+  /**
+    Cash funds type.
+    
+    @static
+    @constant
+    @type String
+    @default K
+  */
   CASH: 'K',
 
-/**
-  Customer Deposit document type.
-  @static
-  @constant
-  @type String
-  @default W
-*/
+  /**
+    Customer Deposit document type.
+    @static
+    @constant
+    @type String
+    @default W
+  */
   WIRE_TRANSFER: 'W',
   
-/**
-  Other funds type.
-  @static
-  @constant
-  @type String
-  @default O
-*/
+  /**
+    Other funds type.
+    @static
+    @constant
+    @type String
+    @default O
+  */
   OTHER: 'O'
 
 });
 
-/**
-  Post an Cash Receipt. If no alternative callback is provided, the
-  Cash Receipt will be automatically refreshed.
-  
-  @param {XM.CashReceipt} cash receipt
-  @param {Function} callback - default refreshes cash receipt
-  @returns Receiver
-*/
-XM.CashReceipt.post = function(cashReceipt, callback) { 
-  if(!SC.kindOf(cashReceipt, XM.CashReceipt) ||
-     cashReceipt.get('isPosted')) return false; 
-  var that = this, dispatch;
-  
-  // define default callback if not passed
-  if (callback === undefined) {
-    callback = function(err, result) {
-      cashReceipt.refresh();
-    }
-  }
-  
-  // set up
-  dispatch = XT.Dispatch.create({
-    className: 'XM.CashReceipt',
-    functionName: 'post',
-    parameters: cashReceipt.get('id'),
-    target: that,
-    action: callback
-  });
-  console.log("Post Cash Receipt: %@".fmt(cashReceipt.get('id')));
-  
-  // do it
-  cashReceipt.get('store').dispatch(dispatch);
-  return this;
-}
-
-/**
-  Void a Cash Receipt. If no alternative callback is provided,
-  the Cash Receipt will be automatically refreshed.
-  
-  @param {XM.CashReceipt} cash receipt
-  @param {Function} callback - default refreshes cash receipt
-  @returns Receiver
-*/
-XM.CashReceipt.void = function(cashReceipt, callback) { 
-  if(!SC.kindOf(cashReceipt, XM.CashReceipt) ||
-     !cashReceipt.get('isPosted')) return false; 
-  var that = this, dispatch;
-  
-  // define default callback if not passed
-  if (callback === undefined) {
-    callback = function(err, result) {
-      cashReceipt.refresh();
-    }
-  }
-  
-  // set up
-  dispatch = XT.Dispatch.create({
-    className: 'XM.CashReceipt',
-    functionName: 'void',
-    parameters: cashReceipt.get('id'),
-    target: that,
-    action: callback
-  });
-  console.log("Void Cash Receipt: %@".fmt(cashReceipt.get('id')));
-  
-  // do it
-  cashReceipt.get('store').dispatch(dispatch);
-  return this;
-}
 
 
