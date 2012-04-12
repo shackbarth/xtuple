@@ -95,6 +95,22 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.property('includeCredits', 'applicationsLength').cacheable(),
   
   /**
+    The earliest date by which the application date may be set to.
+  */
+  minApplyDate: function() {
+    var details = this.get('details'), minDate = false;
+    for (var i = 0; i < details.get('length'); i++) {
+      var docDate = details.objectAt(i).getPath('receivable.documentDate');
+      if (minDate) {
+        minDate = SC.DateTime.compareDate(minDate, docDate) < 0 ? docDate : minDate;
+      } else {
+        minDate = docDate;
+      }
+    }
+    return minDate;
+  }.property('detailsLength'),
+  
+  /**
     An array of open receivables for the selected `customer`. If the
     the cash receipt is posted this will return no results.
   */
@@ -291,8 +307,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         isUpdated = false,
         isNotFixedCurrency = details.get('length') ? false : true;
 
-    // things that affect exchange rate are only editable when no detail
-    this.distributionDate.set('isEditable', isNotFixedCurrency);
+    // currency is only editable when no detail
     this.currency.set('isEditable', isNotFixedCurrency);
     this.currencyRate.set('isEditable', isNotFixedCurrency);
     
@@ -327,6 +342,23 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       }
     }
   }.observes('detailsLength').cacheable(),
+  
+  datesDidChange: function() {
+    var minApplyDate = this.get('minApplyDate'),
+        applicationDate = this.get('applicationDate'),
+        distributionDate = this.get('distributionDate');
+     
+    // application date can not be less than the minimum apply date
+    if (minApplyDate && SC.DateTime.compareDate(applicationDate, minApplyDate) < 0) {
+      applicationDate = minApplyDate;
+      this.set('applicationDate', applicationDate);
+    }
+    
+    // distribution date can not be greater than the application date
+    if (SC.DateTime.compareDate(distributionDate, applicationDate) > 0) {
+      this.set('distributionDate', applicationDate);
+    }    
+  }.observes('minApplyDate', 'applicationDate', 'distributionDate'),
 
   receivablesLengthDidChange: function() {
     var receivables = this.get('receivables'),
