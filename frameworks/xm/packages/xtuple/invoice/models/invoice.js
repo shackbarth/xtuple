@@ -547,7 +547,8 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
 
 /**
   Post an invoice. If no alternative callback provided, invoice 
-  will be automatically refreshed.
+  will be automatically refreshed.  If the invoice is in a dirty
+  state, this function will return false.
   
   @param {XM.Invoice} invoice
   @param {Function} callback - default refreshes invoice
@@ -555,7 +556,8 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
 */
 XM.Invoice.post = function(invoice, callback) { 
   if(!SC.kindOf(invoice, XM.Invoice) ||
-     invoice.get('isPosted')) return false; 
+     invoice.get('isPosted') ||
+     invoice.isDirty()) return false; 
   var that = this, dispatch;
   
   // define default callback if not passed
@@ -582,7 +584,8 @@ XM.Invoice.post = function(invoice, callback) {
 
 /**
   Void an invoice. If no alternative callback provided, invoice 
-  will be automatically refreshed.
+  will be automatically refreshed. If the invoice is in a dirty
+  state, this function will return false.
   
   @param {XM.Invoice} invoice
   @param {Function} callback - default refreshes invoice
@@ -590,7 +593,8 @@ XM.Invoice.post = function(invoice, callback) {
 */
 XM.Invoice.void = function(invoice, callback) { 
   if(!SC.kindOf(invoice, XM.Invoice) ||
-     !invoice.get('isPosted')) return false; 
+     !invoice.get('isPosted') ||
+     invoice.isDirty()) return false; 
   var that = this, dispatch;
   
   // define default callback if not passed
