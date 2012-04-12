@@ -7,10 +7,10 @@
   "comment": "Layout Income Statement Detail Map",
   "privileges": {
     "all": {
-      "create": true,
-      "read": true,
-      "update": true,
-      "delete": true
+      "create": "MaintainFinancialLayouts",
+      "read": "ViewFinancialLayouts",
+      "update": "MaintainFinancialLayouts",
+      "delete": "MaintainFinancialLayouts"
     }
   },
   "properties": [
@@ -148,6 +148,5 @@
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }
