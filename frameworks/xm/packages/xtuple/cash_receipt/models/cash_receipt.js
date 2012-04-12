@@ -528,6 +528,31 @@ XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
     cashReceipts.firstObject().get('store').dispatch(dispatch);
     return this;
   },
+  
+  /**
+    Post all unposted cash receipts.
+
+    @returns Receiver
+  */
+  postAll: function() {
+    var that = this,qry, ary;
+      
+    // define the query
+    qry = SC.Query.local(XM.CashReceipt, {
+      conditions: "isPosted = NO AND isVoid = NO"
+    });
+    
+    // execute it
+    ary = XT.store.find(qry);
+    
+    // post when we get a result
+    ary.addObserver('status', ary, function observer() {
+      if (ary.get('status') === SC.Record.READY_CLEAN) {
+        ary.removeObserver('status', ary, observer);
+        XM.CashReceipt.post(ary);
+      }
+    })
+  }
 
 });
 
