@@ -37,7 +37,8 @@
         "isNested": true,
         "type": "CustomerInfo",
         "column": "cashrcpt_cust_id",
-        "isRequired": true
+        "isRequired": true,
+        "isEditable": false
       }
     },
     {
