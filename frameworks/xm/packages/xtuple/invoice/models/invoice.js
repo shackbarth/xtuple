@@ -178,7 +178,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       target: that,
       action: callback
     });
-    console.log("Post Invoice: %@".fmt(id));
+    this.log("Post Invoice: %@".fmt(id));
     
     // do it
     this.get('store').dispatch(dispatch);
@@ -211,7 +211,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       target: that,
       action: callback
     });
-    console.log("Void Invoice: %@".fmt(id));
+    this.log("Void Invoice: %@".fmt(id));
     
     // do it
     this.get('store').dispatch(dispatch);
