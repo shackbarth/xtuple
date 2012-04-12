@@ -282,6 +282,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //
   
   currencyDidChange: function() {
+    if (this.isNotDirty()) return;
     var distributionDate = this.get('distributionDate'),
         currency = this.get('currency'),
         that = this;
@@ -344,6 +345,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.observes('detailsLength').cacheable(),
   
   datesDidChange: function() {
+    if (this.isNotDirty()) return;
     var minApplyDate = this.get('minApplyDate'),
         applicationDate = this.get('applicationDate'),
         distributionDate = this.get('distributionDate');

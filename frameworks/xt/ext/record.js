@@ -101,7 +101,7 @@ XT.Record = SC.Record.extend(XT.Logging,
     // recursive function that does the work
     var changedOnly = function(attrs) {
       var ret = null;
-      if (attrs.dataState !== 'read') {
+      if (attrs && attrs.dataState !== 'read') {
         ret = {};
         for (var prop in attrs) {
           if (attrs[prop] instanceof Array) {
