@@ -14,8 +14,10 @@ sc_require('mixins/_sub_account_type');
 
   @extends XM.Record
 */
-XM.SubAccountType = XT.Record.extend(XM._SubAccountType,
+XM.SubAccountType = XM.Document.extend(XM._SubAccountType,
 /** @scope XM.SubAccountType.prototype */ {
+
+documentKey: 'code',
 
 // .................................................
 // CALCULATED PROPERTIES
