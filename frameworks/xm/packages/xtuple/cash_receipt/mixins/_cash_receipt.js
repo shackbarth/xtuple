@@ -95,7 +95,6 @@ XM._CashReceipt = {
     @type String
   */
   documentNumber: SC.Record.attr(String, {
-    isRequired: true,
     label: '_documentNumber'.loc()
   }),
 
@@ -128,13 +127,25 @@ XM._CashReceipt = {
   /**
     @type Date
   */
-  applyDate: SC.Record.attr(SC.DateTime, {
+  distributionDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     defaultValue: function() {
       return SC.DateTime.create().toFormattedString('%Y-%m-%d');
     },
-    label: '_applyDate'.loc()
+    label: '_distributionDate'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  applicationDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    defaultValue: function() {
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
+    },
+    label: '_applicationDate'.loc()
   }),
 
   /**
