@@ -40,11 +40,25 @@ XT.Request = SC.Object.extend(
   */
   notify: function(target, method) {
     var args = SC.A(arguments).slice(2);
+    var func;
+    var context;
     var callback;
+
+    if (target instanceof Function) {
+      func = target;
+      if (typeof method === 'object') {
+        context = method;
+      } else {
+        context = XT;
+      }
+    } else {
+      func = target[method];
+      context = target;
+    }
 
     callback = function(response) {
       args.unshift(response);
-      target[method].apply(target, args);
+      func.apply(context, args);
     }
 
     this.callback = callback;
@@ -95,9 +109,9 @@ XT.Request = SC.Object.extend(
     SC.mixin(wrapper, session);
 
     console.log("EVENT", event);
-    console.log("WRAPPER => ", wrapper);
-    console.log(ack);
-    console.log(callback);
+    // console.log("WRAPPER => ", wrapper);
+    // console.log(ack);
+    // console.log(callback);
 
     socket.json.emit(event, wrapper, ack);
   },
@@ -129,12 +143,13 @@ SC.mixin(XT.Request,
     if (namespace && (event === undefined)) {
       event = namespace;
       namespace = null;
-    } else if (namespace === undefined && event === undefined) {
-
-    } else {
-      req.set('issueEvent', event);
-      req.set('namespace', namespace);
+    } else if (event === undefined && namespace === undefined) {
+      event = 'message';
+      namespace = null;
     }
+
+    req.set('issueEvent', event);
+    req.set('namespace', namespace);
     return req;
   }
 

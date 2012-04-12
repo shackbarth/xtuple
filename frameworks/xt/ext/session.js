@@ -21,7 +21,7 @@ XT.session = SC.Object.create(
 
   /**
   */
-  acquireSession: function(username, password, organization, forceNew) {
+  acquireSession: function(username, password, organization) {
 
     // retrieve the session delegate (if one was set or the default empty
     // one if not)
@@ -32,7 +32,6 @@ XT.session = SC.Object.create(
       username: username,
       password: password,
       organization: organization,
-      forceNew: !! forceNew
     };
 
     // let the delegate know we're about to request a new session
@@ -48,7 +47,7 @@ XT.session = SC.Object.create(
   /**
   */
   didAcquireSession: function(response, delegate) {
-    SC.Logger.info("didAcquireSession() with response", response);
+    SC.Logger.info("didAcquireSession() with response");
     console.log(response);
   },
 
