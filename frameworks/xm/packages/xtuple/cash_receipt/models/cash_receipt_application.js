@@ -17,6 +17,12 @@ XM.CashReceiptApplication = SC.Object.extend(
   
   cashReceipt: null,
   
+  /** @private */
+  currencyRate: 1,
+  
+  /** @private */
+  currencyRateBinding: SC.Binding.from('*receipt.currencyRate').oneWay().noDelay(),
+  
   cashReceiptDetail: null,
   
   receivable: null,
@@ -51,10 +57,10 @@ XM.CashReceiptApplication = SC.Object.extend(
   receivableApplied: function() {
     var applied = this.get('applied'),
         discount = this.get('discount'),
-        crCurrencyRate = this.getPath('cashReceipt.currencyRate') || 1,
+        crCurrencyRate = this.get('currencyRate'),
         arCurrencyRate = this.getPath('receivable.currencyRate');
     return SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE);
-  }.property('applied', 'discount').cacheable(),
+  }.property('applied', 'discount', 'currencyRate').cacheable(),
 
   /**
     The balance due on the receivable in the receivable's currency.
@@ -194,8 +200,17 @@ XM.CashReceiptApplication = SC.Object.extend(
   },
   
   clear: function() {
-    var detail = this.get('cashReceiptDetail');
-    if (detail) detail.destroy();
+    var cashReceipt = this.get('cashReceipt'),
+        details = cashReceipt.get('details'),
+        detail = this.get('cashReceiptDetail'),
+        applied = this.get('applied') * -1,
+        discount = this.get('discount') * -1;
+    if (detail) {
+      detail.destroy();
+      details.removeObject(detail);
+      cashReceipt.updateApplied(applied);
+      cashReceipt.updateDiscount(discount);
+    }
     this.set('cashReceiptDetail', null);
   }
   

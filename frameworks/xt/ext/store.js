@@ -259,6 +259,7 @@ XT.Store = SC.Store.extend(XT.Logging,
       if (status & SC.Record.BUSY) {
         var newStatus = K.DESTROYED_CLEAN;
         that.writeStatus(storeKey, newStatus);
+        that.removeDataHash(storeKey, newStatus) ;
         that.dataHashDidChange(storeKey, null, true);
       }
     });
@@ -420,6 +421,7 @@ XT.Store = SC.Store.extend(XT.Logging,
     Reimplemented from `SC.Store`.
 
     Don't destroy children automatically.
+    Remove dataHash immediately if READY_NEW.
   */
   destroyRecord: function(recordType, id, storeKey) {
     if (storeKey === undefined) storeKey = recordType.storeKeyFor(id);
@@ -440,6 +442,7 @@ XT.Store = SC.Store.extend(XT.Logging,
     // if new status, destroy but leave in clean state
     } else if (status === K.READY_NEW) {
       status = K.DESTROYED_CLEAN ;
+      this.removeDataHash(storeKey, status);
 
     // otherwise, destroy in dirty state
     } else status = K.DESTROYED_DIRTY ;
