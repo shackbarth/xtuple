@@ -25,6 +25,8 @@ XM.Currency = XM.Document.extend(XM._Currency,
   abbreviation: SC.Record.attr(String, {
     fromType: function(record, key, value) {
       if(value && value.length > 3) return value.substr(0,3);
+    } else {
+      return value;
     }
   }),
   

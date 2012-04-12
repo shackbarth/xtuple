@@ -6,6 +6,7 @@
 /*globals XM */
 
 sc_require('mixins/_layout_income_statement_detail');
+sc_require('mixins/layout_financial_statement');
 sc_require('model/ledger_account');
 
 /**
@@ -13,7 +14,7 @@ sc_require('model/ledger_account');
 
   @extends XM.Record
 */
-XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetail,
+XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetail, XM.LayoutFinancialStatement,
   /** @scope XM.LayoutIncomeStatementDetail.prototype */ {
 
   // .................................................
@@ -38,18 +39,16 @@ XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetai
 
   filteredSubAccounts: function() {
     var subAccountTypes = XM.SubAccountType.getTypes(),
-        record = this,
+        accountType = record.get('accountType'),
         ret;
 
-    ret = subAccountTypes.filter(function(subAccountType) {
-      var accountType = record.get('accountType');
-
+    ret = function() {
       if(accountType) {
-      return subAccountType.get('accountType') === accountType;
+        return subAccountTypes.filterProperty('accountType', accountType);
       } else {
-        return subAccountType;
+        return subAccountTypes;
       }
-    }, this);
+    }
 
     return ret;
   }.property('accountType').cacheable(),
