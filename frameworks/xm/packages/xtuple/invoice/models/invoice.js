@@ -153,12 +153,69 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     arguments.callee.base.apply(this, arguments);
   },
   
-  post: function() {
-    return XM.Invoice.post(this);
+  /**
+    Post an invoice. If the invoice is in a dirty
+    state, this function will return false.
+    
+    @returns Receiver
+  */
+  post: function() { 
+    if(this.get('isPosted') ||
+       this.isDirty()) return false; 
+    var that = this, dispatch,
+        id = this.get('id');
+    
+    // define callback
+    callback = function(err, result) {
+      this.refresh();
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.Invoice',
+      functionName: 'post',
+      parameters: id,
+      target: that,
+      action: callback
+    });
+    console.log("Post Invoice: %@".fmt(id));
+    
+    // do it
+    this.get('store').dispatch(dispatch);
+    return this;
   },
-  
-  void: function() {
-    return XM.Invoice.void(this);
+
+  /**
+    Void an invoice. If the invoice is in a dirty
+    state, this function will return false.
+    
+    @returns Receiver
+  */
+  void: function() { 
+    if(!this.get('isPosted') ||
+       this.get('isVoid') ||
+       this.isDirty()) return false; 
+    var that = this, dispatch,
+        id = this.get('id');
+    
+    // define callback
+    callback = function(err, result) {
+      that.refresh();
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.Invoice',
+      functionName: 'void',
+      parameters: id,
+      target: that,
+      action: callback
+    });
+    console.log("Void Invoice: %@".fmt(id));
+    
+    // do it
+    this.get('store').dispatch(dispatch);
+    return this;
   },
   
   /**
@@ -545,77 +602,4 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
   }.observes('status')
 });
 
-/**
-  Post an invoice. If no alternative callback provided, invoice 
-  will be automatically refreshed.  If the invoice is in a dirty
-  state, this function will return false.
-  
-  @param {XM.Invoice} invoice
-  @param {Function} callback - default refreshes invoice
-  @returns Receiver
-*/
-XM.Invoice.post = function(invoice, callback) { 
-  if(!SC.kindOf(invoice, XM.Invoice) ||
-     invoice.get('isPosted') ||
-     invoice.isDirty()) return false; 
-  var that = this, dispatch;
-  
-  // define default callback if not passed
-  if (callback === undefined) {
-    callback = function(err, result) {
-      invoice.refresh();
-    }
-  }
-  
-  // set up
-  dispatch = XT.Dispatch.create({
-    className: 'XM.Invoice',
-    functionName: 'post',
-    parameters: invoice.get('id'),
-    target: that,
-    action: callback
-  });
-  console.log("Post Invoice: %@".fmt(invoice.get('id')));
-  
-  // do it
-  invoice.get('store').dispatch(dispatch);
-  return this;
-}
-
-/**
-  Void an invoice. If no alternative callback provided, invoice 
-  will be automatically refreshed. If the invoice is in a dirty
-  state, this function will return false.
-  
-  @param {XM.Invoice} invoice
-  @param {Function} callback - default refreshes invoice
-  @returns Receiver
-*/
-XM.Invoice.void = function(invoice, callback) { 
-  if(!SC.kindOf(invoice, XM.Invoice) ||
-     !invoice.get('isPosted') ||
-     invoice.isDirty()) return false; 
-  var that = this, dispatch;
-  
-  // define default callback if not passed
-  if (callback === undefined) {
-    callback = function(err, result) {
-      invoice.refresh();
-    }
-  }
-  
-  // set up
-  dispatch = XT.Dispatch.create({
-    className: 'XM.Invoice',
-    functionName: 'void',
-    parameters: invoice.get('id'),
-    target: that,
-    action: callback
-  });
-  console.log("Void Invoice: %@".fmt(invoice.get('id')));
-  
-  // do it
-  invoice.get('store').dispatch(dispatch);
-  return this;
-}
 
