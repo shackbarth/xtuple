@@ -6,7 +6,13 @@
 
 sc_require('ext/request');
 sc_require('ext/dispatch');
+sc_require('ext/session_detail');
 sc_require('delegates/session_delegate');
+
+XT.SESSION_MULTIPLE     = 0x01;
+XT.SESSION_ERROR        = 0x02;
+XT.SESSION_VALID        = 0x04;
+XT.SESSION_FORCE_NEW    = 'FORCE_NEW_SESSION';
 
 /**
   @instance
@@ -31,24 +37,82 @@ XT.session = SC.Object.create(
     var session = {
       username: username,
       password: password,
-      organization: organization,
+      organization: organization
     };
 
+    var details = XT.SessionDetail.create(session).freeze();
+    
     // let the delegate know we're about to request a new session
     delegate.willAcquireSession(session);
 
     // issue the actual request
     XT.Request
       .issue('session/request')
-      .notify(this, 'didAcquireSession', delegate)
+      .notify(this, 'didAcquireSession', details)
       .json().send(session);
   },
 
   /**
   */
-  didAcquireSession: function(response, delegate) {
-    SC.Logger.info("didAcquireSession() with response");
-    console.log(response);
+  didAcquireSession: function(response, details) {
+    SC.Logger.info("didAcquireSession()");
+
+    console.log("details ", details);
+
+    this.set('details', details);
+
+    console.log("RESPONSE", response);
+
+    var delegate = this.get('delegate');
+
+    switch(response.code) {
+      case XT.SESSION_ERROR:
+
+        // temporary - true handling not known
+        SC.Logger.error(response.data);
+        break;
+      case XT.SESSION_VALID:
+
+        // copy the session data where it belongs
+        var details = XT.SessionDetail
+          .create(response.data).freeze();
+        
+        this.set('details', details);
+
+        // the delegate need to know what the hell just
+        // happened
+        delegate.didAcquireSession(details);
+  
+        // WTF?!?
+        XT.dataSource.set('isReady', true);
+
+        break;
+      case XT.SESSION_MULTIPLE:
+        var self = this;
+        var available = response.data;
+        var ack = function(selection) {
+          XT.Request
+            .issue('session/select')
+            .notify(self, 'didAcquireSession')
+            .send(selection);
+          this.isFired = true;
+        }
+
+        // allow the delegate to attempt to handle the
+        // sessions situation and if it doesn't go ahead
+        // and just force a new one to be created
+        if (!delegate.didReceiveMultipleSessions(available, ack)) {
+          SC.Logger.info("didReceiveMultipleSessions() returned negative, using default to request new session");
+          if (ack.isFired) {
+            SC.Logger.warn("delegate returned negative but did fire the ack");
+          } else { ack(XT.SESSION_FORCE_NEW); }
+        }
+
+        break;
+      default:
+        console.log("ok, wtf, really?", response);
+    }
+     
   },
 
   //...........................................
@@ -76,26 +140,7 @@ XT.session = SC.Object.create(
 
   /**
   */
-  payloadAttributes: function() {
-    var sid = this.get('sid');
-    var username = this.get('username');
-    var lastModified = this.get('lastModified');
-    var created = this.get('created');
-    var organization = this.get('organization');
-    return {
-      sid: sid,
-      username: username,
-      lastModified: lastModified,
-      created: created,
-      organization: organization
-    };
-  }.property(),
-
-  sid: null,
-  username: null,
-  lastModified: null,
-  created: null,
-  organization: null,
+  details: XT.SessionDetail.create(),
 
   /**
     Loads session objects for settings, preferences and privileges into local
@@ -215,4 +260,12 @@ XT.session = SC.Object.create(
     return true;
   },
 
+});
+
+
+XT.ready(function() {
+  XT.socket.on('session/new', function(response) {
+    SC.Logger.info("Datasource pushed new session");
+    XT.session.didAcquireSession(response);
+  });
 });

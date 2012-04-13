@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals XT */
 
+sc_require('ext/response');
+
 /**
   @class
 
@@ -57,6 +59,11 @@ XT.Request = SC.Object.extend(
     }
 
     callback = function(response) {
+
+      response = XT.Response.create({
+        rawResponse: response
+      });
+
       args.unshift(response);
       func.apply(context, args);
     }
@@ -70,7 +77,7 @@ XT.Request = SC.Object.extend(
   }.property().cacheable(),
 
   session: function() {
-    return XT.session.get('payloadAttributes');
+    return XT.session.get('details');
   }.property(),
 
   /**
@@ -106,10 +113,10 @@ XT.Request = SC.Object.extend(
       payload = SC.json.encode(payload);
     }
     wrapper.payload = payload;
-    SC.mixin(wrapper, session);
+    SC.mixin(wrapper, session.unmix());
 
-    console.log("EVENT", event);
-    // console.log("WRAPPER => ", wrapper);
+    // console.log("EVENT", event);
+    console.log("WRAPPER => ", wrapper);
     // console.log(ack);
     // console.log(callback);
 
@@ -117,11 +124,8 @@ XT.Request = SC.Object.extend(
   },
 
   ack: function(callback, event) {
-    return function(response) {
-
-      console.log("GOT ACK FOR EVENT", event, response);
-
-      if (callback && callback instanceof Function) callback(response);
+    return function(response, ack) {
+      if (callback && callback instanceof Function) callback(response, ack);
     }
   },
 

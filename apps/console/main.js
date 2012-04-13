@@ -8,7 +8,7 @@ Console.main = function main() {
   //XT.dataSource.getSession('admin', 'admin', '380postbooks');
 
   // use the new package system out of the box for now
-  XT.package = SC.Package.create();
+  XT.package = XT.Package.create();
   XT.run();
 };
 

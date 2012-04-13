@@ -33,6 +33,24 @@ XT.SessionDelegate = {
     @param {Object} session A hash of the session's properties.
   */
   didAcquireSession: function(session) {},
+
+  /**
+    Called once a session request returns with a multiple
+    sessions available code and requires either a selection
+    from the available sessions or a flag to begin a new
+    session is returned.
+
+    If the delegate handles this request ensure that it returns
+    a boolean true or the session handler will attempt to.
+
+    @method
+    @param {Array} available The available sessions to choose from.
+    @param {Function} ack The ack method to be called by passing it an
+      integer of the index of the chosen available session or the
+      XT.SESSION_FORCE_NEW boolean flag if a new session is required.
+    @returns {Boolean} true|false if the delegate handled the ack.
+  */
+  didReceiveMultipleSessions: function(available, ack) {},
   
   /**
     Called when a session was successfully logged out.

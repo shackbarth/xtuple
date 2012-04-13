@@ -12,7 +12,7 @@ var socket = XT.socket = io.connect('http://localhost:9000/client');
 // pass attempt it will have to suffice
 var socketTimeout = setTimeout(function() {
   SC.Logger.error("Could not acquire a socket to the datasource");
-}, 1000);
+}, 2000);
 // try to catch a connect event but make sure to
 // clear the timer
 socket.on('connect', function() {
