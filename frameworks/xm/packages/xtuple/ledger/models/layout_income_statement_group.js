@@ -5,8 +5,6 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/ledger/models
-
 sc_require('mixins/_layout_income_statement_group');
 
 /**
@@ -17,7 +15,12 @@ sc_require('mixins/_layout_income_statement_group');
 XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   /** @scope XM.LayoutIncomeStatementGroup.prototype */ {
 
-  layoutGroupRecords: [],
+  /**
+    Stores parent-group records for view layer drop down.
+    Selected value will set the percentLayoutIncomeStatementGroup
+    property.
+  */
+  layoutGroupRecords: null,
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -27,15 +30,33 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   // METHODS
   //
 
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.layoutGroupRecords = [];
+    this.getLayoutGroupRecords();
+  },
+
+  /**
+    Called on instantiation and when the layoutIncomeStatementGroup
+    property changes.
+    Will push parent-group records into layoutGroupRecords
+    property.
+  */
   getLayoutGroupRecords: function() {
-    var layoutGroupRec = this.get('layoutIncomeStatementGroup');
+    var layoutGroupRec = this.get('layoutIncomeStatementGroup'),
+        recs = this.get('layoutGroupRecords'),
+        idx;
 
     while(layoutGroupRec) {
-      console.log("group id: " + layoutGroupRec.get('id'));
-      console.log("next group id: " + layoutGroupRec.get('layoutIncomeStatementGroup'));
-      this.layoutGroupRecords.push(layoutGroupRec);
+      /**
+        Fail-safe to prevent duplicate records from being pushed
+        into layoutGroupRecords array.
+      */
+      idx = recs.lastIndexOf(layoutGroupRec);
+      if(idx === -1) {
+        recs.push(layoutGroupRec);
+      }
       layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
-      console.log("post-assignment");
     }
   },
 
@@ -43,8 +64,51 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   // OBSERVERS
   //
 
+  statusDidChange: function() {
+    var status = this.get('status');
+
+    /**
+      Make sure labels' isEditable property is 
+      synced with the associated boolean flag
+      condition.
+    */
+    if(status === SC.Record.READY_NEW) {
+      this.isShowSubtotalDidChange();
+      this.isAlternateSubtotalDidChange();
+    }
+  }.observes('status'),
+
   layoutIncomeStatementGroupDidChange: function() {
     this.getLayoutGroupRecords();
-  }.observes('layoutIncomeStatementGroup', 'status'),
+  }.observes('layoutIncomeStatementGroup'),
+
+  isShowSubtotalDidChange: function() {
+    var isShowSubtotal = this.get('isShowSubtotal');
+
+    this.set('isShowDifference', isShowSubtotal);
+    this.set('isShowBudget', isShowSubtotal);
+    if(!isShowSubtotal) this.set('isAlternateSubtotal', isShowSubtotal);
+    this.isAlternateSubtotal.set('isEditable', isShowSubtotal);
+  }.observes('isShowSubtotal'),
+
+  isAlternateSubtotalDidChange: function() {
+    var isAlternateSubtotal = this.get('isAlternateSubtotal');
+
+    this.alternateSubtotalLabel.set('isEditable', isAlternateSubtotal);
+  }.observes('isAlternateSubtotal'),
+
+  isSummarizeDidChange: function() {
+    var isSummarize = this.get('isSummarize'),
+        isShowSubtotal = this.get('isShowSubtotal');
+
+    if(isSummarize) this.set('isAlternateSubtotal', false);
+    this.isShowSubtotal.set('isEditable', !isSummarize);
+    if(!isShowSubtotal) {
+      this.set('isShowDifference', isSummarize);
+      this.set('isShowBudget', isSummarize);
+    } else {
+      this.isAlternateSubtotal.set('isEditable', false);
+    }
+  }.observes('isSummarize'),
 
 });
