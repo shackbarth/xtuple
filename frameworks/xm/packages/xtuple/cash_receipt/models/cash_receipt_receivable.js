@@ -19,7 +19,7 @@ XM.CashReceiptReceivable = XT.Record.extend(XM._CashReceiptReceivable, XM.SubLed
   pendingApplicationsLength: 0,
   
   /** @private */
-  pendingApplicationsLengthBinding: SC.Binding.from('*applications.length').oneWay().noDelay(),
+  pendingApplicationsLengthBinding: SC.Binding.from('*pendingApplications.length').oneWay().noDelay(),
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -37,7 +37,11 @@ XM.CashReceiptReceivable = XT.Record.extend(XM._CashReceiptReceivable, XM.SubLed
   
     // loop through all pending applications and add them up
     for (var i = 0; i < applications.get('length'); i++) {
-      pending += applications.objectAt(i).get('amount');
+      var application = applications.objectAt(i),
+          status = application.get('status'), K = SC.Record;
+      if ((status & K.DESTROYED) === 0) {
+        pending += application.get('amount');
+      }
     }
 
     return SC.Math.round(pending, XT.MONEY_SCALE);
