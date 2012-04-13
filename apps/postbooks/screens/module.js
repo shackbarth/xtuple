@@ -26,7 +26,7 @@ var white =    "white";
 
 var BackButton = SC.ButtonWidget.extend({
 
-  name: "Back",
+  name: "Dashboard",
 
   cornerRadius: 5,
 
@@ -46,7 +46,7 @@ var BackButton = SC.ButtonWidget.extend({
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
     ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText(this.get('name'), ctx.width/2, ctx.height/2);
+    ctx.fillText('\u2190 '+this.get('name'), ctx.width/2, ctx.height/2);
   }
 
 });
@@ -98,13 +98,15 @@ Postbooks.LoadModule = function(name, classes) {
       browseClass: browseClass,
 
       action: function(object, index) {
-        console.log('do something on index ' + index);
-        var tray = this.getPath('supersurface'),
-            next = tray.get('subsurfaces')[1],
-            carousel = tray.get('carousel');
-
+        // console.log('do something on index ' + index);
+        // var tray = this.getPath('supersurface'),
+        //     next = tray.get('subsurfaces')[1],
+        //     carousel = tray.get('carousel');
+        
         controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
-        if (next) carousel.makeSurfaceVisible(next);
+        // if (next) carousel.makeSurfaceVisible(next);
+
+        Postbooks.statechart.sendAction('show'+className+(className==='GeneralLedger'? 'Submodule' : ''));
       },
 
       willRenderLayers: function(ctx) {
@@ -154,17 +156,17 @@ Postbooks.LoadModule = function(name, classes) {
       }
     });
 
-    var layout = SC.LayoutSurface.create();
-    var carousel = Postbooks.Carousel.create({
-      layout: { top: 14, left: 0, right: 0, bottom: 0 }
-    });
-    carousel.getPath('tray.subsurfaces').pushObject(surface);
-
-    var editor = Postbooks.PropertiesEditorForClass(baseClass, controller);
-    carousel.getPath('tray.subsurfaces').pushObject(editor);
-
-    layout.get('subsurfaces').pushObject(carousel);
-    tabSurfaces[className + 'Surface'] = layout;
+    // var layout = SC.LayoutSurface.create();
+    // var carousel = Postbooks.Carousel.create({
+    //   layout: { top: 14, left: 0, right: 0, bottom: 0 }
+    // });
+    // carousel.getPath('tray.subsurfaces').pushObject(surface);
+    // 
+    // var editor = Postbooks.PropertiesEditorForClass(baseClass, controller);
+    // carousel.getPath('tray.subsurfaces').pushObject(editor);
+    // 
+    // layout.get('subsurfaces').pushObject(carousel);
+    tabSurfaces[className + 'Surface'] = surface;
   });
 
   var MyTabSurface = SC.TabSurface.extend({
@@ -182,7 +184,7 @@ Postbooks.LoadModule = function(name, classes) {
 
     willRenderLayers: function(ctx) {
       ctx.fillStyle = base3;
-      ctx.font = "13pt Calibri";
+      ctx.font = "16pt Calibri";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -192,7 +194,7 @@ Postbooks.LoadModule = function(name, classes) {
   });
   topbar.set('backgroundColor', base03);
   topbar.get('layers').pushObject(BackButton.create({
-    layout: { left: 20, centerY: 0, width: 100, height: 24 },
+    layout: { left: 20, centerY: 0, width: 120, height: 24 },
     target: 'Postbooks.statechart',
     action: 'showDashboard'
   }));

@@ -23,7 +23,6 @@ Postbooks.APPLICATION = SC.State.design({
     } else SC.routes.trigger(); // ensures we will enter a substate
 
     // setTimeout(Postbooks.RenderModelHierarchy, 0);
-    // Postbooks.LoadModule();
     Postbooks.LoadDashboard();
   },
 
@@ -35,11 +34,11 @@ Postbooks.APPLICATION = SC.State.design({
 
   // SUBSTATES
 
-  "DUMMY": SC.State, // HACK: Prevent "missing initial state" error message from SC.
-  "DASHBOARD": SC.State.plugin('Postbooks.DASHBOARD'),
-  "CRM": SC.State.plugin('Postbooks.CRM'),
-  "RECEIVABLES": SC.State.plugin('Postbooks.RECEIVABLES'),
-  "PAYABLES": SC.State.plugin('Postbooks.PAYABLES'),
+  "DUMMY":          SC.State, // HACK: Prevent "missing initial state" error message from SC.
+  "DASHBOARD":      SC.State.plugin('Postbooks.DASHBOARD'),
+  "CRM":            SC.State.plugin('Postbooks.CRM'),
+  "RECEIVABLES":    SC.State.plugin('Postbooks.RECEIVABLES'),
+  "PAYABLES":       SC.State.plugin('Postbooks.PAYABLES'),
   "GENERAL_LEDGER": SC.State.plugin('Postbooks.GENERAL_LEDGER')
 
 });

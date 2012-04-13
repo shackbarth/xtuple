@@ -6,7 +6,14 @@
 
 Postbooks.CRM = SC.State.design({
 
+  initialSubstate: 'DUMMY',
+
   enterState: function() {
+    if (this.__movingUp__) {
+      this.__movingUp__ = false;
+      return;
+    }
+
     SC.routes.set('location', 'crm');
 
     // Postbooks.LoadModule("CRM", 'Contact Account Opportunity Incident Project'.w());
@@ -14,6 +21,7 @@ Postbooks.CRM = SC.State.design({
   },
 
   exitState: function() {
+    if (this.__movingUp__) return;
     SC.app.get('ui').popSurface();
   },
 
@@ -25,8 +33,30 @@ Postbooks.CRM = SC.State.design({
 
   showDashboard: function() {
     this.gotoState('DASHBOARD');
-  }
+  },
+
+  showContact: function() {
+    this.gotoState('CONTACT');
+  },
+
+  showAccount: function() {
+    this.gotoState('ACCOUNT');
+  },
+
+  showIncident: function() {
+    this.gotoState('INCIDENT');
+  },
+
+  showProject: function() {
+    this.gotoState('PROJECT');
+  },
 
   // SUBSTATES
+
+  "DUMMY":    SC.State, // HACK: Prevent "missing initial state" error message from SC.
+  "CONTACT":  SC.State.plugin('Postbooks.CONTACT'),
+  "ACCOUNT":  SC.State.plugin('Postbooks.ACCOUNT'),
+  "INCIDENT": SC.State.plugin('Postbooks.INCIDENT'),
+  "PROJECT":  SC.State.plugin('Postbooks.PROJECT')
 
 });

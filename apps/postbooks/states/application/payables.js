@@ -6,13 +6,21 @@
 
 Postbooks.PAYABLES = SC.State.design({
 
+  initialSubstate: 'DUMMY',
+
   enterState: function() {
+    if (this.__movingUp__) {
+      this.__movingUp__ = false;
+      return;
+    }
+
     SC.routes.set('location', 'payables');
 
     Postbooks.LoadModule("Payables", 'Vendor Voucher Payable PaymentApproval Payment'.w());
   },
 
   exitState: function() {
+    if (this.__movingUp__) return;
     SC.app.get('ui').popSurface();
   },
 
@@ -24,9 +32,36 @@ Postbooks.PAYABLES = SC.State.design({
 
   showDashboard: function() {
     this.gotoState('DASHBOARD');
-  }
+  },
 
+  showVendor: function() {
+    this.gotoState('VENDOR');
+  },
+
+  showVoucher: function() {
+    this.gotoState('VOUCHER');
+  },
+
+  showPayable: function() {
+    this.gotoState('PAYABLE');
+  },
+
+  showPaymentApproval: function() {
+    this.gotoState('PAYMENT_APPROVAL');
+  },
+
+  showPayment: function() {
+    this.gotoState('PAYMENT');
+  },
 
   // SUBSTATES
+
+  "DUMMY":             SC.State, // HACK: Prevent "missing initial state" error message from SC.
+  "VENDOR":            SC.State.plugin('Postbooks.VENDOR'),
+  "VOUCHER":           SC.State.plugin('Postbooks.VOUCHER'),
+  "PAYABLE":           SC.State.plugin('Postbooks.PAYABLE'),
+  "PAYMENT_APPROVAL":  SC.State.plugin('Postbooks.PAYMENT_APPROVAL'),
+  "PAYMENT":           SC.State.plugin('Postbooks.PAYMENT')
+
 
 });

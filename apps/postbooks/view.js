@@ -52,7 +52,9 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
         }
       }),
       layers = view.get('layers'),
-      layout = SC.LayoutSurface.create(),
+      layout = SC.LayoutSurface.create({
+        layout: { top: 0, left: 0, right: 0, bottom: 0 }
+      }),
       y = 16,
       proto = klass.prototype,
       items = [];
