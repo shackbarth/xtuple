@@ -11,6 +11,7 @@ Postbooks.PAYMENT_APPROVAL = SC.State.design({
   },
 
   exitState: function() {
+    SC.EndEditingTextLayer();
     SC.app.get('ui').popSurface();
   },
 

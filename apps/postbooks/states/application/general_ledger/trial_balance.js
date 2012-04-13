@@ -11,6 +11,7 @@ Postbooks.TRIAL_BALANCE = SC.State.design({
   },
 
   exitState: function() {
+    SC.EndEditingTextLayer();
     SC.app.get('ui').popSurface();
   },
 

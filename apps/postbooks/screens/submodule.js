@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals Postbooks XT XM sc_assert */
 
-sc_require('carousel');
+sc_require('views/carousel');
 
 var base03 =   "#002b36";
 var base02 =   "#073642";

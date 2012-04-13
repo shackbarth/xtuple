@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XT XM sc_assert */
 
-sc_require('carousel');
+sc_require('views/carousel');
+sc_require('views/master_list');
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -51,7 +52,7 @@ var BackButton = SC.ButtonWidget.extend({
 
 });
 
-Postbooks.LoadModule = function(name, classes) {
+Postbooks.LoadModule = function(name, classes, state) {
   var items = [];
   classes.forEach(function(className, idx) {
     items.push({
@@ -60,13 +61,6 @@ Postbooks.LoadModule = function(name, classes) {
       enabled: true
     });
   });
-
-  // Individual surfaces are added below.
-  var tabSurfaces = {
-    layout: { top: 44, left: 0, right: 0, bottom: 0 },
-    items: items,
-    value: items[0].value
-  };
 
   classes.forEach(function(className, idx) {
     var baseClass = XM[className];
@@ -87,8 +81,8 @@ Postbooks.LoadModule = function(name, classes) {
     controller = Postbooks[className+'ObjectController'] = SC.ObjectController.create();
 
     var surface = SC.ListView.create({
-      layout: { top: 13, left: 0, right: 0, bottom: 0 },
-      rowHeight: 60,
+      layout: { top: 0, left: 0, right: 0, bottom: 0 },
+      rowHeight: 88,
       hasHorizontalScroller: false,
 
       contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
@@ -156,25 +150,48 @@ Postbooks.LoadModule = function(name, classes) {
       }
     });
 
-    // var layout = SC.LayoutSurface.create();
-    // var carousel = Postbooks.Carousel.create({
-    //   layout: { top: 14, left: 0, right: 0, bottom: 0 }
-    // });
-    // carousel.getPath('tray.subsurfaces').pushObject(surface);
-    // 
-    // var editor = Postbooks.PropertiesEditorForClass(baseClass, controller);
-    // carousel.getPath('tray.subsurfaces').pushObject(editor);
-    // 
-    // layout.get('subsurfaces').pushObject(carousel);
-    tabSurfaces[className + 'Surface'] = surface;
+    items[idx].surface = surface;
   });
 
-  var MyTabSurface = SC.TabSurface.extend({
-    theme: 'regular',
-    itemTitleKey: 'title',
-    itemValueKey: 'value',
-    itemIconKey: 'icon',
-    itemIsEnabledKey: 'enabled'
+  var list = [SC.Object.create({
+    title: "Home",
+    surface: SC.View.create({
+      willRenderLayers: function(context) {
+        context.fillStyle = cyan;
+        context.fillRect(0, 0, context.width, context.height);
+      }
+    })
+  })];
+  items.forEach(function(item) {
+    list.push(SC.Object.create(item));
+  });
+
+  var listController = SC.ArrayController.create({
+    content: list,
+    allowsEmptySelection: false
+  });
+
+  listController.selectObject(list[1]);
+
+  var detail = SC.ContainerSurface.create({
+    layout: { top: 44, left: 320, right: 0, bottom: 0 },
+    orderInTransition:  null,
+    replaceTransition:  null,
+    orderOutTransition: null
+  });
+
+  detail.set('contentSurface', list[1].surface);
+
+  state.listContainer = detail;
+
+  var listView = Postbooks.MasterListView.create({
+    contentBinding: SC.Binding.from('arrangedObjects', listController).multiple().oneWay(),
+    selectionBinding: SC.Binding.from('selection', listController),
+
+    action: function(object, index) {
+      // console.log('do something on index ' + index);
+      detail.set('contentSurface', list[index].surface);
+    }
   });
 
   var module = SC.LayoutSurface.create();
@@ -199,7 +216,7 @@ Postbooks.LoadModule = function(name, classes) {
     action: 'showDashboard'
   }));
 
-  module.get('subsurfaces').pushObjects([topbar, MyTabSurface.create(tabSurfaces)]);
+  module.get('subsurfaces').pushObjects([topbar, listView, detail]);
 
   SC.app.get('ui').pushSurface(module);
 };

@@ -11,6 +11,7 @@ Postbooks.GENERAL_LEDGER_SUBMODULE = SC.State.design({
   },
 
   exitState: function() {
+    SC.EndEditingTextLayer();
     SC.app.get('ui').popSurface();
   },
 

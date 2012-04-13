@@ -11,12 +11,16 @@ Postbooks.PAYABLES = SC.State.design({
   enterState: function() {
     if (this.__movingUp__) {
       this.__movingUp__ = false;
+
+      // Clear the selection. This is somewhat tricky to find...
+      var listView = this.listContainer.get('contentSurface');
+      if (listView) listView.set('selection', SC.IndexSet.create().freeze());
       return;
     }
 
     SC.routes.set('location', 'payables');
 
-    Postbooks.LoadModule("Payables", 'Vendor Voucher Payable PaymentApproval Payment'.w());
+    Postbooks.LoadModule("Payables", 'Vendor Voucher Payable PaymentApproval Payment'.w(), this);
   },
 
   exitState: function() {

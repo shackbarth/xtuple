@@ -11,12 +11,16 @@ Postbooks.RECEIVABLES = SC.State.design({
   enterState: function() {
     if (this.__movingUp__) {
       this.__movingUp__ = false;
+
+      // Clear the selection. This is somewhat tricky to find...
+      var listView = this.listContainer.get('contentSurface');
+      if (listView) listView.set('selection', SC.IndexSet.create().freeze());
       return;
     }
 
     SC.routes.set('location', 'receivables');
 
-    Postbooks.LoadModule("Receivables", 'Customer Invoice Receivable CashReceipt CustomerCreditCard'.w());
+    Postbooks.LoadModule("Receivables", 'Customer Invoice Receivable CashReceipt CustomerCreditCard'.w(), this);
   },
 
   exitState: function() {

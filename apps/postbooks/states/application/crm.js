@@ -11,13 +11,17 @@ Postbooks.CRM = SC.State.design({
   enterState: function() {
     if (this.__movingUp__) {
       this.__movingUp__ = false;
+
+      // Clear the selection. This is somewhat tricky to find...
+      var listView = this.listContainer.get('contentSurface');
+      if (listView) listView.set('selection', SC.IndexSet.create().freeze());
       return;
     }
 
     SC.routes.set('location', 'crm');
 
     // Postbooks.LoadModule("CRM", 'Contact Account Opportunity Incident Project'.w());
-    Postbooks.LoadModule("CRM", 'Contact Account Incident Project'.w()); // FIXME: Opporunity hangs the app.
+    Postbooks.LoadModule("CRM", 'Contact Account Incident Project'.w(), this); // FIXME: Opporunity hangs the app.
   },
 
   exitState: function() {

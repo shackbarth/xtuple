@@ -11,6 +11,7 @@ Postbooks.BANK_ACCOUNT = SC.State.design({
   },
 
   exitState: function() {
+    SC.EndEditingTextLayer();
     SC.app.get('ui').popSurface();
   },
 
