@@ -36,14 +36,9 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
       synced with the associated boolean flag
       condition.
     */
-    if(status === SC.Record.READY_NEW) {
+    if(status === SC.Record.READY_NEW || status === SC.Record.READY_CLEAN) {
       this.isShowSubtotalDidChange();
       this.isAlternateSubtotalDidChange();
-    }
-
-    if(status === SC.Record.READY_CLEAN) {
-console.log('here!!!!');
-this.refresh();
     }
   }.observes('status'),
 

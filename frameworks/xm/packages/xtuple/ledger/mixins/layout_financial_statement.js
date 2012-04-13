@@ -32,8 +32,7 @@ XM.LayoutFinancialStatement = {
       and mirroring across all instances.
     */
     this.layoutGroupRecords = [];
-    this.getLayoutGroupRecords();
-
+    this.layoutIncomeStatementGroupStatusDidChange();
   },
 
   /**
@@ -66,11 +65,20 @@ XM.LayoutFinancialStatement = {
   //
   
   /**
-    keep layoutGroupRecords[] up-to-date if 
+    keep layoutGroupRecords[] up-to-date as 
     'layoutIncomeStatementGroup' changes. 
   */
+
   layoutIncomeStatementGroupDidChange: function() {
     this.getLayoutGroupRecords();
   }.observes('layoutIncomeStatementGroup'),
+
+  layoutIncomeStatementGroupStatusDidChange: function() {
+    var status = this.getPath('layoutIncomeStatementGroup.status');
+
+    if(status == SC.Record.READY_CLEAN) {
+      this.getLayoutGroupRecords();
+    }
+  }.observes('*layoutIncomeStatementGroup.status'),
 
 };
