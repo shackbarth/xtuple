@@ -12,6 +12,15 @@
   ],
   "properties": [
     {
+      "name": "salesCategory",
+      "toOne": {
+        "type": "SalesCategory",
+        "column": "cashrcpt_salescat_id",
+        "isRequired": true,
+        "defaultValue": -1
+      }
+    },
+    {
       "name": "distributions",
       "toMany": {
         "isNested": true,

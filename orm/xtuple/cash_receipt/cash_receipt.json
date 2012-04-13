@@ -37,7 +37,8 @@
         "isNested": true,
         "type": "CustomerInfo",
         "column": "cashrcpt_cust_id",
-        "isRequired": true
+        "isRequired": true,
+        "isEditable": false
       }
     },
     {
@@ -53,14 +54,17 @@
       "toOne": {
         "type": "Currency",
         "column": "cashrcpt_curr_id",
-        "isRequired": true
+        "isRequired": true,
+        "defaultValue": "baseCurrency"
       }
     },
     {
       "name": "currencyRate",
       "attr": {
         "type": "Number",
-        "column": "cashrcpt_curr_rate"
+        "column": "cashrcpt_curr_rate",
+        "isRequried": true,
+        "defaultValue": 1
       }
     },
     {
@@ -75,17 +79,7 @@
       "name": "documentNumber",
       "attr": {
         "type": "String",
-        "column": "cashrcpt_docnumber",
-        "isRequired": true
-      }
-    },
-    {
-      "name": "salesCategory",
-      "toOne": {
-        "type": "SalesCategory",
-        "column": "cashrcpt_salescat_id",
-        "isRequired": true,
-        "defaultValue": false
+        "column": "cashrcpt_docnumber"
       }
     },
     {
@@ -113,10 +107,19 @@
       }
     },
     {
-      "name": "applyDate",
+      "name": "distributionDate",
       "attr": {
         "type": "Date",
-        "column": "cashrcpt_applydate"
+        "column": "cashrcpt_distdate",
+        "defaultValue": "currentDate"
+      }
+    },
+    {
+      "name": "applicationDate",
+      "attr": {
+        "type": "Date",
+        "column": "cashrcpt_applydate",
+        "defaultValue": "currentDate"
       }
     },
     {
