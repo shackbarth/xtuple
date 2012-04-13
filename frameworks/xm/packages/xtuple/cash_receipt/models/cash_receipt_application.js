@@ -27,7 +27,9 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   
   receivable: null,
   
-  /** @private */
+  /** 
+    The value of all pending applications in the receivable's currency.
+  /*
   pending: 0,
   
   /** @private */
