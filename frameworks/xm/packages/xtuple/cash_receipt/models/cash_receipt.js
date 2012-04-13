@@ -51,6 +51,17 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   discount: 0,
   
   /**
+    @type Boolean
+  */
+  isUseCustomerDeposit: SC.Record.attr(Boolean, {
+    isRequired: true,
+    defaultValue: function() {
+      return XT.session.settings.get('EnableCustomerDeposits');
+    },
+    label: '_isUseCustomerDeposit'.loc()
+  }),
+  
+  /**
     Indicates whether to include outstanding credit memos in applications array.
     
     @type Boolean
@@ -143,9 +154,14 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     Apply the balance of the cash receipt to as many open `receivables`
     as possible. Credits are applied first if `includeCredits` is true,
     the balance is then applied to receivables ordered by date.
+    
+    If the global setting `HideApplyToBalance` is true, this funciton will
+    return false.
   */
   applyBalance: function() {
-    if (this.get('isPosted')) return;
+    if (this.get('isPosted') || XT.session.settings.get('HideApplyToBalance')) {
+      return false;
+    }
     var includeCredits = this.get('includeCredits'),
         applications = this.get('applications'), list;
        
@@ -379,7 +395,28 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         applications.pushObject(application);
       }
     }
-  }.observes('receivablesLength').cacheable()
+  }.observes('receivablesLength').cacheable(),
+  
+  /**
+    Lock down changes if a credit card was processed.
+  */
+  statusDidChange: function() {
+    var status = this.get('status'), K = SC.Record,
+        fundsType = this.get('fundsType'), R = XM.CashReceipt;
+    if (status == K.READY_CLEAN && 
+       (fundsType == R.AMERICAN_EXPRESS ||
+        fundsType == R.DISCOVER ||
+        fundsType == R.MASTER_CARD ||
+        fundsType == R.VISA)) {
+      this.amount.set('isEditable', false);
+      this.currency.set('isEditable', false);
+      this.fundsType.set('isEditable', false);
+      this.documentNumber.set('isEditable', false);
+      this.documentDate.set('isEditable', false);
+      this.distributionDate.set('isEditable', false);
+      this.applicationDate.set('isEditable', false);
+    }
+  }.observes('status')
 
 });
 
