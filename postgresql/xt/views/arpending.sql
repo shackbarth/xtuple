@@ -5,7 +5,7 @@ create or replace view xt.arpending as
     cashrcptitem_id as arpending_id,
     'R'::text as arpending_type,
     cashrcptitem_aropen_id as arpending_aropen_id,
-    round((cashrcptitem_amount + cashrcptitem_discount) * aropen_curr_rate / cashrcpt_curr_rate * case when aropen_doctype in ('I','D') then 1 else -1 end, 2) as arpending_amount
+    round(currtocurr(cashrcpt_curr_id,aropen_curr_id,(cashrcptitem_amount + cashrcptitem_discount),cashrcpt_applydate) * case when aropen_doctype in ('I','D') then 1 else -1 end,2) as arpending_amount
   from cashrcptitem 
     join cashrcpt on cashrcpt_id=cashrcptitem_cashrcpt_id
     join aropen on aropen_id=cashrcptitem_aropen_id
