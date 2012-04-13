@@ -13,13 +13,6 @@
   ],
   "properties": [
     {
-      "name": "distributionDate",
-      "attr": {
-        "type": "Date",
-        "column": "aropen_distdate"
-      }
-    },
-    {
       "name": "ledgerAccount",
       "toOne": {
         "isNested": true,

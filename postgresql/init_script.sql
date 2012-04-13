@@ -66,6 +66,8 @@
 -- xt views
 \i xt/views/apapply.sql;
 \i xt/views/arapply.sql;
+\i xt/views/aropencr.sql;
+\i xt/views/aropenid.sql;
 \i xt/views/arpending.sql;
 \i xt/views/docinfo.sql; 
 \i xt/views/gl.sql;
