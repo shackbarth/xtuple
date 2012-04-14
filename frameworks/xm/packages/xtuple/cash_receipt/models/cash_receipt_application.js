@@ -38,7 +38,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   isLoadingCashReceiptExchangeRate: false,
   
   /** @private */
-  isLoadingCashReceiptExchangeRateBinding: SC.Binding.from('*cashReceipt.appliedMoney.isLoading').oneWay().noDelay(),
+  isLoadingCashReceiptExchangeRateBinding: SC.Binding.from('*cashReceipt.amountMoney.isLoading').oneWay().noDelay(),
   
   /** @private */
   isLoadingReceivableExchangeRate: false,
@@ -96,7 +96,6 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   init: function() {
     arguments.callee.base.apply(this, arguments);
     this.set('appliedMoney', XM.Money.create()); // bindings set up by observers
-    this.set('appliedMoney', XM.Money.create());
   },
   
   /**
@@ -194,7 +193,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   _xm_removePending: function() {
     var applications = this.getPath('receivable.pendingApplications'),
         id = this.getPath('cashReceiptDetail.id'), pending;
-    pending = applications.findProperty('id', id);
+    if (id) pending = applications.findProperty('id', id);
     if (pending) {
       // just remove, don't destroy because we might reintroduce later
       applications.removeObject(pending);
@@ -208,7 +207,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   appliedDidChange: function() {
     if (this.get('isLoadingReceivableExchangeRate') ||
         this.get('isLoadingCashReceiptExchangeRate')) return;
-    var crCurrencyRate = this.getPath('cashReceipt.appliedMoney.exchangeRate'),
+    var crCurrencyRate = this.getPath('cashReceipt.amountMoney.exchangeRate'),
         arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
         applied = this.get('applied'),
         discount = this.get('discount'),
