@@ -52,16 +52,24 @@ XT.session = SC.Object.create(
       .json().send(session);
   },
 
+  set: function(key, value) {
+    if (key === 'details') {
+      var details = this.get('details');
+      if (details) details.destroy();
+    }
+    return arguments.callee.base.apply(this, arguments);
+  },
+
   /**
   */
   didAcquireSession: function(response, details) {
-    SC.Logger.info("didAcquireSession()");
+    // SC.Logger.info("didAcquireSession()");
 
-    console.log("details ", details);
+    // console.log("details ", details);
 
     this.set('details', details);
 
-    console.log("RESPONSE", response);
+    // console.log("RESPONSE", response);
 
     var delegate = this.get('delegate');
 
@@ -102,10 +110,11 @@ XT.session = SC.Object.create(
         // sessions situation and if it doesn't go ahead
         // and just force a new one to be created
         if (!delegate.didReceiveMultipleSessions(available, ack)) {
-          SC.Logger.info("didReceiveMultipleSessions() returned negative, using default to request new session");
-          if (ack.isFired) {
-            SC.Logger.warn("delegate returned negative but did fire the ack");
-          } else { ack(XT.SESSION_FORCE_NEW); }
+          SC.Logger.warn("Using the default to request new session even though multiple " +
+            "sessions already exist");
+          if (!ack.isFired) {
+            ack(XT.SESSION_FORCE_NEW); 
+          }
         }
 
         break;

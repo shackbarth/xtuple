@@ -65,7 +65,10 @@ XT.Request = SC.Object.extend(
       });
 
       args.unshift(response);
-      func.apply(context, args);
+
+      SC.run(function() {
+        func.apply(context, args);
+      });
     }
 
     this.callback = callback;
@@ -116,7 +119,7 @@ XT.Request = SC.Object.extend(
     SC.mixin(wrapper, session.unmix());
 
     // console.log("EVENT", event);
-    console.log("WRAPPER => ", wrapper);
+    // console.log("WRAPPER => ", wrapper);
     // console.log(ack);
     // console.log(callback);
 

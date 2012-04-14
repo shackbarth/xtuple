@@ -25,7 +25,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   /**
     Logging for this object?
   */
-  logLocal: true,
+  logLocal: false,
 
   //............................................
   // METHODS
@@ -164,8 +164,6 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     @param {SC.Query} query The original query object.
   */
   didFetch: function(response, store, query) {
-
-    console.log(response, store, query);
 
     if (SC.ok(response)) {
       if (response.get("body").error ) {

@@ -21,6 +21,11 @@ XT.SessionDetail = SC.Object.extend(SC.Freezable, SC.Copyable,
       unmixed[key] = this[key];
     }
     return unmixed;
+  },
+
+  destroy: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.password = null;
   }
 
 });
