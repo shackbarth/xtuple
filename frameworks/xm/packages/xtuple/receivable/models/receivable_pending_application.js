@@ -5,14 +5,14 @@
 
 /*globals XM */
 
-sc_require('mixins/_pending_application');
+sc_require('mixins/_receivable_pending_application');
 
 /**
   @class
 
   @extends XM.Record
 */
-XM.PendingApplication = XT.Record.extend(XM._PendingApplication,
+XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplication,
   /** @scope XM.ReceivablePendingApplication.prototype */ {
 
   // .................................................
@@ -29,8 +29,8 @@ XM.PendingApplication = XT.Record.extend(XM._PendingApplication,
 
 });
 
-XM.PendingApplication.mixin( 
-  /** @scope XM.PendingApplication */ {
+XM.ReceivablePendingApplication.mixin( 
+  /** @scope XM.ReceivablePendingApplication */ {
 
 /**
   Cash Receipt application type.

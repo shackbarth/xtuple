@@ -128,9 +128,9 @@ XM._CashReceiptReceivable = {
   }),
 
   /**
-    @type XM.PendingApplication
+    @type XM.ReceivablePendingApplication
   */
-  pendingApplications: SC.Record.toMany('XM.PendingApplication', {
+  pendingApplications: SC.Record.toMany('XM.ReceivablePendingApplication', {
     isNested: true,
     inverse: 'receivable',
     label: '_pendingApplications'.loc()

@@ -39,9 +39,26 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   receivablesLengthBinding: SC.Binding.from('*receivables.length').oneWay().noDelay(),
   
   /**
+    Money object for amount. Uses distribution date for exchange rate.
+    
+    @type XM.Money
+  */
+  amountMoney: null,
+  
+  /**
     Total amount applied.
+    
+    @type Number
   */
   applied: 0,
+  
+  /**
+    Money object for total amount applied. Uses application date
+    for exchange rate.
+    
+    @type XM.Money
+  */
+  appliedMoney: null,
   
   /**
     Total discount taken.
@@ -149,6 +166,36 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //..................................................
   // METHODS
   //
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    
+    // create money object and bindings for amount
+    var amountMoney = XM.Money.create();
+    this.set('amountMoney', amountMoney);
+    SC.Binding.from('amount', this)
+              .to('localValue', amountMoney)
+              .noDelay().connect();
+    SC.Binding.from('currency', this)
+              .to('currency', amountMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('distributionDate', this)
+              .to('effective', amountMoney)
+              .oneWay().noDelay().connect();
+    
+    // create money object and bindings for applied
+    var appliedMoney = XM.Money.create();
+    this.set('appliedMoney', appliedMoney);
+    SC.Binding.from('applied', this)
+              .to('localValue', appliedMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('currency', this)
+              .to('currency', amountMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('applicationDate', this)
+              .to('effective', appliedMoney)
+              .oneWay().noDelay().connect();
+  },
   
   /**
     Apply the balance of the cash receipt to as many open `receivables`
