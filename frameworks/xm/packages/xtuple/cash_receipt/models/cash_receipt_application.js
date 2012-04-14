@@ -105,13 +105,12 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     
     @param {Number} amount
     @param {Number} discount
-    @param {Function} callback
   */
   apply: function(amount, discount) {
     if (this.getPath('cashReceipt.isPosted')) return;
-    this._xm_pendingAmount = amount;
-    this._xm_pendingDiscount = discount;
-    this._applyPending();
+    this._xm_amountPending = amount;
+    this._xm_discountPending = discount;
+    this._xm_apply();
   },
 
   /**
@@ -120,9 +119,9 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     @param {Function} optional - callback
   */  
   applyBalance: function(callback) {
-    this._xm_applyBalance = true;
+    this._xm_applyBalancePending = true;
     this._xm_pendingCallback = callback;
-    this._applyBalancePending();
+    this._xm_applyBalance();
   },
   
   /**
@@ -151,6 +150,43 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     }
     this.set('cashReceiptDetail', null);
   },
+
+  /** @private 
+    Creates a pending application record on the receivable so we get a correct total for "all pending" 
+    applications.
+    
+    @param {Number} total amount applied
+  */
+  _xm_createPending: function() {
+    var amount = this.getPath('appliedMoney.localValue'),
+        detail = this.get('cashReceiptDetail'),
+        receivable = this.get('receivable'),
+        store = receivable.get('store'),
+        applications = receivable.get('pendingApplications'),
+        recordType = XM.ReceivablePendingApplication,
+        storeKey, pending;
+ 
+    // bail if nothing to do
+    if (!detail) return;
+    
+    this.log('Creating pending application');
+
+    // create a pending application record (info only, the datasource will ignore this)
+    storeKey = store.loadRecord(recordType, {
+      guid: detail.get('id'),
+      pendingApplicationType: recordType.CASH_RECEIPT,
+      receivable: receivable,
+      amount: amount
+    });
+    pending = store.materializeRecord(storeKey);
+      
+    // bind the ids of detail (which may have a temporory id at this time)
+    // we may need to reference this later if this application gets cleared
+    SC.Binding.from('id', detail).to('id', pending).oneWay().noDelay().connect();
+      
+    // push new pending record into pending applications array
+    applications.pushObject(pending);
+  },
   
   /** @private
     Removes the pending application record associated with detail on this object from the receivable.
@@ -164,50 +200,6 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
       applications.removeObject(pending);
     }
   },
-
-  /** @private 
-    Creates a pending application record on the receivable so we get a correct total for "all pending" 
-    applications.
-    
-    @param {Number} total amount applied
-  */
-  _xm_createPending: function(amount) {
-    var cashReceipt = this.get('cashReceipt'),
-        crCurrency = cashReceipt.getPath('currency'),
-        applicationDate = cashReceipt.get('applicationDate'),
-        distributionDate = cashReceipt.get('distributionDate'),
-        store = cashReceipt.get('store'),
-        detail = this.get('cashReceiptDetail'),
-        receivable = this.get('receivable'),
-        applications = receivable.get('pendingApplications'),
-        arCurrency = receivable.get('currency'),
-        storeKey, pending,
-        recordType = XM.ReceivablePendingApplication;
- 
-    // bail if nothing to do
-    if (!detail) return;
-    
-    this.log('Creating pending application');
-    
-    // make sure we have some kind of valid application date
-    applicationDate = applicationDate ? applicationDate : (distributionDate ? distributionDate : SC.DateTime.create());
-
-    // create a pending application record (info only, the datasource will ignore this)
-    storeKey = store.loadRecord(recordType, {
-      guid: detail.get('id'),
-      pendingApplicationType: recordType.CASH_RECEIPT,
-      receivable: receivable,
-      amount: result
-    });
-    pending = store.materializeRecord(storeKey);
-      
-    // bind the ids of detail (which may have a temporory id at this time)
-    // we may need to reference this later if this application gets cleared
-    SC.Binding.from('id', detail).to('id', pending).oneWay().noDelay().connect();
-      
-    // push new pending record into pending applications array
-    applications.pushObject(pending);
-  },
   
   // .................................................
   // OBSERVERS
@@ -218,8 +210,9 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
         this.get('isLoadingCashReceiptExchangeRate')) return;
     var crCurrencyRate = this.getPath('cashReceipt.appliedMoney.exchangeRate'),
         arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
-        crApplied = this.get('applied'),
-        arApplied = SC.Math.round(crApplied * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE);
+        applied = this.get('applied'),
+        discount = this.get('discount'),
+        arApplied = SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE); 
         
     // update applied money
     this.setPathIfChanged('appliedMoney.localValue', arApplied);
@@ -227,7 +220,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     // rebuild pending application records
     var amount = this.get('applied') + this.get('discount');
     this._xm_removePending();
-    this._xm_createPending(amount);
+    this._xm_createPending();
   }.observes('applied', 'appliedMoneyExchangeRate', 'isLoadingReceivableExchangeRate', 'isLoadingCashReceiptExchangeRate'),
   
   cashReceiptDidChange: function() {
@@ -248,7 +241,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     Execute any pending request to apply cash. If the client is waiting
     for exchange rate data, punt and try again when loading is complete.
   */
-  _applyPending: function() {
+  _xm_apply: function() {
     // bail if nothing to do
     if (SC.none(this._xm_amountPending)) return;
     
@@ -277,9 +270,8 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   
     // values must be valid
     if (amount < 0 || discount < 0 || 
-        amount + discount > balance ||
-        isPosted) {
-      this.error('Can not apply a value greater than balance');
+        amount + discount > balance) {
+      this.error('Can not apply a value greater than the balance');
       return false;
     }
   
@@ -316,9 +308,9 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     Execute any pending request to apply cash balance. If the client is waiting
     for exchange rate data, punt and try again when loading is complete.
   */
-  _applyBalancePending: function() {
+  _xm_applyBalance: function() {
     // bail if nothing to do
-    if (!this._xm_applyBalance) return;
+    if (!this._xm_applyBalancePending) return;
     
     // can't process if exchange rates are still loading
     if (this.get('isLoadingCashReceiptExchangeRate') ||
@@ -326,7 +318,8 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
       this.log('Exiting apply pending until exchange rates loaded.');
       return;
     }
-      
+    
+    //setup
     var applied = this.get('applied'),
         cashReceipt = this.get('cashReceipt'),
         crBalance = cashReceipt.get('balance'),
@@ -368,7 +361,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     }
     if (amount) return this.apply(amount, discount);
     
-    this._xm_applyBalance = false;
+    this._xm_applyBalancePending = false;
   }.observes('isLoadingReceivableExchangeRate', 'isLoadingCashReceiptExchangeRate'),
   
 });

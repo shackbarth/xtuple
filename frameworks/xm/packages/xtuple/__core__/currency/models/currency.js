@@ -96,6 +96,9 @@ XM.Currency = XM.Document.extend(XM._Currency,
   @returns Receiver
 */
 XM.Currency.rate = function(currency, effective, callback) {
+  // TODO: Rework this to use sparse array technique to reduce
+  // datasource requests
+  
   if (!SC.kindOf(currency, XM.Currency) ||
       !SC.kindOf(effective, SC.DateTime)) return false;
   var that = this,
@@ -127,40 +130,6 @@ XM.Currency.rate = function(currency, effective, callback) {
     }
   })
   
-  return this;
-}
-
-/**
-  Request conversion for value from one currency to another.
-  
-  @param {XM.Currency} from currency
-  @param {XM.Currency} to currency
-  @param {Number} value
-  @param {SC.DateTime} effective date
-  @param {Function} callback
-  @returns Receiver
-*/
-XM.Currency.toCurrency = function(fromCurrency, toCurrency, value, effective, callback) {
-  if (!SC.kindOf(fromCurrency, XM.Currency) ||
-      !SC.kindOf(toCurrency, XM.Currency) ||
-      !SC.kindOf(effective, SC.DateTime)) return false;
-  var that = this, dispatch,
-      fromCurrencyId = fromCurrency.get('id'),
-      toCurrencyId = toCurrency.get('id'),
-      effective = effective.toFormattedString('%Y-%m-%d');
-  
-  // set up
-  dispatch = XT.Dispatch.create({
-    className: 'XM.Currency',
-    functionName: 'toCurrency',
-    parameters: [fromCurrencyId, toCurrencyId, value, effective],
-    target: that,
-    action: callback
-  });
-  console.log("Currency to Currency: %@".fmt(value));
-  
-  // do it
-  fromCurrency.get('store').dispatch(dispatch);
   return this;
 }
 
