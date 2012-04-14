@@ -88,6 +88,15 @@
         "column": "aropen_id",
         "inverse": "receivable"
       }
+    },
+    {
+      "name": "details",
+      "toMany": {
+        "isNested": true,
+        "type": "ApplyCreditDetail",
+        "column": "aropen_id",
+        "inverse": "applyCredit"
+      }
     }
   ],
   "isSystem": true
