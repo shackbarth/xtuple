@@ -52,10 +52,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* evaluate */
         if(parameters) {
-          if(cond.indexOf('%@') > 0) {  /* replace wild card tokens */
+          if(conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
             for(var i = 0; i < parameters.length; i++) {
-              var n = cond.indexOf('%@'),
-                  val =  format(parameters[i]);
+              var val =  format(parameters[i]);
               conditions = conditions.replace(/%@/,val);
             }
           } else {  /* replace parameterized tokens */
@@ -84,8 +83,8 @@ select xt.install_js('XT','Data','xtuple', $$
         }
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
       }    
-      ret = conditions.length ? '(' + conditions + ')' : ret;
-      ret = pcond.length ? (conditions.length ? ret.concat(' and ', pcond) : pcond) : ret;
+      ret = conditions && conditions.length ? '(' + conditions + ')' : ret;
+      ret = pcond.length ? (conditions && conditions.length ? ret.concat(' and ', pcond) : pcond) : ret;
       return ret;
     },
 
