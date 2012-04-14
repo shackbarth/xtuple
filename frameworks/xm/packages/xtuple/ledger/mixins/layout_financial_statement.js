@@ -36,6 +36,34 @@ XM.LayoutFinancialStatement = {
   },
 
   /**
+    Ensure all children sub-groups are destroyed before current 
+    instance is destroyed.
+  */
+  destroy: function() {
+//debugger;
+    var store = this.get('store'),
+        storeKey = this.get('storeKey'),
+        groups = this.getPath('parentRecord.groups'),
+        id = this.get('id'),
+        group, groupsLength, guid, childStoreKey, childRecord;
+
+    groupsLength = groups.get('length');
+    for(var i = 0; i < groupsLength; i++) {
+      group = groups.objectAt(i).readAttribute('layoutIncomeStatementGroup');
+      if(group === id) {
+        guid = groups.objectAt(i).readAttribute('guid');
+        childStoreKey = XM.LayoutIncomeStatementGroup.storeKeyFor(guid);
+        childRecord = store.materializeRecord(childStoreKey);
+        childRecord.destroy();
+      }
+    }
+    store.destroyRecord(null, null, storeKey);
+    this.notifyPropertyChange('status');
+
+    return this;
+  },
+
+  /**
     Called on instantiation and when the 'layoutIncomeStatementGroup'
     property changes.
     Will push parent-group records into layoutGroupRecords
@@ -73,9 +101,13 @@ XM.LayoutFinancialStatement = {
     this.getLayoutGroupRecords();
   }.observes('layoutIncomeStatementGroup'),
 
+  /**
+    wait for 'parent' group to load before trying to
+    get all parent group records.
+  */
   layoutIncomeStatementGroupStatusDidChange: function() {
     var status = this.getPath('layoutIncomeStatementGroup.status');
-
+console.log("calling object: " + arguments[1]);
     if(status == SC.Record.READY_CLEAN) {
       this.getLayoutGroupRecords();
     }
