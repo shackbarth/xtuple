@@ -44,7 +44,7 @@ SC.RecordAttribute.registerTransform(Money, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toMoney().valueOf();
+    return SC.none(val) ? null : val.valueOf().toMoney().valueOf();
   }
 
 });
@@ -59,7 +59,7 @@ SC.RecordAttribute.registerTransform(Quantity, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toQuantity().valueOf();
+    return SC.none(val) ? null : val.valueOf().toQuantity().valueOf();
   }
 
 });
@@ -74,7 +74,7 @@ SC.RecordAttribute.registerTransform(QuantityPer, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toQuantityPer().valueOf();
+    return SC.none(val) ? null : val.valueOf().toQuantityPer().valueOf();
   }
 
 });
@@ -89,7 +89,7 @@ SC.RecordAttribute.registerTransform(Cost, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toCost().valueOf();
+    return SC.none(val) ? null : val.valueOf().toCost().valueOf();
   }
 
 });
@@ -104,7 +104,7 @@ SC.RecordAttribute.registerTransform(SalesPrice, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toSalesPrice().valueOf();
+    return SC.none(val) ? null : val.valueOf().toSalesPrice().valueOf();
   }
 
 });
@@ -119,7 +119,7 @@ SC.RecordAttribute.registerTransform(PurchasePrice, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toPurchasePrice().valueOf();
+    return SC.none(val) ? null : val.valueOf().toPurchasePrice().valueOf();
   }
 
 });
@@ -134,7 +134,7 @@ SC.RecordAttribute.registerTransform(ExtendedPrice, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toExtendedPrice().valueOf();
+    return SC.none(val) ? null : val.valueOf().toExtendedPrice().valueOf();
   }
 
 });
@@ -149,7 +149,7 @@ SC.RecordAttribute.registerTransform(UnitRatio, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toUnitRatio().valueOf();
+    return SC.none(val) ? null : val.valueOf().toUnitRatio().valueOf();
   }
 
 });
@@ -164,7 +164,7 @@ SC.RecordAttribute.registerTransform(Percent, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toPercent().valueOf() / 100;
+    return SC.none(val) ? null : val.valueOf().toPercent().valueOf() / 100;
   }
 
 });
@@ -179,6 +179,6 @@ SC.RecordAttribute.registerTransform(Weight, {
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.toWeight().valueOf();
+    return SC.none(val) ? null : val.valueOf().toWeight().valueOf();
   }
 });
