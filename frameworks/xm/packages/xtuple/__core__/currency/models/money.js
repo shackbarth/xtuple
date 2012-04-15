@@ -20,7 +20,7 @@ XM.Money = XT.Object.extend(
 /** @scope XM.Money.prototype */ {
 
   /**
-    Precision scale used for rounding. Appropriate scales would be:
+    Precision used for rounding. Appropriate scales would be:
       * XT.MONEY_SCALE
       * XT.COST_SCALE
       * XT.SALES_PRICE_SCALE
@@ -31,7 +31,7 @@ XM.Money = XT.Object.extend(
     @type Number
     @default XT.MONEY_SCALE
   */
-  scale: XT.MONEY_SCALE,
+  precision: XT.MONEY_SCALE,
  
   /**
     The monetary value to be converted.
@@ -99,11 +99,11 @@ XM.Money = XT.Object.extend(
     
     // calculate
     var exchangeRate = this.get('exchangeRate'),
-        scale = this.get('scale');
-    return exchangeRate ? SC.Math.round(localValue / exchangeRate, scale) : '?????';
+        precision = this.get('precision');
+    return exchangeRate ? (localValue / exchangeRate).round(precision) : '?????';
     
     var effective = this.get('effective');
-  }.property('localValue', 'exchangeRate', 'scale').cacheable(),
+  }.property('localValue', 'exchangeRate', 'precision').cacheable(),
   
   /**
     The currency of the local value.

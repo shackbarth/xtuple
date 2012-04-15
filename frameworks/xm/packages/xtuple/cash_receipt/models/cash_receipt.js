@@ -92,17 +92,21 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   /**
     Total unapplied.
+    
+    @type Money
   */
   balance: function() {
     var amount = this.get('amount') || 0,
         applied = this.get('applied');
         
-    return SC.Math.round(amount - applied, XT.MONEY_SCALE);
+    return (amount - applied).toMoney();
   }.property('amount', 'applied').cacheable(),
   
   /**
     Return an array of applications filtered by the `includeCredits` 
     property and sorted by due date.
+    
+    @type SC.Array
   */
   filteredApplications: function() {
     var applications = this.get('applications'),
@@ -124,6 +128,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   /**
     The earliest date by which the application date may be set to.
+    
+    @type SC.DateTime
   */
   minApplyDate: function() {
     var details = this.get('details'), minDate = false;
@@ -141,6 +147,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /**
     An array of open receivables for the selected `customer`. If the
     the cash receipt is posted this will return no results.
+    
+    @type SC.Array
   */
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
@@ -314,7 +322,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     @returns Number
   */
   updateApplied: function(amount) {
-    var applied = SC.Math.round(this.get('applied') + amount, XT.MONEY_SCALE);
+    var applied = (this.get('applied') + amount).toMoney();
     this.set('applied', applied);
     return applied;
   },
@@ -326,7 +334,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     @returns Number
   */  
   updateDiscount: function(amount) {
-    var discount = SC.Math.round(this.get('discount') + amount, XT.MONEY_SCALE);
+    var discount = (this.get('discount') + amount).toMoney();
     this.set('discount', discount);
     return discount;
   },

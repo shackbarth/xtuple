@@ -80,13 +80,13 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     The balance due on the receivable in the receivable's currency including pending
     applications.
     
-    @type Number
+    @type Money
   */  
   balance: function() {
     var receivable = this.get('receivable'),
         balance = receivable.get('balance'),
         pending = receivable.get('pending');
-    return SC.Math.round(balance - pending, XT.MONEY_SCALE);
+    return (balance - pending).toMoney();
   }.property('pending'),
   
   // .................................................
@@ -160,17 +160,14 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     var amount = this.getPath('appliedMoney.localValue'),
         detail = this.get('cashReceiptDetail'),
         receivable = this.get('receivable'),
-        store = receivable.get('store'),
-        applications = receivable.get('pendingApplications'),
         recordType = XM.ReceivablePendingApplication,
-        storeKey, pending;
- 
+        store, storeKey, pending, applications;
+
     // bail if nothing to do
-    if (!detail) return;
-    
-    this.log('Creating pending application');
+    if (!detail || !receivable) return;
 
     // create a pending application record (info only, the datasource will ignore this)
+    store = receivable.get('store');
     storeKey = store.loadRecord(recordType, {
       guid: detail.get('id'),
       pendingApplicationType: recordType.CASH_RECEIPT,
@@ -184,7 +181,10 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     SC.Binding.from('id', detail).to('id', pending).oneWay().noDelay().connect();
       
     // push new pending record into pending applications array
+    applications = receivable.get('pendingApplications');
     applications.pushObject(pending);
+    
+    this.log('Created pending application: %@'.fmt(pending.toString()));
   },
   
   /** @private
@@ -192,11 +192,13 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   */
   _xm_removePending: function() {
     var applications = this.getPath('receivable.pendingApplications'),
+        store = this.getPath('receivable.store'),
         id = this.getPath('cashReceiptDetail.id'), pending;
-    if (id) pending = applications.findProperty('id', id);
+    if (id && applications) pending = applications.findProperty('id', id);
     if (pending) {
       // just remove, don't destroy because we might reintroduce later
       applications.removeObject(pending);
+      store.unloadRecord(XM.ReceivablePendingApplication, id);
     }
   },
   
@@ -204,14 +206,20 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   // OBSERVERS
   //
   
+  /**
+    Updates the value of applied money and rebuilds pending applications as needed.
+  */
   appliedDidChange: function() {
     if (this.get('isLoadingReceivableExchangeRate') ||
         this.get('isLoadingCashReceiptExchangeRate')) return;
+        
     var crCurrencyRate = this.getPath('cashReceipt.amountMoney.exchangeRate'),
         arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
         applied = this.get('applied'),
         discount = this.get('discount'),
-        arApplied = SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE); 
+        arApplied = ((applied + discount) * arCurrencyRate / crCurrencyRate).toMoney(); 
+        
+    this.log('applied did change: %@'.fmt(arApplied));    
         
     // update applied money
     this.setPathIfChanged('appliedMoney.localValue', arApplied);
@@ -221,16 +229,18 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     this._xm_removePending();
     this._xm_createPending();
   }.observes('applied', 'appliedMoneyExchangeRate', 'isLoadingReceivableExchangeRate', 'isLoadingCashReceiptExchangeRate'),
-  
-  cashReceiptDidChange: function() {
+
+  /** @private */  
+  _xm_cashReceiptDidChange: function() {
     var cashReceipt = this.get('cashReceipt'),
         appliedMoney = this.get('appliedMoney');
     SC.Binding.from('applicationDate', cashReceipt)
           .to('effective', appliedMoney)
           .oneWay().noDelay().connect();
   }.observes('cashReceipt'),
- 
-  receivableDidChange: function() {
+
+  /** @private */ 
+  _xm_receivableDidChange: function() {
     var currency = this.getPath('receivable.currency'),
         appliedMoney = this.get('appliedMoney');
     appliedMoney.set('currency', currency);
@@ -265,7 +275,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
         amount = this._xm_amountPending;
         
     // calculate balance in cash receipt currency
-    balance = SC.Math.round(balance * crCurrencyRate / arCurrencyRate + applied, XT.MONEY_SCALE);
+    balance =(balance * crCurrencyRate / arCurrencyRate + applied).toMoney();
   
     // values must be valid
     if (amount < 0 || discount < 0 || 
@@ -334,8 +344,8 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
         discount = 0, amount;
 
     // determine balance we could apply in cash receipt currency
-    amount = SC.Math.round(crBalance + applied, XT.MONEY_SCALE);
-    balance = SC.Math.round(arBalance * crCurrencyRate / arCurrencyRate + applied, XT.MONEY_SCALE);
+    amount = (crBalance + applied).toMoney();
+    balance = (arBalance * crCurrencyRate / arCurrencyRate + applied).toMoney();
         
     // bail out if nothing to do
     if (balance === 0 || amount === 0) return;
@@ -343,16 +353,16 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     // calculate discount if applicable
     if (balance > 0 && discountDate && 
         SC.DateTime.compareDate(documentDate, discountDate) <= 0) {
-      discount = SC.Math.round(balance * discountPercent, XT.MONEY_SCALE);
+      discount = (balance * discountPercent).toMoney();
     }
     
     // adjust the amount or discount as appropriate and apply
     if (documentType === XM.Receivable.INVOICE || 
         documentType === XM.Receivable.DEBIT_MEMO) {
       if (arBalance <= amount + discount) {
-        amount = SC.Math.round(arBalance - discount, XT.MONEY_SCALE);
+        amount = (arBalance - discount).toMoney;
       } else {
-        discount = SC.Math.round((amount / (1 - discountPercent)) - amount, XT.MONEY_SCALE);
+        discount = ((amount / (1 - discountPercent)) - amount).toMoney();
       }
     } else {
       amount = arBalance;

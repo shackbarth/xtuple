@@ -39,12 +39,12 @@ SC.RecordAttribute.registerTransform(Money, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.MONEY_SCALE);
+    return SC.none(val) ? null : val.toMoney();
   },
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.MONEY_SCALE);
+    return SC.none(val) ? null : val.toMoney().valueOf();
   }
 
 });
@@ -52,14 +52,14 @@ SC.RecordAttribute.registerTransform(Money, {
 /** @private - xtuple converter for database form of quantity */
 SC.RecordAttribute.registerTransform(Quantity, {
 
-  /** @private  */
+  /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.QTY_SCALE);
+    return SC.none(val) ? null : val.toQuantity();
   },
 
-  /** @private  */
+  /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.QTY_SCALE);
+    return SC.none(val) ? null : val.toQuantity().valueOf();
   }
 
 });
@@ -69,12 +69,12 @@ SC.RecordAttribute.registerTransform(QuantityPer, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.QTY_PER_SCALE);
+    return SC.none(val) ? null : val.toQuantityPer();
   },
 
-  /** @private  */
+  /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.QTY_PER_SCALE);
+    return SC.none(val) ? null : val.toQuantityPer().valueOf();
   }
 
 });
@@ -84,12 +84,12 @@ SC.RecordAttribute.registerTransform(Cost, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.COST_SCALE);
+    return SC.none(val) ? null : val.toCost();
   },
 
-  /** @private  */
+  /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.COST_SCALE);
+    return SC.none(val) ? null : val.toCost().valueOf();
   }
 
 });
@@ -99,12 +99,12 @@ SC.RecordAttribute.registerTransform(SalesPrice, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.SALES_PRICE_SCALE);
+    return SC.none(val) ? null : val.toSalesPrice();
   },
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.SALES_PRICE_SCALE);
+    return SC.none(val) ? null : val.toSalesPrice().valueOf();
   }
 
 });
@@ -114,12 +114,27 @@ SC.RecordAttribute.registerTransform(PurchasePrice, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.PURCHASE_PRICE_SCALE);
+    return SC.none(val) ? null : val.toPurchasePrice();
   },
 
-  /** @private  */
+  /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.PURCHASE_PRICE_SCALE);
+    return SC.none(val) ? null : val.toPurchasePrice().valueOf();
+  }
+
+});
+
+/** @private - xtuple converter for database form of extended price */
+SC.RecordAttribute.registerTransform(ExtendedPrice, {
+
+  /** @private */
+  to: function(val) {
+    return SC.none(val) ? null : val.toExtendedPrice();
+  },
+
+  /** @private */
+  from: function(val) {
+    return SC.none(val) ? null : val.toExtendedPrice().valueOf();
   }
 
 });
@@ -129,12 +144,12 @@ SC.RecordAttribute.registerTransform(UnitRatio, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.UNIT_RATIO_SCALE);
+    return SC.none(val) ? null : val.toUnitRatio();
   },
 
-  /** @private  */
+  /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.UNIT_RATIO_SCALE);
+    return SC.none(val) ? null : val.toUnitRatio().valueOf();
   }
 
 });
@@ -144,12 +159,12 @@ SC.RecordAttribute.registerTransform(Percent, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val * 100, XT.PERCENT_SCALE);
+    return SC.none(val) ? null : (val * 100).toPercent();
   },
 
-  /** @private - convert a percent to a number for persistent storage */
+  /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val / 100, XT.PERCENT_SCALE);
+    return SC.none(val) ? null : val.toPercent().valueOf() / 100;
   }
 
 });
@@ -159,12 +174,11 @@ SC.RecordAttribute.registerTransform(Weight, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.WEIGHT_SCALE);
+    return SC.none(val) ? null : val.toWeight();
   },
 
-  /** @private  */
+  /** @private */
   from: function(val) {
-    return SC.none(val) ? null : SC.Math.round(val, XT.WEIGHT_SCALE);
+    return SC.none(val) ? null : val.toWeight().valueOf();
   }
-
 });

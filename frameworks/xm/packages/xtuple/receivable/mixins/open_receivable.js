@@ -27,7 +27,7 @@ XM.OpenReceivable = /** @scope XM.OpenReceivable.prototype */ {
     Total value of applications that have been created, but not posted, on the receivable
     in the receivable's currency.
     
-    @type Number
+    @type Money
   */
   pending: function() {
     var applications = this.getPath('pendingApplications'),
@@ -42,7 +42,7 @@ XM.OpenReceivable = /** @scope XM.OpenReceivable.prototype */ {
       }
     }
 
-    return SC.Math.round(pending, XT.MONEY_SCALE);
+    return pending.toMoney();
   }.property('pendingApplicationsLength').cacheable()
 
   //..................................................

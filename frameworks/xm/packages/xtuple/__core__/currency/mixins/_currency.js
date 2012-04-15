@@ -69,13 +69,6 @@ XM._Currency = {
   isBase: SC.Record.attr(Boolean, {
     defaultValue: false,
     label: '_isBase'.loc()
-  }),
-
-  /**
-    @type XM.CurrencyRate
-  */
-  rates: SC.Record.toMany('XM.CurrencyRate', {
-    label: '_rates'.loc()
   })
 
 };

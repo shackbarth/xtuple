@@ -118,9 +118,9 @@ XM._Opportunity = {
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  amount: SC.Record.attr(Number, {
+  amount: SC.Record.attr(Money, {
     label: '_amount'.loc()
   }),
 

@@ -20,19 +20,19 @@ XM.ProjectTask = XT.Record.extend(XM._ProjectTask,
   //
   
   /**
-    @type Number
+    @type Quantity
   */
   balanceHours: function() {
     var value = this.get('budgetedHours') || 0 - this.get('actualHours') || 0;
-    return SC.Math.round(value, XT.QTY_SCALE);
+    return value.toQuantity();
   }.property('budgetedHours','actualHours'),
 
   /**
-    @type Number
+    @type Money
   */
   balanceExpenses: function() {
     var value = this.get('budgetedExpenses') || 0 - this.get('actualExpenses') || 0;
-    return SC.Math.round(value, XT.MONEY_SCALE);
+    return value.toMoney();
   }.property('budgetedExpenses','actualExpenses'),
   
   //..................................................
