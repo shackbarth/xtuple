@@ -52,15 +52,7 @@
         "column": "curr_base",
         "defaultValue": false
       }
-    },
-    {
-      "name": "rates",
-      "toMany": {
-        "type": "CurrencyRate",
-        "column": "curr_id",
-        "inverse": "currency"
-      }
-    }   
+    }
   ],
   "isSystem": true
 }

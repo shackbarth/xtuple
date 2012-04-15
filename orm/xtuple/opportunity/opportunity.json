@@ -103,7 +103,7 @@
     {
       "name": "amount",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "ophead_amount"
       }
     },
