@@ -10,7 +10,7 @@ sc_require('mixins/_receivable_pending_application');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 XM.ReceivablePendingApplication = XT.Record.extend(XM._ReceivablePendingApplication,
   /** @scope XM.ReceivablePendingApplication.prototype */ {

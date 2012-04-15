@@ -5,14 +5,12 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/ledger/models
-
 sc_require('mixins/_budget_detail');
 
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 XM.BudgetDetail = XT.Record.extend(XM._BudgetDetail,
   /** @scope XM.BudgetDetail.prototype */ {

@@ -10,7 +10,7 @@ sc_require('mixins/_layout_income_statement_detail');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetail,
   /** @scope XM.LayoutIncomeStatementDetail.prototype */ {
