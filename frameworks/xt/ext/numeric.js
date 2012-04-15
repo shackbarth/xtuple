@@ -11,77 +11,77 @@ var Money, Quantity, QuantityPer, Cost, SalesPrice, PurchasePrice, Percent,
 
 SharedNumericPrototoype = {
   valueOf: function()  {  return this.val; },
-  toString: function() {  return this.val.toFixed(this.precision); }
+  toString: function() {  return this.val.toFixed(this.scale); }
 };
 
-Money = global.Money = function(val) { this.val = +val.toFixed(this.precision); };
+Money = global.Money = function(val) { this.val = +val.toFixed(this.scale); };
 Money.prototype = SC.beget(SharedNumericPrototoype);
 Money.prototype.constructor = Money;
-Money.prototype.precision = XT.MONEY_SCALE;
+Money.prototype.scale = XT.MONEY_SCALE;
 
-Quantity = global.Quantity = function(val) { this.val = +val.toFixed(this.precision); };
+Quantity = global.Quantity = function(val) { this.val = +val.toFixed(this.scale); };
 Quantity.prototype = SC.beget(SharedNumericPrototoype);
 Quantity.prototype.constructor = Quantity;
-Quantity.prototype.precision = XT.QTY_SCALE;
+Quantity.prototype.scale = XT.QTY_SCALE;
 
-QuantityPer = global.QuantityPer = function(val) { this.val = +val.toFixed(this.precision); };
+QuantityPer = global.QuantityPer = function(val) { this.val = +val.toFixed(this.scale); };
 QuantityPer.prototype = SC.beget(SharedNumericPrototoype);
 QuantityPer.prototype.constructor = QuantityPer;
-QuantityPer.prototype.precision = XT.QTY_PER_SCALE;
+QuantityPer.prototype.scale = XT.QTY_PER_SCALE;
 
-Cost = global.Cost = function(val) { this.val = +val.toFixed(this.precision); };
+Cost = global.Cost = function(val) { this.val = +val.toFixed(this.scale); };
 Cost.prototype = SC.beget(SharedNumericPrototoype);
 Cost.prototype.constructor = Cost;
-Cost.prototype.precision = XT.COST_SCALE;
+Cost.prototype.scale = XT.COST_SCALE;
 
-SalesPrice = global.SalesPrice = function(val) { this.val = +val.toFixed(this.precision); };
+SalesPrice = global.SalesPrice = function(val) { this.val = +val.toFixed(this.scale); };
 SalesPrice.prototype = SC.beget(SharedNumericPrototoype);
 SalesPrice.prototype.constructor = SalesPrice;
-SalesPrice.prototype.precision = XT.SALES_PRICE_SCALE;
+SalesPrice.prototype.scale = XT.SALES_PRICE_SCALE;
 
-PurchasePrice = global.PurchasePrice = function(val) { this.val = +val.toFixed(this.precision); };
+PurchasePrice = global.PurchasePrice = function(val) { this.val = +val.toFixed(this.scale); };
 PurchasePrice.prototype = SC.beget(SharedNumericPrototoype);
 PurchasePrice.prototype.constructor = PurchasePrice;
-PurchasePrice.prototype.precision = XT.PURCHASE_PRICE_SCALE;
+PurchasePrice.prototype.scale = XT.PURCHASE_PRICE_SCALE;
 
-ExtendedPrice = global.PurchasePrice = function(val) { this.val = +val.toFixed(this.precision); };
+ExtendedPrice = global.PurchasePrice = function(val) { this.val = +val.toFixed(this.scale); };
 ExtendedPrice.prototype = SC.beget(SharedNumericPrototoype);
 ExtendedPrice.prototype.constructor = PurchasePrice;
-ExtendedPrice.prototype.precision = XT.EXTENDED_PRICE_SCALE;
+ExtendedPrice.prototype.scale = XT.EXTENDED_PRICE_SCALE;
 
-Percent = global.Percent = function(val) { this.val = +val.toFixed(this.precision); };
+Percent = global.Percent = function(val) { this.val = +val.toFixed(this.scale); };
 Percent.prototype = SC.beget(SharedNumericPrototoype);
 Percent.prototype.constructor = Percent;
-Percent.prototype.precision = XT.PERCENT_SCALE;
+Percent.prototype.scale = XT.PERCENT_SCALE;
 
-UnitRatio = global.UnitRatio = function(val) { this.val = +val.toFixed(this.precision); };
+UnitRatio = global.UnitRatio = function(val) { this.val = +val.toFixed(this.scale); };
 UnitRatio.prototype = SC.beget(SharedNumericPrototoype);
 UnitRatio.prototype.constructor = UnitRatio;
-UnitRatio.prototype.precision = XT.UNIT_RATIO_SCALE;
+UnitRatio.prototype.scale = XT.UNIT_RATIO_SCALE;
 
-Weight = global.Weight = function(val) { this.val = +val.toFixed(this.precision); };
+Weight = global.Weight = function(val) { this.val = +val.toFixed(this.scale); };
 Weight.prototype = SC.beget(SharedNumericPrototoype);
 Weight.prototype.constructor = Weight;
-Weight.prototype.precision = XT.WEIGHT_SCALE;
+Weight.prototype.scale = XT.WEIGHT_SCALE;
 
 /**
   Implementation of round on number that accepts a decimal places number as a
-  argument to calculate precision. Rounds to `precision` if no precision specified.
+  argument to calculate scale. Rounds to `scale` if none specified.
   
   @param {Number} decimal places
   @returns {Number}
 */
 Number.prototype.round = function(decimalPlaces) {
-  return this.toFixed(decimalPlaces || this.precision) - 0;
+  return +this.toFixed(decimalPlaces || this.scale);
 }
 
 /**
-  The default precision for `round` if no precision specified.
+  The default scale for `round` if no scale specified.
   
   @constant
   @default 0
 */
-Number.prototype.precision = 0;
+Number.prototype.scale = 0;
 Number.prototype.toMoney = function() { return new Money(this) };
 Number.prototype.toQuantity = function() { return new Quantity(this) };
 Number.prototype.toQuantityPer = function() { return new QuantityPer(this) };

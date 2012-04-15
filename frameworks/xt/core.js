@@ -121,7 +121,7 @@ XT = global.XT = SC.Object.create(
     @type Number
     @default 7
   */
-  UNIT_RATIO_SCALE: 7,
+  UNIT_RATIO_SCALE: 8,
   
   /**
     System precision scale for percentages.
