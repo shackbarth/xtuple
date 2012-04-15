@@ -33,7 +33,7 @@
     {
       "name": "rate",
       "attr": {
-        "type": "Number",
+        "type": "UnitRatio",
         "column": "curr_rate",
         "isRequired": true
       }

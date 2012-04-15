@@ -44,7 +44,7 @@
     {
       "name": "amount",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "cashrcpt_amount",
         "isRequired": true
       }
