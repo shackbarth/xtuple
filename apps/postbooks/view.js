@@ -75,19 +75,20 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
         left = 200, right = 40;
 
    if (property && !stop && (property.isChildrenAttribute || property.isManyAttribute)) {
-     var arrayKlass = property.get('typeClass');
-
-     items.push({
-       title: key.titleize().pluralize(),
-       value: key + 'Surface',
-       enabled: true
-     });
-
-     var arrayController = SC.ArrayController.create({
-       contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
-     });
-
-     tabSurfaces[key + 'Surface'] = Postbooks.ListViewForClass(arrayKlass, arrayController);
+     continue;
+     // var arrayKlass = property.get('typeClass');
+     // 
+     // items.push({
+     //   title: key.titleize().pluralize(),
+     //   value: key + 'Surface',
+     //   enabled: true
+     // });
+     // 
+     // var arrayController = SC.ArrayController.create({
+     //   contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+     // });
+     // 
+     // tabSurfaces[key + 'Surface'] = Postbooks.ListViewForClass(arrayKlass, arrayController);
 
    } else if (property && !stop && (property.isChildAttribute || property.isSingleAttribute)) {
       var objectKlass = property.get('typeClass');
@@ -255,6 +256,9 @@ Postbooks.ListViewForClass = function(klass, controller) {
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
         ctx.fillText(text, w/2, h/2);
+      } else {
+        ctx.fillStyle = base3;
+        ctx.fillRect(0, 0, ctx.width, ctx.height);
       }
     },
 

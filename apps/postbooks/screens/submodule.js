@@ -72,12 +72,19 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
 
-  var contentArea = SC.LayoutSurface.create({
-    layout: { top: 44, left: 0, right: 0, bottom: 0 }
-  });
+  // var contentArea = SC.LayoutSurface.create({
+  //   layout: { top: 44, left: 320, right: 0, bottom: 0 }
+  // });
   var editor = Postbooks.PropertiesEditorForClass(baseClass, controller);
 
-  contentArea.get('subsurfaces').pushObject(editor);
+  // contentArea.get('subsurfaces').pushObject(editor);
+
+  var contentArea = SC.ContainerSurface.create({
+    layout: { top: 44, left: 320, right: 0, bottom: 0 },
+    orderInTransition:  null,
+    replaceTransition:  null,
+    orderOutTransition: null
+  });
 
   var submodule = SC.LayoutSurface.create();
   
@@ -102,7 +109,63 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     action: 'showCRM'
   }));
 
-  submodule.get('subsurfaces').pushObjects([topbar, contentArea]);
+  var list = [SC.Object.create({
+    title: "Overview",
+    surface: editor
+  })];
+
+  var proto = baseClass.prototype;
+  for (var key in proto) {
+    if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
+
+    var property = proto[key];
+
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      var arrayKlass = property.get('typeClass');
+
+      var arrayController = SC.ArrayController.create({
+        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+      });
+
+      list.push(SC.Object.create({
+        title: key.titleize().pluralize(),
+        surface: Postbooks.ListViewForClass(arrayKlass, arrayController)
+      }));
+    }
+  }
+
+  var listController = SC.ArrayController.create({
+    content: list,
+    allowsEmptySelection: false
+  });
+
+  listController.selectObject(list[0]);
+
+  // var detail = SC.ContainerSurface.create({
+  //   layout: { top: 44, left: 320, right: 0, bottom: 0 },
+  //   orderInTransition:  null,
+  //   replaceTransition:  null,
+  //   orderOutTransition: null
+  // });
+  // 
+  // detail.set('contentSurface', list[1].surface);
+
+  contentArea.set('contentSurface', list[0].surface);
+
+
+  var listView = Postbooks.MasterListView.create({
+    contentBinding: SC.Binding.from('arrangedObjects', listController).multiple().oneWay(),
+    selectionBinding: SC.Binding.from('selection', listController),
+
+    action: function(object, index) {
+      console.log('do something on index ' + index);
+      contentArea.set('contentSurface', list[index].surface);
+    }
+  });
+
+  submodule.get('subsurfaces').pushObjects([topbar, listView, contentArea]);
 
   SC.app.get('ui').pushSurface(submodule);
 };
