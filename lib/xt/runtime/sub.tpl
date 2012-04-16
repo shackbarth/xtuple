@@ -12,7 +12,7 @@ sc_require('mixins/_{fileName}');
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 {className2} = XT.Record.extend({className},
   /** @scope {className2}.prototype */ {
