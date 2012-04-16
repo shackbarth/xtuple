@@ -25,7 +25,7 @@ XM._LayoutIncomeStatement = {
   privileges: {
     "all": {
       "create": "MaintainFinancialLayouts",
-      "read": "MaintainFinancialLayouts",
+      "read": "ViewFinancialLayouts",
       "update": "MaintainFinancialLayouts",
       "delete": "MaintainFinancialLayouts"
     }

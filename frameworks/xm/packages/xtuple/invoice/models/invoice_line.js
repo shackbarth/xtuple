@@ -333,7 +333,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       });
       
       // do it
-      console.log("XM.InvoiceTax for: %@".fmt(this.get('id')));
+      this.log("XM.InvoiceTax for: %@".fmt(this.get('id')));
       store.dispatch(dispatch);
     } else {
       // add up stored result

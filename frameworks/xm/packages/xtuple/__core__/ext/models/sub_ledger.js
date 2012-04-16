@@ -28,66 +28,79 @@ XM.SubLedger = XM.TaxableDocument.extend(XM.SubLedgerMixin,
   //
   
   /**
-    For new records this dispatches a post function that handles the two
-    step process of creating the record, then posting it. Otherwise it
-    commits normally. A function by the name of [className].post(dataHash), where
-    the dataHash is the changeSet of the subclass, must exist on the data source 
-    for this to operate properly.
+    This dispatches a post function that handles the two step process of creating the record, 
+    then posting it. This function may only be called when the record is in a READY_NEW state. 
+    
+    A function by the name of [className].post(dataHash), where the dataHash is the changeSet of 
+    the subclass, must exist on the data source for this to operate properly.
+    
+    @seealso `commitRecord`
+  */
+  post: function() {
+    var dataHash = this.get('changeSet'),
+        store = this.get('store'),
+        storeKey = this.get('storeKey'),
+        rev = SC.Store.generateStoreKey(),
+        that = this,
+        className = this.get('className'),
+        status = this.get('status'),
+        K = SC.Record;
+      
+    // validate
+    if (status !== K.READY_NEW) return false;
+    
+    // update status of this record
+    store.writeStatus(storeKey, K.BUSY_CREATING);
+    store.dataHashDidChange(storeKey, rev, true);
+    this.notifyPropertyChange('status');
+      
+    // update status of children
+    store._propagateToChildren(storeKey, function(storeKey) {
+      var rev = SC.Store.generateStoreKey(),
+          rec = store.materializeRecord(storeKey);
+      store.writeStatus(storeKey, K.BUSY_CREATING);
+      store.dataHashDidChange(storeKey, rev, true);
+      rec.notifyPropertyChange('status');
+    });
+    
+    // callback - notify store of results
+    callback = function(err, result) {
+      if (err) store.dataSourceDidError(storeKey, err);
+      else store.dataSourceDidComplete(storeKey);
+    }
+
+    // define call
+    dispatch = XT.Dispatch.create({
+      className: className,
+      functionName: 'post',
+      parameters: dataHash,
+      target: that,
+      action: callback
+    });
+    
+    // do it
+    store.dispatch(dispatch);
+    return this;
+  },
+  
+  /**
+    If the record is in a READY_NEW state this will call `post`, otherwise will commit normally.
+    
+    @seealso `post`
   */
   commitRecord: function() {
     var status = this.get('status'),
-        className = this.get('className');
-    
-    // if new dispatch post function
-    if (status === SC.Record.READY_NEW) {
-      var dataHash = this.get('changeSet'),
-          store = this.get('store'),
-          storeKey = this.get('storeKey'),
-          rev = SC.Store.generateStoreKey(),
-          that = this;
-      
-      // update status of this record
-      store.writeStatus(storeKey, SC.Record.BUSY_CREATING);
-      store.dataHashDidChange(storeKey, rev, true);
-      this.notifyPropertyChange('status');
-        
-      // update status of children
-      store._propagateToChildren(storeKey, function(storeKey) {
-        var rev = SC.Store.generateStoreKey(),
-            rec = store.materializeRecord(storeKey);
-        store.writeStatus(storeKey, SC.Record.BUSY_CREATING);
-        store.dataHashDidChange(storeKey, rev, true);
-        rec.notifyPropertyChange('status');
-      });
-      
-      // callback - notify store of results
-      callback = function(err, result) {
-        if (err) store.dataSourceDidError(storeKey, err);
-        else store.dataSourceDidComplete(storeKey);
-      }
-
-      // define call
-      dispatch = XT.Dispatch.create({
-        className: className,
-        functionName: 'post',
-        parameters: dataHash,
-        target: that,
-        action: callback
-      });
-      
-      // do it
-      store.dispatch(dispatch);
-      return this;
-    }
-    return arguments.callee.base.apply(this, arguments);
+        K = SC.Record;
+    return status === K.READY_NEW ? this.post() : arguments.callee.base.apply(this, arguments);
   },
   
   /**
     Only new records may be destroyed.
   */
   destroy: function() {
-    var status = this.get('status');
-    if (status === SC.Record.READY_NEW) {
+    var status = this.get('status'),
+        K = SC.Record;
+    if (status === K.READY_NEW) {
       return arguments.callee.base.apply(this, arguments);
     }
     return false;

@@ -70,6 +70,9 @@ XM._CashReceipt = {
   */
   currency: SC.Record.toOne('XM.Currency', {
     isRequired: true,
+    defaultValue: function() {
+      return XM.Currency.BASE;
+    },
     label: '_currency'.loc()
   }),
 
@@ -77,6 +80,7 @@ XM._CashReceipt = {
     @type Number
   */
   currencyRate: SC.Record.attr(Number, {
+    defaultValue: 1,
     label: '_currencyRate'.loc()
   }),
 
@@ -92,17 +96,7 @@ XM._CashReceipt = {
     @type String
   */
   documentNumber: SC.Record.attr(String, {
-    isRequired: true,
     label: '_documentNumber'.loc()
-  }),
-
-  /**
-    @type XM.SalesCategory
-  */
-  salesCategory: SC.Record.toOne('XM.SalesCategory', {
-    isRequired: true,
-    defaultValue: false,
-    label: '_salesCategory'.loc()
   }),
 
   /**
@@ -134,10 +128,25 @@ XM._CashReceipt = {
   /**
     @type Date
   */
-  applyDate: SC.Record.attr(SC.DateTime, {
+  distributionDate: SC.Record.attr(SC.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    label: '_applyDate'.loc()
+    defaultValue: function() {
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
+    },
+    label: '_distributionDate'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  applicationDate: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    defaultValue: function() {
+      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
+    },
+    label: '_applicationDate'.loc()
   }),
 
   /**

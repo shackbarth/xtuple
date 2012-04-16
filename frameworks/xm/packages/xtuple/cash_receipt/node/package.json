@@ -1,7 +1,6 @@
 {
   "type": "demand",
   "dependencies": [
-    "__core__",
-    "receivable"
+    "__core__"
   ]
 }

@@ -367,6 +367,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   _fetch: function _fetch(store, query) {
     var payload = {}, qp = query.get('parameters'),
         conditions = query.get('conditions'),
+        orderBy = query.get('orderBy'),
         language = query.get('queryLanguage'),
         recordType = query.get('recordType'),
         list, conds = [], params = {};
@@ -415,6 +416,21 @@ XT.DataSource = SC.Object.extend(XT.Logging,
       conds.push(tokenValue);
     }
 
+    // massage 'orderBy' as well
+    if (orderBy) {
+      // split order by on comma into array
+      list = orderBy.split(',');
+      for (var i = 0; i < list.get('length'); i++) {
+        // strip leading whitespace and separate potential DESC and ASC qualifiers
+        var str = list.objectAt(i).replace(/^\s+|\s+$/g,""),
+            sub = str.split(' ');
+        // quote the property name, then put it all back together
+        sub.replace(0, 1, ['"' + sub.firstObject() + '"']);
+        list.replace(i, 1, [sub.join(' ')]);
+      }
+      orderBy = list.join(',');
+    }
+    
     // helper function to convert parameters to data source friendly formats
     var format = function(value) {
       // format date if applicable
@@ -439,7 +455,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
       recordType: query.get('recordType').prototype.className,
       conditions: conds.join(' '),
       parameters: params,
-      orderBy: query.get('orderBy')
+      orderBy: orderBy
     };
 
     this.log("fetch => payload: ", payload);

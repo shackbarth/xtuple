@@ -67,26 +67,7 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
-
-    Removes parents updating children with parent status when we don't need
-    or want that behavior.
-  */
-  writeDataHash: function(storeKey, hash, status) {
-    // Update dataHashes and optionally status.
-    if (hash) this.dataHashes[storeKey] = hash;
-    if (status) this.statuses[storeKey] = status;
-
-    // Also note that this hash is now editable.
-    var editables = this.editables;
-    if (!editables) editables = this.editables = [];
-    editables[storeKey] = 1; // Use number for dense array support.
-
-    return this;
-  },
-
-  /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Don't notify children here.
   */
@@ -114,9 +95,94 @@ XT.Store = SC.Store.extend(XT.Logging,
 
     return this;
   },
+  
+  // ..........................................................
+  // REIMPLEMENTED METHODS
+  //
+  // The methods in this section re-implement standard SC.Store methods with modifictions.
+  
+  /**
+    Reimplemented from `SC.Store`.
+
+    After creating a record create a temporary id, then fetch one asynchronously from 
+    the data source.
+  */
+  createRecord: function(recordType, dataHash, id) {
+    var primaryKey = recordType.prototype.primaryKey,
+        args = SC.A(arguments);
+
+    // Create a temporary id (negative of store key) if none passed
+    if (primaryKey === 'guid' && SC.none(dataHash.guid)) {
+      var storeKey = SC.Store.generateStoreKey(),
+          id = storeKey * -1;
+      SC.Store.replaceRecordTypeFor(storeKey, recordType);
+      SC.Store.replaceIdFor(storeKey, id);
+      dataHash.guid = id;
+      args[1] = dataHash;
+    }
+
+    // Do the standard thing
+    var ret = arguments.callee.base.apply(this, args);
+    
+    // If primary key is guid and id is temporary, fetch a real one asynchronously
+    if (primaryKey === 'guid' && ret.get('id') < 0) {
+      XT.Record.fetchId.call(ret);
+    }
+
+    return ret
+  },
+  
+  /**
+    Reimplemented from `SC.Store`.
+
+    Don't destroy children automatically.
+    Remove dataHash immediately if READY_NEW.
+  */
+  destroyRecord: function(recordType, id, storeKey) {
+    if (storeKey === undefined) storeKey = recordType.storeKeyFor(id);
+    var status = this.readStatus(storeKey), changelog, K = SC.Record;
+
+    // handle status - ignore if destroying or destroyed
+    if ((status === K.BUSY_DESTROYING) || (status & K.DESTROYED)) {
+      return this; // nothing to do
+
+    // error out if empty
+    } else if (status === K.EMPTY) {
+      throw K.NOT_FOUND_ERROR ;
+
+    // error out if busy
+    } else if (status & K.BUSY) {
+      throw K.BUSY_ERROR ;
+
+    // if new status, destroy but leave in clean state
+    } else if (status === K.READY_NEW) {
+      status = K.DESTROYED_CLEAN ;
+      this.removeDataHash(storeKey, status);
+
+    // otherwise, destroy in dirty state
+    } else status = K.DESTROYED_DIRTY ;
+
+    // remove the data hash, set new status
+    this.writeStatus(storeKey, status);
+    this.dataHashDidChange(storeKey);
+
+    // add/remove change log
+    changelog = this.changelog;
+    if (!changelog) changelog = this.changelog = SC.Set.create();
+
+    ((status & K.DIRTY) ? changelog.add(storeKey) : changelog.remove(storeKey));
+    this.changelog=changelog;
+
+    // if commit records is enabled
+    if(this.get('commitRecordsAutomatically')){
+      this.invokeLast(this.commitRecords);
+    }
+
+    return this ;
+  },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Don't notify status here.
   */
@@ -145,140 +211,26 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
-    Update children only when appropriate with the proper status.
+    Removes parents updating children with parent status when we don't need
+    or want that behavior.
   */
-  dataSourceDidComplete: function(storeKey, dataHash, newId) {
-    var status = this.readStatus(storeKey), K = SC.Record, statusOnly;
+  writeDataHash: function(storeKey, hash, status) {
+    // Update dataHashes and optionally status.
+    if (hash) this.dataHashes[storeKey] = hash;
+    if (status) this.statuses[storeKey] = status;
 
-    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
-    // DESTROYED_DIRTY
-    if (!(status & K.BUSY)) {
-      throw K.BAD_STATE_ERROR; // should never be called in this state
-    }
+    // Also note that this hash is now editable.
+    var editables = this.editables;
+    if (!editables) editables = this.editables = [];
+    editables[storeKey] = 1; // Use number for dense array support.
 
-    // otherwise, determine proper state transition
-    if(status===K.BUSY_DESTROYING) {
-      throw K.BAD_STATE_ERROR ;
-    } else status = K.READY_CLEAN ;
-
-    this.writeStatus(storeKey, status) ;
-    if (dataHash) this.writeDataHash(storeKey, dataHash, status) ;
-    if (newId) SC.Store.replaceIdFor(storeKey, newId);
-
-    statusOnly = dataHash || newId ? false : true;
-    this.dataHashDidChange(storeKey, null, statusOnly);
-
-    // Force record to refresh its cached properties based on store key
-    var record = this.materializeRecord(storeKey);
-
-    // update affected children
-    if (statusOnly) {
-      var that = this;
-      this._propagateToChildren(storeKey, function(storeKey) {
-        var status = that.peekStatus(storeKey);
-        if (status & SC.Record.BUSY) {
-          var newStatus = status != K.BUSY_DESTROYING ? K.READY_CLEAN : K.DESTROYED_CLEAN;
-          that.writeStatus(storeKey, newStatus);
-          that.dataHashDidChange(storeKey, null, true);
-        }
-      });
-    }
-
-    //update callbacks
-    this._retreiveCallbackForStoreKey(storeKey);
-
-    return this ;
+    return this;
   },
-
+  
   /**
-    Reimplemented from SC.Store.
-
-    Change status of child records to destroyed, and remove duplicate notice
-    on parent.
-  */
-  dataSourceDidDestroy: function(storeKey) {
-    var status = this.readStatus(storeKey), K = SC.Record;
-
-    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
-    // DESTROYED_DIRTY
-    if (!(status & K.BUSY)) {
-      throw K.BAD_STATE_ERROR; // should never be called in this state
-    }
-    // otherwise, determine proper state transition
-    else{
-      status = K.DESTROYED_CLEAN ;
-    }
-    this.removeDataHash(storeKey, status) ;
-    this.dataHashDidChange(storeKey);
-
-    // Force record to refresh its cached properties based on store key
-    var record = this.materializeRecord(storeKey);
-
-    // update affected children
-    var that = this;
-    this._propagateToChildren(storeKey, function(storeKey) {
-      var status = that.peekStatus(storeKey);
-      if (status & SC.Record.BUSY) {
-        var newStatus = K.DESTROYED_CLEAN;
-        that.writeStatus(storeKey, newStatus);
-        that.dataHashDidChange(storeKey, null, true);
-      }
-    });
-
-    this._retreiveCallbackForStoreKey(storeKey);
-
-    return this ;
-  },
-
-  /**
-    Reimplemented from SC.Store.
-
-    Change status of child records to error, and remove duplicate notice on
-    parent.
-  */
-  dataSourceDidError: function(storeKey, error) {
-    var status = this.readStatus(storeKey), errors = this.recordErrors, K = SC.Record;
-
-    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
-    // DESTROYED_DIRTY
-    if (!(status & K.BUSY)) { throw K.BAD_STATE_ERROR; }
-
-    // otherwise, determine proper state transition
-    else status = K.ERROR ;
-
-    // Add the error to the array of record errors (for lookup later on if
-    // necessary).
-    if (error && error.isError) {
-      if (!errors) errors = this.recordErrors = [];
-      errors[storeKey] = error;
-    }
-
-    this.writeStatus(storeKey, status) ;
-    this.dataHashDidChange(storeKey, null, true);
-
-    // Force record to refresh its cached properties based on store key
-    var record = this.materializeRecord(storeKey);
-
-    // update affected children
-    var that = this;
-    this._propagateToChildren(storeKey, function(storeKey) {
-      var status = that.peekStatus(storeKey);
-      if (status & SC.Record.BUSY) {
-        var newStatus = K.ERROR;
-        that.writeStatus(storeKey, newStatus);
-        that.dataHashDidChange(storeKey, null, true);
-      }
-    });
-
-    // update callbacks
-    this._retreiveCallbackForStoreKey(storeKey);
-    return this ;
-  },
-
-  /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
     Change status of child records to busy.
   */
@@ -381,49 +333,136 @@ XT.Store = SC.Store.extend(XT.Logging,
   },
 
   /**
-    Reimplemented from SC.Store.
+    Reimplemented from `SC.Store`.
 
-    Don't destroy children automatically.
+    Update children only when appropriate with the proper status.
   */
-  destroyRecord: function(recordType, id, storeKey) {
-    if (storeKey === undefined) storeKey = recordType.storeKeyFor(id);
-    var status = this.readStatus(storeKey), changelog, K = SC.Record;
+  dataSourceDidComplete: function(storeKey, dataHash, newId) {
+    var status = this.readStatus(storeKey), K = SC.Record, statusOnly;
 
-    // handle status - ignore if destroying or destroyed
-    if ((status === K.BUSY_DESTROYING) || (status & K.DESTROYED)) {
-      return this; // nothing to do
-
-    // error out if empty
-    } else if (status === K.EMPTY) {
-      throw K.NOT_FOUND_ERROR ;
-
-    // error out if busy
-    } else if (status & K.BUSY) {
-      throw K.BUSY_ERROR ;
-
-    // if new status, destroy but leave in clean state
-    } else if (status === K.READY_NEW) {
-      status = K.DESTROYED_CLEAN ;
-
-    // otherwise, destroy in dirty state
-    } else status = K.DESTROYED_DIRTY ;
-
-    // remove the data hash, set new status
-    this.writeStatus(storeKey, status);
-    this.dataHashDidChange(storeKey);
-
-    // add/remove change log
-    changelog = this.changelog;
-    if (!changelog) changelog = this.changelog = SC.Set.create();
-
-    ((status & K.DIRTY) ? changelog.add(storeKey) : changelog.remove(storeKey));
-    this.changelog=changelog;
-
-    // if commit records is enabled
-    if(this.get('commitRecordsAutomatically')){
-      this.invokeLast(this.commitRecords);
+    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
+    // DESTROYED_DIRTY
+    if (!(status & K.BUSY)) {
+      throw K.BAD_STATE_ERROR; // should never be called in this state
     }
 
+    // otherwise, determine proper state transition
+    if(status===K.BUSY_DESTROYING) {
+      throw K.BAD_STATE_ERROR ;
+    } else status = K.READY_CLEAN ;
+
+    this.writeStatus(storeKey, status) ;
+    if (dataHash) this.writeDataHash(storeKey, dataHash, status) ;
+    if (newId) SC.Store.replaceIdFor(storeKey, newId);
+
+    statusOnly = dataHash || newId ? false : true;
+    this.dataHashDidChange(storeKey, null, statusOnly);
+
+    // Force record to refresh its cached properties based on store key
+    var record = this.materializeRecord(storeKey);
+
+    // update affected children
+    if (statusOnly) {
+      var that = this;
+      this._propagateToChildren(storeKey, function(storeKey) {
+        var status = that.peekStatus(storeKey);
+        if (status & SC.Record.BUSY) {
+          var newStatus = status != K.BUSY_DESTROYING ? K.READY_CLEAN : K.DESTROYED_CLEAN;
+          that.writeStatus(storeKey, newStatus);
+          that.dataHashDidChange(storeKey, null, true);
+        }
+      });
+    }
+
+    //update callbacks
+    this._retreiveCallbackForStoreKey(storeKey);
+
+    return this ;
+  },
+
+  /**
+    Reimplemented from `SC.Store`.
+
+    Change status of child records to destroyed, and remove duplicate notice
+    on parent.
+  */
+  dataSourceDidDestroy: function(storeKey) {
+    var status = this.readStatus(storeKey), K = SC.Record;
+
+    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
+    // DESTROYED_DIRTY
+    if (!(status & K.BUSY)) {
+      throw K.BAD_STATE_ERROR; // should never be called in this state
+    }
+    // otherwise, determine proper state transition
+    else{
+      status = K.DESTROYED_CLEAN ;
+    }
+    this.removeDataHash(storeKey, status) ;
+    this.dataHashDidChange(storeKey);
+
+    // Force record to refresh its cached properties based on store key
+    var record = this.materializeRecord(storeKey);
+
+    // update affected children
+    var that = this;
+    this._propagateToChildren(storeKey, function(storeKey) {
+      var status = that.peekStatus(storeKey);
+      if (status & SC.Record.BUSY) {
+        var newStatus = K.DESTROYED_CLEAN;
+        that.writeStatus(storeKey, newStatus);
+        that.removeDataHash(storeKey, newStatus) ;
+        that.dataHashDidChange(storeKey, null, true);
+      }
+    });
+
+    this._retreiveCallbackForStoreKey(storeKey);
+
+    return this ;
+  },
+
+  /**
+    Reimplemented from `SC.Store`.
+
+    Change status of child records to error, and remove duplicate notice on
+    parent.
+  */
+  dataSourceDidError: function(storeKey, error) {
+    var status = this.readStatus(storeKey), errors = this.recordErrors, K = SC.Record;
+
+    // EMPTY, ERROR, READY_CLEAN, READY_NEW, READY_DIRTY, DESTROYED_CLEAN,
+    // DESTROYED_DIRTY
+    if (!(status & K.BUSY)) { throw K.BAD_STATE_ERROR; }
+
+    // otherwise, determine proper state transition
+    else status = K.ERROR ;
+
+    // Add the error to the array of record errors (for lookup later on if
+    // necessary).
+    if (error && error.isError) {
+      if (!errors) errors = this.recordErrors = [];
+      errors[storeKey] = error;
+    }
+
+    this.writeStatus(storeKey, status) ;
+    this.dataHashDidChange(storeKey, null, true);
+
+    // Force record to refresh its cached properties based on store key
+    var record = this.materializeRecord(storeKey);
+
+    // update affected children
+    var that = this;
+    this._propagateToChildren(storeKey, function(storeKey) {
+      var status = that.peekStatus(storeKey);
+      if (status & SC.Record.BUSY) {
+        var newStatus = K.ERROR;
+        that.writeStatus(storeKey, newStatus);
+        that.dataHashDidChange(storeKey, null, true);
+      }
+    });
+
+    // update callbacks
+    this._retreiveCallbackForStoreKey(storeKey);
     return this ;
   }
 
