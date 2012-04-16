@@ -20,6 +20,12 @@ XM.LayoutFinancialStatement = {
   // CALCULATED PROPERTIES
   //
   
+  subGroups: function() {
+    var groups = this.getPath('parentRecord.groups');
+
+    return groups.filterProperty('layoutIncomeStatementGroup', this);
+  }.property('groupsLength').cacheable(),
+
   // .................................................
   // METHODS
   //
@@ -32,32 +38,29 @@ XM.LayoutFinancialStatement = {
       and mirroring across all instances.
     */
     this.layoutGroupRecords = [];
-    this.layoutIncomeStatementGroupStatusDidChange();
+//    this.layoutIncomeStatementGroupStatusDidChange();
   },
 
   /**
-    Ensure all children sub-groups are destroyed before current 
-    instance is destroyed.
+    Ensure all sub-group records are marked SC.Record.DESTROYED 
+    before current record.
   */
   destroy: function() {
-//debugger;
     var store = this.get('store'),
-        storeKey = this.get('storeKey'),
-        groups = this.getPath('parentRecord.groups'),
-        id = this.get('id'),
-        group, groupsLength, guid, childStoreKey, childRecord;
+        subGroups = this.get('subGroups'),
+        sKey = this.get('storeKey'),
+        len, guid, rec, recSKey;
 
-    groupsLength = groups.get('length');
-    for(var i = 0; i < groupsLength; i++) {
-      group = groups.objectAt(i).readAttribute('layoutIncomeStatementGroup');
-      if(group === id) {
-        guid = groups.objectAt(i).readAttribute('guid');
-        childStoreKey = XM.LayoutIncomeStatementGroup.storeKeyFor(guid);
-        childRecord = store.materializeRecord(childStoreKey);
-        childRecord.destroy();
+    len = this.getPath('subGroups.length');
+    if(len > 0) {
+      for(var i = 0; i < len; i++) {
+          guid = subGroups.objectAt(i).readAttribute('guid');
+          recSKey = XM.LayoutIncomeStatementGroup.storeKeyFor(guid);
+          rec = store.materializeRecord(recSKey);
+          rec.destroy();
       }
     }
-    store.destroyRecord(null, null, storeKey);
+    store.destroyRecord(null, null, sKey);
     this.notifyPropertyChange('status');
 
     return this;
@@ -70,21 +73,30 @@ XM.LayoutFinancialStatement = {
     property.
   */
   getLayoutGroupRecords: function() {
-    var layoutGroupRec = this.get('layoutIncomeStatementGroup'),
+    var store = this.get('store'),
+        groupId = this.readAttribute('layoutIncomeStatementGroup'),
         recs = this.get('layoutGroupRecords'),
-        idx;
+        groupSKey, groupRec, idx;
 
-    while(layoutGroupRec) {
+    groupSKey = XM.LayoutIncomeStatementGroup.storeKeyExists(groupId);
+    groupRec = store.materializeRecord(groupSKey);
+    while(groupRec) {
 
       /**
         Fail-safe to prevent duplicate records from being pushed
         into layoutGroupRecords array.
       */
-      idx = recs.lastIndexOf(layoutGroupRec);
+      idx = recs.lastIndexOf(groupRec);
       if(idx === -1) {
-        recs.push(layoutGroupRec);
+        recs.push(groupRec);
       }
-      layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
+      groupId = groupRec.readAttribute('layoutIncomeStatementGroup')
+      if(groupId) {
+        groupSKey = XM.LayoutIncomeStatementGroup.storeKeyFor(groupId);
+        groupRec = store.materializeRecord(groupSKey);
+      } else {
+        groupRec = null;
+      }
     }
   },
 
@@ -107,10 +119,13 @@ XM.LayoutFinancialStatement = {
   */
   layoutIncomeStatementGroupStatusDidChange: function() {
     var status = this.getPath('layoutIncomeStatementGroup.status');
-console.log("calling object: " + arguments[1]);
     if(status == SC.Record.READY_CLEAN) {
       this.getLayoutGroupRecords();
     }
   }.observes('*layoutIncomeStatementGroup.status'),
+
+  statusDidChange: function() {
+    console.log('status changed!!!!')
+  }.observes('status'),
 
 };

@@ -21,6 +21,10 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
   // CALCULATED PROPERTIES
   //
 
+  groupsLength: 0,
+
+  groupsLengthBinding: '*groups.length',
+
   //..................................................
   // METHODS
   //
@@ -58,7 +62,7 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
       sync 'options' labels' isEditable properties with 
       associated boolean flag's default state
     */
-    if(status === SC.Record.READY_NEW) {
+    if(status === SC.Record.READY_NEW || status === SC.Record.READY_CLEAN) {
       this.isShowTotalDidChange();
       this.isAlternateBudgetDidChange();
     }
