@@ -63,42 +63,6 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     return true;
   },
 
-  ////// /**
-  //////   Issues a request to the node datasource to acquire an active session.
-
-  //////   @todo Currently only uses hard-coded admin/admin user unless
-  //////     username/password are arbitrarily handed to it. This is not
-  //////     the end-design goal but for development only.
-  ////// */
-  ////// getSession: function(username, password, organization, forceNew) {
-
-  //////   this.log("getSession => requesting a session");
-
-  //////   var needs = [];
-
-  //////   if (SC.none(username)) needs.push("username");
-  //////   if (SC.none(password)) needs.push("password");
-  //////   if (SC.none(organization)) needs.push("organization");
-
-  //////   if (needs.length > 0) {
-  //////     SC.Logger.error("The following are missing fields in order to acquire a session: " +
-  //////       needs.join(", ")); 
-  //////     return false;
-  //////   }
-
-  //////   XT.Request
-  //////     .postUrl(this.URL)
-  //////     .header({ 'Accept': 'application/json' })
-  //////     .notify(this, 'didGetSession').json()
-  //////     .send({
-  //////       requestType: 'requestSession',
-  //////       userName: username,
-  //////       password: password,
-  //////       organization: organization,
-  //////       forceNew: !!forceNew
-  //////     });
-  ////// },
-
   /**
     Dispatch a function request to the node datasource.
 
@@ -144,31 +108,6 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     return this.ready(this._retrieveRecord, this, store, storeKey, id);
   },
 
-  /////// /**
-  /////// */
-  /////// selectSessionByIndex: function(idx) {
-  ///////   var sessions = this.get('availableSessions');
-  ///////   var session = sessions[idx];
-  ///////   if (session) {
-
-  ///////     // one thing to note here is that we do not authenticate
-  ///////     // the user again - the only way they could have acquired
-  ///////     // the list is to have been authenticated...
-  ///////     // is this enough?
-  ///////     var sid = session.sessionData.sid;
-  ///////     var username = this.get('username');
-  ///////     var organization = this.get('organization');
-  ///////     var session = { sid: sid };
-  ///////     
-  ///////     // this means that when we fire our next getSession request
-  ///////     // the sid will be attached to the request automatically
-  ///////     this.session = session;
-  ///////     this.getSession(username, '***', organization);
-  ///////   } else {
-  ///////     SC.Logger.error("Could not select session %@", idx);
-  ///////   }
-  /////// },
-
   commitRecords: function(store, createStoreKeys, updateStoreKeys, destroyStoreKeys, params) {
     var storeKeys = createStoreKeys.concat(updateStoreKeys).concat(destroyStoreKeys),
         ret = true;
@@ -193,30 +132,6 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   //............................................
   // CALLBACKS
   //
-
-  /////////// /**
-  ///////////   Callback receives response for a session request. Sets the
-  ///////////   isReady flag to true on the datasource that in turn
-  ///////////   flushes any pending requests.
-
-  ///////////   @param {SC.Response} response The response from the request.
-  /////////// */
-  /////////// didGetSession: function(response) {
-  ///////////   if (SC.ok(response)) {
-  ///////////     var body = response.get('body'); 
-
-  ///////////     // determine if we have received an actual session
-  ///////////     // object or need to choose from an active session
-  ///////////     if (body.availableSessions) {
-  ///////////       this.set('availableSessions', body.availableSessions);
-  ///////////     } else {
-  ///////////       this.set('session', body);
-  ///////////       this.set('isReady', true);
-  ///////////     }
-  ///////////   } else {
-  ///////////     throw "Could not acquire session";
-  ///////////   }
-  /////////// },
 
   /**
     Callback receives resposne for a dispatch request.
@@ -249,6 +164,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     @param {SC.Query} query The original query object.
   */
   didFetch: function(response, store, query) {
+
     if (SC.ok(response)) {
       if (response.get("body").error ) {
         var error = SC.Error.create({
@@ -357,10 +273,14 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     this.log("dispatch => payload: ", payload);
 
     XT.Request
-      .postUrl(this.URL)
-      .header({ 'Accept': 'application/json' }).json()
+      .issue('function/dispatch')
       .notify(this, 'didDispatch', store, dispatch)
-      .send(payload);
+      .json().send(payload);
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({ 'Accept': 'application/json' }).json()
+    //   .notify(this, 'didDispatch', store, dispatch)
+    //   .send(payload);
   },
 
   /** @private */
@@ -461,10 +381,14 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     this.log("fetch => payload: ", payload);
 
     XT.Request
-      .postUrl(this.URL)
-      .header({'Accept': 'application/json'}).json()
+      .issue('function/fetch')
       .notify(this, 'didFetch', store, query)
-      .send(payload);
+      .json().send(payload);
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({'Accept': 'application/json'}).json()
+    //   .notify(this, 'didFetch', store, query)
+    //   .send(payload);
   },
 
   /** @private */
@@ -476,11 +400,17 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     payload.recordType = recordType;
     payload.id = id;
     this.log("retrieveRecord => payload: ", payload);
+
     XT.Request
-      .postUrl(this.URL)
-      .header({ 'Accept': 'application/json' }).json()
+      .issue('function/retrieveRecord')
       .notify(this, 'didRetrieveRecord', store, storeKey)
-      .send(payload);
+      .json().send(payload);
+
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({ 'Accept': 'application/json' }).json()
+    //   .notify(this, 'didRetrieveRecord', store, storeKey)
+    //   .send(payload);
   },
 
   /** @private */
@@ -492,11 +422,17 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     payload.recordType = recordType;
     payload.dataHash = record.get('changeSet');
     this.log("commitRecord => payload: ", payload);
+
     XT.Request
-      .postUrl(this.URL)
-      .header({ 'Accept': 'application/json' }).json()
+      .issue('function/commitRecord')
       .notify(this, 'didCommitRecord', store, storeKey)
-      .send(payload);
+      .json().send(payload);
+
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({ 'Accept': 'application/json' }).json()
+    //   .notify(this, 'didCommitRecord', store, storeKey)
+    //   .send(payload);
   },
 
   //............................................
@@ -526,14 +462,5 @@ XT.DataSource = SC.Object.extend(XT.Logging,
 
     if (SC.isNode) process.emit('sessionReady');
   }.observes('isReady')
-
-  ////////// /**
-  ////////// */
-  ////////// _xt_availableSessionsDidChange: function() {
-  //////////   var sessions = this.get('availableSessions');
-  //////////   sessions.forEach(function(session, idx) {
-  //////////     console.log("%@: %@".fmt(idx, session.sessionData.sid));
-  //////////   });
-  ////////// }.observes('availableSessions')
 
 });

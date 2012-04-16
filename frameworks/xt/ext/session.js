@@ -4,8 +4,15 @@
 // ==========================================================================
 /*globals XT */
 
+sc_require('ext/request');
 sc_require('ext/dispatch');
+sc_require('ext/session_detail');
 sc_require('delegates/session_delegate');
+
+XT.SESSION_MULTIPLE     = 0x01;
+XT.SESSION_ERROR        = 0x02;
+XT.SESSION_VALID        = 0x04;
+XT.SESSION_FORCE_NEW    = 'FORCE_NEW_SESSION';
 
 /**
   @instance
@@ -20,7 +27,7 @@ XT.session = SC.Object.create(
 
   /**
   */
-  acquireSession: function(username, password, organization, forceNew) {
+  acquireSession: function(username, password, organization) {
 
     // retrieve the session delegate (if one was set or the default empty
     // one if not)
@@ -30,45 +37,92 @@ XT.session = SC.Object.create(
     var session = {
       username: username,
       password: password,
-      organization: organization,
-      forceNew: !! forceNew
+      organization: organization
     };
 
-    // get the socket to the datasource
-    var socket = this.get('socket');
-
-    if (!socket) throw "Cannot communicate with datasource via socket " +
-      "to request a session, socket not available";
-
+    var details = XT.SessionDetail.create(session).freeze();
+    
     // let the delegate know we're about to request a new session
     delegate.willAcquireSession(session);
 
-    // send the request
-    socket.json.emit('requestSession', session);
+    // issue the actual request
+    XT.Request
+      .issue('session/request')
+      .notify(this, 'didAcquireSession', details)
+      .json().send(session);
   },
 
-  //...........................................
-  // SOCKET
-  //
-
-  /** 
-  */
-  _xt_socket: null,
-
-  /**
-  */
-  _xt_socketIsEnabled: false,
+  set: function(key, value) {
+    if (key === 'details') {
+      var details = this.get('details');
+      if (details) details.destroy();
+    }
+    return arguments.callee.base.apply(this, arguments);
+  },
 
   /**
   */
-  socket: function() {
-    var enabled = this.get('_xt_socketIsEnabled');
-    return enabled ? this.get('_xt_socket') : null;
-  }.property('_xt_socketIsEnabled').cacheable(),
+  didAcquireSession: function(response, details) {
+    // SC.Logger.info("didAcquireSession()");
 
-  //
-  // END SOCKET
-  //...........................................
+    // console.log("details ", details);
+
+    this.set('details', details);
+
+    // console.log("RESPONSE", response);
+
+    var delegate = this.get('delegate');
+
+    switch(response.code) {
+      case XT.SESSION_ERROR:
+
+        // temporary - true handling not known
+        SC.Logger.error(response.data);
+        break;
+      case XT.SESSION_VALID:
+
+        // copy the session data where it belongs
+        var details = XT.SessionDetail
+          .create(response.data).freeze();
+        
+        this.set('details', details);
+
+        // the delegate need to know what the hell just
+        // happened
+        delegate.didAcquireSession(details);
+  
+        // WTF?!?
+        XT.dataSource.set('isReady', true);
+
+        break;
+      case XT.SESSION_MULTIPLE:
+        var self = this;
+        var available = response.data;
+        var ack = function(selection) {
+          XT.Request
+            .issue('session/select')
+            .notify(self, 'didAcquireSession')
+            .send(selection);
+          this.isFired = true;
+        }
+
+        // allow the delegate to attempt to handle the
+        // sessions situation and if it doesn't go ahead
+        // and just force a new one to be created
+        if (!delegate.didReceiveMultipleSessions(available, ack)) {
+          SC.Logger.warn("Using the default to request new session even though multiple " +
+            "sessions already exist");
+          if (!ack.isFired) {
+            ack(XT.SESSION_FORCE_NEW); 
+          }
+        }
+
+        break;
+      default:
+        console.log("ok, wtf, really?", response);
+    }
+     
+  },
 
   //...........................................
   // PROPERTIES
@@ -92,6 +146,10 @@ XT.session = SC.Object.create(
   store: function() {
     return XT.store;
   }.property().cacheable(),
+
+  /**
+  */
+  details: XT.SessionDetail.create(),
 
   /**
     Loads session objects for settings, preferences and privileges into local
@@ -211,33 +269,12 @@ XT.session = SC.Object.create(
     return true;
   },
 
-  /** @private */
-  init: function() {
+});
 
-    // boring normal stuff
-    arguments.callee.base.apply(this, arguments);
 
-    var self = this;
-
-    // grab a fucking socket now thats interesting!
-    // the socket.io package is loaded inlined so
-    // we know its available, go ahead and setup the
-    // socket we want for session communication
-
-    // this...is ugly...?
-    XT.ready(function() {
-
-      // TODO: The underlying node datasource url will have to be exposed...
-      var socket = io.connect(/** REPLACE ME */ 'http://localhost:9000' + '/session');
-
-      // provide an update mechanism...
-      socket.on('connect', function() {
-        self.set('_xt_socketIsEnabled', true);
-      });
-
-      // set the property for future reference
-      self._xt_socket = socket;
-    });
-  },
-
+XT.ready(function() {
+  XT.socket.on('session/new', function(response) {
+    SC.Logger.info("Datasource pushed new session");
+    XT.session.didAcquireSession(response);
+  });
 });
