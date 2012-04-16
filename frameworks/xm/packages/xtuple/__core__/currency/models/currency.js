@@ -100,6 +100,9 @@ XM.Currency = XM.Document.extend(XM._Currency,
   @returns Receiver
 */
 XM.Currency.rate = function(currency, effective, callback) {
+  // TODO: Rework this to use sparse array technique to reduce
+  // datasource requests
+  
   if (!SC.kindOf(currency, XM.Currency) ||
       !SC.kindOf(effective, SC.DateTime)) return false;
   var that = this,

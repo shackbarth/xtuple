@@ -17,16 +17,24 @@ sc_require('mixins/_project');
 XM.Project = XM.Document.extend(XM._Project, XM.Documents, 
 /** @scope XM.Project.prototype */ {	
 
-  /** @private */
+  /**
+    @type Quantity
+  */
   budgetedHoursTotal: 0,
 
-  /** @private */ 
+  /**
+    @type Quantity
+  */ 
   actualHoursTotal: 0,
 
-  /** @private */
+  /**
+    @type Money
+  */
   budgetedExpensesTotal: 0,
 
-  /** @private */
+  /**  
+    @type Money
+  */
   actualExpensesTotal: 0,
 
   // .................................................
@@ -39,14 +47,20 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
     }
   }),
 
+  /**
+    @type Quantity
+  */
   balanceHoursTotal: function() {
     var hours = this.get('budgetedHoursTotal') - this.get('actualHoursTotal');
-    return SC.Math.round(hours, XT.QTY_SCALE);
+    return hours.toQuantity();
   }.property('budgetedHoursTotal','actualHoursTotal'),
 
+  /**
+    @type Money
+  */
   balanceExpensesTotal: function() {
     var expenses = this.get('budgetedExpensesTotal') - this.get('actualExpensesTotal');
-    return SC.Math.round(expenses, XT.MONEY_SCALE);
+    return expenses.toMoney();
   }.property('budgetedExpensesTotal','actualExpensesTotal'),
 
   copy: function() { 
@@ -66,7 +80,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
           hours = status & SC.Record.DESTROYED ? 0 : task.get('budgetedHours');
       budgetedHours = budgetedHours + hours;
     }
-    this.setIfChanged('budgetedHoursTotal', SC.Math.round(budgetedHours, XT.QTY_SCALE));
+    this.setIfChanged('budgetedHoursTotal', budgetedHours.toQuantity());
   },	
 
   updateActualHours: function() {
@@ -78,7 +92,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
           hours = status & SC.Record.DESTROYED ? 0 : task.get('actualHours');
       actualHours = actualHours + hours;
     }
-    this.setIfChanged('actualHoursTotal', SC.Math.round(actualHours, XT.QTY_SCALE));
+    this.setIfChanged('actualHoursTotal', actualHours.toQuantity());
   },
 
   updateBudgetedExpenses: function() {
@@ -90,7 +104,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
           expenses = status & SC.Record.DESTROYED ? 0 : task.get('budgetedExpenses');
       budgetedExpenses = budgetedExpenses + expenses;
     }
-    this.setIfChanged('budgetedExpensesTotal', SC.Math.round(budgetedExpenses, XT.MONEY_SCALE));
+    this.setIfChanged('budgetedExpensesTotal', budgetedExpenses.toMoney());
   },	
 
   updateActualExpenses: function() {
@@ -102,7 +116,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
           expenses = status & SC.Record.DESTROYED ? 0 : task.get('actualExpenses');
       actualExpenses = actualExpenses + expenses;
     }
-    this.setIfChanged('actualExpensesTotal', SC.Math.round(actualExpenses, XT.MONEY_SCALE));
+    this.setIfChanged('actualExpensesTotal', actualExpenses.toMoney());
   },	
 
   //..................................................

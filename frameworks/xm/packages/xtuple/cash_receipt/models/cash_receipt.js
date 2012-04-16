@@ -39,9 +39,26 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   receivablesLengthBinding: SC.Binding.from('*receivables.length').oneWay().noDelay(),
   
   /**
+    Money object for amount. Uses distribution date for exchange rate.
+    
+    @type XM.Money
+  */
+  amountMoney: null,
+  
+  /**
     Total amount applied.
+    
+    @type Number
   */
   applied: 0,
+  
+  /**
+    Money object for total amount applied. Uses application date
+    for exchange rate.
+    
+    @type XM.Money
+  */
+  appliedMoney: null,
   
   /**
     Total discount taken.
@@ -49,6 +66,17 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     @type Number
   */
   discount: 0,
+  
+  /**
+    @type Boolean
+  */
+  isUseCustomerDeposit: SC.Record.attr(Boolean, {
+    isRequired: true,
+    defaultValue: function() {
+      return XT.session.settings.get('EnableCustomerDeposits');
+    },
+    label: '_isUseCustomerDeposit'.loc()
+  }),
   
   /**
     Indicates whether to include outstanding credit memos in applications array.
@@ -64,17 +92,21 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   /**
     Total unapplied.
+    
+    @type Money
   */
   balance: function() {
     var amount = this.get('amount') || 0,
         applied = this.get('applied');
         
-    return SC.Math.round(amount - applied, XT.MONEY_SCALE);
+    return (amount - applied).toMoney();
   }.property('amount', 'applied').cacheable(),
   
   /**
     Return an array of applications filtered by the `includeCredits` 
     property and sorted by due date.
+    
+    @type SC.Array
   */
   filteredApplications: function() {
     var applications = this.get('applications'),
@@ -95,8 +127,28 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.property('includeCredits', 'applicationsLength').cacheable(),
   
   /**
+    The earliest date by which the application date may be set to.
+    
+    @type SC.DateTime
+  */
+  minApplyDate: function() {
+    var details = this.get('details'), minDate = false;
+    for (var i = 0; i < details.get('length'); i++) {
+      var docDate = details.objectAt(i).getPath('receivable.documentDate');
+      if (minDate) {
+        minDate = SC.DateTime.compareDate(minDate, docDate) < 0 ? docDate : minDate;
+      } else {
+        minDate = docDate;
+      }
+    }
+    return minDate;
+  }.property('detailsLength'),
+  
+  /**
     An array of open receivables for the selected `customer`. If the
     the cash receipt is posted this will return no results.
+    
+    @type SC.Array
   */
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
@@ -123,13 +175,48 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   // METHODS
   //
   
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    
+    // create money object and bindings for amount
+    var amountMoney = XM.Money.create();
+    this.set('amountMoney', amountMoney);
+    SC.Binding.from('amount', this)
+              .to('localValue', amountMoney)
+              .noDelay().connect();
+    SC.Binding.from('currency', this)
+              .to('currency', amountMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('distributionDate', this)
+              .to('effective', amountMoney)
+              .oneWay().noDelay().connect();
+    
+    // create money object and bindings for applied
+    var appliedMoney = XM.Money.create();
+    this.set('appliedMoney', appliedMoney);
+    SC.Binding.from('applied', this)
+              .to('localValue', appliedMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('currency', this)
+              .to('currency', amountMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('applicationDate', this)
+              .to('effective', appliedMoney)
+              .oneWay().noDelay().connect();
+  },
+  
   /**
     Apply the balance of the cash receipt to as many open `receivables`
     as possible. Credits are applied first if `includeCredits` is true,
     the balance is then applied to receivables ordered by date.
+    
+    If the global setting `HideApplyToBalance` is true, this funciton will
+    return false.
   */
   applyBalance: function() {
-    if (this.get('isPosted')) return;
+    if (this.get('isPosted') || XT.session.settings.get('HideApplyToBalance')) {
+      return false;
+    }
     var includeCredits = this.get('includeCredits'),
         applications = this.get('applications'), list;
        
@@ -188,7 +275,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       target: that,
       action: callback
     });
-    console.log("Post Cash Receipt: %@".fmt(id));
+    this.log("Post Cash Receipt: %@".fmt(id));
     
     // do it
     this.get('store').dispatch(dispatch);
@@ -221,7 +308,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       target: that,
       action: callback
     });
-    console.log("Void Cash Receipt: %@".fmt(id));
+    this.log("Void Cash Receipt: %@".fmt(id));
     
     // do it
     this.get('store').dispatch(dispatch);
@@ -235,7 +322,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     @returns Number
   */
   updateApplied: function(amount) {
-    var applied = SC.Math.round(this.get('applied') + amount, XT.MONEY_SCALE);
+    var applied = (this.get('applied') + amount).toMoney();
     this.set('applied', applied);
     return applied;
   },
@@ -247,7 +334,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     @returns Number
   */  
   updateDiscount: function(amount) {
-    var discount = SC.Math.round(this.get('discount') + amount, XT.MONEY_SCALE);
+    var discount = (this.get('discount') + amount).toMoney();
     this.set('discount', discount);
     return discount;
   },
@@ -266,6 +353,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   //
   
   currencyDidChange: function() {
+    if (this.isNotDirty()) return;
     var distributionDate = this.get('distributionDate'),
         currency = this.get('currency'),
         that = this;
@@ -291,8 +379,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         isUpdated = false,
         isNotFixedCurrency = details.get('length') ? false : true;
 
-    // things that affect exchange rate are only editable when no detail
-    this.distributionDate.set('isEditable', isNotFixedCurrency);
+    // currency is only editable when no detail
     this.currency.set('isEditable', isNotFixedCurrency);
     this.currencyRate.set('isEditable', isNotFixedCurrency);
     
@@ -327,6 +414,24 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       }
     }
   }.observes('detailsLength').cacheable(),
+  
+  datesDidChange: function() {
+    if (this.isNotDirty()) return;
+    var minApplyDate = this.get('minApplyDate'),
+        applicationDate = this.get('applicationDate'),
+        distributionDate = this.get('distributionDate');
+     
+    // application date can not be less than the minimum apply date
+    if (minApplyDate && SC.DateTime.compareDate(applicationDate, minApplyDate) < 0) {
+      applicationDate = minApplyDate;
+      this.set('applicationDate', applicationDate);
+    }
+    
+    // distribution date can not be greater than the application date
+    if (SC.DateTime.compareDate(distributionDate, applicationDate) > 0) {
+      this.set('distributionDate', applicationDate);
+    }    
+  }.observes('minApplyDate', 'applicationDate', 'distributionDate'),
 
   receivablesLengthDidChange: function() {
     var receivables = this.get('receivables'),
@@ -345,12 +450,34 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         applications.pushObject(application);
       }
     }
-  }.observes('receivablesLength').cacheable()
+  }.observes('receivablesLength').cacheable(),
+  
+  /**
+    Lock down changes if a credit card was processed.
+  */
+  statusDidChange: function() {
+    var status = this.get('status'), K = SC.Record,
+        fundsType = this.get('fundsType'), R = XM.CashReceipt;
+    if (status == K.READY_CLEAN && 
+       (fundsType == R.AMERICAN_EXPRESS ||
+        fundsType == R.DISCOVER ||
+        fundsType == R.MASTER_CARD ||
+        fundsType == R.VISA)) {
+      this.amount.set('isEditable', false);
+      this.currency.set('isEditable', false);
+      this.fundsType.set('isEditable', false);
+      this.documentNumber.set('isEditable', false);
+      this.documentDate.set('isEditable', false);
+      this.distributionDate.set('isEditable', false);
+      this.applicationDate.set('isEditable', false);
+    }
+  }.observes('status')
 
 });
 
 // class constants and methods
-XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
+XM.CashReceipt.mixin(
+   /** @scope XM.CashReceipt */ {
 
   //..................................................
   // CONSTANTS
@@ -450,7 +577,77 @@ XM.CashReceipt.mixin( /** @scope XM.CashReceipt */ {
     @type String
     @default O
   */
-  OTHER: 'O'
+  OTHER: 'O',
+  
+  //..................................................
+  // METHODS
+  //
+  
+  /**
+    Post an array of cash receipts. If any of the cash receipts passed 
+    are posted or in a dirty state, this function will return false.
+
+    @params {SC.Array} array of cash receipts
+    @returns Receiver
+  */
+  post: function(cashReceipts) { 
+    var that = this, dispatch,
+        ids = [];
+        
+    if(!cashReceipts || !cashReceipts.get('length')) return false;
+    
+    for(var i = 0; i < cashReceipts.get('length'); i++) {
+      var cashReceipt = cashReceipts.objectAt(i);
+      if(cashReceipt.get('isPosted') || cashReceipt.isDirty()) return false;
+      ids.push(cashReceipt.get('id'));
+    }
+    
+    // define callback
+    callback = function(err, result) {
+      for(var i = 0; i < cashReceipts.get('length'); i++) {
+        cashReceipts.objectAt(i).refresh();
+      }
+    }
+    
+    // set up
+    dispatch = XT.Dispatch.create({
+      className: 'XM.CashReceipt',
+      functionName: 'post',
+      parameters: [ids],
+      target: that,
+      action: callback
+    });
+    console.log("Post Cash Receipts: %@".fmt(ids));
+    
+    // do it
+    cashReceipts.firstObject().get('store').dispatch(dispatch);
+    return this;
+  },
+  
+  /**
+    Post all unposted cash receipts.
+
+    @returns Receiver
+  */
+  postAll: function() {
+    var that = this,qry, ary;
+      
+    // define the query
+    qry = SC.Query.local(XM.CashReceipt, {
+      conditions: "isPosted = NO AND isVoid = NO"
+    });
+    
+    // execute it
+    ary = XT.store.find(qry);
+    
+    // post when we get a result
+    ary.addObserver('status', ary, function observer() {
+      if (ary.get('status') === SC.Record.READY_CLEAN) {
+        ary.removeObserver('status', ary, observer);
+        XM.CashReceipt.post(ary);
+      }
+    })
+  }
 
 });
 

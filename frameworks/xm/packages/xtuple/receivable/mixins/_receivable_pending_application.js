@@ -6,15 +6,15 @@
 /*globals XM */
 
 /**
-  @scope XM.PendingApplication
+  @scope XM.ReceivablePendingApplication
   @mixin
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-XM._PendingApplication = {
-  /** @scope XM.PendingApplication.prototype */
+XM._ReceivablePendingApplication = {
+  /** @scope XM.ReceivablePendingApplication.prototype */
   
-  className: 'XM.PendingApplication',
+  className: 'XM.ReceivablePendingApplication',
 
   
 

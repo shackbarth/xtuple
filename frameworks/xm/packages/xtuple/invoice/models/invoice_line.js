@@ -16,10 +16,15 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   /** @scope XM.InvoiceLine.prototype */ {
   
   /**
-    An XM.Unit array of valid
+    An array of valid selling units.
+    
+    @type SC.Array
   */
   sellingUnits: [],
   
+  /**
+    @type Money
+  */
   tax: 0,
   
   /** @private */
@@ -93,12 +98,15 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
   // CALCULATED PROPERTIES
   //
 
+  /**
+    @type ExtendedPrice
+  */
   extendedPrice: function() {
     var billed = this.get('billed') || 0,
         qtyUnitRatio = this.get('quantityUnitRatio') || 1,
         price = this.get('price') || 0,
         priceUnitRatio = this.get('priceUnitRatio') || 1;
-    return SC.Math.round(billed * qtyUnitRatio * (price / priceUnitRatio), XT.EXTENDED_PRICE_SCALE);
+    return (billed * qtyUnitRatio * price / priceUnitRatio).toExtendedPrice();
   }.property('billed', 'price').cacheable(),
 
   //..................................................
@@ -333,7 +341,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       });
       
       // do it
-      console.log("XM.InvoiceTax for: %@".fmt(this.get('id')));
+      this.log("XM.InvoiceTax for: %@".fmt(this.get('id')));
       store.dispatch(dispatch);
     } else {
       // add up stored result

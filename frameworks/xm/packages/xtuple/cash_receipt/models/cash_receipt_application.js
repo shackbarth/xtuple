@@ -12,7 +12,7 @@
 
   @extends SC.Object
 */
-XM.CashReceiptApplication = SC.Object.extend(
+XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   /** @scope XM.CashReceiptApplication.prototype */ {
   
   cashReceipt: null,
@@ -20,13 +20,46 @@ XM.CashReceiptApplication = SC.Object.extend(
   cashReceiptDetail: null,
   
   receivable: null,
+  
+  /**
+    The amount to be applied in the money of the receivable.
+    
+    @type XM.Money
+  */
+  appliedMoney: null,
+  
+  /** @private */
+  appliedMoneyExchangeRate: 1,
+  
+  /** @private */
+  appliedMoneyExchangeRateBinding: SC.Binding.from('*appliedMoney.exchangeRate').oneWay().noDelay(),
+
+  /** @private */
+  isLoadingCashReceiptExchangeRate: false,
+  
+  /** @private */
+  isLoadingCashReceiptExchangeRateBinding: SC.Binding.from('*cashReceipt.amountMoney.isLoading').oneWay().noDelay(),
+  
+  /** @private */
+  isLoadingReceivableExchangeRate: false,
+  
+  /** @private */
+  isLoadingReceivableExchangeRateBinding: SC.Binding.from('*appliedMoney.isLoading').oneWay().noDelay(),
+  
+  /** 
+    The value of all pending applications in the receivable's currency.
+  */
+  pending: 0,
+  
+  /** @private */
+  pendingBinding: SC.Binding.from('*receivable.pending').oneWay().noDelay(),
 
   // .................................................
   // CALCULATED PROPERTIES
   //
   
   /**
-    The amount to be applied to the associated receivable.
+    The amount to be applied in the currency of the cash receipt.
     
     @type Number
   */
@@ -35,7 +68,7 @@ XM.CashReceiptApplication = SC.Object.extend(
   }.property('cashReceiptDetail').cacheable(),
 
   /**
-    The discount to be applied to the associated receivable.
+    The discount to be applied in the currency of the cash receipt.
     
     @type Number
   */
@@ -44,33 +77,26 @@ XM.CashReceiptApplication = SC.Object.extend(
   }.property('cashReceiptDetail').cacheable(),
   
   /**
-    Total applied amount of this cash receipt in the currency of the receivable.
+    The balance due on the receivable in the receivable's currency including pending
+    applications.
     
-    @type Number
-  */
-  receivableApplied: function() {
-    var applied = this.get('applied'),
-        discount = this.get('discount'),
-        crCurrencyRate = this.getPath('cashReceipt.currencyRate') || 1,
-        arCurrencyRate = this.getPath('receivable.currencyRate');
-    return SC.Math.round((applied + discount) * arCurrencyRate / crCurrencyRate, XT.MONEY_SCALE);
-  }.property('applied', 'discount').cacheable(),
-
-  /**
-    The balance due on the receivable in the receivable's currency.
-    
-    @type Number
+    @type Money
   */  
   balance: function() {
     var receivable = this.get('receivable'),
-        balance = receivable.getPath('receivable.balance'),
+        balance = receivable.get('balance'),
         pending = receivable.get('pending');
-    return SC.Math.round(balance - allPending, XT.MONEY_SCALE);
-  }.property('*receivable.pending').cacheable(),
+    return (balance - pending).toMoney();
+  }.property('pending'),
   
   // .................................................
   // METHODS
   //
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.set('appliedMoney', XM.Money.create()); // bindings set up by observers
+  },
   
   /**
     Apply an amount from the cash receipt associated with this application
@@ -78,30 +104,185 @@ XM.CashReceiptApplication = SC.Object.extend(
     
     @param {Number} amount
     @param {Number} discount
-    returns XM.CashReceiptDetail
   */
   apply: function(amount, discount) {
+    if (this.getPath('cashReceipt.isPosted')) return;
+    this._xm_amountPending = amount;
+    this._xm_discountPending = discount;
+    this._xm_apply();
+  },
+
+  /**
+    Apply as much as possible of the cash receipt to the balance of the receivable.
+    
+    @param {Function} optional - callback
+  */  
+  applyBalance: function(callback) {
+    this._xm_applyBalancePending = true;
+    this._xm_pendingCallback = callback;
+    this._xm_applyBalance();
+  },
+  
+  /**
+    Clear this application.
+  */
+  clear: function() {
     var cashReceipt = this.get('cashReceipt'),
-        isPosted = cashReceipt.get('isPosted'),
-        crCurrencyRate = cashReceipt.get('currencyRate'),
+        details = cashReceipt.get('details'),
         detail = this.get('cashReceiptDetail'),
-        applied = detail ? detail.get('amount') : 0,
+        id = detail.get('id'),
+        applied = this.get('applied') * -1,
+        discount = this.get('discount') * -1,
+        status = detail.get('status'), K = SC.Record;
+
+    // remove related pending application record
+    this._xm_removePending();
+    
+    // remove the detail from this object
+    if (detail) {
+      if (status == K.READY_NEW) details.removeObject(detail);
+      detail.destroy();
+      
+      // update the cash receipt totals
+      cashReceipt.updateApplied(applied);
+      cashReceipt.updateDiscount(discount);
+    }
+    this.set('cashReceiptDetail', null);
+  },
+
+  /** @private 
+    Creates a pending application record on the receivable so we get a correct total for "all pending" 
+    applications.
+    
+    @param {Number} total amount applied
+  */
+  _xm_createPending: function() {
+    var amount = this.getPath('appliedMoney.localValue'),
+        detail = this.get('cashReceiptDetail'),
         receivable = this.get('receivable'),
-        arCurrencyRate = receivable.get('currencyRate'),
-        arBalance = receivable.get('balance') - pending,
+        recordType = XM.ReceivablePendingApplication,
+        store, storeKey, pending, applications;
+
+    // bail if nothing to do
+    if (!detail || !receivable) return;
+
+    // create a pending application record (info only, the datasource will ignore this)
+    store = receivable.get('store');
+    storeKey = store.loadRecord(recordType, {
+      guid: detail.get('id'),
+      pendingApplicationType: recordType.CASH_RECEIPT,
+      receivable: receivable,
+      amount: amount
+    });
+    pending = store.materializeRecord(storeKey);
+      
+    // bind the ids of detail (which may have a temporory id at this time)
+    // we may need to reference this later if this application gets cleared
+    SC.Binding.from('id', detail).to('id', pending).oneWay().noDelay().connect();
+      
+    // push new pending record into pending applications array
+    applications = receivable.get('pendingApplications');
+    applications.pushObject(pending);
+    
+    this.log('Created pending application: %@'.fmt(pending.toString()));
+  },
+  
+  /** @private
+    Removes the pending application record associated with detail on this object from the receivable.
+  */
+  _xm_removePending: function() {
+    var applications = this.getPath('receivable.pendingApplications'),
+        store = this.getPath('receivable.store'),
+        id = this.getPath('cashReceiptDetail.id'), pending;
+    if (id && applications) pending = applications.findProperty('id', id);
+    if (pending) {
+      // just remove, don't destroy because we might reintroduce later
+      applications.removeObject(pending);
+      store.unloadRecord(XM.ReceivablePendingApplication, id);
+    }
+  },
+  
+  // .................................................
+  // OBSERVERS
+  //
+  
+  /**
+    Updates the value of applied money and rebuilds pending applications as needed.
+  */
+  appliedDidChange: function() {
+    if (this.get('isLoadingReceivableExchangeRate') ||
+        this.get('isLoadingCashReceiptExchangeRate')) return;
+        
+    var crCurrencyRate = this.getPath('cashReceipt.amountMoney.exchangeRate'),
+        arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
+        applied = this.get('applied'),
+        discount = this.get('discount'),
+        arApplied = ((applied + discount) * arCurrencyRate / crCurrencyRate).toMoney(); 
+        
+    this.log('applied did change: %@'.fmt(arApplied));    
+        
+    // update applied money
+    this.setPathIfChanged('appliedMoney.localValue', arApplied);
+    
+    // rebuild pending application records
+    var amount = this.get('applied') + this.get('discount');
+    this._xm_removePending();
+    this._xm_createPending();
+  }.observes('applied', 'appliedMoneyExchangeRate', 'isLoadingReceivableExchangeRate', 'isLoadingCashReceiptExchangeRate'),
+
+  /** @private */  
+  _xm_cashReceiptDidChange: function() {
+    var cashReceipt = this.get('cashReceipt'),
+        appliedMoney = this.get('appliedMoney');
+    SC.Binding.from('applicationDate', cashReceipt)
+          .to('effective', appliedMoney)
+          .oneWay().noDelay().connect();
+  }.observes('cashReceipt'),
+
+  /** @private */ 
+  _xm_receivableDidChange: function() {
+    var currency = this.getPath('receivable.currency'),
+        appliedMoney = this.get('appliedMoney');
+    appliedMoney.set('currency', currency);
+  }.observes('receivable'),
+  
+  /** @private
+    Execute any pending request to apply cash. If the client is waiting
+    for exchange rate data, punt and try again when loading is complete.
+  */
+  _xm_apply: function() {
+    // bail if nothing to do
+    if (SC.none(this._xm_amountPending)) return;
+    
+    // can't process if exchange rates are still loading
+    if (this.get('isLoadingCashReceiptExchangeRate') ||
+        this.get('isLoadingReceivableExchangeRate')) {
+      this.log('Exiting apply pending until exchange rates loaded.');
+      return;
+    }
+    
+    // setup
+    var cashReceipt = this.get('cashReceipt'),
+        crCurrencyRate = cashReceipt.get('appliedMoney.exchangeRate'),
+        arCurrencyRate = this.get('appliedMoney.exchangeRate'),
+        detail = this.get('cashReceiptDetail'),
+        receivable = this.get('receivable'),
         documentType = receivable.get('documentType'),
-        pending = receivable.get('pending'),
+        applied = this.get('applied'),
+        balance = this.get('balance'),
         store = receivable.get('store'),
-        storeKey, pending; 
+        discount = this._xm_discountPending || 0,
+        amount = this._xm_amountPending;
         
     // calculate balance in cash receipt currency
-    arBalance = SC.Math.round(arBalance * crCurrencyRate / arCurrencyRate + applied, XT.MONEY_SCALE);
+    balance =(balance * crCurrencyRate / arCurrencyRate + applied).toMoney();
   
     // values must be valid
-    discount = discount || 0;
     if (amount < 0 || discount < 0 || 
-        amount + discount - applied > arBalance ||
-        isPosted) return false;
+        amount + discount > balance) {
+      this.error('Can not apply a value greater than the balance');
+      return false;
+    }
   
     // credits need sense reversed
     if (documentType === XM.Receivable.CREDIT_MEMO || 
@@ -110,13 +291,8 @@ XM.CashReceiptApplication = SC.Object.extend(
       discount = 0; // should never be a discount on credit
     }
   
-    // destroy the old detail
-    if (detail) { 
-      var id = detail.get('id');
-      detail.destroy();
-      pending = receivable.get('pendingApplications').findProperty('id', id);
-      if (pending) pending.destroy();
-    };
+    // clear the old detail
+    if (detail) this.clear();
     
     // create a new detail
     detail = store.createRecord(XM.CashReceiptDetail, {});
@@ -127,35 +303,40 @@ XM.CashReceiptApplication = SC.Object.extend(
               
     // associate detail to this application
     this.set('cashReceiptDetail', detail);
- 
-    // create a pending application record (info only, the datasource will ignore this)
-    storeKey = store.loadRecord(XM.PendingApplication, {
-      guid: detail.get('id'),
-      pendingApplicationType: XM.PendingApplication.CASH_RECEIPT,
-      receivable: receivable,
-      amount: (amount + discount) * arCurrencyRate / crCurrencyRate
-    });
-    pending = store.materializeRecord(storeKey);
-    
-    // bind the ids of detail (which may have a temporory id at this time)
-    // and pending in case detail gets destroyed in the same session
-    SC.Binding.from('id', detail).to('id', pending).oneWay().noDelay().connect();
-    
-    // associate detail to pending applications
-    receivable.get('pendingApplications').pushObject(pending);
 
-    return detail;
-  },
-  
-  applyBalance: function() {
+    // notify caller if applicable
+    if (this._xm_callbackPending) this._xm_callbackPending.call(detail);
+    
+    // reset
+    this._xm_amountPending = undefined;
+    this._xm_discountPending = undefined;
+    this._xm_callbackPending = undefined;
+  }.observes('isLoadingReceivableExchangeRate', 'isLoadingCashReceiptExchangeRate'),
+
+  /** @private
+    Execute any pending request to apply cash balance. If the client is waiting
+    for exchange rate data, punt and try again when loading is complete.
+  */
+  _xm_applyBalance: function() {
+    // bail if nothing to do
+    if (!this._xm_applyBalancePending) return;
+    
+    // can't process if exchange rates are still loading
+    if (this.get('isLoadingCashReceiptExchangeRate') ||
+        this.get('isLoadingReceivableExchangeRate')) {
+      this.log('Exiting apply pending until exchange rates loaded.');
+      return;
+    }
+    
+    //setup
     var applied = this.get('applied'),
         cashReceipt = this.get('cashReceipt'),
-        crCurrencyRate = cashReceipt.get('currencyRate'),
         crBalance = cashReceipt.get('balance'),
+        crCurrencyRate = cashReceipt.get('appliedMoney.exchangeRate'),
+        arCurrencyRate = this.get('appliedMoney.exchangeRate'),
         receivable = this.get('receivable'),
         documentType = receivable.get('documentType'),
-        arCurrencyRate = receivable.get('currencyRate'),
-        arBalance = receivable.get('balance') - receivable.get('pending'),
+        arBalance = this.get('balance'),
         documentDate = receivable.get('documentDate'),
         terms = receivable.get('terms'),
         discountDate = terms ? terms.calculateDiscountDate(documentDate) : null,
@@ -163,25 +344,25 @@ XM.CashReceiptApplication = SC.Object.extend(
         discount = 0, amount;
 
     // determine balance we could apply in cash receipt currency
-    amount = SC.Math.round(crBalance + applied, XT.MONEY_SCALE);  
-    arBalance = SC.Math.round(arBalance * crCurrencyRate / arCurrencyRate + applied, XT.MONEY_SCALE);
+    amount = (crBalance + applied).toMoney();
+    balance = (arBalance * crCurrencyRate / arCurrencyRate + applied).toMoney();
         
     // bail out if nothing to do
-    if (arBalance === 0 || amount === 0) return this.get('detail');
+    if (balance === 0 || amount === 0) return;
     
     // calculate discount if applicable
-    if (arBalance > 0 && discountDate && 
+    if (balance > 0 && discountDate && 
         SC.DateTime.compareDate(documentDate, discountDate) <= 0) {
-      discount = SC.Math.round(arBalance * discountPercent, XT.MONEY_SCALE);
+      discount = (balance * discountPercent).toMoney();
     }
     
     // adjust the amount or discount as appropriate and apply
     if (documentType === XM.Receivable.INVOICE || 
         documentType === XM.Receivable.DEBIT_MEMO) {
       if (arBalance <= amount + discount) {
-        amount = SC.Math.round(arBalance - discount, XT.MONEY_SCALE);
+        amount = (arBalance - discount).toMoney;
       } else {
-        discount = SC.Math.round((amount / (1 - discountPercent)) - amount, XT.MONEY_SCALE);
+        discount = ((amount / (1 - discountPercent)) - amount).toMoney();
       }
     } else {
       amount = arBalance;
@@ -189,19 +370,8 @@ XM.CashReceiptApplication = SC.Object.extend(
     }
     if (amount) return this.apply(amount, discount);
     
-    // if there was nothing to apply
-    return false;
-  },
-  
-  clear: function() {
-    var detail = this.get('cashReceiptDetail');
-    if (detail) detail.destroy();
-    this.set('cashReceiptDetail', null);
-  }
-  
-  // .................................................
-  // OBSERVERS
-  //
+    this._xm_applyBalancePending = false;
+  }.observes('isLoadingReceivableExchangeRate', 'isLoadingCashReceiptExchangeRate'),
   
 });
 

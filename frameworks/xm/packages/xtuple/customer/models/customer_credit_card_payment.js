@@ -5,14 +5,12 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/customer/models
-
 sc_require('mixins/_customer_credit_card_payment');
 
 /**
   @class
 
-  @extends XM.Record
+  @extends XT.Record
 */
 XM.CustomerCreditCardPayment = XT.Record.extend(XM._CustomerCreditCardPayment,
   /** @scope XM.CustomerCreditCardPayment.prototype */ {

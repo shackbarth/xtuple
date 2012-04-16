@@ -53,7 +53,7 @@ XM.TaxableDocument = XM.Document.extend(XM.Taxable,
           tax = status & SC.Record.DESTROYED ? 0 : misc.get('tax');
       miscTax = miscTax + tax; 
     } 
-    this.setIfChanged('miscTax', SC.Math.round(miscTax, XT.MONEY_SCALE));
+    this.setIfChanged('miscTax', miscTax.toMoney());
   },
 
   //..................................................
