@@ -72,12 +72,11 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
 
-  // var contentArea = SC.LayoutSurface.create({
-  //   layout: { top: 44, left: 320, right: 0, bottom: 0 }
-  // });
-  var editor = Postbooks.PropertiesEditorForClass(baseClass, controller);
+  var tiles = Postbooks.TilesForClass(baseClass, controller);
+  console.log(tiles);
 
-  // contentArea.get('subsurfaces').pushObject(editor);
+  var editor = Postbooks.TileCarousel.create();
+  editor.get('tray').set('subsurfaces', tiles);
 
   var contentArea = SC.ContainerSurface.create({
     layout: { top: 44, left: 320, right: 0, bottom: 0 },

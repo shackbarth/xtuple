@@ -5,6 +5,7 @@
 /*globals Postbooks XM sc_assert */
 
 sc_require('views/carousel');
+sc_require('views/tile_view');
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -24,47 +25,82 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
+Postbooks.TilesForClass = function(klass, controller) {
+  var tiles = [],
+      proto = klass.prototype;
+
+  tiles.push(Postbooks.PropertiesEditorForClass(klass, controller));
+
+  for (var key in proto) {
+    if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
+
+    var property = proto[key];
+
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      continue;
+
+    // } else if (property && property.isChildAttribute) {
+    } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+      var objectKlass = property.get('typeClass');
+
+      var objectController = SC.ObjectController.create({
+        contentBinding: SC.Binding.from(key, controller).single().oneWay()
+      });
+
+      tiles.push(Postbooks.PropertiesEditorForClass(objectKlass, objectController, key));
+    }
+  }
+
+  return tiles;
+};
+
 /** Builds an SC.View subcass that can edit properties of the record class. */
-Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
-  var view = SC.View.create({
+Postbooks.PropertiesEditorForClass = function(klass, controller, propertyKey) {
+  var view = Postbooks.TileView.create({
         layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
         hasHorizontalScroller: false,
         mouseDown: function(evt) {
-          var carousel;
-
-          carousel = this.get('supersurface');
-          while (carousel && carousel.constructor !== Postbooks.Carousel) {
-            carousel = carousel.get('supersurface');
-          }
-
-          if (!carousel) return false;
-
-          var tray = carousel.get('tray'),
-              next = tray.get('subsurfaces')[0];
-
+          // var carousel;
+          // 
+          // carousel = this.get('supersurface');
+          // while (carousel && carousel.constructor !== Postbooks.Carousel) {
+          //   carousel = carousel.get('supersurface');
+          // }
+          // 
+          // if (!carousel) return false;
+          // 
+          // var tray = carousel.get('tray'),
+          //     next = tray.get('subsurfaces')[0];
+          // 
           SC.EndEditingTextLayer();
-          if (next) {
-            next.set('selection', SC.IndexSet.create().freeze());
-            carousel.makeSurfaceVisible(next);
-          }
+          // if (next) {
+          //   next.set('selection', SC.IndexSet.create().freeze());
+          //   carousel.makeSurfaceVisible(next);
+          // }
 
           return true;
+        },
+
+        willRenderLayers: function(context) {
+          context.fillStyle = base3;
+          context.fillRect(0, 3, context.width, 38);
+
+          context.fillStyle = base00;
+          context.fillRect(20, 6, 32, 32);
+
+          context.font = "12pt Calibri";
+          context.fillStyle = 'black';
+          context.textAlign = 'left';
+          context.textBaseline = 'middle';
+
+          context.fillText(propertyKey? propertyKey.titleize() : "Overview", 72, 22);
         }
       }),
       layers = view.get('layers'),
-      layout = SC.LayoutSurface.create({
-        layout: { top: 0, left: 0, right: 0, bottom: 0 }
-      }),
-      y = 16,
-      proto = klass.prototype,
-      items = [];
-
-  // Individual surfaces are added below.
-  var tabSurfaces = {
-    // layout: { bottom: 0, left: 0, right: 0, height: 0.5 },
-    layout: { top: 0, left: 0, right: 0, bottom: 0 }, // top set below
-    items: items
-  };
+      y = 44,
+      proto = klass.prototype;
 
   for (var key in proto) {
     if (key === 'guid') continue;
@@ -72,38 +108,13 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
     if (key === 'dataState') continue;
 
     var property = proto[key],
-        left = 200, right = 40;
+        left = 120, right = 12;
 
-   if (property && !stop && (property.isChildrenAttribute || property.isManyAttribute)) {
+   if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
      continue;
-     // var arrayKlass = property.get('typeClass');
-     // 
-     // items.push({
-     //   title: key.titleize().pluralize(),
-     //   value: key + 'Surface',
-     //   enabled: true
-     // });
-     // 
-     // var arrayController = SC.ArrayController.create({
-     //   contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
-     // });
-     // 
-     // tabSurfaces[key + 'Surface'] = Postbooks.ListViewForClass(arrayKlass, arrayController);
 
-   } else if (property && !stop && (property.isChildAttribute || property.isSingleAttribute)) {
-      var objectKlass = property.get('typeClass');
-
-      items.push({
-        title: key.titleize(),
-        value: key + 'Surface',
-        enabled: true
-      });
-
-      var objectController = SC.ObjectController.create({
-        contentBinding: SC.Binding.from(key, controller).single().oneWay()
-      });
-
-      tabSurfaces[key + 'Surface'] = Postbooks.PropertiesEditorForClass(objectKlass, objectController, property.isSingleAttribute);
+   } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+     continue;
 
     } else if (property && property.isRecordAttribute) {
       if (property.isChildrenAttribute)    continue;
@@ -116,7 +127,8 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
 
         if (typeClass === String) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 0, height: 24, width: left - 6 },
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
             textAlign: 'right',
             value: key.titleize() + ':'
           });
@@ -127,7 +139,8 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
           y += 24;
         } else if (typeClass === Number) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 0, height: 24, width: left - 6 },
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
             textAlign: 'right',
             value: key.titleize() + ':'
           });
@@ -140,7 +153,8 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
           y += 24;
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 0, height: 24, width: left - 6 },
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
             textAlign: 'right',
             value: key.titleize() + ':'
           });
@@ -153,7 +167,8 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
           y += 24;
         } else if (typeClass === SC.DateTime) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 0, height: 24, width: left - 6 },
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
             textAlign: 'right',
             value: key.titleize() + ':'
           });
@@ -187,29 +202,7 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, stop) {
     }
   }
 
-  var MyTabSurface = SC.TabSurface.extend({
-    theme: 'regular',
-    itemTitleKey: 'title',
-    itemValueKey: 'value',
-    itemIconKey: 'icon',
-    itemIsEnabledKey: 'enabled'
-  });
-
-  // console.log('items', items);
-
-  tabSurfaces.value = items.length? items[0].value : null;
-
-  if (items.length === 0) view.set('layout', { top: 0, left: 0, right: 0, bottom: 0 });
-  else {
-    view.set('layout', { top: 0, left: 0, right: 0, height: y });
-    tabSurfaces.layout.top = y + 6;
-  }
-
-  var tabs = MyTabSurface.create(tabSurfaces);
-
-  layout.get('subsurfaces').pushObject(view);
-  if (items.length) layout.get('subsurfaces').pushObject(tabs);
-  return layout;
+  return view;
 };
 
 Postbooks.ListViewForClass = function(klass, controller) {

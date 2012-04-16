@@ -78,11 +78,15 @@ Postbooks.Carousel = SC.CompositeSurface.extend({
     if (this._sc_visibleSurface) this.makeSurfaceVisible(this._sc_visibleSurface);
   },
 
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
+  initTray: function() {
     var tray;
     tray = this._sc_tray = Postbooks.InternalCarouselTray.create();
     this.get('subsurfaces').pushObject(tray);
+  },
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    this.initTray();
   }
 
 });
