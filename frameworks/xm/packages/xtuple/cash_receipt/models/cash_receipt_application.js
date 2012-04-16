@@ -327,13 +327,13 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
       this.log('Exiting apply pending until exchange rates loaded.');
       return;
     }
-    
+
     //setup
     var applied = this.get('applied'),
         cashReceipt = this.get('cashReceipt'),
         crBalance = cashReceipt.get('balance'),
-        crCurrencyRate = cashReceipt.get('appliedMoney.exchangeRate'),
-        arCurrencyRate = this.get('appliedMoney.exchangeRate'),
+        crCurrencyRate = cashReceipt.getPath('appliedMoney.exchangeRate'),
+        arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
         receivable = this.get('receivable'),
         documentType = receivable.get('documentType'),
         arBalance = this.get('balance'),
@@ -346,7 +346,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     // determine balance we could apply in cash receipt currency
     amount = (crBalance + applied).toMoney();
     balance = (arBalance * crCurrencyRate / arCurrencyRate + applied).toMoney();
-        
+  
     // bail out if nothing to do
     if (balance === 0 || amount === 0) return;
     
@@ -359,8 +359,8 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     // adjust the amount or discount as appropriate and apply
     if (documentType === XM.Receivable.INVOICE || 
         documentType === XM.Receivable.DEBIT_MEMO) {
-      if (arBalance <= amount + discount) {
-        amount = (arBalance - discount).toMoney;
+      if (balance <= amount + discount) {
+        amount = (balance - discount).toMoney();
       } else {
         discount = ((amount / (1 - discountPercent)) - amount).toMoney();
       }
