@@ -19,3 +19,7 @@ socket.on('connect', function() {
   clearInterval(socketInterval);
   SC.Logger.info("Connected to datasource via socket");
 });
+// for debugging purposes
+socket.on('debug', function(payload) {
+  console.log("<<SOCKET DEBUG MESSAGE>> " + payload.message, "\n<<END>>");
+});
