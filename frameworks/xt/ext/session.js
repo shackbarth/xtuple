@@ -4,28 +4,152 @@
 // ==========================================================================
 /*globals XT */
 
-sc_require('ext/store');
+sc_require('ext/request');
 sc_require('ext/dispatch');
+sc_require('ext/session_detail');
+sc_require('delegates/session_delegate');
 
-/** @instance
+XT.SESSION_MULTIPLE     = 0x01;
+XT.SESSION_ERROR        = 0x02;
+XT.SESSION_VALID        = 0x04;
+XT.SESSION_FORCE_NEW    = 'FORCE_NEW_SESSION';
 
-  An object that contains user login information for quick access at run time.
-
+/**
+  @instance
   @extends SC.Object
 */
+XT.session = SC.Object.create(
+  /** @lends XT.Session.prototype */ {
 
-XT.session = SC.Object.create({
+  //...........................................
+  // METHODS
+  //
 
-  SETTINGS:             0x0100,
-  PRIVILEGES:           0x0200,
-  LOCALE:               0x0400,
-  ALL:                  0x0100 | 0x0200 | 0x0400,
+  /**
+  */
+  acquireSession: function(username, password, organization) {
 
-  privileges: null,
+    // retrieve the session delegate (if one was set or the default empty
+    // one if not)
+    var delegate = this.get('delegate');
 
+    // this is just a parameter-hash to send to the datasource
+    var session = {
+      username: username,
+      password: password,
+      organization: organization
+    };
+
+    var details = XT.SessionDetail.create(session).freeze();
+    
+    // let the delegate know we're about to request a new session
+    delegate.willAcquireSession(session);
+
+    // issue the actual request
+    XT.Request
+      .issue('session/request')
+      .notify(this, 'didAcquireSession', details)
+      .json().send(session);
+  },
+
+  set: function(key, value) {
+    if (key === 'details') {
+      var details = this.get('details');
+      if (details) details.destroy();
+    }
+    return arguments.callee.base.apply(this, arguments);
+  },
+
+  /**
+  */
+  didAcquireSession: function(response, details) {
+    // SC.Logger.info("didAcquireSession()");
+
+    // console.log("details ", details);
+
+    this.set('details', details);
+
+    // console.log("RESPONSE", response);
+
+    var delegate = this.get('delegate');
+
+    switch(response.code) {
+      case XT.SESSION_ERROR:
+
+        // temporary - true handling not known
+        SC.Logger.error(response.data);
+        break;
+      case XT.SESSION_VALID:
+
+        // copy the session data where it belongs
+        var details = XT.SessionDetail
+          .create(response.data).freeze();
+        
+        this.set('details', details);
+
+        // the delegate need to know what the hell just
+        // happened
+        delegate.didAcquireSession(details);
+  
+        // WTF?!?
+        XT.dataSource.set('isReady', true);
+
+        break;
+      case XT.SESSION_MULTIPLE:
+        var self = this;
+        var available = response.data;
+        var ack = function(selection) {
+          XT.Request
+            .issue('session/select')
+            .notify(self, 'didAcquireSession')
+            .send(selection);
+          this.isFired = true;
+        }
+
+        // allow the delegate to attempt to handle the
+        // sessions situation and if it doesn't go ahead
+        // and just force a new one to be created
+        if (!delegate.didReceiveMultipleSessions(available, ack)) {
+          SC.Logger.warn("Using the default to request new session even though multiple " +
+            "sessions already exist");
+          if (!ack.isFired) {
+            ack(XT.SESSION_FORCE_NEW); 
+          }
+        }
+
+        break;
+      default:
+        console.log("ok, wtf, really?", response);
+    }
+     
+  },
+
+  //...........................................
+  // PROPERTIES
+  //
+
+  /**
+    The session delegate receives calls on specific
+    events related to the session.
+
+    @property
+    @default XT.SessionDelegate
+  */
+  delegate: XT.SessionDelegate,
+
+  SETTINGS:         0x01,
+  PRIVILEGES:       0x02,
+  LOCALE:           0x04,
+  ALL:              0x01 | 0x02 | 0x04,
+
+  /** @private */
   store: function() {
     return XT.store;
   }.property().cacheable(),
+
+  /**
+  */
+  details: XT.SessionDetail.create(),
 
   /**
     Loads session objects for settings, preferences and privileges into local
@@ -34,7 +158,7 @@ XT.session = SC.Object.create({
     arguments are passed the default is `XT.session.ALL` which will load all
     session objects.
   */
-  load: function(types) {
+  loadSessionObjects: function(types) {
     var self = this,
         store = this.get('store'),
         dispatch, callback;
@@ -145,9 +269,12 @@ XT.session = SC.Object.create({
     return true;
   },
 
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-    XT.ready(function() { XT.session.load(); });
-  }
+});
 
+
+XT.ready(function() {
+  XT.socket.on('session/new', function(response) {
+    SC.Logger.info("Datasource pushed new session");
+    XT.session.didAcquireSession(response);
+  });
 });

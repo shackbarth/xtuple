@@ -1,5 +1,5 @@
 {
-  "type": "lazy",
+  "type": "demand",
   "dependencies": [
     "__core__"
   ]
