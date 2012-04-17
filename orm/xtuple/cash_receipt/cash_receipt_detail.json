@@ -41,7 +41,7 @@
     {
       "name": "amount",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "cashrcptitem_amount",
         "isRequired": true
       }
@@ -49,7 +49,7 @@
     {
       "name": "discount",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "cashrcptitem_discount",
         "isRequired": true,
         "defaultValue": 0

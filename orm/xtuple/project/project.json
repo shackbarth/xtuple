@@ -50,6 +50,22 @@
       }
     },
     {
+      "name": "account",
+      "toOne": {
+        "isNested": true,
+        "type": "Account",
+        "column": "prj_crmacct_id"
+      }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "isNested": true,
+        "type": "Contact",
+        "column": "prj_cntct_id"
+      }
+    },
+    {
       "name": "notes",
       "attr": {
         "type": "String",

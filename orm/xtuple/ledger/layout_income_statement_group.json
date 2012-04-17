@@ -7,10 +7,10 @@
   "comment": "Layout Income Statement Group Map",
   "privileges": {
     "all": {
-      "create": true,
-      "read": true,
-      "update": true,
-      "delete": true
+      "create": "MaintainFinancialLayouts",
+      "read": "ViewFinancialLayouts",
+      "update": "MaintainFinancialLayouts",
+      "delete": "MaintainFinancialLayouts"
     }
   },
   "properties": [
@@ -54,7 +54,8 @@
       "name": "isShowSubtotal",
       "attr": {
         "type": "Boolean",
-        "column": "flgrp_subtotal"
+        "column": "flgrp_subtotal",
+        "defaultValue": false
       }
     },
     {
@@ -123,6 +124,5 @@
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }

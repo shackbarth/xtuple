@@ -7,10 +7,10 @@
   "comment": "Layout Income Statement Detail Map",
   "privileges": {
     "all": {
-      "create": true,
-      "read": true,
-      "update": true,
-      "delete": true
+      "create": "MaintainFinancialLayouts",
+      "read": "ViewFinancialLayouts",
+      "update": "MaintainFinancialLayouts",
+      "delete": "MaintainFinancialLayouts"
     }
   },
   "properties": [
@@ -125,6 +125,15 @@
       }
     },
     {
+      "name": "customSource",
+      "attr": {
+        "type": "Boolean",
+        "column": "flitem_custom_source",
+        "value": "S",
+        "isVisible": false
+      }
+    },
+    {
       "name": "percentlayoutIncomeStatementGroup",
       "toOne": {
         "type": "LayoutIncomeStatementGroup",
@@ -139,6 +148,5 @@
       }
     }
   ],
-  "isNestedOnly": true,
   "isSystem": true
 }
