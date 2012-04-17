@@ -4,6 +4,7 @@ var path = require('path');
 
 module.exports = BT.Framework.create({
 
-  sourceTree: path.join(__dirname, "..")
+  sourceTree: path.join(__dirname, ".."),
+  usePackages: true
 
 });
