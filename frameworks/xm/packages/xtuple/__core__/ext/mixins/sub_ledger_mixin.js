@@ -39,7 +39,7 @@ XM.SubLedgerMixin =
   paid: function() {
     var asOf = this.get('asOf'),
         applications = this.get('applications'),
-        paid = new Money(0);
+        paid = 0;
     for (var i = 0; i < applications.get('length'); i++) {
       var application = applications.objectAt(i), 
           postDate = application.get('postDate');
