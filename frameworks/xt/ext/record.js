@@ -316,12 +316,12 @@ XT.Record = SC.Record.extend(XT.Logging,
     else if (status === K.DESTROYED_DIRTY) value = 'deleted';
     else if (status & K.DIRTY)             value = 'updated';
 
-    if (status !== K.DESTROYED_CLEAN && status !== K.ERROR) {
-      // You cannot write attributes once an object is fully destroyed.
+    // only update attribute in valid states
+    if (status !== K.DESTROYED_CLEAN && 
+        status !== K.ERROR &&
+        status !== K.EMPTY) {
       this.writeAttribute(key, value, YES);
     }
-
-
     this.log('Change status %@:%@ to %@'
              .fmt(this.get('className'),this.get('id'), this.statusString()));
   }.observes('status'),
@@ -453,36 +453,8 @@ XT.Record = SC.Record.extend(XT.Logging,
     }
 
     return this ;
-  },
-  
-  /**
-    Reimplemented from `SC.Record`
-
-    Don't notify status change for every event. 
-  */
-  recordDidChange: function(key) {
-
-    // If we have a parent, they changed too!
-    var p = this.get('parentRecord');
-    if (p) {
-      var psk = p.get('storeKey'),
-          csk = this.get('storeKey'),
-          store = this.get('store'),
-          path = store.parentRecords[psk][csk];
-  
-      p.recordDidChange(path);
-    }
-
-    this.get('store').recordDidChange(null, null, this.get('storeKey'), key);
-    if (key === 'status') this.notifyPropertyChange('status');
-
-    // If there are any aggregate records, we might need to propagate our new
-    // status to them.
-    this.propagateToAggregates();
-
-    return this ;
   }
-
+  
 });
 
 // Class Methods
