@@ -453,36 +453,8 @@ XT.Record = SC.Record.extend(XT.Logging,
     }
 
     return this ;
-  },
-  
-  /**
-    Reimplemented from `SC.Record`
-
-    Don't notify status change for every event. 
-  */
-  recordDidChange: function(key) {
-
-    // If we have a parent, they changed too!
-    var p = this.get('parentRecord');
-    if (p) {
-      var psk = p.get('storeKey'),
-          csk = this.get('storeKey'),
-          store = this.get('store'),
-          path = store.parentRecords[psk][csk];
-  
-      p.recordDidChange(path);
-    }
-
-    this.get('store').recordDidChange(null, null, this.get('storeKey'), key);
-    if (key === 'status') this.notifyPropertyChange('status');
-
-    // If there are any aggregate records, we might need to propagate our new
-    // status to them.
-    this.propagateToAggregates();
-
-    return this ;
   }
-
+  
 });
 
 // Class Methods
