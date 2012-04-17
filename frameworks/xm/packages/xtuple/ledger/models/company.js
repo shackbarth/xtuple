@@ -12,26 +12,30 @@ sc_require('mixins/_company');
 
   @extends XT.Record
 */
-XM.Company = XT.Record.extend(XM._Company,
-/** @scope XM.Company.prototype */ {
+XM.Company = XM.Document.extend(XM._Company,
+	/** @scope XM.Company.prototype */ {
 
-// .................................................
-// CALCULATED PROPERTIES
-//
+	documentKey: 'number',
 
-number: SC.Record.attr(Number, {
-  toType: function(record, key, value) {
-  if(value) return value.get('length') <= 2 ? value : null;
-  }
-}),
 
-//..................................................
-// METHODS
-//
+	// .................................................
+	// CALCULATED PROPERTIES
+	//
 
-//..................................................
-// OBSERVERS
-//
+	number: SC.Record.attr(String, {
+		fromType: function(record, key, value) {
+			var segmentSize = XT.session.settings.get('GLCompanySize');
+			return value.substr(0,segmentSize)
+		} 
+	}),
+
+	//..................................................
+	// METHODS
+	//
+
+	//..................................................
+	// OBSERVERS
+	//
 
 });
 
