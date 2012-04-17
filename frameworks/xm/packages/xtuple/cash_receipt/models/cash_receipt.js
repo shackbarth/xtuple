@@ -432,10 +432,11 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       // if not found make one
       if ((status & SC.Record.DESTROYED) === 0) {
         if (!application) {
-          application = XM.CashReceiptApplication.create();
-          application.set('cashReceipt', this),
+          application = XM.CashReceiptApplication.create({
+            receivable: receivable,
+            cashReceipt: this
+          });
           application.set('cashReceiptDetail', detail),
-          application.set('receivable', receivable),
           applications.pushObject(application);
           isUpdated = true;
           
@@ -483,9 +484,10 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
           
       // if not found make one
       if (!application) {
-        application = XM.CashReceiptApplication.create();
-        application.set('cashReceipt', this);
-        application.set('receivable', receivable);
+        application = XM.CashReceiptApplication.create({
+          receivable: receivable,
+          cashReceipt: this
+        });
         applications.pushObject(application);
       }
     }
