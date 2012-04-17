@@ -198,7 +198,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
               .to('localValue', appliedMoney)
               .oneWay().noDelay().connect();
     SC.Binding.from('currency', this)
-              .to('currency', amountMoney)
+              .to('currency', appliedMoney)
               .oneWay().noDelay().connect();
     SC.Binding.from('applicationDate', this)
               .to('effective', appliedMoney)
@@ -217,37 +217,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     if (this.get('isPosted') || XT.session.settings.get('HideApplyToBalance')) {
       return false;
     }
-    var includeCredits = this.get('includeCredits'),
-        applications = this.get('applications'), list;
-       
-    // loop through credits first
-    if (includeCredits) {
-      // create a filtered list
-      list = applications.filter(function(application) {
-        var documentType = application.getPath('receivable.documentType');
-        return documentType === XM.Receivable.CREDIT_MEMO ||
-               documentType === XM.Receivable.CUSTOMER_DEPOSIT;
-      }, this);
-      
-      // loop through and apply
-      for (var i = 0; i < list.get('length'); i++) {
-        list.objectAt(i).applyBalance();
-      }
-    }
-  
-    // now process debits
-    list = applications.filter(function(application) {
-      var documentType = application.getPath('receivable.documentType');
-      return documentType === XM.Receivable.INVOICE ||
-             documentType === XM.Receivable.DEBIT_MEMO;
-    }, this).sort(this._xm_sort);
-    
-    // loop through and apply
-    var n = 0;
-    while (n < list.get('length') && this.get('balance') > 0) {
-      list.objectAt(n).applyBalance();
-      n++;
-    }
+    this._xm_applyBalance();
   },
   
   /**
@@ -337,6 +307,75 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     var discount = (this.get('discount') + amount).toMoney();
     this.set('discount', discount);
     return discount;
+  },
+  
+  /** @private */
+  _xm_applyBalance: function() {
+    this.get('includeCredits') ? this._xm_applyCredits() : this._xm_applyDebits();
+  },
+  
+  /** @private 
+    Applying balances involves asynchronous requests, so must be done with callbacks
+  */
+  _xm_applyCredits: function(list, idx, callback) {
+    var applications = this.get('applications'), that;
+    
+    // Set up if this is the initial call
+    if (SC.none(list)) {
+      that = this;
+      idx = 0;
+       
+      // create a filtered list
+      list = applications.filter(function(application) {
+        var documentType = application.getPath('receivable.documentType');
+        return documentType === XM.Receivable.CREDIT_MEMO ||
+               documentType === XM.Receivable.CUSTOMER_DEPOSIT;
+      }, this);
+      
+      // this call back will make recursive requests until list is processed
+      callback = function() {
+        idx++;
+        // Either apply the next credit or move on to debits
+        if (idx < list.get('length')) {
+          that._xm_applyCredits(list, idx, this);
+        } else {
+          that._xm_applyDebits();
+        }
+      }
+    }
+    
+    // now make the call
+    list.ObjectAt(idx).applyBalance(callback);
+  },
+  
+  /** @private 
+      Applying balances involves asynchronous requests, so must be done with callbacks
+  */
+  _xm_applyDebits: function(list, idx, callback) {
+    var applications = this.get('applications');
+    
+    // Set up if this is the initial call
+    if (SC.none(list)) {
+      var that = this;
+      idx = 0;
+       
+      // now process debits
+      list = applications.filter(function(application) {
+        var documentType = application.getPath('receivable.documentType');
+        return documentType === XM.Receivable.INVOICE ||
+               documentType === XM.Receivable.DEBIT_MEMO;
+      }, this).sort(this._xm_sort);
+      
+      // this call back will make recursive requests until list is processed
+      callback = function() {
+        idx++;
+        // continue applying balances to succesive records until we're done.
+        if (idx < list.get('length'))  that._xm_applyDebits(list, idx, this);
+      }
+    }
+    
+    // now make the call
+    list.ObjectAt(idx).applyBalance(callback);
   },
   
   /** @private

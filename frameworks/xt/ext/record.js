@@ -15,8 +15,6 @@ sc_require('mixins/logging');
 */
 XT.Record = SC.Record.extend(XT.Logging,
   /** @scope XT.Record.prototype */ {
-
-  logLocal: true,
   
   /**
     The full path name of this class. Should be set in every subclass.
@@ -124,38 +122,9 @@ XT.Record = SC.Record.extend(XT.Logging,
     // TODO: get this to reduce to only changed fields!
   }.property(),
 
-  /**
-    A property that returns the result of canUpdate.
-
-    @type Boolean
-  */
-  isEditable: function() {
-    var isEditable = arguments.callee.base.apply(this, arguments);
-
-    if (isEditable && this.get('status') !== SC.Record.READY_NEW) {
-      return this.canUpdate();
-    } else {
-      return isEditable;
-    }
-  }.property('status').cacheable(),
-
   // ..........................................................
   // METHODS
   //
-
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-    var required = this.requiredAttributes();
-
-    // Validate all required fields.
-    for (var i = 0; i < required.get('length'); i++) {
-      this.addObserver(required[i], this.validate);
-    }
-
-    if (this.getPath('store.isNested')) {
-      this.addObserver('isValid', this, '_isValidDidChange');
-    }
-  },
 
   /**
     Returns true when READY_NEW or READY dirty.
@@ -310,6 +279,94 @@ XT.Record = SC.Record.extend(XT.Logging,
     else if (!isError && idx > -1) errors.removeAt(idx);
   },
 
+  // ..........................................................
+  // OBSERVERS
+  //
+
+  /** @private
+    If the store is nested when this record is initialized, this function
+    will be set to observe 'isValid' notify the store if the record becomes
+    invalid.
+  */
+  _xt_isValidDidChange: function() {
+    var store = this.get('store'),
+        invalidRecords = store.get('invalidRecords'),
+        isValid = this.get('isValid'),
+        idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
+
+    if (store.get('isNested')) {
+      if (isValid && idx > -1) invalidRecords.removeAt(idx);
+      else if (!isValid && idx === -1) invalidRecords.pushObject(this);
+    }
+  },
+
+  /** @private
+    Track substates for data source use. Updates dataState property directly
+    so we don't fire events that change the status to dirty.
+  */
+  _xt_statusChanged: function() {
+    var status = this.get('status'),
+        key = 'dataState',
+        value = 'error',
+        K = SC.Record;
+
+    // update data state used for server side evaluation
+    if (status === K.READY_NEW)            value = 'created';
+    else if (status === K.READY_CLEAN)     value = 'read';
+    else if (status === K.DESTROYED_DIRTY) value = 'deleted';
+    else if (status & K.DIRTY)             value = 'updated';
+
+    if (status !== K.DESTROYED_CLEAN && status !== K.ERROR) {
+      // You cannot write attributes once an object is fully destroyed.
+      this.writeAttribute(key, value, YES);
+    }
+
+
+    this.log('Change status %@:%@ to %@'
+             .fmt(this.get('className'),this.get('id'), this.statusString()));
+  }.observes('status'),
+  
+  // ..........................................................
+  // REIMPLEMENTED
+  //
+  // The contents this section re-implement SC.Record functionality.
+
+  /**
+    Reimplimented from `SC.Record`.
+    
+    Returns the result of canUpdate.
+
+    @type Boolean
+  */
+  isEditable: function() {
+    var isEditable = arguments.callee.base.apply(this, arguments);
+
+    if (isEditable && this.get('status') !== SC.Record.READY_NEW) {
+      return this.canUpdate();
+    } else {
+      return isEditable;
+    }
+  }.property('status').cacheable(),
+
+  /**
+    Reimplimented from `SC.Record`.
+
+    Adds validation observers to all required fields.
+  */
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    var required = this.requiredAttributes();
+
+    // Validate all required fields.
+    for (var i = 0; i < required.get('length'); i++) {
+      this.addObserver(required[i], this.validate);
+    }
+
+    if (this.getPath('store.isNested')) {
+      this.addObserver('isValid', this, '_isValidDidChange');
+    }
+  },
+
   /**
     Reimplimented from `SC.Record`.
 
@@ -424,298 +481,256 @@ XT.Record = SC.Record.extend(XT.Logging,
     this.propagateToAggregates();
 
     return this ;
-  },
-
-  // ..........................................................
-  // OBSERVERS
-  //
-
-  /** @private
-    If the store is nested when this record is initialized, this function
-    will be set to observe 'isValid' notify the store if the record becomes
-    invalid.
-  */
-  _xt_isValidDidChange: function() {
-    var store = this.get('store'),
-        invalidRecords = store.get('invalidRecords'),
-        isValid = this.get('isValid'),
-        idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
-
-    if (store.get('isNested')) {
-      if (isValid && idx > -1) invalidRecords.removeAt(idx);
-      else if (!isValid && idx === -1) invalidRecords.pushObject(this);
-    }
-  },
-
-  /** @private
-    Track substates for data source use. Updates dataState property directly
-    so we don't fire events that change the status to dirty.
-  */
-  _xt_statusChanged: function() {
-    var status = this.get('status'),
-        key = 'dataState',
-        value = 'error',
-        K = SC.Record;
-
-    // update data state used for server side evaluation
-    if (status === K.READY_NEW)            value = 'created';
-    else if (status === K.READY_CLEAN)     value = 'read';
-    else if (status === K.DESTROYED_DIRTY) value = 'deleted';
-    else if (status & K.DIRTY)             value = 'updated';
-
-    if (status !== K.DESTROYED_CLEAN && status !== K.ERROR) {
-      // You cannot write attributes once an object is fully destroyed.
-      this.writeAttribute(key, value, YES);
-    }
-
-
-    this.log('Change status %@:%@ to %@'
-             .fmt(this.get('className'),this.get('id'), this.statusString()));
-  }.observes('status')
+  }
 
 });
 
-XT.Record.ignoreUnknownProperties = true;
+// Class Methods
+XT.Record.mixin( /** @scope XT.Record */ {
 
-/**
-  Use this function to find out whether a user can create records before instantiating one.
+  ignoreUnknownProperties: true,
 
-  @returns {Boolean}
-*/
-XT.Record.canCreate = function() {
-  var privileges = this.prototype.privileges,
-      sessionPrivs = XT.session.privileges,
-      isGranted = false;
+  /**
+    Use this function to find out whether a user can create records before instantiating one.
 
-  // TODO: This is pretty awkward to read.
-  if (sessionPrivs) {
-    isGranted = privileges.all && privileges.all.create && sessionPrivs.get(privileges.all.create) ? true :
-               (privileges.personal && privileges.personal.create && sessionPrivs.get(privileges.personal.create) ? true : false);
+    @returns {Boolean}
+  */
+  canCreate: function() {
+    var privileges = this.prototype.privileges,
+        sessionPrivs = XT.session.privileges,
+        isGranted = false;
 
-  }
+    // TODO: This is pretty awkward to read.
+    if (sessionPrivs) {
+      isGranted = privileges.all && privileges.all.create && sessionPrivs.get(privileges.all.create) ? true :
+                 (privileges.personal && privileges.personal.create && sessionPrivs.get(privileges.personal.create) ? true : false);
 
-  return isGranted;
-};
-
-/**
-  Use this function to find out whether a user can read this record type
-  before any have been loaded.
-
-  @returns {Boolean}
-*/
-XT.Record.canRead = function() {
-  var privileges = this.prototype.privileges,
-      sessionPrivs = XT.session.privileges,
-      isGranted = false;
-
-  // TODO: This is pretty awkward to read.
-  if (sessionPrivs) {
-    isGranted = privileges.all && privileges.all.read && sessionPrivs.get(privileges.all.read) ? true :
-               (privileges.all && privileges.all.update && sessionPrivs.get(privileges.all.update) ? true :
-               (privileges.personal && privileges.personal.read && sessionPrivs.get(privileges.personal.read) ? true :
-               (privileges.personal && privileges.personal.update && sessionPrivs.get(privileges.personal.update) ? true : false)));
-
-  }
-
-  return isGranted;
-};
-
-/**
-  Returns whether a user has access to update a record of this type. If a
-  record is passed that involves personal privileges, it will validate
-  whether that particular record is updatable.
-
-  @returns {Boolean}
-*/
-XT.Record.canUpdate = function(record) {
-  return XT.Record._canDo.call(this, 'update', record);
-};
-
-/**
-  Returns whether a user has access to delete a record of this type. If a
-  record is passed that involves personal privileges, it will validate
-  whether that particular record is deletable.
-
-  @returns {Boolean}
-*/
-XT.Record.canDelete = function(record) {
-  return XT.Record._canDo.call(this, 'delete', record);
-};
-
-/** @private */
-XT.Record._canDo = function(action, record) {
-  var privileges = this.prototype.privileges,
-      sessionPrivs = XT.session.privileges,
-      isGrantedAll = false,
-      isGrantedPersonal = false,
-      userName = XT.DataSource.session.userName;
-
-  // TODO: This is pretty awkward to read.
-  if (sessionPrivs) {
-    isGrantedAll = privileges.all && privileges.all[action] ? sessionPrivs.get(privileges.all[action]) : false;
-
-    isGrantedPersonal = isGrantedAll ? true :
-                       (privileges.personal && privileges.personal[action] ? sessionPrivs.get(privileges.personal[action]) : false);
-
-  }
-
-  // If only personal privileges, check the original attribute cache to see
-  // if this was it was updatable
-  // TODO: This is pretty awkward to read.
-  if (!isGrantedAll && isGrantedPersonal && record && this._attrCache) {
-    var i = 0, props = privileges.personal && privileges.personal.properties ? privileges.personal.properties : [];
-
-    isGrantedPersonal = false;
-    while (!isGrantedPersonal && i < props.length) {
-      isGrantedPersonal = this._attrCache[props[i]] === XT.DataSource.session.userName;
-      i++;
     }
+
+    return isGranted;
+  },
+
+  /**
+    Use this function to find out whether a user can read this record type
+    before any have been loaded.
+
+    @returns {Boolean}
+  */
+  canRead: function() {
+    var privileges = this.prototype.privileges,
+        sessionPrivs = XT.session.privileges,
+        isGranted = false;
+
+    // TODO: This is pretty awkward to read.
+    if (sessionPrivs) {
+      isGranted = privileges.all && privileges.all.read && sessionPrivs.get(privileges.all.read) ? true :
+                 (privileges.all && privileges.all.update && sessionPrivs.get(privileges.all.update) ? true :
+                 (privileges.personal && privileges.personal.read && sessionPrivs.get(privileges.personal.read) ? true :
+                 (privileges.personal && privileges.personal.update && sessionPrivs.get(privileges.personal.update) ? true : false)));
+
+    }
+
+    return isGranted;
+  },
+
+  /**
+    Returns whether a user has access to update a record of this type. If a
+    record is passed that involves personal privileges, it will validate
+    whether that particular record is updatable.
+
+    @returns {Boolean}
+  */
+  canUpdate: function(record) {
+    return XT.Record._canDo.call(this, 'update', record);
+  },
+
+  /**
+    Returns whether a user has access to delete a record of this type. If a
+    record is passed that involves personal privileges, it will validate
+    whether that particular record is deletable.
+
+    @returns {Boolean}
+  */
+  canDelete: function(record) {
+    return XT.Record._canDo.call(this, 'delete', record);
+  },
+
+  /** @private */
+  _canDo: function(action, record) {
+    var privileges = this.prototype.privileges,
+        sessionPrivs = XT.session.privileges,
+        isGrantedAll = false,
+        isGrantedPersonal = false,
+        userName = XT.DataSource.session.userName;
+
+    // TODO: This is pretty awkward to read.
+    if (sessionPrivs) {
+      isGrantedAll = privileges.all && privileges.all[action] ? sessionPrivs.get(privileges.all[action]) : false;
+
+      isGrantedPersonal = isGrantedAll ? true :
+                         (privileges.personal && privileges.personal[action] ? sessionPrivs.get(privileges.personal[action]) : false);
+
+    }
+
+    // If only personal privileges, check the original attribute cache to see
+    // if this was it was updatable
+    // TODO: This is pretty awkward to read.
+    if (!isGrantedAll && isGrantedPersonal && record && this._attrCache) {
+      var i = 0, props = privileges.personal && privileges.personal.properties ? privileges.personal.properties : [];
+
+      isGrantedPersonal = false;
+      while (!isGrantedPersonal && i < props.length) {
+        isGrantedPersonal = this._attrCache[props[i]] === XT.DataSource.session.userName;
+        i++;
+      }
+    }
+
+    return isGrantedAll || isGrantedPersonal;
+  },
+
+  /**
+    A utility function to sets the next sequential id on a record. Accepts a
+    `Number` property to set when the server responds.
+
+    The function will send the class name property of itself to the server
+    which will cross reference the ORM 'idSequnceName' property for the class
+    to determine which sequence to use.
+
+    @param {String} id property to set, defaults to 'guid'
+    @returns {Object} receiever
+  */
+  fetchId: function(prop) {
+    var self = this,
+        recordType = this.get("className"),
+        dispatch;
+
+    prop = prop ? prop : 'guid';
+
+    var callback = function(error, result) {
+      if (!error) self.set(prop, result);
+    };
+
+    dispatch = XT.Dispatch.create({
+      className: 'XT.Record',
+      functionName: 'fetchId',
+      parameters: recordType,
+      target: self,
+      action: callback
+    });
+
+    this.log("XT.Record.fetchId for: %@".fmt(recordType));
+
+    self.get('store').dispatch(dispatch);
+
+    return this;
+  },
+
+  /**
+    A utility function to sets the next sequential number on a record.
+    Accepts a number property to set when the server responds.
+
+    The function will send the class name property of itself to the server
+    which will cross reference the ORM 'orderSequnce' property for the class
+    to determine which sequence to use.
+
+    @param {String} number property to set, defaults to 'number'
+    @returns {Object} receiever
+  */
+  fetchNumber: function(prop) {
+    var that = this,
+        recordType = this.get("className"),
+        dispatch;
+
+    prop = prop ? prop : 'number';
+
+    var callback = function(error, result) {
+      if (!error) {
+        that._xt_numberGen = result;
+        that.set(prop, result);
+      }
+    };
+
+    dispatch = XT.Dispatch.create({
+      className: 'XT.Record',
+      functionName: 'fetchNumber',
+      parameters: recordType,
+      target: that,
+      action: callback
+    });
+
+    this.log("XT.Record.fetchNumber for: %@".fmt(recordType));
+
+    that.get('store').dispatch(dispatch);
+
+    return this;
+  },
+
+  /**
+    Releases a number back into the number pool for the record type. Usually
+    would happen when user cancels without saving a new record.
+
+    The function will send the class name property of itself to the server
+    which will cross reference the ORM 'orderSequnce' property for the class
+    to determine which sequence to use.
+
+    @param {Number} number to release
+    @returns {Object} receiever
+  */
+  releaseNumber: function(number) {
+    var self = this,
+        recordType = this.get("className"),
+        dispatch;
+
+    dispatch = XT.Dispatch.create({
+      className: 'XT.Record',
+      functionName: 'releaseNumber',
+      parameters: [
+        recordType,
+        number
+      ],
+      target: self
+    });
+
+    this.log("XT.Record.releaseNumber for: %@".fmt(recordType));
+
+    self.get('store').dispatch(dispatch);
+
+    return this;
+  },
+
+  /**
+    Return a matching record id for a passed user `key` and `value`. If none
+    found, returns zero.
+
+    @param {String} property to search on, typically a user key
+    @param {String} value to search for
+    @param {Function} callback
+    @returns {Object} receiever
+  */
+  findExisting: function(key, value, callback) {
+    var self = this,
+        recordType = this.get("className"),
+        dispatch,
+        id = this.get('id') || -1;
+
+    dispatch = XT.Dispatch.create({
+      className: 'XT.Record',
+      functionName: 'findExisting',
+      parameters: [
+        recordType,
+        key,
+        value,
+        id
+      ],
+      target: self,
+      action: callback
+    });
+
+    this.log("XT.Record.findExisting for: %@".fmt(recordType));
+
+    self.get('store').dispatch(dispatch);
+
+    return this;
   }
 
-  return isGrantedAll || isGrantedPersonal;
-};
-
-/**
-  A utility function to sets the next sequential id on a record. Accepts a
-  `Number` property to set when the server responds.
-
-  The function will send the class name property of itself to the server
-  which will cross reference the ORM 'idSequnceName' property for the class
-  to determine which sequence to use.
-
-  @param {String} id property to set, defaults to 'guid'
-  @returns {Object} receiever
-*/
-XT.Record.fetchId = function(prop) {
-  var self = this,
-      recordType = this.get("className"),
-      dispatch;
-
-  prop = prop ? prop : 'guid';
-
-  var callback = function(error, result) {
-    if (!error) self.set(prop, result);
-  };
-
-  dispatch = XT.Dispatch.create({
-    className: 'XT.Record',
-    functionName: 'fetchId',
-    parameters: recordType,
-    target: self,
-    action: callback
-  });
-
-  this.log("XT.Record.fetchId for: %@".fmt(recordType));
-
-  self.get('store').dispatch(dispatch);
-
-  return this;
-};
-
-/**
-  A utility function to sets the next sequential number on a record.
-  Accepts a number property to set when the server responds.
-
-  The function will send the class name property of itself to the server
-  which will cross reference the ORM 'orderSequnce' property for the class
-  to determine which sequence to use.
-
-  @param {String} number property to set, defaults to 'number'
-  @returns {Object} receiever
-*/
-XT.Record.fetchNumber = function(prop) {
-  var that = this,
-      recordType = this.get("className"),
-      dispatch;
-
-  prop = prop ? prop : 'number';
-
-  var callback = function(error, result) {
-    if (!error) {
-      that._xt_numberGen = result;
-      that.set(prop, result);
-    }
-  };
-
-  dispatch = XT.Dispatch.create({
-    className: 'XT.Record',
-    functionName: 'fetchNumber',
-    parameters: recordType,
-    target: that,
-    action: callback
-  });
-
-  this.log("XT.Record.fetchNumber for: %@".fmt(recordType));
-
-  that.get('store').dispatch(dispatch);
-
-  return this;
-};
-
-/**
-  Releases a number back into the number pool for the record type. Usually
-  would happen when user cancels without saving a new record.
-
-  The function will send the class name property of itself to the server
-  which will cross reference the ORM 'orderSequnce' property for the class
-  to determine which sequence to use.
-
-  @param {Number} number to release
-  @returns {Object} receiever
-*/
-XT.Record.releaseNumber = function(number) {
-  var self = this,
-      recordType = this.get("className"),
-      dispatch;
-
-  dispatch = XT.Dispatch.create({
-    className: 'XT.Record',
-    functionName: 'releaseNumber',
-    parameters: [
-      recordType,
-      number
-    ],
-    target: self
-  });
-
-  this.log("XT.Record.releaseNumber for: %@".fmt(recordType));
-
-  self.get('store').dispatch(dispatch);
-
-  return this;
-};
-
-/**
-  Return a matching record id for a passed user `key` and `value`. If none
-  found, returns zero.
-
-  @param {String} property to search on, typically a user key
-  @param {String} value to search for
-  @param {Function} callback
-  @returns {Object} receiever
-*/
-XT.Record.findExisting = function(key, value, callback) {
-  var self = this,
-      recordType = this.get("className"),
-      dispatch,
-      id = this.get('id') || -1;
-
-  dispatch = XT.Dispatch.create({
-    className: 'XT.Record',
-    functionName: 'findExisting',
-    parameters: [
-      recordType,
-      key,
-      value,
-      id
-    ],
-    target: self,
-    action: callback
-  });
-
-  this.log("XT.Record.findExisting for: %@".fmt(recordType));
-
-  self.get('store').dispatch(dispatch);
-
-  return this;
-};
+});
