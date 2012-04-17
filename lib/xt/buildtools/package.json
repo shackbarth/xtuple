@@ -1,0 +1,22 @@
+{
+  "author": "W. Cole Davis <cole@xtuple.com> (github.com/clinuz)",
+  "name": "buildtools",
+  "description": "Runtime buildtools for hosting the Postbooks client with dynamic content",
+  "version": "0.0.1A",
+  "homepage": "clinuz.github.com/datasource",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/clinuz/datasource.git"
+  },
+  "main": "index.js",
+  "engines": {
+    "node": "~0.7.2 || 0.8"
+  },
+  "dependencies": {
+    "colors": "0.6.x",
+    "uglify-js": "1.2.x",
+    "diveSync": "0.2.x"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
