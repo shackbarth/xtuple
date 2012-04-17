@@ -38,6 +38,18 @@ XM.LayoutFinancialStatement = {
       and mirroring across all instances.
     */
     this.layoutGroupRecords = [];
+
+    /**
+
+    */
+    this.addObserver('status', function() {
+      var status = this.get('status');
+
+      if(status & SC.Record.READY) {
+        
+      }
+    });
+
 //    this.layoutIncomeStatementGroupStatusDidChange();
   },
 
@@ -123,9 +135,5 @@ XM.LayoutFinancialStatement = {
       this.getLayoutGroupRecords();
     }
   }.observes('*layoutIncomeStatementGroup.status'),
-
-  statusDidChange: function() {
-    console.log('status changed!!!!')
-  }.observes('status'),
 
 };

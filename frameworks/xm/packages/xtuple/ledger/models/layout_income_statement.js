@@ -17,13 +17,17 @@ XM.LayoutIncomeStatement = XM.Document.extend(XM._LayoutIncomeStatement,
 
   documentKey: 'name',
 
+  registerQue: [],
+
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  groupsLength: 0,
+  unregisteredGroups: function() {
+    var grps = this.get('groups');
 
-  groupsLengthBinding: '*groups.length',
+    return SC.copy(grps, true);
+  },
 
   //..................................................
   // METHODS
