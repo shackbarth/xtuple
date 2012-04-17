@@ -208,6 +208,24 @@
       }
     },
     {
+      "name": "account",
+      "toOne": {
+        "isNested": true,
+        "type": "ProjectAccount",
+        "column": "prj_crmacct_id",
+        "inverse": "source"
+      }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "isNested": true,
+        "type": "ProjectContact",
+        "column": "prj_cntct_id",
+        "inverse": "source"
+      }
+    },
+    {
       "name": "projects",
       "toMany": {
         "isNested": true,
