@@ -29,7 +29,7 @@ Postbooks.TilesForClass = function(klass, controller) {
   var tiles = [],
       proto = klass.prototype;
 
-  tiles.push(Postbooks.PropertiesEditorForClass(klass, controller));
+  tiles.push(Postbooks.PropertiesEditorForClass(klass, controller, undefined, true));
 
   for (var key in proto) {
     if (key === 'guid') continue;
@@ -57,7 +57,7 @@ Postbooks.TilesForClass = function(klass, controller) {
 };
 
 /** Builds an SC.View subcass that can edit properties of the record class. */
-Postbooks.PropertiesEditorForClass = function(klass, controller, propertyKey) {
+Postbooks.PropertiesEditorForClass = function(klass, controller, propertyKey, isOverview) {
   var view = Postbooks.TileView.create({
         layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
         hasHorizontalScroller: false,
@@ -79,6 +79,10 @@ Postbooks.PropertiesEditorForClass = function(klass, controller, propertyKey) {
           //   next.set('selection', SC.IndexSet.create().freeze());
           //   carousel.makeSurfaceVisible(next);
           // }
+
+          if (!isOverview) {
+            Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", controller.get('content'));
+          }
 
           return true;
         },
@@ -217,13 +221,17 @@ Postbooks.ListViewForClass = function(klass, controller) {
     baseClass: klass,
 
     action: function(object, index) {
-      console.log('do something on embedde list index ' + index);
+      console.log('do something on embedded list index ' + index);
       // var tray = this.getPath('supersurface'),
       //     next = tray.get('subsurfaces')[1],
       //     carousel = tray.get('carousel');
       // 
       // controller.set('content', XM.store.find(baseClass, Number(object.get('guid'))));
       // if (next) carousel.makeSurfaceVisible(next);
+      var instance = this.get('content').objectAt(index);
+      if (instance) {
+        Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", instance);
+      }
     },
 
     willRenderLayers: function(ctx) {

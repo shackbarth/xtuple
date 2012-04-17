@@ -24,8 +24,16 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.LoadSubmodule = function(className, backButtonTitle) {
-  var name = className.titleize();
+Postbooks.LoadModal = function(className, backButtonTitle, instance) {
+  var context = SC.Object.create({
+    submoduleTitle: Postbooks.get('submoduleTitle'),
+    submoduleBackButtonTitle: Postbooks.get('submoduleBackButtonTitle'),
+    submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction')
+  });
+
+  Postbooks.set('submoduleTitle', className.titleize());
+  Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
+  Postbooks.set('submoduleBackButtonAction', 'popModule');
 
   var baseClass = XM[className];
   var browseClass = XM[className+'Browse'] || baseClass;
@@ -36,14 +44,16 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   sc_assert(browseClass.isClass);
   sc_assert(browseClass.subclassOf(XT.Record));
 
-  Postbooks[className+'ListController'] = SC.ArrayController.create({
+  context[className+'ListController'] = SC.ArrayController.create({
     content: XT.store.find(browseClass),
     allowsEmptySelection: true
   });
 
-  var controller = Postbooks[className+'ObjectController'];
+  var controller;
+  controller = context[className+'ObjectController'] = SC.ObjectController.create();
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
+  controller.set('content', instance);
 
   var tiles = Postbooks.TilesForClass(baseClass, controller);
   console.log(tiles);
@@ -52,43 +62,14 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   editor.get('tray').set('subsurfaces', tiles);
 
   var contentArea = SC.ContainerSurface.create({
-    layout: { top: 44, left: 320, right: 0, bottom: 0 },
+    layout: { top: 0, left: 320, right: 0, bottom: 0 },
     orderInTransition:  null,
     replaceTransition:  null,
     orderOutTransition: null
   });
 
-  var submodule = SC.LayoutSurface.create();
-
-  Postbooks.set('submoduleTitle', name);
-
-  var topbar = SC.View.create({
-    layout: { top: 0, left: 0, right: 0, height: 44 },
-
-    nameBinding: 'Postbooks.submoduleTitle',
-
-    willRenderLayers: function(ctx) {
-      ctx.fillStyle = base3;
-      ctx.font = "16pt Calibri";
-      ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
-      ctx.shadowBlur = 0;
-      ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(this.get('name'), ctx.width/2, ctx.height/2);
-    }
-  });
-  topbar.set('backgroundColor', base03);
-
-  Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
-  Postbooks.set('submoduleBackButtonAction', 'showCRM');
-
-  topbar.get('layers').pushObject(Postbooks.BackButton.create({
-    layout: { left: 20, centerY: 0, width: 120, height: 24 },
-    nameBinding: 'Postbooks.submoduleBackButtonTitle',
-    target: 'Postbooks.statechart',
-    actionBinding: 'Postbooks.submoduleBackButtonAction'
-  }));
-
+  var modal = SC.LayoutSurface.create();
+  
   var list = [SC.Object.create({
     title: "Overview",
     surface: editor
@@ -123,15 +104,6 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
   listController.selectObject(list[0]);
 
-  // var detail = SC.ContainerSurface.create({
-  //   layout: { top: 44, left: 320, right: 0, bottom: 0 },
-  //   orderInTransition:  null,
-  //   replaceTransition:  null,
-  //   orderOutTransition: null
-  // });
-  // 
-  // detail.set('contentSurface', list[1].surface);
-
   contentArea.set('contentSurface', list[0].surface);
 
 
@@ -144,8 +116,20 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
       contentArea.set('contentSurface', list[index].surface);
     }
   });
+  listView.set('layout', { top: 0, left: 0, width: 320, bottom: 0 });
 
-  submodule.get('subsurfaces').pushObjects([topbar, listView, contentArea]);
+  modal.get('subsurfaces').pushObjects([listView, contentArea]);
 
-  SC.app.get('ui').pushSurface(submodule);
+  context.set('surface', modal);
+
+  var viewport = SC.app.computeViewportSize();
+  modal.set('frame', SC.MakeRect(viewport.width, 44, viewport.width-64, viewport.height - 52));
+
+  Postbooks.get('modalContexts').pushObject(context);
+  SC.app.addSurface(modal);
+  setTimeout(function() {
+    SC.RunLoop.begin();
+    modal.set('frame', SC.MakeRect(64, 44, viewport.width-64, viewport.height - 52));
+    SC.RunLoop.end();
+  },0);
 };

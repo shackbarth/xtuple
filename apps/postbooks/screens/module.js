@@ -6,6 +6,7 @@
 
 sc_require('views/carousel');
 sc_require('views/master_list');
+sc_require('widgets/back_button');
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -24,33 +25,6 @@ var blue =     "#268bd2";
 var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
-
-var BackButton = SC.ButtonWidget.extend({
-
-  name: "Dashboard",
-
-  cornerRadius: 5,
-
-  dragPoint: null,
-
-  render: function(ctx) {
-    console.log('IconLayer.render()', SC.guidFor(this));
-    ctx.beginPath();
-    this.renderHitTestPath(ctx);
-    ctx.fillStyle = base02;
-    ctx.fill();
-
-    // Draw some text.
-    ctx.fillStyle = base3;
-    ctx.font = "13pt Calibri";
-    ctx.textBaseline = "middle";
-    ctx.textAlign = "center";
-    ctx.shadowBlur = 0;
-    ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText('\u2190 '+this.get('name'), ctx.width/2, ctx.height/2);
-  }
-
-});
 
 Postbooks.LoadModule = function(name, classes, state) {
   var items = [];
@@ -210,8 +184,9 @@ Postbooks.LoadModule = function(name, classes, state) {
     }
   });
   topbar.set('backgroundColor', base03);
-  topbar.get('layers').pushObject(BackButton.create({
+  topbar.get('layers').pushObject(Postbooks.BackButton.create({
     layout: { left: 20, centerY: 0, width: 120, height: 24 },
+    name: "Dashboard",
     target: 'Postbooks.statechart',
     action: 'showDashboard'
   }));

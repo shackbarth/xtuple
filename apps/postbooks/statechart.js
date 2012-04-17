@@ -28,6 +28,24 @@ Postbooks.statechart = SC.Statechart.create({
       window.location.reload();
     },
 
+    popModule: function() {
+      var modalContexts = Postbooks.get('modalContexts');
+      if (modalContexts.length === 0) return;
+      var currentModal = modalContexts.popObject();
+      var frame = currentModal.surface.get('frame');
+      frame.x = SC.app.computeViewportSize().width;
+
+      Postbooks.set('submoduleTitle', currentModal.submoduleTitle);
+      Postbooks.set('submoduleBackButtonTitle', currentModal.submoduleBackButtonTitle);
+      Postbooks.set('submoduleBackButtonAction', currentModal.submoduleBackButtonAction);
+
+      setTimeout(function() {
+        SC.RunLoop.begin();
+        SC.app.removeSurface(currentModal.surface);
+        SC.RunLoop.end();
+      }, 250);
+    },
+
     // feedback: function() {
     //   window.open("http://www.xtuple.com/", "feedback"); // FIXME
     // },

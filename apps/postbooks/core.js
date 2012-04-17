@@ -15,6 +15,12 @@ Postbooks = global.Postbooks = SC.Application.create(
   NAMESPACE: 'Postbooks',
   VERSION: '{{{POSTBOOKS_VERSION}}}',
 
+  submoduleTitle: "(no title)",
+  submoduleBackButtonTitle: "(unknown)",
+  submoduleBackButtonAction: null,
+
+  modalContexts: [],
+
   // Debugging
   getState: function() {
     return Postbooks.statechart.get('currentStates').map(function(s) { return s.get('fullPath'); });
@@ -51,7 +57,8 @@ Postbooks = global.Postbooks = SC.Application.create(
         Postbooks.statechart.sendAction('showDashboard');
         break;
     }
-  },
+  }
+
 });
 
 // Remotely record when exceptions occur.

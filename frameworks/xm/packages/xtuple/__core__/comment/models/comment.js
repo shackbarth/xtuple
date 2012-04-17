@@ -13,6 +13,8 @@
 XM.Comment = XT.Record.extend(
 /** @scope XM.Comment.prototype */ {
 
+  className: 'XM.Comment',
+
   /**
     Walk like a duck.
   */
