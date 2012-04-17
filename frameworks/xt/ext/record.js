@@ -316,12 +316,12 @@ XT.Record = SC.Record.extend(XT.Logging,
     else if (status === K.DESTROYED_DIRTY) value = 'deleted';
     else if (status & K.DIRTY)             value = 'updated';
 
-    if (status !== K.DESTROYED_CLEAN && status !== K.ERROR) {
-      // You cannot write attributes once an object is fully destroyed.
+    // only update attribute in valid states
+    if (status !== K.DESTROYED_CLEAN && 
+        status !== K.ERROR &&
+        status !== K.EMPTY) {
       this.writeAttribute(key, value, YES);
     }
-
-
     this.log('Change status %@:%@ to %@'
              .fmt(this.get('className'),this.get('id'), this.statusString()));
   }.observes('status'),
