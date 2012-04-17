@@ -35,6 +35,8 @@ var white =    "white";
 */
 Postbooks.TileCarousel = Postbooks.Carousel.extend({
 
+  _sc_backgroundColor: 'black',
+
   updateTrayLayout: function() {
     // console.log('Postbooks.TileCarousel#updateTrayLayout()');
     var tray = this._sc_tray,

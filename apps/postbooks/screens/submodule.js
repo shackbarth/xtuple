@@ -111,7 +111,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
       list.push(SC.Object.create({
         title: key.titleize().pluralize(),
-        surface: Postbooks.ListViewForClass(arrayKlass, arrayController)
+        surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
       }));
     }
   }

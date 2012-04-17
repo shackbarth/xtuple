@@ -63,6 +63,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
 
   var contentArea = SC.ContainerSurface.create({
     layout: { top: 0, left: 320, right: 0, bottom: 0 },
+    _sc_backgroundColor: 'black',
     orderInTransition:  null,
     replaceTransition:  null,
     orderOutTransition: null
@@ -92,7 +93,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
 
       list.push(SC.Object.create({
         title: key.titleize().pluralize(),
-        surface: Postbooks.ListViewForClass(arrayKlass, arrayController)
+        surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
       }));
     }
   }
