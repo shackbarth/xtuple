@@ -57,17 +57,17 @@ XM._CashReceiptDetail = {
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  amount: SC.Record.attr(Number, {
+  amount: SC.Record.attr(Money, {
     isRequired: true,
     label: '_amount'.loc()
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  discount: SC.Record.attr(Number, {
+  discount: SC.Record.attr(Money, {
     isRequired: true,
     defaultValue: 0,
     label: '_discount'.loc()

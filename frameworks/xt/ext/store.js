@@ -65,36 +65,6 @@ XT.Store = SC.Store.extend(XT.Logging,
     }
     if (action) action.call(target, error, null);
   },
-
-  /**
-    Reimplemented from `SC.Store`.
-
-    Don't notify children here.
-  */
-  dataHashDidChange: function(storeKeys, rev, statusOnly, key) {
-    // Update the revision for `storeKey`.  Use `generateStoreKey()` because
-    // that guarantees a universally (to this store hierarchy anyway) unique
-    // key value.
-    if (!rev) rev = SC.Store.generateStoreKey();
-    var isArray, len, idx, storeKey;
-
-    isArray = SC.typeOf(storeKeys) === SC.T_ARRAY;
-    if (isArray) {
-      len = storeKeys.length;
-    } else {
-      len = 1;
-      storeKey = storeKeys;
-    }
-
-    var that = this;
-    for (idx=0; idx<len; ++idx) {
-      if (isArray) storeKey = storeKeys[idx];
-      this.revisions[storeKey] = rev;
-      this._notifyRecordPropertyChange(storeKey, statusOnly, key);
-    }
-
-    return this;
-  },
   
   // ..........................................................
   // REIMPLEMENTED METHODS
@@ -225,6 +195,36 @@ XT.Store = SC.Store.extend(XT.Logging,
     var editables = this.editables;
     if (!editables) editables = this.editables = [];
     editables[storeKey] = 1; // Use number for dense array support.
+
+    return this;
+  },
+  
+  /**
+    Reimplemented from `SC.Store`.
+
+    Don't notify children here.
+  */
+  dataHashDidChange: function(storeKeys, rev, statusOnly, key) {
+    // Update the revision for `storeKey`.  Use `generateStoreKey()` because
+    // that guarantees a universally (to this store hierarchy anyway) unique
+    // key value.
+    if (!rev) rev = SC.Store.generateStoreKey();
+    var isArray, len, idx, storeKey;
+
+    isArray = SC.typeOf(storeKeys) === SC.T_ARRAY;
+    if (isArray) {
+      len = storeKeys.length;
+    } else {
+      len = 1;
+      storeKey = storeKeys;
+    }
+
+    var that = this;
+    for (idx=0; idx<len; ++idx) {
+      if (isArray) storeKey = storeKeys[idx];
+      this.revisions[storeKey] = rev;
+      this._notifyRecordPropertyChange(storeKey, statusOnly, key);
+    }
 
     return this;
   },

@@ -42,21 +42,21 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
   /**
     Total credit allocated to the invoice.
     
-    @type Number
+    @type Money
   */
   allocatedCredit: 0,
   
   /**
     Outstanding credit.
     
-    @type Number
+    @type Money
   */
   outstandingCredit: 0,
   
   /**
     Total of line item sales.
     
-    @type Number
+    @type Money
   */
   subTotal: 0,
   
@@ -64,7 +64,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     Total of line item taxes. May be either estimated or actual
     depending on whether line item detail has changed.
     
-    @type Number
+    @type Money
   */
   lineTax: 0,
   
@@ -81,7 +81,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     Calculated total of freight taxes. May be either estimated or actual
     depending on whether freight or tax zone has changed.
     
-    @type Number
+    @type Money
   */
   freightTax: 0,
 
@@ -104,25 +104,25 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
   /**
     Total invoice taxes.
     
-    @type Number
+    @type Money
   */
   taxTotal: function() {
     var lineTax = this.get('lineTax'),
         freightTax = this.get('freightTax'),
         miscTax = this.get('miscTax');
-    return SC.Math.round(lineTax + freightTax + miscTax, XT.MONEY_SCALE); 
+    return (lineTax + freightTax + miscTax).toMoney(); 
   }.property('lineTax', 'freightTax', 'miscTax').cacheable(),
   
   /**
     Total invoice amount.
     
-    @type Number
+    @type Money
   */
   total: function() {
     var subTotal = this.get('subTotal'),
         freight = this.get('freight'),
         totalTax = this.get('taxTotal');
-    return SC.Math.round(subTotal + freight + totalTax, XT.MONEY_SCALE); 
+    return (subTotal + freight + totalTax).toMoney(); 
   }.property('subTotal', 'freight', 'taxTotal').cacheable(),
   
   //..................................................
@@ -261,7 +261,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
         credit = credit + credits.objectAt(i).get('amount');
       }
     }
-    this.setIfChanged('allocatedCredit', SC.Math.round(credit, XT.MONEY_SCALE));
+    this.setIfChanged('allocatedCredit', credit.toMoney());
   },
   
   /**
@@ -277,7 +277,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
      var extendedPrice = (status & SC.Record.DESTROYED) == 0 ? line.get('extendedPrice') : 0;
       subTotal = subTotal + extendedPrice;
     }
-    this.setIfChanged('subTotal', subTotal);
+    this.setIfChanged('subTotal', subTotal.toMoney());
   },
   
   /**
@@ -318,11 +318,11 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     // next round and sum up each tax code for total
     for(var i = 0; i < taxDetail.get('length'); i++) {
       var codeTotal = taxDetail.objectAt(i),
-          rtax = SC.Math.round(codeTotal.get('tax'), XT.MONEY_SCALE);
+          rtax = codeTotal.get('tax').toMoney();
       codeTotal.set('tax', rtax);
       taxTotal = taxTotal + rtax;
     }
-    this.setIfChanged('lineTax',  SC.Math.round(taxTotal, XT.MONEY_SCALE));
+    this.setIfChanged('lineTax',  taxTotal.toMoney());
     this.setIfChanged('lineTaxDetail', taxDetail);
   },
   

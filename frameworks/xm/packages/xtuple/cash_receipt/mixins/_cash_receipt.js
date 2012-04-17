@@ -58,9 +58,9 @@ XM._CashReceipt = {
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  amount: SC.Record.attr(Number, {
+  amount: SC.Record.attr(Money, {
     isRequired: true,
     label: '_amount'.loc()
   }),

@@ -92,36 +92,36 @@ XM._ProjectTask = {
   }),
 
   /**
-    @type Number
+    @type Quantity
   */
-  budgetedHours: SC.Record.attr(Number, {
+  budgetedHours: SC.Record.attr(Quantity, {
     isRequired: true,
     defaultValue: 0,
     label: '_budgetedHours'.loc()
   }),
 
   /**
-    @type Number
+    @type Quantity
   */
-  actualHours: SC.Record.attr(Number, {
+  actualHours: SC.Record.attr(Quantity, {
     isRequired: true,
     defaultValue: 0,
     label: '_actualHours'.loc()
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  budgetedExpenses: SC.Record.attr(Number, {
+  budgetedExpenses: SC.Record.attr(Money, {
     isRequired: true,
     defaultValue: 0,
     label: '_budgetedExpenses'.loc()
   }),
 
   /**
-    @type Number
+    @type Money
   */
-  actualExpenses: SC.Record.attr(Number, {
+  actualExpenses: SC.Record.attr(Money, {
     isRequired: true,
     defaultValue: 0,
     label: '_actualExpenses'.loc()

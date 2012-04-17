@@ -20,7 +20,7 @@ XM.Money = XT.Object.extend(
 /** @scope XM.Money.prototype */ {
 
   /**
-    Precision scale used for rounding. Appropriate scales would be:
+    Precision used for rounding. Appropriate scales would be:
       * XT.MONEY_SCALE
       * XT.COST_SCALE
       * XT.SALES_PRICE_SCALE
@@ -31,7 +31,7 @@ XM.Money = XT.Object.extend(
     @type Number
     @default XT.MONEY_SCALE
   */
-  scale: XT.MONEY_SCALE,
+  precision: XT.MONEY_SCALE,
  
   /**
     The monetary value to be converted.
@@ -43,10 +43,9 @@ XM.Money = XT.Object.extend(
 
   /**
     Calculated from the currency and effective date unless
-    set manually. Setting this manually will flag isPosted
-    to true.
+    set manually unless `isFixed` is true.
     
-    @seealso isPosted
+    @seealso isFixed
     @type Number
     @default 1
   */
@@ -62,7 +61,7 @@ XM.Money = XT.Object.extend(
     @type Boolean
     @default false
   */
-  isPosted: false,
+  isFixed: false,
   
   /**
     Store to run queries against.
@@ -70,11 +69,21 @@ XM.Money = XT.Object.extend(
     @type {SC.Store}
     @default XT.store
   */
-  store: XT.store,
+  store: null,
+  
+  /**
+    Indicates the object is querying an exchange rate from the datasource.
+  */
+  isLoading: false,
   
   // .................................................
   // CALCULATED PROPERTIES
   //
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    if (!this.get('store')) this.set('store', XT.store);
+  },
   
   /**
     The local value converted to base currency.
@@ -90,11 +99,11 @@ XM.Money = XT.Object.extend(
     
     // calculate
     var exchangeRate = this.get('exchangeRate'),
-        scale = this.get('scale');
-    return exchangeRate ? SC.Math.round(localValue / exchangeRate, scale) : '?????';
+        precision = this.get('precision');
+    return exchangeRate ? (localValue / exchangeRate).round(precision) : '?????';
     
     var effective = this.get('effective');
-  }.property('localValue', 'exchangeRate', 'scale').cacheable(),
+  }.property('localValue', 'exchangeRate', 'precision').cacheable(),
   
   /**
     The currency of the local value.
@@ -144,12 +153,16 @@ XM.Money = XT.Object.extend(
   /**
     Recalculates the exchange rate.
   */
-  exchangeRateCriteriaDidChange: function() {
-    // if posted, bail out
-    if (this.get('isPosted')) return;
+  exchangeRateCriteriaDidChange: function() {  
+    // if posted or loading, bail out
+    if (this.get('isFixed') || this.get('isLoading')) return;
     
     var currency = this.get('currency'),
         effective = this.get('effective');
+      
+    // if we've already processed this, bail out
+    if (currency === this._xm_currencyCache &&
+        effective === this._xm_effectiveCache) return;
 
     // if the currency is base, always set to one 1
     if (currency.get('id') === XM.Currency.BASE) {
@@ -167,6 +180,8 @@ XM.Money = XT.Object.extend(
       }
     });
       
+    this.set('isLoading', true);
+      
     // fetch the value
     var that = this,
         store = this.get('store'),
@@ -177,9 +192,14 @@ XM.Money = XT.Object.extend(
       if (ary.get('status') === SC.Record.READY_CLEAN) {
         ary.removeObserver('status', ary, observer);
         that.setIfChanged('exchangeRate', ary.firstObject() ? ary.firstObject().get('rate') : 0);
+        that.set('isLoading', false);
       }
     })
-  }.observes('currency', 'effective', 'isPosted').cacheable(),
+    
+    // remember what we did so we don't run again unless we need to
+    this._xm_currencyCache = currency;
+    this._xm_effectiveCache = effective;
+  }.observes('currency', 'effective', 'isFixed', 'isLoading').cacheable(),
   
 }) ;
 

@@ -39,9 +39,26 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   receivablesLengthBinding: SC.Binding.from('*receivables.length').oneWay().noDelay(),
   
   /**
+    Money object for amount. Uses distribution date for exchange rate.
+    
+    @type XM.Money
+  */
+  amountMoney: null,
+  
+  /**
     Total amount applied.
+    
+    @type Number
   */
   applied: 0,
+  
+  /**
+    Money object for total amount applied. Uses application date
+    for exchange rate.
+    
+    @type XM.Money
+  */
+  appliedMoney: null,
   
   /**
     Total discount taken.
@@ -75,17 +92,21 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   /**
     Total unapplied.
+    
+    @type Money
   */
   balance: function() {
     var amount = this.get('amount') || 0,
         applied = this.get('applied');
         
-    return SC.Math.round(amount - applied, XT.MONEY_SCALE);
+    return (amount - applied).toMoney();
   }.property('amount', 'applied').cacheable(),
   
   /**
     Return an array of applications filtered by the `includeCredits` 
     property and sorted by due date.
+    
+    @type SC.Array
   */
   filteredApplications: function() {
     var applications = this.get('applications'),
@@ -107,6 +128,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   /**
     The earliest date by which the application date may be set to.
+    
+    @type SC.DateTime
   */
   minApplyDate: function() {
     var details = this.get('details'), minDate = false;
@@ -124,6 +147,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /**
     An array of open receivables for the selected `customer`. If the
     the cash receipt is posted this will return no results.
+    
+    @type SC.Array
   */
   receivables: function() {
     if (!this._xm_receivables) this._xm_receivables = [];
@@ -150,6 +175,36 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   // METHODS
   //
   
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    
+    // create money object and bindings for amount
+    var amountMoney = XM.Money.create();
+    this.set('amountMoney', amountMoney);
+    SC.Binding.from('amount', this)
+              .to('localValue', amountMoney)
+              .noDelay().connect();
+    SC.Binding.from('currency', this)
+              .to('currency', amountMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('distributionDate', this)
+              .to('effective', amountMoney)
+              .oneWay().noDelay().connect();
+    
+    // create money object and bindings for applied
+    var appliedMoney = XM.Money.create();
+    this.set('appliedMoney', appliedMoney);
+    SC.Binding.from('applied', this)
+              .to('localValue', appliedMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('currency', this)
+              .to('currency', appliedMoney)
+              .oneWay().noDelay().connect();
+    SC.Binding.from('applicationDate', this)
+              .to('effective', appliedMoney)
+              .oneWay().noDelay().connect();
+  },
+  
   /**
     Apply the balance of the cash receipt to as many open `receivables`
     as possible. Credits are applied first if `includeCredits` is true,
@@ -162,37 +217,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     if (this.get('isPosted') || XT.session.settings.get('HideApplyToBalance')) {
       return false;
     }
-    var includeCredits = this.get('includeCredits'),
-        applications = this.get('applications'), list;
-       
-    // loop through credits first
-    if (includeCredits) {
-      // create a filtered list
-      list = applications.filter(function(application) {
-        var documentType = application.getPath('receivable.documentType');
-        return documentType === XM.Receivable.CREDIT_MEMO ||
-               documentType === XM.Receivable.CUSTOMER_DEPOSIT;
-      }, this);
-      
-      // loop through and apply
-      for (var i = 0; i < list.get('length'); i++) {
-        list.objectAt(i).applyBalance();
-      }
-    }
-  
-    // now process debits
-    list = applications.filter(function(application) {
-      var documentType = application.getPath('receivable.documentType');
-      return documentType === XM.Receivable.INVOICE ||
-             documentType === XM.Receivable.DEBIT_MEMO;
-    }, this).sort(this._xm_sort);
-    
-    // loop through and apply
-    var n = 0;
-    while (n < list.get('length') && this.get('balance') > 0) {
-      list.objectAt(n).applyBalance();
-      n++;
-    }
+    this._xm_applyBalance();
   },
   
   /**
@@ -267,7 +292,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     @returns Number
   */
   updateApplied: function(amount) {
-    var applied = SC.Math.round(this.get('applied') + amount, XT.MONEY_SCALE);
+    var applied = (this.get('applied') + amount).toMoney();
     this.set('applied', applied);
     return applied;
   },
@@ -279,9 +304,78 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     @returns Number
   */  
   updateDiscount: function(amount) {
-    var discount = SC.Math.round(this.get('discount') + amount, XT.MONEY_SCALE);
+    var discount = (this.get('discount') + amount).toMoney();
     this.set('discount', discount);
     return discount;
+  },
+  
+  /** @private */
+  _xm_applyBalance: function() {
+    this.get('includeCredits') ? this._xm_applyCredits() : this._xm_applyDebits();
+  },
+  
+  /** @private 
+    Applying balances involves asynchronous requests, so must be done with callbacks
+  */
+  _xm_applyCredits: function(list, idx, callback) {
+    var applications = this.get('applications'), that;
+    
+    // Set up if this is the initial call
+    if (SC.none(list)) {
+      that = this;
+      idx = 0;
+       
+      // create a filtered list
+      list = applications.filter(function(application) {
+        var documentType = application.getPath('receivable.documentType');
+        return documentType === XM.Receivable.CREDIT_MEMO ||
+               documentType === XM.Receivable.CUSTOMER_DEPOSIT;
+      }, this);
+      
+      // this call back will make recursive requests until list is processed
+      callback = function() {
+        idx++;
+        // Either apply the next credit or move on to debits
+        if (idx < list.get('length')) {
+          that._xm_applyCredits(list, idx, this);
+        } else {
+          that._xm_applyDebits();
+        }
+      }
+    }
+    
+    // now make the call
+    list.ObjectAt(idx).applyBalance(callback);
+  },
+  
+  /** @private 
+      Applying balances involves asynchronous requests, so must be done with callbacks
+  */
+  _xm_applyDebits: function(list, idx, callback) {
+    var applications = this.get('applications');
+    
+    // Set up if this is the initial call
+    if (SC.none(list)) {
+      var that = this;
+      idx = 0;
+       
+      // now process debits
+      list = applications.filter(function(application) {
+        var documentType = application.getPath('receivable.documentType');
+        return documentType === XM.Receivable.INVOICE ||
+               documentType === XM.Receivable.DEBIT_MEMO;
+      }, this).sort(this._xm_sort);
+      
+      // this call back will make recursive requests until list is processed
+      callback = function() {
+        idx++;
+        // continue applying balances to succesive records until we're done.
+        if (idx < list.get('length'))  that._xm_applyDebits(list, idx, this);
+      }
+    }
+    
+    // now make the call
+    list.ObjectAt(idx).applyBalance(callback);
   },
   
   /** @private

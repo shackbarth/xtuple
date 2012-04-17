@@ -24,10 +24,10 @@ XM._CashReceiptDistribution = {
 
   privileges: {
     "all": {
-      "create": "false",
-      "read": "true",
-      "update": "false",
-      "delete": "false"
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
     }
   },
 
@@ -44,20 +44,23 @@ XM._CashReceiptDistribution = {
     @type XM.CashReceipt
   */
   cashReceipt: SC.Record.toOne('XM.CashReceipt', {
+    isRequired: true,
     label: '_cashReceipt'.loc()
   }),
 
   /**
-    @type XM.Account
+    @type XM.LedgerAccount
   */
-  account: SC.Record.toOne('XM.Account', {
-    label: '_account'.loc()
+  ledgerAccount: SC.Record.toOne('XM.LedgerAccount', {
+    isRequired: true,
+    label: '_ledgerAccount'.loc()
   }),
 
   /**
     @type Number
   */
   amount: SC.Record.attr(Number, {
+    isRequired: true,
     label: '_amount'.loc()
   }),
 

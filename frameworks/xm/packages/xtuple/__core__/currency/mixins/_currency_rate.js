@@ -49,9 +49,9 @@ XM._CurrencyRate = {
   }),
 
   /**
-    @type Number
+    @type UnitRatio
   */
-  rate: SC.Record.attr(Number, {
+  rate: SC.Record.attr(UnitRatio, {
     isRequired: true,
     label: '_rate'.loc()
   }),

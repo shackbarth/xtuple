@@ -41,12 +41,12 @@ XM.Taxable = {
       taxTotal = taxTotal + tax,
       detail = SC.Object.create({ 
         taxCode: taxCode, 
-        tax: SC.Math.round(tax, XT.SALES_PRICE_SCALE) 
+        tax: tax.toSalesPrice() 
       });
       taxDetail.push(detail);
     }
     this.setIfChanged(taxDetailProperty, taxDetail);
-    this.setIfChanged(taxTotalProperty, SC.Math.round(taxTotal, XT.SALES_PRICE_SCALE));
+    this.setIfChanged(taxTotalProperty, taxTotal.toSalesPrice());
   }
 
 };

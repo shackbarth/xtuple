@@ -34,7 +34,7 @@ XM.SubLedgerMixin =
   /**
     Total value of all posted applications.
     
-    @type Number
+    @type Money
   */
   paid: function() {
     var asOf = this.get('asOf'),
@@ -47,21 +47,21 @@ XM.SubLedgerMixin =
         paid = paid + application.get('paid');
       }
     }
-    return SC.Math.round(paid, XT.MONEY_SCALE);
+    return paid.toMoney();
   }.property('applicationsLength', 'asOf').cacheable(),
 
   /**
     Total due remaining.
     
-    @type Number
+    @type Money
   */
   balance: function() {
     var asOf = this.get('asOf'),
         documentDate = this.get('documentDate'),
         amount = this.get('amount') || 0,
-        paid = this.get('paid') || 0, ret = 0;
+        paid = this.get('paid') || 0, ret = new Money(0);
     if (documentDate && SC.DateTime.compareDate(asOf, documentDate) >= 0) {
-      ret = SC.Math.round(amount - paid, XT.MONEY_SCALE);
+      ret = (amount - paid).toMoney();
     }
     return ret;
   }.property('amount', 'paid', 'documentDate').cacheable(),
