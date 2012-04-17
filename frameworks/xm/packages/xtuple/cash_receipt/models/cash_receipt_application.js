@@ -211,7 +211,9 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   */
   appliedDidChange: function() {
     if (this.get('isLoadingReceivableExchangeRate') ||
-        this.get('isLoadingCashReceiptExchangeRate')) return;
+        this.get('isLoadingCashReceiptExchangeRate') ||
+        !this.get('cashReceiptDetail') ||
+        this.get('cashReceiptDetail').isNotDirty()) return;
         
     var crCurrencyRate = this.getPath('cashReceipt.amountMoney.exchangeRate'),
         arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
@@ -332,15 +334,17 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     var applied = this.get('applied'),
         cashReceipt = this.get('cashReceipt'),
         crBalance = cashReceipt.get('balance'),
+        crDocumentDate = cashReceipt.get('documentDate') || SC.DateTime.create(),
         crCurrencyRate = cashReceipt.getPath('appliedMoney.exchangeRate'),
         arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
         receivable = this.get('receivable'),
         documentType = receivable.get('documentType'),
         arBalance = this.get('balance'),
-        documentDate = receivable.get('documentDate'),
+        arDocumentDate = receivable.get('documentDate'),
         terms = receivable.get('terms'),
-        discountDate = terms ? terms.calculateDiscountDate(documentDate) : null,
-        discountPercent = terms ? terms.get('discountPercent') / 100 : 0,
+        discountDate = terms ? terms.calculateDiscountDate(arDocumentDate) : null,
+        isDiscountable = discountDate ? SC.DateTime.compareDate(crDocumentDate, discountDate) <= 0 : false,
+        discountPercent = isDiscountable ? terms.get('discountPercent') / 100 : 0,
         discount = 0, amount;
 
     // determine balance we could apply in cash receipt currency
@@ -351,10 +355,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     if (balance === 0 || amount === 0) return;
     
     // calculate discount if applicable
-    if (balance > 0 && discountDate && 
-        SC.DateTime.compareDate(documentDate, discountDate) <= 0) {
-      discount = (balance * discountPercent).toMoney();
-    }
+    discount = (balance * discountPercent).toMoney();
     
     // adjust the amount or discount as appropriate and apply
     if (documentType === XM.Receivable.INVOICE || 
