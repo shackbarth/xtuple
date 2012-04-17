@@ -42,8 +42,8 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     @param {...} [arguments] Any additional arguments are supplied to the callback method.
   */
   ready: function(callback, context) {
-    var args = Array.prototype.slice.call(arguments),
-        callbacks;
+    var args = SC.A(arguments);
+    var callbacks;
 
     args = args.length > 2 ? args.slice(2) : [];
     context = context ? context : null;
@@ -61,34 +61,6 @@ XT.DataSource = SC.Object.extend(XT.Logging,
 
     callbacks.push({ callback: callback, context: context, args: args });
     return true;
-  },
-
-  /**
-    Issues a request to the node datasource to acquire an active session.
-
-    @todo Currently only uses hard-coded admin/admin user unless
-      username/password are arbitrarily handed to it. This is not
-      the end-design goal but for development only.
-  */
-  getSession: function(username, password, company) {
-    if (!SC.none(this.session)) return;
-
-    this.log("getSession => requesting a session");
-
-    if (SC.none(username)) username = 'admin';
-    if (SC.none(password)) password = 'admin';
-    if (SC.none(company))  company  = '380postbooks';
-
-    XT.Request
-      .postUrl(this.URL)
-      .header({ 'Accept': 'application/json' })
-      .notify(this, 'didGetSession').json()
-      .send({
-        requestType: 'requestSession',
-        userName: username,
-        password: password,
-        company: company
-      });
   },
 
   /**
@@ -162,25 +134,6 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   //
 
   /**
-    Callback receives response for a session request. Sets the
-    isReady flag to true on the datasource that in turn
-    flushes any pending requests.
-
-    @param {SC.Response} response The response from the request.
-  */
-  didGetSession: function(response) {
-    if (SC.ok(response)) {
-      this.log("didGetSession => session acquired");
-      var body = response.get('body');
-      this.set('session', body);
-    } else {
-      throw "Could not acquire session";
-    }
-
-    this.set('isReady', true);
-  },
-
-  /**
     Callback receives resposne for a dispatch request.
 
     @param {SC.Response} response The response from the request.
@@ -211,6 +164,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     @param {SC.Query} query The original query object.
   */
   didFetch: function(response, store, query) {
+
     if (SC.ok(response)) {
       if (response.get("body").error ) {
         var error = SC.Error.create({
@@ -319,10 +273,14 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     this.log("dispatch => payload: ", payload);
 
     XT.Request
-      .postUrl(this.URL)
-      .header({ 'Accept': 'application/json' }).json()
+      .issue('function/dispatch')
       .notify(this, 'didDispatch', store, dispatch)
-      .send(payload);
+      .json().send(payload);
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({ 'Accept': 'application/json' }).json()
+    //   .notify(this, 'didDispatch', store, dispatch)
+    //   .send(payload);
   },
 
   /** @private */
@@ -423,10 +381,14 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     this.log("fetch => payload: ", payload);
 
     XT.Request
-      .postUrl(this.URL)
-      .header({'Accept': 'application/json'}).json()
+      .issue('function/fetch')
       .notify(this, 'didFetch', store, query)
-      .send(payload);
+      .json().send(payload);
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({'Accept': 'application/json'}).json()
+    //   .notify(this, 'didFetch', store, query)
+    //   .send(payload);
   },
 
   /** @private */
@@ -438,11 +400,17 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     payload.recordType = recordType;
     payload.id = id;
     this.log("retrieveRecord => payload: ", payload);
+
     XT.Request
-      .postUrl(this.URL)
-      .header({ 'Accept': 'application/json' }).json()
+      .issue('function/retrieveRecord')
       .notify(this, 'didRetrieveRecord', store, storeKey)
-      .send(payload);
+      .json().send(payload);
+
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({ 'Accept': 'application/json' }).json()
+    //   .notify(this, 'didRetrieveRecord', store, storeKey)
+    //   .send(payload);
   },
 
   /** @private */
@@ -454,11 +422,17 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     payload.recordType = recordType;
     payload.dataHash = record.get('changeSet');
     this.log("commitRecord => payload: ", payload);
+
     XT.Request
-      .postUrl(this.URL)
-      .header({ 'Accept': 'application/json' }).json()
+      .issue('function/commitRecord')
       .notify(this, 'didCommitRecord', store, storeKey)
-      .send(payload);
+      .json().send(payload);
+
+    // XT.Request
+    //   .postUrl(this.URL)
+    //   .header({ 'Accept': 'application/json' }).json()
+    //   .notify(this, 'didCommitRecord', store, storeKey)
+    //   .send(payload);
   },
 
   //............................................
