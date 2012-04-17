@@ -3,7 +3,7 @@
   HACK.............................................
 */
 Console.main = function main() {
-  XT.dataSource = XT.DataSource.create({ name: 'XT.dataSource' });
+  XT.dataSource = XT.DataSource.create({ name: 'XT.dataSource', logLocal: true });
   XT.store = XT.Store.create().from(XT.dataSource);
 
   // use the new package system out of the box for now

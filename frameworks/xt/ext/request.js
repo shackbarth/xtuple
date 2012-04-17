@@ -120,6 +120,7 @@ XT.Request = SC.Object.extend(
 
     // console.log("EVENT", event);
     // console.log("WRAPPER => ", wrapper);
+       console.log("PAYLOAD TO SERVER (sans-wrapper) => ", payload);
     // console.log(ack);
     // console.log(callback);
 
