@@ -9,15 +9,14 @@
   as soon as it is pushed on to the array.
 */
 SC.ChildArray.prototype.pushObject = function(obj) {
+  this.insertAt(this.get('length'), obj);
+  
   var parent = this.get('record'),
       store = parent.get('store'),
       psk = parent.get('storeKey'),
       csk = obj.get('storeKey'),
       propertyName = this.get('propertyName'),
       path;
-  
-  // do what we're here for
-  this.insertAt(this.get('length'), obj);
   
   // register child
   parent.isParentRecord = true;
