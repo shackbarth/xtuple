@@ -55,5 +55,8 @@
       }
     }
   ],
+  "order": [
+    "curr_effective DESC"
+  ],
   "isSystem": true
 }

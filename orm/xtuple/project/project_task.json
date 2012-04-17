@@ -77,7 +77,7 @@
     {
       "name": "budgetedHours",
       "attr": {
-        "type": "Number",
+        "type": "Quantity",
         "column": "prjtask_hours_budget",
         "isRequired": true,
         "defaultValue": 0
@@ -86,7 +86,7 @@
     {
       "name": "actualHours",
       "attr": {
-        "type": "Number",
+        "type": "Quantity",
         "column": "prjtask_hours_actual",
         "isRequired": true,
         "defaultValue": 0
@@ -95,7 +95,7 @@
     {
       "name": "budgetedExpenses",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "prjtask_exp_budget",
         "isRequired": true,
         "defaultValue": 0
@@ -104,7 +104,7 @@
     {
       "name": "actualExpenses",
       "attr": {
-        "type": "Number",
+        "type": "Money",
         "column": "prjtask_exp_actual",
         "isRequired": true,
         "defaultValue": 0

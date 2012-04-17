@@ -66,6 +66,8 @@
 -- xt views
 \i xt/views/apapply.sql;
 \i xt/views/arapply.sql;
+\i xt/views/aropencr.sql;
+\i xt/views/aropenid.sql;
 \i xt/views/arpending.sql;
 \i xt/views/docinfo.sql; 
 \i xt/views/gl.sql;
@@ -89,7 +91,6 @@
 \i xm/javascript/cash_receipt_journal.sql;
 \i xm/javascript/contact.sql;
 \i xm/javascript/crm.sql;
-\i xm/javascript/currency.sql;
 \i xm/javascript/customer.sql;
 \i xm/javascript/database_information.sql;
 \i xm/javascript/fiscal_year.sql;

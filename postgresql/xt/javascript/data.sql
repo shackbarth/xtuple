@@ -52,10 +52,9 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* evaluate */
         if(parameters) {
-          if(cond.indexOf('%@') > 0) {  /* replace wild card tokens */
+          if(conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
             for(var i = 0; i < parameters.length; i++) {
-              var n = cond.indexOf('%@'),
-                  val =  format(parameters[i]);
+              var val =  format(parameters[i]);
               conditions = conditions.replace(/%@/,val);
             }
           } else {  /* replace parameterized tokens */
@@ -84,8 +83,8 @@ select xt.install_js('XT','Data','xtuple', $$
         }
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
       }    
-      ret = conditions.length ? '(' + conditions + ')' : ret;
-      ret = pcond.length ? (conditions.length ? ret.concat(' and ', pcond) : pcond) : ret;
+      ret = conditions && conditions.length ? '(' + conditions + ')' : ret;
+      ret = pcond.length ? (conditions && conditions.length ? ret.concat(' and ', pcond) : pcond) : ret;
       return ret;
     },
 
@@ -501,30 +500,47 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns Object
     */
     retrieveRecord: function(recordType, id, encryptionKey) {
+      return this.retrieveRecords(recordType, [id], encryptionKey)[0];
+    },
+
+    /**
+      Retreives an array of records from the database. If the user does not have appropriate privileges an
+      error will be thrown.
+      
+      @param {String} namespace qualified record type
+      @param {Number} record ids
+      @param {String} encryption key
+      @returns Object
+    */
+    retrieveRecords: function(recordType, ids, encryptionKey) {
       var nameSpace = recordType.beforeDot(), 
           type = recordType.afterDot(),
           map = XT.Orm.fetch(nameSpace, type),
-          ret, sql, pkey = XT.Orm.primaryKey(map), i = 0;
+          ret, sql, pkey = XT.Orm.primaryKey(map);
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
-      sql = "select * from {schema}.{table} where {primaryKey} = $1;"
+      sql = "select * from {schema}.{table} where {primaryKey} in ({ids});"
             .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{table}/, type.decamelize())
             .replace(/{primaryKey}/, pkey)
-            .replace(/{id}/, id);  
+            .replace(/{ids}/, ids.join(','));
 
       /* validate - don't bother running the query if the user has no privileges */
       if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
 
       /* query the map */
       if(DEBUG) print(NOTICE, 'sql = ', sql);
-      ret = executeSql(sql, [id]);
-      if(!ret.length) throw new Error('No record found for {recordType} id {id}'
+      ret = executeSql(sql);
+      if(!ret.length) throw new Error('No record found for {recordType} id(s) {ids}'
                                       .replace(/{recordType}/, recordType)
-                                      .replace(/{id}/, id));
-      ret = this.decrypt(nameSpace, type, ret[0], encryptionKey);
+                                      .replace(/{ids}/, ids.join(',')));
 
-      /* check privileges again, this time against record specific criteria where applicable */
-      if(!this.checkPrivileges(nameSpace, type, ret)) throw new Error("Access Denied.");
+      for (var i = 0; i < ret.length; i++) {
+        /* check privileges again, this time against record specific criteria where applicable */
+        if(!this.checkPrivileges(nameSpace, type, ret[i])) throw new Error("Access Denied.");
+        
+        /* decrypt result where applicable */
+        ret[i] = this.decrypt(nameSpace, type, ret[i], encryptionKey);
+      }
 
       /* return the results */
       return ret;

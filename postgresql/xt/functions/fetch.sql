@@ -22,33 +22,33 @@ create or replace function xt.fetch(data_hash text) returns text as $$
 
 $$ language plv8;
 /*
-select xt.fetch(E'{ "query":{
+select xt.fetch($${ "query":{
                          "recordType":"XM.Contact",
                          "parameters":{ 
                            "firstName": "Jake", 
                            "lastName": "F"
                          }, 
-                         "conditions":"firstName = {firstName} OR lastName BEGINS_WITH {lastName}", 
-                         "orderBy":"lastName", 
+                         "conditions":"\"firstName\" = {firstName} OR \"lastName\" ~^ {lastName}", 
+                         "orderBy":"\"lastName\"", 
                          "rowLimit": 3,
                          "prettyPrint": true
                          }
-                       }');
+                       }$$);
 
-select xt.fetch(E'{ "query":{
+select xt.fetch($${ "query":{
                          "recordType":"XM.Contact",
                          "rowLimit": 10,
                          "prettyPrint": true
                          }
-                       }');
+                       }$$);
 
-select xt.fetch(E'{ "query":{
+select xt.fetch($${ "query":{
                          "recordType":"XM.Contact",
                          "parameters":[ "Jake",  "F" ], 
-                         "conditions":"firstName = %@ OR lastName BEGINS_WITH %@", 
-                         "orderBy":"lastName", 
+                         "conditions":"\"firstName\" = %@ OR \"lastName\" ~^ %@", 
+                         "orderBy":"\"lastName\"", 
                          "rowLimit": 3,
                          "prettyPrint":true
                          }
-                       }');
+                       }$$);
 */

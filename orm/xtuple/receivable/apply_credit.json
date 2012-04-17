@@ -1,14 +1,14 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "CashReceiptReceivable",
-  "table": "aropen",
-  "comment": "Cash Receipt Receivable Map",
+  "type": "ApplyCredit",
+  "table": "xt.aropencr",
+  "comment": "Apply Credit Map",
   "privileges": {
     "all": {
       "create": false,
-      "read": "ViewCashReceipts",
-      "update": "MaintainCashReceipts",
+      "read": "ApplyARMemos",
+      "update": false,
       "delete": false
     }
   },
@@ -24,86 +24,51 @@
     {
       "name": "customer",
       "toOne": {
+        "isNested" : true,
         "type": "CustomerInfo",
-        "column": "aropen_cust_id",
-        "inverse" : "guid",
-        "isEditable": false
+        "column": "aropen_cust_id"
       }
     },
     {
       "name": "documentDate",
       "attr": {
         "type": "Date",
-        "column": "aropen_docdate",
-        "isRequired": true,
-        "isEditable": false
-      }
-    },
-    {
-      "name": "dueDate",
-      "attr": {
-        "type": "Date",
-        "column": "aropen_duedate",
-        "isRequired": true,
-        "isEditable": false
+        "column": "aropen_docdate"
       }
     },
     {
       "name": "documentType",
       "attr": {
         "type": "String",
-        "column": "aropen_doctype",
-        "isRequired": true,
-        "isEditable": false
+        "column": "aropen_doctype"
       }
     },
     {
       "name": "number",
       "attr": {
         "type": "String",
-        "column": "aropen_docnumber",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "orderNumber",
-      "attr": {
-        "type": "String",
-        "column": "aropen_ordernumber",
-        "isEditable": false
-      }
-    },
-    {
-      "name": "terms",
-      "toOne": {
-        "isNested": true,
-        "type": "Terms",
-        "column": "aropen_terms_id",
-        "isEditable": false
+        "column": "aropen_docnumber"
       }
     },
     {
       "name": "amount",
       "attr": {
         "type": "Money",
-        "column": "aropen_amount",
-        "isEditable": false
+        "column": "aropen_amount"
       }
     },
     {
       "name": "currency",
       "toOne": {
         "type": "Currency",
-        "column": "aropen_curr_id",
-        "isEditable": false
+        "column": "aropen_curr_id"
       }
     },
     {
       "name": "currencyRate",
       "attr": {
         "type": "Number",
-        "column": "aropen_curr_rate",
-        "isEditable": false
+        "column": "aropen_curr_rate"
       }
     },
     {
@@ -114,7 +79,7 @@
         "column": "aropen_id",
         "inverse": "receivable"
       }
-    },  
+    }, 
     {
       "name": "pendingApplications",
       "toMany": {
@@ -123,13 +88,14 @@
         "column": "aropen_id",
         "inverse": "receivable"
       }
-    },   
+    },
     {
-      "name": "isOpen",
-      "attr": {
-        "type": "Boolean",
-        "column": "aropen_open",
-        "isEditable": false
+      "name": "details",
+      "toMany": {
+        "isNested": true,
+        "type": "ApplyCreditDetail",
+        "column": "aropen_id",
+        "inverse": "applyCredit"
       }
     }
   ],

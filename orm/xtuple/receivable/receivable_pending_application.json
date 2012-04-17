@@ -1,9 +1,9 @@
 {
   "context": "xtuple",
   "nameSpace": "XM",
-  "type": "PendingApplication",
+  "type": "ReceivablePendingApplication",
   "table": "xt.arpending",
-  "comment": "Pending Application Map",
+  "comment": "Receivable Pending Application Map",
   "privileges": {
     "all": {
       "create": "false",

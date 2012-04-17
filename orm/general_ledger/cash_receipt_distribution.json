@@ -7,10 +7,10 @@
   "comment": "Cash Receipt Distribution Map",
   "privileges": {
     "all": {
-      "create": "false",
-      "read": "true",
-      "update": "false",
-      "delete": "false"
+      "create": true,
+      "read": true,
+      "update": true,
+      "delete": true
     }
   },
   "properties": [
@@ -26,21 +26,24 @@
       "name": "cashReceipt",
       "toOne": {
         "type": "CashReceipt",
-        "column": "cashrcptmisc_cashrcpt_id"
+        "column": "cashrcptmisc_cashrcpt_id",
+        "isRequired": true
       }
     },
     {
-      "name": "account",
+      "name": "ledgerAccount",
       "toOne": {
-        "type": "Account",
-        "column": "cashrcptmisc_accnt_id"
+        "type": "LedgerAccount",
+        "column": "cashrcptmisc_accnt_id",
+        "isRequired": true
       }
     },
     {
       "name": "amount",
       "attr": {
         "type": "Number",
-        "column": "cashrcptmisc_amount"
+        "column": "cashrcptmisc_amount",
+        "isRequired": true
       }
     },
     {
