@@ -6,6 +6,8 @@
 
 SC.ENABLE_CSS_TRANSITIONS = true;
 
+Postbooks.USE_320_TILES = false;
+
 XT.DataSource.prototype.logLevels = SC.Object.create({
   warn:  false,
   info:  false,

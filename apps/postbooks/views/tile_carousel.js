@@ -49,7 +49,7 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend({
 
     // Need to calculate the number of tiles per slide, then figure out 
     // the number of slides.
-    if (width <= 678 || height <= 704) {
+    if (slides <= 4 || width <= 678 || height <= 704) {
       tilesPerSlide = 4; // This is our minimum.
       tray.__horizontalTiles__ = tray.__verticalTiles__ = 2;
     } else {
@@ -152,15 +152,22 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     var columns = [], column, tileFrame;
     var horizontalCenter = Math.floor((width/horizontalTiles)/2);
     var horizontalOffset = Math.floor(width/horizontalTiles);
-    var verticalCenter = Math.floor((height/verticalTiles)/2);
-    var verticalOffset = Math.floor(height/verticalTiles);
+    var verticalCenter = Math.floor(((height-55)/verticalTiles)/2);
+    var verticalOffset = Math.floor((height-55)/verticalTiles);
     for (var idx=0, len=horizontalTiles; idx<len; ++idx) {
       column = columns[idx] = [];
       for (var idx2=0, len2=verticalTiles; idx2<len2; ++idx2) {
         tileFrame = column[idx2] = SC.MakeRect();
-        tileFrame.width = tileFrame.height = 320;
-        tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 160;
-        tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 160;
+        if (Postbooks.USE_320_TILES) {
+          tileFrame.width = tileFrame.height = 320;
+          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 160;
+          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 160;
+        } else {
+          tileFrame.width = horizontalOffset - 12;
+          tileFrame.height = verticalOffset - 12;
+          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - (horizontalOffset/2) + 6;
+          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - (verticalOffset/2) + 6;
+        }
       }
     }
 

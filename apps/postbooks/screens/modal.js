@@ -69,7 +69,12 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
     orderOutTransition: null
   });
 
-  var modal = SC.LayoutSurface.create();
+  var modal = SC.LayoutSurface.create({
+    viewportSizeDidChange: function(viewport) {
+      console.log('viewportSizeDidChange');
+      this.set('frame', SC.MakeRect(64, 44, viewport.width-64, viewport.height - 52));
+    }
+  });
   
   var list = [SC.Object.create({
     title: "Overview",
