@@ -149,9 +149,9 @@ XM._Account = {
   }),
 
   /**
-    @type XM.TaxAuthorityInfo
+    @type XM.TaxAuthority
   */
-  taxAuthority: SC.Record.toOne('XM.TaxAuthorityInfo', {
+  taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
     label: '_taxAuthority'.loc()
   }),
 
