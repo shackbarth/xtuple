@@ -96,7 +96,7 @@ Postbooks.LoadModule = function(name, classes, state) {
 
           // Draw view name.
           ctx.fillStyle = base03;
-          ctx.font = "11pt Calibri";
+          ctx.font = "11pt Helvetica";
           ctx.textBaseline = "middle";
           ctx.textAlign = "center";
           ctx.fillText(text, w/2, h/2);
@@ -115,7 +115,7 @@ Postbooks.LoadModule = function(name, classes, state) {
         context.lineTo(width, height - 0.5);
         context.stroke();
 
-        context.font = "12pt Calibri";
+        context.font = "12pt Helvetica";
         context.fillStyle = 'black';
         context.textAlign = 'center';
         context.textBaseline = 'middle';
@@ -175,7 +175,7 @@ Postbooks.LoadModule = function(name, classes, state) {
 
     willRenderLayers: function(ctx) {
       ctx.fillStyle = base3;
-      ctx.font = "16pt Calibri";
+      ctx.font = "16pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;

@@ -41,7 +41,7 @@ Postbooks.BackButton = SC.ButtonWidget.extend({
 
     // Draw some text.
     ctx.fillStyle = base3;
-    ctx.font = "13pt Calibri";
+    ctx.font = "13pt Helvetica";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;

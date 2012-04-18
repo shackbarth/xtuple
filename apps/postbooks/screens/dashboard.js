@@ -41,7 +41,7 @@ var IconLayer = SC.ButtonWidget.extend({
 
     // Draw some text.
     ctx.fillStyle = base3;
-    ctx.font = "16pt Calibri";
+    ctx.font = "14pt Helvetica";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
@@ -59,7 +59,7 @@ Postbooks.LoadDashboard = function() {
 
     willRenderLayers: function(ctx) {
       ctx.fillStyle = base3;
-      ctx.font = "16pt Calibri";
+      ctx.font = "16pt Helvetica";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
@@ -74,7 +74,7 @@ Postbooks.LoadDashboard = function() {
   });
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: -200, centerY: -150, width: 300, height: 200 },
+    layout: { centerX: -200, centerY: -120, width: 300, height: 200 },
     color: magenta,
     name: "Contact Management",
     target: 'Postbooks.statechart',
@@ -82,7 +82,7 @@ Postbooks.LoadDashboard = function() {
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: 200, centerY: -150, width: 300, height: 200 },
+    layout: { centerX: 200, centerY: -120, width: 300, height: 200 },
     color: violet,
     name: "Receivables",
     target: 'Postbooks.statechart',
@@ -90,7 +90,7 @@ Postbooks.LoadDashboard = function() {
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: -200, centerY: 150, width: 300, height: 200 },
+    layout: { centerX: -200, centerY: 120, width: 300, height: 200 },
     color: blue,
     name: "Payables",
     target: 'Postbooks.statechart',
@@ -98,7 +98,7 @@ Postbooks.LoadDashboard = function() {
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: 200, centerY: 150, width: 300, height: 200 },
+    layout: { centerX: 200, centerY: 120, width: 300, height: 200 },
     color: cyan,
     name: "General Ledger",
     target: 'Postbooks.statechart',
