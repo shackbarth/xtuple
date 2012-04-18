@@ -12,26 +12,29 @@ sc_require('mixins/_profit_center');
 
   @extends XT.Record
 */
-XM.ProfitCenter = XT.Record.extend(XM._ProfitCenter,
-/** @scope XM.ProfitCenter.prototype */ {
+XM.ProfitCenter = XM.Document.extend(XM._ProfitCenter,
+	/** @scope XM.ProfitCenter.prototype */ {
 
-// .................................................
-// CALCULATED PROPERTIES
-//
+	documentKey: 'number',
 
-number: SC.Record.attr(Number, {
-  toType: function(record, key, value) {
-  if(value) return value.get('length') <= 2 ? value : null;
-  }
-}),
+	// .................................................
+	// CALCULATED PROPERTIES
+	//
 
-//..................................................
-// METHODS
-//
+	number: SC.Record.attr(String, {
+		fromType: function(record, key, value) {
+			var segmentSize = XT.session.settings.get('GLProfitSize');
+			return value.substr(0,segmentSize)
+		} 
+	}),
 
-//..................................................
-// OBSERVERS
-//
+	//..................................................
+	// METHODS
+	//
+
+	//..................................................
+	// OBSERVERS
+	//
 
 });
 

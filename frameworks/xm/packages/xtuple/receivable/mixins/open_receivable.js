@@ -15,13 +15,18 @@ XM.OpenReceivable = /** @scope XM.OpenReceivable.prototype */ {
 
   /** @private */
   pendingApplicationsLength: 0,
-  
-  /** @private */
-  pendingApplicationsLengthBinding: SC.Binding.from('*pendingApplications.length').oneWay().noDelay(),
 
   // .................................................
   // CALCULATED PROPERTIES
   //
+
+  initMixin: function() {
+    var pendingApplications = this.get('pendingApplications');
+
+    SC.Binding.from('length', pendingApplications)
+              .to('pendingApplicationsLength', this)
+              .oneWay().noDelay().connect();
+  },
   
   /**
     Total value of applications that have been created, but not posted, on the receivable

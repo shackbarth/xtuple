@@ -50,9 +50,6 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     The value of all pending applications in the receivable's currency.
   */
   pending: 0,
-  
-  /** @private */
-  pendingBinding: SC.Binding.from('*receivable.pending').oneWay().noDelay(),
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -95,7 +92,23 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    this.set('appliedMoney', XM.Money.create()); // bindings set up by observers
+    var appliedMoney = XM.Money.create(),
+        receivable = this.get('receivable'),
+        currency = this.getPath('receivable.currency'),
+        cashReceipt = this.get('cashReceipt');
+        
+    appliedMoney.set('currency', currency);
+    this.set('appliedMoney', appliedMoney); 
+
+    // bind pending value to drive updates on this object
+    SC.Binding.from('pending', receivable)
+              .to('pending', this)
+              .oneWay().noDelay().connect();
+              
+    // application date drives exchange rate for receivable
+    SC.Binding.from('applicationDate', cashReceipt)
+          .to('effective', appliedMoney)
+          .oneWay().noDelay().connect();
   },
   
   /**
@@ -231,22 +244,6 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     this._xm_removePending();
     this._xm_createPending();
   }.observes('applied', 'appliedMoneyExchangeRate', 'isLoadingReceivableExchangeRate', 'isLoadingCashReceiptExchangeRate'),
-
-  /** @private */  
-  _xm_cashReceiptDidChange: function() {
-    var cashReceipt = this.get('cashReceipt'),
-        appliedMoney = this.get('appliedMoney');
-    SC.Binding.from('applicationDate', cashReceipt)
-          .to('effective', appliedMoney)
-          .oneWay().noDelay().connect();
-  }.observes('cashReceipt'),
-
-  /** @private */ 
-  _xm_receivableDidChange: function() {
-    var currency = this.getPath('receivable.currency'),
-        appliedMoney = this.get('appliedMoney');
-    appliedMoney.set('currency', currency);
-  }.observes('receivable'),
   
   /** @private
     Execute any pending request to apply cash. If the client is waiting

@@ -48,9 +48,9 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /**
     Total amount applied.
     
-    @type Number
+    @type Money
   */
-  applied: 0,
+  applied: null,
   
   /**
     Money object for total amount applied. Uses application date
@@ -63,9 +63,9 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /**
     Total discount taken.
     
-    @type Number
+    @type Money
   */
-  discount: 0,
+  discount: null,
   
   /**
     @type Boolean
@@ -177,6 +177,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   
   init: function() {
     arguments.callee.base.apply(this, arguments);
+    this.set('applied', new Money(0));
+    this.set('discount', new Money(0));
     
     // create money object and bindings for amount
     var amountMoney = XM.Money.create();
@@ -432,10 +434,11 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
       // if not found make one
       if ((status & SC.Record.DESTROYED) === 0) {
         if (!application) {
-          application = XM.CashReceiptApplication.create();
-          application.set('cashReceipt', this),
+          application = XM.CashReceiptApplication.create({
+            receivable: receivable,
+            cashReceipt: this
+          });
           application.set('cashReceiptDetail', detail),
-          application.set('receivable', receivable),
           applications.pushObject(application);
           isUpdated = true;
           
@@ -483,9 +486,10 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
           
       // if not found make one
       if (!application) {
-        application = XM.CashReceiptApplication.create();
-        application.set('cashReceipt', this);
-        application.set('receivable', receivable);
+        application = XM.CashReceiptApplication.create({
+          receivable: receivable,
+          cashReceipt: this
+        });
         applications.pushObject(application);
       }
     }
