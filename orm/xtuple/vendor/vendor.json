@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "Name",
+      "name": "name",
       "attr": {
         "type": "String",
         "column": "vend_name"

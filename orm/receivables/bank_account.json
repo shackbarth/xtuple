@@ -12,7 +12,7 @@
   ],
   "properties": [
     {
-      "name": "useByReceivables",
+      "name": "usedByReceivables",
       "attr": {
         "type": "Boolean",
         "column": "bankaccnt_ar",

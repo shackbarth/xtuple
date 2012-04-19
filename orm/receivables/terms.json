@@ -12,7 +12,7 @@
   ],
   "properties": [
     {
-      "name": "usedByReceievables",
+      "name": "usedByReceivables",
       "attr": {
         "type": "Boolean",
         "column": "terms_ar",
