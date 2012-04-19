@@ -53,7 +53,7 @@
       }
     },
     {
-      "name": "deferredledgerAccount",
+      "name": "deferredLedgerAccount",
       "toOne": { 
         "isNested": true,
         "type": "LedgerAccountInfo",

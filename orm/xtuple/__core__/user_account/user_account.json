@@ -30,7 +30,7 @@
       }
     },
     {
-      "name": "propername",
+      "name": "properName",
       "attr": {
         "type": "String",
         "column": "usr_propername"
