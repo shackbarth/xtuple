@@ -30,12 +30,14 @@ XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.Documents,
   //..................................................
   // OBSERVERS
   //
-  
+
   _xm_assignedToDidChange: function() {
-    var assignedTo = this.get('assignedTo'),
-        status = this.get('status');
-     
-    if(status & SC.Record.READY && assignedTo) this.set('assignDate', SC.DateTime.create());
-  }.observes('assignedTo'),
-  
+    if(this.isDirty()) {
+      var assignedTo = this.get('assignedTo'),
+          status = this.get('status');
+       
+      if(status & SC.Record.READY && assignedTo) this.set('assignDate', SC.DateTime.create());
+    }
+  }.observes('assignedTo')
+
 });
