@@ -277,4 +277,7 @@ XT.ready(function() {
     SC.Logger.info("Datasource pushed new session");
     XT.session.didAcquireSession(response);
   });
+
+
+  XT.session.loadSessionObjects();
 });
