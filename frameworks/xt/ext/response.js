@@ -5,24 +5,34 @@ XT.Response = SC.Object.extend(
   init: function() {
     arguments.callee.base.apply(this, arguments);
     var raw = this.get('rawResponse');
-    this.set('data', raw.data);
-    this.set('code', raw.code);
+    var data;
+    try {
+      data = SC.json.decode(raw.data);
+    } catch (err) {
+      data = raw.data;
+    }
+
+    if (data.isError) {
+      this.error = data;
+    } else {
+      this.set('data', data);
+      this.code = raw.code;
+    }
   },
 
   body: function() {
-    var data = this.get('data');
-    return data;
-  }.property('data').cacheable(),
-
-  error: function() {
-    var data = this.get('data');
-    data.error = data;
-    return data;
+    if (this.error) {
+      return this.error;
+    } else {
+      return this.get('data') || {};
+    }
   }.property('data').cacheable(),
 
   data: null,
 
   code: null,
+
+  error: null,
 
   rawResponse: null
 
