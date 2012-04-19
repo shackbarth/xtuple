@@ -164,10 +164,7 @@ XM._Payable = {
   /**
     @type Date
   */
-  isOpen: SC.Record.attr(SC.DateTime, {
-    format: '%Y-%m-%d',
-    useIsoDate: false,
-    defaultValue: true,
+  isOpen: SC.Record.attr(Boolean, {
     label: '_isOpen'.loc()
   }),
 
