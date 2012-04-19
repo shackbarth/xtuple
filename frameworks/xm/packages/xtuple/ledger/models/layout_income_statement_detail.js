@@ -7,7 +7,7 @@
 
 sc_require('mixins/_layout_income_statement_detail');
 sc_require('mixins/layout_financial_statement');
-sc_require('model/ledger_account');
+sc_require('models/ledger_account');
 
 /**
   @class
