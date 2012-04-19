@@ -25,7 +25,7 @@
     {
       "name": "name",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "opsource_name",
         "isEditable": false
       }

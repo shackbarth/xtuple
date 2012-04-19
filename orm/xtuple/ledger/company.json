@@ -54,7 +54,7 @@
       }
     },
     {
-      "name": "discrepencyLedgerAccount",
+      "name": "discrepancyLedgerAccount",
       "toOne": {
         "isNested": true,
         "type": "LedgerAccountInfo",

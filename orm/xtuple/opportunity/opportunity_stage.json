@@ -25,7 +25,7 @@
     {
       "name": "name",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "opstage_name",
         "isEditable": false
       }

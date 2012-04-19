@@ -21,7 +21,7 @@
       }
     },
     {
-      "name": "opportunitytRelations",
+      "name": "opportunityRelations",
       "toMany": {
         "type": "OpportunityInfo",
         "column": "crmacct_id",
