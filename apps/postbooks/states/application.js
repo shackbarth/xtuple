@@ -11,11 +11,16 @@ Postbooks.APPLICATION = SC.State.design({
   enterState: function() {
     XT.dataSource = XT.DataSource.create({ name: 'XT.dataSource' });
     XT.store = XT.Store.create().from(XT.dataSource);
-    XT.dataSource.getSession();
 
     // Use the new package system out of the box for now.
-    XT.package = SC.Package.create();
+    XT.package = XT.Package.create();
     XT.run();
+
+    // the delegate needs to be set before the session has been
+    // acquired, it is set on the XT.session object/controller
+
+    // TEMPORARY HACK
+    XT.session.acquireSession('admin', 'admin', '380postbooks');
 
     SC.routes.add(':tab', Postbooks, Postbooks.routeHandler);
     if (!window.location.hash) {
