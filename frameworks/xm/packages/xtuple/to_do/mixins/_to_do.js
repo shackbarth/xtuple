@@ -149,7 +149,7 @@ XM._ToDo = {
       var record = arguments[0],
           status = record.get('status'),
           ret;
-      if (status = SC.Record.READY_NEW) {
+      if (status == SC.Record.READY_NEW) {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }
@@ -167,7 +167,7 @@ XM._ToDo = {
       var record = arguments[0],
           status = record.get('status'),
           ret;
-      if (status = SC.Record.READY_NEW) {
+      if (status == SC.Record.READY_NEW) {
         XM.UserAccountInfo.setCurrentUser(record, 'assignedTo');
         ret = '_loading'.loc();
       }
