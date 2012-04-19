@@ -52,8 +52,8 @@ XM._UserAccount = {
   /**
     @type String
   */
-  propername: SC.Record.attr(String, {
-    label: '_propername'.loc()
+  properName: SC.Record.attr(String, {
+    label: '_properName'.loc()
   }),
 
   /**

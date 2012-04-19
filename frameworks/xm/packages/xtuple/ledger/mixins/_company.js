@@ -74,9 +74,9 @@ XM._Company = {
   /**
     @type XM.LedgerAccountInfo
   */
-  discrepencyLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
+  discrepancyLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
     isNested: true,
-    label: '_discrepencyLedgerAccount'.loc()
+    label: '_discrepancyLedgerAccount'.loc()
   })
 
 };

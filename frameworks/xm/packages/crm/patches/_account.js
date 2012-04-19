@@ -26,8 +26,8 @@ SC.Patch.create( /** @scope XM.Account.prototype */ {
     /**
       @type XM.OpportunityInfo
     */
-    opportunitytRelations: SC.Record.toMany('XM.OpportunityInfo', {
-      label: '_opportunitytRelations'.loc()
+    opportunityRelations: SC.Record.toMany('XM.OpportunityInfo', {
+      label: '_opportunityRelations'.loc()
     }),
   
     /**

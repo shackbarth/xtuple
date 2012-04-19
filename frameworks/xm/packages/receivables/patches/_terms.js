@@ -19,9 +19,9 @@ SC.Patch.create( /** @scope XM.Terms.prototype */ {
     /**
       @type Boolean
     */
-    usedByReceievables: SC.Record.attr(Boolean, {
+    usedByReceivables: SC.Record.attr(Boolean, {
       defaultValue: false,
-      label: '_usedByReceievables'.loc()
+      label: '_usedByReceivables'.loc()
     })
 
   }
