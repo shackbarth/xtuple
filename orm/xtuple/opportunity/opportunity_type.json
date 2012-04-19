@@ -25,7 +25,7 @@
     {
       "name": "name",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "optype_name",
         "isEditable": false
       }
