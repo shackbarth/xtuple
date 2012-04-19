@@ -1,11 +1,20 @@
 
 sc_require('ext/socket.io.min');
 
+// RESET THESE PROPERTIES BY HAND FOR NOW
+SOCKET_SOURCE = 'aurora.xtuple.com';
+SOCKET_PORT = 9000;
+SOCKET_SERVER_DEBUGGING = true;
+
 //.........................................
 // this needs to work by exposing the actual
 // node address/port to the client by the
 // builder?
-var socket = XT.socket = io.connect('http://localhost:9000/client');
+// TODO: THIS SHOULD NOT BE HARD CODED TO LOOK HERE!
+// var socket = XT.socket = io.connect('http://aurora.xtuple.com:9000/client');
+SOCKET_URL = 'http://' + SOCKET_SOURCE + ':' + SOCKET_PORT + '/client';
+SC.Logger.info("USING %@ TO CONNECT TO SOCKET".fmt(SOCKET_URL));
+var socket = XT.socket = io.connect(SOCKET_URL);
 // set a timeout so we can tell if something
 // most likely went wrong, this is not a long
 // term way to fix this problem but for a first
@@ -21,5 +30,7 @@ socket.on('connect', function() {
 });
 // for debugging purposes
 socket.on('debug', function(payload) {
-  console.log("<<SOCKET DEBUG MESSAGE>> " + payload.message, "\n<<END>>");
+  if (SOCKET_SERVER_DEBUGGING) {
+    console.log("<<SOCKET DEBUG MESSAGE>> " + payload.message, "\n<<END>>");
+  }
 });
