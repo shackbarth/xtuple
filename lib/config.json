@@ -12,6 +12,6 @@
   "generated-models-directory": "../client/frameworks/xm/packages",
   "generated-subclass-models-directory": "../generated_template_models",
   "mode": "develop",
-  "target-app": "postbooks",
+  "target-app": "console",
   "app-port": 4020
 }
