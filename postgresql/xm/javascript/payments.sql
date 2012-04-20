@@ -1,12 +1,12 @@
-select xt.install_js('XM','payables','payables', $$
+select xt.install_js('XM','payments','payments', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
-  XM.Payables = {};
+  XM.Payments = {};
 
-  XM.Payables.isDispatchable = true,
+  XM.Payments.isDispatchable = true,
 
-  XM.Payables.options = [
+  XM.Payments.options = [
     "NextAPMemoNumber",
     "ACHEnabled",
     "ACHCompanyId",
@@ -26,8 +26,8 @@ select xt.install_js('XM','payables','payables', $$
 
   @returns {Object}
   */
-  XM.Payables.settings = function() {
-    var keys = XM.Payables.options.slice(0),
+  XM.Payments.settings = function() {
+    var keys = XM.Payments.options.slice(0),
         data = Object.create(XT.Data),
         sql = "select orderseq_number as value "
             + "from orderseq"
@@ -48,14 +48,14 @@ select xt.install_js('XM','payables','payables', $$
   }
 
   /* 
-  Update Payables configuration settings. Only valid options as defined in the array
-  XM.Payables.options will be processed.
+  Update Payments configuration settings. Only valid options as defined in the array
+  XM.Payments.options will be processed.
 
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.Payables.commitSettings = function(settings) {
-    var sql, options = XM.Payables.options.slice(0),
+  XM.Payments.commitSettings = function(settings) {
+    var sql, options = XM.Payments.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */
@@ -82,7 +82,7 @@ select xt.install_js('XM','payables','payables', $$
     return data.commitMetrics(metrics);
   }
 
-  XT.registerSettings('XM','Payables','settings');
+  XT.registerSettings('XM','Payments','settings');
 
 $$ );
 

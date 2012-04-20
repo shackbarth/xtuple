@@ -86,6 +86,7 @@
 -- xm/javascript
 \i xm/javascript/address.sql;
 \i xm/javascript/bank_account_reconciliation.sql;
+\i xm/javascript/billing.sql;
 \i xm/javascript/cash_receipt.sql;
 \i xm/javascript/cash_distribution_journal.sql;
 \i xm/javascript/cash_receipt_journal.sql;
@@ -101,15 +102,15 @@
 \i xm/javascript/invoice_line.sql;
 \i xm/javascript/item.sql;
 \i xm/javascript/journal.sql;
+\i xm/javascript/ledger.sql;
 \i xm/javascript/ledger_account.sql;
 \i xm/javascript/payable.sql;
-\i xm/javascript/payables.sql;
 \i xm/javascript/payment.sql;
+\i xm/javascript/payments.sql;
 \i xm/javascript/period.sql;
 \i xm/javascript/project.sql;
 \i xm/javascript/purchase_journal.sql;
 \i xm/javascript/receivable.sql;
-\i xm/javascript/receivables.sql;
 \i xm/javascript/sales_journal.sql;
 \i xm/javascript/standard_journal.sql;
 \i xm/javascript/tax.sql;
