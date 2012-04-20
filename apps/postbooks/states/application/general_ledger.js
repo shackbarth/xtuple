@@ -20,7 +20,7 @@ Postbooks.GENERAL_LEDGER = SC.State.design({
 
     SC.routes.set('location', 'general-ledger');
 
-    Postbooks.LoadModule("General Ledger", 'Journal GeneralLedger TrialBalance Budget FinancialStatement BankAccount'.w(), this);
+    Postbooks.LoadModule("_ledger".loc(), 'Journal GeneralLedger TrialBalance Budget FinancialStatement BankAccount'.w(), this);
   },
 
   exitState: function() {

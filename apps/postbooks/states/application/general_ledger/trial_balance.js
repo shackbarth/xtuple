@@ -7,7 +7,7 @@
 Postbooks.TRIAL_BALANCE = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('TrialBalance', "General Ledger");
+    Postbooks.LoadSubmodule('TrialBalance', "_ledger".loc());
   },
 
   exitState: function() {

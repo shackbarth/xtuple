@@ -7,7 +7,7 @@
 Postbooks.GENERAL_LEDGER_SUBMODULE = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('GeneralLedger', "General Ledger");
+    Postbooks.LoadSubmodule('GeneralLedger', "_ledger".loc());
   },
 
   exitState: function() {

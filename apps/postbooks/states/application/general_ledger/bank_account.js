@@ -7,7 +7,7 @@
 Postbooks.BANK_ACCOUNT = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('BankAccount', "General Ledger");
+    Postbooks.LoadSubmodule('BankAccount', "_ledger".loc());
   },
 
   exitState: function() {

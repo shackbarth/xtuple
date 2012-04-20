@@ -64,7 +64,7 @@ Postbooks.LoadDashboard = function() {
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
       ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText("xTuple Postbooks", ctx.width/2, ctx.height/2);
+      ctx.fillText("_xtuplePostbooks".loc(), ctx.width/2, ctx.height/2);
     }
   });
   topbar.set('backgroundColor', base03);
@@ -76,7 +76,7 @@ Postbooks.LoadDashboard = function() {
   springboard.get('layers').pushObject(IconLayer.create({
     layout: { centerX: -200, centerY: -120, width: 300, height: 200 },
     color: magenta,
-    name: "Contact Management",
+    name: "_crm".loc(),
     target: 'Postbooks.statechart',
     action: 'showCRM'
   }));
@@ -84,7 +84,7 @@ Postbooks.LoadDashboard = function() {
   springboard.get('layers').pushObject(IconLayer.create({
     layout: { centerX: 200, centerY: -120, width: 300, height: 200 },
     color: violet,
-    name: "Receivables",
+    name: "_receivables".loc(),
     target: 'Postbooks.statechart',
     action: 'showReceivables'
   }));
@@ -92,7 +92,7 @@ Postbooks.LoadDashboard = function() {
   springboard.get('layers').pushObject(IconLayer.create({
     layout: { centerX: -200, centerY: 120, width: 300, height: 200 },
     color: blue,
-    name: "Payables",
+    name: "_payables".loc(),
     target: 'Postbooks.statechart',
     action: 'showPayables'
   }));
@@ -100,7 +100,7 @@ Postbooks.LoadDashboard = function() {
   springboard.get('layers').pushObject(IconLayer.create({
     layout: { centerX: 200, centerY: 120, width: 300, height: 200 },
     color: cyan,
-    name: "General Ledger",
+    name: "_ledger".loc(),
     target: 'Postbooks.statechart',
     action: 'showGeneralLedger'
   }));

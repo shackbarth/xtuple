@@ -7,7 +7,7 @@
 Postbooks.BUDGET = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Budget', "General Ledger");
+    Postbooks.LoadSubmodule('Budget', "_ledger".loc());
   },
 
   exitState: function() {

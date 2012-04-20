@@ -7,7 +7,7 @@
 Postbooks.PAYABLE = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Payable', "Payables");
+    Postbooks.LoadSubmodule('Payable', "_payables".loc());
   },
 
   exitState: function() {

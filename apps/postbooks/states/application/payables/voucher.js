@@ -7,7 +7,7 @@
 Postbooks.VOUCHER = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Voucher', "Payables");
+    Postbooks.LoadSubmodule('Voucher', "_payables".loc());
   },
 
   exitState: function() {

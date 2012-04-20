@@ -30,7 +30,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   var items = [];
   classes.forEach(function(className, idx) {
     items.push({
-      title: className.titleize().pluralize(),
+      title: ("_" + className.camelize()).loc(),
       value: className + 'Surface',
       enabled: true
     });
@@ -128,7 +128,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   });
 
   var list = [SC.Object.create({
-    title: "Home",
+    title: "_home".loc(),
     surface: SC.View.create({
       willRenderLayers: function(context) {
         context.fillStyle = cyan;
@@ -186,7 +186,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   topbar.set('backgroundColor', base03);
   topbar.get('layers').pushObject(Postbooks.BackButton.create({
     layout: { left: 20, centerY: 0, width: 120, height: 24 },
-    name: "Dashboard",
+    name: "_dashboard".loc(),
     target: 'Postbooks.statechart',
     action: 'showDashboard'
   }));
