@@ -43,14 +43,14 @@ Postbooks = global.Postbooks = SC.Application.create(
       case 'crm':
         Postbooks.statechart.sendAction('showCRM');
         break;
-      case 'receivables':
-        Postbooks.statechart.sendAction('showReceivables');
+      case 'billing':
+        Postbooks.statechart.sendAction('showBilling');
         break;
-      case 'payables':
-        Postbooks.statechart.sendAction('showPayables');
+      case 'payments':
+        Postbooks.statechart.sendAction('showPayments');
         break;
-      case 'general-ledger':
-        Postbooks.statechart.sendAction('showGeneralLedger');
+      case 'ledger':
+        Postbooks.statechart.sendAction('showLedger');
         break;
       // case 'dashboard':
       default:

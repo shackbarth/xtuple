@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.RECEIVABLES = SC.State.design({
+Postbooks.BILLING = SC.State.design({
 
   initialSubstate: 'DUMMY',
 
@@ -18,7 +18,7 @@ Postbooks.RECEIVABLES = SC.State.design({
       return;
     }
 
-    SC.routes.set('location', 'receivables');
+    SC.routes.set('location', 'billing');
 
     Postbooks.LoadModule("_billing".loc(), 'Customer Invoice Receivable CashReceipt CustomerCreditCard'.w(), this);
   },
@@ -30,7 +30,7 @@ Postbooks.RECEIVABLES = SC.State.design({
 
   // ACTIONS
 
-  showReceivables: function() {
+  showBilling: function() {
     // Do nothing.
   },
 

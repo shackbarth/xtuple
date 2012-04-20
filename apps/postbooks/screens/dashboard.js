@@ -86,7 +86,7 @@ Postbooks.LoadDashboard = function() {
     color: violet,
     name: "_billing".loc(),
     target: 'Postbooks.statechart',
-    action: 'showReceivables'
+    action: 'showBilling'
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
@@ -94,7 +94,7 @@ Postbooks.LoadDashboard = function() {
     color: blue,
     name: "_payments".loc(),
     target: 'Postbooks.statechart',
-    action: 'showPayables'
+    action: 'showPayments'
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
@@ -102,7 +102,7 @@ Postbooks.LoadDashboard = function() {
     color: cyan,
     name: "_ledger".loc(),
     target: 'Postbooks.statechart',
-    action: 'showGeneralLedger'
+    action: 'showLedger'
   }));
 
   dashboard.get('subsurfaces').pushObjects([topbar, springboard]);

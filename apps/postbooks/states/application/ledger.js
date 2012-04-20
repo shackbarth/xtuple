@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.GENERAL_LEDGER = SC.State.design({
+Postbooks.LEDGER = SC.State.design({
 
   initialSubstate: 'DUMMY',
 
@@ -18,7 +18,7 @@ Postbooks.GENERAL_LEDGER = SC.State.design({
       return;
     }
 
-    SC.routes.set('location', 'general-ledger');
+    SC.routes.set('location', 'ledger');
 
     Postbooks.LoadModule("_ledger".loc(), 'Journal GeneralLedger TrialBalance Budget FinancialStatement BankAccount'.w(), this);
   },
@@ -30,7 +30,7 @@ Postbooks.GENERAL_LEDGER = SC.State.design({
 
   // ACTIONS
 
-  showGeneralLedger: function() {
+  showLedger: function() {
     // Do nothing.
   },
 

@@ -4,7 +4,7 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.PAYABLES = SC.State.design({
+Postbooks.PAYMENTS = SC.State.design({
 
   initialSubstate: 'DUMMY',
 
@@ -18,7 +18,7 @@ Postbooks.PAYABLES = SC.State.design({
       return;
     }
 
-    SC.routes.set('location', 'payables');
+    SC.routes.set('location', 'payments');
 
     Postbooks.LoadModule("_payments".loc(), 'Vendor Voucher Payable PaymentApproval Payment'.w(), this);
   },
@@ -30,7 +30,7 @@ Postbooks.PAYABLES = SC.State.design({
 
   // ACTIONS
 
-  showPayables: function() {
+  showPayments: function() {
     // Do nothing.
   },
 
