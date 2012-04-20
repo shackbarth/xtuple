@@ -42,7 +42,7 @@ XM.ContactEmail.RenderDetailListRow = function(context, width, height, index, ob
   context.fillText(object.get('guid') + ': ' + object.get('email'), width/2, height/2);
 };
 
-XM.ContactEmail.CreateTileView = function(controller, propertyKey, isOverview) {
+XM.ContactEmail.CreateTileView = function(controller, title, isOverview) {
   // Nope, generate the default tile view on the fly.
   var view = Postbooks.TileView.create({
         layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
@@ -69,7 +69,7 @@ XM.ContactEmail.CreateTileView = function(controller, propertyKey, isOverview) {
           context.textAlign = 'left';
           context.textBaseline = 'middle';
 
-          context.fillText(propertyKey? propertyKey.titleize() : "Overview", 72, 22);
+          context.fillText(title ? title : "_overview".loc(), 72, 22);
         }
 
       }),
@@ -105,7 +105,7 @@ XM.ContactEmail.CreateTileView = function(controller, propertyKey, isOverview) {
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -117,7 +117,7 @@ XM.ContactEmail.CreateTileView = function(controller, propertyKey, isOverview) {
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -131,7 +131,7 @@ XM.ContactEmail.CreateTileView = function(controller, propertyKey, isOverview) {
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -145,7 +145,7 @@ XM.ContactEmail.CreateTileView = function(controller, propertyKey, isOverview) {
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -157,7 +157,7 @@ XM.ContactEmail.CreateTileView = function(controller, propertyKey, isOverview) {
         } else if (typeClass === Boolean) {
           widget = SC.CheckboxWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
-            title: key.titleize(),
+            title: property.label,
             valueBinding: SC.Binding.transform(function(val) {
               return !!val;
             }).from(key, controller)

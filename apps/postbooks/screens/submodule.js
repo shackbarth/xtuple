@@ -25,7 +25,7 @@ var green =    "#859900";
 var white =    "white";
 
 Postbooks.LoadSubmodule = function(className, backButtonTitle) {
-  var name = className.titleize();
+  var name = ("_" + className.camelize()).loc();
 
   var baseClass = XM[className];
   var browseClass = XM[className+'Browse'] || baseClass;
@@ -90,7 +90,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   }));
 
   var list = [SC.Object.create({
-    title: "Overview",
+    title: "_overview".loc(),
     surface: editor
   })];
 
@@ -110,7 +110,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
       });
 
       list.push(SC.Object.create({
-        title: key.titleize().pluralize(),
+        title: property.label,
         surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
       }));
     }

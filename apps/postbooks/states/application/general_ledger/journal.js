@@ -7,7 +7,7 @@
 Postbooks.JOURNAL = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Journal', "General Ledger");
+    Postbooks.LoadSubmodule('Journal', "_ledger".loc());
   },
 
   exitState: function() {

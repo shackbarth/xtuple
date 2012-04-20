@@ -20,7 +20,7 @@ Postbooks.CRM = SC.State.design({
 
     SC.routes.set('location', 'crm');
 
-    Postbooks.LoadModule("CRM", 'Contact Account Opportunity Incident Project'.w(), this); // FIXME: Opporunity hangs the app.
+    Postbooks.LoadModule("_crm".loc(), 'Contact Account Opportunity Incident Project'.w(), this);
   },
 
   exitState: function() {

@@ -7,7 +7,7 @@
 Postbooks.FINANCIAL_STATEMENT = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('FinancialStatement', "General Ledger");
+    Postbooks.LoadSubmodule('FinancialStatement', "_ledger".loc());
   },
 
   exitState: function() {
