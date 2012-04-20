@@ -5,8 +5,6 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/__core__/item/models
-
 sc_require('mixins/_item_account');
 
 /**

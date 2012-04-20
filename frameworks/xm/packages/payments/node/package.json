@@ -1,7 +1,7 @@
 {
   "type": "demand",
   "dependencies": [
-    "__core__",
+    "foundation",
     "payable",
     "payment",
     "vendor",

@@ -5,8 +5,6 @@
 
 /*globals XM */
 
-// PLACE ME IN ../client/frameworks/xm/packages/xtuple/__core__/contact/models
-
 sc_require('mixins/_contact_account');
 
 /**
