@@ -1,12 +1,12 @@
-select xt.install_js('XM','receivables','receivables', $$
+select xt.install_js('XM','billing','billing', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
-  XM.Receivables = {};
+  XM.Billing = {};
 
-  XM.Receivables.isDispatchable = true,
+  XM.Billing.isDispatchable = true,
 
-  XM.Receivables.options = [
+  XM.Billing.options = [
     "NextARMemoNumber",
     "NextCashRcptNumber",
     "HideApplyToBalance",
@@ -40,12 +40,12 @@ select xt.install_js('XM','receivables','receivables', $$
   ]
 
   /* 
-  Return Receivables configuration settings.
+  Return Billing configuration settings.
 
   @returns {Object}
   */
-  XM.Receivables.settings = function() {
-    var keys = XM.Receivables.options.slice(0),
+  XM.Billing.settings = function() {
+    var keys = XM.Billing.options.slice(0),
         data = Object.create(XT.Data),
         sql = "select orderseq_number as value "
             + "from orderseq"
@@ -66,14 +66,14 @@ select xt.install_js('XM','receivables','receivables', $$
   }
 
   /* 
-  Update Receivables configuration settings. Only valid options as defined in the array
-  XM.Receivables.options will be processed.
+  Update Billing configuration settings. Only valid options as defined in the array
+  XM.Billing.options will be processed.
 
    @param {Object} settings
    @returns {Boolean}
   */
-  XM.Receivables.commitSettings = function(settings) {
-    var sql, options = XM.Receivables.options.slice(0),
+  XM.Billing.commitSettings = function(settings) {
+    var sql, options = XM.Billing.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */
@@ -110,7 +110,7 @@ select xt.install_js('XM','receivables','receivables', $$
     return data.commitMetrics(metrics);
   }
 
-  XT.registerSettings('XM','Receivables','settings');
+  XT.registerSettings('XM','Billing','settings');
 
 $$ );
 

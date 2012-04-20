@@ -29,7 +29,7 @@ select xt.install_js('XM','ledger','ledger', $$
   @returns {Object}
   */
   XM.Ledger.settings = function() {
-    var keys = XM.GeneralLedger.options.slice(0),
+    var keys = XM.Ledger.options.slice(0),
         data = Object.create(XT.Data);
     
     return data.retrieveMetrics(keys);
@@ -43,7 +43,7 @@ select xt.install_js('XM','ledger','ledger', $$
   @returns {Boolean}
   */
   XM.Ledger.commitSettings = function(settings) {
-    var sql, options = XM.GeneralLedger.options.slice(0),
+    var sql, options = XM.Ledger.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */

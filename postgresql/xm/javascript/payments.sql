@@ -27,7 +27,7 @@ select xt.install_js('XM','payments','payments', $$
   @returns {Object}
   */
   XM.Payments.settings = function() {
-    var keys = XM.Payables.options.slice(0),
+    var keys = XM.Payments.options.slice(0),
         data = Object.create(XT.Data),
         sql = "select orderseq_number as value "
             + "from orderseq"
@@ -55,7 +55,7 @@ select xt.install_js('XM','payments','payments', $$
    @returns {Boolean}
   */
   XM.Payments.commitSettings = function(settings) {
-    var sql, options = XM.Payables.options.slice(0),
+    var sql, options = XM.Payments.options.slice(0),
         data = Object.create(XT.Data), metrics = {};
 
     /* check privileges */
