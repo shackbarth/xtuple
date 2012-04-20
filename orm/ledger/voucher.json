@@ -1,0 +1,25 @@
+{
+  "context": "ledger",
+  "nameSpace": "XM",
+  "type": "Voucher",
+  "table": "vohead",
+  "isExtension": true,
+  "comment": "Extended by Ledger",
+  "relations": [
+    {
+      "column": "vohead_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "vohead_distdate"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

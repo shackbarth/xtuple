@@ -1,0 +1,40 @@
+{
+  "context": "ledger",
+  "nameSpace": "XM",
+  "type": "Payable",
+  "table": "apopen",
+  "isExtension": true,
+  "comment": "Extended by Ledger",
+  "relations": [
+    {
+      "column": "apopen_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "distributionDate",
+      "attr": {
+        "type": "Date",
+        "column": "apopen_distdate"
+      }
+    },
+    {
+      "name": "ledgerAccount",
+      "toOne": {
+        "isNested": true,
+        "type": "LedgerAccount",
+        "column": "apopen_accnt_id"
+      }
+    },
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "apopen_journalnumber"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}
