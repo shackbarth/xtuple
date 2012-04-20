@@ -20,11 +20,6 @@ XM.Settings = {
   privilege: null,
   
   /** 
-    Binding to global settings to which all properties on a settings object should bind to.
-  */
-  settingsBinding: SC.Binding.from('XT.session.settings').noDelay(),
-
-  /** 
     Commit changes to settings properties to the server. Will dispatch to a function with
     the same class name as that of the class this mixin is used in with a function call
     of 'commitSettings.' There must be a matching function call on the server to receive the
