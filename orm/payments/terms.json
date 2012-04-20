@@ -1,0 +1,24 @@
+{	
+  "context": "payments",
+  "nameSpace": "XM",
+  "type": "Terms",
+  "table": "terms",
+  "isExtension": true,
+  "comment": "Extended by Payments",
+  "relations": [
+    {
+      "column": "terms_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "usedForPayments",
+      "attr": {
+        "type": "Boolean",
+        "column": "terms_ap",
+        "defaultValue": false
+      }
+    }
+  ],
+  "isSystem": true
+}

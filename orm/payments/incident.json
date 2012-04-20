@@ -1,0 +1,27 @@
+{
+  "context": "payments",
+  "nameSpace": "XM",
+  "type": "Incident",
+  "table": "incdt",
+  "isExtension": true,
+  "comment": "Extended by Payments",
+  "relations": [
+    {
+      "column": "cntct_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "vendors",
+      "toMany": {
+        "isNested": true,
+        "type": "IncidentVendor",
+        "column": "incdt_id",
+        "inverse": "source"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}
