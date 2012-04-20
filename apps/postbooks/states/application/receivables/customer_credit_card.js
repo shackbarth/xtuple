@@ -7,7 +7,7 @@
 Postbooks.CUSTOMER_CREDIT_CARD = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('CustomerCreditCard', "_receivables".loc());
+    Postbooks.LoadSubmodule('CustomerCreditCard', "_billing".loc());
   },
 
   exitState: function() {

@@ -7,7 +7,7 @@
 Postbooks.CASH_RECEIPT = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('CashReceipt', "_receivables".loc());
+    Postbooks.LoadSubmodule('CashReceipt', "_billing".loc());
   },
 
   exitState: function() {

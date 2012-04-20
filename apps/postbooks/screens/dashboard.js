@@ -84,7 +84,7 @@ Postbooks.LoadDashboard = function() {
   springboard.get('layers').pushObject(IconLayer.create({
     layout: { centerX: 200, centerY: -120, width: 300, height: 200 },
     color: violet,
-    name: "_receivables".loc(),
+    name: "_billing".loc(),
     target: 'Postbooks.statechart',
     action: 'showReceivables'
   }));
@@ -92,7 +92,7 @@ Postbooks.LoadDashboard = function() {
   springboard.get('layers').pushObject(IconLayer.create({
     layout: { centerX: -200, centerY: 120, width: 300, height: 200 },
     color: blue,
-    name: "_payables".loc(),
+    name: "_payments".loc(),
     target: 'Postbooks.statechart',
     action: 'showPayables'
   }));

@@ -20,7 +20,7 @@ Postbooks.PAYABLES = SC.State.design({
 
     SC.routes.set('location', 'payables');
 
-    Postbooks.LoadModule("_payables".loc(), 'Vendor Voucher Payable PaymentApproval Payment'.w(), this);
+    Postbooks.LoadModule("_payments".loc(), 'Vendor Voucher Payable PaymentApproval Payment'.w(), this);
   },
 
   exitState: function() {

@@ -7,7 +7,7 @@
 Postbooks.CUSTOMER = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Customer', "_receivables".loc());
+    Postbooks.LoadSubmodule('Customer', "_billing".loc());
   },
 
   exitState: function() {

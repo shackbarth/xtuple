@@ -7,7 +7,7 @@
 Postbooks.VENDOR = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Vendor', "_payables".loc());
+    Postbooks.LoadSubmodule('Vendor', "_payments".loc());
   },
 
   exitState: function() {
