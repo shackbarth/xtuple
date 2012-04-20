@@ -1,0 +1,10 @@
+{
+  "type": "demand",
+  "dependencies": [
+    "foundation",
+    "payable",
+    "payment",
+    "vendor",
+    "voucher"
+  ]
+}

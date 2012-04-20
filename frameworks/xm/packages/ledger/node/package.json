@@ -1,0 +1,7 @@
+{
+  "type": "demand",
+  "dependencies": [
+    "foundation",
+    "general_ledger"
+  ]
+}
