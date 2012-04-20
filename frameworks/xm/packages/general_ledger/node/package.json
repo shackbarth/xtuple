@@ -1,7 +1,0 @@
-{
-  "type": "demand",
-  "dependencies": [
-    "__core__",
-    "ledger"
-  ]
-}

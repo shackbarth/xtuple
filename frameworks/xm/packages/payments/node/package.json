@@ -2,6 +2,9 @@
   "type": "demand",
   "dependencies": [
     "foundation",
-    "receivable"
+    "payable",
+    "payment",
+    "vendor",
+    "voucher"
   ]
 }

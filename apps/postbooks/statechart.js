@@ -62,16 +62,16 @@ Postbooks.statechart = SC.Statechart.create({
       this.gotoState('CRM');
     },
 
-    showReceivables: function() {
-      this.gotoState('RECEIVABLES');
+    showBilling: function() {
+      this.gotoState('BILLING');
     },
 
-    showPayables: function() {
-      this.gotoState('PAYABLES');
+    showPayments: function() {
+      this.gotoState('PAYMENTS');
     },
 
-    showGeneralLedger: function() {
-      this.gotoState('GENERAL_LEDGER');
+    showLedger: function() {
+      this.gotoState('LEDGER');
     },
 
     // KEYBOARD SHORTCUTS

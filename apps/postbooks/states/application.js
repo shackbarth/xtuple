@@ -42,8 +42,8 @@ Postbooks.APPLICATION = SC.State.design({
   "DUMMY":          SC.State, // HACK: Prevent "missing initial state" error message from SC.
   "DASHBOARD":      SC.State.plugin('Postbooks.DASHBOARD'),
   "CRM":            SC.State.plugin('Postbooks.CRM'),
-  "RECEIVABLES":    SC.State.plugin('Postbooks.RECEIVABLES'),
-  "PAYABLES":       SC.State.plugin('Postbooks.PAYABLES'),
-  "GENERAL_LEDGER": SC.State.plugin('Postbooks.GENERAL_LEDGER')
+  "BILLING":    SC.State.plugin('Postbooks.BILLING'),
+  "PAYMENTS":       SC.State.plugin('Postbooks.PAYMENTS'),
+  "LEDGER": SC.State.plugin('Postbooks.LEDGER')
 
 });

@@ -2,6 +2,6 @@
   "type": "demand",
   "dependencies": [
     "foundation",
-    "receivable"
+    "general_ledger"
   ]
 }
