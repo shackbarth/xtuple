@@ -33,7 +33,7 @@
     {
       "name": "number",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "ophead_number",
         "isEditable": false
       }
@@ -41,7 +41,7 @@
     {
       "name": "name",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "ophead_name",
         "isEditable": false
       }
