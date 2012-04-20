@@ -67,6 +67,22 @@ XM._Project = {
   }),
 
   /**
+    @type XM.Account
+  */
+  account: SC.Record.toOne('XM.Account', {
+    isNested: true,
+    label: '_account'.loc()
+  }),
+
+  /**
+    @type XM.Contact
+  */
+  contact: SC.Record.toOne('XM.Contact', {
+    isNested: true,
+    label: '_contact'.loc()
+  }),
+
+  /**
     @type String
   */
   notes: SC.Record.attr(String, {
@@ -119,7 +135,7 @@ XM._Project = {
       var record = arguments[0],
           status = record.get('status'),
           ret;
-      if (status = SC.Record.READY_NEW) {
+      if (status == SC.Record.READY_NEW) {
         XM.UserAccountInfo.setCurrentUser(record, 'assignedTo');
         ret = '_loading'.loc();
       }
@@ -145,7 +161,7 @@ XM._Project = {
       var record = arguments[0],
           status = record.get('status'),
           ret;
-      if (status = SC.Record.READY_NEW) {
+      if (status == SC.Record.READY_NEW) {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }

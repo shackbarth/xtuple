@@ -73,9 +73,9 @@ XM._ReceivableLedgerAccounts = {
   /**
     @type XM.LedgerAccountInfo
   */
-  deferredledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
+  deferredLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
     isNested: true,
-    label: '_deferredledgerAccount'.loc()
+    label: '_deferredLedgerAccount'.loc()
   }),
 
   /**

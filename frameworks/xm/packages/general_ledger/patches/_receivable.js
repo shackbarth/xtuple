@@ -17,15 +17,6 @@ SC.Patch.create( /** @scope XM.Receivable.prototype */ {
   body: {
   
     /**
-      @type Date
-    */
-    distributionDate: SC.Record.attr(SC.DateTime, {
-      format: '%Y-%m-%d',
-      useIsoDate: false,
-      label: '_distributionDate'.loc()
-    }),
-  
-    /**
       @type XM.LedgerAccount
     */
     ledgerAccount: SC.Record.toOne('XM.LedgerAccount', {
