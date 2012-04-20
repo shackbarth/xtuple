@@ -138,7 +138,7 @@
     {
       "name": "taxAuthority",
       "toOne": {
-        "type": "TaxAuthorityInfo",
+        "type": "TaxAuthority",
         "column": "crmacct_taxauth_id",
         "inverse": "guid"
       }
