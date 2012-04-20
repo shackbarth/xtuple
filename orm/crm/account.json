@@ -15,6 +15,7 @@
     {
       "name": "incidentRelations",
       "toMany": {
+        "isNested": true,
         "type": "IncidentInfo",
         "column": "crmacct_id",
         "inverse": "account"
@@ -23,6 +24,7 @@
     {
       "name": "opportunityRelations",
       "toMany": {
+        "isNested": true,
         "type": "OpportunityInfo",
         "column": "crmacct_id",
         "inverse": "account"
@@ -31,6 +33,7 @@
     {
       "name": "toDoRelations",
       "toMany": {
+        "isNested": true,
         "type": "ToDoInfo",
         "column": "crmacct_id",
         "inverse": "account"
