@@ -1,0 +1,25 @@
+{
+  "context": "ledger",
+  "nameSpace": "XM",
+  "type": "Payment",
+  "table": "checkhead",
+  "isExtension": true,
+  "comment": "Extended by Ledger",
+  "relations": [
+    {
+      "column": "checkhead_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+    {
+      "name": "journalNumber",
+      "attr": {
+        "type": "Number",
+        "column": "checkhead_journalnumber"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

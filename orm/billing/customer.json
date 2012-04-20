@@ -1,0 +1,34 @@
+{
+  "context": "billing",
+  "nameSpace": "XM",
+  "type": "Customer",
+  "table": "custinfo",
+  "isExtension": true,
+  "comment": "Extended by Billing",
+  "isChild": true,
+  "relations": [
+    {
+      "column": "cust_id"
+    }
+  ],
+  "properties": [
+    {
+      "name": "receivables",
+      "toMany": {
+        "type": "Receivable",
+        "column": "cust_id",
+        "inverse": "customer"
+      }
+    },
+    {
+      "name": "cashReceipts",
+      "toMany": {
+        "type": "CashReceipt",
+        "column": "cust_id",
+        "inverse": "customer"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}
