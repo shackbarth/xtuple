@@ -34,7 +34,7 @@
     {
       "name": "number",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "incdt_number",
         "isEditable": false
       }
