@@ -20,6 +20,7 @@ SC.Patch.create( /** @scope XM.ToDo.prototype */ {
       @type XM.AccountInfo
     */
     account: SC.Record.toOne('XM.AccountInfo', {
+      isNested: true,
       label: '_account'.loc()
     }),
   
