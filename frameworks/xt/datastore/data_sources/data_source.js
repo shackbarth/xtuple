@@ -375,7 +375,9 @@ XT.DataSource = SC.Object.extend(XT.Logging,
       recordType: query.get('recordType').prototype.className,
       conditions: conds.join(' '),
       parameters: params,
-      orderBy: orderBy
+      orderBy: orderBy,
+      rowLimit: query.get('rowLimit'),
+      rowOffset: query.get('rowOffset')
     };
 
     this.log("fetch => payload: ", payload);

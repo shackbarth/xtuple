@@ -11,10 +11,10 @@
   @extends XT.Object
 */
 
-XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
-/** @scope XM.GeneralLedgerSettings.prototype */ {
+XM.LedgerSettings = XT.Object.extend( XM.Settings,
+/** @scope XM.LedgerSettings.prototype */ {
 
-  className: 'XM.GeneralLedgerSettings',
+  className: 'XM.LedgerSettings',
   
   privilege: 'ConfigureGL',
 
@@ -40,7 +40,7 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   /**
     @type Number
   */  
-  companySizeBinding: SC.Binding.from('*settings.GLCompanySize').noDelay(),
+  companySize: null,
 
   /**
     @type Boolean
@@ -64,17 +64,17 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   /**
     @type Boolean
   */
-  profitSizeBinding: SC.Binding.from('*settings.GLProfitSize').noDelay(),
+  profitSize: null,
   
   /**
     @type String
   */
-  isFreeFormProfitCentersBinding: SC.Binding.from('*settings.GLFFProfitCenters').noDelay(),
+  isFreeFormProfitCenters: null,
   
   /**
     @type Number
   */
-  mainSizeBinding: SC.Binding.from('*settings.GLMainSize').noDelay(),
+  mainSize: null,
 
   /**
     @type Boolean
@@ -98,27 +98,27 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   /**
     @type Boolean
   */
-  subAccountSizeBinding: SC.Binding.from('*settings.GLSubaccountSize').noDelay(),
+  subAccountSize: null,
 
   /**
     @type Boolean
   */  
-  isFreeFormSubAccountsBinding: SC.Binding.from('*settings.GLFFSubaccounts').noDelay(),
+  isFreeFormSubAccounts: null,
 
   /**
     @type Boolean
   */  
-  isUseJournalsBinding: SC.Binding.from('*settings.UseJournals').noDelay(),
+  isUseJournals: null,
   
   /**
     @type String
   */
-  isMandatoryJournalEntryNotesBinding: SC.Binding.from('*settings.MandatoryGLEntryNotes').noDelay(),
+  isMandatoryJournalEntryNotes: null,
   
   /**
     @type String
   */
-  isManualForwardUpdateBinding: SC.Binding.from('*settings.ManualForwardUpdate').noDelay(),
+  isManualForwardUpdate: null,
   
   /**
     @type Boolean
@@ -130,27 +130,27 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   /**
     @type String
   */  
-  retainedEarningsAccountBinding: SC.Binding.from('*settings.YearEndEquityAccount').noDelay(),
+  retainedEarningsAccount: null,
   
   /**
     @type Boolean
   */
-  currencyGainLossAccountBinding: SC.Binding.from('*settings.CurrencyGainLossAccount').noDelay(),
+  currencyGainLossAccount: null,
 
   /**
     @type Boolean
   */ 
-  journalSeriesDiscrepancyAccountBinding: SC.Binding.from('*settings.GLSeriesDiscrepancyAccount').noDelay(),
+  journalSeriesDiscrepancyAccount: null,
 
   /**
     @type String
   */  
-  currencyExchangeSenseBinding: SC.Binding.from('*settings.CurrencyExchangeSense').noDelay(),
+  currencyExchangeSense: null,
 
   /**
     @type String
   */
-  isInventoryInterfaceEnabledBinding: SC.Binding.from('*settings.InterfaceToGL').noDelay(), 
+  isInventoryInterfaceEnabled: null, 
 
   // ..........................................................
   // PRIVATE
@@ -163,7 +163,8 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
       
       qry = SC.Query.local(XM.LedgerAccountInfo, {
         conditions: "company MATCHES {regexp}",
-        parameters: { regexp: regExp }
+        parameters: { regexp: regExp },
+        rowLimit: 1
       });
       this._companyAccounts = XT.store.find(qry);
     }
@@ -172,7 +173,7 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   }.property().cacheable(),
   
   /** @private */
-  companyAccountsLengthBinding: '*companyAccounts.length',
+  companyAccountsLength: 0,
   
   /** @private */
   profitCenterAccounts: function() {
@@ -181,7 +182,8 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
       
       qry = SC.Query.local(XM.LedgerAccountInfo, {
         conditions: "profitCenter MATCHES {regexp}",
-        parameters: { regexp: regExp }
+        parameters: { regexp: regExp },
+        rowLimit: 1
       });
       this._profitCenterAccounts = XT.store.find(qry);
     }
@@ -190,7 +192,7 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   }.property().cacheable(),
   
   /** @private */
-  profitCenterAccountsLengthBinding: '*profitCenterAccounts.length',  
+  profitCenterAccountsLength: 0,  
   
   /** @private */
   subAccountAccounts: function() {
@@ -199,7 +201,8 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
       
       qry = SC.Query.local(XM.LedgerAccountInfo, {
         conditions: "subAccount MATCHES {regexp}",
-        parameters: { regexp: regExp }
+        parameters: { regexp: regExp },
+        rowLimit: 1
       });
       this._subAccountAccounts = XT.store.find(qry);
     }
@@ -208,7 +211,37 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   }.property().cacheable(),
   
   /** @private */
-  subAccountAccountsLengthBinding: '*subAccountAccounts.length',  
+  subAccountAccountsLength: 0,  
+  
+  // ..........................................................
+  // METHODS
+  //
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+
+    // bind all the properties to settings
+    var settings = this.get('settings');
+    SC.Binding.from('*settings.GLCompanySize', XT.session).to('companySize', this).noDelay().connect();
+    SC.Binding.from('*settings.GLProfitSize', XT.session).to('profitSize', this).noDelay().connect();
+    SC.Binding.from('*settings.GLFFProfitCenters', XT.session).to('isFreeFormProfitCenters', this).noDelay().connect();
+    SC.Binding.from('*settings.GLMainSize', XT.session).to('mainSize', this).noDelay().connect();
+    SC.Binding.from('*settings.GLSubaccountSize', XT.session).to('subAccountSize', this).noDelay().connect();
+    SC.Binding.from('*settings.GLFFSubaccounts', XT.session).to('isFreeFormSubAccounts', this).noDelay().connect();
+    SC.Binding.from('*settings.UseJournals', XT.session).to('isUseJournals', this).noDelay().connect();
+    SC.Binding.from('*settings.MandatoryGLEntryNotes', XT.session).to('isMandatoryJournalEntryNotes', this).noDelay().connect();
+    SC.Binding.from('*settings.ManualForwardUpdate', XT.session).to('isManualForwardUpdate', this).noDelay().connect();
+    SC.Binding.from('*settings.YearEndEquityAccount', XT.session).to('retainedEarningsAccount', this).noDelay().connect();
+    SC.Binding.from('*settings.CurrencyGainLossAccount', XT.session).to('currencyGainLossAccount', this).noDelay().connect();
+    SC.Binding.from('*settings.GLSeriesDiscrepancyAccount', XT.session).to('journalSeriesDiscrepancyAccount', this).noDelay().connect();
+    SC.Binding.from('*settings.CurrencyExchangeSense', XT.session).to('currencyExchangeSense', this).noDelay().connect();
+    SC.Binding.from('*settings.InterfaceToGL', XT.session).to('isInventoryInterfaceEnabled', this).noDelay().connect();
+
+    // local bindings
+    SC.Binding.from('*companyAccounts.length', this).to('companyAccountsLength', this).noDelay().connect();
+    SC.Binding.from('*profitCenterAccounts.length', this).to('profitCenterAccountsLength', this).noDelay().connect();
+    SC.Binding.from('*subAccountAccounts.length', this).to('subAccountAccountsLength', this).noDelay().connect(); 
+  },
   
   // ..........................................................
   // OBSERVERS
@@ -237,5 +270,5 @@ XM.GeneralLedgerSettings = XT.Object.extend( XM.Settings,
   
 }) ;
 
-// DOES NOT WORK
-// XT.ready(function() { setTimeout(function() { XM.generalLedger = XM.GeneralLedger.create(); }, 4000); });
+// FIXME - queries can't run until application is ready
+//XM.ledgerSettings = XM.LedgerSettings.create();
