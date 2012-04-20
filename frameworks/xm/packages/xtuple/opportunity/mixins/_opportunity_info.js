@@ -50,16 +50,16 @@ XM._OpportunityInfo = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type String
   */
-  number: SC.Record.attr(Number, {
+  number: SC.Record.attr(String, {
     label: '_number'.loc()
   }),
 
   /**
-    @type Number
+    @type String
   */
-  name: SC.Record.attr(Number, {
+  name: SC.Record.attr(String, {
     label: '_name'.loc()
   }),
 
