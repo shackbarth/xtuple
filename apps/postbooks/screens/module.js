@@ -74,7 +74,7 @@ Postbooks.LoadModule = function(name, classes, state) {
         controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
         // if (next) carousel.makeSurfaceVisible(next);
 
-        Postbooks.statechart.sendAction('show'+className+(className==='GeneralLedger'? 'Submodule' : ''));
+        Postbooks.statechart.sendAction('show'+className);
       },
 
       willRenderLayers: function(ctx) {
@@ -83,11 +83,11 @@ Postbooks.LoadModule = function(name, classes, state) {
         if (content && content.get('length') === 0) {
           var w = ctx.width, h = ctx.height;
 
-          var text = 'No records.',
+          var text = '_noRecords'.loc(),
               status = content? content.get('status') : null;
 
           if (status && status === SC.Record.BUSY_LOADING) {
-            text = "Loading...";
+            text = "_loading".loc();
           }
 
           // Clear background.
