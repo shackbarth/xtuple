@@ -62,14 +62,38 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
     var expenses = this.get('budgetedExpensesTotal') - this.get('actualExpensesTotal');
     return expenses.toMoney();
   }.property('budgetedExpensesTotal','actualExpensesTotal'),
-
-  copy: function() { 
-    return XM.Project.copy(this,number,offset) 
-  },
+  
+  /**
+    Returns the status as a localized string.
+    
+    @type String
+  */
+  projectStatusString: function() {
+    var projectStatus = this.get('projectStatus'),
+        K = XM.Project, ret;
+    switch (projectStatus) {
+      case K.CONCEPT:
+        ret = "_concept".loc();
+        break;
+      case K.IN_PROCESS:
+        ret = "_inProcess".loc();
+        break;
+      case K.COMPLETED:
+        ret = "_completed".loc();
+        break;
+      default:
+        ret = "_error".loc();
+    }
+    return ret;
+  }.property('incidentStatus').cacheable(),
 
   //..................................................
   // METHODS
   //
+  
+  copy: function() { 
+    return XM.Project.copy(this,number,offset) 
+  },
 
   updateBudgetedHours: function() {
     var tasks = this.get('tasks'),

@@ -92,9 +92,9 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
    
     // Contact Name
     val = object.getPath('contact.name') || '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.fillStyle = 'black';
-    context.fillText(val, 275, 55);
+    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val? val : "_noContact".loc(), 275, 55);
 
   // 2 Row format
   } else {
@@ -107,21 +107,19 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
   
     // Contact Name
     val = object.getPath('contact.name') || '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.fillStyle ='black';
-    context.fillText(val, 275, 35);
+    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val? val : "_noContact".loc(), 275, 35);
   
     // Stage
     val = object.getPath('opportunityStage.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.textAlign = 'left';
     context.fillStyle = val? 'black' : base1;
     context.fillText(val? val : "_noStage".loc(), 475, 15);
     
     // Assigned To
     val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
-    context.textAlign = 'left';
     context.fillStyle = 'black';
     context.fillText(val , 475, 35);  
 
