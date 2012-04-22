@@ -102,6 +102,7 @@ SC.stringsFor("en_US", {
   "_cardType": "Card Type",
   "_cashReceipt": "Cash Receipt",
   "_cashReceipts": "Cash Receipts",
+  "_category": "Category",
   "_characteristic": "Characteristic",
   "_characteristicType": "Characteristic Type",
   "_characteristicOption": "Characteristic Option",

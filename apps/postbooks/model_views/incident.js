@@ -23,6 +23,8 @@ var green =    "#859900";
 var white =    "white";
 
 XM.Incident.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+  var K = Postbooks;
+  
   // Rect
   context.fillStyle = isSelected? '#99CCFF' : 'white';
   context.fillRect(0, 0, width, height);
@@ -34,98 +36,67 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
   context.moveTo(0, height - 0.5);
   context.lineTo(width, height - 0.5);
   context.stroke();
+  
+  context.textAlign = 'left';
+  context.textBaseline = 'middle';
 
   // Contact Number
   var val = object.get('number');
-  context.font = (val? "bold " : "italic ")+"10pt Helvetica";
+  context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
   context.fillText(val? val : "_noNumber".loc(), 15, 15);
   
   // Updated
-  /*
-  TODO: implement interval aging like github
-  context.save();
-  var dt = object.get('updated') || SC.DateTime.create();
+  var dt = object.get('updated');
   val = new Date(dt.get('milliseconds')).toLocaleDateString();
-  context.font = "10pt Helvetica";
+  var isToday = SC.DateTime.compareDate(dt, SC.DateTime.create()) == 0;
+  context.font = (isToday? "bold " : "")+"8pt "+K.TYPEFACE;
+  context.textAlign = 'right';
   context.fillStyle = 'black';
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
-  context.fillText(val , 170, 15);
-  context.restore();
-  */
-  
+  context.fillText(val , 265, 15);
+
   // Status
-  context.save();
   val = object.get('incidentStatusString');
-  context.font = (val? "" : "italic ")+"8pt Helvetica";
-  context.fillStyle = val? 'black' : base1;
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.textAlign = 'left';
-  context.textBaseline = 'middle';
-  context.fillText(val , 255, 15);
-  context.restore();
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val , 300, 15);
   
   // Description
-  context.save();
   val = object.get('description');
-  context.font = (val? "" : "italic ")+"10pt Helvetica";
+  context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
   context.fillText(val? val : "_noDescription".loc() , 15, 35);
-  context.restore();
-  
+
   // Account Name
-  context.save();
   val = object.getPath('account.name');
-  context.font = "italic 8pt Helvetica";
+  context.font = "italic 8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
   context.fillText(val , 15, 55);
-  context.restore();
  
   // Contact Name
-  context.save();
   val = object.getPath('contact.name');
-  context.font = (val? "" : "italic ")+"8pt Helvetica";
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
-  context.fillText(val? val : "_noName".loc() , 255, 55);
-  context.restore();
-    
+  context.fillText(val? val : "_noName".loc() , 300, 55);
+
   // Priority
-  context.save();
   val = object.getPath('priority.name');
   var color = object.getPath('priority.color');
-  context.font = (val? "" : "italic ")+"8pt Helvetica";
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? color : base1;
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
-  context.fillText(val? val : "_noPriority".loc(), 355, 15);
-  context.restore();
+  context.fillText(val? val : "_noPriority".loc(), 400, 15);
   
   // Category
-  context.save();
-  val = object.getPath('incidentCategory.name');
-  context.font = (val? "" : "italic ")+"8pt Helvetica";
+  val = object.getPath('category.name');
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
-  context.fillText(val? val : "_noCategory".loc(), 455, 15);
-  context.restore();
+  context.fillText(val? val : "_noCategory".loc(), 400, 35);;
   
   // Severity
-  context.save();
   val = object.getPath('severity.name');
-  context.font = (val? "" : "italic ")+"8pt Helvetica";
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'left';
-  context.textBaseline = 'middle';
-  context.fillText(val? val : "_noSeverity".loc(), 455, 35);
-  context.restore();
+  context.fillText(val? val : "_noSeverity".loc(), 400, 55);
 
 };
