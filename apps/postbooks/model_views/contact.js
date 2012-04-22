@@ -47,27 +47,7 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
     context.textAlign = 'left';
     context.textBaseline = 'middle';
     context.fillText(val? val : "_noName".loc(), 15, 15);
-    
-    // Account Name
-    context.save();
-    val = object.getPath('account.name');
-    context.font = (val? "" : "italic ")+"10pt Helvetica";
-    context.fillStyle = val? 'black' : base1;
-    context.textAlign = 'left';
-    context.textBaseline = 'middle';
-    context.fillText(val? val : "_noAccountName".loc() , 15, 35);
-    context.restore();
-    
-    // Title
-    context.save();
-    val = object.get('jobTitle');
-    context.font = "italic 8pt Helvetica";
-    context.fillStyle = val? 'black' : base1;
-    context.textAlign = 'left';
-    context.textBaseline = 'middle';
-    context.fillText(val? val : "_noJobTitle".loc() , 15, 55);
-    context.restore();
-    
+
     // Phone
     context.save();
     val = object.get('phone');
@@ -76,6 +56,26 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
     context.textAlign = 'left';
     context.textBaseline = 'middle';
     context.fillText(val? val : "_noPhone".loc(), 255, 15);
+    context.restore();
+
+    // Title
+    context.save();
+    val = object.get('jobTitle');
+    context.font = (val? "" : "italic ")+"10pt Helvetica";
+    context.fillStyle = val? 'black' : base1;
+    context.textAlign = 'left';
+    context.textBaseline = 'middle';
+    context.fillText(val? val : "_noJobTitle".loc() , 15, 35);
+    context.restore();
+
+    // Account Name
+    context.save();
+    val = object.getPath('account.name');
+    context.font = (val? "" : "italic ")+"8pt Helvetica";
+    context.fillStyle = val? 'black' : base1;
+    context.textAlign = 'left';
+    context.textBaseline = 'middle';
+    context.fillText(val? val : "_noAccountName".loc() , 15, 55);
     context.restore();
     
     // Email
@@ -88,12 +88,12 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
     context.fillText(val? val : "_noEmail".loc() , 255, 35);
     context.restore();
     
-    // Title
+    // Location
     context.save();
     var city = object.getPath('address.city') || '',
         state = object.getPath('address.state') || '';
     val = city+(city && state? ', ' : '')+state;
-    context.font = (val? "" : "italic ")+"8pt Helvetica";
+    context.font = "italic 8pt Helvetica";
     context.fillStyle = val? 'black' : base1;
     context.textAlign = 'left';
     context.textBaseline = 'middle';
