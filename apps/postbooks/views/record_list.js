@@ -34,7 +34,8 @@ Postbooks.DefaultRecordListRenderRow = function(context, width, height, index, o
   context.lineTo(width, height - 0.5);
   context.stroke();
 
-  context.font = "12pt Helvetica";
+  var K = Postbooks;
+  context.font = "12pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
@@ -66,8 +67,9 @@ Postbooks.RecordListView = SC.ListView.extend({
       ctx.fillRect(0, 0, w, h);
 
       // Draw view name.
+      var K = Postbooks;
       ctx.fillStyle = base03;
-      ctx.font = "11pt Helvetica";
+      ctx.font = "11pt "+K.TYPEFACE;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.fillText(text, w/2, h/2);
