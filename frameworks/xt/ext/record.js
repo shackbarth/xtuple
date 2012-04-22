@@ -388,22 +388,20 @@ XT.Record = SC.Record.extend(XT.Logging,
       csk = childRecord.get('storeKey');
     } else {
       recordType = this._materializeNestedRecordType(value, key);
-      SC.run(function() {
-        var hash = value || {}, // init if needed
-            pk = recordType.prototype.primaryKey,
-            id = hash[pk];
+      var hash = value || {}, // init if needed
+          pk = recordType.prototype.primaryKey,
+          id = hash[pk];
 
-        csk = id ? store.storeKeyExists(recordType, id) : null;
+      csk = id ? store.storeKeyExists(recordType, id) : null;
 
-        if (csk) {
-          store.writeDataHash(csk, hash);
-          childRecord = store.materializeRecord(csk);
-        } else {
-          csk = store.pushRetrieve(recordType, id, hash);
-          childRecord = store.materializeRecord(csk);
-          childRecord.notifyPropertyChange('status');
-        }
-      }, this);
+      if (csk) {
+        store.writeDataHash(csk, hash);
+        childRecord = store.materializeRecord(csk);
+      } else {
+        csk = store.pushRetrieve(recordType, id, hash);
+        childRecord = store.materializeRecord(csk);
+        childRecord.notifyPropertyChange('status');
+      }
     }
     if (childRecord){
       this.isParentRecord = true;
