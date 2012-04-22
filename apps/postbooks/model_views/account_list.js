@@ -37,14 +37,14 @@ XM.Account.RenderRecordListRow = function(context, width, height, index, object,
   // Primary Contact Name
   var contact = object.get('primaryContact') || ''; 
   val = contact? contact.get('name') : '';
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   context.fillText(val, 215, 15);
   
   // Primary Contact Phone
   val = contact? contact.get('phone') : '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "10pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
   context.fillText(val, 315, 15);

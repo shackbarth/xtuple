@@ -4,12 +4,11 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Incident.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+XM.Opportunity.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
   // Rect
-  val = object.get('color');
-  context.fillStyle = isSelected? '#99CCFF' : val;
+  context.fillStyle = isSelected? '#99CCFF' : 'white';
   context.fillRect(0, 0, width, height);
 
   context.strokeStyle = 'grey';
@@ -30,23 +29,60 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
   context.fillText(val? val : "_noNumber".loc(), 15, 15);
   
   // Updated
-  var dt = object.get('updated');
-  val = new Date(dt.get('milliseconds')).toLocaleDateString();
-  var isToday = SC.DateTime.compareDate(dt, SC.DateTime.create()) == 0;
-  context.font = (isToday? "bold " : "")+"8pt "+K.TYPEFACE;
-  context.textAlign = 'right';
-  context.fillStyle = 'black';
-  context.fillText(val , 265, 15);
+  var dt = object.get('targetClose');
+  if (dt) {
+    val = new Date(dt.get('milliseconds')).toLocaleDateString();
+    var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
+    context.font = "8pt "+K.TYPEFACE;
+    context.textAlign = 'right';
+    context.fillStyle = isDue? XT.EXPIRED : 'black';
+    context.fillText(val , 265, 15);
+  }
   
-  // Description
-  val = object.get('description');
+  // Name
+  val = object.get('name');
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
   context.fillText(val , 15, 35);
   
+  // Amount
+  val = object.getPath('amount');
+  val = val? val.valueOf().toString() : '';
+  context.font = "8pt "+K.TYPEFACE;
+  context.textAlign = 'right';
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val, 265, 35);
+  
+  context.textAlign = 'left';
+  
   // 3 Row format
   if (width<K.PORTRAIT_LIST_WIDTH) {
+
+    // Stage
+    val = object.getPath('opportunityStage.name');
+    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val? val : "_noStage".loc(), 275, 15);
+    
+    // Assigned To
+    val = object.getPath('assignedTo.username') || '';
+    context.font = "8pt "+K.TYPEFACE;
+    context.fillStyle = 'black';
+    context.fillText(val , 275, 35);  
+    
+    // Priority
+    val = object.getPath('priority.name');
+    var emphasis = object.getPath('priority.order')<=1? "bold " : "";
+    context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
+    context.fillStyle = val? black : base1;
+    context.fillText(val? val : "_noPriority".loc(), 375, 15);
+    
+    // Type
+    val = object.getPath('opportunityType.name');
+    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val? val : "_noType".loc(), 375, 35);
 
     // Account Name
     val = object.getPath('account.name');
@@ -55,67 +91,40 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
     context.fillText(val , 15, 55);
    
     // Contact Name
-    val = object.getPath('contact.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noName".loc() , 275, 55);
-  
-    // Status
-    val = object.get('incidentStatusString');
+    val = object.getPath('contact.name') || '';
     context.font = "8pt "+K.TYPEFACE;
-    context.textAlign = 'left';
     context.fillStyle = 'black';
-    context.fillText(val , 275, 15);
-    
-    // Assigned To
-    val = object.getPath('assignedTo.username') || '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.textAlign = 'left';
-    context.fillStyle = 'black';
-    context.fillText(val , 275, 35);
-        
-    // Priority
-    val = object.getPath('priority.name');
-    var emphasis = object.getPath('priority.order')<=1? "bold " : "";
-    context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? black : base1;
-    context.fillText(val? val : "_noPriority".loc(), 375, 15);
-    
-    // Category
-    val = object.getPath('category.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noCategory".loc(), 375, 35);
+    context.fillText(val, 275, 55);
 
   // 2 Row format
   } else {
-          
+  
     // Account Name
     val = object.getPath('account.name');
     context.font = "italic 8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
     context.fillText(val , 275, 15);
-   
+  
     // Contact Name
-    val = object.getPath('contact.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noName".loc() , 275, 35);
-    
-    // Status
-    val = object.get('incidentStatusString');
+    val = object.getPath('contact.name') || '';
     context.font = "8pt "+K.TYPEFACE;
+    context.fillStyle ='black';
+    context.fillText(val, 275, 35);
+  
+    // Stage
+    val = object.getPath('opportunityStage.name');
+    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.textAlign = 'left';
-    context.fillStyle = 'black';
-    context.fillText(val , 475, 15);
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val? val : "_noStage".loc(), 475, 15);
     
     // Assigned To
     val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'left';
     context.fillStyle = 'black';
-    context.fillText(val , 475, 35);
-        
+    context.fillText(val , 475, 35);  
+
     // Priority
     val = object.getPath('priority.name');
     var emphasis = object.getPath('priority.order')<=1? "bold " : "";
@@ -123,11 +132,11 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
     context.fillStyle = val? black : base1;
     context.fillText(val? val : "_noPriority".loc(), 575, 15);
     
-    // Category
-    val = object.getPath('category.name');
+    // Type
+    val = object.getPath('opportunityType.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noCategory".loc(), 575, 35);
+    context.fillText(val? val : "_noType".loc(), 575, 35);
 
   }
 
