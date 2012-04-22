@@ -55,7 +55,7 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
 
   // Title
   val = object.get('jobTitle');
-  context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.fillText(val? val : "_noJobTitle".loc() , 15, 35);
 
@@ -109,15 +109,3 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
 
 };
 
-XM.Contact.RecordListView = Postbooks.RecordListView.extend({
-  
-  updateDisplay: function() {
-    var w = this._sc_context.w,
-        K = Postbooks;
-    this.setIfChanged('rowHeight', w < K.PORTRAIT_LIST_WIDTH ? K.HEIGHT_3_ROW : K.HEIGHT_2_ROW);
-    arguments.callee.base.apply(this, arguments);
-  },
-  
-  renderRow: XM.Contact.RenderRecordListRow
-
-});

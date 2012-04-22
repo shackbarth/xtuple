@@ -70,35 +70,49 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
   context.fillStyle = val? 'black' : base1;
   context.fillText(val? val : "_noDescription".loc() , 15, 35);
 
-  // Account Name
-  val = object.getPath('account.name');
-  context.font = "italic 8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  context.fillText(val , 15, 55);
- 
-  // Contact Name
-  val = object.getPath('contact.name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noName".loc() , 300, 55);
-
   // Priority
   val = object.getPath('priority.name');
   var emphasis = object.getPath('priority.order')<=1? "bold " : "";
   context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? black : base1;
-  context.fillText(val? val : "_noPriority".loc(), 400, 15);
+  context.fillText(val? val : "_noPriority".loc(), 375, 15);
   
   // Category
   val = object.getPath('category.name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noCategory".loc(), 400, 35);;
+  context.fillText(val? val : "_noCategory".loc(), 375, 35);
   
-  // Severity
-  val = object.getPath('severity.name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noSeverity".loc(), 400, 55);
+  // 3 Row format
+  if (width<K.PORTRAIT_LIST_WIDTH) {
+
+    // Account Name
+    val = object.getPath('account.name');
+    context.font = "italic 8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val , 15, 55);
+   
+    // Contact Name
+    val = object.getPath('contact.name');
+    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val? val : "_noName".loc() , 300, 55);
+
+  // 2 Row format
+  } else {
+          
+    // Account Name
+    val = object.getPath('account.name');
+    context.font = "italic 8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val , 450, 15);
+   
+    // Contact Name
+    val = object.getPath('contact.name');
+    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.fillText(val? val : "_noName".loc() , 450, 35);
+
+  }
 
 };
