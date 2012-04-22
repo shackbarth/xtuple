@@ -23,10 +23,12 @@ var green =    "#859900";
 var white =    "white";
 
 XM.Incident.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
-  var K = Postbooks;
+  var K = Postbooks, val;
   
   // Rect
-  context.fillStyle = isSelected? '#99CCFF' : 'white';
+  debugger
+  val = object.get('color');
+  context.fillStyle = isSelected? '#99CCFF' : val;
   context.fillRect(0, 0, width, height);
 
   context.strokeStyle = 'grey';
@@ -41,7 +43,7 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
   context.textBaseline = 'middle';
 
   // Contact Number
-  var val = object.get('number');
+  val = object.get('number');
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.fillText(val? val : "_noNumber".loc(), 15, 15);
@@ -57,7 +59,7 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
 
   // Status
   val = object.get('incidentStatusString');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = "10pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   context.fillText(val , 300, 15);
@@ -82,9 +84,9 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
 
   // Priority
   val = object.getPath('priority.name');
-  var color = object.getPath('priority.color');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? color : base1;
+  var emphasis = object.getPath('priority.order')<=1? "bold " : "";
+  context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? black : base1;
   context.fillText(val? val : "_noPriority".loc(), 400, 15);
   
   // Category
