@@ -550,7 +550,7 @@ SC.stringsFor("en_US", {
   "_yearExpire": "Year Expire",
 
   // ********
-  // Errors
+  // Messages
   // ********
 
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
@@ -570,6 +570,11 @@ SC.stringsFor("en_US", {
   "_idInvalid": "The record requries a valid id issued from the data source.",
   "_loading": "Loading...",
   "_noLineItems": "This document requires at least one line item.",
+  "_noAccountName": "No Account Name",
+  "_noEmail": "No Email",
+  "_noJobTitle": "No Job Title",
+  "_noName": "No Name",
+  "_noPhone": "No Phone",
   "_noRecords": "No Records",
   "_noResultsFound": "No results were returned for the query.",
   "_optionExistsValue": "A option already exists with this Value.",
