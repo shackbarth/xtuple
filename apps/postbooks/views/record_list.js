@@ -45,7 +45,7 @@ Postbooks.DefaultRecordListRenderRow = function(context, width, height, index, o
 Postbooks.RecordListView = SC.ListView.extend({
 
   layout: { top: 0, left: 0, right: 0, bottom: 0 },
-  rowHeight: 70,
+  rowHeight: Postbooks.HEIGHT_3_ROW
   hasHorizontalScroller: false,
 
   willRenderLayers: function(ctx) {

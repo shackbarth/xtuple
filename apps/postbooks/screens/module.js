@@ -52,24 +52,37 @@ Postbooks.LoadModule = function(name, classes, state) {
       allowsEmptySelection: true
     });
 
-    var controller;
+    var controller, surface;
     controller = Postbooks[className+'ObjectController'] = SC.ObjectController.create();
 
-    var surface = Postbooks.RecordListView.create({
-      contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
-      selectionBinding: 'Postbooks.'+className+'ListController.selection',
+    // class have it's own list view?
+    if (browseClass.RecordListView) {
+      surface = browseClass.RecordListView.create({
+        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
+        selectionBinding: 'Postbooks.'+className+'ListController.selection',
 
-      baseClass: baseClass,
-      browseClass: browseClass,
+        action: function(object, index) {
+          controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
+          Postbooks.statechart.sendAction('show'+className);
+        }
 
-      action: function(object, index) {
-        controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
-        Postbooks.statechart.sendAction('show'+className);
-      },
+      });
       
-      renderRow: browseClass.RenderRecordListRow? browseClass.RenderRecordListRow : Postbooks.DefaultRecordListRenderRow
+    // nope, default
+    } else {
+      surface = Postbooks.RecordListView.create({
+        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
+        selectionBinding: 'Postbooks.'+className+'ListController.selection',
 
-    });
+        action: function(object, index) {
+          controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
+          Postbooks.statechart.sendAction('show'+className);
+        },
+        
+        renderRow: browseClass.RenderRecordListRow? browseClass.RenderRecordListRow : Postbooks.DefaultRecordListRenderRow
+
+      });
+    }
 
     items[idx].surface = surface;
   });
