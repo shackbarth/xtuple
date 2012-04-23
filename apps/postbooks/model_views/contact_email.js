@@ -34,7 +34,8 @@ XM.ContactEmail.RenderDetailListRow = function(context, width, height, index, ob
   context.lineTo(width, height - 0.5);
   context.stroke();
 
-  context.font = "12pt Helvetica";
+  var K = Postbooks;
+  context.font = "12pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
@@ -63,8 +64,9 @@ XM.ContactEmail.CreateTileView = function(controller, title, isOverview) {
 
           context.fillStyle = base00;
           context.fillRect(20, 6, 32, 32);
-
-          context.font = "12pt Helvetica";
+ 
+          var K = Postbooks;
+          context.font = "12pt "+K.TYPEFACE;
           context.fillStyle = 'black';
           context.textAlign = 'left';
           context.textBaseline = 'middle';
