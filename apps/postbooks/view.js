@@ -85,7 +85,8 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
           context.fillStyle = base00;
           context.fillRect(20, 6, 32, 32);
 
-          context.font = "12pt Helvetica";
+          var K = Postbooks;
+          context.font = "12pt "+K.TYPEFACE;
           context.fillStyle = 'black';
           context.textAlign = 'left';
           context.textBaseline = 'middle';
@@ -213,7 +214,8 @@ Postbooks.DefaultListRenderRow = function(context, width, height, index, object,
   context.lineTo(width, height - 0.5);
   context.stroke();
 
-  context.font = "12pt Helvetica";
+  var K = Postbooks;
+  context.font = "12pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
@@ -281,7 +283,9 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
 
         // Draw view name.
         ctx.fillStyle = base03;
-        ctx.font = "11pt Helvetica";
+        
+        var Postbooks;
+        ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
         ctx.fillText(text, w/2, h/2);
