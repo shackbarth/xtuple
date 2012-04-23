@@ -153,6 +153,66 @@ XT = global.XT = SC.Object.create(
   */
   USE_320_TILES: false,
 
+  /**
+    System display color for errors.
+    
+    @static
+    @constant
+    @type String
+    @default Red
+  */
+  ERROR: 'Red',
+
+  /**
+    System display color for warnings.
+    
+    @static
+    @constant
+    @type String
+    @default Orange
+  */
+  WARNING:'Orange',
+
+  /**
+    System display color for emphasis.
+    
+    @static
+    @constant
+    @type String
+    @default Blue
+  */
+  EMPHASIS: 'Blue',
+  
+  /**
+    System display color for alternate emphasis.
+    
+    @static
+    @constant
+    @type String
+    @default Green
+  */
+  ALTERNATE_EMPHASIS: 'Green',
+  
+  /**
+    System display color for expired dates.
+    
+    @static
+    @constant
+    @type String
+    @default 'Red'
+  */
+  EXPIRED: 'Red',
+  
+  /**
+    System display color for future dates.
+    
+    @static
+    @constant
+    @type String
+    @default Blue
+  */
+  FUTURE: 'Blue'
+
 });
 
 SC.mixin(XT, 

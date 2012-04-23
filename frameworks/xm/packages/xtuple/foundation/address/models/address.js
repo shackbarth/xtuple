@@ -55,6 +55,13 @@ XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
     @return {String}
   */
   format: function(isHtml) { return XM.Address.format(this, isHtml ? isHtml : NO) },
+  
+  /**
+    A formatted address that includes city, state and country.
+    
+    @return {String}
+  */
+  formatShort: function() {return XM.Address.formatShort(this) },
 
   /**
     Returns an integer from the server indicating how many times the address is used by other
@@ -183,6 +190,21 @@ XM.Address.format = function() {
 
   return result;
 };
+
+/**
+  A formatted address that includes city, state and country.
+  
+  @return {String}
+*/
+XM.Address.formatShort = function(address) {
+  var ret,
+      city = address.get('city') || '',
+      state = address.get('state') || '';
+      country = address.get('country') || '';
+  ret = city+(city && state? ', ' : '')+state;
+  ret += (ret? ' ' : '') + country;
+  return ret;
+},
 
 /**
   Returns an integer from the server indicating how many times the address is used 

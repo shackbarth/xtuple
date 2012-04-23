@@ -57,7 +57,57 @@ Postbooks = global.Postbooks = SC.Application.create(
         Postbooks.statechart.sendAction('showDashboard');
         break;
     }
-  }
+  },
+  
+  /**
+    System typeface.
+    
+    @static
+    @constant
+    @type String
+    @default 550
+  */
+  TYPEFACE: 'helvetica',
+  
+  /**
+    List width considered portrait mode.
+    
+    @static
+    @constant
+    @type Number
+    @default 550
+  */
+  PORTRAIT_LIST_WIDTH: 550,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 30
+  */
+  HEIGHT_1_ROW: 30,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 50
+  */
+  HEIGHT_2_ROW: 50,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 70
+  */
+  HEIGHT_3_ROW: 70
 
 });
 

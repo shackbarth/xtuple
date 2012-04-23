@@ -40,8 +40,9 @@ var IconLayer = SC.ButtonWidget.extend({
     ctx.fill();
 
     // Draw some text.
+    var K = Postbooks;
     ctx.fillStyle = base3;
-    ctx.font = "14pt Helvetica";
+    ctx.font = "14pt "+K.TYPEFACE;
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
@@ -58,8 +59,9 @@ Postbooks.LoadDashboard = function() {
     layout: { top: 0, left: 0, right: 0, height: 44 },
 
     willRenderLayers: function(ctx) {
+      var K = Postbooks;
       ctx.fillStyle = base3;
-      ctx.font = "16pt Helvetica";
+      ctx.font = "16pt "+K.TYPEFACE;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;
