@@ -39,22 +39,22 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
     context.fillText(val , 265, 15);
   }
   
+  // Amount
+  val = object.getPath('amount');
+  val = val? val.valueOf().toString() : '';
+  context.font = "8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.textAlign = 'right';
+  context.fillText(val, 265, 35);
+  var amountWidth = val.length? context.measureText(val).width + 5 : 0;
+  
   // Name
   val = object.get('name');
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
+  if (val) val = val.elide(context, 255 - amountWidth);
   context.fillText(val , 15, 35);
-  
-  // Amount
-  val = object.getPath('amount');
-  val = val? val.valueOf().toString() : '';
-  context.font = "8pt "+K.TYPEFACE;
-  context.textAlign = 'right';
-  context.fillStyle = val? 'black' : base1;
-  context.fillText(val, 265, 35);
-  
-  context.textAlign = 'left';
   
   // 3 Row format
   if (width<K.PORTRAIT_LIST_WIDTH) {
@@ -63,12 +63,14 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
     val = object.getPath('opportunityStage.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
+    if (val) val = val.elide(context, 95);
     context.fillText(val? val : "_noStage".loc(), 275, 15);
     
     // Assigned To
     val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
+    if (val) val = val.elide(context, 95);
     context.fillText(val , 275, 35);  
     
     // Priority
@@ -88,6 +90,7 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
     val = object.getPath('account.name');
     context.font = "italic 8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
+    if (val) val = val.elide(context, 255);
     context.fillText(val , 15, 55);
    
     // Contact Name
@@ -103,24 +106,28 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
     val = object.getPath('account.name');
     context.font = "italic 8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
+    if (val) val = val.elide(context, 195);
     context.fillText(val , 275, 15);
   
     // Contact Name
     val = object.getPath('contact.name') || '';
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
+    if (val) val = val.elide(context, 195);
     context.fillText(val? val : "_noContact".loc(), 275, 35);
   
     // Stage
     val = object.getPath('opportunityStage.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
+    if (val) val = val.elide(context, 95);
     context.fillText(val? val : "_noStage".loc(), 475, 15);
     
     // Assigned To
     val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
+    if (val) val = val.elide(context, 95);
     context.fillText(val , 475, 35);  
 
     // Priority

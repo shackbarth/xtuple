@@ -242,6 +242,7 @@ SC.stringsFor("en_US", {
   "_history": "History",
   "_home": "Home",
   "_honorific": "Honorific",
+  "_hrs": "hrs.",
   "_image": "Image",
   "_images": "Images",
   "_incident": "Incident",
