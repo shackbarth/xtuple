@@ -141,14 +141,14 @@
       "name": "targetClose",
       "attr": {
         "type": "Date",
-        "column": "ophead_actual_date"
+        "column": "ophead_target_date"
       }
     },
     {
       "name": "actualClose",
       "attr": {
         "type": "Date",
-        "column": "ophead_target_date"
+        "column": "ophead_actual_date"
       }
     },
     {

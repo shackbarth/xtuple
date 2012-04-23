@@ -51,6 +51,14 @@
       }
     },
     {
+      "name": "category",
+      "toOne": {
+        "type": "IncidentCategory",
+        "column": "incdt_incdtcat_id",
+        "isRequired": true
+      }
+    },
+    {
       "name": "isPublic",
       "attr": {
         "type": "Boolean",
@@ -145,6 +153,13 @@
         "type": "IncidentRecurrence",
         "column": "incdt_id",
         "inverse": "incident"
+      }
+    },
+    {
+      "name": "updated",
+      "attr": {
+        "type": "Date",
+        "column": "incdt_updated"
       }
     },
     {
