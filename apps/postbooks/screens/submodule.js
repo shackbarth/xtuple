@@ -69,7 +69,9 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
     willRenderLayers: function(ctx) {
       ctx.fillStyle = base3;
-      ctx.font = "16pt Helvetica";
+      
+      var K = Postbooks;
+      ctx.font = "16pt "+K.TYPEFACE;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
       ctx.shadowBlur = 0;

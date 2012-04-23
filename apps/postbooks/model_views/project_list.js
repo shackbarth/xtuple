@@ -4,12 +4,11 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Incident.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+XM.Project.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
   // Rect
-  val = object.get('color');
-  context.fillStyle = isSelected? '#99CCFF' : val;
+  context.fillStyle = isSelected? '#99CCFF' : 'white';
   context.fillRect(0, 0, width, height);
 
   context.strokeStyle = 'grey';
@@ -29,17 +28,19 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
   context.fillStyle = 'black';
   context.fillText(val, 15, 15);
   
-  // Updated
-  var dt = object.get('updated');
-  val = new Date(dt.get('milliseconds')).toLocaleDateString();
-  var isToday = SC.DateTime.compareDate(dt, SC.DateTime.create()) == 0;
-  context.font = (isToday? "bold " : "")+"8pt "+K.TYPEFACE;
-  context.textAlign = 'right';
-  context.fillStyle = 'black';
-  context.fillText(val , 265, 15);
+  // Due Date
+  var dt = object.get('dueDate');
+  if (dt) {
+    val = new Date(dt.get('milliseconds')).toLocaleDateString();
+    var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
+    context.font = "8pt "+K.TYPEFACE;
+    context.textAlign = 'right';
+    context.fillStyle = isDue? XT.EXPIRED : 'black';
+    context.fillText(val , 265, 15);
+  }
   
-  // Description
-  val = object.get('description');
+  // Name
+  val = object.get('name');
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
@@ -52,16 +53,16 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
     val = object.getPath('account.name');
     context.font = "italic 8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
-    context.fillText(val , 15, 55);
+    context.fillText(val? val : "_noAccountName".loc() , 15, 55);
    
     // Contact Name
     val = object.getPath('contact.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noName".loc() , 275, 55);
+    context.fillText(val? val : "_noContact".loc(), 275, 55);
   
     // Status
-    val = object.get('incidentStatusString');
+    val = object.get('projectStatusString');
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.fillText(val , 275, 15);
@@ -71,19 +72,20 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.fillText(val , 275, 35);
-        
-    // Priority
-    val = object.getPath('priority.name');
-    var emphasis = object.getPath('priority.order')<=1? "bold " : "";
-    context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
+
+    // Total Actual Hours
+    val = object.get('actualHoursTotal');
+    val = val? val.toString() : "0";
+    context.textAlign = 'right';
     context.fillStyle = val? black : base1;
-    context.fillText(val? val : "_noPriority".loc(), 375, 15);
+    context.fillText(val, 425, 15);
     
-    // Category
-    val = object.getPath('category.name');
+    // Total Actual Expenses
+    val = object.get('actualExpensesTotal');
+    val = val? val.toString() : "0";
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noCategory".loc(), 375, 35);
+    context.fillText(val, 425, 35);
 
   // 2 Row format
   } else {
@@ -92,38 +94,39 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
     val = object.getPath('account.name');
     context.font = "italic 8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
-    context.fillText(val , 275, 15);
+    context.fillText(val? val : "_noAccountName".loc() , 275, 15);
    
     // Contact Name
     val = object.getPath('contact.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noName".loc() , 275, 35);
+    context.fillText(val? val : "_noContact".loc() , 275, 35);
     
     // Status
-    val = object.get('incidentStatusString');
+    val = object.get('projectStatusString');
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.fillText(val , 475, 15);
     
     // Assigned To
     val = object.getPath('assignedTo.username') || '';
-    context.font = "8pt "+K.TYPEFACE;
+    context.font = "8pt "+K.TYPEFACE
     context.fillStyle = 'black';
     context.fillText(val , 475, 35);
-        
-    // Priority
-    val = object.getPath('priority.name');
-    var emphasis = object.getPath('priority.order')<=1? "bold " : "";
-    context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
+
+    // Total Actual Hours
+    val = object.get('actualHoursTotal');
+    val = val? val.toString() : "0";
+    context.textAlign = 'right';
     context.fillStyle = val? black : base1;
-    context.fillText(val? val : "_noPriority".loc(), 575, 15);
+    context.fillText(val, 625, 15);
     
-    // Category
-    val = object.getPath('category.name');
+    // Total Actual Expenses
+    val = object.get('actualExpensesTotal');
+    val = val? val.toString() : "0";
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noCategory".loc(), 575, 35);
+    context.fillText(val, 625, 35);
 
   }
 
