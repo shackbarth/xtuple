@@ -85,7 +85,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
         ret = "_error".loc();
     }
     return ret;
-  }.property('incidentStatus').cacheable(),
+  }.property('projectStatus').cacheable(),
 
   //..................................................
   // METHODS

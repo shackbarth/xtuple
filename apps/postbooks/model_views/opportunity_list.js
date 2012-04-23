@@ -24,11 +24,11 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
 
   // Number
   val = object.get('number');
-  context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noNumber".loc(), 15, 15);
+  context.font = "bold 10pt "+K.TYPEFACE;
+  context.fillStyle = 'black';
+  context.fillText(val, 15, 15);
   
-  // Updated
+  // Target Close
   var dt = object.get('targetClose');
   if (dt) {
     val = new Date(dt.get('milliseconds')).toLocaleDateString();

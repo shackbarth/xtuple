@@ -24,11 +24,11 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
 
   // Number
   val = object.get('number');
-  context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noNumber".loc(), 15, 15);
+  context.font = "bold 10pt "+K.TYPEFACE;
+  context.fillStyle = 'black';
+  context.fillText(val, 15, 15);
   
-  // Updated
+  // Due Date
   var dt = object.get('dueDate');
   if (dt) {
     val = new Date(dt.get('milliseconds')).toLocaleDateString();
@@ -93,7 +93,6 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
     // Account Name
     val = object.getPath('account.name');
     context.font = "italic 8pt "+K.TYPEFACE;
-    context.textAlign = 'left';
     context.fillStyle = val? 'black' : base1;
     context.fillText(val? val : "_noAccountName".loc() , 275, 15);
    
