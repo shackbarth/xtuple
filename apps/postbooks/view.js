@@ -272,7 +272,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
             status = content? content.get('status') : null;
 
         if (status && status === SC.Record.BUSY_LOADING) {
-          text = "Loading...";
+          text = "_loading".loc();
         }
 
         // Clear background.

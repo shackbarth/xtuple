@@ -8,11 +8,9 @@
 /**
   Localizes the string.  This will look up the receiver string as a key
   in the current Strings hash.  If the key matches, the loc'd value will be
-  used.  The resulting string will also be passed through fmt() to insert
-  any variables.
+  used.
 
-  @param args {Object...} optional arguments to interpolate also
-  @returns {String} the localized and formatted string.
+  @returns {String} the localized string.
 */
 
 String.prototype.loc = function() {
@@ -21,11 +19,7 @@ String.prototype.loc = function() {
   var localized = SC.Locale.currentLocale.locWithDefault(this);
   if (SC.typeOf(localized) !== SC.T_STRING) { localized = this; }
 
-  var args = SC.$A(arguments);
-  //to extend String.prototype
-  if(args.length>0 && args[0].isSCArray) args=args[0];
-
-  return localized.fmt(args);
+  return localized;
 }
 
 

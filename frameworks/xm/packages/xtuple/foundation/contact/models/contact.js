@@ -26,39 +26,23 @@ XM.Contact = XM.Document.extend(XM._Contact, XM.Documents,
   @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: YES
+    defaultValue: true
   }),
-
-  /**
-  A set of all the contact uses on this record.
-  
-  Append values to this property with plugins by
-  adding a new property for each use type with
-  observers that add objects to this property.
-  
-  @type SC.Set
-  */
-  uses: function(key, value) {
-    if(value) { 
-      this._uses = value;
-    } else if(!this._documents) { 
-      this._uses = SC.Set.create(); 
-    }
-    
-    return this._uses;
-  }.property().cacheable(),
 
   /**
   @type String
   */
   name: function() {
-    var mid = this.get('middleName');
-    var suf = this.get('suffix');
-
-    return this.get('firstName') + ' '
-         + ((mid && mid.length) ? mid + ' ' : '')
-         + this.get('lastName')
-         + ((suf && suf.length) ? ' ' + suf : '');
+    var name = [],
+        first = this.get('firstName'),
+        mid = this.get('middleName'),
+        last = this.get('lastName'),
+        suf = this.get('suffix');
+    if (first) name.push(first);
+    if (mid) name.push(mid);
+    if (last) name.push(last);
+    if (suf) name.push(suf);
+    return name.join(' ');
   }.property('firstName', 'middleName', 'lastName', 'suffix').cacheable(),
 
   // ..........................................................
@@ -66,8 +50,8 @@ XM.Contact = XM.Document.extend(XM._Contact, XM.Documents,
   //
 
   validate: function() {
-    var flen = this.get('firstName') ? this.get('firstName').length : 0,
-        llen = this.get('lastName') ? this.get('lastName').length : 0,
+    var flen = this.get('firstName')? this.get('firstName').length : 0,
+        llen = this.get('lastName')? this.get('lastName').length : 0,
         errors = arguments.callee.base.apply(this, arguments),
         nameErr = XT.errors.findProperty('code', 'xt1002');
 

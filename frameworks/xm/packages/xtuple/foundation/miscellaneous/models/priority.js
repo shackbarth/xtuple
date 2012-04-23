@@ -20,6 +20,33 @@ XM.Priority = XM.Document.extend(XM._Priority,
   // .................................................
   // CALCULATED PROPERTIES
   //
+  
+  /**
+    Returns color code based on the order value.
+    
+    @type String
+  */
+  color: function() {
+    var order = this.get('order'),
+        K = XM.Priority;
+    switch (order) {
+      case K.VERY_HIGH:
+        ret = XT.ERROR;
+        break;
+      case K.HIGH:
+        ret = XT.WARNING;
+        break;
+      case K.LOW:
+        ret = XT.EMPHASIS;
+        break;
+      case K.VERY_LOW:
+        ret = XT.ALTERNATE_EMPHASIS;
+        break;
+      default:
+        ret = 'black';
+    }
+    return ret;
+  }.property('order').cacheable(),
 
   //..................................................
   // METHODS
@@ -40,9 +67,9 @@ XM.Priority.mixin( /** @scope XM.Priority */ {
   @static
   @constant
   @type Number
-  @default 1
+  @default 0
 */
-  VERY_HIGH: 1,
+  VERY_HIGH: 0,
 
 /**
   High
@@ -50,9 +77,9 @@ XM.Priority.mixin( /** @scope XM.Priority */ {
   @static
   @constant
   @type Number
-  @default 2
+  @default 1
 */
-  HIGH: 2,
+  HIGH: 1,
 
 /**
   Normal
@@ -60,9 +87,9 @@ XM.Priority.mixin( /** @scope XM.Priority */ {
   @static
   @constant
   @type Number
-  @default 3
+  @default 2
 */
-  NORMAL: 3,
+  NORMAL: 2,
 
 /**
   Low
@@ -70,9 +97,9 @@ XM.Priority.mixin( /** @scope XM.Priority */ {
   @static
   @constant
   @type Number
-  @default 4
+  @default 3
 */
-  LOW: 4,
+  LOW: 3,
 
 /**
   Very Low
@@ -80,8 +107,8 @@ XM.Priority.mixin( /** @scope XM.Priority */ {
   @static
   @constant
   @type Number
-  @default 5
+  @default 4
 */
-  VERY_LOW: 5
+  VERY_LOW: 4
 
 });
