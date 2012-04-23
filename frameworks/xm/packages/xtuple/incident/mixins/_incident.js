@@ -67,6 +67,14 @@ XM._Incident = {
   }),
 
   /**
+    @type XM.IncidentCategory
+  */
+  category: SC.Record.toOne('XM.IncidentCategory', {
+    isRequired: true,
+    label: '_category'.loc()
+  }),
+
+  /**
     @type Boolean
   */
   isPublic: SC.Record.attr(Boolean, {
@@ -167,6 +175,15 @@ XM._Incident = {
     isNested: true,
     inverse: 'incident',
     label: '_recurring'.loc()
+  }),
+
+  /**
+    @type Date
+  */
+  updated: SC.Record.attr(SC.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    label: '_updated'.loc()
   }),
 
   /**

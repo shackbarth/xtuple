@@ -7,7 +7,7 @@
 Postbooks.PROJECT = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Project', "CRM");
+    Postbooks.LoadSubmodule('Project', "_crm".loc());
   },
 
   exitState: function() {

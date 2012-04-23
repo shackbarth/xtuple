@@ -43,21 +43,71 @@ Postbooks = global.Postbooks = SC.Application.create(
       case 'crm':
         Postbooks.statechart.sendAction('showCRM');
         break;
-      case 'receivables':
-        Postbooks.statechart.sendAction('showReceivables');
+      case 'billing':
+        Postbooks.statechart.sendAction('showBilling');
         break;
-      case 'payables':
-        Postbooks.statechart.sendAction('showPayables');
+      case 'payments':
+        Postbooks.statechart.sendAction('showPayments');
         break;
-      case 'general-ledger':
-        Postbooks.statechart.sendAction('showGeneralLedger');
+      case 'ledger':
+        Postbooks.statechart.sendAction('showLedger');
         break;
       // case 'dashboard':
       default:
         Postbooks.statechart.sendAction('showDashboard');
         break;
     }
-  }
+  },
+  
+  /**
+    System typeface.
+    
+    @static
+    @constant
+    @type String
+    @default 550
+  */
+  TYPEFACE: 'helvetica',
+  
+  /**
+    List width considered portrait mode.
+    
+    @static
+    @constant
+    @type Number
+    @default 550
+  */
+  PORTRAIT_LIST_WIDTH: 550,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 30
+  */
+  HEIGHT_1_ROW: 30,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 50
+  */
+  HEIGHT_2_ROW: 50,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 70
+  */
+  HEIGHT_3_ROW: 70
 
 });
 

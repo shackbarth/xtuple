@@ -7,7 +7,7 @@
 Postbooks.OPPORTUNITY = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Opportunity', "CRM");
+    Postbooks.LoadSubmodule('Opportunity', "_crm".loc());
   },
 
   exitState: function() {

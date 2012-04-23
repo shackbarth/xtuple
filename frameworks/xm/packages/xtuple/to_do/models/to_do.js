@@ -15,13 +15,40 @@ sc_require('mixins/_to_do');
 */
 XM.ToDo = XT.Record.extend(XM._ToDo, XM.Documents,
   /** @scope XM.ToDo.prototype */ {
-  
+    
   // .................................................
   // CALCULATED PROPERTIES
   //
-
-  // see document mixin for object behavior(s)
-  documentKey: 'name',
+  
+  /**
+    Returns the status as a localized string.
+    
+    @type String
+  */
+  toDoStatusString: function() {
+    var toDoStatus = this.get('toDoStatus'),
+        K = XM.ToDo, ret;
+    switch (toDoStatus) {
+      case K.PENDING:
+        ret = "_pending".loc();
+        break;
+      case K.DEFERRED:
+        ret = "_deferred".loc();
+        break;
+      case K.NEITHER:
+        ret = "_neither".loc();
+        break;
+      case K.IN_PROCESS:
+        ret = "_inProcess".loc();
+        break;
+      case K.COMPLETED:
+        ret = "_completed".loc();
+        break;
+      default:
+        ret = "_error".loc();
+    }
+    return ret;
+  }.property('toDoStatus').cacheable(),
 
   //..................................................
   // METHODS
@@ -30,46 +57,7 @@ XM.ToDo = XT.Record.extend(XM._ToDo, XM.Documents,
   //..................................................
   // OBSERVERS
   //
-  
-  /* @private */
-  toDosLength: 0,
-  
-  /* @private */
-  toDosLengthBinding: '*toDos.length',
-  
-  _xm_assignedToDidChange: function() {
-    var assignedTo = this.get('assignedTo'),
-        status = this.get('status');
-     
-    if(status & SC.Record.READY && assignedTo) this.set('assignDate', SC.DateTime.create());
-  }.observes('assignedTo'),
-  
-  /* @private */
-  _xm_toDosDidChange: function() {
-    var documents = this.get('documents'),
-        toDos = this.get('toDos');
 
-    documents.addEach(toDos);    
-  }.observes('toDosLength'),
-
-  /**
-    @private
-
-    If startDate is entered and toDoStatus is 'N' the toDoStatus is changed to 'I' (in-progress).
-
-    If completeDate is entered the toDoStaus is changed to 'C' (complete).
-  */
-  statusDidChange: function() {
-    var status = this.get('status'),
-        _toDoStatus = this.get('toDoStatus'),
-        _startDate = this.get('startDate'),
-        _completeDate = this.get('completeDate');
-    if(status & SC.Record.READY) {
-      if(_completeDate && _toDoStatus != XM.ToDo.COMPLETED) this.set('toDoStatus', XM.ToDo.COMPLETED);
-      else if(_startDate && _toDoStatus === XM.ToDo.NEITHER) this.set('toDoStatus', XM.ToDo.INPROGRESS);
-    }
-  }.observes('toDoStatus', 'startDate', 'completeDate')
-  
 });
 
 
@@ -111,7 +99,7 @@ XM.ToDo.mixin( /** @scope XM.ToDo */ {
   @type String
   @default I
 */
-  INPROGRESS: 'I',
+  IN_PROCESS: 'I',
 
 /**
   Completed status for To-Do (completeDate is entered).
