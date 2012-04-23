@@ -16,7 +16,7 @@ XM.IncidentNotes = XT.TileView.extend(
     context.textAlign = 'left';
     context.textBaseline = 'middle';
 
-    context.fillText("Incident Notes", 72, 22);
+    context.fillText("Notes", 72, 22);
   },
     
 });
@@ -24,7 +24,7 @@ XM.IncidentNotes = XT.TileView.extend(
 XM.IncidentNotes.CreateTileView = function(controller) {
   var view = this.create();
   var notes = SC.TextFieldWidget.create({
-    layout: { top: 44, left: 0, height: 24, right: 0 },
+    layout: { top: 44, left: 10, height: 24, right: 10 },
     valueBinding: SC.Binding.from('notes', controller)
   });
   var layers = view.get('layers');
