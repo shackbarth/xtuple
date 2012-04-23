@@ -23,8 +23,10 @@ XM.IncidentNotes = XT.TileView.extend(
 
 XM.IncidentNotes.CreateTileView = function(controller) {
   var view = this.create();
+
   var notes = SC.TextFieldWidget.create({
     layout: { top: 44, left: 10, height: 24, right: 10 },
+    isSingleLine: false,
     valueBinding: SC.Binding.from('notes', controller)
   });
   var layers = view.get('layers');
