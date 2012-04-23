@@ -31,7 +31,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
     submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction')
   });
 
-  Postbooks.set('submoduleTitle', className.titleize());
+  Postbooks.set('submoduleTitle', ("_" + className.camelize()).loc());
   Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
   Postbooks.set('submoduleBackButtonAction', 'popModule');
 
@@ -77,7 +77,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
   });
   
   var list = [SC.Object.create({
-    title: "Overview",
+    title: "_overview".loc(),
     surface: editor
   })];
 
@@ -97,7 +97,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
       });
 
       list.push(SC.Object.create({
-        title: key.titleize().pluralize(),
+        title: property.label,
         surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
       }));
     }

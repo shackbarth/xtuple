@@ -22,27 +22,27 @@ XM.CrmSettings = XT.Object.extend(XM.Settings,
   /**
     @type String
   */  
-  accountNumberGenerationBinding: SC.Binding.from('*settings.CRMAccountNumberGeneration').noDelay(),
+  accountNumberGeneration: null,
     
   /**
     @type Number
   */
-  nextAccountNumberBinding: SC.Binding.from('*settings.NextCRMAccountNumber').noDelay(),
+  nextAccountNumber: null,
 
   /**
     @type Number
   */  
-  nextIncidentNumberBinding: SC.Binding.from('*settings.NextIncidentNumber').noDelay(),
+  nextIncidentNumber: null,
   
   /**
     @type Boolean
   */
-  isUseProjectsBinding: SC.Binding.from('*settings.UseProjects').noDelay(),
+  isUseProjects: null,
  
   /**
     @type Boolean
   */ 
-  isAutoCreateProjectsForOrdersBinding: SC.Binding.from('*settings.AutoCreateProjectsForOrders').noDelay(),
+  isAutoCreateProjectsForOrders: null,
   
   /**
     @type Boolean
@@ -54,57 +54,57 @@ XM.CrmSettings = XT.Object.extend(XM.Settings,
   /**
     @type Boolean
   */
-  isOpportunityChangeLogBinding: SC.Binding.from('*settings.OpportunityChangeLog').noDelay(),
+  isOpportunityChangeLog: null,
 
   /**
     @type Boolean
   */  
-  isIncidentsPublicPrivateBinding: SC.Binding.from('*settings.IncidentsPublicPrivate').noDelay(),
+  isIncidentsPublicPrivate: null,
 
   /**
     @type Boolean
   */  
-  isIncidentPublicDefaultBinding: SC.Binding.from('*settings.IncidentPublicDefault').noDelay(),
+  isIncidentPublicDefault: null,
 
   /**
     @type String
   */  
-  incidentNewColorBinding: SC.Binding.from('*settings.IncidentNewColor').noDelay(),
+  incidentNewColor: null,
   
   /**
     @type String
   */
-  incidentFeedbackColorBinding: SC.Binding.from('*settings.IncidentFeedbackColor').noDelay(),
+  incidentFeedbackColor: null,
 
   /**
     @type String
   */
-  incidentConfirmedColorBinding: SC.Binding.from('*settings.IncidentConfirmedColor').noDelay(),
+  incidentConfirmedColor: null,
 
   /**
     @type String
   */
-  incidentAssignedColorBinding: SC.Binding.from('*settings.IncidentAssignedColor').noDelay(),
+  incidentAssignedColor: null,
   
   /**
     @type String
   */
-  incidentResolvedColorBinding: SC.Binding.from('*settings.IncidentResolvedColor').noDelay(),
+  incidentResolvedColor: null,
   
   /**
     @type String
   */
-  incidentClosedColorBinding: SC.Binding.from('*settings.IncidentClosedColor').noDelay(),
+  incidentClosedColor: null,
   
   /**
     @type String
   */
-  isDefaultAddressCountryBinding: SC.Binding.from('*settings.DefaultAddressCountry').noDelay(),
+  isDefaultAddressCountry: null,
 
   /**
     @type Boolean
   */
-  isStrictAddressCountryBinding: SC.Binding.from('*settings.StrictAddressCountry').noDelay(),
+  isStrictAddressCountry: null,
   
   /**
     @type Boolean
@@ -133,7 +133,30 @@ XM.CrmSettings = XT.Object.extend(XM.Settings,
     
     // strict setting is irreversible once turned on and committed
     if(isStrict && !isChanged) this.set('isStrictAddressCountry', true);
-  }.observes('isStrictAddressCountry')
+  }.observes('isStrictAddressCountry'),
+  
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+
+    // bind all the properties to settings
+    var settings = this.get('settings');
+    SC.Binding.from('*settings.CRMAccountNumberGeneration', XT.session).to('accountNumberGeneration', this).noDelay().connect();
+    SC.Binding.from('*settings.NextCRMAccountNumber', XT.session).to('nextAccountNumber', this).noDelay().connect();
+    SC.Binding.from('*settings.NextIncidentNumber', XT.session).to('nextIncidentNumber', this).noDelay().connect();
+    SC.Binding.from('*settings.UseProjects', XT.session).to('isUseProjects', this).noDelay().connect();
+    SC.Binding.from('*settings.AutoCreateProjectsForOrders', XT.session).to('isAutoCreateProjectsForOrders', this).noDelay().connect();
+    SC.Binding.from('*settings.OpportunityChangeLog', XT.session).to('isOpportunityChangeLog', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentsPublicPrivate', XT.session).to('isIncidentsPublicPrivate', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentPublicDefault', XT.session).to('isIncidentPublicDefault', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentNewColor', XT.session).to('incidentNewColor', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentFeedbackColor', XT.session).to('incidentFeedbackColor', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentConfirmedColor', XT.session).to('incidentConfirmedColor', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentAssignedColor', XT.session).to('incidentAssignedColor', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentResolvedColor', XT.session).to('incidentResolvedColor', this).noDelay().connect();
+    SC.Binding.from('*settings.IncidentClosedColor', XT.session).to('incidentClosedColor', this).noDelay().connect();
+    SC.Binding.from('*settings.DefaultAddressCountry', XT.session).to('isDefaultAddressCountry', this).noDelay().connect();
+    SC.Binding.from('*settings.StrictAddressCountry', XT.session).to('isStrictAddressCountry', this).noDelay().connect();
+  }
   
 }) ;
 

@@ -50,8 +50,8 @@ XM._Vendor = {
   /**
     @type String
   */
-  Name: SC.Record.attr(String, {
-    label: '_Name'.loc()
+  name: SC.Record.attr(String, {
+    label: '_name'.loc()
   }),
 
   /**

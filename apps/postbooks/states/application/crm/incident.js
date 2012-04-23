@@ -7,7 +7,7 @@
 Postbooks.INCIDENT = SC.State.design({
 
   enterState: function() {
-    Postbooks.LoadSubmodule('Incident', "CRM");
+    Postbooks.LoadSubmodule('Incident', "_crm".loc());
   },
 
   exitState: function() {

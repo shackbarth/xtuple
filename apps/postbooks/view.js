@@ -49,7 +49,7 @@ Postbooks.TilesForClass = function(klass, controller) {
         contentBinding: SC.Binding.from(key, controller).single().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, key));
+      tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
     }
   }
 
@@ -57,11 +57,11 @@ Postbooks.TilesForClass = function(klass, controller) {
 };
 
 /** Builds an SC.View subcass that can edit properties of the record class. */
-Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOverview) {
+Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview) {
 
   // See if we have an override.
   if (klass.CreateTileView) {
-    return klass.CreateTileView(controller, propertyKey, isOverview);
+    return klass.CreateTileView(controller, title, isOverview);
   }
 
   // Nope, generate the default tile view on the fly.
@@ -72,13 +72,13 @@ Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOv
           SC.EndEditingTextLayer();
 
           if (!isOverview) {
-            Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", controller.get('content'));
+            Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), controller.get('content'));
           }
 
           return true;
         },
 
-        willRenderLayers: function(context) {
+        willRenderLayers: function(context) {        
           context.fillStyle = base3;
           context.fillRect(0, 3, context.width, 38);
 
@@ -90,7 +90,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOv
           context.textAlign = 'left';
           context.textBaseline = 'middle';
 
-          context.fillText(propertyKey? propertyKey.titleize() : "Overview", 72, 22);
+          context.fillText(title ? title : "_overview".loc(), 72, 22);
         }
 
       }),
@@ -126,7 +126,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOv
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -138,7 +138,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOv
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -152,7 +152,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOv
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -166,7 +166,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOv
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',
             textAlign: 'right',
-            value: key.titleize() + ':'
+            value: property.label + ':'
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
@@ -178,7 +178,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, propertyKey, isOv
         } else if (typeClass === Boolean) {
           widget = SC.CheckboxWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
-            title: key.titleize(),
+            title: property.label,
             valueBinding: SC.Binding.transform(function(val) {
               return !!val;
             }).from(key, controller)
@@ -272,7 +272,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
             status = content? content.get('status') : null;
 
         if (status && status === SC.Record.BUSY_LOADING) {
-          text = "Loading...";
+          text = "_loading".loc();
         }
 
         // Clear background.

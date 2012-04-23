@@ -26,7 +26,7 @@ Postbooks.BackButton = SC.ButtonWidget.extend({
 
   displayProperties: 'name'.w(),
 
-  name: "Back",
+  name: "_back".loc(),
 
   cornerRadius: 5,
 
