@@ -291,7 +291,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
         // Draw view name.
         ctx.fillStyle = base03;
         
-        var Postbooks;
+        var K = Postbooks;
         ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
