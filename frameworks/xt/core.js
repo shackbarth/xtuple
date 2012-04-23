@@ -141,7 +141,17 @@ XT = global.XT = SC.Object.create(
     @type Number
     @default 2
   */
-  WEIGHT_SCALE: 2
+  WEIGHT_SCALE: 2,
+
+  /**
+    ...
+    
+    @static
+    @constant
+    @type Boolean
+    @default false
+  */
+  USE_320_TILES: false,
 
 });
 
