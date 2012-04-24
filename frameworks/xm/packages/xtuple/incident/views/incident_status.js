@@ -24,9 +24,9 @@ XM.IncidentStatus = XT.TileView.extend(
 
 XM.IncidentStatus.CreateTileView = function(controller) {
   var view = this.create();
+  var I = XM.Incident;
 
   var incdtStatus = SC.SelectWidget.create({
-    var I = XM.Incident;
     items: [
       { title: 'New',
         value: I.NEW,
@@ -49,15 +49,16 @@ XM.IncidentStatus.CreateTileView = function(controller) {
         enabled: true
       },
       { title: 'Closed',
-        value: CLOSED,
+        value: I.CLOSED,
         enabled: true
       }
     ],
     itemTitleKey: 'title',
     itemValueKey: 'value',
     itemIsEnabledKey: 'enabled',
-    isEnabled: true
-    valueBinding: SC.Binding.from('incidentStatus', controller)
+    isEnabled: true,
+    value: I.NEW
+//    valueBinding: SC.Binding.from('incidentStatus', controller)
   });
   var layers = view.get('layers');
   layers.pushObject(incdtStatus);
