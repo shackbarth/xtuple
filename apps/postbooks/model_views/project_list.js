@@ -21,15 +21,9 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   
   context.textAlign = 'left';
   context.textBaseline = 'middle';
-
-  // Number
-  val = object.get('number');
-  context.font = "bold 10pt "+K.TYPEFACE;
-  context.fillStyle = 'black';
-  context.fillText(val, 15, 15);
   
   // Due Date
-  var dt = object.get('dueDate');
+  var dt = object.get('dueDate'), dateWidth = 0;
   if (dt) {
     val = new Date(dt.get('milliseconds')).toLocaleDateString();
     var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
@@ -37,97 +31,94 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
     context.fillText(val , 265, 15);
+    dateWidth += context.measureText(val).width + 5;
   }
   
+  // Number
+  val = object.get('number');
+  context.font = "bold 10pt "+K.TYPEFACE;
+  context.fillStyle = 'black';
+  context.textAlign = 'left';
+  if (val) val = val.elide(context, 250 - dateWidth);
+  context.fillText(val, 15, 15);
+
   // Name
   val = object.get('name');
   context.font = "8pt "+K.TYPEFACE;
-  context.textAlign = 'left';
   context.fillStyle = 'black';
   context.fillText(val , 15, 35);
+
+  // Account Name
+  val = object.getPath('account.name') || '';
+  context.font = "italic 8pt "+K.TYPEFACE;
+  context.fillText(val , 15, 55);
+
+  // Contact Name
+  val = object.getPath('contact.name') || '';
+  context.font = "8pt "+K.TYPEFACE;
+  if (val) val = val.elide(context, 120);
+  context.fillText(val , 275, 55);
+
+  // Status
+  val = object.get('projectStatusString');
+  if (val) val = val.elide(context, 120);
+  context.fillText(val , 275, 15);
+
+  // Assigned To
+  //FIXME: when user name is used assertion erros show up. why?
+  val = 'FIXME'; //val = object.getPath('assignedTo.username') || '';
+  if (val) val = val.elide(context, 120);
+  context.fillText(val , 275, 35);
+
+  // labels 
+  context.fillText("_budget".loc()+":", 400, 15);
+  context.fillText("_actual".loc()+":", 400, 35);
+  context.fillText("_balance".loc()+":", 400, 55);
+
+  // Budgeted Hours Total 
+  val = object.get('budgetedHoursTotal');
+  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
+  context.textAlign = 'right';
+  context.fillText(val, 550, 15);
+
+  // Actual Expenses Total 
+  val = object.get('budgetedlExpensesTotal');
+  val = val? val.valueOf().toFixed() : "0";
+  context.fillText(val, 625, 15);
+
+  // Actual Hours Total 
+  val = object.get('actualHoursTotal');
+  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
+  context.fillText(val, 550, 35);
   
-  // 3 Row format
-  if (width<K.PORTRAIT_LIST_WIDTH) {
-
-    // Account Name
-    val = object.getPath('account.name');
-    context.font = "italic 8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noAccountName".loc() , 15, 55);
-   
-    // Contact Name
-    val = object.getPath('contact.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noContact".loc(), 275, 55);
+  // Actual Expenses Total 
+  val = object.get('actualExpensesTotal');
+  val = val? val.valueOf().toFixed() : "0";
+  context.fillText(val, 625, 35);
   
-    // Status
-    val = object.get('projectStatusString');
-    context.font = "8pt "+K.TYPEFACE;
-    context.fillStyle = 'black';
-    context.fillText(val , 275, 15);
-    
-    // Assigned To
-    val = object.getPath('assignedTo.username') || '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.fillStyle = 'black';
-    context.fillText(val , 275, 35);
-
-    // Total Actual Hours
-    val = object.get('actualHoursTotal');
-    val = val? val.toString() : "0";
-    context.textAlign = 'right';
-    context.fillStyle = val? black : base1;
-    context.fillText(val, 425, 15);
-    
-    // Total Actual Expenses
-    val = object.get('actualExpensesTotal');
-    val = val? val.toString() : "0";
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val, 425, 35);
-
-  // 2 Row format
-  } else {
-          
-    // Account Name
-    val = object.getPath('account.name');
-    context.font = "italic 8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noAccountName".loc() , 275, 15);
-   
-    // Contact Name
-    val = object.getPath('contact.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noContact".loc() , 275, 35);
-    
-    // Status
-    val = object.get('projectStatusString');
-    context.font = "8pt "+K.TYPEFACE;
-    context.fillStyle = 'black';
-    context.fillText(val , 475, 15);
-    
-    // Assigned To
-    val = object.getPath('assignedTo.username') || '';
-    context.font = "8pt "+K.TYPEFACE
-    context.fillStyle = 'black';
-    context.fillText(val , 475, 35);
-
-    // Total Actual Hours
-    val = object.get('actualHoursTotal');
-    val = val? val.toString() : "0";
-    context.textAlign = 'right';
-    context.fillStyle = val? black : base1;
-    context.fillText(val, 625, 15);
-    
-    // Total Actual Expenses
-    val = object.get('actualExpensesTotal');
-    val = val? val.toString() : "0";
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val, 625, 35);
-
-  }
+  // Balance Hours Total 
+  val = object.get('balanceHoursTotal');
+  context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
+  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
+  context.textAlign = 'right';
+  context.fillText(val, 550, 55);
+  
+  // Balance Expenses Total 
+  val = object.get('balanceExpensesTotal');
+  context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
+  val = val? val.valueOf().toFixed() : "0";
+  context.fillText(val, 625, 55);
 
 };
+
+Postbooks.RecordListView = SC.ListView.extend({
+
+  layout: { top: 0, left: 0, right: 0, bottom: 0 },
+  rowHeight: Postbooks.HEIGHT_3_ROW,
+  hasHorizontalScroller: false,
+  landscapeRows: 3,
+  portraitRows: 3,
+
+  renderRow: Postbooks.DefaultRecordListRenderRow
+
+});
