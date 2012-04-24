@@ -2,7 +2,8 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals XM */
+/*globals XM XT */
+
 sc_require('mixins/_account');
 
 /** @class
@@ -39,7 +40,8 @@ XM.Account = XM.AccountDocument.extend(XM.Documents, XM._Account,
   //
 
   validate: function() {
-    var errors = arguments.callee.base.apply(this, arguments);
+    var errors = arguments.callee.base.apply(this, arguments),
+        isValid, err;
 
     // Validate Parent
     if(this.get('parent')) {
@@ -51,7 +53,7 @@ XM.Account = XM.AccountDocument.extend(XM.Documents, XM._Account,
     // Validate User Account
     if(this.get('isUserAccount')) {
       isValid = this.get('userAccount') ? this.get('userAccount') : 0;
-      err = XT.errors.findProperty('code', 'xt1020');
+      err = XT.errors.findProperty('code', 'xt1019');
       this.updateErrors(err, !isValid);
     }
 

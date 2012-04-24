@@ -4,24 +4,10 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.OPPORTUNITY = SC.State.design({
+sc_require('states/application/crm/submodule');
 
-  enterState: function() {
-    Postbooks.LoadSubmodule('Opportunity', "_crm".loc());
-  },
+Postbooks.OPPORTUNITY = Postbooks.CRM_SUBMODULE.design({
 
-  exitState: function() {
-    SC.EndEditingTextLayer();
-    SC.app.get('ui').popSurface();
-  },
-
-  // ACTIONS
-
-  showCRM: function() {
-    this.parentState.__movingUp__ = true; // HACK: SC.Statechart will exit/enter our parent state!
-    this.gotoState(this.parentState);
-  }
-
-  // SUBSTATES
+  className: 'Opportunity'
 
 });

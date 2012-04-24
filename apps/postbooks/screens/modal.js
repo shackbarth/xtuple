@@ -45,7 +45,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
   sc_assert(browseClass.subclassOf(XT.Record));
 
   context[className+'ListController'] = SC.ArrayController.create({
-    content: XT.store.find(browseClass),
+    content: Postbooks.get('store').find(browseClass),
     allowsEmptySelection: true
   });
 
@@ -56,7 +56,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
   controller.set('content', instance);
 
   var tiles = Postbooks.TilesForClass(baseClass, controller);
-  console.log(tiles);
+  // console.log(tiles);
 
   var editor = Postbooks.TileCarousel.create();
   editor.get('tray').set('subsurfaces', tiles);

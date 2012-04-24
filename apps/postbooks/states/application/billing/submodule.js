@@ -4,10 +4,10 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-sc_require('states/application/crm/submodule');
+sc_require('states/submodule');
 
-Postbooks.ACCOUNT = Postbooks.CRM_SUBMODULE.design({
+Postbooks.BILLING_SUBMODULE = Postbooks.SUBMODULE.design({
 
-  className: 'Account'
+  title: "_billing"
 
 });

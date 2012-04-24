@@ -11,6 +11,7 @@ Postbooks.APPLICATION = SC.State.design({
   enterState: function() {
     XT.dataSource = XT.DataSource.create({ name: 'XT.dataSource' });
     XT.store = XT.Store.create().from(XT.dataSource);
+    Postbooks.set('store', XT.store);
 
     // Use the new package system out of the box for now.
     XT.package = XT.Package.create();
@@ -26,9 +27,6 @@ Postbooks.APPLICATION = SC.State.design({
     if (!window.location.hash) {
       this.gotoState('DASHBOARD');
     } else SC.routes.trigger(); // ensures we will enter a substate
-
-    // setTimeout(Postbooks.RenderModelHierarchy, 0);
-    Postbooks.LoadDashboard();
   },
 
   exitState: function() {
@@ -39,11 +37,10 @@ Postbooks.APPLICATION = SC.State.design({
 
   // SUBSTATES
 
-  "DUMMY":          SC.State, // HACK: Prevent "missing initial state" error message from SC.
-  "DASHBOARD":      SC.State.plugin('Postbooks.DASHBOARD'),
-  "CRM":            SC.State.plugin('Postbooks.CRM'),
-  "BILLING":    SC.State.plugin('Postbooks.BILLING'),
-  "PAYMENTS":       SC.State.plugin('Postbooks.PAYMENTS'),
-  "LEDGER": SC.State.plugin('Postbooks.LEDGER')
+  "DASHBOARD": SC.State.plugin('Postbooks.DASHBOARD'),
+  "CRM":       SC.State.plugin('Postbooks.CRM'),
+  "BILLING":   SC.State.plugin('Postbooks.BILLING'),
+  "PAYMENTS":  SC.State.plugin('Postbooks.PAYMENTS'),
+  "LEDGER":    SC.State.plugin('Postbooks.LEDGER')
 
 });
