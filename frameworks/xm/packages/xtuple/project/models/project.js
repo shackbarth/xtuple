@@ -97,11 +97,12 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 
   updateBudgetedHours: function() {
     var tasks = this.get('tasks'),
+        K = SC.Record,
         budgetedHours = 0;
     for (var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
-          hours = status & SC.Record.DESTROYED ? 0 : task.get('budgetedHours');
+          hours = (status & K.DESTROYED)? 0 : task.get('budgetedHours');
       budgetedHours = budgetedHours + hours;
     }
     this.setIfChanged('budgetedHoursTotal', budgetedHours.toQuantity());
@@ -109,11 +110,12 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 
   updateActualHours: function() {
     var tasks = this.get('tasks'),
+        K = SC.Record,
         actualHours = 0;
     for (var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
-          hours = status & SC.Record.DESTROYED ? 0 : task.get('actualHours');
+          hours = (status & K.DESTROYED)? 0 : task.get('actualHours');
       actualHours = actualHours + hours;
     }
     this.setIfChanged('actualHoursTotal', actualHours.toQuantity());
@@ -121,11 +123,12 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 
   updateBudgetedExpenses: function() {
     var tasks = this.get('tasks'),
+        K = SC.Record,
         budgetedExpenses = 0;
     for (var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
-          expenses = status & SC.Record.DESTROYED ? 0 : task.get('budgetedExpenses');
+          expenses = (status & K.DESTROYED)? 0 : task.get('budgetedExpenses');
       budgetedExpenses = budgetedExpenses + expenses;
     }
     this.setIfChanged('budgetedExpensesTotal', budgetedExpenses.toMoney());
@@ -133,11 +136,12 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 
   updateActualExpenses: function() {
     var tasks = this.get('tasks'),
+        K = SC.Record,
         actualExpenses = 0;
     for (var i = 0; i < tasks.get('length'); i++) {
       var task = tasks.objectAt(i),
           status = task.get('status'),
-          expenses = status & SC.Record.DESTROYED ? 0 : task.get('actualExpenses');
+          expenses = (status & K.DESTROYED)? 0 : task.get('actualExpenses');
       actualExpenses = actualExpenses + expenses;
     }
     this.setIfChanged('actualExpensesTotal', actualExpenses.toMoney());
@@ -148,8 +152,9 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
   //
 
   statusDidChange: function(){
-    var status = this.get('status');
-    if (status === SC.Record.READY_CLEAN) {
+    var status = this.get('status'),
+        K = SC.Record;
+    if (status === K.READY_CLEAN) {
       this.number.set('isEditable', false);
       this.updateActualHours(),
       this.updateBudgetedHours();
@@ -160,12 +165,13 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
 
   projectStatusDidChange: function() {
     var status = this.get('status'),
+        K = XM.Project,
         projectStatus = this.get('projectStatus');
     if (this.isDirty()) {
-      if (projectStatus === XM.Project.IN_PROCESS &&
+      if (projectStatus === K.IN_PROCESS &&
           !this.get('assignDate')) {
         this.set('assignDate', SC.DateTime.create());
-      } else if (projectStatus === XM.Project.COMPLETED &&
+      } else if (projectStatus === K.COMPLETED &&
                  !this.get('completeDate')) {
         this.set('completeDate', SC.DateTime.create());
       }

@@ -41,81 +41,72 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.textAlign = 'left';
   if (val) val = val.elide(context, 250 - dateWidth);
   context.fillText(val, 15, 15);
-  
+
   // Name
   val = object.get('name');
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.fillText(val , 15, 35);
-  
+
   // Account Name
   val = object.getPath('account.name') || '';
   context.font = "italic 8pt "+K.TYPEFACE;
   context.fillText(val , 15, 55);
-  
+
   // Contact Name
   val = object.getPath('contact.name') || '';
   context.font = "8pt "+K.TYPEFACE;
-  if (val) val = val.elide(context, 145);
+  if (val) val = val.elide(context, 120);
   context.fillText(val , 275, 55);
-    
+
   // Status
   val = object.get('projectStatusString');
-  context.font = "8pt "+K.TYPEFACE;
-  if (val) val = val.elide(context, 145);
+  if (val) val = val.elide(context, 120);
   context.fillText(val , 275, 15);
-  
+
   // Assigned To
-  val = object.getPath('assignedTo.username') || '';
-  context.font = "8pt "+K.TYPEFACE
-  if (val) val = val.elide(context, 145);
+  //FIXME: when user name is used assertion erros show up. why?
+  val = 'FIXME'; //val = object.getPath('assignedTo.username') || '';
+  if (val) val = val.elide(context, 120);
   context.fillText(val , 275, 35);
 
   // labels 
   context.fillText("_budget".loc()+":", 400, 15);
   context.fillText("_actual".loc()+":", 400, 35);
   context.fillText("_balance".loc()+":", 400, 55);
-    
+
   // Budgeted Hours Total 
   val = object.get('budgetedHoursTotal');
-  val = (val? val.toString() : "0")+" "+"_hrs".loc();
+  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
   context.textAlign = 'right';
-  context.fillStyle = val? black : base1;
-  context.fillText(val, 525, 15);
-  
+  context.fillText(val, 550, 15);
+
   // Actual Expenses Total 
   val = object.get('budgetedlExpensesTotal');
-  val = val? val.toString() : "0";
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
+  val = val? val.valueOf().toFixed() : "0";
   context.fillText(val, 625, 15);
 
   // Actual Hours Total 
   val = object.get('actualHoursTotal');
-  val = (val? val.toString() : "0")+" "+"_hrs".loc();
-  context.textAlign = 'right';
-  context.fillStyle = val? black : base1;
-  context.fillText(val, 525, 35);
+  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
+  context.fillText(val, 550, 35);
   
   // Actual Expenses Total 
   val = object.get('actualExpensesTotal');
-  val = val? val.toString() : "0";
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
+  val = val? val.valueOf().toFixed() : "0";
   context.fillText(val, 625, 35);
   
   // Balance Hours Total 
   val = object.get('balanceHoursTotal');
+  context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
   val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
   context.textAlign = 'right';
-  context.fillStyle = val? black : base1;
-  context.fillText(val, 525, 55);
+  context.fillText(val, 550, 55);
   
   // Balance Expenses Total 
   val = object.get('balanceExpensesTotal');
-  val = val? val.toString() : "0";
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
+  context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
+  val = val? val.valueOf().toFixed() : "0";
   context.fillText(val, 625, 55);
 
 };
