@@ -518,6 +518,11 @@ select xt.install_js('XT','Data','xtuple', $$
           map = XT.Orm.fetch(nameSpace, type),
           ret, sql, pkey = XT.Orm.primaryKey(map);
       if(!pkey) throw new Error('No primary key found for {recordType}'.replace(/{recordType}/, recordType));
+      for (var i = 0; i < ids.length; i++) {
+        if (XT.typeOf(ids[i]) === 'string') {
+          ids.splice(i,1,"'"+ids[i]+"'");
+        }
+      }
       sql = "select * from {schema}.{table} where {primaryKey} in ({ids});"
             .replace(/{schema}/, nameSpace.decamelize())
             .replace(/{table}/, type.decamelize())
