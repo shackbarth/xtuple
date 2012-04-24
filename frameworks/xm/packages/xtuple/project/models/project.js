@@ -170,10 +170,10 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
     if (this.isDirty()) {
       if (projectStatus === K.IN_PROCESS &&
           !this.get('assignDate')) {
-        this.set('assignDate', SC.DateTime.create());
+        this.set('assignDate', XT.DateTime.create());
       } else if (projectStatus === K.COMPLETED &&
                  !this.get('completeDate')) {
-        this.set('completeDate', SC.DateTime.create());
+        this.set('completeDate', XT.DateTime.create());
       }
     }
   }.observes('projectStatus')

@@ -58,7 +58,7 @@ XM._BankAccountAdjustment = {
   /**
     @type Date
   */
-  created: SC.Record.attr(SC.DateTime, {
+  created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_created'.loc()
@@ -74,7 +74,7 @@ XM._BankAccountAdjustment = {
   /**
     @type Date
   */
-  date: SC.Record.attr(SC.DateTime, {
+  date: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_date'.loc()
@@ -111,7 +111,7 @@ XM._BankAccountAdjustment = {
   /**
     @type Date
   */
-  notes: SC.Record.attr(SC.DateTime, {
+  notes: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_notes'.loc()

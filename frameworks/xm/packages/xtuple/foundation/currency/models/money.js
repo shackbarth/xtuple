@@ -125,14 +125,14 @@ XM.Money = XT.Object.extend(
   /**
     Effective date used to determine exchange rate.
     
-    @type SC.DateTime
+    @type XT.DateTime
     @default currentDate
   */
   effective: function(key, value) {
     if (value !== undefined) {
       this._xm_effective = value;
     } else if (!this._xm_effective) {
-      this._xm_effective = SC.DateTime.create();
+      this._xm_effective = XT.DateTime.create();
     }
     return this._xm_effective;
   }.property(),

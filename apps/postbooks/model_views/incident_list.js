@@ -31,7 +31,7 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
   
   // Updated
   var dt = object.get('updated');
-  val = new Date(dt.get('milliseconds')).toLocaleDateString();
+  val = dt.toLocaleDateString();
   var isToday = SC.DateTime.compareDate(dt, SC.DateTime.create()) == 0;
   context.font = (isToday? "bold " : "")+"8pt "+K.TYPEFACE;
   context.textAlign = 'right';

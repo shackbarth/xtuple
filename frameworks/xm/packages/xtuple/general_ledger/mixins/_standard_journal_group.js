@@ -43,7 +43,7 @@ XM._StandardJournalGroup = {
   /**
     @type Date
   */
-  name: SC.Record.attr(SC.DateTime, {
+  name: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_name'.loc()

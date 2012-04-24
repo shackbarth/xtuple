@@ -25,7 +25,7 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   // Due Date
   var dt = object.get('dueDate'), dateWidth = 0;
   if (dt) {
-    val = new Date(dt.get('milliseconds')).toLocaleDateString();
+    val = dt.toLocaleDateString();
     var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'right';

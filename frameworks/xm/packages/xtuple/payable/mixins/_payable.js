@@ -52,7 +52,7 @@ XM._Payable = {
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(SC.DateTime, {
+  documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     isRequired: true,
@@ -62,7 +62,7 @@ XM._Payable = {
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(SC.DateTime, {
+  dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     isRequired: true,
@@ -164,7 +164,7 @@ XM._Payable = {
   /**
     @type Date
   */
-  isOpen: SC.Record.attr(SC.DateTime, {
+  isOpen: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     defaultValue: true,
@@ -174,7 +174,7 @@ XM._Payable = {
   /**
     @type Date
   */
-  closeDate: SC.Record.attr(SC.DateTime, {
+  closeDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_closeDate'.loc()

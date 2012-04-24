@@ -27,11 +27,11 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
   context.font = "bold 10pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.fillText(val, 15, 15);
-  
+
   // Target Close
   var dt = object.get('targetClose');
   if (dt) {
-    val = new Date(dt.get('milliseconds')).toLocaleDateString();
+    val = dt.toLocaleDateString();
     var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'right';

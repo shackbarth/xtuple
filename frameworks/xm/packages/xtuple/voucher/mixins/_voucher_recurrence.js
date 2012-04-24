@@ -57,7 +57,7 @@ XM._VoucherRecurrence = {
   /**
     @type Date
   */
-  startDate: SC.Record.attr(SC.DateTime, {
+  startDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_startDate'.loc()
@@ -66,7 +66,7 @@ XM._VoucherRecurrence = {
   /**
     @type Date
   */
-  endDate: SC.Record.attr(SC.DateTime, {
+  endDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_endDate'.loc()

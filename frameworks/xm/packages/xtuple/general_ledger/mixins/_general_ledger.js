@@ -43,7 +43,7 @@ XM._GeneralLedger = {
   /**
     @type Date
   */
-  date: SC.Record.attr(SC.DateTime, {
+  date: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_date'.loc()
@@ -88,7 +88,7 @@ XM._GeneralLedger = {
   /**
     @type Date
   */
-  created: SC.Record.attr(SC.DateTime, {
+  created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_created'.loc()
