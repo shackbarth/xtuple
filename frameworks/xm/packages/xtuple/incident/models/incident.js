@@ -128,8 +128,8 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.Documents,
     Custom Views
   */
   customTileViews: [
-    'XM.IncidentNotes',
-    'XM.IncidentStatus'
+    'XM.IncidentNotes'//,
+//    'XM.IncidentStatus'
   ]
   
 });

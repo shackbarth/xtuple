@@ -33,7 +33,7 @@ XM.IncidentStatus.CreateTileView = function(controller) {
         enabled: true
       },
       { title: 'Feedback',
-        Value: I.FEEDBACK,
+        value: I.FEEDBACK,
         enabled: true
       },
       { title: 'Confirmed',

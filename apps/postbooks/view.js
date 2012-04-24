@@ -35,7 +35,9 @@ Postbooks.TilesForClass = function(klass, controller) {
     if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
-
+//    if (key === 'owner') continue;
+//    if (key === 'assignedTo') continue;
+//console.log('proto keys: '+key);
     var property = proto[key];
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
@@ -110,6 +112,8 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
     if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
+//    if (key === 'owner') continue;
+//    if (key === 'assignedTo') continue;
 
     var property = proto[key],
         left = 120, right = 12;
