@@ -264,7 +264,7 @@ XT.session = SC.Object.create(
 
   didFetchLocale: function(error, response) {
     // Attach the locale to the session object.
-    this.set('locale', response);
+    this.set('locale', SC.Object.create(response));
 
     return true;
   },
