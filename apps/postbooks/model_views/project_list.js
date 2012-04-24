@@ -111,14 +111,11 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
 
 };
 
-Postbooks.RecordListView = SC.ListView.extend({
+XM.Project.RecordListView = Postbooks.RecordListView.extend({
 
-  layout: { top: 0, left: 0, right: 0, bottom: 0 },
-  rowHeight: Postbooks.HEIGHT_3_ROW,
-  hasHorizontalScroller: false,
   landscapeRows: 3,
   portraitRows: 3,
 
-  renderRow: Postbooks.DefaultRecordListRenderRow
+  renderRow: XM.Project.RenderRecordListRow
 
 });
