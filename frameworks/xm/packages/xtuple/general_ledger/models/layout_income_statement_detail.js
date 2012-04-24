@@ -6,49 +6,33 @@
 /*globals XM */
 
 sc_require('mixins/_layout_income_statement_detail');
+sc_require('mixins/layout_financial_statement');
+sc_require('models/ledger_account');
 
 /**
   @class
 
   @extends XT.Record
 */
-XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetail,
+XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetail, XM.LayoutFinancialStatement,
   /** @scope XM.LayoutIncomeStatementDetail.prototype */ {
 
   // .................................................
   // CALCULATED PROPERTIES
   //
 
-  /**
-    TODO: move to XM.SubAccountType as a function 
-          mixin
-
-  XM.SubAccountType.getTypes = function() {
-    if(!this._subAccountTypes) {
-      var qry = SC.Query.local(XM.SubAccountType),
-          store = this.get('store');
-
-      this._subAccountTypes = store.find(qry);
-    }
-    return this._subAccountTypes;
-  }
-
-  */
-
   filteredSubAccounts: function() {
     var subAccountTypes = XM.SubAccountType.getTypes(),
-        record = this,
+        accountType = record.get('accountType'),
         ret;
 
-    ret = subAccountTypes.filter(function(subAccountType) {
-      var accountType = record.get('accountType');
-
+    ret = function() {
       if(accountType) {
-      return subAccountType.get('accountType') === accountType;
+        return subAccountTypes.filterProperty('accountType', accountType);
       } else {
-        return subAccountType;
+        return subAccountTypes;
       }
-    }, this);
+    }
 
     return ret;
   }.property('accountType').cacheable(),
@@ -56,14 +40,6 @@ XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetai
   //..................................................
   // METHODS
   //
-
-  init: function() {
-    this.subAccounts = XM.SubAccountType();
-  },
-
-  updateSubAccountTypes: function() {
-    
-  },
 
   //..................................................
   // OBSERVERS

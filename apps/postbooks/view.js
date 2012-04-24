@@ -50,6 +50,13 @@ Postbooks.TilesForClass = function(klass, controller) {
       });
 
       tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
+    } else if (key === 'customTileViews') {
+      property.forEach(function(viewName) {
+        var view = SC.objectForPropertyPath(viewName);
+        if (view) {
+          tiles.push(view.CreateTileView(controller));
+        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+      });
     }
   }
 
@@ -118,7 +125,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
       else if (property.isChildAttribute)  continue;
       else if (property.isManyAttribute)   continue;
       else if (property.isSingleAttribute) continue;
-      else if (property.isRecordAttribute) {
+      else if (property.isRecordAttribute && property.isVisibleInView !== false) {
         var label = null, widget = null,
             typeClass = property.get('typeClass');
 
@@ -284,7 +291,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
         // Draw view name.
         ctx.fillStyle = base03;
         
-        var Postbooks;
+        var K = Postbooks;
         ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";

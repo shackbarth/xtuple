@@ -125,6 +125,18 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.Documents,
       (status == SC.Record.READY_DIRTY || status == SC.Record.READY_NEW))
       this.set('incidentStatus','A');
   }.observes('assignedTo'),
+
+  notes: SC.Record.attr(String, {
+    label: '_notes'.loc(),
+    isVisibleInView: false
+  }),
+
+  /**
+    Custom Views
+  */
+  customTileViews: [
+    'XM.IncidentNotes'
+  ]
   
 });
 

@@ -142,11 +142,11 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   */
   didDispatch: function(response, store, dispatch) {
     if (SC.ok(response)) {
-      if (response.get("body").error) {
+      if (response.error) {
         var error = SC.Error.create({
           code: 'xt1014',
           label: '_datasourceError'.loc(),
-          message: '_dispatchError'.loc() + ': ' + response.get("body").message
+          message: '_dispatchError'.loc() + ': ' + response.get("body").reason
         });
         store.dataSourceDidErrorDispatch(dispatch, error);
       } else {
@@ -166,11 +166,11 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   didFetch: function(response, store, query) {
 
     if (SC.ok(response)) {
-      if (response.get("body").error ) {
+      if (response.error ) {
         var error = SC.Error.create({
           code: 'xt1012',
           label: '_datasourceError'.loc(),
-          message: '_fetchError'.loc() + ': ' + response.get("body").message
+          message: '_fetchError'.loc() + ': ' + response.get("body").reason
         });
         store.dataSourceDidErrorQuery(query, error);
       } else {
@@ -195,11 +195,11 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   */
   didRetrieveRecord: function(response, store, storeKey) {
     if (SC.ok(response)) {
-      if (response.get("body").error) {
+      if (response.error) {
         var error = SC.Error.create({
           code: 'xt1011',
           label: '_datasourceError'.loc(),
-          message: '_retrieveError'.loc() + ': ' + response.get("body").message
+          message: '_retrieveError'.loc() + ': ' + response.get("body").reason
         });
         store.dataSourceDidError(storeKey, error);
       } else {
@@ -218,13 +218,13 @@ XT.DataSource = SC.Object.extend(XT.Logging,
   */
   didCommitRecord: function(response, store, storeKey) {
     if (SC.ok(response)) {
-      if (response.get("body").error) {
+      if (response.error) {
         var error = SC.Error.create({
           code: 'xt1013',
           label: '_datasourceError'.loc(),
-          message: '_commitError'.loc() + ': ' + response.get("body").message
+          message: '_commitError'.loc() + ': ' + response.get("body").reason
         });
-        error.set('message', error.get('message') + ': ' + response.get("body").message);
+        error.set('message', error.get('message') + ': ' + response.get("body").context);
         store.dataSourceDidError(storeKey, error);
       } else {
         if (store.peekStatus(storeKey) !== SC.Record.BUSY_DESTROYING) {
