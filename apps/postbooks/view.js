@@ -50,6 +50,13 @@ Postbooks.TilesForClass = function(klass, controller) {
       });
 
       tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
+    } else if (key === 'customTileViews') {
+      property.forEach(function(viewName) {
+        var view = SC.objectForPropertyPath(viewName);
+        if (view) {
+          tiles.push(view.CreateTileView(controller));
+        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+      });
     }
   }
 
@@ -85,7 +92,8 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
           context.fillStyle = base00;
           context.fillRect(20, 6, 32, 32);
 
-          context.font = "12pt Helvetica";
+          var K = Postbooks;
+          context.font = "12pt "+K.TYPEFACE;
           context.fillStyle = 'black';
           context.textAlign = 'left';
           context.textBaseline = 'middle';
@@ -117,7 +125,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
       else if (property.isChildAttribute)  continue;
       else if (property.isManyAttribute)   continue;
       else if (property.isSingleAttribute) continue;
-      else if (property.isRecordAttribute) {
+      else if (property.isRecordAttribute && property.isVisibleInView !== false) {
         var label = null, widget = null,
             typeClass = property.get('typeClass');
 
@@ -213,7 +221,8 @@ Postbooks.DefaultListRenderRow = function(context, width, height, index, object,
   context.lineTo(width, height - 0.5);
   context.stroke();
 
-  context.font = "12pt Helvetica";
+  var K = Postbooks;
+  context.font = "12pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
@@ -281,7 +290,9 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
 
         // Draw view name.
         ctx.fillStyle = base03;
-        ctx.font = "11pt Helvetica";
+        
+        var K = Postbooks;
+        ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
         ctx.fillText(text, w/2, h/2);

@@ -15,6 +15,8 @@ sc_require('mixins/_user_account');
 XM.UserAccount = XT.Record.extend(XM._UserAccount,
   /** @scope XM.UserAccount.prototype */ {
 
+  primaryKey: 'username'
+  
   // .................................................
   // CALCULATED PROPERTIES
   //

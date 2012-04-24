@@ -25,5 +25,6 @@ var project = BT.Project.create({
 
 BT.Server.create({
   hostname: "127.0.0.1",
+  //hostname: "192.168.0.128",
   project: project
 });

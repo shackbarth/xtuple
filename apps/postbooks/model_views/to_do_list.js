@@ -56,7 +56,8 @@ XM.ToDo.RenderRecordListRow = function(context, width, height, index, object, is
     context.fillText(val? val : "_noStatus".loc(), 275, 15);
     
     // Assigned To
-    val = object.getPath('assignedTo.username') || '';
+    //FIXME: when user name is used assertion erros show up. why?
+    val = 'FIXME'; //val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.fillText(val , 275, 35);  
