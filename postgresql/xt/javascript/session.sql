@@ -15,8 +15,8 @@ select xt.install_js('XT','Session','xtuple', $$
     var sql = "select "
             + "locale_id as id, "
             + "locale_code as code, "
-            + "lang_id AS language, "
-            + "country_id AS country, "
+            + "lang_abbr2 AS language, "
+            + "country_abbr AS country, "
             + "case when length(locale_error_color) = 0 then 'red' else locale_error_color end as errorColor, "
             + "case when length(locale_warning_color) = 0 then 'orange' else locale_warning_color end as warningColor, "
             + "case when length(locale_emphasis_color) = 0 then 'blue' else locale_emphasis_color end as emphasisColor, "
@@ -34,21 +34,15 @@ select xt.install_js('XT','Session','xtuple', $$
             + "coalesce(locale_percent_scale, 2) as percentScale "
             + "from locale "
             + "join usr on usr_locale_id = locale_id "
-            + "left outer join lang on locale_lang_id = lang_id "
-            + "left outer join country on locale_country_id = country_id "
+            + "left join lang on locale_lang_id = lang_id "
+            + "left join country on locale_country_id = country_id "
             + "where usr_username = getEffectiveXtUser() ", 
     rec = executeSql(sql)[0];
 
     /* determine culture */
-    var country = rec.country || -1,
-        language = rec.language || -1,
-        countryAbbr, languageAbbr,
-        culture = 'en-US';
-    if (country > 0 && language > 0) {
-      countryAbbr = executeSql('select country_abbr as result from country where country_id=$1', [country])[0].result;
-      languageAbbr = executeSql('select lang_abbr2 as result from lang where lang_id=$1', [language])[0].result;
-      if (languageAbbr && countryAbbr) culture = languageAbbr+'-'+countryAbbr;
-    }
+    var culture = 'en';
+    if (rec.language && rec.country) culture = rec.language+'-'+rec.country;
+    else if (rec.language) culture = rec.language;
     rec.culture = culture;
 
     return JSON.stringify(rec);
