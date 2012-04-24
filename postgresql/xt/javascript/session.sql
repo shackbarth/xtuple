@@ -37,9 +37,21 @@ select xt.install_js('XT','Session','xtuple', $$
             + "left outer join lang on locale_lang_id = lang_id "
             + "left outer join country on locale_country_id = country_id "
             + "where usr_username = getEffectiveXtUser() ", 
-        rec = executeSql(sql);
+    rec = executeSql(sql)[0];
 
-    return rec.length ? JSON.stringify(rec[0]) : '{}';
+    /* determine culture */
+    var country = rec.country || -1,
+        language = rec.language || -1,
+        countryAbbr, languageAbbr,
+        culture = 'en-US';
+    if (country > 0 && language > 0) {
+      countryAbbr = executeSql('select country_abbr as result from country where country_id=$1', [country])[0].result;
+      languageAbbr = executeSql('select lang_abbr2 as result from lang where lang_id=$1', [language])[0].result;
+      if (languageAbbr && countryAbbr) culture = languageAbbr+'-'+countryAbbr;
+    }
+    rec.culture = culture;
+
+    return JSON.stringify(rec);
   }
 
   /** 
