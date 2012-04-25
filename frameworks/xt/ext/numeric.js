@@ -25,9 +25,18 @@ SharedNumericPrototoype = {
 };
 
 /** private */
-_xt_toCurrencyLocale = function() {
+_xt_toCurrencyLocale = function(symbol) {
   var c = 'c'+XT.session.locale.get(this.localeScale);
-  return Globalize.format(this.val, c);
+  var old = Globalize.culture().numberFormat.currency.symbol;
+  var ret;
+  if (symbol && symbol !== old) {
+    Globalize.culture().numberFormat.currency.symbol = symbol;
+    ret = Globalize.format(this.val, c);
+    Globalize.culture().numberFormat.currency.symbol = old;
+  } else {
+    ret = Globalize.format(this.val, c);
+  }
+  return ret;
 }
 
 Money = global.Money = function(val) { this.val = +val.toFixed(this.scale); };
