@@ -6,6 +6,7 @@
 
 XM.Project.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
+  var contact = object.getPath('contact.name');
   
   // Rect
   context.fillStyle = isSelected? '#99CCFF' : 'white';
@@ -53,10 +54,11 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   // Account Name
   val = object.getPath('account.name') || '';
   context.font = "italic 8pt "+K.TYPEFACE;
+  if (contact) val = val.elide(context, 255);
   context.fillText(val , 15, 55);
 
   // Contact Name
-  val = object.getPath('contact.name') || '';
+  val = contact || '';
   context.font = "8pt "+K.TYPEFACE;
   if (val) val = val.elide(context, 120);
   context.fillText(val , 275, 55);
