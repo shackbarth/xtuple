@@ -111,7 +111,7 @@ XM._CashReceipt = {
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(SC.DateTime, {
+  documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_documentDate'.loc()
@@ -128,11 +128,11 @@ XM._CashReceipt = {
   /**
     @type Date
   */
-  distributionDate: SC.Record.attr(SC.DateTime, {
+  distributionDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
+      return XT.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_distributionDate'.loc()
   }),
@@ -140,11 +140,11 @@ XM._CashReceipt = {
   /**
     @type Date
   */
-  applicationDate: SC.Record.attr(SC.DateTime, {
+  applicationDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     defaultValue: function() {
-      return SC.DateTime.create().toFormattedString('%Y-%m-%d');
+      return XT.DateTime.create().toFormattedString('%Y-%m-%d');
     },
     label: '_applicationDate'.loc()
   }),
@@ -186,7 +186,7 @@ XM._CashReceipt = {
   /**
     @type Date
   */
-  posted: SC.Record.attr(SC.DateTime, {
+  posted: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_posted'.loc()

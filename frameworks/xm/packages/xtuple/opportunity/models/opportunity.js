@@ -31,12 +31,13 @@ XM.Opportunity = XM.Document.extend(XM._Opportunity, XM.Documents,
   // OBSERVERS
   //
 
-  _xm_assignedToDidChange: function() {
-    if(this.isDirty()) {
-      var assignedTo = this.get('assignedTo'),
-          status = this.get('status');
-       
-      if(status & SC.Record.READY && assignedTo) this.set('assignDate', SC.DateTime.create());
+  assignedToDidChange: function() {
+    if (this.isNotDirty()) return;
+    var assignedTo = this.get('assignedTo'),
+        assignDate = this.get('assignDate');
+     
+    if(assignedTo && !assignDate) {
+      this.set('assignDate', XT.DateTime.create());
     }
   }.observes('assignedTo')
 

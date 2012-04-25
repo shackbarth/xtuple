@@ -106,7 +106,7 @@ XM._VoucherTax = {
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(SC.DateTime, {
+  documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_documentDate'.loc()

@@ -109,10 +109,10 @@ XM._IncidentAlarm = {
   /**
     @type Date
   */
-  time: SC.Record.attr(SC.DateTime, {
+  time: SC.Record.attr(XT.DateTime, {
     useIsoDate: true,
     defaultValue: function() {
-      return SC.DateTime.create().toFormattedString(SC.DATETIME_ISO8601);
+      return XT.DateTime.create().toFormattedString(SC.DATETIME_ISO8601);
     },
     label: '_time'.loc()
   }),
@@ -120,7 +120,7 @@ XM._IncidentAlarm = {
   /**
     @type Date
   */
-  trigger: SC.Record.attr(SC.DateTime, {
+  trigger: SC.Record.attr(XT.DateTime, {
     useIsoDate: true,
     label: '_trigger'.loc()
   })

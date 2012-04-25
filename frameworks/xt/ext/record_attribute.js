@@ -14,6 +14,7 @@
 // ==========================================================================
 
 sc_require('ext/numeric');
+sc_require('ext/date_time');
 
 /** @private
   xTuple converter for SC.Record-type records.
@@ -32,6 +33,28 @@ SC.RecordAttribute.registerTransform(SC.Record, {
   /** @private - convert a record instance to a record id */
   from: function(record) { return record ? record.get('id') : null; }
 
+});
+
+SC.RecordAttribute.registerTransform(XT.DateTime, {
+
+  /** @private
+    Convert a String to a DateTime
+  */
+  to: function(str, attr) {
+    if (SC.none(str) || SC.instanceOf(str, XT.DateTime)) return str;
+    if (SC.none(str) || SC.instanceOf(str, Date)) return XT.DateTime.create(str.getTime());
+    var format = attr.get('format');
+    return XT.DateTime.parse(str, format ? format : XT.DateTime.recordFormat);
+  },
+
+  /** @private
+    Convert a DateTime to a String
+  */
+  from: function(dt, attr) {
+    if (SC.none(dt)) return dt;
+    var format = attr.get('format');
+    return dt.toFormattedString(format ? format : XT.DateTime.recordFormat);
+  }
 });
 
 /** @private - xtuple converter for database form of money */
