@@ -46,28 +46,8 @@ Postbooks.DefaultRecordListRenderRow = function(context, width, height, index, o
 Postbooks.RecordListView = SC.ListView.extend({
 
   layout: { top: 0, left: 0, right: 0, bottom: 0 },
-  rowHeight: Postbooks.HEIGHT_3_ROW,
+  rowHeight: Postbooks.HEIGHT_2_ROW,
   hasHorizontalScroller: false,
-  landscapeRows: 2,
-  portraitRows: 3,
-
-  updateDisplay: function() {
-    var width = this._sc_context.w,
-        K = Postbooks,
-        height = K.HEIGHT_3_ROW;
-    
-    // change the number of rows based on width and orientation settings
-    var orientation = width < K.PORTRAIT_LIST_WIDTH? 'portraitRows' : 'landscapeRows'
-    var rows = this.get(orientation);
-    if(rows == 2) {
-      height = K.HEIGHT_2_ROW;
-    } else if (rows == 1) {
-      height = K.HEIGHT_1_ROW;
-    }
-    this.setIfChanged('rowHeight', height);
-    
-    arguments.callee.base.apply(this, arguments);
-  },
 
   willRenderLayers: function(ctx) {
     var content = this.get('content');

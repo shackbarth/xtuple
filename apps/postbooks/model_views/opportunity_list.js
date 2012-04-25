@@ -57,93 +57,45 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
   if (val) val = val.elide(context, 255 - amountWidth);
   context.fillText(val , 15, 35);
   
-  // 3 Row format
-  if (width<K.PORTRAIT_LIST_WIDTH) {
+  // Account Name
+  val = object.getPath('account.name');
+  context.font = "italic 8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  if (val) val = val.elide(context, 195);
+  context.fillText(val , 275, 15);
 
-    // Stage
-    val = object.getPath('opportunityStage.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    if (val) val = val.elide(context, 95);
-    context.fillText(val? val : "_noStage".loc(), 275, 15);
-    
-    // Assigned To
-    val = object.getPath('assignedTo.username') || '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.fillStyle = 'black';
-    if (val) val = val.elide(context, 95);
-    context.fillText(val , 275, 35);  
-    
-    // Priority
-    val = object.getPath('priority.name');
-    var emphasis = object.getPath('priority.order')<=1? "bold " : "";
-    context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? black : base1;
-    context.fillText(val? val : "_noPriority".loc(), 375, 15);
-    
-    // Type
-    val = object.getPath('opportunityType.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noType".loc(), 375, 35);
+  // Contact Name
+  val = object.getPath('contact.name') || '';
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  if (val) val = val.elide(context, 195);
+  context.fillText(val? val : "_noContact".loc(), 275, 35);
 
-    // Account Name
-    val = object.getPath('account.name');
-    context.font = "italic 8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    if (val) val = val.elide(context, 255);
-    context.fillText(val , 15, 55);
-   
-    // Contact Name
-    val = object.getPath('contact.name') || '';
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noContact".loc(), 275, 55);
-
-  // 2 Row format
-  } else {
+  // Stage
+  val = object.getPath('opportunityStage.name');
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  if (val) val = val.elide(context, 95);
+  context.fillText(val? val : "_noStage".loc(), 475, 15);
   
-    // Account Name
-    val = object.getPath('account.name');
-    context.font = "italic 8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    if (val) val = val.elide(context, 195);
-    context.fillText(val , 275, 15);
-  
-    // Contact Name
-    val = object.getPath('contact.name') || '';
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    if (val) val = val.elide(context, 195);
-    context.fillText(val? val : "_noContact".loc(), 275, 35);
-  
-    // Stage
-    val = object.getPath('opportunityStage.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    if (val) val = val.elide(context, 95);
-    context.fillText(val? val : "_noStage".loc(), 475, 15);
-    
-    // Assigned To
-    val = object.getPath('assignedTo.username') || '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.fillStyle = 'black';
-    if (val) val = val.elide(context, 95);
-    context.fillText(val , 475, 35);  
+  // Assigned To
+  val = object.getPath('assignedTo.username') || '';
+  context.font = "8pt "+K.TYPEFACE;
+  context.fillStyle = 'black';
+  if (val) val = val.elide(context, 95);
+  context.fillText(val , 475, 35);  
 
-    // Priority
-    val = object.getPath('priority.name');
-    var emphasis = object.getPath('priority.order')<=1? "bold " : "";
-    context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? black : base1;
-    context.fillText(val? val : "_noPriority".loc(), 575, 15);
-    
-    // Type
-    val = object.getPath('opportunityType.name');
-    context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val? val : "_noType".loc(), 575, 35);
-
-  }
+  // Priority
+  val = object.getPath('priority.name');
+  var emphasis = object.getPath('priority.order')<=1? "bold " : "";
+  context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? black : base1;
+  context.fillText(val? val : "_noPriority".loc(), 575, 15);
+  
+  // Type
+  val = object.getPath('opportunityType.name');
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val? val : "_noType".loc(), 575, 35);
 
 };

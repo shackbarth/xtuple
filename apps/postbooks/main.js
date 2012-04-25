@@ -12,7 +12,7 @@ XT.DataSource.prototype.logLevels = SC.Object.create({
   warn:  false,
   info:  false,
   error: false,
-  logLocal: true
+  logLocal: false
 });
 
 function main() {

@@ -125,9 +125,7 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
 
 XM.Project.RecordListView = Postbooks.RecordListView.extend({
 
-  landscapeRows: 3,
-  portraitRows: 3,
-
+  rowHeight: Postbooks.HEIGHT_3_ROW,
   renderRow: XM.Project.RenderRecordListRow
 
 });

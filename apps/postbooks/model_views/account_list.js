@@ -52,42 +52,19 @@ XM.Account.RenderRecordListRow = function(context, width, height, index, object,
   context.fillStyle = 'black';
   if (val) val = val.elide(context, 120);
   context.fillText(val, 315, 15);
-  
-  // 3 Row format
-  if (width<K.PORTRAIT_LIST_WIDTH) {
-  
-    // Primary Contact Email
-    val = contact? contact.get('primaryEmail') : '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.textAlign = 'left';
-    context.fillStyle = 'blue';
-    context.fillText(val, 315, 35);
-    
-    // Primary Contact Location
-    val = contact? contact.get('address') : null;
-    val = val? val.formatShort() : '';
-    context.font = "italic 8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val , 15, 55);
-
-
-  // 2 Row format
-  } else {
           
-    // Primary Contact Email
-    val = contact? contact.get('primaryEmail') : '';
-    context.font = "8pt "+K.TYPEFACE;
-    context.textAlign = 'left';
-    context.fillStyle = 'blue';
-    context.fillText(val, 435, 15);
-    
-    // Primary Contact Location
-    val = contact? contact.get('address') : null;
-    val = val? val.formatShort() : '';
-    context.font = "italic 8pt "+K.TYPEFACE;
-    context.fillStyle = val? 'black' : base1;
-    context.fillText(val , 315, 35);
-
-  }
+  // Primary Contact Email
+  val = contact? contact.get('primaryEmail') : '';
+  context.font = "8pt "+K.TYPEFACE;
+  context.textAlign = 'left';
+  context.fillStyle = 'blue';
+  context.fillText(val, 435, 15);
+  
+  // Primary Contact Location
+  val = contact? contact.get('address') : null;
+  val = val? val.formatShort() : '';
+  context.font = "italic 8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val , 315, 35);
 
 };
