@@ -1,6 +1,5 @@
 
-XM.IncidentNotes = XT.TileView.extend(
-  /** @lends XM.IncidentNotes.prototype */ {
+XM.IncidentNotes = Postbooks.TileView.extend({
 
   layout: { top: 0, left: 0, right: 0, height: 0 },
 
@@ -11,7 +10,7 @@ XM.IncidentNotes = XT.TileView.extend(
     context.fillStyle = base00;
     context.fillRect(20, 6, 32, 32);
 
-    var K = XT;
+    var K = Postbooks;
     context.font = "12pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.textAlign = 'left';
