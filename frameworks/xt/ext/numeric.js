@@ -5,7 +5,6 @@
 /*globals XT global */
 
 sc_require('ext/session');
-sc_require('jquery/globalize');
 
 var Money, Quantity, QuantityPer, Cost, SalesPrice, PurchasePrice, Percent,
     UnitRatio, Weight, SharedNumericPrototoype;

@@ -8,7 +8,6 @@ sc_require('ext/request');
 sc_require('ext/dispatch');
 sc_require('ext/session_detail');
 sc_require('delegates/session_delegate');
-sc_require('jquery/globalize');
 
 XT.SESSION_MULTIPLE     = 0x01;
 XT.SESSION_ERROR        = 0x02;
