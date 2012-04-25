@@ -4,17 +4,19 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
+Postbooks.TRACE = false; // Set to true to trace when not on localhost.
+
 Postbooks.statechart = SC.Statechart.create({
 
-  trace: YES,
+  trace: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || Postbooks.TRACE),
 
   rootState: SC.State.design({
+
+    initialSubstate: 'APPLICATION',
 
     enterState: function() {
       SC.userDefaults.set('appDomain', 'Postbooks');
     },
-
-    initialSubstate: 'APPLICATION',
 
     // ACTIONS
 
@@ -39,6 +41,7 @@ Postbooks.statechart = SC.Statechart.create({
       Postbooks.set('submoduleBackButtonTitle', currentModal.submoduleBackButtonTitle);
       Postbooks.set('submoduleBackButtonAction', currentModal.submoduleBackButtonAction);
 
+      // Wait for the surface to exit the viewport before removing it.
       setTimeout(function() {
         SC.RunLoop.begin();
         SC.app.removeSurface(currentModal.surface);
@@ -55,23 +58,28 @@ Postbooks.statechart = SC.Statechart.create({
     // },
 
     showDashboard: function() {
-      this.gotoState('DASHBOARD');
+      if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.DASHBOARD)) return;
+      else this.gotoState('DASHBOARD');
     },
 
     showCRM: function() {
-      this.gotoState('CRM');
+      if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.CRM)) return;
+      else this.gotoState('CRM');
     },
 
     showBilling: function() {
-      this.gotoState('BILLING');
+      if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.BILLING)) return;
+      else this.gotoState('BILLING');
     },
 
     showPayments: function() {
-      this.gotoState('PAYMENTS');
+      if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.PAYMENTS)) return;
+      else this.gotoState('PAYMENTS');
     },
 
     showLedger: function() {
-      this.gotoState('LEDGER');
+      if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.LEDGER)) return;
+      else this.gotoState('LEDGER');
     },
 
     // KEYBOARD SHORTCUTS

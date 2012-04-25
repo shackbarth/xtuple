@@ -2,12 +2,6 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals global Postbooks XM XT sc_assert */
+/*globals Postbooks sc_assert XT */
 
-sc_require('states/application/crm/submodule');
-
-Postbooks.ACCOUNT = Postbooks.CRM_SUBMODULE.design({
-
-  className: 'Account'
-
-});
+Postbooks.ComboBoxWidget = SC.TextFieldWidget;

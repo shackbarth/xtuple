@@ -2,8 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework        
 // Copyright: ©2012 OpenMFG LLC, d/b/a xTuple                             
 // ==========================================================================
-
-/*globals XM */
+/*globals XM XT */
 
 sc_require('mixins/_user_account_info');
 
@@ -41,14 +40,15 @@ XM.UserAccountInfo = XT.Record.extend(XM._UserAccountInfo,
 */
 XM.UserAccountInfo.setCurrentUser = function(record, property) {
   var store = record.get('store'),
-      userName = store.get('dataSource').session.userName,
+      userName = XT.session.details.username,
       res = store.find('XM.UserAccountInfo', userName);
   res.addObserver('status', res, function observer() {
     if (res.get('status') === SC.Record.READY_CLEAN) {
       res.removeObserver('status', res, observer);
-      record.set(property, res.get('attributes'));
+      if (record.get('status') !== SC.Record.EMPTY) {
+        record.set(property, res.get('attributes'));
+      }
     }
   });
   return this;
-}
-
+};

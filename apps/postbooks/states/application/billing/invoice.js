@@ -4,23 +4,10 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.INVOICE = SC.State.design({
+sc_require('states/application/billing/submodule');
 
-  enterState: function() {
-    Postbooks.LoadSubmodule('Invoice', "_billing".loc());
-  },
+Postbooks.INVOICE = Postbooks.BILLING_SUBMODULE.design({
 
-  exitState: function() {
-    SC.app.get('ui').popSurface();
-  },
-
-  // ACTIONS
-
-  showCRM: function() {
-    this.parentState.__movingUp__ = true; // HACK: SC.Statechart will exit/enter our parent state!
-    this.gotoState(this.parentState);
-  }
-
-  // SUBSTATES
+  className: 'Invoice'
 
 });
