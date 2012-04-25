@@ -26,7 +26,7 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   var dt = object.get('dueDate'), dateWidth = 0;
   if (dt) {
     val = dt.toLocaleDateString();
-    var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
+    var isDue = XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
@@ -71,43 +71,52 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.fillText(val , 275, 35);
 
   // labels 
-  context.fillText("_budget".loc()+":", 400, 15);
+  var budgetLabel = "_budget".loc()+":";
+  var budgetLabelWidth = context.measureText(budgetLabel).width;
+  context.fillText(budgetLabel, 400, 15);
+  var actualLabel = "_actual".loc()+":";
+  var actualLabelWidth = context.measureText(actualLabel).width;
   context.fillText("_actual".loc()+":", 400, 35);
-  context.fillText("_balance".loc()+":", 400, 55);
+  var balanceLabel = "_balance".loc()+":";
+  var balanceLabelWidth = context.measureText(balanceLabel).width;
+  context.fillText(balanceLabel, 400, 55);
 
   // Budgeted Hours Total 
   val = object.get('budgetedHoursTotal');
-  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
+  val = val.toLocaleString()+" "+"_hrs".loc();
   context.textAlign = 'right';
+  val = val.elide(context, 145 - budgetLabelWidth);
   context.fillText(val, 550, 15);
 
-  // Actual Expenses Total 
-  val = object.get('budgetedlExpensesTotal');
-  val = val? val.valueOf().toFixed() : "0";
-  context.fillText(val, 625, 15);
+  // Budgeted Expenses Total 
+  val = object.get('budgetedExpensesTotal').toLocaleString();
+  val = val.elide(context, 95);
+  context.fillText(val, 650, 15);
 
   // Actual Hours Total 
   val = object.get('actualHoursTotal');
-  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
+  val = val.toLocaleString()+" "+"_hrs".loc();
+  val = val.elide(context, 145 - actualLabelWidth);
   context.fillText(val, 550, 35);
   
   // Actual Expenses Total 
-  val = object.get('actualExpensesTotal');
-  val = val? val.valueOf().toFixed() : "0";
-  context.fillText(val, 625, 35);
+  val = object.get('actualExpensesTotal').toLocaleString();
+  val = val.elide(context, 95);
+  context.fillText(val, 650, 35);
   
   // Balance Hours Total 
   val = object.get('balanceHoursTotal');
   context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
-  val = (val? val.valueOf().toFixed() : "0")+" "+"_hrs".loc();
-  context.textAlign = 'right';
+  val = val.toLocaleString()+" "+"_hrs".loc();
+  val = val.elide(context, 145 - balanceLabelWidth);
   context.fillText(val, 550, 55);
   
   // Balance Expenses Total 
   val = object.get('balanceExpensesTotal');
   context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
-  val = val? val.valueOf().toFixed() : "0";
-  context.fillText(val, 625, 55);
+  val = val.toLocaleString();
+  val = val.elide(context, 95);
+  context.fillText(val, 650, 55);
 
 };
 

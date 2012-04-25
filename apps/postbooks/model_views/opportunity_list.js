@@ -32,7 +32,7 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
   var dt = object.get('targetClose');
   if (dt) {
     val = dt.toLocaleDateString();
-    var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
+    var isDue = XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
@@ -41,7 +41,7 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
   
   // Amount
   val = object.getPath('amount');
-  val = val? val.valueOf().toString() : '';
+  val = val? val.toLocaleString() : '';
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';

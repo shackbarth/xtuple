@@ -32,7 +32,7 @@ XM.ToDo.RenderRecordListRow = function(context, width, height, index, object, is
   var dt = object.get('dueDate');
   if (dt) {
     val = dt.toLocaleDateString();
-    var isDue = SC.DateTime.compareDate(dt, SC.DateTime.create()) <= 0;
+    var isDue = XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';

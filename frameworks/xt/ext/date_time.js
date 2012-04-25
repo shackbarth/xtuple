@@ -18,9 +18,8 @@ XT.DateTime = SC.DateTime.extend(
   */
   toLocaleDateString: function(isLong) {
     var d = new Date(this.get('milliseconds')),
-        format = isLong? 'D' : 'd',
-        culture = XT.session.getPath('locale.culture');
-    return Globalize.format(d, format, culture);
+        format = isLong? 'D' : 'd';
+    return Globalize.format(d, format);
   },
   
   
