@@ -70,8 +70,7 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
     context.fillText(val , 275, 15);
     
     // Assigned To
-    //FIXME: when user name is used assertion erros show up. why?
-    val = 'FIXME'; //val = object.getPath('assignedTo.username') || '';
+    val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     if (val) val = val.elide(context, 95);

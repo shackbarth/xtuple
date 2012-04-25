@@ -32,7 +32,8 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
   var dt = object.get('targetClose');
   if (dt) {
     val = dt.toLocaleDateString();
-    var isDue = XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
+    var isDue = object.get('isActive') &&
+                XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
@@ -67,8 +68,7 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
     context.fillText(val? val : "_noStage".loc(), 275, 15);
     
     // Assigned To
-    //FIXME: when user name is used assertion erros show up. why?
-    val = 'FIXME'; //val = object.getPath('assignedTo.username') || '';
+    val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     if (val) val = val.elide(context, 95);

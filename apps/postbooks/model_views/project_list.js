@@ -23,10 +23,12 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.textBaseline = 'middle';
   
   // Due Date
-  var dt = object.get('dueDate'), dateWidth = 0;
+  var dt = object.get('dueDate');
+  var dateWidth = 0;
   if (dt) {
     val = dt.toLocaleDateString();
-    var isDue = XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
+    var isDue = object.get('projectStatus') !== XM.Project.COMPLETED &&
+                XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
     context.font = "8pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
@@ -65,8 +67,7 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.fillText(val , 275, 15);
 
   // Assigned To
-  //FIXME: when user name is used assertion erros show up. why?
-  val = 'FIXME'; //val = object.getPath('assignedTo.username') || '';
+  val = object.getPath('assignedTo.username') || '';
   if (val) val = val.elide(context, 120);
   context.fillText(val , 275, 35);
 
