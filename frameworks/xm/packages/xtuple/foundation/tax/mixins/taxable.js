@@ -38,10 +38,10 @@ XM.Taxable = {
         storeKey = store.loadRecord(XM.TaxCode, item.taxCode);
         taxCode = store.materializeRecord(storeKey);
       }
-      taxTotal = taxTotal + tax,
+      taxTotal = taxTotal + tax;
       detail = SC.Object.create({ 
         taxCode: taxCode, 
-        tax: tax.toSalesPrice() 
+        tax: tax
       });
       taxDetail.push(detail);
     }
