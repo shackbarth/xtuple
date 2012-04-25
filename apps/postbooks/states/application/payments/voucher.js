@@ -4,24 +4,10 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.VOUCHER = SC.State.design({
+sc_require('states/application/payments/submodule');
 
-  enterState: function() {
-    Postbooks.LoadSubmodule('Voucher', "_payments".loc());
-  },
+Postbooks.VOUCHER = Postbooks.PAYMENTS_SUBMODULE.design({
 
-  exitState: function() {
-    SC.EndEditingTextLayer();
-    SC.app.get('ui').popSurface();
-  },
-
-  // ACTIONS
-
-  showCRM: function() {
-    this.parentState.__movingUp__ = true; // HACK: SC.Statechart will exit/enter our parent state!
-    this.gotoState(this.parentState);
-  }
-
-  // SUBSTATES
+  className: 'Voucher'
 
 });
