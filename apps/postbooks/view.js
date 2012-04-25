@@ -30,8 +30,13 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
   var tiles = [],
       proto = klass.prototype;
-
-  tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
+  var klassName = proto.className;
+  var tileView = XM.getViewForModel(klassName, 'XT.TileView');
+  if (tileView) {
+    tiles.push(tileView.createTileView(controller));
+  } else {
+    tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
+  }
 
   for (var key in proto) {
     if (key === 'guid') continue;
@@ -52,15 +57,20 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
       });
 
       tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
-    } else if (key === 'customTileViews') {
-      property.forEach(function(viewName) {
-        var view = SC.objectForPropertyPath(viewName);
-        if (view) {
-          tiles.push(view.CreateTileView(controller));
-        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-      });
     }
+    // } else if (key === 'customTileViews') {
+    //   property.forEach(function(viewName) {
+    //     var view = SC.objectForPropertyPath(viewName);
+    //     if (view) {
+    //       tiles.push(view.CreateTileView(controller));
+    //     } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+    //   });
+    // }
   }
+
+  tiles = tiles.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
+    return tileView.CreateTileView(controller);
+  }));
 
   return tiles;
 };
