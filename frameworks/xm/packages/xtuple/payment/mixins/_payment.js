@@ -50,7 +50,7 @@ XM._Payment = {
   /**
     @type Date
   */
-  paymentDate: SC.Record.attr(SC.DateTime, {
+  paymentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_paymentDate'.loc()

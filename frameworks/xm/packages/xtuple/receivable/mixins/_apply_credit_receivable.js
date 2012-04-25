@@ -50,7 +50,7 @@ XM._ApplyCreditReceivable = {
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(SC.DateTime, {
+  documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_documentDate'.loc()
@@ -59,7 +59,7 @@ XM._ApplyCreditReceivable = {
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(SC.DateTime, {
+  dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_dueDate'.loc()

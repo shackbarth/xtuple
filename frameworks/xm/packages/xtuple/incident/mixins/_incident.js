@@ -180,7 +180,7 @@ XM._Incident = {
   /**
     @type Date
   */
-  updated: SC.Record.attr(SC.DateTime, {
+  updated: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_updated'.loc()

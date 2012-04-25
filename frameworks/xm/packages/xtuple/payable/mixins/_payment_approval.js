@@ -71,7 +71,7 @@ XM._PaymentApproval = {
   /**
     @type Date
   */
-  date: SC.Record.attr(SC.DateTime, {
+  date: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_date'.loc()

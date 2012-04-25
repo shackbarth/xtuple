@@ -304,7 +304,7 @@ XT.Record = SC.Record.extend(XT.Logging,
     Track substates for data source use. Updates dataState property directly
     so we don't fire events that change the status to dirty.
   */
-  _xt_statusChanged: function() {
+  _xt_statusDidChange: function() {
     var status = this.get('status'),
         key = 'dataState',
         value = 'error',

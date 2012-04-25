@@ -21,12 +21,12 @@ XM.Comment = XT.Record.extend(
   isComment: true,
   
   /**
-  @type SC.DateTime
+  @type XT.DateTime
   */
-  created: SC.Record.attr(SC.DateTime, {
+  created: SC.Record.attr(XT.DateTime, {
     /** @private */
     defaultValue: function() {
-      return (arguments[0].get('status') === SC.Record.READY_NEW) ? SC.DateTime.create().toFormattedString(SC.DATETIME_ISO8601) : null;
+      return (arguments[0].get('status') === SC.Record.READY_NEW) ? XT.DateTime.create().toFormattedString(XT.DateTime_ISO8601) : null;
     }
   }),
   

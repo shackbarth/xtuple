@@ -25,8 +25,7 @@ XM.CurrencyRate = XT.Record.extend(XM._CurrencyRate,
     date(s) conflicts...
   */
   dateOverlaps: function() {
-    var status = this.get('status');
-    if(status == SC.Record.READY_NEW || status == SC.Record.READY_DIRTY) {
+    if(this.isDirty()) {
       var effectiveDate = this.get('effective'),
           expiresDate = this.get('expires'),
           currencyRec = this.get('currency'),
@@ -82,7 +81,7 @@ XM.CurrencyRate = XT.Record.extend(XM._CurrencyRate,
     // validate expires date is after effective date
     var effective = this.get('effective'),
         expires = this.get('expires');
-      isErr = SC.DateTime.compareDate(effective, expires) > 0;
+      isErr = XT.DateTime.compareDate(effective, expires) > 0;
       err = XT.errors.findProperty('code', 'xt1004');
       this.updateErrors(err, isErr);
     

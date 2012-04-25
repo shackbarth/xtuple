@@ -19,7 +19,7 @@ SC.Patch.create( /** @scope XM.Payable.prototype */ {
     /**
       @type Date
     */
-    distributionDate: SC.Record.attr(SC.DateTime, {
+    distributionDate: SC.Record.attr(XT.DateTime, {
       format: '%Y-%m-%d',
       useIsoDate: false,
       label: '_distributionDate'.loc()

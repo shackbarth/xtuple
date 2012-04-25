@@ -93,7 +93,7 @@ XM._CustomerCreditCardPayment = {
   /**
     @type Date
   */
-  created: SC.Record.attr(SC.DateTime, {
+  created: SC.Record.attr(XT.DateTime, {
     useIsoDate: true,
     label: '_created'.loc()
   }),

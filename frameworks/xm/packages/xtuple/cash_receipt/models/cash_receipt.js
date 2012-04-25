@@ -129,14 +129,14 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /**
     The earliest date by which the application date may be set to.
     
-    @type SC.DateTime
+    @type XT.DateTime
   */
   minApplyDate: function() {
     var details = this.get('details'), minDate = false;
     for (var i = 0; i < details.get('length'); i++) {
       var docDate = details.objectAt(i).getPath('receivable.documentDate');
       if (minDate) {
-        minDate = SC.DateTime.compareDate(minDate, docDate) < 0 ? docDate : minDate;
+        minDate = XT.DateTime.compareDate(minDate, docDate) < 0 ? docDate : minDate;
       } else {
         minDate = docDate;
       }
@@ -386,7 +386,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   _xm_sort: function(a,b) {
     var aDate = a.getPath('receivable.dueDate'),
         bDate = b.getPath('receivable.dueDate');
-    return SC.DateTime.compareDate(aDate, bDate);
+    return XT.DateTime.compareDate(aDate, bDate);
   },
 
   //..................................................
@@ -464,13 +464,13 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         distributionDate = this.get('distributionDate');
      
     // application date can not be less than the minimum apply date
-    if (minApplyDate && SC.DateTime.compareDate(applicationDate, minApplyDate) < 0) {
+    if (minApplyDate && XT.DateTime.compareDate(applicationDate, minApplyDate) < 0) {
       applicationDate = minApplyDate;
       this.set('applicationDate', applicationDate);
     }
     
     // distribution date can not be greater than the application date
-    if (SC.DateTime.compareDate(distributionDate, applicationDate) > 0) {
+    if (XT.DateTime.compareDate(distributionDate, applicationDate) > 0) {
       this.set('distributionDate', applicationDate);
     }    
   }.observes('minApplyDate', 'applicationDate', 'distributionDate'),

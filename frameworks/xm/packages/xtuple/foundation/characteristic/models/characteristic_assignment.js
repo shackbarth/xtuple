@@ -22,7 +22,7 @@ XM.CharacteristicAssignment = XT.Record.extend(
       if(value) {
         var type = record.getPath('characteristic.characteristicType');
         if(type && type === XM.Characteristic.DATE) {
-          value = SC.DateTime.parse(value, '%Y-%m-%d');
+          value = XT.DateTime.parse(value, '%Y-%m-%d');
         }
       }
       return value;

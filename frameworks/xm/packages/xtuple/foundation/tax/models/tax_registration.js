@@ -78,7 +78,7 @@ XM.TaxRegistration = XM.Document.extend(XM._TaxRegistration,
     // validate expires date is after effective date
     var effective = this.get('effective'),
         expires = this.get('expires');
-    isErr = SC.DateTime.compareDate(effective, expires) > 0;
+    isErr = XT.DateTime.compareDate(effective, expires) > 0;
     err = XT.errors.findProperty('code', 'xt1004');
     this.updateErrors(err, isErr);
     
