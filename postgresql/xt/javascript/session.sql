@@ -12,31 +12,32 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {hash}
   */ 
   XT.Session.locale = function() {
-    var sql = "select "
-            + "locale_id as id, "
-            + "locale_code as code, "
-            + "lang_abbr2 AS language, "
-            + "country_abbr AS country, "
-            + "case when length(locale_error_color) = 0 then 'red' else locale_error_color end as errorColor, "
-            + "case when length(locale_warning_color) = 0 then 'orange' else locale_warning_color end as warningColor, "
-            + "case when length(locale_emphasis_color) = 0 then 'blue' else locale_emphasis_color end as emphasisColor, "
-            + "case when length(locale_altemphasis_color) = 0 then 'green' else locale_altemphasis_color end as altEmphasisColor, "
-            + "case when length(locale_expired_color) = 0 then 'red' else locale_expired_color end as expiredColor, "
-            + "case when length(locale_future_color) = 0 then 'blue' else locale_future_color end as futureColor, "
-            + "coalesce(locale_curr_scale,2) as currencyScale, "
-            + "coalesce(locale_salesprice_scale, 4) as salesPriceScale, "
-            + "coalesce(locale_purchprice_scale, 4) as purchasePriceScale, "
-            + "coalesce(locale_extprice_scale, 2) as extPriceScale, "
-            + "coalesce(locale_cost_scale, 4) as costScale, "
-            + "coalesce(locale_qty_scale, 2) as qtyScale, "
-            + "coalesce(locale_qtyper_scale, 6) as qtyPerScale, "
-            + "coalesce(locale_uomratio_scale, 6) as uomRatioScale, "
-            + "coalesce(locale_percent_scale, 2) as percentScale "
-            + "from locale "
-            + "join usr on usr_locale_id = locale_id "
-            + "left join lang on locale_lang_id = lang_id "
-            + "left join country on locale_country_id = country_id "
-            + "where usr_username = getEffectiveXtUser() ", 
+    var sql = 'select '
+            + 'locale_id as "id", '
+            + 'locale_code as "code", '
+            + 'lang_abbr2 AS "language", '
+            + 'country_abbr AS "country", '
+            + 'case when length(locale_error_color) = 0 then \'red\' else locale_error_color end as "errorColor", '
+            + 'case when length(locale_warning_color) = 0 then \'orange\' else locale_warning_color end as "warningColor", '
+            + 'case when length(locale_emphasis_color) = 0 then \'blue\' else locale_emphasis_color end as "emphasisColor", '
+            + 'case when length(locale_altemphasis_color) = 0 then \'green\' else locale_altemphasis_color end as "altEmphasisColor", '
+            + 'case when length(locale_expired_color) = 0 then \'red\' else locale_expired_color end as "expiredColor", '
+            + 'case when length(locale_future_color) = 0 then \'blue\' else locale_future_color end as "futureColor", '
+            + 'coalesce(locale_curr_scale,2) as "currencyScale", '
+            + 'coalesce(locale_salesprice_scale, 4) as "salesPriceScale", '
+            + 'coalesce(locale_purchprice_scale, 4) as "purchasePriceScale", '
+            + 'coalesce(locale_extprice_scale, 2) as "extPriceScale", '
+            + 'coalesce(locale_cost_scale, 4) as "costScale", '
+            + 'coalesce(locale_qty_scale, 2) as "qtyScale", '
+            + 'coalesce(locale_qtyper_scale, 6) as "qtyPerScale", '
+            + 'coalesce(locale_uomratio_scale, 6) as "uomRatioScale", '
+            + 'coalesce(locale_percent_scale, 2) as "percentScale", '
+            + 'coalesce(locale_weight_scale, 2) as "weightScale" '
+            + 'from locale '
+            + 'join usr on usr_locale_id = locale_id '
+            + 'left join lang on locale_lang_id = lang_id '
+            + 'left join country on locale_country_id = country_id '
+            + 'where usr_username = getEffectiveXtUser() ', 
     rec = executeSql(sql)[0];
 
     /* determine culture */
