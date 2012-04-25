@@ -67,7 +67,7 @@ XM._IncidentHistory = {
   /**
     @type Date
   */
-  created: SC.Record.attr(SC.DateTime, {
+  created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_created'.loc()

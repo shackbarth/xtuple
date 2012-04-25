@@ -130,7 +130,7 @@ XM._ProjectTask = {
   /**
     @type Date
   */
-  startDate: SC.Record.attr(SC.DateTime, {
+  startDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_startDate'.loc()
@@ -139,7 +139,7 @@ XM._ProjectTask = {
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(SC.DateTime, {
+  dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_dueDate'.loc()
@@ -148,7 +148,7 @@ XM._ProjectTask = {
   /**
     @type Date
   */
-  assignDate: SC.Record.attr(SC.DateTime, {
+  assignDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_assignDate'.loc()
@@ -157,7 +157,7 @@ XM._ProjectTask = {
   /**
     @type Date
   */
-  completeDate: SC.Record.attr(SC.DateTime, {
+  completeDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_completeDate'.loc()

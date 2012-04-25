@@ -33,13 +33,13 @@ String.prototype.loc = function() {
   @param {Number) maximum length
 */
 String.prototype.elide = function(context, maxLength) {
-  var ret = this;
+  var ret = this, isRight = context.textAlign === 'right';
   if (context.measureText(ret).width > maxLength) {
     var e = '...', len = context.measureText(e).width;
     while (context.measureText(ret).width+len > maxLength) {
-      ret = ret.slice(0, ret.length-1);
+      ret = isRight? ret.slice(1, ret.length) : ret.slice(0, ret.length-1);
     }
-    ret = context.textAlign === 'right'? e+ret : ret+e;
+    ret = isRight? e+ret : ret+e;
   }
   return ret;
 }

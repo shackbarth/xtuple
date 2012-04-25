@@ -354,7 +354,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     // helper function to convert parameters to data source friendly formats
     var format = function(value) {
       // format date if applicable
-      if (SC.kindOf(value, SC.DateTime)) {
+      if (SC.kindOf(value, XT.DateTime)) {
         return value.toFormattedString('%Y-%m-%d');
       // format record if applicable
       } else if (SC.kindOf(value, SC.Record)) {

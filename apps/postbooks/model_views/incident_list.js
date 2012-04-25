@@ -31,8 +31,8 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
   
   // Updated
   var dt = object.get('updated');
-  val = new Date(dt.get('milliseconds')).toLocaleDateString();
-  var isToday = SC.DateTime.compareDate(dt, SC.DateTime.create()) == 0;
+  val = dt.toLocaleDateString();
+  var isToday = XT.DateTime.compareDate(dt, XT.DateTime.create()) == 0;
   context.font = (isToday? "bold " : "")+"8pt "+K.TYPEFACE;
   context.textAlign = 'right';
   context.fillStyle = 'black';
@@ -70,8 +70,7 @@ XM.Incident.RenderRecordListRow = function(context, width, height, index, object
     context.fillText(val , 275, 15);
     
     // Assigned To
-    //FIXME: when user name is used assertion erros show up. why?
-    val = 'FIXME'; //val = object.getPath('assignedTo.username') || '';
+    val = object.getPath('assignedTo.username') || '';
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     if (val) val = val.elide(context, 95);

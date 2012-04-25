@@ -8,6 +8,7 @@ sc_require('ext/request');
 sc_require('ext/dispatch');
 sc_require('ext/session_detail');
 sc_require('delegates/session_delegate');
+sc_require('jquery/globalize');
 
 XT.SESSION_MULTIPLE     = 0x01;
 XT.SESSION_ERROR        = 0x02;
@@ -264,7 +265,11 @@ XT.session = SC.Object.create(
 
   didFetchLocale: function(error, response) {
     // Attach the locale to the session object.
-    this.set('locale', response);
+    this.set('locale', SC.Object.create(response));
+
+    // Set globalization culture
+    var culture = this.getPath('locale.culture');
+    Globalize.culture(culture);
 
     return true;
   },
