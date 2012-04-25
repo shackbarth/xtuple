@@ -31,7 +31,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
   var tiles = [],
       proto = klass.prototype;
   var klassName = proto.className;
-  var tileView = XM.getViewForModel(klassName, 'XT.TileView');
+  var tileView = XM.getViewForModel(klassName, 'Postbooks.TileView');
   if (tileView) {
     tiles.push(tileView.createTileView(controller));
   } else {
