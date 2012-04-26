@@ -21,7 +21,8 @@ Postbooks.APPLICATION = SC.State.design({
     // acquired, it is set on the XT.session object/controller
 
     // TEMPORARY HACK
-    XT.session.acquireSession('admin', 'admin', '380postbooks');
+    // THIS WAS MOVED TO onload.js from the socket package in xt
+    // XT.session.acquireSession('admin', 'admin', '380postbooks');
 
     SC.routes.add(':tab', Postbooks, Postbooks.routeHandler);
     if (!window.location.hash) {

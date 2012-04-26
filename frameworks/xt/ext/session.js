@@ -119,7 +119,8 @@ XT.session = SC.Object.create(
 
         break;
       default:
-        console.log("ok, wtf, really?", response);
+        SC.Logger.error("ok, wtf, really?");
+        console.error(response);
     }
      
   },
