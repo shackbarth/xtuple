@@ -25,7 +25,17 @@ SharedNumericPrototoype = {
   toLocaleString: function() {
     var n = 'n'+XT.session.locale.get(this.localeScale);
     return Globalize.format(this.val, n);
-  }
+  },
+  toMoney: function() { return new Money(this.valueOf()) },
+  toQuantity: function() { return new Quantity(this.valueOf()) },
+  toQuantityPer: function() { return new QuantityPer(this.valueOf()) },
+  toCost: function() { return new Cost(this.valueOf()) },
+  toSalesPrice: function() { return new SalesPrice(this.valueOf()) },
+  toPurchasePrice: function() { return new PurchasePrice(this.valueOf()) },
+  toExtendedPrice: function() { return new ExtendedPrice(this.valueOf()) },
+  toPercent: function() { return new Percent(this.valueOf()) },
+  toUnitRatio: function() { return new UnitRatio(this.valueOf()) },
+  toWeight: function() { return new Weight(this.valueOf()) }
 };
 
 /** private */
