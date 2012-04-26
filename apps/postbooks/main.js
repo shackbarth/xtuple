@@ -11,8 +11,7 @@ Postbooks.USE_320_TILES = false;
 XT.DataSource.prototype.logLevels = SC.Object.create({
   warn:  false,
   info:  false,
-  error: false,
-  logLocal: false
+  error: false
 });
 
 function main() {
