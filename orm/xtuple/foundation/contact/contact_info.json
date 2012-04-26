@@ -120,5 +120,9 @@
       }
     }
   ],
+  "order": [
+    "length(cntct_last_name || cntct_first_name)=0", 
+    "cntct_last_name || cntct_first_name"
+  ],
   "isSystem": true
 }
