@@ -2,7 +2,7 @@
 sc_require('ext/socket.io.min');
 
 // RESET THESE PROPERTIES BY HAND FOR NOW
-SOCKET_SOURCE = 'aurora.xtuple.com';
+SOCKET_SOURCE = DATASOURCE_URL || 'aurora.xtuple.com';
 SOCKET_PORT = 9000;
 SOCKET_SERVER_DEBUGGING = true;
 
@@ -25,8 +25,18 @@ var socketInterval = setInterval(function() {
 // try to catch a connect event but make sure to
 // clear the timer
 socket.on('connect', function() {
+  // don'tallow it to stupidly attempt to redo all of the initial
+  // load stuff when we're simply reconnecting
+  if (XT.DATASOURCE_CONNECTED) return;
+  XT.DATASOURCE_CONNECTED = true;
   clearInterval(socketInterval);
   SC.Logger.info("Connected to datasource via socket");
+  SC.ready(function() {
+
+    // THIS NEEDS TO BE REPLACED BECAUSE THERE SHOULD BE A LOGIN
+    // AVAILABLE TO SET THIS!
+    XT.session.acquireSession('admin', 'admin', '380postbooks');
+  });
 });
 // for debugging purposes
 socket.on('debug', function(payload) {
