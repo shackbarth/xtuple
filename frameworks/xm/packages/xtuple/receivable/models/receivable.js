@@ -19,6 +19,54 @@ XM.Receivable = XM.SubLedger.extend(XM._Receivable,
   // CALCULATED PROPERTIES
   //
 
+  /**
+    Returns the color of the incident corresponding with its status.
+    
+    @type String
+  */
+  color: function() {
+    var documentType = this.get('documentType'),
+        K = XM.SubLedger, ret;
+    switch (documentType) {
+      case K.CREDIT_MEMO:
+        ret = XT.EMPHASIS;
+        break;
+      case K.CUSTOMER_DEPOSIT:
+        ret = XT.ALTERNATE_EMPHASIS;
+        break;
+      default:
+        ret = black;
+    }
+    return ret;
+  }.property('documentType').cacheable(),
+  
+  /**
+    Returns the status as a localized string.
+    
+    @type String
+  */
+  documentTypeString: function() {
+    var documentType = this.get('documentType'),
+        K = XM.SubLedger, ret;
+    switch (documentType) {
+      case K.INVOICE:
+        ret = "_invoice".loc();
+        break;
+      case K.CREDIT_MEMO:
+        ret = "_creditMemo".loc();
+        break;
+      case K.DEBIT_MEMO:
+        ret = "_debitMemo".loc();
+        break;
+      case K.CUSTOMER_DEPOSIT:
+        ret = "_customerDeposit".loc();
+        break;
+      default:
+        ret = "_error".loc();
+    }
+    return ret;
+  }.property('documentType').cacheable(),
+
   //..................................................
   // METHODS
   //
@@ -53,3 +101,4 @@ XM.Receivable = XM.SubLedger.extend(XM._Receivable,
   }.observes('status')
   
 });
+

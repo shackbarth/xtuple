@@ -80,7 +80,7 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.fillText(budgetLabel, 400, 15);
   var actualLabel = "_actual".loc()+":";
   var actualLabelWidth = context.measureText(actualLabel).width;
-  context.fillText("_actual".loc()+":", 400, 35);
+  context.fillText(actualLabel, 400, 35);
   var balanceLabel = "_balance".loc()+":";
   var balanceLabelWidth = context.measureText(balanceLabel).width;
   context.fillText(balanceLabel, 400, 55);
