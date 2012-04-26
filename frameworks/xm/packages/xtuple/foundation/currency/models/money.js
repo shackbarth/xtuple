@@ -100,9 +100,7 @@ XM.Money = XT.Object.extend(
     // calculate
     var exchangeRate = this.get('exchangeRate'),
         precision = this.get('precision');
-    return exchangeRate ? (localValue / exchangeRate).round(precision) : '?????';
-    
-    var effective = this.get('effective');
+    return exchangeRate? SC.Math.round(localValue / exchangeRate, precision) : 0;
   }.property('localValue', 'exchangeRate', 'precision').cacheable(),
   
   /**
