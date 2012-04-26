@@ -6,10 +6,15 @@ XT.Response = SC.Object.extend(
     arguments.callee.base.apply(this, arguments);
     var raw = this.get('rawResponse');
     var data;
-    try {
-      data = SC.json.decode(raw.data);
-    } catch (err) {
-      data = raw.data;
+  
+    data = raw.data;
+
+    if (typeof data === 'string') {
+      try {
+        data = JSON.parse(data);
+      } catch (err) {
+        throw new Error("Could not parse payload response from datasource, " + raw.data);
+      }
     }
 
     if (data.isError) {
