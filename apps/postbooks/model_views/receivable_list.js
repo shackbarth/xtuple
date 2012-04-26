@@ -67,42 +67,42 @@ XM.Receivable.RenderRecordListRow = function(context, width, height, index, obje
   context.font = "italic 8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
-  val = val.elide(context, 170);
+  val = val.elide(context, 195);
   context.fillText(val , 275, 15);
   
   // Notes
   val = object.get('notes') || '';
   context.font = "8pt "+K.TYPEFACE;
-  val = val.elide(context, 255);
+  val = val.elide(context, 170);
   context.fillText(val , 275, 35);
 
   // labels 
   context.font = "8pt "+K.TYPEFACE;
   var paidLabel = "_paid".loc()+":";
   var paidLabelWidth = context.measureText(paidLabel).width;
-  context.fillText(paidLabel, 450, 15);
+  context.fillText(paidLabel, 475, 15);
   var balanceLabel = "_balance".loc()+":";
   var balanceLabelWidth = context.measureText(balanceLabel).width;
-  context.fillText(balanceLabel, 450, 35);
+  context.fillText(balanceLabel, 475, 35);
   context.textAlign = 'right';
 
   // Paid
   val = (object.get('paid') * sense).toMoney();
   val = currency.toLocaleString(val);
   val = val.elide(context, 95);
-  context.fillText(val, 575, 15);
+  context.fillText(val, 600, 15);
   
   // Balance
   var balance = (object.get('balance') * sense).toMoney();
   balance = (balance * sense).toMoney();
   val = currency.toLocaleString(balance);
   val = val.elide(context, 95);
-  context.fillText(val, 575, 35);
+  context.fillText(val, 600, 35);
   
   // Balance
   val = base.toLocaleString(balance);
   val = val.elide(context, 95);
-  context.fillText(val, 650, 35);
+  context.fillText(val, 675, 35);
 
 };
 
