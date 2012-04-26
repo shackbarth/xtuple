@@ -35,14 +35,36 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
   if (phoneWidth < 0) phoneWidth = 0;
     
   // Contact Name
-  val = object.get('name');
-  context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'left';
-  val = val? val : "_noName".loc();
-  val = val.elide(context, 255 - phoneWidth);
-  context.fillText(val, 15, 15);
-
+  var firstName = object.get('firstName');
+  var lastName = object.get('lastName');
+  var firstNameWidth = 0;
+  if (!lastName && firstName) {
+    lastName = firstName;
+    firstName = null;
+  }
+  if (firstName && lastName) {
+    val = firstName;
+    context.font = "10pt "+K.TYPEFACE;
+    context.fillStyle = 'black';
+    context.textAlign = 'left';
+    val = val.elide(context, 255-phoneWidth);
+    context.fillText(val, 15, 15);
+    firstNameWidth = context.measureText(val).width + 5;  
+  }
+  if (lastName) {
+    val = lastName;
+    context.font = "bold 10pt "+K.TYPEFACE;
+    context.fillStyle = 'black';
+    context.textAlign = 'left';
+    val = val.elide(context, 250-firstNameWidth-phoneWidth);
+    context.fillText(val, 15+firstNameWidth, 15);
+  } else  {
+    context.font = "italic 10pt "+K.TYPEFACE;
+    context.fillStyle = base1;
+    context.textAlign = 'left';
+    context.fillText("_noName".loc(), 15, 15);
+  }
+  
   // Account Name
   val = object.getPath('account.name');
   context.font = "italic 8pt "+K.TYPEFACE;
