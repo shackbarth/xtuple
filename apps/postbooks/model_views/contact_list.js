@@ -39,7 +39,7 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
-  val = val? val : "_noName".loc()
+  val = val? val : "_noName".loc();
   val = val.elide(context, 255 - phoneWidth);
   context.fillText(val, 15, 15);
 
@@ -57,7 +57,7 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   val = val? val : "_noJobTitle".loc();
-  val = val.elide(context, 195);
+  val = val.elide(context, 255);
   context.fillText(val , 15, 35);
 
   // Email

@@ -6,6 +6,9 @@
 
 XM.Account.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
+  var contact = object.get('primaryContact');
+  var address = contact? contact.get('address') : null;
+  address = address? address.formatShort() : '';
   
   // Rect
   context.fillStyle = isSelected? '#99CCFF' : 'white';
@@ -21,50 +24,53 @@ XM.Account.RenderRecordListRow = function(context, width, height, index, object,
   
   context.textAlign = 'left';
   context.textBaseline = 'middle';
-
+  
+  // Primary Contact Phone
+  var phoneWidth = 0;
+  val = contact? contact.get('phone') : '';
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.textAlign = 'right';
+  if (val) val = val.elide(context, 195);
+  context.fillText(val, 265, 15);
+  if (val) phoneWidth = context.measureText(val).width + 5;
+  if (phoneWidth < 0) phoneWidth = 0;
+  
   // Number
   val = object.get('number');
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 115);
-  context.fillText(val? val : "_noNumber".loc(), 15, 15);
+  context.textAlign = 'left';
+  val = val.elide(context, 255 - phoneWidth);
+  context.fillText(val, 15, 15);
   
   // Name
   val = object.get('name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 295);
+  if (address) val = val.elide(context, 255);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
   // Primary Contact Name
-  var contact = object.get('primaryContact') || ''; 
   val = contact? contact.get('name') : '';
-  context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
+  context.font = "italic 8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 175);
-  context.fillText(val, 135, 15);
-  
-  // Primary Contact Phone
-  val = contact? contact.get('phone') : '';
-  context.font = "10pt "+K.TYPEFACE;
-  context.textAlign = 'left';
-  context.fillStyle = 'black';
-  if (val) val = val.elide(context, 120);
-  context.fillText(val, 315, 15);
+  val = val? val : "_noContact".loc();
+  val = val.elide(context, 195);
+  context.fillText(val, 275, 15);
           
   // Primary Contact Email
   val = contact? contact.get('primaryEmail') : '';
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'blue';
-  context.fillText(val, 435, 15);
+  context.fillText(val, 475, 15);
   
   // Primary Contact Location
-  val = contact? contact.get('address') : null;
-  val = val? val.formatShort() : '';
-  context.font = "italic 8pt "+K.TYPEFACE;
+  val = address;
+  context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.fillText(val , 315, 35);
+  context.fillText(val , 275, 35);
 
 };
