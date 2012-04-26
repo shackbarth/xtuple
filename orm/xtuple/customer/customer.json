@@ -326,5 +326,8 @@
       }
     }
   ],
+  "order": [
+    "cust_number"
+  ],
   "isSystem": true
 }

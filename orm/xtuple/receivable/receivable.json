@@ -191,5 +191,9 @@
       }
     }
   ],
+  "order": [
+    "aropen_docdate desc",
+    "aropen_docnumber desc"
+  ],
   "isSystem": true
 }
