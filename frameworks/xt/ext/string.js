@@ -33,6 +33,7 @@ String.prototype.loc = function() {
   @param {Number) maximum length
 */
 String.prototype.elide = function(context, maxLength) {
+  if (maxLength <= 0) return '';
   var ret = this, isRight = context.textAlign === 'right';
   if (context.measureText(ret).width > maxLength) {
     var e = '...', len = context.measureText(e).width;
