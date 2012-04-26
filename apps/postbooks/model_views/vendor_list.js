@@ -4,9 +4,9 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Customer.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+XM.Vendor.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
-  var contact = object.get('billingContact');
+  var contact = object.get('primaryContact');
   var address = contact? contact.get('address') : null;
   address = address? address.formatShort() : '';
   
@@ -25,7 +25,7 @@ XM.Customer.RenderRecordListRow = function(context, width, height, index, object
   context.textAlign = 'left';
   context.textBaseline = 'middle';
   
-  // Billing Contact Phone
+  // Primary Contact Phone
   var phoneWidth = 0;
   val = contact? contact.get('phone') : '';
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
@@ -51,7 +51,7 @@ XM.Customer.RenderRecordListRow = function(context, width, height, index, object
   if (address) val = val.elide(context, 255);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
-  // Billing Contact Name
+  // Primary Contact Name
   val = contact? contact.get('name') : '';
   context.font = "italic 8pt "+K.TYPEFACE;
   context.textAlign = 'left';
@@ -60,7 +60,7 @@ XM.Customer.RenderRecordListRow = function(context, width, height, index, object
   val = val.elide(context, 195);
   context.fillText(val, 275, 15);
           
-  // Billing Contact Email
+  // Primary Contact Email
   val = contact? contact.get('primaryEmail') : '';
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';
