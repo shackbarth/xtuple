@@ -2,7 +2,7 @@
 sc_require('ext/socket.io.min');
 
 // RESET THESE PROPERTIES BY HAND FOR NOW
-SOCKET_SOURCE = DATASOURCE_URL || 'aurora.xtuple.com';
+SOCKET_SOURCE = window.DATASOURCE_HOST || 'aurora.xtuple.com';
 SOCKET_PORT = 9000;
 SOCKET_SERVER_DEBUGGING = true;
 
