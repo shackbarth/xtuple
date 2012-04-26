@@ -70,9 +70,21 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
     // }
   }
 
-  tiles = tiles.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
+  var customViews = [];
+
+  customViews = customViews.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
     return tileView.CreateTileView(controller);
   }));
+
+  for (var i=0; i<customViews.length; i++) {
+    console.log("layoutSchema: %@".fmt(customViews[i].layoutSchema.tileSize));
+    var idx = customViews[i].layoutSchema.order;
+    tiles = tiles.replace(idx, 0, customViews[i]);
+  }
+
+/*  tiles = tiles.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
+    return tileView.CreateTileView(controller);
+  }));*/
 
   return tiles;
 };
