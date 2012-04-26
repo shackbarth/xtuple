@@ -7,6 +7,7 @@
 XM.Project.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   var contact = object.getPath('contact.name');
+  var currency = XT.store.find('XM.Currency', XM.Currency.BASE);
   
   // Rect
   context.fillStyle = isSelected? '#99CCFF' : 'white';
@@ -92,7 +93,8 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.fillText(val, 550, 15);
 
   // Budgeted Expenses Total 
-  val = object.get('budgetedExpensesTotal').toLocaleString();
+  val = object.get('budgetedExpensesTotal');
+  val = currency.toLocaleString(val);
   val = val.elide(context, 95);
   context.fillText(val, 650, 15);
 
@@ -103,7 +105,8 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.fillText(val, 550, 35);
   
   // Actual Expenses Total 
-  val = object.get('actualExpensesTotal').toLocaleString();
+  val = object.get('actualExpensesTotal')
+  val = currency.toLocaleString(val);
   val = val.elide(context, 95);
   context.fillText(val, 650, 35);
   
@@ -117,7 +120,7 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   // Balance Expenses Total 
   val = object.get('balanceExpensesTotal');
   context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
-  val = val.toLocaleString();
+  val = currency.toLocaleString(val);
   val = val.elide(context, 95);
   context.fillText(val, 650, 55);
 

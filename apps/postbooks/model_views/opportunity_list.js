@@ -41,13 +41,18 @@ XM.Opportunity.RenderRecordListRow = function(context, width, height, index, obj
   }
   
   // Amount
-  val = object.getPath('amount');
-  val = val? val.toLocaleString() : '';
-  context.font = "8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  context.textAlign = 'right';
-  context.fillText(val, 265, 35);
-  var amountWidth = val.length? context.measureText(val).width + 5 : 0;
+  var amount = object.getPath('amount');
+  var currency = object.getPath('currency');
+  var amountWidth = 0;
+  if (amount) {
+    val = currency.toLocaleString(amount);
+    val = val? val.toLocaleString() : '';
+    context.font = "8pt "+K.TYPEFACE;
+    context.fillStyle = val? 'black' : base1;
+    context.textAlign = 'right';
+    context.fillText(val, 265, 35);
+    amountWidth = val.length? context.measureText(val).width + 5 : 0;
+  }
   
   // Name
   val = object.get('name');

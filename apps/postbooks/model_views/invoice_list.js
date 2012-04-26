@@ -30,7 +30,9 @@ XM.Invoice.RenderRecordListRow = function(context, width, height, index, object,
   var numberWidth = context.measureText(val).width;
 
   // Total
-  val = object.getPath('total').toLocaleString();
+  var amount = object.getPath('total');
+  var currency = object.getPath('currency');
+  val = currency.toLocaleString(amount);
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
