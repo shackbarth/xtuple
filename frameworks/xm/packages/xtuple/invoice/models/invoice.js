@@ -383,7 +383,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
 
     return errors;
   }.observes('linesLength', 'total'),
-  
+ 
   creditsLengthDidChange: function() {
     this.updateAllocatedCredit();
   }.observes('creditsLength'),
@@ -431,22 +431,24 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       this._xm_cacheCredit = credit;
     }
   }.observes('customer', 'currency', 'invoiceDate', 'credit'),
-  
+
   linesLengthDidChange: function() {
     // lock down currency if applicable
     this.currency.set('isEditable', this.get('linesLength') > 0);
     
     // handle line numbering
+    /* FIXME: This causes invoice list to hang. probably because of run loop problem
     var lines = this.get('lines'),
         max = 0, lineNumber, line;
     for (var i = 0; i < lines.get('length'); i++) {
-      line = lines.objectAt(i);
+      line = lines.objectAt(i); // this line specifically causes the hang
       lineNumber = line.get('lineNumber');
       if (lineNumber) max = lineNumber > max ? lineNumber : max;
       else line.set('lineNumber', max + 1);
     }
+    */
   }.observes('linesLength'),
-  
+
   /**
     Recalculate all line taxes.
   */
@@ -600,6 +602,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       }
     }
   }.observes('status')
+
 });
 
 

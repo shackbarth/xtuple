@@ -61,16 +61,20 @@ XM.Invoice.RenderRecordListRow = function(context, width, height, index, object,
   
   // Terms
   val = object.getPath('terms.code');
-  context.fillStyle = 'black';
-  context.fillText(val, 575, 15);
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val? val : "_noTerms".loc(), 575, 15);
   
   // Sales Rep
   val = object.getPath('salesRep.name');
-  context.fillText(val, 575, 35);
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val? val : "_noSalesRep".loc(), 575, 35);
     
   // Billto Name
   val = object.getPath('billtoName');
   context.font = "italic 8pt "+K.TYPEFACE;
+  context.fillStyle = 'black';
   if (isPrinted) val.elide(context, 195);
   context.fillText(val , 275, 15);
   
