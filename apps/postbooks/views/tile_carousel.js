@@ -41,14 +41,13 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend({
     // console.log('Postbooks.TileCarousel#updateTrayLayout()');
     var tray = this._sc_tray,
         frame = SC.MakeRect(this.get('frame')),
-        width = frame.width, height = frame.height,
-        tilesPerSlide = 4;
+        width = frame.width, height = frame.height;
 
     sc_assert(tray);
-    var slides = tray.get('subsurfaces').length || 1; // Make at least one.
-
+    var slides = tray.get('subsurfaces').length || 1;
     // Need to calculate the number of tiles per slide, then figure out 
     // the number of slides.
+/*
     if (slides <= 4 || width <= 678 || height <= 704) {
       tilesPerSlide = 4; // This is our minimum.
       tray.__horizontalTiles__ = tray.__verticalTiles__ = 2;
@@ -60,9 +59,12 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend({
       tilesPerSlide = horizontalTiles * verticalTiles;
       tray.__horizontalTiles__ = horizontalTiles;
       tray.__verticalTiles__ = verticalTiles;
-    }
+    }*/
 
-    slides = Math.ceil(slides/tilesPerSlide);
+    tilesPerSlide = 2;
+    tray.__horizontalTiles__ = 1;
+    tray.__verticalTiles__ = 2;
+    slides = Math.ceil(slides/2);
 
     frame[2]/*width*/ = frame[2]/*width*/ * slides;
     tray.set('frame', frame);
@@ -142,18 +144,20 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
         frame = SC.MakeRect(this.get('frame')),
         totalWidth = frame.width,
         slides = this.__slides__, // Set by our Carousel.
-        width = Math.floor(frame.width / slides),
+        width = 500,//Math.floor(frame.width / slides),
         height = frame.height,
         horizontalTiles = this.__horizontalTiles__,
         verticalTiles = this.__verticalTiles__,
-        tilesPerSlide = horizontalTiles * verticalTiles;
-
+        tilesPerSlide = 2;
+console.log('frame width: %@'.fmt(frame.width));
+console.log('width: %@'.fmt(width));
+console.log('height: %@'.fmt(height));
     // Calculate and cache the tile frames for a single slide.
     var columns = [], column, tileFrame;
-    var horizontalCenter = Math.floor((width/horizontalTiles)/2);
-    var horizontalOffset = Math.floor(width/horizontalTiles);
-    var verticalCenter = Math.floor(((height-55)/verticalTiles)/2);
-    var verticalOffset = Math.floor((height-55)/verticalTiles);
+    var horizontalCenter = 48;
+    var horizontalOffset = 96;
+    var verticalCenter = 162;
+    var verticalOffset = 324;
     for (var idx=0, len=horizontalTiles; idx<len; ++idx) {
       column = columns[idx] = [];
       for (var idx2=0, len2=verticalTiles; idx2<len2; ++idx2) {
@@ -161,14 +165,14 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
         if (Postbooks.USE_320_TILES) {
 
           tileFrame.width = tileFrame.height = 320;
-          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 160;
-          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 160;
-        } else {
+          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 50;
+          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 100;
+        }/* else {
           tileFrame.width = horizontalOffset - 12;
           tileFrame.height = verticalOffset - 12;
           tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - (horizontalOffset/2) + 6;
           tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - (verticalOffset/2) + 6;
-        }
+        }*/
       }
     }
 
