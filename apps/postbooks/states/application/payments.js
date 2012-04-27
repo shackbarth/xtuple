@@ -4,39 +4,15 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.PAYMENTS = SC.State.design({
+sc_require('states/module');
 
-  initialSubstate: 'DUMMY',
+Postbooks.PAYMENTS = Postbooks.MODULE.design({
 
-  enterState: function() {
-    if (this.__movingUp__) {
-      this.__movingUp__ = false;
-
-      // Clear the selection. This is somewhat tricky to find...
-      var listView = this.listContainer.get('contentSurface');
-      if (listView) listView.set('selection', SC.IndexSet.create().freeze());
-      return;
-    }
-
-    SC.routes.set('location', 'payments');
-
-    Postbooks.LoadModule("_payments".loc(), 'Vendor Voucher Payable PaymentApproval Payment'.w(), this);
-  },
-
-  exitState: function() {
-    if (this.__movingUp__) return;
-    SC.app.get('ui').popSurface();
-  },
+  route: 'payments',
+  title: "_payments",
+  submodules: 'Vendor Voucher Payable PaymentApproval Payment'.w(),
 
   // ACTIONS
-
-  showPayments: function() {
-    // Do nothing.
-  },
-
-  showDashboard: function() {
-    this.gotoState('DASHBOARD');
-  },
 
   showVendor: function() {
     this.gotoState('VENDOR');
@@ -60,12 +36,10 @@ Postbooks.PAYMENTS = SC.State.design({
 
   // SUBSTATES
 
-  "DUMMY":             SC.State, // HACK: Prevent "missing initial state" error message from SC.
-  "VENDOR":            SC.State.plugin('Postbooks.VENDOR'),
-  "VOUCHER":           SC.State.plugin('Postbooks.VOUCHER'),
-  "PAYABLE":           SC.State.plugin('Postbooks.PAYABLE'),
-  "PAYMENT_APPROVAL":  SC.State.plugin('Postbooks.PAYMENT_APPROVAL'),
-  "PAYMENT":           SC.State.plugin('Postbooks.PAYMENT')
-
+  "VENDOR":           SC.State.plugin('Postbooks.VENDOR'),
+  "VOUCHER":          SC.State.plugin('Postbooks.VOUCHER'),
+  "PAYABLE":          SC.State.plugin('Postbooks.PAYABLE'),
+  "PAYMENT_APPROVAL": SC.State.plugin('Postbooks.PAYMENT_APPROVAL'),
+  "PAYMENT":          SC.State.plugin('Postbooks.PAYMENT')
 
 });

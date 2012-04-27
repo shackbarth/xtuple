@@ -1,5 +1,17 @@
 
-XM.IncidentNotes = Postbooks.TileView.extend({
+XM.IncidentNotes = XM.ModelView.extend(
+  /** @lends XM.IncidentNotes.prototype */ {
+
+  modelViewType: Postbooks.TileView,
+
+  targetModel: 'XM.Incident',
+
+  isCustomView: true,
+
+  layoutSchema: {
+    order: 4,
+    tileSize: .5
+  },
 
   layout: { top: 0, left: 0, right: 0, height: 0 },
 

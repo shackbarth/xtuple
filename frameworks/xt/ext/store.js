@@ -464,6 +464,42 @@ XT.Store = SC.Store.extend(XT.Logging,
     // update callbacks
     this._retreiveCallbackForStoreKey(storeKey);
     return this ;
+  },
+
+  // ..........................................................
+  // STORE CHAINING
+  //
+
+  /**
+    Returns a new nested store instance that can be used to buffer changes
+    until you are ready to commit them.  When you are ready to commit your
+    changes, call `commitChanges()` or `destroyChanges()` and then `destroy()`
+    when you are finished with the chained store altogether.
+
+        store = MyApp.store.chain();
+        .. edit edit edit
+        store.commitChanges().destroy();
+
+    @param {Hash} attrs optional attributes to set on new store
+    @param {Class} newStoreClass optional the class of the newly-created nested store (defaults to SC.NestedStore)
+    @returns {SC.NestedStore} new nested store chained to receiver
+  */
+  chain: function(attrs) {
+    if (!attrs) attrs = {};
+    attrs.parentStore = this;
+
+    var newStoreClass = XT.NestedStore;
+
+    // Replicate parent records references
+    attrs.childRecords = this.childRecords ? SC.clone(this.childRecords) : {};
+    attrs.parentRecords = this.parentRecords ? SC.clone(this.parentRecords) : {};
+
+    var ret    = newStoreClass.create(attrs),
+        nested = this.nestedStores;
+
+    if (!nested) nested = this.nestedStores = [];
+    nested.push(ret);
+    return ret ;
   }
 
 });

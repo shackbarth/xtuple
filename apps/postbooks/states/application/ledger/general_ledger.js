@@ -4,24 +4,10 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.GENERAL_LEDGER_SUBMODULE = SC.State.design({
+sc_require('states/application/ledger/submodule');
 
-  enterState: function() {
-    Postbooks.LoadSubmodule('GeneralLedger', "_ledger".loc());
-  },
+Postbooks.GENERAL_LEDGER = Postbooks.LEDGER_SUBMODULE.design({
 
-  exitState: function() {
-    SC.EndEditingTextLayer();
-    SC.app.get('ui').popSurface();
-  },
-
-  // ACTIONS
-
-  showCRM: function() {
-    this.parentState.__movingUp__ = true; // HACK: SC.Statechart will exit/enter our parent state!
-    this.gotoState(this.parentState);
-  }
-
-  // SUBSTATES
+  className: 'GeneralLedger'
 
 });

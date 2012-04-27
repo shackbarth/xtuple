@@ -25,11 +25,18 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.TilesForClass = function(klass, controller) {
+Postbooks.TilesForClass = function(klass, controller, isRoot) {
+  console.log('Postbooks.TilesForClass(', klass, ')');
+
   var tiles = [],
       proto = klass.prototype;
-
-  tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true));
+  var klassName = proto.className;
+  var tileView = XM.getViewForModel(klassName, 'Postbooks.TileView');
+  if (tileView) {
+    tiles.push(tileView.createTileView(controller));
+  } else {
+    tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
+  }
 
   for (var key in proto) {
     if (key === 'guid') continue;
@@ -52,21 +59,39 @@ Postbooks.TilesForClass = function(klass, controller) {
       });
 
       tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
-    } else if (key === 'customTileViews') {
-      property.forEach(function(viewName) {
-        var view = SC.objectForPropertyPath(viewName);
-        if (view) {
-          tiles.push(view.CreateTileView(controller));
-        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-      });
     }
+    // } else if (key === 'customTileViews') {
+    //   property.forEach(function(viewName) {
+    //     var view = SC.objectForPropertyPath(viewName);
+    //     if (view) {
+    //       tiles.push(view.CreateTileView(controller));
+    //     } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+    //   });
+    // }
   }
+
+  var customViews = [];
+
+  customViews = customViews.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
+    return tileView.CreateTileView(controller);
+  }));
+
+  for (var i=0; i<customViews.length; i++) {
+    console.log("layoutSchema: %@".fmt(customViews[i].layoutSchema.tileSize));
+    var idx = customViews[i].layoutSchema.order;
+    tiles = tiles.replace(idx, 0, customViews[i]);
+  }
+
+/*  tiles = tiles.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
+    return tileView.CreateTileView(controller);
+  }));*/
 
   return tiles;
 };
 
 /** Builds an SC.View subcass that can edit properties of the record class. */
-Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview) {
+Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview, isRoot) {
+  console.log('Postbooks.CreateTileViewForClass(', klass, title, isOverview, ')');
 
   // See if we have an override.
   if (klass.CreateTileView) {
@@ -108,15 +133,63 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
       y = 44,
       proto = klass.prototype;
 
-  for (var key in proto) {
+  if (isOverview && isRoot) {
+    var commands = [{
+      title: "\u2699",
+      value: null,
+      enabled: true
+    }, {
+      title: "Delete",
+      value: 'delete',
+      enabled: true
+    }];
+
+    for (var key in klass) {
+      var property = klass[key];
+      if (typeof property === 'function' && property.isCommand) {
+        commands.push({
+          title: property.commandName || "(no name)",
+          value: property,
+          enabled: true
+        });
+      } else if (typeof property === 'object' && property.isCommand && property.call && typeof property.call === 'function') {
+        commands.push({
+          title: property.commandName || "(no name)",
+          value: property,
+          enabled: true
+        });
+      }
+    }
+
+    layers.pushObject(SC.SelectWidget.create({
+      layout: { top: 10, right: 10, width: 60, height: 24 },
+      theme: 'regular',
+      items: commands,
+      value: null,
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIsEnabledKey: 'enabled',
+
+      valueDidChange: function() {
+        var value = this.get('value');
+        if (value === 'delete') {
+          Postbooks.statechart.sendAction('deleteRecord');
+        } else {
+          alert('FIXME: Execute command!');
+        }
+      }.observes('value')
+    }));
+  }
+
+  for (key in proto) {
     if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 //    if (key === 'owner') continue;
 //    if (key === 'assignedTo') continue;
 
-    var property = proto[key],
-        left = 120, right = 12;
+    property = proto[key];
+    var left = 120, right = 12;
 
    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
      continue;
@@ -214,6 +287,8 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
 };
 
 Postbooks.DefaultListRenderRow = function(context, width, height, index, object, isSelected) {
+  console.log('Postbooks.DefaultListRenderRow()');
+
   context.fillStyle = isSelected? '#99CCFF' : 'white';
   context.fillRect(0, 0, width, height);
 
@@ -235,7 +310,7 @@ Postbooks.DefaultListRenderRow = function(context, width, height, index, object,
 };
 
 Postbooks.CreateListViewForClass = function(klass, controller) {
-  // console.log('Postbooks.CreateListViewForClass()', klass);
+  console.log('Postbooks.CreateListViewForClass(', klass, ')');
 
   // See if we have an override.
   if (klass.CreateDetailListView) {

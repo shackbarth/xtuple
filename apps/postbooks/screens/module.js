@@ -7,6 +7,7 @@
 sc_require('views/carousel');
 sc_require('views/master_list');
 sc_require('views/record_list');
+sc_require('widgets/button');
 sc_require('widgets/back_button');
 
 var base03 =   "#002b36";
@@ -28,12 +29,14 @@ var green =    "#859900";
 var white =    "white";
 
 Postbooks.LoadModule = function(name, classes, state) {
+  console.log('Postbooks.LoadModule(', name, classes, ')');
   var items = [];
   classes.forEach(function(className, idx) {
     items.push({
       title: ("_" + className.pluralize().camelize()).loc(),
       value: className + 'Surface',
-      enabled: true
+      enabled: true,
+      className: className
     });
   });
 
@@ -48,7 +51,7 @@ Postbooks.LoadModule = function(name, classes, state) {
     sc_assert(browseClass.subclassOf(XT.Record));
 
     Postbooks[className+'ListController'] = SC.ArrayController.create({
-      content: XT.store.find(browseClass),
+      content: Postbooks.get('store').find(browseClass),
       allowsEmptySelection: true
     });
 
@@ -65,19 +68,35 @@ Postbooks.LoadModule = function(name, classes, state) {
     // class have it's own list view?
     if (browseClass.RecordListView) {
       surface = browseClass.RecordListView.create({
-        contentBinding: content,
-        selectionBinding: selection,
-        action: action
+        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
+        selectionBinding: 'Postbooks.'+className+'ListController.selection',
+
+        action: function(object, index) {
+          sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
+          Postbooks.set('store', Postbooks.get('store').chain());
+          controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
+          Postbooks.submoduleController = controller;
+          Postbooks.statechart.sendAction('show'+className);
+        }
+
       });
       
     // nope, default
     } else {
       surface = Postbooks.RecordListView.create({
-        contentBinding: content,
-        selectionBinding: selection,
-        action: action,
-        renderRow: browseClass.RenderRecordListRow? 
-                   browseClass.RenderRecordListRow : Postbooks.DefaultRecordListRenderRow
+        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
+        selectionBinding: 'Postbooks.'+className+'ListController.selection',
+
+        action: function(object, index) {
+          sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
+          Postbooks.set('store', Postbooks.get('store').chain());
+          controller.set('content', Postbooks.get('store').find(baseClass, Number(object.get('guid'))));
+          Postbooks.submoduleController = controller;
+          Postbooks.statechart.sendAction('show'+className);
+        },
+        
+        renderRow: browseClass.RenderRecordListRow? browseClass.RenderRecordListRow : Postbooks.DefaultRecordListRenderRow
+
       });
     }
 
@@ -117,6 +136,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   detail.set('contentSurface', list[0].surface);
 
   state.listContainer = detail;
+  state.listController = listController;
 
   var listView = Postbooks.MasterListView.create({
     contentBinding: SC.Binding.from('arrangedObjects', listController).multiple().oneWay(),
@@ -151,6 +171,12 @@ Postbooks.LoadModule = function(name, classes, state) {
     name: "_dashboard".loc(),
     target: 'Postbooks.statechart',
     action: 'showDashboard'
+  }));
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { right: 20, centerY: 0, width: 120, height: 24 },
+    name: "_new".loc(),
+    target: 'Postbooks.statechart',
+    action: 'newRecord'
   }));
 
   module.get('subsurfaces').pushObjects([topbar, listView, detail]);

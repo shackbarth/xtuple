@@ -4,46 +4,22 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.LEDGER = SC.State.design({
+sc_require('states/module');
 
-  initialSubstate: 'DUMMY',
+Postbooks.LEDGER = Postbooks.MODULE.design({
 
-  enterState: function() {
-    if (this.__movingUp__) {
-      this.__movingUp__ = false;
-
-      // Clear the selection. This is somewhat tricky to find...
-      var listView = this.listContainer.get('contentSurface');
-      if (listView) listView.set('selection', SC.IndexSet.create().freeze());
-      return;
-    }
-
-    SC.routes.set('location', 'ledger');
-
-    Postbooks.LoadModule("_ledger".loc(), 'Journal GeneralLedger TrialBalance Budget FinancialStatement BankAccount'.w(), this);
-  },
-
-  exitState: function() {
-    if (this.__movingUp__) return;
-    SC.app.get('ui').popSurface();
-  },
+  route: 'ledger',
+  title: "_ledger",
+  submodules: 'Journal GeneralLedger TrialBalance Budget FinancialStatement BankAccount'.w(),
 
   // ACTIONS
-
-  showLedger: function() {
-    // Do nothing.
-  },
-
-  showDashboard: function() {
-    this.gotoState('DASHBOARD');
-  },
 
   showJournal: function() {
     this.gotoState('JOURNAL');
   },
 
   showGeneralLedgerSubmodule: function() {
-    this.gotoState('GENERAL_LEDGER_SUBMODULE');
+    this.gotoState('GENERAL_LEDGER');
   },
 
   showTrialBalance: function() {
@@ -64,12 +40,11 @@ Postbooks.LEDGER = SC.State.design({
 
   // SUBSTATES
 
-  "DUMMY":                     SC.State, // HACK: Prevent "missing initial state" error message from SC.
-  "JOURNAL":                   SC.State.plugin('Postbooks.JOURNAL'),
-  "GENERAL_LEDGER_SUBMODULE":  SC.State.plugin('Postbooks.GENERAL_LEDGER_SUBMODULE'),
-  "TRIAL_BALANCE":             SC.State.plugin('Postbooks.TRIAL_BALANCE'),
-  "BUDGET":                    SC.State.plugin('Postbooks.BUDGET'),
-  "FINANCIAL_STATEMENT":       SC.State.plugin('Postbooks.FINANCIAL_STATEMENT'),
-  "BANK_ACCOUNT":              SC.State.plugin('Postbooks.BANK_ACCOUNT')
+  "JOURNAL":             SC.State.plugin('Postbooks.JOURNAL'),
+  "GENERAL_LEDGER":      SC.State.plugin('Postbooks.GENERAL_LEDGER'),
+  "TRIAL_BALANCE":       SC.State.plugin('Postbooks.TRIAL_BALANCE'),
+  "BUDGET":              SC.State.plugin('Postbooks.BUDGET'),
+  "FINANCIAL_STATEMENT": SC.State.plugin('Postbooks.FINANCIAL_STATEMENT'),
+  "BANK_ACCOUNT":        SC.State.plugin('Postbooks.BANK_ACCOUNT')
 
 });
