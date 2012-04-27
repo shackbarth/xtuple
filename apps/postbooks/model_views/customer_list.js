@@ -4,10 +4,10 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-Postbooks.Account = {};
-Postbooks.Account.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Customer = {};
+Postbooks.Customer.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
-  var contact = object.get('primaryContact');
+  var contact = object.get('billingContact');
   var address = contact? contact.get('address') : null;
   address = address? address.formatShort() : '';
   
@@ -26,7 +26,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   context.textAlign = 'left';
   context.textBaseline = 'middle';
   
-  // Primary Contact Phone
+  // Billing Contact Phone
   var phoneWidth = 0;
   val = contact? contact.get('phone') : '';
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
@@ -52,7 +52,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   if (address) val = val.elide(context, 255);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
-  // Primary Contact Name
+  // Billing Contact Name
   val = contact? contact.get('name') : '';
   context.font = "italic 8pt "+K.TYPEFACE;
   context.textAlign = 'left';
@@ -61,7 +61,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   val = val.elide(context, 195);
   context.fillText(val, 275, 15);
           
-  // Primary Contact Email
+  // Billing Contact Email
   val = contact? contact.get('primaryEmail') : '';
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';

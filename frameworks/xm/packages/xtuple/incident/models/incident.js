@@ -23,13 +23,6 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.Documents,
   //
   
   /**
-    @type String
-  */
-  incidentStatus: SC.Record.attr(String, {
-    defaultValue: 'N'
-  }),
-  
-  /**
     Returns the color of the incident corresponding with its status.
     
     @type String
@@ -131,13 +124,6 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.Documents,
     isVisibleInView: false
   }),
 
-  /**
-    Custom Views
-  */
-  customTileViews: [
-    'XM.IncidentNotes'
-  ]
-  
 });
 
 XM.Incident.mixin( /** @scope XM.Incident */ {

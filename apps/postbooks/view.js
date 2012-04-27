@@ -30,14 +30,21 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
   var tiles = [],
       proto = klass.prototype;
-
-  tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
+  var klassName = proto.className;
+  var tileView = XT.getViewForModel(klassName, 'Postbooks.TileView');
+  if (tileView) {
+    tiles.push(tileView.createTileView(controller));
+  } else {
+    tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
+  }
 
   for (var key in proto) {
     if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
-
+//    if (key === 'owner') continue;
+//    if (key === 'assignedTo') continue;
+//console.log('proto keys: '+key);
     var property = proto[key];
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
@@ -52,15 +59,32 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
       });
 
       tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
-    } else if (key === 'customTileViews') {
-      property.forEach(function(viewName) {
-        var view = SC.objectForPropertyPath(viewName);
-        if (view) {
-          tiles.push(view.CreateTileView(controller));
-        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-      });
     }
+    // } else if (key === 'customTileViews') {
+    //   property.forEach(function(viewName) {
+    //     var view = SC.objectForPropertyPath(viewName);
+    //     if (view) {
+    //       tiles.push(view.CreateTileView(controller));
+    //     } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+    //   });
+    // }
   }
+
+  var customViews = [];
+
+  customViews = customViews.concat(XT.getCustomViewsForModel(klassName).map(function(tileView) {
+    return tileView.CreateTileView(controller);
+  }));
+
+  for (var i=0; i<customViews.length; i++) {
+    console.log("layoutSchema: %@".fmt(customViews[i].layoutSchema.tileSize));
+    var idx = customViews[i].layoutSchema.order;
+    tiles = tiles.replace(idx, 0, customViews[i]);
+  }
+
+/*  tiles = tiles.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
+    return tileView.CreateTileView(controller);
+  }));*/
 
   return tiles;
 };
@@ -161,6 +185,8 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
     if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
+//    if (key === 'owner') continue;
+//    if (key === 'assignedTo') continue;
 
     property = proto[key];
     var left = 120, right = 12;
@@ -220,7 +246,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
             }).from(key, controller)
           });
           y += 24;
-        } else if (typeClass === SC.DateTime) {
+        } else if (typeClass === XT.DateTime) {
           label = SC.LabelLayer.create({
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',

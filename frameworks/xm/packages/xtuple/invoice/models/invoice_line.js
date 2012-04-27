@@ -124,13 +124,27 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       // callback
       callback = function(err, result) {
         var units = [], qry,
-            store = that.get('store');
-        qry = SC.Query.local(XM.Unit, {
-          conditions: "guid ANY {units}",
-          parameters: { 
-            units: result.units
-          }
-        });
+            store = that.get('store'),
+            key = result.units.toString(),
+            K = XM.InvoiceLine;
+            
+        // see if we have a cached query
+        if (K._xm_unitsQuery && K._xm_unitsQuery[key]) {
+          qry = K._xm_unitsQuery[key];
+          
+        // no, so make one
+        } else {
+          qry = SC.Query.local(XM.Unit, {
+            conditions: "guid ANY {units}",
+            parameters: { 
+              units: result.units
+            }
+          });
+          
+          // cache this for re-use
+          if (!K._xm_unitsQuery) K._xm_unitsQuery = {};
+          K._xm_unitsQuery[key] = qry;
+        }
         units = store.find(qry);
         that.setIfChanged('sellingUnits', units);
       }

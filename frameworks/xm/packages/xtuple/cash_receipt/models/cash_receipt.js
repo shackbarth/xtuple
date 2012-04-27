@@ -171,6 +171,51 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     return [];
   }.property('customer', 'isPosted').cacheable(),
   
+  /**
+    Returns the funds type as a localized string.
+    
+    @type String
+  */
+  fundsTypeString: function() {
+    var fundsType = this.get('fundsType'),
+        K = XM.CashReceipt, ret;
+    switch (fundsType) {
+      case K.CHECK:
+        ret = "_check".loc();
+        break;
+      case K.CERTIFIED_CHECK:
+        ret = "_certifiedCheck".loc();
+        break;
+      case K.MASTER_CARD:
+        ret = "_masterCard".loc();
+        break;
+      case K.VISA:
+        ret = "_visa".loc();
+        break;
+      case K.AMERICAN_EXPRESS:
+        ret = "_americanExpress".loc();
+        break;
+      case K.DISCOVER_CARD:
+        ret = "_discoverCard".loc();
+        break;
+      case K.OTHER_CREDIT_CARD:
+        ret = "_otherCreditCard".loc();
+        break;
+      case K.CASH:
+        ret = "_cash".loc();
+        break;
+      case K.WIRE_TRANSFER:
+        ret = "_wireTransfer".loc();
+        break;
+      case K.OTHER:
+        ret = "_other".loc();
+        break;
+      default:
+        ret = "_error".loc();
+    }
+    return ret;
+  }.property('fundsType').cacheable(),
+  
   //..................................................
   // METHODS
   //
