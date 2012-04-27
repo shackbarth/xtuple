@@ -16,6 +16,8 @@ sc_require('mixins/logging');
 XT.Record = SC.Record.extend(XT.Logging,
   /** @scope XT.Record.prototype */ {
   
+  logLocal: false,
+  
   /**
     The full path name of this class. Should be set in every subclass.
 
