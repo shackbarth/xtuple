@@ -100,6 +100,9 @@ XM.Receivable.RenderRecordListRow = function(context, width, height, index, obje
   context.fillText(val, 600, 35);
   
   // Balance
+  // FIXME: Why doesn't this get updated even when re-rendering the view? 
+  // It seems property changed is not being called
+  balance = (object.getPath('balanceMoney.baseValue') * sense).toMoney();
   val = base.toLocaleString(balance);
   val = val.elide(context, 95);
   context.fillText(val, 675, 35);

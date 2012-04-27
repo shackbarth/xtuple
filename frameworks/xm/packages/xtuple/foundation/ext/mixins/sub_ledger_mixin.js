@@ -92,6 +92,13 @@ XM.SubLedgerMixin =
     }
     return ret;
   }.property('amount', 'paid', 'documentDate').cacheable(),
+  
+  /**
+    Total due remaining.
+    
+    @type XM.Money
+  */
+  balanceMoney: null,
 
   //..................................................
   // METHODS
@@ -106,6 +113,14 @@ XM.SubLedgerMixin =
     var applications = this.get('applications');
     SC.Binding.from('length', applications).to('applicationsLength', this).oneWay().noDelay().connect();
     
+    // set up balanceMoney
+    var balanceMoney = this.get('balanceMoney');
+    if (!balanceMoney) {
+      balanceMoney = XM.Money.create();
+      this.set('balanceMoney', balanceMoney);
+    }
+    SC.Binding.from('currency', this).to('currency', balanceMoney).oneWay().noDelay().connect();
+    SC.Binding.from('balance', this).to('localValue', balanceMoney).oneWay().noDelay().connect();
   },
 
   //..................................................
