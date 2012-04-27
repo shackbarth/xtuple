@@ -31,7 +31,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   var items = [];
   classes.forEach(function(className, idx) {
     items.push({
-      title: ("_" + className.camelize()).loc(),
+      title: ("_" + className.pluralize().camelize()).loc(),
       value: className + 'Surface',
       enabled: true
     });
