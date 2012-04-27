@@ -30,66 +30,48 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
   var tiles = [],
       proto = klass.prototype;
-  var klassName = proto.className;
-  var tileView = XT.getViewForModel(klassName, 'Postbooks.TileView');
-  if (tileView) {
-    tiles.push(tileView.createTileView(controller));
+
+  // see if there is a function for this specific class
+  if (Postbooks[klass] && Postbooks[klass].tiles) {
+    tiles = Postbooks[klass].tiles(controller, isRoot);
+    
+  // otherwise generate automatically
   } else {
     tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
-  }
 
-  for (var key in proto) {
-    if (key === 'guid') continue;
-    if (key === 'type') continue;
-    if (key === 'dataState') continue;
-//    if (key === 'owner') continue;
-//    if (key === 'assignedTo') continue;
-//console.log('proto keys: '+key);
-    var property = proto[key];
+    for (var key in proto) {
+      if (key === 'guid') continue;
+      if (key === 'type') continue;
+      if (key === 'dataState') continue;
 
-    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-      continue;
+      var property = proto[key];
 
-    // } else if (property && property.isChildAttribute) {
-    } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
-      var objectKlass = property.get('typeClass');
+      if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+        continue;
 
-      var objectController = SC.ObjectController.create({
-        contentBinding: SC.Binding.from(key, controller).single().oneWay()
-      });
+      } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+        var objectKlass = property.get('typeClass');
 
-      tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
+        var objectController = SC.ObjectController.create({
+          contentBinding: SC.Binding.from(key, controller).single().oneWay()
+        });
+
+        tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
+      } else if (key === 'customTileViews') {
+        property.forEach(function(viewName) {
+          var view = SC.objectForPropertyPath(viewName);
+          if (view) {
+            tiles.push(view.CreateTileView(controller));
+          } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+        });
+      }
     }
-    // } else if (key === 'customTileViews') {
-    //   property.forEach(function(viewName) {
-    //     var view = SC.objectForPropertyPath(viewName);
-    //     if (view) {
-    //       tiles.push(view.CreateTileView(controller));
-    //     } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-    //   });
-    // }
   }
-
-  var customViews = [];
-
-  customViews = customViews.concat(XT.getCustomViewsForModel(klassName).map(function(tileView) {
-    return tileView.CreateTileView(controller);
-  }));
-
-  for (var i=0; i<customViews.length; i++) {
-    console.log("layoutSchema: %@".fmt(customViews[i].layoutSchema.tileSize));
-    var idx = customViews[i].layoutSchema.order;
-    tiles = tiles.replace(idx, 0, customViews[i]);
-  }
-
-/*  tiles = tiles.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
-    return tileView.CreateTileView(controller);
-  }));*/
 
   return tiles;
 };
 
-/** Builds an SC.View subcass that can edit properties of the record class. */
+/** Builds an SC.View subclass from all attributes that can edit properties of the record class. */
 Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview, isRoot) {
   console.log('Postbooks.CreateTileViewForClass(', klass, title, isOverview, ')');
 
@@ -99,42 +81,10 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
   }
 
   // Nope, generate the default tile view on the fly.
-  var view = Postbooks.TileView.create({
-        layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
-
-        mouseDown: function(evt) {
-          SC.EndEditingTextLayer();
-
-          if (!isOverview) {
-            Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), controller.get('content'));
-          }
-
-          return true;
-        },
-
-        willRenderLayers: function(context) {        
-          context.fillStyle = base3;
-          context.fillRect(0, 3, context.width, 38);
-
-          context.fillStyle = base00;
-          context.fillRect(20, 6, 32, 32);
-
-          var K = Postbooks;
-          context.font = "12pt "+K.TYPEFACE;
-          context.fillStyle = 'black';
-          context.textAlign = 'left';
-          context.textBaseline = 'middle';
-
-          context.fillText(title ? title : "_overview".loc(), 72, 22);
-        }
-
-      }),
-      layers = view.get('layers'),
-      y = 44,
-      proto = klass.prototype;
+  var proto = klass.prototype, properties = [], commands = [];
 
   if (isOverview && isRoot) {
-    var commands = [{
+    commands = [{
       title: "\u2699",
       value: null,
       enabled: true
@@ -160,7 +110,73 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
         });
       }
     }
+  }
 
+  for (key in proto) {
+   if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
+
+    var property = proto[key];
+
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      continue;
+    } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+      continue;
+    } else if (property && property.isRecordAttribute) {
+      if (property.isChildrenAttribute)    continue;
+      else if (property.isChildAttribute)  continue;
+      else if (property.isManyAttribute)   continue;
+      else if (property.isSingleAttribute) continue;
+      
+      properties.push(key);
+    }
+  }
+  
+  view = Postbooks.CreateTileView(klass, controller, title, properties, commands);
+
+  return view;
+};
+
+/** Builds an SC.View subclass from a specific property list that can edit them the record class. */
+Postbooks.CreateTileView = function(klass, controller, title, properties, commands) {
+  console.log('Postbooks.CreateTileView(', klass, controller, title, properties, commands, ')');
+
+  var view = Postbooks.TileView.create({
+    layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
+
+    mouseDown: function(evt) {
+      SC.EndEditingTextLayer();
+
+      if (!isOverview) {
+        Postbooks.LoadModal(title, "_back".loc(), controller.get('content'));
+      }
+
+      return true;
+    },
+
+    willRenderLayers: function(context) {        
+      context.fillStyle = base3;
+      context.fillRect(0, 3, context.width, 38);
+
+      context.fillStyle = base00;
+      context.fillRect(20, 6, 32, 32);
+
+      var K = Postbooks;
+      context.font = "12pt "+K.TYPEFACE;
+      context.fillStyle = 'black';
+      context.textAlign = 'left';
+      context.textBaseline = 'middle';
+
+      context.fillText(title ? title : "_overview".loc(), 72, 22);
+    }
+
+  }),
+  layers = view.get('layers'),
+  y = 44,
+  proto = klass.prototype;
+
+  if (commands.get('length')) {
     layers.pushObject(SC.SelectWidget.create({
       layout: { top: 10, right: 10, width: 60, height: 24 },
       theme: 'regular',
@@ -181,107 +197,86 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
     }));
   }
 
-  for (key in proto) {
-    if (key === 'guid') continue;
-    if (key === 'type') continue;
-    if (key === 'dataState') continue;
-//    if (key === 'owner') continue;
-//    if (key === 'assignedTo') continue;
+  properties.forEach(function(key) {
+    var property = proto[key],
+        left = 120, right = 12,
+        label = null, widget = null,
+        typeClass = property.get('typeClass');
 
-    property = proto[key];
-    var left = 120, right = 12;
-
-   if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-     continue;
-
-   } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
-     continue;
-
-    } else if (property && property.isRecordAttribute) {
-      if (property.isChildrenAttribute)    continue;
-      else if (property.isChildAttribute)  continue;
-      else if (property.isManyAttribute)   continue;
-      else if (property.isSingleAttribute) continue;
-      else if (property.isRecordAttribute && property.isVisibleInView !== false) {
-        var label = null, widget = null,
-            typeClass = property.get('typeClass');
-
-        if (typeClass === String) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === Number) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass.isNumeric) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === XT.DateTime) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.transform(function(val) {
-              return val? val.toISO8601() : "no date set";
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === Boolean) {
-          widget = SC.CheckboxWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            title: property.label,
-            valueBinding: SC.Binding.transform(function(val) {
-              return !!val;
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === Array) {
-          console.log('Unknown property type', 'Array');          
-        } else if (typeClass === Object) {
-          console.log('Unknown property type', 'Object');          
-        } else {
-          console.log('Unknown property type', typeClass.displayName? typeClass.displayName : typeClass);          
-        }
-
-        if (label)  layers.pushObject(label);
-        if (widget) layers.pushObject(widget);
-      }
+    if (typeClass === String) {
+      label = SC.LabelLayer.create({
+        layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+        backgroundColor: 'white',
+        textAlign: 'right',
+        value: property.label + ':'
+      });
+      widget = SC.TextFieldWidget.create({
+        layout: { top: y, left: left, height: 24, right: right },
+        valueBinding: SC.Binding.from(key, controller)
+      });
+      y += 24;
+    } else if (typeClass === Number) {
+      label = SC.LabelLayer.create({
+        layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+        backgroundColor: 'white',
+        textAlign: 'right',
+        value: property.label + ':'
+      });
+      widget = SC.TextFieldWidget.create({
+        layout: { top: y, left: left, height: 24, right: right },
+        valueBinding: SC.Binding.transform(function(val) {
+          return String(val);
+        }).from(key, controller)
+      });
+      y += 24;
+    } else if (typeClass.isNumeric) {
+      label = SC.LabelLayer.create({
+        layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+        backgroundColor: 'white',
+        textAlign: 'right',
+        value: property.label + ':'
+      });
+      widget = SC.TextFieldWidget.create({
+        layout: { top: y, left: left, height: 24, right: right },
+        valueBinding: SC.Binding.transform(function(val) {
+          return String(val);
+        }).from(key, controller)
+      });
+      y += 24;
+    } else if (typeClass === XT.DateTime) {
+      label = SC.LabelLayer.create({
+        layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+        backgroundColor: 'white',
+        textAlign: 'right',
+        value: property.label + ':'
+      });
+      widget = SC.TextFieldWidget.create({
+        layout: { top: y, left: left, height: 24, right: right },
+        valueBinding: SC.Binding.transform(function(val) {
+          return val? val.toISO8601() : "no date set";
+        }).from(key, controller)
+      });
+      y += 24;
+    } else if (typeClass === Boolean) {
+      widget = SC.CheckboxWidget.create({
+        layout: { top: y, left: left, height: 24, right: right },
+        title: property.label,
+        valueBinding: SC.Binding.transform(function(val) {
+          return !!val;
+        }).from(key, controller)
+      });
+      y += 24;
+    } else if (typeClass === Array) {
+      console.log('Unknown property type', 'Array');          
+    } else if (typeClass === Object) {
+      console.log('Unknown property type', 'Object');          
+    } else {
+      console.log('Unknown property type', typeClass.displayName? typeClass.displayName : typeClass);          
     }
-  }
+
+    if (label)  layers.pushObject(label);
+    if (widget) layers.pushObject(widget);
+  });
 
   return view;
 };
@@ -329,14 +324,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
     baseClass: klass,
 
     action: function(object, index) {
-      // console.log('do something on embedded list index ' + index);
       var that = this;
-      // var tray = this.getPath('supersurface'),
-      //     next = tray.get('subsurfaces')[1],
-      //     carousel = tray.get('carousel');
-      // 
-      // controller.set('content', XM.store.find(baseClass, Number(object.get('guid'))));
-      // if (next) carousel.makeSurfaceVisible(next);
       var instance = this.get('content').objectAt(index);
       if (instance) {
         Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", instance);
