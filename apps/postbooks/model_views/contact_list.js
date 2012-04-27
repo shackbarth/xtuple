@@ -6,7 +6,8 @@
 
 sc_require('views/record_list');
 
-XM.Contact.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Contact = {};
+Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   // Rect
   context.fillStyle = isSelected? '#99CCFF' : 'white';

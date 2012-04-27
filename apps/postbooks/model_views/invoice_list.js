@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Invoice.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Invoice = {};
+Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
   // Rect

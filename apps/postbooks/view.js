@@ -246,7 +246,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
             }).from(key, controller)
           });
           y += 24;
-        } else if (typeClass === SC.DateTime) {
+        } else if (typeClass === XT.DateTime) {
           label = SC.LabelLayer.create({
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'white',

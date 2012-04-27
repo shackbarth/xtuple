@@ -61,41 +61,29 @@ Postbooks.LoadModule = function(name, classes, state) {
     selection = 'Postbooks.'+className+'ListController.selection';
     
     action = function(object, index) {
-      controller.set('content', XT.store.find(baseClass, Number(object.get('guid'))));
+      sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
+      Postbooks.set('store', Postbooks.get('store').chain());
+      controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
+      Postbooks.submoduleController = controller;
       Postbooks.statechart.sendAction('show'+className);
     }
 
     // class have it's own list view?
-    if (browseClass.RecordListView) {
-      surface = browseClass.RecordListView.create({
-        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
-        selectionBinding: 'Postbooks.'+className+'ListController.selection',
-
-        action: function(object, index) {
-          sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
-          Postbooks.set('store', Postbooks.get('store').chain());
-          controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
-          Postbooks.submoduleController = controller;
-          Postbooks.statechart.sendAction('show'+className);
-        }
-
+    if (Postbooks[className] && Postbooks[className].RecordListView) {
+      surface = Postbooks[className].RecordListView.create({
+        contentBinding: content,
+        selectionBinding: selection,
+        action: action
       });
       
     // nope, default
     } else {
       surface = Postbooks.RecordListView.create({
-        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
-        selectionBinding: 'Postbooks.'+className+'ListController.selection',
-
-        action: function(object, index) {
-          sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
-          Postbooks.set('store', Postbooks.get('store').chain());
-          controller.set('content', Postbooks.get('store').find(baseClass, Number(object.get('guid'))));
-          Postbooks.submoduleController = controller;
-          Postbooks.statechart.sendAction('show'+className);
-        },
-        
-        renderRow: browseClass.RenderRecordListRow? browseClass.RenderRecordListRow : Postbooks.DefaultRecordListRenderRow
+        contentBinding: content,
+        selectionBinding: selection,
+        action: action,
+        renderRow: Postbooks[className] && Postbooks[className].RenderRecordListRow? 
+                   Postbooks[className].RenderRecordListRow : Postbooks.RenderRecordListRow
 
       });
     }

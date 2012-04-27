@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.ToDo.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.ToDo = {}
+Postbooks.ToDo.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   var contact = object.getPath('contact.name');
   var assignedTo = object.getPath('assignedTo.username');

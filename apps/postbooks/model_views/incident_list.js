@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Incident.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Incident = {};
+Postbooks.Incident.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
   // Rect
