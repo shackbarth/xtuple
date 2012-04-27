@@ -20,7 +20,7 @@ Postbooks.BILLING = SC.State.design({
 
     SC.routes.set('location', 'billing');
 
-    Postbooks.LoadModule("_billing".loc(), 'Customer Invoice Receivable CashReceipt CustomerCreditCard'.w(), this);
+    Postbooks.LoadModule("_billing".loc(), 'Customer Invoice Receivable CashReceipt'.w(), this);
   },
 
   exitState: function() {

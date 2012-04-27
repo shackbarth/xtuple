@@ -100,9 +100,7 @@ XM.Money = XT.Object.extend(
     // calculate
     var exchangeRate = this.get('exchangeRate'),
         precision = this.get('precision');
-    return exchangeRate ? (localValue / exchangeRate).round(precision) : '?????';
-    
-    var effective = this.get('effective');
+    return exchangeRate? SC.Math.round(localValue / exchangeRate, precision) : 0;
   }.property('localValue', 'exchangeRate', 'precision').cacheable(),
   
   /**
@@ -167,6 +165,7 @@ XM.Money = XT.Object.extend(
     // if the currency is base, always set to one 1
     if (currency.get('id') === XM.Currency.BASE) {
       this.setIfChanged('exchangeRate', 1);
+      return;
     }
 
     // build the query
