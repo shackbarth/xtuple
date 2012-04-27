@@ -159,6 +159,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
       for (var idx2=0, len2=verticalTiles; idx2<len2; ++idx2) {
         tileFrame = column[idx2] = SC.MakeRect();
         if (Postbooks.USE_320_TILES) {
+
           tileFrame.width = tileFrame.height = 320;
           tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 160;
           tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 160;
