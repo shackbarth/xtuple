@@ -1,4 +1,5 @@
 {
+  "type": "demand",
   "dependencies": [
     "foundation"
   ]
