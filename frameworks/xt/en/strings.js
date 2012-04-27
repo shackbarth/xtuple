@@ -576,7 +576,7 @@ SC.stringsFor("en_US", {
   "_vendors": "Vendors",
   "_visa": "Visa",
   "_voucher": "Voucher",
-  "_vouchers": "Vouhers",
+  "_vouchers": "Vouchers",
   "_voucher_tax": "Voucher Tax",
   "_warningColor": "Warning Color",
   "_webAddress": "Web Address",
