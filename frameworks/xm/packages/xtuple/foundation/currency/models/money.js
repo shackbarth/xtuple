@@ -165,6 +165,7 @@ XM.Money = XT.Object.extend(
     // if the currency is base, always set to one 1
     if (currency.get('id') === XM.Currency.BASE) {
       this.setIfChanged('exchangeRate', 1);
+      return;
     }
 
     // build the query
