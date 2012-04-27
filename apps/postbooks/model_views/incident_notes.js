@@ -1,6 +1,6 @@
 
-XM.IncidentNotes = XM.ModelView.extend(
-  /** @lends XM.IncidentNotes.prototype */ {
+Postbooks.IncidentNotes = XT.ModelView.extend(
+  /** @lends Postbooks.IncidentNotes.prototype */ {
 
   modelViewType: Postbooks.TileView,
 
@@ -33,7 +33,7 @@ XM.IncidentNotes = XM.ModelView.extend(
     
 });
 
-XM.IncidentNotes.CreateTileView = function(controller) {
+Postbooks.IncidentNotes.CreateTileView = function(controller) {
   var view = this.create();
 
   var notes = SC.TextFieldWidget.create({
