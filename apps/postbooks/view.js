@@ -31,7 +31,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
   var tiles = [],
       proto = klass.prototype;
   var klassName = proto.className;
-  var tileView = XM.getViewForModel(klassName, 'Postbooks.TileView');
+  var tileView = XT.getViewForModel(klassName, 'Postbooks.TileView');
   if (tileView) {
     tiles.push(tileView.createTileView(controller));
   } else {
@@ -72,7 +72,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
   var customViews = [];
 
-  customViews = customViews.concat(XM.getCustomViewsForModel(klassName).map(function(tileView) {
+  customViews = customViews.concat(XT.getCustomViewsForModel(klassName).map(function(tileView) {
     return tileView.CreateTileView(controller);
   }));
 

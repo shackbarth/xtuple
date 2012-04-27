@@ -3,8 +3,8 @@
 /**
 */
 
-XM.ModelView = SC.View.extend(
-  /** @lends XM.ModelView.prototype */ { 
+XT.ModelView = SC.View.extend(
+  /** @lends XT.ModelView.prototype */ { 
 
   modelViewType: null,
 
@@ -16,10 +16,10 @@ XM.ModelView = SC.View.extend(
 
 });
 
-XM.ModelView.originalExtend = XM.ModelView.extend;
+XT.ModelView.originalExtend = XT.ModelView.extend;
 
-SC.mixin(XM.ModelView, 
-  /** @lends XM.ModelView */ {
+SC.mixin(XT.ModelView, 
+  /** @lends XT.ModelView */ {
 
   extend: function() {
     var props = arguments[0];
@@ -27,7 +27,7 @@ SC.mixin(XM.ModelView,
     var viewType = viewKlass.prototype.className;
     var view = viewKlass.extend(props);
 
-    XM.registerViewForModel(view);
+    XT.registerViewForModel(view);
     return view;
   }
 
