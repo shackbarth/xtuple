@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Receivable.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Receivable = {};
+Postbooks.Receivable.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   var contact = object.getPath('contact.name');
   var currency = object.get('currency');

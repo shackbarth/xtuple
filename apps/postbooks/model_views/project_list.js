@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Project.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Project = {};
+Postbooks.Project.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   var contact = object.getPath('contact.name');
   var currency = XT.store.find('XM.Currency', XM.Currency.BASE);
@@ -126,9 +127,9 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
 
 };
 
-XM.Project.RecordListView = Postbooks.RecordListView.extend({
+Postbooks.Project.RecordListView = Postbooks.RecordListView.extend({
 
   rowHeight: Postbooks.HEIGHT_3_ROW,
-  renderRow: XM.Project.RenderRecordListRow
+  renderRow: Postbooks.Project.RenderRecordListRow
 
 });
