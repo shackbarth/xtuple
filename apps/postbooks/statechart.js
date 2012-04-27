@@ -6,7 +6,7 @@
 
 Postbooks.statechart = SC.Statechart.create({
 
-  trace: YES,
+  trace: NO,
 
   rootState: SC.State.design({
 
