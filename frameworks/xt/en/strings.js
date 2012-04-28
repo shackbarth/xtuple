@@ -520,6 +520,7 @@ SC.stringsFor("en_US", {
   "_startDate": "Start Date",
   "_state": "State",
   "_states": "States",
+  "_status": "Status",
   "_subAccount": "Sub Account",
   "_subType": "Sub Type",
   "_subtotalLabel": "Subtotal Label",

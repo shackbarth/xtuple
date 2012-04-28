@@ -4,7 +4,29 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-Postbooks.ToDo = {}
+sc_require('views/carousel');
+sc_require('views/tile_view');
+
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
+
+Postbooks.ToDo = {};
+
 Postbooks.ToDo.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   var contact = object.getPath('contact.name');
@@ -87,3 +109,29 @@ Postbooks.ToDo.RenderRecordListRow = function(context, width, height, index, obj
   context.fillText(val? val : "_noPriority".loc(), 575, 15);
 
 };
+
+Postbooks.ToDo.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.ToDo.Tiles()');
+  
+  var klass = XM.ToDo,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // header
+  properties = ['name', 'isActive', 'description', 'priority', 'owner', 'assignedTo']
+  tiles.push(Postbooks.CreateTileView(klass, controller, undefined, properties));
+  
+  // dates
+  properties = ['toDoStatus', 'startDate', 'dueDate', 'assignDate', 'completeDate']
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_status".loc(), properties));
+  
+  // notes
+  properties = ['notes']
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_notes".loc(), properties));
+
+  return tiles;
+};
+
+
+

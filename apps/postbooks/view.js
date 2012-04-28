@@ -176,7 +176,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
   y = 44,
   proto = klass.prototype;
 
-  if (commands.get('length')) {
+  if (commands && commands.get('length')) {
     layers.pushObject(SC.SelectWidget.create({
       layout: { top: 10, right: 10, width: 60, height: 24 },
       theme: 'regular',
