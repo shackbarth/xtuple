@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Opportunity.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Opportunity = {};
+Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
   // Rect

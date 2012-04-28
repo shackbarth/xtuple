@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Vendor.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Vendor = {};
+Postbooks.Vendor.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   var contact = object.get('primaryContact');
   var address = contact? contact.get('address') : null;

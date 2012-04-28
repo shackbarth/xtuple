@@ -4,39 +4,15 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.BILLING = SC.State.design({
+sc_require('states/module');
 
-  initialSubstate: 'DUMMY',
+Postbooks.BILLING = Postbooks.MODULE.design({
 
-  enterState: function() {
-    if (this.__movingUp__) {
-      this.__movingUp__ = false;
-
-      // Clear the selection. This is somewhat tricky to find...
-      var listView = this.listContainer.get('contentSurface');
-      if (listView) listView.set('selection', SC.IndexSet.create().freeze());
-      return;
-    }
-
-    SC.routes.set('location', 'billing');
-
-    Postbooks.LoadModule("_billing".loc(), 'Customer Invoice Receivable CashReceipt'.w(), this);
-  },
-
-  exitState: function() {
-    if (this.__movingUp__) return;
-    SC.app.get('ui').popSurface();
-  },
+  route: 'billing',
+  title: "_billing",
+  submodules: 'Customer Invoice Receivable CashReceipt'.w(),
 
   // ACTIONS
-
-  showBilling: function() {
-    // Do nothing.
-  },
-
-  showDashboard: function() {
-    this.gotoState('DASHBOARD');
-  },
 
   showCustomer: function() {
     this.gotoState('CUSTOMER');
@@ -60,11 +36,10 @@ Postbooks.BILLING = SC.State.design({
 
   // SUBSTATES
 
-  "DUMMY":                 SC.State, // HACK: Prevent "missing initial state" error message from SC.
-  "CUSTOMER":              SC.State.plugin('Postbooks.CUSTOMER'),
-  "INVOICE":               SC.State.plugin('Postbooks.INVOICE'),
-  "RECEIVABLE":            SC.State.plugin('Postbooks.RECEIVABLE'),
-  "CASH_RECEIPT":          SC.State.plugin('Postbooks.CASH_RECEIPT'),
-  "CUSTOMER_CREDIT_CARD":  SC.State.plugin('Postbooks.CUSTOMER_CREDIT_CARD')
+  "CUSTOMER":             SC.State.plugin('Postbooks.CUSTOMER'),
+  "INVOICE":              SC.State.plugin('Postbooks.INVOICE'),
+  "RECEIVABLE":           SC.State.plugin('Postbooks.RECEIVABLE'),
+  "CASH_RECEIPT":         SC.State.plugin('Postbooks.CASH_RECEIPT'),
+  "CUSTOMER_CREDIT_CARD": SC.State.plugin('Postbooks.CUSTOMER_CREDIT_CARD')
 
 });

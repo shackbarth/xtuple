@@ -15,6 +15,8 @@ Postbooks = global.Postbooks = SC.Application.create(
   NAMESPACE: 'Postbooks',
   VERSION: '{{{POSTBOOKS_VERSION}}}',
 
+  store: null,
+
   submoduleTitle: "(no title)",
   submoduleBackButtonTitle: "(unknown)",
   submoduleBackButtonAction: null,
@@ -80,7 +82,7 @@ Postbooks = global.Postbooks = SC.Application.create(
   PORTRAIT_LIST_WIDTH: 550,
 
   /**
-    Stndard row height for three rows.
+    Standard row height for one row.
     
     @static
     @constant
@@ -90,7 +92,7 @@ Postbooks = global.Postbooks = SC.Application.create(
   HEIGHT_1_ROW: 30,
 
   /**
-    Stndard row height for three rows.
+    Standard row height for two rows.
     
     @static
     @constant
@@ -100,16 +102,30 @@ Postbooks = global.Postbooks = SC.Application.create(
   HEIGHT_2_ROW: 50,
 
   /**
-    Stndard row height for three rows.
+    Standard row height for three rows.
     
     @static
     @constant
     @type Number
     @default 70
   */
-  HEIGHT_3_ROW: 70
+  HEIGHT_3_ROW: 70,
+  
+  /**
+    Stndard spacing between widgets.
+    
+    @static
+    @constant
+    @type Number
+    @default 4
+  */
+  SPACING: 4
+
 
 });
+
+// Alias.
+Postbooks.getStates = Postbooks.getState;
 
 // Remotely record when exceptions occur.
 // SC.ExceptionHandler.handleException = function(exception) {

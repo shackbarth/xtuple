@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.CashReceipt.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.CashReceipt = {};
+Postbooks.CashReceipt.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
   // Rect

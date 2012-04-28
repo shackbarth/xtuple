@@ -25,48 +25,55 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.TilesForClass = function(klass, controller) {
+Postbooks.TilesForClass = function(klass, controller, isRoot) {
+  console.log('Postbooks.TilesForClass(', klass, ')');
+
   var tiles = [],
       proto = klass.prototype;
 
-  tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true));
+  // see if there is a function for this specific class
+  if (Postbooks[klass] && Postbooks[klass].tiles) {
+    tiles = Postbooks[klass].tiles(controller, isRoot);
+    
+  // otherwise generate automatically
+  } else {
+    tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
 
-  for (var key in proto) {
-    if (key === 'guid') continue;
-    if (key === 'type') continue;
-    if (key === 'dataState') continue;
-//    if (key === 'owner') continue;
-//    if (key === 'assignedTo') continue;
-//console.log('proto keys: '+key);
-    var property = proto[key];
+    for (var key in proto) {
+      if (key === 'guid') continue;
+      if (key === 'type') continue;
+      if (key === 'dataState') continue;
 
-    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-      continue;
+      var property = proto[key];
 
-    // } else if (property && property.isChildAttribute) {
-    } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
-      var objectKlass = property.get('typeClass');
+      if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+        continue;
 
-      var objectController = SC.ObjectController.create({
-        contentBinding: SC.Binding.from(key, controller).single().oneWay()
-      });
+      } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+        var objectKlass = property.get('typeClass');
 
-      tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
-    } else if (key === 'customTileViews') {
-      property.forEach(function(viewName) {
-        var view = SC.objectForPropertyPath(viewName);
-        if (view) {
-          tiles.push(view.CreateTileView(controller));
-        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-      });
+        var objectController = SC.ObjectController.create({
+          contentBinding: SC.Binding.from(key, controller).single().oneWay()
+        });
+
+        tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
+      } else if (key === 'customTileViews') {
+        property.forEach(function(viewName) {
+          var view = SC.objectForPropertyPath(viewName);
+          if (view) {
+            tiles.push(view.CreateTileView(controller));
+          } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+        });
+      }
     }
   }
 
   return tiles;
 };
 
-/** Builds an SC.View subcass that can edit properties of the record class. */
-Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview) {
+/** Builds an SC.View subclass from all attributes that can edit properties of the record class. */
+Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview, isRoot) {
+  console.log('Postbooks.CreateTileViewForClass(', klass, title, isOverview, ')');
 
   // See if we have an override.
   if (klass.CreateTileView) {
@@ -74,146 +81,228 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
   }
 
   // Nope, generate the default tile view on the fly.
-  var view = Postbooks.TileView.create({
-        layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
+  var proto = klass.prototype, properties = [], commands = [];
 
-        mouseDown: function(evt) {
-          SC.EndEditingTextLayer();
+  if (isOverview && isRoot) {
+    commands = [{
+      title: "\u2699",
+      value: null,
+      enabled: true
+    }, {
+      title: "Delete",
+      value: 'delete',
+      enabled: true
+    }];
 
-          if (!isOverview) {
-            Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), controller.get('content'));
-          }
+    for (var key in klass) {
+      var property = klass[key];
+      if (typeof property === 'function' && property.isCommand) {
+        commands.push({
+          title: property.commandName || "(no name)",
+          value: property,
+          enabled: true
+        });
+      } else if (typeof property === 'object' && property.isCommand && property.call && typeof property.call === 'function') {
+        commands.push({
+          title: property.commandName || "(no name)",
+          value: property,
+          enabled: true
+        });
+      }
+    }
+  }
 
-          return true;
-        },
-
-        willRenderLayers: function(context) {        
-          context.fillStyle = base3;
-          context.fillRect(0, 3, context.width, 38);
-
-          context.fillStyle = base00;
-          context.fillRect(20, 6, 32, 32);
-
-          var K = Postbooks;
-          context.font = "12pt "+K.TYPEFACE;
-          context.fillStyle = 'black';
-          context.textAlign = 'left';
-          context.textBaseline = 'middle';
-
-          context.fillText(title ? title : "_overview".loc(), 72, 22);
-        }
-
-      }),
-      layers = view.get('layers'),
-      y = 44,
-      proto = klass.prototype;
-
-  for (var key in proto) {
-    if (key === 'guid') continue;
+  for (key in proto) {
+   if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
-//    if (key === 'owner') continue;
-//    if (key === 'assignedTo') continue;
 
-    var property = proto[key],
-        left = 120, right = 12;
+    var property = proto[key];
 
-   if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-     continue;
-
-   } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
-     continue;
-
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      continue;
+    } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+      continue;
     } else if (property && property.isRecordAttribute) {
       if (property.isChildrenAttribute)    continue;
       else if (property.isChildAttribute)  continue;
       else if (property.isManyAttribute)   continue;
       else if (property.isSingleAttribute) continue;
-      else if (property.isRecordAttribute && property.isVisibleInView !== false) {
-        var label = null, widget = null,
-            typeClass = property.get('typeClass');
-
-        if (typeClass === String) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === Number) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass.isNumeric) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === SC.DateTime) {
-          label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
-            textAlign: 'right',
-            value: property.label + ':'
-          });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.transform(function(val) {
-              return val? val.toISO8601() : "no date set";
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === Boolean) {
-          widget = SC.CheckboxWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            title: property.label,
-            valueBinding: SC.Binding.transform(function(val) {
-              return !!val;
-            }).from(key, controller)
-          });
-          y += 24;
-        } else if (typeClass === Array) {
-          console.log('Unknown property type', 'Array');          
-        } else if (typeClass === Object) {
-          console.log('Unknown property type', 'Object');          
-        } else {
-          console.log('Unknown property type', typeClass.displayName? typeClass.displayName : typeClass);          
-        }
-
-        if (label)  layers.pushObject(label);
-        if (widget) layers.pushObject(widget);
-      }
+      
+      properties.push(key);
     }
   }
+  
+  view = Postbooks.CreateTileView(klass, controller, title, properties, commands);
+
+  return view;
+};
+
+/** Builds an SC.View subclass from a specific property list that can edit them the record class. */
+Postbooks.CreateTileView = function(klass, controller, title, properties, commands) {
+  console.log('Postbooks.CreateTileView(', klass, controller, title, properties, commands, ')');
+
+  var view = Postbooks.TileView.create({
+    layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
+
+    mouseDown: function(evt) {
+      SC.EndEditingTextLayer();
+
+      if (!isOverview) {
+        Postbooks.LoadModal(title, "_back".loc(), controller.get('content'));
+      }
+
+      return true;
+    },
+
+    willRenderLayers: function(context) {        
+      context.fillStyle = base3;
+      context.fillRect(0, 3, context.width, 32);
+
+      context.fillStyle = base00;
+      context.fillRect(20, 7, 24, 24);
+
+      var K = Postbooks;
+      context.font = "12pt "+K.TYPEFACE;
+      context.fillStyle = 'black';
+      context.textAlign = 'left';
+      context.textBaseline = 'middle';
+
+      context.fillText(title ? title : "_overview".loc(), 72, 19  );
+    }
+
+  }),
+  layers = view.get('layers'),
+  y = 42,
+  proto = klass.prototype,
+  K = Postbooks;
+
+  if (commands && commands.get('length')) {
+    layers.pushObject(SC.SelectWidget.create({
+      layout: { top: 7, right: 10, width: 60, height: 24 },
+      theme: 'regular',
+      items: commands,
+      value: null,
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIsEnabledKey: 'enabled',
+
+      valueDidChange: function() {
+        var value = this.get('value');
+        if (value === 'delete') {
+          Postbooks.statechart.sendAction('deleteRecord');
+        } else {
+          alert('FIXME: Execute command!');
+        }
+      }.observes('value')
+    }));
+  }
+
+  properties.forEach(function(key) {
+    if (key === 'spacer') {
+      y += 12;
+    } else {
+      var property = proto[key],
+          left = 120, right = 12,
+          label = null, widget = null,
+          typeClass = property.get('typeClass');
+
+      if (typeClass === String) {
+        label = SC.LabelLayer.create({
+          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+          backgroundColor: 'white',
+          textAlign: 'right',
+          value: property.label + ':'
+        });
+        widget = SC.TextFieldWidget.create({
+          layout: { top: y, left: left, height: 24, right: right },
+          valueBinding: SC.Binding.from(key, controller)
+        });
+        y += 24 + K.SPACING;
+      } else if (property.isSingleAttribute) { // just for now so we can see layout impact
+        label = SC.LabelLayer.create({
+          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+          backgroundColor: 'white',
+          textAlign: 'right',
+          value: property.label + ':'
+        });
+        widget = SC.TextFieldWidget.create({
+          layout: { top: y, left: left, height: 24, right: right },
+          valueBinding: SC.Binding.transform(function(val) {
+            return String(val);
+          }).from(key, controller)
+        });
+        y += 24 + K.SPACING;
+      } else if (typeClass === Number) {
+        label = SC.LabelLayer.create({
+          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+          backgroundColor: 'white',
+          textAlign: 'right',
+          value: property.label + ':'
+        });
+        widget = SC.TextFieldWidget.create({
+          layout: { top: y, left: left, height: 24, right: right },
+          valueBinding: SC.Binding.transform(function(val) {
+            return String(val);
+          }).from(key, controller)
+        });
+        y += 24 + K.SPACING;
+      } else if (typeClass.isNumeric) {
+        label = SC.LabelLayer.create({
+          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+          backgroundColor: 'white',
+          textAlign: 'right',
+          value: property.label + ':'
+        });
+        widget = SC.TextFieldWidget.create({
+          layout: { top: y, left: left, height: 24, right: right },
+          valueBinding: SC.Binding.transform(function(val) {
+            return val? val.toLocaleString() : "";
+          }).from(key, controller)
+        });
+        y += 24 + K.SPACING;
+      } else if (typeClass === XT.DateTime) {
+        label = SC.LabelLayer.create({
+          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+          backgroundColor: 'white',
+          textAlign: 'right',
+          value: property.label + ':'
+        });
+        widget = SC.TextFieldWidget.create({
+          layout: { top: y, left: left, height: 24, right: right },
+          valueBinding: SC.Binding.transform(function(val) {
+            return val? val.toLocaleDateString() : "no date set";
+          }).from(key, controller)
+        });
+        y += 24 + K.SPACING;
+      } else if (typeClass === Boolean) {
+        widget = SC.CheckboxWidget.create({
+          layout: { top: y, left: left, height: 24, right: right },
+          title: property.label,
+          valueBinding: SC.Binding.transform(function(val) {
+            return !!val;
+          }).from(key, controller)
+        });
+        y += 24 + K.SPACING;
+      } else if (typeClass === Array) {
+        console.log('Unknown property type', 'Array');          
+      } else if (typeClass === Object) {
+        console.log('Unknown property type', 'Object');          
+      } else {
+        console.log('Unknown property type', typeClass.displayName? typeClass.displayName : typeClass);          
+      }
+
+      if (label)  layers.pushObject(label);
+      if (widget) layers.pushObject(widget);
+    }
+  });
 
   return view;
 };
 
 Postbooks.DefaultListRenderRow = function(context, width, height, index, object, isSelected) {
+  console.log('Postbooks.DefaultListRenderRow()');
+
   context.fillStyle = isSelected? '#99CCFF' : 'white';
   context.fillRect(0, 0, width, height);
 
@@ -235,7 +324,7 @@ Postbooks.DefaultListRenderRow = function(context, width, height, index, object,
 };
 
 Postbooks.CreateListViewForClass = function(klass, controller) {
-  // console.log('Postbooks.CreateListViewForClass()', klass);
+  console.log('Postbooks.CreateListViewForClass(', klass, ')');
 
   // See if we have an override.
   if (klass.CreateDetailListView) {
@@ -254,14 +343,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
     baseClass: klass,
 
     action: function(object, index) {
-      // console.log('do something on embedded list index ' + index);
       var that = this;
-      // var tray = this.getPath('supersurface'),
-      //     next = tray.get('subsurfaces')[1],
-      //     carousel = tray.get('carousel');
-      // 
-      // controller.set('content', XM.store.find(baseClass, Number(object.get('guid'))));
-      // if (next) carousel.makeSurfaceVisible(next);
       var instance = this.get('content').objectAt(index);
       if (instance) {
         Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", instance);

@@ -4,7 +4,8 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Invoice.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Invoice = {};
+Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
   // Rect
@@ -90,5 +91,28 @@ XM.Invoice.RenderRecordListRow = function(context, width, height, index, object,
   context.textAlign = 'left';
   context.fillText(val? val : "_sameAsBillto".loc(), 275, 35);
 
+};
+
+Postbooks.Invoice.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Invoice.Tiles()');
+  
+  var klass = XM.Invoice,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  properties = 'number invoiceDate terms spacer purchaseOrderNumber orderDate shipDate spacer salesRep commission taxZone'.w()
+  tiles.push(Postbooks.CreateTileView(klass, controller, undefined, properties));
+  
+  // totals
+  //properties = 'shipVia incoTerms shipCharge'.w()
+  //tiles.push(Postbooks.CreateTileView(klass, controller, "_totals".loc(), properties));
+  
+  // additional
+  properties = 'shipVia incoTerms shipCharge'.w()
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_additional".loc(), properties));
+
+  return tiles;
 };
 

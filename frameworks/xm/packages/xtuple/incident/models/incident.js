@@ -124,14 +124,6 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.Documents,
     isVisibleInView: false
   }),
 
-  /**
-    Custom Views
-  */
-  customTileViews: [
-    'XM.IncidentNotes'//,
-//    'XM.IncidentStatus'
-  ]
-  
 });
 
 XM.Incident.mixin( /** @scope XM.Incident */ {

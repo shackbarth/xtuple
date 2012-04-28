@@ -4,9 +4,11 @@
 // ==========================================================================
 /*globals XT XM Postbooks sc_assert */
 
+SC.THROW_ALL_ERRORS = true;
+
 SC.ENABLE_CSS_TRANSITIONS = true;
 
-Postbooks.USE_320_TILES = false;
+Postbooks.USE_320_TILES = true;
 
 XT.DataSource.prototype.logLevels = SC.Object.create({
   warn:  false,

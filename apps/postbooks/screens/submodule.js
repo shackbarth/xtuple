@@ -5,6 +5,9 @@
 /*globals Postbooks XT XM sc_assert */
 
 sc_require('views/carousel');
+sc_require('views/master_list');
+sc_require('widgets/button');
+sc_require('widgets/back_button');
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -25,6 +28,7 @@ var green =    "#859900";
 var white =    "white";
 
 Postbooks.LoadSubmodule = function(className, backButtonTitle) {
+  console.log('Postbooks.LoadSubmodule(', className, backButtonTitle, ')');
   var name = ("_" + className.camelize()).loc();
 
   var baseClass = XM[className];
@@ -36,17 +40,15 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   sc_assert(browseClass.isClass);
   sc_assert(browseClass.subclassOf(XT.Record));
 
-  Postbooks[className+'ListController'] = SC.ArrayController.create({
-    content: XT.store.find(browseClass),
-    allowsEmptySelection: true
-  });
-
   var controller = Postbooks[className+'ObjectController'];
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
 
-  var tiles = Postbooks.TilesForClass(baseClass, controller);
-  console.log(tiles);
+  if (Postbooks[className] && Postbooks[className].Tiles) {
+    var tiles = Postbooks[className].Tiles(controller, true);
+  } else {
+    var tiles = Postbooks.TilesForClass(baseClass, controller, true);
+  }
 
   var editor = Postbooks.TileCarousel.create();
   editor.get('tray').set('subsurfaces', tiles);
@@ -82,7 +84,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   topbar.set('backgroundColor', base03);
 
   Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
-  Postbooks.set('submoduleBackButtonAction', 'showCRM');
+  Postbooks.set('submoduleBackButtonAction', 'back');
 
   topbar.get('layers').pushObject(Postbooks.BackButton.create({
     layout: { left: 20, centerY: 0, width: 120, height: 24 },
@@ -91,9 +93,32 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     actionBinding: 'Postbooks.submoduleBackButtonAction'
   }));
 
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { right: 20, centerY: 0, width: 120, height: 24 },
+    name: "_cancel".loc(),
+    target: 'Postbooks.statechart',
+    action: 'cancel',
+    isEnabledBinding: 'Postbooks*store.hasChanges',
+    isVisibleBinding: SC.Binding.transform(function(length) {
+      return Number(length) > 0 ? false : true;
+    }).from('Postbooks.modalContexts.length')
+  }));
+
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { right: 160, centerY: 0, width: 120, height: 24 },
+    name: Postbooks.submoduleController.get('status') === SC.Record.READY_NEW ? "_save".loc() : "_apply".loc(),
+    target: 'Postbooks.statechart',
+    action: 'apply',
+    isEnabledBinding: 'Postbooks*store.hasChanges',
+    isVisibleBinding: SC.Binding.transform(function(length) {
+      return Number(length) > 0 ? false : true;
+    }).from('Postbooks.modalContexts.length')
+  }));
+
   var list = [SC.Object.create({
     title: "_overview".loc(),
-    surface: editor
+    surface: editor,
+    isOverview: true
   })];
 
   var proto = baseClass.prototype;
@@ -113,7 +138,9 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
       list.push(SC.Object.create({
         title: property.label,
-        surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
+        surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController),
+        klass: arrayKlass,
+        attribute: key
       }));
     }
   }
@@ -125,17 +152,27 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
   listController.selectObject(list[0]);
 
-  // var detail = SC.ContainerSurface.create({
-  //   layout: { top: 44, left: 320, right: 0, bottom: 0 },
-  //   orderInTransition:  null,
-  //   replaceTransition:  null,
-  //   orderOutTransition: null
-  // });
-  // 
-  // detail.set('contentSurface', list[1].surface);
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { right: 300, centerY: 0, width: 120, height: 24 },
+    name: "_new".loc(),
+    target: 'Postbooks.statechart',
+    action: 'newRecord',
+    listController: listController,
+
+    // These three work together.
+    isVisible: function() {
+      return this.get('isVisibleModal') && this.get('isVisibleSelection');
+    }.property('isVisibleModal', 'isVisibleSelection'),
+    isVisibleModalBinding: SC.Binding.transform(function(length) {
+      return Number(length) > 0 ? false : true;
+    }).from('Postbooks.modalContexts.length'),
+    isVisibleSelectionBinding: SC.Binding.transform(function(selection) {
+      var firstObject = selection.firstObject();
+      return firstObject && !firstObject.isOverview ? true : false;
+    }).from('selection', listController)
+  }));
 
   contentArea.set('contentSurface', list[0].surface);
-
 
   var listView = Postbooks.MasterListView.create({
     contentBinding: SC.Binding.from('arrangedObjects', listController).multiple().oneWay(),
