@@ -315,7 +315,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     if (isItem && item && customer) {
       var listPrice = item.get('listPrice'),
           discount = customer.get('discount'),
-          price = listPrice * (1 - discount / 100);
+          price = listPrice * (1 - discount);
       this.setIfChanged('price', price);
       this.setIfChanged('customerPrice', price);
     }

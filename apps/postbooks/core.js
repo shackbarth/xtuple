@@ -124,6 +124,9 @@ Postbooks = global.Postbooks = SC.Application.create(
 
 });
 
+SC.LabelLayer.prototype.font = "10pt "+Postbooks.TYPEFACE;
+SC.TextLayer.prototype.font = "10pt "+Postbooks.TYPEFACE;
+
 // Alias.
 Postbooks.getStates = Postbooks.getState;
 
