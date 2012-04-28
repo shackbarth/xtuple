@@ -120,7 +120,7 @@ Postbooks.Invoice.Tiles = function(controller, isRoot) {
 Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   console.log('Postbooks.Invoice.CreateBilltoTileView(', controller, ')');
 
-  var view = Postbooks.TileView.create({ title: "_billto".loc() }),
+  var view = Postbooks.TileView.create(),
       layers = view.get('layers'),
       y = 42,
       proto = XM.Invoice.prototype,
@@ -131,23 +131,6 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
  
   // number
   key = 'number';
-  property = proto[key];
-  label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
-    textAlign: 'right',
-    value: property.label + ':'
-  });
-  widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
-    valueBinding: SC.Binding.from(key, controller)
-  });
-  y += 24 + K.SPACING;
-  layers.pushObject(label);
-  layers.pushObject(widget);
- 
-  // purchase order
-  key = 'purchaseOrderNumber';
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
@@ -182,6 +165,23 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
 
+  // purchase order
+  key = 'purchaseOrderNumber';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
   // customer
   key = 'customer';
   property = proto[key];
@@ -205,10 +205,10 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   key = 'billtoAddress';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    layout: { top: y + 4, left: 12, height: 24, right: right },
     backgroundColor: 'white',
     textAlign: 'left',
-    value: "_billto".loc() + ':'
+    value: "_billtoAddress".loc() + ':'
   });
   y += 24;
   widget = SC.TextFieldWidget.create({
@@ -227,7 +227,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
 Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   console.log('Postbooks.Invoice.ShiptoTileView(', controller, ')');
 
-  var view = Postbooks.TileView.create({ title: "_shipto".loc() }),
+  var view = Postbooks.TileView.create({ title: "_shipping".loc() }),
       layers = view.get('layers'),
       y = 42,
       proto = XM.Invoice.prototype,
@@ -312,10 +312,10 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   key = 'shiptoAddress';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    layout: { top: y + 4, left: 12, height: 24, right: right },
     backgroundColor: 'white',
     textAlign: 'left',
-    value: "_shipto".loc() + ':'
+    value: "_shiptoAddress".loc() + ':'
   });
   y += 24;
   widget = SC.TextFieldWidget.create({
