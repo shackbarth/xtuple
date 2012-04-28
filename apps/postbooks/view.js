@@ -133,18 +133,18 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
     }
   }
   
-  view = Postbooks.CreateTileView(klass, controller, title, properties, commands);
+  view = Postbooks.CreateTileView(klass, controller, title, properties, commands, isOverview);
 
   return view;
 };
 
 /** Builds an SC.View subclass from a specific property list that can edit them the record class. */
-Postbooks.CreateTileView = function(klass, controller, title, properties, commands) {
-  console.log('Postbooks.CreateTileView(', klass, controller, title, properties, commands, ')');
-
+Postbooks.CreateTileView = function(klass, controller, title, properties, commands, isOverview) {
+  console.log('Postbooks.CreateTileView(', klass, controller, title, properties, commands, isOverview, ')');
+  
+  title = title? title : "_overview".loc();
   var view = Postbooks.TileView.create({
-    layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
-
+    title: title,
     mouseDown: function(evt) {
       SC.EndEditingTextLayer();
 
@@ -153,24 +153,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
       }
 
       return true;
-    },
-
-    willRenderLayers: function(context) {        
-      context.fillStyle = base3;
-      context.fillRect(0, 3, context.width, 32);
-
-      context.fillStyle = base00;
-      context.fillRect(20, 7, 24, 24);
-
-      var K = Postbooks;
-      context.font = "12pt "+K.TYPEFACE;
-      context.fillStyle = 'black';
-      context.textAlign = 'left';
-      context.textBaseline = 'middle';
-
-      context.fillText(title ? title : "_overview".loc(), 72, 19  );
     }
-
   }),
   layers = view.get('layers'),
   y = 42,
@@ -204,92 +187,95 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
     } else {
       var property = proto[key],
           left = 120, right = 12,
-          label = null, widget = null,
-          typeClass = property.get('typeClass');
+          label = null, widget = null;
+          
+      if (property.isRecordAttribute) {    
+        var typeClass = property.get('typeClass');
 
-      if (typeClass === String) {
-        label = SC.LabelLayer.create({
-          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-          backgroundColor: 'white',
-          textAlign: 'right',
-          value: property.label + ':'
-        });
-        widget = SC.TextFieldWidget.create({
-          layout: { top: y, left: left, height: 24, right: right },
-          valueBinding: SC.Binding.from(key, controller)
-        });
-        y += 24 + K.SPACING;
-      } else if (property.isSingleAttribute) { // just for now so we can see layout impact
-        label = SC.LabelLayer.create({
-          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-          backgroundColor: 'white',
-          textAlign: 'right',
-          value: property.label + ':'
-        });
-        widget = SC.TextFieldWidget.create({
-          layout: { top: y, left: left, height: 24, right: right },
-          valueBinding: SC.Binding.transform(function(val) {
-            return String(val);
-          }).from(key, controller)
-        });
-        y += 24 + K.SPACING;
-      } else if (typeClass === Number) {
-        label = SC.LabelLayer.create({
-          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-          backgroundColor: 'white',
-          textAlign: 'right',
-          value: property.label + ':'
-        });
-        widget = SC.TextFieldWidget.create({
-          layout: { top: y, left: left, height: 24, right: right },
-          valueBinding: SC.Binding.transform(function(val) {
-            return String(val);
-          }).from(key, controller)
-        });
-        y += 24 + K.SPACING;
-      } else if (typeClass.isNumeric) {
-        label = SC.LabelLayer.create({
-          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-          backgroundColor: 'white',
-          textAlign: 'right',
-          value: property.label + ':'
-        });
-        widget = SC.TextFieldWidget.create({
-          layout: { top: y, left: left, height: 24, right: right },
-          valueBinding: SC.Binding.transform(function(val) {
-            return val? val.toLocaleString() : "";
-          }).from(key, controller)
-        });
-        y += 24 + K.SPACING;
-      } else if (typeClass === XT.DateTime) {
-        label = SC.LabelLayer.create({
-          layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-          backgroundColor: 'white',
-          textAlign: 'right',
-          value: property.label + ':'
-        });
-        widget = SC.TextFieldWidget.create({
-          layout: { top: y, left: left, height: 24, right: right },
-          valueBinding: SC.Binding.transform(function(val) {
-            return val? val.toLocaleDateString() : "no date set";
-          }).from(key, controller)
-        });
-        y += 24 + K.SPACING;
-      } else if (typeClass === Boolean) {
-        widget = SC.CheckboxWidget.create({
-          layout: { top: y, left: left, height: 24, right: right },
-          title: property.label,
-          valueBinding: SC.Binding.transform(function(val) {
-            return !!val;
-          }).from(key, controller)
-        });
-        y += 24 + K.SPACING;
-      } else if (typeClass === Array) {
-        console.log('Unknown property type', 'Array');          
-      } else if (typeClass === Object) {
-        console.log('Unknown property type', 'Object');          
-      } else {
-        console.log('Unknown property type', typeClass.displayName? typeClass.displayName : typeClass);          
+        if (typeClass === String) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
+            textAlign: 'right',
+            value: property.label + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.from(key, controller)
+          });
+          y += 24 + K.SPACING;
+        } else if (property.isSingleAttribute) { // just for now so we can see layout impact
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
+            textAlign: 'right',
+            value: property.label + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.transform(function(val) {
+              return String(val);
+            }).from(key, controller)
+          });
+          y += 24 + K.SPACING;
+        } else if (typeClass === Number) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
+            textAlign: 'right',
+            value: property.label + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.transform(function(val) {
+              return String(val);
+            }).from(key, controller)
+          });
+          y += 24 + K.SPACING;
+        } else if (typeClass.isNumeric) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
+            textAlign: 'right',
+            value: property.label + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.transform(function(val) {
+              return val? val.toLocaleString() : "";
+            }).from(key, controller)
+          });
+          y += 24 + K.SPACING;
+        } else if (typeClass === XT.DateTime) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
+            textAlign: 'right',
+            value: property.label + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.transform(function(val) {
+              return val? val.toLocaleDateString() : "no date set";
+            }).from(key, controller)
+          });
+          y += 24 + K.SPACING;
+        } else if (typeClass === Boolean) {
+          widget = SC.CheckboxWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            title: property.label,
+            valueBinding: SC.Binding.transform(function(val) {
+              return !!val;
+            }).from(key, controller)
+          });
+          y += 24 + K.SPACING;
+        } else if (typeClass === Array) {
+          console.log('Unknown property type', 'Array');          
+        } else if (typeClass === Object) {
+          console.log('Unknown property type', 'Object');          
+        } else {
+          console.log('Unknown property type', typeClass.displayName? typeClass.displayName : typeClass);          
+        }
       }
 
       if (label)  layers.pushObject(label);
