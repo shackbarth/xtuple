@@ -294,17 +294,18 @@ XT.Record = SC.Record.extend(XT.Logging,
         isValid = this.get('isValid'),
         idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
 
-    if (store.get('isNested')) {
-      if (isValid && idx > -1) invalidRecords.removeAt(idx);
-      else if (!isValid && idx === -1) invalidRecords.pushObject(this);
-    }
+    // FIXME: The store never returns an invalidRecords array!
+    // if (store.get('isNested')) {
+    //   if (isValid && idx > -1) invalidRecords.removeAt(idx);
+    //   else if (!isValid && idx === -1) invalidRecords.pushObject(this);
+    // }
   },
 
   /** @private
     Track substates for data source use. Updates dataState property directly
     so we don't fire events that change the status to dirty.
   */
-  _xt_statusChanged: function() {
+  _xt_statusDidChange: function() {
     var status = this.get('status'),
         key = 'dataState',
         value = 'error',
@@ -322,8 +323,8 @@ XT.Record = SC.Record.extend(XT.Logging,
         status !== K.EMPTY) {
       this.writeAttribute(key, value, YES);
     }
-    this.log('Change status %@:%@ to %@'
-             .fmt(this.get('className'),this.get('id'), this.statusString()));
+    // this.log('Change status %@:%@ to %@'
+    //          .fmt(this.get('className'),this.get('id'), this.statusString()));
   }.observes('status'),
   
   // ..........................................................
@@ -363,7 +364,7 @@ XT.Record = SC.Record.extend(XT.Logging,
     }
 
     if (this.getPath('store.isNested')) {
-      this.addObserver('isValid', this, '_isValidDidChange');
+      this.addObserver('isValid', this, '_xt_isValidDidChange');
     }
   },
 
@@ -398,7 +399,11 @@ XT.Record = SC.Record.extend(XT.Logging,
         store.writeDataHash(csk, hash);
         childRecord = store.materializeRecord(csk);
       } else {
-        csk = store.pushRetrieve(recordType, id, hash);
+        if (store.isNested) {
+          csk = store.parentStore.pushRetrieve(recordType, id, hash);
+        } else {
+          csk = store.pushRetrieve(recordType, id, hash);
+        }
         childRecord = store.materializeRecord(csk);
         childRecord.notifyPropertyChange('status');
       }

@@ -28,8 +28,8 @@ XM.Terms = XM.Document.extend(XM._Terms,
   /**
     Calculate a discount date based on a given document date.
     
-    @param {SC.DateTime} document date.
-    @returns SC.DateTime
+    @param {XT.DateTime} document date.
+    @returns XT.DateTime
   */
   calculateDiscountDate: function(date) {
     return XM.Terms.calculateDiscountDate(this, date);
@@ -38,8 +38,8 @@ XM.Terms = XM.Document.extend(XM._Terms,
   /**
     Calculate a due date based on a given document date.
     
-    @param {SC.DateTime} document date.
-    @returns SC.DateTime
+    @param {XT.DateTime} document date.
+    @returns XT.DateTime
   */
   calculateDueDate: function(date) {
     return XM.Terms.calculateDueDate(this, date);
@@ -55,8 +55,8 @@ XM.Terms = XM.Document.extend(XM._Terms,
   Calculate a discount date based on a given document date.
   
   @param {XM.Terms} terms
-  @param {SC.DateTime} document date.
-  @returns SC.DateTime
+  @param {XT.DateTime} document date.
+  @returns XT.DateTime
 */
 XM.Terms.calculateDiscountDate = function(terms, date) {
   return XM.Terms._calculateDate(terms, date, 'discountDays');
@@ -66,8 +66,8 @@ XM.Terms.calculateDiscountDate = function(terms, date) {
   Calculate a due date based on a given document date.
   
   @param {XM.Terms} terms
-  @param {SC.DateTime} document date.
-  @returns SC.DateTime
+  @param {XT.DateTime} document date.
+  @returns XT.DateTime
 */
 XM.Terms.calculateDueDate = function(terms, date) {
   return XM.Terms._calculateDate(terms, date, 'dueDays');
@@ -78,12 +78,12 @@ XM.Terms.calculateDueDate = function(terms, date) {
   and advancement basis.
   
   @param {XM.Terms} terms
-  @param {SC.DateTime} document date.
+  @param {XT.DateTime} document date.
   @param {String} due date or discount date basis
-  @returns SC.DateTime
+  @returns XT.DateTime
 */
 XM.Terms._calculateDate = function(terms, date, basis) {
-  if (!SC.kindOf(date, SC.DateTime)) return false;
+  if (!SC.kindOf(date, XT.DateTime)) return false;
   else if (!SC.kindOf(terms, XM.Terms)) return date;
   var termsType = terms.get('termsType'),
       advanceDays = terms.get(basis),
@@ -96,7 +96,7 @@ XM.Terms._calculateDate = function(terms, date, basis) {
     
   // handle proximo (day of month)
   } else if (termsType === 'P') {
-    result = SC.DateTime.create({ 
+    result = XT.DateTime.create({ 
       month: date.get('month'), 
       day: advanceDays, 
       year: date.get('year')

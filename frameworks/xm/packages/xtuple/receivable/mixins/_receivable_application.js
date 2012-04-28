@@ -71,7 +71,7 @@ XM._ReceivableApplication = {
   /**
     @type Date
   */
-  postDate: SC.Record.attr(SC.DateTime, {
+  postDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_postDate'.loc()

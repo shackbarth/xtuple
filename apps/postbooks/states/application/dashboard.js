@@ -8,10 +8,9 @@ Postbooks.DASHBOARD = SC.State.design({
 
   enterState: function() {
     SC.routes.set('location', 'dashboard');
-    // Postbooks.set('mainViewShowing', 'overview');
-    // Postbooks.mainPage.mainPane.makeFirstResponder(Postbooks.mainPage.mainPane.getPath('mainView.contentView'));
-    // 
-    // Postbooks.set('currentNav', 'overview');
+
+    // setTimeout(Postbooks.RenderModelHierarchy, 0);
+    Postbooks.LoadDashboard();
   },
 
   // ACTIONS

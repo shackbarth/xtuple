@@ -22,9 +22,13 @@ XM.Currency = XM.Document.extend(XM._Currency,
   // CALCULATED PROPERTIES
   //
 
-  abbreviation: SC.Record.attr(Boolean, {
-    toType: function(record, key, value) {
-      if(value && value.length > 3) return value.substr(0,3);
+  abbreviation: SC.Record.attr(String, {
+    fromType: function(record, key, value) {
+      if(value && value.length > 3) {
+        return value.substr(0,3);
+      } else {
+        return value;
+      }
     }
   }),
   
@@ -91,7 +95,7 @@ XM.Currency = XM.Document.extend(XM._Currency,
   values.
   
   @param {XM.Currency} currency
-  @param {SC.DateTime} effective date
+  @param {XT.DateTime} effective date
   @param {Function} callback
   @returns Receiver
 */
@@ -100,7 +104,7 @@ XM.Currency.rate = function(currency, effective, callback) {
   // datasource requests
   
   if (!SC.kindOf(currency, XM.Currency) ||
-      !SC.kindOf(effective, SC.DateTime)) return false;
+      !SC.kindOf(effective, XT.DateTime)) return false;
   var that = this,
       store = currency.get('store'),
       qry, ary;

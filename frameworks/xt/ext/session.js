@@ -119,7 +119,8 @@ XT.session = SC.Object.create(
 
         break;
       default:
-        console.log("ok, wtf, really?", response);
+        SC.Logger.error("ok, wtf, really?");
+        console.error(response);
     }
      
   },
@@ -264,7 +265,11 @@ XT.session = SC.Object.create(
 
   didFetchLocale: function(error, response) {
     // Attach the locale to the session object.
-    this.set('locale', response);
+    this.set('locale', SC.Object.create(response));
+
+    // Set globalization culture
+    var culture = this.getPath('locale.culture');
+    Globalize.culture(culture);
 
     return true;
   },

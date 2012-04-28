@@ -4,39 +4,15 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
-Postbooks.CRM = SC.State.design({
+sc_require('states/module');
 
-  initialSubstate: 'DUMMY',
+Postbooks.CRM = Postbooks.MODULE.design({
 
-  enterState: function() {
-    if (this.__movingUp__) {
-      this.__movingUp__ = false;
-
-      // Clear the selection. This is somewhat tricky to find...
-      var listView = this.listContainer.get('contentSurface');
-      if (listView) listView.set('selection', SC.IndexSet.create().freeze());
-      return;
-    }
-
-    SC.routes.set('location', 'crm');
-
-    Postbooks.LoadModule("_crm".loc(), 'Contact Account ToDo Opportunity Incident Project'.w(), this);
-  },
-
-  exitState: function() {
-    if (this.__movingUp__) return;
-    SC.app.get('ui').popSurface();
-  },
+  route: 'crm',
+  title: "_crm",
+  submodules: 'Contact Account ToDo Opportunity Incident Project'.w(),
 
   // ACTIONS
-
-  showCRM: function() {
-    // Do nothing.
-  },
-
-  showDashboard: function() {
-    this.gotoState('DASHBOARD');
-  },
 
   showContact: function() {
     this.gotoState('CONTACT');
@@ -64,12 +40,11 @@ Postbooks.CRM = SC.State.design({
 
   // SUBSTATES
 
-  "DUMMY":    SC.State, // HACK: Prevent "missing initial state" error message from SC.
-  "CONTACT": SC.State.plugin('Postbooks.CONTACT'),
-  "ACCOUNT": SC.State.plugin('Postbooks.ACCOUNT'),
-  "TO_DO": SC.State.plugin('Postbooks.TO_DO'),
+  "CONTACT":     SC.State.plugin('Postbooks.CONTACT'),
+  "ACCOUNT":     SC.State.plugin('Postbooks.ACCOUNT'),
+  "TO_DO":       SC.State.plugin('Postbooks.TO_DO'),
   "OPPORTUNITY": SC.State.plugin('Postbooks.OPPORTUNITY'),
-  "INCIDENT": SC.State.plugin('Postbooks.INCIDENT'),
-  "PROJECT": SC.State.plugin('Postbooks.PROJECT')
+  "INCIDENT":    SC.State.plugin('Postbooks.INCIDENT'),
+  "PROJECT":     SC.State.plugin('Postbooks.PROJECT')
 
 });

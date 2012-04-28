@@ -27,18 +27,21 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
   val = object.get('name');
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
+  if (val) val = val.elide(context, 195);
   context.fillText(val? val : "_noName".loc(), 15, 15);
 
   // Phone
   val = object.get('phone');
   context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
+  if (val) val = val.elide(context, 195);
   context.fillText(val? val : "_noPhone".loc(), 215, 15);
 
   // Title
   val = object.get('jobTitle');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
+  if (val) val = val.elide(context, 195);
   context.fillText(val? val : "_noJobTitle".loc() , 15, 35);
 
   // 3 Row format
@@ -48,6 +51,7 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
     val = object.getPath('account.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
+    if (val) val = val.elide(context, 195);
     context.fillText(val? val : "_noAccountName".loc() , 15, 55);
   
     // Email
@@ -70,6 +74,7 @@ XM.Contact.RenderRecordListRow = function(context, width, height, index, object,
     val = object.getPath('account.name');
     context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
+    if (val) val = val.elide(context, 195);
     context.fillText(val? val : "_noAccountName".loc() , 215, 35);
   
     // Email

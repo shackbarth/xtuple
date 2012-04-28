@@ -64,7 +64,7 @@ XM._StandardJournalGroupItem = {
   /**
     @type Date
   */
-  effective: SC.Record.attr(SC.DateTime, {
+  effective: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_effective'.loc()
@@ -73,7 +73,7 @@ XM._StandardJournalGroupItem = {
   /**
     @type Date
   */
-  expires: SC.Record.attr(SC.DateTime, {
+  expires: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_expires'.loc()

@@ -50,7 +50,7 @@ XM._CashReceiptReceivable = {
   /**
     @type Date
   */
-  documentDate: SC.Record.attr(SC.DateTime, {
+  documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     isRequired: true,
@@ -60,7 +60,7 @@ XM._CashReceiptReceivable = {
   /**
     @type Date
   */
-  dueDate: SC.Record.attr(SC.DateTime, {
+  dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     isRequired: true,

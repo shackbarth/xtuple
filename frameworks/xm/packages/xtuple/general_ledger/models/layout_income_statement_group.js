@@ -6,21 +6,15 @@
 /*globals XM */
 
 sc_require('mixins/_layout_income_statement_group');
+sc_require('mixins/layout_financial_statement');
 
 /**
   @class
 
   @extends XT.Record
 */
-XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
+XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup, XM.LayoutFinancialStatement,
   /** @scope XM.LayoutIncomeStatementGroup.prototype */ {
-
-  /**
-    Stores parent-group records for view layer drop down.
-    Selected value will set the percentLayoutIncomeStatementGroup
-    property.
-  */
-  layoutGroupRecords: null,
 
   // .................................................
   // CALCULATED PROPERTIES
@@ -29,36 +23,6 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
   //..................................................
   // METHODS
   //
-
-  init: function() {
-    arguments.callee.base.apply(this, arguments);
-    this.layoutGroupRecords = [];
-    this.getLayoutGroupRecords();
-  },
-
-  /**
-    Called on instantiation and when the layoutIncomeStatementGroup
-    property changes.
-    Will push parent-group records into layoutGroupRecords
-    property.
-  */
-  getLayoutGroupRecords: function() {
-    var layoutGroupRec = this.get('layoutIncomeStatementGroup'),
-        recs = this.get('layoutGroupRecords'),
-        idx;
-
-    while(layoutGroupRec) {
-      /**
-        Fail-safe to prevent duplicate records from being pushed
-        into layoutGroupRecords array.
-      */
-      idx = recs.lastIndexOf(layoutGroupRec);
-      if(idx === -1) {
-        recs.push(layoutGroupRec);
-      }
-      layoutGroupRec = layoutGroupRec.get('layoutIncomeStatementGroup');
-    }
-  },
 
   //..................................................
   // OBSERVERS
@@ -72,15 +36,11 @@ XM.LayoutIncomeStatementGroup = XT.Record.extend(XM._LayoutIncomeStatementGroup,
       synced with the associated boolean flag
       condition.
     */
-    if(status === SC.Record.READY_NEW) {
+    if(status === SC.Record.READY_NEW || status === SC.Record.READY_CLEAN) {
       this.isShowSubtotalDidChange();
       this.isAlternateSubtotalDidChange();
     }
   }.observes('status'),
-
-  layoutIncomeStatementGroupDidChange: function() {
-    this.getLayoutGroupRecords();
-  }.observes('layoutIncomeStatementGroup'),
 
   isShowSubtotalDidChange: function() {
     var isShowSubtotal = this.get('isShowSubtotal');

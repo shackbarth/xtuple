@@ -16,7 +16,7 @@ XM.SubLedgerMixin =
   /**
     Aging control for paid and balance values.
     
-    @type SC.DateTime
+    @type XT.DateTime
     @default currentDate
   */
   asOf: null,
@@ -43,7 +43,7 @@ XM.SubLedgerMixin =
     for (var i = 0; i < applications.get('length'); i++) {
       var application = applications.objectAt(i), 
           postDate = application.get('postDate');
-      if (SC.DateTime.compare(asOf, postDate) >= 0) {
+      if (XT.DateTime.compare(asOf, postDate) >= 0) {
         paid = paid + application.get('paid');
       }
     }
@@ -60,7 +60,7 @@ XM.SubLedgerMixin =
         documentDate = this.get('documentDate'),
         amount = this.get('amount') || 0,
         paid = this.get('paid') || 0, ret = new Money(0);
-    if (documentDate && SC.DateTime.compareDate(asOf, documentDate) >= 0) {
+    if (documentDate && XT.DateTime.compareDate(asOf, documentDate) >= 0) {
       ret = (amount - paid).toMoney();
     }
     return ret;
@@ -71,7 +71,7 @@ XM.SubLedgerMixin =
   //
 
   initMixin: function() {
-    if (!this.get('asOf')) this.set('asOf', SC.DateTime.create());
+    if (!this.get('asOf')) this.set('asOf', XT.DateTime.create());
   }
 
   //..................................................

@@ -105,10 +105,11 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.Documents,
   //
   
   validate: function() {
-    var isErr, errors = arguments.callee.base.apply(this, arguments);
+    var isErr, errors = arguments.callee.base.apply(this, arguments),
+        K = XM.Incident;
     
     // Validate assignee
-    isErr = this.get('incidentStatus') === XM.Incident.STATUS_ASSIGNED &&
+    isErr = this.get('incidentStatus') === K.ASSIGNED &&
             !this.get('assignedTo');
     err = XT.errors.findProperty('code', 'xt1025');
     this.updateErrors(err, isErr);
@@ -117,14 +118,25 @@ XM.Incident = XM.Document.extend(XM._Incident, XM.Documents,
   }.observes('assignedTo', 'incidentStatus'),
   
   /* @private */
-  _xm_assignedToDidChange: function() {
+  assignedToDidChange: function() {
+    if (this.isNotDirty()) return;
     var assignedTo = this.get('assignedTo'),
-        status = this.get('status');
+        K = XM.Incident;
      
-    if(assignedTo &&
-      (status == SC.Record.READY_DIRTY || status == SC.Record.READY_NEW))
-      this.set('incidentStatus','A');
+    if (assignedTo) this.set('incidentStatus', K.ASSIGNED);
   }.observes('assignedTo'),
+
+  notes: SC.Record.attr(String, {
+    label: '_notes'.loc(),
+    isVisibleInView: false
+  }),
+
+  /**
+    Custom Views
+  */
+  customTileViews: [
+    'XM.IncidentNotes'
+  ]
   
 });
 

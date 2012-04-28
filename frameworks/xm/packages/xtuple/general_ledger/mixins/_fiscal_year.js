@@ -43,7 +43,7 @@ XM._FiscalYear = {
   /**
     @type Date
   */
-  start: SC.Record.attr(SC.DateTime, {
+  start: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_start'.loc()
@@ -52,7 +52,7 @@ XM._FiscalYear = {
   /**
     @type Date
   */
-  end: SC.Record.attr(SC.DateTime, {
+  end: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
     label: '_end'.loc()

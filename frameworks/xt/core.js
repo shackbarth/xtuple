@@ -144,6 +144,66 @@ XT = global.XT = SC.Object.create(
   WEIGHT_SCALE: 2,
 
   /**
+    ...
+    
+    @static
+    @constant
+    @type Boolean
+    @default false
+  */
+  USE_320_TILES: false,
+
+  /**
+    System typeface.
+    
+    @static
+    @constant
+    @type String
+    @default 550
+  */
+  TYPEFACE: 'helvetica',
+
+  /**
+    List width considered portrait mode.
+    
+    @static
+    @constant
+    @type Number
+    @default 550
+  */
+  PORTRAIT_LIST_WIDTH: 550,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 30
+  */
+  HEIGHT_1_ROW: 30,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 50
+  */
+  HEIGHT_2_ROW: 50,
+
+  /**
+    Stndard row height for three rows.
+    
+    @static
+    @constant
+    @type Number
+    @default 70
+  */
+  HEIGHT_3_ROW: 70,
+
+  /**
     System display color for errors.
     
     @static
@@ -276,24 +336,6 @@ SC.mixin(XT,
     warn: YES,
     error: YES,
     info: YES 
-  }),
-
-  //...................................................
-  // DateTime convenience functions
-  //
-
-  /**
-    returns SC.DateTime object set to '1971-01-01'
-  */
-  startOfTime: function() {
-    return SC.DateTime.create(0);
-  },
-
-  /**
-    returns SC.DateTime object set to '2100-01-01'
-  */
-  endOfTime: function() {
-    return SC.DateTime.parse('2100-01-01 00:00:00', '%Y-%m-%d %H:%M:%S');
-  },
+  })
 
 });

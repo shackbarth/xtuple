@@ -24,7 +24,7 @@ XM.TaxRate = XT.Record.extend(XM._TaxRate,
   //
 
   expire: function() {
-    this.set('expires', SC.DateTime.create());
+    this.set('expires', XT.DateTime.create());
   },
 
   //..................................................
@@ -40,7 +40,7 @@ XM.TaxRate = XT.Record.extend(XM._TaxRate,
     var effective = this.get('effective'),
         expires = this.get('expires');
 
-    isErr = SC.DateTime.compareDate(effective, expires) > 0;
+    isErr = XT.DateTime.compareDate(effective, expires) > 0;
     err = XT.errors.findProperty('code', 'xt1004');
     this.updateErrors(err, isErr);
     

@@ -4,6 +4,11 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
+//....................................................
+// MAKE SURE TO INCLUDE THE GLOBAL PACKAGE MANIFEST
+//
+{{@projectPackageManifest}}
+
 /** @namespace
 
   @extends SC.Application
@@ -14,6 +19,8 @@ Postbooks = global.Postbooks = SC.Application.create(
 
   NAMESPACE: 'Postbooks',
   VERSION: '{{{POSTBOOKS_VERSION}}}',
+
+  store: null,
 
   submoduleTitle: "(no title)",
   submoduleBackButtonTitle: "(unknown)",
@@ -110,6 +117,9 @@ Postbooks = global.Postbooks = SC.Application.create(
   HEIGHT_3_ROW: 70
 
 });
+
+// Alias.
+Postbooks.getStates = Postbooks.getState;
 
 // Remotely record when exceptions occur.
 // SC.ExceptionHandler.handleException = function(exception) {
