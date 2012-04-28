@@ -44,7 +44,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
 
-  if (className === 'ToDo') { // temporary
+  if (Postbooks[className] && Postbooks[className].Tiles) {
     var tiles = Postbooks[className].Tiles(controller, true);
   } else {
     var tiles = Postbooks.TilesForClass(baseClass, controller, true);
