@@ -259,6 +259,11 @@
       }
     }
   ],
+  "order": [
+    "ophead_target_date", 
+    "ophead_number",
+    "ophead_name"
+  ],
   "isSystem": true,
   "sourceCode": "OPP"
 }

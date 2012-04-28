@@ -361,5 +361,9 @@
       }
     }
   ],
+  "order": [
+    "invchead_invcdate desc",
+    "invchead_invcnumber desc"
+  ],
   "isSystem": true
 }

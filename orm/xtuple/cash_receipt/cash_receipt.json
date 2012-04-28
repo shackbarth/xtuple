@@ -173,5 +173,9 @@
       }
     }
   ],
+  "order": [
+    "cashrcpt_distdate desc",
+    "cashrcpt_number desc"
+  ],
   "isSystem": true
 }
