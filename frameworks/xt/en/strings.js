@@ -631,6 +631,7 @@ SC.stringsFor("en_US", {
   "_noRecords": "No Records",
   "_noResultsFound": "No results were returned for the query.",
   "_noStage": "No Stage",
+  "_noTargetDate": "No Target Date",
   "_noTerms": "No Terms",
   "_noType": "No Type",
   "_optionExistsValue": "A option already exists with this Value.",

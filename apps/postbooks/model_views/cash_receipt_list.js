@@ -37,45 +37,46 @@ Postbooks.CashReceipt.RenderRecordListRow = function(context, width, height, ind
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
-  val = val.elide(context, 145 - numberWidth);
-  context.fillText(val, 165, 15);
+  context.fillText(val, 315, 35);
 
   // Distribution Date
   var dt = object.get('distributionDate');
   if (dt) {
     val = dt.toLocaleDateString();
-    context.font = "8pt "+K.TYPEFACE;
+    var isDue = !object.get('isPosted') &&
+                XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
+    context.font = "10pt "+K.TYPEFACE;
     context.textAlign = 'right';
-    context.fillStyle = 'black';
-    context.fillText(val , 265, 15);
+    context.fillStyle = isDue? XT.EXPIRED : 'black';
+    context.fillText(val , 315, 15);
   }
 
   // Funds Type
+  var docNumber = object.getPath('documentNumber') || '';
   val = object.get('fundsTypeString');
+  if (docNumber) val += ": "+docNumber;
+  context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = 'black';
-  context.fillText(val, 265, 35);
+  context.textAlign = 'left';
+  context.fillText(val, 15, 35);
 
   // Customer Name
   val = object.getPath('customer.name');
   context.font = "italic 8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
-  if (isPosted) val.elide(context, 195);
-  context.fillText(val , 275, 15);
-  
-  // Document Number
-  val = object.getPath('documentNumber') || '';
-  context.font = "8pt "+K.TYPEFACE;
-  context.fillText(val, 275, 35);
-  
-  // Bank Account
-  val = object.getPath('bankAccount.name') || '';
-  context.fillText(val, 475, 15);
+  context.fillText(val , 325, 15);
   
   // Posted
   var isPosted = object.getPath('isPosted');
   val = isPosted? "_posted".loc() : '';
-  context.fillText(val, 475, 35);
+  context.fillText(val, 490, 35);
+  
+  // Bank Account
+  val = object.getPath('bankAccount.description') || '';
+  context.font = "8pt "+K.TYPEFACE;
+  if (isPosted) val = val.elide(context, 160);
+  context.fillText(val, 325, 35);
 
 };
 

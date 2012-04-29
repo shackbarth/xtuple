@@ -54,10 +54,10 @@ Postbooks.ToDo.RenderRecordListRow = function(context, width, height, index, obj
     val = dt.toLocaleDateString();
     var isDue = object.get('isActive') &&
                 XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
-    context.font = "8pt "+K.TYPEFACE;
+    context.font = "10pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
-    context.fillText(val , 265, 15);
+    context.fillText(val , 315, 15);
     dateWidth += context.measureText(val).width + 5;
   }
   
@@ -66,47 +66,47 @@ Postbooks.ToDo.RenderRecordListRow = function(context, width, height, index, obj
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'left';
-  val = val.elide(context, 250 - dateWidth);
+  val = val.elide(context, 295 - dateWidth);
   context.fillText(val? val : "_noName".loc(), 15, 15);
   
   // Description
   val = object.get('description');
   context.font = "8pt "+K.TYPEFACE;
-  if (val && contact) val = val.elide(context, 250);
+  if (val && contact) val = val.elide(context, 290);
   context.fillText(val , 15, 35);
 
   // Account Name
   val = object.getPath('account.name');
   context.font = "italic 8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  val = val? val.elide(context, 195) : null;
-  context.fillText(val? val : "_noAccountName".loc() , 275, 15);
+  val = val? val.elide(context, 160) : null;
+  context.fillText(val? val : "_noAccountName".loc() , 325, 15);
 
   // Contact Name
   val = contact;
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  val = val? val.elide(context, 195) : '';
-  context.fillText(val, 275, 35);
+  val = val? val.elide(context, 160) : '';
+  context.fillText(val, 325, 35);
 
   // Status
   val = object.get('toDoStatusString');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noStage".loc(), 475, 15);
+  context.fillText(val? val : "_noStage".loc(), 490, 15);
   
   // Assigned To
   val = assignedTo || '';
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = 'black';
-  context.fillText(val , 475, 35);  
+  context.fillText(val , 490, 35);  
 
   // Priority
   val = object.getPath('priority.name');
   var emphasis = object.getPath('priority.order')<=1? "bold " : "";
   context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? black : base1;
-  context.fillText(val? val : "_noPriority".loc(), 575, 15);
+  context.fillText(val? val : "_noPriority".loc(), 565, 15);
 
 };
 
