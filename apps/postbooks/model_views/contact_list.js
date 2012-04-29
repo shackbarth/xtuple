@@ -84,8 +84,7 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
   context.fillText(val , 15, 35);
 
   // Email
-  val = object.getPath('primaryEmail');
-  val = val? val : "_noEmail".loc();
+  val = object.getPath('primaryEmail') || '';
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'blue' : base1;
   context.fillText(val , 490, 15);

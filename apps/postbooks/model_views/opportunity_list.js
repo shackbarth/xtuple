@@ -31,14 +31,18 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
 
   // Target Close
   var dt = object.get('targetClose');
+  context.textAlign = 'right';
   if (dt) {
     val = dt.toLocaleDateString();
     var isDue = object.get('isActive') &&
                 XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
     context.font = "10pt "+K.TYPEFACE;
-    context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
     context.fillText(val , 315, 15);
+  } else {
+    context.font = "italic 8pt "+K.TYPEFACE;
+    context.fillStyle = base1;
+    context.fillText("_noTargetDate".loc() , 315, 15);
   }
   
   // Amount
@@ -60,7 +64,7 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
-  if (val) val = val.elide(context, 295 - amountWidth);
+  if (val) val = val.elide(context, 300 - amountWidth);
   context.fillText(val , 15, 35);
   
   // Account Name
