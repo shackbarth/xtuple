@@ -66,28 +66,32 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
     context.fillText("_noName".loc(), 15, 15);
   }
   
+
+  // Email
+  var emailWidth = 0;
+  val = object.getPath('primaryEmail') || '';
+  context.font = "8pt "+K.TYPEFACE;
+  context.fillStyle = 'blue';
+  context.textAlign = 'right';
+  context.fillText(val , 315, 35);
+  if (val) emailWidth = context.measureText(val).width + 5;
+  
+  // Title
+  val = object.get('jobTitle');
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.textAlign = 'left';
+  val = val? val : "_noJobTitle".loc();
+  val = val.elide(context, 305 - emailWidth);
+  context.fillText(val , 15, 35);
+
   // Account Name
   val = object.getPath('account.name');
   context.font = "italic 8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
   val = val? val : "_noAccountName".loc();
-  val = val.elide(context, 160);
   context.fillText(val , 325, 15);
-  
-  // Title
-  val = object.get('jobTitle');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'black' : base1;
-  val = val? val : "_noJobTitle".loc();
-  val = val.elide(context, 305);
-  context.fillText(val , 15, 35);
-
-  // Email
-  val = object.getPath('primaryEmail') || '';
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
-  context.fillStyle = val? 'blue' : base1;
-  context.fillText(val , 490, 15);
 
   // Location
   val = object.get('address');

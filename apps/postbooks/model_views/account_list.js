@@ -44,29 +44,30 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   context.textAlign = 'left';
   val = val.elide(context, 295 - phoneWidth);
   context.fillText(val, 15, 15);
-  
+ 
+  // Primary Contact Email
+  var emailWidth = 0;
+  val = contact? contact.get('primaryEmail') : '';
+  context.font = "8pt "+K.TYPEFACE;
+  context.textAlign = 'right';
+  context.fillStyle = 'blue';
+  context.fillText(val, 315, 35);
+  if (val) emailWidth = context.measureText(val).width + 5;
+    
   // Name
   val = object.get('name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
-  if (address) val = val.elide(context, 295);
+  val = val.elide(context, 300 - emailWidth);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
   // Primary Contact Name
   val = contact? contact.get('name') : '';
   context.font = "italic 8pt "+K.TYPEFACE;
-  context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   val = val? val : "_noContact".loc();
-  val = val.elide(context, 160);
   context.fillText(val, 325, 15);
-          
-  // Primary Contact Email
-  val = contact? contact.get('primaryEmail') : '';
-  context.font = "8pt "+K.TYPEFACE;
-  context.textAlign = 'left';
-  context.fillStyle = 'blue';
-  context.fillText(val, 490, 15);
   
   // Primary Contact Location
   val = address;

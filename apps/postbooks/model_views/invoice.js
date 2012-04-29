@@ -30,6 +30,18 @@ Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, 
   context.fillText(val, 15, 15);
   var numberWidth = context.measureText(val).width;
 
+  // Invoice Date
+  dt = object.get('invoiceDate');
+  if (dt) {
+    val = dt.toLocaleDateString();
+    var isDue = !object.get('isPosted') &&
+                XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
+    context.font = "10pt "+K.TYPEFACE;
+    context.textAlign = 'right';
+    context.fillStyle = isDue? XT.EXPIRED : 'black';
+    context.fillText(val , 315, 15);
+  }
+  
   // Total
   var amount = object.getPath('total');
   var currency = object.getPath('currency');
@@ -37,59 +49,56 @@ Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, 
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
-  val = val.elide(context, 145 - numberWidth);
-  context.fillText(val, 165, 15);
-
-  // Invoice Date
-  val = object.get('invoiceDate').toLocaleDateString();
+  context.fillText(val, 315, 35);
+  var amountWidth = context.measureText(val).width + 5;
+  
+  // Purchase Order Number
+  val = object.get('purchaseOrderNumber') || '';
   context.font = "8pt "+K.TYPEFACE;
-  context.textAlign = 'right';
-  val = val.elide(context, 95);
-  context.fillText(val , 265, 15);
+  context.textAlign = 'left';
+  context.fillStyle = 'black';
+  if (val) val = val.elide(context, 300 - amountWidth);
+  context.fillText(val , 15, 35);
  
   // Printed
   var isPrinted = object.getPath('isPrinted');
   val = isPrinted? "_printed".loc() : '';
   context.textAlign = 'left';
   context.fillStyle = 'black';
-  context.fillText(val, 475, 15);
+  context.fillText(val, 490, 15);
  
   // Posted
   var isPosted = object.getPath('isPosted');
   val = isPosted? "_posted".loc() : '';
   context.fillStyle = 'black';
-  context.fillText(val, 475, 35);
-  
+  context.fillText(val, 490, 35);
+  if (isPosted) debugger
   // Terms
   val = object.getPath('terms.code');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noTerms".loc(), 575, 15);
+  context.fillText(val? val : "_noTerms".loc(), 565, 15);
   
   // Sales Rep
   val = object.getPath('salesRep.name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noSalesRep".loc(), 575, 35);
+  context.fillText(val? val : "_noSalesRep".loc(), 565, 35);
     
   // Billto Name
   val = object.getPath('billtoName');
   context.font = "italic 8pt "+K.TYPEFACE;
   context.fillStyle = 'black';
-  if (isPrinted) val.elide(context, 195);
-  context.fillText(val , 275, 15);
-  
-  // Shipto Label
-  context.textAlign = 'right';
-  context.font = "8pt "+K.TYPEFACE;
-  context.fillText("_shipto".loc()+":" , 265, 35);
+  if (isPrinted) val = val.elide(context, 160);
+  context.fillText(val , 325, 15);
   
   // Shipto Name
   val = object.getPath('shiptoName');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
-  context.fillText(val? val : "_sameAsBillto".loc(), 275, 35);
+  if (isPosted) val = val.elide(context, 160);
+  context.fillText(val? val : "_sameAsBillto".loc(), 325, 35);
 
 };
 
