@@ -72,7 +72,8 @@ Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, 
   val = isPosted? "_posted".loc() : '';
   context.fillStyle = 'black';
   context.fillText(val, 490, 35);
-  if (isPosted) debugger
+  if (isPosted)
+  
   // Terms
   val = object.getPath('terms.code');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
@@ -116,12 +117,12 @@ Postbooks.Invoice.Tiles = function(controller, isRoot) {
   // ship-to
   tiles.push(Postbooks.Invoice.CreateShiptoTileView(controller));
 
+  // totals
+  tiles.push(Postbooks.Invoice.CreateTotalsTileView(controller));
+
   // additional
   properties = ' terms taxZone spacer salesRep commission spacer shipDate'.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_additional".loc(), properties));
-  
-  // totals
-  tiles.push(Postbooks.Invoice.CreateTotalsTileView(controller));
 
   return tiles;
 };
@@ -343,14 +344,18 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
 Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   console.log('Postbooks.Invoice.CreateTotalsTileView(', controller, ')');
 
-  var view = Postbooks.TileView.create({ title: "_totals".loc() }),
-  layers = view.get('layers'),
-  y = 42,
-  proto = XM.Invoice.prototype,
-  K = Postbooks,
-  key, property,
-  left = 120, right = 12,
-  label = null, widget = null;
+  var K = Postbooks.TileView,
+      view = Postbooks.TileView.create({ 
+        title: "_totals".loc(), 
+        size: K.HORIZONTAL_TILE 
+      }),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Invoice.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
  
   // subtotal
   key = 'subTotal';

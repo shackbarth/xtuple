@@ -42,20 +42,27 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend({
     var tray = this._sc_tray,
         frame = SC.MakeRect(this.get('frame')),
         width = frame.width, height = frame.height,
-        tilesPerSlide = 4;
+        tilesPerSlide = 2,
+        K = Postbooks.TileView;
 
     sc_assert(tray);
-    var slides = tray.get('subsurfaces').length || 1; // Make at least one.
+    var slides = 0, surfaces = tray.get('subsurfaces'); len = surfaces.length || 1; // Make at least one.
+    
+    // Take various widths of slides into consideration
+    for (var i=0; i<len; i++) {
+      var size = surfaces.objectAt(i).get('size') || K.QUARTER_TILE;
+      slides += Math.ceil(size.width/320);
+    }
 
     // Need to calculate the number of tiles per slide, then figure out 
     // the number of slides.
     if (slides <= 4 || width <= 678 || height <= 704) {
-      tilesPerSlide = 4; // This is our minimum.
+      tilesPerSlide = 2; // This is our minimum.
       tray.__horizontalTiles__ = tray.__verticalTiles__ = 2;
     } else {
       // See if we can fit more tiles per slide.
       var horizontalTiles = Math.floor((width-38)/320),
-          verticalTiles = Math.floor((height-55)/320);
+          verticalTiles = 2; //Math.floor((height-55)/320);
 
       tilesPerSlide = horizontalTiles * verticalTiles;
       tray.__horizontalTiles__ = horizontalTiles;
@@ -146,8 +153,51 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
         height = frame.height,
         horizontalTiles = this.__horizontalTiles__,
         verticalTiles = this.__verticalTiles__,
-        tilesPerSlide = horizontalTiles * verticalTiles;
+        tilesPerSlide = horizontalTiles * verticalTiles,
+        slide = 0;
 
+    // HACK: this requires careful planning of tile creation to work right. 
+    // To be replaced by Cassowary constraint solver.
+    // This implementation currently only works with `Postbooks.TileView.QUARTER_TILE`
+    // and `Postbooks.TileView.HORIZONTAL_TILE`.
+    
+    // Loop over tiles and place them
+    var horizontalCenter = Math.floor((width/horizontalTiles)/2);
+    var horizontalOffset = Math.floor(width/horizontalTiles);
+    var verticalCenter = Math.floor(((height-55)/verticalTiles)/2);
+    var verticalOffset = Math.floor((height-55)/verticalTiles);
+    var col = 0, row = 0;
+    subsurfaces.forEach(function(tile) {
+      var tileFrame = SC.MakeRect(),
+          K = Postbooks.TileView,
+          size = tile.get('size') || K.QUARTER_TILE;
+          
+      tileFrame.width = size.width
+      tileFrame.height = size.height;
+      tileFrame.x = ((col*horizontalOffset)+horizontalCenter) - 160;
+      tileFrame.y = ((row*verticalOffset)+verticalCenter) - 160;
+          
+      // We need to move the tileFrame to the correct slide.
+      var x = tileFrame.x;
+      tileFrame.x = x + width*slide;
+      sc_assert(tileFrame);
+      tile.set('frame', tileFrame);
+      tileFrame.x = x; // Restore the original.
+      
+      // Advance to next frame
+      col += Math.ceil(size.width/320);
+      if (col >= horizontalTiles) {
+        col = 0;
+        row += Math.ceil(size.width/320);
+      }
+      if (row >= verticalTiles) {
+        col = 0;
+        row = 0;
+        slide++;
+      }
+    })
+
+/*    
     // Calculate and cache the tile frames for a single slide.
     var columns = [], column, tileFrame;
     var horizontalCenter = Math.floor((width/horizontalTiles)/2);
@@ -195,6 +245,6 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
         }
       }
     }
+*/
   }
-
 });

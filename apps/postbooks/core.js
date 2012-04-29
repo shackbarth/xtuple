@@ -121,7 +121,6 @@ Postbooks = global.Postbooks = SC.Application.create(
   */
   SPACING: 4
 
-
 });
 
 SC.LabelLayer.prototype.font = "10pt "+Postbooks.TYPEFACE;
