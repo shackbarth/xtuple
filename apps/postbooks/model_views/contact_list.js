@@ -27,11 +27,11 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
   // Phone
   var phoneWidth = 0;
   val = object.get('phone') || '';
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
   if (val) val = val.elide(context, 195);
-  context.fillText(val, 265, 15);
+  context.fillText(val, 315, 15);
   if (val) phoneWidth = context.measureText(val).width + 5;
   if (phoneWidth < 0) phoneWidth = 0;
     
@@ -48,7 +48,7 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
     context.font = "10pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.textAlign = 'left';
-    val = val.elide(context, 255-phoneWidth);
+    val = val.elide(context, 300-phoneWidth);
     context.fillText(val, 15, 15);
     firstNameWidth = context.measureText(val).width + 5;  
   }
@@ -57,7 +57,7 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
     context.font = "bold 10pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.textAlign = 'left';
-    val = val.elide(context, 250-firstNameWidth-phoneWidth);
+    val = val.elide(context, 300-firstNameWidth-phoneWidth);
     context.fillText(val, 15+firstNameWidth, 15);
   } else  {
     context.font = "italic 10pt "+K.TYPEFACE;
@@ -71,16 +71,16 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
   context.font = "italic 8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
-  val = val? val : "_noAccountName".loc()
-  val = val.elide(context, 195);
-  context.fillText(val , 275, 15);
+  val = val? val : "_noAccountName".loc();
+  val = val.elide(context, 160);
+  context.fillText(val , 325, 15);
   
   // Title
   val = object.get('jobTitle');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   val = val? val : "_noJobTitle".loc();
-  val = val.elide(context, 255);
+  val = val.elide(context, 305);
   context.fillText(val , 15, 35);
 
   // Email
@@ -88,14 +88,14 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
   val = val? val : "_noEmail".loc();
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'blue' : base1;
-  context.fillText(val , 475, 15);
+  context.fillText(val , 490, 15);
 
   // Location
   val = object.get('address');
   val = val? val.formatShort() : '';
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = 'black';
-  context.fillText(val , 275, 35);
+  context.fillText(val , 325, 35);
 
 };
 
