@@ -111,17 +111,17 @@ Postbooks.Invoice.Tiles = function(controller, isRoot) {
       proto = klass.prototype;
       properties = [];
 
-  // bill-to
+  // Overview
   tiles.push(Postbooks.Invoice.CreateBilltoTileView(controller));
 
-  // ship-to
+  // Shipping
   tiles.push(Postbooks.Invoice.CreateShiptoTileView(controller));
 
-  // totals
+  // Totals
   tiles.push(Postbooks.Invoice.CreateTotalsTileView(controller));
 
-  // additional
-  properties = ' terms taxZone spacer salesRep commission spacer shipDate'.w();
+  // Additional
+  properties = 'terms taxZone spacer salesRep commission spacer shipDate'.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_additional".loc(), properties));
 
   return tiles;
@@ -139,7 +139,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
       left = 120, right = 12,
       label = null, widget = null;
  
-  // number
+  // Number
   key = 'number';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -156,7 +156,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   
-  // invoice date
+  // Invoice date
   key = 'invoiceDate';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -175,7 +175,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
 
-  // purchase order
+  // Purchase order
   key = 'purchaseOrderNumber';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -192,7 +192,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
 
-  // customer
+  // Customer
   key = 'customer';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -211,7 +211,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   
-  // bill-to address
+  // Bill-to address
   key = 'billtoAddress';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -246,7 +246,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
       left = 120, right = 12,
       label = null, widget = null;
   
-  // ship via
+  // Ship via
   key = 'shipVia';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -263,7 +263,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
  
-  // inco terms
+  // Inco Terms
   key = 'incoTerms';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -280,7 +280,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   
-  // shipCharge
+  // ShipCharge
   key = 'shipCharge';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -299,7 +299,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   
-  // shipto
+  // Shipto
   key = 'shipto';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -318,7 +318,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   
-  // ship-to address
+  // Ship-to address
   key = 'shiptoAddress';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -357,7 +357,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
       left = 120, right = 12,
       label = null, widget = null;
  
-  // subtotal
+  // Subtotal
   key = 'subTotal';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -376,7 +376,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
  
-  // freight
+  // Freight
   key = 'freight';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -395,7 +395,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   
-  // tax total
+  // Tax total
   key = 'taxTotal';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -414,7 +414,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   
-  // total
+  // Total
   key = 'total';
   property = proto[key];
   label = SC.LabelLayer.create({

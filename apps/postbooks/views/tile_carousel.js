@@ -64,14 +64,14 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend({
       var horizontalTiles = Math.floor((width-38)/320),
           verticalTiles = 2; //Math.floor((height-55)/320);
 
-      tilesPerSlide = horizontalTiles * verticalTiles;
+      tilesPerSlide = 2; //horizontalTiles * verticalTiles;
       tray.__horizontalTiles__ = horizontalTiles;
       tray.__verticalTiles__ = verticalTiles;
     }
 
     slides = Math.ceil(slides/tilesPerSlide);
 
-    frame[2]/*width*/ = frame[2]/*width*/ * slides;
+    frame[2]/*width*/ = 320/*width*/ * slides;
     tray.set('frame', frame);
     tray.__slides__ = slides;
   },
@@ -129,7 +129,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     SC.AnimationTransaction.begin({ duration: 300 });
     var frame = this.get('frame');
     // frame.x = frame.x + evt.clientX - this._clientX;
-    frame.x = this._nextSlide * -this.getPath('carousel.frame').width;
+    frame.x = this._nextSlide * -320; //this.getPath('carousel.frame').width;
     // frame.x = this._startX;
     // frame.y = frame.y + evt.clientY - this._clientY;
     this.set('frame', frame);
@@ -162,20 +162,23 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     // and `Postbooks.TileView.HORIZONTAL_TILE`.
     
     // Loop over tiles and place them
-    var horizontalCenter = Math.floor((width/horizontalTiles)/2);
-    var horizontalOffset = Math.floor(width/horizontalTiles);
-    var verticalCenter = Math.floor(((height-55)/verticalTiles)/2);
-    var verticalOffset = Math.floor((height-55)/verticalTiles);
+    var horizontalCenter = 160;
+    var horizontalOffset = 320;
+    var verticalCenter = 160;
+    var verticalOffset = 320;
     var col = 0, row = 0;
+
     subsurfaces.forEach(function(tile) {
       var tileFrame = SC.MakeRect(),
           K = Postbooks.TileView,
-          size = tile.get('size') || K.QUARTER_TILE;
+          size = tile.get('size') || K.QUARTER_TILE,
+          xMargin = col? 0 : K.TILE_MARGIN,
+          yMargin = row? 0 : K.TILE_MARGIN;
           
-      tileFrame.width = size.width
-      tileFrame.height = size.height;
-      tileFrame.x = ((col*horizontalOffset)+horizontalCenter) - 160;
-      tileFrame.y = ((row*verticalOffset)+verticalCenter) - 160;
+      tileFrame.width = size.width - K.TILE_MARGIN * 2;
+      tileFrame.height = size.height - K.TILE_MARGIN * 2;
+      tileFrame.x = ((col*horizontalOffset)+horizontalCenter) - 160 + xMargin;
+      tileFrame.y = ((row*verticalOffset)+verticalCenter) - 160 + yMargin;
           
       // We need to move the tileFrame to the correct slide.
       var x = tileFrame.x;
@@ -188,14 +191,14 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
       col += Math.ceil(size.width/320);
       if (col >= horizontalTiles) {
         col = 0;
-        row += Math.ceil(size.width/320);
+        row += 1;
       }
       if (row >= verticalTiles) {
         col = 0;
         row = 0;
         slide++;
       }
-    })
+    }, this)
 
 /*    
     // Calculate and cache the tile frames for a single slide.
