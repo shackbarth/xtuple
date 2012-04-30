@@ -2,6 +2,7 @@
   "type": "demand",
   "dependencies": [
     "document",
-    "comment"
+    "comment",
+    "characteristic"
   ]
 }
