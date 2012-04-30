@@ -101,6 +101,40 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
   // CALCULATED PROPERTIES
   //
   
+  /** 
+    Formatted bill-to address.
+  */
+  billtoAddress: function() {
+    var billtoName = this.get('billtoName'),
+        billtoAddress1 = this.get('billtoAddress1'),
+        billtoAddress2 = this.get('billtoAddress2'),
+        billtoAddress3 = this.get('billtoAddress3'),
+        billtoCity = this.get('billtoCity'),
+        billtoState = this.get('billtoState'),
+        billtoPostalCode = this.get('billtoPostalCode'),
+        billtoCountry = this.get('billtoCountry');
+    return XM.Address.format(billtoName, billtoAddress1, billtoAddress2, billtoAddress3, 
+                             billtoCity, billtoState, billtoPostalCode, billtoCountry);
+  }.property('billtoName', 'billtoAddress1', 'billtoAddress2', 'billtoAddress3', 
+             'billtoCity', 'billtoState', 'billtoPostalCode', 'billtoCountry').cacheable(),
+  
+  /** 
+    Formatted ship-to address.
+  */
+  shiptoAddress: function() {
+    var shiptoName = this.get('shiptoName'),
+        shiptoAddress1 = this.get('shiptoAddress1'),
+        shiptoAddress2 = this.get('shiptoAddress2'),
+        shiptoAddress3 = this.get('shiptoAddress3'),
+        shiptoCity = this.get('shiptoCity'),
+        shiptoState = this.get('shiptoState'),
+        shiptoPostalCode = this.get('shiptoPostalCode'),
+        shiptoCountry = this.get('shiptoCountry');
+    return XM.Address.format(shiptoName, shiptoAddress1, shiptoAddress2, shiptoAddress3, 
+                             shiptoCity, shiptoState, shiptoPostalCode,  shiptoCountry);
+  }.property('shiptoName', 'shiptoAddress1', 'shiptoAddress2', 'shiptoAddress3', 
+             'shiptoCity', 'shiptoState', 'shiptoPostalCode', 'shiptoCountry').cacheable(),
+  
   /**
     Total invoice taxes.
     

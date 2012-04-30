@@ -1,0 +1,433 @@
+// ==========================================================================
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
+// ==========================================================================
+/*globals Postbooks XM sc_assert */
+
+Postbooks.Invoice = {};
+Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+  var K = Postbooks, val;
+  
+  // Rect
+  context.fillStyle = isSelected? '#99CCFF' : 'white';
+  context.fillRect(0, 0, width, height);
+
+  context.strokeStyle = 'grey';
+  context.lineWidth = 1;
+
+  context.beginPath();
+  context.moveTo(0, height - 0.5);
+  context.lineTo(width, height - 0.5);
+  context.stroke();
+  
+  context.textAlign = 'left';
+  context.textBaseline = 'middle';
+
+  // Number
+  val = object.get('number');
+  context.font = "bold 10pt "+K.TYPEFACE;
+  context.fillStyle = 'black';
+  context.fillText(val, 15, 15);
+  var numberWidth = context.measureText(val).width;
+
+  // Invoice Date
+  dt = object.get('invoiceDate');
+  if (dt) {
+    val = dt.toLocaleDateString();
+    var isDue = !object.get('isPosted') &&
+                XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
+    context.font = "10pt "+K.TYPEFACE;
+    context.textAlign = 'right';
+    context.fillStyle = isDue? XT.EXPIRED : 'black';
+    context.fillText(val , 315, 15);
+  }
+  
+  // Total
+  var amount = object.getPath('total');
+  var currency = object.getPath('currency');
+  val = currency.toLocaleString(amount);
+  context.font = "8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.textAlign = 'right';
+  context.fillText(val, 315, 35);
+  var amountWidth = context.measureText(val).width + 5;
+  
+  // Purchase Order Number
+  val = object.get('purchaseOrderNumber') || '';
+  context.font = "8pt "+K.TYPEFACE;
+  context.textAlign = 'left';
+  context.fillStyle = 'black';
+  if (val) val = val.elide(context, 300 - amountWidth);
+  context.fillText(val , 15, 35);
+ 
+  // Printed
+  var isPrinted = object.getPath('isPrinted');
+  val = isPrinted? "_printed".loc() : '';
+  context.textAlign = 'left';
+  context.fillStyle = 'black';
+  context.fillText(val, 490, 15);
+ 
+  // Posted
+  var isPosted = object.getPath('isPosted');
+  val = isPosted? "_posted".loc() : '';
+  context.fillStyle = 'black';
+  context.fillText(val, 490, 35);
+  if (isPosted) debugger
+  // Terms
+  val = object.getPath('terms.code');
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val? val : "_noTerms".loc(), 565, 15);
+  
+  // Sales Rep
+  val = object.getPath('salesRep.name');
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.fillText(val? val : "_noSalesRep".loc(), 565, 35);
+    
+  // Billto Name
+  val = object.getPath('billtoName');
+  context.font = "italic 8pt "+K.TYPEFACE;
+  context.fillStyle = 'black';
+  if (isPrinted) val = val.elide(context, 160);
+  context.fillText(val , 325, 15);
+  
+  // Shipto Name
+  val = object.getPath('shiptoName');
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.fillStyle = val? 'black' : base1;
+  context.textAlign = 'left';
+  if (isPosted) val = val.elide(context, 160);
+  context.fillText(val? val : "_sameAsBillto".loc(), 325, 35);
+
+};
+
+Postbooks.Invoice.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Invoice.Tiles()');
+  
+  var klass = XM.Invoice,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // bill-to
+  tiles.push(Postbooks.Invoice.CreateBilltoTileView(controller));
+
+  // ship-to
+  tiles.push(Postbooks.Invoice.CreateShiptoTileView(controller));
+
+  // additional
+  properties = ' terms taxZone spacer salesRep commission spacer shipDate'.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_additional".loc(), properties));
+  
+  // totals
+  tiles.push(Postbooks.Invoice.CreateTotalsTileView(controller));
+
+  return tiles;
+};
+
+Postbooks.Invoice.CreateBilltoTileView = function(controller) {
+  console.log('Postbooks.Invoice.CreateBilltoTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create(),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Invoice.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+  // number
+  key = 'number';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // invoice date
+  key = 'invoiceDate';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleDateString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // purchase order
+  key = 'purchaseOrderNumber';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // customer
+  key = 'customer';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // bill-to address
+  key = 'billtoAddress';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: "_billtoAddress".loc() + ':'
+  });
+  y += 24;
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: 12, height: 24, right: right },
+    isSingleLine: false,
+    font: "italic 8pt "+K.TYPEFACE,
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 144 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  return view;
+};
+
+Postbooks.Invoice.CreateShiptoTileView = function(controller) {
+  console.log('Postbooks.Invoice.ShiptoTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create({ title: "_shipping".loc() }),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Invoice.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+  
+  // ship via
+  key = 'shipVia';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+ 
+  // inco terms
+  key = 'incoTerms';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // shipCharge
+  key = 'shipCharge';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // shipto
+  key = 'shipto';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_shipto".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // ship-to address
+  key = 'shiptoAddress';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: "_shiptoAddress".loc() + ':'
+  });
+  y += 24;
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: 12, height: 24, right: right },
+    isSingleLine: false,
+    font: "italic 8pt "+K.TYPEFACE,
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 144 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  return view;
+};
+
+Postbooks.Invoice.CreateTotalsTileView = function(controller) {
+  console.log('Postbooks.Invoice.CreateTotalsTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create({ title: "_totals".loc() }),
+  layers = view.get('layers'),
+  y = 42,
+  proto = XM.Invoice.prototype,
+  K = Postbooks,
+  key, property,
+  left = 120, right = 12,
+  label = null, widget = null;
+ 
+  // subtotal
+  key = 'subTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_subtotal".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+ 
+  // freight
+  key = 'freight';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // tax total
+  key = 'taxTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_tax".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // total
+  key = 'total';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_total".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  return view;
+};
+

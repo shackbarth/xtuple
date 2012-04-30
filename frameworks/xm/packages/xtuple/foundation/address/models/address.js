@@ -54,7 +54,7 @@ XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
     @param {isHtml} Optional. Specify whether line breaks are to be HTML
     @return {String}
   */
-  format: function(isHtml) { return XM.Address.format(this, isHtml ? isHtml : NO) },
+  format: function(isHtml) { return XM.Address.format(this, isHtml ? isHtml : false) },
   
   /**
     A formatted address that includes city, state and country.
@@ -80,7 +80,7 @@ XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
   @return {XM.Address} copy of the address
 */
 XM.Address.copy = function(address) {
-  if(!SC.kindOf(address, XM.Address)) return NO;
+  if(!SC.kindOf(address, XM.Address)) return false;
 
   var store = address.get('store'),
   hash = address.get('attributes');
@@ -103,7 +103,7 @@ XM.Address.copy = function(address) {
 */
 XM.Address.findExisting = function(address, callback) {
   if(!SC.kindOf(address, XM.Address) || 
-     address.get('status') !== SC.Record.READY_NEW) return NO;
+     address.get('status') !== SC.Record.READY_NEW) return false;
 
   var dispatch = XT.Dispatch.create({
     className: 'XM.Address',
@@ -138,7 +138,7 @@ XM.Address.findExisting = function(address, callback) {
 
   Where address is an XM.Address and isHtml determines whether to
   use HTML line breaks instead of ASCII new line characters. The
-  default for isHtml is NO. The longer signatures accept string
+  default for isHtml is false. The longer signatures accept string
   components of an address.
 
   @return {String}
@@ -158,7 +158,7 @@ XM.Address.format = function() {
     state = arguments[0].get('state');
     postalcode = arguments[0].get('postalcode');
     country = arguments[0].get('country');
-    breaks = (arguments[1] === undefined ? NO : arguments[1]) ? '<br />' : '\n';
+    breaks = (arguments[1] === undefined ? false : arguments[1]) ? '<br />' : '\n';
   }
   else if(typeof arguments[0] === SC.T_STRING)  {
     name = arguments[0];
@@ -169,9 +169,9 @@ XM.Address.format = function() {
     state = arguments[5];
     postalcode = arguments[6];
     country = arguments[7];
-    breaks = (arguments[8] === undefined ? NO : arguments[8]) ? '<br />' : '\n';
+    breaks = (arguments[8] === undefined ? false : arguments[8]) ? '<br />' : '\n';
   }
-  else return NO;
+  else return false;
 
   if(name) fmtlines.push(name);
   if(line1) fmtlines.push(line1);
@@ -215,7 +215,7 @@ XM.Address.formatShort = function(address) {
   @return receiver
 */
 XM.Address.useCount = function(address, callback) {
-  if(!SC.kindOf(address, XM.Address)) return NO;
+  if(!SC.kindOf(address, XM.Address)) return false;
 
   var dispatch = XT.Dispatch.create({
     className: 'XM.Address',

@@ -31,14 +31,18 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
 
   // Target Close
   var dt = object.get('targetClose');
+  context.textAlign = 'right';
   if (dt) {
     val = dt.toLocaleDateString();
     var isDue = object.get('isActive') &&
                 XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
-    context.font = "8pt "+K.TYPEFACE;
-    context.textAlign = 'right';
+    context.font = "10pt "+K.TYPEFACE;
     context.fillStyle = isDue? XT.EXPIRED : 'black';
-    context.fillText(val , 265, 15);
+    context.fillText(val , 315, 15);
+  } else {
+    context.font = "italic 8pt "+K.TYPEFACE;
+    context.fillStyle = base1;
+    context.fillText("_noTargetDate".loc() , 315, 15);
   }
   
   // Amount
@@ -51,7 +55,7 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
     context.font = "8pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
     context.textAlign = 'right';
-    context.fillText(val, 265, 35);
+    context.fillText(val, 315, 35);
     amountWidth = val.length? context.measureText(val).width + 5 : 0;
   }
   
@@ -60,48 +64,48 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
-  if (val) val = val.elide(context, 255 - amountWidth);
+  if (val) val = val.elide(context, 300 - amountWidth);
   context.fillText(val , 15, 35);
   
   // Account Name
   val = object.getPath('account.name');
   context.font = "italic 8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 195);
-  context.fillText(val , 275, 15);
+  if (val) val = val.elide(context, 160);
+  context.fillText(val , 325, 15);
 
   // Contact Name
   val = object.getPath('contact.name') || '';
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 195);
-  context.fillText(val? val : "_noContact".loc(), 275, 35);
+  if (val) val = val.elide(context, 160);
+  context.fillText(val? val : "_noContact".loc(), 325, 35);
 
   // Stage
   val = object.getPath('opportunityStage.name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 95);
-  context.fillText(val? val : "_noStage".loc(), 475, 15);
+  if (val) val = val.elide(context, 70);
+  context.fillText(val? val : "_noStage".loc(), 490, 15);
   
   // Assigned To
   val = object.getPath('assignedTo.username') || '';
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = 'black';
-  if (val) val = val.elide(context, 95);
-  context.fillText(val , 475, 35);  
+  if (val) val = val.elide(context, 70);
+  context.fillText(val , 490, 35);  
 
   // Priority
   val = object.getPath('priority.name');
   var emphasis = object.getPath('priority.order')<=1? "bold " : "";
   context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? black : base1;
-  context.fillText(val? val : "_noPriority".loc(), 575, 15);
+  context.fillText(val? val : "_noPriority".loc(), 565, 15);
   
   // Type
   val = object.getPath('opportunityType.name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  context.fillText(val? val : "_noType".loc(), 575, 35);
+  context.fillText(val? val : "_noType".loc(), 565, 35);
 
 };
