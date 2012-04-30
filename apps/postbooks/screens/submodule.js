@@ -44,8 +44,11 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
 
-  var tiles = Postbooks.TilesForClass(baseClass, controller, true);
-  // console.log(tiles);
+  if (Postbooks[className] && Postbooks[className].Tiles) {
+    var tiles = Postbooks[className].Tiles(controller, true);
+  } else {
+    var tiles = Postbooks.TilesForClass(baseClass, controller, true);
+  }
 
   var editor = Postbooks.TileCarousel.create();
   editor.get('tray').set('subsurfaces', tiles);

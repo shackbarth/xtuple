@@ -34,10 +34,10 @@ Postbooks.Receivable.RenderRecordListRow = function(context, width, height, inde
     val = dt.toLocaleDateString();
     var isDue = object.get('isOpen') &&
                 XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
-    context.font = "8pt "+K.TYPEFACE;
+    context.font = "10pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
-    context.fillText(val , 265, 15);
+    context.fillText(val , 315, 15);
     dateWidth += context.measureText(val).width + 5;
   }
   
@@ -55,36 +55,37 @@ Postbooks.Receivable.RenderRecordListRow = function(context, width, height, inde
   val = val.elide(context, 95);
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'right';
-  context.fillText(val, 165, 15);
+  context.fillText(val, 315, 35);
 
   // Document Type
   val = object.get('documentTypeString');
   context.font = "8pt "+K.TYPEFACE;
+  context.textAlign = 'left';
   context.fillStyle = object.get('color');
-  context.fillText(val , 165, 35);
+  context.fillText(val , 15, 35);
 
   // Customer Name
   val = object.getPath('customer.name') || '';
   context.font = "italic 8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
-  val = val.elide(context, 195);
-  context.fillText(val , 275, 15);
+  val = val.elide(context, 160);
+  context.fillText(val , 325, 15);
   
   // Notes
   val = object.get('notes') || '';
   context.font = "8pt "+K.TYPEFACE;
-  val = val.elide(context, 170);
-  context.fillText(val , 275, 35);
+  val = val.elide(context, 160);
+  context.fillText(val , 325, 35);
 
   // labels 
   context.font = "8pt "+K.TYPEFACE;
   var paidLabel = "_paid".loc()+":";
   var paidLabelWidth = context.measureText(paidLabel).width;
-  context.fillText(paidLabel, 475, 15);
+  context.fillText(paidLabel, 490, 15);
   var balanceLabel = "_balance".loc()+":";
   var balanceLabelWidth = context.measureText(balanceLabel).width;
-  context.fillText(balanceLabel, 475, 35);
+  context.fillText(balanceLabel, 490, 35);
   context.textAlign = 'right';
 
   // Paid
@@ -105,9 +106,10 @@ Postbooks.Receivable.RenderRecordListRow = function(context, width, height, inde
   // It seems property changed is not being called
   if (currency.get('id') !== base.get('id')) {
     balance = (object.getPath('balanceMoney.baseValue') * sense).toMoney();
-    val = base.toLocaleString(balance);
+    val = "- " + base.toLocaleString(balance);
+    context.textAlign = 'left';
     val = val.elide(context, 95);
-    context.fillText(val, 675, 35);
+    context.fillText(val, 605, 35);
   }
 
 };
