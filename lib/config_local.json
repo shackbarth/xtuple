@@ -1,0 +1,14 @@
+{
+  "port": 5432,
+  "host": "localhost",
+  "debug": true,
+  "server-port": 9000,
+  "session-timeout": 15,
+  "redis-host": "localhost",
+  "redis-port": 6379,
+  "dev-ui-port": 9080,
+  "orm-installer-debugging": false,
+  "generated-models-directory": "../client/frameworks/xm/packages",
+  "generated-subclass-models-directory": "../generated_template_models",
+  "mode": "develop"
+}
