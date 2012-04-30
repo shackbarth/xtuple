@@ -1,6 +1,9 @@
 {
-  "port": 5432,
-  "host": "aurora.xtuple.com",
+  "port": 19689,
+  "host": "asteroidbelt.xtuple.com",
+  "databaseUser": "admin",
+  "databasePassword": "Assemble!Aurora",
+  "defaultOrganization": "aurora",
   "debug": true,
   "server-port": 9000,
   "session-timeout": 15,
