@@ -1,14 +1,21 @@
 {
-  "port": 5432,
-  "host": "localhost",
+  "port": 19689,
+  "host": "asteroidbelt.xtuple.com",
+  "databaseUser": "admin",
+  "databasePassword": "Assemble!Aurora",
+  "defaultOrganization": "aurora",
   "debug": true,
   "server-port": 9000,
   "session-timeout": 15,
-  "redis-host": "localhost",
+  "redis-host": "aurora.xtuple.com",
   "redis-port": 6379,
   "dev-ui-port": 9080,
+  "encryption-key-file": "lib/key.txt",
   "orm-installer-debugging": false,
   "generated-models-directory": "../client/frameworks/xm/packages",
   "generated-subclass-models-directory": "../generated_template_models",
-  "mode": "develop"
+  "mode": "develop",
+  "target-app": "postbooks",
+  "app-port": 4020,
+  "buildClient": false
 }

@@ -16,5 +16,6 @@
   "generated-subclass-models-directory": "../generated_template_models",
   "mode": "develop",
   "target-app": "postbooks",
-  "app-port": 4020
+  "app-port": 4020,
+  "buildClient": true
 }
