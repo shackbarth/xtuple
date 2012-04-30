@@ -118,15 +118,15 @@ Postbooks.ToDo.Tiles = function(controller, isRoot) {
       proto = klass.prototype;
       properties = [];
 
-  // header
+  // Overview
   properties = 'name isActive description priority owner assignedTo'.w()
   tiles.push(Postbooks.CreateTileView(klass, controller, undefined, properties));
   
-  // dates
+  // Dates
   properties = 'toDoStatus startDate dueDate assignDate completeDate'.w()
   tiles.push(Postbooks.CreateTileView(klass, controller, "_status".loc(), properties));
   
-  // notes
+  // Notes
   properties = 'notes'.w()
   tiles.push(Postbooks.CreateTileView(klass, controller, "_notes".loc(), properties));
 
