@@ -90,3 +90,178 @@ Postbooks.Incident.RenderRecordListRow = function(context, width, height, index,
   context.fillText(val? val : "_noCategory".loc(), 565, 35);
 
 };
+
+Postbooks.Incident.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Incident.Tiles()');
+  
+  var klass = XM.Incident,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  tiles.push(Postbooks.Incident.CreateOverviewTileView(controller));
+
+  // status...
+  properties = ' category incidentStatus severity priority resolution'.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+  
+  return tiles;
+};
+
+Postbooks.Incident.CreateOverviewTileView = function(controller) {
+  console.log('Postbooks.Incident.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create(),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Incident.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+  // number
+  key = 'number';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // description 
+  key = 'description';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += K.VERT_SPACER;
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // crm account 
+  key = 'account';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 12, width: left - 18 },
+    font: "bold 6pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 10 + K.SPACING;
+  layers.pushObject(label);
+
+  // owner 
+  key = 'owner';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 12, width: left - 18 },
+    font: "bold 6pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 10 + K.SPACING;
+  layers.pushObject(label);
+
+  // assignedTo 
+  key = 'assignedTo';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 12, width: left - 18 },
+    font: "bold 6pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+
+  // isPublic 
+  key = 'isPublic';
+  property = proto[key];
+  widget = SC.CheckboxWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    title: property.label,
+    valueBinding: SC.Binding.transform(function(val) {
+      return !!val;
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  return view;
+};

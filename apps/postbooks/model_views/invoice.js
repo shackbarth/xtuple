@@ -72,7 +72,7 @@ Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, 
   val = isPosted? "_posted".loc() : '';
   context.fillStyle = 'black';
   context.fillText(val, 490, 35);
-  if (isPosted) debugger
+  
   // Terms
   val = object.getPath('terms.code');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
