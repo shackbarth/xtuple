@@ -24,10 +24,16 @@ XT.Store = SC.Store.extend(XT.Logging,
   dispatch: function(dispatch) {
     if (!dispatch) throw new Error("dispatch() requires a dispatch");
 
-    var source = this._getDataSource();
+    var store = this;
+    var source;
+
+    // if we're in a nested store we have to walk back up to be
+    // able to send the dispatch
+    // TODO: should this wait until we're ready to commit?
+    while (!(source = store._getDataSource())) store = store.get('parentStore');
     if (source && source.dispatch) {
       source.dispatch.call(source, this, dispatch);
-    }
+    } else { throw new Error("XT.store.dispatch() source or source.dispatch not available"); }
 
     return this;
   },

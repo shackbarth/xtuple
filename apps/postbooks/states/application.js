@@ -13,7 +13,6 @@ Postbooks.APPLICATION = SC.State.design({
     XT.store = XT.Store.create().from(XT.dataSource);
     Postbooks.set('store', XT.store);
 
-    // Use the new package system out of the box for now.
     XT.package = XT.Package.create();
     XT.run();
 
@@ -21,7 +20,8 @@ Postbooks.APPLICATION = SC.State.design({
     // acquired, it is set on the XT.session object/controller
 
     // TEMPORARY HACK
-    XT.session.acquireSession('admin', 'admin', '380postbooks');
+    // THIS WAS MOVED TO onload.js from the socket package in xt
+    // XT.session.acquireSession('admin', 'admin', '380postbooks');
 
     SC.routes.add(':tab', Postbooks, Postbooks.routeHandler);
     if (!window.location.hash) {
