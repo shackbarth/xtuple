@@ -10,7 +10,9 @@ XT.Package = SC.Package.extend(
     BUILDER_SOCKET.emit('fetch', { request: 'package', package: packageName }, 
     function(content) {
       package.source = content;
-      self._sc_packageDidLoad(packageName);
+      SC.run(function() {
+        self._sc_packageDidLoad(packageName);
+      });
     });
   }
 

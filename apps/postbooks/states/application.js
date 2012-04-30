@@ -13,7 +13,6 @@ Postbooks.APPLICATION = SC.State.design({
     XT.store = XT.Store.create().from(XT.dataSource);
     Postbooks.set('store', XT.store);
 
-    // Use the new package system out of the box for now.
     XT.package = XT.Package.create();
     XT.run();
 

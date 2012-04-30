@@ -44,14 +44,6 @@ Postbooks.LoadModule = function(name, classes, state) {
     var baseClass = XM[className];
     var browseClass = XM[className+'Browse'] || baseClass;
 
-    if (!baseClass || !browseClass) {
-      var packageName = 'xm/' + className.decamelize();
-      return XT.package.loadPackage(packageName, function() {
-        console.log("CALLBACK FOR PACKAGE " + packageName);
-        Postbooks.LoadModule(name, classes, state);
-      });
-    }
-
     sc_assert(baseClass);
     sc_assert(baseClass.isClass);
     sc_assert(baseClass.subclassOf(XT.Record));

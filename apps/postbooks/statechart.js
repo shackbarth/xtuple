@@ -64,22 +64,38 @@ Postbooks.statechart = SC.Statechart.create({
 
     showCRM: function() {
       if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.CRM)) return;
-      else this.gotoState('CRM');
+      else {
+        XT.package.loadPackage('xm/crm', this, function() {
+          this.gotoState('CRM');
+        });
+      }
     },
 
     showBilling: function() {
       if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.BILLING)) return;
-      else this.gotoState('BILLING');
+      else {
+        XT.package.loadPackage('xm/billing', this, function() {
+          this.gotoState('BILLING');
+        });
+      }
     },
 
     showPayments: function() {
       if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.PAYMENTS)) return;
-      else this.gotoState('PAYMENTS');
+      else {
+        XT.package.loadPackage('xm/payments', this, function() {
+          this.gotoState('PAYMENTS');
+        });
+      }
     },
 
     showLedger: function() {
       if (Postbooks.statechart.stateIsEntered(Postbooks.statechart.rootState.APPLICATION.LEDGER)) return;
-      else this.gotoState('LEDGER');
+      else {
+        XT.package.loadPackage('xm/ledger', this, function() {
+          this.gotoState('LEDGER');
+        });
+      }
     },
 
     // KEYBOARD SHORTCUTS
