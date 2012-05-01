@@ -325,8 +325,8 @@ XT.Record = SC.Record.extend(XT.Logging,
         status !== K.EMPTY) {
       this.writeAttribute(key, value, YES);
     }
-    // this.log('Change status %@:%@ to %@'
-    //          .fmt(this.get('className'),this.get('id'), this.statusString()));
+    this.log('Change status %@:%@ to %@'
+             .fmt(this.get('className'),this.get('id'), this.statusString()));
   }.observes('status'),
   
   // ..........................................................

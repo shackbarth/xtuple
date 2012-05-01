@@ -43,6 +43,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   classes.forEach(function(className, idx) {
     var baseClass = XM[className];
     var browseClass = XM[className+'Browse'] || baseClass;
+
     sc_assert(baseClass);
     sc_assert(baseClass.isClass);
     sc_assert(baseClass.subclassOf(XT.Record));

@@ -218,6 +218,20 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             }).from(key, controller)
           });
           y += 24 + K.SPACING;
+        } else if (property.isChildrenAttribute) { // just for now so we can see layout impact
+          label = SC.LabelLayer.create({
+            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'white',
+            textAlign: 'right',
+            value: property.label + ':'
+          });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 24, right: right },
+            valueBinding: SC.Binding.transform(function(val) {
+              return String(val);
+            }).from(key, controller)
+          });
+          y += 24 + K.SPACING;
         } else if (typeClass === Number) {
           label = SC.LabelLayer.create({
             layout: { top: y + 4, left: 12, height: 24, width: left - 18 },

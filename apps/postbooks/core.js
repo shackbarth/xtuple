@@ -4,6 +4,11 @@
 // ==========================================================================
 /*globals global Postbooks XM XT sc_assert */
 
+//....................................................
+// MAKE SURE TO INCLUDE THE GLOBAL PACKAGE MANIFEST
+//
+{{@projectPackageManifest}}
+
 /** @namespace
 
   @extends SC.Application
@@ -119,8 +124,17 @@ Postbooks = global.Postbooks = SC.Application.create(
     @type Number
     @default 4
   */
-  SPACING: 4
+  SPACING: 4,
 
+  /**
+    Vertical spacing between logical widget groupings.
+    
+    @static
+    @constant
+    @type Number
+    @default 12
+  */
+  VERT_SPACER: 12
 
 });
 

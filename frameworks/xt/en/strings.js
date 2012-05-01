@@ -264,7 +264,7 @@ SC.stringsFor("en_US", {
   "_incident": "Incident",
   "_incidentRelations": "Incidents",
   "_incidents": "Incidents",
-  "_incidentStatus": "Incident Status",
+  "_incidentStatus": "Status",
   "_incoTerms": "Inco Terms",
   "_incoTermsSource": "Inco Terms Source",
   "_initials": "Initials",
