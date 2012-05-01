@@ -129,7 +129,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     SC.AnimationTransaction.begin({ duration: 300 });
     var frame = this.get('frame');
     // frame.x = frame.x + evt.clientX - this._clientX;
-    frame.x = this._nextSlide * -320; //this.getPath('carousel.frame').width;
+    frame.x = this._nextSlide * -315; //this.getPath('carousel.frame').width;
     // frame.x = this._startX;
     // frame.y = frame.y + evt.clientY - this._clientY;
     this.set('frame', frame);

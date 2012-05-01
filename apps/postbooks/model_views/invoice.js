@@ -72,7 +72,6 @@ Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, 
   val = isPosted? "_posted".loc() : '';
   context.fillStyle = 'black';
   context.fillText(val, 490, 35);
-  if (isPosted)
   
   // Terms
   val = object.getPath('terms.code');
