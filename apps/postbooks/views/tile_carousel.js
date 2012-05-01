@@ -57,19 +57,19 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend({
     // Need to calculate the number of tiles per slide, then figure out 
     // the number of slides.
     if (slides <= 4 || width <= 678 || height <= 704) {
-      tilesPerSlide = 2; // This is our minimum.
+      //tilesPerSlide = 2; // This is our minimum.
       tray.__horizontalTiles__ = tray.__verticalTiles__ = 2;
     } else {
       // See if we can fit more tiles per slide.
       var horizontalTiles = Math.floor((width-38)/320),
           verticalTiles = 2; //Math.floor((height-55)/320);
 
-      tilesPerSlide = 2; //horizontalTiles * verticalTiles;
+      //tilesPerSlide = 2; //horizontalTiles * verticalTiles;
       tray.__horizontalTiles__ = horizontalTiles;
       tray.__verticalTiles__ = verticalTiles;
     }
 
-    slides = Math.ceil(slides/tilesPerSlide);
+    slides = Math.ceil((slides+1)/tilesPerSlide);
 
     frame[2]/*width*/ = 320/*width*/ * slides;
     tray.set('frame', frame);
