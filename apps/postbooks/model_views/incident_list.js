@@ -103,8 +103,11 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
   tiles.push(Postbooks.Incident.CreateOverviewTileView(controller));
 
   // status...
-  properties = ' category incidentStatus severity priority resolution'.w();
+  properties = ' category incidentStatus severity priority resolution '.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+
+  // contact
+  tiles.push(Postbooks.Incident.CreateContactTileView(controller));
 
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
@@ -161,6 +164,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
 
   // crm account 
   key = 'account';
+  console.log('crm account type: %@'.fmt(proto[key].type));
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
@@ -265,6 +269,23 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+
+  return view;
+};
+
+Postbooks.Incident.CreateContactTileView = function(controller) {
+  console.log('Postbooks.Incident.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create({ title: "_contact".loc() }),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Incident.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+  
 
   return view;
 };
