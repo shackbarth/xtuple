@@ -127,8 +127,7 @@ Postbooks.ToDo.Tiles = function(controller, isRoot) {
   tiles.push(Postbooks.CreateTileView(klass, controller, "_status".loc(), properties));
   
   // Notes
-  properties = 'notes'.w()
-  tiles.push(Postbooks.CreateTileView(klass, controller, "_notes".loc(), properties));
+  tiles.push(Postbooks.CreateNotesTileView(controller));
 
   return tiles;
 };

@@ -4,7 +4,29 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
+sc_require('views/carousel');
+sc_require('views/tile_view');
+
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
+
 Postbooks.Opportunity = {};
+
 Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   
@@ -108,4 +130,89 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   context.fillStyle = val? 'black' : base1;
   context.fillText(val? val : "_noType".loc(), 565, 35);
 
+};
+
+Postbooks.Opportunity.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Opportunity.Tiles()');
+  
+  var klass = XM.Incident,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  tiles.push(Postbooks.Opportunity.CreateOverviewTileView(controller));
+
+  // status...
+//  properties = ' category incidentStatus severity priority resolution '.w();
+//  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+
+  //notes
+  tiles.push(Postbooks.CreateNotesTileView(controller));
+  
+  return tiles;
+};
+
+Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
+  console.log('Postbooks.Opportunity.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create(),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Opportunity.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+  // isActive
+  key = 'isActive';
+  property = proto[key];
+  widget = SC.CheckboxWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    title: property.label,
+    valueBinding: SC.Binding.transform(function(val) {
+      return !!val;
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(widget);
+
+
+  // number
+  key = 'number';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // name 
+  key = 'name';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += K.VERT_SPACER;
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  return view;
 };
