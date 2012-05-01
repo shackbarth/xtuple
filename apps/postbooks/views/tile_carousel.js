@@ -182,7 +182,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
           
       // We need to move the tileFrame to the correct slide.
       var x = tileFrame.x;
-      tileFrame.x = x + width*slide;
+      tileFrame.x = x + width*slide*horizontalTiles;
       sc_assert(tileFrame);
       tile.set('frame', tileFrame);
       tileFrame.x = x; // Restore the original.
