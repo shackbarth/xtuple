@@ -33,7 +33,7 @@ socket.on('connect', function() {
 
     // THIS NEEDS TO BE REPLACED BECAUSE THERE SHOULD BE A LOGIN
     // AVAILABLE TO SET THIS!
-    XT.session.acquireSession('admin', 'admin', '380postbooks');
+    XT.session.acquireSession('admin', 'Assemble!Aurora', 'aurora');
   });
 });
 // for debugging purposes
