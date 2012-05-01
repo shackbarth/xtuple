@@ -10,7 +10,7 @@ Postbooks.BILLING = Postbooks.MODULE.design({
 
   route: 'billing',
   title: "_billing",
-  submodules: 'Customer Invoice Receivable CashReceipt CustomerCreditCard'.w(),
+  submodules: 'Customer Invoice Receivable CashReceipt'.w(),
 
   // ACTIONS
 

@@ -165,19 +165,54 @@ XM.Item._xm_units = function(item, type, callback) {
   if(!SC.kindOf(item, XM.Item) &&
      !SC.kindOf(item, XM.ItemInfo)) return false;
      
-  var that = this,
-      id = item.get('id'),
-      dispatch;
+  var that = this;
+  var id = item.get('id');
+  var key = id.toString();
+  var dispatch;
+  var K = XM.Item;
+
+  // see if we have cached results
+  if (K._xm_unitsCache && 
+      K._xm_unitsCache[key] &&
+      K._xm_unitsCache[key][type]) {
+    callback(null, K._xm_unitsCache[key][type]);
+  
+  // then see if we have attempted to call this
+  } else if (K._xm_unitsCallbacks && 
+      K._xm_unitsCallbacks[key] &&
+      K._xm_unitsCallbacks[key][type]) {
+    K._xm_unitsCallbacks[key][type].push(callback);
+    
+  // no, well then lets ask
+  } else {
+    localCallback = function(err, results) {
+      if (!K._xm_unitsCache) K._xm_unitsCache = {};
+      if (!K._xm_unitsCache[key]) K._xm_unitsCache[key] = {};
+      if (!K._xm_unitsCache[key][type]) K._xm_unitsCache[key][type] = results;
       
-  dispatch = XT.Dispatch.create({
-    className: 'XM.Item',
-    functionName: type,
-    parameters: id,
-    target: that,
-    action: callback
-  });
-  console.log("XM.Units.%@ for: %@".fmt(type, id));
-  item.get('store').dispatch(dispatch);
+      // process the queue
+      callbacks = K._xm_unitsCallbacks[key][type];
+      for (var i = 0; i < callbacks.length; i++) {
+        callbacks[i](null, results);
+      }
+    },
+        
+    dispatch = XT.Dispatch.create({
+      className: 'XM.Item',
+      functionName: type,
+      parameters: id,
+      target: that,
+      action: localCallback
+    });
+    console.log("XM.Units.%@ for: %@".fmt(type, id));
+    
+    if (!K._xm_unitsCallbacks) K._xm_unitsCallbacks = {};
+    if (!K._xm_unitsCallbacks[key]) K._xm_unitsCallbacks[key] = {};
+    if (!K._xm_unitsCallbacks[key][type]) K._xm_unitsCallbacks[key][type] = [];
+    K._xm_unitsCallbacks[key][type].push(callback);
+    
+    item.get('store').dispatch(dispatch);
+  }
   
   return this;
 }

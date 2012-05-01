@@ -4,9 +4,10 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-XM.Project.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Project = {};
+Postbooks.Project.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
-  var contact = object.getPath('contact.name');
+  var currency = XT.store.find('XM.Currency', XM.Currency.BASE);
   
   // Rect
   context.fillStyle = isSelected? '#99CCFF' : 'white';
@@ -30,10 +31,10 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
     val = dt.toLocaleDateString();
     var isDue = object.get('projectStatus') !== XM.Project.COMPLETED &&
                 XT.DateTime.compareDate(dt, XT.DateTime.create()) <= 0;
-    context.font = "8pt "+K.TYPEFACE;
+    context.font = "10pt "+K.TYPEFACE;
     context.textAlign = 'right';
     context.fillStyle = isDue? XT.EXPIRED : 'black';
-    context.fillText(val , 265, 15);
+    context.fillText(val , 315, 15);
     dateWidth += context.measureText(val).width + 5;
   }
   
@@ -42,36 +43,32 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.font = "bold 10pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'left';
-  if (val) val = val.elide(context, 250 - dateWidth);
+  if (val) val = val.elide(context, 290 - dateWidth);
   context.fillText(val, 15, 15);
 
   // Name
   val = object.get('name');
   context.font = "8pt "+K.TYPEFACE;
   context.fillStyle = 'black';
+  val = val.elide(context, 295);
   context.fillText(val , 15, 35);
 
   // Account Name
   val = object.getPath('account.name') || '';
   context.font = "italic 8pt "+K.TYPEFACE;
-  if (contact) val = val.elide(context, 255);
+  val = val.elide(context, 295);
   context.fillText(val , 15, 55);
-
-  // Contact Name
-  val = contact || '';
-  context.font = "8pt "+K.TYPEFACE;
-  if (val) val = val.elide(context, 120);
-  context.fillText(val , 275, 55);
 
   // Status
   val = object.get('projectStatusString');
-  if (val) val = val.elide(context, 120);
-  context.fillText(val , 275, 15);
+  context.font = "8pt "+K.TYPEFACE;
+  if (val) val = val.elide(context, 70);
+  context.fillText(val , 325, 15);
 
   // Assigned To
   val = object.getPath('assignedTo.username') || '';
-  if (val) val = val.elide(context, 120);
-  context.fillText(val , 275, 35);
+  if (val) val = val.elide(context, 70);
+  context.fillText(val , 325, 35);
 
   // labels 
   var budgetLabel = "_budget".loc()+":";
@@ -79,7 +76,7 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   context.fillText(budgetLabel, 400, 15);
   var actualLabel = "_actual".loc()+":";
   var actualLabelWidth = context.measureText(actualLabel).width;
-  context.fillText("_actual".loc()+":", 400, 35);
+  context.fillText(actualLabel, 400, 35);
   var balanceLabel = "_balance".loc()+":";
   var balanceLabelWidth = context.measureText(balanceLabel).width;
   context.fillText(balanceLabel, 400, 55);
@@ -89,45 +86,45 @@ XM.Project.RenderRecordListRow = function(context, width, height, index, object,
   val = val.toLocaleString()+" "+"_hrs".loc();
   context.textAlign = 'right';
   val = val.elide(context, 145 - budgetLabelWidth);
-  context.fillText(val, 550, 15);
+  context.fillText(val, 535, 15);
 
   // Budgeted Expenses Total 
-  val = object.get('budgetedExpensesTotal').toLocaleString();
+  val = object.get('budgetedExpensesTotal');
+  val = currency.toLocaleString(val);
   val = val.elide(context, 95);
-  context.fillText(val, 650, 15);
+  context.fillText(val, 635, 15);
 
   // Actual Hours Total 
   val = object.get('actualHoursTotal');
   val = val.toLocaleString()+" "+"_hrs".loc();
   val = val.elide(context, 145 - actualLabelWidth);
-  context.fillText(val, 550, 35);
+  context.fillText(val, 535, 35);
   
   // Actual Expenses Total 
-  val = object.get('actualExpensesTotal').toLocaleString();
+  val = object.get('actualExpensesTotal')
+  val = currency.toLocaleString(val);
   val = val.elide(context, 95);
-  context.fillText(val, 650, 35);
+  context.fillText(val, 635, 35);
   
   // Balance Hours Total 
   val = object.get('balanceHoursTotal');
   context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
   val = val.toLocaleString()+" "+"_hrs".loc();
   val = val.elide(context, 145 - balanceLabelWidth);
-  context.fillText(val, 550, 55);
+  context.fillText(val, 535, 55);
   
   // Balance Expenses Total 
   val = object.get('balanceExpensesTotal');
   context.fillStyle = val && val.valueOf() >= 0? 'black' :  XT.ERROR;
-  val = val.toLocaleString();
+  val = currency.toLocaleString(val);
   val = val.elide(context, 95);
-  context.fillText(val, 650, 55);
+  context.fillText(val, 635, 55);
 
 };
 
-XM.Project.RecordListView = Postbooks.RecordListView.extend({
+Postbooks.Project.RecordListView = Postbooks.RecordListView.extend({
 
-  landscapeRows: 3,
-  portraitRows: 3,
-
-  renderRow: XM.Project.RenderRecordListRow
+  rowHeight: Postbooks.HEIGHT_3_ROW,
+  renderRow: Postbooks.Project.RenderRecordListRow
 
 });

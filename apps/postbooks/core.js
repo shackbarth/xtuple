@@ -87,7 +87,7 @@ Postbooks = global.Postbooks = SC.Application.create(
   PORTRAIT_LIST_WIDTH: 550,
 
   /**
-    Stndard row height for three rows.
+    Standard row height for one row.
     
     @static
     @constant
@@ -97,7 +97,7 @@ Postbooks = global.Postbooks = SC.Application.create(
   HEIGHT_1_ROW: 30,
 
   /**
-    Stndard row height for three rows.
+    Standard row height for two rows.
     
     @static
     @constant
@@ -107,16 +107,30 @@ Postbooks = global.Postbooks = SC.Application.create(
   HEIGHT_2_ROW: 50,
 
   /**
-    Stndard row height for three rows.
+    Standard row height for three rows.
     
     @static
     @constant
     @type Number
     @default 70
   */
-  HEIGHT_3_ROW: 70
+  HEIGHT_3_ROW: 70,
+  
+  /**
+    Stndard spacing between widgets.
+    
+    @static
+    @constant
+    @type Number
+    @default 4
+  */
+  SPACING: 4
+
 
 });
+
+SC.LabelLayer.prototype.font = "10pt "+Postbooks.TYPEFACE;
+SC.TextLayer.prototype.font = "10pt "+Postbooks.TYPEFACE;
 
 // Alias.
 Postbooks.getStates = Postbooks.getState;

@@ -42,9 +42,21 @@ XM.Currency = XM.Document.extend(XM._Currency,
     this.checkBaseCurrency();
   },
 
-  // Disable isBase if base currency not set
+  /** 
+    Disable isBase if base currency not set
+  */
   checkBaseCurrency: function() {
     this.isBase.set('isEditable', !XM.Currency.BASE && !this.get('isBase'));
+  },
+  
+  /**
+    Format a numeric money type in this currency to a localized string.
+    
+    @parm {Money|Cost|SalesPrice|PurchasePrice|ExtendedPrice}
+  */
+  toLocaleString: function(n) {
+    var symbol = this.get('symbol');
+    return n.toLocaleString(symbol);
   },
 
   //..................................................

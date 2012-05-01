@@ -101,6 +101,40 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
   // CALCULATED PROPERTIES
   //
   
+  /** 
+    Formatted bill-to address.
+  */
+  billtoAddress: function() {
+    var billtoName = this.get('billtoName'),
+        billtoAddress1 = this.get('billtoAddress1'),
+        billtoAddress2 = this.get('billtoAddress2'),
+        billtoAddress3 = this.get('billtoAddress3'),
+        billtoCity = this.get('billtoCity'),
+        billtoState = this.get('billtoState'),
+        billtoPostalCode = this.get('billtoPostalCode'),
+        billtoCountry = this.get('billtoCountry');
+    return XM.Address.format(billtoName, billtoAddress1, billtoAddress2, billtoAddress3, 
+                             billtoCity, billtoState, billtoPostalCode, billtoCountry);
+  }.property('billtoName', 'billtoAddress1', 'billtoAddress2', 'billtoAddress3', 
+             'billtoCity', 'billtoState', 'billtoPostalCode', 'billtoCountry').cacheable(),
+  
+  /** 
+    Formatted ship-to address.
+  */
+  shiptoAddress: function() {
+    var shiptoName = this.get('shiptoName'),
+        shiptoAddress1 = this.get('shiptoAddress1'),
+        shiptoAddress2 = this.get('shiptoAddress2'),
+        shiptoAddress3 = this.get('shiptoAddress3'),
+        shiptoCity = this.get('shiptoCity'),
+        shiptoState = this.get('shiptoState'),
+        shiptoPostalCode = this.get('shiptoPostalCode'),
+        shiptoCountry = this.get('shiptoCountry');
+    return XM.Address.format(shiptoName, shiptoAddress1, shiptoAddress2, shiptoAddress3, 
+                             shiptoCity, shiptoState, shiptoPostalCode,  shiptoCountry);
+  }.property('shiptoName', 'shiptoAddress1', 'shiptoAddress2', 'shiptoAddress3', 
+             'shiptoCity', 'shiptoState', 'shiptoPostalCode', 'shiptoCountry').cacheable(),
+  
   /**
     Total invoice taxes.
     
@@ -383,7 +417,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
 
     return errors;
   }.observes('linesLength', 'total'),
-  
+ 
   creditsLengthDidChange: function() {
     this.updateAllocatedCredit();
   }.observes('creditsLength'),
@@ -431,22 +465,24 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       this._xm_cacheCredit = credit;
     }
   }.observes('customer', 'currency', 'invoiceDate', 'credit'),
-  
+
   linesLengthDidChange: function() {
     // lock down currency if applicable
     this.currency.set('isEditable', this.get('linesLength') > 0);
     
     // handle line numbering
+    /* FIXME: This causes invoice list to hang. probably because of run loop problem
     var lines = this.get('lines'),
         max = 0, lineNumber, line;
     for (var i = 0; i < lines.get('length'); i++) {
-      line = lines.objectAt(i);
+      line = lines.objectAt(i); // this line specifically causes the hang
       lineNumber = line.get('lineNumber');
       if (lineNumber) max = lineNumber > max ? lineNumber : max;
       else line.set('lineNumber', max + 1);
     }
+    */
   }.observes('linesLength'),
-  
+
   /**
     Recalculate all line taxes.
   */
@@ -600,6 +636,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       }
     }
   }.observes('status')
+
 });
 
 

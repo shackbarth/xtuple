@@ -9,11 +9,10 @@ Postbooks.APPLICATION = SC.State.design({
   initialSubstate: 'DASHBOARD',
 
   enterState: function() {
-    XT.dataSource = XT.DataSource.create({ name: 'XT.dataSource' });
+    XT.dataSource = XT.DataSource.create({ name: 'XT.dataSource', logLocal: true });
     XT.store = XT.Store.create().from(XT.dataSource);
     Postbooks.set('store', XT.store);
 
-    // Use the new package system out of the box for now.
     XT.package = XT.Package.create();
     XT.run();
 

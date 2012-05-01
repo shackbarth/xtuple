@@ -182,12 +182,12 @@ SC.RecordAttribute.registerTransform(Percent, {
 
   /** @private */
   to: function(val) {
-    return SC.none(val) ? null : (val * 100).toPercent();
+    return SC.none(val) ? null : val.toPercent();
   },
 
   /** @private */
   from: function(val) {
-    return SC.none(val) ? null : val.valueOf().toPercent().valueOf() / 100;
+    return SC.none(val) ? null : val.valueOf().toPercent().valueOf();
   }
 
 });

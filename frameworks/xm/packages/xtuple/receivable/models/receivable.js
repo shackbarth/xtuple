@@ -53,3 +53,4 @@ XM.Receivable = XM.SubLedger.extend(XM._Receivable,
   }.observes('status')
   
 });
+

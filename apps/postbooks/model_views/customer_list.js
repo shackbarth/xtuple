@@ -4,10 +4,10 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
-Postbooks.Account = {};
-Postbooks.Account.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+Postbooks.Customer = {};
+Postbooks.Customer.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
-  var contact = object.get('primaryContact');
+  var contact = object.get('billingContact');
   var address = contact? contact.get('address') : null;
   address = address? address.formatShort() : '';
   
@@ -26,10 +26,10 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   context.textAlign = 'left';
   context.textBaseline = 'middle';
   
-  // Primary Contact Phone
+  // Billing Contact Phone
   var phoneWidth = 0;
   val = contact? contact.get('phone') : '';
-  context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
   if (val) val = val.elide(context, 195);
@@ -44,27 +44,28 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   context.textAlign = 'left';
   val = val.elide(context, 295 - phoneWidth);
   context.fillText(val, 15, 15);
- 
-  // Primary Contact Email
+  
+  // Billing Contact Email
   var emailWidth = 0;
   val = contact? contact.get('primaryEmail') : '';
   context.font = "8pt "+K.TYPEFACE;
   context.textAlign = 'right';
   context.fillStyle = 'blue';
   context.fillText(val, 315, 35);
-  if (val) emailWidth = context.measureText(val).width + 5;
-    
+  if (val) emailWidth = context.measureText(val).width + 5; 
+   
   // Name
   val = object.get('name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
-  val = val.elide(context, 300 - emailWidth);
+  if (address) val = val.elide(context, 300 - emailWidth);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
-  // Primary Contact Name
+  // Billing Contact Name
   val = contact? contact.get('name') : '';
   context.font = "italic 8pt "+K.TYPEFACE;
+  context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   val = val? val : "_noContact".loc();
   context.fillText(val, 325, 15);

@@ -1,6 +1,17 @@
 
-XM.IncidentNotes = XT.TileView.extend(
-  /** @lends XM.IncidentNotes.prototype */ {
+Postbooks.IncidentNotes = XT.ModelView.extend(
+  /** @lends Postbooks.IncidentNotes.prototype */ {
+
+  modelViewType: Postbooks.TileView,
+
+  targetModel: 'XM.Incident',
+
+  isCustomView: true,
+
+  layoutSchema: {
+    order: 4,
+    tileSize: .5
+  },
 
   layout: { top: 0, left: 0, right: 0, height: 0 },
 
@@ -11,7 +22,8 @@ XM.IncidentNotes = XT.TileView.extend(
     context.fillStyle = base00;
     context.fillRect(20, 6, 32, 32);
 
-    context.font = "12pt Helvetica";
+    var K = Postbooks;
+    context.font = "12pt "+K.TYPEFACE;
     context.fillStyle = 'black';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
@@ -21,7 +33,7 @@ XM.IncidentNotes = XT.TileView.extend(
     
 });
 
-XM.IncidentNotes.CreateTileView = function(controller) {
+Postbooks.IncidentNotes.CreateTileView = function(controller) {
   var view = this.create();
 
   var notes = SC.TextFieldWidget.create({

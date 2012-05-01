@@ -33,7 +33,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   var items = [];
   classes.forEach(function(className, idx) {
     items.push({
-      title: ("_" + className.camelize()).loc(),
+      title: ("_" + className.pluralize().camelize()).loc(),
       value: className + 'Surface',
       enabled: true,
       className: className
@@ -43,6 +43,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   classes.forEach(function(className, idx) {
     var baseClass = XM[className];
     var browseClass = XM[className+'Browse'] || baseClass;
+
     sc_assert(baseClass);
     sc_assert(baseClass.isClass);
     sc_assert(baseClass.subclassOf(XT.Record));
@@ -55,40 +56,35 @@ Postbooks.LoadModule = function(name, classes, state) {
       allowsEmptySelection: true
     });
 
-    var controller, surface;
+    var controller, surface, content, selection;
     controller = Postbooks[className+'ObjectController'] = SC.ObjectController.create();
+    content = 'Postbooks.'+className+'ListController.arrangedObjects';
+    selection = 'Postbooks.'+className+'ListController.selection';
+    
+    action = function(object, index) {
+      sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
+      Postbooks.set('store', Postbooks.get('store').chain());
+      controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
+      Postbooks.submoduleController = controller;
+      Postbooks.statechart.sendAction('show'+className);
+    }
 
     // class have it's own list view?
-    if (browseClass.RecordListView) {
-      surface = browseClass.RecordListView.create({
-        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
-        selectionBinding: 'Postbooks.'+className+'ListController.selection',
-
-        action: function(object, index) {
-          sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
-          Postbooks.set('store', Postbooks.get('store').chain());
-          controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
-          Postbooks.submoduleController = controller;
-          Postbooks.statechart.sendAction('show'+className);
-        }
-
+    if (Postbooks[className] && Postbooks[className].RecordListView) {
+      surface = Postbooks[className].RecordListView.create({
+        contentBinding: content,
+        selectionBinding: selection,
+        action: action
       });
       
     // nope, default
     } else {
       surface = Postbooks.RecordListView.create({
-        contentBinding: 'Postbooks.'+className+'ListController.arrangedObjects',
-        selectionBinding: 'Postbooks.'+className+'ListController.selection',
-
-        action: function(object, index) {
-          sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
-          Postbooks.set('store', Postbooks.get('store').chain());
-          controller.set('content', Postbooks.get('store').find(baseClass, Number(object.get('guid'))));
-          Postbooks.submoduleController = controller;
-          Postbooks.statechart.sendAction('show'+className);
-        },
-        
-        renderRow: browseClass.RenderRecordListRow? browseClass.RenderRecordListRow : Postbooks.DefaultRecordListRenderRow
+        contentBinding: content,
+        selectionBinding: selection,
+        action: action,
+        renderRow: Postbooks[className] && Postbooks[className].RenderRecordListRow? 
+                   Postbooks[className].RenderRecordListRow : Postbooks.RenderRecordListRow
 
       });
     }
@@ -96,6 +92,8 @@ Postbooks.LoadModule = function(name, classes, state) {
     items[idx].surface = surface;
   });
 
+  var list = [];
+  /* comment out until we can get to filling  'home' content
   var list = [SC.Object.create({
     title: "_home".loc(),
     surface: SC.View.create({
@@ -105,6 +103,7 @@ Postbooks.LoadModule = function(name, classes, state) {
       }
     })
   })];
+  */
   items.forEach(function(item) {
     list.push(SC.Object.create(item));
   });
@@ -114,7 +113,7 @@ Postbooks.LoadModule = function(name, classes, state) {
     allowsEmptySelection: false
   });
 
-  listController.selectObject(list[1]);
+  listController.selectObject(list[0]);
 
   var detail = SC.ContainerSurface.create({
     layout: { top: 44, left: 320, right: 0, bottom: 0 },
@@ -123,7 +122,7 @@ Postbooks.LoadModule = function(name, classes, state) {
     orderOutTransition: null
   });
 
-  detail.set('contentSurface', list[1].surface);
+  detail.set('contentSurface', list[0].surface);
 
   state.listContainer = detail;
   state.listController = listController;
