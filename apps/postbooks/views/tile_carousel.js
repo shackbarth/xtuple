@@ -41,32 +41,37 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend({
     // console.log('Postbooks.TileCarousel#updateTrayLayout()');
     var tray = this._sc_tray,
         frame = SC.MakeRect(this.get('frame')),
-        width = frame.width, height = frame.height;
+        width = frame.width, height = frame.height,
+        tilesPerSlide = 2,
+        K = Postbooks.TileView;
 
     sc_assert(tray);
-    var slides = tray.get('subsurfaces').length || 1;
+    var slides = 0, surfaces = tray.get('subsurfaces'); len = surfaces.length || 1; // Make at least one.
+    
+    // Take various widths of slides into consideration
+    for (var i=0; i<len; i++) {
+      var size = surfaces.objectAt(i).get('size') || K.QUARTER_TILE;
+      slides += Math.ceil(size.width/320);
+    }
+
     // Need to calculate the number of tiles per slide, then figure out 
     // the number of slides.
-/*
     if (slides <= 4 || width <= 678 || height <= 704) {
-      tilesPerSlide = 4; // This is our minimum.
+      tilesPerSlide = 2; // This is our minimum.
       tray.__horizontalTiles__ = tray.__verticalTiles__ = 2;
     } else {
       // See if we can fit more tiles per slide.
       var horizontalTiles = Math.floor((width-38)/320),
-          verticalTiles = Math.floor((height-55)/320);
+          verticalTiles = 2; //Math.floor((height-55)/320);
 
-      tilesPerSlide = horizontalTiles * verticalTiles;
+      tilesPerSlide = 2; //horizontalTiles * verticalTiles;
       tray.__horizontalTiles__ = horizontalTiles;
       tray.__verticalTiles__ = verticalTiles;
-    }*/
+    }
 
-    tilesPerSlide = 2;
-    tray.__horizontalTiles__ = 1;
-    tray.__verticalTiles__ = 2;
-    slides = Math.ceil(slides/2);
+    slides = Math.ceil(slides/tilesPerSlide);
 
-    frame[2]/*width*/ = frame[2]/*width*/ * slides;
+    frame[2]/*width*/ = 320/*width*/ * slides;
     tray.set('frame', frame);
     tray.__slides__ = slides;
   },
@@ -124,7 +129,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     SC.AnimationTransaction.begin({ duration: 300 });
     var frame = this.get('frame');
     // frame.x = frame.x + evt.clientX - this._clientX;
-    frame.x = this._nextSlide * -this.getPath('carousel.frame').width;
+    frame.x = this._nextSlide * -320; //this.getPath('carousel.frame').width;
     // frame.x = this._startX;
     // frame.y = frame.y + evt.clientY - this._clientY;
     this.set('frame', frame);
@@ -144,35 +149,78 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
         frame = SC.MakeRect(this.get('frame')),
         totalWidth = frame.width,
         slides = this.__slides__, // Set by our Carousel.
-        width = 500,//Math.floor(frame.width / slides),
+        width = Math.floor(frame.width / slides),
         height = frame.height,
         horizontalTiles = this.__horizontalTiles__,
         verticalTiles = this.__verticalTiles__,
-        tilesPerSlide = 2;
-console.log('frame width: %@'.fmt(frame.width));
-console.log('width: %@'.fmt(width));
-console.log('height: %@'.fmt(height));
+        tilesPerSlide = horizontalTiles * verticalTiles,
+        slide = 0;
+
+    // HACK: this requires careful planning of tile creation to work right. 
+    // To be replaced by Cassowary constraint solver.
+    // This implementation currently only works with `Postbooks.TileView.QUARTER_TILE`
+    // and `Postbooks.TileView.HORIZONTAL_TILE`.
+    
+    // Loop over tiles and place them
+    var horizontalCenter = 160;
+    var horizontalOffset = 320;
+    var verticalCenter = 160;
+    var verticalOffset = 320;
+    var col = 0, row = 0;
+
+    subsurfaces.forEach(function(tile) {
+      var tileFrame = SC.MakeRect(),
+          K = Postbooks.TileView,
+          size = tile.get('size') || K.QUARTER_TILE,
+          xMargin = col? 0 : K.TILE_MARGIN,
+          yMargin = row? 0 : K.TILE_MARGIN;
+          
+      tileFrame.width = size.width - K.TILE_MARGIN * 2;
+      tileFrame.height = size.height - K.TILE_MARGIN * 2;
+      tileFrame.x = ((col*horizontalOffset)+horizontalCenter) - 160 + xMargin;
+      tileFrame.y = ((row*verticalOffset)+verticalCenter) - 160 + yMargin;
+          
+      // We need to move the tileFrame to the correct slide.
+      var x = tileFrame.x;
+      tileFrame.x = x + width*slide*horizontalTiles;
+      sc_assert(tileFrame);
+      tile.set('frame', tileFrame);
+      tileFrame.x = x; // Restore the original.
+      
+      // Advance to next frame
+      col += Math.ceil(size.width/320);
+      if (col >= horizontalTiles) {
+        col = 0;
+        row += 1;
+      }
+      if (row >= verticalTiles) {
+        col = 0;
+        row = 0;
+        slide++;
+      }
+    }, this)
+
+/*    
     // Calculate and cache the tile frames for a single slide.
     var columns = [], column, tileFrame;
-    var horizontalCenter = 48;
-    var horizontalOffset = 96;
-    var verticalCenter = 162;
-    var verticalOffset = 324;
+    var horizontalCenter = Math.floor((width/horizontalTiles)/2);
+    var horizontalOffset = Math.floor(width/horizontalTiles);
+    var verticalCenter = Math.floor(((height-55)/verticalTiles)/2);
+    var verticalOffset = Math.floor((height-55)/verticalTiles);
     for (var idx=0, len=horizontalTiles; idx<len; ++idx) {
       column = columns[idx] = [];
       for (var idx2=0, len2=verticalTiles; idx2<len2; ++idx2) {
         tileFrame = column[idx2] = SC.MakeRect();
         if (Postbooks.USE_320_TILES) {
-
           tileFrame.width = tileFrame.height = 320;
-          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 50;
-          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 100;
-        }/* else {
+          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 160;
+          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 160;
+        } else {
           tileFrame.width = horizontalOffset - 12;
           tileFrame.height = verticalOffset - 12;
           tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - (horizontalOffset/2) + 6;
           tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - (verticalOffset/2) + 6;
-        }*/
+        }
       }
     }
 
@@ -200,6 +248,6 @@ console.log('height: %@'.fmt(height));
         }
       }
     }
+*/
   }
-
 });
