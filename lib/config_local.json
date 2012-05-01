@@ -17,5 +17,5 @@
   "mode": "develop",
   "target-app": "postbooks",
   "app-port": 4020,
-  "buildClient": true
+  "buildClient": false
 }

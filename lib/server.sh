@@ -15,7 +15,25 @@ if [ ! -d "lib/xt/node_modules/blossom" ]; then
   git clone git@github.com:clinuz/blossom.git
   cd blossom
   npm install
-  cd ../../..
+  cd ../../../..
+else
+  cd lib/xt/node_modules/blossom
+  git pull
+  cd ../../../..
+fi
+
+# make sure to clone build-tools if they don't exist
+# and if they do try and update?
+if [ ! -d "lib/xt/node_modules/build-tools" ]; then
+  cd lib/xt/node_modules
+  git clone git@github.com:clinuz/build-tools.git
+  cd build-tools
+  npm install --force
+  cd ../../../..
+else
+  cd lib/xt/node_modules/build-tools
+  git pull
+  cd ../../../..
 fi
 
 # will only install them if they need to be installed or
