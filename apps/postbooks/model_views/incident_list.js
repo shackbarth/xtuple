@@ -149,6 +149,19 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
       left = 120, right = 12,
       label = null, widget = null;
  
+  // isPublic 
+  key = 'isPublic';
+  property = proto[key];
+  widget = SC.CheckboxWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    title: property.label,
+    valueBinding: SC.Binding.transform(function(val) {
+      return !!val;
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(widget);
+
   // number
   key = 'number';
   property = proto[key];
@@ -278,36 +291,22 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   y += 24 + K.SPACING;
   layers.pushObject(label);
 
-  // isPublic 
-  key = 'isPublic';
-  property = proto[key];
-  widget = SC.CheckboxWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
-    title: property.label,
-    valueBinding: SC.Binding.transform(function(val) {
-      return !!val;
-    }).from(key, controller)
-  });
-  y += 24 + K.SPACING;
-  layers.pushObject(label);
-  layers.pushObject(widget);
-
   return view;
 };
 
 Postbooks.Incident.CreateContactTileView = function(controller) {
   console.log('Postbooks.Incident.CreateOverviewTileView(', controller, ')');
 
-  var view = Postbooks.TileView.create({ title: "_contact".loc() }),
-      layers = view.get('layers'),
-      y = 42,
-      proto = XM.Incident.prototype,
-      K = Postbooks,
-      key, property,
-      left = 120, right = 12,
-      label = null, widget = null;
+  var proto = XM.Incident.prototype,
+      key, property, objectKlass, objectController;
  
-  
+  key = 'contact';
+  property = proto[key];
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
 
-  return view;
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label);
+
 };
