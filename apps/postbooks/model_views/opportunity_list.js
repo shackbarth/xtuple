@@ -143,9 +143,11 @@ Postbooks.Opportunity.Tiles = function(controller, isRoot) {
   // overview
   tiles.push(Postbooks.Opportunity.CreateOverviewTileView(controller));
 
-  // status...
-//  properties = ' category incidentStatus severity priority resolution '.w();
-//  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+  // details
+  // TODO: include opportunitySource, opportunityStage, and OpportunityType
+  //        properties in this tile...
+  properties = ' priority '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
 
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
@@ -175,7 +177,7 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
       return !!val;
     }).from(key, controller)
   });
-  y += 24 + K.SPACING;
+  y += 18 + K.SPACING;
   layers.pushObject(widget);
 
 
@@ -213,6 +215,100 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+
+  // crm account 
+  key = 'account';
+  console.log('crm account type: %@'.fmt(proto[key].type));
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 12, width: left - 18 },
+    font: "bold 6pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 10 + K.SPACING;
+  layers.pushObject(label);
+
+  // owner 
+  key = 'owner';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 12, width: left - 18 },
+    font: "bold 6pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 10 + K.SPACING;
+  layers.pushObject(label);
+
+  // assignedTo 
+  key = "assignedTo";
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 12, width: left - 18 },
+    font: "bold 6pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
 
   return view;
 };

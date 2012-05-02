@@ -124,7 +124,7 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
   // overview
   tiles.push(Postbooks.Incident.CreateOverviewTileView(controller));
 
-  // status...
+  // details
   properties = ' category incidentStatus severity priority resolution '.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
 
