@@ -144,8 +144,6 @@ Postbooks.Opportunity.Tiles = function(controller, isRoot) {
   tiles.push(Postbooks.Opportunity.CreateOverviewTileView(controller));
 
   // details
-  // TODO: include opportunitySource, opportunityStage, and OpportunityType
-  //        properties in this tile...
   properties = ' opportunityStage priority opportunitySource opportunityType spacer startDate assignDate targetClose actualClose '.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
 
@@ -154,7 +152,7 @@ Postbooks.Opportunity.Tiles = function(controller, isRoot) {
 
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
-  
+
   return tiles;
 };
 

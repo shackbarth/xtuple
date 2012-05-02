@@ -140,8 +140,17 @@ Postbooks.Project.Tiles = function(controller, isRoot) {
   // overview
   tiles.push(Postbooks.Project.CreateOverviewTileView(controller));
 
+  // details
+  properties = ' projectStatus spacer dueDate startDate assignDate completeDate '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+
   // contact
   tiles.push(Postbooks.Project.CreateContactTileView(controller));
+
+  // summary
+  tiles.push(Postbooks.Project.CreateSummaryTileView(controller));
+ // properties = ' budgetedHoursTotal actualHoursTotal balanceHoursTotal '.w();
+  //tiles.push(Postbooks.Project.CreateSummaryTileView(controller));
 
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
@@ -308,4 +317,177 @@ Postbooks.Project.CreateContactTileView = function(controller) {
 
   return Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label);
 
+};
+
+Postbooks.Project.CreateSummaryTileView = function(controller) {
+  console.log('Postbooks.Project.CreateSummaryTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create({ title: "_summary".loc() }),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Project.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+  // hours
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: "_hours".loc()
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+
+  // budgetedHoursTotal
+  key = 'budgetedHoursTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_budgetedHoursTotal".loc() + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left + 73, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: '0'
+    /* TODO: get this computed property binding working.
+    valueBinding: valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "0";
+    }).from(key, controller)*/
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+
+  // actualHoursTotal
+  key = 'actualHoursTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_actualHoursTotal".loc() + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left + 73, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: '0'
+    /* TODO: get this computed property binding working.
+    valueBinding: valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "0";
+    }).from(key, controller)*/
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+
+  // balanceHoursTotal
+  key = 'balanceHoursTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_balance".loc() + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left + 73, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: '0'
+    /* TODO: get this computed property binding working.
+    valueBinding: valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "0";
+    }).from(key, controller)*/
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+
+  // expenses
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: "_expenses".loc()
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+
+  // budgetedExpensesTotal
+  key = 'budgetedHoursTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_budgetedExpensesTotal".loc() + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left + 73, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: '0'
+    /* TODO: get this computed property binding working.
+    valueBinding: valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "0";
+    }).from(key, controller)*/
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+
+  // actualExpensesTotal
+  key = 'actualExpensesTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_actualExpensesTotal".loc() + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left + 73, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: '0'
+    /* TODO: get this computed property binding working.
+    valueBinding: valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "0";
+    }).from(key, controller)*/
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+
+  // balanceHoursTotal
+  key = 'balanceHoursTotal';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_balance".loc() + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left + 73, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: '0'
+    /* TODO: get this computed property binding working.
+    valueBinding: valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "0";
+    }).from(key, controller)*/
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+
+  return view;
 };
