@@ -154,7 +154,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   property = proto[key];
   widget = SC.CheckboxWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    title: property.label,
+    title: "_isPublic".loc(),
     valueBinding: SC.Binding.transform(function(val) {
       return !!val;
     }).from(key, controller)
@@ -169,7 +169,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_number".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -186,7 +186,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_description".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -205,7 +205,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_account".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -236,7 +236,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_owner".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -267,7 +267,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_assignedTo".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -307,6 +307,6 @@ Postbooks.Incident.CreateContactTileView = function(controller) {
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
 
-  return Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label);
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_contact".loc());
 
 };

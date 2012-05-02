@@ -177,7 +177,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_number".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -194,7 +194,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_name".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -213,7 +213,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_account".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -244,7 +244,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "_owner".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -275,7 +275,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: "assignedTo".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -315,7 +315,7 @@ Postbooks.Project.CreateContactTileView = function(controller) {
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
 
-  return Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label);
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_contact".loc());
 
 };
 

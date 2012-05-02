@@ -126,73 +126,21 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
 Postbooks.Contact.Tiles = function(controller, isRoot) {
   console.log('Postbooks.Contact.Tiles()');
   
-  var klass = XM.Incident,
+  var klass = XM.Contact,
       tiles = [],
       proto = klass.prototype;
       properties = [];
 
   // overview
-  tiles.push(Postbooks.Contact.CreateOverviewTileView(controller));
+  properties = ' isActive number spacer honorific firstName middleName lastName suffix jobTitle '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, null, properties));
 
-  // details
-//  properties = ' category incidentStatus severity priority resolution '.w();
-//  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
-
-  // contact
-//  tiles.push(Postbooks.Contact.CreateContactTileView(controller));
+  // communication
+  properties = ' phone alternate fax spacer primaryEmail webAddress spacer account owner '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
 
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
   
   return tiles;
-};
-
-Postbooks.Contact.CreateOverviewTileView = function(controller) {
-  console.log('Postbooks.Contact.CreateOverviewTileView(', controller, ')');
-
-  var view = Postbooks.TileView.create(),
-      layers = view.get('layers'),
-      y = 42,
-      proto = XM.Contact.prototype,
-      K = Postbooks,
-      key, property,
-      left = 120, right = 12,
-      label = null, widget = null;
- 
-  // isActive
-  key = 'isActive';
-  property = proto[key];
-  console.log('property: %@'.fmt(property));
-  console.log('property.label: %@'.fmt(property.label));
-  widget = SC.CheckboxWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
-    title: property.label,
-    valueBinding: SC.Binding.transform(function(val) {
-      return !!val;
-    }).from(key, controller)
-  });
-  y += 24 + K.SPACING;
-  layers.pushObject(widget);
-
-
-  // number
-  key = 'number';
-  property = proto[key];
-  label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
-    textAlign: 'right',
-    value: property.label + ':'
-  });
-  layers.pushObject(label);
-  label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: left, height: 24, width: right },
-    backgroundColor: 'white',
-    textAlign: 'left',
-    valueBinding: SC.Binding.from(key, controller)
-  });
-  y += 24 + K.SPACING;
-  layers.pushObject(label);
-
-  return view;
 };
