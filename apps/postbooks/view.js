@@ -44,7 +44,8 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
       if (key === 'type') continue;
       if (key === 'dataState') continue;
 
-      var property = proto[key];
+      var property = proto[key],
+          title = (("_"+key).loc())+":";
 
       if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
         continue;
@@ -56,7 +57,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
           contentBinding: SC.Binding.from(key, controller).single().oneWay()
         });
 
-        tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label));
+        tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, title));
       } else if (key === 'customTileViews') {
         property.forEach(function(viewName) {
           var view = SC.objectForPropertyPath(viewName);
@@ -278,7 +279,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (typeClass === Boolean) {
           widget = SC.CheckboxWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
-            title: property.label,
+            title: title,
             valueBinding: SC.Binding.transform(function(val) {
               return !!val;
             }).from(key, controller)

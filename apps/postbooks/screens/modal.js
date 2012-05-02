@@ -87,7 +87,8 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
-    var property = proto[key];
+    var property = proto[key],
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -97,7 +98,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance) {
       });
 
       list.push(SC.Object.create({
-        title: property.label,
+        title: title,
         surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
       }));
     }

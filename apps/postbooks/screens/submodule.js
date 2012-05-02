@@ -127,7 +127,8 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
-    var property = proto[key];
+    var property = proto[key],
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -137,7 +138,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
       });
 
       list.push(SC.Object.create({
-        title: property.label,
+        title: title,
         surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController),
         klass: arrayKlass,
         attribute: key
