@@ -61,7 +61,7 @@
       "name": "contact",
       "toOne": {
         "isNested": true,
-        "type": "Contact",
+        "type": "ContactInfo",
         "column": "prj_cntct_id"
       }
     },
