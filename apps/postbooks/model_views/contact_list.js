@@ -5,8 +5,29 @@
 /*globals Postbooks XM sc_assert */
 
 sc_require('views/record_list');
+sc_require('views/carousel');
+sc_require('views/tile_view');
+
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
 
 Postbooks.Contact = {};
+
 Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   // Rect
@@ -102,3 +123,76 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
 
 };
 
+Postbooks.Contact.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Contact.Tiles()');
+  
+  var klass = XM.Incident,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  tiles.push(Postbooks.Contact.CreateOverviewTileView(controller));
+
+  // details
+//  properties = ' category incidentStatus severity priority resolution '.w();
+//  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+
+  // contact
+//  tiles.push(Postbooks.Contact.CreateContactTileView(controller));
+
+  //notes
+  tiles.push(Postbooks.CreateNotesTileView(controller));
+  
+  return tiles;
+};
+
+Postbooks.Contact.CreateOverviewTileView = function(controller) {
+  console.log('Postbooks.Contact.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create(),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Contact.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+  // isActive
+  key = 'isActive';
+  property = proto[key];
+  console.log('property: %@'.fmt(property));
+  console.log('property.label: %@'.fmt(property.label));
+  widget = SC.CheckboxWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    title: property.label,
+    valueBinding: SC.Binding.transform(function(val) {
+      return !!val;
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(widget);
+
+
+  // number
+  key = 'number';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: property.label + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left, height: 24, width: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+
+  return view;
+};
