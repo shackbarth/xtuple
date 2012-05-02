@@ -44,55 +44,47 @@ XM._Terms = {
     @type String
   */
   code: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_code'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type String
   */
   termsType: SC.Record.attr(String, {
-    defaultValue: 'D',
-    label: '_termsType'.loc()
+    defaultValue: 'D'
   }),
 
   /**
     @type Number
   */
   dueDays: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_dueDays'.loc()
+    defaultValue: 0
   }),
 
   /**
     @type Number
   */
   discountDays: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_discountDays'.loc()
+    defaultValue: 0
   }),
 
   /**
     @type Percent
   */
   discountPercent: SC.Record.attr(Percent, {
-    defaultValue: 0,
-    label: '_discountPercent'.loc()
+    defaultValue: 0
   }),
 
   /**
     @type Number
   */
   cutOffDay: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_cutOffDay'.loc()
+    defaultValue: 0
   })
 
 };

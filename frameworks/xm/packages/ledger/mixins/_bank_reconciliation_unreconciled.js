@@ -43,43 +43,31 @@ XM._BankReconciliationUnreconciled = {
   /**
     @type XM.BankReconciliation
   */
-  bankReconciliation: SC.Record.toOne('XM.BankReconciliation', {
-    label: '_bankReconciliation'.loc()
-  }),
+  bankReconciliation: SC.Record.toOne('XM.BankReconciliation'),
 
   /**
     @type String
   */
-  date: SC.Record.attr(String, {
-    label: '_date'.loc()
-  }),
+  date: SC.Record.attr(String),
 
   /**
     @type String
   */
-  documentType: SC.Record.attr(String, {
-    label: '_documentType'.loc()
-  }),
+  documentType: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  documentNumber: SC.Record.attr(Number, {
-    label: '_documentNumber'.loc()
-  }),
+  documentNumber: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

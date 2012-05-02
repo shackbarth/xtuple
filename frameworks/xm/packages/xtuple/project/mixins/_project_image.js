@@ -43,23 +43,18 @@ XM._ProjectImage = {
   /**
     @type XM.Project
   */
-  source: SC.Record.toOne('XM.Project', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Project'),
 
   /**
     @type XM.ImageInfo
   */
   image: SC.Record.toOne('XM.ImageInfo', {
-    isNested: true,
-    label: '_image'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

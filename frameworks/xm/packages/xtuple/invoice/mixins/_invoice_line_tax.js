@@ -43,87 +43,64 @@ XM._InvoiceLineTax = {
   /**
     @type XM.InvoiceLine
   */
-  invoiceLine: SC.Record.toOne('XM.InvoiceLine', {
-    label: '_invoiceLine'.loc()
-  }),
+  invoiceLine: SC.Record.toOne('XM.InvoiceLine'),
 
   /**
     @type XM.TaxType
   */
-  taxType: SC.Record.toOne('XM.TaxType', {
-    label: '_taxType'.loc()
-  }),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
     @type XM.TaxCode
   */
-  taxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_taxCode'.loc()
-  }),
+  taxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
     @type Number
   */
-  basis: SC.Record.attr(Number, {
-    label: '_basis'.loc()
-  }),
+  basis: SC.Record.attr(Number),
 
   /**
     @type XM.TaxCode
   */
-  basisTaxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_basisTaxCode'.loc()
-  }),
+  basisTaxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
     @type Number
   */
-  sequence: SC.Record.attr(Number, {
-    label: '_sequence'.loc()
-  }),
+  sequence: SC.Record.attr(Number),
 
   /**
     @type Percent
   */
-  percent: SC.Record.attr(Percent, {
-    label: '_percent'.loc()
-  }),
+  percent: SC.Record.attr(Percent),
 
   /**
     @type Money
   */
-  amount: SC.Record.attr(Money, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Money),
 
   /**
     @type SalesPrice
   */
-  tax: SC.Record.attr(SalesPrice, {
-    label: '_tax'.loc()
-  }),
+  tax: SC.Record.attr(SalesPrice),
 
   /**
     @type Date
   */
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_documentDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  })
+  currencyRate: SC.Record.attr(Number)
 
 };

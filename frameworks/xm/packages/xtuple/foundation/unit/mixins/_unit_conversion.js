@@ -43,31 +43,25 @@ XM._UnitConversion = {
   /**
     @type XM.Unit
   */
-  fromUnit: SC.Record.toOne('XM.Unit', {
-    label: '_fromUnit'.loc()
-  }),
+  fromUnit: SC.Record.toOne('XM.Unit'),
 
   /**
     @type UnitRatio
   */
   fromValue: SC.Record.attr(UnitRatio, {
-    defaultValue: 1,
-    label: '_fromValue'.loc()
+    defaultValue: 1
   }),
 
   /**
     @type XM.Unit
   */
-  toUnit: SC.Record.toOne('XM.Unit', {
-    label: '_toUnit'.loc()
-  }),
+  toUnit: SC.Record.toOne('XM.Unit'),
 
   /**
     @type UnitRatio
   */
   toValue: SC.Record.attr(UnitRatio, {
-    defaultValue: 1,
-    label: '_toValue'.loc()
+    defaultValue: 1
   })
 
 };

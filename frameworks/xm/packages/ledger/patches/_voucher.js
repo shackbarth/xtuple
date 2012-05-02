@@ -21,8 +21,7 @@ SC.Patch.create( /** @scope XM.Voucher.prototype */ {
     */
     distributionDate: SC.Record.attr(XT.DateTime, {
       format: '%Y-%m-%d',
-      useIsoDate: false,
-      label: '_distributionDate'.loc()
+      useIsoDate: false
     })
 
   }

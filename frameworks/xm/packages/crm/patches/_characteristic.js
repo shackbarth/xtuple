@@ -19,23 +19,17 @@ SC.Patch.create( /** @scope XM.Characteristic.prototype */ {
     /**
       @type Boolean
     */
-    isIncidents: SC.Record.attr(Boolean, {
-      label: '_isIncidents'.loc()
-    }),
+    isIncidents: SC.Record.attr(Boolean),
   
     /**
       @type Boolean
     */
-    isOpportunities: SC.Record.attr(Boolean, {
-      label: '_isOpportunities'.loc()
-    }),
+    isOpportunities: SC.Record.attr(Boolean),
   
     /**
       @type Boolean
     */
-    isAccounts: SC.Record.attr(Boolean, {
-      label: '_isAccounts'.loc()
-    })
+    isAccounts: SC.Record.attr(Boolean)
 
   }
 

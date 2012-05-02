@@ -43,87 +43,64 @@ XM._VoucherTax = {
   /**
     @type XM.Voucher
   */
-  voucher: SC.Record.toOne('XM.Voucher', {
-    label: '_voucher'.loc()
-  }),
+  voucher: SC.Record.toOne('XM.Voucher'),
 
   /**
     @type XM.TaxType
   */
-  taxType: SC.Record.toOne('XM.TaxType', {
-    label: '_taxType'.loc()
-  }),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
     @type XM.TaxCode
   */
-  taxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_taxCode'.loc()
-  }),
+  taxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
     @type Number
   */
-  basis: SC.Record.attr(Number, {
-    label: '_basis'.loc()
-  }),
+  basis: SC.Record.attr(Number),
 
   /**
     @type XM.TaxCode
   */
-  basisTaxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_basisTaxCode'.loc()
-  }),
+  basisTaxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
     @type Number
   */
-  sequence: SC.Record.attr(Number, {
-    label: '_sequence'.loc()
-  }),
+  sequence: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  percent: SC.Record.attr(Number, {
-    label: '_percent'.loc()
-  }),
+  percent: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  tax: SC.Record.attr(Number, {
-    label: '_tax'.loc()
-  }),
+  tax: SC.Record.attr(Number),
 
   /**
     @type Date
   */
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_documentDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  })
+  currencyRate: SC.Record.attr(Number)
 
 };

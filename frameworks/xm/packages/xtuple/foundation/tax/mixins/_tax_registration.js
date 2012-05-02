@@ -43,24 +43,19 @@ XM._TaxRegistration = {
   /**
     @type XM.TaxAuthority
   */
-  taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
-    label: '_taxAuthority'.loc()
-  }),
+  taxAuthority: SC.Record.toOne('XM.TaxAuthority'),
 
   /**
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.TaxZone
   */
-  taxZone: SC.Record.toOne('XM.TaxZone', {
-    label: '_taxZone'.loc()
-  }),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
     @type Date
@@ -70,8 +65,7 @@ XM._TaxRegistration = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.startOfTime();
-    },
-    label: '_effective'.loc()
+    }
   }),
 
   /**
@@ -82,15 +76,12 @@ XM._TaxRegistration = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.endOfTime();
-    },
-    label: '_expires'.loc()
+    }
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

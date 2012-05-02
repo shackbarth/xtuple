@@ -56,39 +56,32 @@ XM._ProjectTask = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.Project
   */
-  project: SC.Record.toOne('XM.Project', {
-    label: '_project'.loc()
-  }),
+  project: SC.Record.toOne('XM.Project'),
 
   /**
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type String
   */
   projectTaskStatus: SC.Record.attr(String, {
     isRequired: true,
-    defaultValue: 'P',
-    label: '_projectTaskStatus'.loc()
+    defaultValue: 'P'
   }),
 
   /**
@@ -96,8 +89,7 @@ XM._ProjectTask = {
   */
   budgetedHours: SC.Record.attr(Quantity, {
     isRequired: true,
-    defaultValue: 0,
-    label: '_budgetedHours'.loc()
+    defaultValue: 0
   }),
 
   /**
@@ -105,8 +97,7 @@ XM._ProjectTask = {
   */
   actualHours: SC.Record.attr(Quantity, {
     isRequired: true,
-    defaultValue: 0,
-    label: '_actualHours'.loc()
+    defaultValue: 0
   }),
 
   /**
@@ -114,8 +105,7 @@ XM._ProjectTask = {
   */
   budgetedExpenses: SC.Record.attr(Money, {
     isRequired: true,
-    defaultValue: 0,
-    label: '_budgetedExpenses'.loc()
+    defaultValue: 0
   }),
 
   /**
@@ -123,8 +113,7 @@ XM._ProjectTask = {
   */
   actualExpenses: SC.Record.attr(Money, {
     isRequired: true,
-    defaultValue: 0,
-    label: '_actualExpenses'.loc()
+    defaultValue: 0
   }),
 
   /**
@@ -132,8 +121,7 @@ XM._ProjectTask = {
   */
   startDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_startDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -141,8 +129,7 @@ XM._ProjectTask = {
   */
   dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_dueDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -150,8 +137,7 @@ XM._ProjectTask = {
   */
   assignDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_assignDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -159,24 +145,21 @@ XM._ProjectTask = {
   */
   completeDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_completeDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_assignedTo'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_owner'.loc()
+    isNested: true
   }),
 
   /**
@@ -184,8 +167,7 @@ XM._ProjectTask = {
   */
   comments: SC.Record.toMany('XM.ProjectTaskComment', {
     isNested: true,
-    inverse: 'project_task',
-    label: '_comments'.loc()
+    inverse: 'project_task'
   }),
 
   /**
@@ -193,8 +175,7 @@ XM._ProjectTask = {
   */
   alarms: SC.Record.toMany('XM.ProjectTaskAlarm', {
     isNested: true,
-    inverse: 'project_task',
-    label: '_alarms'.loc()
+    inverse: 'project_task'
   })
 
 };

@@ -43,66 +43,49 @@ XM._PayableApplication = {
   /**
     @type XM.Vendor
   */
-  vendor: SC.Record.toOne('XM.Vendor', {
-    label: '_vendor'.loc()
-  }),
+  vendor: SC.Record.toOne('XM.Vendor'),
 
   /**
     @type XM.Payable
   */
-  payable: SC.Record.toOne('XM.Payable', {
-    label: '_payable'.loc()
-  }),
+  payable: SC.Record.toOne('XM.Payable'),
 
   /**
     @type String
   */
-  documentType: SC.Record.attr(String, {
-    label: '_documentType'.loc()
-  }),
+  documentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  documentNumber: SC.Record.attr(String, {
-    label: '_documentNumber'.loc()
-  }),
+  documentNumber: SC.Record.attr(String),
 
   /**
     @type Date
   */
   postDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_postDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  paid: SC.Record.attr(Number, {
-    label: '_paid'.loc()
-  }),
+  paid: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };

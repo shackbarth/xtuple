@@ -43,16 +43,13 @@ XM._UserAccountUserAccountRoleAssignment = {
   /**
     @type String
   */
-  userAccount: SC.Record.attr(String, {
-    label: '_userAccount'.loc()
-  }),
+  userAccount: SC.Record.attr(String),
 
   /**
     @type XM.UserAccountRoleInfo
   */
   userAccountRole: SC.Record.toOne('XM.UserAccountRoleInfo', {
-    isNested: true,
-    label: '_userAccountRole'.loc()
+    isNested: true
   })
 
 };

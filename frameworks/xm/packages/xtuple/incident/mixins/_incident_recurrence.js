@@ -43,31 +43,24 @@ XM._IncidentRecurrence = {
   /**
     @type XM.Incident
   */
-  incident: SC.Record.toOne('XM.Incident', {
-    label: '_incident'.loc()
-  }),
+  incident: SC.Record.toOne('XM.Incident'),
 
   /**
     @type String
   */
-  period: SC.Record.attr(String, {
-    label: '_period'.loc()
-  }),
+  period: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  frequency: SC.Record.attr(Number, {
-    label: '_frequency'.loc()
-  }),
+  frequency: SC.Record.attr(Number),
 
   /**
     @type Date
   */
   startDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_startDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -75,15 +68,12 @@ XM._IncidentRecurrence = {
   */
   endDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_endDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  maximum: SC.Record.attr(Number, {
-    label: '_maximum'.loc()
-  })
+  maximum: SC.Record.attr(Number)
 
 };

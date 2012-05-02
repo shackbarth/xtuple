@@ -44,8 +44,7 @@ XM._ApplyCredit = {
     @type XM.CustomerInfo
   */
   customer: SC.Record.toOne('XM.CustomerInfo', {
-    isNested: true,
-    label: '_customer'.loc()
+    isNested: true
   }),
 
   /**
@@ -53,52 +52,40 @@ XM._ApplyCredit = {
   */
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_documentDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  documentType: SC.Record.attr(String, {
-    label: '_documentType'.loc()
-  }),
+  documentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type Money
   */
-  amount: SC.Record.attr(Money, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Money),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  }),
+  currencyRate: SC.Record.attr(Number),
 
   /**
     @type XM.ReceivableApplication
   */
   applications: SC.Record.toMany('XM.ReceivableApplication', {
     isNested: true,
-    inverse: 'receivable',
-    label: '_applications'.loc()
+    inverse: 'receivable'
   }),
 
   /**
@@ -106,8 +93,7 @@ XM._ApplyCredit = {
   */
   pendingApplications: SC.Record.toMany('XM.ReceivablePendingApplication', {
     isNested: true,
-    inverse: 'receivable',
-    label: '_pendingApplications'.loc()
+    inverse: 'receivable'
   }),
 
   /**
@@ -115,8 +101,7 @@ XM._ApplyCredit = {
   */
   details: SC.Record.toMany('XM.ApplyCreditDetail', {
     isNested: true,
-    inverse: 'applyCredit',
-    label: '_details'.loc()
+    inverse: 'applyCredit'
   })
 
 };

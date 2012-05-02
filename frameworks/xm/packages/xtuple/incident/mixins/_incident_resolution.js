@@ -43,22 +43,16 @@ XM._IncidentResolution = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  order: SC.Record.attr(Number, {
-    label: '_order'.loc()
-  }),
+  order: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  })
+  description: SC.Record.attr(String)
 
 };

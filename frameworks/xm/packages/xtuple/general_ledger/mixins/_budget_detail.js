@@ -43,23 +43,18 @@ XM._BudgetDetail = {
   /**
     @type Number
   */
-  budget: SC.Record.toOne(Number, {
-    label: '_budget'.loc()
-  }),
+  budget: SC.Record.toOne(Number),
 
   /**
     @type XM.Period
   */
-  period: SC.Record.toOne('XM.Period', {
-    label: '_period'.loc()
-  }),
+  period: SC.Record.toOne('XM.Period'),
 
   /**
     @type XM.LedgerAccountInfo
   */
   ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_ledgerAccount'.loc()
+    isNested: true
   })
 
 };

@@ -19,9 +19,7 @@ SC.Patch.create( /** @scope XM.Vendor.prototype */ {
     /**
       @type XM.Account
     */
-    account: SC.Record.toOne('XM.Account', {
-      label: '_account'.loc()
-    })
+    account: SC.Record.toOne('XM.Account')
 
   }
 

@@ -43,9 +43,7 @@ XM._CashReceiptReceivable = {
   /**
     @type XM.CustomerInfo
   */
-  customer: SC.Record.toOne('XM.CustomerInfo', {
-    label: '_customer'.loc()
-  }),
+  customer: SC.Record.toOne('XM.CustomerInfo'),
 
   /**
     @type Date
@@ -53,8 +51,7 @@ XM._CashReceiptReceivable = {
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true,
-    label: '_documentDate'.loc()
+    isRequired: true
   }),
 
   /**
@@ -63,68 +60,54 @@ XM._CashReceiptReceivable = {
   dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true,
-    label: '_dueDate'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
   documentType: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_documentType'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  orderNumber: SC.Record.attr(String, {
-    label: '_orderNumber'.loc()
-  }),
+  orderNumber: SC.Record.attr(String),
 
   /**
     @type XM.Terms
   */
   terms: SC.Record.toOne('XM.Terms', {
-    isNested: true,
-    label: '_terms'.loc()
+    isNested: true
   }),
 
   /**
     @type Money
   */
-  amount: SC.Record.attr(Money, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Money),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  }),
+  currencyRate: SC.Record.attr(Number),
 
   /**
     @type XM.ReceivableApplication
   */
   applications: SC.Record.toMany('XM.ReceivableApplication', {
     isNested: true,
-    inverse: 'receivable',
-    label: '_applications'.loc()
+    inverse: 'receivable'
   }),
 
   /**
@@ -132,15 +115,12 @@ XM._CashReceiptReceivable = {
   */
   pendingApplications: SC.Record.toMany('XM.ReceivablePendingApplication', {
     isNested: true,
-    inverse: 'receivable',
-    label: '_pendingApplications'.loc()
+    inverse: 'receivable'
   }),
 
   /**
     @type Boolean
   */
-  isOpen: SC.Record.attr(Boolean, {
-    label: '_isOpen'.loc()
-  })
+  isOpen: SC.Record.attr(Boolean)
 
 };

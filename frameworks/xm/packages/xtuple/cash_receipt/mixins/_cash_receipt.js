@@ -44,8 +44,7 @@ XM._CashReceipt = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
@@ -53,16 +52,14 @@ XM._CashReceipt = {
   */
   customer: SC.Record.toOne('XM.CustomerInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_customer'.loc()
+    isRequired: true
   }),
 
   /**
     @type Money
   */
   amount: SC.Record.attr(Money, {
-    isRequired: true,
-    label: '_amount'.loc()
+    isRequired: true
   }),
 
   /**
@@ -72,40 +69,34 @@ XM._CashReceipt = {
     isRequired: true,
     defaultValue: function() {
       return XM.Currency.BASE;
-    },
-    label: '_currency'.loc()
+    }
   }),
 
   /**
     @type Number
   */
   currencyRate: SC.Record.attr(Number, {
-    defaultValue: 1,
-    label: '_currencyRate'.loc()
+    defaultValue: 1
   }),
 
   /**
     @type String
   */
   fundsType: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_fundsType'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  documentNumber: SC.Record.attr(String, {
-    label: '_documentNumber'.loc()
-  }),
+  documentNumber: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
   isUseCustomerDeposit: SC.Record.attr(Boolean, {
     isRequired: true,
-    defaultValue: false,
-    label: '_isUseCustomerDeposit'.loc()
+    defaultValue: false
   }),
 
   /**
@@ -113,16 +104,14 @@ XM._CashReceipt = {
   */
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_documentDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type XM.BankAccount
   */
   bankAccount: SC.Record.toOne('XM.BankAccount', {
-    isRequired: true,
-    label: '_bankAccount'.loc()
+    isRequired: true
   }),
 
   /**
@@ -133,8 +122,7 @@ XM._CashReceipt = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.create().toFormattedString('%Y-%m-%d');
-    },
-    label: '_distributionDate'.loc()
+    }
   }),
 
   /**
@@ -145,8 +133,7 @@ XM._CashReceipt = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.create().toFormattedString('%Y-%m-%d');
-    },
-    label: '_applicationDate'.loc()
+    }
   }),
 
   /**
@@ -154,8 +141,7 @@ XM._CashReceipt = {
   */
   isPosted: SC.Record.attr(Boolean, {
     isRequired: true,
-    defaultValue: false,
-    label: '_isPosted'.loc()
+    defaultValue: false
   }),
 
   /**
@@ -163,8 +149,7 @@ XM._CashReceipt = {
   */
   isVoid: SC.Record.attr(Boolean, {
     isRequired: true,
-    defaultValue: false,
-    label: '_isVoid'.loc()
+    defaultValue: false
   }),
 
   /**
@@ -172,31 +157,25 @@ XM._CashReceipt = {
   */
   details: SC.Record.toMany('XM.CashReceiptDetail', {
     isNested: true,
-    inverse: 'cashReceipt',
-    label: '_details'.loc()
+    inverse: 'cashReceipt'
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type Date
   */
   posted: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_posted'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  postedBy: SC.Record.attr(String, {
-    label: '_postedBy'.loc()
-  })
+  postedBy: SC.Record.attr(String)
 
 };

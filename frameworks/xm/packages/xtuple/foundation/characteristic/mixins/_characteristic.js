@@ -44,73 +44,56 @@ XM._Characteristic = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type Number
   */
   characteristicType: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_characteristicType'.loc()
+    defaultValue: 0
   }),
 
   /**
     @type Number
   */
   order: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_order'.loc()
+    defaultValue: 0
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type String
   */
-  mask: SC.Record.attr(String, {
-    label: '_mask'.loc()
-  }),
+  mask: SC.Record.attr(String),
 
   /**
     @type String
   */
-  validator: SC.Record.attr(String, {
-    label: '_validator'.loc()
-  }),
+  validator: SC.Record.attr(String),
 
   /**
     @type XM.CharacteristicOption
   */
-  options: SC.Record.toMany('XM.CharacteristicOption', {
-    label: '_options'.loc()
-  }),
+  options: SC.Record.toMany('XM.CharacteristicOption'),
 
   /**
     @type Boolean
   */
-  isAddresses: SC.Record.attr(Boolean, {
-    label: '_isAddresses'.loc()
-  }),
+  isAddresses: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isContacts: SC.Record.attr(Boolean, {
-    label: '_isContacts'.loc()
-  }),
+  isContacts: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isItems: SC.Record.attr(Boolean, {
-    label: '_isItems'.loc()
-  })
+  isItems: SC.Record.attr(Boolean)
 
 };

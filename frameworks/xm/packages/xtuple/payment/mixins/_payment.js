@@ -43,124 +43,92 @@ XM._Payment = {
   /**
     @type XM.BankAccount
   */
-  bankAccount: SC.Record.toOne('XM.BankAccount', {
-    label: '_bankAccount'.loc()
-  }),
+  bankAccount: SC.Record.toOne('XM.BankAccount'),
 
   /**
     @type Date
   */
   paymentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_paymentDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  number: SC.Record.attr(Number, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  }),
+  currencyRate: SC.Record.attr(Number),
 
   /**
     @type Boolean
   */
-  isMiscellaneous: SC.Record.attr(Boolean, {
-    label: '_isMiscellaneous'.loc()
-  }),
+  isMiscellaneous: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isPrinted: SC.Record.attr(Boolean, {
-    label: '_isPrinted'.loc()
-  }),
+  isPrinted: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isPosted: SC.Record.attr(Boolean, {
-    label: '_isPosted'.loc()
-  }),
+  isPosted: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isVoid: SC.Record.attr(Boolean, {
-    label: '_isVoid'.loc()
-  }),
+  isVoid: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isReplaced: SC.Record.attr(Boolean, {
-    label: '_isReplaced'.loc()
-  }),
+  isReplaced: SC.Record.attr(Boolean),
 
   /**
     @type XM.ExpenseCategory
   */
-  expenseCategory: SC.Record.toOne('XM.ExpenseCategory', {
-    label: '_expenseCategory'.loc()
-  }),
+  expenseCategory: SC.Record.toOne('XM.ExpenseCategory'),
 
   /**
     @type String
   */
-  for: SC.Record.attr(String, {
-    label: '_for'.loc()
-  }),
+  for: SC.Record.attr(String),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isDeleted: SC.Record.attr(Boolean, {
-    label: '_isDeleted'.loc()
-  }),
+  isDeleted: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  achBatch: SC.Record.attr(String, {
-    label: '_achBatch'.loc()
-  }),
+  achBatch: SC.Record.attr(String),
 
   /**
     @type XM.PaymentDetail
   */
   details: SC.Record.toMany('XM.PaymentDetail', {
     isNested: true,
-    inverse: 'payment',
-    label: '_details'.loc()
+    inverse: 'payment'
   })
 
 };

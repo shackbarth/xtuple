@@ -43,23 +43,18 @@ XM._ContactImage = {
   /**
     @type XM.Comment
   */
-  source: SC.Record.toOne('XM.Comment', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Comment'),
 
   /**
     @type XM.ImageInfo
   */
   image: SC.Record.toOne('XM.ImageInfo', {
-    isNested: true,
-    label: '_image'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

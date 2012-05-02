@@ -49,45 +49,34 @@ XM._AddressComment = {
   /**
     @type XM.Address
   */
-  address: SC.Record.toOne('XM.Address', {
-    label: '_address'.loc()
-  }),
+  address: SC.Record.toOne('XM.Address'),
 
   /**
     @type XM.CommentType
   */
-  commentType: SC.Record.toOne('XM.CommentType', {
-    label: '_commentType'.loc()
-  }),
+  commentType: SC.Record.toOne('XM.CommentType'),
 
   /**
     @type String
   */
-  text: SC.Record.attr(String, {
-    label: '_text'.loc()
-  }),
+  text: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isPublic: SC.Record.attr(Boolean, {
-    label: '_isPublic'.loc()
-  }),
+  isPublic: SC.Record.attr(Boolean),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };

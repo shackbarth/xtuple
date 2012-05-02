@@ -43,66 +43,49 @@ XM._ReceivableApplication = {
   /**
     @type XM.Customer
   */
-  customer: SC.Record.toOne('XM.Customer', {
-    label: '_customer'.loc()
-  }),
+  customer: SC.Record.toOne('XM.Customer'),
 
   /**
     @type XM.Receivable
   */
-  receivable: SC.Record.toOne('XM.Receivable', {
-    label: '_receivable'.loc()
-  }),
+  receivable: SC.Record.toOne('XM.Receivable'),
 
   /**
     @type String
   */
-  documentType: SC.Record.attr(String, {
-    label: '_documentType'.loc()
-  }),
+  documentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  documentNumber: SC.Record.attr(String, {
-    label: '_documentNumber'.loc()
-  }),
+  documentNumber: SC.Record.attr(String),
 
   /**
     @type Date
   */
   postDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_postDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  paid: SC.Record.attr(Number, {
-    label: '_paid'.loc()
-  }),
+  paid: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };

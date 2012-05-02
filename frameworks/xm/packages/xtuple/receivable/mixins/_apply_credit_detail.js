@@ -43,29 +43,21 @@ XM._ApplyCreditDetail = {
   /**
     @type XM.ApplyCredit
   */
-  applyCredit: SC.Record.toOne('XM.ApplyCredit', {
-    label: '_applyCredit'.loc()
-  }),
+  applyCredit: SC.Record.toOne('XM.ApplyCredit'),
 
   /**
     @type XM.ApplyCreditReceivable
   */
-  receivable: SC.Record.attr('XM.ApplyCreditReceivable', {
-    label: '_receivable'.loc()
-  }),
+  receivable: SC.Record.attr('XM.ApplyCreditReceivable'),
 
   /**
     @type Money
   */
-  amount: SC.Record.attr(Money, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Money),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  })
+  currency: SC.Record.toOne('XM.Currency')
 
 };

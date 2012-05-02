@@ -44,91 +44,71 @@ XM._BankAccountAdjustment = {
     @type XM.BankAccountInfo
   */
   bankAccount: SC.Record.toOne('XM.BankAccountInfo', {
-    isNested: true,
-    label: '_bankAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.BankAccountAdjustmentType
   */
-  bankAccountAdjustmentType: SC.Record.toOne('XM.BankAccountAdjustmentType', {
-    label: '_bankAccountAdjustmentType'.loc()
-  }),
+  bankAccountAdjustmentType: SC.Record.toOne('XM.BankAccountAdjustmentType'),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  }),
+  createdBy: SC.Record.attr(String),
 
   /**
     @type Date
   */
   date: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_date'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  documentNumber: SC.Record.attr(String, {
-    label: '_documentNumber'.loc()
-  }),
+  documentNumber: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  }),
+  currencyRate: SC.Record.attr(Number),
 
   /**
     @type Date
   */
   notes: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_notes'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  sequence: SC.Record.attr(Number, {
-    label: '_sequence'.loc()
-  }),
+  sequence: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  isPosted: SC.Record.attr(Number, {
-    label: '_isPosted'.loc()
-  })
+  isPosted: SC.Record.attr(Number)
 
 };

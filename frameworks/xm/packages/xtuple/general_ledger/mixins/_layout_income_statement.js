@@ -44,23 +44,19 @@ XM._LayoutIncomeStatement = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isActive'.loc()
+    defaultValue: true
   }),
 
   /**
@@ -68,8 +64,7 @@ XM._LayoutIncomeStatement = {
   */
   groups: SC.Record.toMany('XM.LayoutIncomeStatementGroup', {
     isNested: true,
-    inverse: 'layoutIncomeStatement',
-    label: '_groups'.loc()
+    inverse: 'layoutIncomeStatement'
   }),
 
   /**
@@ -77,60 +72,48 @@ XM._LayoutIncomeStatement = {
   */
   details: SC.Record.toMany('XM.LayoutIncomeStatementDetail', {
     isNested: true,
-    inverse: 'layoutIncomeStatement',
-    label: '_details'.loc()
+    inverse: 'layoutIncomeStatement'
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
   isShowTotal: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    label: '_isShowTotal'.loc()
+    defaultValue: false
   }),
 
   /**
     @type Boolean
   */
   isAlternateBudget: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    label: '_isAlternateBudget'.loc()
+    defaultValue: false
   }),
 
   /**
     @type String
   */
-  budgetLabel: SC.Record.attr(String, {
-    label: '_budgetLabel'.loc()
-  }),
+  budgetLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
   isAlternateTotal: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    label: '_isAlternateTotal'.loc()
+    defaultValue: false
   }),
 
   /**
     @type String
   */
-  alternateTotalLabel: SC.Record.attr(String, {
-    label: '_alternateTotalLabel'.loc()
-  }),
+  alternateTotalLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isSystem: SC.Record.attr(Boolean, {
-    label: '_isSystem'.loc()
-  })
+  isSystem: SC.Record.attr(Boolean)
 
 };

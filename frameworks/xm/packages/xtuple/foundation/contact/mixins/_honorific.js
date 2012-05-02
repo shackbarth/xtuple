@@ -43,8 +43,6 @@ XM._Honorific = {
   /**
     @type String
   */
-  code: SC.Record.attr(String, {
-    label: '_code'.loc()
-  })
+  code: SC.Record.attr(String)
 
 };

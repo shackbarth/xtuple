@@ -43,22 +43,16 @@ XM._OpportunityStage = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  deactivate: SC.Record.attr(Boolean, {
-    label: '_deactivate'.loc()
-  })
+  deactivate: SC.Record.attr(Boolean)
 
 };

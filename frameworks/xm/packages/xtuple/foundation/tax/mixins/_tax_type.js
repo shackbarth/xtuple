@@ -44,22 +44,17 @@ XM._TaxType = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isSystem: SC.Record.attr(Boolean, {
-    label: '_isSystem'.loc()
-  })
+  isSystem: SC.Record.attr(Boolean)
 
 };

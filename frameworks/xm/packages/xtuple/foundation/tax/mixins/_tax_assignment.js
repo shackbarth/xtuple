@@ -43,22 +43,16 @@ XM._TaxAssignment = {
   /**
     @type XM.TaxZone
   */
-  taxZone: SC.Record.toOne('XM.TaxZone', {
-    label: '_taxZone'.loc()
-  }),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
     @type XM.TaxType
   */
-  taxType: SC.Record.toOne('XM.TaxType', {
-    label: '_taxType'.loc()
-  }),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
     @type XM.TaxCode
   */
-  taxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_taxCode'.loc()
-  })
+  taxCode: SC.Record.toOne('XM.TaxCode')
 
 };

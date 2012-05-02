@@ -43,23 +43,18 @@ XM._ToDoAlarm = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type XM.ToDo
   */
-  toDo: SC.Record.toOne('XM.ToDo', {
-    label: '_toDo'.loc()
-  }),
+  toDo: SC.Record.toOne('XM.ToDo'),
 
   /**
     @type Boolean
   */
   isEvent: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    label: '_isEvent'.loc()
+    defaultValue: false
   }),
 
   /**
@@ -68,16 +63,14 @@ XM._ToDoAlarm = {
   eventRecipient: SC.Record.attr(String, {
     defaultValue: function() {
       return arguments[0].getPath("store.dataSource").session.userName;
-    },
-    label: '_eventRecipient'.loc()
+    }
   }),
 
   /**
     @type Boolean
   */
   isMessage: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    label: '_isMessage'.loc()
+    defaultValue: false
   }),
 
   /**
@@ -86,24 +79,21 @@ XM._ToDoAlarm = {
   messageRecipient: SC.Record.attr(String, {
     defaultValue: function() {
       return arguments[0].getPath("store.dataSource").session.userName;
-    },
-    label: '_messageRecipient'.loc()
+    }
   }),
 
   /**
     @type Number
   */
   offset: SC.Record.attr(Number, {
-    defaultValue: 15,
-    label: '_offset'.loc()
+    defaultValue: 15
   }),
 
   /**
     @type String
   */
   qualifier: SC.Record.attr(String, {
-    defaultValue: 'MB',
-    label: '_qualifier'.loc()
+    defaultValue: 'MB'
   }),
 
   /**
@@ -113,16 +103,14 @@ XM._ToDoAlarm = {
     useIsoDate: true,
     defaultValue: function() {
       return XT.DateTime.create().toFormattedString(SC.DATETIME_ISO8601);
-    },
-    label: '_time'.loc()
+    }
   }),
 
   /**
     @type Date
   */
   trigger: SC.Record.attr(XT.DateTime, {
-    useIsoDate: true,
-    label: '_trigger'.loc()
+    useIsoDate: true
   })
 
 };

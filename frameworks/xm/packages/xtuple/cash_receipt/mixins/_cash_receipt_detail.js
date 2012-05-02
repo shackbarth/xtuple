@@ -44,24 +44,21 @@ XM._CashReceiptDetail = {
     @type XM.CashReceipt
   */
   cashReceipt: SC.Record.toOne('XM.CashReceipt', {
-    isRequired: true,
-    label: '_cashReceipt'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.CashReceiptReceivable
   */
   receivable: SC.Record.toOne('XM.CashReceiptReceivable', {
-    isRequired: true,
-    label: '_receivable'.loc()
+    isRequired: true
   }),
 
   /**
     @type Money
   */
   amount: SC.Record.attr(Money, {
-    isRequired: true,
-    label: '_amount'.loc()
+    isRequired: true
   }),
 
   /**
@@ -69,8 +66,7 @@ XM._CashReceiptDetail = {
   */
   discount: SC.Record.attr(Money, {
     isRequired: true,
-    defaultValue: 0,
-    label: '_discount'.loc()
+    defaultValue: 0
   })
 
 };

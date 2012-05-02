@@ -20,8 +20,7 @@ SC.Patch.create( /** @scope XM.Terms.prototype */ {
       @type Boolean
     */
     usedForBilling: SC.Record.attr(Boolean, {
-      defaultValue: false,
-      label: '_usedForBilling'.loc()
+      defaultValue: false
     })
 
   }

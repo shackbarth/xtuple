@@ -43,23 +43,18 @@ XM._OpportunityFile = {
   /**
     @type XM.Opportunity
   */
-  source: SC.Record.toOne('XM.Opportunity', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Opportunity'),
 
   /**
     @type XM.FileInfo
   */
   file: SC.Record.toOne('XM.FileInfo', {
-    isNested: true,
-    label: '_file'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

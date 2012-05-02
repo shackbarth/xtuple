@@ -38,22 +38,16 @@ XM._UserAccountInfo = {
   /**
     @type String
   */
-  username: SC.Record.attr(String, {
-    label: '_username'.loc()
-  }),
+  username: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  propername: SC.Record.attr(String, {
-    label: '_propername'.loc()
-  })
+  propername: SC.Record.attr(String)
 
 };

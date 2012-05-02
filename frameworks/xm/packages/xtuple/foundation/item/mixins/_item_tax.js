@@ -43,22 +43,16 @@ XM._ItemTax = {
   /**
     @type Number
   */
-  itemTax: SC.Record.attr(Number, {
-    label: '_itemTax'.loc()
-  }),
+  itemTax: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  itemTaxType: SC.Record.attr(Number, {
-    label: '_itemTaxType'.loc()
-  }),
+  itemTaxType: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  itemTaxZone: SC.Record.attr(Number, {
-    label: '_itemTaxZone'.loc()
-  })
+  itemTaxZone: SC.Record.attr(Number)
 
 };

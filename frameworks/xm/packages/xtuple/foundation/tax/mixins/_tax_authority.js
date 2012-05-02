@@ -44,44 +44,34 @@ XM._TaxAuthority = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  externalReference: SC.Record.attr(String, {
-    label: '_externalReference'.loc()
-  }),
+  externalReference: SC.Record.attr(String),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type String
   */
-  county: SC.Record.attr(String, {
-    label: '_county'.loc()
-  }),
+  county: SC.Record.attr(String),
 
   /**
     @type XM.AddressInfo
   */
   address: SC.Record.toOne('XM.AddressInfo', {
-    isNested: true,
-    label: '_address'.loc()
+    isNested: true
   })
 
 };

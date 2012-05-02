@@ -43,43 +43,31 @@ XM._ItemConversion = {
   /**
     @type XM.Item
   */
-  item: SC.Record.toOne('XM.Item', {
-    label: '_item'.loc()
-  }),
+  item: SC.Record.toOne('XM.Item'),
 
   /**
     @type XM.Unit
   */
-  fromUnit: SC.Record.toOne('XM.Unit', {
-    label: '_fromUnit'.loc()
-  }),
+  fromUnit: SC.Record.toOne('XM.Unit'),
 
   /**
     @type Number
   */
-  fromValue: SC.Record.attr(Number, {
-    label: '_fromValue'.loc()
-  }),
+  fromValue: SC.Record.attr(Number),
 
   /**
     @type XM.Unit
   */
-  toUnit: SC.Record.toOne('XM.Unit', {
-    label: '_toUnit'.loc()
-  }),
+  toUnit: SC.Record.toOne('XM.Unit'),
 
   /**
     @type Number
   */
-  toValue: SC.Record.attr(Number, {
-    label: '_toValue'.loc()
-  }),
+  toValue: SC.Record.attr(Number),
 
   /**
     @type Boolean
   */
-  fractional: SC.Record.attr(Boolean, {
-    label: '_fractional'.loc()
-  })
+  fractional: SC.Record.attr(Boolean)
 
 };

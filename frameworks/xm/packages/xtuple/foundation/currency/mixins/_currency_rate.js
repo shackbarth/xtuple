@@ -44,16 +44,14 @@ XM._CurrencyRate = {
     @type XM.Currency
   */
   currency: SC.Record.toOne('XM.Currency', {
-    isRequired: true,
-    label: '_currency'.loc()
+    isRequired: true
   }),
 
   /**
     @type UnitRatio
   */
   rate: SC.Record.attr(UnitRatio, {
-    isRequired: true,
-    label: '_rate'.loc()
+    isRequired: true
   }),
 
   /**
@@ -62,8 +60,7 @@ XM._CurrencyRate = {
   effective: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true,
-    label: '_effective'.loc()
+    isRequired: true
   }),
 
   /**
@@ -72,8 +69,7 @@ XM._CurrencyRate = {
   expires: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true,
-    label: '_expires'.loc()
+    isRequired: true
   })
 
 };

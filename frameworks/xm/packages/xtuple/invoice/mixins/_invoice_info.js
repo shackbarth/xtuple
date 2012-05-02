@@ -43,8 +43,6 @@ XM._InvoiceInfo = {
   /**
     @type Number
   */
-  number: SC.Record.attr(Number, {
-    label: '_number'.loc()
-  })
+  number: SC.Record.attr(Number)
 
 };

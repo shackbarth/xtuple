@@ -19,9 +19,7 @@ SC.Patch.create( /** @scope XM.Payment.prototype */ {
     /**
       @type Number
     */
-    journalNumber: SC.Record.attr(Number, {
-      label: '_journalNumber'.loc()
-    })
+    journalNumber: SC.Record.attr(Number)
 
   }
 

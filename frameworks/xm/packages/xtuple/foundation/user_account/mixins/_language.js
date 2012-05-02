@@ -43,22 +43,16 @@ XM._Language = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  abbreviationShort: SC.Record.attr(String, {
-    label: '_abbreviationShort'.loc()
-  }),
+  abbreviationShort: SC.Record.attr(String),
 
   /**
     @type String
   */
-  abbreviationLong: SC.Record.attr(String, {
-    label: '_abbreviationLong'.loc()
-  })
+  abbreviationLong: SC.Record.attr(String)
 
 };

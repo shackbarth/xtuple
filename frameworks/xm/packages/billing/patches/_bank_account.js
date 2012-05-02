@@ -20,8 +20,7 @@ SC.Patch.create( /** @scope XM.BankAccount.prototype */ {
       @type Boolean
     */
     usedByReceivables: SC.Record.attr(Boolean, {
-      defaultValue: false,
-      label: '_usedByReceivables'.loc()
+      defaultValue: false
     })
 
   }

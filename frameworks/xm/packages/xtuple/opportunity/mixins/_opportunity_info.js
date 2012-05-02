@@ -52,45 +52,35 @@ XM._OpportunityInfo = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type XM.AccountInfo
   */
-  account: SC.Record.toOne('XM.AccountInfo', {
-    label: '_account'.loc()
-  }),
+  account: SC.Record.toOne('XM.AccountInfo'),
 
   /**
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_owner'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_assignedTo'.loc()
+    isNested: true
   })
 
 };

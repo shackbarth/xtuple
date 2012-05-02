@@ -43,29 +43,21 @@ XM._CharacteristicAssignment = {
   /**
     @type String
   */
-  targetType: SC.Record.attr(String, {
-    label: '_targetType'.loc()
-  }),
+  targetType: SC.Record.attr(String),
 
   /**
     @type XM.Characteristic
   */
-  target: SC.Record.toOne('XM.Characteristic', {
-    label: '_target'.loc()
-  }),
+  target: SC.Record.toOne('XM.Characteristic'),
 
   /**
     @type Number
   */
-  characteristic: SC.Record.attr(Number, {
-    label: '_characteristic'.loc()
-  }),
+  characteristic: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  value: SC.Record.attr(String, {
-    label: '_value'.loc()
-  })
+  value: SC.Record.attr(String)
 
 };

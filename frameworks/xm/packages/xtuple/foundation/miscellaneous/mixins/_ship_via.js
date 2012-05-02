@@ -44,15 +44,12 @@ XM._ShipVia = {
     @type String
   */
   code: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_code'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  })
+  description: SC.Record.attr(String)
 
 };

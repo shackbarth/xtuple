@@ -44,15 +44,12 @@ XM._ProfitCenter = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  })
+  description: SC.Record.attr(String)
 
 };
