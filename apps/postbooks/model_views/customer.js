@@ -77,3 +77,68 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
   context.fillText(val , 325, 35);
 
 };
+
+Postbooks.Customer.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Customer.Tiles()');
+  
+  var klass = XM.Customer,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // Additional
+  properties = 'number name customerType isActive spacer salesRep commission taxZone currency'.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_overview".loc(), properties));
+  
+  // Terms
+  properties = 'terms discount creditStatus spacer balanceMethod creditLimit creditLimitCurrency creditRating graceDays'.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_terms".loc(), properties));
+
+  // Billing Contact
+  tiles.push(Postbooks.Customer.CreateBillingContactTileView(controller));
+  
+  // Correspondence Contact
+  tiles.push(Postbooks.Customer.CreateCorrespondenceContactTileView(controller));
+  
+  // Sales
+  properties = 'isFreeFormBillto isFreeFormShipto shipVia shipCharge'.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_sales".loc(), properties));
+  
+  return tiles;
+
+};
+
+Postbooks.Customer.CreateBillingContactTileView = function(controller) {
+ console.log('Postbooks.Customer.CreateOverviewTileView(', controller, ')');
+
+ var proto = XM.Customer.prototype,
+     key, property, objectKlass, objectController;
+
+ key = 'billingContact';
+ property = proto[key];
+ objectKlass = property.get('typeClass');
+ objectController = SC.ObjectController.create({
+   contentBinding: SC.Binding.from(key, controller).single().oneWay()
+ });
+
+ return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_billingContact".loc());
+
+};
+
+Postbooks.Customer.CreateCorrespondenceContactTileView = function(controller) {
+ console.log('Postbooks.Customer.CreateOverviewTileView(', controller, ')');
+
+ var proto = XM.Customer.prototype,
+     key, property, objectKlass, objectController;
+
+ key = 'correspondenceContact';
+ property = proto[key];
+ objectKlass = property.get('typeClass');
+ objectController = SC.ObjectController.create({
+   contentBinding: SC.Binding.from(key, controller).single().oneWay()
+ });
+
+ return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_correspondenceContact".loc());
+
+};
+
