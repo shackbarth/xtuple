@@ -135,7 +135,7 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
 Postbooks.Opportunity.Tiles = function(controller, isRoot) {
   console.log('Postbooks.Opportunity.Tiles()');
   
-  var klass = XM.Incident,
+  var klass = XM.Opportunity,
       tiles = [],
       proto = klass.prototype;
       properties = [];
@@ -146,8 +146,11 @@ Postbooks.Opportunity.Tiles = function(controller, isRoot) {
   // details
   // TODO: include opportunitySource, opportunityStage, and OpportunityType
   //        properties in this tile...
-  properties = ' priority '.w();
+  properties = ' opportunityStage priority opportunitySource opportunityType spacer startDate assignDate targetClose actualClose '.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+
+  // contact
+  tiles.push(Postbooks.Opportunity.CreateContactTileView(controller));
 
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
@@ -177,7 +180,7 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
       return !!val;
     }).from(key, controller)
   });
-  y += 18 + K.SPACING;
+  y += 24 + K.SPACING;
   layers.pushObject(widget);
 
 
@@ -311,4 +314,21 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   layers.pushObject(label);
 
   return view;
+};
+
+Postbooks.Opportunity.CreateContactTileView = function(controller) {
+  console.log('Postbooks.Opportunity.CreateOverviewTileView(', controller, ')');
+
+  var proto = XM.Opportunity.prototype,
+      key, property, objectKlass, objectController;
+ 
+  key = 'contact';
+  property = proto[key];
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, property.label);
+
 };
