@@ -43,16 +43,13 @@ XM._Url = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
   path: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_path'.loc()
+    isRequired: true
   })
 
 };

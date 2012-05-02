@@ -20,24 +20,21 @@ SC.Patch.create( /** @scope XM.ToDo.prototype */ {
       @type XM.AccountInfo
     */
     account: SC.Record.toOne('XM.AccountInfo', {
-      isNested: true,
-      label: '_account'.loc()
+      isNested: true
     }),
   
     /**
       @type XM.IncidentInfo
     */
     incident: SC.Record.toOne('XM.IncidentInfo', {
-      isNested: true,
-      label: '_incident'.loc()
+      isNested: true
     }),
   
     /**
       @type XM.OpportunityInfo
     */
     opportunity: SC.Record.toOne('XM.OpportunityInfo', {
-      isNested: true,
-      label: '_opportunity'.loc()
+      isNested: true
     }),
   
     /**
@@ -45,8 +42,7 @@ SC.Patch.create( /** @scope XM.ToDo.prototype */ {
     */
     incidents: SC.Record.toMany('XM.ToDoIncident', {
       isNested: true,
-      inverse: 'source',
-      label: '_incidents'.loc()
+      inverse: 'source'
     }),
   
     /**
@@ -54,8 +50,7 @@ SC.Patch.create( /** @scope XM.ToDo.prototype */ {
     */
     projects: SC.Record.toMany('XM.ToDoProject', {
       isNested: true,
-      inverse: 'source',
-      label: '_projects'.loc()
+      inverse: 'source'
     }),
   
     /**
@@ -63,8 +58,7 @@ SC.Patch.create( /** @scope XM.ToDo.prototype */ {
     */
     opportunities: SC.Record.toMany('XM.ToDoOpportunity', {
       isNested: true,
-      inverse: 'source',
-      label: '_opportunities'.loc()
+      inverse: 'source'
     })
 
   }

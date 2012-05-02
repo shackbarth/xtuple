@@ -52,81 +52,62 @@ XM._ContactInfo = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  jobTitle: SC.Record.attr(String, {
-    label: '_jobTitle'.loc()
-  }),
+  jobTitle: SC.Record.attr(String),
 
   /**
     @type String
   */
-  phone: SC.Record.attr(String, {
-    label: '_phone'.loc()
-  }),
+  phone: SC.Record.attr(String),
 
   /**
     @type String
   */
-  alternate: SC.Record.attr(String, {
-    label: '_alternate'.loc()
-  }),
+  alternate: SC.Record.attr(String),
 
   /**
     @type String
   */
-  fax: SC.Record.attr(String, {
-    label: '_fax'.loc()
-  }),
+  fax: SC.Record.attr(String),
 
   /**
     @type String
   */
-  primaryEmail: SC.Record.attr(String, {
-    label: '_primaryEmail'.loc()
-  }),
+  primaryEmail: SC.Record.attr(String),
 
   /**
     @type String
   */
-  webAddress: SC.Record.attr(String, {
-    label: '_webAddress'.loc()
-  }),
+  webAddress: SC.Record.attr(String),
 
   /**
     @type XM.AddressInfo
   */
   address: SC.Record.toOne('XM.AddressInfo', {
-    isNested: true,
-    label: '_address'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_owner'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.AccountInfo
   */
   account: SC.Record.toOne('XM.AccountInfo', {
-    isNested: true,
-    label: '_account'.loc()
+    isNested: true
   })
 
 };

@@ -43,23 +43,18 @@ XM._ProjectUrl = {
   /**
     @type XM.Project
   */
-  source: SC.Record.toOne('XM.Project', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Project'),
 
   /**
     @type XM.Url
   */
   url: SC.Record.toOne('XM.Url', {
-    isNested: true,
-    label: '_url'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

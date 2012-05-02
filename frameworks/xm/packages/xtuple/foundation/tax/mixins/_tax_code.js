@@ -44,36 +44,27 @@ XM._TaxCode = {
     @type String
   */
   code: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_code'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type XM.TaxClass
   */
-  taxClass: SC.Record.toOne('XM.TaxClass', {
-    label: '_taxClass'.loc()
-  }),
+  taxClass: SC.Record.toOne('XM.TaxClass'),
 
   /**
     @type XM.TaxAuthority
   */
-  taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
-    label: '_taxAuthority'.loc()
-  }),
+  taxAuthority: SC.Record.toOne('XM.TaxAuthority'),
 
   /**
     @type XM.TaxCode
   */
-  basisTaxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_basisTaxCode'.loc()
-  })
+  basisTaxCode: SC.Record.toOne('XM.TaxCode')
 
 };

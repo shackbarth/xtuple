@@ -53,38 +53,30 @@ XM._IncidentInfo = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type XM.AccountInfo
   */
-  account: SC.Record.toOne('XM.AccountInfo', {
-    label: '_account'.loc()
-  }),
+  account: SC.Record.toOne('XM.AccountInfo'),
 
   /**
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_owner'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_assignedTo'.loc()
+    isNested: true
   })
 
 };

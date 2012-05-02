@@ -43,45 +43,35 @@ XM._VendorAddress = {
   /**
     @type XM.Vendor
   */
-  vendor: SC.Record.toOne('XM.Vendor', {
-    label: '_vendor'.loc()
-  }),
+  vendor: SC.Record.toOne('XM.Vendor'),
 
   /**
     @type String
   */
-  code: SC.Record.attr(String, {
-    label: '_code'.loc()
-  }),
+  code: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.ContactInfo
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_contact'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.AddressInfo
   */
   address: SC.Record.toOne('XM.AddressInfo', {
-    isNested: true,
-    label: '_address'.loc()
+    isNested: true
   })
 
 };

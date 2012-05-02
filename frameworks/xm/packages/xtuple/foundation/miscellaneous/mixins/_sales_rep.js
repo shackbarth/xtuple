@@ -44,31 +44,26 @@ XM._SalesRep = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isActive'.loc()
+    defaultValue: true
   }),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Number
   */
   commission: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_commission'.loc()
+    defaultValue: 0
   })
 
 };

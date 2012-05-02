@@ -20,100 +20,73 @@ SC.Patch.create( /** @scope XM.BankAccount.prototype */ {
       @type Boolean
     */
     usedByPayables: SC.Record.attr(Boolean, {
-      defaultValue: false,
-      label: '_usedByPayables'.loc()
+      defaultValue: false
     }),
   
     /**
       @type Number
     */
-    nextCheckNumber: SC.Record.attr(Number, {
-      label: '_nextCheckNumber'.loc()
-    }),
+    nextCheckNumber: SC.Record.attr(Number),
   
     /**
       @type Number
     */
-    checkForm: SC.Record.attr(Number, {
-      label: '_checkForm'.loc()
-    }),
+    checkForm: SC.Record.attr(Number),
   
     /**
       @type Number
     */
-    routing: SC.Record.attr(Number, {
-      label: '_routing'.loc()
-    }),
+    routing: SC.Record.attr(Number),
   
     /**
       @type Boolean
     */
-    isAchEnabled: SC.Record.attr(Boolean, {
-      label: '_isAchEnabled'.loc()
-    }),
+    isAchEnabled: SC.Record.attr(Boolean),
   
     /**
       @type Boolean
     */
-    achGenerateCheckNumber: SC.Record.attr(Boolean, {
-      label: '_achGenerateCheckNumber'.loc()
-    }),
+    achGenerateCheckNumber: SC.Record.attr(Boolean),
   
     /**
       @type Number
     */
-    achLeadTime: SC.Record.attr(Number, {
-      label: '_achLeadTime'.loc()
-    }),
+    achLeadTime: SC.Record.attr(Number),
   
     /**
       @type String
     */
-    achOriginType: SC.Record.attr(String, {
-      label: '_achOriginType'.loc()
-    }),
+    achOriginType: SC.Record.attr(String),
   
     /**
       @type String
     */
-    achOriginName: SC.Record.attr(String, {
-      label: '_achOriginName'.loc()
-    }),
+    achOriginName: SC.Record.attr(String),
   
     /**
       @type String
     */
-    achOrigin: SC.Record.attr(String, {
-      label: '_achOrigin'.loc()
-    }),
+    achOrigin: SC.Record.attr(String),
   
     /**
       @type Boolean
     */
-    achDestinationType: SC.Record.attr(Boolean, {
-      label: '_achDestinationType'.loc()
-    }),
+    achDestinationType: SC.Record.attr(Boolean),
   
     /**
       @type Boolean
     */
-    achDestinationName: SC.Record.attr(Boolean, {
-      label: '_achDestinationName'.loc()
-    }),
+    achDestinationName: SC.Record.attr(Boolean),
   
     /**
       @type Boolean
     */
-    achDestination: SC.Record.attr(Boolean, {
-      label: '_achDestination'.loc()
-    }),
+    achDestination: SC.Record.attr(Boolean),
   
     /**
       @type Number
     */
-    achDestinationFederal: SC.Record.attr(Number, {
-      label: '_achDestinationFederal'.loc()
-    })
+    achDestinationFederal: SC.Record.attr(Number)
 
   }
 

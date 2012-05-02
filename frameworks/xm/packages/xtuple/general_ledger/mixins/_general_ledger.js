@@ -45,67 +45,52 @@ XM._GeneralLedger = {
   */
   date: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_date'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.LedgerAccountInfo
   */
   ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_ledgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  sense: SC.Record.attr(String, {
-    label: '_sense'.loc()
-  }),
+  sense: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  journalNumber: SC.Record.attr(Number, {
-    label: '_journalNumber'.loc()
-  }),
+  journalNumber: SC.Record.attr(Number),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  }),
+  createdBy: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isDeleted: SC.Record.attr(Boolean, {
-    label: '_isDeleted'.loc()
-  })
+  isDeleted: SC.Record.attr(Boolean)
 
 };

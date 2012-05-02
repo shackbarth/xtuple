@@ -20,24 +20,21 @@ SC.Patch.create( /** @scope XM.SalesCategory.prototype */ {
       @type XM.LedgerAccount
     */
     salesLedgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_salesLedgerAccount'.loc()
+      isRequired: true
     }),
   
     /**
       @type XM.LedgerAccount
     */
     prepaidLedgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_prepaidLedgerAccount'.loc()
+      isRequired: true
     }),
   
     /**
       @type XM.LedgerAccount
     */
     receivableLedgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_receivableLedgerAccount'.loc()
+      isRequired: true
     })
 
   }

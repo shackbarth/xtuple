@@ -43,15 +43,11 @@ XM._ContactEmail = {
   /**
     @type XM.Comment
   */
-  contact: SC.Record.toOne('XM.Comment', {
-    label: '_contact'.loc()
-  }),
+  contact: SC.Record.toOne('XM.Comment'),
 
   /**
     @type String
   */
-  email: SC.Record.attr(String, {
-    label: '_email'.loc()
-  })
+  email: SC.Record.attr(String)
 
 };

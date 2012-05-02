@@ -19,23 +19,17 @@ SC.Patch.create( /** @scope XM.ToDoInfo.prototype */ {
     /**
       @type XM.OpportunityInfo
     */
-    opportunity: SC.Record.toOne('XM.OpportunityInfo', {
-      label: '_opportunity'.loc()
-    }),
+    opportunity: SC.Record.toOne('XM.OpportunityInfo'),
   
     /**
       @type XM.AccountInfo
     */
-    account: SC.Record.toOne('XM.AccountInfo', {
-      label: '_account'.loc()
-    }),
+    account: SC.Record.toOne('XM.AccountInfo'),
   
     /**
       @type XM.IncidentInfo
     */
-    incident: SC.Record.toOne('XM.IncidentInfo', {
-      label: '_incident'.loc()
-    })
+    incident: SC.Record.toOne('XM.IncidentInfo')
 
   }
 

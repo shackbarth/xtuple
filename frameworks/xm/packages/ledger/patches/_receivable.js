@@ -20,8 +20,7 @@ SC.Patch.create( /** @scope XM.Receivable.prototype */ {
       @type XM.LedgerAccount
     */
     ledgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isNested: true,
-      label: '_ledgerAccount'.loc()
+      isNested: true
     }),
   
     /**
@@ -29,8 +28,7 @@ SC.Patch.create( /** @scope XM.Receivable.prototype */ {
     */
     salesCategory: SC.Record.toOne('XM.SalesCategory', {
       isRequired: true,
-      defaultValue: -1,
-      label: '_salesCategory'.loc()
+      defaultValue: -1
     })
 
   }

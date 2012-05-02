@@ -52,24 +52,20 @@ XM._Opportunity = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isActive'.loc()
+    defaultValue: true
   }),
 
   /**
@@ -77,52 +73,40 @@ XM._Opportunity = {
   */
   account: SC.Record.toOne('XM.AccountInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_account'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.ContactInfo
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_contact'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.OpportunityStage
   */
-  opportunityStage: SC.Record.toOne('XM.OpportunityStage', {
-    label: '_opportunityStage'.loc()
-  }),
+  opportunityStage: SC.Record.toOne('XM.OpportunityStage'),
 
   /**
     @type XM.Priority
   */
-  priority: SC.Record.toOne('XM.Priority', {
-    label: '_priority'.loc()
-  }),
+  priority: SC.Record.toOne('XM.Priority'),
 
   /**
     @type XM.OpportunitySource
   */
-  opportunitySource: SC.Record.toOne('XM.OpportunitySource', {
-    label: '_opportunitySource'.loc()
-  }),
+  opportunitySource: SC.Record.toOne('XM.OpportunitySource'),
 
   /**
     @type XM.OpportunityType
   */
-  opportunityType: SC.Record.toOne('XM.OpportunityType', {
-    label: '_opportunityType'.loc()
-  }),
+  opportunityType: SC.Record.toOne('XM.OpportunityType'),
 
   /**
     @type Money
   */
-  amount: SC.Record.attr(Money, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Money),
 
   /**
     @type XM.Currency
@@ -130,16 +114,13 @@ XM._Opportunity = {
   currency: SC.Record.toOne('XM.Currency', {
     defaultValue: function() {
       return XM.Currency.BASE;
-    },
-    label: '_currency'.loc()
+    }
   }),
 
   /**
     @type Number
   */
-  probability: SC.Record.attr(Number, {
-    label: '_probability'.loc()
-  }),
+  probability: SC.Record.attr(Number),
 
   /**
     @type Date
@@ -149,8 +130,7 @@ XM._Opportunity = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.create().toFormattedString('%Y-%m-%d');
-    },
-    label: '_startDate'.loc()
+    }
   }),
 
   /**
@@ -158,8 +138,7 @@ XM._Opportunity = {
   */
   assignDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_assignDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -167,8 +146,7 @@ XM._Opportunity = {
   */
   targetClose: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_targetClose'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -176,16 +154,13 @@ XM._Opportunity = {
   */
   actualClose: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_actualClose'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.UserAccountInfo
@@ -200,16 +175,14 @@ XM._Opportunity = {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }
-    },
-    label: '_owner'.loc()
+    }
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_assignedTo'.loc()
+    isNested: true
   }),
 
   /**
@@ -217,8 +190,7 @@ XM._Opportunity = {
   */
   comments: SC.Record.toMany('XM.OpportunityComment', {
     isNested: true,
-    inverse: 'opportunity',
-    label: '_comments'.loc()
+    inverse: 'opportunity'
   }),
 
   /**
@@ -226,8 +198,7 @@ XM._Opportunity = {
   */
   characteristics: SC.Record.toMany('XM.OpportunityCharacteristic', {
     isNested: true,
-    inverse: 'opportunity',
-    label: '_characteristics'.loc()
+    inverse: 'opportunity'
   }),
 
   /**
@@ -235,8 +206,7 @@ XM._Opportunity = {
   */
   contacts: SC.Record.toMany('XM.OpportunityContact', {
     isNested: true,
-    inverse: 'source',
-    label: '_contacts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -244,8 +214,7 @@ XM._Opportunity = {
   */
   items: SC.Record.toMany('XM.OpportunityItem', {
     isNested: true,
-    inverse: 'source',
-    label: '_items'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -253,8 +222,7 @@ XM._Opportunity = {
   */
   files: SC.Record.toMany('XM.OpportunityFile', {
     isNested: true,
-    inverse: 'source',
-    label: '_files'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -262,8 +230,7 @@ XM._Opportunity = {
   */
   images: SC.Record.toMany('XM.OpportunityImage', {
     isNested: true,
-    inverse: 'source',
-    label: '_images'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -271,8 +238,7 @@ XM._Opportunity = {
   */
   urls: SC.Record.toMany('XM.OpportunityUrl', {
     isNested: true,
-    inverse: 'source',
-    label: '_urls'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -280,8 +246,7 @@ XM._Opportunity = {
   */
   accounts: SC.Record.toMany('XM.OpportunityAccount', {
     isNested: true,
-    inverse: 'source',
-    label: '_accounts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -289,8 +254,7 @@ XM._Opportunity = {
   */
   opportunities: SC.Record.toMany('XM.OpportunityOpportunity', {
     isNested: true,
-    inverse: 'source',
-    label: '_opportunities'.loc()
+    inverse: 'source'
   })
 
 };

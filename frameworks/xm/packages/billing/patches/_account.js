@@ -19,9 +19,7 @@ SC.Patch.create( /** @scope XM.Account.prototype */ {
     /**
       @type XM.CustomerInfo
     */
-    customer: SC.Record.toOne('XM.CustomerInfo', {
-      label: '_customer'.loc()
-    })
+    customer: SC.Record.toOne('XM.CustomerInfo')
 
   }
 

@@ -21,8 +21,7 @@ SC.Patch.create( /** @scope XM.BankAccount.prototype */ {
     */
     ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
       isNested: true,
-      isRequired: true,
-      label: '_ledgerAccount'.loc()
+      isRequired: true
     })
 
   }

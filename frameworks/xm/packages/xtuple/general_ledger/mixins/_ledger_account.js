@@ -43,74 +43,57 @@ XM._LedgerAccount = {
   /**
     @type String
   */
-  company: SC.Record.attr(String, {
-    label: '_company'.loc()
-  }),
+  company: SC.Record.attr(String),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String, {
-    label: '_profitCenter'.loc()
-  }),
+  profitCenter: SC.Record.attr(String),
 
   /**
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String, {
-    label: '_subAccount'.loc()
-  }),
+  subAccount: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type String
   */
-  externalReference: SC.Record.attr(String, {
-    label: '_externalReference'.loc()
-  }),
+  externalReference: SC.Record.attr(String),
 
   /**
     @type String
   */
   accountType: SC.Record.attr(String, {
-    defaultValue: true,
-    label: '_accountType'.loc()
+    defaultValue: true
   }),
 
   /**
     @type String
   */
-  subType: SC.Record.attr(String, {
-    label: '_subType'.loc()
-  }),
+  subType: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isActive'.loc()
+    defaultValue: true
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

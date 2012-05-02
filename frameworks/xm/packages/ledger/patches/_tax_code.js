@@ -20,8 +20,7 @@ SC.Patch.create( /** @scope XM.TaxCode.prototype */ {
       @type XM.LedgerAccount
     */
     ledgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_ledgerAccount'.loc()
+      isRequired: true
     })
 
   }

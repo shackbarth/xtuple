@@ -44,65 +44,49 @@ XM._CustomerCreditCardPayment = {
     @type XM.CustomerInfo
   */
   customer: SC.Record.toOne('XM.CustomerInfo', {
-    isNested: true,
-    label: '_customer'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  customerCreditCardPaymentType: SC.Record.attr(String, {
-    label: '_customerCreditCardPaymentType'.loc()
-  }),
+  customerCreditCardPaymentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  customerCreditCardPaymentStatus: SC.Record.attr(String, {
-    label: '_customerCreditCardPaymentStatus'.loc()
-  }),
+  customerCreditCardPaymentStatus: SC.Record.attr(String),
 
   /**
     @type String
   */
-  documentNumber: SC.Record.attr(String, {
-    label: '_documentNumber'.loc()
-  }),
+  documentNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  reference: SC.Record.attr(String, {
-    label: '_reference'.loc()
-  }),
+  reference: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
-    useIsoDate: true,
-    label: '_created'.loc()
+    useIsoDate: true
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };

@@ -43,36 +43,26 @@ XM._BankReconciliationItem = {
   /**
     @type XM.BankReconciliation
   */
-  bankReconciliation: SC.Record.toOne('XM.BankReconciliation', {
-    label: '_bankReconciliation'.loc()
-  }),
+  bankReconciliation: SC.Record.toOne('XM.BankReconciliation'),
 
   /**
     @type String
   */
-  sourceType: SC.Record.attr(String, {
-    label: '_sourceType'.loc()
-  }),
+  sourceType: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  source: SC.Record.attr(Number, {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  })
+  currencyRate: SC.Record.attr(Number)
 
 };

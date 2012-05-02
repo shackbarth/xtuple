@@ -43,23 +43,18 @@ XM._Image = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type String
   */
   data: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_data'.loc()
+    isRequired: true
   })
 
 };

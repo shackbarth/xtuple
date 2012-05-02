@@ -43,141 +43,101 @@ XM._Locale = {
   /**
     @type String
   */
-  code: SC.Record.attr(String, {
-    label: '_code'.loc()
-  }),
+  code: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.Language
   */
-  language: SC.Record.toOne('XM.Language', {
-    label: '_language'.loc()
-  }),
+  language: SC.Record.toOne('XM.Language'),
 
   /**
     @type XM.Country
   */
-  country: SC.Record.toOne('XM.Country', {
-    label: '_country'.loc()
-  }),
+  country: SC.Record.toOne('XM.Country'),
 
   /**
     @type String
   */
-  errorColor: SC.Record.attr(String, {
-    label: '_errorColor'.loc()
-  }),
+  errorColor: SC.Record.attr(String),
 
   /**
     @type String
   */
-  warningColor: SC.Record.attr(String, {
-    label: '_warningColor'.loc()
-  }),
+  warningColor: SC.Record.attr(String),
 
   /**
     @type String
   */
-  emphasisColor: SC.Record.attr(String, {
-    label: '_emphasisColor'.loc()
-  }),
+  emphasisColor: SC.Record.attr(String),
 
   /**
     @type String
   */
-  altEmphasisColor: SC.Record.attr(String, {
-    label: '_altEmphasisColor'.loc()
-  }),
+  altEmphasisColor: SC.Record.attr(String),
 
   /**
     @type String
   */
-  expiredColor: SC.Record.attr(String, {
-    label: '_expiredColor'.loc()
-  }),
+  expiredColor: SC.Record.attr(String),
 
   /**
     @type String
   */
-  futureColor: SC.Record.attr(String, {
-    label: '_futureColor'.loc()
-  }),
+  futureColor: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  currencyScale: SC.Record.attr(Number, {
-    label: '_currencyScale'.loc()
-  }),
+  currencyScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  salesPriceScale: SC.Record.attr(Number, {
-    label: '_salesPriceScale'.loc()
-  }),
+  salesPriceScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  purchasePriceScale: SC.Record.attr(Number, {
-    label: '_purchasePriceScale'.loc()
-  }),
+  purchasePriceScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  extendedPriceScale: SC.Record.attr(Number, {
-    label: '_extendedPriceScale'.loc()
-  }),
+  extendedPriceScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  costScale: SC.Record.attr(Number, {
-    label: '_costScale'.loc()
-  }),
+  costScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  quantityScale: SC.Record.attr(Number, {
-    label: '_quantityScale'.loc()
-  }),
+  quantityScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  quantityPerScale: SC.Record.attr(Number, {
-    label: '_quantityPerScale'.loc()
-  }),
+  quantityPerScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  unitRatioScale: SC.Record.attr(Number, {
-    label: '_unitRatioScale'.loc()
-  }),
+  unitRatioScale: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  percentScale: SC.Record.attr(Number, {
-    label: '_percentScale'.loc()
-  })
+  percentScale: SC.Record.attr(Number)
 
 };

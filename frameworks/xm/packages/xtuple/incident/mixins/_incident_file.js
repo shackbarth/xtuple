@@ -43,23 +43,18 @@ XM._IncidentFile = {
   /**
     @type XM.Incident
   */
-  source: SC.Record.toOne('XM.Incident', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Incident'),
 
   /**
     @type XM.FileInfo
   */
   file: SC.Record.toOne('XM.FileInfo', {
-    isNested: true,
-    label: '_file'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

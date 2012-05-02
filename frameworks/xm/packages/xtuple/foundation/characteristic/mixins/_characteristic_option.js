@@ -43,23 +43,18 @@ XM._CharacteristicOption = {
   /**
     @type XM.Characteristic
   */
-  characteristic: SC.Record.toOne('XM.Characteristic', {
-    label: '_characteristic'.loc()
-  }),
+  characteristic: SC.Record.toOne('XM.Characteristic'),
 
   /**
     @type String
   */
-  value: SC.Record.attr(String, {
-    label: '_value'.loc()
-  }),
+  value: SC.Record.attr(String),
 
   /**
     @type Number
   */
   order: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_order'.loc()
+    defaultValue: 0
   })
 
 };

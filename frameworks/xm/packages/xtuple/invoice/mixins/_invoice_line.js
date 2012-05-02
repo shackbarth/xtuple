@@ -44,139 +44,113 @@ XM._InvoiceLine = {
     @type XM.Invoice
   */
   invoice: SC.Record.toOne('XM.Invoice', {
-    isRequired: true,
-    label: '_invoice'.loc()
+    isRequired: true
   }),
 
   /**
     @type Number
   */
   lineNumber: SC.Record.attr(Number, {
-    isRequired: true,
-    label: '_lineNumber'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.ItemInfo
   */
   item: SC.Record.toOne('XM.ItemInfo', {
-    isNested: true,
-    label: '_item'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  itemNumber: SC.Record.attr(String, {
-    label: '_itemNumber'.loc()
-  }),
+  itemNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type XM.SalesCategory
   */
   salesCategory: SC.Record.toOne('XM.SalesCategory', {
-    defaultValue: -1,
-    label: '_salesCategory'.loc()
+    defaultValue: -1
   }),
 
   /**
     @type String
   */
-  customerPartNumber: SC.Record.attr(String, {
-    label: '_customerPartNumber'.loc()
-  }),
+  customerPartNumber: SC.Record.attr(String),
 
   /**
     @type Quantity
   */
   ordered: SC.Record.attr(Quantity, {
-    isRequired: true,
-    label: '_ordered'.loc()
+    isRequired: true
   }),
 
   /**
     @type Quantity
   */
   billed: SC.Record.attr(Quantity, {
-    isRequired: true,
-    label: '_billed'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.Unit
   */
-  quantityUnit: SC.Record.toOne('XM.Unit', {
-    label: '_quantityUnit'.loc()
-  }),
+  quantityUnit: SC.Record.toOne('XM.Unit'),
 
   /**
     @type UnitRatio
   */
   quantityUnitRatio: SC.Record.attr(UnitRatio, {
     isRequired: true,
-    defaultValue: 1,
-    label: '_quantityUnitRatio'.loc()
+    defaultValue: 1
   }),
 
   /**
     @type SalesPrice
   */
   price: SC.Record.attr(SalesPrice, {
-    isRequired: true,
-    label: '_price'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.Unit
   */
-  priceUnit: SC.Record.toOne('XM.Unit', {
-    label: '_priceUnit'.loc()
-  }),
+  priceUnit: SC.Record.toOne('XM.Unit'),
 
   /**
     @type UnitRatio
   */
   priceUnitRatio: SC.Record.attr(UnitRatio, {
     isRequired: true,
-    defaultValue: 1,
-    label: '_priceUnitRatio'.loc()
+    defaultValue: 1
   }),
 
   /**
     @type SalesPrice
   */
-  customerPrice: SC.Record.attr(SalesPrice, {
-    label: '_customerPrice'.loc()
-  }),
+  customerPrice: SC.Record.attr(SalesPrice),
 
   /**
     @type XM.TaxType
   */
-  taxType: SC.Record.toOne('XM.TaxType', {
-    label: '_taxType'.loc()
-  }),
+  taxType: SC.Record.toOne('XM.TaxType'),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.InvoiceLineTax
   */
   taxes: SC.Record.toMany('XM.InvoiceLineTax', {
     isNested: true,
-    inverse: 'invoiceLine',
-    label: '_taxes'.loc()
+    inverse: 'invoiceLine'
   })
 
 };

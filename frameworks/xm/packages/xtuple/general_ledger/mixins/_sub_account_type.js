@@ -44,22 +44,17 @@ XM._SubAccountType = {
     @type String
   */
   accountType: SC.Record.attr(String, {
-    defaultValue: true,
-    label: '_accountType'.loc()
+    defaultValue: true
   }),
 
   /**
     @type String
   */
-  code: SC.Record.attr(String, {
-    label: '_code'.loc()
-  }),
+  code: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  })
+  description: SC.Record.attr(String)
 
 };

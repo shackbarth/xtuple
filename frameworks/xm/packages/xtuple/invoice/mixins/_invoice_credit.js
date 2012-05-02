@@ -43,22 +43,16 @@ XM._InvoiceCredit = {
   /**
     @type XM.Invoice
   */
-  invoice: SC.Record.toOne('XM.Invoice', {
-    label: '_invoice'.loc()
-  }),
+  invoice: SC.Record.toOne('XM.Invoice'),
 
   /**
     @type Money
   */
-  amount: SC.Record.attr(Money, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Money),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  })
+  currency: SC.Record.toOne('XM.Currency')
 
 };

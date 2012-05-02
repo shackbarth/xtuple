@@ -43,8 +43,6 @@ XM._VendorPayment = {
   /**
     @type XM.Vendor
   */
-  vendor: SC.Record.toOne('XM.Vendor', {
-    label: '_vendor'.loc()
-  })
+  vendor: SC.Record.toOne('XM.Vendor')
 
 };

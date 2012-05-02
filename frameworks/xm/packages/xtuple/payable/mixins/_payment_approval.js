@@ -43,45 +43,34 @@ XM._PaymentApproval = {
   /**
     @type XM.Payable
   */
-  payable: SC.Record.toOne('XM.Payable', {
-    label: '_payable'.loc()
-  }),
+  payable: SC.Record.toOne('XM.Payable'),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type XM.BankAccount
   */
-  bankAccount: SC.Record.toOne('XM.BankAccount', {
-    label: '_bankAccount'.loc()
-  }),
+  bankAccount: SC.Record.toOne('XM.BankAccount'),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Date
   */
   date: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_date'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  discount: SC.Record.attr(Number, {
-    label: '_discount'.loc()
-  })
+  discount: SC.Record.attr(Number)
 
 };

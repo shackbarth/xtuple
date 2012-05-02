@@ -45,24 +45,20 @@ XM._StandardJournalGroup = {
   */
   name: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_name'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type XM.StandardJournalGroupItem
   */
   items: SC.Record.toMany('XM.StandardJournalGroupItem', {
     isNested: true,
-    inverse: 'standardJournalGroup',
-    label: '_items'.loc()
+    inverse: 'standardJournalGroup'
   })
 
 };

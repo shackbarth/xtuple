@@ -20,32 +20,28 @@ SC.Patch.create( /** @scope XM.ExpenseCategory.prototype */ {
       @type XM.LedgerAccount
     */
     expenseLedgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_expenseLedgerAccount'.loc()
+      isRequired: true
     }),
   
     /**
       @type XM.LedgerAccount
     */
     liabilityLedgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_liabilityLedgerAccount'.loc()
+      isRequired: true
     }),
   
     /**
       @type XM.LedgerAccount
     */
     varianceLedgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_varianceLedgerAccount'.loc()
+      isRequired: true
     }),
   
     /**
       @type XM.LedgerAccount
     */
     freightLedgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isRequired: true,
-      label: '_freightLedgerAccount'.loc()
+      isRequired: true
     })
 
   }

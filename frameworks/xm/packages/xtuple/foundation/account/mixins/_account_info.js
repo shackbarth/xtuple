@@ -52,38 +52,30 @@ XM._AccountInfo = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type XM.AccountContactInfo
   */
   primaryContact: SC.Record.toOne('XM.AccountContactInfo', {
-    isNested: true,
-    label: '_primaryContact'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_owner'.loc()
+    isNested: true
   })
 
 };

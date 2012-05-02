@@ -43,43 +43,31 @@ XM._ItemAlias = {
   /**
     @type XM.Item
   */
-  item: SC.Record.toOne('XM.Item', {
-    label: '_item'.loc()
-  }),
+  item: SC.Record.toOne('XM.Item'),
 
   /**
     @type String
   */
-  aliasNumber: SC.Record.attr(String, {
-    label: '_aliasNumber'.loc()
-  }),
+  aliasNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  useDescription: SC.Record.attr(Boolean, {
-    label: '_useDescription'.loc()
-  }),
+  useDescription: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  description1: SC.Record.attr(String, {
-    label: '_description1'.loc()
-  }),
+  description1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description2: SC.Record.attr(String, {
-    label: '_description2'.loc()
-  })
+  description2: SC.Record.attr(String)
 
 };

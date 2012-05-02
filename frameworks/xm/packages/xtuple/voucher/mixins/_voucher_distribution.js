@@ -43,50 +43,36 @@ XM._VoucherDistribution = {
   /**
     @type XM.Voucher
   */
-  voucher: SC.Record.toOne('XM.Voucher', {
-    label: '_voucher'.loc()
-  }),
+  voucher: SC.Record.toOne('XM.Voucher'),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  quantity: SC.Record.attr(Number, {
-    label: '_quantity'.loc()
-  }),
+  quantity: SC.Record.attr(Number),
 
   /**
     @type XM.ExpenseCategory
   */
-  expenseCategory: SC.Record.toOne('XM.ExpenseCategory', {
-    label: '_expenseCategory'.loc()
-  }),
+  expenseCategory: SC.Record.toOne('XM.ExpenseCategory'),
 
   /**
     @type XM.TaxCode
   */
-  taxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_taxCode'.loc()
-  }),
+  taxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
     @type Boolean
   */
-  isDiscountable: SC.Record.attr(Boolean, {
-    label: '_isDiscountable'.loc()
-  }),
+  isDiscountable: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

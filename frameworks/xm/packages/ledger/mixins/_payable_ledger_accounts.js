@@ -43,39 +43,32 @@ XM._PayableLedgerAccounts = {
   /**
     @type XM.VendorType
   */
-  vendorType: SC.Record.toOne('XM.VendorType', {
-    label: '_vendorType'.loc()
-  }),
+  vendorType: SC.Record.toOne('XM.VendorType'),
 
   /**
     @type String
   */
-  vendorTypePattern: SC.Record.attr(String, {
-    label: '_vendorTypePattern'.loc()
-  }),
+  vendorTypePattern: SC.Record.attr(String),
 
   /**
     @type XM.LedgerAccountInfo
   */
   payablesLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_payablesLedgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.LedgerAccountInfo
   */
   prepaidledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_prepaidledgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.LedgerAccountInfo
   */
   discountledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_discountledgerAccount'.loc()
+    isNested: true
   })
 
 };

@@ -43,15 +43,11 @@ XM._ToDoInfo = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  })
+  isActive: SC.Record.attr(Boolean)
 
 };

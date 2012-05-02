@@ -54,39 +54,33 @@ XM._ToDo = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type XM.ContactInfo
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_contact'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
   toDoStatus: SC.Record.attr(String, {
-    defaultValue: 'N',
-    label: '_toDoStatus'.loc()
+    defaultValue: 'N'
   }),
 
   /**
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isActive'.loc()
+    defaultValue: true
   }),
 
   /**
@@ -94,8 +88,7 @@ XM._ToDo = {
   */
   startDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_startDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -104,8 +97,7 @@ XM._ToDo = {
   dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true,
-    label: '_dueDate'.loc()
+    isRequired: true
   }),
 
   /**
@@ -113,8 +105,7 @@ XM._ToDo = {
   */
   assignDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_assignDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -122,23 +113,18 @@ XM._ToDo = {
   */
   completeDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_completeDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.Priority
   */
-  priority: SC.Record.toOne('XM.Priority', {
-    label: '_priority'.loc()
-  }),
+  priority: SC.Record.toOne('XM.Priority'),
 
   /**
     @type XM.UserAccountInfo
@@ -153,8 +139,7 @@ XM._ToDo = {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }
-    },
-    label: '_owner'.loc()
+    }
   }),
 
   /**
@@ -171,8 +156,7 @@ XM._ToDo = {
         XM.UserAccountInfo.setCurrentUser(record, 'assignedTo');
         ret = '_loading'.loc();
       }
-    },
-    label: '_assignedTo'.loc()
+    }
   }),
 
   /**
@@ -180,8 +164,7 @@ XM._ToDo = {
   */
   alarms: SC.Record.toMany('XM.ToDoAlarm', {
     isNested: true,
-    inverse: 'to_do',
-    label: '_alarms'.loc()
+    inverse: 'to_do'
   }),
 
   /**
@@ -189,8 +172,7 @@ XM._ToDo = {
   */
   comments: SC.Record.toMany('XM.ToDoComment', {
     isNested: true,
-    inverse: 'to_do',
-    label: '_comments'.loc()
+    inverse: 'to_do'
   }),
 
   /**
@@ -198,8 +180,7 @@ XM._ToDo = {
   */
   accounts: SC.Record.toMany('XM.ToDoAccount', {
     isNested: true,
-    inverse: 'source',
-    label: '_accounts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -207,8 +188,7 @@ XM._ToDo = {
   */
   contacts: SC.Record.toMany('XM.ToDoContact', {
     isNested: true,
-    inverse: 'source',
-    label: '_contacts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -216,8 +196,7 @@ XM._ToDo = {
   */
   items: SC.Record.toMany('XM.ToDoItem', {
     isNested: true,
-    inverse: 'source',
-    label: '_items'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -225,8 +204,7 @@ XM._ToDo = {
   */
   files: SC.Record.toMany('XM.ToDoFile', {
     isNested: true,
-    inverse: 'source',
-    label: '_files'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -234,8 +212,7 @@ XM._ToDo = {
   */
   images: SC.Record.toMany('XM.ToDoImage', {
     isNested: true,
-    inverse: 'source',
-    label: '_images'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -243,8 +220,7 @@ XM._ToDo = {
   */
   urls: SC.Record.toMany('XM.ToDoUrl', {
     isNested: true,
-    inverse: 'source',
-    label: '_urls'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -252,8 +228,7 @@ XM._ToDo = {
   */
   toDos: SC.Record.toMany('XM.ToDoToDo', {
     isNested: true,
-    inverse: 'source',
-    label: '_toDos'.loc()
+    inverse: 'source'
   })
 
 };

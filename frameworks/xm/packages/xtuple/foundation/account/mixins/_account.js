@@ -53,16 +53,14 @@ XM._Account = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
@@ -70,8 +68,7 @@ XM._Account = {
   */
   isActive: SC.Record.attr(Boolean, {
     isRequired: true,
-    defaultValue: true,
-    label: '_isActive'.loc()
+    defaultValue: true
   }),
 
   /**
@@ -79,39 +76,33 @@ XM._Account = {
   */
   accountType: SC.Record.attr(String, {
     isRequired: true,
-    defaultValue: 'O',
-    label: '_accountType'.loc()
+    defaultValue: 'O'
   }),
 
   /**
     @type XM.AccountInfo
   */
   parent: SC.Record.toOne('XM.AccountInfo', {
-    isNested: true,
-    label: '_parent'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.ContactInfo
   */
   primaryContact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_primaryContact'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.ContactInfo
   */
   secondaryContact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_secondaryContact'.loc()
+    isNested: true
   }),
 
   /**
@@ -119,8 +110,7 @@ XM._Account = {
   */
   contactRelations: SC.Record.toMany('XM.ContactInfo', {
     isNested: true,
-    inverse: 'account',
-    label: '_contactRelations'.loc()
+    inverse: 'account'
   }),
 
   /**
@@ -136,39 +126,32 @@ XM._Account = {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }
-    },
-    label: '_owner'.loc()
+    }
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   userAccount: SC.Record.toOne('XM.UserAccountInfo', {
-    isRequired: true,
-    label: '_userAccount'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.SalesRep
   */
-  salesRep: SC.Record.toOne('XM.SalesRep', {
-    label: '_salesRep'.loc()
-  }),
+  salesRep: SC.Record.toOne('XM.SalesRep'),
 
   /**
     @type XM.TaxAuthority
   */
-  taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
-    label: '_taxAuthority'.loc()
-  }),
+  taxAuthority: SC.Record.toOne('XM.TaxAuthority'),
 
   /**
     @type XM.AccountComment
   */
   comments: SC.Record.toMany('XM.AccountComment', {
     isNested: true,
-    inverse: 'account',
-    label: '_comments'.loc()
+    inverse: 'account'
   }),
 
   /**
@@ -176,8 +159,7 @@ XM._Account = {
   */
   characteristics: SC.Record.toMany('XM.AccountCharacteristic', {
     isNested: true,
-    inverse: 'account',
-    label: '_characteristics'.loc()
+    inverse: 'account'
   }),
 
   /**
@@ -185,8 +167,7 @@ XM._Account = {
   */
   contacts: SC.Record.toMany('XM.AccountContact', {
     isNested: true,
-    inverse: 'source',
-    label: '_contacts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -194,8 +175,7 @@ XM._Account = {
   */
   items: SC.Record.toMany('XM.AccountItem', {
     isNested: true,
-    inverse: 'source',
-    label: '_items'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -203,8 +183,7 @@ XM._Account = {
   */
   files: SC.Record.toMany('XM.AccountFile', {
     isNested: true,
-    inverse: 'source',
-    label: '_files'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -212,8 +191,7 @@ XM._Account = {
   */
   images: SC.Record.toMany('XM.AccountImage', {
     isNested: true,
-    inverse: 'source',
-    label: '_images'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -221,8 +199,7 @@ XM._Account = {
   */
   urls: SC.Record.toMany('XM.AccountUrl', {
     isNested: true,
-    inverse: 'source',
-    label: '_urls'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -230,8 +207,7 @@ XM._Account = {
   */
   accounts: SC.Record.toMany('XM.AccountAccount', {
     isNested: true,
-    inverse: 'source',
-    label: '_accounts'.loc()
+    inverse: 'source'
   })
 
 };

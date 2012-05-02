@@ -44,31 +44,26 @@ XM._CashReceiptDistribution = {
     @type XM.CashReceipt
   */
   cashReceipt: SC.Record.toOne('XM.CashReceipt', {
-    isRequired: true,
-    label: '_cashReceipt'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.LedgerAccount
   */
   ledgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-    isRequired: true,
-    label: '_ledgerAccount'.loc()
+    isRequired: true
   }),
 
   /**
     @type Number
   */
   amount: SC.Record.attr(Number, {
-    isRequired: true,
-    label: '_amount'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

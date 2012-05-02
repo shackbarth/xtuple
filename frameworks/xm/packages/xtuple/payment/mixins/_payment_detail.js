@@ -43,45 +43,34 @@ XM._PaymentDetail = {
   /**
     @type XM.Payment
   */
-  payment: SC.Record.toOne('XM.Payment', {
-    label: '_payment'.loc()
-  }),
+  payment: SC.Record.toOne('XM.Payment'),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  }),
+  currencyRate: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  discount: SC.Record.attr(Number, {
-    label: '_discount'.loc()
-  }),
+  discount: SC.Record.attr(Number),
 
   /**
     @type Date
   */
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_documentDate'.loc()
+    useIsoDate: false
   })
 
 };

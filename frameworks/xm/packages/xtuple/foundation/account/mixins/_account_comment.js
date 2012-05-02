@@ -49,45 +49,34 @@ XM._AccountComment = {
   /**
     @type XM.Account
   */
-  account: SC.Record.toOne('XM.Account', {
-    label: '_account'.loc()
-  }),
+  account: SC.Record.toOne('XM.Account'),
 
   /**
     @type XM.Account
   */
-  commentType: SC.Record.toOne('XM.Account', {
-    label: '_commentType'.loc()
-  }),
+  commentType: SC.Record.toOne('XM.Account'),
 
   /**
     @type String
   */
-  text: SC.Record.attr(String, {
-    label: '_text'.loc()
-  }),
+  text: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isPublic: SC.Record.attr(Boolean, {
-    label: '_isPublic'.loc()
-  }),
+  isPublic: SC.Record.attr(Boolean),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };

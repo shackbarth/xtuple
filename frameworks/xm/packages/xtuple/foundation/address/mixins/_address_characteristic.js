@@ -43,24 +43,19 @@ XM._AddressCharacteristic = {
   /**
     @type Number
   */
-  address: SC.Record.attr(Number, {
-    label: '_address'.loc()
-  }),
+  address: SC.Record.attr(Number),
 
   /**
     @type XM.Characteristic
   */
   characteristic: SC.Record.toOne('XM.Characteristic', {
     isNested: true,
-    isRequired: true,
-    label: '_characteristic'.loc()
+    isRequired: true
   }),
 
   /**
     @type Number
   */
-  value: SC.Record.attr(Number, {
-    label: '_value'.loc()
-  })
+  value: SC.Record.attr(Number)
 
 };

@@ -45,88 +45,67 @@ XM._Journal = {
   */
   date: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_date'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  series: SC.Record.attr(Number, {
-    label: '_series'.loc()
-  }),
+  series: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  source: SC.Record.attr(String, {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.attr(String),
 
   /**
     @type String
   */
-  documentType: SC.Record.attr(String, {
-    label: '_documentType'.loc()
-  }),
+  documentType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  documentNumber: SC.Record.attr(String, {
-    label: '_documentNumber'.loc()
-  }),
+  documentNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.LedgerAccountInfo
   */
   ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_ledgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  sense: SC.Record.attr(String, {
-    label: '_sense'.loc()
-  }),
+  sense: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type Boolean
   */
-  journal: SC.Record.attr(Boolean, {
-    label: '_journal'.loc()
-  }),
+  journal: SC.Record.attr(Boolean),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };

@@ -43,23 +43,18 @@ XM._CustomerItem = {
   /**
     @type XM.Customer
   */
-  source: SC.Record.toOne('XM.Customer', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Customer'),
 
   /**
     @type XM.ItemInfo
   */
   item: SC.Record.toOne('XM.ItemInfo', {
-    isNested: true,
-    label: '_item'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

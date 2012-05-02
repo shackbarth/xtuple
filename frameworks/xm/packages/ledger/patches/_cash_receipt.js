@@ -21,8 +21,7 @@ SC.Patch.create( /** @scope XM.CashReceipt.prototype */ {
     */
     salesCategory: SC.Record.toOne('XM.SalesCategory', {
       isRequired: true,
-      defaultValue: -1,
-      label: '_salesCategory'.loc()
+      defaultValue: -1
     }),
   
     /**
@@ -30,8 +29,7 @@ SC.Patch.create( /** @scope XM.CashReceipt.prototype */ {
     */
     distributions: SC.Record.toMany('XM.CashReceiptDistribution', {
       isNested: true,
-      inverse: 'cashReceipt',
-      label: '_distributions'.loc()
+      inverse: 'cashReceipt'
     })
 
   }

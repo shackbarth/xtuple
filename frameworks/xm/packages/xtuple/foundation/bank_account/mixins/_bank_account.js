@@ -44,37 +44,28 @@ XM._BankAccount = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type String
   */
-  bankName: SC.Record.attr(String, {
-    label: '_bankName'.loc()
-  }),
+  bankName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  accountNumber: SC.Record.attr(String, {
-    label: '_accountNumber'.loc()
-  }),
+  accountNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  bankAccountType: SC.Record.attr(String, {
-    label: '_bankAccountType'.loc()
-  }),
+  bankAccountType: SC.Record.attr(String),
 
   /**
     @type XM.Currency
@@ -82,15 +73,12 @@ XM._BankAccount = {
   currency: SC.Record.toOne('XM.Currency', {
     defaultValue: function() {
       return XM.Currency.BASE;
-    },
-    label: '_currency'.loc()
+    }
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

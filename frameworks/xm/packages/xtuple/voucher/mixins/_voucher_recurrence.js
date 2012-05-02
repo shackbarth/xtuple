@@ -36,31 +36,24 @@ XM._VoucherRecurrence = {
   /**
     @type XM.Voucher
   */
-  voucher: SC.Record.toOne('XM.Voucher', {
-    label: '_voucher'.loc()
-  }),
+  voucher: SC.Record.toOne('XM.Voucher'),
 
   /**
     @type String
   */
-  period: SC.Record.attr(String, {
-    label: '_period'.loc()
-  }),
+  period: SC.Record.attr(String),
 
   /**
     @type Number
   */
-  frequency: SC.Record.attr(Number, {
-    label: '_frequency'.loc()
-  }),
+  frequency: SC.Record.attr(Number),
 
   /**
     @type Date
   */
   startDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_startDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -68,15 +61,12 @@ XM._VoucherRecurrence = {
   */
   endDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_endDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  maximum: SC.Record.attr(Number, {
-    label: '_maximum'.loc()
-  })
+  maximum: SC.Record.attr(Number)
 
 };

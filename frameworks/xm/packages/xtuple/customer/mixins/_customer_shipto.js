@@ -43,108 +43,80 @@ XM._CustomerShipto = {
   /**
     @type XM.Customer
   */
-  customer: SC.Record.toOne('XM.Customer', {
-    label: '_customer'.loc()
-  }),
+  customer: SC.Record.toOne('XM.Customer'),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isDefault: SC.Record.attr(Boolean, {
-    label: '_isDefault'.loc()
-  }),
+  isDefault: SC.Record.attr(Boolean),
 
   /**
     @type XM.SalesRep
   */
-  salesRep: SC.Record.toOne('XM.SalesRep', {
-    label: '_salesRep'.loc()
-  }),
+  salesRep: SC.Record.toOne('XM.SalesRep'),
 
   /**
     @type Percent
   */
-  commission: SC.Record.attr(Percent, {
-    label: '_commission'.loc()
-  }),
+  commission: SC.Record.attr(Percent),
 
   /**
     @type XM.ShipZone
   */
-  shipZone: SC.Record.toOne('XM.ShipZone', {
-    label: '_shipZone'.loc()
-  }),
+  shipZone: SC.Record.toOne('XM.ShipZone'),
 
   /**
     @type XM.TaxZone
   */
-  taxZone: SC.Record.toOne('XM.TaxZone', {
-    label: '_taxZone'.loc()
-  }),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
     @type String
   */
-  shipVia: SC.Record.attr(String, {
-    label: '_shipVia'.loc()
-  }),
+  shipVia: SC.Record.attr(String),
 
   /**
     @type XM.ShipCharge
   */
-  shipCharge: SC.Record.toOne('XM.ShipCharge', {
-    label: '_shipCharge'.loc()
-  }),
+  shipCharge: SC.Record.toOne('XM.ShipCharge'),
 
   /**
     @type XM.ContactInfo
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_contact'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.AddressInfo
   */
   address: SC.Record.toOne('XM.AddressInfo', {
-    isNested: true,
-    label: '_address'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shippingNotes: SC.Record.attr(String, {
-    label: '_shippingNotes'.loc()
-  })
+  shippingNotes: SC.Record.attr(String)
 
 };

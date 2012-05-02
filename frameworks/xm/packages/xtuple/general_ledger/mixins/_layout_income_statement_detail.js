@@ -43,117 +43,88 @@ XM._LayoutIncomeStatementDetail = {
   /**
     @type XM.LayoutIncomeStatement
   */
-  layoutIncomeStatement: SC.Record.toOne('XM.LayoutIncomeStatement', {
-    label: '_layoutIncomeStatement'.loc()
-  }),
+  layoutIncomeStatement: SC.Record.toOne('XM.LayoutIncomeStatement'),
 
   /**
     @type XM.LayoutIncomeStatementGroup
   */
-  layoutIncomeStatementGroup: SC.Record.toOne('XM.LayoutIncomeStatementGroup', {
-    label: '_layoutIncomeStatementGroup'.loc()
-  }),
+  layoutIncomeStatementGroup: SC.Record.toOne('XM.LayoutIncomeStatementGroup'),
 
   /**
     @type XM.LedgerAccountInfo
   */
   ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_ledgerAccount'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  company: SC.Record.attr(String, {
-    label: '_company'.loc()
-  }),
+  company: SC.Record.attr(String),
 
   /**
     @type String
   */
-  profitCenter: SC.Record.attr(String, {
-    label: '_profitCenter'.loc()
-  }),
+  profitCenter: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  subAccount: SC.Record.attr(String, {
-    label: '_subAccount'.loc()
-  }),
+  subAccount: SC.Record.attr(String),
 
   /**
     @type String
   */
-  accountType: SC.Record.attr(String, {
-    label: '_accountType'.loc()
-  }),
+  accountType: SC.Record.attr(String),
 
   /**
     @type String
   */
-  subType: SC.Record.attr(String, {
-    label: '_subType'.loc()
-  }),
+  subType: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isSubtract: SC.Record.attr(Boolean, {
-    label: '_isSubtract'.loc()
-  }),
+  isSubtract: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
   isShowBudget: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isShowBudget'.loc()
+    defaultValue: true
   }),
 
   /**
     @type Boolean
   */
-  isShowBudgetPercent: SC.Record.attr(Boolean, {
-    label: '_isShowBudgetPercent'.loc()
-  }),
+  isShowBudgetPercent: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
   isShowDifference: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isShowDifference'.loc()
+    defaultValue: true
   }),
 
   /**
     @type Boolean
   */
-  isShowDifferencePercent: SC.Record.attr(Boolean, {
-    label: '_isShowDifferencePercent'.loc()
-  }),
+  isShowDifferencePercent: SC.Record.attr(Boolean),
 
   /**
     @type XM.LayoutIncomeStatementGroup
   */
-  percentlayoutIncomeStatementGroup: SC.Record.toOne('XM.LayoutIncomeStatementGroup', {
-    label: '_percentlayoutIncomeStatementGroup'.loc()
-  }),
+  percentlayoutIncomeStatementGroup: SC.Record.toOne('XM.LayoutIncomeStatementGroup'),
 
   /**
     @type Number
   */
-  order: SC.Record.attr(Number, {
-    label: '_order'.loc()
-  })
+  order: SC.Record.attr(Number)
 
 };

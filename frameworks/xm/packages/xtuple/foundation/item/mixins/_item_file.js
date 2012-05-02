@@ -43,23 +43,18 @@ XM._ItemFile = {
   /**
     @type Number
   */
-  source: SC.Record.attr(Number, {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.attr(Number),
 
   /**
     @type XM.FileInfo
   */
   file: SC.Record.toOne('XM.FileInfo', {
-    isNested: true,
-    label: '_file'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

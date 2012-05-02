@@ -43,22 +43,16 @@ XM._ReceivablePendingApplication = {
   /**
     @type String
   */
-  pendingApplicationType: SC.Record.attr(String, {
-    label: '_pendingApplicationType'.loc()
-  }),
+  pendingApplicationType: SC.Record.attr(String),
 
   /**
     @type XM.CashReceiptReceivable
   */
-  receivable: SC.Record.toOne('XM.CashReceiptReceivable', {
-    label: '_receivable'.loc()
-  }),
+  receivable: SC.Record.toOne('XM.CashReceiptReceivable'),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  })
+  amount: SC.Record.attr(Number)
 
 };

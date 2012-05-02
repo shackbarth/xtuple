@@ -43,50 +43,36 @@ XM._Country = {
   /**
     @type String
   */
-  abbreviation: SC.Record.attr(String, {
-    label: '_abbreviation'.loc()
-  }),
+  abbreviation: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  currencyName: SC.Record.attr(String, {
-    label: '_currencyName'.loc()
-  }),
+  currencyName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  currencySymbol: SC.Record.attr(String, {
-    label: '_currencySymbol'.loc()
-  }),
+  currencySymbol: SC.Record.attr(String),
 
   /**
     @type String
   */
-  currencyAbbreviation: SC.Record.attr(String, {
-    label: '_currencyAbbreviation'.loc()
-  }),
+  currencyAbbreviation: SC.Record.attr(String),
 
   /**
     @type String
   */
-  currencyNumber: SC.Record.attr(String, {
-    label: '_currencyNumber'.loc()
-  }),
+  currencyNumber: SC.Record.attr(String),
 
   /**
     @type XM.State
   */
-  states: SC.Record.toMany('XM.State', {
-    label: '_states'.loc()
-  })
+  states: SC.Record.toMany('XM.State')
 
 };

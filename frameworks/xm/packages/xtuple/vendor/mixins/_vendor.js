@@ -43,109 +43,82 @@ XM._Vendor = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isReceives1099: SC.Record.attr(Boolean, {
-    label: '_isReceives1099'.loc()
-  }),
+  isReceives1099: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  incoTermsSource: SC.Record.attr(String, {
-    label: '_incoTermsSource'.loc()
-  }),
+  incoTermsSource: SC.Record.attr(String),
 
   /**
     @type String
   */
-  incoTerms: SC.Record.attr(String, {
-    label: '_incoTerms'.loc()
-  }),
+  incoTerms: SC.Record.attr(String),
 
   /**
     @type XM.Terms
   */
-  terms: SC.Record.toOne('XM.Terms', {
-    label: '_terms'.loc()
-  }),
+  terms: SC.Record.toOne('XM.Terms'),
 
   /**
     @type String
   */
-  shipVia: SC.Record.attr(String, {
-    label: '_shipVia'.loc()
-  }),
+  shipVia: SC.Record.attr(String),
 
   /**
     @type XM.VendorType
   */
-  vendorType: SC.Record.toOne('XM.VendorType', {
-    label: '_vendorType'.loc()
-  }),
+  vendorType: SC.Record.toOne('XM.VendorType'),
 
   /**
     @type Boolean
   */
-  isQualified: SC.Record.attr(Boolean, {
-    label: '_isQualified'.loc()
-  }),
+  isQualified: SC.Record.attr(Boolean),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type XM.ContactInfo
   */
   primaryContact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_primaryContact'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.ContactInfo
   */
   secondaryContact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_secondaryContact'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.AddressInfo
   */
   mainAddress: SC.Record.toOne('XM.AddressInfo', {
-    isNested: true,
-    label: '_mainAddress'.loc()
+    isNested: true
   }),
 
   /**
@@ -153,80 +126,60 @@ XM._Vendor = {
   */
   alternateAddresses: SC.Record.toMany('XM.VendorAddress', {
     isNested: true,
-    inverse: 'vendor',
-    label: '_alternateAddresses'.loc()
+    inverse: 'vendor'
   }),
 
   /**
     @type Boolean
   */
-  isMatch: SC.Record.attr(Boolean, {
-    label: '_isMatch'.loc()
-  }),
+  isMatch: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isAchEnabled: SC.Record.attr(Boolean, {
-    label: '_isAchEnabled'.loc()
-  }),
+  isAchEnabled: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  achAccountType: SC.Record.attr(String, {
-    label: '_achAccountType'.loc()
-  }),
+  achAccountType: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isAchUseVendorInfo: SC.Record.attr(Boolean, {
-    label: '_isAchUseVendorInfo'.loc()
-  }),
+  isAchUseVendorInfo: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  achIndividualNumber: SC.Record.attr(String, {
-    label: '_achIndividualNumber'.loc()
-  }),
+  achIndividualNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  achIndividualName: SC.Record.attr(String, {
-    label: '_achIndividualName'.loc()
-  }),
+  achIndividualName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  achRoutingNumber: SC.Record.attr(String, {
-    label: '_achRoutingNumber'.loc()
-  }),
+  achRoutingNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  achAccountNumber: SC.Record.attr(String, {
-    label: '_achAccountNumber'.loc()
-  }),
+  achAccountNumber: SC.Record.attr(String),
 
   /**
     @type XM.TaxZone
   */
-  taxZone: SC.Record.toOne('XM.TaxZone', {
-    label: '_taxZone'.loc()
-  }),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
     @type XM.VendorTaxRegistration
   */
   taxRegistrations: SC.Record.toMany('XM.VendorTaxRegistration', {
     isNested: true,
-    inverse: 'vendor',
-    label: '_taxRegistrations'.loc()
+    inverse: 'vendor'
   }),
 
   /**
@@ -234,8 +187,7 @@ XM._Vendor = {
   */
   comments: SC.Record.toMany('XM.VendorComment', {
     isNested: true,
-    inverse: 'vendor',
-    label: '_comments'.loc()
+    inverse: 'vendor'
   })
 
 };

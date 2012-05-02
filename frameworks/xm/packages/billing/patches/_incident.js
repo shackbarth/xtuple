@@ -20,8 +20,7 @@ SC.Patch.create( /** @scope XM.Incident.prototype */ {
       @type XM.ReceivableInfo
     */
     receivable: SC.Record.toOne('XM.ReceivableInfo', {
-      isNested: true,
-      label: '_receivable'.loc()
+      isNested: true
     }),
   
     /**
@@ -29,8 +28,7 @@ SC.Patch.create( /** @scope XM.Incident.prototype */ {
     */
     customers: SC.Record.toMany('XM.IncidentCustomer', {
       isNested: true,
-      inverse: 'source',
-      label: '_customers'.loc()
+      inverse: 'source'
     })
 
   }

@@ -44,39 +44,33 @@ XM._Company = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type XM.LedgerAccountInfo
   */
   yearEndLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_yearEndLedgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.LedgerAccountInfo
   */
   gainLossLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_gainLossLedgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.LedgerAccountInfo
   */
   discrepancyLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_discrepancyLedgerAccount'.loc()
+    isNested: true
   })
 
 };
