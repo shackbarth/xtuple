@@ -43,15 +43,11 @@ XM._ReceivableInfo = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  documentType: SC.Record.attr(String, {
-    label: '_documentType'.loc()
-  })
+  documentType: SC.Record.attr(String)
 
 };

@@ -43,23 +43,18 @@ XM._ProjectFile = {
   /**
     @type XM.Project
   */
-  source: SC.Record.toOne('XM.Project', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Project'),
 
   /**
     @type XM.FileInfo
   */
   file: SC.Record.toOne('XM.FileInfo', {
-    isNested: true,
-    label: '_file'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

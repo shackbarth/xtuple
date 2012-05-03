@@ -54,40 +54,34 @@ XM._Incident = {
     @type Number
   */
   number: SC.Record.attr(Number, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
   description: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_description'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.IncidentCategory
   */
   category: SC.Record.toOne('XM.IncidentCategory', {
-    isRequired: true,
-    label: '_category'.loc()
+    isRequired: true
   }),
 
   /**
     @type Boolean
   */
-  isPublic: SC.Record.attr(Boolean, {
-    label: '_isPublic'.loc()
-  }),
+  isPublic: SC.Record.attr(Boolean),
 
   /**
     @type XM.AccountInfo
   */
   account: SC.Record.toOne('XM.AccountInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_account'.loc()
+    isRequired: true
   }),
 
   /**
@@ -95,38 +89,30 @@ XM._Incident = {
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_contact'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.Priority
   */
-  priority: SC.Record.toOne('XM.Priority', {
-    label: '_priority'.loc()
-  }),
+  priority: SC.Record.toOne('XM.Priority'),
 
   /**
     @type String
   */
   incidentStatus: SC.Record.attr(String, {
-    defaultValue: 'N',
-    label: '_incidentStatus'.loc()
+    defaultValue: 'N'
   }),
 
   /**
     @type XM.IncidentResolution
   */
-  resolution: SC.Record.toOne('XM.IncidentResolution', {
-    label: '_resolution'.loc()
-  }),
+  resolution: SC.Record.toOne('XM.IncidentResolution'),
 
   /**
     @type XM.IncidentSeverity
   */
-  severity: SC.Record.toOne('XM.IncidentSeverity', {
-    label: '_severity'.loc()
-  }),
+  severity: SC.Record.toOne('XM.IncidentSeverity'),
 
   /**
     @type XM.UserAccountInfo
@@ -141,31 +127,26 @@ XM._Incident = {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }
-    },
-    label: '_owner'.loc()
+    }
   }),
 
   /**
     @type XM.UserAccountInfo
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
-    isNested: true,
-    label: '_assignedTo'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.ItemInfo
   */
   item: SC.Record.toOne('XM.ItemInfo', {
-    isNested: true,
-    label: '_item'.loc()
+    isNested: true
   }),
 
   /**
@@ -173,8 +154,7 @@ XM._Incident = {
   */
   recurring: SC.Record.toMany('XM.IncidentRecurrence', {
     isNested: true,
-    inverse: 'incident',
-    label: '_recurring'.loc()
+    inverse: 'incident'
   }),
 
   /**
@@ -182,8 +162,7 @@ XM._Incident = {
   */
   updated: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_updated'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -191,8 +170,7 @@ XM._Incident = {
   */
   alarms: SC.Record.toMany('XM.IncidentAlarm', {
     isNested: true,
-    inverse: 'incident',
-    label: '_alarms'.loc()
+    inverse: 'incident'
   }),
 
   /**
@@ -200,8 +178,7 @@ XM._Incident = {
   */
   history: SC.Record.toMany('XM.IncidentHistory', {
     isNested: true,
-    inverse: 'incident',
-    label: '_history'.loc()
+    inverse: 'incident'
   }),
 
   /**
@@ -209,8 +186,7 @@ XM._Incident = {
   */
   comments: SC.Record.toMany('XM.IncidentComment', {
     isNested: true,
-    inverse: 'incident',
-    label: '_comments'.loc()
+    inverse: 'incident'
   }),
 
   /**
@@ -218,8 +194,7 @@ XM._Incident = {
   */
   characteristics: SC.Record.toMany('XM.IncidentCharacteristic', {
     isNested: true,
-    inverse: 'incident',
-    label: '_characteristics'.loc()
+    inverse: 'incident'
   }),
 
   /**
@@ -227,8 +202,7 @@ XM._Incident = {
   */
   contacts: SC.Record.toMany('XM.IncidentContact', {
     isNested: true,
-    inverse: 'source',
-    label: '_contacts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -236,8 +210,7 @@ XM._Incident = {
   */
   items: SC.Record.toMany('XM.IncidentItem', {
     isNested: true,
-    inverse: 'source',
-    label: '_items'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -245,8 +218,7 @@ XM._Incident = {
   */
   files: SC.Record.toMany('XM.IncidentFile', {
     isNested: true,
-    inverse: 'source',
-    label: '_files'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -254,8 +226,7 @@ XM._Incident = {
   */
   images: SC.Record.toMany('XM.IncidentImage', {
     isNested: true,
-    inverse: 'source',
-    label: '_images'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -263,8 +234,7 @@ XM._Incident = {
   */
   urls: SC.Record.toMany('XM.IncidentUrl', {
     isNested: true,
-    inverse: 'source',
-    label: '_urls'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -272,8 +242,7 @@ XM._Incident = {
   */
   accounts: SC.Record.toMany('XM.IncidentAccount', {
     isNested: true,
-    inverse: 'source',
-    label: '_accounts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -281,8 +250,7 @@ XM._Incident = {
   */
   incidents: SC.Record.toMany('XM.IncidentIncident', {
     isNested: true,
-    inverse: 'source',
-    label: '_incidents'.loc()
+    inverse: 'source'
   })
 
 };

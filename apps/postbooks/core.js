@@ -74,7 +74,7 @@ Postbooks = global.Postbooks = SC.Application.create(
     @type String
     @default 550
   */
-  TYPEFACE: 'verdana',
+  TYPEFACE: 'helvetica, arial',
   
   /**
     List width considered portrait mode.

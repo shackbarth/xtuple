@@ -43,8 +43,6 @@ XM._TaxAuthorityPayment = {
   /**
     @type XM.TaxAuthority
   */
-  taxAuthority: SC.Record.toOne('XM.TaxAuthority', {
-    label: '_taxAuthority'.loc()
-  })
+  taxAuthority: SC.Record.toOne('XM.TaxAuthority')
 
 };

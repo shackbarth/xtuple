@@ -43,36 +43,26 @@ XM._VendorInfo = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type XM.Terms
   */
-  terms: SC.Record.toOne('XM.Terms', {
-    label: '_terms'.loc()
-  }),
+  terms: SC.Record.toOne('XM.Terms'),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  })
+  currency: SC.Record.toOne('XM.Currency')
 
 };

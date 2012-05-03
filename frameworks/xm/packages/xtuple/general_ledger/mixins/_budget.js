@@ -44,22 +44,17 @@ XM._Budget = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type XM.BudgetDetail
   */
-  items: SC.Record.toMany('XM.BudgetDetail', {
-    label: '_items'.loc()
-  })
+  items: SC.Record.toMany('XM.BudgetDetail')
 
 };

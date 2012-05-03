@@ -43,38 +43,29 @@ XM._InvoiceTaxAdjustment = {
   /**
     @type XM.Invoice
   */
-  invoice: SC.Record.toOne('XM.Invoice', {
-    label: '_invoice'.loc()
-  }),
+  invoice: SC.Record.toOne('XM.Invoice'),
 
   /**
     @type XM.TaxCode
   */
-  taxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_taxCode'.loc()
-  }),
+  taxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
     @type Number
   */
-  sequence: SC.Record.attr(Number, {
-    label: '_sequence'.loc()
-  }),
+  sequence: SC.Record.attr(Number),
 
   /**
     @type Money
   */
-  tax: SC.Record.attr(Money, {
-    label: '_tax'.loc()
-  }),
+  tax: SC.Record.attr(Money),
 
   /**
     @type Date
   */
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_documentDate'.loc()
+    useIsoDate: false
   })
 
 };

@@ -43,23 +43,18 @@ XM._IncidentContact = {
   /**
     @type XM.Contact
   */
-  source: SC.Record.toOne('XM.Contact', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Contact'),
 
   /**
     @type XM.ContactInfo
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_contact'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

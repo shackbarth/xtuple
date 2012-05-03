@@ -43,44 +43,33 @@ XM._TrialBalance = {
   /**
     @type XM.Period
   */
-  period: SC.Record.toOne('XM.Period', {
-    label: '_period'.loc()
-  }),
+  period: SC.Record.toOne('XM.Period'),
 
   /**
     @type XM.LedgerAccountInfo
   */
   ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_ledgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type Number
   */
-  beginning: SC.Record.attr(Number, {
-    label: '_beginning'.loc()
-  }),
+  beginning: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  ending: SC.Record.attr(Number, {
-    label: '_ending'.loc()
-  }),
+  ending: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  credits: SC.Record.attr(Number, {
-    label: '_credits'.loc()
-  }),
+  credits: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  debits: SC.Record.attr(Number, {
-    label: '_debits'.loc()
-  })
+  debits: SC.Record.attr(Number)
 
 };

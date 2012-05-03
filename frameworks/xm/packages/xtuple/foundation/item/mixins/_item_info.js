@@ -43,65 +43,48 @@ XM._ItemInfo = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  description1: SC.Record.attr(String, {
-    label: '_description1'.loc()
-  }),
+  description1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description2: SC.Record.attr(String, {
-    label: '_description2'.loc()
-  }),
+  description2: SC.Record.attr(String),
 
   /**
     @type XM.Unit
   */
-  inventoryUnit: SC.Record.toOne('XM.Unit', {
-    label: '_inventoryUnit'.loc()
-  }),
+  inventoryUnit: SC.Record.toOne('XM.Unit'),
 
   /**
     @type Boolean
   */
-  isFractional: SC.Record.attr(Boolean, {
-    label: '_isFractional'.loc()
-  }),
+  isFractional: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isSold: SC.Record.attr(Boolean, {
-    label: '_isSold'.loc()
-  }),
+  isSold: SC.Record.attr(Boolean),
 
   /**
     @type Number
   */
-  listPrice: SC.Record.attr(Number, {
-    label: '_listPrice'.loc()
-  }),
+  listPrice: SC.Record.attr(Number),
 
   /**
     @type XM.Unit
   */
   priceUnit: SC.Record.toOne('XM.Unit', {
-    isRequired: true,
-    label: '_priceUnit'.loc()
+    isRequired: true
   })
 
 };

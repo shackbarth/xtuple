@@ -43,23 +43,18 @@ XM._ToDoOpportunity = {
   /**
     @type XM.ToDo
   */
-  source: SC.Record.toOne('XM.ToDo', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.ToDo'),
 
   /**
     @type XM.OpportunityInfo
   */
   opportunity: SC.Record.toOne('XM.OpportunityInfo', {
-    isNested: true,
-    label: '_opportunity'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

@@ -20,8 +20,7 @@ SC.Patch.create( /** @scope XM.VoucherDistribution.prototype */ {
       @type XM.LedgerAccount
     */
     ledgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isNested: true,
-      label: '_ledgerAccount'.loc()
+      isNested: true
     })
 
   }

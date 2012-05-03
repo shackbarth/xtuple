@@ -43,22 +43,16 @@ XM._UnitType = {
   /**
     @type Number
   */
-  name: SC.Record.attr(Number, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  multiple: SC.Record.attr(Boolean, {
-    label: '_multiple'.loc()
-  })
+  multiple: SC.Record.attr(Boolean)
 
 };

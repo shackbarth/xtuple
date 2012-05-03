@@ -43,23 +43,18 @@ XM._IncidentVendor = {
   /**
     @type XM.Incident
   */
-  source: SC.Record.toOne('XM.Incident', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Incident'),
 
   /**
     @type XM.VendorInfo
   */
   vendor: SC.Record.toOne('XM.VendorInfo', {
-    isNested: true,
-    label: '_vendor'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

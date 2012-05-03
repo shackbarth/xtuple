@@ -43,29 +43,21 @@ XM._PayablePendingApplication = {
   /**
     @type XM.Payment
   */
-  payment: SC.Record.toOne('XM.Payment', {
-    label: '_payment'.loc()
-  }),
+  payment: SC.Record.toOne('XM.Payment'),
 
   /**
     @type XM.Payable
   */
-  payable: SC.Record.toOne('XM.Payable', {
-    label: '_payable'.loc()
-  }),
+  payable: SC.Record.toOne('XM.Payable'),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  discount: SC.Record.attr(Number, {
-    label: '_discount'.loc()
-  })
+  discount: SC.Record.attr(Number)
 
 };

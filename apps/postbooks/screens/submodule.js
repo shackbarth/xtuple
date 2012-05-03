@@ -106,7 +106,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
   topbar.get('layers').pushObject(Postbooks.Button.create({
     layout: { right: 160, centerY: 0, width: 120, height: 24 },
-    name: Postbooks.submoduleController.get('status') === SC.Record.READY_NEW ? "_save".loc() : "_apply".loc(),
+    name: "_save".loc(),
     target: 'Postbooks.statechart',
     action: 'apply',
     isEnabledBinding: 'Postbooks*store.hasChanges',
@@ -127,7 +127,8 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
-    var property = proto[key];
+    var property = proto[key],
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -137,7 +138,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
       });
 
       list.push(SC.Object.create({
-        title: property.label,
+        title: title,
         surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController),
         klass: arrayKlass,
         attribute: key

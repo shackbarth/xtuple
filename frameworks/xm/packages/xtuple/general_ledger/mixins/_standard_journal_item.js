@@ -43,30 +43,23 @@ XM._StandardJournalItem = {
   /**
     @type XM.StandardJournal
   */
-  standardJournal: SC.Record.toOne('XM.StandardJournal', {
-    label: '_standardJournal'.loc()
-  }),
+  standardJournal: SC.Record.toOne('XM.StandardJournal'),
 
   /**
     @type XM.LedgerAccountInfo
   */
   ledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_ledgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type Number
   */
-  amount: SC.Record.attr(Number, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Number),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

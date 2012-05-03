@@ -67,17 +67,17 @@ XM._Project = {
   }),
 
   /**
-    @type XM.Account
+    @type XM.AccountInfo
   */
-  account: SC.Record.toOne('XM.Account', {
+  account: SC.Record.toOne('XM.AccountInfo', {
     isNested: true,
     label: '_account'.loc()
   }),
 
   /**
-    @type XM.Contact
+    @type XM.ContactInfo
   */
-  contact: SC.Record.toOne('XM.Contact', {
+  contact: SC.Record.toOne('XM.ContactInfo', {
     isNested: true,
     label: '_contact'.loc()
   }),

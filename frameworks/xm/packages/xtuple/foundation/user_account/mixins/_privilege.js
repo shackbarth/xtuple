@@ -43,15 +43,11 @@ XM._Privilege = {
   /**
     @type String
   */
-  module: SC.Record.attr(String, {
-    label: '_module'.loc()
-  }),
+  module: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  })
+  name: SC.Record.attr(String)
 
 };

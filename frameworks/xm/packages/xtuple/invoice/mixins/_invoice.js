@@ -44,16 +44,13 @@ XM._Invoice = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  orderNumber: SC.Record.attr(String, {
-    label: '_orderNumber'.loc()
-  }),
+  orderNumber: SC.Record.attr(String),
 
   /**
     @type Date
@@ -63,8 +60,7 @@ XM._Invoice = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.create().toFormattedString('%Y-%m-%d');
-    },
-    label: '_orderDate'.loc()
+    }
   }),
 
   /**
@@ -75,8 +71,7 @@ XM._Invoice = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.create().toFormattedString('%Y-%m-%d');
-    },
-    label: '_invoiceDate'.loc()
+    }
   }),
 
   /**
@@ -84,8 +79,7 @@ XM._Invoice = {
   */
   shipDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_shipDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -93,8 +87,7 @@ XM._Invoice = {
   */
   isPrinted: SC.Record.attr(Boolean, {
     isRequired: true,
-    defaultValue: false,
-    label: '_isPrinted'.loc()
+    defaultValue: false
   }),
 
   /**
@@ -102,16 +95,14 @@ XM._Invoice = {
   */
   isPosted: SC.Record.attr(Boolean, {
     isRequired: true,
-    defaultValue: false,
-    label: '_isPosted'.loc()
+    defaultValue: false
   }),
 
   /**
     @type Boolean
   */
   isVoid: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    label: '_isVoid'.loc()
+    defaultValue: false
   }),
 
   /**
@@ -119,201 +110,148 @@ XM._Invoice = {
   */
   customer: SC.Record.toOne('XM.CustomerInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_customer'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  billtoName: SC.Record.attr(String, {
-    label: '_billtoName'.loc()
-  }),
+  billtoName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoAddress1: SC.Record.attr(String, {
-    label: '_billtoAddress1'.loc()
-  }),
+  billtoAddress1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoAddress2: SC.Record.attr(String, {
-    label: '_billtoAddress2'.loc()
-  }),
+  billtoAddress2: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoAddress3: SC.Record.attr(String, {
-    label: '_billtoAddress3'.loc()
-  }),
+  billtoAddress3: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoCity: SC.Record.attr(String, {
-    label: '_billtoCity'.loc()
-  }),
+  billtoCity: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoState: SC.Record.attr(String, {
-    label: '_billtoState'.loc()
-  }),
+  billtoState: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoPostalCode: SC.Record.attr(String, {
-    label: '_billtoPostalCode'.loc()
-  }),
+  billtoPostalCode: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoCountry: SC.Record.attr(String, {
-    label: '_billtoCountry'.loc()
-  }),
+  billtoCountry: SC.Record.attr(String),
 
   /**
     @type String
   */
-  billtoContactPhone: SC.Record.attr(String, {
-    label: '_billtoContactPhone'.loc()
-  }),
+  billtoContactPhone: SC.Record.attr(String),
 
   /**
     @type XM.CustomerShiptoInfo
   */
   shipto: SC.Record.toOne('XM.CustomerShiptoInfo', {
-    isNested: true,
-    label: '_shipto'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  shiptoName: SC.Record.attr(String, {
-    label: '_shiptoName'.loc()
-  }),
+  shiptoName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoAddress1: SC.Record.attr(String, {
-    label: '_shiptoAddress1'.loc()
-  }),
+  shiptoAddress1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoAddress2: SC.Record.attr(String, {
-    label: '_shiptoAddress2'.loc()
-  }),
+  shiptoAddress2: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoAddress3: SC.Record.attr(String, {
-    label: '_shiptoAddress3'.loc()
-  }),
+  shiptoAddress3: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoCity: SC.Record.attr(String, {
-    label: '_shiptoCity'.loc()
-  }),
+  shiptoCity: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoState: SC.Record.attr(String, {
-    label: '_shiptoState'.loc()
-  }),
+  shiptoState: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoPostalCode: SC.Record.attr(String, {
-    label: '_shiptoPostalCode'.loc()
-  }),
+  shiptoPostalCode: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoCountry: SC.Record.attr(String, {
-    label: '_shiptoCountry'.loc()
-  }),
+  shiptoCountry: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shiptoContactPhone: SC.Record.attr(String, {
-    label: '_shiptoContactPhone'.loc()
-  }),
+  shiptoContactPhone: SC.Record.attr(String),
 
   /**
     @type XM.SalesRep
   */
-  salesRep: SC.Record.toOne('XM.SalesRep', {
-    label: '_salesRep'.loc()
-  }),
+  salesRep: SC.Record.toOne('XM.SalesRep'),
 
   /**
     @type Percent
   */
   commission: SC.Record.attr(Percent, {
     isRequired: true,
-    defaultValue: 0,
-    label: '_commission'.loc()
+    defaultValue: 0
   }),
 
   /**
     @type XM.TaxZone
   */
-  taxZone: SC.Record.toOne('XM.TaxZone', {
-    label: '_taxZone'.loc()
-  }),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
     @type XM.Terms
   */
-  terms: SC.Record.toOne('XM.Terms', {
-    label: '_terms'.loc()
-  }),
+  terms: SC.Record.toOne('XM.Terms'),
 
   /**
     @type String
   */
-  purchaseOrderNumber: SC.Record.attr(String, {
-    label: '_purchaseOrderNumber'.loc()
-  }),
+  purchaseOrderNumber: SC.Record.attr(String),
 
   /**
     @type String
   */
-  shipVia: SC.Record.attr(String, {
-    label: '_shipVia'.loc()
-  }),
+  shipVia: SC.Record.attr(String),
 
   /**
     @type String
   */
-  incoTerms: SC.Record.attr(String, {
-    label: '_incoTerms'.loc()
-  }),
+  incoTerms: SC.Record.attr(String),
 
   /**
     @type XM.ShipCharge
   */
-  shipCharge: SC.Record.toOne('XM.ShipCharge', {
-    label: '_shipCharge'.loc()
-  }),
+  shipCharge: SC.Record.toOne('XM.ShipCharge'),
 
   /**
     @type XM.Currency
@@ -322,8 +260,7 @@ XM._Invoice = {
     isRequired: true,
     defaultValue: function() {
       return XM.Currency.BASE;
-    },
-    label: '_currency'.loc()
+    }
   }),
 
   /**
@@ -331,8 +268,7 @@ XM._Invoice = {
   */
   freight: SC.Record.attr(Money, {
     isRequired: true,
-    defaultValue: 0,
-    label: '_freight'.loc()
+    defaultValue: 0
   }),
 
   /**
@@ -340,8 +276,7 @@ XM._Invoice = {
   */
   credits: SC.Record.toMany('XM.InvoiceCredit', {
     isNested: true,
-    inverse: 'invoice',
-    label: '_credits'.loc()
+    inverse: 'invoice'
   }),
 
   /**
@@ -349,8 +284,7 @@ XM._Invoice = {
   */
   lines: SC.Record.toMany('XM.InvoiceLine', {
     isNested: true,
-    inverse: 'invoice',
-    label: '_lines'.loc()
+    inverse: 'invoice'
   }),
 
   /**
@@ -358,8 +292,7 @@ XM._Invoice = {
   */
   freightTaxes: SC.Record.toMany('XM.InvoiceTaxFreight', {
     isNested: true,
-    inverse: 'invoice',
-    label: '_freightTaxes'.loc()
+    inverse: 'invoice'
   }),
 
   /**
@@ -367,22 +300,17 @@ XM._Invoice = {
   */
   adjustmentTaxes: SC.Record.toMany('XM.InvoiceTaxAdjustment', {
     isNested: true,
-    inverse: 'invoice',
-    label: '_adjustmentTaxes'.loc()
+    inverse: 'invoice'
   }),
 
   /**
     @type XM.InvoiceRecurrence
   */
-  recurrences: SC.Record.toMany('XM.InvoiceRecurrence', {
-    label: '_recurrences'.loc()
-  }),
+  recurrences: SC.Record.toMany('XM.InvoiceRecurrence'),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  })
+  notes: SC.Record.attr(String)
 
 };

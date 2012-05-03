@@ -43,22 +43,16 @@ XM._State = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  abbreviation: SC.Record.attr(String, {
-    label: '_abbreviation'.loc()
-  }),
+  abbreviation: SC.Record.attr(String),
 
   /**
     @type XM.Country
   */
-  country: SC.Record.toOne('XM.Country', {
-    label: '_country'.loc()
-  })
+  country: SC.Record.toOne('XM.Country')
 
 };

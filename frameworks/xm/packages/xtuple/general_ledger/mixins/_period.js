@@ -43,17 +43,14 @@ XM._Period = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Date
   */
   start: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_start'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -61,43 +58,32 @@ XM._Period = {
   */
   end: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_end'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type XM.FiscalYear
   */
-  fiscalYear: SC.Record.toOne('XM.FiscalYear', {
-    label: '_fiscalYear'.loc()
-  }),
+  fiscalYear: SC.Record.toOne('XM.FiscalYear'),
 
   /**
     @type Number
   */
-  number: SC.Record.attr(Number, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  quarter: SC.Record.attr(Number, {
-    label: '_quarter'.loc()
-  }),
+  quarter: SC.Record.attr(Number),
 
   /**
     @type Boolean
   */
-  frozen: SC.Record.attr(Boolean, {
-    label: '_frozen'.loc()
-  }),
+  frozen: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  closed: SC.Record.attr(Boolean, {
-    label: '_closed'.loc()
-  })
+  closed: SC.Record.attr(Boolean)
 
 };

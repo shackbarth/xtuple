@@ -43,23 +43,17 @@ XM._TaxRate = {
   /**
     @type XM.TaxCode
   */
-  taxCode: SC.Record.toOne('XM.TaxCode', {
-    label: '_taxCode'.loc()
-  }),
+  taxCode: SC.Record.toOne('XM.TaxCode'),
 
   /**
     @type Percent
   */
-  percent: SC.Record.attr(Percent, {
-    label: '_percent'.loc()
-  }),
+  percent: SC.Record.attr(Percent),
 
   /**
     @type Money
   */
-  amount: SC.Record.attr(Money, {
-    label: '_amount'.loc()
-  }),
+  amount: SC.Record.attr(Money),
 
   /**
     @type XM.Currency
@@ -68,8 +62,7 @@ XM._TaxRate = {
     isNested: true,
     defaultValue: function() {
       return XM.Currency.BASE;
-    },
-    label: '_currency'.loc()
+    }
   }),
 
   /**
@@ -80,8 +73,7 @@ XM._TaxRate = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.startOfTime();
-    },
-    label: '_effective'.loc()
+    }
   }),
 
   /**
@@ -92,8 +84,7 @@ XM._TaxRate = {
     useIsoDate: false,
     defaultValue: function() {
       return XT.DateTime.endOfTime();
-    },
-    label: '_expires'.loc()
+    }
   })
 
 };

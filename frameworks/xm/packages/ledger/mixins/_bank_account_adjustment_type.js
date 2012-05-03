@@ -43,29 +43,21 @@ XM._BankAccountAdjustmentType = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type String
   */
-  ledgerAccount: SC.Record.attr(String, {
-    label: '_ledgerAccount'.loc()
-  }),
+  ledgerAccount: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isCredit: SC.Record.toOne(Boolean, {
-    label: '_isCredit'.loc()
-  })
+  isCredit: SC.Record.toOne(Boolean)
 
 };

@@ -21,8 +21,7 @@ SC.Patch.create( /** @scope XM.Incident.prototype */ {
     */
     vendors: SC.Record.toMany('XM.IncidentVendor', {
       isNested: true,
-      inverse: 'source',
-      label: '_vendors'.loc()
+      inverse: 'source'
     })
 
   }

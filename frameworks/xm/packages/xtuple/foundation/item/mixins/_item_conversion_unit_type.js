@@ -43,15 +43,11 @@ XM._ItemConversionUnitType = {
   /**
     @type XM.ItemConversion
   */
-  itemUnitConversion: SC.Record.toOne('XM.ItemConversion', {
-    label: '_itemUnitConversion'.loc()
-  }),
+  itemUnitConversion: SC.Record.toOne('XM.ItemConversion'),
 
   /**
     @type Number
   */
-  itemUnitType: SC.Record.attr(Number, {
-    label: '_itemUnitType'.loc()
-  })
+  itemUnitType: SC.Record.attr(Number)
 
 };

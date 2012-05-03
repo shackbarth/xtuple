@@ -43,38 +43,29 @@ XM._FinancialLayout = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  layoutType: SC.Record.attr(String, {
-    label: '_layoutType'.loc()
-  }),
+  layoutType: SC.Record.attr(String),
 
   /**
     @type XM.FinancialLayoutGroup
   */
   groups: SC.Record.toMany('XM.FinancialLayoutGroup', {
     isNested: true,
-    inverse: 'financialLayout',
-    label: '_groups'.loc()
+    inverse: 'financialLayout'
   }),
 
   /**
@@ -82,176 +73,127 @@ XM._FinancialLayout = {
   */
   items: SC.Record.toMany('XM.FinancialLayoutItem', {
     isNested: true,
-    inverse: 'financialLayout',
-    label: '_items'.loc()
+    inverse: 'financialLayout'
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  showTotal: SC.Record.attr(Boolean, {
-    label: '_showTotal'.loc()
-  }),
+  showTotal: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isShowBeginning: SC.Record.attr(Boolean, {
-    label: '_isShowBeginning'.loc()
-  }),
+  isShowBeginning: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isShowEnding: SC.Record.attr(Boolean, {
-    label: '_isShowEnding'.loc()
-  }),
+  isShowEnding: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isShowDebitsCredits: SC.Record.attr(Boolean, {
-    label: '_isShowDebitsCredits'.loc()
-  }),
+  isShowDebitsCredits: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isShowBudget: SC.Record.attr(Boolean, {
-    label: '_isShowBudget'.loc()
-  }),
+  isShowBudget: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isShowDifference: SC.Record.attr(Boolean, {
-    label: '_isShowDifference'.loc()
-  }),
+  isShowDifference: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isShowCustom: SC.Record.attr(Boolean, {
-    label: '_isShowCustom'.loc()
-  }),
+  isShowCustom: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isAlternateBeginning: SC.Record.attr(Boolean, {
-    label: '_isAlternateBeginning'.loc()
-  }),
+  isAlternateBeginning: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  beginningLabel: SC.Record.attr(String, {
-    label: '_beginningLabel'.loc()
-  }),
+  beginningLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isAlternateEnding: SC.Record.attr(Boolean, {
-    label: '_isAlternateEnding'.loc()
-  }),
+  isAlternateEnding: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  endingLabel: SC.Record.attr(String, {
-    label: '_endingLabel'.loc()
-  }),
+  endingLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isAlternateDebits: SC.Record.attr(Boolean, {
-    label: '_isAlternateDebits'.loc()
-  }),
+  isAlternateDebits: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  debitsLabel: SC.Record.attr(String, {
-    label: '_debitsLabel'.loc()
-  }),
+  debitsLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isAlternateCredits: SC.Record.attr(Boolean, {
-    label: '_isAlternateCredits'.loc()
-  }),
+  isAlternateCredits: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  creditsLabel: SC.Record.attr(String, {
-    label: '_creditsLabel'.loc()
-  }),
+  creditsLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isAlternateBudget: SC.Record.attr(Boolean, {
-    label: '_isAlternateBudget'.loc()
-  }),
+  isAlternateBudget: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  budgetLabel: SC.Record.attr(String, {
-    label: '_budgetLabel'.loc()
-  }),
+  budgetLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isAlternateDifference: SC.Record.attr(Boolean, {
-    label: '_isAlternateDifference'.loc()
-  }),
+  isAlternateDifference: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  differenceLabel: SC.Record.attr(String, {
-    label: '_differenceLabel'.loc()
-  }),
+  differenceLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isAlternateTotal: SC.Record.attr(Boolean, {
-    label: '_isAlternateTotal'.loc()
-  }),
+  isAlternateTotal: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  totalLabel: SC.Record.attr(String, {
-    label: '_totalLabel'.loc()
-  }),
+  totalLabel: SC.Record.attr(String),
 
   /**
     @type String
   */
-  customLabel: SC.Record.attr(String, {
-    label: '_customLabel'.loc()
-  }),
+  customLabel: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isSystem: SC.Record.attr(Boolean, {
-    label: '_isSystem'.loc()
-  })
+  isSystem: SC.Record.attr(Boolean)
 
 };

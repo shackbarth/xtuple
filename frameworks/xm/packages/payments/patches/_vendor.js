@@ -19,9 +19,7 @@ SC.Patch.create( /** @scope XM.Vendor.prototype */ {
     /**
       @type XM.VendorPayment
     */
-    checks: SC.Record.toMany('XM.VendorPayment', {
-      label: '_checks'.loc()
-    })
+    checks: SC.Record.toMany('XM.VendorPayment')
 
   }
 

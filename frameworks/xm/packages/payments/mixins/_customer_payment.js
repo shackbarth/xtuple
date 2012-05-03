@@ -43,8 +43,6 @@ XM._CustomerPayment = {
   /**
     @type XM.Customer
   */
-  customer: SC.Record.toOne('XM.Customer', {
-    label: '_customer'.loc()
-  })
+  customer: SC.Record.toOne('XM.Customer')
 
 };

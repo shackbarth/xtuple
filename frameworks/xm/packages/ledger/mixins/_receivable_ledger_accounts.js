@@ -43,47 +43,39 @@ XM._ReceivableLedgerAccounts = {
   /**
     @type XM.CustomerType
   */
-  customerType: SC.Record.toOne('XM.CustomerType', {
-    label: '_customerType'.loc()
-  }),
+  customerType: SC.Record.toOne('XM.CustomerType'),
 
   /**
     @type String
   */
-  customerTypePattern: SC.Record.attr(String, {
-    label: '_customerTypePattern'.loc()
-  }),
+  customerTypePattern: SC.Record.attr(String),
 
   /**
     @type XM.LedgerAccountInfo
   */
   receivablesLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_receivablesLedgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.LedgerAccountInfo
   */
   prepaidledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_prepaidledgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.LedgerAccountInfo
   */
   deferredLedgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_deferredLedgerAccount'.loc()
+    isNested: true
   }),
 
   /**
     @type XM.LedgerAccountInfo
   */
   discountledgerAccount: SC.Record.toOne('XM.LedgerAccountInfo', {
-    isNested: true,
-    label: '_discountledgerAccount'.loc()
+    isNested: true
   })
 
 };

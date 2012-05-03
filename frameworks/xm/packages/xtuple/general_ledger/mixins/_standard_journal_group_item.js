@@ -43,31 +43,24 @@ XM._StandardJournalGroupItem = {
   /**
     @type XM.StandardJournalGroup
   */
-  standardJournalGroup: SC.Record.toOne('XM.StandardJournalGroup', {
-    label: '_standardJournalGroup'.loc()
-  }),
+  standardJournalGroup: SC.Record.toOne('XM.StandardJournalGroup'),
 
   /**
     @type XM.StandardJournal
   */
-  standardJournal: SC.Record.toOne('XM.StandardJournal', {
-    label: '_standardJournal'.loc()
-  }),
+  standardJournal: SC.Record.toOne('XM.StandardJournal'),
 
   /**
     @type Number
   */
-  apply: SC.Record.attr(Number, {
-    label: '_apply'.loc()
-  }),
+  apply: SC.Record.attr(Number),
 
   /**
     @type Date
   */
   effective: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_effective'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -75,8 +68,7 @@ XM._StandardJournalGroupItem = {
   */
   expires: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_expires'.loc()
+    useIsoDate: false
   })
 
 };

@@ -43,23 +43,18 @@ XM._IncidentUrl = {
   /**
     @type XM.Incident
   */
-  source: SC.Record.toOne('XM.Incident', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Incident'),
 
   /**
     @type XM.Url
   */
   url: SC.Record.toOne('XM.Url', {
-    isNested: true,
-    label: '_url'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

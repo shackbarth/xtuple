@@ -5,8 +5,29 @@
 /*globals Postbooks XM sc_assert */
 
 sc_require('views/record_list');
+sc_require('views/carousel');
+sc_require('views/tile_view');
+
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
 
 Postbooks.Contact = {};
+
 Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   // Rect
@@ -102,3 +123,113 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
 
 };
 
+Postbooks.Contact.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Contact.Tiles()');
+  
+  var klass = XM.Contact,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  properties = ' isActive number spacer honorific firstName middleName lastName suffix jobTitle '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, null, properties));
+
+  // details
+  properties = ' phone alternate fax spacer primaryEmail webAddress spacer account owner '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+
+  // general
+  tiles.push(Postbooks.Contact.CreateGeneralTileView(controller));
+
+  //notes
+  tiles.push(Postbooks.CreateNotesTileView(controller));
+  
+  return tiles;
+};
+
+Postbooks.Contact.CreateGeneralTileView = function(controller) {
+  console.log('Postbooks.Contact.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create({ title: "_general".loc() }),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Contact.prototype,
+      K = Postbooks,
+      left = 120, right = 12,
+      label = null, widget = null,
+      key, property, objectKlass, objectController, objectKey;
+ 
+  // crm account 
+  key = 'account';
+  console.log('crm account type: %@'.fmt(proto[key].type));
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_account".loc() + ':'
+  });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'number';
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'name';
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 12 + K.SPACING;
+  layers.pushObject(label);
+
+  // owner 
+  key = 'owner';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_owner".loc() + ':'
+  });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'username';
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  objectKey = 'propername';
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 12 + K.SPACING;
+  layers.pushObject(label);
+
+  return view;
+};

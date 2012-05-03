@@ -45,8 +45,7 @@ XM._Payable = {
   */
   vendor: SC.Record.toOne('XM.VendorInfo', {
     isNested: true,
-    isRequired: true,
-    label: '_vendor'.loc()
+    isRequired: true
   }),
 
   /**
@@ -55,8 +54,7 @@ XM._Payable = {
   documentDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true,
-    label: '_documentDate'.loc()
+    isRequired: true
   }),
 
   /**
@@ -65,40 +63,34 @@ XM._Payable = {
   dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true,
-    label: '_dueDate'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
   documentType: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_documentType'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  orderNumber: SC.Record.attr(String, {
-    label: '_orderNumber'.loc()
-  }),
+  orderNumber: SC.Record.attr(String),
 
   /**
     @type XM.Terms
   */
   terms: SC.Record.toOne('XM.Terms', {
     isRequired: true,
-    defaultValue: -1,
-    label: '_terms'.loc()
+    defaultValue: -1
   }),
 
   /**
@@ -106,16 +98,14 @@ XM._Payable = {
   */
   payableStatus: SC.Record.toOne(String, {
     isRequired: true,
-    defaultValue: 'O',
-    label: '_payableStatus'.loc()
+    defaultValue: 'O'
   }),
 
   /**
     @type Money
   */
   amount: SC.Record.attr(Money, {
-    isRequired: true,
-    label: '_amount'.loc()
+    isRequired: true
   }),
 
   /**
@@ -125,40 +115,33 @@ XM._Payable = {
     isRequired: true,
     defaultValue: function() {
       return XM.Currency.BASE;
-    },
-    label: '_currency'.loc()
+    }
   }),
 
   /**
     @type Number
   */
-  currencyRate: SC.Record.attr(Number, {
-    label: '_currencyRate'.loc()
-  }),
+  currencyRate: SC.Record.attr(Number),
 
   /**
     @type XM.PayableTaxAdjustment
   */
   adjustmentTaxes: SC.Record.toMany('XM.PayableTaxAdjustment', {
     isNested: true,
-    inverse: 'payable',
-    label: '_adjustmentTaxes'.loc()
+    inverse: 'payable'
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.PayableApplication
   */
   applications: SC.Record.toMany('XM.PayableApplication', {
     isNested: true,
-    inverse: 'payable',
-    label: '_applications'.loc()
+    inverse: 'payable'
   }),
 
   /**
@@ -167,8 +150,7 @@ XM._Payable = {
   isOpen: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    defaultValue: true,
-    label: '_isOpen'.loc()
+    defaultValue: true
   }),
 
   /**
@@ -176,8 +158,7 @@ XM._Payable = {
   */
   closeDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_closeDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -186,8 +167,7 @@ XM._Payable = {
   createdBy: SC.Record.attr(String, {
     defaultValue: function() {
       return arguments[0].getPath("store.dataSource").session.userName;
-    },
-    label: '_createdBy'.loc()
+    }
   })
 
 };

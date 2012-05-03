@@ -43,80 +43,59 @@ XM._Address = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  line1: SC.Record.attr(String, {
-    label: '_line1'.loc()
-  }),
+  line1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line2: SC.Record.attr(String, {
-    label: '_line2'.loc()
-  }),
+  line2: SC.Record.attr(String),
 
   /**
     @type String
   */
-  line3: SC.Record.attr(String, {
-    label: '_line3'.loc()
-  }),
+  line3: SC.Record.attr(String),
 
   /**
     @type String
   */
-  city: SC.Record.attr(String, {
-    label: '_city'.loc()
-  }),
+  city: SC.Record.attr(String),
 
   /**
     @type String
   */
-  state: SC.Record.attr(String, {
-    label: '_state'.loc()
-  }),
+  state: SC.Record.attr(String),
 
   /**
     @type String
   */
-  postalCode: SC.Record.attr(String, {
-    label: '_postalCode'.loc()
-  }),
+  postalCode: SC.Record.attr(String),
 
   /**
     @type String
   */
-  country: SC.Record.attr(String, {
-    label: '_country'.loc()
-  }),
+  country: SC.Record.attr(String),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.AddressComment
   */
   comments: SC.Record.toMany('XM.AddressComment', {
     isNested: true,
-    inverse: 'address',
-    label: '_comments'.loc()
+    inverse: 'address'
   }),
 
   /**
@@ -124,8 +103,7 @@ XM._Address = {
   */
   characteristics: SC.Record.toMany('XM.AddressCharacteristic', {
     isNested: true,
-    inverse: 'address',
-    label: '_characteristics'.loc()
+    inverse: 'address'
   })
 
 };

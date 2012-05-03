@@ -44,22 +44,17 @@ XM._ShipCharge = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isCustomerPay: SC.Record.attr(Boolean, {
-    label: '_isCustomerPay'.loc()
-  })
+  isCustomerPay: SC.Record.attr(Boolean)
 
 };

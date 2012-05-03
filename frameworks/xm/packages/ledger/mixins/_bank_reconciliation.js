@@ -44,8 +44,7 @@ XM._BankReconciliation = {
     @type XM.BankAccountInfo
   */
   bankAccount: SC.Record.toOne('XM.BankAccountInfo', {
-    isNested: true,
-    label: '_bankAccount'.loc()
+    isNested: true
   }),
 
   /**
@@ -53,8 +52,7 @@ XM._BankReconciliation = {
   */
   openDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_openDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -62,31 +60,25 @@ XM._BankReconciliation = {
   */
   endDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_endDate'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type Number
   */
-  openBalance: SC.Record.attr(Number, {
-    label: '_openBalance'.loc()
-  }),
+  openBalance: SC.Record.attr(Number),
 
   /**
     @type Number
   */
-  endBalance: SC.Record.attr(Number, {
-    label: '_endBalance'.loc()
-  }),
+  endBalance: SC.Record.attr(Number),
 
   /**
     @type XM.BankReconciliationItem
   */
   items: SC.Record.toMany('XM.BankReconciliationItem', {
     isNested: true,
-    inverse: 'bankReconciliation',
-    label: '_items'.loc()
+    inverse: 'bankReconciliation'
   }),
 
   /**
@@ -94,24 +86,20 @@ XM._BankReconciliation = {
   */
   unreconciled: SC.Record.toMany('XM.BankReconciliationUnreconciled', {
     isNested: true,
-    inverse: 'bankReconciliation',
-    label: '_unreconciled'.loc()
+    inverse: 'bankReconciliation'
   }),
 
   /**
     @type String
   */
-  isPosted: SC.Record.attr(String, {
-    label: '_isPosted'.loc()
-  }),
+  isPosted: SC.Record.attr(String),
 
   /**
     @type Date
   */
   postDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_postDate'.loc()
+    useIsoDate: false
   }),
 
   /**
@@ -119,15 +107,12 @@ XM._BankReconciliation = {
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };

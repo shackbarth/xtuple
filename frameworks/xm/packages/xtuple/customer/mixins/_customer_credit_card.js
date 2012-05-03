@@ -43,138 +43,102 @@ XM._CustomerCreditCard = {
   /**
     @type Number
   */
-  sequence: SC.Record.attr(Number, {
-    label: '_sequence'.loc()
-  }),
+  sequence: SC.Record.attr(Number),
 
   /**
     @type XM.Customer
   */
-  customer: SC.Record.toOne('XM.Customer', {
-    label: '_customer'.loc()
-  }),
+  customer: SC.Record.toOne('XM.Customer'),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  address1: SC.Record.attr(String, {
-    label: '_address1'.loc()
-  }),
+  address1: SC.Record.attr(String),
 
   /**
     @type String
   */
-  address2: SC.Record.attr(String, {
-    label: '_address2'.loc()
-  }),
+  address2: SC.Record.attr(String),
 
   /**
     @type String
   */
-  city: SC.Record.attr(String, {
-    label: '_city'.loc()
-  }),
+  city: SC.Record.attr(String),
 
   /**
     @type String
   */
-  state: SC.Record.attr(String, {
-    label: '_state'.loc()
-  }),
+  state: SC.Record.attr(String),
 
   /**
     @type String
   */
-  postalCode: SC.Record.attr(String, {
-    label: '_postalCode'.loc()
-  }),
+  postalCode: SC.Record.attr(String),
 
   /**
     @type String
   */
-  country: SC.Record.attr(String, {
-    label: '_country'.loc()
-  }),
+  country: SC.Record.attr(String),
 
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isDebit: SC.Record.attr(Boolean, {
-    label: '_isDebit'.loc()
-  }),
+  isDebit: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  monthExpire: SC.Record.attr(String, {
-    label: '_monthExpire'.loc()
-  }),
+  monthExpire: SC.Record.attr(String),
 
   /**
     @type String
   */
-  yearExpire: SC.Record.attr(String, {
-    label: '_yearExpire'.loc()
-  }),
+  yearExpire: SC.Record.attr(String),
 
   /**
     @type String
   */
-  cardType: SC.Record.attr(String, {
-    label: '_cardType'.loc()
-  }),
+  cardType: SC.Record.attr(String),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  }),
+  createdBy: SC.Record.attr(String),
 
   /**
     @type Date
   */
   updated: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_updated'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  updatedBy: SC.Record.attr(String, {
-    label: '_updatedBy'.loc()
-  })
+  updatedBy: SC.Record.attr(String)
 
 };

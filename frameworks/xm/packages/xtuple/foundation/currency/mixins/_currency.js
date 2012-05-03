@@ -44,31 +44,26 @@ XM._Currency = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  symbol: SC.Record.attr(String, {
-    label: '_symbol'.loc()
-  }),
+  symbol: SC.Record.attr(String),
 
   /**
     @type String
   */
   abbreviation: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_abbreviation'.loc()
+    isRequired: true
   }),
 
   /**
     @type Boolean
   */
   isBase: SC.Record.attr(Boolean, {
-    defaultValue: false,
-    label: '_isBase'.loc()
+    defaultValue: false
   })
 
 };

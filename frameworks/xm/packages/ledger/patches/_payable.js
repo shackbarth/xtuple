@@ -21,24 +21,20 @@ SC.Patch.create( /** @scope XM.Payable.prototype */ {
     */
     distributionDate: SC.Record.attr(XT.DateTime, {
       format: '%Y-%m-%d',
-      useIsoDate: false,
-      label: '_distributionDate'.loc()
+      useIsoDate: false
     }),
   
     /**
       @type XM.LedgerAccount
     */
     ledgerAccount: SC.Record.toOne('XM.LedgerAccount', {
-      isNested: true,
-      label: '_ledgerAccount'.loc()
+      isNested: true
     }),
   
     /**
       @type Number
     */
-    journalNumber: SC.Record.attr(Number, {
-      label: '_journalNumber'.loc()
-    })
+    journalNumber: SC.Record.attr(Number)
 
   }
 

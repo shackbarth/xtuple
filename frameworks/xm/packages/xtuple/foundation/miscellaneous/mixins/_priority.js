@@ -44,23 +44,19 @@ XM._Priority = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type Number
   */
   order: SC.Record.attr(Number, {
-    defaultValue: 0,
-    label: '_order'.loc()
+    defaultValue: 0
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  })
+  description: SC.Record.attr(String)
 
 };

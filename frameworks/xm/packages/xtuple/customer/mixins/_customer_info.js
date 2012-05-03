@@ -43,100 +43,73 @@ XM._CustomerInfo = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type XM.ContactInfo
   */
   billingContact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true,
-    label: '_billingContact'.loc()
+    isNested: true
   }),
 
   /**
     @type Boolean
   */
-  isFreeFormShipto: SC.Record.attr(Boolean, {
-    label: '_isFreeFormShipto'.loc()
-  }),
+  isFreeFormShipto: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isFreeFormBillto: SC.Record.attr(Boolean, {
-    label: '_isFreeFormBillto'.loc()
-  }),
+  isFreeFormBillto: SC.Record.attr(Boolean),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency', {
-    label: '_currency'.loc()
-  }),
+  currency: SC.Record.toOne('XM.Currency'),
 
   /**
     @type XM.Terms
   */
-  terms: SC.Record.toOne('XM.Terms', {
-    label: '_terms'.loc()
-  }),
+  terms: SC.Record.toOne('XM.Terms'),
 
   /**
     @type String
   */
-  creditStatus: SC.Record.attr(String, {
-    label: '_creditStatus'.loc()
-  }),
+  creditStatus: SC.Record.attr(String),
 
   /**
     @type XM.SalesRep
   */
-  salesRep: SC.Record.toOne('XM.SalesRep', {
-    label: '_salesRep'.loc()
-  }),
+  salesRep: SC.Record.toOne('XM.SalesRep'),
 
   /**
     @type Percent
   */
-  commission: SC.Record.attr(Percent, {
-    label: '_commission'.loc()
-  }),
+  commission: SC.Record.attr(Percent),
 
   /**
     @type Percent
   */
-  discount: SC.Record.attr(Percent, {
-    label: '_discount'.loc()
-  }),
+  discount: SC.Record.attr(Percent),
 
   /**
     @type XM.TaxZone
   */
-  taxZone: SC.Record.toOne('XM.TaxZone', {
-    label: '_taxZone'.loc()
-  }),
+  taxZone: SC.Record.toOne('XM.TaxZone'),
 
   /**
     @type XM.ShipCharge
   */
-  shipCharge: SC.Record.toOne('XM.ShipCharge', {
-    label: '_shipCharge'.loc()
-  })
+  shipCharge: SC.Record.toOne('XM.ShipCharge')
 
 };

@@ -43,36 +43,26 @@ XM._CommentType = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isSystem: SC.Record.attr(Boolean, {
-    label: '_isSystem'.loc()
-  }),
+  isSystem: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  commentsEditable: SC.Record.attr(Boolean, {
-    label: '_commentsEditable'.loc()
-  }),
+  commentsEditable: SC.Record.attr(Boolean),
 
   /**
     @type Number
   */
-  order: SC.Record.attr(Number, {
-    label: '_order'.loc()
-  })
+  order: SC.Record.attr(Number)
 
 };

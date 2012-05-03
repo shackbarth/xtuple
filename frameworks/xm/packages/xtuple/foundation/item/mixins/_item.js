@@ -44,48 +44,42 @@ XM._Item = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_number'.loc()
+    isRequired: true
   }),
 
   /**
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isActive'.loc()
+    defaultValue: true
   }),
 
   /**
     @type String
   */
   description1: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_description1'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
   description2: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_description2'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.ClassCode
   */
   classCode: SC.Record.toOne('XM.ClassCode', {
-    isRequired: true,
-    label: '_classCode'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.Unit
   */
   inventoryUnit: SC.Record.toOne('XM.Unit', {
-    isRequired: true,
-    label: '_inventoryUnit'.loc()
+    isRequired: true
   }),
 
   /**
@@ -93,23 +87,19 @@ XM._Item = {
   */
   isFractional: SC.Record.attr(Boolean, {
     isRequired: true,
-    defaultValue: false,
-    label: '_isFractional'.loc()
+    defaultValue: false
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
   isSold: SC.Record.attr(Boolean, {
-    defaultValue: true,
-    label: '_isSold'.loc()
+    defaultValue: true
   }),
 
   /**
@@ -117,40 +107,34 @@ XM._Item = {
   */
   productCategory: SC.Record.toOne('XM.ProductCategory', {
     isRequired: true,
-    defaultValue: -1,
-    label: '_productCategory'.loc()
+    defaultValue: -1
   }),
 
   /**
     @type Number
   */
   listPrice: SC.Record.attr(Number, {
-    isRequired: true,
-    label: '_listPrice'.loc()
+    isRequired: true
   }),
 
   /**
     @type XM.Unit
   */
   priceUnit: SC.Record.toOne('XM.Unit', {
-    isRequired: true,
-    label: '_priceUnit'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  extendedDescription: SC.Record.attr(String, {
-    label: '_extendedDescription'.loc()
-  }),
+  extendedDescription: SC.Record.attr(String),
 
   /**
     @type XM.ItemComment
   */
   comments: SC.Record.toMany('XM.ItemComment', {
     isNested: true,
-    inverse: 'item',
-    label: '_comments'.loc()
+    inverse: 'item'
   }),
 
   /**
@@ -158,8 +142,7 @@ XM._Item = {
   */
   characteristics: SC.Record.toMany('XM.ItemCharacteristic', {
     isNested: true,
-    inverse: 'item',
-    label: '_characteristics'.loc()
+    inverse: 'item'
   }),
 
   /**
@@ -167,8 +150,7 @@ XM._Item = {
   */
   conversions: SC.Record.toMany('XM.ItemConversion', {
     isNested: true,
-    inverse: 'item',
-    label: '_conversions'.loc()
+    inverse: 'item'
   }),
 
   /**
@@ -176,8 +158,7 @@ XM._Item = {
   */
   aliases: SC.Record.toMany('XM.ItemAlias', {
     isNested: true,
-    inverse: 'item',
-    label: '_aliases'.loc()
+    inverse: 'item'
   }),
 
   /**
@@ -185,8 +166,7 @@ XM._Item = {
   */
   accounts: SC.Record.toMany('XM.ContactAccount', {
     isNested: true,
-    inverse: 'source',
-    label: '_accounts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -194,8 +174,7 @@ XM._Item = {
   */
   contacts: SC.Record.toMany('XM.ItemContact', {
     isNested: true,
-    inverse: 'source',
-    label: '_contacts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -203,8 +182,7 @@ XM._Item = {
   */
   items: SC.Record.toMany('XM.ItemItem', {
     isNested: true,
-    inverse: 'source',
-    label: '_items'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -212,8 +190,7 @@ XM._Item = {
   */
   files: SC.Record.toMany('XM.ItemFile', {
     isNested: true,
-    inverse: 'source',
-    label: '_files'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -221,8 +198,7 @@ XM._Item = {
   */
   images: SC.Record.toMany('XM.ItemImage', {
     isNested: true,
-    inverse: 'source',
-    label: '_images'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -230,8 +206,7 @@ XM._Item = {
   */
   urls: SC.Record.toMany('XM.ItemUrl', {
     isNested: true,
-    inverse: 'source',
-    label: '_urls'.loc()
+    inverse: 'source'
   })
 
 };

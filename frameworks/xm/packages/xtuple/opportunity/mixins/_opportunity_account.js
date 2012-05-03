@@ -36,23 +36,18 @@ XM._OpportunityAccount = {
   /**
     @type XM.Opportunity
   */
-  source: SC.Record.toOne('XM.Opportunity', {
-    label: '_source'.loc()
-  }),
+  source: SC.Record.toOne('XM.Opportunity'),
 
   /**
     @type XM.AccountInfo
   */
   account: SC.Record.toOne('XM.AccountInfo', {
-    isNested: true,
-    label: '_account'.loc()
+    isNested: true
   }),
 
   /**
     @type String
   */
-  purpose: SC.Record.attr(String, {
-    label: '_purpose'.loc()
-  })
+  purpose: SC.Record.attr(String)
 
 };

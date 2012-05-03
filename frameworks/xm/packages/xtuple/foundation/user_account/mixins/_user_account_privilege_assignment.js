@@ -43,16 +43,13 @@ XM._UserAccountPrivilegeAssignment = {
   /**
     @type String
   */
-  userAccount: SC.Record.attr(String, {
-    label: '_userAccount'.loc()
-  }),
+  userAccount: SC.Record.attr(String),
 
   /**
     @type XM.Privilege
   */
   privilege: SC.Record.toOne('XM.Privilege', {
-    isNested: true,
-    label: '_privilege'.loc()
+    isNested: true
   })
 
 };

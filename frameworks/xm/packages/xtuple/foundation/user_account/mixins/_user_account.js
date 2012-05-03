@@ -38,87 +38,64 @@ XM._UserAccount = {
   /**
     @type String
   */
-  username: SC.Record.attr(String, {
-    label: '_username'.loc()
-  }),
+  username: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  properName: SC.Record.attr(String, {
-    label: '_properName'.loc()
-  }),
+  properName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  password: SC.Record.attr(String, {
-    label: '_password'.loc()
-  }),
+  password: SC.Record.attr(String),
 
   /**
     @type String
   */
-  initials: SC.Record.attr(String, {
-    label: '_initials'.loc()
-  }),
+  initials: SC.Record.attr(String),
 
   /**
     @type String
   */
-  email: SC.Record.attr(String, {
-    label: '_email'.loc()
-  }),
+  email: SC.Record.attr(String),
 
   /**
     @type XM.Locale
   */
-  locale: SC.Record.toOne('XM.Locale', {
-    label: '_locale'.loc()
-  }),
+  locale: SC.Record.toOne('XM.Locale'),
 
   /**
     @type Boolean
   */
-  disableExport: SC.Record.attr(Boolean, {
-    label: '_disableExport'.loc()
-  }),
+  disableExport: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  canCreateUsers: SC.Record.attr(Boolean, {
-    label: '_canCreateUsers'.loc()
-  }),
+  canCreateUsers: SC.Record.attr(Boolean),
 
   /**
     @type Boolean
   */
-  isDatabaseUser: SC.Record.attr(Boolean, {
-    label: '_isDatabaseUser'.loc()
-  }),
+  isDatabaseUser: SC.Record.attr(Boolean),
 
   /**
     @type XM.UserAccountPrivilegeAssignment
   */
-  grantedPrivileges: SC.Record.toMany('XM.UserAccountPrivilegeAssignment', {
-    label: '_grantedPrivileges'.loc()
-  }),
+  grantedPrivileges: SC.Record.toMany('XM.UserAccountPrivilegeAssignment'),
 
   /**
     @type XM.UserAccountRole
   */
   userAccountRoles: SC.Record.toMany('XM.UserAccountRole', {
     isNested: true,
-    inverse: 'guid',
-    label: '_userAccountRoles'.loc()
+    inverse: 'guid'
   }),
 
   /**
@@ -126,8 +103,7 @@ XM._UserAccount = {
   */
   grantedUserAccountRoles: SC.Record.toMany('XM.UserAccountUserAccountRoleAssignment', {
     isNested: true,
-    inverse: 'userAccount',
-    label: '_grantedUserAccountRoles'.loc()
+    inverse: 'userAccount'
   })
 
 };

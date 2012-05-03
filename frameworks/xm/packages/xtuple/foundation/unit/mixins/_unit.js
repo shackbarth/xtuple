@@ -44,31 +44,25 @@ XM._Unit = {
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true,
-    label: '_name'.loc()
+    isRequired: true
   }),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isItemWeight: SC.Record.attr(Boolean, {
-    label: '_isItemWeight'.loc()
-  }),
+  isItemWeight: SC.Record.attr(Boolean),
 
   /**
     @type XM.UnitConversion
   */
   conversionTo: SC.Record.toMany('XM.UnitConversion', {
     isNested: true,
-    inverse: 'to_unit',
-    label: '_conversionTo'.loc()
+    inverse: 'to_unit'
   }),
 
   /**
@@ -76,8 +70,7 @@ XM._Unit = {
   */
   conversionFrom: SC.Record.toMany('XM.UnitConversion', {
     isNested: true,
-    inverse: 'from_unit',
-    label: '_conversionFrom'.loc()
+    inverse: 'from_unit'
   })
 
 };

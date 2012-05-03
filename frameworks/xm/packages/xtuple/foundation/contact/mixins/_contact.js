@@ -52,107 +52,78 @@ XM._Contact = {
   /**
     @type String
   */
-  number: SC.Record.attr(String, {
-    label: '_number'.loc()
-  }),
+  number: SC.Record.attr(String),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean, {
-    label: '_isActive'.loc()
-  }),
+  isActive: SC.Record.attr(Boolean),
 
   /**
     @type String
   */
-  honorific: SC.Record.attr(String, {
-    label: '_honorific'.loc()
-  }),
+  honorific: SC.Record.attr(String),
 
   /**
     @type String
   */
-  firstName: SC.Record.attr(String, {
-    label: '_firstName'.loc()
-  }),
+  firstName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  middleName: SC.Record.attr(String, {
-    label: '_middleName'.loc()
-  }),
+  middleName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  lastName: SC.Record.attr(String, {
-    label: '_lastName'.loc()
-  }),
+  lastName: SC.Record.attr(String),
 
   /**
     @type String
   */
-  suffix: SC.Record.attr(String, {
-    label: '_suffix'.loc()
-  }),
+  suffix: SC.Record.attr(String),
 
   /**
     @type String
   */
-  jobTitle: SC.Record.attr(String, {
-    label: '_jobTitle'.loc()
-  }),
+  jobTitle: SC.Record.attr(String),
 
   /**
     @type String
   */
-  initials: SC.Record.attr(String, {
-    label: '_initials'.loc()
-  }),
+  initials: SC.Record.attr(String),
 
   /**
     @type String
   */
-  phone: SC.Record.attr(String, {
-    label: '_phone'.loc()
-  }),
+  phone: SC.Record.attr(String),
 
   /**
     @type String
   */
-  alternate: SC.Record.attr(String, {
-    label: '_alternate'.loc()
-  }),
+  alternate: SC.Record.attr(String),
 
   /**
     @type String
   */
-  fax: SC.Record.attr(String, {
-    label: '_fax'.loc()
-  }),
+  fax: SC.Record.attr(String),
 
   /**
     @type String
   */
-  primaryEmail: SC.Record.attr(String, {
-    label: '_primaryEmail'.loc()
-  }),
+  primaryEmail: SC.Record.attr(String),
 
   /**
     @type String
   */
-  webAddress: SC.Record.attr(String, {
-    label: '_webAddress'.loc()
-  }),
+  webAddress: SC.Record.attr(String),
 
   /**
     @type XM.AccountInfo
   */
   account: SC.Record.toOne('XM.AccountInfo', {
-    isNested: true,
-    label: '_account'.loc()
+    isNested: true
   }),
 
   /**
@@ -168,23 +139,19 @@ XM._Contact = {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }
-    },
-    label: '_owner'.loc()
+    }
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String, {
-    label: '_notes'.loc()
-  }),
+  notes: SC.Record.attr(String),
 
   /**
     @type XM.AddressInfo
   */
   address: SC.Record.toOne('XM.AddressInfo', {
-    isNested: true,
-    label: '_address'.loc()
+    isNested: true
   }),
 
   /**
@@ -192,8 +159,7 @@ XM._Contact = {
   */
   email: SC.Record.toMany('XM.ContactEmail', {
     isNested: true,
-    inverse: 'contact',
-    label: '_email'.loc()
+    inverse: 'contact'
   }),
 
   /**
@@ -201,8 +167,7 @@ XM._Contact = {
   */
   comments: SC.Record.toMany('XM.ContactComment', {
     isNested: true,
-    inverse: 'contact',
-    label: '_comments'.loc()
+    inverse: 'contact'
   }),
 
   /**
@@ -210,8 +175,7 @@ XM._Contact = {
   */
   characteristics: SC.Record.toMany('XM.ContactCharacteristic', {
     isNested: true,
-    inverse: 'contact',
-    label: '_characteristics'.loc()
+    inverse: 'contact'
   }),
 
   /**
@@ -219,8 +183,7 @@ XM._Contact = {
   */
   accounts: SC.Record.toMany('XM.ContactAccount', {
     isNested: true,
-    inverse: 'source',
-    label: '_accounts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -228,8 +191,7 @@ XM._Contact = {
   */
   contacts: SC.Record.toMany('XM.ContactContact', {
     isNested: true,
-    inverse: 'source',
-    label: '_contacts'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -237,8 +199,7 @@ XM._Contact = {
   */
   items: SC.Record.toMany('XM.ContactItem', {
     isNested: true,
-    inverse: 'source',
-    label: '_items'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -246,8 +207,7 @@ XM._Contact = {
   */
   files: SC.Record.toMany('XM.ContactFile', {
     isNested: true,
-    inverse: 'source',
-    label: '_files'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -255,8 +215,7 @@ XM._Contact = {
   */
   images: SC.Record.toMany('XM.ContactImage', {
     isNested: true,
-    inverse: 'source',
-    label: '_images'.loc()
+    inverse: 'source'
   }),
 
   /**
@@ -264,8 +223,7 @@ XM._Contact = {
   */
   urls: SC.Record.toMany('XM.ContactUrl', {
     isNested: true,
-    inverse: 'source',
-    label: '_urls'.loc()
+    inverse: 'source'
   })
 
 };

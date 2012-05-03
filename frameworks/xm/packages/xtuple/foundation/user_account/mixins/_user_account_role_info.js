@@ -43,15 +43,11 @@ XM._UserAccountRoleInfo = {
   /**
     @type String
   */
-  name: SC.Record.attr(String, {
-    label: '_name'.loc()
-  }),
+  name: SC.Record.attr(String),
 
   /**
     @type XM.UserAccountRolePrivilegeAssignment
   */
-  privileges: SC.Record.toMany('XM.UserAccountRolePrivilegeAssignment', {
-    label: '_privileges'.loc()
-  })
+  privileges: SC.Record.toMany('XM.UserAccountRolePrivilegeAssignment')
 
 };

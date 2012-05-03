@@ -53,31 +53,24 @@ XM._IncidentHistory = {
   /**
     @type XM.Incident
   */
-  incident: SC.Record.toOne('XM.Incident', {
-    label: '_incident'.loc()
-  }),
+  incident: SC.Record.toOne('XM.Incident'),
 
   /**
     @type String
   */
-  description: SC.Record.attr(String, {
-    label: '_description'.loc()
-  }),
+  description: SC.Record.attr(String),
 
   /**
     @type Date
   */
   created: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false,
-    label: '_created'.loc()
+    useIsoDate: false
   }),
 
   /**
     @type String
   */
-  createdBy: SC.Record.attr(String, {
-    label: '_createdBy'.loc()
-  })
+  createdBy: SC.Record.attr(String)
 
 };
