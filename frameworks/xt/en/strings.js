@@ -55,6 +55,7 @@ SC.stringsFor("en_US", {
   "_alarms": "Alarms",
   "_aliasNumber": "Alias Number",
   "_aliases": "Aliases",
+  "_allocatedCredit": "Allocated Credit",
   "_altEmphasisColor": "Alt Emphasis Color",
   "_alternate": "Alternate",
   "_alternateAddresses": "Alternate Addresses",
@@ -228,6 +229,7 @@ SC.stringsFor("en_US", {
   "_expense_category": "Expense Category",
   "_expiredColor": "Expired Color",
   "_expires": "Expires",
+  "_extended": "Extended",
   "_extendedDescription": "Extended Description",
   "_extendedPriceScale": "Extended Price Scale",
   "_externalReference": "External Reference",
@@ -468,7 +470,7 @@ SC.stringsFor("en_US", {
   "_projects": "Projects",
   "_properName": "Proper Name",
   "_propername": "Propername",
-  "_purchaseOrderNumber": "Purch. Order",
+  "_purchaseOrderNumber": "Purchase Order",
   "_purchasePriceScale": "Purchase Price Scale",
   "_purpose": "Purpose",
   "_resolved": "Resolved",
@@ -656,6 +658,8 @@ SC.stringsFor("en_US", {
   "_totalMustBePositive": "Total Must Be Positive",
   "_unknownError": "Unknown Error",
   "_uniqueNameRequired": "A Currency type already exists with this Abbreviation.",
+  "_unsavedChanges": "There are unsaved changes. Save the changes?",
+  "_unsavedRecord": "The record has not been saved. Save the record?",
   "_usernameInvalid": "The user name is invalid."
   
 });

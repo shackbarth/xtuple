@@ -106,7 +106,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
   topbar.get('layers').pushObject(Postbooks.Button.create({
     layout: { right: 160, centerY: 0, width: 120, height: 24 },
-    name: Postbooks.submoduleController.get('status') === SC.Record.READY_NEW ? "_save".loc() : "_apply".loc(),
+    name: "_save".loc(),
     target: 'Postbooks.statechart',
     action: 'apply',
     isEnabledBinding: 'Postbooks*store.hasChanges',

@@ -331,9 +331,8 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
   // See if we have an override.
   var className = klass.prototype.className;
   className = className.slice(className.indexOf('.') + 1); // drop name space
-  if (Postbooks[className] && Postbooks[className].RecordListView) {
-  debugger
-    return Postbooks[className].RecordListView(controller);
+  if (Postbooks[className] && Postbooks[className].CreateDetailListView) {
+    return Postbooks[className].CreateDetailListView(controller);
   }
 
   // Nope, generate the default tile view on the fly.

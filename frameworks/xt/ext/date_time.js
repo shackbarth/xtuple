@@ -22,7 +22,17 @@ XT.DateTime = SC.DateTime.extend(
     return Globalize.format(d, format);
   },
   
-  
+  /**
+    Returns the date time portion of a `XT.DateTime object as a string, using 
+    locale conventions
+    
+    @param {Boolean} long format - default false
+  */
+  toLocaleDateTimeString: function(isLong) {
+    var d = new Date(this.get('milliseconds')),
+        format = isLong? 'F' : 'f';
+    return Globalize.format(d, format);
+  }
 
 });
 

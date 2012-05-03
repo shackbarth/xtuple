@@ -116,7 +116,8 @@ XM.Document = XT.Record.extend(
 
     // For manually edited numbers, check for conflicts with existing
     if(number && this.isDirty())  {
-      if(this._xt_numberGen && this._xt_numberGen == number) return;
+      if((this._xt_numberGen && this._xt_numberGen == number) ||
+         (this._xmdoc_key && this._xmdoc_key == number)) return;
 
       // callback
       callback = function(err, result) {
@@ -148,9 +149,17 @@ XM.Document = XT.Record.extend(
   // ..........................................................
   // OBSERVERS
   //
+  
+  _xmdoc_statusDidChange: function() {
+    // Cache number
+    if (this.isNotDirty()) {
+      var key = this.get('documentKey');
+      this._xmdoc_key = this.get(key);
+    }
+  }.observes('status'),
 
   /** @private */
-  _xm_numberPolicyDidChange: function() {
+  _xmdoc_numberPolicyDidChange: function() {
     var policy = this.get('numberPolicy'),
         docKey = this.get('documentKey');
     this[docKey].set('isEditable', policy !== 'A');

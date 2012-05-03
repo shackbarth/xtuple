@@ -116,12 +116,15 @@ Postbooks.Invoice.Tiles = function(controller, isRoot) {
   // Shipping
   tiles.push(Postbooks.Invoice.CreateShiptoTileView(controller));
 
-  // Totals
-  tiles.push(Postbooks.Invoice.CreateTotalsTileView(controller));
+  // Lines
+  tiles.push(Postbooks.Invoice.CreateLinesTileView(controller));
 
   // Additional
   properties = 'terms taxZone spacer salesRep commission spacer shipDate'.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_additional".loc(), properties));
+
+  // Totals
+  tiles.push(Postbooks.Invoice.CreateTotalsTileView(controller));
 
   return tiles;
 };
@@ -145,7 +148,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -162,7 +165,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -181,7 +184,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -198,7 +201,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -252,7 +255,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -269,7 +272,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -286,7 +289,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -305,7 +308,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: "_shipto".loc() + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -340,12 +343,12 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   return view;
 };
 
-Postbooks.Invoice.CreateTotalsTileView = function(controller) {
+Postbooks.Invoice.CreateLinesTileView = function(controller) {
   console.log('Postbooks.Invoice.CreateTotalsTileView(', controller, ')');
 
   var K = Postbooks.TileView,
       view = Postbooks.TileView.create({ 
-        title: "_totals".loc(), 
+        title: "_lines".loc(), 
         size: K.HORIZONTAL_TILE 
       }),
       layers = view.get('layers'),
@@ -355,6 +358,49 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
       key, property,
       left = 120, right = 12,
       label = null, widget = null;
+ 
+
+  return view;
+};
+
+
+Postbooks.Invoice.CreateTotalsTileView = function(controller) {
+  console.log('Postbooks.Invoice.CreateTotalsTileView(', controller, ')');
+
+  var K = Postbooks.TileView,
+      view = Postbooks.TileView.create({ 
+        title: "_totals".loc(), 
+        size: K.QUARTER_TILE 
+      }),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Invoice.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+  // Credits
+  key = 'allocatedCredit';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_allocatedCredit".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // Spacer
+  y += K.VERT_SPACER;
  
   // Subtotal
   key = 'subTotal';
@@ -382,7 +428,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
