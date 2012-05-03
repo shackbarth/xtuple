@@ -110,20 +110,6 @@
       }
     },
     {
-      "name": "isAcceptsBackorders",
-      "attr": {
-        "type": "Boolean",
-        "column": "cust_backorder"
-      }
-    },
-    {
-      "name": "isAcceptsPartialShip",
-      "attr": {
-        "type": "Boolean",
-        "column": "cust_partialship"
-      }
-    },
-    {
       "name": "isFreeFormShipto",
       "attr": {
         "type": "Boolean",

@@ -582,6 +582,8 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns {String} a string formatted like a postgres RECORD datatype 
     */
     rowify: function(key, value) {
+      if (value === null) return 'null';
+      
       var type = key.afterDot().classify(), 
           nameSpace = key.beforeDot().toUpperCase(),
           orm = XT.Orm.fetch(nameSpace, type),
