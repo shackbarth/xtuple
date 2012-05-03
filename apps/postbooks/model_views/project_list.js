@@ -48,20 +48,20 @@ Postbooks.Project.RenderRecordListRow = function(context, width, height, index, 
 
   // Name
   val = object.get('name');
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   val = val.elide(context, 295);
   context.fillText(val , 15, 35);
 
   // Account Name
   val = object.getPath('account.name') || '';
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   val = val.elide(context, 295);
   context.fillText(val , 15, 55);
 
   // Status
   val = object.get('projectStatusString');
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   if (val) val = val.elide(context, 70);
   context.fillText(val , 325, 15);
 

@@ -63,7 +63,7 @@ Postbooks.Incident.RenderRecordListRow = function(context, width, height, index,
   
   // Description
   val = object.get('description');
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
   if (val) val = val.elide(context, 295);
@@ -71,21 +71,21 @@ Postbooks.Incident.RenderRecordListRow = function(context, width, height, index,
           
   // Account Name
   val = object.getPath('account.name');
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   if (val) val = val.elide(context, 160);
   context.fillText(val , 325, 15);
  
   // Contact Name
   val = object.getPath('contact.name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   if (val) val = val.elide(context, 160);
   context.fillText(val? val : "_noName".loc() , 325, 35);
   
   // Status
   val = object.get('incidentStatusString');
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   if (val) val = val.elide(context, 70);
   context.fillText(val , 490, 15);
@@ -93,7 +93,7 @@ Postbooks.Incident.RenderRecordListRow = function(context, width, height, index,
   // Assigned To
   val = object.get('assignedTo');
   val = val? val.get('username') : '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   if (val) val = val.elide(context, 70);
   context.fillText(val , 490, 35);
@@ -101,13 +101,13 @@ Postbooks.Incident.RenderRecordListRow = function(context, width, height, index,
   // Priority
   val = object.getPath('priority.name');
   var emphasis = object.getPath('priority.order')<=1? "bold " : "";
-  context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? emphasis : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? black : base1;
   context.fillText(val? val : "_noPriority".loc(), 565, 15);
   
   // Category
   val = object.getPath('category.name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.fillText(val? val : "_noCategory".loc(), 565, 35);
 

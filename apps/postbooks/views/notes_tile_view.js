@@ -9,6 +9,7 @@ Postbooks.CreateNotesTileView = function(controller) {
       key;
  
   key = 'notes';
+
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 70, right: right },
     borderColor: 'white',
@@ -16,6 +17,6 @@ Postbooks.CreateNotesTileView = function(controller) {
     valueBinding: SC.Binding.from(key, controller)
   });
   layers.pushObject(widget);
- 
+
   return view;
 };
