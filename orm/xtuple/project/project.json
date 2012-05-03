@@ -53,7 +53,7 @@
       "name": "account",
       "toOne": {
         "isNested": true,
-        "type": "Account",
+        "type": "AccountInfo",
         "column": "prj_crmacct_id"
       }
     },
