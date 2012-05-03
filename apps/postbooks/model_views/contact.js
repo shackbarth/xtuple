@@ -91,7 +91,7 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
   // Email
   var emailWidth = 0;
   val = object.getPath('primaryEmail') || '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'blue';
   context.textAlign = 'right';
   context.fillText(val , 315, 35);
@@ -99,7 +99,7 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
   
   // Title
   val = object.get('jobTitle');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
   val = val? val : "_noJobTitle".loc();
@@ -108,7 +108,7 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
 
   // Account Name
   val = object.getPath('account.name');
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
   val = val? val : "_noAccountName".loc();
@@ -117,7 +117,7 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
   // Location
   val = object.get('address');
   val = val? val.formatShort() : '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.fillText(val , 325, 35);
 

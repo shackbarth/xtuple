@@ -48,7 +48,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   // Primary Contact Email
   var emailWidth = 0;
   val = contact? contact.get('primaryEmail') : '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'right';
   context.fillStyle = 'blue';
   context.fillText(val, 315, 35);
@@ -56,7 +56,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
     
   // Name
   val = object.get('name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   val = val.elide(context, 300 - emailWidth);
@@ -64,14 +64,14 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
 
   // Primary Contact Name
   val = contact? contact.get('name') : '';
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   val = val? val : "_noContact".loc();
   context.fillText(val, 325, 15);
   
   // Primary Contact Location
   val = address;
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.fillText(val , 325, 35);
 
@@ -107,15 +107,36 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   key = 'isActive';
   property = proto[key];
   widget = SC.CheckboxWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: right, height: 24, right: right },
     title: "_isActive".loc(),
     valueBinding: SC.Binding.transform(function(val) {
       return !!val;
     }).from(key, controller)
   });
-  y += 24 + K.SPACING;
   layers.pushObject(widget);
 
+  // accounType
+  var radio = SC.RadioWidget.create({
+    layout: { top: y, left: left, height: 24, width: left },
+    items: [{ title: "Organization",
+              value: "O",
+              enabled: true,
+              width: 120
+            },
+            { title: "Individual",
+              value: "I",
+              enabled: true,
+              width: 120
+            }],
+    value: "O",
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIsEnabledKey: 'enabled',
+    layoutDirection: SC.LAYOUT_HORIZONTAL,
+    itemWidthKey: 'width'
+  });
+  y += 48 + K.SPACING;
+  layers.push(radio);
 
   // number
   key = 'number';
