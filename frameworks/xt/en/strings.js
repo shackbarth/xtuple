@@ -657,6 +657,8 @@ SC.stringsFor("en_US", {
   "_totalMustBePositive": "Total Must Be Positive",
   "_unknownError": "Unknown Error",
   "_uniqueNameRequired": "A Currency type already exists with this Abbreviation.",
+  "_unsavedChanges": "There are unsaved changes. Save the changes?",
+  "_unsavedRecord": "The record has not been saved. Save the record?",
   "_usernameInvalid": "The user name is invalid."
   
 });

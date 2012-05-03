@@ -67,9 +67,9 @@ Postbooks.SUBMODULE = SC.State.design({
     if (Postbooks.getPath('store.hasChanges')) {
       var save;
       if (Postbooks.submoduleController.get('status') === SC.Record.READY_NEW) {
-        save = window.confirm("The record has not been saved. Save the record?");
+        save = window.confirm("_unsavedRecord".loc());
       } else {
-        save = window.confirm("There are unsaved changes. Save the changes?");
+        save = window.confirm("_unsavedChanges".loc());
       }
       if (!save) {
         // Subtle: We may need to re-establish our module's route.
