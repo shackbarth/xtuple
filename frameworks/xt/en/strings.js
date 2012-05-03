@@ -253,6 +253,7 @@ SC.stringsFor("en_US", {
   "_fundsType": "Funds Type",
   "_futureColor": "Future Color",
   "_gainLossLedgerAccount": "Gain Loss Ledger Account",
+  "_general": "General",
   "_generalLedger": "General Ledger",
   "_generalLedgers": "General Ledger",
   "_graceDays": "Grace Days",

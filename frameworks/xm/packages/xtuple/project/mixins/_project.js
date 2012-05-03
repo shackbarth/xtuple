@@ -54,41 +54,48 @@ XM._Project = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true
+    isRequired: true,
+    label: '_number'.loc()
   }),
 
   /**
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true
+    isRequired: true,
+    label: '_name'.loc()
   }),
 
   /**
-    @type XM.Account
+    @type XM.AccountInfo
   */
-  account: SC.Record.toOne('XM.Account', {
-    isNested: true
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: true,
+    label: '_account'.loc()
   }),
 
   /**
     @type XM.ContactInfo
   */
   contact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true
+    isNested: true,
+    label: '_contact'.loc()
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String),
+  notes: SC.Record.attr(String, {
+    label: '_notes'.loc()
+  }),
 
   /**
     @type Date
   */
   startDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false
+    useIsoDate: false,
+    label: '_startDate'.loc()
   }),
 
   /**
@@ -97,7 +104,8 @@ XM._Project = {
   dueDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
     useIsoDate: false,
-    isRequired: true
+    isRequired: true,
+    label: '_dueDate'.loc()
   }),
 
   /**
@@ -105,7 +113,8 @@ XM._Project = {
   */
   assignDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false
+    useIsoDate: false,
+    label: '_assignDate'.loc()
   }),
 
   /**
@@ -113,7 +122,8 @@ XM._Project = {
   */
   completeDate: SC.Record.attr(XT.DateTime, {
     format: '%Y-%m-%d',
-    useIsoDate: false
+    useIsoDate: false,
+    label: '_completeDate'.loc()
   }),
 
   /**
@@ -129,7 +139,8 @@ XM._Project = {
         XM.UserAccountInfo.setCurrentUser(record, 'assignedTo');
         ret = '_loading'.loc();
       }
-    }
+    },
+    label: '_assignedTo'.loc()
   }),
 
   /**
@@ -137,7 +148,8 @@ XM._Project = {
   */
   projectStatus: SC.Record.attr(String, {
     isRequired: true,
-    defaultValue: 'P'
+    defaultValue: 'P',
+    label: '_projectStatus'.loc()
   }),
 
   /**
@@ -153,20 +165,24 @@ XM._Project = {
         XM.UserAccountInfo.setCurrentUser(record, 'owner');
         ret = '_loading'.loc();
       }
-    }
+    },
+    label: '_owner'.loc()
   }),
 
   /**
     @type XM.ProjectRecurrence
   */
-  recurrences: SC.Record.toMany('XM.ProjectRecurrence'),
+  recurrences: SC.Record.toMany('XM.ProjectRecurrence', {
+    label: '_recurrences'.loc()
+  }),
 
   /**
     @type XM.ProjectComment
   */
   comments: SC.Record.toMany('XM.ProjectComment', {
     isNested: true,
-    inverse: 'project'
+    inverse: 'project',
+    label: '_comments'.loc()
   }),
 
   /**
@@ -174,7 +190,8 @@ XM._Project = {
   */
   tasks: SC.Record.toMany('XM.ProjectTask', {
     isNested: true,
-    inverse: 'project'
+    inverse: 'project',
+    label: '_tasks'.loc()
   }),
 
   /**
@@ -182,7 +199,8 @@ XM._Project = {
   */
   accounts: SC.Record.toMany('XM.ProjectAccount', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_accounts'.loc()
   }),
 
   /**
@@ -190,7 +208,8 @@ XM._Project = {
   */
   contacts: SC.Record.toMany('XM.ProjectContact', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_contacts'.loc()
   }),
 
   /**
@@ -198,7 +217,8 @@ XM._Project = {
   */
   items: SC.Record.toMany('XM.ProjectItem', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_items'.loc()
   }),
 
   /**
@@ -206,7 +226,8 @@ XM._Project = {
   */
   files: SC.Record.toMany('XM.ProjectFile', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_files'.loc()
   }),
 
   /**
@@ -214,7 +235,8 @@ XM._Project = {
   */
   images: SC.Record.toMany('XM.ProjectImage', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_images'.loc()
   }),
 
   /**
@@ -222,7 +244,8 @@ XM._Project = {
   */
   urls: SC.Record.toMany('XM.ProjectUrl', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_urls'.loc()
   }),
 
   /**
@@ -230,7 +253,8 @@ XM._Project = {
   */
   projects: SC.Record.toMany('XM.ProjectProject', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_projects'.loc()
   })
 
 };
