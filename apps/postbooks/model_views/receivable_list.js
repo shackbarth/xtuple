@@ -53,20 +53,20 @@ Postbooks.Receivable.RenderRecordListRow = function(context, width, height, inde
   val = object.get('amount');
   val = currency.toLocaleString(val);
   val = val.elide(context, 95);
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'right';
   context.fillText(val, 315, 35);
 
   // Document Type
   val = object.get('documentTypeString');
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = object.get('color');
   context.fillText(val , 15, 35);
 
   // Customer Name
   val = object.getPath('customer.name') || '';
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
   val = val.elide(context, 160);
@@ -74,12 +74,12 @@ Postbooks.Receivable.RenderRecordListRow = function(context, width, height, inde
   
   // Notes
   val = object.get('notes') || '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   val = val.elide(context, 160);
   context.fillText(val , 325, 35);
 
   // labels 
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   var paidLabel = "_paid".loc()+":";
   var paidLabelWidth = context.measureText(paidLabel).width;
   context.fillText(paidLabel, 490, 15);

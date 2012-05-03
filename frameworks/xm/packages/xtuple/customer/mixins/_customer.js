@@ -112,16 +112,6 @@ XM._Customer = {
   /**
     @type Boolean
   */
-  isAcceptsBackorders: SC.Record.attr(Boolean),
-
-  /**
-    @type Boolean
-  */
-  isAcceptsPartialShip: SC.Record.attr(Boolean),
-
-  /**
-    @type Boolean
-  */
   isFreeFormShipto: SC.Record.attr(Boolean),
 
   /**

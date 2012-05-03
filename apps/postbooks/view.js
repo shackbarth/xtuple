@@ -279,7 +279,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (typeClass === Boolean) {
           widget = SC.CheckboxWidget.create({
             layout: { top: y, left: left, height: 24, right: right },
-            title: title,
+            title: ("_"+key).loc(),
             valueBinding: SC.Binding.transform(function(val) {
               return !!val;
             }).from(key, controller)
