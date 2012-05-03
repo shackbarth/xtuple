@@ -38,9 +38,9 @@ String.prototype.elide = function(context, maxLength) {
   if (context.measureText(ret).width > maxLength) {
     var e = '...', len = context.measureText(e).width;
     while (context.measureText(ret).width+len > maxLength) {
-      ret = isRight? ret.slice(1, ret.length) : ret.slice(0, ret.length-1);
+      ret = ret.slice(0, ret.length-1);
     }
-    ret = isRight? e+ret : ret+e;
+    ret = ret+e;
   }
   return ret;
 }

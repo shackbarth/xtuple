@@ -33,19 +33,24 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   context.fillText(val, 15, 15);
   
   // Item
-  item = object.get('item')
+  item = object.get('item');
   val = item? item.get('number') : object.get('itemNumber');
   context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
-  context.fillStyle = 'black';
-  if (val) val = val.elide(context, 280);
+  if (val) val = val.elide(context, 200);
   context.fillText(val , 45, 15);
   
+  // Sales Category
+  val = item? '' : object.getPath('salesCategory.name');
+  context.font = "9pt "+K.TYPEFACE;
+  context.textAlign = 'right';
+  if (val) val = val.elide(context, 65);
+  context.fillText(val , 315, 15);
+  
   // Description
-  val = item? item.getPath('description1') : object.getPath('itemDescription');
+  val = item? item.getPath('description1') : object.getPath('description');
   context.font = "italic 9pt "+K.TYPEFACE;
   context.textAlign = 'left';
-  context.fillStyle = 'black';
   //if (val) val = val.elide(context, 325);
   context.fillText(val , 325, 15);
 
@@ -56,33 +61,49 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   context.fillText(orderedLabel, 45, 35);
 
   val = object.get('ordered').toLocaleString();
-  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'right';
-  context.fillStyle = 'black';
-  if (val) val = val.elide(context, 275);
+  if (val) val = val.elide(context, 100-orderedLabelWidth);
   context.fillText(val , 150, 35);
   
   // Billed
   var billedLabel = "_billed".loc()+":";
   var billedLabelWidth = context.measureText(billedLabel).width;
-  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillText(billedLabel, 155, 35);
 
   val = object.get('billed').toLocaleString();
-  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'right';
-  context.fillStyle = 'black';
-  if (val) val = val.elide(context, 275);
-  context.fillText(val , 270, 35);
+  if (val) val = val.elide(context, 100-billedLabelWidth);
+  context.fillText(val , 260, 35);
   
   // Quantity Unit
-  val = object.getPath('quantityUnit.name');
-  context.font = "9pt "+K.TYPEFACE;
+  val = object.getPath('quantityUnit.name') || '';
   context.textAlign = 'left';
-  context.fillStyle = 'black';
-  //if (val) val = val.elide(context, 275);
-  context.fillText(val , 275, 35);
+  if (val) val = val.elide(context, 50);
+  context.fillText(val , 265, 35);
+  
+  // Price
+  val = object.get('price').toLocaleString();
+  context.textAlign = 'right';
+  if (val) val = val.elide(context, 100);
+  context.fillText(val , 400, 35);
+  
+  // Price Unit
+  val = object.getPath('priceUnit.name') || '';
+  context.textAlign = 'left';
+  if (val) val = val.elide(context, 50);
+  context.fillText(val , 405, 35);
+  
+  // Price
+  var extendedLabel = "_extended".loc()+":";
+  var extendedLabelWidth = context.measureText(extendedLabel).width;
+  context.textAlign = 'left';
+  context.fillText(extendedLabel, 485, 35);
+  
+  val = object.get('extendedPrice').toLocaleString();
+  context.textAlign = 'right';
+  if (val) val = val.elide(context, 100);
+  context.fillText(val , 635, 35);
 
 };
 

@@ -148,7 +148,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -165,7 +165,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -184,7 +184,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -201,7 +201,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -255,7 +255,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -272,7 +272,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -289,7 +289,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -308,7 +308,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: "_shipto".loc() + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
@@ -380,6 +380,28 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
       left = 120, right = 12,
       label = null, widget = null;
  
+  // Credits
+  key = 'allocatedCredit';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_allocatedCredit".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // Spacer
+  y += K.VERT_SPACER;
+ 
   // Subtotal
   key = 'subTotal';
   property = proto[key];
@@ -406,7 +428,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: property.label + ':'
+    value: ("_"+key).loc()+ ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
