@@ -1,0 +1,64 @@
+{
+  "postbooks": {
+    "type": "app",
+    "monitor": true,
+    "frameworks": [
+      "foundation",
+      "application",
+      "datastore",
+      "xt"
+    ],
+    "path": "apps/postbooks"
+  },
+
+  "xt": {
+    "type": "framework",
+    "monitor": true,
+    "frameworks": [
+      "foundation",
+      "application",
+      "datastore"
+    ],
+    "path": "frameworks/xt"
+  },
+
+  "xm": {
+    "type": "framework",
+    "monitor": true,
+    "frameworks": [
+      "xt"
+    ],
+    "path": "frameworks/xm"
+  },
+
+  "foundation": {
+    "type": "framework",
+    "path": "node_modules/blossom/foundation"
+  },
+
+  "application": {
+    "type": "framework",
+    "frameworks": [
+      "constraints",
+      "foundation"
+    ],
+    "path": "node_modules/blossom/application"
+  },
+
+  "datastore": {
+    "type": "framework",
+    "frameworks": [
+      "foundation",
+      "application"
+    ],
+    "path": "node_modules/blossom/datastore"
+  },
+
+  "constraints": {
+    "type": "framework",
+    "frameworks": [
+      "foundation"
+    ],
+    "path": "node_modules/blossom/application/constraints"
+  }
+}
