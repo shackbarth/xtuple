@@ -469,7 +469,7 @@ SC.stringsFor("en_US", {
   "_projects": "Projects",
   "_properName": "Proper Name",
   "_propername": "Propername",
-  "_purchaseOrderNumber": "Purch. Order",
+  "_purchaseOrderNumber": "Purchase Order",
   "_purchasePriceScale": "Purchase Price Scale",
   "_purpose": "Purpose",
   "_resolved": "Resolved",

@@ -37,7 +37,7 @@ Postbooks.Button = SC.ButtonWidget.extend({
   dragPoint: null,
 
   render: function(ctx) {
-    console.log('IconLayer.render()', SC.guidFor(this));
+    //console.log('IconLayer.render()', SC.guidFor(this));
     ctx.beginPath();
     this.renderHitTestPath(ctx);
     ctx.fillStyle = base02;
