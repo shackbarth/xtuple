@@ -48,7 +48,7 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   context.fillText(val , 315, 15);
   
   // Description
-  val = item? item.getPath('description1') : object.getPath('description');
+  val = item? item.get('description1') : object.get('description');
   context.font = "italic 9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   //if (val) val = val.elide(context, 325);
@@ -109,7 +109,6 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
 
 Postbooks.InvoiceLine.RecordListView = Postbooks.RecordListView.extend({
 
-  rowHeight: Postbooks.HEIGHT_2_ROW,
   renderRow: Postbooks.InvoiceLine.RenderRecordListRow
 
 });

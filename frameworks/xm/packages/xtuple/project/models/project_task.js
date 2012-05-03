@@ -6,6 +6,7 @@
 /*globals XM */
 
 sc_require('mixins/_project_task');
+sc_require('models/project');
 
 /**
   @class
@@ -34,6 +35,30 @@ XM.ProjectTask = XT.Record.extend(XM._ProjectTask,
     var value = this.get('budgetedExpenses') || 0 - this.get('actualExpenses') || 0;
     return value.toMoney();
   }.property('budgetedExpenses','actualExpenses'),
+  
+  /**
+    Returns the status as a localized string.
+    
+    @type String
+  */
+  projectTaskStatusString: function() {
+    var projectTaskStatus = this.get('projectTaskStatus'),
+        K = XM.Project, ret;
+    switch (projectTaskStatus) {
+      case K.CONCEPT:
+        ret = "_concept".loc();
+        break;
+      case K.IN_PROCESS:
+        ret = "_inProcess".loc();
+        break;
+      case K.COMPLETED:
+        ret = "_completed".loc();
+        break;
+      default:
+        ret = "_error".loc();
+    }
+    return ret;
+  }.property('projectTaskStatus').cacheable(),
   
   //..................................................
   // METHODS
