@@ -5,8 +5,29 @@
 /*globals Postbooks XM sc_assert */
 
 sc_require('views/record_list');
+sc_require('views/carousel');
+sc_require('views/tile_view');
+
+var base03 =   "#002b36";
+var base02 =   "#073642";
+var base01 =   "#586e75";
+var base00 =   "#657b83";
+var base0 =    "#839496";
+var base1 =    "#93a1a1";
+var base2 =    "#eee8d5";
+var base3 =    "#fdf6e3";
+var yellow =   "#b58900";
+var orange =   "#cb4b16";
+var red =      "#dc322f";
+var magenta =  "#d33682";
+var violet =   "#6c71c4";
+var blue =     "#268bd2";
+var cyan =     "#2aa198";
+var green =    "#859900";
+var white =    "white";
 
 Postbooks.Contact = {};
+
 Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   // Rect
@@ -102,3 +123,24 @@ Postbooks.Contact.RenderRecordListRow = function(context, width, height, index, 
 
 };
 
+Postbooks.Contact.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.Contact.Tiles()');
+  
+  var klass = XM.Contact,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  properties = ' isActive number spacer honorific firstName middleName lastName suffix jobTitle '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, null, properties));
+
+  // communication
+  properties = ' phone alternate fax spacer primaryEmail webAddress spacer account owner '.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+
+  //notes
+  tiles.push(Postbooks.CreateNotesTileView(controller));
+  
+  return tiles;
+};
