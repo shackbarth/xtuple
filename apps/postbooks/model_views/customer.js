@@ -29,7 +29,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
   // Billing Contact Phone
   var phoneWidth = 0;
   val = contact? contact.get('phone') : '';
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
   if (val) val = val.elide(context, 195);
@@ -48,7 +48,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
   // Billing Contact Email
   var emailWidth = 0;
   val = contact? contact.get('primaryEmail') : '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "10pt "+K.TYPEFACE;
   context.textAlign = 'right';
   context.fillStyle = 'blue';
   context.fillText(val, 315, 35);
@@ -56,7 +56,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
    
   // Name
   val = object.get('name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   if (address) val = val.elide(context, 300 - emailWidth);
@@ -64,7 +64,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
 
   // Billing Contact Name
   val = contact? contact.get('name') : '';
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   val = val? val : "_noContact".loc();
@@ -72,7 +72,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
   
   // Primary Contact Location
   val = address;
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.fillText(val , 325, 35);
 

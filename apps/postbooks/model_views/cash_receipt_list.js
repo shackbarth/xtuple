@@ -34,7 +34,7 @@ Postbooks.CashReceipt.RenderRecordListRow = function(context, width, height, ind
   var amount = object.getPath('amount');
   var currency = object.getPath('currency');
   val = currency.toLocaleString(amount);
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
   context.fillText(val, 315, 35);
@@ -55,14 +55,14 @@ Postbooks.CashReceipt.RenderRecordListRow = function(context, width, height, ind
   var docNumber = object.getPath('documentNumber') || '';
   val = object.get('fundsTypeString');
   if (docNumber) val += ": "+docNumber;
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'left';
   context.fillText(val, 15, 35);
 
   // Customer Name
   val = object.getPath('customer.name');
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
   context.fillText(val , 325, 15);
@@ -74,7 +74,7 @@ Postbooks.CashReceipt.RenderRecordListRow = function(context, width, height, ind
   
   // Bank Account
   val = object.getPath('bankAccount.description') || '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   if (isPosted) val = val.elide(context, 160);
   context.fillText(val, 325, 35);
 
