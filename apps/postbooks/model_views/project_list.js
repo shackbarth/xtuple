@@ -166,9 +166,9 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
       y = 42,
       proto = XM.Project.prototype,
       K = Postbooks,
-      key, property,
       left = 120, right = 12,
-      label = null, widget = null;
+      label = null, widget = null,
+      key, property, objectKlass, objectController, objectKey;
  
   // number
   key = 'number';
@@ -215,26 +215,32 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     textAlign: 'right',
     value: "_account".loc() + ':'
   });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'number';
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'name';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 12, width: left - 18 },
-    font: "bold 6pt "+K.TYPEFACE,
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'white',
     textAlign: 'left',
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
-  y += 10 + K.SPACING;
+  y += 12 + K.SPACING;
   layers.pushObject(label);
 
   // owner 
@@ -246,26 +252,28 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     textAlign: 'right',
     value: "_owner".loc() + ':'
   });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'username';
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+  objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 12, width: left - 18 },
-    font: "bold 6pt "+K.TYPEFACE,
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'white',
     textAlign: 'left',
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
-  y += 10 + K.SPACING;
+  y += 12 + K.SPACING;
   layers.pushObject(label);
 
   // assignedTo 
@@ -275,26 +283,32 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
     textAlign: 'right',
-    value: "assignedTo".loc() + ':'
+    value: "_assignedTo".loc() + ':'
   });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'username';
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 12, width: left - 18 },
-    font: "bold 6pt "+K.TYPEFACE,
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'white',
     textAlign: 'left',
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
@@ -333,9 +347,10 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
  
   // hours
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    layout: { top: y + 4, left: 12, height: 24, width: left + 75 },
     backgroundColor: 'white',
-    textAlign: 'left',
+    font: "bold 10pt "+K.TYPEFACE,
+    textAlign: 'center',
     value: "_hours".loc()
   });
   y += 24 + K.SPACING;
@@ -412,9 +427,10 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
 
   // expenses
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    layout: { top: y + 4, left: 12, height: 24, width: left + 75 },
     backgroundColor: 'white',
-    textAlign: 'left',
+    font: "bold 10pt "+K.TYPEFACE,
+    textAlign: 'center',
     value: "_expenses".loc()
   });
   y += 24 + K.SPACING;

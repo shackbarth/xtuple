@@ -217,7 +217,7 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
 
-  // crm account 
+   // crm account 
   key = 'account';
   console.log('crm account type: %@'.fmt(proto[key].type));
   property = proto[key];
@@ -227,26 +227,32 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
     textAlign: 'right',
     value: "_account".loc() + ':'
   });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'number';
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'name';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 12, width: left - 18 },
-    font: "bold 6pt "+K.TYPEFACE,
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'white',
     textAlign: 'left',
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
-  y += 10 + K.SPACING;
+  y += 12 + K.SPACING;
   layers.pushObject(label);
 
   // owner 
@@ -258,26 +264,28 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
     textAlign: 'right',
     value: "_owner".loc() + ':'
   });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'username';
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+  objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 12, width: left - 18 },
-    font: "bold 6pt "+K.TYPEFACE,
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'white',
     textAlign: 'left',
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
-  y += 10 + K.SPACING;
+  y += 12 + K.SPACING;
   layers.pushObject(label);
 
   // assignedTo 
@@ -289,24 +297,30 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
     textAlign: 'right',
     value: "_assignedTo".loc() + ':'
   });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'username';
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 12, width: left - 18 },
-    font: "bold 6pt "+K.TYPEFACE,
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'white',
     textAlign: 'left',
-    valueBinding: SC.Binding.transform(function(val) {
-      return String(val);
-    }).from(key, controller)
+    valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
