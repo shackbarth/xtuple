@@ -62,7 +62,7 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
     context.fillStyle = isDue? XT.EXPIRED : 'black';
     context.fillText(val , 315, 15);
   } else {
-    context.font = "italic 8pt "+K.TYPEFACE;
+    context.font = "italic 9pt "+K.TYPEFACE;
     context.fillStyle = base1;
     context.fillText("_noTargetDate".loc() , 315, 15);
   }
@@ -74,7 +74,7 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   if (amount) {
     val = currency.toLocaleString(amount);
     val = val? val.toLocaleString() : '';
-    context.font = "8pt "+K.TYPEFACE;
+    context.font = "9pt "+K.TYPEFACE;
     context.fillStyle = val? 'black' : base1;
     context.textAlign = 'right';
     context.fillText(val, 315, 35);
@@ -83,7 +83,7 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   
   // Name
   val = object.get('name');
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
   if (val) val = val.elide(context, 300 - amountWidth);
@@ -91,28 +91,28 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   
   // Account Name
   val = object.getPath('account.name');
-  context.font = "italic 8pt "+K.TYPEFACE;
+  context.font = "italic 9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   if (val) val = val.elide(context, 160);
   context.fillText(val , 325, 15);
 
   // Contact Name
   val = object.getPath('contact.name') || '';
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   if (val) val = val.elide(context, 160);
   context.fillText(val? val : "_noContact".loc(), 325, 35);
 
   // Stage
   val = object.getPath('opportunityStage.name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   if (val) val = val.elide(context, 70);
   context.fillText(val? val : "_noStage".loc(), 490, 15);
   
   // Assigned To
   val = object.getPath('assignedTo.username') || '';
-  context.font = "8pt "+K.TYPEFACE;
+  context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   if (val) val = val.elide(context, 70);
   context.fillText(val , 490, 35);  
@@ -120,13 +120,13 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   // Priority
   val = object.getPath('priority.name');
   var emphasis = object.getPath('priority.order')<=1? "bold " : "";
-  context.font = (val? emphasis : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? emphasis : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? black : base1;
   context.fillText(val? val : "_noPriority".loc(), 565, 15);
   
   // Type
   val = object.getPath('opportunityType.name');
-  context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
+  context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.fillText(val? val : "_noType".loc(), 565, 35);
 
