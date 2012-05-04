@@ -65,14 +65,15 @@ XT.Record = SC.Record.extend(XT.Logging,
   */
   isValid: function() {
     return this.getPath('validateErrors.length') === 0;
-  }.property('validateErrorsLength'),
+  }.property('validateErrorsLength').cacheable(),
 
   /**
     An array of SC.Error objects populated by the validate function.
   */
   validateErrors: [],
+  
+  /** @private */
   validateErrorsLength: 0,
-  validateErrorsLengthBinding: SC.Binding.from('*validateErrors.length').noDelay(),
 
   /**
     State used for data source processing. You should never edit this
@@ -291,17 +292,17 @@ XT.Record = SC.Record.extend(XT.Logging,
     invalid.
   */
   _xt_isValidDidChange: function() {
-    var store = this.get('store'),
-        invalidRecords = store.get('invalidRecords'),
-        isValid = this.get('isValid'),
-        idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
-
-    // FIXME: The store never returns an invalidRecords array!
-    // if (store.get('isNested')) {
-    //   if (isValid && idx > -1) invalidRecords.removeAt(idx);
-    //   else if (!isValid && idx === -1) invalidRecords.pushObject(this);
-    // }
-  },
+    var store = this.get('store');
+    if (store.get('isNested')) {
+      var invalidRecords = store.get('invalidRecords'),
+          isValid = this.get('isValid'),
+          idx = invalidRecords ? invalidRecords.lastIndexOf(this) : -1;
+      if (isValid && idx > -1) invalidRecords.removeAt(idx);
+      else if (!isValid && idx === -1) invalidRecords.pushObject(this);
+    }
+    this.log('Valid changed %@:%@ to %@'
+        .fmt(this.get('className'),this.get('id'), this.get('isValid')));
+  }.observes('isValid'),
 
   /** @private
     Track substates for data source use. Updates dataState property directly
@@ -368,6 +369,11 @@ XT.Record = SC.Record.extend(XT.Logging,
     if (this.getPath('store.isNested')) {
       this.addObserver('isValid', this, '_xt_isValidDidChange');
     }
+    
+    // Binding for validate errors length
+    SC.Binding.from('.validateErrors.length', this)
+              .to('validateErrorsLength', this)
+              .oneWay().noDelay().connect();
   },
 
   /**

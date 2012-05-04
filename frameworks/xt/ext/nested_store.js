@@ -31,6 +31,51 @@ XT.NestedStore = XT.Store.extend(
 /** @scope SC.NestedStore.prototype */ {
 
   /**
+    Array of invalid records. Should not attempt to commit if anything is in here.
+    in here.
+  */
+  invalidRecords: [],
+  
+  /** @private */
+  invalidRecordsLength: 0,
+  
+  /** @private */
+  invalidRecordsLengthBinding: SC.Binding.from('*invalidRecords.length').oneWay().noDelay(),
+  
+  /**
+    Returns true if `hasChanges` is true and there are no invalid records in the store.
+  */
+  canCommit: function() {
+    return this.get('hasChanges') && !this.get('invalidRecordsLength');
+  }.property('hasChanges', 'invalidRecordsLength').cacheable(),
+  
+  /**
+    Propagate this store's changes to its parent.  If the store does not 
+    have a parent, this has no effect other than to clear the change set.
+    
+    Will do nothing if any records are listed in `invalidRecords`.
+
+    @param {Boolean} force if true, does not check for conflicts first
+    @returns {SC.Store} receiver
+  */
+  commitChanges: function(force) {
+    if (this.get('invalidRecordsLength')) return;
+    
+    if (this.get('hasChanges')) {
+      var pstore = this.get('parentStore');
+      pstore.commitChangesFromNestedStore(this, this.chainedChanges, force);
+    }
+
+    // clear out custom changes - even if there is nothing to commit.
+    this.reset();
+    return this ;
+  },
+  
+  // ..........................................................
+  // COPIED CONTENT FROM SC.NestedStore
+  // 
+
+  /**
     This is set to true when there are changes that have not been committed 
     yet.
 
@@ -126,24 +171,6 @@ XT.NestedStore = XT.Store.extend(
       throw "SC.Store#find() can only accept LOCAL queries in nested stores";
     }
     return arguments.callee.base.apply(this, arguments);
-  },
-  
-  /**
-    Propagate this store's changes to its parent.  If the store does not 
-    have a parent, this has no effect other than to clear the change set.
-
-    @param {Boolean} force if true, does not check for conflicts first
-    @returns {SC.Store} receiver
-  */
-  commitChanges: function(force) {
-    if (this.get('hasChanges')) {
-      var pstore = this.get('parentStore');
-      pstore.commitChangesFromNestedStore(this, this.chainedChanges, force);
-    }
-
-    // clear out custom changes - even if there is nothing to commit.
-    this.reset();
-    return this ;
   },
 
   /**
