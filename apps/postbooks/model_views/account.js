@@ -126,7 +126,6 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
 
   // accounType
   key = 'accountType';
-  // property = proto[key];
   var radio = SC.RadioWidget.create({
     layout: { top: y, left: left, height: 24, width: left },
     items: [{ title: "Organization",
@@ -139,7 +138,6 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
               enabled: true,
               width: 120
             }],
-    // value: "O",
     valueBinding: SC.Binding.from(key, controller),
     itemTitleKey: 'title',
     itemValueKey: 'value',
