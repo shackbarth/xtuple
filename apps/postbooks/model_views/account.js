@@ -88,6 +88,15 @@ Postbooks.Account.Tiles = function(controller, isRoot) {
   // overview
   tiles.push(Postbooks.Account.CreateOverviewTileView(controller));
 
+  // primaryContact
+  tiles.push(Postbooks.Account.CreatePrimaryContactTileView(controller));
+
+  // secondaryContact
+  tiles.push(Postbooks.Account.CreateSecondaryContactTileView(controller));
+
+  //notes
+  tiles.push(Postbooks.CreateNotesTileView(controller));
+  
   return tiles;
 };
 
@@ -116,19 +125,20 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   layers.pushObject(widget);
 
   // accounType
+  key = 'accountType';
   var radio = SC.RadioWidget.create({
     layout: { top: y, left: left, height: 24, width: left },
     items: [{ title: "Organization",
-              value: "O",
+              value: XM.Account.ORGANIZATION,
               enabled: true,
               width: 120
             },
             { title: "Individual",
-              value: "I",
+              value: XM.Account.INDIVIDUAL,
               enabled: true,
               width: 120
             }],
-    value: "O",
+    valueBinding: SC.Binding.from(key, controller),
     itemTitleKey: 'title',
     itemValueKey: 'value',
     itemIsEnabledKey: 'enabled',
@@ -136,6 +146,7 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
     itemWidthKey: 'width'
   });
   y += 48 + K.SPACING;
+  y += K.VERT_SPACER;
   layers.push(radio);
 
   // number
@@ -173,5 +184,105 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
 
+  // owner 
+  key = 'owner';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_owner".loc() + ':'
+  });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'username';
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  objectKey = 'propername';
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 12 + K.SPACING;
+  layers.pushObject(label);
+
+  // parent 
+  key = 'parent';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_parent".loc() + ':'
+  });
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'number';
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  objectKey = 'name';
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left+5, height: 18, width: left },
+    font: "8pt "+K.TYPEFACE,
+    fontStyle: "italic",
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 12 + K.SPACING;
+  layers.pushObject(label);
+
   return view;
+};
+
+Postbooks.Account.CreatePrimaryContactTileView = function(controller) {
+  console.log('Postbooks.Account.CreatePrimaryContactTileView(', controller, ')');
+
+  var proto = XM.Account.prototype,
+      key, property, objectKlass, objectController;
+ 
+  key = 'primaryContact';
+  property = proto[key];
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_primaryContact".loc());
+
+};
+
+Postbooks.Account.CreateSecondaryContactTileView = function(controller) {
+  console.log('Postbooks.Account.CreateSecondaryContactTileView(', controller, ')');
+
+  var proto = XM.Account.prototype,
+      key, property, objectKlass, objectController;
+ 
+  key = 'secondaryContact';
+  property = proto[key];
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_secondaryContact".loc());
+
 };

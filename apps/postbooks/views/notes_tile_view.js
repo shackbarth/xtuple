@@ -18,5 +18,12 @@ Postbooks.CreateNotesTileView = function(controller) {
   });
   layers.pushObject(widget);
 
+  /**
+  var view = SC.TextSurface.create({
+    value: 'Hello world',
+  });
+  view.set('frame', SC.MakeRect(0, 42, 320, 320));
+  */
+
   return view;
 };
