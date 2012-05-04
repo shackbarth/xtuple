@@ -125,19 +125,22 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   layers.pushObject(widget);
 
   // accounType
+  key = 'accountType';
+  // property = proto[key];
   var radio = SC.RadioWidget.create({
     layout: { top: y, left: left, height: 24, width: left },
     items: [{ title: "Organization",
-              value: "O",
+              value: XM.Account.ORGANIZATION,
               enabled: true,
               width: 120
             },
             { title: "Individual",
-              value: "I",
+              value: XM.Account.INDIVIDUAL,
               enabled: true,
               width: 120
             }],
-    value: "O",
+    // value: "O",
+    valueBinding: SC.Binding.from(key, controller),
     itemTitleKey: 'title',
     itemValueKey: 'value',
     itemIsEnabledKey: 'enabled',
