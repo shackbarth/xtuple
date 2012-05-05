@@ -593,7 +593,7 @@ select xt.install_js('XT','Data','xtuple', $$
       for (var prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop),
         type = ormp ? (ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type) : 'String';
-        if (prop) {
+        if (prop && record[prop] !== null) {
           if (ormp.toMany) { 
             /* orm rules ignore arrays, but we need this place holder so type signatures match */
             props.push("'{}'");  
