@@ -90,7 +90,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
       value: null,
       enabled: true
     }, {
-      title: "Delete",
+      title: "_delete".loc(),
       value: 'delete',
       enabled: true
     }];
