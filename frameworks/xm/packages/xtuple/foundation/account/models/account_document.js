@@ -8,11 +8,11 @@
 
   Provides special number handling capabilities for documents.
 
-  @extends XT.Record
+  @extends XM.Document
 */
 
 XM.AccountDocument = XM.Document.extend(
-/** @scope XM.Document.prototype */ {
+/** @scope XM.AccountDocument.prototype */ {
 
   /**
     Walk like a duck.

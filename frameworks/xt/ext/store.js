@@ -7,6 +7,8 @@
 sc_require('mixins/logging');
 
 /** @class
+
+  @extends SC.Store
 */
 XT.Store = SC.Store.extend(XT.Logging,
   /** @scope XT.Store.prototype */ {

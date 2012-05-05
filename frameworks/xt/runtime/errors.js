@@ -5,7 +5,7 @@
 // ==========================================================================
 /*globals XT */
 
-/** @namespace
+/** @instance
 
   A global array that contains all system errors. Specific errors can be 
   looked up using the standard enumerator `findProperty` method:
@@ -20,7 +20,7 @@
   error properties. The array is processed at the start up of the application 
   into `SC.Error` objects pushed into to the `XT.errors` array.
 
-  @extends SC.Object
+  @extends SC.Array
 */
 
 XT.errors = [];

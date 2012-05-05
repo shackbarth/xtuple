@@ -43,7 +43,14 @@ Postbooks.DefaultRecordListRenderRow = function(context, width, height, index, o
   context.fillText(object.get('guid') + ': ' + (object.get('name') || object.get('description') || object.get('number')), width/2, height/2);
 };
 
-Postbooks.RecordListView = SC.ListView.extend({
+/** @class
+
+  (Document your Model here)
+
+  @extends SC.ListView
+*/
+Postbooks.RecordListView = SC.ListView.extend(
+  /** @scope Postbooks.RecordListView.prototype */{
 
   layout: { top: 0, left: 0, right: 0, bottom: 0 },
   rowHeight: Postbooks.HEIGHT_2_ROW,
