@@ -24,36 +24,6 @@ XM.SubLedgerMixin =
   /** @private */
   applicationsLength: 0,
 
-  amount: null,
-
-  /**
-    implementations of this mixin must supply a documentDate.
-    
-    @type XM.DateTime
-  */  
-  documentDate: null,
-
-  /**
-    implementations of this mixin must supply an amount.
-    
-    @type Money
-  */  
-  amount: null,
-
-  /**
-    implementations of this mixin must supply a paid amount.
-    
-    @type Money
-  */  
-  paid: null,
-  
-  /**
-    implementations of this mixin must supply a currency.
-    
-    @type XM.Currency
-  */
-  currency: null,
-
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -83,10 +53,10 @@ XM.SubLedgerMixin =
     @type Money
   */
   balance: function() {
-    var asOf = this.get('asOf'),
-        documentDate = this.get('documentDate'),
-        amount = this.get('amount') || 0,
-        paid = this.get('paid') || 0, ret = new Money(0);
+    var asOf = this.get('asOf');
+    var documentDate = this.get('documentDate');
+    var amount = this.get('amount') || 0;
+    var paid = this.get('paid') || 0, ret = new Money(0);
     if (documentDate && XT.DateTime.compareDate(asOf, documentDate) >= 0) {
       ret = (amount - paid).toMoney();
     }

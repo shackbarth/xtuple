@@ -24,19 +24,10 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   applicationsLength: 0,
   
   /** @private */
-  applicationsLengthBinding: SC.Binding.from('*applications.length').oneWay().noDelay(),
-
-  /** @private */
   detailsLength: 0,
   
   /** @private */
-  detailsLengthBinding: SC.Binding.from('*details.length').oneWay().noDelay(),
-  
-  /** @private */
   receivablesLength: 0,
-  
-  /** @private */
-  receivablesLengthBinding: SC.Binding.from('*receivables.length').oneWay().noDelay(),
   
   /**
     Money object for amount. Uses distribution date for exchange rate.
@@ -250,6 +241,19 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     SC.Binding.from('applicationDate', this)
               .to('effective', appliedMoney)
               .oneWay().noDelay().connect();
+  
+    // length bindings
+    SC.Binding.from('*applications.length', this)
+            .to('applicationsLength', this)
+            .oneWay().noDelay().connect();
+            
+    SC.Binding.from('*details.length', this)
+            .to('detailsLength', this)
+            .oneWay().noDelay().connect();
+            
+    SC.Binding.from('*receivables.length', this)
+            .to('receivablesLength', this)
+            .oneWay().noDelay().connect();
   },
   
   /**
@@ -521,6 +525,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.observes('minApplyDate', 'applicationDate', 'distributionDate'),
 
   receivablesLengthDidChange: function() {
+console.log('RECIVABLES LENGTH CHANGED')
     var receivables = this.get('receivables'),
         applications = this.get('applications');
 
