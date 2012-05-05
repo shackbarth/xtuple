@@ -24,11 +24,10 @@ sc_require('ext/store');
   retrieve a nested store by using the `chain()` method.  When you are finished
   working with the nested store, `destroy()` will dispose of it.
   
-  @extends SC.Store
-  @since SproutCore 1.0
+  @extends XT.Store
 */
 XT.NestedStore = XT.Store.extend(
-/** @scope SC.NestedStore.prototype */ {
+/** @scope XT.NestedStore.prototype */ {
 
   /**
     Array of invalid records. Should not attempt to commit if anything is in here.

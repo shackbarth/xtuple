@@ -137,7 +137,8 @@ Postbooks.SUBMODULE = SC.State.design({
   deleteRecord: function() {
     SC.EndEditingTextLayer();
 
-    if (window.confirm("Delete record?")) {
+    if (window.confirm("_deleteRecord".loc())) {
+
       // If we're working on a new record, just clean up and exit.
       if (Postbooks.submoduleController.get('status') === SC.Record.READY_NEW) {
         Postbooks.get('store').destroy();
@@ -150,6 +151,12 @@ Postbooks.SUBMODULE = SC.State.design({
 
         Postbooks.get('store').destroy();
         Postbooks.set('store', XT.store); // Required before we exit.
+      }
+      
+      // Push our changes to the server.
+      if (this.didCommit) {
+        console.log('Committing changes to the server.');
+        XT.store.commitRecords();
       }
 
       // HACK: SC.Statechart will exit/enter our parent state!

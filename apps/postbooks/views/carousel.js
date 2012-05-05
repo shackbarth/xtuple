@@ -13,7 +13,8 @@
 
   @extends SC.CompositeSurface
 */
-Postbooks.Carousel = SC.CompositeSurface.extend({
+Postbooks.Carousel = SC.CompositeSurface.extend(
+  /** @scope Postbooks.Carousel.prototype */{
 
   updateDisplay: function() {
     

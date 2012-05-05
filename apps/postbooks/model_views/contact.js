@@ -129,14 +129,23 @@ Postbooks.Contact.Tiles = function(controller, isRoot) {
   var klass = XM.Contact,
       tiles = [],
       proto = klass.prototype;
-      properties = [];
+      properties = [], commands = [];
 
   // overview
   properties = ' isActive number spacer honorific firstName middleName lastName suffix jobTitle '.w();
-  tiles.push(Postbooks.CreateTileView(klass, controller, null, properties));
+  commands = [{
+      title: "\u2699",
+      value: null,
+      enabled: true
+    }, {
+      title: "_delete".loc(),
+      value: 'delete',
+      enabled: true
+  }];
+  tiles.push(Postbooks.CreateTileView(klass, controller, null, properties, commands));
 
   // details
-  properties = ' phone alternate fax spacer primaryEmail webAddress spacer account owner '.w();
+  properties = 'phone alternate fax spacer primaryEmail webAddress spacer account owner '.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
 
   // general
