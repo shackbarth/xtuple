@@ -18,7 +18,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 
   numberPolicy: XT.AUTO_NUMBER,
 
-  applications: [],
+  applications: null,
   
   /** @private */
   applicationsLength: 0,
@@ -243,7 +243,9 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
               .oneWay().noDelay().connect();
   
     // length bindings
-    SC.Binding.from('*applications.length', this)
+    var applications = [];
+    this.set('applications', applications);
+    SC.Binding.from('length', applications)
             .to('applicationsLength', this)
             .oneWay().noDelay().connect();
             
@@ -504,7 +506,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         }
       }
     }
-  }.observes('detailsLength').cacheable(),
+  }.observes('detailsLength'),
   
   datesDidChange: function() {
     if (this.isNotDirty()) return;
@@ -525,7 +527,6 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.observes('minApplyDate', 'applicationDate', 'distributionDate'),
 
   receivablesLengthDidChange: function() {
-console.log('RECIVABLES LENGTH CHANGED')
     var receivables = this.get('receivables'),
         applications = this.get('applications');
 
@@ -551,18 +552,24 @@ console.log('RECIVABLES LENGTH CHANGED')
   statusDidChange: function() {
     var status = this.get('status'), K = SC.Record,
         fundsType = this.get('fundsType'), R = XM.CashReceipt;
-    if (status == K.READY_CLEAN && 
-       (fundsType == R.AMERICAN_EXPRESS ||
-        fundsType == R.DISCOVER ||
-        fundsType == R.MASTER_CARD ||
-        fundsType == R.VISA)) {
-      this.amount.set('isEditable', false);
-      this.currency.set('isEditable', false);
-      this.fundsType.set('isEditable', false);
-      this.documentNumber.set('isEditable', false);
-      this.documentDate.set('isEditable', false);
-      this.distributionDate.set('isEditable', false);
-      this.applicationDate.set('isEditable', false);
+        
+    if (status == K.READY_CLEAN) {
+      // set initial detail length since no notification on first load
+      this.set('detailsLength', this.getPath('details.length'));
+      
+      // if credit card processed, lock it down
+      if (fundsType == R.AMERICAN_EXPRESS ||
+          fundsType == R.DISCOVER ||
+          fundsType == R.MASTER_CARD ||
+          fundsType == R.VISA) {
+        this.amount.set('isEditable', false);
+        this.currency.set('isEditable', false);
+        this.fundsType.set('isEditable', false);
+        this.documentNumber.set('isEditable', false);
+        this.documentDate.set('isEditable', false);
+        this.distributionDate.set('isEditable', false);
+        this.applicationDate.set('isEditable', false);
+      }
     }
   }.observes('status')
 
