@@ -18,6 +18,7 @@ if [ ! -d "lib/xt/node_modules/blossom" ]; then
   cd ../../../..
 else
   cd lib/xt/node_modules/blossom
+  echo -ne "Updating blossom..."
   git pull
   cd ../../../..
 fi
@@ -32,6 +33,7 @@ if [ ! -d "lib/xt/node_modules/build-tools" ]; then
   cd ../../../..
 else
   cd lib/xt/node_modules/build-tools
+  echo -ne "Updating build-tools..."
   git pull
   cd ../../../..
 fi
