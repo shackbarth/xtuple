@@ -77,6 +77,11 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   */
   includeCredits: false,
   
+  /**
+    Lable for balance application choice. Changes when application date changes.
+  */
+  applyBalanceLabel: "_applyBalanceAs".loc(),
+  
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -509,11 +514,10 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   }.observes('detailsLength'),
   
   datesDidChange: function() {
-    if (this.isNotDirty()) return;
-    var minApplyDate = this.get('minApplyDate'),
-        applicationDate = this.get('applicationDate'),
-        distributionDate = this.get('distributionDate');
-     
+    var applicationDate = this.get('applicationDate'),
+        distributionDate = this.get('distributionDate'),
+        minApplyDate = this.get('minApplyDate');
+       
     // application date can not be less than the minimum apply date
     if (minApplyDate && XT.DateTime.compareDate(applicationDate, minApplyDate) < 0) {
       applicationDate = minApplyDate;
@@ -521,9 +525,15 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     }
     
     // distribution date can not be greater than the application date
-    if (XT.DateTime.compareDate(distributionDate, applicationDate) > 0) {
+    if (XT.DateTime.compareDate(distributionDate, applicationDate) == 1) {
       this.set('distributionDate', applicationDate);
-    }    
+    }
+        
+    if (XT.DateTime.compareDate(distributionDate, applicationDate) == -1) {
+      this.setIfChanged('applyBalanceLabel', "_recordReceiptAs".loc());
+    } else {
+      this.setIfChanged('applyBalanceLabel', "_applyBalanceAs".loc());
+    }
   }.observes('minApplyDate', 'applicationDate', 'distributionDate'),
 
   receivablesLengthDidChange: function() {
@@ -554,8 +564,8 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         fundsType = this.get('fundsType'), R = XM.CashReceipt;
         
     if (status == K.READY_CLEAN) {
-      // set initial detail length since no notification on first load
       this.set('detailsLength', this.getPath('details.length'));
+      this.datesDidChange();
       
       // if credit card processed, lock it down
       if (fundsType == R.AMERICAN_EXPRESS ||

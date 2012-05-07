@@ -81,3 +81,168 @@ Postbooks.CashReceipt.RenderRecordListRow = function(context, width, height, ind
 
 };
 
+Postbooks.CashReceipt.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.CashReceipt.Tiles()');
+  
+  var klass = XM.CashReceipt,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // Overview
+  tiles.push(Postbooks.CashReceipt.CreateOverviewTileView(controller));
+  
+  // Additional
+  properties = 'fundsType documentNumber documentDate bankAccount distributionDate applicationDate'.w();
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_additional".loc(), properties));
+
+  // Notes
+  tiles.push(Postbooks.CreateNotesTileView(controller));
+
+  return tiles;
+};
+
+Postbooks.CashReceipt.CreateOverviewTileView = function(controller) {
+  console.log('Postbooks.CashReceipt.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create(),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Invoice.prototype,
+      K = Postbooks,
+      key, property,
+      left = 125, right = 12,
+      label = null, widget = null;
+ 
+  // Number
+  key = 'number';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: ("_"+key).loc()+ ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // Customer
+  key = 'customer';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: ("_"+key).loc()+ ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return String(val);
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // Amount
+  key = 'amount';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_amount".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // Discount
+  key = 'discount';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_discount".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  
+  // Balance
+  key = 'balance';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_balance".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.transform(function(val) {
+      return val? val.toLocaleString() : "";
+    }).from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // Apply balance
+  if (XT.session.settings.get('EnableCustomerDeposits')) {
+    key = 'applyBalanceLabel';
+    label = SC.LabelLayer.create({
+      layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+      backgroundColor: 'white',
+      textAlign: 'right',
+      valueBinding: SC.Binding.transform(function(val) {
+        return val+":";
+      }).from(key, controller).oneWay().noDelay()
+    });
+    key = 'isUseCustomerDeposit';
+    var radio = SC.RadioWidget.create({
+      layout: { top: y, left: left, height: 24, width: 140 },
+      items: [{ title: "_creditMemo".loc(),
+                value: false,
+                enabled: true,
+                width: 120
+              },
+              { title: "_customerDeposit".loc(),
+                value: true,
+                enabled: true,
+                width: 120
+              }],
+      valueBinding: SC.Binding.from(key, controller),
+      itemTitleKey: 'title',
+      itemValueKey: 'value',
+      itemIsEnabledKey: 'enabled',
+      layoutDirection: SC.LAYOUT_VERTICAL,
+      itemWidthKey: 'width'
+    });
+    y += 48 + K.SPACING;
+    y += K.VERT_SPACER;
+    layers.pushObject(label);
+    layers.push(radio);
+  }
+  
+  return view;
+};
