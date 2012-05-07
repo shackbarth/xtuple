@@ -12,9 +12,10 @@
 
   @seealso XM.AdjustmentTax
   @extends XM.Document
+  @extends XM.Taxable
 */
 XM.TaxableDocument = XM.Document.extend(XM.Taxable,
-  /** @scope XM.Invoice.prototype */ {
+  /** @scope XM.TaxableDocument.prototype */ {
  
   /** @private */
   adjustmentTaxesLength: 0,

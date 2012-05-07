@@ -11,7 +11,7 @@
 */
 
 XT.Dispatch = SC.Object.extend(
-  /** @scope SC.Dispatch.prototype */ {
+  /** @scope XT.Dispatch.prototype */ {
 
   // ..........................................................
   // PROPERTIES

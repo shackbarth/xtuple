@@ -4,16 +4,15 @@
 // =========================================================================
 /*globals XM */
 
-/** @mixin
+/** @namespace
 
   Support for document assignments on models.
-  
 */
 
 XM.Documents = {
   
   /**
-  Holds all of the document assignments.
+    Holds all of the document assignments.
   */
   documents: [],
   
