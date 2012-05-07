@@ -27,7 +27,6 @@ SC.ChildArray.prototype.pushObject = function(obj) {
   // set the parent on the child's foreign key
   if (parent[propertyName] && parent[propertyName].inverse) {
     var key = parent[propertyName].inverse;
-       // value = obj[key].isNested ? parent : parent.get('id');
     obj.set(key, parent);
   }
 
