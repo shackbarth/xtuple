@@ -246,3 +246,84 @@ Postbooks.CashReceipt.CreateOverviewTileView = function(controller) {
   
   return view;
 };
+
+Postbooks.CashReceipt.Lists = function(controller) {
+  console.log('Postbooks.CashReceipt.Lists()');
+  
+  var lists = [];
+
+  var key = 'filteredApplications';
+  var K = Postbooks;
+  var arrayController = SC.ArrayController.create({
+    contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+  });
+
+  var list = SC.ListView.create({
+    layout: { top: 13, left: 0, right: 0, bottom: 0 },
+    rowHeight: K.HEIGHT_2_ROW,
+    hasHorizontalScroller: false,
+
+    contentBinding: SC.Binding.from('arrangedObjects', arrayController).oneWay(),
+    selectionBinding: SC.Binding.from('selection', arrayController),
+
+    action: function(object, index) {
+      var that = this;
+      var instance = this.get('content').objectAt(index);
+      if (instance) {
+        Postbooks.LoadModal("CashReceiptApplication", "_back".loc(), instance);
+
+        // Deselect our row after the modal transition ends.
+        setTimeout(function() {
+          SC.RunLoop.begin();
+          that.get('content').deselectObject(instance);
+          SC.RunLoop.end();
+        }, 250);
+      }
+    },
+
+    willRenderLayers: function(ctx) {
+      var content = this.get('content');
+
+      if (content && content.get('length') === 0) {
+        var w = ctx.width, h = ctx.height;
+
+        var text = '_noRecords'.loc(),
+            status = content? content.get('status') : null;
+
+        if (status && status === SC.Record.BUSY_LOADING) {
+          text = "_loading".loc();
+        }
+
+        // Clear background.
+        ctx.fillStyle = base3;
+        ctx.fillRect(0, 0, w, h);
+
+        // Draw view name.
+        ctx.fillStyle = base03;
+        
+        var K = Postbooks;
+        ctx.font = "11pt "+K.TYPEFACE;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        ctx.fillText(text, w/2, h/2);
+      } else {
+        ctx.fillStyle = base3;
+        ctx.fillRect(0, 0, ctx.width, ctx.height);
+      }
+    },
+
+    renderRow: Postbooks.DefaultListRenderRow
+
+  });
+  
+  lists.push(SC.Object.create({
+    title: "_applications".loc(),
+    surface: list,
+    klass: XM.CashReceiptApplication,
+    attribute: key
+  }));
+
+  return lists;
+};
+
+
