@@ -125,6 +125,9 @@ Postbooks.ToDo.Tiles = function(controller, isRoot) {
   // properties = 'toDoStatus startDate dueDate assignDate completeDate'.w()
   tiles.push(Postbooks.ToDo.CreateStatusTileView(controller));
   
+  // Contact
+  tiles.push(Postbooks.ToDo.CreateContactTileView(controller));
+
   // Notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
 
@@ -299,7 +302,31 @@ Postbooks.ToDo.CreateStatusTileView = function(controller) {
       left = 120, right = 12,
       label = null, widget = null;
  
-  // startDate
+  key = 'toDoStatusProxy';
+  var radio = SC.RadioWidget.create({
+    layout: { top: y, left: left, height: 24, width: left },
+    items: [{ title: "_pending".loc(),
+              value: T.PENDING,
+              enabled: true
+            },
+            { title: "_deferred".loc(),
+              value: T.DEFERRED,
+              enabled: true
+            },
+            { title: "_neither".loc(),
+              value: T.NEITHER,
+              enabled: true
+            }],
+    value: SC.Binding.from(key, controller),
+    itemTitleKey: 'title',
+    itemValueKey: 'value',
+    itemIsEnabledKey: 'enabled'
+  });
+  y += 72 + K.SPACING;
+  y += K.VERT_SPACER;
+  layers.push(radio);
+
+   // startDate
   key = 'startDate';
   property = proto[key];
   label = SC.LabelLayer.create({
@@ -377,4 +404,21 @@ Postbooks.ToDo.CreateStatusTileView = function(controller) {
   layers.pushObject(widget);
 
   return view;
+};
+
+Postbooks.ToDo.CreateContactTileView = function(controller) {
+  console.log('Postbooks.Account.CreateContactTileView(', controller, ')');
+
+  var proto = XM.ToDo.prototype,
+      key, property, objectKlass, objectController;
+ 
+  key = 'contact';
+  property = proto[key];
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_contact".loc());
+
 };

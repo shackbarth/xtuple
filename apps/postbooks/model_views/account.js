@@ -128,12 +128,12 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   key = 'accountType';
   var radio = SC.RadioWidget.create({
     layout: { top: y, left: left, height: 24, width: left },
-    items: [{ title: "Organization",
+    items: [{ title: "_organization".loc(),
               value: XM.Account.ORGANIZATION,
               enabled: true,
               width: 120
             },
-            { title: "Individual",
+            { title: "_individual".loc(),
               value: XM.Account.INDIVIDUAL,
               enabled: true,
               width: 120
