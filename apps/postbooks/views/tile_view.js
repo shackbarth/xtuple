@@ -4,7 +4,15 @@
 // ==========================================================================
 /*globals Postbooks sc_assert */
 
-Postbooks.TileView = SC.View.extend({
+/** @class
+
+  (Document your Model here)
+
+  @extends SC.View
+*/
+Postbooks.TileView = SC.View.extend(
+  /** @scope Postbooks.TileView.prototype */{
+  
   isTile: true, // Walk like a duck.
   
   layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below

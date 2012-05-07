@@ -98,7 +98,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     name: "_cancel".loc(),
     target: 'Postbooks.statechart',
     action: 'cancel',
-    isEnabledBinding: 'Postbooks*store.hasChanges',
+    isEnabledBinding: 'Postbooks*store.canCommit',
     isVisibleBinding: SC.Binding.transform(function(length) {
       return Number(length) > 0 ? false : true;
     }).from('Postbooks.modalContexts.length')
@@ -109,7 +109,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     name: "_save".loc(),
     target: 'Postbooks.statechart',
     action: 'apply',
-    isEnabledBinding: 'Postbooks*store.hasChanges',
+    isEnabledBinding: 'Postbooks*store.canCommit',
     isVisibleBinding: SC.Binding.transform(function(length) {
       return Number(length) > 0 ? false : true;
     }).from('Postbooks.modalContexts.length')

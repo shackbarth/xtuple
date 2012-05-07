@@ -11,6 +11,7 @@
   used.
 
   @returns {String} the localized string.
+  @extends String
 */
 
 String.prototype.loc = function() {

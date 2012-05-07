@@ -18,25 +18,16 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
 
   numberPolicy: XT.AUTO_NUMBER,
 
-  applications: [],
+  applications: null,
   
   /** @private */
   applicationsLength: 0,
   
   /** @private */
-  applicationsLengthBinding: SC.Binding.from('*applications.length').oneWay().noDelay(),
-
-  /** @private */
   detailsLength: 0,
   
   /** @private */
-  detailsLengthBinding: SC.Binding.from('*details.length').oneWay().noDelay(),
-  
-  /** @private */
   receivablesLength: 0,
-  
-  /** @private */
-  receivablesLengthBinding: SC.Binding.from('*receivables.length').oneWay().noDelay(),
   
   /**
     Money object for amount. Uses distribution date for exchange rate.
@@ -250,6 +241,21 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
     SC.Binding.from('applicationDate', this)
               .to('effective', appliedMoney)
               .oneWay().noDelay().connect();
+  
+    // length bindings
+    var applications = [];
+    this.set('applications', applications);
+    SC.Binding.from('length', applications)
+            .to('applicationsLength', this)
+            .oneWay().noDelay().connect();
+            
+    SC.Binding.from('*details.length', this)
+            .to('detailsLength', this)
+            .oneWay().noDelay().connect();
+            
+    SC.Binding.from('*receivables.length', this)
+            .to('receivablesLength', this)
+            .oneWay().noDelay().connect();
   },
   
   /**
@@ -398,12 +404,12 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /** @private 
       Applying balances involves asynchronous requests, so must be done with callbacks
   */
-  _xm_applyDebits: function(list, idx, callback) {
-    var applications = this.get('applications');
+  _xm_applyDebits: function(list, idx) {
+    var applications = this.get('applications'),
+        that = this;
     
     // Set up if this is the initial call
     if (SC.none(list)) {
-      var that = this;
       idx = 0;
        
       // now process debits
@@ -412,17 +418,17 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         return documentType === XM.Receivable.INVOICE ||
                documentType === XM.Receivable.DEBIT_MEMO;
       }, this).sort(this._xm_sort);
-      
-      // this call back will make recursive requests until list is processed
-      callback = function() {
-        idx++;
-        // continue applying balances to succesive records until we're done.
-        if (idx < list.get('length'))  that._xm_applyDebits(list, idx, this);
-      }
+    }
+    
+    // this call back will make recursive requests until list is processed
+    callback = function() {
+      idx++;
+      // continue applying balances to succesive records until we're done.
+      if (idx < list.get('length'))  that._xm_applyDebits(list, idx);
     }
     
     // now make the call
-    list.ObjectAt(idx).applyBalance(callback);
+    list.objectAt(idx).applyBalance(callback);
   },
   
   /** @private
@@ -500,7 +506,7 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         }
       }
     }
-  }.observes('detailsLength').cacheable(),
+  }.observes('detailsLength'),
   
   datesDidChange: function() {
     if (this.isNotDirty()) return;
@@ -546,18 +552,24 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   statusDidChange: function() {
     var status = this.get('status'), K = SC.Record,
         fundsType = this.get('fundsType'), R = XM.CashReceipt;
-    if (status == K.READY_CLEAN && 
-       (fundsType == R.AMERICAN_EXPRESS ||
-        fundsType == R.DISCOVER ||
-        fundsType == R.MASTER_CARD ||
-        fundsType == R.VISA)) {
-      this.amount.set('isEditable', false);
-      this.currency.set('isEditable', false);
-      this.fundsType.set('isEditable', false);
-      this.documentNumber.set('isEditable', false);
-      this.documentDate.set('isEditable', false);
-      this.distributionDate.set('isEditable', false);
-      this.applicationDate.set('isEditable', false);
+        
+    if (status == K.READY_CLEAN) {
+      // set initial detail length since no notification on first load
+      this.set('detailsLength', this.getPath('details.length'));
+      
+      // if credit card processed, lock it down
+      if (fundsType == R.AMERICAN_EXPRESS ||
+          fundsType == R.DISCOVER ||
+          fundsType == R.MASTER_CARD ||
+          fundsType == R.VISA) {
+        this.amount.set('isEditable', false);
+        this.currency.set('isEditable', false);
+        this.fundsType.set('isEditable', false);
+        this.documentNumber.set('isEditable', false);
+        this.documentDate.set('isEditable', false);
+        this.distributionDate.set('isEditable', false);
+        this.applicationDate.set('isEditable', false);
+      }
     }
   }.observes('status')
 

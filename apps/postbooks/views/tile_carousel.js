@@ -31,9 +31,10 @@ var white =    "white";
   By default, the first subsurface is visible. You can choose another 
   subsurface by doing `carousel.makeSurfaceVisible(theSuburface)`.
 
-  @extends SC.CompositeSurface
+  @extends Postbooks.Carousel
 */
-Postbooks.TileCarousel = Postbooks.Carousel.extend({
+Postbooks.TileCarousel = Postbooks.Carousel.extend(
+  /** @scope Postbooks.TileCarousel.prototype */{
 
   _sc_backgroundColor: 'black',
 

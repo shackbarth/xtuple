@@ -46,7 +46,14 @@ Postbooks.DefaultMasterRenderRow = function(context, width, height, index, objec
   context.fillText(object.get('title'), 72, height/2);
 };
 
-Postbooks.MasterListView = SC.ListView.extend({
+/** @class
+
+  (Document your Model here)
+
+  @extends SC.ListView
+*/
+Postbooks.MasterListView = SC.ListView.extend(
+  /** @scope Postbooks.MasterListView.prototype */{
 
   layout: { top: 44, left: 0, width: 319, bottom: 0 },
   rowHeight: 44,

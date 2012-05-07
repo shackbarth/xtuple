@@ -75,16 +75,6 @@ Postbooks = global.Postbooks = SC.Application.create(
     @default 550
   */
   TYPEFACE: 'helvetica, arial',
-  
-  /**
-    List width considered portrait mode.
-    
-    @static
-    @constant
-    @type Number
-    @default 550
-  */
-  PORTRAIT_LIST_WIDTH: 550,
 
   /**
     Standard row height for one row.

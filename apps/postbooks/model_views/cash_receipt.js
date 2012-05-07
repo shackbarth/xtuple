@@ -69,6 +69,7 @@ Postbooks.CashReceipt.RenderRecordListRow = function(context, width, height, ind
   
   // Posted
   var isPosted = object.getPath('isPosted');
+  context.font = "9pt "+K.TYPEFACE;
   val = isPosted? "_posted".loc() : '';
   context.fillText(val, 490, 35);
   
