@@ -404,12 +404,12 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
   /** @private 
       Applying balances involves asynchronous requests, so must be done with callbacks
   */
-  _xm_applyDebits: function(list, idx, callback) {
-    var applications = this.get('applications');
+  _xm_applyDebits: function(list, idx) {
+    var applications = this.get('applications'),
+        that = this;
     
     // Set up if this is the initial call
     if (SC.none(list)) {
-      var that = this;
       idx = 0;
        
       // now process debits
@@ -418,17 +418,17 @@ XM.CashReceipt = XM.Document.extend(XM._CashReceipt,
         return documentType === XM.Receivable.INVOICE ||
                documentType === XM.Receivable.DEBIT_MEMO;
       }, this).sort(this._xm_sort);
-      
-      // this call back will make recursive requests until list is processed
-      callback = function() {
-        idx++;
-        // continue applying balances to succesive records until we're done.
-        if (idx < list.get('length'))  that._xm_applyDebits(list, idx, this);
-      }
+    }
+    
+    // this call back will make recursive requests until list is processed
+    callback = function() {
+      idx++;
+      // continue applying balances to succesive records until we're done.
+      if (idx < list.get('length'))  that._xm_applyDebits(list, idx);
     }
     
     // now make the call
-    list.ObjectAt(idx).applyBalance(callback);
+    list.objectAt(idx).applyBalance(callback);
   },
   
   /** @private

@@ -132,7 +132,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
   */  
   applyBalance: function(callback) {
     this._xm_applyBalancePending = true;
-    this._xm_pendingCallback = callback;
+    this._xm_callbackPending = callback;
     this._xm_applyBalance();
   },
   
@@ -262,8 +262,8 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     
     // setup
     var cashReceipt = this.get('cashReceipt'),
-        crCurrencyRate = cashReceipt.get('appliedMoney.exchangeRate'),
-        arCurrencyRate = this.get('appliedMoney.exchangeRate'),
+        crCurrencyRate = cashReceipt.getPath('appliedMoney.exchangeRate'),
+        arCurrencyRate = this.getPath('appliedMoney.exchangeRate'),
         detail = this.get('cashReceiptDetail'),
         receivable = this.get('receivable'),
         documentType = receivable.get('documentType'),
@@ -304,7 +304,7 @@ XM.CashReceiptApplication = SC.Object.extend(XT.Logging,
     this.set('cashReceiptDetail', detail);
 
     // notify caller if applicable
-    if (this._xm_callbackPending) this._xm_callbackPending.call(detail);
+    if (this._xm_callbackPending) this._xm_callbackPending.call();
     
     // reset
     this._xm_amountPending = undefined;
