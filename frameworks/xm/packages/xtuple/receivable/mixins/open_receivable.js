@@ -6,12 +6,12 @@
 /*globals XM */
 
 /**
-  @mixin
+  @namespace
   
   An abstract mixin with a pending property that calculates the total
   value of all pending applications.
 */
-XM.OpenReceivable = /** @scope XM.OpenReceivable.prototype */ {
+XM.OpenReceivable = {
 
   /** @private */
   pendingApplicationsLength: 0,

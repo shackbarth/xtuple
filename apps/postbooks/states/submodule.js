@@ -77,6 +77,7 @@ Postbooks.SUBMODULE = SC.State.design({
         return;
       } else {
         Postbooks.get('store').commitChanges(true); // force
+        this.didCommit = true;
       }
     }
 
@@ -102,7 +103,7 @@ Postbooks.SUBMODULE = SC.State.design({
   apply: function() {
     SC.EndEditingTextLayer();
     Postbooks.get('store').commitChanges(true); // force
-    this.didCommit = true;
+    XT.store.commitRecords();
   },
 
   cancel: function() {
