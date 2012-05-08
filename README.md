@@ -3,7 +3,7 @@ XTUPLE DATASOURCE
 
 > THIS DOCUMENTATION IS CURRENTLY UNDER CONSTRUCTION AND INCOMPLETE
 
-> It is __highly recommended__ that this software be used for educational purposes and testing only as it is designed to be integrated with many other components and requires a high level of technical abilities to use properly.
+> It is __highly recommended__ that this software be used for educational purposes and testing only as it is designed to be integrated with many other components and requires a high level of technical ability and domain knowledge to use properly.
 
 The datasource requires the following components before being able to be run.
 
