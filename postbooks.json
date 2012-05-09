@@ -1,7 +1,6 @@
 {
   "postbooks": {
     "type": "app",
-    "monitor": true,
     "frameworks": [
       "foundation",
       "application",
@@ -13,7 +12,6 @@
 
   "xt": {
     "type": "framework",
-    "monitor": true,
     "frameworks": [
       "foundation",
       "application",
@@ -24,7 +22,6 @@
 
   "xm": {
     "type": "framework",
-    "monitor": true,
     "frameworks": [
       "xt"
     ],

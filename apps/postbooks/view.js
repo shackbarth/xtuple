@@ -326,7 +326,7 @@ Postbooks.DefaultListRenderRow = function(context, width, height, index, object,
 };
 
 Postbooks.CreateListViewForClass = function(klass, controller) {
-  console.log('Postbooks.CreateListViewForClass(', klass, ')');
+  console.log('Postbooks.CreateListViewForClass(', klass.prototype.className, ')');
 
   // See if we have an override.
   var className = klass.prototype.className;
