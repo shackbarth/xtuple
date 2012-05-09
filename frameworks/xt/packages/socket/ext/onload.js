@@ -31,12 +31,6 @@ socket.on('connect', function() {
   XT.DATASOURCE_CONNECTED = true;
   clearInterval(socketInterval);
   SC.Logger.info("Connected to datasource via socket");
-  SC.ready(function() {
-
-    // THIS NEEDS TO BE REPLACED BECAUSE THERE SHOULD BE A LOGIN
-    // AVAILABLE TO SET THIS!
-    XT.session.acquireSession('admin', 'Assemble!Aurora', 'aurora');
-  });
 });
 // for debugging purposes
 socket.on('debug', function(payload) {
