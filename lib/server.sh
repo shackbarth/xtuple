@@ -7,24 +7,12 @@ if [ -d "lib/node_modules" ]; then
   echo -ne "...done\\n"
 fi 
 
-# npm takes too long when using a dependency from git
-# so it was removed from the package.json for now
-# if the blossom directory doesn't exist go grab it
-if [ ! -d "lib/xt/node_modules/blossom" ]; then
-  cd lib/xt/node_modules
-  git clone git@github.com:clinuz/blossom.git
-  cd blossom
-  npm install
-  cd ../../../..
-else
-  cd lib/xt/node_modules/blossom
-  git pull
-  cd ../../../..
-fi
-
 # make sure to clone build-tools if they don't exist
 # and if they do try and update?
 if [ ! -d "lib/xt/node_modules/build-tools" ]; then
+  if [ ! -d "lib/xt/node_modules" ]; then
+    mkdir -p lib/xt/node_modules
+  fi
   cd lib/xt/node_modules
   git clone git@github.com:clinuz/build-tools.git
   cd build-tools
@@ -32,6 +20,7 @@ if [ ! -d "lib/xt/node_modules/build-tools" ]; then
   cd ../../../..
 else
   cd lib/xt/node_modules/build-tools
+  echo -ne "Updating build-tools..."
   git pull
   cd ../../../..
 fi
