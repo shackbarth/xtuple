@@ -367,7 +367,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
       if (content && content.get('length') === 0) {
         var w = ctx.width, h = ctx.height;
 
-        var text = 'No records.',
+        var text = '_noRecords'.loc(),
             status = content? content.get('status') : null;
 
         if (status && status === SC.Record.BUSY_LOADING) {
