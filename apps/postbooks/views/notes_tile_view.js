@@ -57,10 +57,41 @@ Postbooks.CreateNotesTileView = function(controller) {
   draggableSurface.set('frame', SC.MakeRect(0, 42, 320, 320));
   draggableSurface.set('backgroundColor', "#fdf6e3");
 
+  for (name in controller) {
+    if (controller.hasOwnProperty(name)) {
+      console.log('controller property: %@'.fmt(name));
+    }
+  }
+
+  var content = controller.content;
+  for (name in content) {
+    if (content.hasOwnProperty(name)) {
+      console.log('content property: %@'.fmt(name));
+    }
+  }
+
+  var notes = controller.get('notes');
+  console.log('controller notes: %@'.fmt(notes));
+
   var view = SC.TextSurface.create({
-    value: 'Hello world',
-    // valueBinding: SC.Binding.from(key, controller).noDelay()
+    // value: 'Hello world',
+    valueDidChange: function() {
+      var value = this.get('value');
+      console.log('value: %@'.fmt(value));
+    }.observes('value')
   });
+  SC.Binding.from(key, controller).to('value', view).sync().connect().flushPendingChanges();
+
+  controller.addObserver('notes', function() {
+    console.log('notes value: %@'.fmt(this.get('notes')));
+  });
+
+  NOTES_VALUE = controller;
+
+  var bindingRef = view.bindings;
+
+  console.log('bindings length: %@'.fmt(bindingRef.length));
+
   view.set('frame', SC.MakeRect(0, 34, 310, 276));
 
   draggableSurface.get('subsurfaces').pushObject(view);
