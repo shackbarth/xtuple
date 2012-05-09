@@ -37,8 +37,8 @@ XM.TaxCode = XM.Document.extend(XM._TaxCode,
           qry;
 
       qry = SC.Query.local(XM.TaxCode, {
-        conditions: "taxClass = {taxClass} "
-                    + "AND id != {id} ",
+        conditions: "taxClass = {taxClass} " +
+                    "AND id != {id} ",
         parameters: {
           taxClass: taxClass,
           id: id

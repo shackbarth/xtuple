@@ -49,5 +49,5 @@ XM.CashFlowStatement = XM.IncomeStatement.extend(
 
 XM.CashFlowStatement.retrieve = function(columnLayout, period) {
   return false; // TODO: implement this
-}
+};
 

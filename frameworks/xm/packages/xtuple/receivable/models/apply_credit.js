@@ -65,7 +65,7 @@ XM.ApplyCredit = XT.Record.extend(
       conditions: "customer = {customer} AND isOpen = YES",
       parameters: { customer: customer },
       orderBy: "dueDate"
-    })
+    });
     return store.find(query);
   }.property().cacheable(),
   

@@ -33,7 +33,7 @@ XM.AccountDocument = XM.Document.extend(
     // we want to check account for duplicates since it is the parent of all
     var oldName = this.get('className');
     this.set('className', 'XM.Account');
-    arguments.callee.base.apply(this, arguments) 
+    arguments.callee.base.apply(this, arguments); 
     this.set('className', oldName);
   }
 

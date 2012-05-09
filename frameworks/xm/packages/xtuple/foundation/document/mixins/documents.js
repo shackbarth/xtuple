@@ -35,8 +35,7 @@ XM.Documents = {
         of type XM.DocumentAssignment.
       */
       for(key in this) {
-        keyValue = this[key];
-        if(keyValue && keyValue.isRecordAttribute) {
+        if(this[key] && this[key].isRecordAttribute) {
           keyValueType = this[key].type;
           if(SC.typeOf(keyValueType) === SC.T_STRING) {
             keyValueType = SC.objectForPropertyPath(keyValueType);
@@ -53,27 +52,29 @@ XM.Documents = {
     */
     if(assignmentProperties.length) {
       propsLength = assignmentProperties.length;
+			addDocuments = function() {
+        var docAssLength = this.get('length'),
+            docs = record.documents,
+            childRec, indx, status;
+
+        /**
+          Loop through child records and add any 
+          non-DESTROYED records (that don't already exist)
+          to documents[].
+        */
+        for(var j = 0; j < docAssLength; j++) {
+          childRec = this.objectAt(j);
+          idx = docs.lastIndexOf(childRec);
+          status = childRec.get('status');
+          if((status & SC.Record.DESTROYED) === 0 && idx === -1) {
+            record.documents.push(childRec);
+          }
+        }
+      };
+
       for(var i = 0; i < propsLength; i++) {
         documentAssignment = this.get(assignmentProperties[i]);
-        documentAssignment.addObserver('[]', function() {
-          var docAssLength = this.get('length'),
-              docs = record.documents,
-              childRec, indx, status;
-
-          /**
-            Loop through child records and add any 
-            non-DESTROYED records (that don't already exist)
-            to documents[].
-          */
-          for(var j = 0; j < docAssLength; j++) {
-            childRec = this.objectAt(j);
-            idx = docs.lastIndexOf(childRec);
-            status = childRec.get('status');
-            if((status & SC.Record.DESTROYED) == 0 && idx === -1) {
-              record.documents.push(childRec);
-            }
-          }
-        });
+        documentAssignment.addObserver('[]', addDocuments);
       }
     }
   },

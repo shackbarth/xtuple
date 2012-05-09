@@ -39,4 +39,4 @@ XM.SubAccountType.getTypes = function() {
      this._subAccountTypes = store.find(qry);
    }
    return this._subAccountTypes;
-}
+};

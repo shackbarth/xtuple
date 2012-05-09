@@ -84,7 +84,7 @@ XM.Document = XT.Record.extend(
         XT.Record.fetchNumber.call(record, docKey);
         return '_loading'.loc(); // prevents coming back here
       } else return '';
-    }
+    };
     this[docKey].defaultValue = dv;
     this[docKey].set('isRequired', true);
     this.addObserver(docKey, this.keyDidChange);
@@ -122,12 +122,12 @@ XM.Document = XT.Record.extend(
       // callback
       callback = function(err, result) {
         if(!err) {
-          var err = XT.errors.findProperty('code', 'xt1007'),
-              id = record.get('id'),
-              isConflict = result ? result !== id  : false;          
+          var id = record.get('id'),
+              isConflict = result ? result !== id  : false; 
+          err = XT.errors.findProperty('code', 'xt1007');         
           record.updateErrors(err, isConflict);
         }
-      }        
+      };        
       
       // function call
       XT.Record.findExisting.call(record, docKey, number, callback);

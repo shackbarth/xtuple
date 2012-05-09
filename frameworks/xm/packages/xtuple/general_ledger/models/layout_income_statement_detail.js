@@ -32,7 +32,7 @@ XM.LayoutIncomeStatementDetail = XT.Record.extend(XM._LayoutIncomeStatementDetai
       } else {
         return subAccountTypes;
       }
-    }
+    };
 
     return ret;
   }.property('accountType').cacheable(),

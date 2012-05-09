@@ -92,7 +92,7 @@ XM.Project = XM.Document.extend(XM._Project, XM.Documents,
   //
   
   copy: function() { 
-    return XM.Project.copy(this,number,offset) 
+    return XM.Project.copy(this,number,offset); 
   },
 
   updateBudgetedHours: function() {
@@ -207,7 +207,7 @@ XM.Project.copy = function(project,number,offset) {
   delete hash.startDate;
   delete hash.guid;
   return store.createRecord(XM.Project, hash).normalize();
-}
+};
 
 XM.Project.mixin( /** @scope XM.Project */ {
 

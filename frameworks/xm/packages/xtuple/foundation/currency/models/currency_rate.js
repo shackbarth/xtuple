@@ -33,14 +33,14 @@ XM.CurrencyRate = XT.Record.extend(XM._CurrencyRate,
           qry;
       if (effectiveDate && expiresDate && currencyRec) {
         qry = SC.Query.local(XM.CurrencyRate, {
-          conditions: "((currency = {currency}) AND (id != {id})) "
-                      + "AND ( "
-                      + "     (((effective >= {effective}) AND (effective <= {expires})) OR"
-                      + "      ((expires >= {effective}) AND (expires <= {expires}))) "
-                      + "    OR "
-                      + "     ((effective <= {effective}) AND "
-                      + "      (expires >= {expires})) "
-                      + "    )",
+          conditions: "((currency = {currency}) AND (id != {id})) " + 
+											"AND ( " +
+                      "     (((effective >= {effective}) AND (effective <= {expires})) OR" +
+                      "      ((expires >= {effective}) AND (expires <= {expires}))) " +
+                      "    OR " +
+                      "     ((effective <= {effective}) AND " +
+                      "      (expires >= {expires})) " +
+                      "    )",
           parameters: {  
             currency: currencyRec,
             id: currencyRateId,

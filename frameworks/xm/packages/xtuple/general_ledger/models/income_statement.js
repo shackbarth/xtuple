@@ -79,5 +79,5 @@ XM.IncomeStatement = XM.FinancialStatement.extend(
 
 XM.IncomeStatement.retrieve = function(columnLayout, period) {
   return false; // TODO: implement this
-}
+};
 
