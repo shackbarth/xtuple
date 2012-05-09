@@ -19,27 +19,37 @@ SC.Patch.create( /** @scope XM.Customer.prototype */ {
     /**
       @type XM.Account
     */
-    account: SC.Record.toOne('XM.Account'),
+    account: SC.Record.toOne('XM.Account', {
+      label: '_account'.loc()
+    }),
   
     /**
       @type XM.ContactInfo
     */
-    contactRelations: SC.Record.toMany('XM.ContactInfo'),
+    contactRelations: SC.Record.toMany('XM.ContactInfo', {
+      label: '_contactRelations'.loc()
+    }),
   
     /**
       @type XM.IncidentInfo
     */
-    incidentRelations: SC.Record.toMany('XM.IncidentInfo'),
+    incidentRelations: SC.Record.toMany('XM.IncidentInfo', {
+      label: '_incidentRelations'.loc()
+    }),
   
     /**
       @type XM.OpportunityInfo
     */
-    opportunitytRelations: SC.Record.toMany('XM.OpportunityInfo'),
+    opportunitytRelations: SC.Record.toMany('XM.OpportunityInfo', {
+      label: '_opportunitytRelations'.loc()
+    }),
   
     /**
       @type XM.ToDoInfo
     */
-    toDoRelations: SC.Record.toMany('XM.ToDoInfo')
+    toDoRelations: SC.Record.toMany('XM.ToDoInfo', {
+      label: '_toDoRelations'.loc()
+    })
 
   }
 

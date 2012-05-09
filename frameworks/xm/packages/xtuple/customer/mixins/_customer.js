@@ -44,151 +44,199 @@ XM._Customer = {
     @type String
   */
   number: SC.Record.attr(String, {
-    isRequired: true
+    isRequired: true,
+    label: '_number'.loc()
   }),
 
   /**
     @type String
   */
   name: SC.Record.attr(String, {
-    isRequired: true
+    isRequired: true,
+    label: '_name'.loc()
   }),
 
   /**
-    @type XM.Customer
+    @type XM.CustomerType
   */
-  customerType: SC.Record.toOne('XM.Customer', {
-    isRequired: true
+  customerType: SC.Record.toOne('XM.CustomerType', {
+    isRequired: true,
+    label: '_customerType'.loc()
   }),
 
   /**
     @type Boolean
   */
   isActive: SC.Record.attr(Boolean, {
-    defaultValue: true
+    defaultValue: true,
+    label: '_isActive'.loc()
   }),
 
   /**
     @type String
   */
-  notes: SC.Record.attr(String),
+  notes: SC.Record.attr(String, {
+    label: '_notes'.loc()
+  }),
 
   /**
     @type XM.ContactInfo
   */
   billingContact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true
+    isNested: true,
+    label: '_billingContact'.loc()
   }),
 
   /**
     @type XM.ContactInfo
   */
   correspondenceContact: SC.Record.toOne('XM.ContactInfo', {
-    isNested: true
+    isNested: true,
+    label: '_correspondenceContact'.loc()
   }),
 
   /**
     @type XM.SalesRep
   */
   salesRep: SC.Record.toOne('XM.SalesRep', {
-    isRequired: true
+    isRequired: true,
+    label: '_salesRep'.loc()
   }),
 
   /**
     @type Percent
   */
-  commission: SC.Record.attr(Percent),
+  commission: SC.Record.attr(Percent, {
+    label: '_commission'.loc()
+  }),
 
   /**
     @type String
   */
-  shipVia: SC.Record.attr(String),
+  shipVia: SC.Record.attr(String, {
+    label: '_shipVia'.loc()
+  }),
 
   /**
-    @type XM.Customer
+    @type XM.ShipCharge
   */
-  shipCharge: SC.Record.toOne('XM.Customer'),
+  shipCharge: SC.Record.toOne('XM.ShipCharge', {
+    label: '_shipCharge'.loc()
+  }),
 
   /**
     @type Boolean
   */
-  isFreeFormShipto: SC.Record.attr(Boolean),
+  isAcceptsBackorders: SC.Record.attr(Boolean, {
+    label: '_isAcceptsBackorders'.loc()
+  }),
+
+  /**
+    @type Boolean
+  */
+  isAcceptsPartialShip: SC.Record.attr(Boolean, {
+    label: '_isAcceptsPartialShip'.loc()
+  }),
+
+  /**
+    @type Boolean
+  */
+  isFreeFormShipto: SC.Record.attr(Boolean, {
+    label: '_isFreeFormShipto'.loc()
+  }),
 
   /**
     @type Boolean
   */
   isFreeFormBillto: SC.Record.attr(Boolean, {
-    defaultValue: false
+    defaultValue: false,
+    label: '_isFreeFormBillto'.loc()
   }),
 
   /**
-    @type XM.Customer
+    @type XM.Terms
   */
-  terms: SC.Record.toOne('XM.Customer', {
-    isRequired: true
+  terms: SC.Record.toOne('XM.Terms', {
+    isRequired: true,
+    label: '_terms'.loc()
   }),
 
   /**
     @type Percent
   */
   discount: SC.Record.attr(Percent, {
-    defaultValue: 0
+    defaultValue: 0,
+    label: '_discount'.loc()
   }),
 
   /**
     @type XM.Currency
   */
-  currency: SC.Record.toOne('XM.Currency'),
+  currency: SC.Record.toOne('XM.Currency', {
+    label: '_currency'.loc()
+  }),
 
   /**
     @type String
   */
   creditStatus: SC.Record.attr(String, {
-    defaultValue: 'G'
+    defaultValue: 'G',
+    label: '_creditStatus'.loc()
   }),
 
   /**
     @type String
   */
   balanceMethod: SC.Record.attr(String, {
-    defaultValue: 'B'
+    defaultValue: 'B',
+    label: '_balanceMethod'.loc()
   }),
 
   /**
     @type Number
   */
-  creditLimit: SC.Record.attr(Number),
+  creditLimit: SC.Record.attr(Number, {
+    label: '_creditLimit'.loc()
+  }),
 
   /**
-    @type XM.Customer
+    @type XM.Currency
   */
-  creditLimitCurrency: SC.Record.toOne('XM.Customer', {
+  creditLimitCurrency: SC.Record.toOne('XM.Currency', {
     defaultValue: function() {
       return XM.Currency.BASE;
-    }
+    },
+    label: '_creditLimitCurrency'.loc()
   }),
 
   /**
     @type String
   */
-  creditRating: SC.Record.attr(String),
+  creditRating: SC.Record.attr(String, {
+    label: '_creditRating'.loc()
+  }),
 
   /**
     @type Number
   */
-  graceDays: SC.Record.attr(Number),
+  graceDays: SC.Record.attr(Number, {
+    label: '_graceDays'.loc()
+  }),
 
   /**
     @type XM.TaxZone
   */
-  taxZone: SC.Record.toOne('XM.TaxZone'),
+  taxZone: SC.Record.toOne('XM.TaxZone', {
+    label: '_taxZone'.loc()
+  }),
 
   /**
     @type XM.CustomerShipto
   */
   shiptos: SC.Record.toMany('XM.CustomerShipto', {
     isNested: true,
-    inverse: 'customer'
+    inverse: 'customer',
+    label: '_shiptos'.loc()
   }),
 
   /**
@@ -196,7 +244,8 @@ XM._Customer = {
   */
   comments: SC.Record.toMany('XM.CustomerComment', {
     isNested: true,
-    inverse: 'customer'
+    inverse: 'customer',
+    label: '_comments'.loc()
   }),
 
   /**
@@ -204,7 +253,8 @@ XM._Customer = {
   */
   characteristics: SC.Record.toMany('XM.CustomerCharacteristic', {
     isNested: true,
-    inverse: 'customer'
+    inverse: 'customer',
+    label: '_characteristics'.loc()
   }),
 
   /**
@@ -212,20 +262,24 @@ XM._Customer = {
   */
   creditCards: SC.Record.toMany('XM.CustomerCreditCard', {
     isNested: true,
-    inverse: 'customer'
+    inverse: 'customer',
+    label: '_creditCards'.loc()
   }),
 
   /**
     @type XM.CustomerCreditCardPayment
   */
-  creditCardPayments: SC.Record.toMany('XM.CustomerCreditCardPayment'),
+  creditCardPayments: SC.Record.toMany('XM.CustomerCreditCardPayment', {
+    label: '_creditCardPayments'.loc()
+  }),
 
   /**
     @type XM.CustomerContact
   */
   contacts: SC.Record.toMany('XM.CustomerContact', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_contacts'.loc()
   }),
 
   /**
@@ -233,7 +287,8 @@ XM._Customer = {
   */
   items: SC.Record.toMany('XM.CustomerItem', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_items'.loc()
   }),
 
   /**
@@ -241,7 +296,8 @@ XM._Customer = {
   */
   files: SC.Record.toMany('XM.CustomerFile', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_files'.loc()
   }),
 
   /**
@@ -249,7 +305,8 @@ XM._Customer = {
   */
   images: SC.Record.toMany('XM.CustomerImage', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_images'.loc()
   }),
 
   /**
@@ -257,7 +314,8 @@ XM._Customer = {
   */
   urls: SC.Record.toMany('XM.CustomerUrl', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_urls'.loc()
   }),
 
   /**
@@ -265,7 +323,8 @@ XM._Customer = {
   */
   customers: SC.Record.toMany('XM.CustomerCustomer', {
     isNested: true,
-    inverse: 'source'
+    inverse: 'source',
+    label: '_customers'.loc()
   })
 
 };
