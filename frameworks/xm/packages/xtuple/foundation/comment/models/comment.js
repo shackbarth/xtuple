@@ -3,7 +3,7 @@
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals XM */
-/** @clas
+/** @class
 
   (Document your Model here)
 

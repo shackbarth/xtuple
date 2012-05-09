@@ -121,28 +121,33 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     isOverview: true
   })];
 
-  var proto = baseClass.prototype;
-  for (var key in proto) {
-    if (key === 'guid') continue;
-    if (key === 'type') continue;
-    if (key === 'dataState') continue;
 
-    var property = proto[key],
-        title = ("_"+key).loc();
+  if (Postbooks[className] && Postbooks[className].Lists) {
+    list = list.concat(Postbooks[className].Lists(controller));
+  } else {
+    var proto = baseClass.prototype;
+    for (var key in proto) {
+      if (key === 'guid') continue;
+      if (key === 'type') continue;
+      if (key === 'dataState') continue;
 
-    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-      var arrayKlass = property.get('typeClass');
+      var property = proto[key],
+          title = ("_"+key).loc();
 
-      var arrayController = SC.ArrayController.create({
-        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
-      });
+      if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+        var arrayKlass = property.get('typeClass');
 
-      list.push(SC.Object.create({
-        title: title,
-        surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController),
-        klass: arrayKlass,
-        attribute: key
-      }));
+        var arrayController = SC.ArrayController.create({
+          contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+        });
+
+        list.push(SC.Object.create({
+          title: title,
+          surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController),
+          klass: arrayKlass,
+          attribute: key
+        }));
+      }
     }
   }
 

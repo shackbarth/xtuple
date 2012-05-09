@@ -6,12 +6,11 @@
 /*globals XM */
 
 /**
-  @mixin
+  @namespace
   
   A mixin that handles totalling for paid and balance amounts.
 */
-XM.SubLedgerMixin = 
-  /** @scope XM.Subledger.prototype */ {
+XM.SubLedgerMixin = {
   
   /**
     Aging control for paid and balance values.

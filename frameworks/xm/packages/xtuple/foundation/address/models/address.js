@@ -6,7 +6,8 @@
 
 sc_require('mixins/_address');
 
-/**
+/** @class
+  
   (Document your Model here)
 
   @extends XM.Document
