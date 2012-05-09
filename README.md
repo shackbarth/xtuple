@@ -6,7 +6,7 @@ This repository contains the database object definitions that enable a standard 
 Prerequisites
 -------------
  * [PostgreSQL] (http://www.postgresql.org/) -- 'v9.1.0+'
- * [plV8js] (http://code.google.com/p/plv8js/wiki/PLV8) -- clone source, do *not* do not use tar downloads!
+ * [plV8js] (http://code.google.com/p/plv8js/wiki/PLV8) -- clone source, do *not* use tar downloads!
  * [Postbooks] (http://sourceforge.net/projects/postbooks) -- 'v3.8.0+'
 
 Instructions
