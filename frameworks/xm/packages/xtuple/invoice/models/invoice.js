@@ -353,7 +353,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     for(var t = 0; t < taxDetail.get('length'); t++) {
       var roundTotal = taxDetail.objectAt(t),
           rtax = roundTotal.get('tax').toMoney();
-      roudTotal.set('tax', rtax);
+      roundTotal.set('tax', rtax);
       taxTotal = taxTotal + rtax;
     }
     this.setIfChanged('lineTax',  taxTotal.toMoney());
