@@ -8,6 +8,14 @@ var Builder =       require('../build-tools');
 // setup some variables for convenience
 
 //..........................................
+// FOR DEVELOPMENT ONLY
+//
+
+var databaseUser = 'admin';
+var databaseUserPassword = 'Assemble!Aurora';
+var databaseOrganization = 'aurora';
+
+//..........................................
 // PROJECT SETTINGS
 //
 
@@ -74,6 +82,12 @@ var sortedFilesListInIndex = true;
 
 // start 'er up
 var builder = new Builder({
+
+  // DEVELOPPMENT ONLY
+  databaseUser: databaseUser,
+  databaseUserPassword: databaseUserPassword,
+  databaseOrganization: databaseOrganization,
+
   projectRoot: projectRoot,
   projectMode: projectMode,
   projectPackageMode: projectPackageMode,
