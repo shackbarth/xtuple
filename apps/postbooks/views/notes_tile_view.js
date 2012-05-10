@@ -5,7 +5,7 @@ Postbooks.CreateNotesTileView = function(controller) {
 
   var key = 'notes',
       K = Postbooks;
-  
+
   var layoutSurface = SC.LayoutSurface.create();
   layoutSurface.set('frame', SC.MakeRect(0, 42, 320, 320));
   layoutSurface.set('backgroundColor', "white");
@@ -37,10 +37,22 @@ Postbooks.CreateNotesTileView = function(controller) {
   var view = SC.TextSurface.create({
     _sc_borderColor: "transparent",
     _sc_font: " 11pt "+K.TYPEFACE,
-    value: function() {
-      var ret = controller.get('notes');
-      return ret;
-    },
+
+    // HACK: this assignment is
+    // merely to get text on the 
+    // text surface when the Incident
+    // overview View renders.
+
+    // The binding to the 'notes'
+    // property on the controller
+    // works both ways, but something
+    // is preventing a proper sync
+    // between them when the Notes
+    // 'tile' renders.
+
+    // TODO: fix controller binding
+    // to work correctly...
+    value: controller.get('notes'),
 
     // testing value binding
     valueDidChange: function() {
@@ -50,7 +62,7 @@ Postbooks.CreateNotesTileView = function(controller) {
   });
 
   //create binding from record object to value property of textSurface
-  notesBinding = SC.Binding.from(key, controller).to('value', view).sync().connect();
+  notesBinding = SC.Binding.from(key, controller).to('value', view).sync().connect().flushPendingChanges();
   bindingsRef = view.get('bindings');
   bindingsRef.pushObject(notesBinding);
 
