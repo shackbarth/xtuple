@@ -133,3 +133,49 @@ Postbooks.ProjectTask.CreateDetailListView = function(controller) {
   
   return list;
 };
+
+Postbooks.ProjectTask.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.ProjectTask.Tiles()');
+  
+  var klass = XM.ProjectTask,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  tiles.push(Postbooks.ProjectTask.CreateOverviewTileView(controller));
+  
+  return tiles;
+};
+
+Postbooks.ProjectTask.CreateOverviewTileView = function(controller) {
+  console.log('Postbooks.ProjectTask.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create(),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.ProjectTask.prototype,
+      K = Postbooks,
+      left = 120, right = 12,
+      label = null, widget = null,
+      key, property, objectKlass, objectController, objectKey;
+ 
+  // number
+  key = 'number';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_number".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  return view;
+};
