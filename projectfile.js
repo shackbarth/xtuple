@@ -48,7 +48,7 @@ var projectWWW = _path.join(__dirname, 'www');
 
 // the url to the datasource/responder for the client to
 // communicate with
-var datasourceHost = 'aurora.xtuple.com';
+var datasourceHost = 'asteroidbelt.xtuple.com';
 
 // the port on which the client is to connect to the datasource
 var datasourceHostPort = 9000;
