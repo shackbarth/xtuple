@@ -34,10 +34,10 @@ XM.TaxRegistration = XM.Document.extend(XM._TaxRegistration,
           qry;
       if(taxZone && taxAuthority && number && id) {
         qry = SC.Query.local(XM.TaxRegistration, { 
-          conditions: "id != {id} "
-                      + "AND taxZone = {taxZone} "
-                      + "AND taxAuthority = {taxAuthority} "
-                      + "AND number = {number} ", 
+          conditions: "id != {id} " +
+                      "AND taxZone = {taxZone} " +
+                      "AND taxAuthority = {taxAuthority} " +
+                      "AND number = {number} ", 
           parameters: { 
             id: id,
             taxZone: taxZone,

@@ -59,18 +59,18 @@ XM.TaxType._xm_setTaxTypeConstant = function(name) {
       ary.removeObserver('status', ary, observer);
       XM.TaxType[prop] = ary.firstObject().get('id');
     }
-  })
-}
+  });
+};
 
 /** @private */
 XM.TaxType._xm_setTaxTypeAdjustment = function() {
   XM.TaxType._xm_setTaxTypeConstant('Adjustment');
-}
+};
 
 /** @private */
 XM.TaxType._xm_setTaxTypeFreight = function() {
   XM.TaxType._xm_setTaxTypeConstant('Freight');
-}
+};
 
 // TODO: Move this to start up
 XT.ready(function() {

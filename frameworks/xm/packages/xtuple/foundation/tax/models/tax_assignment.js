@@ -33,10 +33,10 @@ XM.TaxAssignment = XT.Record.extend(XM._TaxAssignment,
 
       if(taxZone && taxType && taxCode && id) {
         qry = SC.Query.local(XM.TaxAssignment, { 
-          conditions: "id != {id} "
-                      + "AND taxZone = {taxZone} "
-                      + "AND taxType = {taxType} "
-                      + "AND taxCode = {taxCode} ", 
+          conditions: "id != {id} " +
+                      "AND taxZone = {taxZone} " +
+                      "AND taxType = {taxType} " +
+                      "AND taxCode = {taxCode} ", 
           parameters: { 
             id: id,
             taxZone: taxZone,

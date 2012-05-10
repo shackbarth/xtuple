@@ -117,7 +117,7 @@ XM.Money = XT.Object.extend(
       var store = this.get('store');
       this._xm_currency = store.find(XM.Currency, XM.Currency.BASE);
     }
-    return this._xm_currency
+    return this._xm_currency;
   }.property(),
   
   /**
@@ -170,9 +170,9 @@ XM.Money = XT.Object.extend(
 
     // build the query
     qry = SC.Query.local(XM.CurrencyRate, {
-      conditions: "currency = {currency} "
-                + "AND effective <= {effective} "
-                + "AND expires >= {effective} ",
+      conditions: "currency = {currency} " +
+                  "AND effective <= {effective} " +
+                  "AND expires >= {effective} ",
       parameters: {  
         currency: currency,
         effective: effective 
@@ -193,7 +193,7 @@ XM.Money = XT.Object.extend(
         that.setIfChanged('exchangeRate', ary.firstObject() ? ary.firstObject().get('rate') : 0);
         that.set('isLoading', false);
       }
-    })
+    });
     
     // remember what we did so we don't run again unless we need to
     this._xm_currencyCache = currency;

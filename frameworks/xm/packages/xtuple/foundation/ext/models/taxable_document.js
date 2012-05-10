@@ -29,8 +29,6 @@ XM.TaxableDocument = XM.Document.extend(XM.Taxable,
     @type Number
   */
   miscTax: 0,
-  
-  /**
 
   //..................................................
   // CALCULATED PROPERTIES

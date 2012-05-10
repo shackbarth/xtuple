@@ -8,6 +8,14 @@ var Builder =       require('../build-tools');
 // setup some variables for convenience
 
 //..........................................
+// FOR DEVELOPMENT ONLY
+//
+
+var databaseUser = 'admin';
+var databaseUserPassword = 'Assemble!Aurora';
+var databaseOrganization = 'aurora';
+
+//..........................................
 // PROJECT SETTINGS
 //
 
@@ -40,7 +48,7 @@ var projectWWW = _path.join(__dirname, 'www');
 
 // the url to the datasource/responder for the client to
 // communicate with
-var datasourceHost = 'aurora.xtuple.com';
+var datasourceHost = 'asteroidbelt.xtuple.com';
 
 // the port on which the client is to connect to the datasource
 var datasourceHostPort = 9000;
@@ -74,6 +82,12 @@ var sortedFilesListInIndex = true;
 
 // start 'er up
 var builder = new Builder({
+
+  // DEVELOPPMENT ONLY
+  databaseUser: databaseUser,
+  databaseUserPassword: databaseUserPassword,
+  databaseOrganization: databaseOrganization,
+
   projectRoot: projectRoot,
   projectMode: projectMode,
   projectPackageMode: projectPackageMode,

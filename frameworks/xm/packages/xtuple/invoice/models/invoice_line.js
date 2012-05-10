@@ -74,7 +74,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       var fractional = true;
       if(value) {
         var isItem = record.get('isItem'),
-            item = record.get('item'),
+            item = record.get('item');
         fractional = isItem && item ? item.get('fractional') : false;
       }
       return fractional ? value : Math.floor(value);
@@ -87,7 +87,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       var fractional = true;
       if(value) {
         var isItem = record.get('isItem'),
-            item = record.get('item'),
+            item = record.get('item');
         fractional = isItem && item ? item.get('fractional') : false;
       }
       return fractional ? value : Math.floor(value);
@@ -147,7 +147,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         }
         units = store.find(qry);
         that.setIfChanged('sellingUnits', units);
-      }
+      };
       
       // function call 
       XM.Item.sellingUnits(item, callback);
@@ -262,7 +262,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         // get the unit of measure conversion from the data source
         callback = function(err, result) {
           that.setIfChanged('quantityUnitRatio', result);
-        }
+        };
     
         // function call
         XM.Item.unitToUnitRatio(item, quantityUnit, inventoryUnit, callback);
@@ -289,7 +289,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         // get the unit of measure conversion from the data source
         callback = function(err, result) {
           that.setIfChanged('priceUnitRatio', result);
-        }
+        };
     
         // function call
         XM.Item.unitToUnitRatio(item, priceUnit, inventoryUnit, callback);
@@ -303,7 +303,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     Sets default price based on item list price minus customer discount.
     Overload this function for more comprehensive price schedule support.
   */
-  priceCriteriaDidChange: function() {;    
+  priceCriteriaDidChange: function() {    
     if (this.isNotDirty()) return;
      
     // recalculate price
@@ -343,7 +343,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
       // callback
       callback = function(err, result) {
         that.setTaxDetail(result, 'taxDetail', 'tax');
-      }
+      };
 
       // define call
       dispatch = XT.Dispatch.create({
@@ -384,7 +384,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
         var store = that.get('store'),
             taxType = store.find('XM.TaxType', result);
         that.set('taxType', taxType);
-      }
+      };
 
       // make the request
       XM.Item.taxType(item, taxZone, callback);

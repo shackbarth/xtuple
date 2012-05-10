@@ -118,7 +118,7 @@ XM.SubLedger = XM.TaxableDocument.extend(XM.SubLedgerMixin,
     callback = function(err, result) {
       if (err) store.dataSourceDidError(storeKey, err);
       else store.dataSourceDidComplete(storeKey);
-    }
+    };
 
     // define call
     dispatch = XT.Dispatch.create({

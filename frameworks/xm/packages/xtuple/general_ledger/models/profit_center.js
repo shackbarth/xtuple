@@ -24,7 +24,7 @@ XM.ProfitCenter = XM.Document.extend(XM._ProfitCenter,
 	number: SC.Record.attr(String, {
 		fromType: function(record, key, value) {
 			var segmentSize = XT.session.settings.get('GLProfitSize');
-			return value.substr(0,segmentSize)
+			return value.substr(0,segmentSize);
 		} 
 	}),
 

@@ -202,7 +202,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     // define callback
     callback = function(err, result) {
       this.refresh();
-    }
+    };
     
     // set up
     dispatch = XT.Dispatch.create({
@@ -235,7 +235,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     // define callback
     callback = function(err, result) {
       that.refresh();
-    }
+    };
     
     // set up
     dispatch = XT.Dispatch.create({
@@ -291,7 +291,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
         credit = 0;
     for(var i = 0; i < credits.get('length'); i++) {
       var status = credits.objectAt(i).get('status');
-      if ((status & SC.Record.DESTROYED) == 0) {
+      if ((status & SC.Record.DESTROYED) === 0) {
         credit = credit + credits.objectAt(i).get('amount');
       }
     }
@@ -308,7 +308,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       var line = lines.objectAt(i),
           status = line.get('status');
 
-     var extendedPrice = (status & SC.Record.DESTROYED) == 0 ? line.get('extendedPrice') : 0;
+     var extendedPrice = (status & SC.Record.DESTROYED) === 0 ? line.get('extendedPrice') : 0;
       subTotal = subTotal + extendedPrice;
     }
     this.setIfChanged('subTotal', subTotal.toMoney());
@@ -328,7 +328,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
           taxes = line.get('taxDetail'),
           status = line.get('status');
 
-      if ((status & SC.Record.DESTROYED) == 0) {
+      if ((status & SC.Record.DESTROYED) === 0) {
         for (var n = 0; n < taxes.get('length'); n++) {
           var lineTax = taxes.objectAt(n),
               taxCode = lineTax.get('taxCode'),
@@ -350,10 +350,10 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     }
 
     // next round and sum up each tax code for total
-    for(var i = 0; i < taxDetail.get('length'); i++) {
-      var codeTotal = taxDetail.objectAt(i),
-          rtax = codeTotal.get('tax').toMoney();
-      codeTotal.set('tax', rtax);
+    for(var t = 0; t < taxDetail.get('length'); t++) {
+      var roundTotal = taxDetail.objectAt(t),
+          rtax = roundTotal.get('tax').toMoney();
+      roudTotal.set('tax', rtax);
       taxTotal = taxTotal + rtax;
     }
     this.setIfChanged('lineTax',  taxTotal.toMoney());
@@ -376,7 +376,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
       // callback
       callback = function(err, result) {
         this.setTaxDetail(result, 'freightTaxDetail', 'freightTax');
-      }
+      };
 
       // define call
       dispatch = XT.Dispatch.create({
@@ -444,7 +444,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
             
         // account for unsaved changes
         for (var i = 0; i < credits.get('length'); i++) {
-          var credit = credits.objectAt(i)
+          var credit = credits.objectAt(i),
               status = credit.get('status'),
               amount = credit.get('amount');
           if (status == SC.Record.READY_NEW) value = value - amount;
@@ -453,7 +453,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
         
         // update the value
         that.setIfChanged('outstandingCredit', value);
-      }
+      };
      
       // function call
       XM.Customer.outstandingCredit(customer, currency, invoiceDate, callback);
@@ -487,7 +487,7 @@ XM.Invoice = XM.TaxableDocument.extend(XM._Invoice,
     Recalculate all line taxes.
   */
   lineTaxTypeCriteriaDidChange: function() {
-    if (this.isNotDirty()) return
+    if (this.isNotDirty()) return;
     
     // recalculate line tax
     var lines = this.get('lines'),

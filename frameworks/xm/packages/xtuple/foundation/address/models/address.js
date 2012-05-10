@@ -46,7 +46,7 @@ XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
     @param {XM.Address} address
     @return {XM.Address} copy of the receiver
   */
-  copy: function() { return XM.Address.copy(this) },
+  copy: function() { return XM.Address.copy(this); },
 
   /**
     This function formats the multiple lines of an address into a
@@ -55,14 +55,14 @@ XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
     @param {isHtml} Optional. Specify whether line breaks are to be HTML
     @return {String}
   */
-  format: function(isHtml) { return XM.Address.format(this, isHtml ? isHtml : false) },
+  format: function(isHtml) { return XM.Address.format(this, isHtml ? isHtml : false); },
   
   /**
     A formatted address that includes city, state and country.
     
     @return {String}
   */
-  formatShort: function() {return XM.Address.formatShort(this) },
+  formatShort: function() {return XM.Address.formatShort(this); },
 
   /**
     Returns an integer from the server indicating how many times the address is used by other
@@ -70,7 +70,7 @@ XM.Address = XM.Document.extend(XM._Address, SC.Copyable,
 
     @return {Number}
   */
-  useCount: function() { return XM.Address.useCount(this) }
+  useCount: function() { return XM.Address.useCount(this); }
 
 });
 
@@ -91,7 +91,7 @@ XM.Address.copy = function(address) {
   delete hash.notes;
 
   return store.createRecord(XM.Address, hash).normalize();
-}
+};
 
 /**
   Find an address with the same fields as the passed. Only
@@ -120,7 +120,7 @@ XM.Address.findExisting = function(address, callback) {
       country: address.get('country')
     },
     action: callback
-  })
+  });
 
   console.log("XM.Address.findExisting for: %@".fmt(JSON.stringify(address.get('attributes'))));
 
@@ -223,7 +223,7 @@ XM.Address.useCount = function(address, callback) {
     functionName: 'useCount',
     parameters: address.get('id'),
     action: callback
-  })
+  });
 
   console.log("XM.Address.useCount for: %@".fmt(address.get('id')));
 
