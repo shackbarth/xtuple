@@ -37,6 +37,10 @@ Postbooks.CreateNotesTileView = function(controller) {
   var view = SC.TextSurface.create({
     _sc_borderColor: "transparent",
     _sc_font: " 11pt "+K.TYPEFACE,
+    value: function() {
+      var ret = controller.get('notes');
+      return ret;
+    },
 
     // testing value binding
     valueDidChange: function() {
