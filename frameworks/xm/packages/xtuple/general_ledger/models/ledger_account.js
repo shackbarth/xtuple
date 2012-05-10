@@ -24,7 +24,7 @@ XM.LedgerAccount = XM.Document.extend(XM._LedgerAccount,
 	number: SC.Record.attr(String, {
 		fromType: function(record, key, value) {
 			var segmentSize = XT.session.settings.get('GLMainSize');
-			return value.substr(0,segmentSize)
+			return value.substr(0,segmentSize);
 		} 
 	}),
 

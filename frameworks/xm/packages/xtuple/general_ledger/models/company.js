@@ -25,7 +25,7 @@ XM.Company = XM.Document.extend(XM._Company,
 	number: SC.Record.attr(String, {
 		fromType: function(record, key, value) {
 			var segmentSize = XT.session.settings.get('GLCompanySize');
-			return value.substr(0,segmentSize)
+			return value.substr(0,segmentSize);
 		} 
 	}),
 

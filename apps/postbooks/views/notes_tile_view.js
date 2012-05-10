@@ -1,5 +1,6 @@
 Postbooks.CreateNotesTileView = function(controller) {
 
+  /**
   var view = Postbooks.TileView.create({ title: "_notes".loc() }),
       layers = view.get('layers'),
       y = 42,
@@ -7,9 +8,11 @@ Postbooks.CreateNotesTileView = function(controller) {
       left = 12, right = 12,
       widget = null,
       key;
+  */
  
-  key = 'notes';
+  var key = 'notes';
 
+  /**
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 70, right: right },
     borderColor: 'white',
@@ -17,13 +20,50 @@ Postbooks.CreateNotesTileView = function(controller) {
     valueBinding: SC.Binding.from(key, controller)
   });
   layers.pushObject(widget);
-
-  /**
-  var view = SC.TextSurface.create({
-    value: 'Hello world',
-  });
-  view.set('frame', SC.MakeRect(0, 42, 320, 320));
   */
 
-  return view;
+  var draggableSurface = SC.CompositeSurface.create({
+    mouseDown: function(evt) {
+      // console.log('draggableSurface#mouseDown');
+      this._clientX = evt.clientX;
+      this._clientY = evt.clientY;
+      return true;
+    },
+
+    mouseDragged: function(evt) {
+      // console.log('draggableSurface#mouseDragged');
+      SC.AnimationTransaction.begin({ duration: 0 });
+      var frame = this.get('frame');
+      frame.x = frame.x + evt.clientX - this._clientX;
+      frame.y = frame.y + evt.clientY - this._clientY;
+      this._clientX = evt.clientX;
+      this._clientY = evt.clientY;
+      SC.AnimationTransaction.end();
+      return true;
+    },
+
+    mouseUp: function(evt) {
+      // console.log('draggableSurface#mouseUp');
+      SC.AnimationTransaction.begin({ duration: 0 });
+      var frame = this.get('frame');
+      frame.x = frame.x + evt.clientX - this._clientX;
+      frame.y = frame.y + evt.clientY - this._clientY;
+      delete this._clientX;
+      delete this._clientY;
+      SC.AnimationTransaction.end();
+      return true;
+    }
+  });
+  draggableSurface.set('frame', SC.MakeRect(0, 42, 320, 320));
+  draggableSurface.set('backgroundColor', "#fdf6e3");
+
+  var view = SC.TextSurface.create({
+    value: 'Hello world',
+    // valueBinding: SC.Binding.from(key, controller).noDelay()
+  });
+  view.set('frame', SC.MakeRect(0, 34, 310, 276));
+
+  draggableSurface.get('subsurfaces').pushObject(view);
+
+  return draggableSurface;
 };

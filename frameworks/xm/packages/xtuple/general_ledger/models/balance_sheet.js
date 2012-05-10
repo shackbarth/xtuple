@@ -19,5 +19,5 @@ XM.BalanceSheet = XM.FinancialStatement.extend(
 
 XM.BalanceSheet.retrieve = function(columnLayout, period) {
   return false; // TODO: implement this
-}
+};
 

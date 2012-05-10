@@ -44,10 +44,10 @@ XM.Item = XM.Document.extend(XM._Item, XM.Documents,
    var status = this.get('status'),
        itemType = this.get('itemType');
    if(status & SC.Record.READY) {
-	   if(itemType === 'R'){
-		   this.set('isSold', true);
-		 } 
-  }
+     if(itemType === 'R'){
+       this.set('isSold', true);
+     } 
+   }
   }.observes('itemType'),
 	
 	/**
@@ -81,7 +81,7 @@ XM.Item = XM.Document.extend(XM._Item, XM.Documents,
 */
 XM.Item.sellingUnits = function(item, callback) {
   return XM.Item._xm_units(item, 'sellingUnits', callback);
-}
+};
 
 /**
   Request the selling units of measure for an item.
@@ -92,7 +92,7 @@ XM.Item.sellingUnits = function(item, callback) {
 */
 XM.Item.materialIssueUnits = function(item, callback) {
   return XM.Item._xm_units(item, 'materialIssueUnits', callback);
-}
+};
 
 /**
   Requests a unit of measure conversion ratio for a given item, from unit 
@@ -127,7 +127,7 @@ XM.Item.unitToUnitRatio = function(item, fromUnit, toUnit, callback) {
   item.get('store').dispatch(dispatch);
   
   return this;
-}
+};
 
 /**
   Request the tax type for an item in a given tax zone.
@@ -158,7 +158,7 @@ XM.Item.taxType = function(item, taxZone, callback) {
   item.get('store').dispatch(dispatch);
   
   return this;
-}
+};
 
 /** @private */
 XM.Item._xm_units = function(item, type, callback) {
@@ -215,5 +215,5 @@ XM.Item._xm_units = function(item, type, callback) {
   }
   
   return this;
-}
+};
 

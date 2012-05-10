@@ -16,6 +16,24 @@ sc_require('mixins/_to_do');
 XM.ToDo = XT.Record.extend(XM._ToDo, XM.Documents,
   /** @scope XM.ToDo.prototype */ {
     
+  toDoStatusProxy: function() {
+    var toDoStatus = this.get('toDoStatus'),
+        K = XM.ToDo,
+        ret;
+
+    switch (toDoStatus) {
+      case K.PENDING:
+        ret = K.PENDING;
+        break;
+      case K.DEFERRED:
+        ret = K.DEFERRED;
+        break;
+      default:
+        ret = K.NEITHER;
+    }
+    return ret;
+  }.property('toDoStatus').cacheable(),
+
   // .................................................
   // CALCULATED PROPERTIES
   //
@@ -54,12 +72,50 @@ XM.ToDo = XT.Record.extend(XM._ToDo, XM.Documents,
   // METHODS
   //
 
+  /**
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    var K = XM.ToDo;
+    this.set('toDoStatusProxy', K.NEITHER);
+  },
+  */
+
   //..................................................
   // OBSERVERS
   //
 
-});
+  /**
+    @private
 
+    If startDate is entered and toDoStatusProxy is 'N' the toDoStatus is 'I' (in-progress).
+
+    If completeDate is entered the toDoStaus is 'C' (complete).
+  */
+  statusDidChange: function() {
+    var status = this.get('status'),
+        toDoStatus = this.get('toDoStatus'),
+        proxy = this.get('toDoStatusProxy'),
+        startDate = this.get('startDate'),
+        completeDate = this.get('completeDate'),
+        K = XM.ToDo;
+
+    if(status & SC.Record.READY) {
+      if(completeDate) {
+        this.set('toDoStatus', K.COMPLETED);
+        this.set('toDoStatusProxy', K.NEITHER);
+      } else if(proxy === K.PENDING) {
+        this.set('toDoStatus', proxy);
+      } else if (proxy === K.DEFERRED) {
+        this.set('toDoStatus', proxy);
+      } else if (startDate) {
+        this.set('toDoStatus', K.IN_PROCESS);
+      } else {
+        this.set('toDoStatus', K.NEITHER);
+      }
+    }
+  }.observes('toDoStatus', 'toDoStatusProxy', 'startDate', 'completeDate')
+  
+});
 
 XM.ToDo.mixin( /** @scope XM.ToDo */ {
 

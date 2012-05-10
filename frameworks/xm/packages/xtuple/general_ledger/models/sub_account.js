@@ -24,7 +24,7 @@ XM.SubAccount = XM.Document.extend(XM._SubAccount,
 	number: SC.Record.attr(String, {
 		fromType: function(record, key, value) {
 			var segmentSize = XT.session.settings.get('GLSubaccountSize');
-			return value.substr(0,segmentSize)
+			return value.substr(0,segmentSize);
 		} 
 	}),
 

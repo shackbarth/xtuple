@@ -80,13 +80,13 @@ XM.Currency = XM.Document.extend(XM._Currency,
         
       callback = function(err, result) {
         if(!err) {
-          var err = XT.errors.findProperty('code', 'xt1022'),
-              id = record.get('id'),
+          var id = record.get('id'),
               isConflict = result ? result !== id  : false;
+          err = XT.errors.findProperty('code', 'xt1022');
             
           record.updateErrors(err, isConflict);
         }
-      }
+      };
       
       XT.Record.findExisting.call(record, 'abbreviation', abbr, callback);
     }
@@ -123,9 +123,9 @@ XM.Currency.rate = function(currency, effective, callback) {
     
   // build the query
   qry = SC.Query.local(XM.CurrencyRate, {
-    conditions: "currency = {currency} "
-              + "AND effective <= {effective} "
-              + "AND expires >= {effective} ",
+    conditions: "currency = {currency} " +
+                "AND effective <= {effective} " +
+                "AND expires >= {effective} ",
     parameters: {
       currency: currency,
       effective: effective
@@ -144,10 +144,10 @@ XM.Currency.rate = function(currency, effective, callback) {
         callback(err);
       }
     }
-  })
+  });
   
   return this;
-}
+};
 
 XM.Currency.BASE = null;
 
@@ -167,8 +167,8 @@ XM.Currency._xm_setCurrencyBase = function() {
       ary.removeObserver('status', ary, observer);
       XM.Currency.BASE = ary.firstObject().get('id');
     }
-  })
-}
+  });
+};
 
 // TODO: Move this to start up
 XT.ready(function() {

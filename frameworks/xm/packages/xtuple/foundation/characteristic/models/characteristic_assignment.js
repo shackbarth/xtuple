@@ -44,9 +44,9 @@ XM.CharacteristicAssignment = XT.Record.extend(
   characteristicDidChange: function() {
     var characteristic = this.get('characteristic');
 
-    if(this._oldChar && this._oldChar != characteristic) {
+    if (this._oldChar && this._oldChar != characteristic) {
       this.set('value', '');
-    };
+    }
 
     this._oldChar = characteristic;
 

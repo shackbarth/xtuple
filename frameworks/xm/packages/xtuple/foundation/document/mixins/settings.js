@@ -46,10 +46,10 @@ XM.Settings = {
       if(!error) {
         // Remove committed changes from array
         for(var prop in changed) {
-          globalChanged.removeObject(prop);
+          if (globalChanged[prop]) globalChanged.removeObject(prop);
         }
       }
-    }
+    };
     
     dispatch = XT.Dispatch.create({
       className: self.get('className'),

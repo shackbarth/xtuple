@@ -60,7 +60,7 @@ XM.Terms = XM.Document.extend(XM._Terms,
 */
 XM.Terms.calculateDiscountDate = function(terms, date) {
   return XM.Terms._calculateDate(terms, date, 'discountDays');
-}
+};
 
 /**
   Calculate a due date based on a given document date.
@@ -71,7 +71,7 @@ XM.Terms.calculateDiscountDate = function(terms, date) {
 */
 XM.Terms.calculateDueDate = function(terms, date) {
   return XM.Terms._calculateDate(terms, date, 'dueDays');
-}
+};
 
 /** @private
   Calculate a date to advance based on a given document date
@@ -107,8 +107,8 @@ XM.Terms._calculateDate = function(terms, date, basis) {
       result = result.advance({ month: 1 });
     }
   }
-  return result
-}
+  return result;
+};
 
 XM.Terms.mixin( /** @scope XM.Terms */ {
 
