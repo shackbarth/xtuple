@@ -36,7 +36,7 @@ select xt.install_js('XM','Receivable','xtuple', $$
       } else {
         sql = "select createARCreditMemo( $1,$2::integer, $3::text, $4, $5::date, $6::numeric, $7, $8, $9, $10, $11::date, $12, $13, $14::numeric, $15 ) as result";;
       }
-      ret = executeSql(sql, [receivable.guid, receivable.customer.guid, receivable.number, receivable.orderNumber,
+      ret = plv8.execute(sql, [receivable.guid, receivable.customer.guid, receivable.number, receivable.orderNumber,
                              receivable.documentDate, receivable.amount, receivable.notes, receivable.reasonCode,
                              salesCategory, ledgerAccount, receivable.dueDate, receivable.terms, receivable.salesRep,
                              receivable.commissionDue, receivable.currency])[0].result;

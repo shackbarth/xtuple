@@ -22,7 +22,7 @@ select xt.install_js('XM','Project','xtuple', $$
       err = "Access Denied.";
 
     if(!err) {
-      return executeSql(sql)[0].result;
+      return plv8.execute(sql)[0].result;
     }
 
     throw new Error(err);

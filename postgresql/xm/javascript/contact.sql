@@ -31,7 +31,7 @@ select xt.install_js('XM','Contact','xtuple', $$
 
 	  if(!err) {
 
-			ret = executeSql("select cntctmerge($1,$2,$3) AS result;", [sourceContactId,targetContactId,purge])[0].result;
+			ret = plv8.execute("select cntctmerge($1,$2,$3) AS result;", [sourceContactId,targetContactId,purge])[0].result;
 
 			return ret;
 	  }
@@ -55,7 +55,7 @@ select xt.install_js('XM','Contact','xtuple', $$
 
 	  if(!err) {
 
-			ret = executeSql("select cntctused($1) AS result;", [contactId])[0].result;
+			ret = plv8.execute("select cntctused($1) AS result;", [contactId])[0].result;
 
 			return ret;
 	  }
@@ -79,7 +79,7 @@ select xt.install_js('XM','Contact','xtuple', $$
 
 	  if(!err) {
 
-			ret = executeSql("select cntctrestore($1) AS result;", [mergeContactId])[0].result;
+			ret = plv8.execute("select cntctrestore($1) AS result;", [mergeContactId])[0].result;
 
 			return ret;
 	  }

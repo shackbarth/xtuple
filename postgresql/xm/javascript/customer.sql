@@ -48,7 +48,7 @@ select xt.install_js('XM','Customer','xtuple', $$
         + "        and  (aropen_doctype in ('C', 'R')) "
         + "        and  (aropen_open)) "
         + "      group by aropen_id, aropen_amount, aropen_paid, aropen_curr_id) as data;";
-    return executeSql(sql,[customerId, currencyId, effective])[0].amount;
+    return plv8.execute(sql,[customerId, currencyId, effective])[0].amount;
   }
   
   /** 
@@ -76,7 +76,7 @@ select xt.install_js('XM','Customer','xtuple', $$
               + "where (metric_name='DefaultAutoCreditWarnGraceDays')), 30))) > 0) "
               + " and (cust_autoupdatestatus) "
               + " and (cust_creditstatus = 'G')) ",
-        rec = executeSql(sql);
+        rec = plv8.execute(sql);
       return rec.length ? JSON.stringify (rec) : '{}';
     }
     throw new Error(err);

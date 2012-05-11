@@ -40,7 +40,7 @@ select xt.install_js('XM','Payable','xtuple', $$
       } else {
         sql = "select createAPCreditMemo($1::integer ,$2::integer, NULL::integer, $3::text, $4, $5::date, $6::numeric, $7, $8, $9::date, $10, $11) as result";;
       }
-      ret = executeSql(sql, [payable.guid, payable.vendor.guid, payable.number, payable.orderNumber,
+      ret = plv8.execute(sql, [payable.guid, payable.vendor.guid, payable.number, payable.orderNumber,
                              payable.documentDate, payable.amount, payable.notes, ledgerAccount, 
                              payable.dueDate, payable.terms, payable.currency])[0].result;
       if (ret === 0) err = "Amount must be greater than zero.";
@@ -65,7 +65,7 @@ select xt.install_js('XM','Payable','xtuple', $$
     else if(bankAccountId === undefined) err = "No bank account specified";
 
     if(!err) {
-      ret = executeSql("select selectPayment($1, $2) AS result;", [payableId, bankAccountId])[0].result;
+      ret = plv8.execute("select selectPayment($1, $2) AS result;", [payableId, bankAccountId])[0].result;
 
       switch (ret)
       {
@@ -123,7 +123,7 @@ select xt.install_js('XM','Payable','xtuple', $$
           sql = sql.replace(/{bankAccnt}/, bankAccountId)
                    .replace(/{conditions}/, 'vend_id = ' + target);
       }
-      return executeSql(sql)[0].result;
+      return plv8.execute(sql)[0].result;
     }
     
     throw new Error(err);
@@ -169,7 +169,7 @@ select xt.install_js('XM','Payable','xtuple', $$
           sql = sql.replace(/{bankAccnt}/, bankAccountId)
                    .replace(/{conditions}/, 'vend_id = ' + target);
       }
-      return executeSql(sql)[0].result;
+      return plv8.execute(sql)[0].result;
     }
     
     throw new Error(err);
@@ -189,7 +189,7 @@ select xt.install_js('XM','Payable','xtuple', $$
 	  else if(payableId === undefined) err = "No payable specified";
 
 	  if(!err) {
-	    ret = executeSql("select clearPayment($1) AS result;", [payableId])[0].result;
+	    ret = plv8.execute("select clearPayment($1) AS result;", [payableId])[0].result;
 
 	    return ret;
 	  }
@@ -237,7 +237,7 @@ select xt.install_js('XM','Payable','xtuple', $$
 	        sqlSelected = sql.replace(/{apselect_id}/, payableId)
 	                 .replace(/{conditions}/, 'vend_id = ' + target);
 	    }
-	    return executeSql(sql)[0].result;
+	    return plv8.execute(sql)[0].result;
 	  }
   
     throw new Error(err);
@@ -257,7 +257,7 @@ select xt.install_js('XM','Payable','xtuple', $$
 	  else if(payableId === undefined) err = "No payable specified";
 
 	  if(!err) {
-	    ret = executeSql("select apopen_status FROM apopen WHERE apopen_id = $1 as result;", [payableId])[0].result;
+	    ret = plv8.execute("select apopen_status FROM apopen WHERE apopen_id = $1 as result;", [payableId])[0].result;
 
 	    return ret;
 	  }
@@ -303,7 +303,7 @@ select xt.install_js('XM','Payable','xtuple', $$
 	        sql = sql.replace(/{vend_id}/, vendorId)
 	                 .replace(/{conditions}/, 'vend_id = ' + target);
 	    }
-	    return executeSql(sql)[0].result;
+	    return plv8.execute(sql)[0].result;
 	  }
   
 	  throw new Error(err);

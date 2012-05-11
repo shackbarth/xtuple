@@ -19,7 +19,7 @@ select xt.install_js('XM','Voucher','xtuple', $$
     if(!data.checkPrivilege('PostVouchers')) err = "Access Denied.";
     else if(voucherId === undefined) err = "No Voucher specified.";
     if(!err) {
-      ret = executeSql("select postvoucher($1, false) as result;", [voucherId])[0].result;
+      ret = plv8.execute("select postvoucher($1, false) as result;", [voucherId])[0].result;
 
       switch (ret)
       {
@@ -55,7 +55,7 @@ select xt.install_js('XM','Voucher','xtuple', $$
     if(!data.checkPrivilege('PostVouchers')) err = "Access Denied.";
 
     if(!err) {
-      ret = executeSql("select postvouchers(false) as result;")[0].result;
+      ret = plv8.execute("select postvouchers(false) as result;")[0].result;
 
       switch (ret)
       {
@@ -92,7 +92,7 @@ select xt.install_js('XM','Voucher','xtuple', $$
     else if(voucherId === undefined) err = "No voucher specified";
 
     if(!err) {
-      return executeSql("select voidapopenvoucher($1) as result;", [apOpenId])[0].result;
+      return plv8.execute("select voidapopenvoucher($1) as result;", [apOpenId])[0].result;
     }
 
     throw new Error(err);
@@ -114,7 +114,7 @@ select xt.install_js('XM','Voucher','xtuple', $$
       err = "Access Denied.";
 
     if(!err) {
-      return executeSql(sql)[0].result;
+      return plv8.execute(sql)[0].result;
     }
 
     throw new Error(err);

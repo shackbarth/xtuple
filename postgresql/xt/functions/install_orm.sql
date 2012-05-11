@@ -3,7 +3,7 @@ create or replace function xt.install_orm(json text) returns void volatile as $$
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select xt.js_init()');
+  if(!this.isInitialized) plv8.execute('select xt.js_init()');
 
   XT.Orm.install(json);
   

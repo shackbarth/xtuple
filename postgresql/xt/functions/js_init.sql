@@ -217,7 +217,7 @@ create or replace function xt.js_init() returns void as $$
   sql = 'select distinct js_namespace as "nameSpace" '
         + 'from xt.js '
         + 'where js_active; '
-  res = executeSql(sql);
+  res = plv8.execute(sql);
   if(res.length) {
     for(var i = 0; i < res.length; i++) {
       if(!this[res[i].nameSpace]) this[res[i].nameSpace] = {};
@@ -229,7 +229,7 @@ create or replace function xt.js_init() returns void as $$
         + 'from xt.js '
         + 'where js_active '
         + 'order by js_ext ';
-    res = executeSql(sql);
+    res = plv8.execute(sql);
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
         if(DEBUG) print(NOTICE, 'loading javascript for type->', res[i].js_type);

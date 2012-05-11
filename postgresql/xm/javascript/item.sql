@@ -35,7 +35,7 @@ select xt.install_js('XM','item','xtuple', $$
   */
   XM.Item.taxType = function(itemId, taxZoneId) {
     var sql = 'select getItemTaxType($1, $2) as "taxType";'
-    return executeSql(sql, [itemId, taxZoneId])[0].taxType;
+    return plv8.execute(sql, [itemId, taxZoneId])[0].taxType;
   }
 
   /**
@@ -48,7 +48,7 @@ select xt.install_js('XM','item','xtuple', $$
   */
   XM.Item.unitToUnitRatio = function(itemId, fromUnitId, toUnitId) {
     var sql = 'select itemUomToUomRatio($1, $2, $3) as "ratio"';
-    return executeSql(sql, [itemId, fromUnitId, toUnitId])[0].ratio;
+    return plv8.execute(sql, [itemId, fromUnitId, toUnitId])[0].ratio;
   }
   
   /** @private
@@ -78,7 +78,7 @@ select xt.install_js('XM','item','xtuple', $$
             + "where uomtype_name=$2 "
             + " and itemuomconv_item_id=$1) as units ";
 
-     return JSON.stringify(executeSql(sql, [itemId, type])[0]);
+     return JSON.stringify(plv8.execute(sql, [itemId, type])[0]);
   }
 
 $$ );

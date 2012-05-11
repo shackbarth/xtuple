@@ -35,7 +35,7 @@ select xt.install_js('XM','Journal','xtuple', $$
     if(!err) {
 
       if(!isPostByType) {
-        ret = executeSql("select postjournals($1) as result;", [target])[0].result;
+        ret = plv8.execute("select postjournals($1) as result;", [target])[0].result;
         switch (ret)
         {
           case -4:

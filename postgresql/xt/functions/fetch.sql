@@ -3,7 +3,7 @@ create or replace function xt.fetch(data_hash text) returns text as $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select xt.js_init()');
+  if(!this.isInitialized) plv8.execute('select xt.js_init()');
 
   var query = JSON.parse(data_hash).query,
       recordType = query.recordType

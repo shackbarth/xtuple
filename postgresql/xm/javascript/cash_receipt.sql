@@ -14,7 +14,7 @@ select xt.install_js('XM','CashReceipt','xtuple', $$
   XM.CashReceipt.post = function(cashReceiptIds) {
     var ret, sql, err,
         data = Object.create(XT.Data),
-        journal = executeSql("select fetchJournalNumber('C/R') as journal")[0].journal,
+        journal = plv8.execute("select fetchJournalNumber('C/R') as journal")[0].journal,
         ids = XT.typeOf(cashReceiptIds) === 'array' ? cashReceiptIds : [cashReceiptIds],
         i = 0;
 
@@ -22,7 +22,7 @@ select xt.install_js('XM','CashReceipt','xtuple', $$
     else if(!ids.length) err = "No Cash Receipt specified";
 
     while (!err && i < ids.length) {
-      ret = executeSql("select postCashReceipt($1, $2) AS result;", [ids[i], journal])[0].result;
+      ret = plv8.execute("select postCashReceipt($1, $2) AS result;", [ids[i], journal])[0].result;
 
       switch (ret)
       {
@@ -67,7 +67,7 @@ select xt.install_js('XM','CashReceipt','xtuple', $$
     else if(cashReceiptId === undefined) err = "No Invoice specified";
 
     if(!err) {
-      ret = executeSql("select reversecashreceipt($1, fetchJournalNumber('C/R')) AS result;", [cashReceiptId])[0].result;
+      ret = plv8.execute("select reversecashreceipt($1, fetchJournalNumber('C/R')) AS result;", [cashReceiptId])[0].result;
 
       switch (ret)
       {

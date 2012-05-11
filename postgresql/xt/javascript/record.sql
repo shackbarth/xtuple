@@ -19,7 +19,7 @@ select xt.install_js('XT','Record','xtuple', $$
         seq = map.idSequenceName,
         sql = 'select nextval($1) as result';
 
-    return seq ? executeSql(sql, [seq])[0].result : false;
+    return seq ? plv8.execute(sql, [seq])[0].result : false;
   }
 
   /**
@@ -35,7 +35,7 @@ select xt.install_js('XT','Record','xtuple', $$
         seq = map.orderSequence,
         sql = 'select fetchNextNumber($1) as result';
 
-    return seq ? executeSql(sql, [seq])[0].result : false;
+    return seq ? plv8.execute(sql, [seq])[0].result : false;
   }
 
   /**
@@ -52,7 +52,7 @@ select xt.install_js('XT','Record','xtuple', $$
         seq = map.orderSequence,
         sql = 'select releaseNumber($1, $2) as result';
 
-    return seq ? executeSql(sql, [seq, number - 0])[0].result > 0 : false;
+    return seq ? plv8.execute(sql, [seq, number - 0])[0].result > 0 : false;
   }
 
   /**
@@ -75,7 +75,7 @@ select xt.install_js('XT','Record','xtuple', $$
               .replace(/{userKey}/, key)
               .replace(/{value}/, value)
               .replace(/{id}/, id),
-        result = executeSql(sql, [value, id])[0];
+        result = plv8.execute(sql, [value, id])[0];
 
     return result ? result.id : 0;
   }

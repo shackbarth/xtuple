@@ -3,7 +3,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
   /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select xt.js_init()');
+  if(!this.isInitialized) plv8.execute('select xt.js_init()');
 
   var view, views = [], i = 1, res, n;
 
@@ -22,7 +22,7 @@ create or replace function xt.orm_did_change() returns trigger as $$
   while (n--) {
     nsp = views[n].beforeDot();
     rel = views[n].afterDot();
-    executeSql("select dropIfExists('VIEW', $1, $2)", [rel, nsp]);
+    plv8.execute("select dropIfExists('VIEW', $1, $2)", [rel, nsp]);
   }
 
   /* Determine whether to rebuild */ 

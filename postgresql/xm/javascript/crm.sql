@@ -47,18 +47,18 @@ select xt.install_js('XM','crm','crm', $$
         cnum = {}, inum = {}, ret = [], qry;
 
     cnum.setting = 'NextCRMAccountNumber';
-    cnum.value = executeSql(sql, ['CRMAccountNumber'])[0].value;
+    cnum.value = plv8.execute(sql, ['CRMAccountNumber'])[0].value;
     ret.push(cnum);
 
     inum.setting = 'NextIncidentNumber';
-    inum.value = executeSql(sql, ['IncidentNumber'])[0].value;
+    inum.value = plv8.execute(sql, ['IncidentNumber'])[0].value;
     ret.push(inum);
 
     sql = "select status_color as color "
         + "from status "
         + " where (status_type='INCDT') "
         + "order by status_seq";
-    qry = executeSql(sql);
+    qry = plv8.execute(sql);
 
     while(colors.length) {
       var col = {};
@@ -88,12 +88,12 @@ select xt.install_js('XM','crm','crm', $$
 
     /* update numbers */
     if(settings['NextCRMAccountNumber']) {
-      executeSql('select setNextCRMAccountNumber($1)', [settings['NextCRMAccountNumber']]);
+      plv8.execute('select setNextCRMAccountNumber($1)', [settings['NextCRMAccountNumber']]);
     }
     options.remove('NextCRMAccountNumber');
 
     if(settings['NextIncidentNumber']) {
-      executeSql('select setNextIncidentNumber($1)', [settings['NextIncidentNumber']]);
+      plv8.execute('select setNextIncidentNumber($1)', [settings['NextIncidentNumber']]);
     }
     options.remove('NextIncidentNumber');
 
@@ -103,32 +103,32 @@ select xt.install_js('XM','crm','crm', $$
         + " and status_code=$2";
 
     if(settings['IncidentNewColor']) {
-      executeSql(sql, [settings['IncidentNewColor'], 'N'])
+      plv8.execute(sql, [settings['IncidentNewColor'], 'N'])
     }
     options.remove('IncidentNewColor');
 
     if(settings['IncidentFeedbackColor']) {
-      executeSql(sql, [settings['IncidentFeedbackColor'], 'F'])
+      plv8.execute(sql, [settings['IncidentFeedbackColor'], 'F'])
     }
     options.remove('IncidentFeedbackColor');
 
     if(settings['IncidentConfirmedColor']) {
-      executeSql(sql, [settings['IncidentConfirmedColor'], 'C'])
+      plv8.execute(sql, [settings['IncidentConfirmedColor'], 'C'])
     }
     options.remove('IncidentConfirmedColor');
 
     if(settings['IncidentAssignedColor']) {
-      executeSql(sql, [settings['IncidentAssignedColor'], 'A'])
+      plv8.execute(sql, [settings['IncidentAssignedColor'], 'A'])
     }
     options.remove('IncidentAssignedColor');
 
     if(settings['IncidentResolvedColor']) {
-      executeSql(sql, [settings['IncidentResolvedColor'], 'R'])
+      plv8.execute(sql, [settings['IncidentResolvedColor'], 'R'])
     }
     options.remove('IncidentResolvedColor');
 
     if(settings['IncidentClosedColor']) {
-      executeSql(sql, [settings['IncidentNewColor'], 'L'])
+      plv8.execute(sql, [settings['IncidentNewColor'], 'L'])
     }
     options.remove('IncidentClosedColor');
 

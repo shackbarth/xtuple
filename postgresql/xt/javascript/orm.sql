@@ -68,7 +68,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         + 'where orm_namespace = $1 '
         + ' and orm_type = $2 '
         + ' and orm_context = $3';
-    oldOrm = executeSql(sql, [nameSpace, type, context])[0];
+    oldOrm = plv8.execute(sql, [nameSpace, type, context])[0];
     sequence = newJson.sequence ? newJson.sequence : 0;
     isExtension = newJson.isExtension ? true : false;
     if(oldOrm) {
@@ -79,10 +79,10 @@ select xt.install_js('XT','Orm','xtuple', $$
           + ' orm_json = $1, '
           + ' orm_seq = $2 '
           + 'where orm_id = $3';
-      executeSql(sql, [json, sequence, oldOrm.id]);   
+      plv8.execute(sql, [json, sequence, oldOrm.id]);   
     } else { 
       sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
-      executeSql(sql, [nameSpace, type, context, json, sequence, isExtension]); 
+      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension]); 
     }
   }
 
@@ -105,7 +105,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             + " and (refclassid='pg_class'::regclass) "
             + ' and (refobjid::regclass::text = $1) '
             + " and (nspname || '.' || relname != $1) "
-    rec = executeSql(sql, [view])
+    rec = plv8.execute(sql, [view])
 
     /*  Loop through view dependencies */
     for(var i = 0; i < rec.length; i++) {
@@ -147,7 +147,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               + ' and orm_type=$2'
               + ' and not orm_ext '
               + ' and orm_active ',
-          res = executeSql(sql, [ nameSpace, type ]);
+          res = plv8.execute(sql, [ nameSpace, type ]);
       if(!res.length) return false;
       ret = JSON.parse(res[0].json);
 
@@ -160,7 +160,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               + ' and orm_ext '
               + ' and orm_active '
               + 'order by orm_seq';
-      res = executeSql(sql, [ nameSpace, type ]);
+      res = plv8.execute(sql, [ nameSpace, type ]);
       for(var i = 0; i < res.length; i++) {
         var orm = JSON.parse(res[i].json),
             ext = {};
@@ -687,24 +687,24 @@ select xt.install_js('XT','Orm','xtuple', $$
             .replace(/{where}/, clauses.length ? 'where ' + clauses.join(' and ') : '')
             .replace(/{order}/, orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
     if(DEBUG) print(NOTICE, 'query', query);
-    executeSql(query);
+    plv8.execute(query);
 
     /* Add comment */
     query = "comment on view {name} is '{comments}'"
             .replace(/{name}/, viewName)
             .replace(/{comments}/, comments);           
-    executeSql(query);
+    plv8.execute(query);
     
     /* Apply the rules */
     for(var i = 0; i < rules.length; i++) {
       if(DEBUG) print(NOTICE, 'rule', rules[i]);   
-      executeSql(rules[i]);
+      plv8.execute(rules[i]);
     }
 
     /* Grant access to xtrole */
     query = 'grant all on {view} to xtrole'
             .replace(/{view}/, viewName);           
-    executeSql(query); 
+    plv8.execute(query); 
   }
 $$ );
 

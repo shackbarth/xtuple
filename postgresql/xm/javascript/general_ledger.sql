@@ -27,7 +27,7 @@ select xt.install_js('XM','GeneralLedger','xtuple', $$
       notes = '';
 
     if(!err) {
-      return executeSql("select deleteglseries($1, $2) as result;", [seriesId, notes])[0].result;
+      return plv8.execute("select deleteglseries($1, $2) as result;", [seriesId, notes])[0].result;
     }
 
     throw new Error(err);
@@ -56,7 +56,7 @@ select xt.install_js('XM','GeneralLedger','xtuple', $$
       notes = '';
 
     if(!err) {
-      return executeSql("select deleteglseries($1, $2, $3) as result;", [seriesId, distributionDate, notes])[0].result;
+      return plv8.execute("select deleteglseries($1, $2, $3) as result;", [seriesId, distributionDate, notes])[0].result;
     }
 
     throw new Error(err);
