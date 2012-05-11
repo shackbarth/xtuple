@@ -2,15 +2,17 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  /* support methods */  
-  Function.prototype.curry = function() {
-    if (arguments.length<1) {
-        return this; //nothing to curry with - return function
-    }
-    var __method = this;
-    var args = arguments[0]; 
-        return function() {
-        return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+  if (!Function.prototype.curry) {
+    /* support methods */  
+    Function.prototype.curry = function() {
+      if (arguments.length<1) {
+          return this; //nothing to curry with - return function
+      }
+      var __method = this;
+      var args = arguments[0]; 
+          return function() {
+          return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
+      }
     }
   }
 
@@ -18,7 +20,7 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
   var dataHash = JSON.parse(data_hash),
       nameSpace = dataHash.className.beforeDot(),
       type = dataHash.className.afterDot(),
-      obj = this[nameSpace][type],
+      obj = plv8[nameSpace][type],
       f = dataHash.functionName, 
       params = dataHash.parameters,
       args = params instanceof Array ? params : [params], 
