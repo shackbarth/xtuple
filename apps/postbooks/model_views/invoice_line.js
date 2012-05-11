@@ -139,3 +139,103 @@ Postbooks.InvoiceLine.CreateDetailListView = function(controller) {
   
   return list;
 };
+
+Postbooks.InvoiceLine.Tiles = function(controller, isRoot) {
+  console.log('Postbooks.InvoiceLine.Tiles()');
+  
+  var klass = XM.InvoiceLine,
+      tiles = [],
+      proto = klass.prototype;
+      properties = [];
+
+  // overview
+  tiles.push(Postbooks.InvoiceLine.CreateOverviewTileView(controller));
+
+  return tiles;
+};
+
+Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
+  console.log('Postbooks.InvoiceLine.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create({ 
+        isChangeLayout: true,
+        isChangeLayoutDidChange: function() {
+          var isChangeLayout = this.get('isChangeLayout');
+          console.log('isChangeLayout: %@'.fmt(isChangeLayout));
+        }.observes('isChangeLayout'),
+      }),
+      layers = view.get('layers'),
+      viewBindingsRef = view.get('bindings'),
+      y = 42,
+      proto = XM.InvoiceLine.prototype,
+      K = Postbooks,
+      left = 120, right = 12,
+      label = null, widget = null,
+      key, property, objectKlass, objectController, objectKey;
+
+  // invoice number
+  key = 'invoice';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_invoiceNumber".loc() + ':'
+  });
+  layers.pushObject(label);
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'number';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+
+  // lineNumber
+  key = 'lineNumber';
+  property = proto[key];
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_lineNumber".loc() + ':'
+  });
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+
+  // isItem
+  key = 'isItem';
+  widget = SC.CheckboxWidget.create({
+    layout: { top: y, left: right, height: 24, width: left },
+    title: "_item".loc(),
+    /** TODO: make binding work */
+    valueBinding: SC.Binding.transform(function(val) {
+      return !!val;
+    }).from(key, controller),
+    valueDidChange: function() {
+      var value = this.get('value');
+      console.log('widget: %@'.fmt(value));
+    }.observes('value')
+  });
+  controller.addObserver('isItem', function() {
+    console.log('isItem: %@'.fmt(this.get('isItem')));
+  });
+  widgetBinding = SC.Binding.from('value', widget).to('isChangeLayout', view).sync().connect().flushPendingChanges();
+  viewBindingsRef.pushObject(widgetBinding);
+  y += 24 + K.SPACING;
+  layers.pushObject(widget);
+
+ return view;
+};

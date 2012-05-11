@@ -36,12 +36,11 @@ Postbooks.CreateNotesTileView = function(controller) {
 
   var view = SC.TextSurface.create({
     _sc_borderColor: "transparent",
-    _sc_font: " 11pt "+K.TYPEFACE,
 
     // HACK: this assignment is
     // merely to get text on the 
-    // text surface when the Incident
-    // overview View renders.
+    // text surface when the 'Notes'
+    // View renders.
 
     // The binding to the 'notes'
     // property on the controller
