@@ -20,7 +20,7 @@ select xt.install_js('XM','Period','xtuple', $$
     else if(periodId === undefined) err = "Not defined";
 
     if(!err) {
-      ret = executeSql("select closeaccountingperiod($1) as result;", [periodId])[0].result;
+      ret = plv8.execute("select closeaccountingperiod($1) as result;", [periodId])[0].result;
 
       switch (ret)
       {
@@ -85,7 +85,7 @@ select xt.install_js('XM','Period','xtuple', $$
     else if(periodId === undefined) err = "Not defined";
 
     if(!err) {
-      ret = executeSql("select openaccountingperiod($1) as result;", [periodId])[0].result;
+      ret = plv8.execute("select openaccountingperiod($1) as result;", [periodId])[0].result;
 
       switch (ret)
       {

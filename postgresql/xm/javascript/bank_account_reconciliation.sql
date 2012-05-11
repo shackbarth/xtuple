@@ -19,7 +19,7 @@ select xt.install_js('XM','BankAccountReconciliation','xtuple', $$
     if(!data.checkPrivilege('MaintainBankRec')) err = "Access Denied.";
 
     if(!err) {
-      ret = executeSql("select postbankreconciliation($1) as result;", [bankRecId])[0].result;
+      ret = plv8.execute("select postbankreconciliation($1) as result;", [bankRecId])[0].result;
 
       switch (ret)
       {

@@ -52,7 +52,7 @@ select xt.install_js('XM','LedgerAccount','xtuple', $$
       sql += " from accnt"
              + " where (accnt_id = $2);";
       
-      return executeSql(sql, [description, accountId]);
+      return plv8.execute(sql, [description, accountId]);
     }
 
     throw new Error(err);

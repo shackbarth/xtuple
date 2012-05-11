@@ -35,11 +35,11 @@ select xt.install_js('XM','payments','payments', $$
         cnum = {}, inum = {}, ret = [];
 
     cnum.setting = 'NextAPMemoNumber';
-    cnum.value = executeSql(sql, ['APMemoNumber'])[0].value;
+    cnum.value = plv8.execute(sql, ['APMemoNumber'])[0].value;
     ret.push(cnum);
 
     inum.setting = 'NextACHBatchNumber';
-    inum.value = executeSql(sql, ['ACHBatch'])[0].value;
+    inum.value = plv8.execute(sql, ['ACHBatch'])[0].value;
     ret.push(inum);
 
     ret = ret.concat(data.retrieveMetrics(keys));
@@ -63,12 +63,12 @@ select xt.install_js('XM','payments','payments', $$
 
     /* update numbers */
     if(settings['NextAPMemoNumber']) {
-      executeSql('select setNextAPMemoNumber($1)', [settings['NextAPMemoNumber']]);
+      plv8.execute('select setNextAPMemoNumber($1)', [settings['NextAPMemoNumber']]);
     }
     options.remove('NextAPMemoNumber');
 
     if(settings['NextACHBatchNumber']) {
-      executeSql("select setNextNumber('ACHBatch', $1)", [settings['NextACHBatchNumber']]);
+      plv8.execute("select setNextNumber('ACHBatch', $1)", [settings['NextACHBatchNumber']]);
     }
     options.remove('NextACHBatchNumber');
 

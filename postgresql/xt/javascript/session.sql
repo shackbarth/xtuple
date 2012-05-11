@@ -38,7 +38,7 @@ select xt.install_js('XT','Session','xtuple', $$
             + 'left join lang on locale_lang_id = lang_id '
             + 'left join country on locale_country_id = country_id '
             + 'where usr_username = getEffectiveXtUser() ', 
-    rec = executeSql(sql)[0];
+    rec = plv8.execute(sql)[0];
 
     /* determine culture */
     var culture = 'en';
@@ -74,7 +74,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {hash}
   */ 
   XT.Session.privileges = function() {
-    var rec = executeSql( 'select privilege, granted as "isGranted" from privgranted' );
+    var rec = plv8.execute( 'select privilege, granted as "isGranted" from privgranted' );
 
     return rec.length ? JSON.stringify (rec) : '{}';
   }

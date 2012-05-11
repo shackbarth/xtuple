@@ -23,7 +23,7 @@ select xt.install_js('XM','Tax','xtuple', $$
             + '  join xm.tax_code tx on tx.guid=taxdetail_tax_id '
             + '  left join xm.tax_code bs on bs.guid=taxdetail_tax_basis_tax_id '
             + 'order by sequence, tx.code;'
-    ret = executeSql(sql, [taxZoneId || -1, taxTypeId || -1, effective, currencyId, amount]);
+    ret = plv8.execute(sql, [taxZoneId || -1, taxTypeId || -1, effective, currencyId, amount]);
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);
     return ret;
   }

@@ -19,7 +19,7 @@ select xt.install_js('XM','StandardJournal','xtuple', $$
     if(!data.checkPrivilege('PostStandardJournals')) err = "Access Denied.";
 
     if(!err) {
-      return executeSql("select poststandardjournal($1, $2, $3) as result;", [standardJournalId, distributionDate, isReverse])[0].result;
+      return plv8.execute("select poststandardjournal($1, $2, $3) as result;", [standardJournalId, distributionDate, isReverse])[0].result;
 
     }
 
@@ -39,7 +39,7 @@ select xt.install_js('XM','StandardJournal','xtuple', $$
     if(!data.checkPrivilege('PostStandardJournalGroups')) err = "Access Denied.";
 
     if(!err) {
-      return executeSql("select poststandardjournalgroup($1, $2, $3) as result;", [standardJournalGroupId, distributionDate, isReverse])[0].result;
+      return plv8.execute("select poststandardjournalgroup($1, $2, $3) as result;", [standardJournalGroupId, distributionDate, isReverse])[0].result;
 
     }
 

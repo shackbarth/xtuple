@@ -19,7 +19,7 @@ select xt.install_js('XM','FiscalYear','xtuple', $$
     if(!data.checkPrivilege('MaintainAccountingPeriods')) err = "Access Denied.";
 
     if(!err) {
-      ret = executeSql("select closeaccountingyearperiod($1) as result;", [periodId])[0].result;
+      ret = plv8.execute("select closeaccountingyearperiod($1) as result;", [periodId])[0].result;
 
       switch (ret)
       {
@@ -110,7 +110,7 @@ select xt.install_js('XM','FiscalYear','xtuple', $$
     if(!data.checkPrivilege('MaintainAccountingPeriods')) err = "Access Denied.";
 
     if(!err) {
-      ret = executeSql("select openaccountingyearperiod($1) as result;", [periodId])[0].result;
+      ret = plv8.execute("select openaccountingyearperiod($1) as result;", [periodId])[0].result;
 
       switch (ret)
       {

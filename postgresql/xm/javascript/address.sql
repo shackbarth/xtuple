@@ -26,7 +26,7 @@ select xt.install_js('XM','Address','xtuple', $$
 
     if(address.type !== 'Address') throw new Error('Invalid type passed to XM.Address.findExisting.');
     
-    resp = executeSql(sql,[address.line1, address.line2, address.line3, address.city, address.state, address.postalcode, address.country]);
+    resp = plv8.execute(sql,[address.line1, address.line2, address.line3, address.city, address.state, address.postalcode, address.country]);
 
     return resp.length ? resp[0].id : 0;
   }
@@ -38,7 +38,7 @@ select xt.install_js('XM','Address','xtuple', $$
   @returns {Number}
   */
   XM.Address.useCount = function(id) {
-    return executeSql('select addrUseCount($1) as result', [id])[0].result;
+    return plv8.execute('select addrUseCount($1) as result', [id])[0].result;
   }
 
 $$ );

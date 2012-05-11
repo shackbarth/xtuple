@@ -128,7 +128,9 @@ create or replace function xt.js_init() returns void as $$
   // XT
   //
 
-  XT = {};
+  plv8.XT = XT = {};
+  
+  plv8.XM = XM = {}; // WHERE THE $!@#*@# WAS THIS BEFORE NOW!??!
 
   /**
      Change properties names on an object with underscores '_' to camel case.
@@ -211,13 +213,13 @@ create or replace function xt.js_init() returns void as $$
   // PROCESS
   //
 
- var res, sql;
+  var res, sql;
 
   /* create namespace objects for all registered javascript */
   sql = 'select distinct js_namespace as "nameSpace" '
         + 'from xt.js '
         + 'where js_active; '
-  res = executeSql(sql);
+  res = plv8.execute(sql);
   if(res.length) {
     for(var i = 0; i < res.length; i++) {
       if(!this[res[i].nameSpace]) this[res[i].nameSpace] = {};
@@ -229,17 +231,15 @@ create or replace function xt.js_init() returns void as $$
         + 'from xt.js '
         + 'where js_active '
         + 'order by js_ext ';
-    res = executeSql(sql);
+    res = plv8.execute(sql);
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
-        if(DEBUG) print(NOTICE, 'loading javascript for type->', res[i].js_type);
+        if(DEBUG) plv8.elog(NOTICE, 'loading javascript for type->', res[i].js_type);
         
         eval(res[i].javascript);
       }
     }
   }
-  
-  this.isInitialized = !DEBUG;
 
 $$ language plv8;
 

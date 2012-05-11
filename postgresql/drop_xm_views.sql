@@ -7,7 +7,7 @@ DO $$
             + "where schemaname = 'xm';",
      result;
 
-  result = executeSql(sql);
+  result = plv8.execute(sql);
   return result;
 
 $$ language plv8;
