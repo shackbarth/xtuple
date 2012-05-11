@@ -1,4 +1,4 @@
-﻿select xt.install_js('XM','LedgerAccount','xtuple', $$
+select xt.install_js('XM','LedgerAccount','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
@@ -59,3 +59,4 @@
   }
 
 $$ );
+
