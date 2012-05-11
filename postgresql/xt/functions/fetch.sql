@@ -2,9 +2,6 @@ create or replace function xt.fetch(data_hash text) returns text as $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  /* initialize plv8 if needed */
-  if(!this.isInitialized) plv8.execute('select xt.js_init()');
-
   var query = JSON.parse(data_hash).query,
       recordType = query.recordType
       conditions = query.conditions,

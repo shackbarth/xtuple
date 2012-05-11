@@ -2,9 +2,6 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  /* initialize plv8 if needed */
-  if(!this.isInitialized) plv8.execute('select xt.js_init()');
-
   /* constants */
   var SELECT = 'select {columns} from {table} where {conditions}'
       INSERT = 'insert into {table} ({columns}) values ({expressions});',
@@ -485,7 +482,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
           .replace(/{where}/, clauses.length ? 'where ' + clauses.join(' and ') : '')
           .replace(/{order}/, orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
 
-  if(DEBUG) print(NOTICE, 'query', query);
+  if(DEBUG) plv8.elog(NOTICE, 'query', query);
 
   plv8.execute(query);
 
@@ -498,7 +495,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
   
   /* Apply the rules */
   for(var i = 0; i < rules.length; i++) {
-    if(DEBUG) print(NOTICE, 'rule', rules[i]);
+    if(DEBUG) plv8.elog(NOTICE, 'rule', rules[i]);
     
     plv8.execute(rules[i]);
   }

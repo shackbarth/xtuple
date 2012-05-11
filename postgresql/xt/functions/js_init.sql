@@ -232,14 +232,12 @@ create or replace function xt.js_init() returns void as $$
     res = plv8.execute(sql);
     if(res.length) {
       for(var i = 0; i < res.length; i++) {
-        if(DEBUG) print(NOTICE, 'loading javascript for type->', res[i].js_type);
+        if(DEBUG) plv8.elog(NOTICE, 'loading javascript for type->', res[i].js_type);
         
         eval(res[i].javascript);
       }
     }
   }
-  
-  this.isInitialized = !DEBUG;
 
 $$ language plv8;
 
