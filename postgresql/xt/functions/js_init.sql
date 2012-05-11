@@ -128,7 +128,9 @@ create or replace function xt.js_init() returns void as $$
   // XT
   //
 
-  XT = {};
+  plv8.XT = XT = {};
+  
+  plv8.XM = XM = {}; // WHERE THE $!@#*@# WAS THIS BEFORE NOW!??!
 
   /**
      Change properties names on an object with underscores '_' to camel case.
@@ -211,7 +213,7 @@ create or replace function xt.js_init() returns void as $$
   // PROCESS
   //
 
- var res, sql;
+  var res, sql;
 
   /* create namespace objects for all registered javascript */
   sql = 'select distinct js_namespace as "nameSpace" '
