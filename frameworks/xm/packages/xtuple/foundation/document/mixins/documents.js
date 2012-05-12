@@ -11,6 +11,46 @@
 
 XM.Documents = {
   
+	/**
+    Related to (sibling).
+
+		@static
+		@constant
+		@type String
+		@default S
+	*/
+	PENDING: 'S',
+
+	/**
+		Parent.
+
+		@static
+		@constant
+		@type String
+		@default A
+	*/
+  DEFERRED: 'A',
+
+	/**
+    Child.
+	
+		@static
+		@constant
+    @type String
+		@default C
+	*/
+   NEITHER: 'C',
+	
+	/**
+    Duplicate.
+	
+		@static
+		@constant
+		@type String
+		@default N
+	*/
+  DUPLICATE: 'D',
+
   /**
     Holds all of the document assignments.
   */
