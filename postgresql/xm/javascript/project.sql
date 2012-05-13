@@ -1,4 +1,4 @@
-﻿select xt.install_js('XM','Project','xtuple', $$
+select xt.install_js('XM','Project','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -22,7 +22,7 @@
       err = "Access Denied.";
 
     if(!err) {
-      return executeSql(sql)[0].result;
+      return plv8.execute(sql)[0].result;
     }
 
     throw new Error(err);

@@ -1,4 +1,4 @@
-﻿select xt.install_js('XM','Journal','xtuple', $$
+select xt.install_js('XM','Journal','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -35,7 +35,7 @@
     if(!err) {
 
       if(!isPostByType) {
-        ret = executeSql("select postjournals($1) as result;", [target])[0].result;
+        ret = plv8.execute("select postjournals($1) as result;", [target])[0].result;
         switch (ret)
         {
           case -4:
@@ -53,3 +53,4 @@
   }
 
 $$ );
+

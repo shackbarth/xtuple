@@ -1,25 +1,20 @@
-XTUPLE DATABASE
-===============
+#XTUPLE DATABASE
 
 This repository contains the database object definitions that enable a standard xTuple database to run in conjunction with the xTuple NodeJS Datasource (https://github.com/xtuple/datasource).
 
-Prerequisites
--------------
- * [PostgreSQL] (http://www.postgresql.org/) -- 'v9.1.0+'
- * [plV8js] (http://code.google.com/p/plv8js/wiki/PLV8) -- clone source, do *not* use tar downloads!
- * [Postbooks] (http://sourceforge.net/projects/postbooks) -- 'v3.8.0+'
+##Prerequisites
 
-Instructions
-------------
-Build and install the plV8 language on your PostgreSQL server per instructions on the Google website. Restore a PostBooks 3.8.0 database on to your database server, then execute the following:
+ * [PostgreSQL] (http://www.postgresql.org/) -- `v9.1.0`
+ * [plV8js] (https://code.google.com/p/plv8js) -- `git clone` clone source, do *not* use tar downloads!
+   - [v8] (http://github.com/v8/v8) -- `v3.6.2`
+ * [Postbooks] (http://sourceforge.net/projects/postbooks) -- `v4.0.0Beta`
 
-* 'cd postgresql'
-*  psql -d [database] -U [user] -f 'init_script.sql'
+##Instructions
 
-Install Object Relational Map (ORM) definitions
+Build and install PostgreSQL from source. In the `contrib/crypto` directory `sudo make install`.   
 
-* configure and start the xTuple [datasource] (https://github.com/xtuple/datasource). 
-  Note: the datasource directory should be adjacent to this database directory on your host.
-* launch the orm installer in your browser: http://localhost:9080/orm/
-* click 'Select All'
-* click 'Install Selected'
+Build the v8 library then copy the `libv8*` shared libraries to `/usr/local/lib`.  
+
+Build the plv8js PostgreSQL extension via `make; sudo make install` (make sure to check instructions).  
+
+From the repository root (database) run the `resetdb.py` script (`resetdb.py --help` for options) to restore from a backup and automatically run the init script. Once database is installed and init script has been run `cd installer` and make sure to modify the credentials in the `installer.js` script to match your database. Run the installed `./installer.js` and navigate in your browser to `localhost:9080/orm` and in the text field type the name of the database to connect to and press enter. Then click the `select all` and then `install selected` buttons and *cross-fingers* hope they all turn green.

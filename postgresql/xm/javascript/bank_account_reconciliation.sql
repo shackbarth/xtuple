@@ -1,4 +1,4 @@
-﻿select xt.install_js('XM','BankAccountReconciliation','xtuple', $$
+select xt.install_js('XM','BankAccountReconciliation','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -19,7 +19,7 @@
     if(!data.checkPrivilege('MaintainBankRec')) err = "Access Denied.";
 
     if(!err) {
-      ret = executeSql("select postbankreconciliation($1) as result;", [bankRecId])[0].result;
+      ret = plv8.execute("select postbankreconciliation($1) as result;", [bankRecId])[0].result;
 
       switch (ret)
       {

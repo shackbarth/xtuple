@@ -2,9 +2,6 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
 /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
    See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  /* initialize plv8 if needed */
-  if(!this.isInitialized) executeSql('select xt.js_init()');
-
   /* constants */
   var SELECT = 'select {columns} from {table} where {conditions}'
       INSERT = 'insert into {table} ({columns}) values ({expressions});',
@@ -451,7 +448,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
       + ' and orm_active '
       + ' and not orm_ext ';
 
-  qry = executeSql(sql, [nameSpace, type]);
+  qry = plv8.execute(sql, [nameSpace, type]);
   
   if(!qry.length) throw new Error('No base object relational map found for view ' + view_name);
   
@@ -468,7 +465,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
       + ' and orm_ext '
       + 'order by orm_seq, orm_id ';
 
-  extensions = executeSql(sql, [nameSpace, type]);
+  extensions = plv8.execute(sql, [nameSpace, type]);
 
   for(var i = 0; i < extensions.length; i++) {
     processOrm(JSON.parse(extensions[i].json));
@@ -485,28 +482,28 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
           .replace(/{where}/, clauses.length ? 'where ' + clauses.join(' and ') : '')
           .replace(/{order}/, orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
 
-  if(DEBUG) print(NOTICE, 'query', query);
+  if(DEBUG) plv8.elog(NOTICE, 'query', query);
 
-  executeSql(query);
+  plv8.execute(query);
 
   /* Add comment */
   query = "comment on view {name} is '{comments}'"
           .replace(/{name}/, view_name)
           .replace(/{comments}/, comments); 
           
-  executeSql(query);
+  plv8.execute(query);
   
   /* Apply the rules */
   for(var i = 0; i < rules.length; i++) {
-    if(DEBUG) print(NOTICE, 'rule', rules[i]);
+    if(DEBUG) plv8.elog(NOTICE, 'rule', rules[i]);
     
-    executeSql(rules[i]);
+    plv8.execute(rules[i]);
   }
 
   /* Grant access to xtrole */
   query = 'grant all on {view} to xtrole'
           .replace(/{view}/, view_name);
           
-  executeSql(query); 
+  plv8.execute(query); 
 
 $$ language plv8;

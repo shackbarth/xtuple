@@ -45,7 +45,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
     if(!data.checkPrivilege("PostMiscInvoices")) err = "Access denied."
     else if(invoiceId === undefined) err = "No Invoice specified";
     if(!err) {
-      ret = executeSql("select postinvoice($1) AS result;", [invoiceId])[0].result;
+      ret = plv8.execute("select postinvoice($1) AS result;", [invoiceId])[0].result;
       switch (ret)
       {
         case -1: 
@@ -100,7 +100,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
     if(!data.checkPrivilege("PostMiscInvoices")) err = "Access denied."
     if(postUnprinted === undefined) postUnprinted = false;
     if(!err) {
-      ret = executeSql("select postinvoices($1) AS result;", [postUnprinted])[0].result;
+      ret = plv8.execute("select postinvoices($1) AS result;", [postUnprinted])[0].result;
       return ret;
     }
     throw new Error(err);
@@ -118,7 +118,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
     if(!data.checkPrivilege("VoidPostedInvoices")) err = "Access denied."
     else if(invoiceId === undefined) err = "No Invoice specified";
     if(!err) {
-      ret = executeSql("select voidinvoice($1) AS result;", [invoiceId])[0].result;
+      ret = plv8.execute("select voidinvoice($1) AS result;", [invoiceId])[0].result;
       switch (ret)
       {
         case -1: 
@@ -160,7 +160,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
     if(!data.checkPrivilege('MaintainMiscInvoicess'))
       err = "Access Denied.";
     if(!err) {
-      return executeSql(sql)[0].result;
+      return plv8.execute(sql)[0].result;
     }
     throw new Error(err);
   }
@@ -179,7 +179,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
     else if(cutOffDate === undefined) err = "Not defined";
     else if(invoiceId === undefined) err = "Not defined";
     if(!err) {
-      ret = executeSql("select purgeInvoiceRecord($1,$2) AS result;", [cutOffDate, invoiceId])[0].result;
+      ret = plv8.execute("select purgeInvoiceRecord($1,$2) AS result;", [cutOffDate, invoiceId])[0].result;
       return ret;
     }
     throw new Error(err);

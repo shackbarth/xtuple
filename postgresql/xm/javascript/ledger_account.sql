@@ -1,4 +1,4 @@
-﻿select xt.install_js('XM','LedgerAccount','xtuple', $$
+select xt.install_js('XM','LedgerAccount','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
   
@@ -52,10 +52,11 @@
       sql += " from accnt"
              + " where (accnt_id = $2);";
       
-      return executeSql(sql, [description, accountId]);
+      return plv8.execute(sql, [description, accountId]);
     }
 
     throw new Error(err);
   }
 
 $$ );
+

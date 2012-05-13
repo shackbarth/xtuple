@@ -13,7 +13,7 @@ create or replace function xt.install_js(name_space text, type_name text, contex
       + ' and js_type = $2 '
       + ' and js_context = $3';
 
-  js = executeSql(sql, [name_space, type_name, context])[0];
+  js = plv8.execute(sql, [name_space, type_name, context])[0];
 
   if(js) {
     if(js.isExtension !== is_extension) throw new Error("Can not change extension state for {namespace}.{type} in context {context}."
@@ -25,11 +25,11 @@ create or replace function xt.install_js(name_space text, type_name text, contex
         + ' js_text = $1 '
         + 'where js_id = $2';
 
-    executeSql(sql, [javascript, js.id]);   
+    plv8.execute(sql, [javascript, js.id]);   
   } else { 
     sql = 'insert into xt.js ( js_namespace, js_type, js_context, js_text, js_ext ) values ($1, $2, $3, $4, $5)';
 
-    executeSql(sql, [name_space, type_name, context, javascript, is_extension]); 
+    plv8.execute(sql, [name_space, type_name, context, javascript, is_extension]); 
   }
   
 $$ language plv8;

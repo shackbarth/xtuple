@@ -1,20 +1,20 @@
-﻿select xt.install_js('XM','SalesJournal','xtuple', $$
+select xt.install_js('XM','PurchaseJournal','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XM.SalesJournal = {};
+  XM.PurchaseJournal = {};
   
-  XM.SalesJournal.isDispatchable = true;
+  XM.PurchaseJournal.isDispatchable = true;
   
   /** 
-   Post Sales Journals journal type.
+   Post Purchase Journals journal type.
 
    *** By Type NOT currently implemented ***
 
    @param {Date, Date, Date} startDate, endDate, distributionDate
    @returns {Number}
   */
-  XM.SalesJournal.post = function(startDate, endDate, distributionDate) {
+  XM.PurchaseJournal.post = function(startDate, endDate, distributionDate) {
     var data = Object.create(XT.Data),
         ret, err;
 
@@ -23,7 +23,7 @@
       err = "Start date, End date, and Distribution date required.";
 
     if(!err) {
-      ret = XM.Journal.post('S',startDate, endDate, distributionDate);
+      ret = XM.Journal.post('P',startDate, endDate, distributionDate);
       switch (ret)
       {
         case -4:

@@ -99,7 +99,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (typeof privilege === 'string') {
         if(!this._grantedPrivs) this._grantedPrivs = [];
         if(this._grantedPrivs.contains(privilege)) return true;  
-        var res = executeSql("select checkPrivilege($1) as is_granted", [ privilege ]),
+        var res = plv8.execute("select checkPrivilege($1) as is_granted", [ privilege ]),
           ret = res[0].is_granted;
         /* cache the result locally so we don't requery needlessly */
         if(ret) this._grantedPrivs.push(privilege);
@@ -129,18 +129,18 @@ select xt.install_js('XT','Data','xtuple', $$
                     record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* if there is no ORM, this isn't a table data type so no check required */
-      if (DEBUG) print(NOTICE, 'orm is ->', JSON.stringify(map, null, 2));    
+      if (DEBUG) plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map, null, 2));    
       if(!map) return true;
       
       /* can not access 'nested only' records directly */
-      if(DEBUG) print(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly);    
+      if(DEBUG) plv8.elog(NOTICE, 'is top level ->', isTopLevel, 'is nested ->', map.isNestedOnly);    
       if(isTopLevel && map.isNestedOnly) return false
         
       /* check privileges - first do we have access to anything? */
       if(privileges) { 
-        if(DEBUG) print(NOTICE, 'privileges found');      
+        if(DEBUG) plv8.elog(NOTICE, 'privileges found');      
         if(committing) {
-          if(DEBUG) print(NOTICE, 'is committing');
+          if(DEBUG) plv8.elog(NOTICE, 'is committing');
           
           /* check if user has 'all' read privileges */
           isGrantedAll = privileges.all ? this.checkPrivilege(privileges.all[action]) : false;
@@ -148,7 +148,7 @@ select xt.install_js('XT','Data','xtuple', $$
           /* otherwise check for 'personal' read privileges */
           if(!isGrantedAll) isGrantedPersonal =  privileges.personal ? this.checkPrivilege(privileges.personal[action]) : false;
         } else {
-          if(DEBUG) print(NOTICE, 'is NOT committing');
+          if(DEBUG) plv8.elog(NOTICE, 'is NOT committing');
           
           /* check if user has 'all' read privileges */
           isGrantedAll = privileges.all ? 
@@ -164,7 +164,7 @@ select xt.install_js('XT','Data','xtuple', $$
       
       /* if we're checknig an actual record and only have personal privileges, see if the record allows access */
       if(record && !isGrantedAll && isGrantedPersonal) {
-        if(DEBUG) print(NOTICE, 'checking record level personal privileges');    
+        if(DEBUG) plv8.elog(NOTICE, 'checking record level personal privileges');    
         var that = this,
 
         /* shared checker function that checks 'personal' properties for access rights */
@@ -190,7 +190,7 @@ select xt.install_js('XT','Data','xtuple', $$
           isGrantedPersonal = checkPersonal(record);
         }
       }
-      if(DEBUG) print(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);  
+      if(DEBUG) plv8.elog(NOTICE, 'is granted all ->', isGrantedAll, 'is granted personal ->', isGrantedPersonal);  
       return isGrantedAll || isGrantedPersonal;
     },
     
@@ -226,7 +226,7 @@ select xt.install_js('XT','Data','xtuple', $$
         var value = metrics[key];      
         if(typeof value === 'boolean') value = value ? 't' : 'f';
         else if(typeof value === 'number') value = value.toString();    
-        executeSql('select setMetric($1,$2)', [key, value]);
+        plv8.execute('select setMetric($1,$2)', [key, value]);
       }
       return true;
     },
@@ -313,10 +313,10 @@ select xt.install_js('XT','Data','xtuple', $$
             .replace(/{columns}/, columns)
             .replace(/{expressions}/, expressions)
       
-      if(DEBUG) { print(NOTICE, 'sql =', sql); }
+      if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
       
       /* commit the record */
-      executeSql(sql); 
+      plv8.execute(sql); 
 
       /* okay, now lets handle arrays */
       this.commitArrays(schemaName, record, orm);
@@ -375,10 +375,10 @@ select xt.install_js('XT','Data','xtuple', $$
             .replace(/{recordType}/, key.decamelize())
             .replace(/{expressions}/, expressions)
             .replace(/{primaryKey}/, pkey);    
-      if(DEBUG) { print(NOTICE, 'sql =', sql); }
+      if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
       
       /* commit the record */
-      executeSql(sql, [record[pkey]]); 
+      plv8.execute(sql, [record[pkey]]); 
 
       /* okay, now lets handle arrays */
       this.commitArrays(schemaName, record, orm); 
@@ -397,10 +397,10 @@ select xt.install_js('XT','Data','xtuple', $$
       sql = 'delete from {recordType} where {primaryKey} = $1;'
             .replace(/{recordType}/, key.decamelize())
             .replace(/{primaryKey}/, pkey);     
-      if(DEBUG) print(NOTICE, 'sql =', sql);
+      if(DEBUG) plv8.elog(NOTICE, 'sql =', sql);
       
       /* commit the record */
-      executeSql(sql, [record[pkey]]); 
+      plv8.execute(sql, [record[pkey]]); 
     },
 
     /** 
@@ -411,7 +411,7 @@ select xt.install_js('XT','Data','xtuple', $$
     currentUser: function() {
       var res;
       if(!this._currentUser) {
-        res = executeSql("select getEffectiveXtUser() as curr_user");
+        res = plv8.execute("select getEffectiveXtUser() as curr_user");
 
         /* cache the result locally so we don't requery needlessly */
         this._currentUser = res[0].curr_user;
@@ -437,7 +437,7 @@ select xt.install_js('XT','Data','xtuple', $$
         if(ormp && ormp.attr && ormp.attr.isEncrypted) {
           if(encryptionKey) {
             sql = "select formatbytea(decrypt(setbytea($1), setbytea($2), 'bf')) as result";
-            record[prop] = executeSql(sql, [record[prop], encryptionKey])[0].result;
+            record[prop] = plv8.execute(sql, [record[prop], encryptionKey])[0].result;
           } else {
             record[prop] = '**********'
           }
@@ -482,8 +482,8 @@ select xt.install_js('XT','Data','xtuple', $$
                .replace('{orderBy}', orderBy)
                .replace('{limit}', limit)
                .replace('{offset}', offset);     
-      if(DEBUG) { print(NOTICE, 'sql = ', sql); }
-      recs = executeSql(sql);
+      if(DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
+      recs = plv8.execute(sql);
       for (var i = 0; i < recs.length; i++) {  	
         recs[i] = this.decrypt(nameSpace, type, recs[i]);	  	
       }
@@ -533,8 +533,8 @@ select xt.install_js('XT','Data','xtuple', $$
       if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
 
       /* query the map */
-      if(DEBUG) print(NOTICE, 'sql = ', sql);
-      ret = executeSql(sql);
+      if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
+      ret = plv8.execute(sql);
       if(!ret.length) throw new Error('No record found for {recordType} id(s) {ids}'
                                       .replace(/{recordType}/, recordType)
                                       .replace(/{ids}/, ids.join(',')));
@@ -563,7 +563,7 @@ select xt.install_js('XT','Data','xtuple', $$
               + 'where metric_name in ({keys})', ret; 
       for(var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
       sql = sql.replace(/{keys}/, keys.join(','));
-      ret =  executeSql(sql);
+      ret =  plv8.execute(sql);
 
       /* recast where applicable */
       for(var i = 0; i < ret.length; i++) {
@@ -611,7 +611,7 @@ select xt.install_js('XT','Data','xtuple', $$
         }
       }
       ret = ret.concat('(', props.join(','), ')');
-      if(DEBUG) { print(NOTICE, 'rowify = ', ret); }    
+      if(DEBUG) { plv8.elog(NOTICE, 'rowify = ', ret); }    
       return ret;
     }
   }

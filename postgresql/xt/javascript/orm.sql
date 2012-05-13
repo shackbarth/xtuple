@@ -68,7 +68,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         + 'where orm_namespace = $1 '
         + ' and orm_type = $2 '
         + ' and orm_context = $3';
-    oldOrm = executeSql(sql, [nameSpace, type, context])[0];
+    oldOrm = plv8.execute(sql, [nameSpace, type, context])[0];
     sequence = newJson.sequence ? newJson.sequence : 0;
     isExtension = newJson.isExtension ? true : false;
     if(oldOrm) {
@@ -79,10 +79,10 @@ select xt.install_js('XT','Orm','xtuple', $$
           + ' orm_json = $1, '
           + ' orm_seq = $2 '
           + 'where orm_id = $3';
-      executeSql(sql, [json, sequence, oldOrm.id]);   
+      plv8.execute(sql, [json, sequence, oldOrm.id]);   
     } else { 
       sql = 'insert into xt.orm ( orm_namespace, orm_type, orm_context, orm_json, orm_seq, orm_ext ) values ($1, $2, $3, $4, $5, $6)';
-      executeSql(sql, [nameSpace, type, context, json, sequence, isExtension]); 
+      plv8.execute(sql, [nameSpace, type, context, json, sequence, isExtension]); 
     }
   }
 
@@ -105,7 +105,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             + " and (refclassid='pg_class'::regclass) "
             + ' and (refobjid::regclass::text = $1) '
             + " and (nspname || '.' || relname != $1) "
-    rec = executeSql(sql, [view])
+    rec = plv8.execute(sql, [view])
 
     /*  Loop through view dependencies */
     for(var i = 0; i < rec.length; i++) {
@@ -147,7 +147,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               + ' and orm_type=$2'
               + ' and not orm_ext '
               + ' and orm_active ',
-          res = executeSql(sql, [ nameSpace, type ]);
+          res = plv8.execute(sql, [ nameSpace, type ]);
       if(!res.length) return false;
       ret = JSON.parse(res[0].json);
 
@@ -160,7 +160,7 @@ select xt.install_js('XT','Orm','xtuple', $$
               + ' and orm_ext '
               + ' and orm_active '
               + 'order by orm_seq';
-      res = executeSql(sql, [ nameSpace, type ]);
+      res = plv8.execute(sql, [ nameSpace, type ]);
       for(var i = 0; i < res.length; i++) {
         var orm = JSON.parse(res[i].json),
             ext = {};
@@ -253,7 +253,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           toOneJoins = [], ormClauses = [];
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name;
-        if(DEBUG) print(NOTICE, 'processing property ->', props[i].name);
+        if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
         if(props[i].name === 'type') throw new Error("Can not use 'type' as a property name.");
         if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
         if(props[i].name === 'status') throw new Error("Can not use 'status' as a property name.");
@@ -261,7 +261,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         
         /* process attributes */
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
-          if(DEBUG) print(NOTICE, 'building attribute');      
+          if(DEBUG) plv8.elog(NOTICE, 'building attribute');      
           var attr = props[i].attr ? props[i].attr : props[i].toOne,
               isVisible = attr.isVisible !== false ? true : false,
               isEditable = attr.isEditable !== false ? true : false,
@@ -299,7 +299,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process toOne  */
         if(props[i].toOne && props[i].toOne.isNested) {
-          if(DEBUG) print(NOTICE, 'building toOne');     
+          if(DEBUG) plv8.elog(NOTICE, 'building toOne');     
           var toOne = props[i].toOne,
               table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
               type = table.afterDot(),
@@ -337,7 +337,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process toMany */
         if(props[i].toMany) {      
-          if(DEBUG) print(NOTICE, 'building toMany');
+          if(DEBUG) plv8.elog(NOTICE, 'building toMany');
          if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);       
           var toMany = props[i].toMany,
               table = base.nameSpace + '.' + toMany.type.decamelize(),
@@ -397,13 +397,13 @@ select xt.install_js('XT','Orm','xtuple', $$
       }
 
       /* build crud rules */
-      if(DEBUG) print(NOTICE, 'building CRUD rules');
+      if(DEBUG) plv8.elog(NOTICE, 'building CRUD rules');
       
       /* process extension */
       if(orm.isExtension) {
         var upsTgtCols = [],
             upsSrcCols = [];
-        if(DEBUG) print(NOTICE, 'process CRUD extension');
+        if(DEBUG) plv8.elog(NOTICE, 'process CRUD extension');
 
         /* process relations (if different table) */
         if(orm.table !== base.table) {
@@ -434,7 +434,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         
         /* build rules */
         conditions = [];
-        if(DEBUG) print(NOTICE, 'process extension relations');
+        if(DEBUG) plv8.elog(NOTICE, 'process extension relations');
         if(!orm.relations) throw new Error("Extension must have at least one relation defined.");         
         for(var i = 0; i < orm.relations.length; i++) {
           var rel = orm.relations[i], value;
@@ -451,7 +451,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* insert rules for extensions */
-        if(DEBUG) print(NOTICE, 'process extension INSERT');       
+        if(DEBUG) plv8.elog(NOTICE, 'process extension INSERT');       
         if(canCreate && insSrcCols.length) {
           if(base.table === orm.table) {
             rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
@@ -478,7 +478,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* update rules for extensions */
-        if(DEBUG) print(NOTICE, 'process extension UPDATE');     
+        if(DEBUG) plv8.elog(NOTICE, 'process extension UPDATE');     
         if(canUpdate && updCols.length) {
           var rule;
           if(!orm.isChild && base.table !== orm.table) {
@@ -527,7 +527,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         }
 
         /* only delete where circumstances allow */
-        if(DEBUG) print(NOTICE, 'process extension DELETE');      
+        if(DEBUG) plv8.elog(NOTICE, 'process extension DELETE');      
         if(canDelete && !orm.isChild && base.table !== orm.table) {
           rule = CREATE_RULE.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') 
                             .replace(/{event}/, 'delete')
@@ -543,7 +543,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       /* base orm */
       } else {
         var rule;
-        if(DEBUG) print(NOTICE, 'process base CRUD');
+        if(DEBUG) plv8.elog(NOTICE, 'process base CRUD');
 
        /* add static values */
        cols.push("'" + orm.type + "' as \"type\"");
@@ -556,7 +556,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(orm.privileges || orm.isNestedOnly) {
           
           /* insert rule */
-         if(DEBUG) print(NOTICE, 'process base INSERT');        
+         if(DEBUG) plv8.elog(NOTICE, 'process base INSERT');        
           if(canCreate && insSrcCols.length) {
             rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
                               .replace(/{event}/, 'insert')
@@ -576,7 +576,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           rules.push(rule);
 
           /* update rule */
-          if(DEBUG) print(NOTICE, 'process base UPDATE');         
+          if(DEBUG) plv8.elog(NOTICE, 'process base UPDATE');         
           if(canUpdate && pKeyCol && updCols.length) {
             rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
                               .replace(/{event}/, 'update')
@@ -596,7 +596,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           rules.push(rule); 
 
           /* delete rule */
-          if(DEBUG) print(NOTICE, 'process base DELETE');       
+          if(DEBUG) plv8.elog(NOTICE, 'process base DELETE');       
           if(canDelete && pKeyCol) {
             rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
                               .replace(/{event}/, 'delete')
@@ -618,7 +618,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* must be non-updatable view */
         } else { 
-          if(DEBUG) print(NOTICE, 'process base non-updatable');
+          if(DEBUG) plv8.elog(NOTICE, 'process base non-updatable');
           
           rule = CREATE_RULE.replace(/{name}/,'"_INSERT"')
                             .replace(/{event}/, 'insert')
@@ -643,7 +643,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       }
 
       /* process and add order by array */
-      if(DEBUG) print(NOTICE, 'process base order array');     
+      if(DEBUG) plv8.elog(NOTICE, 'process base order array');     
       if(orm.order) {
         for(var i = 0; i < orm.order.length; i++) {
           orm.order[i] = orm.order[i].replace(RegExp(table + ".", "g"), tblAlias + ".");
@@ -654,7 +654,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       tbl++;
 
       /* add extensions */
-      if(DEBUG) print(NOTICE, 'process base extensions');     
+      if(DEBUG) plv8.elog(NOTICE, 'process base extensions');     
       if(orm.extensions) {
         for(var i = 0; i < orm.extensions.length; i++) {
           var ext = orm.extensions[i];
@@ -686,25 +686,25 @@ select xt.install_js('XT','Orm','xtuple', $$
             .replace(/{tables}/, tbls.join(' '))
             .replace(/{where}/, clauses.length ? 'where ' + clauses.join(' and ') : '')
             .replace(/{order}/, orderBy.length ? 'order by ' + orderBy.join(' , ') : '');
-    if(DEBUG) print(NOTICE, 'query', query);
-    executeSql(query);
+    if(DEBUG) plv8.elog(NOTICE, 'query', query);
+    plv8.execute(query);
 
     /* Add comment */
     query = "comment on view {name} is '{comments}'"
             .replace(/{name}/, viewName)
             .replace(/{comments}/, comments);           
-    executeSql(query);
+    plv8.execute(query);
     
     /* Apply the rules */
     for(var i = 0; i < rules.length; i++) {
-      if(DEBUG) print(NOTICE, 'rule', rules[i]);   
-      executeSql(rules[i]);
+      if(DEBUG) plv8.elog(NOTICE, 'rule', rules[i]);   
+      plv8.execute(rules[i]);
     }
 
     /* Grant access to xtrole */
     query = 'grant all on {view} to xtrole'
             .replace(/{view}/, viewName);           
-    executeSql(query); 
+    plv8.execute(query); 
   }
 $$ );
 

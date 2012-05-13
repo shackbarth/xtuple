@@ -53,11 +53,11 @@ select xt.install_js('XM','billing','billing', $$
         cnum = {}, inum = {}, ret = [];
 
     cnum.setting = 'NextARMemoNumber';
-    cnum.value = executeSql(sql, ['ARMemoNumber'])[0].value;
+    cnum.value = plv8.execute(sql, ['ARMemoNumber'])[0].value;
     ret.push(cnum);
 
     inum.setting = 'NextCashRcptNumber';
-    inum.value = executeSql(sql, ['CashRcptNumber'])[0].value;
+    inum.value = plv8.execute(sql, ['CashRcptNumber'])[0].value;
     ret.push(inum);
 
     ret = ret.concat(data.retrieveMetrics(keys));
@@ -81,18 +81,18 @@ select xt.install_js('XM','billing','billing', $$
 
     /* update numbers */
     if(settings['NextARMemoNumber']) {
-      executeSql('select setNextARMemoNumber($1)', [settings['NextARMemoNumber']]);
+      plv8.execute('select setNextARMemoNumber($1)', [settings['NextARMemoNumber']]);
     }
     options.remove('NextARMemoNumber');
 
     if(settings['NextCashRcptNumber']) {
-      executeSql('select setNextCashRcptNumber($1)', [settings['NextCashRcptNumber']]);
+      plv8.execute('select setNextCashRcptNumber($1)', [settings['NextCashRcptNumber']]);
     }
     options.remove('NextCashRcptNumber');
 
     /* update address as a real address */
     sql = "select saveAddr(null,null,$1,$2,$3,$4,$5,$6,$7,'CHANGEONE')";
-    executeSql(sql, [settings['remitto_address1'] ? settings['remitto_address1'] : '',
+    plv8.execute(sql, [settings['remitto_address1'] ? settings['remitto_address1'] : '',
                      settings['remitto_address2'] ? settings['remitto_address2'] : '',
                      settings['remitto_address3'] ? settings['remitto_address3'] : '',
                      settings['remitto_city'] ? settings['remitto_city'] : '',
