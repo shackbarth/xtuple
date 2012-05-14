@@ -50,7 +50,7 @@
     {
       "name": "value",
       "attr": {
-        "type": "Number",
+        "type": "String",
         "column": "value"
       }
     }
