@@ -327,7 +327,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
       left = 120, right = 12,
       full = 296,
       label = null, widget = null;
- 
+
   // hours
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: full },
