@@ -386,7 +386,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         that.tryToPerform('popModal');
       });
     } else if (evt.type === 'popModal') {
-      return this.transition('Inactive');
+      return this.transition('Editor');
     }
   }.behavior('Modal'),
 
@@ -404,7 +404,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         that.tryToPerform('popModal');
       });
     } else if (evt.type === 'popModal') {
-      return this.transition('Inactive');
+      return this.transition('Editor');
     }
   }.behavior('Modal'),
 
