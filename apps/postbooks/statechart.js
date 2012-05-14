@@ -41,6 +41,9 @@ Postbooks.statechart = SC.Statechart.create({
       Postbooks.set('submoduleBackButtonTitle', currentModal.submoduleBackButtonTitle);
       Postbooks.set('submoduleBackButtonAction', currentModal.submoduleBackButtonAction);
 
+      var callback = currentModal.callback;
+      if (callback && typeof callback === 'function') callback();
+
       // Wait for the surface to exit the viewport before removing it.
       setTimeout(function() {
         SC.RunLoop.begin();

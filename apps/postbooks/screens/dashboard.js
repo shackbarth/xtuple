@@ -4,6 +4,7 @@
 // ==========================================================================
 /*globals XT XM Postbooks sc_assert */
 
+sc_require('views/topbar');
 sc_require('views/carousel');
 
 var base03 =   "#002b36";
@@ -34,6 +35,9 @@ var IconLayer = SC.ButtonWidget.extend({
 
   render: function(ctx) {
     //console.log('IconLayer.render()', SC.guidFor(this));
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height;
+
     ctx.beginPath();
     this.renderHitTestPath(ctx);
     ctx.fillStyle = this.get('color');
@@ -47,7 +51,7 @@ var IconLayer = SC.ButtonWidget.extend({
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
     ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText(this.get('name'), ctx.width/2, ctx.height/2);
+    ctx.fillText(this.get('name'), w/2, h/2);
   }
 
 });
@@ -55,21 +59,9 @@ var IconLayer = SC.ButtonWidget.extend({
 Postbooks.LoadDashboard = function() {
   var dashboard = SC.LayoutSurface.create();
   
-  var topbar = SC.View.create({
-    layout: { top: 0, left: 0, right: 0, height: 44 },
-
-    willRenderLayers: function(ctx) {
-      var K = Postbooks;
-      ctx.fillStyle = base3;
-      ctx.font = "16pt "+K.TYPEFACE;
-      ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
-      ctx.shadowBlur = 0;
-      ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText("_xtuplePostbooks".loc(), ctx.width/2, ctx.height/2);
-    }
+  var topbar = Postbooks.Topbar.create({
+    name: "_xtuplePostbooks".loc()
   });
-  topbar.set('backgroundColor', base03);
 
   var springboard = SC.View.create({
     layout: { top: 44, left: 0, right: 0, bottom: 0 }

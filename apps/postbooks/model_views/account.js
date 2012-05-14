@@ -32,7 +32,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   context.font = (val? "" : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 195);
+  if (val && val.elide) val = val.elide(context, 195);
   context.fillText(val, 315, 15);
   if (val) phoneWidth = context.measureText(val).width + 5;
   if (phoneWidth < 0) phoneWidth = 0;
@@ -42,7 +42,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
-  val = val.elide(context, 295 - phoneWidth);
+  if (val && val.elide) val = val.elide(context, 295 - phoneWidth);
   context.fillText(val, 15, 15);
  
   // Primary Contact Email
@@ -59,7 +59,7 @@ Postbooks.Account.RenderRecordListRow = function(context, width, height, index, 
   context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
-  val = val.elide(context, 300 - emailWidth);
+  if (val && val.elide) val = val.elide(context, 300 - emailWidth);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
   // Primary Contact Name
@@ -97,6 +97,26 @@ Postbooks.Account.Tiles = function(controller, isRoot) {
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
   
+  //to-many relationships
+  for (var key in proto) {
+    if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
+
+    var property = proto[key],
+        title = ("_"+key).loc()+":";
+
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      var arrayKlass = property.get('typeClass');
+
+      var arrayController = SC.ArrayController.create({
+        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+      });
+
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+    }
+  }
+
   return tiles;
 };
 
@@ -116,7 +136,7 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   key = 'isActive';
   property = proto[key];
   widget = SC.CheckboxWidget.create({
-    layout: { top: y, left: right, height: 24, right: right },
+    layout: { top: y, left: right, height: 22, right: right },
     title: "_isActive".loc(),
     valueBinding: SC.Binding.transform(function(val) {
       return !!val;
@@ -153,13 +173,14 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   key = 'number';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_number".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -170,13 +191,14 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   key = 'name';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_name".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(key, controller)
   });
   y += K.VERT_SPACER;
@@ -188,8 +210,9 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   key = 'owner';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_owner".loc() + ':'
   });
@@ -199,7 +222,7 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'username';
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
@@ -210,7 +233,8 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'white',
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
@@ -221,8 +245,9 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   key = 'parent';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_parent".loc() + ':'
   });
@@ -232,7 +257,7 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'number';
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
@@ -243,7 +268,8 @@ Postbooks.Account.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'white',
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });

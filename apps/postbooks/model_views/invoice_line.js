@@ -37,21 +37,21 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   val = item? item.get('number') : object.get('itemNumber');
   context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
-  if (val) val = val.elide(context, 200);
+  if (val && val.elide) val = val.elide(context, 200);
   context.fillText(val , 45, 15);
   
   // Sales Category
   val = item? '' : object.getPath('salesCategory.name');
   context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 65);
+  if (val && val.elide) val = val.elide(context, 65);
   context.fillText(val , 315, 15);
   
   // Description
   val = item? item.get('description1') : object.get('description');
   context.font = "italic 9pt "+K.TYPEFACE;
   context.textAlign = 'left';
-  //if (val) val = val.elide(context, 325);
+  //if (val && val.elide) val = val.elide(context, 325);
   context.fillText(val , 325, 15);
 
   // Ordered
@@ -62,7 +62,7 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
 
   val = object.get('ordered').toLocaleString();
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 100-orderedLabelWidth);
+  if (val && val.elide) val = val.elide(context, 100-orderedLabelWidth);
   context.fillText(val , 150, 35);
   
   // Billed
@@ -73,25 +73,25 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
 
   val = object.get('billed').toLocaleString();
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 100-billedLabelWidth);
+  if (val && val.elide) val = val.elide(context, 100-billedLabelWidth);
   context.fillText(val , 260, 35);
   
   // Quantity Unit
   val = object.getPath('quantityUnit.name') || '';
   context.textAlign = 'left';
-  if (val) val = val.elide(context, 50);
+  if (val && val.elide) val = val.elide(context, 50);
   context.fillText(val , 265, 35);
   
   // Price
   val = object.get('price').toLocaleString();
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 100);
+  if (val && val.elide) val = val.elide(context, 100);
   context.fillText(val , 400, 35);
   
   // Price Unit
   val = object.getPath('priceUnit.name') || '';
   context.textAlign = 'left';
-  if (val) val = val.elide(context, 50);
+  if (val && val.elide) val = val.elide(context, 50);
   context.fillText(val , 405, 35);
   
   // Price
@@ -102,7 +102,7 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   
   val = object.get('extendedPrice').toLocaleString();
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 100);
+  if (val && val.elide) val = val.elide(context, 100);
   context.fillText(val , 635, 35);
 
 };

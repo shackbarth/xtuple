@@ -26,6 +26,8 @@ Postbooks.Button = SC.ButtonWidget.extend({
 
   displayProperties: 'name'.w(),
 
+  tooltip: "Button Tooltip",
+
   name: "_back".loc(),
 
   displayName: function() {
@@ -36,23 +38,47 @@ Postbooks.Button = SC.ButtonWidget.extend({
 
   dragPoint: null,
 
+  renderButtonShape: function(ctx) {
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height,
+        radius = this.get('cornerRadius');
+
+    if (radius === undefined) radius = 5;
+
+    SC.CreateRoundRectPath(ctx, 1.5, 1.5, w-3, h-3, radius);
+  },
+
   render: function(ctx) {
     //console.log('IconLayer.render()', SC.guidFor(this));
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height,
+        isEnabled = this.get('isEnabled');
+
+    var lingrad = ctx.createLinearGradient(0,0,0,h);
+    lingrad.addColorStop(0, 'rgb(252,188,126)');
+    lingrad.addColorStop(0.9, 'rgb(255,102,0)');
+    lingrad.addColorStop(1, 'rgb(255,178,128)');
+
+    ctx.globalAlpha = isEnabled? 1.0 : 0.5;
+
     ctx.beginPath();
-    this.renderHitTestPath(ctx);
-    ctx.fillStyle = base02;
+    ctx.fillStyle = lingrad;
+    this.renderButtonShape(ctx);
     ctx.fill();
+    ctx.strokeStyle = white;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
 
     // Draw some text.
-    ctx.fillStyle = this.get('isEnabled')? base3 : base1;
+    ctx.fillStyle = isEnabled? white : 'rgba(255,255,255,0.7)';
     
     var K = Postbooks;
-    ctx.font = "13pt "+K.TYPEFACE;
+    ctx.font = "11pt "+K.TYPEFACE;
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
     ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText(this.get('displayName'), ctx.width/2, ctx.height/2);
+    ctx.fillText(this.get('displayName'), w/2, h/2);
   }
 
 });

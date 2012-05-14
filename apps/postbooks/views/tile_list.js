@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks sc_assert XT XM */
+/*globals global Postbooks XM XT sc_assert */
 
 sc_require('views/record_list');
 sc_require('views/tile_view');
@@ -25,14 +25,22 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.CharacteristicsListView = SC.IListView.extend(
-  /** @scope Postbooks.CharacteristicsListView.prototype */{
+Postbooks.DefaultTileListRenderRow = Postbooks.DefaultRecordListRenderRow;
+
+/** @class
+
+  (Document your Model here)
+
+  @extends SC.ListView
+*/
+Postbooks.TileListView = SC.ListView.extend(
+  /** @scope Postbooks.TileListView.prototype */{
 
   isTile: true, // Walk like a duck.
 
   layout: { top: 0, left: 0, right: 0, height: 0 }, // height set below
 
-  rowHeight: Postbooks.HEIGHT_3_ROW,
+  rowHeight: Postbooks.HEIGHT_2_ROW,
   hasHorizontalScroller: false,
 
   /**
@@ -76,61 +84,7 @@ Postbooks.CharacteristicsListView = SC.IListView.extend(
     }
   },
   
-  createRenderLayerTree: function() {
-    var tree =  SC.Widget.create({
-
-      render: function(context) {
-        var bounds = this.get('bounds'),
-            width = bounds.width,
-            height = bounds.height,
-            index = this.get('rowIndex'),
-            object = this.get('content'),
-            isSelected = this.get('isSelected');
-      
-        context.fillStyle = 'clear';
-        context.fillRect(0, 0, width, height);
-      
-        context.strokeStyle = 'black';
-        context.lineWidth = 1;
-      
-        if (!this.get('isLast')) {
-          context.beginPath();
-          context.moveTo(0, height - 0.5);
-          context.lineTo(width, height - 0.5);
-          context.stroke();
-        }
-      }
-    });
-
-    var query = SC.Query.create({
-      conditions: 'isContacts = YES',
-      recordType: XM.Characteristic
-    });
-
-    var items = SC.RecordArray.create({
-      store: XT.store,
-      query: query
-    });
-
-    XT.dataSource.fetch(XT.store, query);
-
-    var selectwidget = SC.SelectWidget.create({
-      layout: { top: 8, left: 11, right: 11, height: 24 },
-      theme: 'capsule',
-      items: items,
-      valueBinding: SC.Binding.from('*content.characteristic', tree).noDelay(),
-      itemTitleKey: 'name'
-    });
-    tree.addSublayer(selectwidget);
-
-    var textfield = SC.TextFieldWidget.create({
-      layout: { bottom: 8, left: 12, right: 12, height: 22 }
-      // valueBinding: SC.Binding.from('*content.value', tree)
-    });
-    tree.addSublayer(textfield);
-
-    return tree;
-  },
+  renderRow: Postbooks.DefaultTileListRenderRow,
 
   init: function() {
     arguments.callee.base.apply(this, arguments);

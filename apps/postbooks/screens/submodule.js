@@ -33,6 +33,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
   var baseClass = XM[className];
   var browseClass = XM[className+'Browse'] || baseClass;
+  if (!baseClass) debugger;
   sc_assert(baseClass);
   sc_assert(baseClass.isClass);
   sc_assert(baseClass.subclassOf(XT.Record));
@@ -64,24 +65,9 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
   Postbooks.set('submoduleTitle', name);
 
-  var topbar = SC.View.create({
-    layout: { top: 0, left: 0, right: 0, height: 44 },
-
+  var topbar = Postbooks.Topbar.create({
     nameBinding: 'Postbooks.submoduleTitle',
-
-    willRenderLayers: function(ctx) {
-      ctx.fillStyle = base3;
-      
-      var K = Postbooks;
-      ctx.font = "16pt "+K.TYPEFACE;
-      ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
-      ctx.shadowBlur = 0;
-      ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(this.get('name'), ctx.width/2, ctx.height/2);
-    }
   });
-  topbar.set('backgroundColor', base03);
 
   Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
   Postbooks.set('submoduleBackButtonAction', 'back');
@@ -121,7 +107,6 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     isOverview: true
   })];
 
-
   if (Postbooks[className] && Postbooks[className].Lists) {
     list = list.concat(Postbooks[className].Lists(controller));
   } else {
@@ -143,7 +128,8 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
         list.push(SC.Object.create({
           title: title,
-          surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController),
+          // surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController),
+          surface: editor,
           klass: arrayKlass,
           attribute: key
         }));
@@ -185,7 +171,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     selectionBinding: SC.Binding.from('selection', listController),
 
     action: function(object, index) {
-      console.log('do something on index ' + index);
+      console.log('FIXME: need to implement auto-scroll to the correct tile');
       contentArea.set('contentSurface', list[index].surface);
     }
   });

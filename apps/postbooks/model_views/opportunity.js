@@ -86,35 +86,35 @@ Postbooks.Opportunity.RenderRecordListRow = function(context, width, height, ind
   context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = 'black';
-  if (val) val = val.elide(context, 300 - amountWidth);
+  if (val && val.elide) val = val.elide(context, 300 - amountWidth);
   context.fillText(val , 15, 35);
   
   // Account Name
   val = object.getPath('account.name');
   context.font = "italic 9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 160);
+  if (val && val.elide) val = val.elide(context, 160);
   context.fillText(val , 325, 15);
 
   // Contact Name
   val = object.getPath('contact.name') || '';
   context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 160);
+  if (val && val.elide) val = val.elide(context, 160);
   context.fillText(val? val : "_noContact".loc(), 325, 35);
 
   // Stage
   val = object.getPath('opportunityStage.name');
   context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (val) val = val.elide(context, 70);
+  if (val && val.elide) val = val.elide(context, 70);
   context.fillText(val? val : "_noStage".loc(), 490, 15);
   
   // Assigned To
   val = object.getPath('assignedTo.username') || '';
   context.font = "9pt "+K.TYPEFACE;
   context.fillStyle = 'black';
-  if (val) val = val.elide(context, 70);
+  if (val && val.elide) val = val.elide(context, 70);
   context.fillText(val , 490, 35);  
 
   // Priority
@@ -153,6 +153,26 @@ Postbooks.Opportunity.Tiles = function(controller, isRoot) {
   //notes
   tiles.push(Postbooks.CreateNotesTileView(controller));
 
+  //to-many relationships
+  for (var key in proto) {
+    if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
+
+    var property = proto[key],
+        title = ("_"+key).loc()+":";
+
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      var arrayKlass = property.get('typeClass');
+
+      var arrayController = SC.ArrayController.create({
+        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+      });
+
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+    }
+  }
+
   return tiles;
 };
 
@@ -172,7 +192,7 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   key = 'isActive';
   property = proto[key];
   widget = SC.CheckboxWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     title: "_isActive".loc(),
     valueBinding: SC.Binding.transform(function(val) {
       return !!val;
@@ -186,13 +206,14 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   key = 'number';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_number".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -203,13 +224,14 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   key = 'name';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_name".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(key, controller)
   });
   y += K.VERT_SPACER;
@@ -222,8 +244,9 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   console.log('crm account type: %@'.fmt(proto[key].type));
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_account".loc() + ':'
   });
@@ -233,7 +256,7 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'number';
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
@@ -248,7 +271,8 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'white',
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
@@ -259,8 +283,9 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   key = 'owner';
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_owner".loc() + ':'
   });
@@ -270,7 +295,7 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'username';
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
@@ -281,7 +306,8 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'white',
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
@@ -292,8 +318,9 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   key = "assignedTo";
   property = proto[key];
   label = SC.LabelLayer.create({
-    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'white',
+    layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'right',
     value: "_assignedTo".loc() + ':'
   });
@@ -303,7 +330,7 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'username';
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 22, right: right },
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
@@ -318,7 +345,8 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'white',
+    backgroundColor: 'clear',
+    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
