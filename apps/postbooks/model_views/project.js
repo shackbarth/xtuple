@@ -297,9 +297,10 @@ Postbooks.Project.CreateContactTileView = function(controller) {
   console.log('Postbooks.Project.CreateOverviewTileView(', controller, ')');
 
   var proto = XM.Project.prototype,
-      key, objectKlass, objectController;
+      key, property, objectKlass, objectController;
  
   key = 'contact';
+  property = proto[key];
   objectKlass = property.get('typeClass');
   objectController = SC.ObjectController.create({
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
