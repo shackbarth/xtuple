@@ -307,7 +307,6 @@ Postbooks.Project.CreateContactTileView = function(controller) {
   });
 
   return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_contact".loc());
-
 };
 
 Postbooks.Project.CreateSummaryTileView = function(controller) {
