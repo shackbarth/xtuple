@@ -54,8 +54,8 @@ XM._AccountCharacteristic = {
   }),
 
   /**
-    @type Number
+    @type String
   */
-  value: SC.Record.attr(Number)
+  value: SC.Record.attr(String)
 
 };
