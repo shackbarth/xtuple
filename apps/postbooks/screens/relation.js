@@ -24,13 +24,12 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
-  console.log('Postbooks.LoadModule(', className, backButtonTitle, ')');
+Postbooks.LoadRelation = function(className, backButtonTitle, instance) {
+  console.log('Postbooks.LoadRelation(', className, backButtonTitle, ')');
   var context = SC.Object.create({
     submoduleTitle: Postbooks.get('submoduleTitle'),
     submoduleBackButtonTitle: Postbooks.get('submoduleBackButtonTitle'),
-    submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction'),
-    callback: callback
+    submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction')
   });
 
   Postbooks.set('submoduleTitle', ("_" + className.camelize()).loc());
@@ -89,8 +88,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
-    var property = proto[key],
-        title = ("_"+key).loc();
+    var property = proto[key];
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -100,7 +98,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
       });
 
       list.push(SC.Object.create({
-        title: title,
+        title: property.label,
         surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
       }));
     }

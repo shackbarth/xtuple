@@ -63,7 +63,7 @@ Postbooks.SUBMODULE = SC.State.design({
   },
 
   back: function(stateName) {
-    SC.EndEditingTextLayer();
+    SC.CloseFieldEditor();
     if (Postbooks.getPath('store.hasChanges')) {
       var save;
       if (Postbooks.submoduleController.get('status') === SC.Record.READY_NEW) {
@@ -101,13 +101,13 @@ Postbooks.SUBMODULE = SC.State.design({
   },
 
   apply: function() {
-    SC.EndEditingTextLayer();
+    SC.CloseFieldEditor();
     Postbooks.get('store').commitChanges(true); // force
     XT.store.commitRecords();
   },
 
   cancel: function() {
-    SC.EndEditingTextLayer();
+    SC.CloseFieldEditor();
 
     // If we're working on a new record, just clean up and exit.
     if (Postbooks.submoduleController.get('status') === SC.Record.READY_NEW) {
@@ -136,7 +136,7 @@ Postbooks.SUBMODULE = SC.State.design({
   },
 
   deleteRecord: function() {
-    SC.EndEditingTextLayer();
+    SC.CloseFieldEditor();
 
     if (window.confirm("_deleteRecord".loc())) {
 

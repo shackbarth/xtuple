@@ -92,7 +92,7 @@ XM.Characteristic = XM.Document.extend(XM._Characteristic,
   
   // On characteristicType change, disable unassociated properties
   characteristicTypeDidChange: function() {
-    this.checkcharacteristicType();
+    this.checkCharacteristicType();
   }.observes('characteristicType'),
 
   statusDidChange: function() {

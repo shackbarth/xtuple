@@ -36,8 +36,6 @@ var white =    "white";
 Postbooks.TileCarousel = Postbooks.Carousel.extend(
   /** @scope Postbooks.TileCarousel.prototype */{
 
-  _sc_backgroundColor: 'black',
-
   updateTrayLayout: function() {
     // console.log('Postbooks.TileCarousel#updateTrayLayout()');
     var tray = this._sc_tray,
@@ -87,7 +85,7 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
 
 Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
 
-  _sc_backgroundColor: base01,
+  _sc_backgroundColor: 'clear',
 
   mouseDown: function(evt) {
     // console.log('Postbooks.InternalTileCarouselTray#mouseDown()');

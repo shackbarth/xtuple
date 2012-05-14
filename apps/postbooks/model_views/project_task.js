@@ -45,25 +45,25 @@ Postbooks.ProjectTask.RenderRecordListRow = function(context, width, height, ind
   context.font = "bold 10pt "+K.TYPEFACE;
   context.fillStyle = 'black';
   context.textAlign = 'left';
-  val = val.elide(context, 290 - dateWidth);
+  if (val && val.elide) val = val.elide(context, 290 - dateWidth);
   context.fillText(val, 15, 15);
   
   // Name
   val = object.get('name') || '';
   context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
-  if (val) val = val.elide(context, 300);
+  if (val && val.elide) val = val.elide(context, 300);
   context.fillText(val , 15, 35);
   
   // Status
   val = object.get('projectTaskStatusString');
   context.font = "9pt "+K.TYPEFACE;
-  if (val) val = val.elide(context, 70);
+  if (val && val.elide) val = val.elide(context, 70);
   context.fillText(val , 325, 15);
 
   // Assigned To
   val = object.getPath('assignedTo.username') || '';
-  if (val) val = val.elide(context, 70);
+  if (val && val.elide) val = val.elide(context, 70);
   context.fillText(val , 325, 35);
 
   // labels 
@@ -78,25 +78,25 @@ Postbooks.ProjectTask.RenderRecordListRow = function(context, width, height, ind
   val = object.get('budgetedHours');
   val = val.toLocaleString()+" "+"_hrs".loc();
   context.textAlign = 'right';
-  val = val.elide(context, 145 - budgetLabelWidth);
+  if (val && val.elide) val = val.elide(context, 145 - budgetLabelWidth);
   context.fillText(val, 535, 15);
 
   // Budgeted Expenses Total 
   val = object.get('budgetedExpenses');
   val = currency.toLocaleString(val);
-  val = val.elide(context, 95);
+  if (val && val.elide) val = val.elide(context, 95);
   context.fillText(val, 635, 15);
 
   // Actual Hours Total 
   val = object.get('actualHours');
   val = val.toLocaleString()+" "+"_hrs".loc();
-  val = val.elide(context, 145 - actualLabelWidth);
+  if (val && val.elide) val = val.elide(context, 145 - actualLabelWidth);
   context.fillText(val, 535, 35);
   
   // Actual Expenses Total 
   val = object.get('actualExpenses')
   val = currency.toLocaleString(val);
-  val = val.elide(context, 95);
+  if (val && val.elide) val = val.elide(context, 95);
   context.fillText(val, 635, 35);
   
 };

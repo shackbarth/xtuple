@@ -13,7 +13,7 @@
   @returns {String} the localized string.
   @extends String
 */
-
+// FIXME: Why doesn't this work?
 String.prototype.loc = function() {
   if(!SC.Locale.currentLocale) { SC.Locale.createCurrentLocale(); }
 
@@ -22,29 +22,4 @@ String.prototype.loc = function() {
 
   return localized;
 }
-
-/**
-  Accepts canvas 2D rendering context and maximum pixel length arguments and 
-  returns a string that does not exceed the maximum width. If the original string 
-  is too long for the width it will be truncated with elipses placed at the
-  beginning of a text aligned right context or the end of a text aligned left
-  or center context.
-
-  @param {CanvasRenderingContext2D}  
-  @param {Number) maximum length
-*/
-String.prototype.elide = function(context, maxLength) {
-  if (maxLength <= 0) return '';
-  var ret = this, isRight = context.textAlign === 'right';
-  if (context.measureText(ret).width > maxLength) {
-    var e = '...', len = context.measureText(e).width;
-    while (context.measureText(ret).width+len > maxLength) {
-      ret = ret.slice(0, ret.length-1);
-    }
-    ret = ret+e;
-  }
-  return ret;
-}
-
-
 

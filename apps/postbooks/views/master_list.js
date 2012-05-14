@@ -23,27 +23,37 @@ var green =    "#859900";
 var white =    "white";
 
 Postbooks.DefaultMasterRenderRow = function(context, width, height, index, object, isSelected) {
-  context.fillStyle = isSelected? '#99CCFF' : 'white';
+  context.fillStyle = 'clear';
   context.fillRect(0, 0, width, height);
 
   context.strokeStyle = 'grey';
   context.lineWidth = 1;
 
   context.beginPath();
-  context.moveTo(0, height - 0.5);
-  context.lineTo(width, height - 0.5);
+  context.moveTo(32, height - 0.5);
+  context.lineTo(width-32, height - 0.5);
   context.stroke();
 
-  context.fillStyle = base00;
-  context.fillRect(20, 6, 32, 32);
+  // context.fillStyle = base00;
+  // context.fillRect(20, 6, 32, 32);
 
   var K = Postbooks;
   context.font = "12pt "+K.TYPEFACE;
-  context.fillStyle = 'black';
+  context.fillStyle = 'white';
   context.textAlign = 'left';
   context.textBaseline = 'middle';
 
-  context.fillText(object.get('title'), 72, height/2);
+  context.fillText(object.get('title'), 64, height/2);
+
+  if (isSelected) {
+    context.beginPath();
+    context.moveTo(48, height/2 - 7);
+    context.lineTo(56, height/2 - 1);
+    context.lineTo(48, height/2 + 5);
+    context.closePath();
+    context.fillStyle = 'rgb(252,102,32)';
+    context.fill();
+  }
 };
 
 /** @class
@@ -59,8 +69,16 @@ Postbooks.MasterListView = SC.ListView.extend(
   rowHeight: 44,
   hasHorizontalScroller: false,
 
+  didCreateElement: function(el) {
+    arguments.callee.base.apply(this, arguments);
+    var style = el.style;
+    style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+    style.backgroundPosition = 'left top';
+    style.backgroundRepeat = 'repeat';
+  },
+
   willRenderLayers: function(context) {
-    context.fillStyle = 'white';
+    context.fillStyle = 'clear';
     context.fillRect(0, 0, context.width, context.height);
   },
 

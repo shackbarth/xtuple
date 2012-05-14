@@ -30,32 +30,36 @@
 
   "foundation": {
     "type": "framework",
-    "path": "node_modules/blossom/foundation"
+    "monitor": true,
+    "path": "../../erichocean/blossom/foundation"
   },
 
   "application": {
     "type": "framework",
+    "monitor": true,
     "frameworks": [
       "constraints",
       "foundation"
     ],
-    "path": "node_modules/blossom/application"
+    "path": "../../erichocean/blossom/application"
   },
 
   "datastore": {
     "type": "framework",
+    "monitor": true,
     "frameworks": [
       "foundation",
       "application"
     ],
-    "path": "node_modules/blossom/datastore"
+    "path": "../../erichocean/blossom/datastore"
   },
 
   "constraints": {
     "type": "framework",
+    "monitor": true,
     "frameworks": [
       "foundation"
     ],
-    "path": "node_modules/blossom/application/constraints"
+    "path": "../../erichocean/blossom/constraints"
   }
 }

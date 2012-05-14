@@ -32,7 +32,7 @@ Postbooks.Vendor.RenderRecordListRow = function(context, width, height, index, o
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 195);
+  if (val && val.elide) val = val.elide(context, 195);
   context.fillText(val, 265, 15);
   if (val) phoneWidth = context.measureText(val).width + 5;
   if (phoneWidth < 0) phoneWidth = 0;
@@ -42,14 +42,14 @@ Postbooks.Vendor.RenderRecordListRow = function(context, width, height, index, o
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
-  val = val.elide(context, 255 - phoneWidth);
+  if (val && val.elide) val = val.elide(context, 255 - phoneWidth);
   context.fillText(val, 15, 15);
   
   // Name
   val = object.get('name');
   context.font = (val? "" : "italic ")+"8pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
-  if (address) val = val.elide(context, 255);
+  if (address && val && val.elide) val = val.elide(context, 255);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
   // Primary Contact Name
@@ -58,7 +58,7 @@ Postbooks.Vendor.RenderRecordListRow = function(context, width, height, index, o
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
   val = val? val : "_noContact".loc();
-  val = val.elide(context, 195);
+  if (val && val.elide) val = val.elide(context, 195);
   context.fillText(val, 275, 15);
           
   // Primary Contact Email

@@ -4,6 +4,7 @@
 // ==========================================================================
 /*globals Postbooks XT XM sc_assert */
 
+sc_require('views/topbar');
 sc_require('views/carousel');
 sc_require('views/master_list');
 sc_require('views/record_list');
@@ -61,13 +62,13 @@ Postbooks.LoadModule = function(name, classes, state) {
     content = 'Postbooks.'+className+'ListController.arrangedObjects';
     selection = 'Postbooks.'+className+'ListController.selection';
     
-    action = function(object, index) {
+    var action = function(object, index) {
       sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
       Postbooks.set('store', Postbooks.get('store').chain());
       controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
       Postbooks.submoduleController = controller;
       Postbooks.statechart.sendAction('show'+className);
-    }
+    };
 
     // class have it's own list view?
     if (Postbooks[className] && Postbooks[className].RecordListView) {
@@ -139,22 +140,10 @@ Postbooks.LoadModule = function(name, classes, state) {
 
   var module = SC.LayoutSurface.create();
   
-  var topbar = SC.View.create({
-    layout: { top: 0, left: 0, right: 0, height: 44 },
-
-    willRenderLayers: function(ctx) {
-      ctx.fillStyle = base3;
-      
-      var K = Postbooks;
-      ctx.font = "16pt "+K.TYPEFACE;
-      ctx.textBaseline = "middle";
-      ctx.textAlign = "center";
-      ctx.shadowBlur = 0;
-      ctx.shadowColor = "rgba(0,0,0,0)";
-      ctx.fillText(name, ctx.width/2, ctx.height/2);
-    }
+  var topbar = Postbooks.Topbar.create({
+    name: name
   });
-  topbar.set('backgroundColor', base03);
+
   topbar.get('layers').pushObject(Postbooks.BackButton.create({
     layout: { left: 20, centerY: 0, width: 120, height: 24 },
     name: "_dashboard".loc(),

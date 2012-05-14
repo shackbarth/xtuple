@@ -25,26 +25,36 @@ Postbooks.TileView = SC.View.extend(
     @default Postbooks.TileView.QUARTER_TILE;
   */
   size: null,
-  
+
+  didCreateElement: function(el) {
+    arguments.callee.base.apply(this, arguments);
+    var style = el.style;
+    style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+    style.backgroundPosition = 'left top';
+    style.backgroundRepeat = 'repeat';
+  },
+
+  clearBackground: true,
+
   willRenderLayers: function(context) { 
     var title = this.get('title');
            
     // title bar
-    context.fillStyle = base3;
-    context.fillRect(0, 3, context.width, 32);
+    // context.fillStyle = base3;
+    // context.fillRect(0, 3, context.width, 32);
 
     // image frame
-    context.fillStyle = base00;
-    context.fillRect(20, 7, 24, 24);
+    // context.fillStyle = base00;
+    // context.fillRect(20, 7, 24, 24);
 
     // title text
     var K = Postbooks;
     context.font = "12pt "+K.TYPEFACE;
-    context.fillStyle = 'black';
+    context.fillStyle = 'white';
     context.textAlign = 'left';
     context.textBaseline = 'middle';
 
-    context.fillText(this.get('title'), 72, 19  );
+    context.fillText(this.get('title'), 18, 19  );
   },
   
   init: function() {

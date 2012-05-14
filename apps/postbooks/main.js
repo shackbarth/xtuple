@@ -18,4 +18,5 @@ XT.DataSource.prototype.logLevels = SC.Object.create({
 
 function main() {
   Postbooks.statechart.initStatechart();
+  // Postbooks.RelationView.create();
 }

@@ -32,7 +32,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
   context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'right';
-  if (val) val = val.elide(context, 195);
+  if (val && val.elide) val = val.elide(context, 195);
   context.fillText(val, 315, 15);
   if (val) phoneWidth = context.measureText(val).width + 5;
   if (phoneWidth < 0) phoneWidth = 0;
@@ -42,7 +42,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
   context.font = (val? "bold " : "italic ")+"10pt "+K.TYPEFACE;
   context.fillStyle = val? 'black' : base1;
   context.textAlign = 'left';
-  val = val.elide(context, 295 - phoneWidth);
+  if (val && val.elide) val = val.elide(context, 295 - phoneWidth);
   context.fillText(val, 15, 15);
   
   // Billing Contact Email
@@ -59,7 +59,7 @@ Postbooks.Customer.RenderRecordListRow = function(context, width, height, index,
   context.font = (val? "" : "italic ")+"9pt "+K.TYPEFACE;
   context.textAlign = 'left';
   context.fillStyle = val? 'black' : base1;
-  if (address) val = val.elide(context, 300 - emailWidth);
+  if (address && val && val.elide) val = val.elide(context, 300 - emailWidth);
   context.fillText(val? val : "_noName".loc(), 15, 35);
 
   // Billing Contact Name
@@ -88,7 +88,7 @@ Postbooks.Customer.Tiles = function(controller, isRoot) {
 
   // Additional
   properties = 'number name customerType isActive spacer salesRep commission taxZone currency'.w();
-  tiles.push(Postbooks.CreateTileView(klass, controller, "_overview".loc(), properties));
+  tiles.push(Postbooks.CreateTileView(klass, controller, "_overview".loc(), properties, null, true));
   
   // Terms
   properties = 'terms discount creditStatus spacer balanceMethod creditLimit creditLimitCurrency creditRating graceDays'.w();
@@ -104,8 +104,27 @@ Postbooks.Customer.Tiles = function(controller, isRoot) {
   properties = 'isFreeFormBillto isFreeFormShipto shipVia shipCharge'.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_sales".loc(), properties));
   
-  return tiles;
+  //to-many relationships
+  for (var key in proto) {
+    if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
 
+    var property = proto[key],
+        title = ("_"+key).loc()+":";
+
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      var arrayKlass = property.get('typeClass');
+
+      var arrayController = SC.ArrayController.create({
+        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+      });
+
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+    }
+  }
+
+  return tiles;
 };
 
 Postbooks.Customer.CreateBillingContactTileView = function(controller) {

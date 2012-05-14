@@ -2,10 +2,11 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM sc_assert */
+/*globals Postbooks XM XT sc_assert */
 
 sc_require('views/carousel');
 sc_require('views/tile_view');
+sc_require('widgets/relation');
 
 var base03 =   "#002b36";
 var base02 =   "#073642";
@@ -45,10 +46,16 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
       if (key === 'dataState') continue;
 
       var property = proto[key],
-          title = (("_"+key).loc())+":";
+          title = ("_"+key).loc()+":";
 
       if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-        continue;
+        var arrayKlass = property.get('typeClass');
+
+        var arrayController = SC.ArrayController.create({
+          contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+        });
+
+        tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
 
       } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
         var objectKlass = property.get('typeClass');
@@ -118,7 +125,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
-    var property = proto[key];
+    property = proto[key];
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       continue;
@@ -134,7 +141,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
     }
   }
   
-  view = Postbooks.CreateTileView(klass, controller, title, properties, commands, isOverview);
+  var view = Postbooks.CreateTileView(klass, controller, title, properties, commands, isOverview);
 
   return view;
 };
@@ -142,14 +149,16 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
 /** Builds an SC.View subclass from a specific property list that can edit them the record class. */
 Postbooks.CreateTileView = function(klass, controller, title, properties, commands, isOverview) {
   console.log('Postbooks.CreateTileView(', klass, controller, title, properties, commands, isOverview, ')');
-  
+
+  if (!isOverview && title === 'Overview') debugger;
+
   title = title? title : "_overview".loc();
   var view = Postbooks.TileView.create({
     title: title,
     mouseDown: function(evt) {
-      SC.EndEditingTextLayer();
+      SC.CloseFieldEditor();
 
-      if (!isOverview) {
+      if (XM[title] !== undefined) {
         Postbooks.LoadModal(title, "_back".loc(), controller.get('content'));
       }
 
@@ -189,32 +198,37 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
       var property = proto[key],
           left = 120, right = 12,
           label = null, widget = null,
-          title = (("_"+key).loc())+":";
-          
+          title = ("_"+key).loc()+":";
+
       if (property.isRecordAttribute) {    
         var typeClass = property.get('typeClass');
+        // if (key === 'customerType') debugger;
 
         if (typeClass === String) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'clear',
+            color: 'white',
             textAlign: 'right',
             value: title
           });
           widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
+            layout: { top: y, left: left, height: 22, right: right },
             valueBinding: SC.Binding.from(key, controller)
           });
           y += 24 + K.SPACING;
         } else if (property.isSingleAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'clear',
+            color: 'white',
             textAlign: 'right',
             value: title
           });
           widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
+            layout: { top: y, left: left, height: 22, right: right },
+            recordType: typeClass,
+            store: controller.getPath('content.store'),
             valueBinding: SC.Binding.transform(function(val) {
               return String(val);
             }).from(key, controller)
@@ -222,13 +236,16 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           y += 24 + K.SPACING;
         } else if (property.isChildrenAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'clear',
+            color: 'white',
             textAlign: 'right',
             value: title
           });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
+          widget = Postbooks.RelationWidget.create({
+            layout: { top: y, left: left, height: 22, right: right },
+            recordType: typeClass,
+            store: controller.getPath('content.store'),
             valueBinding: SC.Binding.transform(function(val) {
               return String(val);
             }).from(key, controller)
@@ -236,27 +253,29 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           y += 24 + K.SPACING;
         } else if (typeClass === Number) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'clear',
+            color: 'white',
             textAlign: 'right',
             value: title
           });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
+          // widget = SC.TextFieldWidget.create({
+          //   layout: { top: y, left: left, height: 22, right: right },
+          //   valueBinding: SC.Binding.transform(function(val) {
+          //     return String(val);
+          //   }).from(key, controller)
+          // });
           y += 24 + K.SPACING;
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'clear',
+            color: 'white',
             textAlign: 'right',
             value: title
           });
           widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
+            layout: { top: y, left: left, height: 22, right: right },
             valueBinding: SC.Binding.transform(function(val) {
               return val? val.toLocaleString() : "";
             }).from(key, controller)
@@ -264,13 +283,14 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           y += 24 + K.SPACING;
         } else if (typeClass === XT.DateTime) {
           label = SC.LabelLayer.create({
-            layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'white',
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'clear',
+            color: 'white',
             textAlign: 'right',
             value: title
           });
           widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
+            layout: { top: y, left: left, height: 22, right: right },
             valueBinding: SC.Binding.transform(function(val) {
               return val? val.toLocaleDateString() : "no date set";
             }).from(key, controller)
@@ -278,7 +298,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           y += 24 + K.SPACING;
         } else if (typeClass === Boolean) {
           widget = SC.CheckboxWidget.create({
-            layout: { top: y, left: left, height: 24, right: right },
+            layout: { top: y, left: left, height: 22, right: right },
             title: ("_"+key).loc(),
             valueBinding: SC.Binding.transform(function(val) {
               return !!val;
@@ -298,6 +318,8 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
       if (widget) layers.pushObject(widget);
     }
   });
+
+  view.set('backgroundColor', 'rgb(66,66,66)');
 
   return view;
 };
@@ -322,7 +344,7 @@ Postbooks.DefaultListRenderRow = function(context, width, height, index, object,
   context.textAlign = 'center';
   context.textBaseline = 'middle';
 
-  context.fillText(object.get('guid') + ': ' + (object.get('name') || object.get('description') || object.get('number')), width/2, height/2);
+  context.fillText(object.get('className') + ': ' + object.get('guid') + ': ' + (object.get('name') || object.get('description') || object.get('number')), width/2, height/2);
 };
 
 Postbooks.CreateListViewForClass = function(klass, controller) {
@@ -351,7 +373,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
       var instance = this.get('content').objectAt(index);
       if (instance) {
         Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", instance);
-
+      
         // Deselect our row after the modal transition ends.
         setTimeout(function() {
           SC.RunLoop.begin();
@@ -393,6 +415,80 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
     },
 
     renderRow: klass.RenderDetailListRow? klass.RenderDetailListRow : Postbooks.DefaultListRenderRow
+
+  });
+
+  return list;
+};
+
+Postbooks.CreateTileListViewForClass = function(klass, controller) {
+  console.log('Postbooks.CreateTileListViewForClass(', klass, ')');
+
+  // See if we have an override.
+  var className = klass.prototype.className;
+  className = className.slice(className.indexOf('.') + 1); // drop name space
+  // if (className === 'ContactCharacteristic') debugger;
+  if (Postbooks[className] && Postbooks[className].CreateTileListView) {
+    return Postbooks[className].CreateTileListView(controller);
+  }
+
+  // Nope, generate the default tile view on the fly.
+  var list = Postbooks.TileListView.create({
+    layout: { top: 0, left: 0, right: 0, bottom: 0 },
+    rowHeight: klass.ListRowHeight !== undefined? klass.ListRowHeight : 60,
+    hasHorizontalScroller: false,
+
+    contentBinding: SC.Binding.from('arrangedObjects', controller).oneWay(),
+    selectionBinding: SC.Binding.from('selection', controller),
+
+    baseClass: klass,
+
+    action: function(object, index) {
+      var that = this;
+      var instance = this.get('content').objectAt(index);
+      if (instance) {
+        Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", instance);
+      
+        // Deselect our row after the modal transition ends.
+        setTimeout(function() {
+          SC.RunLoop.begin();
+          that.get('content').deselectObject(instance);
+          SC.RunLoop.end();
+        }, 250);
+      }
+    },
+
+    willRenderLayers: function(ctx) {
+      var content = this.get('content');
+
+      if (content && content.get('length') === 0) {
+        var w = ctx.width, h = ctx.height;
+
+        var text = 'No records.',
+            status = content? content.get('status') : null;
+
+        if (status && status === SC.Record.BUSY_LOADING) {
+          text = "_loading".loc();
+        }
+
+        // Clear background.
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw view name.
+        ctx.fillStyle = base03;
+        
+        var K = Postbooks;
+        ctx.font = "11pt "+K.TYPEFACE;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        ctx.fillText(text, w/2, h/2);
+      } else {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, w, h);
+      }
+    },
+
+    renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
 
   });
 

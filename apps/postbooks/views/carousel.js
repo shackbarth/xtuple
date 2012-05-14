@@ -61,6 +61,11 @@ Postbooks.Carousel = SC.CompositeSurface.extend(
     // We don't want SC.View's implementation; don't call it.
     div.style.overflowX = 'hidden';
     div.style.overflowY = 'hidden';
+
+    var style = div.style;
+    style.backgroundImage =  Postbooks.createDataUrlForSprite('carousel-texture');
+    style.backgroundPosition = 'left top';
+    style.backgroundRepeat = 'repeat';
   },
 
   updateTrayLayout: function() {
@@ -82,6 +87,7 @@ Postbooks.Carousel = SC.CompositeSurface.extend(
   initTray: function() {
     var tray;
     tray = this._sc_tray = Postbooks.InternalCarouselTray.create();
+    tray.set('backgroundColor', 'clear');
     this.get('subsurfaces').pushObject(tray);
   },
 
