@@ -175,7 +175,7 @@ XM.InvoiceLine = XT.Record.extend(XM._InvoiceLine, XM.Taxable,
     if (isItem) {
       this.setIfChanged('itemNumber', '');
       this.setIfChanged('description', '');
-      this.setIfChanged('salesCategory', -1);
+      this.setIfChanged('salesCategory', XM.SalesCategory.none());
       if (item && item.get('id') == -1) {
         this.set('item', null);
       }
