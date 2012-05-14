@@ -171,11 +171,10 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
       K = Postbooks,
       left = 120, right = 12,
       label = null, widget = null,
-      key, property, objectKlass, objectController, objectKey;
+      key, objectKlass, objectController, objectKey;
 
   // invoice number
   key = 'invoice';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
@@ -198,7 +197,6 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
 
   // lineNumber
   key = 'lineNumber';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
@@ -235,6 +233,123 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
   widgetBinding = SC.Binding.from('value', widget).to('isChangeLayout', view).sync().connect().flushPendingChanges();
   viewBindingsRef.pushObject(widgetBinding);
   y += 24 + K.SPACING;
+  layers.pushObject(widget);
+
+  // item number
+  key = 'item';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_itemNumber".loc() + ':'
+  });
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'number';
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+  objectKey = 'description1';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left, height: 20, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left, height: 20, width: 35 },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    value: "_uom".loc() + ':'
+  });
+  layers.pushObject(label);
+  objectKey = 'priceUnit';
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(objectKey, objectController).single().oneWay()
+  });
+  objectKey = 'name';
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left + 40, height: 20, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+
+  // misc item number
+  key = 'item';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_item".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    // valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // misc description
+  key = 'description1';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_description".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    // valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // misc sales category 
+  key = 'salesCategory';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_salesCategory".loc() + ':'
+  });
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'name';
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    // valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // misc customer p/n
+  key = 'customerPartNumber';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_customerPartNumber".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    // valueBinding: SC.Binding.from(key, controller)
+  });
+//  y += 24 + K.SPACING;
+  layers.pushObject(label);
   layers.pushObject(widget);
 
  return view;

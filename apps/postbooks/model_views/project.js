@@ -207,7 +207,6 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
 
   // crm account 
   key = 'account';
-  console.log('crm account type: %@'.fmt(proto[key].type));
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
