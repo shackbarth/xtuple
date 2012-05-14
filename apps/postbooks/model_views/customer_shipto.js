@@ -9,6 +9,7 @@ Postbooks.CustomerShipto.RenderRecordListRow = function(context, width, height, 
   var K = Postbooks, val;
   var contact = object.get('contact');
   var address = object.get('address') : null;
+  var base1 = "#93a1a1";
   address = address? address.formatShort() : '';
   
   // Rect
