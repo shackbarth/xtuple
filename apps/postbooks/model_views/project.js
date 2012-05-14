@@ -168,11 +168,10 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
       K = Postbooks,
       left = 120, right = 12,
       label = null, widget = null,
-      key, property, objectKlass, objectController, objectKey;
+      key, objectKlass, objectController, objectKey;
  
   // number
   key = 'number';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
@@ -189,7 +188,6 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
 
   // name 
   key = 'name';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
@@ -207,7 +205,6 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
 
   // crm account 
   key = 'account';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
@@ -239,7 +236,6 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
 
   // owner 
   key = 'owner';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
@@ -268,7 +264,6 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
 
   // assignedTo 
   key = "assignedTo";
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'white',
@@ -302,10 +297,9 @@ Postbooks.Project.CreateContactTileView = function(controller) {
   console.log('Postbooks.Project.CreateOverviewTileView(', controller, ')');
 
   var proto = XM.Project.prototype,
-      key, property, objectKlass, objectController;
+      key, objectKlass, objectController;
  
   key = 'contact';
-  property = proto[key];
   objectKlass = property.get('typeClass');
   objectController = SC.ObjectController.create({
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
@@ -323,7 +317,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
       y = 42,
       proto = XM.Project.prototype,
       K = Postbooks,
-      key, property,
+      key,
       left = 120, right = 12,
       full = 296,
       label = null, widget = null;
@@ -341,7 +335,6 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
 
   // budgetedHoursTotal
   key = 'budgetedHoursTotal';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
     backgroundColor: 'white',
@@ -364,7 +357,6 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
 
   // actualHoursTotal
   key = 'actualHoursTotal';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
     backgroundColor: 'white',
@@ -387,7 +379,6 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
 
   // balanceHoursTotal
   key = 'balanceHoursTotal';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
     backgroundColor: 'white',
@@ -421,7 +412,6 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
 
   // budgetedExpensesTotal
   key = 'budgetedHoursTotal';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
     backgroundColor: 'white',
@@ -444,7 +434,6 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
 
   // actualExpensesTotal
   key = 'actualExpensesTotal';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
     backgroundColor: 'white',
@@ -467,7 +456,6 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
 
   // balanceHoursTotal
   key = 'balanceHoursTotal';
-  property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 4, left: 12, height: 24, width: left + 55 },
     backgroundColor: 'white',
