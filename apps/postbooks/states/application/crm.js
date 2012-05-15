@@ -55,3 +55,11 @@ Postbooks.CRM = Postbooks.MODULE.design({
   "PROJECT":     SC.State.plugin('Postbooks.PROJECT')
 
 });
+
+Postbooks.CRM.createIncidentCategoryRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.IncidentCategory, orderBy: 'order ASC' })
+  });
+};

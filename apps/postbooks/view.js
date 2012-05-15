@@ -231,7 +231,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               recordType: typeClass,
               store: controller.getPath('content.store'),
               valueBinding: SC.Binding.from(key, controller),
-              items: Postbooks.IncidentCategoryRecordArray,
+              items: Postbooks.CRM.createIncidentCategoryRecordArray(),
               itemTitleKey: 'name',
               itemValueKey: null // Use item itself
             });
