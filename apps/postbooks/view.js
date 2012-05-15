@@ -235,6 +235,36 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               itemTitleKey: 'name',
               itemValueKey: null // Use item itself
             });
+          } else if (typeClass === XM.Priority) {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: Postbooks.CRM.createPriorityRecordArray(),
+              itemTitleKey: 'name',
+              itemValueKey: null // Use item itself
+            });
+          } else if (typeClass === XM.IncidentResolution) {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: Postbooks.CRM.createIncidentResolutionRecordArray(),
+              itemTitleKey: 'name',
+              itemValueKey: null // Use item itself
+            });
+          } else if (typeClass === XM.IncidentSeverity) {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: Postbooks.CRM.createIncidentSeverityRecordArray(),
+              itemTitleKey: 'name',
+              itemValueKey: null // Use item itself
+            });
           } else {
             widget = SC.TextFieldWidget.create({
               layout: { top: y, left: left, height: 22, right: right },
