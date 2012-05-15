@@ -238,6 +238,7 @@ SC.stringsFor("en_US", {
   "_extendedPriceScale": "Extended Price Scale",
   "_externalReference": "External Reference",
   "_fax": "Fax",
+  "_feedback": "Feedback",
   "_file": "File",
   "_files": "Files",
   "_financialLayout": "Financial Layout",

@@ -189,3 +189,10 @@ XM.Incident.mixin( /** @scope XM.Incident */ {
   CLOSED: 'L'
 
 });
+
+XM.Incident.statusItems = 'NEW FEEDBACK CONFIRMED ASSIGNED RESOLVED CLOSED'.w().map(function(key) {
+  return {
+    title: ('_'+key.toLowerCase()).loc(),
+    value: XM.Incident[key]
+  }
+});
