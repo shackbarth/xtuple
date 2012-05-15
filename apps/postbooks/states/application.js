@@ -23,6 +23,26 @@ Postbooks.APPLICATION = SC.State.design({
     // THIS WAS MOVED TO onload.js from the socket package in xt
     // XT.session.acquireSession('admin', 'admin', '380postbooks');
 
+    // Create our custom CSS images.
+    if (document.getCSSCanvasContext) {
+      'QUARTER_TILE HORIZONTAL_TILE VERTICAL_TILE FULL_TILE'.w().forEach(function(type) {
+        var size = Postbooks.TileView[type];
+        sc_assert(size);
+
+        var cssName = type.toLowerCase().dasherize(),
+            w = size.width, h = size.height,
+            context = document.getCSSCanvasContext('2d', cssName, w, h);
+
+        context.globalAlpha = 0.4;
+        context.strokeStyle = 'black';
+        context.lineWidth = 20;
+        context.beginPath();
+        context.rect(0,-5,w,h);
+        context.stroke();
+        Postbooks.StackBlurCanvasRGBA(context, 0, 0, w, h, 60);
+      });
+    }
+
     SC.routes.add(':tab', Postbooks, Postbooks.routeHandler);
     if (!window.location.hash) {
       this.gotoState('DASHBOARD');

@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals Postbooks sc_assert */
 
+sc_require('stackblur');
+
 /** @class
 
   (Document your Model here)
@@ -32,12 +34,34 @@ Postbooks.TileView = SC.View.extend(
     style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
     style.backgroundPosition = 'left top';
     style.backgroundRepeat = 'repeat';
+
+    var kind, size = this.get('size'); 
+    if (document.getCSSCanvasContext && size) {
+      // Figure out what size we have.
+      'QUARTER_TILE HORIZONTAL_TILE VERTICAL_TILE FULL_TILE'.w().forEach(function(type) {
+        var spec = Postbooks.TileView[type];
+        if (spec.width === size.width && spec.height === size.height) {
+          kind = type;
+        }
+      });
+    }
+
+    if (kind) {
+      style.backgroundImage =  '-webkit-canvas('+kind.toLowerCase().dasherize() + '), ' + Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top, left top';
+      style.backgroundRepeat = 'no-repeat, repeat';
+    } else {
+      style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top';
+      style.backgroundRepeat = 'repeat';
+    }
   },
 
   clearBackground: true,
 
   willRenderLayers: function(context) { 
-    var title = this.get('title');
+    var title = this.get('title'),
+        w = context.width, h = context.height;
            
     // title bar
     // context.fillStyle = base3;
@@ -96,7 +120,7 @@ Postbooks.TileView.mixin( /** @scope Postbooks.TileView */ {
     @type Number
     @default 640Hx320W
   */
-  VERTICAL_TILE: { hieght: 640, width: 320},
+  VERTICAL_TILE: { height: 640, width: 320},
   
   /**
     Constant value for a full screen tile.

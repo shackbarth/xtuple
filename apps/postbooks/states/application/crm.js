@@ -16,7 +16,10 @@ Postbooks.CRM = Postbooks.MODULE.design({
     arguments.callee.base.apply(this, arguments);
 
     // Load any lists used in popups
-    Postbooks.IncidentCategoryRecordArray = XT.store.find(SC.Query.create({ recordType: XM.IncidentCategory, orderBy: 'order ASC' }));
+    XT.store.find(SC.Query.create({ recordType: XM.IncidentCategory, orderBy: 'order ASC' }));
+    XT.store.find(SC.Query.create({ recordType: XM.Priority, orderBy: 'order ASC' }));
+    XT.store.find(SC.Query.create({ recordType: XM.IncidentResolution, orderBy: 'order ASC' }));
+    XT.store.find(SC.Query.create({ recordType: XM.IncidentSeverity, orderBy: 'order ASC' }));
   },
 
   // ACTIONS
@@ -61,5 +64,29 @@ Postbooks.CRM.createIncidentCategoryRecordArray = function() {
   return SC.RecordArray.create({
     store: Postbooks.store,
     query: SC.Query.create({ recordType: XM.IncidentCategory, orderBy: 'order ASC' })
+  });
+};
+
+Postbooks.CRM.createPriorityRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.Priority, orderBy: 'order ASC' })
+  });
+};
+
+Postbooks.CRM.createIncidentResolutionRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.IncidentResolution, orderBy: 'order ASC' })
+  });
+};
+
+Postbooks.CRM.createIncidentSeverityRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.IncidentSeverity, orderBy: 'order ASC' })
   });
 };

@@ -35,7 +35,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
   // see if there is a function for this specific class
   if (Postbooks[klass] && Postbooks[klass].tiles) {
     tiles = Postbooks[klass].tiles(controller, isRoot);
-    
+
   // otherwise generate automatically
   } else {
     tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
@@ -202,7 +202,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
 
       if (property.isRecordAttribute) {    
         var typeClass = property.get('typeClass');
-        // if (key === 'customerType') debugger;
+        // if (key === 'project') debugger;
 
         if (typeClass === String) {
           label = SC.LabelLayer.create({
@@ -212,10 +212,22 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 22, right: right },
-            valueBinding: SC.Binding.from(key, controller)
-          });
+          if (key === 'incidentStatus') {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: XM.Incident.statusItems,
+              itemTitleKey: 'title',
+              itemValueKey: 'value'
+            });
+          } else {
+            widget = SC.TextFieldWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              valueBinding: SC.Binding.from(key, controller)
+            });
+          }
           y += 24 + K.SPACING;
         } else if (property.isSingleAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
@@ -235,6 +247,36 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               itemTitleKey: 'name',
               itemValueKey: null // Use item itself
             });
+          } else if (typeClass === XM.Priority) {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: Postbooks.CRM.createPriorityRecordArray(),
+              itemTitleKey: 'name',
+              itemValueKey: null // Use item itself
+            });
+          } else if (typeClass === XM.IncidentResolution) {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: Postbooks.CRM.createIncidentResolutionRecordArray(),
+              itemTitleKey: 'name',
+              itemValueKey: null // Use item itself
+            });
+          } else if (typeClass === XM.IncidentSeverity) {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: Postbooks.CRM.createIncidentSeverityRecordArray(),
+              itemTitleKey: 'name',
+              itemValueKey: null // Use item itself
+            });
           } else {
             widget = SC.TextFieldWidget.create({
               layout: { top: y, left: left, height: 22, right: right },
@@ -246,7 +288,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             });
           }
           y += 24 + K.SPACING;
-        } else if (property.isChildrenAttribute) { // just for now so we can see layout impact
+        } else if (property.isChildAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'clear',
@@ -254,14 +296,27 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
-          widget = Postbooks.RelationWidget.create({
-            layout: { top: y, left: left, height: 22, right: right },
-            recordType: typeClass,
-            store: controller.getPath('content.store'),
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
+          if (typeClass === XM.ItemInfo) {
+            widget = Postbooks.RelationWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              displayKey: 'description1',
+              controller: controller,
+              controllerKey: key,
+              valueBinding: SC.Binding.from(key, controller)
+            });
+          } else {
+            widget = Postbooks.RelationWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              displayKey: 'name',
+              controller: controller,
+              controllerKey: key,
+              valueBinding: SC.Binding.from(key, controller)
+            });
+          }
           y += 24 + K.SPACING;
         } else if (typeClass === Number) {
           label = SC.LabelLayer.create({
