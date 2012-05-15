@@ -529,7 +529,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       if (displayKey) val = val.get(displayKey);
     }
     if (val && val.elide) val = val.elide(ctx, w - 23);
-    ctx.fillText(val, 4, 3);
+    ctx.fillText(val || '', 4, 3);
 
     // Draw the box.
     ctx.strokeStyle = this.get('borderColor');
