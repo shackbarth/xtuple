@@ -56,7 +56,7 @@ Postbooks.TileView = SC.View.extend(
     context.beginPath();
     context.rect(0,-5,w,h);
     context.stroke();
-    Postbooks.StackBlurCanvasRGBA(context, 0, 0, w, w, 30);
+    Postbooks.StackBlurCanvasRGBA(context, 0, 0, w, h, 30);
     context.globalAlpha = 1.0;
 
     // title text
