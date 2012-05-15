@@ -110,7 +110,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
           value: property,
           enabled: true
         });
-      } else if (typeof property === 'object' && property.isCommand && property.call && typeof property.call === 'function') {
+      } else if (property && typeof property === 'object' && property.isCommand && property.call && typeof property.call === 'function') {
         commands.push({
           title: property.commandName || "(no name)",
           value: property,
