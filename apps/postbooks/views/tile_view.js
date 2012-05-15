@@ -34,6 +34,27 @@ Postbooks.TileView = SC.View.extend(
     style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
     style.backgroundPosition = 'left top';
     style.backgroundRepeat = 'repeat';
+
+    var kind, size = this.get('size'); 
+    if (size) {
+      // Figure out what size we have.
+      'QUARTER_TILE HORIZONTAL_TILE VERTICAL_TILE FULL_TILE'.w().forEach(function(type) {
+        var spec = Postbooks.TileView[type];
+        if (spec.width === size.width && spec.height === size.height) {
+          kind = type;
+        }
+      });
+    }
+
+    if (kind) {
+      style.backgroundImage =  '-webkit-canvas('+kind.toLowerCase().dasherize() + '), ' + Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top, left top';
+      style.backgroundRepeat = 'no-repeat, repeat';
+    } else {
+      style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top';
+      style.backgroundRepeat = 'repeat';
+    }
   },
 
   clearBackground: true,
@@ -49,15 +70,6 @@ Postbooks.TileView = SC.View.extend(
     // image frame
     // context.fillStyle = base00;
     // context.fillRect(20, 7, 24, 24);
-
-    context.globalAlpha = 0.2;
-    context.strokeStyle = 'black';
-    context.lineWidth = 20;
-    context.beginPath();
-    context.rect(0,-5,w,h);
-    context.stroke();
-    Postbooks.StackBlurCanvasRGBA(context, 0, 0, w, h, 30);
-    context.globalAlpha = 1.0;
 
     // title text
     var K = Postbooks;
@@ -108,7 +120,7 @@ Postbooks.TileView.mixin( /** @scope Postbooks.TileView */ {
     @type Number
     @default 640Hx320W
   */
-  VERTICAL_TILE: { hieght: 640, width: 320},
+  VERTICAL_TILE: { height: 640, width: 320},
   
   /**
     Constant value for a full screen tile.
