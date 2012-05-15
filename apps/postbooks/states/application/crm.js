@@ -12,6 +12,13 @@ Postbooks.CRM = Postbooks.MODULE.design({
   title: "_crm",
   submodules: 'Contact Account ToDo Opportunity Incident Project'.w(),
 
+  enterState: function() {
+    arguments.callee.base.apply(this, arguments);
+
+    // Load any lists used in popups
+    Postbooks.IncidentCategoryRecordArray = XT.store.find(SC.Query.create({ recordType: XM.IncidentCategory, orderBy: 'order ASC' }));
+  },
+
   // ACTIONS
 
   showContact: function() {
@@ -48,3 +55,11 @@ Postbooks.CRM = Postbooks.MODULE.design({
   "PROJECT":     SC.State.plugin('Postbooks.PROJECT')
 
 });
+
+Postbooks.CRM.createIncidentCategoryRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.IncidentCategory, orderBy: 'order ASC' })
+  });
+};

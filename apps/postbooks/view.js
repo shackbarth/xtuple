@@ -225,14 +225,26 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 22, right: right },
-            recordType: typeClass,
-            store: controller.getPath('content.store'),
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
+          if (typeClass === XM.IncidentCategory) {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: Postbooks.CRM.createIncidentCategoryRecordArray(),
+              itemTitleKey: 'name',
+              itemValueKey: null // Use item itself
+            });
+          } else {
+            widget = SC.TextFieldWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.transform(function(val) {
+                return String(val);
+              }).from(key, controller)
+            });
+          }
           y += 24 + K.SPACING;
         } else if (property.isChildrenAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
@@ -259,6 +271,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
+          // FIXME: Re-enable this!
           // widget = SC.TextFieldWidget.create({
           //   layout: { top: y, left: left, height: 22, right: right },
           //   valueBinding: SC.Binding.transform(function(val) {
