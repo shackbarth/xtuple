@@ -64,7 +64,17 @@ Postbooks.LoadDashboard = function() {
   });
 
   var springboard = SC.View.create({
-    layout: { top: 44, left: 0, right: 0, bottom: 0 }
+    layout: { top: 44, left: 0, right: 0, bottom: 0 },
+
+    didCreateElement: function(el) {
+      arguments.callee.base.apply(this, arguments);
+      var style = el.style;
+      style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top';
+      style.backgroundRepeat = 'repeat';
+    },
+
+    clearBackground: true
   });
 
   springboard.get('layers').pushObject(IconLayer.create({
