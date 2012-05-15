@@ -73,7 +73,7 @@ Postbooks.Button = SC.ButtonWidget.extend({
     ctx.fillStyle = isEnabled? white : 'rgba(255,255,255,0.7)';
     
     var K = Postbooks;
-    ctx.font = "11pt "+K.TYPEFACE;
+    ctx.font = "10pt "+K.TYPEFACE;
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
