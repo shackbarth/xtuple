@@ -4,11 +4,13 @@
 // ==========================================================================
 /*globals Postbooks XM sc_assert */
 
+sc_require('views/record_list');
+
 Postbooks.CustomerShipto = {};
 Postbooks.CustomerShipto.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
   var K = Postbooks, val;
   var contact = object.get('contact');
-  var address = object.get('address') : null;
+  var address = object.get('address');
   var base1 = "#93a1a1";
   address = address? address.formatShort() : '';
   
@@ -79,14 +81,14 @@ Postbooks.CustomerShipto.RenderRecordListRow = function(context, width, height, 
 
   // Active
   var isActive = object.getPath('isActive');
-  val = isPrinted? "_active".loc() : '';
+  val = isActive? "_active".loc() : '';
   context.textAlign = 'left';
   context.fillStyle = 'black';
   context.fillText(val, 490, 15);
  
   // Default
   var isDefault = object.getPath('isDefault');
-  val = isPosted? "_default".loc() : '';
+  val = isDefault? "_default".loc() : '';
   context.fillStyle = 'black';
   context.fillText(val, 490, 35);
   
@@ -136,6 +138,15 @@ Postbooks.CustomerShipto.Tiles = function(controller, isRoot) {
   // overview
   tiles.push(Postbooks.CustomerShipto.CreateOverviewTileView(controller));
 
+  // contact
+  tiles.push(Postbooks.CustomerShipto.CreateContactTileView(controller));
+
+  // general notes
+  tiles.push(Postbooks.CreateNotesTileView(controller, "_generalNotes".loc()));
+
+  // shipping notes
+  tiles.push(Postbooks.CreateNotesTileView(controller, "_shippingNotes".loc(), 'shippingNotes'));
+
   return tiles;
 };
 
@@ -151,7 +162,108 @@ Postbooks.CustomerShipto.CreateOverviewTileView = function(controller) {
       label = null, widget = null,
       key, objectKlass, objectController, objectKey;
  
+  // customer number
+  key = 'customer';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_customer".loc() + ':'
+  });
+  layers.pushObject(label);
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+  objectKey = 'number';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: left, height: 24, right: right },
+    backgroundColor: 'white',
+    textAlign: 'left',
+    valueBinding: SC.Binding.from(objectKey, objectController)
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
+  objectKey = 'name';
+  label = SC.LabelLayer.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    backgroundColor: 'white',
+      valueBinding: SC.Binding.transform(function(val) {
+      return val? val.elide(label.get('context'), left + 20) : '';
+    }).from(objectKey, objectController)
+  });
+  y += 18 + K.SPACING;
+  layers.pushObject(label);
 
+  // shipto number
+  key = 'number';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_shipto".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // shipto name
+  key = 'name';
+  label = SC.LabelLayer.create({
+    layout: { top: y + 4, left: 12, height: 24, width: left - 18 },
+    backgroundColor: 'white',
+    textAlign: 'right',
+    value: "_name".loc() + ':'
+  });
+  widget = SC.TextFieldWidget.create({
+    layout: { top: y, left: left, height: 24, right: right },
+    valueBinding: SC.Binding.from(key, controller)
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(label);
+  layers.pushObject(widget);
+
+  // active
+  key = 'isActive';
+  widget = SC.CheckboxWidget.create({
+    layout: { top: y, left: left, height: 24, width: left - 18 },
+    title: "_active".loc(),
+    valueBinding: SC.Binding.transform(function(val) {
+      return !!val;
+    }).from(key, controller),
+  });
+  layers.pushObject(widget);
+
+  // default
+  key = 'isDefault';
+  widget = SC.CheckboxWidget.create({
+    layout: { top: y, left: left + 80, height: 24, right: right },
+    title: "_default".loc(),
+    valueBinding: SC.Binding.transform(function(val) {
+      return !!val;
+    }).from(key, controller),
+  });
+  y += 24 + K.SPACING;
+  layers.pushObject(widget);
 
   return view;
+};
+
+Postbooks.CustomerShipto.CreateContactTileView = function(controller) {
+  console.log('Postbooks.CustomerShipto.CreateContactTileView(', controller, ')');
+
+  var proto = XM.CustomerShipto.prototype,
+      key, property, objectKlass, objectController;
+ 
+  key = 'contact';
+  property = proto[key];
+  objectKlass = property.get('typeClass');
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
+
+  return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_contact".loc());
 };

@@ -1,9 +1,9 @@
-Postbooks.CreateNotesTileView = function(controller) {
+Postbooks.CreateNotesTileView = function(controller, optionalTitle, optionalProperty) {
 
   // global for testing textSurface.value binding
   NOTES_VALUE = controller;
 
-  var key = 'notes',
+  var key = optionalProperty? optionalProperty : 'notes',
       K = Postbooks;
 
   var layoutSurface = SC.LayoutSurface.create();
@@ -14,7 +14,7 @@ Postbooks.CreateNotesTileView = function(controller) {
     layout: { top: 3, left: 0, right: 0, height: 32 },
 
     willRenderLayers: function(context) { 
-      var title = "_notes".loc();
+      var title = optionalTitle? optionalTitle : "_notes".loc();
            
       // title bar
       context.fillStyle = "#fdf6e3";
@@ -51,7 +51,7 @@ Postbooks.CreateNotesTileView = function(controller) {
 
     // TODO: fix controller binding
     // to work correctly...
-    value: controller.get('notes'),
+    value: controller.get(key),
 
     // testing value binding
     valueDidChange: function() {

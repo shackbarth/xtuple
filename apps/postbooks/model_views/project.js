@@ -294,7 +294,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
 };
 
 Postbooks.Project.CreateContactTileView = function(controller) {
-  console.log('Postbooks.Project.CreateOverviewTileView(', controller, ')');
+  console.log('Postbooks.Project.CreateContactTileView(', controller, ')');
 
   var proto = XM.Project.prototype,
       key, property, objectKlass, objectController;

@@ -31,7 +31,7 @@ String.prototype.loc = function() {
   or center context.
 
   @param {CanvasRenderingContext2D}  
-  @param {Number) maximum length
+  @param {Number} maximum length
 */
 String.prototype.elide = function(context, maxLength) {
   if (maxLength <= 0) return '';
