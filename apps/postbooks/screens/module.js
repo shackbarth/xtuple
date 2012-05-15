@@ -111,7 +111,9 @@ Postbooks.LoadModule = function(name, classes, state) {
     allowsEmptySelection: false
   });
 
-  listController.selectObject(list[0]);
+  var startIndex = (name === "CRM")? 4 : 0;
+
+  listController.selectObject(list[startIndex]);
 
   (function loadFirstItem(item) {
     if (!item.isLoaded) {
@@ -131,7 +133,7 @@ Postbooks.LoadModule = function(name, classes, state) {
       aryController.set('content', Postbooks.get('store').find(baseClass));
       item.isLoaded = true;
     }
-  })(list[0]);
+  })(list[startIndex]);
 
   var detail = SC.ContainerSurface.create({
     layout: { top: 44, left: 320, right: 0, bottom: 0 },
