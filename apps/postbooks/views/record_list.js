@@ -49,7 +49,7 @@ Postbooks.DefaultRecordListRenderRow = function(context, width, height, index, o
 
   @extends SC.ListView
 */
-Postbooks.RecordListView = SC.ListView.extend(
+Postbooks.RecordListView = SC.IListView.extend(
   /** @scope Postbooks.RecordListView.prototype */{
 
   layout: { top: 0, left: 0, right: 0, bottom: 0 },
