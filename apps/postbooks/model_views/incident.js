@@ -198,7 +198,8 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
-    valueBinding: SC.Binding.from(key, controller)
+    valueBinding: SC.Binding.from(key, controller),
+    isEnabled: false
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
