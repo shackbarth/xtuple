@@ -12,6 +12,13 @@ Postbooks.CRM = Postbooks.MODULE.design({
   title: "_crm",
   submodules: 'Contact Account ToDo Opportunity Incident Project'.w(),
 
+  enterState: function() {
+    arguments.callee.base.apply(this, arguments);
+
+    // Load any lists used in popups
+    Postbooks.IncidentCategoryRecordArray = XT.store.find(SC.Query.create({ recordType: XM.IncidentCategory, orderBy: 'order ASC' }));
+  },
+
   // ACTIONS
 
   showContact: function() {
