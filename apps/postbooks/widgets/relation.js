@@ -383,9 +383,9 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
 
       var that = this;
       Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance, function() {
-        that.tryToPerform('popModal');
+        that.tryToPerform('close');
       });
-    } else if (evt.type === 'popModal') {
+    } else if (evt.type === 'close') {
       return this.transition('Editor');
     }
   }.behavior('Modal'),
@@ -401,9 +401,9 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
 
       var that = this;
       Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance, function() {
-        that.tryToPerform('popModal');
+        that.tryToPerform('close');
       });
-    } else if (evt.type === 'popModal') {
+    } else if (evt.type === 'close') {
       return this.transition('Editor');
     }
   }.behavior('Modal'),

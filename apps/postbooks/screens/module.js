@@ -37,23 +37,20 @@ Postbooks.LoadModule = function(name, classes, state) {
       title: ("_" + className.pluralize().camelize()).loc(),
       value: className + 'Surface',
       enabled: true,
-      className: className
+      className: className,
+      isLoaded: false
     });
   });
 
   classes.forEach(function(className, idx) {
     var baseClass = XM[className];
-    var browseClass = XM[className+'Browse'] || baseClass;
 
     sc_assert(baseClass);
     sc_assert(baseClass.isClass);
     sc_assert(baseClass.subclassOf(XT.Record));
-    sc_assert(browseClass);
-    sc_assert(browseClass.isClass);
-    sc_assert(browseClass.subclassOf(XT.Record));
 
     Postbooks[className+'ListController'] = SC.ArrayController.create({
-      content: Postbooks.get('store').find(browseClass),
+      content: null,
       allowsEmptySelection: true
     });
 
@@ -116,6 +113,26 @@ Postbooks.LoadModule = function(name, classes, state) {
 
   listController.selectObject(list[0]);
 
+  (function loadFirstItem(item) {
+    if (!item.isLoaded) {
+      var className = item.className,
+          baseClass = XM[className];
+
+      sc_assert(baseClass);
+      sc_assert(baseClass.isClass);
+      sc_assert(baseClass.subclassOf(XT.Record));
+
+      var aryController = Postbooks[className+'ListController'];
+
+      sc_assert(aryController);
+      sc_assert(aryController.kindOf(SC.ArrayController));
+      sc_assert(aryController.get('content') === null);
+
+      aryController.set('content', Postbooks.get('store').find(baseClass));
+      item.isLoaded = true;
+    }
+  })(list[0]);
+
   var detail = SC.ContainerSurface.create({
     layout: { top: 44, left: 320, right: 0, bottom: 0 },
     orderInTransition:  null,
@@ -134,7 +151,27 @@ Postbooks.LoadModule = function(name, classes, state) {
 
     action: function(object, index) {
       // console.log('do something on index ' + index);
-      detail.set('contentSurface', list[index].surface);
+      var item = list[index];
+
+      if (!item.isLoaded) {
+        var className = item.className,
+            baseClass = XM[className];
+
+        sc_assert(baseClass);
+        sc_assert(baseClass.isClass);
+        sc_assert(baseClass.subclassOf(XT.Record));
+
+        var aryController = Postbooks[className+'ListController'];
+
+        sc_assert(aryController);
+        sc_assert(aryController.kindOf(SC.ArrayController));
+        sc_assert(aryController.get('content') === null);
+
+        aryController.set('content', Postbooks.get('store').find(baseClass));
+        item.isLoaded = true;
+      }
+
+      detail.set('contentSurface', item.surface);
     }
   });
 

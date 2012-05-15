@@ -12,9 +12,10 @@
 /** @namespace
 
   @extends SC.Application
+  @extends XT.SessionDelegate
 */
 var Postbooks;
-Postbooks = global.Postbooks = SC.Application.create(
+Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
   /** @scope Postbooks.prototype */ {
 
   NAMESPACE: 'Postbooks',
@@ -124,9 +125,98 @@ Postbooks = global.Postbooks = SC.Application.create(
     @type Number
     @default 12
   */
-  VERT_SPACER: 12
+  VERT_SPACER: 12,
+
+  // Session delegate
+  /**
+    Called before a request is made to the datasource to
+    request a new session. The session hash can be modified
+    to reflect any properties needed to be passed on.
+
+    @method
+    @param {Object} session A hash of the session's authentication
+      credentials and flags.
+  */
+  willAcquireSession: function(session) {
+    Postbooks.statechart.sendAction('willAcquireSession', session);
+  },
+
+  /**
+    Called once a valid session has been acquired.
+    
+    @method
+    @param {Object} session A hash of the session's properties.
+  */
+  didAcquireSession: function(session) {
+    Postbooks.statechart.sendAction('didAcquireSession', session);
+  },
+
+  /**
+    Called once a session request returns with a multiple
+    sessions available code and requires either a selection
+    from the available sessions or a flag to begin a new
+    session is returned.
+
+    If the delegate handles this request ensure that it returns
+    a boolean true or the session handler will attempt to.
+
+    @method
+    @param {Array} available The available sessions to choose from.
+    @param {Function} ack The ack method to be called by passing it an
+      integer of the index of the chosen available session or the
+      XT.SESSION_FORCE_NEW boolean flag if a new session is required.
+    @returns {Boolean} true|false if the delegate handled the ack.
+  */
+  didReceiveMultipleSessions: function(available, ack) {
+    Postbooks.statechart.sendAction('didReceiveMultipleSessions', available, ack);
+  },
+  
+  /**
+    Called when a session was successfully logged out.
+
+    @method
+  */
+  didLogoutSession: function() {
+    Postbooks.statechart.sendAction('didLogoutSession');
+  }, 
+
+  /**
+    Called when the session is lost for any reason
+    (even on successful logout). The reason code can
+    be used to dictate further action based on what
+    type of disconnect has been experienced.
+
+    TODO: The reason should ultimately be a code?
+    TODO: Is it even possible for a web app to determine
+      network loss?
+
+    Options:
+      timeout
+      network
+      logout
+      unknown
+
+    @method
+    @param {String} reason String indicator of what happened.
+  */
+  didLoseSession: function(reason) {
+    Postbooks.statechart.sendAction('didLoseSession');
+  },
+
+  /**
+    Called when there has been a session related error.
+
+    @method
+    @param {String} message The error message.
+    @param {Number} code The error code.
+  */
+  didError: function(message, code) {
+    Postbooks.statechart.sendAction('sessionDidError', message, code);
+  }
 
 });
+
+XT.session.delegate = Postbooks;
 
 SC.LabelLayer.prototype.font = "10pt "+Postbooks.TYPEFACE;
 SC.TextLayer.prototype.font = "10pt "+Postbooks.TYPEFACE;

@@ -32,14 +32,10 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   var name = ("_" + className.camelize()).loc();
 
   var baseClass = XM[className];
-  var browseClass = XM[className+'Browse'] || baseClass;
-  if (!baseClass) debugger;
+
   sc_assert(baseClass);
   sc_assert(baseClass.isClass);
   sc_assert(baseClass.subclassOf(XT.Record));
-  sc_assert(browseClass);
-  sc_assert(browseClass.isClass);
-  sc_assert(browseClass.subclassOf(XT.Record));
 
   var controller = Postbooks[className+'ObjectController'];
   sc_assert(controller);
