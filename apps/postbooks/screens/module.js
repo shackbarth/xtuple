@@ -43,17 +43,13 @@ Postbooks.LoadModule = function(name, classes, state) {
 
   classes.forEach(function(className, idx) {
     var baseClass = XM[className];
-    var browseClass = XM[className+'Browse'] || baseClass;
 
     sc_assert(baseClass);
     sc_assert(baseClass.isClass);
     sc_assert(baseClass.subclassOf(XT.Record));
-    sc_assert(browseClass);
-    sc_assert(browseClass.isClass);
-    sc_assert(browseClass.subclassOf(XT.Record));
 
     Postbooks[className+'ListController'] = SC.ArrayController.create({
-      content: Postbooks.get('store').find(browseClass),
+      content: Postbooks.get('store').find(baseClass),
       allowsEmptySelection: true
     });
 
