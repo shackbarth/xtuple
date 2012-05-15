@@ -524,7 +524,10 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     ctx.font = this.get('font');
     ctx.fillStyle = this.get('color');
     var val = this.get('value');
-    if (val) val = val.get(this.get('displayKey'));
+    if (val) {
+      var displayKey = this.get('displayKey');
+      if (displayKey) val = val.get(displayKey);
+    }
     if (val && val.elide) val = val.elide(ctx, w - 23);
     ctx.fillText(val, 4, 3);
 

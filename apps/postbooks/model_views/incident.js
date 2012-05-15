@@ -125,7 +125,7 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
   tiles.push(Postbooks.Incident.CreateOverviewTileView(controller));
 
   // details
-  properties = ' category incidentStatus severity priority resolution '.w();
+  properties = 'category spacer incidentStatus severity priority resolution spacer project item'.w();
   tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
 
   // contact

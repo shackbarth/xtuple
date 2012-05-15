@@ -202,7 +202,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
 
       if (property.isRecordAttribute) {    
         var typeClass = property.get('typeClass');
-        // if (key === 'customerType') debugger;
+        // if (key === 'project') debugger;
 
         if (typeClass === String) {
           label = SC.LabelLayer.create({
@@ -288,7 +288,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             });
           }
           y += 24 + K.SPACING;
-        } else if (property.isChildrenAttribute) { // just for now so we can see layout impact
+        } else if (property.isChildAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
             backgroundColor: 'clear',
