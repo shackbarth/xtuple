@@ -35,7 +35,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
   // see if there is a function for this specific class
   if (Postbooks[klass] && Postbooks[klass].tiles) {
     tiles = Postbooks[klass].tiles(controller, isRoot);
-    
+
   // otherwise generate automatically
   } else {
     tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));

@@ -54,9 +54,14 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   sc_assert(controller.kindOf(SC.ObjectController));
   controller.set('content', instance);
 
-  var tiles = Postbooks.TilesForClass(baseClass, controller);
-  // console.log(tiles);
+  // see if there is a function for this specific class
+  if (Postbooks[className] && Postbooks[className].Tiles) {
+    var tiles = Postbooks[className].Tiles(controller, true);
 
+  // otherwise generate automatically
+  } else {
+    var tiles = Postbooks.TilesForClass(baseClass, controller);
+  }
   var editor = Postbooks.TileCarousel.create();
   editor.get('tray').set('subsurfaces', tiles);
 
