@@ -346,10 +346,10 @@ XT.Record = SC.Record.extend(XT.Logging,
     var isEditable = arguments.callee.base.apply(this, arguments);
 
     if (isEditable && this.get('status') !== SC.Record.READY_NEW) {
-      return this.canUpdate();
-    } else {
-      return isEditable;
+      isEditable = this.canUpdate();
     }
+
+    return isEditable;
   }.property('status').cacheable(),
 
   /**
@@ -544,7 +544,7 @@ XT.Record.mixin( /** @scope XT.Record */ {
         sessionPrivs = XT.session.privileges,
         isGrantedAll = false,
         isGrantedPersonal = false,
-        userName = XT.DataSource.session.userName;
+        userName = XT.session.details.username;
 
     // TODO: This is pretty awkward to read.
     if (sessionPrivs) {

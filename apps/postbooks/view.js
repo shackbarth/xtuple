@@ -217,6 +217,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller),
               items: XM.Incident.statusItems,
               itemTitleKey: 'title',
@@ -225,6 +226,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           } else {
             widget = SC.TextFieldWidget.create({
               layout: { top: y, left: left, height: 22, right: right },
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller)
             });
           }
@@ -242,6 +244,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller),
               items: Postbooks.CRM.createIncidentCategoryRecordArray(),
               itemTitleKey: 'name',
@@ -252,6 +255,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller),
               items: Postbooks.CRM.createPriorityRecordArray(),
               itemTitleKey: 'name',
@@ -262,6 +266,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller),
               items: Postbooks.CRM.createIncidentResolutionRecordArray(),
               itemTitleKey: 'name',
@@ -272,6 +277,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller),
               items: Postbooks.CRM.createIncidentSeverityRecordArray(),
               itemTitleKey: 'name',
@@ -282,6 +288,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.transform(function(val) {
                 return String(val);
               }).from(key, controller)
@@ -304,6 +311,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               displayKey: 'description1',
               controller: controller,
               controllerKey: key,
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller)
             });
           } else {
@@ -314,6 +322,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               displayKey: 'name',
               controller: controller,
               controllerKey: key,
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller)
             });
           }
@@ -344,6 +353,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 22, right: right },
+            isEnabledBinding: SC.Binding.from('isEditable', controller),
             valueBinding: SC.Binding.transform(function(val) {
               return val? val.toLocaleString() : "";
             }).from(key, controller)
@@ -359,6 +369,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           });
           widget = SC.TextFieldWidget.create({
             layout: { top: y, left: left, height: 22, right: right },
+            isEnabledBinding: SC.Binding.from('isEditable', controller),
             valueBinding: SC.Binding.transform(function(val) {
               return val? val.toLocaleDateString() : "no date set";
             }).from(key, controller)
@@ -368,6 +379,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           widget = SC.CheckboxWidget.create({
             layout: { top: y, left: left, height: 22, right: right },
             title: ("_"+key).loc(),
+            isEnabledBinding: SC.Binding.from('isEditable', controller),
             valueBinding: SC.Binding.transform(function(val) {
               return !!val;
             }).from(key, controller)
