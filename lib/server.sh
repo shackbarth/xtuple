@@ -16,7 +16,7 @@ if [ ! -d "lib/xt/node_modules/build-tools" ]; then
   cd lib/xt/node_modules
   git clone git@github.com:clinuz/build-tools.git
   cd build-tools
-  npm install --force
+  npm install
   cd ../../../..
 else
   cd lib/xt/node_modules/build-tools
@@ -29,6 +29,6 @@ fi
 # updated
 # we use force here because of (as of node 0.7.2) incompatible
 # connect module version but it works (1.8.6)
-cd lib/xt; npm install --force; cd ../..; node ./lib/main.js $@
+cd lib/xt; npm install; cd ../..; node ./lib/main.js $@
 
 exit 0
