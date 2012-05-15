@@ -142,7 +142,7 @@ Postbooks.LoadModule = function(name, classes, state) {
     orderOutTransition: null
   });
 
-  detail.set('contentSurface', list[0].surface);
+  detail.set('contentSurface', list[startIndex].surface);
 
   state.listContainer = detail;
   state.listController = listController;
