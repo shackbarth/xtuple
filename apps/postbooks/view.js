@@ -296,14 +296,27 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
-          widget = Postbooks.RelationWidget.create({
-            layout: { top: y, left: left, height: 22, right: right },
-            recordType: typeClass,
-            store: controller.getPath('content.store'),
-            valueBinding: SC.Binding.transform(function(val) {
-              return String(val);
-            }).from(key, controller)
-          });
+          if (typeClass === XM.ItemInfo) {
+            widget = Postbooks.RelationWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              displayKey: 'description1',
+              controller: controller,
+              controllerKey: key,
+              valueBinding: SC.Binding.from(key, controller)
+            });
+          } else {
+            widget = Postbooks.RelationWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              displayKey: 'name',
+              controller: controller,
+              controllerKey: key,
+              valueBinding: SC.Binding.from(key, controller)
+            });
+          }
           y += 24 + K.SPACING;
         } else if (typeClass === Number) {
           label = SC.LabelLayer.create({
