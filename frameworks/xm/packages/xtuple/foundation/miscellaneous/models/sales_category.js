@@ -30,3 +30,20 @@ XM.SalesCategory = XM.Document.extend(XM._SalesCategory,
   //
 
 });
+
+/** 
+  Returns a dummy item info record with an id of -1.
+  
+  @returns {Object} record
+*/
+XM.SalesCategory.none = function() {
+  if (!this._xm_salesCatNone) {
+    var tmp = XT.store.pushRetrieve(XM.ItemInfo, -1, { 
+      guid: -1, 
+      isActive: false,
+      name: ''
+    });
+    this._xm_salesCatNone = XT.store.materializeRecord(tmp).normalize(true);
+  }
+  return this._xm_salesCatNone;
+};
