@@ -212,10 +212,22 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
-          widget = SC.TextFieldWidget.create({
-            layout: { top: y, left: left, height: 22, right: right },
-            valueBinding: SC.Binding.from(key, controller)
-          });
+          if (key === 'incidentStatus') {
+            widget = Postbooks.ToOneSelectWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: typeClass,
+              store: controller.getPath('content.store'),
+              valueBinding: SC.Binding.from(key, controller),
+              items: XM.Incident.statusItems,
+              itemTitleKey: 'title',
+              itemValueKey: 'value'
+            });
+          } else {
+            widget = SC.TextFieldWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              valueBinding: SC.Binding.from(key, controller)
+            });
+          }
           y += 24 + K.SPACING;
         } else if (property.isSingleAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
