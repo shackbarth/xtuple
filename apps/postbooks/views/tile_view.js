@@ -4,6 +4,8 @@
 // ==========================================================================
 /*globals Postbooks sc_assert */
 
+sc_require('stackblur');
+
 /** @class
 
   (Document your Model here)
@@ -37,7 +39,8 @@ Postbooks.TileView = SC.View.extend(
   clearBackground: true,
 
   willRenderLayers: function(context) { 
-    var title = this.get('title');
+    var title = this.get('title'),
+        w = context.width, h = context.height;
            
     // title bar
     // context.fillStyle = base3;
@@ -46,6 +49,15 @@ Postbooks.TileView = SC.View.extend(
     // image frame
     // context.fillStyle = base00;
     // context.fillRect(20, 7, 24, 24);
+
+    context.globalAlpha = 0.2;
+    context.strokeStyle = 'black';
+    context.lineWidth = 20;
+    context.beginPath();
+    context.rect(0,-5,w,h);
+    context.stroke();
+    Postbooks.StackBlurCanvasRGBA(context, 0, 0, w, w, 30);
+    context.globalAlpha = 1.0;
 
     // title text
     var K = Postbooks;
