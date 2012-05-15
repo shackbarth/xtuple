@@ -36,7 +36,7 @@ Postbooks.TileView = SC.View.extend(
     style.backgroundRepeat = 'repeat';
 
     var kind, size = this.get('size'); 
-    if (size) {
+    if (document.getCSSCanvasContext && size) {
       // Figure out what size we have.
       'QUARTER_TILE HORIZONTAL_TILE VERTICAL_TILE FULL_TILE'.w().forEach(function(type) {
         var spec = Postbooks.TileView[type];
