@@ -28,6 +28,8 @@ var black =    "black";
 
 Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
 
+  isTextField: true,
+
   __trace__: true,
   __traceMouseEvents__: false,
 
