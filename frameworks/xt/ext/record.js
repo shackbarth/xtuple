@@ -323,7 +323,8 @@ XT.Record = SC.Record.extend(XT.Logging,
     // only update attribute in valid states
     if (status !== K.DESTROYED_CLEAN && 
         status !== K.ERROR &&
-        status !== K.EMPTY) {
+        status !== K.EMPTY &&
+        status !== K.BUSY_LOADING) {
       this.writeAttribute(key, value, YES);
     }
     this.log('Change status %@:%@ to %@'
