@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM sc_assert */
+/*globals Postbooks XM XT sc_assert */
 
 sc_require('views/carousel');
 sc_require('views/tile_view');
@@ -24,6 +24,7 @@ var blue =     "#268bd2";
 var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
+var black =    "black";
 
 Postbooks.Incident = {};
 
@@ -55,7 +56,7 @@ Postbooks.Incident.RenderRecordListRow = function(context, width, height, index,
   // Updated
   var dt = object.get('updated');
   val = dt.toLocaleDateString();
-  var isToday = XT.DateTime.compareDate(dt, XT.DateTime.create()) == 0;
+  var isToday = XT.DateTime.compareDate(dt, XT.DateTime.create()) === 0;
   context.font = (isToday? "bold " : "")+"10pt "+K.TYPEFACE;
   context.textAlign = 'right';
   context.fillStyle = 'black';
@@ -118,8 +119,9 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
   
   var klass = XM.Incident,
       tiles = [],
-      proto = klass.prototype;
-      properties = [];
+      proto = klass.prototype,
+      properties = [],
+      objectKlass, objectController;
 
   // overview
   tiles.push(Postbooks.Incident.CreateOverviewTileView(controller));
@@ -164,10 +166,12 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
       layers = view.get('layers'),
       y = 42,
       proto = XM.Incident.prototype,
+      typeClass,
       K = Postbooks,
       key, property,
       left = 120, right = 12,
-      label = null, widget = null;
+      label = null, widget = null,
+      objectKey, objectKlass, objectController;
  
   // isPublic 
   key = 'isPublic';
@@ -194,7 +198,8 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
-    valueBinding: SC.Binding.from(key, controller)
+    valueBinding: SC.Binding.from(key, controller),
+    isEnabled: false
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
@@ -223,6 +228,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   key = 'account';
   console.log('crm account type: %@'.fmt(proto[key].type));
   property = proto[key];
+  typeClass = property.get('typeClass');
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'clear',
@@ -235,9 +241,18 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
   objectKey = 'number';
-  widget = SC.TextFieldWidget.create({
+  // widget = SC.TextFieldWidget.create({
+  //   layout: { top: y, left: left, height: 22, right: right },
+  //   valueBinding: SC.Binding.from(objectKey, objectController)
+  // });
+  widget = Postbooks.RelationWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
-    valueBinding: SC.Binding.from(objectKey, objectController)
+    recordType: typeClass,
+    store: controller.getPath('content.store'),
+    displayKey: objectKey,
+    controller: controller,
+    controllerKey: key,
+    valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
@@ -262,6 +277,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   // owner 
   key = 'owner';
   property = proto[key];
+  typeClass = property.get('typeClass');
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'clear',
@@ -274,9 +290,18 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
   objectKey = 'username';
-  widget = SC.TextFieldWidget.create({
+  // widget = SC.TextFieldWidget.create({
+  //   layout: { top: y, left: left, height: 22, right: right },
+  //   valueBinding: SC.Binding.from(objectKey, objectController)
+  // });
+  widget = Postbooks.RelationWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
-    valueBinding: SC.Binding.from(objectKey, objectController)
+    recordType: typeClass,
+    store: controller.getPath('content.store'),
+    displayKey: objectKey,
+    controller: controller,
+    controllerKey: key,
+    valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
@@ -297,6 +322,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   // assignedTo 
   key = "assignedTo";
   property = proto[key];
+  typeClass = property.get('typeClass');
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'clear',
@@ -309,9 +335,18 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
   objectKey = 'username';
-  widget = SC.TextFieldWidget.create({
+  // widget = SC.TextFieldWidget.create({
+  //   layout: { top: y, left: left, height: 22, right: right },
+  //   valueBinding: SC.Binding.from(objectKey, objectController)
+  // });
+  widget = Postbooks.RelationWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
-    valueBinding: SC.Binding.from(objectKey, objectController)
+    recordType: typeClass,
+    store: controller.getPath('content.store'),
+    displayKey: objectKey,
+    controller: controller,
+    controllerKey: key,
+    valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
