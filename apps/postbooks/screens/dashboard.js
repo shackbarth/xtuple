@@ -33,25 +33,43 @@ var IconLayer = SC.ButtonWidget.extend({
 
   dragPoint: null,
 
-  render: function(ctx) {
-    //console.log('IconLayer.render()', SC.guidFor(this));
-    var bounds = this.get('bounds'),
-        w = bounds.width, h = bounds.height;
+  icon: null,
 
-    ctx.beginPath();
-    this.renderHitTestPath(ctx);
-    ctx.fillStyle = this.get('color');
-    ctx.fill();
+  render: function(ctx) {
+    console.log('IconLayer.render()', SC.guidFor(this), this.get('name'));
+    var bounds = this.get('bounds'),
+        w = bounds.width, h = bounds.height,
+        isEnabled = this.get('isEnabled');
+
+    var img = Postbooks.createImageForSprite(this.get('icon'));
+
+    console.log(img);
+    ctx.drawImage(img, 18, 0);
+
+    if (isEnabled) {
+      img = Postbooks.createImageForSprite('dashboard-icon-shadow');
+      ctx.globalAlpha = 0.5;
+      ctx.drawImage(img, 0, 125);
+      ctx.globalAlpha = 1.0;
+    }
 
     // Draw some text.
     var K = Postbooks;
-    ctx.fillStyle = base3;
     ctx.font = "14pt "+K.TYPEFACE;
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
     ctx.shadowBlur = 0;
-    ctx.shadowColor = "rgba(0,0,0,0)";
-    ctx.fillText(this.get('name'), w/2, h/2);
+    ctx.shadowColor = 'rgba(0,0,0,0)';
+  
+    if (isEnabled) {
+      ctx.fillStyle = 'rgba(0,0,0,0.5)';
+      ctx.fillText(this.get('name'), w/2, 181);
+      ctx.fillStyle = 'white';
+      ctx.fillText(this.get('name'), w/2, 180);
+    } else {
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.fillText(this.get('name'), w/2, 180);
+    }
   }
 
 });
@@ -78,35 +96,50 @@ Postbooks.LoadDashboard = function() {
   });
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: -200, centerY: -120, width: 300, height: 200 },
-    color: magenta,
+    layout: { centerX: -350, centerY: -50, width: 150, height: 200 },
     name: "_crm".loc(),
+    icon: 'crm-icon',
     target: 'Postbooks.statechart',
     action: 'showCRM'
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: 200, centerY: -120, width: 300, height: 200 },
+    layout: { centerX: -175, centerY: -50, width: 150, height: 200 },
     color: violet,
     name: "_billing".loc(),
+    icon: 'billing-icon',
     target: 'Postbooks.statechart',
     action: 'showBilling'
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: -200, centerY: 120, width: 300, height: 200 },
+    layout: { centerX: 0, centerY: -50, width: 150, height: 200 },
+    color: cyan,
+    name: "_ledger".loc(),
+    icon: 'ledger-icon-disabled',
+    isEnabled: false,
+    target: 'Postbooks.statechart',
+    action: 'showLedger'
+  }));
+
+  springboard.get('layers').pushObject(IconLayer.create({
+    layout: { centerX: 175, centerY: -50, width: 150, height: 200 },
     color: blue,
     name: "_payments".loc(),
+    icon: 'payables-icon-disabled',
+    isEnabled: false,
     target: 'Postbooks.statechart',
     action: 'showPayments'
   }));
 
   springboard.get('layers').pushObject(IconLayer.create({
-    layout: { centerX: 200, centerY: 120, width: 300, height: 200 },
+    layout: { centerX: 350, centerY: -50, width: 150, height: 200 },
     color: cyan,
-    name: "_ledger".loc(),
+    name: "_time/expense".loc(),
+    icon: 'time-expense-icon-disabled',
+    isEnabled: false,
     target: 'Postbooks.statechart',
-    action: 'showLedger'
+    action: 'showTimeExpense'
   }));
 
   dashboard.get('subsurfaces').pushObjects([topbar, springboard]);
