@@ -130,7 +130,16 @@ Postbooks.LoadModule = function(name, classes, state) {
       sc_assert(aryController.kindOf(SC.ArrayController));
       sc_assert(aryController.get('content') === null);
 
-      aryController.set('content', Postbooks.get('store').find(baseClass));
+      var content;
+
+      if (baseClass === XM.Contact) {
+        var query = SC.Query.remote(XM.Invoice, { store: Postbooks.store, orderBy: 'lastName' });
+        content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
+      } else {
+        content = Postbooks.get('store').find(baseClass);
+      }
+
+      aryController.set('content', content);
       item.isLoaded = true;
     }
   })(list[startIndex]);
@@ -169,7 +178,16 @@ Postbooks.LoadModule = function(name, classes, state) {
         sc_assert(aryController.kindOf(SC.ArrayController));
         sc_assert(aryController.get('content') === null);
 
-        aryController.set('content', Postbooks.get('store').find(baseClass));
+        var content;
+
+        if (baseClass === XM.Contact) {
+          var query = SC.Query.remote(XM.Contact, { store: Postbooks.get('store'), orderBy: 'lastName ASC' });
+          content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
+        } else {
+          content = Postbooks.get('store').find(baseClass);
+        }
+
+        aryController.set('content', content);
         item.isLoaded = true;
       }
 
