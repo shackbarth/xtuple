@@ -1,5 +1,4 @@
 xTuple DataSource -- JavaScript Application and Data Server
-copyright 2006-2011, Strobe Inc., Apple Inc. and contributors.
 
 The MIT License (MIT)
 Copyright (c) 1999-2012 by OpenMFG, LLC, d/b/a xTuple
