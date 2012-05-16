@@ -1,3 +1,8 @@
+xTuple Postbooks - JavasScript Client for Business Management System Framework
+Copyright (c) 1999-2012 by OpenMFG, LLC, d/b/a xTuple
+
+Common Public Attribution License Version 1.0 (CPAL-1.0)
+
 1. Definitions
 
 1.0.1 "Commercial Use" means distribution or otherwise making the Covered Code available to a third party.
@@ -116,15 +121,15 @@ This License applies to code to which the Initial Developer has attached the not
 
 6.1 New Versions.
 
-Socialtext, Inc. ("Socialtext") may publish revised and/or new versions of the License from time to time. Each version will be given a distinguishing version number.
+xTuple may publish revised and/or new versions of the License from time to time. Each version will be given a distinguishing version number.
 
 6.2 Effect of New Versions.
 
-Once Covered Code has been published under a particular version of the License, You may always continue to use it under the terms of that version. You may also choose to use such Covered Code under the terms of any subsequent version of the License published by Socialtext. No one other than Socialtext has the right to modify the terms applicable to Covered Code created under this License.
+Once Covered Code has been published under a particular version of the License, You may always continue to use it under the terms of that version. You may also choose to use such Covered Code under the terms of any subsequent version of the License published by xTuple. No one other than xTuple has the right to modify the terms applicable to Covered Code created under this License.
 
 6.3 Derivative Works.
 
-If You create or use a modified version of this License (which you may only do in order to apply it to code which is not already Covered Code governed by this License), You must (a) rename Your license so that the phrases "Socialtext", "CPAL" or any confusingly similar phrase do not appear in your license (except to note that your license differs from this License) and (b) otherwise make it clear that Your version of the license contains terms which differ from the CPAL. (Filling in the name of the Initial Developer, Original Developer, Original Code or Contributor in the notice described in Exhibit A shall not of themselves be deemed to be modifications of this License.)
+If You create or use a modified version of this License (which you may only do in order to apply it to code which is not already Covered Code governed by this License), You must (a) rename Your license so that the phrases "xTuple", "CPAL" or any confusingly similar phrase do not appear in your license (except to note that your license differs from this License) and (b) otherwise make it clear that Your version of the license contains terms which differ from the CPAL. (Filling in the name of the Initial Developer, Original Developer, Original Code or Contributor in the notice described in Exhibit A shall not of themselves be deemed to be modifications of this License.)
 
  
 
@@ -255,5 +260,6 @@ Graphic Image as provided in the Covered Code, if any. (online at www.xtuple.com
  
 
 Display of Attribution Information is required in Larger Works which are defined in the CPAL as a work which combines Covered Code or portions thereof with code not governed by the terms of the CPAL.
+
 
 
