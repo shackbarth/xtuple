@@ -60,6 +60,7 @@ Postbooks.LoadModule = function(name, classes, state) {
     selection = 'Postbooks.'+className+'ListController.selection';
     
     var action = function(object, index) {
+      if (!object.isRecord) return; // It's the incremental list surrogate.
       sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
       Postbooks.set('store', Postbooks.get('store').chain());
       controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
