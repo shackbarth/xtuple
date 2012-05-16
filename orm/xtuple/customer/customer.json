@@ -42,7 +42,7 @@
     {
       "name": "customerType",
       "toOne": {
-        "type": "Customer",
+        "type": "CustomerType",
         "column": "cust_custtype_id",
         "isRequired": true
       }
@@ -105,7 +105,7 @@
     {
       "name": "shipCharge",
       "toOne": {
-        "type": "Customer",
+        "type": "ShipCharge",
         "column": "cust_shipchrg_id"
       }
     },
@@ -127,7 +127,7 @@
     {
       "name": "terms",
       "toOne": {
-        "type": "Customer",
+        "type": "Terms",
         "column": "cust_terms_id",
         "isRequired": true
       }
@@ -174,7 +174,7 @@
     {
       "name": "creditLimitCurrency",
       "toOne": {
-        "type": "Customer",
+        "type": "Currency",
         "column": "cust_creditlmt_curr_id",
         "defaultValue": "baseCurrency"
       }
@@ -203,7 +203,7 @@
     {
       "name": "shiptos",
       "toMany": {
-	      "isNested": true,
+	    "isNested": true,
         "type": "CustomerShipto",
         "column": "cust_id",
 		    "inverse" : "customer"

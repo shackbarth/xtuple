@@ -129,8 +129,6 @@ create or replace function xt.js_init() returns void as $$
   //
 
   plv8.XT = XT = {};
-  
-  plv8.XM = XM = {}; // WHERE THE $!@#*@# WAS THIS BEFORE NOW!??!
 
   /**
      Change properties names on an object with underscores '_' to camel case.
@@ -222,7 +220,9 @@ create or replace function xt.js_init() returns void as $$
   res = plv8.execute(sql);
   if(res.length) {
     for(var i = 0; i < res.length; i++) {
-      if(!this[res[i].nameSpace]) this[res[i].nameSpace] = {};
+      if(!plv8[res[i].nameSpace]) {
+        plv8[res[i].nameSpace] = eval([res[i].nameSpace] + " = {}");
+      }
     }
        
     /* load up all active javascript installed in the database */

@@ -188,7 +188,7 @@ XT.modelGenerator = XT.Object.create(
         if (inverse) attprops.push(inverse);
       }
 
-      var stdtypes = ['String', 'Number', 'Boolean', 'Money', 'Quantity', 'QuantityPer', 'Cost', 'SalesPrice', 'PurchasePrice', 'ExtendedPrice', 'UnitRatio', 'Percent', 'Weight']
+      var stdtypes = ['String', 'Number', 'Boolean', 'Money', 'Quantity', 'QuantityPer', 'Cost', 'SalesPrice', 'PurchasePrice', 'ExtendedPrice', 'UnitRatio', 'Percent', 'Weight'];
       // handle type
       if(type === 'Date')
       {
@@ -212,15 +212,15 @@ XT.modelGenerator = XT.Object.create(
           if(!obj.useIsoDate) def = "defaultValue: function() {\n      return XT.DateTime.create().toFormattedString('%Y-%m-%d');\n    }";
           else def = "defaultValue: function() {\n      return XT.DateTime.create().toFormattedString(SC.DATETIME_ISO8601);\n    }";
         } else if (obj.isNested && obj.defaultValue === 'currentUser') {
-          def = "defaultValue: function() {\n"
-              + "      var record = arguments[0],\n"
-              + "          status = record.get('status'),\n"
-              + "          ret;\n"
-              + "      if (status == SC.Record.READY_NEW) {\n"
-              + "        XM.UserAccountInfo.setCurrentUser(record, '{name}');\n"
-              + "        ret = '_loading'.loc();\n"
-              + "      }\n"
-              + "    }";
+          def = "defaultValue: function() {\n" +
+              "      var record = arguments[0],\n" +
+              "          status = record.get('status'),\n" +
+              "          ret;\n" +
+              "      if (status == SC.Record.READY_NEW) {\n" +
+              "        XM.UserAccountInfo.setCurrentUser(record, '{name}');\n" +
+              "        ret = '_loading'.loc();\n" +
+              "      }\n" +
+              "    }";
           def = def.replace(/{name}/, name);
         } else if (obj.defaultValue === 'currentUser') {
           def = 'defaultValue: function() {\n      return arguments[0].getPath("store.dataSource").session.userName;\n    }';
@@ -235,12 +235,6 @@ XT.modelGenerator = XT.Object.create(
         }
         else def = 'defaultValue: \'' + obj.defaultValue + '\'';
         attprops.push(def);
-      }
-      
-      // add label
-      if(name !== 'guid') {
-        label = "label: '" + "_" + name + "'.loc()";
-        attprops.push(label);
       }
       
       // build the properties
