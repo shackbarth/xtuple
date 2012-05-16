@@ -177,10 +177,14 @@ XT.DataSource = SC.Object.extend(XT.Logging,
         var results = JSON.parse(response.get("body").rows[0].fetch),
             recordType = query.get('recordType');
 
-        results.forEach(function(dataHash) {
-          store.pushRetrieve(recordType, dataHash.guid, dataHash);
+        var storeKeys = results.map(function(dataHash) {
+          return store.pushRetrieve(recordType, dataHash.guid, dataHash);
         });
-        store.dataSourceDidFetchQuery(query);
+        if (query.get('isRemote')) {
+          store.loadQueryResults(query, storeKeys);
+        } else {
+          store.dataSourceDidFetchQuery(query);
+        }
       }
     }
   },
@@ -366,7 +370,7 @@ XT.DataSource = SC.Object.extend(XT.Logging,
 
     // massage parameters so they are compatible with the data source
     if (qp instanceof Array) {
-      for (var i=0, l=qp.length; i<l; ++i) qp[i] = format(qp[i]);
+      for (var j=0, l=qp.length; j<l; ++j) qp[j] = format(qp[j]);
     } else {
       for (var prop in qp) params[prop] = format(qp[prop]);
     }
