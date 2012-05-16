@@ -40,6 +40,13 @@
     * { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
     div, canvas { border-style: solid; border-width: 0; }
     #ui { border-style: none; }
+    .frame { border-radius: 5px;
+    .frame::-webkit-scrollbar { -webkit-appearance: none; width: 11px; }
+    .frame::-webkit-scrollbar-thumb {
+      border-radius: 8px;
+      border: 2px solid 'rgb(70,70,70)'; /* should match background, can't be transparent */
+      background-color: 'rgb(70,70,70)';
+    }
   </style>
 </head>
 <body style="margin: 0; overflow: hidden;" onload="onload();">
