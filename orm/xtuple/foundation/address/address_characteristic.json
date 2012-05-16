@@ -32,8 +32,8 @@
     },
     {
       "name": "address",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Address",
         "column": "target",
         "isEditable": false
       }
