@@ -133,7 +133,7 @@ Postbooks.LoadModule = function(name, classes, state) {
       var content;
 
       if (baseClass === XM.Contact) {
-        var query = SC.Query.remote(XM.Invoice, { store: Postbooks.store, orderBy: 'lastName' });
+        var query = SC.Query.remote(XM.Contact, { store: Postbooks.store, orderBy: 'lastName' });
         content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
       } else {
         content = Postbooks.get('store').find(baseClass);
