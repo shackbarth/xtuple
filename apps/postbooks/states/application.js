@@ -43,7 +43,7 @@ Postbooks.APPLICATION = SC.State.design({
       });
     }
 
-    SC.routes.add(':tab', Postbooks, Postbooks.routeHandler);
+    SC.routes.add('/:tab', Postbooks, Postbooks.routeHandler);
     if (!window.location.hash) {
       this.gotoState('DASHBOARD');
     } else SC.routes.trigger(); // ensures we will enter a substate

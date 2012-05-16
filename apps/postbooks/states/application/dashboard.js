@@ -7,7 +7,7 @@
 Postbooks.DASHBOARD = SC.State.design({
 
   enterState: function() {
-    SC.routes.set('location', 'dashboard');
+    SC.routes.set('location', '/dashboard');
 
     // setTimeout(Postbooks.RenderModelHierarchy, 0);
     Postbooks.LoadDashboard();
