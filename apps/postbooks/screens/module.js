@@ -130,14 +130,14 @@ Postbooks.LoadModule = function(name, classes, state) {
       sc_assert(aryController.kindOf(SC.ArrayController));
       sc_assert(aryController.get('content') === null);
 
-      var content;
+      var orderByKey;
+      if (baseClass.prototype.number) orderByKey = 'number';
+      else if (baseClass.prototype.code) orderByKey = 'code';
+      else if (baseClass.prototype.name) orderByKey = 'name';
+      else orderByKey = 'guid';
 
-      if (baseClass === XM.Contact) {
-        var query = SC.Query.remote(XM.Contact, { store: Postbooks.store, orderBy: 'lastName' });
-        content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
-      } else {
-        content = Postbooks.get('store').find(baseClass);
-      }
+      var query = SC.Query.remote(baseClass, { store: Postbooks.store, orderBy: orderByKey });
+      var content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
 
       aryController.set('content', content);
       item.isLoaded = true;
@@ -178,14 +178,15 @@ Postbooks.LoadModule = function(name, classes, state) {
         sc_assert(aryController.kindOf(SC.ArrayController));
         sc_assert(aryController.get('content') === null);
 
-        var content;
+        var orderByKey;
+        if (baseClass.prototype.number) orderByKey = 'number';
+        else if (baseClass.prototype.code) orderByKey = 'code';
+        else if (baseClass.prototype.name) orderByKey = 'name';
+        else orderByKey = 'guid';
 
-        if (baseClass === XM.Contact) {
-          var query = SC.Query.remote(XM.Contact, { store: Postbooks.get('store'), orderBy: 'lastName ASC' });
-          content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
-        } else {
-          content = Postbooks.get('store').find(baseClass);
-        }
+        var query = SC.Query.remote(baseClass, { store: Postbooks.store, orderBy: orderByKey });
+        var content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
+
 
         aryController.set('content', content);
         item.isLoaded = true;
