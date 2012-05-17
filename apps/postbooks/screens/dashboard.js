@@ -43,7 +43,7 @@ var IconLayer = SC.ButtonWidget.extend({
 
     var img = Postbooks.createImageForSprite(this.get('icon'));
 
-    console.log(img);
+    // console.log(img);
     ctx.drawImage(img, 18, 0);
 
     if (isEnabled) {
