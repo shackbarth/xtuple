@@ -50,6 +50,13 @@ Postbooks.APPLICATION = SC.State.design({
       context.arc(-300, 150, 305, 0, Math.PI*2, true);
       context.stroke();
       Postbooks.StackBlurCanvasRGBA(context, 0, 0, 100, 300, 30);
+
+      // Create shadow for left list.
+      var context = document.getCSSCanvasContext('2d', 'master-list-shading', 320, 100);
+      context.globalAlpha = 0.2;
+      context.fillStyle = 'black';
+      context.fillRect(0,0,320,40);
+      Postbooks.StackBlurCanvasRGBA(context, 0, 0, 320, 100, 60);
     }
 
     SC.routes.add('/:tab', Postbooks, Postbooks.routeHandler);

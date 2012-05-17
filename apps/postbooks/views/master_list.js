@@ -72,9 +72,17 @@ Postbooks.MasterListView = SC.ListView.extend(
   didCreateElement: function(el) {
     arguments.callee.base.apply(this, arguments);
     var style = el.style;
-    style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
-    style.backgroundPosition = 'left top';
-    style.backgroundRepeat = 'repeat';
+
+    if (document.getCSSCanvasContext) {
+      style.backgroundImage =  '-webkit-canvas(master-list-shading),' + Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left center, left top';
+      style.backgroundSize = '320px 100%, auto';
+      style.backgroundRepeat = 'no-repeat, repeat';
+    } else {
+      style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top';
+      style.backgroundRepeat = 'repeat';
+    }
   },
 
   willRenderLayers: function(context) {
