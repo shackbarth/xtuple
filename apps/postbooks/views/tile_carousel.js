@@ -93,6 +93,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     this._startX = this.get('frame').x;
     // this._clientY = evt.clientY;
     this._needDirection = true;
+    evt.stop();
     return true;
   },
 
@@ -120,6 +121,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     this._clientX = evt.clientX;
     // this._clientY = evt.clientY;
     SC.AnimationTransaction.end();
+    evt.stop();
     return true;
   },
 
@@ -135,6 +137,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     delete this._clientX;
     // delete this._clientY;
     SC.AnimationTransaction.end();
+    evt.stop();
     return true;
   },
 
