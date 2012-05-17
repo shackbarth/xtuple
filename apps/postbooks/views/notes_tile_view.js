@@ -14,6 +14,8 @@ Postbooks.CreateNotesTileView = function(controller, optionalTitle, optionalProp
 
   var layoutSurface = SC.LayoutSurface.create({
 
+    size: Postbooks.TileView.QUARTER_TILE,
+
     didCreateElement: function(el) {
       arguments.callee.base.apply(this, arguments);
       var style = el.style;
