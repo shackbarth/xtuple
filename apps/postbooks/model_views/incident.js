@@ -263,7 +263,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'name';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 18, width: left },
+    layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'clear',
@@ -308,7 +308,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   layers.pushObject(widget);
   objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 18, width: left },
+    layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'clear',
@@ -357,7 +357,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 18, width: left },
+    layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
     backgroundColor: 'clear',
