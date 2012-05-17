@@ -10,8 +10,8 @@ Postbooks.DASHBOARD = SC.State.design({
     SC.routes.set('location', '/dashboard');
 
     // setTimeout(Postbooks.RenderModelHierarchy, 0);
-    if (SC.imagesToLoad === 0) Postbooks.LoadDashboard();
-    else SC.imageLoadedFunction = Postbooks.LoadDashboard;
+    if (Postbooks.imagesToLoad === 0) Postbooks.LoadDashboard();
+    else Postbooks.imageLoadedFunction = Postbooks.LoadDashboard;
   },
 
   // ACTIONS

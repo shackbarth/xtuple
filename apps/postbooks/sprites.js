@@ -47,11 +47,11 @@ Postbooks.createImageForSprite = function(key) {
       image = this.images[key] = new Image();
       image.onload = function() {
         // console.log('loaded', key, 'image');
-        SC.imagesToLoad--;
-        if (SC.imagesToLoad === 0 && SC.imageLoadedFunction) {
+        Postbooks.imagesToLoad--;
+        if (Postbooks.imagesToLoad === 0 && Postbooks.imageLoadedFunction) {
           setTimeout(function() {
             SC.RunLoop.begin();
-            SC.imageLoadedFunction();
+            Postbooks.imageLoadedFunction();
             SC.RunLoop.end();
           }, 0);
         }
@@ -70,10 +70,10 @@ Postbooks.createImageForSprite = function(key) {
 SC.ready(function() {
   // precreate all images
   // debugger;
-  SC.imagesToLoad = 0;
+  Postbooks.imagesToLoad = 0;
   for (var key in Postbooks.sprites) {
     if (!Postbooks.sprites.hasOwnProperty(key)) continue;
     Postbooks.createImageForSprite(key);
-    SC.imagesToLoad++;
+    Postbooks.imagesToLoad++;
   }
 });
