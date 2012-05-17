@@ -368,12 +368,10 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
-          widget = SC.TextFieldWidget.create({
+          widget = Postbooks.DateWidget.create({
             layout: { top: y, left: left, height: 22, right: right },
             isEnabledBinding: SC.Binding.from('isEditable', controller),
-            valueBinding: SC.Binding.transform(function(val) {
-              return val? val.toLocaleDateString() : "no date set";
-            }).from(key, controller)
+            dateBinding: SC.Binding.from(key, controller)
           });
           y += 24 + K.SPACING;
         } else if (typeClass === Boolean) {
