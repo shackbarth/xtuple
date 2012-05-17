@@ -152,7 +152,7 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title));
     }
   }
 
