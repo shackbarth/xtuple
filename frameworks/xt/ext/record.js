@@ -564,7 +564,7 @@ XT.Record.mixin( /** @scope XT.Record */ {
 
       isGrantedPersonal = false;
       while (!isGrantedPersonal && i < props.length) {
-        isGrantedPersonal = this._attrCache[props[i]] === XT.DataSource.session.userName;
+        isGrantedPersonal = this._attrCache[props[i]] === XT.session.details.username;
         i++;
       }
     }
