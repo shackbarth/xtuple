@@ -149,7 +149,21 @@ Postbooks.LoadModule = function(name, classes, state) {
     layout: { top: 44, left: 320, right: 0, bottom: 0 },
     orderInTransition:  null,
     replaceTransition:  null,
-    orderOutTransition: null
+    orderOutTransition: null,
+
+    didCreateElement: function(div) {
+      // We don't want SC.View's implementation; don't call it.
+      div.style.overflowX = 'hidden';
+      div.style.overflowY = 'hidden';
+
+      var style = div.style;
+      if (document.getCSSCanvasContext) {
+        style.backgroundImage =  '-webkit-canvas(list-shadow)';
+        style.backgroundPosition = 'left center';
+        style.backgroundSize = '40px 100%';
+        style.backgroundRepeat = 'no-repeat';
+      }
+    }
   });
 
   detail.set('contentSurface', list[startIndex].surface);

@@ -45,7 +45,8 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
         K = Postbooks.TileView;
 
     sc_assert(tray);
-    var slides = 0, surfaces = tray.get('subsurfaces'); len = surfaces.length || 1; // Make at least one.
+    var slides = 0, surfaces = tray.get('subsurfaces'),
+        len = surfaces.length || 1; // Make at least one.
     
     // Take various widths of slides into consideration
     for (var i=0; i<len; i++) {
@@ -200,7 +201,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
         row = 0;
         slide++;
       }
-    }, this)
+    }, this);
 
 /*    
     // Calculate and cache the tile frames for a single slide.
