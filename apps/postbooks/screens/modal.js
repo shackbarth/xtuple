@@ -79,7 +79,9 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
       this.set('frame', SC.MakeRect(64, 44, viewport.width-64, viewport.height - 52));
     }
   });
-  
+
+  modal.set('backgroundColor', 'rgb(95,98,96)');
+
   var list = [SC.Object.create({
     title: "_overview".loc(),
     surface: editor
@@ -127,7 +129,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
       contentArea.set('contentSurface', list[index].surface);
     }
   });
-  listView.set('layout', { top: 0, left: 0, width: 320, bottom: 0 });
+  listView.set('layout', { top: 0, left: 0, width: 319, bottom: 0 });
 
   modal.get('subsurfaces').pushObjects([listView, contentArea]);
 
