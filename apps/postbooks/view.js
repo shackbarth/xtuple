@@ -32,47 +32,40 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
   var tiles = [],
       proto = klass.prototype;
 
-  // see if there is a function for this specific class
-  if (Postbooks[klass] && Postbooks[klass].tiles) {
-    tiles = Postbooks[klass].tiles(controller, isRoot);
+  tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
 
-  // otherwise generate automatically
-  } else {
-    tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
+  for (var key in proto) {
+    if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
 
-    for (var key in proto) {
-      if (key === 'guid') continue;
-      if (key === 'type') continue;
-      if (key === 'dataState') continue;
+    var property = proto[key],
+        title = ("_"+key).loc()+":";
 
-      var property = proto[key],
-          title = ("_"+key).loc()+":";
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      var arrayKlass = property.get('typeClass');
 
-      if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-        var arrayKlass = property.get('typeClass');
+      var arrayController = SC.ArrayController.create({
+        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+      });
 
-        var arrayController = SC.ArrayController.create({
-          contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
-        });
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
 
-        tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+    } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+      var objectKlass = property.get('typeClass');
 
-      } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
-        var objectKlass = property.get('typeClass');
+      var objectController = SC.ObjectController.create({
+        contentBinding: SC.Binding.from(key, controller).single().oneWay()
+      });
 
-        var objectController = SC.ObjectController.create({
-          contentBinding: SC.Binding.from(key, controller).single().oneWay()
-        });
-
-        tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, title));
-      } else if (key === 'customTileViews') {
-        property.forEach(function(viewName) {
-          var view = SC.objectForPropertyPath(viewName);
-          if (view) {
-            tiles.push(view.CreateTileView(controller));
-          } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-        });
-      }
+      tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, title));
+    } else if (key === 'customTileViews') {
+      property.forEach(function(viewName) {
+        var view = SC.objectForPropertyPath(viewName);
+        if (view) {
+          tiles.push(view.CreateTileView(controller));
+        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+      });
     }
   }
 
