@@ -405,7 +405,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
 };
 
 Postbooks.DefaultListRenderRow = function(context, width, height, index, object, isSelected) {
-  console.log('Postbooks.DefaultListRenderRow()');
+  // console.log('Postbooks.DefaultListRenderRow()');
 
   context.fillStyle = isSelected? '#99CCFF' : 'white';
   context.fillRect(0, 0, width, height);
