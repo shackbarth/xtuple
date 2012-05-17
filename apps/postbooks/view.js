@@ -336,12 +336,13 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             value: title
           });
           // FIXME: Re-enable this!
-          // widget = SC.TextFieldWidget.create({
-          //   layout: { top: y, left: left, height: 22, right: right },
-          //   valueBinding: SC.Binding.transform(function(val) {
-          //     return String(val);
-          //   }).from(key, controller)
-          // });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 22, right: right },
+            isEnabled: key==='number'? false : true,
+            valueBinding: SC.Binding.transform(function(val) {
+              return String(val);
+            }).from(key, controller)
+          });
           y += 24 + K.SPACING;
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
@@ -589,7 +590,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
       style.padding = '6px';
       style.borderStyle = 'solid ';
       style.borderWidth = '1px';
-      style.borderRadius = '5px';
+      // style.borderRadius = '5px'; // doesn't work properly in Chrome; avoid for now
       style.borderColor = this.get('isEnabled') ? 'rgb(252,188,126)' : 'grey'; // this.get('borderColor');
       style.outline = 'none';
       style.boxShadow = 'none';
@@ -627,12 +628,13 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
         ctx.clearRect(0, 0, w, h);
 
         // Draw view name.
-        ctx.fillStyle = 'rgba(128,128,128,0.5)';
+        ctx.fillStyle = 'rgba(70,70,70,0.5)';
         
         var K = Postbooks;
         ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
         ctx.fillText(text, w/2, h/2);
       } else {
         ctx.fillStyle = 'white';
