@@ -94,7 +94,7 @@ XT.modelGenerator = XT.Object.create(
                 if(part === 'mixins') {
                   var prev = pathTo.split('/').slice(0,-1).join('/'),
                       nodePath = _path.join(prev, 'node');
-                  if(!_fs.existsSync(nodePath)) {
+                  if(!_path.existsSync(nodePath)) {
                     _fs.mkdirSync(nodePath);
                     _fs.writeFileSync(_path.join(nodePath, 'package.json'),
                       '{\n'+
@@ -153,13 +153,15 @@ XT.modelGenerator = XT.Object.create(
           }
         });
       } catch(err) {
-        if(socket)
+        if(socket) {
           socket.json.emit('error', {
             message: err.message,
             context: file
           });
-        else
           issue(XT.warning(err));
+        } else {
+          issue(XT.warning(err));
+        }
         continue;
       }
     }
