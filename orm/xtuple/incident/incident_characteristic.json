@@ -42,7 +42,6 @@
     {
       "name": "characteristic",
       "toOne": {
-        "isNested": true,
         "type": "Characteristic",
         "column": "characteristic",
         "isRequired": true
