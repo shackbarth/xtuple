@@ -177,7 +177,7 @@ XM._Receivable = {
   */
   createdBy: SC.Record.attr(String, {
     defaultValue: function() {
-      return arguments[0].getPath("store.dataSource").session.userName;
+      return XT.session.details.username;
     }
   })
 

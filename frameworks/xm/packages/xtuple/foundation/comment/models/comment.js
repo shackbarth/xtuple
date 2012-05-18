@@ -36,7 +36,7 @@ XM.Comment = XT.Record.extend(
   createdBy: SC.Record.attr('XM.UserAccount', {
     /** @private */
     defaultValue: function() {
-      if(arguments[0].get('status') === SC.Record.READY_NEW) return XM.DataSource.session.userName;
+      if(arguments[0].get('status') === SC.Record.READY_NEW) return XT.session.details.username;
     }
   }),
   

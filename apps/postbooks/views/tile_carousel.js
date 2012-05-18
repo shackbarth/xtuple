@@ -45,7 +45,8 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
         K = Postbooks.TileView;
 
     sc_assert(tray);
-    var slides = 0, surfaces = tray.get('subsurfaces'); len = surfaces.length || 1; // Make at least one.
+    var slides = 0, surfaces = tray.get('subsurfaces'),
+        len = surfaces.length || 1; // Make at least one.
     
     // Take various widths of slides into consideration
     for (var i=0; i<len; i++) {
@@ -85,7 +86,7 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
 
 Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
 
-  _sc_backgroundColor: 'clear',
+  _sc_backgroundColor: 'transparent',
 
   mouseDown: function(evt) {
     // console.log('Postbooks.InternalTileCarouselTray#mouseDown()');
@@ -93,6 +94,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     this._startX = this.get('frame').x;
     // this._clientY = evt.clientY;
     this._needDirection = true;
+    evt.stop();
     return true;
   },
 
@@ -120,6 +122,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     this._clientX = evt.clientX;
     // this._clientY = evt.clientY;
     SC.AnimationTransaction.end();
+    evt.stop();
     return true;
   },
 
@@ -135,6 +138,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     delete this._clientX;
     // delete this._clientY;
     SC.AnimationTransaction.end();
+    evt.stop();
     return true;
   },
 
@@ -197,7 +201,7 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
         row = 0;
         slide++;
       }
-    }, this)
+    }, this);
 
 /*    
     // Calculate and cache the tile frames for a single slide.

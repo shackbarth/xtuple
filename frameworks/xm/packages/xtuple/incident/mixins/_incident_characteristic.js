@@ -43,7 +43,7 @@ XM._IncidentCharacteristic = {
   /**
     @type Number
   */
-  incident: SC.Record.attr(Number),
+  incident: SC.Record.toOne('XM.Incident'),
 
   /**
     @type XM.Characteristic

@@ -8,71 +8,48 @@ sc_require('views/carousel');
 sc_require('views/tile_view');
 sc_require('widgets/relation');
 
-var base03 =   "#002b36";
-var base02 =   "#073642";
-var base01 =   "#586e75";
-var base00 =   "#657b83";
-var base0 =    "#839496";
-var base1 =    "#93a1a1";
-var base2 =    "#eee8d5";
-var base3 =    "#fdf6e3";
-var yellow =   "#b58900";
-var orange =   "#cb4b16";
-var red =      "#dc322f";
-var magenta =  "#d33682";
-var violet =   "#6c71c4";
-var blue =     "#268bd2";
-var cyan =     "#2aa198";
-var green =    "#859900";
-var white =    "white";
-
 Postbooks.TilesForClass = function(klass, controller, isRoot) {
   console.log('Postbooks.TilesForClass(', klass, ')');
 
   var tiles = [],
       proto = klass.prototype;
 
-  // see if there is a function for this specific class
-  if (Postbooks[klass] && Postbooks[klass].tiles) {
-    tiles = Postbooks[klass].tiles(controller, isRoot);
+  tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
 
-  // otherwise generate automatically
-  } else {
-    tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
+  function processProperty(viewName) {
+    var view = SC.objectForPropertyPath(viewName);
+    if (view) {
+      tiles.push(view.CreateTileView(controller));
+    } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+  }
 
-    for (var key in proto) {
-      if (key === 'guid') continue;
-      if (key === 'type') continue;
-      if (key === 'dataState') continue;
+  for (var key in proto) {
+    if (key === 'guid') continue;
+    if (key === 'type') continue;
+    if (key === 'dataState') continue;
 
-      var property = proto[key],
-          title = ("_"+key).loc()+":";
+    var property = proto[key],
+        title = ("_"+key).loc()+":";
 
-      if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-        var arrayKlass = property.get('typeClass');
+    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+      var arrayKlass = property.get('typeClass');
 
-        var arrayController = SC.ArrayController.create({
-          contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
-        });
+      var arrayController = SC.ArrayController.create({
+        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+      });
 
-        tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
 
-      } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
-        var objectKlass = property.get('typeClass');
+    } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
+      var objectKlass = property.get('typeClass');
 
-        var objectController = SC.ObjectController.create({
-          contentBinding: SC.Binding.from(key, controller).single().oneWay()
-        });
+      var objectController = SC.ObjectController.create({
+        contentBinding: SC.Binding.from(key, controller).single().oneWay()
+      });
 
-        tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, title));
-      } else if (key === 'customTileViews') {
-        property.forEach(function(viewName) {
-          var view = SC.objectForPropertyPath(viewName);
-          if (view) {
-            tiles.push(view.CreateTileView(controller));
-          } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-        });
-      }
+      tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, title));
+    } else if (key === 'customTileViews') {
+      property.forEach(processProperty, this);
     }
   }
 
@@ -81,7 +58,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
 /** Builds an SC.View subclass from all attributes that can edit properties of the record class. */
 Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview, isRoot) {
-  console.log('Postbooks.CreateTileViewForClass(', klass, title, isOverview, ')');
+  console.log('Postbooks.CreateTileViewForClass(', klass.prototype.className, title, isOverview, ')');
 
   // See if we have an override.
   if (klass.CreateTileView) {
@@ -121,7 +98,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
   }
 
   for (key in proto) {
-   if (key === 'guid') continue;
+    if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
@@ -148,7 +125,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
 
 /** Builds an SC.View subclass from a specific property list that can edit them the record class. */
 Postbooks.CreateTileView = function(klass, controller, title, properties, commands, isOverview) {
-  console.log('Postbooks.CreateTileView(', klass, controller, title, properties, commands, isOverview, ')');
+  console.log('Postbooks.CreateTileView(', klass.prototype.className, controller, title, properties, commands, isOverview, ')');
 
   if (!isOverview && title === 'Overview') debugger;
 
@@ -207,7 +184,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         if (typeClass === String) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -234,7 +211,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (property.isSingleAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -298,7 +275,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (property.isChildAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -330,23 +307,24 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (typeClass === Number) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
           });
           // FIXME: Re-enable this!
-          // widget = SC.TextFieldWidget.create({
-          //   layout: { top: y, left: left, height: 22, right: right },
-          //   valueBinding: SC.Binding.transform(function(val) {
-          //     return String(val);
-          //   }).from(key, controller)
-          // });
+          widget = SC.TextFieldWidget.create({
+            layout: { top: y, left: left, height: 22, right: right },
+            isEnabled: key==='number'? false : true,
+            valueBinding: SC.Binding.transform(function(val) {
+              return String(val);
+            }).from(key, controller)
+          });
           y += 24 + K.SPACING;
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -362,17 +340,15 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (typeClass === XT.DateTime) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
           });
-          widget = SC.TextFieldWidget.create({
+          widget = Postbooks.DateWidget.create({
             layout: { top: y, left: left, height: 22, right: right },
             isEnabledBinding: SC.Binding.from('isEditable', controller),
-            valueBinding: SC.Binding.transform(function(val) {
-              return val? val.toLocaleDateString() : "no date set";
-            }).from(key, controller)
+            dateBinding: SC.Binding.from(key, controller)
           });
           y += 24 + K.SPACING;
         } else if (typeClass === Boolean) {
@@ -405,7 +381,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
 };
 
 Postbooks.DefaultListRenderRow = function(context, width, height, index, object, isSelected) {
-  console.log('Postbooks.DefaultListRenderRow()');
+  // console.log('Postbooks.DefaultListRenderRow()');
 
   context.fillStyle = isSelected? '#99CCFF' : 'white';
   context.fillRect(0, 0, width, height);
@@ -477,11 +453,10 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
         }
 
         // Clear background.
-        ctx.fillStyle = base3;
-        ctx.fillRect(0, 0, w, h);
+        ctx.clearRect(0, 0, w, h);
 
         // Draw view name.
-        ctx.fillStyle = base03;
+        ctx.fillStyle = 'white';
         
         var K = Postbooks;
         ctx.font = "11pt "+K.TYPEFACE;
@@ -489,7 +464,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
         ctx.textAlign = "center";
         ctx.fillText(text, w/2, h/2);
       } else {
-        ctx.fillStyle = base3;
+        ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, ctx.width, ctx.height);
       }
     },
@@ -501,20 +476,78 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
   return list;
 };
 
-Postbooks.CreateTileListViewForClass = function(klass, controller) {
-  console.log('Postbooks.CreateTileListViewForClass(', klass, ')');
+Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
+  console.log('Postbooks.CreateTileListViewForClass(', klass.prototype.className, ')');
 
   // See if we have an override.
   var className = klass.prototype.className;
   className = className.slice(className.indexOf('.') + 1); // drop name space
-  // if (className === 'ContactCharacteristic') debugger;
+
   if (Postbooks[className] && Postbooks[className].CreateTileListView) {
     return Postbooks[className].CreateTileListView(controller);
   }
 
+  var layoutSurface = SC.LayoutSurface.create({
+
+    size: Postbooks.TileView.QUARTER_TILE,
+
+    didCreateElement: function(el) {
+      arguments.callee.base.apply(this, arguments);
+      var style = el.style;
+      style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top';
+      style.backgroundRepeat = 'repeat';
+
+      var kind, size = this.get('size'); 
+      if (document.getCSSCanvasContext && size) {
+        // Figure out what size we have.
+        'QUARTER_TILE HORIZONTAL_TILE VERTICAL_TILE FULL_TILE'.w().forEach(function(type) {
+          var spec = Postbooks.TileView[type];
+          if (spec.width === size.width && spec.height === size.height) {
+            kind = type;
+          }
+        });
+      }
+
+      if (kind) {
+        style.backgroundImage =  '-webkit-canvas('+kind.toLowerCase().dasherize() + '), ' + Postbooks.createDataUrlForSprite('tile-texture');
+        style.backgroundPosition = 'left top, left top';
+        style.backgroundRepeat = 'no-repeat, repeat';
+      } else {
+        style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+        style.backgroundPosition = 'left top';
+        style.backgroundRepeat = 'repeat';
+      }
+    }
+
+  });
+  layoutSurface.set('frame', SC.MakeRect(0, 42, 320, 320));
+  // layoutSurface.set('backgroundColor', "white");
+
+  var topbar = SC.View.create({
+    layout: { top: 3, left: 0, right: 0, height: 32 },
+
+    _sc_backgroundColor: 'transparent',
+    clearBackground: true,
+
+    willRenderLayers: function(context) { 
+      var w = context.width, h = context.height;
+
+      // title text
+      var K = Postbooks;
+      context.font = "12pt "+K.TYPEFACE;
+      context.fillStyle = 'white';
+      context.textAlign = 'left';
+      context.textBaseline = 'middle';
+
+      context.fillText(title, 18, 19);
+    }
+  });
+
   // Nope, generate the default tile view on the fly.
   var list = Postbooks.TileListView.create({
-    layout: { top: 0, left: 0, right: 0, bottom: 0 },
+    layout: { top: 50, left: 12, right: 12, bottom: 16 },
+
     rowHeight: klass.ListRowHeight !== undefined? klass.ListRowHeight : 60,
     hasHorizontalScroller: false,
 
@@ -522,6 +555,20 @@ Postbooks.CreateTileListViewForClass = function(klass, controller) {
     selectionBinding: SC.Binding.from('selection', controller),
 
     baseClass: klass,
+
+    didCreateElement: function(el) {
+      arguments.callee.base.apply(this, arguments);
+      var style = el.style;
+      style.backgroundColor = 'clear'; // 'rgba(70,70,70,0.5)';
+      style.color = 'black';
+      style.padding = '6px';
+      style.borderStyle = 'solid ';
+      style.borderWidth = '1px';
+      // style.borderRadius = '5px'; // doesn't work properly in Chrome; avoid for now
+      style.borderColor = this.get('isEnabled') ? 'rgb(252,188,126)' : 'grey'; // this.get('borderColor');
+      style.outline = 'none';
+      style.boxShadow = 'none';
+    },
 
     action: function(object, index) {
       var that = this;
@@ -555,12 +602,13 @@ Postbooks.CreateTileListViewForClass = function(klass, controller) {
         ctx.clearRect(0, 0, w, h);
 
         // Draw view name.
-        ctx.fillStyle = base03;
+        ctx.fillStyle = 'rgba(70,70,70,0.5)';
         
         var K = Postbooks;
         ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
         ctx.textAlign = "center";
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
         ctx.fillText(text, w/2, h/2);
       } else {
         ctx.fillStyle = 'white';
@@ -572,5 +620,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller) {
 
   });
 
-  return list;
+  layoutSurface.get('subsurfaces').pushObjects([topbar, list]);
+
+  return layoutSurface;
 };

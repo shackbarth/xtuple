@@ -73,7 +73,7 @@ Postbooks.SUBMODULE = SC.State.design({
       }
       if (!save) {
         // Subtle: We may need to re-establish our module's route.
-        SC.routes.set('location', this.parentState.get('route'));
+        SC.routes.set('location', '/'+this.parentState.get('route'));
         return;
       } else {
         Postbooks.get('store').commitChanges(true); // force

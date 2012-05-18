@@ -569,6 +569,7 @@ SC.stringsFor("en_US", {
   "_termsType": "Terms Type",
   "_text": "Text",
   "_time": "Time",
+  "_time/expense": "Time/Expense",
   "_toDo": "To Do",
   "_toDoRelations": "To Dos",
   "_toDoStatus": "To Do Status",

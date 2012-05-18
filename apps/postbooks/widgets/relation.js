@@ -615,7 +615,9 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     style.backgroundPosition = 'right center';
     style.backgroundRepeat = 'no-repeat';
     style.outline = 'none'; // FIXME: This breaks other users of the field editor.
-    style.boxShadow = '0px 0px 3px 1px ' + 'rgb(252,102,32)' + ', 0px 0px 1px 0px ' + 'rgb(128,128,128)' + ' inset';
+    if (this.get('isEnabled')) {
+      style.boxShadow = '0px 0px 3px 1px ' + 'rgb(252,102,32)' + ', 0px 0px 1px 0px ' + 'rgb(128,128,128)' + ' inset';
+    } else style.boxShadow = 'none';
 
     // Without the 'px' ending, these do nothing in WebKit.
     style.paddingTop = '0px';

@@ -194,7 +194,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
   key = 'number';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_number".loc() + ':'
@@ -211,7 +211,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
   key = 'name';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_name".loc() + ':'
@@ -229,7 +229,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
   key = 'account';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_account".loc() + ':'
@@ -250,7 +250,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
@@ -262,7 +262,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
   key = 'owner';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_owner".loc() + ':'
@@ -280,7 +280,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
@@ -292,7 +292,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
   key = "assignedTo";
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_assignedTo".loc() + ':'
@@ -310,7 +310,7 @@ Postbooks.Project.CreateOverviewTileView = function(controller) {
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
@@ -353,7 +353,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   // hours
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 75 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     font: "bold 10pt "+K.TYPEFACE,
     textAlign: 'center',
@@ -366,7 +366,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   key = 'budgetedHoursTotal';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 55 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_budgetedHoursTotal".loc() + ':'
@@ -374,7 +374,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   layers.pushObject(label);
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: left + 73, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: '0'
@@ -390,7 +390,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   key = 'actualHoursTotal';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 55 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_actualHoursTotal".loc() + ':'
@@ -398,7 +398,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   layers.pushObject(label);
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: left + 73, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: '0'
@@ -414,7 +414,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   key = 'balanceHoursTotal';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 55 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_balance".loc() + ':'
@@ -422,7 +422,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   layers.pushObject(label);
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: left + 73, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: '0'
@@ -437,7 +437,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   // expenses
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 75 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     font: "bold 10pt "+K.TYPEFACE,
     textAlign: 'center',
@@ -450,7 +450,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   key = 'budgetedHoursTotal';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 55 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_budgetedExpensesTotal".loc() + ':'
@@ -458,7 +458,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   layers.pushObject(label);
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: left + 73, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: '0'
@@ -474,7 +474,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   key = 'actualExpensesTotal';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 55 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_actualExpensesTotal".loc() + ':'
@@ -482,7 +482,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   layers.pushObject(label);
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: left + 73, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: '0'
@@ -498,7 +498,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   key = 'balanceHoursTotal';
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left + 55 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_balance".loc() + ':'
@@ -506,7 +506,7 @@ Postbooks.Project.CreateSummaryTileView = function(controller) {
   layers.pushObject(label);
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: left + 73, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: '0'
