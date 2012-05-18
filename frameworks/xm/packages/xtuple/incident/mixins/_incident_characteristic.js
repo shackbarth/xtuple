@@ -16,7 +16,7 @@ XM._IncidentCharacteristic = {
   
   className: 'XM.IncidentCharacteristic',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -41,7 +41,7 @@ XM._IncidentCharacteristic = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type XM.Incident
   */
   incident: SC.Record.toOne('XM.Incident'),
 
