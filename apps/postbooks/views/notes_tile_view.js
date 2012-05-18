@@ -52,7 +52,7 @@ Postbooks.CreateNotesTileView = function(controller, optionalTitle, optionalProp
   var topbar = SC.View.create({
     layout: { top: 3, left: 0, right: 0, height: 32 },
 
-    _sc_backgroundColor: 'clear',
+    _sc_backgroundColor: 'transparent',
     clearBackground: true,
 
     willRenderLayers: function(context) { 

@@ -86,7 +86,7 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
 
 Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
 
-  _sc_backgroundColor: 'clear',
+  _sc_backgroundColor: 'transparent',
 
   mouseDown: function(evt) {
     // console.log('Postbooks.InternalTileCarouselTray#mouseDown()');

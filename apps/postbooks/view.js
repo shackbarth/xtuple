@@ -184,7 +184,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         if (typeClass === String) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -211,7 +211,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (property.isSingleAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -275,7 +275,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (property.isChildAttribute) { // just for now so we can see layout impact
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -307,7 +307,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (typeClass === Number) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -324,7 +324,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -340,7 +340,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
         } else if (typeClass === XT.DateTime) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-            backgroundColor: 'clear',
+            backgroundColor: 'transparent',
             color: 'white',
             textAlign: 'right',
             value: title
@@ -527,7 +527,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
   var topbar = SC.View.create({
     layout: { top: 3, left: 0, right: 0, height: 32 },
 
-    _sc_backgroundColor: 'clear',
+    _sc_backgroundColor: 'transparent',
     clearBackground: true,
 
     willRenderLayers: function(context) { 

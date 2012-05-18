@@ -166,7 +166,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -184,7 +184,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -204,7 +204,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -222,7 +222,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -245,7 +245,7 @@ Postbooks.Invoice.CreateBilltoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: "_billtoAddress".loc() + ':'
@@ -281,7 +281,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -299,7 +299,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -317,7 +317,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -337,7 +337,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -357,7 +357,7 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 22, right: right },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     value: "_shiptoAddress".loc() + ':'
@@ -418,7 +418,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_allocatedCredit".loc() + ':'
@@ -441,7 +441,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_subtotal".loc() + ':'
@@ -461,7 +461,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: ("_"+key).loc()+ ':'
@@ -481,7 +481,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_tax".loc() + ':'
@@ -501,7 +501,7 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_total".loc() + ':'
