@@ -258,10 +258,12 @@ XT.Record = SC.Record.extend(XT.Logging,
     // any other primary key type must simply be some value.
     var pkey = this.get('primaryKey'),
         id = this.get('id') || -1;
-    err = XT.errors.findProperty('code', 'xt1015'),
+
+    err = XT.errors.findProperty('code', 'xt1015');
     isErr = pkey === 'guid' ? id < 0 : SC.none(id);
+
     this.updateErrors(err, isErr);
-    
+
     return this.get('validateErrors');
   },
 
