@@ -1,0 +1,25 @@
+{
+  "context": "crm",
+  "nameSpace": "XM",
+  "type": "ProjectInfo",
+  "table": "prj",
+  "isExtension": true,
+  "comment": "Extended by Crm",
+  "relations": [
+    {
+      "column": "prj_id",
+      "inverse": "guid"
+    }
+  ],
+  "properties": [
+     {
+      "name": "account",
+      "toOne": { 
+        "type": "AccountInfo",
+        "column": "prj_crmacct_id"
+      }
+    }
+  ],
+  "sequence": 0,
+  "isSystem": true
+}

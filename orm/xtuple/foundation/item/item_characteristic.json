@@ -33,8 +33,8 @@
     },
     {
       "name": "item",
-      "attr": {
-        "type": "Number",
+      "toOne": {
+        "type": "Item",
         "column": "target",
         "isEditable": false
       }
@@ -42,7 +42,6 @@
     {
       "name": "characteristic",
       "toOne": {
-        "isNested": true,
         "type": "Characteristic",
         "column": "characteristic",
         "isRequired": true
