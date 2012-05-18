@@ -16,6 +16,13 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
   tiles.push(Postbooks.CreateTileViewForClass(klass, controller, undefined, true, isRoot));
 
+  function processProperty(viewName) {
+    var view = SC.objectForPropertyPath(viewName);
+    if (view) {
+      tiles.push(view.CreateTileView(controller));
+    } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
+  }
+
   for (var key in proto) {
     if (key === 'guid') continue;
     if (key === 'type') continue;
@@ -42,12 +49,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
       tiles.push(Postbooks.CreateTileViewForClass(objectKlass, objectController, title));
     } else if (key === 'customTileViews') {
-      property.forEach(function(viewName) {
-        var view = SC.objectForPropertyPath(viewName);
-        if (view) {
-          tiles.push(view.CreateTileView(controller));
-        } else { SC.Logger.warn("Could not find view for class %@".fmt(viewName)); }
-      });
+      property.forEach(processProperty, this);
     }
   }
 
@@ -56,7 +58,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
 
 /** Builds an SC.View subclass from all attributes that can edit properties of the record class. */
 Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview, isRoot) {
-  console.log('Postbooks.CreateTileViewForClass(', klass, title, isOverview, ')');
+  console.log('Postbooks.CreateTileViewForClass(', klass.prototype.className, title, isOverview, ')');
 
   // See if we have an override.
   if (klass.CreateTileView) {
@@ -96,7 +98,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
   }
 
   for (key in proto) {
-   if (key === 'guid') continue;
+    if (key === 'guid') continue;
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
@@ -123,7 +125,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
 
 /** Builds an SC.View subclass from a specific property list that can edit them the record class. */
 Postbooks.CreateTileView = function(klass, controller, title, properties, commands, isOverview) {
-  console.log('Postbooks.CreateTileView(', klass, controller, title, properties, commands, isOverview, ')');
+  console.log('Postbooks.CreateTileView(', klass.prototype.className, controller, title, properties, commands, isOverview, ')');
 
   if (!isOverview && title === 'Overview') debugger;
 
@@ -475,12 +477,12 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
 };
 
 Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
-  console.log('Postbooks.CreateTileListViewForClass(', klass, ')');
+  console.log('Postbooks.CreateTileListViewForClass(', klass.prototype.className, ')');
 
   // See if we have an override.
   var className = klass.prototype.className;
   className = className.slice(className.indexOf('.') + 1); // drop name space
-  // if (className === 'ContactCharacteristic') debugger;
+
   if (Postbooks[className] && Postbooks[className].CreateTileListView) {
     return Postbooks[className].CreateTileListView(controller);
   }
