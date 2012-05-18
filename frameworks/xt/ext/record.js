@@ -70,7 +70,7 @@ XT.Record = SC.Record.extend(XT.Logging,
   /**
     An array of SC.Error objects populated by the validate function.
   */
-  validateErrors: [],
+  validateErrors: null,
   
   /** @private */
   validateErrorsLength: 0,
@@ -362,19 +362,23 @@ XT.Record = SC.Record.extend(XT.Logging,
   */
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    var required = this.requiredAttributes();
+    var required = this.requiredAttributes(),
+        validate = this.validate,
+        validateErrors;
+    
+    validateErrors = this.validateErrors = [];
 
     // Validate all required fields.
-    for (var i = 0; i < required.get('length'); i++) {
-      this.addObserver(required[i], this.validate);
+    for (var idx=0, len=required.get('length'); idx<len; ++idx) {
+      this.addObserver(required[idx], this, validate);
     }
 
     if (this.getPath('store.isNested')) {
-      this.addObserver('isValid', this, '_xt_isValidDidChange');
+      this.addObserver('isValid', this, this._xt_isValidDidChange);
     }
     
     // Binding for validate errors length
-    SC.Binding.from('.validateErrors.length', this)
+    SC.Binding.from('length', validateErrors)
               .to('validateErrorsLength', this)
               .oneWay().noDelay().connect();
   },
