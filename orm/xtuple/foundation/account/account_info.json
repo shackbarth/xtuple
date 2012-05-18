@@ -73,8 +73,5 @@
       }
     }
   ],
-  "order": [
-    "crmacct_number"
-  ],
   "isSystem": true
 }
