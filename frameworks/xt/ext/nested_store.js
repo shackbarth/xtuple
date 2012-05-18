@@ -33,14 +33,23 @@ XT.NestedStore = XT.Store.extend(
     Array of invalid records. Should not attempt to commit if anything is in here.
     in here.
   */
-  invalidRecords: [],
-  
+  invalidRecords: null,
+
   /** @private */
   invalidRecordsLength: 0,
-  
-  /** @private */
-  invalidRecordsLengthBinding: SC.Binding.from('*invalidRecords.length').oneWay().noDelay(),
-  
+
+  init: function() {
+    arguments.callee.base.apply(this, arguments);
+    var invalidRecords;
+
+    invalidRecords = this.invalidRecords = [];
+
+    // Binding for validate errors length
+    SC.Binding.from('length', invalidRecords)
+              .to('invalidRecordsLength', this)
+              .oneWay().noDelay().connect();
+  },
+
   /**
     Returns true if `hasChanges` is true and there are no invalid records in the store.
   */
