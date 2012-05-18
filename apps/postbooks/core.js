@@ -15,7 +15,7 @@
   @extends XT.SessionDelegate
 */
 var Postbooks;
-Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
+Postbooks = global.Postbooks = SC.Object.create(XT.SessionDelegate,
   /** @scope Postbooks.prototype */ {
 
   NAMESPACE: 'Postbooks',
