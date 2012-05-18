@@ -49,7 +49,6 @@ XM._IncidentCharacteristic = {
     @type XM.Characteristic
   */
   characteristic: SC.Record.toOne('XM.Characteristic', {
-    isNested: true,
     isRequired: true
   }),
 
