@@ -33,7 +33,6 @@
     {
       "name": "toDoRelations",
       "toMany": {
-        "isNested": true,
         "type": "ToDoInfo",
         "column": "ophead_id",
         "inverse": "opportunity"
