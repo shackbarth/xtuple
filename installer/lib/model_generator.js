@@ -225,7 +225,7 @@ XT.modelGenerator = XT.Object.create(
               "    }";
           def = def.replace(/{name}/, name);
         } else if (obj.defaultValue === 'currentUser') {
-          def = 'defaultValue: function() {\n      return arguments[0].getPath("store.dataSource").session.userName;\n    }';
+          def = 'defaultValue: function() {\n      return XT.session.details.username;\n    }';
         } else if (obj.defaultValue === 'baseCurrency') {
           def = 'defaultValue: function() {\n      return XM.Currency.BASE;\n    }';
         } else if (XT.typeOf(obj.defaultValue) === XT.T_BOOLEAN || XT.typeOf(obj.defaultValue) === XT.T_NUMBER) {
