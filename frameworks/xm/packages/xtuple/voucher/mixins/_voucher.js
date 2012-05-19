@@ -103,6 +103,8 @@ XM._Voucher = {
   /**
     @type XM.VoucherRecurrence
   */
-  recurrences: SC.Record.toMany('XM.VoucherRecurrence')
+  recurrences: SC.Record.toMany('XM.VoucherRecurrence', {
+    inverse: 'voucher'
+  })
 
 };

@@ -50,7 +50,9 @@ SC.Patch.create( /** @scope XM.Incident.prototype */ {
     /**
       @type XM.ToDoInfo
     */
-    todoRelations: SC.Record.toMany('XM.ToDoInfo')
+    todoRelations: SC.Record.toMany('XM.ToDoInfo', {
+      inverse: 'incident'
+    })
 
   }
 

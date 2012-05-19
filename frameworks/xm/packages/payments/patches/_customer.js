@@ -19,7 +19,9 @@ SC.Patch.create( /** @scope XM.Customer.prototype */ {
     /**
       @type XM.CustomerPayment
     */
-    checks: SC.Record.toMany('XM.CustomerPayment')
+    checks: SC.Record.toMany('XM.CustomerPayment', {
+      inverse: 'customer'
+    })
 
   }
 
