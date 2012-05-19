@@ -186,9 +186,11 @@ XT.modelGenerator = XT.Object.create(
       // handle nested
       if(obj.isNested) {
         attprops.push('isNested: true');
-        var inverse = prop.toMany ? "inverse: '" + (prop.toMany.inverse ? prop.toMany.inverse + "'" : "guid'") : null;
-        if (inverse) attprops.push(inverse);
       }
+      
+      // handle inverse
+      var inverse = prop.toMany ? "inverse: '" + (prop.toMany.inverse ? prop.toMany.inverse + "'" : "guid'") : null;
+      if (inverse) attprops.push(inverse);
 
       var stdtypes = ['String', 'Number', 'Boolean', 'Money', 'Quantity', 'QuantityPer', 'Cost', 'SalesPrice', 'PurchasePrice', 'ExtendedPrice', 'UnitRatio', 'Percent', 'Weight'];
       // handle type
