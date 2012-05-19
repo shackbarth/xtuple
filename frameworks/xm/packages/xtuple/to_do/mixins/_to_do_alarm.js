@@ -62,7 +62,7 @@ XM._ToDoAlarm = {
   */
   eventRecipient: SC.Record.attr(String, {
     defaultValue: function() {
-      return arguments[0].getPath("store.dataSource").session.userName;
+      return XT.session.details.username;
     }
   }),
 
@@ -78,7 +78,7 @@ XM._ToDoAlarm = {
   */
   messageRecipient: SC.Record.attr(String, {
     defaultValue: function() {
-      return arguments[0].getPath("store.dataSource").session.userName;
+      return XT.session.details.username;
     }
   }),
 
