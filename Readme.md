@@ -29,7 +29,7 @@ This makes the 'blossom' module available to npm.
 
 When you need a newer version of blossom, simply do:
 
-    $ cd node_modules
+    $ cd node_modules/blossom
     $ git pull
 
 And you'll be up-to-date.
