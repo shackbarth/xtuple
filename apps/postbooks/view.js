@@ -586,6 +586,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
     },
 
     willRenderLayers: function(ctx) {
+      console.log('Postbooks.TileListView#willRenderLayers()', SC.guidFor(this));
       var content = this.get('content');
 
       if (content && content.get('length') === 0) {

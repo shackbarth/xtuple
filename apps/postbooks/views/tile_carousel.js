@@ -37,7 +37,7 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
   /** @scope Postbooks.TileCarousel.prototype */{
 
   updateTrayLayout: function() {
-    // console.log('Postbooks.TileCarousel#updateTrayLayout()');
+    console.log('Postbooks.TileCarousel#updateTrayLayout()');
     var tray = this._sc_tray,
         frame = SC.MakeRect(this.get('frame')),
         width = frame.width, height = frame.height,
@@ -146,10 +146,21 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     return this.get('supersurface');
   }.property(),
 
+  _tc_width: 0,
+  _tc_height: 0,
+
   updateLayout: function() {
-    // console.log('Postbooks.InternalTileCarouselTray#updateLayout()');
+    console.log('Postbooks.InternalTileCarouselTray#updateLayout()');
+    var frame = SC.MakeRect(this.get('frame'));
+
+    if (this._tc_width === frame.width && this._tc_height === frame.height) {
+      return;
+    } else {
+      this._tc_width = frame.width;
+      this._tc_height = frame.height;
+    }
+
     var subsurfaces = this.get('subsurfaces'),
-        frame = SC.MakeRect(this.get('frame')),
         totalWidth = frame.width,
         slides = this.__slides__, // Set by our Carousel.
         width = Math.floor(frame.width / slides),
