@@ -138,7 +138,7 @@ Postbooks.LoadRelation = function(className, backButtonTitle, instance, callback
   var viewport = SC.app.computeViewportSize();
   modal.set('frame', SC.MakeRect(viewport.width, 44, viewport.width-64, viewport.height - 52));
 
-  Postbooks.get('modalContexts').pushObject(context);
+  Postbooks.pushContext(context);
   SC.app.addSurface(modal);
   setTimeout(function() {
     SC.RunLoop.begin();

@@ -29,6 +29,13 @@ Postbooks = global.Postbooks = SC.Object.create(XT.SessionDelegate,
 
   modalContexts: [],
 
+  activeContext: SC.ObjectController.create(),
+
+  pushContext: function(context) {
+    this.modalContexts.pushObject(context);
+    this.get('activeContext').set('content', context);
+  },
+
   // Debugging
   getState: function() {
     return Postbooks.statechart.get('currentStates').map(function(s) { return s.get('fullPath'); });

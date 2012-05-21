@@ -37,6 +37,8 @@ Postbooks.statechart = SC.Statechart.create({
       var frame = currentModal.surface.get('frame');
       frame.x = SC.app.computeViewportSize().width;
 
+      Postbooks.set('activeContext', currentModal);
+
       Postbooks.set('submoduleTitle', currentModal.submoduleTitle);
       Postbooks.set('submoduleBackButtonTitle', currentModal.submoduleBackButtonTitle);
       Postbooks.set('submoduleBackButtonAction', currentModal.submoduleBackButtonAction);
