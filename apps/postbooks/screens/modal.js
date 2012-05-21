@@ -27,16 +27,13 @@ var white =    "white";
 Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   console.log('Postbooks.LoadModule(', className, backButtonTitle, ')');
   var context = SC.Object.create({
-    submoduleTitle: Postbooks.get('submoduleTitle'),
-    submoduleBackButtonTitle: Postbooks.get('submoduleBackButtonTitle'),
-    submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction'),
-    instance: instance, // The nested store is accessible from here.
+    title: ("_" + className.camelize()).loc(),
+    backButtonTitle: backButtonTitle,
+    backButtonAction: 'popContext',
+    store: instance.store,
+    instance: instance,
     callback: callback
   });
-
-  Postbooks.set('submoduleTitle', ("_" + className.camelize()).loc());
-  Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
-  Postbooks.set('submoduleBackButtonAction', 'popContext');
 
   var baseClass = XM[className];
 
