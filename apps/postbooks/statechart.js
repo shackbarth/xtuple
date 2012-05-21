@@ -30,7 +30,7 @@ Postbooks.statechart = SC.Statechart.create({
       window.location.reload();
     },
 
-    popModule: function() {
+    popContext: function() {
       var modalContexts = Postbooks.get('modalContexts');
       if (modalContexts.length === 0) return;
       var currentModal = modalContexts.popObject();

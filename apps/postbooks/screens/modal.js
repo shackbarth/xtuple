@@ -36,7 +36,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
 
   Postbooks.set('submoduleTitle', ("_" + className.camelize()).loc());
   Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
-  Postbooks.set('submoduleBackButtonAction', 'popModule');
+  Postbooks.set('submoduleBackButtonAction', 'popContext');
 
   var baseClass = XM[className];
 
