@@ -60,7 +60,6 @@ Postbooks.TileView = SC.View.extend(
   clearBackground: true,
 
   willRenderLayers: function(context) { 
-    console.log('Postbooks.TileView#willRenderLayers()', SC.guidFor(this));
     var title = this.get('title'),
         w = context.width, h = context.height;
            
