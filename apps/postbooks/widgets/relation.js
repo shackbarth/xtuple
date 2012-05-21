@@ -395,18 +395,27 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       console.log("Opening existing record of type:", instanceKlass.prototype.className);
 
       instance = XT.store.chain().find(instanceKlass, record.get('id'));
+      console.log('instance status is', instance.statusString());
 
-      instance.addObserver('status', instance, function observer() {
-        var status = instance.get('status');
+      var that = this;
+      if (instance.get('status') !== SC.Record.READY_CLEAN) {
+        instance.addObserver('status', instance, function observer() {
+          var status = instance.get('status');
 
-        if (status === SC.Record.READY_CLEAN) {
-          instance.removeObserver('status', instance, observer);
-          var that = this;
-          Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
-            that.tryToPerform('close');
-          });
-        }
-      });
+          if (status === SC.Record.READY_CLEAN) {
+            instance.removeObserver('status', instance, observer);
+            Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+              console.log('calling callback');
+              that.tryToPerform('close');
+            });
+          }
+        });
+      } else {
+        Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+          console.log('calling callback');
+          that.tryToPerform('close');
+        });
+      }
     } else if (evt.type === 'close') {
       return this.transition('Editor');
     }
