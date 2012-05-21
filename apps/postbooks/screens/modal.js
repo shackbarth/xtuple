@@ -30,6 +30,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
     submoduleTitle: Postbooks.get('submoduleTitle'),
     submoduleBackButtonTitle: Postbooks.get('submoduleBackButtonTitle'),
     submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction'),
+    instance: instance, // The nested store is accessible from here.
     callback: callback
   });
 
@@ -43,12 +44,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   sc_assert(baseClass.isClass);
   sc_assert(baseClass.subclassOf(XT.Record));
 
-  context[className+'ListController'] = SC.ArrayController.create({
-    content: Postbooks.get('store').find(baseClass),
-    allowsEmptySelection: true
-  });
-
-  var controller;
+  var controller, tiles;
   controller = context[className+'ObjectController'] = SC.ObjectController.create();
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
@@ -56,11 +52,11 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
 
   // see if there is a function for this specific class
   if (Postbooks[className] && Postbooks[className].Tiles) {
-    var tiles = Postbooks[className].Tiles(controller, true);
+    tiles = Postbooks[className].Tiles(controller, true);
 
   // otherwise generate automatically
   } else {
-    var tiles = Postbooks.TilesForClass(baseClass, controller);
+    tiles = Postbooks.TilesForClass(baseClass, controller);
   }
   var editor = Postbooks.TileCarousel.create();
   editor.get('tray').set('subsurfaces', tiles);

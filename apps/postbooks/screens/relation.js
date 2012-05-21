@@ -24,12 +24,14 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.LoadRelation = function(className, backButtonTitle, instance) {
+Postbooks.LoadRelation = function(className, backButtonTitle, instance, callback) {
   console.log('Postbooks.LoadRelation(', className, backButtonTitle, ')');
   var context = SC.Object.create({
     submoduleTitle: Postbooks.get('submoduleTitle'),
     submoduleBackButtonTitle: Postbooks.get('submoduleBackButtonTitle'),
-    submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction')
+    submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction'),
+    instance: instance, // The nested store is accessible from here.
+    callback: callback
   });
 
   Postbooks.set('submoduleTitle', ("_" + className.camelize()).loc());
@@ -42,20 +44,24 @@ Postbooks.LoadRelation = function(className, backButtonTitle, instance) {
   sc_assert(baseClass.isClass);
   sc_assert(baseClass.subclassOf(XT.Record));
 
-  context[className+'ListController'] = SC.ArrayController.create({
-    content: Postbooks.get('store').find(baseClass),
-    allowsEmptySelection: true
-  });
-
-  var controller;
+  var controller, tiles;
   controller = context[className+'ObjectController'] = SC.ObjectController.create();
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
   controller.set('content', instance);
 
-  var tiles = Postbooks.TilesForClass(baseClass, controller);
-  // console.log(tiles);
+  Postbooks.controller = controller;
 
+  // see if there is a function for this specific class
+  if (Postbooks[className] && Postbooks[className].Tiles) {
+    console.log('Using Postbooks.'+className+'.Tiles() to generate tiles');
+    tiles = Postbooks[className].Tiles(controller, true);
+
+  // otherwise generate automatically
+  } else {
+    console.log('generating tiles automatically');
+    tiles = Postbooks.TilesForClass(baseClass, controller);
+  }
   var editor = Postbooks.TileCarousel.create();
   editor.get('tray').set('subsurfaces', tiles);
 
@@ -73,7 +79,9 @@ Postbooks.LoadRelation = function(className, backButtonTitle, instance) {
       this.set('frame', SC.MakeRect(64, 44, viewport.width-64, viewport.height - 52));
     }
   });
-  
+
+  modal.set('backgroundColor', 'rgb(95,98,96)');
+
   var list = [SC.Object.create({
     title: "_overview".loc(),
     surface: editor
@@ -85,7 +93,8 @@ Postbooks.LoadRelation = function(className, backButtonTitle, instance) {
     if (key === 'type') continue;
     if (key === 'dataState') continue;
 
-    var property = proto[key];
+    var property = proto[key],
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -95,7 +104,7 @@ Postbooks.LoadRelation = function(className, backButtonTitle, instance) {
       });
 
       list.push(SC.Object.create({
-        title: property.label,
+        title: title,
         surface: Postbooks.CreateListViewForClass(arrayKlass, arrayController)
       }));
     }
@@ -120,7 +129,7 @@ Postbooks.LoadRelation = function(className, backButtonTitle, instance) {
       contentArea.set('contentSurface', list[index].surface);
     }
   });
-  listView.set('layout', { top: 0, left: 0, width: 320, bottom: 0 });
+  listView.set('layout', { top: 0, left: 0, width: 319, bottom: 0 });
 
   modal.get('subsurfaces').pushObjects([listView, contentArea]);
 
