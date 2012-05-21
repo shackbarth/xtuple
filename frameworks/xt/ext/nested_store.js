@@ -178,7 +178,6 @@ XT.NestedStore = XT.Store.extend(
     if (query && query.isQuery && query.get('location') !== SC.Query.LOCAL) {
       throw "SC.Store#find() can only accept LOCAL queries in nested stores";
     }
-
     return arguments.callee.base.apply(this, arguments);
   },
 
@@ -317,12 +316,9 @@ XT.NestedStore = XT.Store.extend(
   _lock: function(storeKey) {
     var locks = this.locks, rev, editables, 
         pk, pr, path, tup, obj, key;
-
+    
     // already locked -- nothing to do
     if (locks && locks[storeKey]) return this;
-
-    // not ready, so nothing to lock! -- return
-    if (!(this.statuses[storeKey] & SC.Ready)) return this;
 
     // create locks if needed
     if (!locks) locks = this.locks = [];
@@ -362,9 +358,7 @@ XT.NestedStore = XT.Store.extend(
       if (!editables) editables = this.editables = [];
       editables[storeKey] = 1 ; // mark as editable
       
-    } else {
-      this.dataHashes[storeKey] = pstore.dataHashes[storeKey];
-    }
+    } else this.dataHashes[storeKey] = pstore.dataHashes[storeKey];
     
     // also copy the status + revision
     this.statuses[storeKey] = this.statuses[storeKey];
@@ -384,6 +378,7 @@ XT.NestedStore = XT.Store.extend(
   
   /** @private - adds chaining support */
   readEditableDataHash: function(storeKey) {
+
     // lock the data hash if needed
     this._lock(storeKey);
     

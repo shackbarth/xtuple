@@ -198,7 +198,6 @@ XT.DataSource = SC.Object.extend(XT.Logging,
     @param {Number} storeKey The storeKey for the record to populate.
   */
   didRetrieveRecord: function(response, store, storeKey) {
-    console.log('didRetrieveRecord', storeKey);
     if (SC.ok(response)) {
       if (response.error) {
         var error = SC.Error.create({
