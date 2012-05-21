@@ -67,6 +67,12 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   });
 
   var modal = SC.LayoutSurface.create({
+    didCreateElement: function(div) {
+      arguments.callee.base.apply(this, arguments);
+      div.style.webkitBackfaceVisibility = 'hidden';
+      div.style.webkitTransform = 'translate3d(0,0,0)';
+    },
+
     viewportSizeDidChange: function(viewport) {
       console.log('viewportSizeDidChange');
       this.set('frame', SC.MakeRect(64, 44, viewport.width-64, viewport.height - 52));

@@ -36,6 +36,12 @@ var white =    "white";
 Postbooks.TileCarousel = Postbooks.Carousel.extend(
   /** @scope Postbooks.TileCarousel.prototype */{
 
+  didCreateElement: function(div) {
+    arguments.callee.base.apply(this, arguments);
+    div.style.overflowX = 'scroll';
+    div.style.overflowY = 'hidden';
+  },
+
   updateTrayLayout: function() {
     // console.log('Postbooks.TileCarousel#updateTrayLayout()');
     var tray = this._sc_tray,
@@ -92,60 +98,6 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
     arguments.callee.base.apply(this, arguments);
     div.style.webkitBackfaceVisibility = 'hidden';
     div.style.webkitTransform = 'translate3d(0,0,0)';
-  },
-
-  mouseDown: function(evt) {
-    // console.log('Postbooks.InternalTileCarouselTray#mouseDown()');
-    this._clientX = evt.clientX;
-    this._startX = this.get('frame').x;
-    // this._clientY = evt.clientY;
-    this._needDirection = true;
-    evt.stop();
-    return true;
-  },
-
-  mouseDragged: function(evt) {
-    // console.log('Postbooks.InternalTileCarouselTray#mouseDragged()');
-    SC.AnimationTransaction.begin({ duration: 0 });
-    var frame = this.get('frame');
-    if (this._needDirection) {
-      // debugger;
-      this._needDirection = false;
-      var currentSlide = this._nextSlide || 0;
-      if (evt.clientX - this._clientX > 0) {
-        currentSlide--;
-      } else {
-        currentSlide++;
-      }
-
-      if (currentSlide >= this.__slides__) currentSlide = this.__slides__ - 1;
-      if (currentSlide < 0) currentSlide = 0;
-
-      this._nextSlide = currentSlide;
-    }
-    frame.x = frame.x + evt.clientX - this._clientX;
-    // frame.y = frame.y + evt.clientY - this._clientY;
-    this._clientX = evt.clientX;
-    // this._clientY = evt.clientY;
-    SC.AnimationTransaction.end();
-    evt.stop();
-    return true;
-  },
-
-  mouseUp: function(evt) {
-    // console.log('Postbooks.InternalTileCarouselTray#mouseUp()');
-    SC.AnimationTransaction.begin({ duration: 300 });
-    var frame = this.get('frame');
-    // frame.x = frame.x + evt.clientX - this._clientX;
-    frame.x = this._nextSlide * -315; //this.getPath('carousel.frame').width;
-    // frame.x = this._startX;
-    // frame.y = frame.y + evt.clientY - this._clientY;
-    this.set('frame', frame);
-    delete this._clientX;
-    // delete this._clientY;
-    SC.AnimationTransaction.end();
-    evt.stop();
-    return true;
   },
 
   carousel: function() {
@@ -271,3 +223,63 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
 */
   }
 });
+
+if (!SC.isTouch()) {
+  SC.mixin(Postbooks.InternalTileCarouselTray.prototype, {
+
+    mouseDown: function(evt) {
+      // console.log('Postbooks.InternalTileCarouselTray#mouseDown()');
+      this._clientX = evt.clientX;
+      this._startX = this.get('frame').x;
+      // this._clientY = evt.clientY;
+      this._needDirection = true;
+      evt.stop();
+      return true;
+    },
+    
+    mouseDragged: function(evt) {
+      // console.log('Postbooks.InternalTileCarouselTray#mouseDragged()');
+      SC.AnimationTransaction.begin({ duration: 0 });
+      var frame = this.get('frame');
+      if (this._needDirection) {
+        // debugger;
+        this._needDirection = false;
+        var currentSlide = this._nextSlide || 0;
+        if (evt.clientX - this._clientX > 0) {
+          currentSlide--;
+        } else {
+          currentSlide++;
+        }
+    
+        if (currentSlide >= this.__slides__) currentSlide = this.__slides__ - 1;
+        if (currentSlide < 0) currentSlide = 0;
+    
+        this._nextSlide = currentSlide;
+      }
+      frame.x = frame.x + evt.clientX - this._clientX;
+      // frame.y = frame.y + evt.clientY - this._clientY;
+      this._clientX = evt.clientX;
+      // this._clientY = evt.clientY;
+      SC.AnimationTransaction.end();
+      evt.stop();
+      return true;
+    },
+    
+    mouseUp: function(evt) {
+      // console.log('Postbooks.InternalTileCarouselTray#mouseUp()');
+      SC.AnimationTransaction.begin({ duration: 300 });
+      var frame = this.get('frame');
+      // frame.x = frame.x + evt.clientX - this._clientX;
+      frame.x = this._nextSlide * -315; //this.getPath('carousel.frame').width;
+      // frame.x = this._startX;
+      // frame.y = frame.y + evt.clientY - this._clientY;
+      this.set('frame', frame);
+      delete this._clientX;
+      // delete this._clientY;
+      SC.AnimationTransaction.end();
+      evt.stop();
+      return true;
+    }
+
+  });
+}
