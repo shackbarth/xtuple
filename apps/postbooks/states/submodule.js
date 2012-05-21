@@ -121,7 +121,6 @@ Postbooks.SUBMODULE = SC.State.design({
 
       this.gotoState(this.parentState);
     } else {
-      debugger;
       Postbooks.getPath('activeContext.store').discardChanges();
     }
   },

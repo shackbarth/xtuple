@@ -395,12 +395,13 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       console.log("Opening existing record of type:", instanceKlass.prototype.className);
 
       instance = XT.store.chain().find(instanceKlass, record.get('id'));
-      console.log('instance status is', instance.statusString());
 
       var that = this;
       if (instance.get('status') !== SC.Record.READY_CLEAN) {
+        console.log('delaying loading relation until it is ready (loaded)');
         instance.addObserver('status', instance, function observer() {
           var status = instance.get('status');
+          // console.log('observer called, status is', instance.statusString());
 
           if (status === SC.Record.READY_CLEAN) {
             instance.removeObserver('status', instance, observer);
@@ -411,6 +412,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
           }
         });
       } else {
+        console.log('loading relation immediately');
         Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
           console.log('calling callback');
           that.tryToPerform('close');
