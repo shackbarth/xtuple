@@ -135,7 +135,7 @@ Postbooks.ToDo.Tiles = function(controller, isRoot) {
     if (key === 'dataState') continue;
 
     var property = proto[key],
-        title = ("_"+key).loc()+":";
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -144,7 +144,7 @@ Postbooks.ToDo.Tiles = function(controller, isRoot) {
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title));
     }
   }
 

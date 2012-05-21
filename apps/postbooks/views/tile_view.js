@@ -78,7 +78,7 @@ Postbooks.TileView = SC.View.extend(
     context.textAlign = 'left';
     context.textBaseline = 'middle';
 
-    context.fillText(this.get('title'), 18, 19  );
+    if (title) context.fillText(title, 18, 19  );
   },
   
   init: function() {

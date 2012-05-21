@@ -80,10 +80,10 @@ Postbooks.Receivable.RenderRecordListRow = function(context, width, height, inde
 
   // labels 
   context.font = "9pt "+K.TYPEFACE;
-  var paidLabel = "_paid".loc()+":";
+  var paidLabel = "_paid".loc();
   var paidLabelWidth = context.measureText(paidLabel).width;
   context.fillText(paidLabel, 490, 15);
-  var balanceLabel = "_balance".loc()+":";
+  var balanceLabel = "_balance".loc();
   var balanceLabelWidth = context.measureText(balanceLabel).width;
   context.fillText(balanceLabel, 490, 35);
   context.textAlign = 'right';
