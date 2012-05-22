@@ -338,6 +338,11 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     setTimeout(function() {
       SC.RunLoop.begin();
       that.set('recordArray', ra);
+      console.log('setting selection to empty');
+      var sel = that.arrayController.get('selection'),
+          rec = sel? sel.firstObject() : null;
+
+      if (sel && rec) sel.removeObject(rec);
       that.tryToPerform('recordArrayLengthDidChange');
       window.ra = ra;
       SC.RunLoop.end();
