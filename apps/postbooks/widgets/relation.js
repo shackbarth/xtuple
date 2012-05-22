@@ -92,11 +92,12 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         title: "_Open…".loc(),
         value: 'open',
         enabled: true
-      }, {
-        title: "_New…".loc(),
-        value: 'new',
-        enabled: true
-      }],
+      }// , {
+      //         title: "_New…".loc(),
+      //         value: 'new',
+      //         enabled: true
+      //       }
+      ],
     
       itemTitleKey: 'title',
       itemValueKey: 'value',
@@ -108,6 +109,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     });
 
     this._autcomplete = SC.ListView.create({
+      rowHeight: 30,
       contentBinding: SC.Binding.from('arrangedObjects', arrayController).multiple().oneWay(),
       selectionBinding: SC.Binding.from('selection', arrayController).oneWay(),
       renderRow: Postbooks.DefaultRecordListRenderRow
@@ -259,7 +261,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       case 'open':
         return this.transition('Open');
       case 'new':
-        return this.transition('New');
+        // return this.transition('New');
       case 'popUpMenuDidClose':
         return this.transition('Inactive');
     }
@@ -314,11 +316,18 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
 
     var ra = this._searchCache[value];
     if (!ra) {
-      var q = SC.Query.create({
-        conditions: "name BEGINS_WITH '" + value + "'",
-        recordType: this.get('recordType')
+      var recordType = this.get('recordType');
+      if (recordType.prototype.className.slice(-4) === 'Info') {
+        recordType = XM[recordType.prototype.className.slice(3,-4)];
+      }
+      var q = SC.Query.remote(recordType, {
+        conditions: "name BEGINS_WITH {value}",
+        orderBy: 'name ASC',
+        parameters: { value: value },
+        rowOffset: 0,
+        rowLimit: 10
       });
-      ra = this._searchCache[value] = this.get('store').find(q);
+      ra = this._searchCache[value] = XT.store.find(q);
     }
 
     // We don't want to be dispatching when we set this.
@@ -332,7 +341,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   },
 
   'Create or Retrieve Search': function(evt) {
-    var value = SC.activeEditor.get('value');
+    var value = SC.activeEditor.get('value') || "";
     switch (evt.type) {
       case 'enter':
         if (value && value.length > 0) {
@@ -354,14 +363,22 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   }.behavior('Text'),
 
   'Has Matches': function(evt) {
-    var autocomplete = this._autcomplete;
+    var autocomplete = this._autcomplete,
+        recordArray = this.get('recordArray');
+
     switch (evt.type) {
       case 'enter':
+        sc_assert(recordArray);
+        sc_assert(recordArray.get('length') > 0);
+
+        var f = this.get('frame'),
+            b = SC.psurfaces[this.get('surface').__id__].__element__.getBoundingClientRect();
+
         var frame = autocomplete.get('frame');
-        frame.x = 10;
-        frame.y = 10;
+        frame.x = f.x + b.left;
+        frame.y = f.y + b.top + f.height;
         frame.width = 200;
-        frame.height = 200;
+        frame.height = recordArray.get('length') * 30;
         SC.app.addSurface(autocomplete);
         break;
       case 'exit':
@@ -423,34 +440,50 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     }
   }.behavior('Modal'),
 
-  'New': function(evt) {
-    if (evt.type === 'enter') {
-      var klass = this.get('recordType'),
-          controller = this.get('controller'),
-          controllerKey = this.get('controllerKey'),
-          instanceKlass, instance;
-
-      if (klass.prototype.className.slice(-4) === 'Info') {
-        instanceKlass = XM[klass.prototype.className.slice(3, -4)];
-      } else {
-        instanceKlass = klass;
-      }
-
-      console.log("Creating new record of type:", instanceKlass.prototype.className);
-
-      instance = XT.store.chain().createRecord(instanceKlass, {});
-      instance.normalize();
-
-      controller.set('controllerKey', instance);
-
-      var that = this;
-      Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
-        that.tryToPerform('close');
-      });
-    } else if (evt.type === 'close') {
-      return this.transition('Editor');
-    }
-  }.behavior('Modal'),
+  // 'New': function(evt) {
+  //   if (evt.type === 'enter') {
+  //     var klass = this.get('recordType'),
+  //         controller = this.get('controller'),
+  //         controllerKey = this.get('controllerKey'),
+  //         instanceKlass, instance;
+  // 
+  //     if (klass.prototype.className.slice(-4) === 'Info') {
+  //       instanceKlass = XM[klass.prototype.className.slice(3, -4)];
+  //     } else {
+  //       instanceKlass = klass;
+  //     }
+  // 
+  //     console.log("Creating new record of type:", instanceKlass.prototype.className);
+  // 
+  //     instance = XT.store.chain().createRecord(instanceKlass, {});
+  //     instance.normalize();
+  // 
+  //     var that = this;
+  //     Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+  //       var rec = XT.store.materializeRecord(instance.storeKey);
+  //       console.log(rec.statusString());
+  // 
+  //       if (rec.get('status') === SC.Record.READY_CLEAN) {
+  //         debugger;
+  //         controller.set(controllerKey, controller.getPath('content.store').find(klass, rec.get('id')));
+  //       } else {
+  //         rec.addObserver('status', rec, function observer() {
+  //           var status = rec.get('status');
+  //           // console.log('observer called, status is', instance.statusString());
+  // 
+  //           if (status === SC.Record.READY_CLEAN) {
+  //             debugger;
+  //             rec.removeObserver('status', rec, observer);
+  //             controller.set(controllerKey, controller.get('content').store.find(klass, rec.get('id')));
+  //           }
+  //         });
+  //       }
+  //       that.tryToPerform('close');
+  //     });
+  //   } else if (evt.type === 'close') {
+  //     return this.transition('Editor');
+  //   }
+  // }.behavior('Modal'),
 
   displayProperties: 'value'.w(),
 
