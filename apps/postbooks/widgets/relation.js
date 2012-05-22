@@ -497,6 +497,16 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
 
         }
         break;
+      case 'keyUp':
+        var c = evt.which;
+        if (c === 38 || c === 40 || c === 13 || c === 9) return;
+
+        var value = this.get('value') || '';
+        if (value.length === 0) {
+          this.transition('No Text');
+        } else {
+          this.transition('Create or Retrieve Search');
+        }
     }
   }.behavior('Text'),
 
