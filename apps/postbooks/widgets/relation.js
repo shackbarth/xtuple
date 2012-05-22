@@ -65,6 +65,8 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     this.tryToPerform('recordArrayLengthDidChange');
   },
 
+  arrayController: null,
+
   init: function() {
     arguments.callee.base.apply(this, arguments);
     var isEnabled = this.get('isEnabled');
@@ -104,7 +106,8 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       itemIsEnabledKey: 'enabled'
     });
 
-    var arrayController = SC.ArrayController.create({
+    var arrayController;
+    arrayController = this.arrayController = SC.ArrayController.create({
       contentBinding: SC.Binding.from('recordArray', this).multiple().oneWay()
     });
 
@@ -335,6 +338,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     setTimeout(function() {
       SC.RunLoop.begin();
       that.set('recordArray', ra);
+      that.tryToPerform('recordArrayLengthDidChange');
       window.ra = ra;
       SC.RunLoop.end();
     }, 0);
@@ -359,12 +363,13 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   }.behavior('Text'),
 
   'No Matches': function(evt) {
-    
+
   }.behavior('Text'),
 
   'Has Matches': function(evt) {
     var autocomplete = this._autcomplete,
-        recordArray = this.get('recordArray');
+        recordArray = this.get('recordArray'),
+        sel, len, rec, idx, indexSet;
 
     switch (evt.type) {
       case 'enter':
@@ -382,7 +387,84 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         SC.app.addSurface(autocomplete);
         break;
       case 'exit':
-      SC.app.removeSurface(autocomplete);
+        SC.app.removeSurface(autocomplete);
+        break;
+      case 'keyDown':
+        if (evt.which === 13 || evt.which === 9) { // Enter, Tab, and Shift-Tab
+          sel = this.arrayController.get('selection');
+
+          if (sel.get('length') === 0) {
+            // Choose the top item.
+            rec = this.arrayController.objectAt(0);
+          } else {
+            rec = sel.firstObject();
+          }
+
+          if (rec) {
+            // Now we need to get the info version of this object, and 
+            // assign it.
+            rec = this.store.find(this.recordType, rec.get('id'));
+            if (rec.get('status') === SC.Record.READY_CLEAN) {
+              this.controller.set(this.controllerKey, rec);
+            } else {
+              var that = this;
+              rec.addObserver('status', rec, function observer() {
+                var status = rec.get('status');
+                // console.log('observer called, status is', rec.statusString());
+
+                if (status === SC.Record.READY_CLEAN) {
+                  rec.removeObserver('status', rec, observer);
+                  that.controller.set(that.controllerKey, rec);
+                }
+              });
+            }
+          }
+
+        } else if (evt.which === 38) { // Up Arrow
+          sel = this.arrayController.get('selection');
+          len = sel.get('length');
+          indexSet = sel.indexSetForSource(this.arrayController);
+          idx = indexSet? indexSet.min() : 0;
+
+          if (len === 0) {
+            // Select the last object
+            rec = this.arrayController.lastObject();
+            if (rec) sel.addObject(rec);
+          } else if (idx === 0) {
+            // Select the object at the end
+            rec = this.arrayController.lastObject();
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          } else {
+            // Select the object above the current object.
+            rec = this.arrayController.objectAt(idx-1);
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          }
+
+        } else if (evt.which === 40) { // Down Arrow
+          sel = this.arrayController.get('selection');
+          len = sel.get('length');
+          indexSet = sel.indexSetForSource(this.arrayController);
+          idx = indexSet? indexSet.min() : 0;
+
+          if (len === 0) {
+            // Select the first object
+            rec = this.arrayController.objectAt(0);
+            if (rec) sel.addObject(rec);
+          } else if (idx === this.arrayController.get('length') - 1) {
+            // Select the object at the beginning
+            rec = this.arrayController.objectAt(0);
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          } else {
+            // Select the object below the current object.
+            rec = this.arrayController.objectAt(idx+1);
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          }
+
+        }
         break;
     }
   }.behavior('Text'),
