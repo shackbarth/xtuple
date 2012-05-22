@@ -51,35 +51,154 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
         K = Postbooks.TileView;
 
     sc_assert(tray);
-    var slides = 0, surfaces = tray.get('subsurfaces'),
-        len = surfaces.length || 1; // Make at least one.
-    
-    // Take various widths of slides into consideration
-    for (var i=0; i<len; i++) {
-      var size = surfaces.objectAt(i).get('size') || K.QUARTER_TILE;
-      slides += Math.ceil(size.width/320);
+
+    var slides = 0, surfaces = tray.get('subsurfaces');
+
+    // How many tiles will fit horizontally?
+    var horizontalTiles = Math.floor(width/325),
+        verticalTiles = Math.floor(height/325);
+
+    // Make sure we have enough room left over on the bottom.
+    if ((height % 325) < 60) verticalTiles--;
+
+    // Make sure we have at least two tiles in each direction.
+    horizontalTiles = Math.max(horizontalTiles, 2);
+    verticalTiles = Math.max(verticalTiles, 2);
+
+    // Calculate and cache the tile frames for a single slide.
+    var columns = [], column, tileOrigin, filled = [];
+    for (var idx=0, len=horizontalTiles; idx<len; ++idx) {
+      column = columns[idx] = [];
+      filled[idx] = []; // Used below.
+      for (var idx2=0, len2=verticalTiles; idx2<len2; ++idx2) {
+        tileOrigin = column[idx2] = SC.MakePoint();
+
+        tileOrigin.x = idx*325 + 5;
+        tileOrigin.y = idx2*325 + 5;
+      }
     }
 
-    // Need to calculate the number of tiles per slide, then figure out 
-    // the number of slides.
-    if (slides <= 4 || width <= 678 || height <= 704) {
-      //tilesPerSlide = 2; // This is our minimum.
-      tray.__horizontalTiles__ = tray.__verticalTiles__ = 2;
-    } else {
-      // See if we can fit more tiles per slide.
-      var horizontalTiles = Math.floor((width-38)/320),
-          verticalTiles = 2; //Math.floor((height-55)/320);
+    function clearColumns(column) { column.length = 0; }
 
-      //tilesPerSlide = 2; //horizontalTiles * verticalTiles;
-      tray.__horizontalTiles__ = horizontalTiles;
-      tray.__verticalTiles__ = verticalTiles;
+    var j, k, jlen=horizontalTiles, klen = verticalTiles,
+        f, nf = SC.MakeRect(), origin, found;
+
+    for (idx=0, len=surfaces.length; idx<len; ++idx) {
+      var surface = surfaces[idx],
+          size = surface.get('size');
+
+      found = false;
+      nf.width = size.width;
+      nf.height = size.height;
+
+      if (size === K.QUARTER_TILE) {
+        // No conditions, just use the first unfilled slot.
+        for (j=0; j<jlen; ++j) {
+          column = filled[j];
+          for (k=0; k<klen; ++k) {
+            if (!column[k]) {
+              found = true;
+              break;
+            }
+          }
+          if (found) break;
+        }
+
+        if (!found) {
+          ++slides;
+          filled.forEach(clearColumns);
+          j = k = 0;
+        }
+
+        origin = columns[j][k];
+        filled[j][k] = true;
+
+      } else if (size === K.HORIZONTAL_TILE) {
+        // Find the first open slot with an open slot next to it.
+        for (j=0; j<jlen; ++j) {
+          column = filled[j];
+          for (k=0; k<klen; ++k) {
+            if (!column[k]) {
+              if (j+1 < jlen && !filled[j+1][k]) {
+                found = true;
+                break;
+              }
+            }
+          }
+          if (found) break;
+        }
+
+        if (!found) {
+          ++slides;
+          filled.forEach(clearColumns);
+          j = k = 0;
+        }
+
+        origin = columns[j][k];
+        filled[j][k] = filled[j+1][k] = true;
+
+      } else if (size === K.VERTICAL_TILE) {
+        // Find the first open slot with an open slot below it.
+        for (j=0; j<jlen; ++j) {
+          column = filled[j];
+          for (k=0; k<klen; ++k) {
+            if (!column[k]) {
+              if (k+1 < klen && !column[k+1]) {
+                found = true;
+                break;
+              }
+            }
+          }
+          if (found) break;
+        }
+
+        if (!found) {
+          ++slides;
+          filled.forEach(clearColumns);
+          j = k = 0;
+        }
+
+        origin = columns[j][k];
+        filled[j][k] = filled[j][k+1] = true;
+
+      } else if (size === K.FULL_TILE) {
+        // Find the first open slot with an open slot below it.
+        for (j=0; j<jlen; ++j) {
+          column = filled[j];
+          for (k=0; k<klen; ++k) {
+            if (!column[k]) {
+              if (k+1 < klen && !column[k+1] && j+1 < jlen && !filled[j+1][k]) {
+                found = true;
+                break;
+              }
+            }
+          }
+          if (found) break;
+        }
+
+        if (!found) {
+          ++slides;
+          filled.forEach(clearColumns);
+          j = k = 0;
+        }
+
+        origin = columns[j][k];
+        filled[j][k] = filled[j][k+1] = filled[j+1][k+1] = true;
+
+      } else sc_assert(false, "You specified a tile with an unknown size:", size);
+
+      nf.x = origin.x + slides * (horizontalTiles*325);
+      nf.y = origin.y;
+      f = surface.get('frame');
+
+      // Only update frames when they change!
+      if (!SC.EqualRect(nf, f)) surface.set('frame', nf);
     }
 
-    slides = Math.ceil((slides+1)/tilesPerSlide);
+    slides++;
 
-    frame[2]/*width*/ = 320/*width*/ * slides;
+    frame.width = slides*frame.width + 5;
     tray.set('frame', frame);
-    tray.__slides__ = slides;
   },
 
   initTray: function() {
@@ -96,132 +215,16 @@ Postbooks.InternalTileCarouselTray = SC.CompositeSurface.extend({
 
   didCreateElement: function(div) {
     arguments.callee.base.apply(this, arguments);
-    div.style.webkitBackfaceVisibility = 'hidden';
-    div.style.webkitTransform = 'translate3d(0,0,0)';
+    if (SC.isTouch()) {
+      div.style.webkitBackfaceVisibility = 'hidden';
+      div.style.webkitTransform = 'translate3d(0,0,0)';
+    }
   },
 
   carousel: function() {
     return this.get('supersurface');
-  }.property(),
+  }.property()
 
-  _tc_width: 0,
-  _tc_height: 0,
-
-  updateLayout: function() {
-    // console.log('Postbooks.InternalTileCarouselTray#updateLayout()');
-    var frame = SC.MakeRect(this.get('frame'));
-    
-    if (this._tc_width === frame.width && this._tc_height === frame.height) {
-      return;
-    } else {
-      this._tc_width = frame.width;
-      this._tc_height = frame.height;
-    }
-
-    var subsurfaces = this.get('subsurfaces'),
-        totalWidth = frame.width,
-        slides = this.__slides__, // Set by our Carousel.
-        width = Math.floor(frame.width / slides),
-        height = frame.height,
-        horizontalTiles = this.__horizontalTiles__,
-        verticalTiles = this.__verticalTiles__,
-        tilesPerSlide = horizontalTiles * verticalTiles,
-        slide = 0;
-
-    // HACK: this requires careful planning of tile creation to work right. 
-    // To be replaced by Cassowary constraint solver.
-    // This implementation currently only works with `Postbooks.TileView.QUARTER_TILE`
-    // and `Postbooks.TileView.HORIZONTAL_TILE`.
-    
-    // Loop over tiles and place them
-    var horizontalCenter = 160;
-    var horizontalOffset = 320;
-    var verticalCenter = 160;
-    var verticalOffset = 320;
-    var col = 0, row = 0;
-
-    subsurfaces.forEach(function(tile) {
-      var tileFrame = SC.MakeRect(),
-          K = Postbooks.TileView,
-          size = tile.get('size') || K.QUARTER_TILE,
-          xMargin = col? 0 : K.TILE_MARGIN,
-          yMargin = row? 0 : K.TILE_MARGIN;
-          
-      tileFrame.width = size.width - K.TILE_MARGIN * 2;
-      tileFrame.height = size.height - K.TILE_MARGIN * 2;
-      tileFrame.x = ((col*horizontalOffset)+horizontalCenter) - 160 + xMargin;
-      tileFrame.y = ((row*verticalOffset)+verticalCenter) - 160 + yMargin;
-          
-      // We need to move the tileFrame to the correct slide.
-      var x = tileFrame.x;
-      tileFrame.x = x + width*slide*horizontalTiles;
-      sc_assert(tileFrame);
-      tile.set('frame', tileFrame);
-      tileFrame.x = x; // Restore the original.
-      
-      // Advance to next frame
-      col += Math.ceil(size.width/320);
-      if (col >= horizontalTiles) {
-        col = 0;
-        row += 1;
-      }
-      if (row >= verticalTiles) {
-        col = 0;
-        row = 0;
-        slide++;
-      }
-    }, this);
-
-/*    
-    // Calculate and cache the tile frames for a single slide.
-    var columns = [], column, tileFrame;
-    var horizontalCenter = Math.floor((width/horizontalTiles)/2);
-    var horizontalOffset = Math.floor(width/horizontalTiles);
-    var verticalCenter = Math.floor(((height-55)/verticalTiles)/2);
-    var verticalOffset = Math.floor((height-55)/verticalTiles);
-    for (var idx=0, len=horizontalTiles; idx<len; ++idx) {
-      column = columns[idx] = [];
-      for (var idx2=0, len2=verticalTiles; idx2<len2; ++idx2) {
-        tileFrame = column[idx2] = SC.MakeRect();
-        if (Postbooks.USE_320_TILES) {
-          tileFrame.width = tileFrame.height = 320;
-          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - 160;
-          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - 160;
-        } else {
-          tileFrame.width = horizontalOffset - 12;
-          tileFrame.height = verticalOffset - 12;
-          tileFrame.x = ((idx*horizontalOffset)+horizontalCenter) - (horizontalOffset/2) + 6;
-          tileFrame.y = ((idx2*verticalOffset)+verticalCenter) - (verticalOffset/2) + 6;
-        }
-      }
-    }
-
-    // Loop over the slides and set the tile frames using the cached frames.
-    for (var i=0, ilen=slides; i<ilen; ++i) {
-      // Loop over the tiles in that slide (not all tiles need to exist);
-      for (var j=i*tilesPerSlide, jlen=j+tilesPerSlide; j<jlen; ++j) {
-        var tile = subsurfaces[j];
-        if (tile) {
-          sc_assert(tile.isTile);
-
-          // Look up the cached frame for this tile.
-          var slideIndex = j - (i*tilesPerSlide);
-          var columnIndex = slideIndex % horizontalTiles;
-          var rowIndex = Math.floor(slideIndex/horizontalTiles);
-          
-          tileFrame = columns[columnIndex][rowIndex];
-
-          // We need to move the tileFrame to the correct slide.
-          var x = tileFrame.x;
-          tileFrame.x = x + width*i;
-          sc_assert(tileFrame);
-          tile.set('frame', tileFrame);
-          tileFrame.x = x; // Restore the original.
-        }
-      }
-    }
-*/
-  }
 });
 
 if (!SC.isTouch()) {
@@ -270,7 +273,7 @@ if (!SC.isTouch()) {
       SC.AnimationTransaction.begin({ duration: 300 });
       var frame = this.get('frame');
       // frame.x = frame.x + evt.clientX - this._clientX;
-      frame.x = this._nextSlide * -315; //this.getPath('carousel.frame').width;
+      frame.x = this._nextSlide * -325; //this.getPath('carousel.frame').width;
       // frame.x = this._startX;
       // frame.y = frame.y + evt.clientY - this._clientY;
       this.set('frame', frame);
