@@ -111,11 +111,16 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       contentBinding: SC.Binding.from('recordArray', this).multiple().oneWay()
     });
 
-    this._autcomplete = SC.ListView.create({
+    this._autocomplete = SC.ListView.create({
       rowHeight: 30,
       contentBinding: SC.Binding.from('arrangedObjects', arrayController).multiple().oneWay(),
       selectionBinding: SC.Binding.from('selection', arrayController).oneWay(),
-      renderRow: Postbooks.DefaultRecordListRenderRow
+      renderRow: Postbooks.DefaultRecordListRenderRow,
+      mouseDown: function(evt) {
+        arguments.callee.base.apply(this, arguments);
+        var rec = this.get('content').objectAt(this._rowIndex);
+        if (rec) that.tryToPerform('chooseRecord', rec);
+      }
     });
 
     this._valueDidChange();
@@ -372,9 +377,10 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   }.behavior('Text'),
 
   'Has Matches': function(evt) {
-    var autocomplete = this._autcomplete,
+    var autocomplete = this._autocomplete,
         recordArray = this.get('recordArray'),
-        sel, len, rec, idx, indexSet;
+        sel, len, rec, idx, indexSet,
+        that = this;
 
     switch (evt.type) {
       case 'enter':
@@ -394,6 +400,27 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       case 'exit':
         SC.app.removeSurface(autocomplete);
         break;
+      case 'chooseRecord':
+        rec = evt.arg1;
+        if (rec) {
+          // Now we need to get the info version of this object, and 
+          // assign it.
+          rec = this.store.find(this.recordType, rec.get('id'));
+          if (rec.get('status') === SC.Record.READY_CLEAN) {
+            this.controller.set(this.controllerKey, rec);
+          } else {
+            rec.addObserver('status', rec, function observer() {
+              var status = rec.get('status');
+              // console.log('observer called, status is', rec.statusString());
+
+              if (status === SC.Record.READY_CLEAN) {
+                rec.removeObserver('status', rec, observer);
+                that.controller.set(that.controllerKey, rec);
+              }
+            });
+          }
+        }
+        break;
       case 'keyDown':
         if (evt.which === 13 || evt.which === 9) { // Enter, Tab, and Shift-Tab
           sel = this.arrayController.get('selection');
@@ -412,7 +439,6 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
             if (rec.get('status') === SC.Record.READY_CLEAN) {
               this.controller.set(this.controllerKey, rec);
             } else {
-              var that = this;
               rec.addObserver('status', rec, function observer() {
                 var status = rec.get('status');
                 // console.log('observer called, status is', rec.statusString());
