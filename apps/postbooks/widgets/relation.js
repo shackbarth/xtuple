@@ -328,9 +328,12 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       if (recordType.prototype.className.slice(-4) === 'Info') {
         recordType = XM[recordType.prototype.className.slice(3,-4)];
       }
+      var searchKey = this.get('searchKey');
+      sc_assert(typeof searchKey === 'string');
+      sc_assert(searchKey.length > 1);
       var q = SC.Query.remote(recordType, {
-        conditions: "name BEGINS_WITH {value}",
-        orderBy: 'name ASC',
+        conditions: searchKey+" BEGINS_WITH {value}",
+        orderBy: searchKey+' ASC',
         parameters: { value: value },
         rowOffset: 0,
         rowLimit: 10
@@ -405,7 +408,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         if (rec) {
           // Now we need to get the info version of this object, and 
           // assign it.
-          rec = this.store.find(this.recordType, rec.get('id'));
+          rec = this.store.find(this.recordType, rec.get(rec.get('primaryKey')));
           if (rec.get('status') === SC.Record.READY_CLEAN) {
             this.controller.set(this.controllerKey, rec);
           } else {
@@ -435,7 +438,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
           if (rec) {
             // Now we need to get the info version of this object, and 
             // assign it.
-            rec = this.store.find(this.recordType, rec.get('id'));
+            rec = this.store.find(this.recordType, rec.get(rec.get('primaryKey')));
             if (rec.get('status') === SC.Record.READY_CLEAN) {
               this.controller.set(this.controllerKey, rec);
             } else {

@@ -252,6 +252,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     displayKey: objectKey,
     controller: controller,
     controllerKey: key,
+    searchKey: 'name',
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -301,6 +302,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     displayKey: objectKey,
     controller: controller,
     controllerKey: key,
+    searchKey: 'username',
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -346,6 +348,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     displayKey: objectKey,
     controller: controller,
     controllerKey: key,
+    searchKey: 'username',
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
