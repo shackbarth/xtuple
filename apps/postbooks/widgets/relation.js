@@ -518,7 +518,28 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   }.behavior('Enabled'),
 
   'Search': function(evt) {
-    
+    if (evt.type === 'enter') {
+      var klass = this.get('recordType'),
+          record = this.get('value'),
+          instanceKlass,
+          that = this;
+
+      if (!record) return; // Nothing to open.
+
+      if (klass.prototype.className.slice(-4) === 'Info') {
+        instanceKlass = XM[klass.prototype.className.slice(3, -4)];
+      } else {
+        instanceKlass = klass;
+      }
+
+      Postbooks.LoadRelationSearch(instanceKlass.prototype.className.slice(3), "_back".loc(), null, function() {
+        console.log('calling search callback');
+        that.tryToPerform('close');
+      });
+    } else if (evt.type === 'close') {
+      alert('Search close');
+      this.transition('Inactive');
+    }
   }.behavior('Modal'),
 
   'Open': function(evt) {
