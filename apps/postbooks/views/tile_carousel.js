@@ -38,8 +38,10 @@ Postbooks.TileCarousel = Postbooks.Carousel.extend(
 
   didCreateElement: function(div) {
     arguments.callee.base.apply(this, arguments);
-    div.style.overflowX = 'scroll';
-    div.style.overflowY = 'hidden';
+    if (SC.isTouch()) {
+      div.style.overflowX = 'scroll';
+      div.style.overflowY = 'hidden';
+    }
   },
 
   updateTrayLayout: function() {
