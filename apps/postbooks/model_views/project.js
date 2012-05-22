@@ -71,13 +71,13 @@ Postbooks.Project.RenderRecordListRow = function(context, width, height, index, 
   context.fillText(val , 325, 35);
 
   // labels 
-  var budgetLabel = "_budget".loc()+":";
+  var budgetLabel = "_budget".loc();
   var budgetLabelWidth = context.measureText(budgetLabel).width;
   context.fillText(budgetLabel, 400, 15);
-  var actualLabel = "_actual".loc()+":";
+  var actualLabel = "_actual".loc();
   var actualLabelWidth = context.measureText(actualLabel).width;
   context.fillText(actualLabel, 400, 35);
-  var balanceLabel = "_balance".loc()+":";
+  var balanceLabel = "_balance".loc();
   var balanceLabelWidth = context.measureText(balanceLabel).width;
   context.fillText(balanceLabel, 400, 55);
 
@@ -162,7 +162,7 @@ Postbooks.Project.Tiles = function(controller, isRoot) {
     if (key === 'dataState') continue;
 
     var property = proto[key],
-        title = ("_"+key).loc()+":";
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -171,7 +171,7 @@ Postbooks.Project.Tiles = function(controller, isRoot) {
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title));
     }
   }
 

@@ -571,7 +571,7 @@ SC.stringsFor("en_US", {
   "_time": "Time",
   "_time/expense": "Time/Expense",
   "_toDo": "To Do",
-  "_toDoRelations": "To Dos",
+  "_todoRelations": "To Dos",
   "_toDoStatus": "To Do Status",
   "_toDos": "To Dos",
   "_total": "Total",

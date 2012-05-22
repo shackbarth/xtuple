@@ -29,7 +29,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
     if (key === 'dataState') continue;
 
     var property = proto[key],
-        title = ("_"+key).loc()+":";
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -38,7 +38,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title));
 
     } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
       var objectKlass = property.get('typeClass');
@@ -175,7 +175,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
       var property = proto[key],
           left = 120, right = 12,
           label = null, widget = null,
-          title = ("_"+key).loc()+":";
+          title = ("_"+key).loc();
 
       if (property.isRecordAttribute) {    
         var typeClass = property.get('typeClass');
@@ -540,7 +540,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
       context.textAlign = 'left';
       context.textBaseline = 'middle';
 
-      context.fillText(title, 18, 19);
+      if (title) context.fillText(title, 18, 19);
     }
   });
 

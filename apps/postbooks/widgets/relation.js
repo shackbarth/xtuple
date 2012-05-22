@@ -3,7 +3,7 @@
 // Copyleft: ©2012 Fohr Motion Picture Studios. All lefts reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals Postbooks sc_assert formatter linebreak */
+/*globals Postbooks sc_assert formatter linebreak XT XM */
 
 sc_require('sprites');
 
@@ -381,12 +381,43 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   'Open': function(evt) {
     if (evt.type === 'enter') {
       var klass = this.get('recordType'),
-          instance = this.get('value');
+          record = this.get('value'),
+          instanceKlass, instance;
+
+      if (!record) return; // Nothing to open.
+
+      if (klass.prototype.className.slice(-4) === 'Info') {
+        instanceKlass = XM[klass.prototype.className.slice(3, -4)];
+      } else {
+        instanceKlass = klass;
+      }
+
+      console.log("Opening existing record of type:", instanceKlass.prototype.className);
+
+      instance = XT.store.chain().find(instanceKlass, record.get('id'));
 
       var that = this;
-      Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance, function() {
-        that.tryToPerform('close');
-      });
+      if (instance.get('status') !== SC.Record.READY_CLEAN) {
+        console.log('delaying loading relation until it is ready (loaded)');
+        instance.addObserver('status', instance, function observer() {
+          var status = instance.get('status');
+          // console.log('observer called, status is', instance.statusString());
+
+          if (status === SC.Record.READY_CLEAN) {
+            instance.removeObserver('status', instance, observer);
+            Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+              console.log('calling callback');
+              that.tryToPerform('close');
+            });
+          }
+        });
+      } else {
+        console.log('loading relation immediately');
+        Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+          console.log('calling callback');
+          that.tryToPerform('close');
+        });
+      }
     } else if (evt.type === 'close') {
       return this.transition('Editor');
     }
@@ -397,12 +428,23 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       var klass = this.get('recordType'),
           controller = this.get('controller'),
           controllerKey = this.get('controllerKey'),
-          instance = this.get('store').createRecord(klass, {});
+          instanceKlass, instance;
+
+      if (klass.prototype.className.slice(-4) === 'Info') {
+        instanceKlass = XM[klass.prototype.className.slice(3, -4)];
+      } else {
+        instanceKlass = klass;
+      }
+
+      console.log("Creating new record of type:", instanceKlass.prototype.className);
+
+      instance = XT.store.chain().createRecord(instanceKlass, {});
+      instance.normalize();
 
       controller.set('controllerKey', instance);
 
       var that = this;
-      Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance, function() {
+      Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
         that.tryToPerform('close');
       });
     } else if (evt.type === 'close') {
@@ -1125,4 +1167,3 @@ Postbooks.RelationMenuItemLayer = SC.Layer.extend(SC.Control, {
   }
 
 });
-

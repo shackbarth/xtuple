@@ -27,15 +27,13 @@ var white =    "white";
 Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   console.log('Postbooks.LoadModule(', className, backButtonTitle, ')');
   var context = SC.Object.create({
-    submoduleTitle: Postbooks.get('submoduleTitle'),
-    submoduleBackButtonTitle: Postbooks.get('submoduleBackButtonTitle'),
-    submoduleBackButtonAction: Postbooks.get('submoduleBackButtonAction'),
+    title: ("_" + className.camelize()).loc(),
+    backButtonTitle: backButtonTitle,
+    backButtonAction: 'popContext',
+    store: instance.store,
+    instance: instance,
     callback: callback
   });
-
-  Postbooks.set('submoduleTitle', ("_" + className.camelize()).loc());
-  Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
-  Postbooks.set('submoduleBackButtonAction', 'popModule');
 
   var baseClass = XM[className];
 
@@ -43,12 +41,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   sc_assert(baseClass.isClass);
   sc_assert(baseClass.subclassOf(XT.Record));
 
-  context[className+'ListController'] = SC.ArrayController.create({
-    content: Postbooks.get('store').find(baseClass),
-    allowsEmptySelection: true
-  });
-
-  var controller;
+  var controller, tiles;
   controller = context[className+'ObjectController'] = SC.ObjectController.create();
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
@@ -56,11 +49,11 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
 
   // see if there is a function for this specific class
   if (Postbooks[className] && Postbooks[className].Tiles) {
-    var tiles = Postbooks[className].Tiles(controller, true);
+    tiles = Postbooks[className].Tiles(controller, true);
 
   // otherwise generate automatically
   } else {
-    var tiles = Postbooks.TilesForClass(baseClass, controller);
+    tiles = Postbooks.TilesForClass(baseClass, controller);
   }
   var editor = Postbooks.TileCarousel.create();
   editor.get('tray').set('subsurfaces', tiles);
@@ -74,6 +67,14 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   });
 
   var modal = SC.LayoutSurface.create({
+    didCreateElement: function(div) {
+      arguments.callee.base.apply(this, arguments);
+      if (SC.isTouch()) {
+        div.style.webkitBackfaceVisibility = 'hidden';
+        div.style.webkitTransform = 'translate3d(0,0,0)';
+      }
+    },
+
     viewportSizeDidChange: function(viewport) {
       console.log('viewportSizeDidChange');
       this.set('frame', SC.MakeRect(64, 44, viewport.width-64, viewport.height - 52));
@@ -138,7 +139,7 @@ Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
   var viewport = SC.app.computeViewportSize();
   modal.set('frame', SC.MakeRect(viewport.width, 44, viewport.width-64, viewport.height - 52));
 
-  Postbooks.get('modalContexts').pushObject(context);
+  Postbooks.pushContext(context);
   SC.app.addSurface(modal);
   setTimeout(function() {
     SC.RunLoop.begin();

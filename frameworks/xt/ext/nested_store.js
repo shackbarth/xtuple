@@ -314,9 +314,13 @@ XT.NestedStore = XT.Store.extend(
     store.
   */
   _lock: function(storeKey) {
+    // console.log('XT.NestedStore#_lock(', storeKey, ')', this.statuses[storeKey]);
     var locks = this.locks, rev, editables, 
         pk, pr, path, tup, obj, key;
-    
+
+    // not ready, so nothing to lock! -- return
+    if (!(this.statuses[storeKey] & SC.Record.READY)) return this;
+
     // already locked -- nothing to do
     if (locks && locks[storeKey]) return this;
 
