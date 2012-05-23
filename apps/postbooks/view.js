@@ -595,13 +595,6 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title, object
       var instance = this.get('content').objectAt(index);
       if (instance) {
         Postbooks.LoadExclusiveModal(klass.prototype.className.slice(3), "Back", instance, objectController, controller);
-      
-        // Deselect our row after the modal transition ends.
-        setTimeout(function() {
-          SC.RunLoop.begin();
-          that.get('content').deselectObject(instance);
-          SC.RunLoop.end();
-        }, 250);
       }
     },
 

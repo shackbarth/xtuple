@@ -33,10 +33,7 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
     store: instance.store,
     instance: instance,
     callback: function() {
-      var sel = arrayController.get('selection'),
-          rec = sel? sel.firstObject() : null;
-
-      if (sel && !sel.isFrozen && rec) sel.removeObject(rec);
+      arrayController.set('selection', SC.SelectionSet.create().freeze());
     }
   });
 
@@ -132,11 +129,9 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
     renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
   });
 
-  var sel = arrayController.get('selection'),
-      rec = sel? sel.firstObject() : null;
-
-  if (sel && !sel.isFrozen && rec) sel.removeObject(rec);
+  var sel = SC.SelectionSet.create();
   sel.addObject(instance);
+  arrayController.set('selection', sel.freeze());
 
   modal.get('subsurfaces').pushObject(list);
 
