@@ -25,7 +25,7 @@ var green =    "#859900";
 var white =    "white";
 
 Postbooks.LoadModal = function(className, backButtonTitle, instance, callback) {
-  console.log('Postbooks.LoadModule(', className, backButtonTitle, ')');
+  console.log('Postbooks.LoadModal(', className, backButtonTitle, ')');
   var context = SC.Object.create({
     title: ("_" + className.camelize()).loc(),
     backButtonTitle: backButtonTitle,

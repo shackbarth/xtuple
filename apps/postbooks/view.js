@@ -38,7 +38,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title, controller));
 
     } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
       var objectKlass = property.get('typeClass');
@@ -476,7 +476,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
   return list;
 };
 
-Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
+Postbooks.CreateTileListViewForClass = function(klass, controller, title, objectController) {
   console.log('Postbooks.CreateTileListViewForClass(', klass.prototype.className, ')');
 
   // See if we have an override.
@@ -544,6 +544,17 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
     }
   });
 
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { top: 6, right: 12, height: 22, width: 60 },
+    name: '_new'.loc(),
+    target: Postbooks.statechart,
+    action: 'newRecord',
+    objectController: objectController,
+    listController: controller,
+    klass: klass,
+    store: objectController.get('content').get('store')
+  }));
+
   // Nope, generate the default tile view on the fly.
   var list = Postbooks.TileListView.create({
     layout: { top: 50, left: 12, right: 12, bottom: 16 },
@@ -574,7 +585,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
       var that = this;
       var instance = this.get('content').objectAt(index);
       if (instance) {
-        Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", instance);
+        Postbooks.LoadExclusiveModal(klass.prototype.className.slice(3), "Back", instance, objectController, controller);
       
         // Deselect our row after the modal transition ends.
         setTimeout(function() {
