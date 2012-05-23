@@ -287,6 +287,19 @@ Postbooks.MoneyWidget = SC.Widget.extend(SC.Control, {
 
   borderWidth: 1,
 
+  createRightRoundPath: function(ctx, x, y, width, height, radius) {
+    if (radius === undefined) radius = 5;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x, y + height);
+    ctx.closePath();
+  },
+
   render: function(ctx) {
     var bounds = this.get('bounds'),
         h = bounds.height, w = bounds.width,
@@ -309,15 +322,60 @@ Postbooks.MoneyWidget = SC.Widget.extend(SC.Control, {
     var val = this.get('value');
     ctx.fillText(val || '', w - 70, 3);
 
+    // Draw the icon.
+    var canvasName = SC.guidFor(currency)+(isEnabled?'-e':'-d'),
+        canvas = Postbooks.MoneyWidget.sprites[canvasName];
+
+    if (!canvas) {
+      canvas = Postbooks.MoneyWidget.sprites[canvasName] = document.createElement('canvas');
+      canvas.width = 65;
+      canvas.height = 22;
+      var context = canvas.getContext('2d');
+    
+      var lingrad = context.createLinearGradient(0,0,0,22);
+      lingrad.addColorStop(0, 'rgb(250,250,250)');
+      lingrad.addColorStop(0.475, 'rgb(230,230,230)');
+      lingrad.addColorStop(0.525, 'rgb(220,220,220)');
+      lingrad.addColorStop(1, 'rgb(194,194,194)');
+
+      context.globalAlpha = isEnabled? 1.0 : 0.5;
+
+      this.createRightRoundPath(context, 0.5, 0.5, 64, 21, 5);
+      context.clip();
+      context.fillStyle = lingrad;
+      context.fillRect(0,0,65,22);
+          
+      // Draw the currency.
+      context.textBaseline = this.get('textBaseline');
+      context.textAlign = 'left';
+      context.font = this.get('font');
+      context.fillStyle = this.get('color');
+      val = currency.get('displayString');
+      context.fillText(val || '', 3, 3, 45, 19);
+          
+      // Draw the arrows.
+      var popupWidth = 20, // Should be even.
+          center = 65 - popupWidth/2 - 0.5;
+          
+      context.beginPath();
+      context.moveTo(center, 6);
+      context.lineTo(center+4, 10);
+      context.lineTo(center-4, 10);
+      context.closePath();
+      context.moveTo(center, 22-6);
+      context.lineTo(center+4, 22-10);
+      context.lineTo(center-4, 22-10);
+      context.closePath();
+      context.fill();
+    }
+
+    ctx.drawImage(canvas, w-65, 0);
+
     // Draw the box.
     ctx.strokeStyle = this.get('borderColor');
     SC.CreateRoundRectPath(ctx, 0.5, 0.5, w-1, h-1, 5);
     ctx.lineWidth = this.get('borderWidth');
     ctx.stroke();
-
-    // Draw the icon.
-    // var img = Postbooks.createImageForSprite('triangle-down-large');
-    // ctx.drawImage(img, w-17, 6);
   },
 
   computeSupersurface: function() {
@@ -388,7 +446,15 @@ Postbooks.MoneyWidget = SC.Widget.extend(SC.Control, {
     style.textAlight = 'right';
     style.color = this.get('color');
     style.backgroundColor = this.get('backgroundColor');
-    style.backgroundImage = Postbooks.createDataUrlForSprite('triangle-down-large');
+
+    var currency = this.getPath('money.currency'),
+        canvasName = SC.guidFor(currency)+(this.get('isEnabled')?'-e':'-d'),
+        canvas = Postbooks.MoneyWidget.sprites[canvasName];
+
+    sc_assert(canvas);
+    var dataURL = canvas.toDataURL('image/png');
+    style.backgroundImage = 'url('+dataURL+')';
+
     style.backgroundPosition = 'right center';
     style.backgroundRepeat = 'no-repeat';
     style.outline = 'none'; // FIXME: This breaks other users of the field editor.
