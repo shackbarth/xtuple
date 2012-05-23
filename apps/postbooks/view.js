@@ -200,6 +200,15 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               itemTitleKey: 'title',
               itemValueKey: 'value'
             });
+          } else if (key === 'honorific') {
+            widget = Postbooks.ComboBoxWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: XM.Honorific,
+              store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
+              valueBinding: SC.Binding.from(key, controller),
+              searchKey: 'code',
+            });
           } else {
             widget = SC.TextFieldWidget.create({
               layout: { top: y, left: left, height: 22, right: right },
