@@ -509,6 +509,7 @@ SC.stringsFor("en_US", {
   "_salesRep": "Sales Rep",
   "_save": "Save",
   "_schedule": "Schedule",
+  "_search": "Search",
   "_Search…": "Search…",
   "_secondaryContact": "Secondary Contact",
   "_sense": "Sense",

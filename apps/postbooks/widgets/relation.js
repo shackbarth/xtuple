@@ -532,12 +532,34 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         instanceKlass = klass;
       }
 
-      Postbooks.LoadRelationSearch(instanceKlass.prototype.className.slice(3), "_back".loc(), null, function() {
-        console.log('calling search callback');
+      var val = this.get('value');
+      if (val) {
+        var displayKey = this.get('displayKey');
+        if (displayKey) val = val.get(displayKey);
+      }
+
+      Postbooks.LoadRelationSearch(instanceKlass.prototype.className.slice(3), "_back".loc(), null, this.get('searchKey'), val, function(controller) {
+        var rec = controller.get('content');
+        if (rec) {
+          rec = that.store.find(that.recordType, rec.get(rec.get('primaryKey')));
+          if (rec.get('status') === SC.Record.READY_CLEAN) {
+            that.controller.set(that.controllerKey, rec);
+          } else {
+            rec.addObserver('status', rec, function observer() {
+              var status = rec.get('status');
+              // console.log('observer called, status is', rec.statusString());
+
+              if (status === SC.Record.READY_CLEAN) {
+                rec.removeObserver('status', rec, observer);
+                that.controller.set(that.controllerKey, rec);
+              }
+            });
+          }
+        }
+
         that.tryToPerform('close');
       });
     } else if (evt.type === 'close') {
-      alert('Search close');
       this.transition('Inactive');
     }
   }.behavior('Modal'),
