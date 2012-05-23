@@ -330,6 +330,21 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             }).from(key, controller)
           });
           y += 24 + K.SPACING;
+        } else if (typeClass === Money) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'transparent',
+            color: 'white',
+            textAlign: 'right',
+            value: title
+          });
+          widget = Postbooks.MoneyWidget.create({
+            layout: { top: y, left: left, height: 22, right: right },
+            isEnabledBinding: SC.Binding.from('isEditable', controller),
+            valueBinding: SC.Binding.from(key, controller),
+            moneyBinding: SC.Binding.from(key+'Money', controller)
+          });
+          y += 24 + K.SPACING;
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
             layout: { top: y + 3, left: 12, height: 24, width: left - 18 },

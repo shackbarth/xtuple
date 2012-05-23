@@ -765,6 +765,7 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
     style.borderRadius = '5px';
     style.borderColor = 'rgb(252,102,32)'; // this.get('borderColor');
     style.font = this.get('font');
+    style.textAlight = 'left';
     style.color = this.get('color');
     style.backgroundColor = this.get('backgroundColor');
     style.backgroundImage = Postbooks.createDataUrlForSprite('triangle-down-large');

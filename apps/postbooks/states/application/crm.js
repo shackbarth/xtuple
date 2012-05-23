@@ -16,11 +16,11 @@ Postbooks.CRM = Postbooks.MODULE.design({
     arguments.callee.base.apply(this, arguments);
 
     // Load any lists used in popups
-    XT.store.find(SC.Query.create({ recordType: XM.IncidentCategory }));
-    XT.store.find(SC.Query.create({ recordType: XM.Priority }));
-    XT.store.find(SC.Query.create({ recordType: XM.IncidentResolution }));
-    XT.store.find(SC.Query.create({ recordType: XM.IncidentSeverity }));
-    XT.store.find(SC.Query.create({ recordType: XM.Honorific }));
+    XT.store.find(XM.IncidentCategory);
+    XT.store.find(XM.Priority);
+    XT.store.find(XM.IncidentResolution);
+    XT.store.find(XM.IncidentSeverity);
+    XT.store.find(XM.Honorific);
   },
 
   // ACTIONS
