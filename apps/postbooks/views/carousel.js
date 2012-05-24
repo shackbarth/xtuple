@@ -63,9 +63,16 @@ Postbooks.Carousel = SC.CompositeSurface.extend(
     div.style.overflowY = 'hidden';
 
     var style = div.style;
-    style.backgroundImage =  Postbooks.createDataUrlForSprite('carousel-texture');
-    style.backgroundPosition = 'left top';
-    style.backgroundRepeat = 'repeat';
+    if (document.getCSSCanvasContext) {
+      style.backgroundImage =  '-webkit-canvas(list-shadow),' + Postbooks.createDataUrlForSprite('carousel-texture');
+      style.backgroundPosition = 'left center, left top';
+      style.backgroundSize = '40px 100%, auto';
+      style.backgroundRepeat = 'no-repeat, repeat';
+    } else {
+      style.backgroundImage =  Postbooks.createDataUrlForSprite('carousel-texture');
+      style.backgroundPosition = 'left top';
+      style.backgroundRepeat = 'repeat';
+    }
   },
 
   updateTrayLayout: function() {

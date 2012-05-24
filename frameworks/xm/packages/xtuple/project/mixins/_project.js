@@ -159,7 +159,9 @@ XM._Project = {
   /**
     @type XM.ProjectRecurrence
   */
-  recurrences: SC.Record.toMany('XM.ProjectRecurrence'),
+  recurrences: SC.Record.toMany('XM.ProjectRecurrence', {
+    inverse: 'project'
+  }),
 
   /**
     @type XM.ProjectComment

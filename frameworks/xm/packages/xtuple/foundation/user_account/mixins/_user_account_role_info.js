@@ -48,6 +48,8 @@ XM._UserAccountRoleInfo = {
   /**
     @type XM.UserAccountRolePrivilegeAssignment
   */
-  privileges: SC.Record.toMany('XM.UserAccountRolePrivilegeAssignment')
+  privileges: SC.Record.toMany('XM.UserAccountRolePrivilegeAssignment', {
+    inverse: 'user_account_role'
+  })
 
 };

@@ -16,7 +16,7 @@ XM._IncidentCharacteristic = {
   
   className: 'XM.IncidentCharacteristic',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -41,15 +41,14 @@ XM._IncidentCharacteristic = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type XM.Incident
   */
-  incident: SC.Record.attr(Number),
+  incident: SC.Record.toOne('XM.Incident'),
 
   /**
     @type XM.Characteristic
   */
   characteristic: SC.Record.toOne('XM.Characteristic', {
-    isNested: true,
     isRequired: true
   }),
 

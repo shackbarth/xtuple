@@ -22,6 +22,10 @@ XM.Currency = XM.Document.extend(XM._Currency,
   // CALCULATED PROPERTIES
   //
 
+  displayString: function() {
+    return this.get('abbreviation') + ' - ' + this.get('symbol');
+  }.property('abbreviation', 'symbol').cacheable(),
+
   abbreviation: SC.Record.attr(String, {
     fromType: function(record, key, value) {
       if(value && value.length > 3) {

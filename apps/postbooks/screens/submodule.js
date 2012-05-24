@@ -41,10 +41,11 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   sc_assert(controller);
   sc_assert(controller.kindOf(SC.ObjectController));
 
+  var tiles;
   if (Postbooks[className] && Postbooks[className].Tiles) {
-    var tiles = Postbooks[className].Tiles(controller, true);
+    tiles = Postbooks[className].Tiles(controller, true);
   } else {
-    var tiles = Postbooks.TilesForClass(baseClass, controller, true);
+    tiles = Postbooks.TilesForClass(baseClass, controller, true);
   }
 
   var editor = Postbooks.TileCarousel.create();
@@ -59,20 +60,24 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
 
   var submodule = SC.LayoutSurface.create();
 
-  Postbooks.set('submoduleTitle', name);
+  Postbooks.pushContext(SC.Object.create({
+    title: name,
+    backButtonTitle: backButtonTitle,
+    backButtonAction: 'back',
+    cancelIsVisible: true,
+    applyIsVisible: true,
+    store: Postbooks.store
+  }));
 
   var topbar = Postbooks.Topbar.create({
-    nameBinding: 'Postbooks.submoduleTitle',
+    nameBinding: 'Postbooks.activeContext.title'
   });
-
-  Postbooks.set('submoduleBackButtonTitle', backButtonTitle);
-  Postbooks.set('submoduleBackButtonAction', 'back');
 
   topbar.get('layers').pushObject(Postbooks.BackButton.create({
     layout: { left: 20, centerY: 0, width: 120, height: 24 },
-    nameBinding: 'Postbooks.submoduleBackButtonTitle',
+    nameBinding: 'Postbooks.activeContext.backButtonTitle',
     target: 'Postbooks.statechart',
-    actionBinding: 'Postbooks.submoduleBackButtonAction'
+    actionBinding: 'Postbooks.activeContext.backButtonAction'
   }));
 
   topbar.get('layers').pushObject(Postbooks.Button.create({
@@ -80,10 +85,8 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     name: "_cancel".loc(),
     target: 'Postbooks.statechart',
     action: 'cancel',
-    isEnabledBinding: 'Postbooks*store.canCommit',
-    isVisibleBinding: SC.Binding.transform(function(length) {
-      return Number(length) > 0 ? false : true;
-    }).from('Postbooks.modalContexts.length')
+    isEnabledBinding: 'Postbooks.activeContext*store.canCommit',
+    isVisibleBinding: 'Postbooks.activeContext.cancelIsVisible'
   }));
 
   topbar.get('layers').pushObject(Postbooks.Button.create({
@@ -91,10 +94,8 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     name: "_save".loc(),
     target: 'Postbooks.statechart',
     action: 'apply',
-    isEnabledBinding: 'Postbooks*store.canCommit',
-    isVisibleBinding: SC.Binding.transform(function(length) {
-      return Number(length) > 0 ? false : true;
-    }).from('Postbooks.modalContexts.length')
+    isEnabledBinding: 'Postbooks.activeContext*store.canCommit',
+    isVisibleBinding: 'Postbooks.activeContext.applyIsVisible'
   }));
 
   var list = [SC.Object.create({
@@ -139,26 +140,6 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
   });
 
   listController.selectObject(list[0]);
-
-  topbar.get('layers').pushObject(Postbooks.Button.create({
-    layout: { right: 300, centerY: 0, width: 120, height: 24 },
-    name: "_new".loc(),
-    target: 'Postbooks.statechart',
-    action: 'newRecord',
-    listController: listController,
-
-    // These three work together.
-    isVisible: function() {
-      return this.get('isVisibleModal') && this.get('isVisibleSelection');
-    }.property('isVisibleModal', 'isVisibleSelection'),
-    isVisibleModalBinding: SC.Binding.transform(function(length) {
-      return Number(length) > 0 ? false : true;
-    }).from('Postbooks.modalContexts.length'),
-    isVisibleSelectionBinding: SC.Binding.transform(function(selection) {
-      var firstObject = selection.firstObject();
-      return firstObject && !firstObject.isOverview ? true : false;
-    }).from('selection', listController)
-  }));
 
   contentArea.set('contentSurface', list[0].surface);
 

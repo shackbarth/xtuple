@@ -15,7 +15,7 @@
   @extends XT.SessionDelegate
 */
 var Postbooks;
-Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
+Postbooks = global.Postbooks = SC.Object.create(XT.SessionDelegate,
   /** @scope Postbooks.prototype */ {
 
   NAMESPACE: 'Postbooks',
@@ -28,6 +28,13 @@ Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
   submoduleBackButtonAction: null,
 
   modalContexts: [],
+
+  activeContext: SC.ObjectController.create(),
+
+  pushContext: function(context) {
+    this.modalContexts.pushObject(context);
+    this.get('activeContext').set('content', context);
+  },
 
   // Debugging
   getState: function() {
@@ -138,7 +145,9 @@ Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
       credentials and flags.
   */
   willAcquireSession: function(session) {
-    if (Postbooks.statechart) Postbooks.statechart.sendAction('willAcquireSession', session);
+    if (Postbooks.statechart && Postbooks.statechart.sendAction) {
+      Postbooks.statechart.sendAction('willAcquireSession', session);
+    }
   },
 
   /**
@@ -148,7 +157,9 @@ Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
     @param {Object} session A hash of the session's properties.
   */
   didAcquireSession: function(session) {
-    if (Postbooks.statechart) Postbooks.statechart.sendAction('didAcquireSession', session);
+    if (Postbooks.statechart && Postbooks.statechart.sendAction) {
+      Postbooks.statechart.sendAction('didAcquireSession', session);
+    }
   },
 
   /**
@@ -168,7 +179,9 @@ Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
     @returns {Boolean} true|false if the delegate handled the ack.
   */
   didReceiveMultipleSessions: function(available, ack) {
-    if (Postbooks.statechart) Postbooks.statechart.sendAction('didReceiveMultipleSessions', available, ack);
+    if (Postbooks.statechart && Postbooks.statechart.sendAction) {
+      Postbooks.statechart.sendAction('didReceiveMultipleSessions', available, ack);
+    }
   },
   
   /**
@@ -177,7 +190,9 @@ Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
     @method
   */
   didLogoutSession: function() {
-    if (Postbooks.statechart) Postbooks.statechart.sendAction('didLogoutSession');
+    if (Postbooks.statechart && Postbooks.statechart.sendAction) {
+      Postbooks.statechart.sendAction('didLogoutSession');
+    }
   }, 
 
   /**
@@ -200,7 +215,9 @@ Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
     @param {String} reason String indicator of what happened.
   */
   didLoseSession: function(reason) {
-    if (Postbooks.statechart) Postbooks.statechart.sendAction('didLoseSession');
+    if (Postbooks.statechart && Postbooks.statechart.sendAction) {
+      Postbooks.statechart.sendAction('didLoseSession');
+    }
   },
 
   /**
@@ -211,7 +228,9 @@ Postbooks = global.Postbooks = SC.Application.create(XT.SessionDelegate,
     @param {Number} code The error code.
   */
   didError: function(message, code) {
-    if (Postbooks.statechart) Postbooks.statechart.sendAction('sessionDidError', message, code);
+    if (Postbooks.statechart && Postbooks.statechart.sendAction) {
+      Postbooks.statechart.sendAction('sessionDidError', message, code);
+    }
   }
 
 });
@@ -229,7 +248,7 @@ Postbooks.getStates = Postbooks.getState;
 //   SC.Logger.warn('Custom Exception');
 // 
 //   var state = "No States";
-//   if (Postbooks.statechart) {
+//   if (Postbooks.statechart && Postbooks.statechart.sendAction) {
 //     var statechart = Postbooks.statechart.get('currentStates');
 //     if (statechart) {
 //       state = statechart.map(

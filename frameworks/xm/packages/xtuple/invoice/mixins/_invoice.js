@@ -306,7 +306,9 @@ XM._Invoice = {
   /**
     @type XM.InvoiceRecurrence
   */
-  recurrences: SC.Record.toMany('XM.InvoiceRecurrence'),
+  recurrences: SC.Record.toMany('XM.InvoiceRecurrence', {
+    inverse: 'invoice'
+  }),
 
   /**
     @type String

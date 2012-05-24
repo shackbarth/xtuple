@@ -55,6 +55,8 @@ XM._Budget = {
   /**
     @type XM.BudgetDetail
   */
-  items: SC.Record.toMany('XM.BudgetDetail')
+  items: SC.Record.toMany('XM.BudgetDetail', {
+    inverse: 'budget'
+  })
 
 };

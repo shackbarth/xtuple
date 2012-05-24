@@ -55,7 +55,7 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   context.fillText(val , 325, 15);
 
   // Ordered
-  var orderedLabel = "_ordered".loc()+":";
+  var orderedLabel = "_ordered".loc();
   var orderedLabelWidth = context.measureText(orderedLabel).width;
   context.font = "9pt "+K.TYPEFACE;
   context.fillText(orderedLabel, 45, 35);
@@ -66,7 +66,7 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   context.fillText(val , 150, 35);
   
   // Billed
-  var billedLabel = "_billed".loc()+":";
+  var billedLabel = "_billed".loc();
   var billedLabelWidth = context.measureText(billedLabel).width;
   context.textAlign = 'left';
   context.fillText(billedLabel, 155, 35);
@@ -95,7 +95,7 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   context.fillText(val , 405, 35);
   
   // Price
-  var extendedLabel = "_extended".loc()+":";
+  var extendedLabel = "_extended".loc();
   var extendedLabelWidth = context.measureText(extendedLabel).width;
   context.textAlign = 'left';
   context.fillText(extendedLabel, 485, 35);

@@ -60,6 +60,7 @@ Postbooks.LoadModule = function(name, classes, state) {
     selection = 'Postbooks.'+className+'ListController.selection';
     
     var action = function(object, index) {
+      if (!object.isRecord) return; // It's the incremental list surrogate.
       sc_assert(!Postbooks.store.isNested, "Postbooks.store should be the base store.");
       Postbooks.set('store', Postbooks.get('store').chain());
       controller.set('content', Postbooks.store.find(baseClass, Number(object.get('guid'))));
@@ -130,14 +131,14 @@ Postbooks.LoadModule = function(name, classes, state) {
       sc_assert(aryController.kindOf(SC.ArrayController));
       sc_assert(aryController.get('content') === null);
 
-      var content;
+      var orderByKey;
+      if (baseClass.prototype.number) orderByKey = 'number';
+      else if (baseClass.prototype.code) orderByKey = 'code';
+      else if (baseClass.prototype.name) orderByKey = 'name';
+      else orderByKey = 'guid';
 
-      if (baseClass === XM.Contact) {
-        var query = SC.Query.remote(XM.Invoice, { store: Postbooks.store, orderBy: 'lastName' });
-        content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
-      } else {
-        content = Postbooks.get('store').find(baseClass);
-      }
+      var query = SC.Query.remote(baseClass, { store: Postbooks.store, orderBy: orderByKey });
+      var content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
 
       aryController.set('content', content);
       item.isLoaded = true;
@@ -148,7 +149,21 @@ Postbooks.LoadModule = function(name, classes, state) {
     layout: { top: 44, left: 320, right: 0, bottom: 0 },
     orderInTransition:  null,
     replaceTransition:  null,
-    orderOutTransition: null
+    orderOutTransition: null,
+
+    didCreateElement: function(div) {
+      // We don't want SC.View's implementation; don't call it.
+      div.style.overflowX = 'hidden';
+      div.style.overflowY = 'hidden';
+
+      var style = div.style;
+      if (document.getCSSCanvasContext) {
+        style.backgroundImage =  '-webkit-canvas(list-shadow)';
+        style.backgroundPosition = 'left center';
+        style.backgroundSize = '40px 100%';
+        style.backgroundRepeat = 'no-repeat';
+      }
+    }
   });
 
   detail.set('contentSurface', list[startIndex].surface);
@@ -178,14 +193,15 @@ Postbooks.LoadModule = function(name, classes, state) {
         sc_assert(aryController.kindOf(SC.ArrayController));
         sc_assert(aryController.get('content') === null);
 
-        var content;
+        var orderByKey;
+        if (baseClass.prototype.number) orderByKey = 'number';
+        else if (baseClass.prototype.code) orderByKey = 'code';
+        else if (baseClass.prototype.name) orderByKey = 'name';
+        else orderByKey = 'guid';
 
-        if (baseClass === XM.Contact) {
-          var query = SC.Query.remote(XM.Contact, { store: Postbooks.get('store'), orderBy: 'lastName ASC' });
-          content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
-        } else {
-          content = Postbooks.get('store').find(baseClass);
-        }
+        var query = SC.Query.remote(baseClass, { store: Postbooks.store, orderBy: orderByKey });
+        var content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
+
 
         aryController.set('content', content);
         item.isLoaded = true;

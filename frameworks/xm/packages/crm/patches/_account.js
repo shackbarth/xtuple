@@ -20,7 +20,6 @@ SC.Patch.create( /** @scope XM.Account.prototype */ {
       @type XM.IncidentInfo
     */
     incidentRelations: SC.Record.toMany('XM.IncidentInfo', {
-      isNested: true,
       inverse: 'account'
     }),
   
@@ -28,7 +27,6 @@ SC.Patch.create( /** @scope XM.Account.prototype */ {
       @type XM.OpportunityInfo
     */
     opportunityRelations: SC.Record.toMany('XM.OpportunityInfo', {
-      isNested: true,
       inverse: 'account'
     }),
   
@@ -36,7 +34,13 @@ SC.Patch.create( /** @scope XM.Account.prototype */ {
       @type XM.ToDoInfo
     */
     toDoRelations: SC.Record.toMany('XM.ToDoInfo', {
-      isNested: true,
+      inverse: 'account'
+    }),
+  
+    /**
+      @type XM.ProjectInfo
+    */
+    projectRelations: SC.Record.toMany('XM.ProjectInfo', {
       inverse: 'account'
     })
 

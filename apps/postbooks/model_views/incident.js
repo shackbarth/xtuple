@@ -143,7 +143,7 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
     if (key === 'dataState') continue;
 
     var property = proto[key],
-        title = ("_"+key).loc()+":";
+        title = ("_"+key).loc();
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
@@ -152,7 +152,7 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title, controller, arrayController));
     }
   }
 
@@ -191,7 +191,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_number".loc() + ':'
@@ -210,7 +210,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   property = proto[key];
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_description".loc() + ':'
@@ -231,7 +231,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   typeClass = property.get('typeClass');
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_account".loc() + ':'
@@ -252,6 +252,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     displayKey: objectKey,
     controller: controller,
     controllerKey: key,
+    searchKey: 'name',
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -263,10 +264,10 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'name';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 18, width: left },
+    layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
@@ -280,7 +281,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   typeClass = property.get('typeClass');
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_owner".loc() + ':'
@@ -301,6 +302,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     displayKey: objectKey,
     controller: controller,
     controllerKey: key,
+    searchKey: 'username',
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -308,10 +310,10 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   layers.pushObject(widget);
   objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 18, width: left },
+    layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
@@ -325,7 +327,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   typeClass = property.get('typeClass');
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'right',
     value: "_assignedTo".loc() + ':'
@@ -346,6 +348,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     displayKey: objectKey,
     controller: controller,
     controllerKey: key,
+    searchKey: 'username',
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -357,10 +360,10 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'propername';
   label = SC.LabelLayer.create({
-    layout: { top: y, left: left+5, height: 18, width: left },
+    layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'clear',
+    backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)

@@ -19,7 +19,9 @@ SC.Patch.create( /** @scope XM.TaxAuthority.prototype */ {
     /**
       @type XM.TaxAuthorityPayment
     */
-    checks: SC.Record.toMany('XM.TaxAuthorityPayment')
+    checks: SC.Record.toMany('XM.TaxAuthorityPayment', {
+      inverse: 'tax_authority'
+    })
 
   }
 

@@ -3,7 +3,7 @@
 // Copyleft: ©2012 Fohr Motion Picture Studios. All lefts reserved.
 // License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
 // ==========================================================================
-/*globals Postbooks sc_assert formatter linebreak */
+/*globals Postbooks sc_assert formatter linebreak XT XM */
 
 sc_require('sprites');
 
@@ -65,6 +65,8 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     this.tryToPerform('recordArrayLengthDidChange');
   },
 
+  arrayController: null,
+
   init: function() {
     arguments.callee.base.apply(this, arguments);
     var isEnabled = this.get('isEnabled');
@@ -92,25 +94,33 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         title: "_Open…".loc(),
         value: 'open',
         enabled: true
-      }, {
-        title: "_New…".loc(),
-        value: 'new',
-        enabled: true
-      }],
+      }// , {
+      //         title: "_New…".loc(),
+      //         value: 'new',
+      //         enabled: true
+      //       }
+      ],
     
       itemTitleKey: 'title',
       itemValueKey: 'value',
       itemIsEnabledKey: 'enabled'
     });
 
-    var arrayController = SC.ArrayController.create({
+    var arrayController;
+    arrayController = this.arrayController = SC.ArrayController.create({
       contentBinding: SC.Binding.from('recordArray', this).multiple().oneWay()
     });
 
-    this._autcomplete = SC.ListView.create({
+    this._autocomplete = SC.ListView.create({
+      rowHeight: 30,
       contentBinding: SC.Binding.from('arrangedObjects', arrayController).multiple().oneWay(),
       selectionBinding: SC.Binding.from('selection', arrayController).oneWay(),
-      renderRow: Postbooks.DefaultRecordListRenderRow
+      renderRow: Postbooks.DefaultRecordListRenderRow,
+      mouseDown: function(evt) {
+        arguments.callee.base.apply(this, arguments);
+        var rec = this.get('content').objectAt(this._rowIndex);
+        if (rec) that.tryToPerform('chooseRecord', rec);
+      }
     });
 
     this._valueDidChange();
@@ -259,7 +269,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       case 'open':
         return this.transition('Open');
       case 'new':
-        return this.transition('New');
+        // return this.transition('New');
       case 'popUpMenuDidClose':
         return this.transition('Inactive');
     }
@@ -314,11 +324,21 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
 
     var ra = this._searchCache[value];
     if (!ra) {
-      var q = SC.Query.create({
-        conditions: "name BEGINS_WITH '" + value + "'",
-        recordType: this.get('recordType')
+      var recordType = this.get('recordType');
+      if (recordType.prototype.className.slice(-4) === 'Info') {
+        recordType = XM[recordType.prototype.className.slice(3,-4)];
+      }
+      var searchKey = this.get('searchKey');
+      sc_assert(typeof searchKey === 'string');
+      sc_assert(searchKey.length > 1);
+      var q = SC.Query.remote(recordType, {
+        conditions: searchKey+" BEGINS_WITH {value}",
+        orderBy: searchKey+' ASC',
+        parameters: { value: value },
+        rowOffset: 0,
+        rowLimit: 10
       });
-      ra = this._searchCache[value] = this.get('store').find(q);
+      ra = this._searchCache[value] = XT.store.find(q);
     }
 
     // We don't want to be dispatching when we set this.
@@ -326,13 +346,19 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     setTimeout(function() {
       SC.RunLoop.begin();
       that.set('recordArray', ra);
+      console.log('setting selection to empty');
+      var sel = that.arrayController.get('selection'),
+          rec = sel? sel.firstObject() : null;
+
+      if (sel && rec) sel.removeObject(rec);
+      that.tryToPerform('recordArrayLengthDidChange');
       window.ra = ra;
       SC.RunLoop.end();
     }, 0);
   },
 
   'Create or Retrieve Search': function(evt) {
-    var value = SC.activeEditor.get('value');
+    var value = SC.activeEditor.get('value') || "";
     switch (evt.type) {
       case 'enter':
         if (value && value.length > 0) {
@@ -350,23 +376,140 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   }.behavior('Text'),
 
   'No Matches': function(evt) {
-    
+
   }.behavior('Text'),
 
   'Has Matches': function(evt) {
-    var autocomplete = this._autcomplete;
+    var autocomplete = this._autocomplete,
+        recordArray = this.get('recordArray'),
+        sel, len, rec, idx, indexSet,
+        that = this;
+
     switch (evt.type) {
       case 'enter':
+        sc_assert(recordArray);
+        sc_assert(recordArray.get('length') > 0);
+
+        var f = this.get('frame'),
+            b = SC.psurfaces[this.get('surface').__id__].__element__.getBoundingClientRect();
+
         var frame = autocomplete.get('frame');
-        frame.x = 10;
-        frame.y = 10;
+        frame.x = f.x + b.left;
+        frame.y = f.y + b.top + f.height;
         frame.width = 200;
-        frame.height = 200;
+        frame.height = recordArray.get('length') * 30;
         SC.app.addSurface(autocomplete);
         break;
       case 'exit':
-      SC.app.removeSurface(autocomplete);
+        SC.app.removeSurface(autocomplete);
         break;
+      case 'chooseRecord':
+        rec = evt.arg1;
+        if (rec) {
+          // Now we need to get the info version of this object, and 
+          // assign it.
+          rec = this.store.find(this.recordType, rec.get(rec.get('primaryKey')));
+          if (rec.get('status') === SC.Record.READY_CLEAN) {
+            this.controller.set(this.controllerKey, rec);
+          } else {
+            rec.addObserver('status', rec, function observer() {
+              var status = rec.get('status');
+              // console.log('observer called, status is', rec.statusString());
+
+              if (status === SC.Record.READY_CLEAN) {
+                rec.removeObserver('status', rec, observer);
+                that.controller.set(that.controllerKey, rec);
+              }
+            });
+          }
+        }
+        break;
+      case 'keyDown':
+        if (evt.which === 13 || evt.which === 9) { // Enter, Tab, and Shift-Tab
+          sel = this.arrayController.get('selection');
+
+          if (sel.get('length') === 0) {
+            // Choose the top item.
+            rec = this.arrayController.objectAt(0);
+          } else {
+            rec = sel.firstObject();
+          }
+
+          if (rec) {
+            // Now we need to get the info version of this object, and 
+            // assign it.
+            rec = this.store.find(this.recordType, rec.get(rec.get('primaryKey')));
+            if (rec.get('status') === SC.Record.READY_CLEAN) {
+              this.controller.set(this.controllerKey, rec);
+            } else {
+              rec.addObserver('status', rec, function observer() {
+                var status = rec.get('status');
+                // console.log('observer called, status is', rec.statusString());
+
+                if (status === SC.Record.READY_CLEAN) {
+                  rec.removeObserver('status', rec, observer);
+                  that.controller.set(that.controllerKey, rec);
+                }
+              });
+            }
+          }
+
+        } else if (evt.which === 38) { // Up Arrow
+          sel = this.arrayController.get('selection');
+          len = sel.get('length');
+          indexSet = sel.indexSetForSource(this.arrayController);
+          idx = indexSet? indexSet.min() : 0;
+
+          if (len === 0) {
+            // Select the last object
+            rec = this.arrayController.lastObject();
+            if (rec) sel.addObject(rec);
+          } else if (idx === 0) {
+            // Select the object at the end
+            rec = this.arrayController.lastObject();
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          } else {
+            // Select the object above the current object.
+            rec = this.arrayController.objectAt(idx-1);
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          }
+
+        } else if (evt.which === 40) { // Down Arrow
+          sel = this.arrayController.get('selection');
+          len = sel.get('length');
+          indexSet = sel.indexSetForSource(this.arrayController);
+          idx = indexSet? indexSet.min() : 0;
+
+          if (len === 0) {
+            // Select the first object
+            rec = this.arrayController.objectAt(0);
+            if (rec) sel.addObject(rec);
+          } else if (idx === this.arrayController.get('length') - 1) {
+            // Select the object at the beginning
+            rec = this.arrayController.objectAt(0);
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          } else {
+            // Select the object below the current object.
+            rec = this.arrayController.objectAt(idx+1);
+            sel.removeObject(this.arrayController.objectAt(idx));
+            if (sel) sel.addObject(rec);
+          }
+
+        }
+        break;
+      case 'keyUp':
+        var c = evt.which;
+        if (c === 38 || c === 40 || c === 13 || c === 9) return;
+
+        var value = this.get('value') || '';
+        if (value.length === 0) {
+          this.transition('No Text');
+        } else {
+          this.transition('Create or Retrieve Search');
+        }
     }
   }.behavior('Text'),
 
@@ -375,40 +518,141 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   }.behavior('Enabled'),
 
   'Search': function(evt) {
-    
+    if (evt.type === 'enter') {
+      var klass = this.get('recordType'),
+          record = this.get('value'),
+          instanceKlass,
+          that = this;
+
+      if (!record) return; // Nothing to open.
+
+      if (klass.prototype.className.slice(-4) === 'Info') {
+        instanceKlass = XM[klass.prototype.className.slice(3, -4)];
+      } else {
+        instanceKlass = klass;
+      }
+
+      var val = this.get('value');
+      if (val) {
+        var displayKey = this.get('displayKey');
+        if (displayKey) val = val.get(displayKey);
+      }
+
+      Postbooks.LoadRelationSearch(instanceKlass.prototype.className.slice(3), "_back".loc(), null, this.get('searchKey'), val, function(controller) {
+        var rec = controller.get('content');
+        if (rec) {
+          rec = that.store.find(that.recordType, rec.get(rec.get('primaryKey')));
+          if (rec.get('status') === SC.Record.READY_CLEAN) {
+            that.controller.set(that.controllerKey, rec);
+          } else {
+            rec.addObserver('status', rec, function observer() {
+              var status = rec.get('status');
+              // console.log('observer called, status is', rec.statusString());
+
+              if (status === SC.Record.READY_CLEAN) {
+                rec.removeObserver('status', rec, observer);
+                that.controller.set(that.controllerKey, rec);
+              }
+            });
+          }
+        }
+
+        that.tryToPerform('close');
+      });
+    } else if (evt.type === 'close') {
+      this.transition('Inactive');
+    }
   }.behavior('Modal'),
 
   'Open': function(evt) {
     if (evt.type === 'enter') {
       var klass = this.get('recordType'),
-          instance = this.get('value');
+          record = this.get('value'),
+          instanceKlass, instance;
+
+      if (!record) return; // Nothing to open.
+
+      if (klass.prototype.className.slice(-4) === 'Info') {
+        instanceKlass = XM[klass.prototype.className.slice(3, -4)];
+      } else {
+        instanceKlass = klass;
+      }
+
+      console.log("Opening existing record of type:", instanceKlass.prototype.className);
+
+      instance = XT.store.chain().find(instanceKlass, record.get('id'));
 
       var that = this;
-      Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance, function() {
-        that.tryToPerform('close');
-      });
+      if (instance.get('status') !== SC.Record.READY_CLEAN) {
+        console.log('delaying loading relation until it is ready (loaded)');
+        instance.addObserver('status', instance, function observer() {
+          var status = instance.get('status');
+          // console.log('observer called, status is', instance.statusString());
+
+          if (status === SC.Record.READY_CLEAN) {
+            instance.removeObserver('status', instance, observer);
+            Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+              console.log('calling callback');
+              that.tryToPerform('close');
+            });
+          }
+        });
+      } else {
+        console.log('loading relation immediately');
+        Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+          console.log('calling callback');
+          that.tryToPerform('close');
+        });
+      }
     } else if (evt.type === 'close') {
       return this.transition('Editor');
     }
   }.behavior('Modal'),
 
-  'New': function(evt) {
-    if (evt.type === 'enter') {
-      var klass = this.get('recordType'),
-          controller = this.get('controller'),
-          controllerKey = this.get('controllerKey'),
-          instance = this.get('store').createRecord(klass, {});
-
-      controller.set('controllerKey', instance);
-
-      var that = this;
-      Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance, function() {
-        that.tryToPerform('close');
-      });
-    } else if (evt.type === 'close') {
-      return this.transition('Editor');
-    }
-  }.behavior('Modal'),
+  // 'New': function(evt) {
+  //   if (evt.type === 'enter') {
+  //     var klass = this.get('recordType'),
+  //         controller = this.get('controller'),
+  //         controllerKey = this.get('controllerKey'),
+  //         instanceKlass, instance;
+  // 
+  //     if (klass.prototype.className.slice(-4) === 'Info') {
+  //       instanceKlass = XM[klass.prototype.className.slice(3, -4)];
+  //     } else {
+  //       instanceKlass = klass;
+  //     }
+  // 
+  //     console.log("Creating new record of type:", instanceKlass.prototype.className);
+  // 
+  //     instance = XT.store.chain().createRecord(instanceKlass, {});
+  //     instance.normalize();
+  // 
+  //     var that = this;
+  //     Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+  //       var rec = XT.store.materializeRecord(instance.storeKey);
+  //       console.log(rec.statusString());
+  // 
+  //       if (rec.get('status') === SC.Record.READY_CLEAN) {
+  //         debugger;
+  //         controller.set(controllerKey, controller.getPath('content.store').find(klass, rec.get('id')));
+  //       } else {
+  //         rec.addObserver('status', rec, function observer() {
+  //           var status = rec.get('status');
+  //           // console.log('observer called, status is', instance.statusString());
+  // 
+  //           if (status === SC.Record.READY_CLEAN) {
+  //             debugger;
+  //             rec.removeObserver('status', rec, observer);
+  //             controller.set(controllerKey, controller.get('content').store.find(klass, rec.get('id')));
+  //           }
+  //         });
+  //       }
+  //       that.tryToPerform('close');
+  //     });
+  //   } else if (evt.type === 'close') {
+  //     return this.transition('Editor');
+  //   }
+  // }.behavior('Modal'),
 
   displayProperties: 'value'.w(),
 
@@ -609,13 +853,16 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
     style.borderRadius = '5px';
     style.borderColor = 'rgb(252,102,32)'; // this.get('borderColor');
     style.font = this.get('font');
+    style.textAlight = 'left';
     style.color = this.get('color');
     style.backgroundColor = this.get('backgroundColor');
     style.backgroundImage = Postbooks.createDataUrlForSprite('triangle-down-large');
     style.backgroundPosition = 'right center';
     style.backgroundRepeat = 'no-repeat';
     style.outline = 'none'; // FIXME: This breaks other users of the field editor.
-    style.boxShadow = '0px 0px 3px 1px ' + 'rgb(252,102,32)' + ', 0px 0px 1px 0px ' + 'rgb(128,128,128)' + ' inset';
+    if (this.get('isEnabled')) {
+      style.boxShadow = '0px 0px 3px 1px ' + 'rgb(252,102,32)' + ', 0px 0px 1px 0px ' + 'rgb(128,128,128)' + ' inset';
+    } else style.boxShadow = 'none';
 
     // Without the 'px' ending, these do nothing in WebKit.
     style.paddingTop = '0px';
@@ -1123,4 +1370,3 @@ Postbooks.RelationMenuItemLayer = SC.Layer.extend(SC.Control, {
   }
 
 });
-

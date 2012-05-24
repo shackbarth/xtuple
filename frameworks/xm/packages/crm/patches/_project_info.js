@@ -10,18 +10,16 @@
 
   This code is automatically generated and will be over-written. Do not edit directly.
 */
-SC.Patch.create( /** @scope XM.Customer.prototype */ { 
+SC.Patch.create( /** @scope XM.ProjectInfo.prototype */ { 
   
-  target: 'XM.Customer',
+  target: 'XM.ProjectInfo',
 
   body: {
   
     /**
-      @type XM.CustomerPayment
+      @type XM.AccountInfo
     */
-    checks: SC.Record.toMany('XM.CustomerPayment', {
-      inverse: 'customer'
-    })
+    account: SC.Record.toOne('XM.AccountInfo')
 
   }
 

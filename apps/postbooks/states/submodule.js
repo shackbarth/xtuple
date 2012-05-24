@@ -63,6 +63,8 @@ Postbooks.SUBMODULE = SC.State.design({
   },
 
   back: function(stateName) {
+    var store = Postbooks.getPath('activeContext.store');
+
     SC.CloseFieldEditor();
     if (Postbooks.getPath('store.hasChanges')) {
       var save;
@@ -73,15 +75,15 @@ Postbooks.SUBMODULE = SC.State.design({
       }
       if (!save) {
         // Subtle: We may need to re-establish our module's route.
-        SC.routes.set('location', this.parentState.get('route'));
+        SC.routes.set('location', '/'+this.parentState.get('route'));
         return;
       } else {
-        Postbooks.get('store').commitChanges(true); // force
+        store.commitChanges(true); // force
         this.didCommit = true;
       }
     }
 
-    Postbooks.get('store').destroy();
+    store.destroy();
     Postbooks.set('store', XT.store); // Required before we exit.
 
     // Push our changes to the server.
@@ -102,7 +104,7 @@ Postbooks.SUBMODULE = SC.State.design({
 
   apply: function() {
     SC.CloseFieldEditor();
-    Postbooks.get('store').commitChanges(true); // force
+    Postbooks.getPath('activeContext.store').commitChanges(true); // force
     XT.store.commitRecords();
   },
 
@@ -111,7 +113,7 @@ Postbooks.SUBMODULE = SC.State.design({
 
     // If we're working on a new record, just clean up and exit.
     if (Postbooks.submoduleController.get('status') === SC.Record.READY_NEW) {
-      Postbooks.get('store').destroy();
+      Postbooks.getPath('activeContext.store').destroy();
       Postbooks.set('store', XT.store); // Required before we exit.
 
       // HACK: SC.Statechart will exit/enter our parent state!
@@ -119,38 +121,42 @@ Postbooks.SUBMODULE = SC.State.design({
 
       this.gotoState(this.parentState);
     } else {
-      Postbooks.get('store').discardChanges();
+      Postbooks.getPath('activeContext.store').discardChanges();
     }
   },
 
   newRecord: function(sender) {
-    var listController = sender.listController,
-        firstObject = listController.get('selection').firstObject(),
-        klass = firstObject? firstObject.klass : null;
+    var objectController = sender.objectController,
+        listController = sender.listController,
+        klass = sender.klass,
+        store = sender.store;
 
     if (klass) {
-      var instance = Postbooks.get('store').createRecord(klass, {});
-      Postbooks.submoduleController.get(firstObject.attribute).pushObject(instance);
-      Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance);
+      var instance = store.createRecord(klass, {});
+      instance.normalize();
+      listController.get('content').pushObject(instance);
+      Postbooks.LoadExclusiveModal(klass.prototype.className.slice(3), "_back".loc(), instance, objectController, listController);
     }
   },
 
   deleteRecord: function() {
+    var store = Postbooks.getPath('activeContext.store');
+
     SC.CloseFieldEditor();
 
     if (window.confirm("_deleteRecord".loc())) {
 
       // If we're working on a new record, just clean up and exit.
       if (Postbooks.submoduleController.get('status') === SC.Record.READY_NEW) {
-        Postbooks.get('store').destroy();
+        store.destroy();
         Postbooks.set('store', XT.store); // Required before we exit.
 
       } else {
         Postbooks.submoduleController.get('content').destroy();
-        Postbooks.get('store').commitChanges(true); // force
+        store.commitChanges(true); // force
         this.didCommit = true;
 
-        Postbooks.get('store').destroy();
+        store.destroy();
         Postbooks.set('store', XT.store); // Required before we exit.
       }
       

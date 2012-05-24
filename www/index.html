@@ -6,6 +6,7 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
   <script>
     var FAST_LAYOUT_FUNCTION = false;
@@ -23,10 +24,6 @@
     window.DATASOURCE_HOST_NAMESPACE = '{{@datasourceHostNamespace}}';
     window.PROJECT_MODE = '{{@projectMode}}';
   </script>
-  {{@css css/jquery-ui-1.8.19.custom.css}}
-  {{@css css/loader.css}}
-  {{@js  js/jquery-1.7.1.min.js}}
-  {{@js  js/jquery-ui-1.8.19.custom.min.js}}
   {{@js  js/socket.io.min.js}}
   {{@js  js/loader.js}}
   <style>
@@ -35,10 +32,6 @@
     #ui { border-style: none; }
   </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
-  <div id="loader-container">
-    <div id="loader-label">The application is loading...</div>
-    <div id="loader-progress-bar"></div>
-  </div> 
+<body style="margin: 0; overflow: hidden;" onload="onload();">
 </body>
 </html>

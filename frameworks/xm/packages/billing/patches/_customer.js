@@ -19,12 +19,16 @@ SC.Patch.create( /** @scope XM.Customer.prototype */ {
     /**
       @type XM.Receivable
     */
-    receivables: SC.Record.toMany('XM.Receivable'),
+    receivables: SC.Record.toMany('XM.Receivable', {
+      inverse: 'customer'
+    }),
   
     /**
       @type XM.CashReceipt
     */
-    cashReceipts: SC.Record.toMany('XM.CashReceipt')
+    cashReceipts: SC.Record.toMany('XM.CashReceipt', {
+      inverse: 'customer'
+    })
 
   }
 
