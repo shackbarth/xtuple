@@ -12,8 +12,8 @@ var Builder =       require('../build-tools');
 //
 
 var databaseUser = 'admin';
-var databaseUserPassword = 'admin';
-var databaseOrganization = '40beta';
+var databaseUserPassword = 'Assemble!Aurora';
+var databaseOrganization = 'aurora';
 
 //..........................................
 // PROJECT SETTINGS
@@ -25,7 +25,7 @@ var projectStructure = _path.join(__dirname, 'postbooks.json');
 // mode that determines how the project is built and served
 // can be development, production or inlined although
 // inlined is broken and will be removed
-var projectMode = 'production';
+var projectMode = 'development';
 
 // the path to the project root, in this case, "client"
 var projectRoot = _path.join(__dirname);
@@ -48,7 +48,7 @@ var projectWWW = _path.join(__dirname, 'www');
 
 // the url to the datasource/responder for the client to
 // communicate with
-var datasourceHost = '172.16.0.200';
+var datasourceHost = 'asteroidbelt.xtuple.com';
 
 // the port on which the client is to connect to the datasource
 var datasourceHostPort = 9000;
