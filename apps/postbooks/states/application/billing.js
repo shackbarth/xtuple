@@ -12,6 +12,13 @@ Postbooks.BILLING = Postbooks.MODULE.design({
   title: "_billing",
   submodules: 'Customer Invoice Receivable CashReceipt'.w(),
 
+  enterState: function() {
+    arguments.callee.base.apply(this, arguments);
+
+    // Load any lists used in popups
+    XT.store.find(XM.Currency);
+  },
+
   // ACTIONS
 
   showCustomer: function() {

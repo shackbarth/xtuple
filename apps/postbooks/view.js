@@ -38,7 +38,7 @@ Postbooks.TilesForClass = function(klass, controller, isRoot) {
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
       });
 
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title));
+      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title, controller));
 
     } else if (property && (property.isChildAttribute || property.isSingleAttribute)) {
       var objectKlass = property.get('typeClass');
@@ -200,6 +200,15 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               itemTitleKey: 'title',
               itemValueKey: 'value'
             });
+          } else if (key === 'honorific') {
+            widget = Postbooks.ComboBoxWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              recordType: XM.Honorific,
+              store: controller.getPath('content.store'),
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
+              valueBinding: SC.Binding.from(key, controller),
+              searchKey: 'code',
+            });
           } else {
             widget = SC.TextFieldWidget.create({
               layout: { top: y, left: left, height: 22, right: right },
@@ -319,6 +328,21 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             valueBinding: SC.Binding.transform(function(val) {
               return String(val);
             }).from(key, controller)
+          });
+          y += 24 + K.SPACING;
+        } else if (typeClass === Money) {
+          label = SC.LabelLayer.create({
+            layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+            backgroundColor: 'transparent',
+            color: 'white',
+            textAlign: 'right',
+            value: title
+          });
+          widget = Postbooks.MoneyWidget.create({
+            layout: { top: y, left: left, height: 22, right: right },
+            isEnabledBinding: SC.Binding.from('isEditable', controller),
+            valueBinding: SC.Binding.from(key, controller),
+            moneyBinding: SC.Binding.from(key+'Money', controller)
           });
           y += 24 + K.SPACING;
         } else if (typeClass.isNumeric) {
@@ -476,7 +500,7 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
   return list;
 };
 
-Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
+Postbooks.CreateTileListViewForClass = function(klass, controller, title, objectController) {
   console.log('Postbooks.CreateTileListViewForClass(', klass.prototype.className, ')');
 
   // See if we have an override.
@@ -544,6 +568,17 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
     }
   });
 
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { top: 6, right: 12, height: 22, width: 60 },
+    name: '_new'.loc(),
+    target: Postbooks.statechart,
+    action: 'newRecord',
+    objectController: objectController,
+    listController: controller,
+    klass: klass,
+    store: objectController.get('content').get('store')
+  }));
+
   // Nope, generate the default tile view on the fly.
   var list = Postbooks.TileListView.create({
     layout: { top: 50, left: 12, right: 12, bottom: 16 },
@@ -574,14 +609,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title) {
       var that = this;
       var instance = this.get('content').objectAt(index);
       if (instance) {
-        Postbooks.LoadModal(klass.prototype.className.slice(3), "Back", instance);
-      
-        // Deselect our row after the modal transition ends.
-        setTimeout(function() {
-          SC.RunLoop.begin();
-          that.get('content').deselectObject(instance);
-          SC.RunLoop.end();
-        }, 250);
+        Postbooks.LoadExclusiveModal(klass.prototype.className.slice(3), "Back", instance, objectController, controller);
       }
     },
 

@@ -60,7 +60,7 @@ var datasourceHostPort = 9000;
 // the url to the builder for the client to communicate with
 // note that localhost can't work if you're serving the application
 // publicly
-var builderHost = '172.16.0.200';
+var builderHost = 'localhost';
 
 // the port for the client to use to request the client application
 var builderHostPort = 4020;

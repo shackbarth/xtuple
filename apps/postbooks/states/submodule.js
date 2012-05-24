@@ -126,15 +126,16 @@ Postbooks.SUBMODULE = SC.State.design({
   },
 
   newRecord: function(sender) {
-    var listController = sender.listController,
-        firstObject = listController.get('selection').firstObject(),
-        klass = firstObject? firstObject.klass : null;
+    var objectController = sender.objectController,
+        listController = sender.listController,
+        klass = sender.klass,
+        store = sender.store;
 
     if (klass) {
-      alert('wrong!');
-      var instance = Postbooks.get('store').createRecord(klass, {});
-      Postbooks.submoduleController.get(firstObject.attribute).pushObject(instance);
-      Postbooks.LoadModal(klass.prototype.className.slice(3), "_back".loc(), instance);
+      var instance = store.createRecord(klass, {});
+      instance.normalize();
+      listController.get('content').pushObject(instance);
+      Postbooks.LoadExclusiveModal(klass.prototype.className.slice(3), "_back".loc(), instance, objectController, listController);
     }
   },
 
