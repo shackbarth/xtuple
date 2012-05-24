@@ -2,9 +2,11 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals XM */
+/*globals XM XT */
+
 sc_require('models/currency');
 sc_require('models/currency_rate');
+
 /** @class
 
   This class handles conversions between a local currency and the system base
@@ -169,7 +171,7 @@ XM.Money = XT.Object.extend(
     }
 
     // build the query
-    qry = SC.Query.local(XM.CurrencyRate, {
+    var qry = SC.Query.local(XM.CurrencyRate, {
       conditions: "currency = {currency} " +
                   "AND effective <= {effective} " +
                   "AND expires >= {effective} ",
@@ -198,7 +200,7 @@ XM.Money = XT.Object.extend(
     // remember what we did so we don't run again unless we need to
     this._xm_currencyCache = currency;
     this._xm_effectiveCache = effective;
-  }.observes('currency', 'effective', 'isFixed', 'isLoading').cacheable(),
+  }.observes('currency', 'effective', 'isFixed', 'isLoading')
   
 }) ;
 

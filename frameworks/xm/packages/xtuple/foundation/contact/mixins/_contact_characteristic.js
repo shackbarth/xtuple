@@ -41,9 +41,9 @@ XM._ContactCharacteristic = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type XM.Contact
   */
-  contact: SC.Record.attr(Number),
+  contact: SC.Record.toOne('XM.Contact'),
 
   /**
     @type XM.Characteristic

@@ -30,16 +30,12 @@ Postbooks.statechart = SC.Statechart.create({
       window.location.reload();
     },
 
-    popModule: function() {
+    popContext: function() {
       var modalContexts = Postbooks.get('modalContexts');
       if (modalContexts.length === 0) return;
       var currentModal = modalContexts.popObject();
       var frame = currentModal.surface.get('frame');
       frame.x = SC.app.computeViewportSize().width;
-
-      Postbooks.set('submoduleTitle', currentModal.submoduleTitle);
-      Postbooks.set('submoduleBackButtonTitle', currentModal.submoduleBackButtonTitle);
-      Postbooks.set('submoduleBackButtonAction', currentModal.submoduleBackButtonAction);
 
       var callback = currentModal.callback;
       if (callback && typeof callback === 'function') callback();
@@ -50,6 +46,8 @@ Postbooks.statechart = SC.Statechart.create({
         SC.app.removeSurface(currentModal.surface);
         SC.RunLoop.end();
       }, 250);
+
+      Postbooks.activeContext.set('content', modalContexts.lastObject());
     },
 
     // feedback: function() {

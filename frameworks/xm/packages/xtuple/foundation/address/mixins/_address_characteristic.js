@@ -16,7 +16,7 @@ XM._AddressCharacteristic = {
   
   className: 'XM.AddressCharacteristic',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -41,15 +41,14 @@ XM._AddressCharacteristic = {
   guid: SC.Record.attr(Number),
 
   /**
-    @type Number
+    @type XM.Address
   */
-  address: SC.Record.attr(Number),
+  address: SC.Record.toOne('XM.Address'),
 
   /**
     @type XM.Characteristic
   */
   characteristic: SC.Record.toOne('XM.Characteristic', {
-    isNested: true,
     isRequired: true
   }),
 

@@ -73,6 +73,8 @@ XM._Country = {
   /**
     @type XM.State
   */
-  states: SC.Record.toMany('XM.State')
+  states: SC.Record.toMany('XM.State', {
+    inverse: 'country'
+  })
 
 };

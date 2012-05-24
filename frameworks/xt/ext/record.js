@@ -70,7 +70,7 @@ XT.Record = SC.Record.extend(XT.Logging,
   /**
     An array of SC.Error objects populated by the validate function.
   */
-  validateErrors: [],
+  validateErrors: null,
   
   /** @private */
   validateErrorsLength: 0,
@@ -258,10 +258,12 @@ XT.Record = SC.Record.extend(XT.Logging,
     // any other primary key type must simply be some value.
     var pkey = this.get('primaryKey'),
         id = this.get('id') || -1;
-    err = XT.errors.findProperty('code', 'xt1015'),
+
+    err = XT.errors.findProperty('code', 'xt1015');
     isErr = pkey === 'guid' ? id < 0 : SC.none(id);
+
     this.updateErrors(err, isErr);
-    
+
     return this.get('validateErrors');
   },
 
@@ -360,19 +362,23 @@ XT.Record = SC.Record.extend(XT.Logging,
   */
   init: function() {
     arguments.callee.base.apply(this, arguments);
-    var required = this.requiredAttributes();
+    var required = this.requiredAttributes(),
+        validate = this.validate,
+        validateErrors;
+    
+    validateErrors = this.validateErrors = [];
 
     // Validate all required fields.
-    for (var i = 0; i < required.get('length'); i++) {
-      this.addObserver(required[i], this.validate);
+    for (var idx=0, len=required.get('length'); idx<len; ++idx) {
+      this.addObserver(required[idx], this, validate);
     }
 
     if (this.getPath('store.isNested')) {
-      this.addObserver('isValid', this, '_xt_isValidDidChange');
+      this.addObserver('isValid', this, this._xt_isValidDidChange);
     }
     
     // Binding for validate errors length
-    SC.Binding.from('.validateErrors.length', this)
+    SC.Binding.from('length', validateErrors)
               .to('validateErrorsLength', this)
               .oneWay().noDelay().connect();
   },
@@ -564,7 +570,7 @@ XT.Record.mixin( /** @scope XT.Record */ {
 
       isGrantedPersonal = false;
       while (!isGrantedPersonal && i < props.length) {
-        isGrantedPersonal = this._attrCache[props[i]] === XT.DataSource.session.userName;
+        isGrantedPersonal = this._attrCache[props[i]] === XT.session.details.username;
         i++;
       }
     }

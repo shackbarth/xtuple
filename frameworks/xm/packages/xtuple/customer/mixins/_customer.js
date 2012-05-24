@@ -218,7 +218,9 @@ XM._Customer = {
   /**
     @type XM.CustomerCreditCardPayment
   */
-  creditCardPayments: SC.Record.toMany('XM.CustomerCreditCardPayment'),
+  creditCardPayments: SC.Record.toMany('XM.CustomerCreditCardPayment', {
+    inverse: 'customer'
+  }),
 
   /**
     @type XM.CustomerContact

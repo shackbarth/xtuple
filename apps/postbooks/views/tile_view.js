@@ -78,7 +78,7 @@ Postbooks.TileView = SC.View.extend(
     context.textAlign = 'left';
     context.textBaseline = 'middle';
 
-    context.fillText(this.get('title'), 18, 19  );
+    if (title) context.fillText(title, 18, 19  );
   },
   
   init: function() {
@@ -110,7 +110,7 @@ Postbooks.TileView.mixin( /** @scope Postbooks.TileView */ {
     @type Number
     @default 230Hx640W
   */
-  HORIZONTAL_TILE: { height: 320, width: 640 },
+  HORIZONTAL_TILE: { height: 320, width: 645 },
   
   /**
     Constant value for a half screen vertical tile.
@@ -120,7 +120,7 @@ Postbooks.TileView.mixin( /** @scope Postbooks.TileView */ {
     @type Number
     @default 640Hx320W
   */
-  VERTICAL_TILE: { height: 640, width: 320},
+  VERTICAL_TILE: { height: 645, width: 320},
   
   /**
     Constant value for a full screen tile.
@@ -130,7 +130,7 @@ Postbooks.TileView.mixin( /** @scope Postbooks.TileView */ {
     @type Number
     @default 640Hx640W
   */
-  FULL_TILE: { height: 640, width: 640},
+  FULL_TILE: { height: 640, width: 645},
   
   /**
     Constant value for a full screen tile.

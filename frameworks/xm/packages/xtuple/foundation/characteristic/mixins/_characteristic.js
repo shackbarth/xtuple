@@ -79,7 +79,9 @@ XM._Characteristic = {
   /**
     @type XM.CharacteristicOption
   */
-  options: SC.Record.toMany('XM.CharacteristicOption'),
+  options: SC.Record.toMany('XM.CharacteristicOption', {
+    inverse: 'characteristic'
+  }),
 
   /**
     @type Boolean

@@ -4,4 +4,13 @@
 // ==========================================================================
 /*globals Postbooks sc_assert XT */
 
-Postbooks.MoneyWidget = SC.CheckboxWidget;
+Postbooks.StickyCheckboxWidget = SC.CheckboxWidget.extend({
+
+  stickKey: null,
+
+  _pb_valueDidChange: function() {
+    var stickyKey = this.get('stickyKey');
+    if (stickyKey) SC.userDefaults.writeDefault(stickyKey, this.get('value'));
+  }
+
+});

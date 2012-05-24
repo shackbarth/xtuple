@@ -67,10 +67,10 @@ Postbooks.ProjectTask.RenderRecordListRow = function(context, width, height, ind
   context.fillText(val , 325, 35);
 
   // labels 
-  var budgetLabel = "_budget".loc()+":";
+  var budgetLabel = "_budget".loc();
   var budgetLabelWidth = context.measureText(budgetLabel).width;
   context.fillText(budgetLabel, 400, 15);
-  var actualLabel = "_actual".loc()+":";
+  var actualLabel = "_actual".loc();
   var actualLabelWidth = context.measureText(actualLabel).width;
   context.fillText(actualLabel, 400, 35);
 

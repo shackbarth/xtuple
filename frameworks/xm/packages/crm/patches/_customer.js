@@ -24,22 +24,30 @@ SC.Patch.create( /** @scope XM.Customer.prototype */ {
     /**
       @type XM.ContactInfo
     */
-    contactRelations: SC.Record.toMany('XM.ContactInfo'),
+    contactRelations: SC.Record.toMany('XM.ContactInfo', {
+      inverse: 'account'
+    }),
   
     /**
       @type XM.IncidentInfo
     */
-    incidentRelations: SC.Record.toMany('XM.IncidentInfo'),
+    incidentRelations: SC.Record.toMany('XM.IncidentInfo', {
+      inverse: 'account'
+    }),
   
     /**
       @type XM.OpportunityInfo
     */
-    opportunitytRelations: SC.Record.toMany('XM.OpportunityInfo'),
+    opportunitytRelations: SC.Record.toMany('XM.OpportunityInfo', {
+      inverse: 'account'
+    }),
   
     /**
       @type XM.ToDoInfo
     */
-    toDoRelations: SC.Record.toMany('XM.ToDoInfo')
+    toDoRelations: SC.Record.toMany('XM.ToDoInfo', {
+      inverse: 'account'
+    })
 
   }
 

@@ -16,7 +16,7 @@ XM._AccountCharacteristic = {
   
   className: 'XM.AccountCharacteristic',
 
-  nestedRecordNamespace: XM,
+  
 
   // .................................................
   // PRIVILEGES
@@ -49,7 +49,6 @@ XM._AccountCharacteristic = {
     @type XM.Characteristic
   */
   characteristic: SC.Record.toOne('XM.Characteristic', {
-    isNested: true,
     isRequired: true
   }),
 

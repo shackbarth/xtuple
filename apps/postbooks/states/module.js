@@ -35,7 +35,7 @@ Postbooks.MODULE = SC.State.design({
     sc_assert(SC.typeOf(submodules) === SC.T_ARRAY, "submodules must be an array in your Postbooks.MODULE subclass.");
     submodules.forEach(function(submodule) { sc_assert(typeof submodule === 'string', 'Submodules must be strings.'); });
 
-    SC.routes.set('location', route);
+    SC.routes.set('location', '/'+route);
 
     Postbooks.LoadModule(title.loc(), submodules, this);
   },

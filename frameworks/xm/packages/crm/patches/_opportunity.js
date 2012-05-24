@@ -36,7 +36,6 @@ SC.Patch.create( /** @scope XM.Opportunity.prototype */ {
       @type XM.ToDoInfo
     */
     toDoRelations: SC.Record.toMany('XM.ToDoInfo', {
-      isNested: true,
       inverse: 'opportunity'
     })
 
