@@ -119,7 +119,8 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
   }.observes('isEnabled'),
 
   isFirstResponderDidChange: function() {
-    var action = this.get('isInputResponder') ? 'didBecomeFirstResponder' : 'didResignFirstResponder';
+    // console.log('Postbooks.ComboBoxWidget#isFirstResponderDidChange()', SC.guidFor(this));
+    var action = this.get('isFirstResponder') ? 'didBecomeFirstResponder' : 'didResignFirstResponder';
     this.dispatchAction(action);
   }.observes('isFirstResponder'),
 
@@ -188,6 +189,7 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
     switch (evt.type) {
       case 'enter':
         // debugger;
+        this._ignoreValueFromField = false;
         this._searchCache = {};
         SC.app.set('inputSurface', this.get('surface'));
         var that = this;
@@ -213,18 +215,19 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
         var bounds = this.get('bounds');
 
         if (evt.hitPoint.x > bounds.width - 20) {
-          var menuView = this._menuView,
-              frame = menuView.get('frame');
+          var autocomplete = this._autocomplete,
+              frame = autocomplete.get('frame');
         
           frame.x = evt.clientX - evt.hitPoint.x + bounds.width - 16;
           frame.y = evt.clientY - evt.hitPoint.y - 24;
-          frame.width = menuView.measuredWidth;
-          frame.height = menuView.measuredHeight;
+          frame.width = autocomplete.measuredWidth;
+          frame.height = autocomplete.measuredHeight;
         
-          return this.transition('Pop Up');
+          return this.transition('Show All Matches');
         }
         break;
       case 'fieldEditorDidClose':
+        if (!this._ignoreValueFromField) this.set('value', evt.arg1 || '');
         return this.transition('Inactive');
       case 'didResignFirstResponder':
         return this.transition('Inactive');
@@ -232,16 +235,16 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
   }.behavior('Active'),
 
   'Pop Up': function(evt) {
-    var menuView = this._menuView;
+    var autocomplete = this._autocomplete;
     switch (evt.type) {
       case 'enter':
-        menuView.triggerLayoutAndRendering();
-        SC.app.addSurface(menuView);
-        SC.app.set('menuSurface', menuView);
+        autocomplete.triggerLayoutAndRendering();
+        SC.app.addSurface(autocomplete);
+        SC.app.set('menuSurface', autocomplete);
         return;
       case 'exit':
         SC.app.set('menuSurface', null);
-        SC.app.removeSurface(menuView);
+        SC.app.removeSurface(autocomplete);
         return;
       case 'search':
         return this.transition('Search');
@@ -274,6 +277,8 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
   'No Text': function(evt) {
     if (evt.type === 'keyUp') {
       this.transition('Typing');
+    } else if (evt.type === 'fieldEditorDidClose') {
+      this.set('value', '');
     }
   }.behavior('Typing'),
 
@@ -389,7 +394,10 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
         break;
       case 'chooseRecord':
         rec = evt.arg1;
-        if (rec) this.set('value', rec.get(this.get('searchKey')));
+        if (rec) {
+          this.set('value', rec.get(this.get('searchKey')));
+          this._ignoreValueFromField = true;
+        }
         break;
       case 'keyDown':
         if (evt.which === 13 || evt.which === 9) { // Enter, Tab, and Shift-Tab
@@ -402,8 +410,10 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
             rec = sel.firstObject();
           }
 
-          if (rec) this.set('value', rec.get(this.get('searchKey')));
-
+          if (rec) {
+            this.set('value', rec.get(this.get('searchKey')));
+            this._ignoreValueFromField = true;
+          }
 
         } else if (evt.which === 38) { // Up Arrow
           sel = this.arrayController.get('selection');
@@ -461,6 +471,7 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
         } else {
           this.transition('Create or Retrieve Search');
         }
+        break;
     }
   }.behavior('Text'),
 
@@ -484,13 +495,19 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
         frame.width = 200;
         frame.height = recordArray.get('length') * 30;
         SC.app.addSurface(autocomplete);
+
+        this._hm_value = SC.activeEditor.get('value');
         break;
       case 'exit':
         SC.app.removeSurface(autocomplete);
+        this._hm_value = null;
         break;
       case 'chooseRecord':
         rec = evt.arg1;
-        if (rec) this.set('value', rec.get(this.get('searchKey')));
+        if (rec) {
+          this.set('value', rec.get(this.get('searchKey')));
+          this._ignoreValueFromField = true;
+        }
         break;
       case 'keyDown':
         if (evt.which === 13 || evt.which === 9) { // Enter, Tab, and Shift-Tab
@@ -507,6 +524,7 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
             // Now we need to get the info version of this object, and 
             // assign it.
             this.set('value', rec.get(this.get('searchKey')));
+            this._ignoreValueFromField = true;
           }
 
         } else if (evt.which === 38) { // Up Arrow
@@ -559,12 +577,13 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
         var c = evt.which;
         if (c === 38 || c === 40 || c === 13 || c === 9) return;
 
-        var value = this.get('value') || '';
+        var value = SC.activeEditor.get('value');
         if (value.length === 0) {
           this.transition('No Text');
-        } else {
+        } else if (value !== this._hm_value) {
           this.transition('Create or Retrieve Search');
         }
+        break;
     }
   }.behavior('Text'),
 
@@ -750,7 +769,7 @@ Postbooks.ComboBoxWidget = SC.Widget.extend(SC.Control, {
   },
 
   takeValueFromFieldEditor: function(value) {
-    console.log('takeValueFromFieldEditor', value);
+    // console.log('takeValueFromFieldEditor', value);
   },
 
   styleInputElement: function(input) {
