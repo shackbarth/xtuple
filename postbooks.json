@@ -38,7 +38,6 @@
     "type": "framework",
     "monitor": true,
     "frameworks": [
-      "constraints",
       "foundation"
     ],
     "path": "../../erichocean/blossom/application"
@@ -52,14 +51,6 @@
       "application"
     ],
     "path": "../../erichocean/blossom/datastore"
-  },
-
-  "constraints": {
-    "type": "framework",
-    "monitor": true,
-    "frameworks": [
-      "foundation"
-    ],
-    "path": "../../erichocean/blossom/constraints"
   }
+
 }
