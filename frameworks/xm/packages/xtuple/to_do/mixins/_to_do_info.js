@@ -43,11 +43,51 @@ XM._ToDoInfo = {
   /**
     @type String
   */
-  name: SC.Record.attr(String),
+  name: SC.Record.attr(String, {
+    isRequired: true
+  }),
+
+  /**
+    @type String
+  */
+  description: SC.Record.attr(String),
+
+  /**
+    @type XM.ContactInfo
+  */
+  contact: SC.Record.toOne('XM.ContactInfo'),
+
+  /**
+    @type String
+  */
+  toDoStatus: SC.Record.attr(String, {
+    defaultValue: 'N'
+  }),
 
   /**
     @type Boolean
   */
-  isActive: SC.Record.attr(Boolean)
+  isActive: SC.Record.attr(Boolean, {
+    defaultValue: true
+  }),
+
+  /**
+    @type Date
+  */
+  dueDate: SC.Record.attr(XT.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false,
+    isRequired: true
+  }),
+
+  /**
+    @type XM.Priority
+  */
+  priority: SC.Record.toOne('XM.Priority'),
+
+  /**
+    @type XM.UserAccountInfo
+  */
+  assignedTo: SC.Record.toOne('XM.UserAccountInfo')
 
 };
