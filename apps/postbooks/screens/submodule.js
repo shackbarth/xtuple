@@ -64,8 +64,8 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     title: name,
     backButtonTitle: backButtonTitle,
     backButtonAction: 'back',
-    cancelIsVisible: true,
-    applyIsVisible: true,
+    firstButtonIsVisible: true,
+    secondButtonIsVisible: true,
     store: Postbooks.store
   }));
 
@@ -86,7 +86,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     target: 'Postbooks.statechart',
     action: 'cancel',
     isEnabledBinding: 'Postbooks.activeContext*store.canCommit',
-    isVisibleBinding: 'Postbooks.activeContext.cancelIsVisible'
+    isVisibleBinding: 'Postbooks.activeContext.firstButtonIsVisible'
   }));
 
   topbar.get('layers').pushObject(Postbooks.Button.create({
@@ -95,7 +95,7 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
     target: 'Postbooks.statechart',
     action: 'apply',
     isEnabledBinding: 'Postbooks.activeContext*store.canCommit',
-    isVisibleBinding: 'Postbooks.activeContext.applyIsVisible'
+    isVisibleBinding: 'Postbooks.activeContext.secondButtonIsVisible'
   }));
 
   var list = [SC.Object.create({

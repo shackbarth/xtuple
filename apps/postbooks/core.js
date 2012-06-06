@@ -23,6 +23,8 @@ Postbooks = global.Postbooks = SC.Object.create(XT.SessionDelegate,
 
   store: null,
 
+  topbarBackButtonTitle: "(no title)",
+
   submoduleTitle: "(no title)",
   submoduleBackButtonTitle: "(unknown)",
   submoduleBackButtonAction: null,

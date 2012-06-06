@@ -21,8 +21,8 @@ Postbooks.LoadRelationSearch = function(className, backButtonTitle, instance, se
     title: ("_" + className.camelize()).loc(),
     backButtonTitle: backButtonTitle,
     backButtonAction: 'popContext',
-    cancelIsVisible: false,
-    applyIsVisible: false,
+    firstButtonIsVisible: false,
+    secondButtonIsVisible: false,
     store: XT.store,
     callback: function() {
       if (callback) callback(controller);

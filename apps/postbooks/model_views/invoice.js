@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM sc_assert */
+/*globals Postbooks XM XT base1 sc_assert */
 
 Postbooks.Invoice = {};
 Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
@@ -31,7 +31,7 @@ Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, 
   var numberWidth = context.measureText(val).width;
 
   // Invoice Date
-  dt = object.get('invoiceDate');
+  var dt = object.get('invoiceDate');
   if (dt) {
     val = dt.toLocaleDateString();
     var isDue = !object.get('isPosted') &&
@@ -107,7 +107,7 @@ Postbooks.Invoice.Tiles = function(controller, isRoot) {
   
   var klass = XM.Invoice,
       tiles = [],
-      proto = klass.prototype;
+      proto = klass.prototype,
       properties = [];
 
   // Overview
@@ -387,7 +387,6 @@ Postbooks.Invoice.CreateLinesTileView = function(controller) {
       layers = view.get('layers'),
       y = 42,
       proto = XM.Invoice.prototype,
-      K = Postbooks,
       key, property,
       left = 120, right = 12,
       label = null, widget = null;
@@ -408,11 +407,12 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
       layers = view.get('layers'),
       y = 42,
       proto = XM.Invoice.prototype,
-      K = Postbooks,
       key, property,
       left = 120, right = 12,
       label = null, widget = null;
- 
+
+  K = Postbooks;
+
   // Credits
   key = 'allocatedCredit';
   property = proto[key];
@@ -518,4 +518,3 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
 
   return view;
 };
-

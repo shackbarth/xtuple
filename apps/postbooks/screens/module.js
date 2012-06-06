@@ -38,7 +38,8 @@ Postbooks.LoadModule = function(name, classes, state) {
       value: className + 'Surface',
       enabled: true,
       className: className,
-      isLoaded: false
+      isLoaded: false,
+      isFiltered: false
     });
   });
 
@@ -54,8 +55,8 @@ Postbooks.LoadModule = function(name, classes, state) {
       allowsEmptySelection: true
     });
 
-    var controller, surface, content, selection;
-    controller = Postbooks[className+'ObjectController'] = SC.ObjectController.create();
+    var controller, list, content, selection;
+    controller = items[idx].controller = Postbooks[className+'ObjectController'] = SC.ObjectController.create();
     content = 'Postbooks.'+className+'ListController.arrangedObjects';
     selection = 'Postbooks.'+className+'ListController.selection';
     
@@ -70,7 +71,7 @@ Postbooks.LoadModule = function(name, classes, state) {
 
     // class have it's own list view?
     if (Postbooks[className] && Postbooks[className].RecordListView) {
-      surface = Postbooks[className].RecordListView.create({
+      list = Postbooks[className].RecordListView.create({
         contentBinding: content,
         selectionBinding: selection,
         action: action
@@ -78,7 +79,7 @@ Postbooks.LoadModule = function(name, classes, state) {
       
     // nope, default
     } else {
-      surface = Postbooks.RecordListView.create({
+      list = Postbooks.RecordListView.create({
         contentBinding: content,
         selectionBinding: selection,
         action: action,
@@ -88,7 +89,7 @@ Postbooks.LoadModule = function(name, classes, state) {
       });
     }
 
-    items[idx].surface = surface;
+    items[idx].list = list;
   });
 
   var list = [];
@@ -166,7 +167,7 @@ Postbooks.LoadModule = function(name, classes, state) {
     }
   });
 
-  detail.set('contentSurface', list[startIndex].surface);
+  detail.set('contentSurface', list[startIndex].list);
 
   state.listContainer = detail;
   state.listController = listController;
@@ -207,28 +208,50 @@ Postbooks.LoadModule = function(name, classes, state) {
         item.isLoaded = true;
       }
 
-      detail.set('contentSurface', item.surface);
+      if (item.isFiltered) {
+        alert("Don't know how to handle a filtered list.");
+      } else {
+        detail.set('contentSurface', item.list);
+      }
     }
   });
 
   var module = SC.LayoutSurface.create();
-  
+
+  Postbooks.pushContext(SC.Object.create({
+    title: name,
+    backButtonTitle: "_dashboard".loc(),
+    backButtonAction: 'showDashboard',
+    firstButtonIsVisible: true,
+    secondButtonIsVisible: true,
+    store: Postbooks.store
+  }));
+
   var topbar = Postbooks.Topbar.create({
     name: name
   });
 
   topbar.get('layers').pushObject(Postbooks.BackButton.create({
     layout: { left: 20, centerY: 0, width: 120, height: 24 },
-    name: "_dashboard".loc(),
+    nameBinding: 'Postbooks.activeContext.backButtonTitle',
     target: 'Postbooks.statechart',
-    action: 'showDashboard'
+    actionBinding: 'Postbooks.activeContext.backButtonAction'
   }));
   topbar.get('layers').pushObject(Postbooks.Button.create({
     layout: { right: 20, centerY: 0, width: 120, height: 24 },
     name: "_new".loc(),
     target: 'Postbooks.statechart',
-    action: 'newRecord'
+    action: 'newRecord',
+    isVisibleBinding: 'Postbooks.activeContext.firstButtonIsVisible'
   }));
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { right: 160, centerY: 0, width: 120, height: 24 },
+    name: "_filter".loc(),
+    target: 'Postbooks.statechart',
+    action: 'filterRecords',
+    isVisibleBinding: 'Postbooks.activeContext.secondButtonIsVisible'
+  }));
+
 
   module.get('subsurfaces').pushObjects([topbar, listView, detail]);
 

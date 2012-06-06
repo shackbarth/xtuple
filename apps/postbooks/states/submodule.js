@@ -92,6 +92,17 @@ Postbooks.SUBMODULE = SC.State.design({
       XT.store.commitRecords();
     }
 
+    // Pop our context.
+    var modalContexts = Postbooks.get('modalContexts');
+    if (modalContexts.length > 0) {
+      var currentModal = modalContexts.popObject(),
+          callback = currentModal.callback;
+
+      if (callback && typeof callback === 'function') callback();
+
+      Postbooks.activeContext.set('content', modalContexts.lastObject());
+    }
+
     if (typeof stateName === 'string') {
       this.gotoState(stateName);
     } else {
