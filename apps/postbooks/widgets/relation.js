@@ -132,7 +132,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   }.observes('isEnabled'),
 
   isFirstResponderDidChange: function() {
-    var action = this.get('isInputResponder') ? 'didBecomeFirstResponder' : 'didResignFirstResponder';
+    var action = this.get('isFirstResponder') ? 'didBecomeFirstResponder' : 'didResignFirstResponder';
     this.dispatchAction(action);
   }.observes('isFirstResponder'),
 
@@ -306,6 +306,8 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       var value = SC.activeEditor.get('value');
       if (!value || (value && value.length === 0)) {
         this.transition('No Text');
+      } else if (value !== this._hm_value) {
+        this.transition('Create or Retrieve Search');
       }
     } else if (evt.type === 'recordArrayLengthDidChange') {
       var len = this.getPath('recordArray.length');
@@ -358,7 +360,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   },
 
   'Create or Retrieve Search': function(evt) {
-    var value = SC.activeEditor.get('value') || "";
+    var value = SC.activeEditor? SC.activeEditor.get('value') || "" : "";
     switch (evt.type) {
       case 'enter':
         if (value && value.length > 0) {
@@ -399,9 +401,12 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         frame.width = 200;
         frame.height = recordArray.get('length') * 30;
         SC.app.addSurface(autocomplete);
+
+        this._hm_value = SC.activeEditor.get('value');
         break;
       case 'exit':
         SC.app.removeSurface(autocomplete);
+        this._hm_value = null;
         break;
       case 'chooseRecord':
         rec = evt.arg1;
