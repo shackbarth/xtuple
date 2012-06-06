@@ -48,10 +48,42 @@
       }
     },
     {
+      "name": "incidentStatus",
+      "attr": {
+        "type": "String",
+        "column": "incdt_status"
+      }
+    },
+    {
+      "name": "category",
+      "toOne": {
+        "type": "IncidentCategory",
+        "column": "incdt_incdtcat_id",
+        "isRequired": true
+      }
+    },
+    {
       "name": "account",
       "toOne": { 
+        "isNested": true,
         "type": "AccountInfo",
         "column": "incdt_crmacct_id"
+      }
+    },
+    {
+      "name": "contact",
+      "toOne": {
+        "isNested": true,
+        "type": "ContactInfo",
+        "column": "incdt_cntct_id",
+        "isRequired": true
+      }
+    },
+    {
+      "name": "priority",
+      "toOne": {
+        "type": "Priority",
+        "column": "incdt_incdtpriority_id"
       }
     },
     {
@@ -70,6 +102,13 @@
         "type": "UserAccountInfo",
         "column": "incdt_assigned_username",
         "inverse": "username"
+      }
+    },
+    {
+      "name": "updated",
+      "attr": {
+        "type": "Date",
+        "column": "incdt_updated"
       }
     }
   ],

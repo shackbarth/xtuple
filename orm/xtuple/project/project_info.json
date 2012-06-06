@@ -72,6 +72,23 @@
         "column": "prj_owner_username",
         "inverse": "username"
       }
+    },
+    {
+      "name": "account",
+      "toOne": {
+        "isNested": true,
+        "type": "AccountInfo",
+        "column": "prj_crmacct_id"
+      }
+    },
+    {
+      "name": "tasks",
+      "toMany": {
+        "isNested": true,
+        "type": "ProjectTask",
+        "column": "prj_id",
+        "inverse": "project"
+      }
     }
   ],
   "isSystem": true

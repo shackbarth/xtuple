@@ -57,17 +57,45 @@
     {
       "name": "account",
       "toOne": { 
+        "isNested": true,
         "type": "AccountInfo",
         "column": "ophead_crmacct_id"
       }
     },
     {
-      "name": "owner",
+      "name": "contact",
       "toOne": {
         "isNested": true,
-        "type": "UserAccountInfo",
-        "column": "ophead_owner_username",
-        "inverse": "username"
+        "type": "ContactInfo",
+        "column": "ophead_cntct_id"
+      }
+    },
+    {
+      "name": "targetClose",
+      "attr": {
+        "type": "Date",
+        "column": "ophead_target_date"
+      }
+    },
+    {
+      "name": "opportunityStage",
+      "toOne": {
+        "type": "OpportunityStage",
+        "column": "ophead_opstage_id"
+      }
+    },
+    {
+      "name": "opportunityType",
+      "toOne": {
+        "type": "OpportunityType",
+        "column": "ophead_optype_id"
+      }
+    },
+    {
+      "name": "priority",
+      "toOne": {
+        "type": "Priority",
+        "column": "ophead_priority_id"
       }
     },
     {
