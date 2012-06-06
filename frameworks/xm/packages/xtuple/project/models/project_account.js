@@ -10,9 +10,9 @@ sc_require('mixins/_project_account');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.DocumentAssignment
 */
-XM.ProjectAccount = XT.Record.extend(XM._ProjectAccount,
+XM.ProjectAccount = XM.DocumentAssignment.extend(XM._ProjectAccount,
   /** @scope XM.ProjectAccount.prototype */ {
 
   // .................................................

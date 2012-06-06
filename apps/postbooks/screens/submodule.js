@@ -117,8 +117,11 @@ Postbooks.LoadSubmodule = function(className, backButtonTitle) {
           title = ("_"+key).loc();
 
       if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
+        // document assignemnts handled differently
+        if (SC.objectForPropertyPath(property.type).prototype.isDocumentAssignment) continue;
+      
         var arrayKlass = property.get('typeClass');
-
+      
         var arrayController = SC.ArrayController.create({
           contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
         });
