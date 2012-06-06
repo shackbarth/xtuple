@@ -10,9 +10,9 @@ sc_require('mixins/_to_do_opportunity');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.DocumentAssignment
 */
-XM.ToDoOpportunity = XT.Record.extend(XM._ToDoOpportunity,
+XM.ToDoOpportunity = XM.DocumentAssignment.extend(XM._ToDoOpportunity,
   /** @scope XM.ToDoOpportunity.prototype */ {
 
   // .................................................

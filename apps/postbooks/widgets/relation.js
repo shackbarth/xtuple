@@ -1,7 +1,6 @@
 // ==========================================================================
-// Project:   Blossom - Modern, Cross-Platform Application Framework
-// Copyleft: ©2012 Fohr Motion Picture Studios. All lefts reserved.
-// License:   Licensed under the GPLv3 license (see BLOSSOM-LICENSE).
+// Project:   xTuple Postbooks - Business Management System Framework
+// Copyright: ©2012 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
 /*globals Postbooks sc_assert formatter linebreak XT XM */
 
@@ -34,6 +33,8 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   __traceMouseEvents__: false,
 
   recordType: null,
+  displayKey: 'number',
+  searchKey: 'number',
   store: null,
   recordArray: [],
 
@@ -66,16 +67,23 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   },
 
   arrayController: null,
+  
+  renderRow: Postbooks.DefaultRecordListRenderRow,
 
   init: function() {
     arguments.callee.base.apply(this, arguments);
+    // if recordType is passed as string, find object
+    var recordType = this.get('recordType');
+    if (SC.typeOf(recordType)===SC.T_STRING) {
+      this.set('recordType', SC.objectForPropertyPath(recordType));
+    }
     var isEnabled = this.get('isEnabled');
     this.__behaviorKey__ = isEnabled? 'Enabled' : 'Disabled';
 
     sc_assert(this.get('recordType'));
     sc_assert(this.get('store'));
 
-    var that = this, menuView;
+    var that = this, menuView, renderRow = this.get('renderRow');
     menuView = this._menuView = Postbooks.RelationWidgetMenuView.create({
       value: null,
 
@@ -115,7 +123,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
       rowHeight: 30,
       contentBinding: SC.Binding.from('arrangedObjects', arrayController).multiple().oneWay(),
       selectionBinding: SC.Binding.from('selection', arrayController).oneWay(),
-      renderRow: Postbooks.DefaultRecordListRenderRow,
+      renderRow: renderRow,
       mouseDown: function(evt) {
         arguments.callee.base.apply(this, arguments);
         var rec = this.get('content').objectAt(this._rowIndex);
@@ -657,8 +665,6 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   displayProperties: 'value'.w(),
 
   font: "10pt Helvetica, sans",
-  color: base03,
-  backgroundColor: base3,
   textBaseline: 'top',
   textAlign: 'left',
   tolerance: 10,

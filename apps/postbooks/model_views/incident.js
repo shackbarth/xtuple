@@ -224,11 +224,9 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
 
-  // crm account 
+  // account 
   key = 'account';
-  console.log('crm account type: %@'.fmt(proto[key].type));
   property = proto[key];
-  typeClass = property.get('typeClass');
   label = SC.LabelLayer.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
     backgroundColor: 'transparent',
@@ -236,33 +234,22 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     textAlign: 'right',
     value: "_account".loc() + ':'
   });
-  objectKlass = property.get('typeClass');
-  objectController = SC.ObjectController.create({
-    contentBinding: SC.Binding.from(key, controller).single().oneWay()
-  });
-  objectKey = 'number';
-  // widget = SC.TextFieldWidget.create({
-  //   layout: { top: y, left: left, height: 22, right: right },
-  //   valueBinding: SC.Binding.from(objectKey, objectController)
-  // });
+  typeClass = property.get('typeClass');
   widget = Postbooks.RelationWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
     recordType: typeClass,
     store: controller.getPath('content.store'),
-    displayKey: objectKey,
     controller: controller,
     controllerKey: key,
-    searchKey: 'name',
+    isEnabledBinding: SC.Binding.from('isEditable', controller),
     valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
-  objectKlass = property.get('typeClass');
   objectController = SC.ObjectController.create({
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
-  objectKey = 'name';
   label = SC.LabelLayer.create({
     layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
@@ -270,7 +257,7 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     backgroundColor: 'transparent',
     color: 'white',
     textAlign: 'left',
-    valueBinding: SC.Binding.from(objectKey, objectController)
+    valueBinding: SC.Binding.from('name', objectController)
   });
   y += 12 + K.SPACING;
   layers.pushObject(label);
