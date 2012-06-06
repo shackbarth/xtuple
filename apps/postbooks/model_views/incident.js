@@ -234,10 +234,6 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
     textAlign: 'right',
     value: "_account".loc() + ':'
   });
-  objectKlass = property.get('typeClass');
-  objectController = SC.ObjectController.create({
-    contentBinding: SC.Binding.from(key, controller).single().oneWay()
-  });
   typeClass = property.get('typeClass');
   widget = Postbooks.RelationWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
@@ -251,6 +247,9 @@ Postbooks.Incident.CreateOverviewTileView = function(controller) {
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
+  objectController = SC.ObjectController.create({
+    contentBinding: SC.Binding.from(key, controller).single().oneWay()
+  });
   label = SC.LabelLayer.create({
     layout: { top: y, left: left+5, height: 18, right: right },
     font: "8pt "+K.TYPEFACE,
