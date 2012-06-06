@@ -137,23 +137,18 @@ Postbooks.Incident.Tiles = function(controller, isRoot) {
   tiles.push(Postbooks.CreateNotesTileView(controller));
   
   //to-many relationships
-  for (var key in proto) {
-    if (key === 'guid') continue;
-    if (key === 'type') continue;
-    if (key === 'dataState') continue;
+  var toMany = 'characteristics toDoRelations history comments alarms'.w();
+  for (var i=0; i < toMany.length; i++) {
+    var key = toMany[i],
+        property = proto[key],
+        title = ("_"+key).loc(),
+        arrayKlass = property.get('typeClass');
 
-    var property = proto[key],
-        title = ("_"+key).loc();
+    var arrayController = SC.ArrayController.create({
+      contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+    });
 
-    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-      var arrayKlass = property.get('typeClass');
-
-      var arrayController = SC.ArrayController.create({
-        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
-      });
-
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title, controller, arrayController));
-    }
+    tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title, controller, arrayController));
   }
 
   return tiles;

@@ -116,35 +116,6 @@ Postbooks.LoadModule = function(name, classes, state) {
 
   listController.selectObject(list[startIndex]);
 
-  (function loadFirstItem(item) {
-    if (!item.isLoaded) {
-      var className = item.className,
-          baseClass = XM[className];
-
-      sc_assert(baseClass);
-      sc_assert(baseClass.isClass);
-      sc_assert(baseClass.subclassOf(XT.Record));
-
-      var aryController = Postbooks[className+'ListController'];
-
-      sc_assert(aryController);
-      sc_assert(aryController.kindOf(SC.ArrayController));
-      sc_assert(aryController.get('content') === null);
-
-      var orderByKey;
-      if (baseClass.prototype.number) orderByKey = 'number';
-      else if (baseClass.prototype.code) orderByKey = 'code';
-      else if (baseClass.prototype.name) orderByKey = 'name';
-      else orderByKey = 'guid';
-
-      var query = SC.Query.remote(baseClass, { store: Postbooks.store, orderBy: orderByKey });
-      var content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
-
-      aryController.set('content', content);
-      item.isLoaded = true;
-    }
-  })(list[startIndex]);
-
   var detail = SC.ContainerSurface.create({
     layout: { top: 44, left: 320, right: 0, bottom: 0 },
     orderInTransition:  null,
@@ -181,7 +152,7 @@ Postbooks.LoadModule = function(name, classes, state) {
 
       if (!item.isLoaded) {
         var className = item.className,
-            baseClass = XM[className];
+            baseClass = XM[className +'Info'] ? XM[className+'Info'] : XM[className];
 
         sc_assert(baseClass);
         sc_assert(baseClass.isClass);

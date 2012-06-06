@@ -61,9 +61,43 @@ XM._IncidentInfo = {
   description: SC.Record.attr(String),
 
   /**
+    @type String
+  */
+  incidentStatus: SC.Record.attr(String),
+
+  /**
+    @type XM.IncidentCategory
+  */
+  category: SC.Record.toOne('XM.IncidentCategory', {
+    isRequired: true
+  }),
+
+  /**
     @type XM.AccountInfo
   */
-  account: SC.Record.toOne('XM.AccountInfo'),
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: true
+  }),
+
+  /**
+    @type XM.ContactInfo
+  */
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: true,
+    isRequired: true
+  }),
+
+  /**
+    @type XM.IncidentCategory
+  */
+  category: SC.Record.toOne('XM.IncidentCategory', {
+    isRequired: true
+  }),
+
+  /**
+    @type XM.Priority
+  */
+  priority: SC.Record.toOne('XM.Priority'),
 
   /**
     @type XM.UserAccountInfo
@@ -77,6 +111,14 @@ XM._IncidentInfo = {
   */
   assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true
+  }),
+
+  /**
+    @type Date
+  */
+  updated: SC.Record.attr(XT.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false
   })
 
 };

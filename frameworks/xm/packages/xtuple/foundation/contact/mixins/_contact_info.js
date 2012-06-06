@@ -55,9 +55,14 @@ XM._ContactInfo = {
   name: SC.Record.attr(String),
 
   /**
-    @type Boolean
+    @type String
   */
-  isActive: SC.Record.attr(Boolean),
+  firstName: SC.Record.attr(String),
+
+  /**
+    @type String
+  */
+  lastName: SC.Record.attr(String),
 
   /**
     @type String

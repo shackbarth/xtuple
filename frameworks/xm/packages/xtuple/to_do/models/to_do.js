@@ -37,36 +37,6 @@ XM.ToDo = XT.Record.extend(XM._ToDo, XM.Documents,
   // .................................................
   // CALCULATED PROPERTIES
   //
-  
-  /**
-    Returns the status as a localized string.
-    
-    @type String
-  */
-  toDoStatusString: function() {
-    var toDoStatus = this.get('toDoStatus'),
-        K = XM.ToDo, ret;
-    switch (toDoStatus) {
-      case K.PENDING:
-        ret = "_pending".loc();
-        break;
-      case K.DEFERRED:
-        ret = "_deferred".loc();
-        break;
-      case K.NEITHER:
-        ret = "_neither".loc();
-        break;
-      case K.IN_PROCESS:
-        ret = "_inProcess".loc();
-        break;
-      case K.COMPLETED:
-        ret = "_completed".loc();
-        break;
-      default:
-        ret = "_error".loc();
-    }
-    return ret;
-  }.property('toDoStatus').cacheable(),
 
   //..................................................
   // METHODS

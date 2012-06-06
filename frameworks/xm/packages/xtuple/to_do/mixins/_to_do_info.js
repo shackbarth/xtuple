@@ -16,7 +16,7 @@ XM._ToDoInfo = {
   
   className: 'XM.ToDoInfo',
 
-  
+  nestedRecordNamespace: XM,
 
   // .................................................
   // PRIVILEGES
@@ -55,7 +55,9 @@ XM._ToDoInfo = {
   /**
     @type XM.ContactInfo
   */
-  contact: SC.Record.toOne('XM.ContactInfo'),
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: true
+  }),
 
   /**
     @type String
@@ -88,6 +90,8 @@ XM._ToDoInfo = {
   /**
     @type XM.UserAccountInfo
   */
-  assignedTo: SC.Record.toOne('XM.UserAccountInfo')
+  assignedTo: SC.Record.toOne('XM.UserAccountInfo', {
+    isNested: true
+  })
 
 };
