@@ -99,6 +99,13 @@ Postbooks.LoadRelationSearch = function(className, backButtonTitle, instance, se
     rowHeight: Postbooks.HEIGHT_2_ROW,
     hasHorizontalScroller: false,
 
+    mouseUp: function(evt) {
+      if (evt.clickCount >= 2) {
+        Postbooks.statechart.sendAction('popContext');
+      }
+      return arguments.callee.base.apply(this, arguments);
+    },
+
     contentBinding: SC.Binding.from('arrangedObjects', arrayController),
     selectionBinding: SC.Binding.from('selection', arrayController),
     renderRow: Postbooks[className] && Postbooks[className].RenderRecordListRow? 
