@@ -382,7 +382,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           widget = Postbooks.DateWidget.create({
             layout: { top: y, left: left, height: 22, right: right },
             isEnabledBinding: SC.Binding.from('isEditable', controller),
-            dateBinding: SC.Binding.from(key, controller)
+            valueBinding: SC.Binding.from(key, controller)
           });
           y += 24 + K.SPACING;
         } else if (typeClass === Boolean) {
