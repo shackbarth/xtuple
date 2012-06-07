@@ -209,7 +209,7 @@ Postbooks.LoadModule = function(name, classes, state) {
       }
 
       if (item.isFiltered) {
-        alert("Don't know how to handle a filtered list.");
+        detail.set('contentSurface', item.get('filteredSurface'));
       } else {
         detail.set('contentSurface', item.list);
       }
