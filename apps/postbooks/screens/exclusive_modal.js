@@ -97,9 +97,11 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
 
     willRenderLayers: function(ctx) {
       var content = this.get('content');
+      var w, h;
 
       if (content && content.get('length') === 0) {
-        var w = ctx.width, h = ctx.height;
+        w = ctx.width, 
+        h = ctx.height;
 
         var text = 'No records.',
             status = content? content.get('status') : null;
@@ -126,7 +128,8 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
       }
     },
 
-    renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
+    renderRow: Postbooks[className] && Postbooks[className].RenderRecordListRow ? 
+               Postbooks[className].RenderRecordListRow : Postbooks.RenderRecordListRow
   });
 
   var sel = SC.SelectionSet.create();
