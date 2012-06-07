@@ -338,12 +338,22 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title
           });
-          widget = Postbooks.MoneyWidget.create({
-            layout: { top: y, left: left, height: 22, right: right },
-            isEnabledBinding: SC.Binding.from('isEditable', controller),
-            valueBinding: SC.Binding.from(key, controller),
-            moneyBinding: SC.Binding.from(key+'Money', controller)
-          });
+          if (key+'Money' in proto) {
+            widget = Postbooks.MoneyWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
+              valueBinding: SC.Binding.from(key, controller),
+              moneyBinding: SC.Binding.from(key+'Money', controller)
+            });
+          } else {
+            widget = SC.TextFieldWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              isEnabled: false,
+              valueBinding: SC.Binding.transform(function(val) {
+                return val.toString();
+              }).from(key, controller)
+            });
+          }
           y += 24 + K.SPACING;
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
