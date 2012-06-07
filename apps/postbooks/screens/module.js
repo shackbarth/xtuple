@@ -142,6 +142,7 @@ Postbooks.LoadModule = function(name, classes, state) {
       var content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
 
       aryController.set('content', content);
+      item.allRecords = content;
       item.isLoaded = true;
     }
   })(list[startIndex]);
@@ -203,8 +204,8 @@ Postbooks.LoadModule = function(name, classes, state) {
         var query = SC.Query.remote(baseClass, { store: Postbooks.store, orderBy: orderByKey });
         var content = SC.IRecordArray.create({ fetchAmount: 50, offsetKey: 'rowOffset', limitKey: 'rowLimit', query: query });
 
-
         aryController.set('content', content);
+        item.allRecords = content;
         item.isLoaded = true;
       }
 

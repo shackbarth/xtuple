@@ -93,6 +93,15 @@ Postbooks.MODULE = SC.State.design({
         var isFiltered = firstObject.get('isFiltered'),
             detail = this.parentState.listContainer;
 
+        var className = firstObject.get('className');
+        sc_assert(className);
+        sc_assert(typeof className === 'string');
+
+        var baseClass = XM[className];
+        sc_assert(baseClass);
+        sc_assert(baseClass.isClass);
+        sc_assert(baseClass.subclassOf(XT.Record));
+
         if (isFiltered) {
           var filteredSurface = firstObject.get('filteredSurface') || null;
 
@@ -111,15 +120,6 @@ Postbooks.MODULE = SC.State.design({
               }
             });
             firstObject.set('filteredSurface', filteredSurface);
-
-            var className = firstObject.get('className');
-            sc_assert(className);
-            sc_assert(typeof className === 'string');
-
-            var baseClass = XM[className];
-            sc_assert(baseClass);
-            sc_assert(baseClass.isClass);
-            sc_assert(baseClass.subclassOf(XT.Record));
 
             var filters = Postbooks[className] && Postbooks[className].CreateFilters ? Postbooks[className].CreateFilters() : [],
                 listController;
@@ -260,7 +260,12 @@ Postbooks.MODULE = SC.State.design({
 
           detail.set('contentSurface', filteredSurface);
         } else {
-          // Need to remove it from it's parent surface?
+          var aryController = Postbooks[className+'ListController'];
+
+          sc_assert(aryController);
+          sc_assert(aryController.kindOf(SC.ArrayController));
+          aryController.set('content', firstObject.allRecords);
+
           detail.set('contentSurface', firstObject.list);
         }
       }
