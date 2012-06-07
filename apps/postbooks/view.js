@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM XT sc_assert */
+/*globals Postbooks XM XT sc_assert Money */
 
 sc_require('views/carousel');
 sc_require('views/tile_view');
@@ -207,7 +207,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               store: controller.getPath('content.store'),
               isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller),
-              searchKey: 'code',
+              searchKey: 'code'
             });
           } else {
             widget = SC.TextFieldWidget.create({
@@ -226,7 +226,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             value: title
           });
           if (typeClass === XM.IncidentCategory) {
-            widget = Postbooks.ToOneSelectWidget.create({
+            widget = Postbooks.EditableToOneSelectWidget.create({
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
