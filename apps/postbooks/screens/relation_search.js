@@ -21,8 +21,8 @@ Postbooks.LoadRelationSearch = function(className, backButtonTitle, instance, se
     title: ("_" + className.camelize()).loc(),
     backButtonTitle: backButtonTitle,
     backButtonAction: 'popContext',
-    cancelIsVisible: false,
-    applyIsVisible: false,
+    firstButtonIsVisible: false,
+    secondButtonIsVisible: false,
     store: XT.store,
     callback: function() {
       if (callback) callback(controller);
@@ -98,6 +98,13 @@ Postbooks.LoadRelationSearch = function(className, backButtonTitle, instance, se
     layout: { top: 320, left: 0, right: 0, bottom: 0 },
     rowHeight: Postbooks.HEIGHT_2_ROW,
     hasHorizontalScroller: false,
+
+    mouseUp: function(evt) {
+      if (evt.clickCount >= 2) {
+        Postbooks.statechart.sendAction('popContext');
+      }
+      return arguments.callee.base.apply(this, arguments);
+    },
 
     contentBinding: SC.Binding.from('arrangedObjects', arrayController),
     selectionBinding: SC.Binding.from('selection', arrayController),

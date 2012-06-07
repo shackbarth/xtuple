@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM sc_assert */
+/*globals Postbooks XM XT base1 sc_assert */
 
 Postbooks.Invoice = {};
 Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
@@ -31,7 +31,7 @@ Postbooks.Invoice.RenderRecordListRow = function(context, width, height, index, 
   var numberWidth = context.measureText(val).width;
 
   // Invoice Date
-  dt = object.get('invoiceDate');
+  var dt = object.get('invoiceDate');
   if (dt) {
     val = dt.toLocaleDateString();
     var isDue = !object.get('isPosted') &&
@@ -107,7 +107,7 @@ Postbooks.Invoice.Tiles = function(controller, isRoot) {
   
   var klass = XM.Invoice,
       tiles = [],
-      proto = klass.prototype;
+      proto = klass.prototype,
       properties = [];
 
   // Overview
@@ -137,6 +137,8 @@ Postbooks.Invoice.Tiles = function(controller, isRoot) {
 
     if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
       var arrayKlass = property.get('typeClass');
+
+      if (arrayKlass === XM.InvoiceLine) continue;
 
       var arrayController = SC.ArrayController.create({
         contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
@@ -376,25 +378,316 @@ Postbooks.Invoice.CreateShiptoTileView = function(controller) {
   return view;
 };
 
-Postbooks.Invoice.CreateLinesTileView = function(controller) {
-  console.log('Postbooks.Invoice.CreateTotalsTileView(', controller, ')');
+Postbooks.Invoice.CreateLinesTileView = function(objectController) {
+  console.log('Postbooks.CreateLinesTileView()');
+  var klass = XM.InvoiceLine,
+      title = "Lines";
 
-  var K = Postbooks.TileView,
-      view = Postbooks.TileView.create({ 
-        title: "_lines".loc(), 
-        size: K.HORIZONTAL_TILE 
-      }),
-      layers = view.get('layers'),
-      y = 42,
-      proto = XM.Invoice.prototype,
-      K = Postbooks,
-      key, property,
-      left = 120, right = 12,
-      label = null, widget = null;
- 
+  // See if we have an override.
+  var className = klass.prototype.className;
+  className = className.slice(className.indexOf('.') + 1); // drop name space
 
-  return view;
+  var controller = SC.ArrayController.create({
+    contentBinding: SC.Binding.from('lines', objectController).multiple().oneWay()
+  });
+
+  var layoutSurface = SC.LayoutSurface.create({
+
+    size: Postbooks.TileView.HORIZONTAL_TILE,
+
+    didCreateElement: function(el) {
+      arguments.callee.base.apply(this, arguments);
+      var style = el.style;
+      style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+      style.backgroundPosition = 'left top';
+      style.backgroundRepeat = 'repeat';
+
+      var kind, size = this.get('size'); 
+      if (document.getCSSCanvasContext && size) {
+        // Figure out what size we have.
+        'QUARTER_TILE HORIZONTAL_TILE VERTICAL_TILE FULL_TILE'.w().forEach(function(type) {
+          var spec = Postbooks.TileView[type];
+          if (spec.width === size.width && spec.height === size.height) {
+            kind = type;
+          }
+        });
+      }
+
+      if (kind) {
+        style.backgroundImage =  '-webkit-canvas('+kind.toLowerCase().dasherize() + '), ' + Postbooks.createDataUrlForSprite('tile-texture');
+        style.backgroundPosition = 'left top, left top';
+        style.backgroundRepeat = 'no-repeat, repeat';
+      } else {
+        style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+        style.backgroundPosition = 'left top';
+        style.backgroundRepeat = 'repeat';
+      }
+    }
+
+  });
+  layoutSurface.set('frame', SC.MakeRect(0, 42, 320, 320));
+  // layoutSurface.set('backgroundColor', "white");
+
+  var topbar = SC.View.create({
+    layout: { top: 3, left: 0, right: 0, height: 32 },
+
+    _sc_backgroundColor: 'transparent',
+    clearBackground: true,
+
+    willRenderLayers: function(context) { 
+      var w = context.width, h = context.height;
+
+      // title text
+      var K = Postbooks;
+      context.font = "12pt "+K.TYPEFACE;
+      context.fillStyle = 'white';
+      context.textAlign = 'left';
+      context.textBaseline = 'middle';
+
+      if (title) context.fillText(title, 18, 19);
+    }
+  });
+
+  topbar.get('layers').pushObject(Postbooks.Button.create({
+    layout: { top: 6, right: 12, height: 22, width: 60 },
+    name: '_new'.loc(),
+    target: Postbooks.statechart,
+    action: 'newRecord',
+    objectController: objectController,
+    listController: controller,
+    klass: klass,
+    store: objectController.get('content').get('store')
+  }));
+
+  // Nope, generate the default tile view on the fly.
+  var list = Postbooks.ITileListView.create({
+    layout: { top: 50, left: 12, right: 12, bottom: 16 },
+
+    rowHeight: klass.ListRowHeight !== undefined? klass.ListRowHeight : 60,
+    hasHorizontalScroller: false,
+
+    contentBinding: SC.Binding.from('arrangedObjects', controller).oneWay(),
+    selectionBinding: SC.Binding.from('selection', controller),
+
+    baseClass: klass,
+
+    didCreateElement: function(el) {
+      arguments.callee.base.apply(this, arguments);
+      var style = el.style;
+      style.backgroundColor = 'clear'; // 'rgba(70,70,70,0.5)';
+      style.color = 'black';
+      style.padding = '6px';
+      style.borderStyle = 'solid ';
+      style.borderWidth = '1px';
+      // style.borderRadius = '5px'; // doesn't work properly in Chrome; avoid for now
+      style.borderColor = this.get('isEnabled') ? 'rgb(252,188,126)' : 'grey'; // this.get('borderColor');
+      style.outline = 'none';
+      style.boxShadow = 'none';
+    },
+
+    action: function(object, index) {
+      var that = this;
+      var instance = this.get('content').objectAt(index);
+      if (instance) {
+        Postbooks.LoadExclusiveModal(klass.prototype.className.slice(3), "Back", instance, objectController, controller);
+      }
+    },
+
+    willRenderLayers: function(ctx) {
+      var content = this.get('content');
+
+      if (content && content.get('length') === 0) {
+        var w = ctx.width, h = ctx.height;
+
+        var text = 'No records.',
+            status = content? content.get('status') : null;
+
+        if (status && status === SC.Record.BUSY_LOADING) {
+          text = "_loading".loc();
+        }
+
+        // Clear background.
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw view name.
+        ctx.fillStyle = 'rgba(70,70,70,0.5)';
+        
+        var K = Postbooks;
+        ctx.font = "11pt "+K.TYPEFACE;
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "center";
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fillText(text, w/2, h/2);
+      } else {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, w, h);
+      }
+    },
+
+    createRenderLayerTree: Postbooks.InvoiceLine.CreateRecordListLayerTree
+
+  });
+
+  layoutSurface.get('subsurfaces').pushObjects([topbar, list]);
+
+  return layoutSurface;
 };
+
+
+// Postbooks.Invoice.CreateLinesTileView = function(objectController) {
+//   console.log('Postbooks.CreateLinesTileView()');
+//   var klass = XM.InvoiceLine,
+//       title = "Lines";
+// 
+//   // See if we have an override.
+//   var className = klass.prototype.className;
+//   className = className.slice(className.indexOf('.') + 1); // drop name space
+// 
+//   var controller = SC.ArrayController.create({
+//     contentBinding: SC.Binding.from('lines', objectController).multiple().oneWay()
+//   });
+// 
+//   var layoutSurface = SC.LayoutSurface.create({
+// 
+//     size: Postbooks.TileView.HORIZONTAL_TILE,
+// 
+//     didCreateElement: function(el) {
+//       arguments.callee.base.apply(this, arguments);
+//       var style = el.style;
+//       style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+//       style.backgroundPosition = 'left top';
+//       style.backgroundRepeat = 'repeat';
+// 
+//       var kind, size = this.get('size'); 
+//       if (document.getCSSCanvasContext && size) {
+//         // Figure out what size we have.
+//         'QUARTER_TILE HORIZONTAL_TILE VERTICAL_TILE FULL_TILE'.w().forEach(function(type) {
+//           var spec = Postbooks.TileView[type];
+//           if (spec.width === size.width && spec.height === size.height) {
+//             kind = type;
+//           }
+//         });
+//       }
+// 
+//       if (kind) {
+//         style.backgroundImage =  '-webkit-canvas('+kind.toLowerCase().dasherize() + '), ' + Postbooks.createDataUrlForSprite('tile-texture');
+//         style.backgroundPosition = 'left top, left top';
+//         style.backgroundRepeat = 'no-repeat, repeat';
+//       } else {
+//         style.backgroundImage =  Postbooks.createDataUrlForSprite('tile-texture');
+//         style.backgroundPosition = 'left top';
+//         style.backgroundRepeat = 'repeat';
+//       }
+//     }
+// 
+//   });
+//   layoutSurface.set('frame', SC.MakeRect(0, 42, 320, 320));
+//   // layoutSurface.set('backgroundColor', "white");
+// 
+//   var topbar = SC.View.create({
+//     layout: { top: 3, left: 0, right: 0, height: 32 },
+// 
+//     _sc_backgroundColor: 'transparent',
+//     clearBackground: true,
+// 
+//     willRenderLayers: function(context) { 
+//       var w = context.width, h = context.height;
+// 
+//       // title text
+//       var K = Postbooks;
+//       context.font = "12pt "+K.TYPEFACE;
+//       context.fillStyle = 'white';
+//       context.textAlign = 'left';
+//       context.textBaseline = 'middle';
+// 
+//       if (title) context.fillText(title, 18, 19);
+//     }
+//   });
+// 
+//   topbar.get('layers').pushObject(Postbooks.Button.create({
+//     layout: { top: 6, right: 12, height: 22, width: 60 },
+//     name: '_new'.loc(),
+//     target: Postbooks.statechart,
+//     action: 'newRecord',
+//     objectController: objectController,
+//     listController: controller,
+//     klass: klass,
+//     store: objectController.get('content').get('store')
+//   }));
+// 
+//   // Nope, generate the default tile view on the fly.
+//   var list = Postbooks.TileListView.create({
+//     layout: { top: 50, left: 12, right: 12, bottom: 16 },
+// 
+//     rowHeight: klass.ListRowHeight !== undefined? klass.ListRowHeight : 60,
+//     hasHorizontalScroller: false,
+// 
+//     contentBinding: SC.Binding.from('arrangedObjects', controller).oneWay(),
+//     selectionBinding: SC.Binding.from('selection', controller),
+// 
+//     baseClass: klass,
+// 
+//     didCreateElement: function(el) {
+//       arguments.callee.base.apply(this, arguments);
+//       var style = el.style;
+//       style.backgroundColor = 'clear'; // 'rgba(70,70,70,0.5)';
+//       style.color = 'black';
+//       style.padding = '6px';
+//       style.borderStyle = 'solid ';
+//       style.borderWidth = '1px';
+//       // style.borderRadius = '5px'; // doesn't work properly in Chrome; avoid for now
+//       style.borderColor = this.get('isEnabled') ? 'rgb(252,188,126)' : 'grey'; // this.get('borderColor');
+//       style.outline = 'none';
+//       style.boxShadow = 'none';
+//     },
+// 
+//     action: function(object, index) {
+//       var that = this;
+//       var instance = this.get('content').objectAt(index);
+//       if (instance) {
+//         Postbooks.LoadExclusiveModal(klass.prototype.className.slice(3), "Back", instance, objectController, controller);
+//       }
+//     },
+// 
+//     willRenderLayers: function(ctx) {
+//       var content = this.get('content');
+// 
+//       if (content && content.get('length') === 0) {
+//         var w = ctx.width, h = ctx.height;
+// 
+//         var text = 'No records.',
+//             status = content? content.get('status') : null;
+// 
+//         if (status && status === SC.Record.BUSY_LOADING) {
+//           text = "_loading".loc();
+//         }
+// 
+//         // Clear background.
+//         ctx.clearRect(0, 0, w, h);
+// 
+//         // Draw view name.
+//         ctx.fillStyle = 'rgba(70,70,70,0.5)';
+//         
+//         var K = Postbooks;
+//         ctx.font = "11pt "+K.TYPEFACE;
+//         ctx.textBaseline = "middle";
+//         ctx.textAlign = "center";
+//         ctx.fillStyle = 'rgba(255,255,255,0.5)';
+//         ctx.fillText(text, w/2, h/2);
+//       } else {
+//         ctx.fillStyle = 'white';
+//         ctx.fillRect(0, 0, w, h);
+//       }
+//     },
+// 
+//     renderRow: Postbooks.InvoiceLine.RenderRecordListRow
+// 
+//   });
+// 
+//   layoutSurface.get('subsurfaces').pushObjects([topbar, list]);
+// 
+//   return layoutSurface;
+// };
 
 
 Postbooks.Invoice.CreateTotalsTileView = function(controller) {
@@ -408,11 +701,12 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
       layers = view.get('layers'),
       y = 42,
       proto = XM.Invoice.prototype,
-      K = Postbooks,
       key, property,
       left = 120, right = 12,
       label = null, widget = null;
- 
+
+  K = Postbooks;
+
   // Credits
   key = 'allocatedCredit';
   property = proto[key];
@@ -518,4 +812,3 @@ Postbooks.Invoice.CreateTotalsTileView = function(controller) {
 
   return view;
 };
-

@@ -24,14 +24,14 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.LoadRelation = function(className, backButtonTitle, instance, callback) {
+Postbooks.LoadRelation = function(className, backButtonTitle, instance, showButtons, callback) {
   console.log('Postbooks.LoadRelation(', className, backButtonTitle, ')');
   var context = SC.Object.create({
     title: ("_" + className.camelize()).loc(),
     backButtonTitle: backButtonTitle,
     backButtonAction: 'popContext',
-    cancelIsVisible: true,
-    applyIsVisible: true,
+    firstButtonIsVisible: showButtons,
+    secondButtonIsVisible: showButtons,
     store: instance.store,
     instance: instance,
     callback: callback

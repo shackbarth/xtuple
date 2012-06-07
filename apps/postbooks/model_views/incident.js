@@ -343,3 +343,93 @@ Postbooks.Incident.CreateContactTileView = function(controller) {
   return Postbooks.CreateTileViewForClass(objectKlass, objectController, "_contact".loc());
 
 };
+
+// These are the filters to use for the master Incidents list. You can 
+// customise the UI to be as sophisticated as you need. You may use any 
+// surface instance you want. It will have its 'controller' property set to
+// an object controller proxying for the filter object.
+Postbooks.Incident.CreateFilters = function() {
+  return [{
+    title: "CRM Account",
+    isEnabled: true,
+    account: null,
+
+    surface: SC.View.create({
+      controller: null,
+      backgroundColor: 'transparent',
+      clearBackground: true,
+      layers: [Postbooks.RelationWidget.create({
+        layout: { top: 20, left: 20, height: 24, width: 200 },
+        recordType: XM.Account,
+        store: XT.store,
+        showButtonsOnOpen: false,
+        isEnabledBinding: '.surface*controller.isEnabled',
+        displayKey: 'number',
+        searchKey: 'name',
+        controllerBinding: '.surface.controller',
+        controllerKey: 'account',
+        valueBinding: '.surface*controller.account'
+      })]
+    }),
+
+    appendConditionAndParameters: function(conditions, parameters) {
+      if (!this.get('isEnabled')) return;
+      var guid = this.getPath('account.guid');
+      if (guid) {
+        conditions.push('account = {account}');
+        parameters.account = guid;
+      }
+    }
+  }, {
+    title: "Status Above",
+    isEnabled: false,
+
+    surface: SC.View.create({
+      controller: null,
+      backgroundColor: 'transparent',
+      clearBackground: true,
+      value: null,
+      layers: [Postbooks.ToOneSelectWidget.create({
+        layout: { top: 21, left: 20, width: 200, height: 22 },
+        recordType: XM.Priority,
+        store: XT.store,
+        isEnabledBinding: '.surface*controller.isEnabled',
+        valueBinding: '.surface*controller.value',
+        items: Postbooks.CRM.createPriorityRecordArray(),
+        itemTitleKey: 'name',
+        itemValueKey: null // Use item itself
+      })]
+    }),
+
+    appendConditionAndParameters: function(conditions, parameters) {
+      if (!this.get('isEnabled')) return;
+      var order = this.getPath('value.order');
+      if (order !== undefined) {
+        conditions.push('priority >= {priority}');
+        parameters.priority = order;
+      }
+    }
+  }].map(function(hash) { return SC.Object.create(hash); });
+};
+
+// This returns an SC.Query instance for the provided filters and store.
+Postbooks.Incident.CreateQueryFromFiltersForStore = function(filters, store) {
+  console.log('Postbooks.Incident.CreateQueryFromFiltersForStore()');
+  var conditions = [],
+      parameters = {};
+
+  filters.invoke('appendConditionAndParameters', conditions, parameters);
+
+  conditions = conditions.join(" AND ");
+
+  console.log('conditions', conditions);
+  console.log('parameters', parameters);
+
+  return SC.Query.remote(XM.Incident, {
+    conditions: conditions, // searchKey+" BEGINS_WITH {value}",
+    parameters: parameters, // { value: value },
+    orderBy: 'description',
+
+    store: store
+  });
+};
