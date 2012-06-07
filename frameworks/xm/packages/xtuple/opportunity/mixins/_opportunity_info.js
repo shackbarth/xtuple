@@ -67,14 +67,39 @@ XM._OpportunityInfo = {
   /**
     @type XM.AccountInfo
   */
-  account: SC.Record.toOne('XM.AccountInfo'),
-
-  /**
-    @type XM.UserAccountInfo
-  */
-  owner: SC.Record.toOne('XM.UserAccountInfo', {
+  account: SC.Record.toOne('XM.AccountInfo', {
     isNested: true
   }),
+
+  /**
+    @type XM.ContactInfo
+  */
+  contact: SC.Record.toOne('XM.ContactInfo', {
+    isNested: true
+  }),
+
+  /**
+    @type Date
+  */
+  targetClose: SC.Record.attr(XT.DateTime, {
+    format: '%Y-%m-%d',
+    useIsoDate: false
+  }),
+
+  /**
+    @type XM.OpportunityStage
+  */
+  opportunityStage: SC.Record.toOne('XM.OpportunityStage'),
+
+  /**
+    @type XM.OpportunityType
+  */
+  opportunityType: SC.Record.toOne('XM.OpportunityType'),
+
+  /**
+    @type XM.Priority
+  */
+  priority: SC.Record.toOne('XM.Priority'),
 
   /**
     @type XM.UserAccountInfo

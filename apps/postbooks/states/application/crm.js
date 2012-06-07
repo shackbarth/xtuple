@@ -21,6 +21,10 @@ Postbooks.CRM = Postbooks.MODULE.design({
     XT.store.find(XM.IncidentResolution);
     XT.store.find(XM.IncidentSeverity);
     XT.store.find(XM.Honorific);
+    XT.store.find(XM.Priority);
+    XT.store.find(XM.OpportunitySource);
+    XT.store.find(XM.OpportunityStage);
+    XT.store.find(XM.OpportunityType);     
   },
 
   // ACTIONS
@@ -89,5 +93,37 @@ Postbooks.CRM.createIncidentSeverityRecordArray = function() {
   return SC.RecordArray.create({
     store: Postbooks.store,
     query: SC.Query.create({ recordType: XM.IncidentSeverity, orderBy: 'order ASC' })
+  });
+};
+
+Postbooks.CRM.createOpportunitySourceRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.OpportunitySource, orderBy: 'name ASC' })
+  });
+};
+
+Postbooks.CRM.createOpportunityStageRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.OpportunityStage, orderBy: 'name ASC' })
+  });
+};
+
+Postbooks.CRM.createOpportunityTypeRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.OpportunityType, orderBy: 'name ASC' })
+  });
+};
+
+Postbooks.CRM.createPriorityRecordArray = function() {
+  // We don't need to find, because we do this once, in CRM#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.Priority, orderBy: 'order ASC' })
   });
 };

@@ -144,8 +144,9 @@ Postbooks.Opportunity.Tiles = function(controller, isRoot) {
   tiles.push(Postbooks.Opportunity.CreateOverviewTileView(controller));
 
   // details
-  properties = ' opportunityStage priority opportunitySource opportunityType spacer startDate assignDate targetClose actualClose '.w();
-  tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+  //properties = ' opportunityStage priority opportunitySource opportunityType spacer startDate assignDate targetClose actualClose '.w();
+  //tiles.push(Postbooks.CreateTileView(klass, controller, "_details".loc(), properties));
+  tiles.push(Postbooks.Opportunity.CreateDetailTileView(controller));
 
   // contact
   tiles.push(Postbooks.Opportunity.CreateContactTileView(controller));
@@ -154,23 +155,18 @@ Postbooks.Opportunity.Tiles = function(controller, isRoot) {
   tiles.push(Postbooks.CreateNotesTileView(controller));
 
   //to-many relationships
-  for (var key in proto) {
-    if (key === 'guid') continue;
-    if (key === 'type') continue;
-    if (key === 'dataState') continue;
+  var toMany = 'characteristics toDoRelations comments'.w();
+  for (var i=0; i < toMany.length; i++) {
+    var key = toMany[i],
+        property = proto[key],
+        title = ("_"+key).loc(),
+        arrayKlass = property.get('typeClass');
 
-    var property = proto[key],
-        title = ("_"+key).loc();
+    var arrayController = SC.ArrayController.create({
+      contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
+    });
 
-    if (property && (property.isChildrenAttribute || property.isManyAttribute)) {
-      var arrayKlass = property.get('typeClass');
-
-      var arrayController = SC.ArrayController.create({
-        contentBinding: SC.Binding.from(key, controller).multiple().oneWay()
-      });
-
-      tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title, controller, arrayController));
-    }
+    tiles.push(Postbooks.CreateTileListViewForClass(arrayKlass, arrayController, title, controller, arrayController));
   }
 
   return tiles;
@@ -205,16 +201,14 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   // number
   key = 'number';
   property = proto[key];
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'transparent',
-    color: 'white',
-    textAlign: 'right',
     value: "_number".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
     layout: { top: y, left: left, height: 22, right: right },
-    valueBinding: SC.Binding.from(key, controller)
+    valueBinding: SC.Binding.from(key, controller),
+    isEnabled: false
   });
   y += 24 + K.SPACING;
   layers.pushObject(label);
@@ -223,11 +217,8 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   // name 
   key = 'name';
   property = proto[key];
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'transparent',
-    color: 'white',
-    textAlign: 'right',
     value: "_name".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
@@ -243,11 +234,8 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   key = 'account';
   console.log('crm account type: %@'.fmt(proto[key].type));
   property = proto[key];
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'transparent',
-    color: 'white',
-    textAlign: 'right',
     value: "_account".loc() + ':'
   });
   objectKlass = property.get('typeClass');
@@ -262,17 +250,11 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   y += 24 + K.SPACING;
   layers.pushObject(label);
   layers.pushObject(widget);
-  objectKlass = property.get('typeClass');
-  objectController = SC.ObjectController.create({
-    contentBinding: SC.Binding.from(key, controller).single().oneWay()
-  });
   objectKey = 'name';
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'transparent',
-    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
@@ -282,11 +264,8 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   // owner 
   key = 'owner';
   property = proto[key];
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'transparent',
-    color: 'white',
-    textAlign: 'right',
     value: "_owner".loc() + ':'
   });
   objectKlass = property.get('typeClass');
@@ -302,12 +281,10 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   layers.pushObject(label);
   layers.pushObject(widget);
   objectKey = 'propername';
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'transparent',
-    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
@@ -317,11 +294,8 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
   // assignedTo 
   key = "assignedTo";
   property = proto[key];
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
-    backgroundColor: 'transparent',
-    color: 'white',
-    textAlign: 'right',
     value: "_assignedTo".loc() + ':'
   });
   objectKlass = property.get('typeClass');
@@ -341,12 +315,10 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
   objectKey = 'propername';
-  label = SC.LabelLayer.create({
+  label = Postbooks.TileLabel.create({
     layout: { top: y, left: left+5, height: 18, width: left },
     font: "8pt "+K.TYPEFACE,
     fontStyle: "italic",
-    backgroundColor: 'transparent',
-    color: 'white',
     textAlign: 'left',
     valueBinding: SC.Binding.from(objectKey, objectController)
   });
@@ -355,6 +327,157 @@ Postbooks.Opportunity.CreateOverviewTileView = function(controller) {
 
   return view;
 };
+
+Postbooks.Opportunity.CreateDetailTileView = function(controller) {
+  console.log('Postbooks.Opportunity.CreateOverviewTileView(', controller, ')');
+
+  var view = Postbooks.TileView.create({ title: '_details'.loc() }),
+      layers = view.get('layers'),
+      y = 42,
+      proto = XM.Opportunity.prototype,
+      K = Postbooks,
+      key, property,
+      left = 120, right = 12,
+      label = null, widget = null;
+ 
+   // Opportunity Stage
+   key = 'opportunityStage';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_opportunityStage'.loc() + ':'
+   });  
+   widget = Postbooks.ToOneSelectWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     recordType: XM.OpportunityStage,
+     store: controller.getPath('content.store'),
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     valueBinding: SC.Binding.from(key, controller),
+     items: Postbooks.CRM.createOpportunityStageRecordArray()
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+   
+   // Priority
+   key = 'priority';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_priority'.loc() + ':'
+   });  
+   widget = Postbooks.ToOneSelectWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     recordType: XM.OpportunityStage,
+     store: controller.getPath('content.store'),
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     valueBinding: SC.Binding.from(key, controller),
+     items: Postbooks.CRM.createPriorityRecordArray()
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+   
+   // Opportunity Source
+   key = 'opportunitySource';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_opportunitySource'.loc() + ':'
+   });  
+   widget = Postbooks.ToOneSelectWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     recordType: XM.OpportunityStage,
+     store: controller.getPath('content.store'),
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     valueBinding: SC.Binding.from(key, controller),
+     items: Postbooks.CRM.createOpportunitySourceRecordArray()
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+   
+   // Opportunity Type
+   key = 'opportunityType';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_opportunityType'.loc() + ':'
+   });  
+   widget = Postbooks.ToOneSelectWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     recordType: XM.OpportunityStage,
+     store: controller.getPath('content.store'),
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     valueBinding: SC.Binding.from(key, controller),
+     items: Postbooks.CRM.createOpportunityTypeRecordArray()
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+   
+   // Spacer
+   y += 12;
+   
+   // Start Date
+   key = 'startDate';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_startDate'.loc() + ':'
+   });
+   widget = Postbooks.DateWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     dateBinding: SC.Binding.from(key, controller)
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+   
+   // Assign Date
+   key = 'assignDate';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_assignDate'.loc() + ':'
+   });
+   widget = Postbooks.DateWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     dateBinding: SC.Binding.from(key, controller)
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+   
+   // Target Close
+   key = 'targetClose';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_targetClose'.loc() + ':'
+   });
+   widget = Postbooks.DateWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     dateBinding: SC.Binding.from(key, controller)
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+   
+   // Actual Close
+   key = 'actualClose';
+   label = Postbooks.TileLabel.create({
+     layout: { top: y + 3, left: 12, height: 24, width: left - 18 },
+     value: '_actualClose'.loc() + ':'
+   });
+   widget = Postbooks.DateWidget.create({
+     layout: { top: y, left: left, height: 22, right: right },
+     isEnabledBinding: SC.Binding.from('isEditable', controller),
+     dateBinding: SC.Binding.from(key, controller)
+   });
+   y += 24 + K.SPACING;
+   layers.pushObject(label);
+   layers.pushObject(widget);
+
+  return view;
+};
+
 
 Postbooks.Opportunity.CreateContactTileView = function(controller) {
   console.log('Postbooks.Opportunity.CreateOverviewTileView(', controller, ')');

@@ -77,6 +77,21 @@ XM._ProjectInfo = {
   */
   owner: SC.Record.toOne('XM.UserAccountInfo', {
     isNested: true
+  }),
+
+  /**
+    @type XM.AccountInfo
+  */
+  account: SC.Record.toOne('XM.AccountInfo', {
+    isNested: true
+  }),
+
+  /**
+    @type XM.ProjectTask
+  */
+  tasks: SC.Record.toMany('XM.ProjectTask', {
+    isNested: true,
+    inverse: 'project'
   })
 
 };

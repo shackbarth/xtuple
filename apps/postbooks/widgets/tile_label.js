@@ -4,7 +4,10 @@
 // ==========================================================================
 /*globals Postbooks sc_assert XT */
 
-Postbooks.ToOneSelectWidget = SC.SelectWidget.extend({
-  itemTitleKey: 'name',
-  itemValueKey: null // Use item itself
+/* @class
+*/
+Postbooks.TileLabel = SC.LabelLayer.extend({
+  backgroundColor: 'transparent',
+  color: 'white',
+  textAlign: 'right'
 });

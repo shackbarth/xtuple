@@ -66,7 +66,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
   }
 
   // Nope, generate the default tile view on the fly.
-  var proto = klass.prototype, properties = [], commands = [];
+  var proto = klass.prototype, properties = [], commands = [], key, property;
 
   if (isOverview && isRoot) {
     commands = [{
@@ -79,8 +79,8 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
       enabled: true
     }];
 
-    for (var key in klass) {
-      var property = klass[key];
+    for (key in klass) {
+      property = klass[key];
       if (typeof property === 'function' && property.isCommand) {
         commands.push({
           title: property.commandName || "(no name)",
@@ -127,7 +127,7 @@ Postbooks.CreateTileViewForClass = function(klass, controller, title, isOverview
 Postbooks.CreateTileView = function(klass, controller, title, properties, commands, isOverview) {
   console.log('Postbooks.CreateTileView(', klass.prototype.className, controller, title, properties, commands, isOverview, ')');
 
-  if (!isOverview && title === 'Overview') debugger;
+  if (!isOverview && title === 'Overview');
 
   title = title? title : "_overview".loc();
   var view = Postbooks.TileView.create({
@@ -494,7 +494,8 @@ Postbooks.CreateListViewForClass = function(klass, controller) {
       }
     },
 
-    renderRow: klass.RenderDetailListRow? klass.RenderDetailListRow : Postbooks.DefaultListRenderRow
+    renderRow: Postbooks[className] && Postbooks[className].RenderRecordListRow ? 
+               Postbooks[className].RenderRecordListRow : Postbooks.RenderRecordListRow
 
   });
 
@@ -616,9 +617,11 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title, object
 
     willRenderLayers: function(ctx) {
       var content = this.get('content');
+      var w, h;
 
       if (content && content.get('length') === 0) {
-        var w = ctx.width, h = ctx.height;
+        w = ctx.width;
+        h = ctx.height;
 
         var text = 'No records.',
             status = content? content.get('status') : null;
@@ -645,7 +648,8 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title, object
       }
     },
 
-    renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
+    renderRow: Postbooks[className] && Postbooks[className].RenderRecordListRow? 
+               Postbooks[className].RenderRecordListRow : Postbooks.RenderRecordListRow
 
   });
 

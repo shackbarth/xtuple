@@ -110,6 +110,11 @@ Postbooks.ToDo.RenderRecordListRow = function(context, width, height, index, obj
 
 };
 
+Postbooks.ToDoInfo = {};
+Postbooks.ToDoInfo.RenderRecordListRow = function(context, width, height, index, object, isSelected) {
+  return Postbooks.ToDo.RenderRecordListRow(context, width, height, index, object, isSelected);
+};
+
 Postbooks.ToDo.Tiles = function(controller, isRoot) {
   console.log('Postbooks.ToDo.Tiles()');
   

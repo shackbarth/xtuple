@@ -10,9 +10,9 @@ sc_require('mixins/_incident_opportunity');
 /**
   @class
 
-  @extends XT.Record
+  @extends XM.DocumentAssignment
 */
-XM.IncidentOpportunity = XT.Record.extend(XM._IncidentOpportunity,
+XM.IncidentOpportunity = XM.DocumentAssignment.extend(XM._IncidentOpportunity,
   /** @scope XM.IncidentOpportunity.prototype */ {
 
   // .................................................
