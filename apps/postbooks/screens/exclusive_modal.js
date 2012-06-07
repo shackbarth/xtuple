@@ -70,7 +70,17 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
 
   modal.get('subsurfaces').pushObject(overview);
 
-  var list = Postbooks.TileListView.create({
+  var listKlass = Postbooks.TileListView,
+      renderHash = {
+        renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
+      };
+
+  if (Postbooks[className] && Postbooks[className].ListView) {
+    listKlass = Postbooks[className].ListView;
+    renderHash = {};
+  }
+
+  var list = listKlass.create(renderHash, {
     layout: { top: 320, left: 0, width: 320, bottom: 0 },
 
     rowHeight: baseClass.ListRowHeight !== undefined? baseClass.ListRowHeight : 60,
@@ -113,7 +123,7 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
 
         // Draw view name.
         ctx.fillStyle = 'rgba(70,70,70,0.5)';
-        
+
         var K = Postbooks;
         ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
@@ -124,9 +134,7 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, w, h);
       }
-    },
-
-    renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
+    }
   });
 
   var sel = SC.SelectionSet.create();

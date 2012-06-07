@@ -518,7 +518,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title, object
   className = className.slice(className.indexOf('.') + 1); // drop name space
 
   if (Postbooks[className] && Postbooks[className].CreateTileListView) {
-    return Postbooks[className].CreateTileListView(controller);
+    return Postbooks[className].CreateTileListView(klass, controller, title, objectController);
   }
 
   var layoutSurface = SC.LayoutSurface.create({
