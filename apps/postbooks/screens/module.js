@@ -120,7 +120,7 @@ Postbooks.LoadModule = function(name, classes, state) {
   (function loadFirstItem(item) {
     if (!item.isLoaded) {
       var className = item.className,
-          baseClass = XM[className];
+          baseClass = XM[className +'Info'] ? XM[className+'Info'] : XM[className];
 
       sc_assert(baseClass);
       sc_assert(baseClass.isClass);
