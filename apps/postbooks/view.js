@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM XT sc_assert */
+/*globals Postbooks XM XT sc_assert Money */
 
 sc_require('views/carousel');
 sc_require('views/tile_view');
@@ -207,7 +207,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
               store: controller.getPath('content.store'),
               isEnabledBinding: SC.Binding.from('isEditable', controller),
               valueBinding: SC.Binding.from(key, controller),
-              searchKey: 'code',
+              searchKey: 'code'
             });
           } else {
             widget = SC.TextFieldWidget.create({
@@ -226,7 +226,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             value: title + ':'
           });
           if (typeClass === XM.IncidentCategory) {
-            widget = Postbooks.ToOneSelectWidget.create({
+            widget = Postbooks.EditableToOneSelectWidget.create({
               layout: { top: y, left: left, height: 22, right: right },
               recordType: typeClass,
               store: controller.getPath('content.store'),
@@ -339,12 +339,22 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
             textAlign: 'right',
             value: title + ':'
           });
-          widget = Postbooks.MoneyWidget.create({
-            layout: { top: y, left: left, height: 22, right: right },
-            isEnabledBinding: SC.Binding.from('isEditable', controller),
-            valueBinding: SC.Binding.from(key, controller),
-            moneyBinding: SC.Binding.from(key+'Money', controller)
-          });
+          if (key+'Money' in proto) {
+            widget = Postbooks.MoneyWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              isEnabledBinding: SC.Binding.from('isEditable', controller),
+              valueBinding: SC.Binding.from(key, controller),
+              moneyBinding: SC.Binding.from(key+'Money', controller)
+            });
+          } else {
+            widget = SC.TextFieldWidget.create({
+              layout: { top: y, left: left, height: 22, right: right },
+              isEnabled: false,
+              valueBinding: SC.Binding.transform(function(val) {
+                return val.toString();
+              }).from(key, controller)
+            });
+          }
           y += 24 + K.SPACING;
         } else if (typeClass.isNumeric) {
           label = SC.LabelLayer.create({
@@ -373,7 +383,7 @@ Postbooks.CreateTileView = function(klass, controller, title, properties, comman
           widget = Postbooks.DateWidget.create({
             layout: { top: y, left: left, height: 22, right: right },
             isEnabledBinding: SC.Binding.from('isEditable', controller),
-            dateBinding: SC.Binding.from(key, controller)
+            valueBinding: SC.Binding.from(key, controller)
           });
           y += 24 + K.SPACING;
         } else if (typeClass === Boolean) {
@@ -510,7 +520,7 @@ Postbooks.CreateTileListViewForClass = function(klass, controller, title, object
   className = className.slice(className.indexOf('.') + 1); // drop name space
 
   if (Postbooks[className] && Postbooks[className].CreateTileListView) {
-    return Postbooks[className].CreateTileListView(controller);
+    return Postbooks[className].CreateTileListView(klass, controller, title, objectController);
   }
 
   var layoutSurface = SC.LayoutSurface.create({

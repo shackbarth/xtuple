@@ -2,7 +2,7 @@
 // Project:   xTuple Postbooks - Business Management System Framework
 // Copyright: ©2011 OpenMFG LLC, d/b/a xTuple
 // ==========================================================================
-/*globals Postbooks XM sc_assert */
+/*globals Postbooks XM XT sc_assert */
 
 sc_require('views/record_list');
 
@@ -33,7 +33,7 @@ Postbooks.InvoiceLine.RenderRecordListRow = function(context, width, height, ind
   context.fillText(val, 15, 15);
   
   // Item
-  item = object.get('item');
+  var item = object.get('item');
   val = item? item.get('number') : object.get('itemNumber');
   context.font = "9pt "+K.TYPEFACE;
   context.textAlign = 'left';
@@ -113,6 +113,142 @@ Postbooks.InvoiceLine.RecordListView = Postbooks.RecordListView.extend({
 
 });
 
+Postbooks.InvoiceLine.CreateRecordListLayerTree = function() {
+  var tree =  SC.Layer.create({
+
+    render: function(context) {
+      var bounds = this.get('bounds'),
+          width = bounds.width,
+          height = bounds.height,
+          index = this.get('rowIndex'),
+          object = this.get('content'),
+          isSelected = this.get('isSelected');
+    
+      context.fillStyle = isSelected? '#99CCFF' : 'white';
+      context.fillRect(0, 0, width, height);
+
+      if (!this.get('isLast')) {
+        context.strokeStyle = 'grey';
+        context.lineWidth = 1;
+
+        context.beginPath();
+        context.moveTo(0, height - 0.5);
+        context.lineTo(width, height - 0.5);
+        context.stroke();
+      }
+
+      var K = Postbooks, val;
+
+      context.textBaseline = 'middle';
+      
+      // Number
+      val = object.get('lineNumber');
+      context.font = "bold 10pt "+K.TYPEFACE;
+      context.fillStyle = 'black';
+      context.textAlign = 'left';
+      context.fillText(val, 15, 15);
+      
+      // Item
+      var item = object.get('item');
+      val = item? item.get('number') : object.get('itemNumber');
+      context.font = "9pt "+K.TYPEFACE;
+      context.textAlign = 'left';
+      if (val && val.elide) val = val.elide(context, 200);
+      context.fillText(val , 45, 15);
+      
+      // Sales Category
+      // val = item? '' : object.getPath('salesCategory.name');
+      // context.font = "9pt "+K.TYPEFACE;
+      // context.textAlign = 'right';
+      // if (val && val.elide) val = val.elide(context, 65);
+      // context.fillText(val , 315, 15);
+      
+      // Description
+      // val = item? item.get('description1') : object.get('description');
+      // context.font = "italic 9pt "+K.TYPEFACE;
+      // context.textAlign = 'left';
+      // //if (val && val.elide) val = val.elide(context, 325);
+      // context.fillText(val , 325, 15);
+      
+      // Ordered
+      var orderedLabel = "_ordered".loc();
+      var orderedLabelWidth = context.measureText(orderedLabel).width;
+      context.font = "9pt "+K.TYPEFACE;
+      context.fillText(orderedLabel, 45, 35);
+      
+      val = object.get('ordered').toLocaleString();
+      context.textAlign = 'right';
+      if (val && val.elide) val = val.elide(context, 100-orderedLabelWidth);
+      context.fillText(val , 150, 35);
+      
+      // Billed
+      var billedLabel = "_billed".loc();
+      var billedLabelWidth = context.measureText(billedLabel).width;
+      context.textAlign = 'left';
+      context.fillText(billedLabel, 155, 35);
+      
+      val = object.get('billed').toLocaleString();
+      context.textAlign = 'right';
+      if (val && val.elide) val = val.elide(context, 100-billedLabelWidth);
+      context.fillText(val , 260, 35);
+      
+      // Quantity Unit
+      val = object.getPath('quantityUnit.name') || '';
+      context.textAlign = 'left';
+      if (val && val.elide) val = val.elide(context, 50);
+      context.fillText(val , 265, 35);
+      
+      // Price
+      val = object.get('price').toLocaleString();
+      context.textAlign = 'right';
+      if (val && val.elide) val = val.elide(context, 100);
+      context.fillText(val , 400, 35);
+      
+      // Price Unit
+      val = object.getPath('priceUnit.name') || '';
+      context.textAlign = 'left';
+      if (val && val.elide) val = val.elide(context, 50);
+      context.fillText(val , 405, 35);
+      
+      // Price
+      var extendedLabel = "_extended".loc();
+      var extendedLabelWidth = context.measureText(extendedLabel).width;
+      context.textAlign = 'left';
+      context.fillText(extendedLabel, 485, 35);
+      
+      val = object.get('extendedPrice').toLocaleString();
+      context.textAlign = 'right';
+      if (val && val.elide) val = val.elide(context, 100);
+      context.fillText(val , 635, 35);
+    }
+  });
+
+  // Sales Category
+  var salesCategory = Postbooks.ToOneSelectWidget.create({
+    layout: { top: 2, left: 160, width: 150, height: 22 },
+    recordType: XM.SalesCategory,
+    store: XT.store,
+    valueBinding: SC.Binding.from('*content.salesCategory', tree).noDelay(),
+    items: Postbooks.BILLING.createSalesCategoryRecordArray(),
+    itemTitleKey: 'name',
+    itemValueKey: null // Use item itself
+  });
+
+  tree.addSublayer(salesCategory);
+
+  // Description
+  var descriptionField = SC.TextFieldWidget.create({
+    layout: { top: 2, left: 330, right: 20, height: 24 },
+    valueBinding: SC.Binding.from('*content.item.description1', tree).noDelay(),
+    isEnabled: false
+  });
+
+  tree.addSublayer(descriptionField);
+
+  return tree;
+};
+
+
 Postbooks.InvoiceLine.CreateDetailListView = function(controller) {
   var list = Postbooks.InvoiceLine.RecordListView.create({
     layout: { top: 13, left: 0, right: 0, bottom: 0 },
@@ -145,7 +281,7 @@ Postbooks.InvoiceLine.Tiles = function(controller, isRoot) {
   
   var klass = XM.InvoiceLine,
       tiles = [],
-      proto = klass.prototype;
+      proto = klass.prototype,
       properties = [];
 
   // overview
@@ -171,7 +307,7 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
         isChangeLayoutDidChange: function() {
           var isChangeLayout = this.get('isChangeLayout');
           console.log('isChangeLayout: %@'.fmt(isChangeLayout));
-        }.observes('isChangeLayout'),
+        }.observes('isChangeLayout')
       }),
       layers = view.get('layers'),
       viewBindingsRef = view.get('bindings'),
@@ -239,7 +375,7 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
   controller.addObserver('isItem', function() {
     console.log('isItem: %@'.fmt(this.get('isItem')));
   });
-  widgetBinding = SC.Binding.from('value', widget).to('isChangeLayout', view).sync().connect().flushPendingChanges();
+  var widgetBinding = SC.Binding.from('value', widget).to('isChangeLayout', view).sync().connect().flushPendingChanges();
   viewBindingsRef.pushObject(widgetBinding);
   y += 24 + K.SPACING;
   layers.pushObject(widget);
@@ -302,7 +438,7 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
     value: "_item".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 24, right: right }
     // valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -318,7 +454,7 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
     value: "_description".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 24, right: right }
     // valueBinding: SC.Binding.from(key, controller)
   });
   y += 24 + K.SPACING;
@@ -338,7 +474,7 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
   });
   objectKey = 'name';
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 24, right: right }
     // valueBinding: SC.Binding.from(objectKey, objectController)
   });
   y += 24 + K.SPACING;
@@ -354,7 +490,7 @@ Postbooks.InvoiceLine.CreateOverviewTileView = function(controller) {
     value: "_customerPartNumber".loc() + ':'
   });
   widget = SC.TextFieldWidget.create({
-    layout: { top: y, left: left, height: 24, right: right },
+    layout: { top: y, left: left, height: 24, right: right }
     // valueBinding: SC.Binding.from(key, controller)
   });
   layers.pushObject(label);
@@ -422,7 +558,7 @@ Postbooks.InvoiceLine.CreateQuantityUnitPriceTileView = function(controller) {
   key = '';
   widget = SC.CheckboxWidget.create({
     layout: { top: y, left: left, height: 24, right: right },
-    title: "_updateInventory".loc(),
+    title: "_updateInventory".loc()
     /** TODO: make binding work
     valueBinding: SC.Binding.transform(function(val) {
       return !!val;
@@ -439,10 +575,10 @@ Postbooks.InvoiceLine.CreateQuantityUnitPriceTileView = function(controller) {
     textAlign: 'right',
     value: "_quantityUnit".loc() + ':'
   });
-  objectController = SC.ObjectController.create({
+  var objectController = SC.ObjectController.create({
     contentBinding: SC.Binding.from(key, controller).single().oneWay()
   });
-  objectKey = 'quantityUnit';
+  var objectKey = 'quantityUnit';
   objectController = SC.ObjectController.create({
     contentBinding: SC.Binding.from(objectKey, objectController).single().oneWay()
   });

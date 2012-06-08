@@ -24,24 +24,31 @@ var cyan =     "#2aa198";
 var green =    "#859900";
 var white =    "white";
 
-Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, parentObjectController, arrayController) {
-  console.log('Postbooks.LoadExclusiveModal(', className, backButtonTitle, ')');
+Postbooks.LoadListEditorModal = function(klass) {
+  console.log('Postbooks.LoadListEditorModal(', klass.prototype.className, ')');
+  var className = klass.prototype.className;
+
+  var store = XT.store.chain();
+
   var context = SC.Object.create({
     title: ("_" + className.camelize()).loc(),
-    backButtonTitle: backButtonTitle,
+    backButtonTitle: '_back'.loc(),
     backButtonAction: 'popContext',
-    store: instance.store,
-    instance: instance,
-    callback: function() {
-      arrayController.set('selection', SC.SelectionSet.create().freeze());
-    }
+    firstButtonIsVisible: true,
+    secondButtonIsVisible: true,
+    store: store
   });
 
-  var baseClass = XM[className];
+  var baseClass = klass;
 
   sc_assert(baseClass);
   sc_assert(baseClass.isClass);
   sc_assert(baseClass.subclassOf(XT.Record));
+
+  var arrayController = SC.ArrayController.create({
+    content: store.find(klass),
+    allowsEmptySelection: false
+  });
 
   var controller, tiles = [];
 
@@ -62,26 +69,27 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
 
   modal.set('backgroundColor', 'rgb(95,98,96)');
 
-  var klass = parentObjectController.get('content').constructor;
-  var overview = Postbooks.CreateTileViewForClass(klass, parentObjectController, klass.prototype.className.slice(3), true, false);
-  overview.set('layout', { top: 0, left: 0, width: 320, height: 320 });
+  var toolbar = SC.View.create({
+    layout: { top: 0, left: 0, width: 320, height: 30 },
 
-  overview.mouseDown = null; // don't want the action
+    layers: [Postbooks.Button.create({
+      layout: { top: 3, width: 100, centerX: 0, height: 24 },
+      name: '_new'.loc(),
+      action: function() {
+        var rec = store.createRecord(klass, {});
+        rec.normalize();
 
-  modal.get('subsurfaces').pushObject(overview);
+        var sel = SC.SelectionSet.create();
+        sel.addObject(rec);
+        arrayController.set('selection', sel.freeze());
+      }
+    })]
+  });
 
-  var listKlass = Postbooks.TileListView,
-      renderHash = {
-        renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
-      };
+  modal.get('subsurfaces').pushObject(toolbar);
 
-  if (Postbooks[className] && Postbooks[className].ListView) {
-    listKlass = Postbooks[className].ListView;
-    renderHash = {};
-  }
-
-  var list = listKlass.create(renderHash, {
-    layout: { top: 320, left: 0, width: 320, bottom: 0 },
+  var list = Postbooks.TileListView.create({
+    layout: { top: 30, left: 0, width: 320, bottom: 0 },
 
     rowHeight: baseClass.ListRowHeight !== undefined? baseClass.ListRowHeight : 60,
     hasHorizontalScroller: false,
@@ -107,11 +115,9 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
 
     willRenderLayers: function(ctx) {
       var content = this.get('content');
-      var w, h;
 
       if (content && content.get('length') === 0) {
-        w = ctx.width, 
-        h = ctx.height;
+        var w = ctx.width, h = ctx.height;
 
         var text = 'No records.',
             status = content? content.get('status') : null;
@@ -125,7 +131,7 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
 
         // Draw view name.
         ctx.fillStyle = 'rgba(70,70,70,0.5)';
-
+        
         var K = Postbooks;
         ctx.font = "11pt "+K.TYPEFACE;
         ctx.textBaseline = "middle";
@@ -138,13 +144,8 @@ Postbooks.LoadExclusiveModal = function(className, backButtonTitle, instance, pa
       }
     },
 
-    renderRow: Postbooks[className] && Postbooks[className].RenderRecordListRow ? 
-               Postbooks[className].RenderRecordListRow : Postbooks.RenderRecordListRow
+    renderRow: klass.RenderRecordListRow? klass.RenderRecordListRow : Postbooks.DefaultListRenderRow
   });
-
-  var sel = SC.SelectionSet.create();
-  sel.addObject(instance);
-  arrayController.set('selection', sel.freeze());
 
   modal.get('subsurfaces').pushObject(list);
 

@@ -38,6 +38,8 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
   store: null,
   recordArray: [],
 
+  showButtonsOnOpen: true,
+
   _recordArray: null,
   _recordArrayDidChange: function() {
     console.log("Postbooks.RelationWidget#_recordArrayDidChange()");
@@ -198,7 +200,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         break;
 
       case 'didBecomeFirstResponder':
-        return this.transition('Editor');
+        return this.transition('Not Typing');
     }
   }.behavior('Enabled'),
 
@@ -604,7 +606,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
 
           if (status === SC.Record.READY_CLEAN) {
             instance.removeObserver('status', instance, observer);
-            Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+            Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, this.get('showButtonsOnOpen'), function() {
               console.log('calling callback');
               that.tryToPerform('close');
             });
@@ -612,7 +614,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         });
       } else {
         console.log('loading relation immediately');
-        Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, function() {
+        Postbooks.LoadRelation(instanceKlass.prototype.className.slice(3), "_back".loc(), instance, this.get('showButtonsOnOpen'), function() {
           console.log('calling callback');
           that.tryToPerform('close');
         });

@@ -17,6 +17,7 @@ Postbooks.BILLING = Postbooks.MODULE.design({
 
     // Load any lists used in popups
     XT.store.find(XM.Currency);
+    XT.store.find(XM.SalesCategory);
   },
 
   // ACTIONS
@@ -50,3 +51,12 @@ Postbooks.BILLING = Postbooks.MODULE.design({
   "CUSTOMER_CREDIT_CARD": SC.State.plugin('Postbooks.CUSTOMER_CREDIT_CARD')
 
 });
+
+Postbooks.BILLING.createSalesCategoryRecordArray = function() {
+  // We don't need to find, because we do this once, in BILLING#enterState.
+  return SC.RecordArray.create({
+    store: Postbooks.store,
+    query: SC.Query.create({ recordType: XM.SalesCategory, orderBy: 'name ASC' })
+  });
+};
+
