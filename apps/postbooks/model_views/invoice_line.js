@@ -240,7 +240,10 @@ Postbooks.InvoiceLine.CreateRecordListLayerTree = function() {
   var descriptionField = SC.TextFieldWidget.create({
     layout: { top: 2, left: 330, right: 20, height: 24 },
     valueBinding: SC.Binding.from('*content.item.description1', tree).noDelay(),
-    isEnabled: false
+    isEnabled: false,
+    color: 'black',
+    borderColor: 'white',
+    backgroundColor: 'white'
   });
 
   tree.addSublayer(descriptionField);
