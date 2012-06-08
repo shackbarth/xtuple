@@ -21,14 +21,17 @@ Postbooks.IncidentComment.ListView =  SC.ListView.extend({
   lineHeight: 18,
 
   computeRowHeight: function(context, width, index, object) {
-    var text = String(object.get('text') || ''),
+    var paragraphs = String(object.get('text') || ''),
         line, that = this,
-        height,
-        cachedAlignments = this._sc_cachedAlignments;
+        height = 0,
+        cachedAlignments = this._sc_cachedAlignments,
+        paragraphAlignments;
 
     if (!cachedAlignments) {
       cachedAlignments = this._sc_cachedAlignments = [];
     }
+
+    paragraphAlignments = cachedAlignments[index] = [];
 
     sc_assert(context);
 
@@ -62,7 +65,7 @@ Postbooks.IncidentComment.ListView =  SC.ListView.extend({
       return lines;
     }
 
-    function align(type, lineLengths, tolerance, center) {
+    function align(text, type, lineLengths, tolerance, center) {
       var format, nodes, breaks, lines;
 
       context.textBaseline = that.get('textBaseline');
@@ -76,17 +79,25 @@ Postbooks.IncidentComment.ListView =  SC.ListView.extend({
       breaks = linebreak(nodes, lineLengths, { tolerance: tolerance });
 
       if (!breaks.isEmpty()) {
-        lines = cachedAlignments[index] = setparagraph(nodes, breaks, lineLengths, center);
-        height = Math.max(that.get('layout').minHeight || 0, lines.length*that.get('lineHeight'));
+        lines = setparagraph(nodes, breaks, lineLengths, center);
+        height += Math.max(that.get('layout').minHeight || 0, lines.length*that.get('lineHeight'));
       } else {
         console.log('Paragraph can not be set with the given tolerance.', tolerance);
-        cachedAlignments[index] = [];
+        lines = [];
       }
+
+      return lines;
     }
 
-    align(this.get('textAlign'), [width-40], 10);
+    paragraphs = paragraphs.split('\n');
+    // console.log(paragraphs);
+    paragraphs.forEach(function(paragraph, index) {
+      paragraphAlignments[index] = align(paragraph, this.get('textAlign'), [width-40], 10);
+    }, this);
 
-    return height + 45; // Also include fixed header text and padding at the bottom.
+    return height + 45;
+      // Also include fixed header text, between-paragraph spacing, and 
+      // padding at the bottom.
   },
 
   renderRow: function(context, width, height, index, object, isSelected) {
@@ -113,31 +124,34 @@ Postbooks.IncidentComment.ListView =  SC.ListView.extend({
 
     context.font = this.get('font');
 
-    var lines = this._sc_cachedAlignments[index],
+    var paragraphAlignments = this._sc_cachedAlignments[index],
         lineLengths = [width-40],
         maxLength = Math.max.apply(null, lineLengths),
         lineHeight = this.get('lineHeight'),
         y = 30, center = false,
-        backgroundColor = 'white';
+        backgroundColor = 'white',
+        lines;
 
-    lines.forEach(function (line, lineIndex) {
-      var x = 20, lineLength = lineIndex < lineLengths.length ? lineLengths[lineIndex] : lineLengths[lineLengths.length - 1];
+    paragraphAlignments.forEach(function(lines) {
+      lines.forEach(function (line, lineIndex) {
+        var x = 20, lineLength = lineIndex < lineLengths.length ? lineLengths[lineIndex] : lineLengths[lineLengths.length - 1];
 
-      if (center) {
-        x += (maxLength - lineLength) / 2;
-      }
-
-      line.nodes.forEach(function (node, index) {
-        if (node.type === 'box') {
-          context.fillText(node.value, x, y);
-          x += node.width;
-        } else if (node.type === 'glue') {
-          x += node.width + line.ratio * (line.ratio < 0 ? node.shrink : node.stretch);
+        if (center) {
+          x += (maxLength - lineLength) / 2;
         }
-      });
 
-      y += lineHeight;
-    });
+        line.nodes.forEach(function (node, index) {
+          if (node.type === 'box') {
+            context.fillText(node.value, x, y);
+            x += node.width;
+          } else if (node.type === 'glue') {
+            x += node.width + line.ratio * (line.ratio < 0 ? node.shrink : node.stretch);
+          }
+        });
+
+        y += lineHeight;
+      });
+    }, this);
   },
 
   adjustLayout: function() {

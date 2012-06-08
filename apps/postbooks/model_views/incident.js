@@ -381,7 +381,7 @@ Postbooks.Incident.CreateFilters = function() {
       }
     }
   }, {
-    title: "Status Above",
+    title: "Priority",
     isEnabled: false,
 
     surface: SC.View.create({
@@ -403,10 +403,10 @@ Postbooks.Incident.CreateFilters = function() {
 
     appendConditionAndParameters: function(conditions, parameters) {
       if (!this.get('isEnabled')) return;
-      var order = this.getPath('value.order');
-      if (order !== undefined) {
-        conditions.push('priority >= {priority}');
-        parameters.priority = order;
+      var guid = this.getPath('value.guid');
+      if (guid !== undefined) {
+        conditions.push('priority = {priority}');
+        parameters.priority = guid;
       }
     }
   }].map(function(hash) { return SC.Object.create(hash); });

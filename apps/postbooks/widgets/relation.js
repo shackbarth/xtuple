@@ -200,7 +200,7 @@ Postbooks.RelationWidget = SC.Widget.extend(SC.Control, {
         break;
 
       case 'didBecomeFirstResponder':
-        return this.transition('Editor');
+        return this.transition('Not Typing');
     }
   }.behavior('Enabled'),
 
