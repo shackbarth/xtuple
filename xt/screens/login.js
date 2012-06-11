@@ -99,17 +99,11 @@ enyo.kind(
                   var screen;
                   
                   if (response.code === 1) {
-                    screen = XT.app.$.loginScreen;
-                    screen.hide();
-                    screen.destroy();
-                    screen = XT.app.$.loginScreenChoices;
-                    screen.renderInto(document.body);
+                    XT.app.setIndex(1);
+                    screen = XT.app.$.loginScreenChoices.$.loginSelectionList;
+                    screen.setActiveSessions(response.data);
                   } else if (response.code === 4) {
-                    screen = XT.app.$.loginScreen;
-                    screen.hide();
-                    screen.destroy();
-                    screen = XT.app.$.mainFrameScreen;
-                    screen.renderInto(document.body);
+                    XT.app.setIndex(2);
                   } else {
                     console.error("WTF IS THIS ", response);
                   }
