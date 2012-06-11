@@ -34,7 +34,7 @@ try {
 console.log("Attempting to setup any dependencies, please wait until " +
   "all child processes have returned");
 
-// ...
+// ...wow this got ugly fast, how dumb, oh well
 for (var libName in XT.required) {
   if (XT.required.hasOwnProperty(libName)) {
     var lib = XT.required[libName];
