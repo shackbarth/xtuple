@@ -1,0 +1,9 @@
+enyo.depends(
+  "$lib/backbone",
+  "$lib/underscore",
+  "$lib/layout",
+  "$lib/onyx",
+  "$lib/newness-labs",
+  "$lib/xt",
+  "$lib/xm"
+);

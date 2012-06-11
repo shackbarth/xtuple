@@ -20,6 +20,9 @@
     "tag": "2.0-beta4"
   },
   "newness-labs": {
-    "origin": "git@github.com:Newness/Labs.git"
+    "origin": "git@github.com:Newness/Labs.git",
+    "entries": [
+      "InfiniteSlidingPane/source"
+    ]
   }
 }
