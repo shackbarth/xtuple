@@ -4,6 +4,8 @@ enyo.depends(
   "$lib/layout",
   "$lib/onyx",
   "$lib/newness-labs",
-  "$lib/xt",
-  "$lib/xm"
+  "$lib/socket.io",
+  "xt",
+  "xm",
+  "app.js"
 );

@@ -101,8 +101,11 @@ if (_path.existsSync(XT.packagePath)) {
     XT.packagesContent.push("  \"$lib/" + libName + "\"");
   });
   
-  XT.packagesContent.push("  \"$lib/xt\"");
-  XT.packagesContent.push("  \"$lib/xm\"");
+  // arbitrary collection...
+  XT.packagesContent.push("  \"$lib/socket.io\"");
+  XT.packagesContent.push("  \"xt\"");
+  XT.packagesContent.push("  \"xm\"");
+  XT.packagesContent.push("  \"app.js\"");
   
   XT.packagesContent = XT.packagesContent.join(",\n");
   XT.packageContent.push(XT.packagesContent);

@@ -2,7 +2,7 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-/* line 17, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -24,45 +24,82 @@ time, mark, audio, video {
   vertical-align: baseline;
 }
 
-/* line 20, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 20, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 body {
   line-height: 1;
 }
 
-/* line 22, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 22, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 24, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 26, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 28, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 101, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 101, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 30, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 114, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 114, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
+}
+
+/* line 14, ../sass/screen.scss */
+.login-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* line 22, ../sass/screen.scss */
+.login-screen-container {
+  -webkit-border-radius: 10px 10px;
+  -moz-border-radius: 10px / 10px;
+  -o-border-radius: 10px / 10px;
+  -ms-border-radius: 10px / 10px;
+  -khtml-border-radius: 10px / 10px;
+  border-radius: 10px / 10px;
+  -moz-box-shadow: black 0 0 20px;
+  -webkit-box-shadow: black 0 0 20px;
+  -o-box-shadow: black 0 0 20px;
+  box-shadow: black 0 0 20px;
+  width: 300px;
+  height: 300px;
+  background-color: #ddd;
+  position: absolute;
+  margin-top: -150px;
+  margin-left: -150px;
+  top: 50%;
+  left: 50%;
+  border: 10px solid #fff;
+}
+/* line 34, ../sass/screen.scss */
+.login-screen-container .login-input-row {
+  margin: 10px 20px;
+  width: 260px;
 }
