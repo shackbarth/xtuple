@@ -12,38 +12,22 @@ body {
 }
 
 .login-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.login-screen-container {
-  @include border-radius(10px, 10px);
-  @include box-shadow(#000 0 0 20px);
-  width: 300px;
-  height: 300px;
-  background-color: #ddd;
-  position: absolute;
-  margin-top: -150px;
-  margin-left: -150px;
-  top: 50%;
-  left: 50%;
-  border: 10px solid #fff;
-  .login-input-row {
-    margin: 10px 20px;
-    width: 260px;
-  }
-}
-
-.session-selection-item-container {
-  background-color: #fff;
-  .session-selection-item {
-    padding: 10px 5px;
-  }
-  &.session-selection-selected {
-    background-color: #000;
-    color: #fff;
-  }
+  .user-login-screen-container {
+    @include border-radius(10px, 10px);
+    @include box-shadow(#000 0 0 20px);
+    width: 300px;
+    height: 300px;
+    background-color: #ddd;
+    border: 10px solid #fff;
+    margin-top: -150px;
+    margin-left: -150px;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    .user-login-block {
+      .user-login-block-row {
+        padding: 5px;
+      }
+    }
+  } 
 }

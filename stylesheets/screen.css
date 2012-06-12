@@ -67,17 +67,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 14, ../sass/screen.scss */
-.login-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-/* line 22, ../sass/screen.scss */
-.login-screen-container {
+/* line 15, ../sass/screen.scss */
+.login-screen .user-login-screen-container {
   -webkit-border-radius: 10px 10px;
   -moz-border-radius: 10px / 10px;
   -o-border-radius: 10px / 10px;
@@ -91,29 +82,14 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   width: 300px;
   height: 300px;
   background-color: #ddd;
-  position: absolute;
+  border: 10px solid #fff;
   margin-top: -150px;
   margin-left: -150px;
   top: 50%;
   left: 50%;
-  border: 10px solid #fff;
+  position: absolute;
 }
-/* line 34, ../sass/screen.scss */
-.login-screen-container .login-input-row {
-  margin: 10px 20px;
-  width: 260px;
-}
-
-/* line 40, ../sass/screen.scss */
-.session-selection-item-container {
-  background-color: #fff;
-}
-/* line 42, ../sass/screen.scss */
-.session-selection-item-container .session-selection-item {
-  padding: 10px 5px;
-}
-/* line 45, ../sass/screen.scss */
-.session-selection-item-container.session-selection-selected {
-  background-color: #000;
-  color: #fff;
+/* line 28, ../sass/screen.scss */
+.login-screen .user-login-screen-container .user-login-block .user-login-block-row {
+  padding: 5px;
 }

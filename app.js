@@ -12,9 +12,7 @@ enyo.kind(
 	arrangerKind: "CardSlideInArranger",
   
   components: [
-    { name: "loginScreen", kind: "XT.LoginScreen" },
-    { name: "loginScreenChoices", kind: "XT.LoginScreenChoices" },
-    { name: "mainFrameScreen", kind: "XT.MainFrameScreen" }
+    { name: "loginScreen", kind: "XT.LoginScreen" }
   ],
   
   start: function() {
@@ -22,9 +20,9 @@ enyo.kind(
     this.renderInto(document.body);
     
     // temporary
-    this.$.loginScreen.$.loginUsername.setValue("admin");
-    this.$.loginScreen.$.loginPassword.setValue("Assemble!Aurora");
-    this.$.loginScreen.$.loginOrganization.setValue("aurora");
+    //this.$.loginScreen.$.loginUsername.setValue("admin");
+    //this.$.loginScreen.$.loginPassword.setValue("Assemble!Aurora");
+    //this.$.loginScreen.$.loginOrganization.setValue("aurora");
   }
     
 });

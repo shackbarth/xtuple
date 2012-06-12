@@ -7,5 +7,6 @@ enyo.depends(
   "data.js",
   "model.js",
   "collection.js",
+  "screen.js",
   "ext"
 );
