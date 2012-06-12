@@ -12,14 +12,14 @@ enyo.kind(
   returns a record array based on a query.
   */
   fetch: function(query, success, error) {
-    var self = this;
+    var that = this;
     var payload = {};
     var complete = function(response) {
       var dataHash = JSON.parse(response.data.rows[0].fetch);
       if (dataHash.error) { 
-        error.call(self, response);
+        error.call(that, response);
       } else { 
-        success.call(self, dataHash); 
+        success.call(that, dataHash); 
       }
     };
   
@@ -36,14 +36,14 @@ enyo.kind(
   returns a single record.
   */
   retrieveRecord: function(recordType, id, success, error) {
-    var self = this;
+    var that = this;
     var payload = {};
     var complete = function(response) {
       var dataHash = JSON.parse(response.data.rows[0].retrieve_record);
       if (dataHash.error) { 
-        error.call(self, response);
+        error.call(that, response);
       } else { 
-        success.call(self, dataHash); 
+        success.call(that, dataHash); 
       }
     };
     

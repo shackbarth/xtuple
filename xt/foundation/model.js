@@ -6,27 +6,43 @@ XT.Model = Backbone.RelationalModel.extend(
 
   idAttribute: "guid",
 
+  initialize: function() {
+    this.on('change', this.attributeChanged);
+  },
+  
   /*
-  Reset changed after fetch.
+  Change state.
+  */
+  attributeChanged: function() {
+    this.set('dataState', 'updated');
+  },
+
+  /*
+  Handle state change
   */
   fetch: function(options) {
+    // turn off state handling
+    this.off('change', this.attributeChanged);
+    this.set('dataState', 'busy');
+    
+    // add call back to turn state handling back on
     if (options === undefined) options = {};
-    var model = this;
+    var that = this;
     var success = options.success;
     options.success = function(resp, status, xhr) {
-      model.resetChanged();
+      that.on('change', that.attributeChanged);
       if (success) success(model, resp, options);
     };
   
     return Backbone.Model.prototype.fetch.call(this, options);
   },
-
+  
   /*
   Sync to xtuple datasource.
   */
   sync: function(method, model, options) {
     var recordType = model.recordType;
-    var id = options.id || this.get('id');
+    var id = options.id || this.id;
     var data = new XT.Data();
     var success = options.success;
     var error = options.error;
@@ -39,19 +55,11 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /*
-  Map idAttribute
-  */
-  get: function(key, value, options) {
-    if (key === 'id' && this.idAttribute) key = this.idAttribute;
-    
-    return Backbone.Model.prototype.get.call(this, key, value, options);
-  },
-  
-  /*
   Validate all required fields if no attributes specified.
   */
   validate: function(attributes, options) {
     if (!attributes) { // all
+      // check required
       var required = this.required || [];
       var i;
     
@@ -61,16 +69,7 @@ XT.Model = Backbone.RelationalModel.extend(
         }
       }
     }
-  },
-  
-  /*
-  Reset model so that it reports no changes.
-  */
-  resetChanged: function() {
-    this.changed = {};
-    this._silent = {};
-    this._pending = {};
-    this._previousAttributes = _.clone(this.attributes);
   }
   
 });
+
