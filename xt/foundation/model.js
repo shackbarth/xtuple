@@ -9,7 +9,7 @@ XT.Model = Backbone.RelationalModel.extend(
   /*
   Reset changed after fetch.
   */
-  fetch: function(key, value, options) {
+  fetch: function(options) {
     if (options === undefined) options = {};
     var model = this;
     var success = options.success;
