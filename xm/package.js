@@ -1,3 +1,3 @@
 enyo.depends(
-  "project"
+  "project.js"
 );
