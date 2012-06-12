@@ -44,9 +44,7 @@ XT.Model = Backbone.RelationalModel.extend(
       this.fetchId();
     }
     
-    // if a data source is passed use it, otherwise try default
-    this._dataSource = options && options.dataSource ? 
-                       options.dataSource : XT.dataSource;
+    this._dataSource = XT.dataSource;
   },
   
   /**
@@ -64,6 +62,13 @@ XT.Model = Backbone.RelationalModel.extend(
   isNew: function() {
     return this.get('dataState') === 'inserted';
   },
+  
+  /**
+  Returns true when dataState is 'inserted' or 'updated'.
+  */
+  isDirty: function() {
+    return this.get('dataState') === 'inserted' || this.get('dataState') === 'updated';
+  },
 
   /**
   Reimplemented to handle state change.
@@ -71,11 +76,13 @@ XT.Model = Backbone.RelationalModel.extend(
   fetch: function(options) {
     // turn off state handling
     this.off('change', this.attributeChanged);
+    this.set('dataState', 'busy');
     
     // add call back to turn state handling back on after fetch
     if (options === undefined) options = {};
     var that = this;
     var success = options.success;
+    options.fetched = true;
     options.success = function(resp, status, xhr) {
       that.on('change', that.attributeChanged);
       if (success) success(model, resp, options);
@@ -97,6 +104,14 @@ XT.Model = Backbone.RelationalModel.extend(
       this.set('guid', resp);
     }; 
     this._dataSource.dispatch('XT.Record', 'fetchId', this.recordType, options);
+  },
+  
+  /**
+  Reimplemented.
+  */
+  set: function( key, value, options ) {
+    if (_.isObject(key) && value.fetched) this.set('dataState', 'read');
+    return Backbone.RelationalModel.prototype.set.call(this, key, value, options);
   },
   
   /**
@@ -131,11 +146,14 @@ XT.Model = Backbone.RelationalModel.extend(
   Validate all required fields if no attributes specified.
   */
   validate: function(attributes, options) {
-    if (this.get('dataState') === 'deleted') {
+    // check state
+    if (this.get('dataState') === 'busy' && !options.fetched) {
+      return 'Record is busy';
+    } else if (this.get('dataState') === 'deleted') {
       return 'Can not alter deleted record';
     }
     
-    if (!attributes) { // all
+    if (!attributes) {  // all
       // check required
       var required = this.required || [];
       var i;

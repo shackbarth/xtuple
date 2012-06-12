@@ -8,11 +8,7 @@ XT.Collection = Backbone.Collection.extend(
   /** @scope XT.Collection.prototype */ {
 
   initialize: function() {
-    var options = arguments[1];
-
-    // if a data source is passed use it, otherwise try default
-    this._dataSource = options && options.dataSource ? 
-                       options.dataSource : XT.dataSource;
+    this._dataSource =  XT.dataSource;
   },
 
   /**
