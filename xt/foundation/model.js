@@ -76,13 +76,13 @@ XT.Model = Backbone.RelationalModel.extend(
   fetch: function(options) {
     // turn off state handling
     this.off('change', this.attributeChanged);
-    this.set('dataState', 'busy');
+    this.set('dataState', 'busy fetching');
     
     // add call back to turn state handling back on after fetch
     if (options === undefined) options = {};
     var that = this;
     var success = options.success;
-    options.fetched = true;
+    options.sync = true;
     options.success = function(resp, status, xhr) {
       that.on('change', that.attributeChanged);
       if (success) success(model, resp, options);
@@ -112,6 +112,20 @@ XT.Model = Backbone.RelationalModel.extend(
   set: function( key, value, options ) {
     if (_.isObject(key) && value.fetched) this.set('dataState', 'read');
     return Backbone.RelationalModel.prototype.set.call(this, key, value, options);
+  },
+  
+  /**
+  Reimplemented.
+  */
+  save: function(key, value, options) {
+    this.set('dataState', 'busy committing');
+    if (options === undefined) options = {};
+    var success = options.success;
+    options.success = function(resp, status, xhr) {
+      that.set('dataState', 'read');
+      if (success) success(model, resp, options);
+    };
+    return Backbone.Model.prototype.save.call(this, options);
   },
   
   /**
