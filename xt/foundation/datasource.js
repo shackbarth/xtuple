@@ -7,7 +7,7 @@ enyo.kind(
   kind: "Component",
   
   published: {
-    datasourceUrl: "localhost",
+    datasourceUrl: "asteroidbelt.xtuple.com",
     datasourcePort: 9000,
     isConnected: false
   },

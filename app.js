@@ -23,8 +23,8 @@ enyo.kind(
     
     // temporary
     this.$.loginScreen.$.loginUsername.setValue("admin");
-    this.$.loginScreen.$.loginPassword.setValue("admin");
-    this.$.loginScreen.$.loginOrganization.setValue("40beta");
+    this.$.loginScreen.$.loginPassword.setValue("Assemble!Aurora");
+    this.$.loginScreen.$.loginOrganization.setValue("aurora");
   }
     
 });
