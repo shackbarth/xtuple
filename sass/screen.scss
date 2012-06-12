@@ -42,4 +42,8 @@ body {
   .session-selection-item {
     padding: 10px 5px;
   }
+  &.session-selection-selected {
+    background-color: #000;
+    color: #fff;
+  }
 }

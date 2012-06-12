@@ -1,4 +1,18 @@
 
+XT.handleAcquiredSession = function(response) {
+  var screen;
+  
+  if (response.code === 1) {
+    XT.app.setIndex(1);
+    screen = XT.app.$.loginScreenChoices.$.loginSelectionList;
+    screen.setActiveSessions(response.data);
+  } else if (response.code === 4) {
+    XT.app.setIndex(2);
+  } else {
+    console.error("WTF IS THIS ", response);
+  }
+};
+
 /**
 */
 enyo.kind(
@@ -95,18 +109,7 @@ enyo.kind(
                   container.$.loginUsername.setValue("");
                   container.$.loginPassword.setValue("");
                   container.$.loginOrganization.setValue("");
-                  
-                  var screen;
-                  
-                  if (response.code === 1) {
-                    XT.app.setIndex(1);
-                    screen = XT.app.$.loginScreenChoices.$.loginSelectionList;
-                    screen.setActiveSessions(response.data);
-                  } else if (response.code === 4) {
-                    XT.app.setIndex(2);
-                  } else {
-                    console.error("WTF IS THIS ", response);
-                  }
+                  XT.handleAcquiredSession(response);
                 });
               }
             }

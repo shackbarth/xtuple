@@ -112,3 +112,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .session-selection-item-container .session-selection-item {
   padding: 10px 5px;
 }
+/* line 45, ../sass/screen.scss */
+.session-selection-item-container.session-selection-selected {
+  background-color: #000;
+  color: #fff;
+}

@@ -32,7 +32,14 @@ enyo.kind({
       fit: true,
       components: [
         { name: "item", kind: "XT.SessionSelectionItem" }
-      ]
+      ],
+      tap: function(inSender, inEvent) {
+        var idx = inEvent.index;
+        XT.Request
+          .handle("session/select")
+          .notify(XT.handleAcquiredSession)
+          .send(idx);
+      }
     }
   ],
   setupSessionItem: function(inSender, inEvent) {
@@ -57,7 +64,17 @@ enyo.kind(
   classes: "onyx",
   fit: true,
   components: [
-    { kind: "onyx.Toolbar", content: "Please select from the following active sessions..." },
+    { kind: "onyx.Toolbar", components: [
+        { content: "Please select from the following active sessions..." },
+        { kind: "onyx.InputDecorator", components: [
+          { kind: "onyx.Button", content: "New Session", tap: function() {
+            XT.Request
+              .handle("session/select")
+              .notify(XT.handleAcquiredSession)
+              .send("FORCE_NEW_SESSION");
+          } }
+        ]}
+      ]},
     { kind: "XT.LoginSelectionList" }
   ] 
 });
