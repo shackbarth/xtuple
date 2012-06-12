@@ -2,19 +2,28 @@
 /**
   @class
   
+  `XT.Model` is an abstract class designed to operate with `XT.DataSource`.
+  It should be subclass for any specific implentation. Subtypes should
+  include a `recordType` the data source will use retreive the record.
+  
   To create a new model include 'insert' in the options like so:  
-    m = XT.Model({recordType: XM.Contact}, {insert: true});
+    XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
+    m = new XM.Contact({insert: true});
     
   To load an existing record include a guid in the options like so:
-    m = XT.Model({recordType: XM.Contact, guid: 1});
+    XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
+    m = new XM.Contact({guid: 1});
     m.fetch();
     
     OR
   
-    m = XT.Model({recordType: XM.Contact});
+    XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
+    m = XM.Contact();
     m.fetch({id: 1});
   
   @extends Backbone.RelationalModel
+  @param {Object} attributes
+  @param {Object} options
 */
 XT.Model = Backbone.RelationalModel.extend(
   /** @scope XT.Model.prototype */ {
@@ -25,15 +34,22 @@ XT.Model = Backbone.RelationalModel.extend(
   Specify the name of a data source model here.
   */
   recordType: null,
-  
+
   initialize: function() {
-    // initialize state for inserted record
-    if (arguments[1] && arguments[1].insert) {
+    var options = arguments[1];
+    
+    // initialize for inserted record
+    if (options && options.insert) {
       this.attributes.dataState = 'inserted';
+      this.fetchId();
     }
+    
+    // if a data source is passed use it, otherwise try default
+    this._dataSource = options && options.dataSource ? 
+                       options.dataSource : XT.dataSource;
   },
   
-  /*
+  /**
   Change dataState to 'updated'.
   */
   attributeChanged: function() {
@@ -42,15 +58,15 @@ XT.Model = Backbone.RelationalModel.extend(
     }
   },
   
-  /* 
-  A model is new if the dataState is "inserted".
+  /**
+  Reimplemented. A model is new if the dataState is "inserted".
   */
   isNew: function() {
     return this.get('dataState') === 'inserted';
   },
 
-  /*
-  Handle state change
+  /**
+  Reimplemented to handle state change.
   */
   fetch: function(options) {
     // turn off state handling
@@ -68,33 +84,50 @@ XT.Model = Backbone.RelationalModel.extend(
     return Backbone.Model.prototype.fetch.call(this, options);
   },
   
+  /**
+  Fetch a new guid from the server.
+  */
+  fetchId: function() {
+    var that = this;
+    var options = {};
+    var success = options.success;
+    
+    // fetch id
+    options.success = function(resp, status, xhr) {
+      this.set('guid', resp);
+    }; 
+    this._dataSource.dispatch('XT.Record', 'fetchId', this.recordType, options);
+  },
+  
+  /**
+  Reimplemented.
+  */
   destroy: function(options) {
     this.set('dataState', 'deleted');
     return Backbone.Model.prototype.destroy.call(this, options);
   },
   
-  /*
-  Sync to xtuple datasource.
+  /**
+  Overload: sync to xtuple datasource.
   */
   sync: function(method, model, options) {
     var recordType = model.recordType;
     var id = options.id || this.id;
-    var data = new XT.Data();
     var success = options.success;
     
     // read
     if (method === 'read' && recordType && id && success) {
-      return data.retrieveRecord(recordType, id, options);
+      return this._dataSource.retrieveRecord(recordType, id, options);
       
     // write
     } else if (method == 'create' || method == 'update' || method === 'delete') {
-      return data.commitRecord(model, options);
+      return this._dataSource.commitRecord(model, options);
     }
     
     return false;
   },
   
-  /*
+  /**
   Validate all required fields if no attributes specified.
   */
   validate: function(attributes, options) {
@@ -113,7 +146,10 @@ XT.Model = Backbone.RelationalModel.extend(
         }
       }
     }
-  }
+  },
+  
+  /** @private */
+  _dataSource: null,
   
 });
 
