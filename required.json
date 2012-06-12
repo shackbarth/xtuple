@@ -3,7 +3,14 @@
     "origin": "git@github.com:documentcloud/backbone.git",
     "entries": [
       "$lib/underscore",
-      "backbone-min.js"
+      "backbone.js"
+    ]
+  },
+  "backbone-relational": {
+    "origin": "github.com/PaulUithol/Backbone-relational.git",
+    "entries": [
+      "$lib/backbone",
+      "backbone-relation.js"
     ]
   },
   "underscore": {
