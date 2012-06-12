@@ -34,7 +34,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /*
-  Change state.
+  Change dataState to 'updated'.
   */
   attributeChanged: function() {
     if (this.get('dataState') === 'read') {
@@ -81,10 +81,14 @@ XT.Model = Backbone.RelationalModel.extend(
     var id = options.id || this.id;
     var data = new XT.Data();
     var success = options.success;
-    var error = options.error;
     
+    // read
     if (method === 'read' && recordType && id && success) {
-      return data.retrieveRecord(recordType, id, success, error);
+      return data.retrieveRecord(recordType, id, options);
+      
+    // write
+    } else if (method == 'create' || method == 'update' || method === 'delete') {
+      return data.commitRecord(model, options);
     }
     
     return false;

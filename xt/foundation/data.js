@@ -9,16 +9,16 @@ enyo.kind(
   kind: "Component",
 
   /*
-  returns a record array based on a query.
+  Returns a record array based on a query.
   */
-  fetch: function(query, success, error) {
+  fetch: function(query, options) {
     var that = this;
     var payload = {};
     var complete = function(response) {
       var dataHash = JSON.parse(response.data.rows[0].fetch);
-      if (dataHash.error) { 
+      if (dataHash.error && options && options.error) {  
         error.call(that, response);
-      } else { 
+      } else if (options && options.success) { 
         success.call(that, dataHash); 
       }
     };
@@ -33,16 +33,20 @@ enyo.kind(
   },
 
   /*
-  returns a single record.
+  Returns a single record.
+  
+  @param {String} record type
+  @param {Number} id
+  @param {Object} options
   */
-  retrieveRecord: function(recordType, id, success, error) {
+  retrieveRecord: function(recordType, id, options) {
     var that = this;
     var payload = {};
     var complete = function(response) {
       var dataHash = JSON.parse(response.data.rows[0].retrieve_record);
-      if (dataHash.error) { 
+      if (dataHash.error && options && options.error) { 
         error.call(that, response);
-      } else { 
+      } else if (options && options.success) { 
         success.call(that, dataHash); 
       }
     };
@@ -55,6 +59,66 @@ enyo.kind(
       .handle("function/retrieveRecord")
       .notify(complete)
       .send(payload); 
-  }
+  },
+  
+  /*
+  Commit a single record.
+  
+  @param {XT.Model} model
+  @param {Object} options
+  */
+  commitRecord: function(model, options) {
+    var that = this;
+    var payload = {};
+    var complete = function(response) {
+      var dataHash = JSON.parse(response.data.rows[0].commit_record);
+      if (dataHash.error && options && options.error) { 
+        options.error.call(that);
+      } else if (options && options.success) { 
+        options.success.call(that); 
+      }
+    };
+    
+    payload.requestType = 'commitRecord';
+    payload.recordType = model.recordType;
+    payload.dataHash = model.toJSON();
+    
+    XT.Request
+      .handle("function/commitRecord")
+      .notify(complete)
+      .send(payload); 
+  },
+  
+  /*
+  Dispatch a server side function call to the datasource.
+  
+  @param {String} class name
+  @param {String} function name
+  @param {Object} parameters
+  @param {Function} success callback
+  @param {Function} error callback
+  */
+  /** @private */
+  dispatch: function (name, func, params, options) {
+    var payload = {
+      requestType: 'dispatch',
+      className: name,
+      functionName: func,
+      parameters: params
+    };
+    var complete = function(response) {
+      var dataHash = JSON.parse(response.data.rows[0].dispatch);
+      if (dataHash.error && options && options.error) {  
+        options.error.call(that, response);
+      } else if (options && options.success) { 
+        options.success.call(that, dataHash); 
+      }
+    };
+
+    XT.Request
+      .issue('function/dispatch')
+      .notify(complete)
+      .send(payload);
+  },
     
 });
