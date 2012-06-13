@@ -12,7 +12,7 @@ enyo.kind(
   fit: true,
   
   /** */
-  classes: "onyx",
+  classes: "enyo-stretch onyx",
   
   /** */
   layoutKind: "CarouselArranger",
@@ -21,7 +21,7 @@ enyo.kind(
   draggable: false,
   
   /** */
-  arrangerKind: "CarouselArranger",
+  //arrangerKind: "CarouselArranger",
   
   /** */
   published: {
@@ -118,5 +118,15 @@ enyo.kind(
 		
 		return this.dispatchBubble(inEventName, e, inSender);
 	},
+	
+	/** */
+	completed: function() {
+    var active;
+    this.inherited(arguments);
+    active = this.getActive();
+    if (active && active.didBecomeActive) {
+      active.didBecomeActive();
+    }
+	}
     
 });

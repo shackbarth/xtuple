@@ -13,20 +13,15 @@ body {
 
 .login-screen {
   .user-login-screen-container {
-    @include border-radius(10px, 10px);
-    @include box-shadow(#000 0 0 20px);
-    width: 300px;
+    width: 166px;
     height: 300px;
-    background-color: #ddd;
-    border: 10px solid #fff;
     margin-top: -150px;
-    margin-left: -150px;
+    margin-left: -83px;
     top: 50%;
     left: 50%;
     position: absolute;
     .user-login-block {
-      .user-login-block-row {
-        padding: 5px;
+      .user-login-block-row { 
       }
     }
   } 

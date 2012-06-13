@@ -25,8 +25,8 @@ enyo.kind(
     { kind: "XT.UserLoginBlockRow", components: [
       { kind: "onyx.InputDecorator", components: [
         { name: "organization", kind: "onyx.Input", placeholder: "Organization" } ]} ]},
-    { kind: "XT.UserLoginBlockRow", components: [
-      { name: "button", kind: "onyx.Button", content: "Login", handlers: { tap: "login" } } ]}
+    { kind: "XT.UserLoginBlockButtonRow", components: [
+      { name: "button", kind: "onyx.Button", content: "Login" } ]}
   ]
     
 });
@@ -39,5 +39,36 @@ enyo.kind(
   
   /** */
   classes: "user-login-block-row"
+    
+});
+
+enyo.kind(
+  /** */ {
+
+  /** */
+  name: "XT.UserLoginBlockButtonRow",
+  
+  /** */
+  kind: "XT.UserLoginBlockRow",
+  
+  /** */
+  tap: function() {
+    var owner = this.owner.$;
+    var credentials = {
+      username: owner.username.getValue(),
+      password: owner.password.getValue(),
+      organization: owner.organization.getValue()
+    };
+    var self = this;
+    XT.session.acquireSession(credentials, function(response) {
+      //owner.username.clear();
+      //owner.password.clear();
+      //owner.organization.clear();
+      
+      if (response.code === 1) {
+        self.bubble("multipleSessions", {eventName:"multipleSessions"});
+      } else { self.bubble("sessionAcquired", {eventName:"sessionAcquired"}); }
+    });
+  }
     
 });
