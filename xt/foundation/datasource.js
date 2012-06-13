@@ -113,6 +113,7 @@ enyo.kind(
   */
   /** @private */
   dispatch: function (name, func, params, options) {
+    var that = this;
     var payload = {
       requestType: 'dispatch',
       className: name,
@@ -129,7 +130,7 @@ enyo.kind(
     };
 
     XT.Request
-      .issue('function/dispatch')
+      .handle('function/dispatch')
       .notify(complete)
       .send(payload);
   },

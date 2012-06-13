@@ -31,6 +31,12 @@ XT.Model = Backbone.RelationalModel.extend(
   idAttribute: "guid",
   
   /**
+  Set to true if you want an id fetch from the server when the `insert` option
+  is passed on a new model
+  */
+  autoFetchId: true,
+  
+  /**
   Specify the name of a data source model here.
   */
   recordType: null,
@@ -48,11 +54,14 @@ XT.Model = Backbone.RelationalModel.extend(
 
   initialize: function() {
     var options = arguments[1];
+   
+    // set data source
+    this._dataSource = XT.dataSource;
     
     // initialize for inserted record
     if (options && options.insert) {
       this.attributes.dataState = 'inserted';
-      this.fetchId();
+      if (this.autoFetchId) this._fetchId();
     }
     
     // set id to read only
@@ -60,7 +69,10 @@ XT.Model = Backbone.RelationalModel.extend(
       this.readOnly.push(this.idAttribute);
     }
     
-    this._dataSource = XT.dataSource;
+    // set id as required
+    if (this.idAttribute && !_.contains(this.required, this.idAttribute)) {
+      this.required.push(this.idAttribute);
+    }
   },
   
   /**
@@ -95,21 +107,6 @@ XT.Model = Backbone.RelationalModel.extend(
     };
   
     return Backbone.Model.prototype.fetch.call(this, options);
-  },
-  
-  /**
-  Fetch a new guid from the server.
-  */
-  fetchId: function() {
-    var that = this;
-    var options = {};
-    var success = options.success;
-    
-    // fetch id
-    options.success = function(resp, status, xhr) {
-      this.set('guid', resp);
-    }; 
-    this._dataSource.dispatch('XT.Record', 'fetchId', this.recordType, options);
   },
   
   /**
@@ -189,6 +186,25 @@ XT.Model = Backbone.RelationalModel.extend(
   /** @private */
   _changed: function() {
     this.set('dataState', 'updated');
+  },
+  
+  /** @private */
+  _fetchId: function() {
+    var that = this;
+    var options = {};
+    
+    // callback
+    options.success = function(resp, status, xhr) {
+      var attr = that.idAttribute;
+      
+      // set the id
+      that.readOnly = _.without(that.readOnly, attr);
+      that.set(attr, resp);
+      that.readOnly.push(attr);
+    };
+    
+    // fetch id
+    this._dataSource.dispatch('XT.Record', 'fetchId', this.recordType, options);
   }
   
 });
