@@ -1,4 +1,6 @@
 enyo.depends(
   "proto",
-  "string.js"
+  "string.js",
+  "model.js",
+  "collection.js"
 );
