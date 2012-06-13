@@ -6,9 +6,9 @@
   It should be subclassed for any specific implentation. Subtypes should
   include a `recordType` the data source will use to retreive the record.
   
-  To create a new model include 'create' in the options like so:  
+  To create a new model include `isNew` in the options like so:  
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-    m = new XM.Contact({firstName: 'Randy'}, {create: true});
+    m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
     
   To load an existing record include a guid in the options like so:
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
@@ -58,8 +58,8 @@ XT.Model = Backbone.RelationalModel.extend(
     // set data source
     this._dataSource = XT.dataSource;
     
-    // initialize for created record
-    if (options && options.create) {
+    // initialize for new record
+    if (options && options.isNew) {
       this.attributes.dataState = 'created';
       if (this.autoFetchId) this._fetchId();
     }
@@ -79,14 +79,14 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented. A model is new if the dataState is "created".
+  Reimplemented. A model is new if the dataState is `created`.
   */
   isNew: function() {
     return this.get('dataState') === 'created';
   },
   
   /**
-  Returns true when dataState is 'created' or 'updated'.
+  Returns true when dataState is `created` or `updated`.
   */
   isDirty: function() {
     return this.get('dataState') === 'created' || this.get('dataState') === 'updated';
@@ -166,7 +166,7 @@ XT.Model = Backbone.RelationalModel.extend(
       return this._dataSource.retrieveRecord(recordType, id, options);
       
     // write
-    } else if (method == 'create' || method == 'update' || method === 'delete') {
+    } else if (method === 'create' || method === 'update' || method === 'delete') {
       var ret = this._dataSource.commitRecord(model, options);
       this.set('dataState', 'busy');
       return ret;
