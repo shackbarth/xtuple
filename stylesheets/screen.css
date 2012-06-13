@@ -80,26 +80,43 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 /* line 31, ../sass/screen.scss */
 .available-sessions-container .session-selection-row {
-  font-size: 14px;
+  margin-bottom: 2px;
 }
 /* line 33, ../sass/screen.scss */
-.available-sessions-container .session-selection-row div {
-  padding: 5px 5px;
-  overflow-x: hidden;
+.available-sessions-container .session-selection-row.header {
+  padding: 15px 5px;
 }
 /* line 36, ../sass/screen.scss */
-.available-sessions-container .session-selection-row div.session-row-username {
-  width: 100px;
+.available-sessions-container .session-selection-row.table-row {
+  font-size: 14px;
+  background-color: #fff;
 }
 /* line 39, ../sass/screen.scss */
-.available-sessions-container .session-selection-row div.session-row-organization {
-  width: 100px;
+.available-sessions-container .session-selection-row.table-row:hover {
+  background-color: #ddd;
 }
 /* line 42, ../sass/screen.scss */
-.available-sessions-container .session-selection-row div.session-row-created {
-  width: 100px;
+.available-sessions-container .session-selection-row.table-row:active {
+  background-color: #fff;
 }
 /* line 45, ../sass/screen.scss */
-.available-sessions-container .session-selection-row div.session-row-sid {
-  width: 200px;
+.available-sessions-container .session-selection-row.table-row div {
+  padding: 15px 5px;
+  overflow-x: hidden;
+}
+/* line 50, ../sass/screen.scss */
+.available-sessions-container .session-selection-row .session-row-username {
+  width: 100px;
+}
+/* line 53, ../sass/screen.scss */
+.available-sessions-container .session-selection-row .session-row-organization {
+  width: 120px;
+}
+/* line 56, ../sass/screen.scss */
+.available-sessions-container .session-selection-row .session-row-created {
+  width: 100px;
+}
+/* line 59, ../sass/screen.scss */
+.available-sessions-container .session-selection-row .session-row-sid {
+  width: 300px;
 }

@@ -22,12 +22,24 @@ enyo.kind(
   /** */
   tap: function(inSender, inEvent) {
     var self = this;
+    var origin = inEvent.originator;
+    var idx = inEvent.index;
+    var owner = origin.owner;
     
     // if the originator is the new-session button
-    if (inEvent.originator.name === "button") {
+    if (origin.name === "button") {
       XT.session.selectSession("FORCE_NEW_SESSION", function() {
         self.bubble("acquiredSession", {eventName:"acquiredSession"});
       });
+    } else {
+      
+      // we check to see if this was a row and if so handle
+      // that instead
+      if (owner.name === "item" || idx) {
+        XT.session.selectSession(idx, function() {
+          self.bubble("acquiredSession", {eventName:"acquiredSession"});
+        });
+      }
     }
   },
   
