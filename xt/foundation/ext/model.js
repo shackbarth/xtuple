@@ -6,9 +6,9 @@
   It should be subclassed for any specific implentation. Subtypes should
   include a `recordType` the data source will use to retreive the record.
   
-  To create a new model include 'insert' in the options like so:  
+  To create a new model include 'create' in the options like so:  
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-    m = new XM.Contact({firstName: 'Randy'}, {insert: true});
+    m = new XM.Contact({firstName: 'Randy'}, {create: true});
     
   To load an existing record include a guid in the options like so:
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
@@ -58,9 +58,9 @@ XT.Model = Backbone.RelationalModel.extend(
     // set data source
     this._dataSource = XT.dataSource;
     
-    // initialize for inserted record
-    if (options && options.insert) {
-      this.attributes.dataState = 'inserted';
+    // initialize for created record
+    if (options && options.create) {
+      this.attributes.dataState = 'created';
       if (this.autoFetchId) this._fetchId();
     }
     
@@ -76,17 +76,17 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented. A model is new if the dataState is "inserted".
+  Reimplemented. A model is new if the dataState is "created".
   */
   isNew: function() {
-    return this.get('dataState') === 'inserted';
+    return this.get('dataState') === 'created';
   },
   
   /**
-  Returns true when dataState is 'inserted' or 'updated'.
+  Returns true when dataState is 'created' or 'updated'.
   */
   isDirty: function() {
-    return this.get('dataState') === 'inserted' || this.get('dataState') === 'updated';
+    return this.get('dataState') === 'created' || this.get('dataState') === 'updated';
   },
 
   /**
