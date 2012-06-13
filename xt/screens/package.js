@@ -1,4 +1,7 @@
 enyo.depends(
+  "shared",
   "login",
-  "dashboard"
+  "dashboard",
+  "crm",
+  "billing"
 );

@@ -44,6 +44,8 @@ enyo.kind(
     var idx = children.indexOf(view);
     var prev = this.previousView;
     
+    this.log("currentViewChanged", viewName);
+    
     if (idx === -1) {
       
       // can't do anything if we can't find the requested
@@ -93,13 +95,17 @@ enyo.kind(
     var carouselEvents = this.getCarouselEvents();
     var evt = inEvent.eventName;
     var viewName = carouselEvents[evt];
-    
+        
     if (viewName) {
       this.setCurrentView(viewName);
     }
     
     // we got this, stop bubbling
     return true;
+  },
+  
+  indexChanged: function() {
+    this.inherited(arguments);
   },
   
   /** */
@@ -122,6 +128,7 @@ enyo.kind(
 	/** */
 	completed: function() {
     var active;
+    
     this.inherited(arguments);
     active = this.getActive();
     if (active && active.didBecomeActive) {
