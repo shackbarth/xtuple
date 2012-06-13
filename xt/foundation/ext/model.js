@@ -34,6 +34,17 @@ XT.Model = Backbone.RelationalModel.extend(
   Specify the name of a data source model here.
   */
   recordType: null,
+  
+  /**
+  An array of required attributes. A validate on the entire model will fail
+  until all the required attributes have values.
+  */
+  required: [],
+  
+  /**
+  An array of attributes that are not editable.
+  */
+  readOnly: [],
 
   initialize: function() {
     var options = arguments[1];
@@ -44,16 +55,12 @@ XT.Model = Backbone.RelationalModel.extend(
       this.fetchId();
     }
     
-    this._dataSource = XT.dataSource;
-  },
-  
-  /**
-  Change dataState to 'updated'.
-  */
-  attributeChanged: function() {
-    if (this.get('dataState') === 'read') {
-      this.set('dataState', 'updated');
+    // set id to read only
+    if (this.idAttribute && !_.contains(this.readOnly, this.idAttribute)) {
+      this.readOnly.push(this.idAttribute);
     }
+    
+    this._dataSource = XT.dataSource;
   },
   
   /**
@@ -74,17 +81,16 @@ XT.Model = Backbone.RelationalModel.extend(
   Reimplemented to handle state change.
   */
   fetch: function(options) {
-    // turn off state handling
-    this.off('change', this.attributeChanged);
-    this.set('dataState', 'busy fetching');
-    
-    // add call back to turn state handling back on after fetch
-    if (options === undefined) options = {};
+    options = options ? _.clone(options) : {};
     var that = this;
     var success = options.success;
-    options.sync = true;
+    
+    // turn off state handling
+    this.off('change', this._changed);
+    
+    // add call back to turn state handling back on after fetch
     options.success = function(resp, status, xhr) {
-      that.on('change', that.attributeChanged);
+      that.on('change', that._changed);
       if (success) success(model, resp, options);
     };
   
@@ -110,22 +116,8 @@ XT.Model = Backbone.RelationalModel.extend(
   Reimplemented.
   */
   set: function( key, value, options ) {
-    if (_.isObject(key) && value.fetched) this.set('dataState', 'read');
+    if (_.isObject(key) && value.sync) this.set('dataState', 'read');
     return Backbone.RelationalModel.prototype.set.call(this, key, value, options);
-  },
-  
-  /**
-  Reimplemented.
-  */
-  save: function(key, value, options) {
-    this.set('dataState', 'busy committing');
-    if (options === undefined) options = {};
-    var success = options.success;
-    options.success = function(resp, status, xhr) {
-      that.set('dataState', 'read');
-      if (success) success(model, resp, options);
-    };
-    return Backbone.Model.prototype.save.call(this, options);
   },
   
   /**
@@ -144,6 +136,9 @@ XT.Model = Backbone.RelationalModel.extend(
     var id = options.id || this.id;
     var success = options.success;
     
+    if (options === undefined) options = {};
+    options.sync = true;
+    
     // read
     if (method === 'read' && recordType && id && success) {
       return this._dataSource.retrieveRecord(recordType, id, options);
@@ -160,18 +155,26 @@ XT.Model = Backbone.RelationalModel.extend(
   Validate all required fields if no attributes specified.
   */
   validate: function(attributes, options) {
+    var attrs = attributes || this.attributes;
+    var i;
+    
     // check state
-    if (this.get('dataState') === 'busy' && !options.fetched) {
-      return 'Record is busy';
+    if (this.get('dataState') === 'busy' && !options.sync) {
+      return "Record is busy";
     } else if (this.get('dataState') === 'deleted') {
-      return 'Can not alter deleted record';
+      return "Can not alter deleted record";
     }
     
-    if (!attributes) {  // all
-      // check required
-      var required = this.required || [];
-      var i;
+    // check for editing on read-only
+    for (i = 0; i < this.readOnly.length; i++) {
+      var attr = this.readOnly[i];
+      if (attributes[attr] !== this.previous(attr)) {
+        return "Can not edit read only attribute " + attr + ".";
+      }
+    }
     
+    // if validating all check required
+    if (!attributes) {
       for (i = 0; i < required.length; i++) {
         if (!this.has(required[i])) {
           return "'" + required[i] + " is required.";
@@ -182,6 +185,11 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /** @private */
   _dataSource: null,
+  
+  /** @private */
+  _changed: function() {
+    this.set('dataState', 'updated');
+  }
   
 });
 
