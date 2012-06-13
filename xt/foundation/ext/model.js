@@ -3,12 +3,12 @@
   @class
   
   `XT.Model` is an abstract class designed to operate with `XT.DataSource`.
-  It should be subclass for any specific implentation. Subtypes should
-  include a `recordType` the data source will use retreive the record.
+  It should be subclassed for any specific implentation. Subtypes should
+  include a `recordType` the data source will use to retreive the record.
   
   To create a new model include 'insert' in the options like so:  
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-    m = new XM.Contact({insert: true});
+    m = new XM.Contact({firstName: 'Randy'}, {insert: true});
     
   To load an existing record include a guid in the options like so:
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
@@ -31,7 +31,7 @@ XT.Model = Backbone.RelationalModel.extend(
   idAttribute: "guid",
   
   /**
-  Set to true if you want an id fetch from the server when the `insert` option
+  Set to true if you want an id fetched from the server when the `insert` option
   is passed on a new model
   */
   autoFetchId: true,
@@ -163,18 +163,19 @@ XT.Model = Backbone.RelationalModel.extend(
     }
     
     // check for editing on read-only
-    for (i = 0; i < this.readOnly.length; i++) {
-      var attr = this.readOnly[i];
-      if (attributes[attr] !== this.previous(attr)) {
-        return "Can not edit read only attribute " + attr + ".";
+    if (attributes) {
+      for (i = 0; i < this.readOnly.length; i++) {
+        var attr = this.readOnly[i];
+        if (attributes[attr] !== this.previous(attr)) {
+          return "Can not edit read only attribute " + attr + ".";
+        }
       }
-    }
     
-    // if validating all check required
-    if (!attributes) {
-      for (i = 0; i < required.length; i++) {
-        if (!this.has(required[i])) {
-          return "'" + required[i] + " is required.";
+    // check required
+    } else {
+      for (i = 0; i < this.required.length; i++) {
+        if (!this.has(this.required[i])) {
+          return "'" + this.required[i] + "' is required.";
         }
       }
     }
