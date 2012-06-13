@@ -28,10 +28,17 @@ enyo.kind(
     var that = this;
     var payload = {};
     var complete = function(response) {
-      var dataHash = JSON.parse(response.data.rows[0].fetch);
-      if (dataHash.error && options && options.error) {  
-        options.error.call(that, response);
-      } else if (options && options.success) { 
+      var dataHash;
+      
+      // handle error
+      if (response.data.isError) { 
+        if (options && options.error) options.error.call(that);
+        return;
+      }
+      
+      // handle success
+      dataHash = JSON.parse(response.data.rows[0].fetch);
+      if (options && options.success) { 
         options.success.call(that, dataHash); 
       }
     };
@@ -56,10 +63,17 @@ enyo.kind(
     var that = this;
     var payload = {};
     var complete = function(response) {
-      var dataHash = JSON.parse(response.data.rows[0].retrieve_record);
-      if (dataHash.error && options && options.error) { 
-        options.error.call(that, response);
-      } else if (options && options.success) { 
+      var dataHash;
+      
+      // handle error
+      if (response.data.isError) { 
+        if (options && options.error) options.error.call(that);
+        return;
+      }
+      
+      // handle success
+      dataHash = JSON.parse(response.data.rows[0].retrieve_record);
+      if (options && options.success) { 
         options.success.call(that, dataHash); 
       }
     };
@@ -84,11 +98,20 @@ enyo.kind(
     var that = this;
     var payload = {};
     var complete = function(response) {
-      var dataHash = JSON.parse(response.data.rows[0].commit_record);
-      if (dataHash.error && options && options.error) { 
-        options.error.call(that);
+      var dataHash;
+    
+      // handle error
+      if (response.data.isError) { 
+        if (options && options.error) options.error.call(that);
+        return;
+      }
+      
+      // handle ok or complete hash response
+      dataHash = JSON.parse(response.data.rows[0].commit_record);
+      if (options && options.success && dataHash.status === 'ok') { 
+        options.success.call(that, { dataState: 'read'} ); 
       } else if (options && options.success) { 
-        options.success.call(that); 
+        options.success.call(that, dataHash ); 
       }
     };
     
@@ -121,10 +144,17 @@ enyo.kind(
       parameters: params
     };
     var complete = function(response) {
-      var dataHash = JSON.parse(response.data.rows[0].dispatch);
-      if (dataHash.error && options && options.error) {  
-        options.error.call(that, response);
-      } else if (options && options.success) { 
+      var dataHash;
+      
+      // handle error
+      if (response.data.isError) { 
+        if (options && options.error) options.error.call(that);
+        return;
+      }
+      
+      // handle success
+      dataHash = JSON.parse(response.data.rows[0].dispatch);
+      if (options && options.success) { 
         options.success.call(that, dataHash); 
       }
     };

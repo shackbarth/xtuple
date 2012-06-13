@@ -73,6 +73,9 @@ XT.Model = Backbone.RelationalModel.extend(
     if (this.idAttribute && !_.contains(this.required, this.idAttribute)) {
       this.required.push(this.idAttribute);
     }
+    
+    // set up state change handler
+    this.on('change', this._changed);
   },
   
   /**
@@ -88,7 +91,7 @@ XT.Model = Backbone.RelationalModel.extend(
   isDirty: function() {
     return this.get('dataState') === 'created' || this.get('dataState') === 'updated';
   },
-
+  
   /**
   Reimplemented to handle state change.
   */
@@ -97,12 +100,9 @@ XT.Model = Backbone.RelationalModel.extend(
     var that = this;
     var success = options.success;
     
-    // turn off state handling
-    this.off('change', this._changed);
-    
-    // add call back to turn state handling back on after fetch
+    // flip sync flag back on success
     options.success = function(resp, status, xhr) {
-      that.on('change', that._changed);
+      that._sync = false;
       if (success) success(model, resp, options);
     };
   
@@ -110,11 +110,26 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented.
+  Reimplemented to handle state change.
   */
-  set: function( key, value, options ) {
-    if (_.isObject(key) && value.sync) this.set('dataState', 'read');
-    return Backbone.RelationalModel.prototype.set.call(this, key, value, options);
+  save: function(key, value, options) {
+    // Handle both `("key", value)` and `({key: value})` -style calls.
+    if (_.isObject(key) || key === null || key === undefined) options = value;
+    options = options ? _.clone(options) : {};
+
+    var that = this;
+    var success = options.success;
+
+    // flip sync flag back on success
+    options.success = function(resp, status, xhr) {
+      that._sync = false;
+      if (success) success(model, resp, options);
+    };
+    
+    // Handle both `("key", value)` and `({key: value})` -style calls.
+    if (_.isObject(key) || key === null || key === undefined) value = options;
+  
+    return Backbone.Model.prototype.save.call(this, key, value, options);
   },
   
   /**
@@ -134,7 +149,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var success = options.success;
     
     if (options === undefined) options = {};
-    options.sync = true;
+    this._sync = true;
     
     // read
     if (method === 'read' && recordType && id && success) {
@@ -142,7 +157,9 @@ XT.Model = Backbone.RelationalModel.extend(
       
     // write
     } else if (method == 'create' || method == 'update' || method === 'delete') {
-      return this._dataSource.commitRecord(model, options);
+      var ret = this._dataSource.commitRecord(model, options);
+      this.set('dataState', 'busy');
+      return ret;
     }
     
     return false;
@@ -156,7 +173,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var i;
     
     // check state
-    if (this.get('dataState') === 'busy' && !options.sync) {
+    if (this.get('dataState') === 'busy' && !this._sync) {
       return "Record is busy";
     } else if (this.get('dataState') === 'deleted') {
       return "Can not alter deleted record";
@@ -184,9 +201,13 @@ XT.Model = Backbone.RelationalModel.extend(
   /** @private */
   _dataSource: null,
   
+  _sync: false,
+  
   /** @private */
   _changed: function() {
-    this.set('dataState', 'updated');
+    if (this.get('dataState') === 'read' && !this._sync) {
+      this.set('dataState', 'updated');
+    }
   },
   
   /** @private */
