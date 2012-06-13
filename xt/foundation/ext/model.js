@@ -3,12 +3,12 @@
   @class
   
   `XT.Model` is an abstract class designed to operate with `XT.DataSource`.
-  It should be subclass for any specific implentation. Subtypes should
-  include a `recordType` the data source will use retreive the record.
+  It should be subclassed for any specific implentation. Subtypes should
+  include a `recordType` the data source will use to retreive the record.
   
-  To create a new model include 'insert' in the options like so:  
+  To create a new model include 'create' in the options like so:  
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-    m = new XM.Contact({insert: true});
+    m = new XM.Contact({firstName: 'Randy'}, {create: true});
     
   To load an existing record include a guid in the options like so:
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
@@ -31,6 +31,12 @@ XT.Model = Backbone.RelationalModel.extend(
   idAttribute: "guid",
   
   /**
+  Set to true if you want an id fetched from the server when the `insert` option
+  is passed on a new model
+  */
+  autoFetchId: true,
+  
+  /**
   Specify the name of a data source model here.
   */
   recordType: null,
@@ -48,11 +54,14 @@ XT.Model = Backbone.RelationalModel.extend(
 
   initialize: function() {
     var options = arguments[1];
+   
+    // set data source
+    this._dataSource = XT.dataSource;
     
-    // initialize for inserted record
-    if (options && options.insert) {
-      this.attributes.dataState = 'inserted';
-      this.fetchId();
+    // initialize for created record
+    if (options && options.create) {
+      this.attributes.dataState = 'created';
+      if (this.autoFetchId) this._fetchId();
     }
     
     // set id to read only
@@ -60,21 +69,24 @@ XT.Model = Backbone.RelationalModel.extend(
       this.readOnly.push(this.idAttribute);
     }
     
-    this._dataSource = XT.dataSource;
+    // set id as required
+    if (this.idAttribute && !_.contains(this.required, this.idAttribute)) {
+      this.required.push(this.idAttribute);
+    }
   },
   
   /**
-  Reimplemented. A model is new if the dataState is "inserted".
+  Reimplemented. A model is new if the dataState is "created".
   */
   isNew: function() {
-    return this.get('dataState') === 'inserted';
+    return this.get('dataState') === 'created';
   },
   
   /**
-  Returns true when dataState is 'inserted' or 'updated'.
+  Returns true when dataState is 'created' or 'updated'.
   */
   isDirty: function() {
-    return this.get('dataState') === 'inserted' || this.get('dataState') === 'updated';
+    return this.get('dataState') === 'created' || this.get('dataState') === 'updated';
   },
 
   /**
@@ -95,21 +107,6 @@ XT.Model = Backbone.RelationalModel.extend(
     };
   
     return Backbone.Model.prototype.fetch.call(this, options);
-  },
-  
-  /**
-  Fetch a new guid from the server.
-  */
-  fetchId: function() {
-    var that = this;
-    var options = {};
-    var success = options.success;
-    
-    // fetch id
-    options.success = function(resp, status, xhr) {
-      this.set('guid', resp);
-    }; 
-    this._dataSource.dispatch('XT.Record', 'fetchId', this.recordType, options);
   },
   
   /**
@@ -166,18 +163,19 @@ XT.Model = Backbone.RelationalModel.extend(
     }
     
     // check for editing on read-only
-    for (i = 0; i < this.readOnly.length; i++) {
-      var attr = this.readOnly[i];
-      if (attributes[attr] !== this.previous(attr)) {
-        return "Can not edit read only attribute " + attr + ".";
+    if (attributes) {
+      for (i = 0; i < this.readOnly.length; i++) {
+        var attr = this.readOnly[i];
+        if (attributes[attr] !== this.previous(attr)) {
+          return "Can not edit read only attribute " + attr + ".";
+        }
       }
-    }
     
-    // if validating all check required
-    if (!attributes) {
-      for (i = 0; i < required.length; i++) {
-        if (!this.has(required[i])) {
-          return "'" + required[i] + " is required.";
+    // check required
+    } else {
+      for (i = 0; i < this.required.length; i++) {
+        if (!this.has(this.required[i])) {
+          return "'" + this.required[i] + "' is required.";
         }
       }
     }
@@ -189,6 +187,25 @@ XT.Model = Backbone.RelationalModel.extend(
   /** @private */
   _changed: function() {
     this.set('dataState', 'updated');
+  },
+  
+  /** @private */
+  _fetchId: function() {
+    var that = this;
+    var options = {};
+    
+    // callback
+    options.success = function(resp, status, xhr) {
+      var attr = that.idAttribute;
+      
+      // set the id
+      that.readOnly = _.without(that.readOnly, attr);
+      that.set(attr, resp);
+      that.readOnly.push(attr);
+    };
+    
+    // fetch id
+    this._dataSource.dispatch('XT.Record', 'fetchId', this.recordType, options);
   }
   
 });
