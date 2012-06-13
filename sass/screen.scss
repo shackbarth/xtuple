@@ -29,22 +29,35 @@ body {
 
 .available-sessions-container {
   .session-selection-row {
-    font-size: 14px;
-    div {
-      padding: 5px 5px;
-      overflow-x: hidden;
-      &.session-row-username {
-        width: 100px;
+    margin-bottom: 2px;
+    &.header {
+      padding: 15px 5px;
+    }
+    &.table-row {
+      font-size: 14px;
+      background-color: #fff;
+      &:hover {
+        background-color: #ddd;
       }
-      &.session-row-organization {
-        width: 100px;
+      &:active {
+        background-color: #fff;
       }
-      &.session-row-created {
-        width: 100px;
+      div {
+        padding: 15px 5px;
+        overflow-x: hidden;
       }
-      &.session-row-sid {
-        width: 200px;
-      }
+    }
+    .session-row-username {
+      width: 100px;
+    }
+    .session-row-organization {
+      width: 120px;
+    }
+    .session-row-created {
+      width: 100px;
+    }
+    .session-row-sid {
+      width: 300px;
     }
   }
 }
