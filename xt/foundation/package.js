@@ -4,7 +4,5 @@ enyo.depends(
   "request.js",
   "response.js",
   "session.js",
-  "model.js",
-  "collection.js",
   "ext"
 );
