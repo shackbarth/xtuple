@@ -25,7 +25,7 @@ enyo.kind({
 enyo.kind(
   /** @scope XT.MainFrameScreen.prototype */ {
 
-  name: "XT.MainFrameScreen",
+  name: "XT.Dashboard",
   
   kind: "FittableRows",
   

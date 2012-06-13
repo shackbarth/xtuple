@@ -9,11 +9,24 @@ enyo.kind(
   kind: "Component",
   
   published: {
-    details: {}
+    details: {},
+    availableSessions: []
   },
   
   create: function() {
     this.inherited(arguments);
+  },
+  
+  selectSession: function(idx, callback) {
+    var self = this;
+    var complete = function(payload) {
+      self._didAcquireSession.call(self, payload, callback);
+    };
+    
+    XT.Request
+      .handle("session/select")
+      .notify(complete)
+      .send(idx);
   },
   
   acquireSession: function(credentials, callback) {
@@ -36,6 +49,11 @@ enyo.kind(
     var self = this;
     var complete;
     
+    // if there are multiple selection options
+    if (payload.code === 1) {
+      this.setAvailableSessions(payload.data);
+    }
+    
     // if this is a valid session acquisition, go ahead
     // and store the properties
     if (payload.code === 4) {
@@ -45,28 +63,6 @@ enyo.kind(
     if (callback && callback instanceof Function) {
       callback(payload);
     }
-    
-    // // in the case where there are multiple sessions...
-    // if (payload.code === 1) {
-    //   complete = function(payload) {
-    //     self._didAcquireSession.call(self, payload, callback);
-    //   };
-    //   
-    //   // TEMPORARY!
-    //   XT.Request
-    //     .handle("session/select")
-    //     .notify(complete)
-    //     .send("FORCE_NEW_SESSION");
-    // } else if (payload.code === 4) {
-    //   
-    //   // we're all ok, this is the valid state
-    //   this.setDetails(payload.data);
-    //   if (callback && callback instanceof Function) {
-    //     callback(payload.data);
-    //   } else { console.warn("NO CALLBACK FOR SESSION"); }
-    // } else {
-    //   console.error("What the $*&! is this session stuff", payload);
-    // }
   }
     
 });
