@@ -6,6 +6,9 @@ enyo.kind(
   name: "XT.AvailableSessions",
   
   /** */
+  classes: "available-sessions-container",
+  
+  /** */
   kind: "FittableRows",
   
   /** */
@@ -13,7 +16,12 @@ enyo.kind(
   
   /** */
   components: [
-    { name: "list", kind: "List", fit: true, multiSelect: false, onSetupItem: "setupSession", components: [
+    { name: "header", kind: "FittableColumns", classes: "session-selection-row", components: [
+      { content: "Username", classes: "session-row-username" },
+      { content: "Organization", classes: "session-row-organization" },
+      { content: "Created", classes: "session-row-created" },
+      { content: "Session ID", classes: "session-row-sid" } ]},
+    { name: "list", kind: "List", fit: true, multiSelect: false, onSetupItem: "setupRow", components: [
       { name: "item", kind: "XT.SessionSelectionRow" } ]}
   ],
   
@@ -23,8 +31,6 @@ enyo.kind(
     
     this.inherited(arguments);
     
-    console.log(this);
-    
     if (this.hasNode() && XT.session && this.getShowing()) {
       sessions = XT.session.getAvailableSessions() || [];
       this.$.list.setCount(sessions.length);
@@ -33,12 +39,10 @@ enyo.kind(
   },
   
   /** */
-  setupSession: function(inSender, inEvent) {
+  setupRow: function(inSender, inEvent) {
     var row = this.$.item;
     var idx = inEvent.index;
     var data = XT.session.getAvailableSessions()[idx].sessionData;
-    
-    this.log(this, data, inEvent);
     
     row.$.username.setContent(data.username);
     row.$.organization.setContent(data.organization);
@@ -55,14 +59,17 @@ enyo.kind(
   name: "XT.SessionSelectionRow",
   
   /** */
+  kind: "FittableColumns",
+  
+  /** */
   classes: "session-selection-row",
   
   /** */
   components: [
-    { name: "username" },
-    { name: "organization" },
-    { name: "created" },
-    { name: "sid" }
+    { name: "username", classes: "session-row-username" },
+    { name: "organization", classes: "session-row-organization" },
+    { name: "created", classes: "session-row-created" },
+    { name: "sid", classes: "session-row-sid" }
   ]
     
 });

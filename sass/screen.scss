@@ -26,3 +26,25 @@ body {
     }
   } 
 }
+
+.available-sessions-container {
+  .session-selection-row {
+    font-size: 14px;
+    div {
+      padding: 5px 5px;
+      overflow-x: hidden;
+      &.session-row-username {
+        width: 100px;
+      }
+      &.session-row-organization {
+        width: 100px;
+      }
+      &.session-row-created {
+        width: 100px;
+      }
+      &.session-row-sid {
+        width: 200px;
+      }
+    }
+  }
+}

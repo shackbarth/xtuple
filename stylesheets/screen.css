@@ -77,3 +77,29 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   left: 50%;
   position: absolute;
 }
+
+/* line 31, ../sass/screen.scss */
+.available-sessions-container .session-selection-row {
+  font-size: 14px;
+}
+/* line 33, ../sass/screen.scss */
+.available-sessions-container .session-selection-row div {
+  padding: 5px 5px;
+  overflow-x: hidden;
+}
+/* line 36, ../sass/screen.scss */
+.available-sessions-container .session-selection-row div.session-row-username {
+  width: 100px;
+}
+/* line 39, ../sass/screen.scss */
+.available-sessions-container .session-selection-row div.session-row-organization {
+  width: 100px;
+}
+/* line 42, ../sass/screen.scss */
+.available-sessions-container .session-selection-row div.session-row-created {
+  width: 100px;
+}
+/* line 45, ../sass/screen.scss */
+.available-sessions-container .session-selection-row div.session-row-sid {
+  width: 200px;
+}
