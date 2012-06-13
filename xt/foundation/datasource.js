@@ -156,6 +156,9 @@ enyo.kind(
     this._sock.on("error", function(err) {
       didError.call(self, err);
     });
+    this._sock.on("debug", function(msg) {
+      self.log("SERVER DEBUG => ", msg);
+    });
   },
   
   /* @private */
