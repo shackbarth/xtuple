@@ -136,6 +136,16 @@ XT.Model = Backbone.RelationalModel.extend(
   Reimplemented.
   */
   destroy: function(options) {
+    options = options ? _.clone(options) : {};
+    var that = this;
+    var success = options.success;
+    
+    // clear on success
+    options.success = function(resp, status, xhr) {
+      that.clear({silent: true});
+      if (success) success(model, resp, options);
+    };
+
     this.set('dataState', 'deleted');
     return Backbone.Model.prototype.destroy.call(this, options);
   },
