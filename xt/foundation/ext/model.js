@@ -135,8 +135,9 @@ XT.Model = Backbone.RelationalModel.extend(
   @param {String} attribute
   */
   isReadOnly: function(attr) {
-    if (!_.isString(attr) || this._readOnly || !this.canUpdate()) {
-      return this._readOnly || !this.canUpdate();
+    var canNotUpdate = !this.canUpdate();
+    if (!_.isString(attr) || this._readOnly || canNotUpdate) {
+      return this._readOnly || canNotUpdate;
     }
     return _.contains(this.readOnly, attr);
   },
@@ -149,7 +150,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // initialize for new record
     if (options && options.isNew) {
-      this.attributes.dataState = 'created';
+      this.attributes.dataState = 'create';
       if (this.autoFetchId) this._fetchId();
     }
     
@@ -168,18 +169,18 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented. A model is new if the dataState is `created`.
+  Reimplemented. A model is new if the dataState is `create`.
   */
   isNew: function() {
-    return this.get('dataState') === 'created';
+    return this.get('dataState') === 'create';
   },
   
   /**
-  Returns true when dataState is `created` or `updated`.
+  Returns true when dataState is `create` or `update`.
   */
   isDirty: function() {
     var dataState = this.get('dataState');
-    return dataState === 'created' || dataState === 'updated';
+    return dataState === 'create' || dataState === 'update';
   },
   
   /**
@@ -239,7 +240,7 @@ XT.Model = Backbone.RelationalModel.extend(
       if (success) success(model, resp, options);
     };
 
-    this.set('dataState', 'deleted');
+    this.set('dataState', 'delete');
     return Backbone.Model.prototype.destroy.call(this, options);
   },
   
@@ -281,8 +282,6 @@ XT.Model = Backbone.RelationalModel.extend(
     // check state
     if (this.get('dataState') === 'busy' && !this._sync) {
       return "Record is busy";
-    } else if (this.get('dataState') === 'deleted') {
-      return "Can not alter deleted record";
     }
     
     // check for editing on read-only
@@ -327,7 +326,7 @@ XT.Model = Backbone.RelationalModel.extend(
   /** @private */
   _changed: function() {
     if (this.get('dataState') === 'read' && !this._sync) {
-      this.set('dataState', 'updated');
+      this.set('dataState', 'update');
     }
   },
   
@@ -365,7 +364,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         sessionPrivs = XT.session.getPrivileges(),
         isGranted = false;
 
-    if (sessionPrivs) {
+    if (sessionPrivs && sessionPrivs.get) {
       // check global
       isGranted = privileges.all && privileges.all.create && 
                   sessionPrivs.get(privileges.all.create) === true;
@@ -391,7 +390,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         sessionPrivs = XT.session.privileges,
         isGranted = false;
 
-    if (sessionPrivs) {
+    if (sessionPrivs && sessionPrivs.get) {
       // check global read privilege
       isGranted = privileges.all && privileges.all.read && 
                   sessionPrivs.get(privileges.all.read) === true;
@@ -448,7 +447,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         isGrantedPersonal = false,
         userName = XT.session.details.username;
 
-    if (sessionPrivs) {
+    if (sessionPrivs && sessionPrivs.get) {
       // check global privileges
       if (privileges.all && privileges.all[action]) {
         isGrantedAll = sessionPrivs.get(privileges.all[action]) === true;
