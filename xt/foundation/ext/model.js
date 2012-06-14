@@ -31,8 +31,8 @@ XT.Model = Backbone.RelationalModel.extend(
   idAttribute: "guid",
   
   /**
-  Set to true if you want an id fetched from the server when the `insert` option
-  is passed on a new model
+  Set to true if you want an id fetched from the server when the `isNew` option
+  is passed on a new model.
   */
   autoFetchId: true,
   
@@ -176,7 +176,10 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Validate all required fields if no attributes specified.
+  Validate:
+   * State
+   * All required fields present if no attributes specified.
+   * Read only attributes are not being edited
   */
   validate: function(attributes, options) {
     var attrs = attributes || this.attributes;
@@ -211,6 +214,7 @@ XT.Model = Backbone.RelationalModel.extend(
   /** @private */
   _dataSource: null,
   
+  /** @private */
   _sync: false,
   
   /** @private */
