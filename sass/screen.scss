@@ -90,3 +90,64 @@ body {}
     }
   }
 }
+
+
+.developer-ui-container {
+  @include box-shadow(#333 4px 4px 10px -4px);
+  @include border-corner-radius(bottom, right, 10px);
+  top: 100px;
+  left: 0;
+  position: absolute;
+  
+  background-color: #d8d8d8;
+  z-index: 10;
+  .developer-rows {
+    .row {
+      display: block;
+      margin: 10px;
+    }
+  }
+  .onyx-grabber {
+    &.developer-grabber {
+      @include box-shadow(#333 4px 4px 10px -4px);
+      @include border-corner-radius(top, right, 10px);
+      @include border-corner-radius(bottom, right, 10px);
+      background-color: #d8d8d8;
+      position: absolute;
+      right: -47px;
+      top: 0;
+      height: 54px;
+      width: 50px;
+    }
+  }
+}
+
+
+
+
+
+.module-left-panel-container {
+  background-color: #333;
+  color: #fff;
+  width: 320px;
+}
+
+.module-right-panel-container {
+  @include box-shadow(#000 -4px 0 10px -4px);
+  background-color: #555;
+  color: #fff;
+}
+
+.crm-menu-item {
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  background-color: #fff;
+  color: #000;
+  &.selected {
+    background-color: #eee;
+  }
+  &:hover {
+    background-color: #eee;
+  }
+}

@@ -44,9 +44,11 @@ enyo.kind(
     var idx = children.indexOf(view);
     var prev = this.previousView;
     
-    this.log("currentViewChanged", viewName);
+    this.log(this.name, "currentViewChanged", viewName);
     
     if (idx === -1) {
+      
+      this.log(this.name, "Could not find requested view %@".f(viewName), this.children, view, this.$);
       
       // can't do anything if we can't find the requested
       // view, so return the currentView to the one it was
@@ -87,6 +89,11 @@ enyo.kind(
     }
     
     // carry on
+    this.inherited(arguments);
+  },
+  
+  dispatch: function() {
+    //this.log(this.name, arguments);
     this.inherited(arguments);
   },
   

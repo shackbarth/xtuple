@@ -210,6 +210,20 @@ enyo.kind(
     if (!XT.session) {
       XT.session = new XT.Session();
     }
+  },
+  
+  reset: function() {
+    if (!this.getIsConnected()) {
+      return;
+    }
+    
+    var sock = this._sock;
+    if (sock) {
+      sock.disconnect();
+      this.setIsConnected(false);
+    }
+    
+    this._connect();
   }
   
 });

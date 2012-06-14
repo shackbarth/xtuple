@@ -8,14 +8,10 @@ enyo.kind(
   name: "App",
   
   /** */
-  kind: "XT.ScreenCarousel",
+  fit: true,
   
   /** */
-  components: [
-    { name: "login", kind: "XT.Login" },
-    { name: "crm", kind: "XT.Crm" },
-    { name: "billing", kind: "XT.Billing" }
-  ],
+  classes: "enyo-unselectable",
   
   /** */
   published: {
@@ -25,16 +21,22 @@ enyo.kind(
   },
   
   /** */
-  carouselEvents: {
+  components: [
     
     /** */
-    dashboard: "login",
+    { name: "postbooks", kind: "XT.Postbooks" }
+  ],
+  
+  /** */
+  create: function() {
+    this.inherited(arguments);
     
-    /** */
-    crm: "crm",
-    
-    /** */
-    billing: "billing"
+    if (DEVELOPMENT_MODE) {
+      this.createComponent({
+        name: "developer",
+        kind: "XT.DeveloperUI"
+      });
+    }
   },
   
   start: function() {
