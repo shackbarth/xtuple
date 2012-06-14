@@ -51,6 +51,48 @@ XT.Model = Backbone.RelationalModel.extend(
   An array of attributes that are not editable.
   */
   readOnly: [],
+  
+  /**
+  Set the entire model, or a specific model attribute to readOnly. Privilege
+  enforcement supercedes read-only settings.
+  
+  Examples:
+  
+  model.setReadOnly() // sets model to read only
+  model.setReadOnly(false) // sets model to be editable
+  model.setReadOnly('name') // sets 'name' attribute to read-only
+  model.setReadOnly('name', false) // sets 'name' attribute to be editable 
+  
+  @param {String|Boolean} Attribute to set, or boolean if setting the model
+  @param {Boolean} boolean - default = true.
+  */
+  setReadOnly: function(key, value) {
+    // handle attribute
+    if (_.isString(key)) {
+      value = _.isBoolean(value) ? value : true;
+      if (value && !_.contains(this.readOnly, key)) {
+        this.readOnly.push(key);
+      } else if (!value && _.contains(this.readOnly, key)) {
+        this.readOnly = _.without(this.readOnly, key);
+      }
+      return;
+    }
+    
+    // handle model
+    key = _.isBoolean(key) ? key : true;
+    this._readOnly = key;
+  },
+  
+  /**
+  Return whether the model is in a read-only state. If an attribute name
+  is passed, returns whether that attribute is read only.
+
+  @param {String} attribute
+  */
+  isReadOnly: function(attr) {
+    if (!_.isString(attr) || this._readOnly) return this._readOnly;
+    return _.contains(this.readOnly, attr);
+  },
 
   initialize: function() {
     var options = arguments[1];
@@ -194,6 +236,10 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // check for editing on read-only
     if (attributes) {
+      if (this.isReadOnly()) {
+        return "Record is in read only mode.";
+      }
+      
       for (i = 0; i < this.readOnly.length; i++) {
         var attr = this.readOnly[i];
         if (attributes[attr] !== this.previous(attr)) {
@@ -213,6 +259,9 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /** @private */
   _dataSource: null,
+  
+  /** @private */
+  _readOnly: false,
   
   /** @private */
   _sync: false,
