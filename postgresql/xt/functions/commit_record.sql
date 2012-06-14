@@ -14,6 +14,7 @@ create or replace function xt.commit_record(data_hash text) returns text as $$
   
 $$ language plv8;
 /*
+select xt.js_init();
 select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
@@ -37,7 +38,7 @@ select xt.commit_record(
         "isActive":true,
         "propername":"administrator",
         "type": "UserAccount",
-        "dataState":"created"
+        "dataState":"create"
       },
       "primaryEmail":"jdr@gmail.com",
       "address": null,
@@ -50,7 +51,7 @@ select xt.commit_record(
         "text":"booya!",
         "isPublic":false,
         "type": "ContactComment",
-        "dataState":"created"
+        "dataState":"create"
         },{
         "guid":739894,
         "contact":12171,
@@ -60,13 +61,13 @@ select xt.commit_record(
         "text":"Now is the time for all good men...",
         "isPublic":false,
         "type": "ContactComment",
-        "dataState":"created"
+        "dataState":"create"
         }
       ],
       "characteristics":[],
       "email":[],
       "type": "Contact",
-      "dataState":"created"
+      "dataState":"create"
     }
   }'
 );
@@ -100,6 +101,8 @@ select xt.commit_record(
       "primaryEmail":"jane@gmail.com",
       "address":{
         "guid":1,
+        "number": "1",
+        "isActive": true,
         "line1":"Tremendous Toys Inc.",
         "line2":"101 Toys Place",
         "line3":"",
@@ -117,7 +120,8 @@ select xt.commit_record(
         "createdBy":"admin", 
         "commentType":"3",
         "text":"booya!",
-        "isPublic":false
+        "isPublic":false,
+        "dataState":"update"
         },{
         "guid":739894,
         "contact":12171,
@@ -127,12 +131,12 @@ select xt.commit_record(
         "text":"Now is NOT the time for all good men...",
         "isPublic":false,
         "type": "ContactComment",
-        "dataState":"updated"
+        "dataState":"update"
       }],
       "characteristics":[],
       "email":[],
       "type": "Contact",
-      "dataState":"updated"
+      "dataState":"update"
     }
   }'
 );
@@ -166,6 +170,8 @@ select xt.commit_record(
       "primaryEmail":"jane@gmail.com",
       "address":{
         "guid":1,
+        "number": "1",
+        "isActive": true,
         "line1":"Tremendous Toys Inc.",
         "line2":"101 Toys Place",
         "line3":"",
@@ -177,7 +183,7 @@ select xt.commit_record(
         "dataState":"read"
       },
       "comments":[{
-        "dataState":"deleted",
+        "dataState":"delete",
         "guid":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
@@ -188,7 +194,7 @@ select xt.commit_record(
         "type": "ContactComment",
         "dataState":"read"
         },{
-        "dataState":"deleted",
+        "dataState":"delete",
         "guid":739894,
         "contact":12171,
         "date":"2011-12-21 12:47:12.756437-05",
@@ -202,7 +208,7 @@ select xt.commit_record(
       "characteristics":[],
       "email":[],
       "type": "Contact",
-      "dataState":"deleted"
+      "dataState":"delete"
     }
   }'
 );

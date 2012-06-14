@@ -17,10 +17,10 @@ select xt.install_js('XT','Data','xtuple', $$
     DATE_TYPE: "D",
     STRING_TYPE: "S",
   
-    CREATED_STATE: 'created',
+    CREATED_STATE: 'create',
     READ_STATE: "read",
-    UPDATED_STATE: 'updated',
-    DELETED_STATE: 'deleted',
+    UPDATED_STATE: 'update',
+    DELETED_STATE: 'delete',
 
     /** 
       Build a SQL clause based on privileges for name space and type, and conditions and parameters passed. Input 
