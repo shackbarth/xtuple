@@ -10,11 +10,70 @@ enyo.kind(
   
   published: {
     details: {},
-    availableSessions: []
+    availableSessions: [],
+    privileges: {},
+    settings: {}
   },
+  
+  SETTINGS: 0x01,
+  PRIVILEGES: 0x02,
+  ALL: 0x01 | 0x02,
   
   create: function() {
     this.inherited(arguments);
+  },
+  
+  /**
+    Loads session objects for settings, preferences and privileges into local
+    memory. Types `XT.session.SETTINGS` or `XT.session.PRIVILEGES` can be passed 
+    as bitwise operators. If no arguments are passed the default is 
+    `XT.session.ALL` which will load all session objects.
+  */
+  loadSessionObjects: function(types) {
+    var that = this;
+
+    if (types === undefined) types = this.ALL;
+
+    if (types & this.PRIVILEGES) {
+      var privilegesOptions = {};
+      
+      // callback
+      privilegesOptions.success = function(resp, status, xhr) {
+        var privileges = new Backbone.Model();
+
+        // Loop through the response and set a privilege for each found.
+        resp.forEach(function(item) {
+          privileges.set(item.privilege, item.isGranted);
+        });
+
+        // Attach the privileges to the session object.
+        that.setPrivileges(privileges);
+      };
+
+      // dispatch
+      XT.dataSource.dispatch('XT.Session', 'privileges', null, privilegesOptions);
+    }
+
+    if (types & this.SETTINGS) {
+      var settingsOptions = {};
+      
+      // callback
+      settingsOptions.success = function(resp, status, xhr) {
+        var settings = new Backbone.Model();
+
+        // Loop through the response and set a setting for each found
+        resp.forEach(function(item) {
+          settings.set(item.setting, item.value);
+        });
+
+        // Attach the settings to the session object
+        that.setSettings(settings);
+      };
+
+      XT.dataSource.dispatch('XT.Session', 'settings', null, settingsOptions);
+    }
+
+    return true;
   },
   
   selectSession: function(idx, callback) {
