@@ -1,4 +1,13 @@
 enyo.depends(
-  "priority.js",
-  "project.js"
+  "Account.js",
+  "Contact.js",
+  "File.js",
+  "Image.js",
+  "Incident.js",
+  "Item.js",
+  "Priority.js",
+  "Project.js",
+  "Url.js",
+  "UserAccount.js",
+  "modules"
 );

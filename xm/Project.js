@@ -1,5 +1,8 @@
 
 /**
+  @class
+  
+  @extends XT.Model
 */
 XM.Project = XT.Model.extend(
   /** @scope XM.Project.prototype */ {
@@ -18,17 +21,81 @@ XM.Project = XT.Model.extend(
   ],
 
   relations: [{
+    type: Backbone.HasOne,
+    key: 'account',
+    relatedModel: 'XM.AccountInfo'
+  },{
+    type: Backbone.HasOne,
+    key: 'contact',
+    relatedModel: 'XM.ContactInfo'
+  },{
+    type: Backbone.HasOne,
+    key: 'owner',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasOne,
+    key: 'assignedTo',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
     type: Backbone.HasMany,
     key: 'tasks',
     relatedModel: 'XM.ProjectTask',
     reverseRelation: {
       key: 'project'
     }
-  },
-  {
+  },{
     type: Backbone.HasMany,
     key: 'comments',
     relatedModel: 'XM.ProjectComment',
+    reverseRelation: {
+      key: 'project'
+    }
+  },{
+    type: Backbone.HasMany,
+    key: 'accounts',
+    relatedModel: 'XM.ProjectAccount',
+    reverseRelation: {
+      key: 'project'
+    }
+  },{
+    type: Backbone.HasMany,
+    key: 'contacts',
+    relatedModel: 'XM.ProjectContact',
+    reverseRelation: {
+      key: 'project'
+    }
+  },{
+    type: Backbone.HasMany,
+    key: 'items',
+    relatedModel: 'XM.ProjectItem',
+    reverseRelation: {
+      key: 'project'
+    }
+  },{
+    type: Backbone.HasMany,
+    key: 'files',
+    relatedModel: 'XM.ProjectFile',
+    reverseRelation: {
+      key: 'project'
+    }
+  },{
+    type: Backbone.HasMany,
+    key: 'images',
+    relatedModel: 'XM.ProjectImage',
+    reverseRelation: {
+      key: 'project'
+    }
+  },{
+    type: Backbone.HasMany,
+    key: 'urls',
+    relatedModel: 'XM.ProjectUrl',
+    reverseRelation: {
+      key: 'project'
+    }
+  },{
+    type: Backbone.HasMany,
+    key: 'projects',
+    relatedModel: 'XM.ProjectProject',
     reverseRelation: {
       key: 'project'
     }
@@ -37,6 +104,159 @@ XM.Project = XT.Model.extend(
 });
 
 /**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectComment = XT.Model.extend(
+  /** @scope XM.ProjectComment.prototype */ {
+
+  recordType: 'XM.ProjectComment',
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectAccount = XT.Model.extend(
+  /** @scope XM.ProjectAccount.prototype */ {
+
+  recordType: 'XM.ProjectAccount',
+ /*
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'account',
+    relatedModel: 'XM.AccountInfo'
+  }]
+  */
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectContact = XT.Model.extend(
+  /** @scope XM.ProjectContact.prototype */ {
+
+  recordType: 'XM.ProjectContact',
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'contact',
+    relatedModel: 'XM.ContactInfo'
+  }]
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectItem = XT.Model.extend(
+  /** @scope XM.ProjectItem.prototype */ {
+
+  recordType: 'XM.ProjectItem',
+
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'item',
+    relatedModel: 'XM.ItemInfo'
+  }]
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectFile = XT.Model.extend(
+  /** @scope XM.ProjectFile.prototype */ {
+
+  recordType: 'XM.ProjectFile',
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'file',
+    relatedModel: 'XM.FileInfo'
+  }]
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectImage = XT.Model.extend(
+  /** @scope XM.ProjectImage.prototype */ {
+
+  recordType: 'XM.ProjectImage',
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'image',
+    relatedModel: 'XM.ImageInfo'
+  }]
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectUrl = XT.Model.extend(
+  /** @scope XM.ProjectUrl.prototype */ {
+
+  recordType: 'XM.ProjectUrl',
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'url',
+    relatedModel: 'XM.Url'
+  }]
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectProject = XT.Model.extend(
+  /** @scope XM.ProjectProject.prototype */ {
+
+  recordType: 'XM.ProjectProject',
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'project',
+    relatedModel: 'XM.ProjectInfo'
+  }]
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectContact = XT.Model.extend(
+  /** @scope XM.ProjectContact.prototype */ {
+
+  recordType: 'XM.ProjectContact',
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
 */
 XM.ProjectTask = XT.Model.extend(
   /** @scope XM.ProjectTask.prototype */ {
@@ -52,20 +272,43 @@ XM.ProjectTask = XT.Model.extend(
     "projectTaskStatus",
     "name",
     "dueDate"
-  ]
+  ],
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'owner',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasOne,
+    key: 'assignedTo',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasMany,
+    key: 'comments',
+    relatedModel: 'XM.ProjectTaskComment',
+    reverseRelation: {
+      key: 'project'
+    }
+  }]
   
 });
 
 /**
+  @class
+  
+  @extends XT.Model
 */
-XM.ProjectComment = XT.Model.extend(
-  /** @scope XM.ProjectComment.prototype */ {
+XM.ProjectTaskComment = XT.Model.extend(
+  /** @scope XM.ProjectTaskComment.prototype */ {
 
-  recordType: 'XM.ProjectComment',
+  recordType: 'XM.ProjectTaskComment',
   
 });
 
 /**
+  @class
+  
+  @extends XT.Model
 */
 XM.ProjectInfo = XT.Model.extend(
   /** @scope XM.ProjectInfo.prototype */ {
@@ -76,7 +319,10 @@ XM.ProjectInfo = XT.Model.extend(
 
 // Collections
 
-/*
+/**
+  @class
+  
+  @extends XT.Collection
 */
 XM.ProjectCollection = XT.Collection.extend(
   /** @scope XM.ProjectCollection.prototype */ {
