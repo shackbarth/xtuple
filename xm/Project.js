@@ -99,6 +99,13 @@ XM.Project = XT.Model.extend(
     reverseRelation: {
       key: 'project'
     }
+  },{
+    type: Backbone.HasMany,
+    key: 'recurrences',
+    relatedModel: 'XM.ProjectRecurrence',
+    reverseRelation: {
+      key: 'project'
+    }
   }]
   
 });
@@ -292,6 +299,18 @@ XM.ProjectTask = XT.Model.extend(
       key: 'project'
     }
   }]
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectRecurrence = XT.Model.extend(
+  /** @scope XM.ProjectRecurrence.prototype */ {
+
+  recordType: 'XM.ProjectRecurrence'
   
 });
 
