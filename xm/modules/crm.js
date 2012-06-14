@@ -8,6 +8,8 @@ XM.ProjectIncident = XT.Model.extend(
   /** @scope XM.ProjectIncident.prototype */ {
 
   recordType: 'XM.ProjectIncident',
+  
+  isDocumentAssignment: true,
  
   relations: [{
     type: Backbone.HasOne,
@@ -27,6 +29,8 @@ XM.ProjectOpportunity = XT.Model.extend(
 
   recordType: 'XM.ProjectOpportunity',
  
+  isDocumentAssignment: true,
+ 
   relations: [{
     type: Backbone.HasOne,
     key: 'opportunity',
@@ -45,6 +49,8 @@ XM.ProjectToDo = XT.Model.extend(
 
   recordType: 'XM.ProjectToDo',
  
+  isDocumentAssignment: true,
+  
   relations: [{
     type: Backbone.HasOne,
     key: 'toDo',

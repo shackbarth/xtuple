@@ -124,13 +124,15 @@ XM.ProjectAccount = XT.Model.extend(
   /** @scope XM.ProjectAccount.prototype */ {
 
   recordType: 'XM.ProjectAccount',
- /*
+
+  isDocumentAssignment: true,
+
   relations: [{
     type: Backbone.HasOne,
     key: 'account',
     relatedModel: 'XM.AccountInfo'
   }]
-  */
+
 });
 
 /**
@@ -142,6 +144,8 @@ XM.ProjectContact = XT.Model.extend(
   /** @scope XM.ProjectContact.prototype */ {
 
   recordType: 'XM.ProjectContact',
+
+  isDocumentAssignment: true,
   
   relations: [{
     type: Backbone.HasOne,
@@ -161,6 +165,8 @@ XM.ProjectItem = XT.Model.extend(
 
   recordType: 'XM.ProjectItem',
 
+  isDocumentAssignment: true,
+
   relations: [{
     type: Backbone.HasOne,
     key: 'item',
@@ -178,6 +184,8 @@ XM.ProjectFile = XT.Model.extend(
   /** @scope XM.ProjectFile.prototype */ {
 
   recordType: 'XM.ProjectFile',
+
+  isDocumentAssignment: true,
   
   relations: [{
     type: Backbone.HasOne,
@@ -196,6 +204,8 @@ XM.ProjectImage = XT.Model.extend(
   /** @scope XM.ProjectImage.prototype */ {
 
   recordType: 'XM.ProjectImage',
+
+  isDocumentAssignment: true,
   
   relations: [{
     type: Backbone.HasOne,
@@ -214,6 +224,8 @@ XM.ProjectUrl = XT.Model.extend(
   /** @scope XM.ProjectUrl.prototype */ {
 
   recordType: 'XM.ProjectUrl',
+
+  isDocumentAssignment: true,
   
   relations: [{
     type: Backbone.HasOne,
@@ -232,24 +244,14 @@ XM.ProjectProject = XT.Model.extend(
   /** @scope XM.ProjectProject.prototype */ {
 
   recordType: 'XM.ProjectProject',
+
+  isDocumentAssignment: true,
   
   relations: [{
     type: Backbone.HasOne,
     key: 'project',
     relatedModel: 'XM.ProjectInfo'
   }]
-  
-});
-
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectContact = XT.Model.extend(
-  /** @scope XM.ProjectContact.prototype */ {
-
-  recordType: 'XM.ProjectContact',
   
 });
 
