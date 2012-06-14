@@ -1,40 +1,47 @@
 
 enyo.kind(
   /** */ {
-    
+
   /** */
-  name: "XT.LoginScreen",
+  name: "XT.Login",
   
   /** */
   kind: "XT.ScreenCarousel",
   
   /** */
-  classes: "login-screen",
-  
-  /** */
-  //arrangerKind: "CardSlideInArranger",
+  components: [
+    { name: "loginScreen", kind: "XT.LoginScreen" },
+    { name: "dashboard", kind: "XT.Dashboard" }
+  ],
   
   /** */
   carouselEvents: {
     
     /** */
-    multipleSessions: "sessionSelection"
+    acquiredSession: "dashboard"
   },
   
   /** */
-  components: [
-    { name: "userLogin", kind: "XT.UserLoginScreen" },
-    { name: "sessionSelection", kind: "XT.SessionSelectionScreen" }
-  ],
-  
-  /** */
-  create: function() {
-    this.inherited(arguments);
+  completed: function() {
+    var screen;
     
-    // temporary
-    this.$.userLogin.$.block.$.username.setValue("admin");
-    this.$.userLogin.$.block.$.password.setValue("Assemble!Aurora");
-    this.$.userLogin.$.block.$.organization.setValue("aurora");
+    this.inherited(arguments);
+
+    // TODO: this really shouldn't be necessary, the point
+    // is to keep the off-screen view (loginScreen) from reflowing
+    // or listening on events - which it shouldn't be if it's not
+    // visible?
+    // TODO: second note is that `destroy` on loginScreen throws
+    // an exception even after control has been removed
+    if (this.getCurrentView() === "dashboard" && !this.removedLogin) {
+      screen = this.$.loginScreen;
+      this.removeControl(screen);
+      screen.removeNodeFromDom();
+      
+      this.removedLogin = true;
+      //screen.destroy();
+    }
+
   }
     
 });

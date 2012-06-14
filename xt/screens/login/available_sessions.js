@@ -45,7 +45,7 @@ enyo.kind(
     var data = XT.session.getAvailableSessions()[idx].sessionData;
     
     var ts = XT.toReadableTimestamp(data.created);
-    
+        
     row.$.username.setContent(data.username);
     row.$.organization.setContent(data.organization);
     row.$.created.setContent(ts);

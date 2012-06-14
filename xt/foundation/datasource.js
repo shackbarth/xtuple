@@ -8,7 +8,7 @@ enyo.kind(
   
   published: {
     datasourceUrl: "asteroidbelt.xtuple.com",
-    //datasourceUrl: "localhost",
+    //datasourceUrl: "192.168.0.146",
     datasourcePort: 9000,
     isConnected: false
   },
