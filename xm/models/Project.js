@@ -9,6 +9,25 @@ XM.Project = XT.Model.extend(
 
   recordType: 'XM.Project',
   
+  privileges: {
+    "all": {
+      "create": "MaintainAllProjects",
+      "read": "ViewAllProjects",
+      "update": "MaintainAllProjects",
+      "delete": "MaintainAllProjects"
+    },
+    "personal": {
+      "create": "MaintainPersonalProjects",
+      "read": "ViewPersonalProjects",
+      "update": "MaintainPersonalProjects",
+      "delete": "MaintainPersonalProjects",
+      "properties": [
+        "owner",
+        "assignedTo"
+      ]
+    }
+  },
+  
   defaults: {
     "projectStatus":  "C"
   },
