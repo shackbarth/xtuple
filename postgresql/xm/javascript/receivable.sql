@@ -4,7 +4,42 @@ select xt.install_js('XM','Receivable','xtuple', $$
   
   XM.Receivable = {};
 
-  XM.Receivable.isDispatchable = true,
+  XM.Receivable.isDispatchable = true;
+
+  /**
+    @constant
+    @static
+    @default 0
+  */
+  XM.Receivable.NO_FILTER = 0;
+
+  /**
+    @constant
+    @static
+    @default 1
+  */
+  XM.Receivable.CUSTOMER_FILTER = 1;
+
+  /**
+    @constant
+    @static
+    @default 2
+  */
+  XM.Receivable.CUSTOMER_TYPE_FILTER = 2;
+
+  /**
+    @constant
+    @static
+    @default 3
+  */
+  XM.Receivable.CUSTOMER_TYPE_PATTERN_FILTER = 3;
+
+  /**
+    @constant
+    @static
+    @default 4
+  */
+  XM.Receivable.CUSTOMER_GROUP_FILTER = 4;
   
   /**
    Commit and post a receivable in a single transaction. Only debit memos and credit memos 
@@ -44,6 +79,60 @@ select xt.install_js('XM','Receivable','xtuple', $$
       else return ret;
     }
     throw new Error(err);
-  }
+  };
+
+  /**
+    Returns array of receivable aging records.
+    
+    @param {String} as of date
+    @param {Boolean} use document date
+    @param {Number} filter type
+    @param {Object} filter value
+    @returns {Array}
+  */
+  XM.Receivable.aging = function(asOf, useDocDate, filterType, filterValue) {
+    var K = XM.Receivable;
+    var clause;
+    var ret;
+    var sql = 'select xm.customer_info, ' +
+              'sum(araging_total_val) AS "total", ' +
+              'sum(araging_cur_val) AS "current",' +
+              'sum(araging_thirty_val) AS "thirtyDays", ' +
+              'sum(araging_sixty_val) AS "sixtyDays", ' +
+              'sum(araging_ninety_val) AS "ninetyDays", ' +
+              'sum(araging_plus_val) AS "overNinetyDays", ' +
+              'from araging($1::date, $2) ' +
+              ' join xm.customer_info on guid=cust_id '
+              'where {clause} ' + 
+              'group by araging_cust_number, araging_cust_id, araging_cust_name ' +
+              'order by araging_cust_number ';
+
+    /* set the filter clause */
+    switch(filterType) {
+      case K.CUSTOMER_FILTER:
+        clause = "cust=" + filterValue;
+        break;
+      case K.CUSTOMER_TYPE_FILTER:
+        clause = "cust_type=" + filterValue;
+        break;
+      case K.CUSTOMER_TYPE_PATTERN_FILTER:
+        clause = "cust_type_pattern ~ '" + filterValue + "'"; 
+        break;
+      case K.CUSTOMER_GROUP_FILTER:
+        clasue = "cust_id in (" + 
+                 "select custgrp_cust_id " +
+                 "from custgrpitem " +
+                 "where custgrpitem_custgrp_id=" + filterValue + ")";
+        break;
+      default:
+        clause = "true";
+    };
+
+    sql = sql.replace(/{clause}/, clause);
+
+    /* execute */
+    ret = executeSql(sql, [asOf, useDocDate]);
+    return JSON.stringify(ret);
+  };
   
 $$ );

@@ -48,7 +48,7 @@
       }
     },
     {
-      "name": "todoRelations",
+      "name": "toDoRelations",
       "toMany": {
         "type": "ToDoInfo",
         "column": "incdt_id",

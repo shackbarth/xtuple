@@ -133,6 +133,7 @@
     {
       "name": "recurrences",
       "toMany": {
+        "isNested": true,
         "type": "ProjectRecurrence",
         "column": "prj_id",
         "inverse": "project"

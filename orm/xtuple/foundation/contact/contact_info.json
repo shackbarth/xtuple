@@ -39,11 +39,17 @@
       }
     },
     {
-      "name": "isActive",
+      "name": "firstName",
       "attr": {
-        "type": "Boolean",
-        "column": "cntct_active",
-        "isEditable": false
+        "type": "String",
+        "column": "cntct_first_name"
+      }
+    },
+    {
+      "name": "lastName",
+      "attr": {
+        "type": "String",
+        "column": "cntct_last_name"
       }
     },
     {
@@ -119,10 +125,6 @@
         "column": "cntct_crmacct_id"
       }
     }
-  ],
-  "order": [
-    "length(cntct_last_name || cntct_first_name)=0", 
-    "cntct_last_name || cntct_first_name"
   ],
   "isSystem": true
 }
