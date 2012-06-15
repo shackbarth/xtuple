@@ -353,7 +353,7 @@ XT.Model = Backbone.RelationalModel.extend(
     };
     
     // fetch id
-    this._dataSource.dispatch('XT.Record', 'fetchId', this.recordType, options);
+    this._dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
   }
   
 });
