@@ -15,3 +15,13 @@ XM.Priority = XT.Model.extend(
   ]
   
 });
+
+/**
+*/
+XM.PriorityCollection = XT.Collection.extend(
+  /** @scope XM.PriorityCollection.prototype */ {
+
+  model: XM.Priority
+  
+});
+
