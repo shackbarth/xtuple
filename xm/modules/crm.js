@@ -71,7 +71,7 @@ XM.Project.prototype.relations.push(
   },
   {
     type: Backbone.HasMany,
-    key: 'images',
+    key: 'opportunities',
     relatedModel: 'XM.ProjectOpportunity',
     reverseRelation: {
       key: 'project'

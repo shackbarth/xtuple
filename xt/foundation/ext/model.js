@@ -108,6 +108,8 @@ XT.Model = Backbone.RelationalModel.extend(
   model.setReadOnly('name') // sets 'name' attribute to read-only
   model.setReadOnly('name', false) // sets 'name' attribute to be editable 
   
+  @seealso `isReadOnly`
+  @seealso `readOnly`
   @param {String|Boolean} Attribute to set, or boolean if setting the model
   @param {Boolean} boolean - default = true.
   */
@@ -130,13 +132,16 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /**
   Return whether the model is in a read-only state. If an attribute name
-  is passed, returns whether that attribute is read only.
+  is passed, returns whether that attribute is read-only.
 
+  @seealso `setReadOnly`
+  @seealso `readOnly`
   @param {String} attribute
   */
   isReadOnly: function(attr) {
-    if (!_.isString(attr) || this._readOnly || !this.canUpdate()) {
-      return this._readOnly || !this.canUpdate();
+    var canNotUpdate = !this.canUpdate();
+    if (!_.isString(attr) || this._readOnly || canNotUpdate) {
+      return this._readOnly || canNotUpdate;
     }
     return _.contains(this.readOnly, attr);
   },
@@ -149,7 +154,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // initialize for new record
     if (options && options.isNew) {
-      this.attributes.dataState = 'created';
+      this.attributes.dataState = 'create';
       if (this.autoFetchId) this._fetchId();
     }
     
@@ -168,18 +173,18 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented. A model is new if the dataState is `created`.
+  Reimplemented. A model is new if the dataState is `create`.
   */
   isNew: function() {
-    return this.get('dataState') === 'created';
+    return this.get('dataState') === 'create';
   },
   
   /**
-  Returns true when dataState is `created` or `updated`.
+  Returns true when dataState is `create` or `update`.
   */
   isDirty: function() {
     var dataState = this.get('dataState');
-    return dataState === 'created' || dataState === 'updated';
+    return dataState === 'create' || dataState === 'update';
   },
   
   /**
@@ -239,7 +244,7 @@ XT.Model = Backbone.RelationalModel.extend(
       if (success) success(model, resp, options);
     };
 
-    this.set('dataState', 'deleted');
+    this.set('dataState', 'delete');
     return Backbone.Model.prototype.destroy.call(this, options);
   },
   
@@ -269,40 +274,41 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Validate:
-   * State
-   * All required fields present if no attributes specified.
-   * Read only attributes are not being edited
+  Default validation checks required fields and read-only.
+  Reimplement your own custom validation code here, but make sure
+  to call back to the superclass at the top of your function using:
+  
+  return XT.Model.prototype.validate.call(this, attributes, options); 
+  
+  @param {Object} attributes
+  @param {Object} options
   */
   validate: function(attributes, options) {
-    var attrs = attributes || this.attributes;
-    var i;
+    // if we're syncing, bail out
+    if (this._sync) return;
     
-    // check state
-    if (this.get('dataState') === 'busy' && !this._sync) {
-      return "Record is busy";
-    } else if (this.get('dataState') === 'deleted') {
-      return "Can not alter deleted record";
-    }
-    
-    // check for editing on read-only
-    if (attributes) {
-      if (this.isReadOnly()) {
-        return "Record is in a read only state.";
-      }
-      
-      for (i = 0; i < this.readOnly.length; i++) {
-        var attr = this.readOnly[i];
-        if (attributes[attr] !== this.previous(attr)) {
-          return "Can not edit read only attribute " + attr + ".";
-        }
-      }
-    
-    // check required
-    } else {
+    var prop;
+    var val;
+    var attr;
+   
+    //check required
+    if (!attributes) {
       for (i = 0; i < this.required.length; i++) {
         if (!this.has(this.required[i])) {
           return "'" + this.required[i] + "' is required.";
+        }
+      }
+    }
+    
+    //check read-only
+    if (attributes) {
+      if (this.isReadOnly()) {
+        return "Record is in a read only state.";
+      } else {
+        for (attr in attributes) {
+          if (this.isReadOnly(attr)) {
+            return "Can not edit read only attribute " + attr + ".";
+          }
         }
       }
     }
@@ -327,7 +333,7 @@ XT.Model = Backbone.RelationalModel.extend(
   /** @private */
   _changed: function() {
     if (this.get('dataState') === 'read' && !this._sync) {
-      this.set('dataState', 'updated');
+      this.set('dataState', 'update');
     }
   },
   
@@ -352,11 +358,15 @@ XT.Model = Backbone.RelationalModel.extend(
   
 });
 
-// Class Methods
+// ..........................................................
+// CLASS METHODS
+//
+
 enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
   /**
-    Use this function to find out whether a user can create records before instantiating one.
+    Use this function to find out whether a user can create records before 
+    instantiating one.
 
     @returns {Boolean}
   */
@@ -365,7 +375,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         sessionPrivs = XT.session.getPrivileges(),
         isGranted = false;
 
-    if (sessionPrivs) {
+    if (sessionPrivs && sessionPrivs.get) {
       // check global
       isGranted = privileges.all && privileges.all.create && 
                   sessionPrivs.get(privileges.all.create) === true;
@@ -391,7 +401,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         sessionPrivs = XT.session.privileges,
         isGranted = false;
 
-    if (sessionPrivs) {
+    if (sessionPrivs && sessionPrivs.get) {
       // check global read privilege
       isGranted = privileges.all && privileges.all.read && 
                   sessionPrivs.get(privileges.all.read) === true;
@@ -448,7 +458,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         isGrantedPersonal = false,
         userName = XT.session.details.username;
 
-    if (sessionPrivs) {
+    if (sessionPrivs && sessionPrivs.get) {
       // check global privileges
       if (privileges.all && privileges.all[action]) {
         isGrantedAll = sessionPrivs.get(privileges.all[action]) === true;

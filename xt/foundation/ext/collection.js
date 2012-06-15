@@ -15,11 +15,12 @@ XT.Collection = Backbone.Collection.extend(
   Overload: sync to xtuple datasource.
   */
   sync: function(method, model, options) {
-    var query = {};
+    options = options ? _.clone(options) : {};
+    options.query = options.query || {};
+    options.query.recordType = model.model.prototype.recordType;
     
-    query.recordType = model.model.prototype.recordType;
-    if (method === 'read' && query.recordType && options.success) {
-      return this._dataSource.fetch(query, options);
+    if (method === 'read' && options.query.recordType && options.success) {
+      return this._dataSource.fetch(options);
     }
     
     return false;
