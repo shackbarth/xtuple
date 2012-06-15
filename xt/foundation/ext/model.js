@@ -62,48 +62,6 @@ XT.Model = Backbone.RelationalModel.extend(
   required: [],
   
   /**
-  A hash structure that defines validation functions. The `validate` function
-  will iterate through each function defined on this object. Add your own custom
-  validation by extending this object.
-  
-  @seealso `validate`
-  @type {Hash}
-  */
-  validation: {
-    checkState: function(attributes, options) {
-      if (this.get('dataState') === 'busy' && !this._sync) {
-        return "Record is busy";
-      }
-    },
-   
-    checkRequired: function(attributes, options) {
-      if (!attributes) {
-        for (i = 0; i < this.required.length; i++) {
-          if (!this.has(this.required[i])) {
-            return "'" + this.required[i] + "' is required.";
-          }
-        }
-      }
-    },
-    
-    checkReadOnly: function(attributes, options) {
-      var attr;
-      
-      if (attributes) {
-        if (this.isReadOnly()) {
-          return "Record is in a read only state.";
-        } else {
-          for (attr in attributes) {
-            if (this.isReadOnly(attr)) {
-              return "Can not edit read only attribute " + attr + ".";
-            }
-          }
-        }
-      }
-    }
-  },
-
-  /**
   An array of attribute names designating attributes that are not editable.
   Use `setReadOnly` to edit this array. 
   
@@ -316,23 +274,44 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Iterates through and executes each function found in the `validate`
-  property.
+  Default validation checks state, required fields and read-only.
+  Reimplement your own custom validation code here, but make sure
+  to call back to the superclass function using:
   
-  @seealso `validation`
+  return XT.Model.prototype.validate.call(this, attributes, options); 
+  
   @param {Object} attributes
   @param {Object} options
   */
   validate: function(attributes, options) {
     var prop;
     var val;
+    var attr;
     
-    // iterate through all the properties in validation
-    // and execute each function found
-    for (prop in this.validation) {
-      if (_.isFunction(this.validation[prop])) {
-        val = this.validation[prop].call(this, attributes, options);
-        if (val) return val;
+    //check state
+    if (this.get('dataState') === 'busy' && !this._sync) {
+      return "Record is busy";
+    }
+   
+    //check required
+    if (!attributes) {
+      for (i = 0; i < this.required.length; i++) {
+        if (!this.has(this.required[i])) {
+          return "'" + this.required[i] + "' is required.";
+        }
+      }
+    }
+    
+    //check read-only
+    if (attributes) {
+      if (this.isReadOnly()) {
+        return "Record is in a read only state.";
+      } else {
+        for (attr in attributes) {
+          if (this.isReadOnly(attr)) {
+            return "Can not edit read only attribute " + attr + ".";
+          }
+        }
       }
     }
   },
