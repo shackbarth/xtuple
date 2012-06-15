@@ -353,20 +353,35 @@ XM.ProjectTaskComment = XT.Model.extend(
 XM.ProjectInfo = XT.Model.extend(
   /** @scope XM.ProjectInfo.prototype */ {
 
-  recordType: 'XM.ProjectInfo'
+  recordType: 'XM.ProjectInfo',
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'owner',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasOne,
+    key: 'assignedTo',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasMany,
+    key: 'tasks',
+    relatedModel: 'XM.ProjectTask',
+    reverseRelation: {
+      key: 'project'
+    }
+  }]
   
 });
-
-// Collections
 
 /**
   @class
   
   @extends XT.Collection
 */
-XM.ProjectCollection = XT.Collection.extend(
-  /** @scope XM.ProjectCollection.prototype */ {
+XM.ProjectInfoCollection = XT.Collection.extend(
+  /** @scope XM.ProjectInfoCollection.prototype */ {
 
-  model: XM.Project
+  model: XM.ProjectInfo
   
 });
