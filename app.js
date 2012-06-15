@@ -57,6 +57,8 @@ enyo.kind(
     
     // lets not allow this to happen again
     this.setIsStarted(true);
+    
+    
   }
     
 });
