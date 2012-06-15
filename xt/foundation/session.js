@@ -117,6 +117,8 @@ enyo.kind(
     // and store the properties
     if (payload.code === 4) {
       this.setDetails(payload.data);
+      
+      XT.StartupTask.flush();
     }
     
     if (callback && callback instanceof Function) {
