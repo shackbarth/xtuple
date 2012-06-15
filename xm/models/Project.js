@@ -28,13 +28,25 @@ XM.Project = XT.Model.extend(
     }
   },
   
+  initialize: function() {
+    XT.Model.prototype.initialize.call(this);
+    
+    this.bind('add:tasks', this.taskChanged);
+    this.bind('remove:tasks', this.taskChanged);
+    this.bind('update:tasks', this.taskChanged);
+  },
+  
   defaults: {
-    "projectStatus":  "C"
+    "status":  "C",
+    "budgetedHoursTotal": 0,
+    "actualHoursTotal": 0,
+    "budgetedExpensesTotal": 0,
+    "actualExpensesTotal": 0
   },
   
   required: [
     "number",
-    "projectStatus",
+    "status",
     "name",
     "dueDate"
   ],
@@ -125,7 +137,28 @@ XM.Project = XT.Model.extend(
     reverseRelation: {
       key: 'project'
     }
-  }]
+  }],
+  
+  taskChanged: function() {
+    var budgetedHoursTotal = 0.0;
+    var actualHoursTotal = 0.0;
+    var budgetedExpensesTotal = 0.0;
+    var actualExpensesTotal = 0.0;
+    
+    // total up task data
+    _.each(this.get('tasks').models, function(task) {
+      budgetedHoursTotal += task.get('budgetedHours');
+      actualHoursTotal += task.get('actualHours');
+      budgetedExpensesTotal += task.get('budgetedExpenses');
+      actualExpensesTotal += task.get('actualExpenses');
+    });
+    
+    // update the project
+    this.set("budgetedHoursTotal", budgetedHoursTotal);
+    this.set("actualHoursTotal", actualHoursTotal);
+    this.set("budgetedExpensesTotal", budgetedExpensesTotal);
+    this.set("actualExpensesTotal", actualExpensesTotal);
+  }
   
 });
 
