@@ -156,3 +156,86 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   color: #fff;
   font-weight: bold;
 }
+
+/* line 95, ../sass/screen.scss */
+.developer-ui-container {
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
+  -webkit-box-shadow: #333333 4px 4px 10px -4px;
+  -o-box-shadow: #333333 4px 4px 10px -4px;
+  box-shadow: #333333 4px 4px 10px -4px;
+  -moz-border-radius-bottomright: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -o-border-bottom-right-radius: 10px;
+  -ms-border-bottom-right-radius: 10px;
+  -khtml-border-bottom-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  top: 100px;
+  left: 0;
+  position: absolute;
+  background-color: #d8d8d8;
+  z-index: 10;
+}
+/* line 105, ../sass/screen.scss */
+.developer-ui-container .developer-rows .row {
+  display: block;
+  margin: 10px;
+}
+/* line 111, ../sass/screen.scss */
+.developer-ui-container .onyx-grabber.developer-grabber {
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
+  -webkit-box-shadow: #333333 4px 4px 10px -4px;
+  -o-box-shadow: #333333 4px 4px 10px -4px;
+  box-shadow: #333333 4px 4px 10px -4px;
+  -moz-border-radius-topright: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -o-border-top-right-radius: 10px;
+  -ms-border-top-right-radius: 10px;
+  -khtml-border-top-right-radius: 10px;
+  border-top-right-radius: 10px;
+  -moz-border-radius-bottomright: 10px;
+  -webkit-border-bottom-right-radius: 10px;
+  -o-border-bottom-right-radius: 10px;
+  -ms-border-bottom-right-radius: 10px;
+  -khtml-border-bottom-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #d8d8d8;
+  position: absolute;
+  right: -47px;
+  top: 0;
+  height: 54px;
+  width: 50px;
+}
+
+/* line 129, ../sass/screen.scss */
+.module-left-panel-container {
+  background-color: #333;
+  color: #fff;
+  width: 320px;
+}
+
+/* line 135, ../sass/screen.scss */
+.module-right-panel-container {
+  -moz-box-shadow: black -4px 0 10px -4px;
+  -webkit-box-shadow: black -4px 0 10px -4px;
+  -o-box-shadow: black -4px 0 10px -4px;
+  box-shadow: black -4px 0 10px -4px;
+  background-color: #555;
+  color: #fff;
+}
+
+/* line 141, ../sass/screen.scss */
+.crm-menu-item {
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  background-color: #fff;
+  color: #000;
+}
+/* line 147, ../sass/screen.scss */
+.crm-menu-item.selected {
+  background-color: #eee;
+}
+/* line 150, ../sass/screen.scss */
+.crm-menu-item:hover {
+  background-color: #eee;
+}
