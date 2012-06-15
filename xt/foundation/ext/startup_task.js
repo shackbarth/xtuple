@@ -50,10 +50,19 @@ enyo.kind(
     var idx = 0;
     
     if (XT._startupCompleted) {
+      
+      enyo.log("Flush called for startup tasks but already completed");
+      
       return;
     } else if (XT._startupTasks.length <= 0) {
+      
+      enyo.log("No startup tasks to issue");
+      
       return;
     } else {
+      
+      enyo.log("Flushing startup tasks");
+      
       tasks = XT._startupTasks;
       for (; idx < tasks.length; ++idx) {
         task = tasks[idx];
