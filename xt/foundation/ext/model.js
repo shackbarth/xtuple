@@ -65,6 +65,9 @@ XT.Model = Backbone.RelationalModel.extend(
   A hash structure that defines validation functions. The `validate` function
   will iterate through each function defined on this object. Add your own custom
   validation by extending this object.
+  
+  @seealso `validate`
+  @type {Hash}
   */
   validation: {
     checkState: function(attributes, options) {
@@ -147,6 +150,8 @@ XT.Model = Backbone.RelationalModel.extend(
   model.setReadOnly('name') // sets 'name' attribute to read-only
   model.setReadOnly('name', false) // sets 'name' attribute to be editable 
   
+  @seealso `isReadOnly`
+  @seealso `readOnly`
   @param {String|Boolean} Attribute to set, or boolean if setting the model
   @param {Boolean} boolean - default = true.
   */
@@ -169,8 +174,10 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /**
   Return whether the model is in a read-only state. If an attribute name
-  is passed, returns whether that attribute is read only.
+  is passed, returns whether that attribute is read-only.
 
+  @seealso `setReadOnly`
+  @seealso `readOnly`
   @param {String} attribute
   */
   isReadOnly: function(attr) {
@@ -312,7 +319,7 @@ XT.Model = Backbone.RelationalModel.extend(
   Iterates through and executes each function found in the `validate`
   property.
   
-  @seealso `validate`
+  @seealso `validation`
   @param {Object} attributes
   @param {Object} options
   */
@@ -378,7 +385,8 @@ XT.Model = Backbone.RelationalModel.extend(
 enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
   /**
-    Use this function to find out whether a user can create records before instantiating one.
+    Use this function to find out whether a user can create records before 
+    instantiating one.
 
     @returns {Boolean}
   */
