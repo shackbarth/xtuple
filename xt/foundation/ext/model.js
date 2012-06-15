@@ -62,6 +62,45 @@ XT.Model = Backbone.RelationalModel.extend(
   required: [],
   
   /**
+  A hash structure that defines validation functions. The `validate` function
+  will iterate through each function defined on this object. Add your own custom
+  validation by extending this object.
+  */
+  validation: {
+    checkState: function(attributes, options) {
+      if (this.get('dataState') === 'busy' && !this._sync) {
+        return "Record is busy";
+      }
+    },
+   
+    checkRequired: function(attributes, options) {
+      if (!attributes) {
+        for (i = 0; i < this.required.length; i++) {
+          if (!this.has(this.required[i])) {
+            return "'" + this.required[i] + "' is required.";
+          }
+        }
+      }
+    },
+    
+    checkReadOnly: function(attributes, options) {
+      var attr;
+      
+      if (attributes) {
+        if (this.isReadOnly()) {
+          return "Record is in a read only state.";
+        } else {
+          for (attr in attributes) {
+            if (this.isReadOnly(attr)) {
+              return "Can not edit read only attribute " + attr + ".";
+            }
+          }
+        }
+      }
+    }
+  },
+
+  /**
   An array of attribute names designating attributes that are not editable.
   Use `setReadOnly` to edit this array. 
   
@@ -270,39 +309,23 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Validate:
-   * State
-   * All required fields present if no attributes specified.
-   * Read only attributes are not being edited
+  Iterates through and executes each function found in the `validate`
+  property.
+  
+  @seealso `validate`
+  @param {Object} attributes
+  @param {Object} options
   */
   validate: function(attributes, options) {
-    var attrs = attributes || this.attributes;
-    var i;
+    var prop;
+    var val;
     
-    // check state
-    if (this.get('dataState') === 'busy' && !this._sync) {
-      return "Record is busy";
-    }
-    
-    // check for editing on read-only
-    if (attributes) {
-      if (this.isReadOnly()) {
-        return "Record is in a read only state.";
-      }
-      
-      for (i = 0; i < this.readOnly.length; i++) {
-        var attr = this.readOnly[i];
-        if (attributes[attr] !== this.previous(attr)) {
-          return "Can not edit read only attribute " + attr + ".";
-        }
-      }
-    
-    // check required
-    } else {
-      for (i = 0; i < this.required.length; i++) {
-        if (!this.has(this.required[i])) {
-          return "'" + this.required[i] + "' is required.";
-        }
+    // iterate through all the properties in validation
+    // and execute each function found
+    for (prop in this.validation) {
+      if (_.isFunction(this.validation[prop])) {
+        val = this.validation[prop].call(this, attributes, options);
+        if (val) return val;
       }
     }
   },
