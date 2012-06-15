@@ -31,17 +31,22 @@ enyo.kind(
   },
   
   addListener: function(listener, method) {
-    if (XT._startupCompleted) {
-      if (listener) {
-        if (method && listener[method]) {
-          listener[method]();
-        }
+    var callback;
+    
+    if (listener && method) {
+      if (listener[method] instanceof Function) {
+        callback = listener[method];
       }
-    } else {
-      XT._startupListeners.push(function() {
-        listener[method]();
-      });
+    } else if (listener && !method && listener instanceof Function) {
+      callback = listener;
     }
+    
+    if (XT._startupCompelted) {
+      callback();
+    } else {
+      XT._startupListeners.push(callback);
+    }
+
   },
   
   flush: function() {
