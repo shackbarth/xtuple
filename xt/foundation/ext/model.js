@@ -274,9 +274,9 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Default validation checks state, required fields and read-only.
+  Default validation checks required fields and read-only.
   Reimplement your own custom validation code here, but make sure
-  to call back to the superclass function using:
+  to call back to the superclass at the top of your function using:
   
   return XT.Model.prototype.validate.call(this, attributes, options); 
   
@@ -284,14 +284,12 @@ XT.Model = Backbone.RelationalModel.extend(
   @param {Object} options
   */
   validate: function(attributes, options) {
+    // if we're syncing, bail out
+    if (this._sync) return;
+    
     var prop;
     var val;
     var attr;
-    
-    //check state
-    if (this.get('dataState') === 'busy' && !this._sync) {
-      return "Record is busy";
-    }
    
     //check required
     if (!attributes) {
@@ -360,7 +358,10 @@ XT.Model = Backbone.RelationalModel.extend(
   
 });
 
-// Class Methods
+// ..........................................................
+// CLASS METHODS
+//
+
 enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
   /**
