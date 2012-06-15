@@ -24,7 +24,8 @@ enyo.kind(
   @param {Object} query
   @param {Object} options
   */
-  fetch: function(query, options) {
+  fetch: function(options) {
+    options = options ? _.clone(options) : {};
     var that = this;
     var payload = {};
     var complete = function(response) {
@@ -44,7 +45,7 @@ enyo.kind(
     };
   
     payload.requestType = 'fetch';
-    payload.query = query;
+    payload.query = options.query;
   
     XT.Request
       .handle("function/fetch")

@@ -62,45 +62,6 @@ XT.Model = Backbone.RelationalModel.extend(
   required: [],
   
   /**
-  A hash structure that defines validation functions. The `validate` function
-  will iterate through each function defined on this object. Add your own custom
-  validation by extending this object.
-  */
-  validation: {
-    checkState: function(attributes, options) {
-      if (this.get('dataState') === 'busy' && !this._sync) {
-        return "Record is busy";
-      }
-    },
-   
-    checkRequired: function(attributes, options) {
-      if (!attributes) {
-        for (i = 0; i < this.required.length; i++) {
-          if (!this.has(this.required[i])) {
-            return "'" + this.required[i] + "' is required.";
-          }
-        }
-      }
-    },
-    
-    checkReadOnly: function(attributes, options) {
-      var attr;
-      
-      if (attributes) {
-        if (this.isReadOnly()) {
-          return "Record is in a read only state.";
-        } else {
-          for (attr in attributes) {
-            if (this.isReadOnly(attr)) {
-              return "Can not edit read only attribute " + attr + ".";
-            }
-          }
-        }
-      }
-    }
-  },
-
-  /**
   An array of attribute names designating attributes that are not editable.
   Use `setReadOnly` to edit this array. 
   
@@ -147,6 +108,8 @@ XT.Model = Backbone.RelationalModel.extend(
   model.setReadOnly('name') // sets 'name' attribute to read-only
   model.setReadOnly('name', false) // sets 'name' attribute to be editable 
   
+  @seealso `isReadOnly`
+  @seealso `readOnly`
   @param {String|Boolean} Attribute to set, or boolean if setting the model
   @param {Boolean} boolean - default = true.
   */
@@ -169,8 +132,10 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /**
   Return whether the model is in a read-only state. If an attribute name
-  is passed, returns whether that attribute is read only.
+  is passed, returns whether that attribute is read-only.
 
+  @seealso `setReadOnly`
+  @seealso `readOnly`
   @param {String} attribute
   */
   isReadOnly: function(attr) {
@@ -309,23 +274,42 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Iterates through and executes each function found in the `validate`
-  property.
+  Default validation checks required fields and read-only.
+  Reimplement your own custom validation code here, but make sure
+  to call back to the superclass at the top of your function using:
   
-  @seealso `validate`
+  return XT.Model.prototype.validate.call(this, attributes, options); 
+  
   @param {Object} attributes
   @param {Object} options
   */
   validate: function(attributes, options) {
+    // if we're syncing, bail out
+    if (this._sync) return;
+    
     var prop;
     var val;
+    var attr;
+   
+    //check required
+    if (!attributes) {
+      for (i = 0; i < this.required.length; i++) {
+        if (!this.has(this.required[i])) {
+          return "'" + this.required[i] + "' is required.";
+        }
+      }
+    }
     
-    // iterate through all the properties in validation
-    // and execute each function found
-    for (prop in this.validation) {
-      if (_.isFunction(this.validation[prop])) {
-        val = this.validation[prop].call(this, attributes, options);
-        if (val) return val;
+    //check read-only
+    if (attributes) {
+      if (this.isReadOnly()) {
+        return "Record is in a read only state.";
+      } else {
+        for (attr in attributes) {
+          if (this.isReadOnly(attr)) {
+            return "Can not edit read only attribute " + attr + ".";
+          }
+        }
       }
     }
   },
@@ -374,11 +358,15 @@ XT.Model = Backbone.RelationalModel.extend(
   
 });
 
-// Class Methods
+// ..........................................................
+// CLASS METHODS
+//
+
 enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
   /**
-    Use this function to find out whether a user can create records before instantiating one.
+    Use this function to find out whether a user can create records before 
+    instantiating one.
 
     @returns {Boolean}
   */
