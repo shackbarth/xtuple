@@ -9,3 +9,7 @@ tmp
 
 # pesky npm debug files
 npm-debug.log
+
+# ignore local version of config file
+# if named correctly
+lib/config_local.js
