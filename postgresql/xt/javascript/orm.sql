@@ -254,10 +254,7 @@ select xt.install_js('XT','Orm','xtuple', $$
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name;
         if(DEBUG) plv8.elog(NOTICE, 'processing property ->', props[i].name);
-        if(props[i].name === 'type') throw new Error("Can not use 'type' as a property name.");
         if(props[i].name === 'dataState') throw new Error("Can not use 'dataState' as a property name.");
-        if(props[i].name === 'status') throw new Error("Can not use 'status' as a property name.");
-        if(props[i].name === 'id') throw new Error("Can not use 'id' as a property name.");
         
         /* process attributes */
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {

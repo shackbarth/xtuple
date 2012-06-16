@@ -48,7 +48,7 @@
       }
     },
     {
-      "name": "projectStatus",
+      "name": "status",
       "attr": {
         "type": "String",
         "column": "prj_status",

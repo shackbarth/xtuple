@@ -91,7 +91,7 @@
       }
     },
     {
-      "name": "incidentStatus",
+      "name": "status",
       "attr": {
         "type": "String",
         "column": "incdt_status",
