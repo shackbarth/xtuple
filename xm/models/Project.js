@@ -1,3 +1,42 @@
+/**
+  @namespace
+  
+  Shared task totaling logic.
+*/
+XM.ProjectMixin = {
+  
+  initialize: function() {
+    XT.Model.prototype.initialize.call(this);
+    
+    // add event bindings
+    this.on('add:tasks remove:tasks', this.tasksChanged);
+  },
+  
+  /**
+  Recaclulate task hours and expense totals.
+  */
+  tasksChanged: function() {
+    var budgetedHoursTotal = 0.0;
+    var actualHoursTotal = 0.0;
+    var budgetedExpensesTotal = 0.0;
+    var actualExpensesTotal = 0.0;
+    
+    // total up task data
+    _.each(this.get('tasks').models, function(task) {
+      budgetedHoursTotal += task.get('budgetedHours');
+      actualHoursTotal += task.get('actualHours');
+      budgetedExpensesTotal += task.get('budgetedExpenses');
+      actualExpensesTotal += task.get('actualExpenses');
+    });
+    
+    // update the project
+    this.set("budgetedHoursTotal", budgetedHoursTotal);
+    this.set("actualHoursTotal", actualHoursTotal);
+    this.set("budgetedExpensesTotal", budgetedExpensesTotal);
+    this.set("actualExpensesTotal", actualExpensesTotal);
+  }
+  
+};
 
 /**
   @class
@@ -29,12 +68,16 @@ XM.Project = XT.Model.extend(
   },
   
   defaults: {
-    "projectStatus":  "C"
+    "status":  "C",
+    "budgetedHoursTotal": 0,
+    "actualHoursTotal": 0,
+    "budgetedExpensesTotal": 0,
+    "actualExpensesTotal": 0
   },
   
   required: [
     "number",
-    "projectStatus",
+    "status",
     "name",
     "dueDate"
   ],
@@ -126,6 +169,83 @@ XM.Project = XT.Model.extend(
       key: 'project'
     }
   }]
+  
+});
+
+_.extend(XM.Project.prototype, XM.ProjectMixin);
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectTask = XT.Model.extend(
+  /** @scope XM.ProjectTask.prototype */ {
+
+  recordType: 'XM.ProjectTask',
+  
+  defaults: {
+    "projectTaskStatus":  "C"
+  },
+  
+  required: [
+    "number",
+    "projectTaskStatus",
+    "name",
+    "dueDate"
+  ],
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'owner',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasOne,
+    key: 'assignedTo',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasMany,
+    key: 'comments',
+    relatedModel: 'XM.ProjectTaskComment',
+    reverseRelation: {
+      key: 'project'
+    }
+  }],
+  
+  // ..........................................................
+  // METHODS
+  //
+  
+  initialize: function() {
+    var evt = 'change:budgetedHours change:actualHours ' +
+              'change:budgetedExpenses change:actualExpense';
+    this.on(evt, this.valuesChanged);
+  },
+  
+  /**
+  Update project totals when values change.
+  */
+  valuesChanged: function() {
+    var attr;
+    var eligible = [
+      'budgetedHours', 
+      'actualHours', 
+      'budgetedExpenses', 
+      'actualExpense'
+    ];
+    
+    // loop through each changed attribute and recalculate eligible values
+    for (attr in this.changed) {
+      if (_.contains(eligible, attr)) {
+        var project = this.get('project');
+        var delta = this.get(attr) - this.previous(attr);
+        var total = project.get(attr + 'Total');
+        
+        project.set(attr + 'Total', total + delta);
+      }
+    }
+  }
+  
   
 });
 
@@ -286,46 +406,6 @@ XM.ProjectProject = XT.Model.extend(
   
   @extends XT.Model
 */
-XM.ProjectTask = XT.Model.extend(
-  /** @scope XM.ProjectTask.prototype */ {
-
-  recordType: 'XM.ProjectTask',
-  
-  defaults: {
-    "projectTaskStatus":  "C"
-  },
-  
-  required: [
-    "number",
-    "projectTaskStatus",
-    "name",
-    "dueDate"
-  ],
-  
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'owner',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'assignedTo',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasMany,
-    key: 'comments',
-    relatedModel: 'XM.ProjectTaskComment',
-    reverseRelation: {
-      key: 'project'
-    }
-  }]
-  
-});
-
-/**
-  @class
-  
-  @extends XT.Model
-*/
 XM.ProjectRecurrence = XT.Model.extend(
   /** @scope XM.ProjectRecurrence.prototype */ {
 
@@ -373,6 +453,8 @@ XM.ProjectInfo = XT.Model.extend(
   }]
   
 });
+
+_.extend(XM.ProjectInfo.prototype, XM.ProjectMixin);
 
 /**
   @class

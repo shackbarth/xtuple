@@ -306,7 +306,8 @@ XT.Model = Backbone.RelationalModel.extend(
         return "Record is in a read only state.";
       } else {
         for (attr in attributes) {
-          if (this.isReadOnly(attr)) {
+          if (this.isReadOnly(attr) && 
+              attributes[attr] !== this.previous(attr)) {
             return "Can not edit read only attribute " + attr + ".";
           }
         }
@@ -375,6 +376,9 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         sessionPrivs = XT.session.getPrivileges(),
         isGranted = false;
 
+    // if no privileges, nothing to check    
+    if (_.isEmpty(privileges)) return true;
+
     if (sessionPrivs && sessionPrivs.get) {
       // check global
       isGranted = privileges.all && privileges.all.create && 
@@ -400,6 +404,9 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
     var privileges = this.prototype.privileges,
         sessionPrivs = XT.session.privileges,
         isGranted = false;
+
+    // if no privileges, nothing to check    
+    if (_.isEmpty(privileges)) return true;
 
     if (sessionPrivs && sessionPrivs.get) {
       // check global read privilege
@@ -457,6 +464,9 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         isGrantedAll = false,
         isGrantedPersonal = false,
         userName = XT.session.details.username;
+    
+    // if no privileges, nothing to check    
+    if (_.isEmpty(privileges)) return true;
 
     if (sessionPrivs && sessionPrivs.get) {
       // check global privileges
