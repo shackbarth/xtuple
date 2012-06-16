@@ -45,7 +45,7 @@
       }
     },
     {
-      "name": "toDoStatus",
+      "name": "status",
       "attr": {
         "type": "String",
         "column": "todoitem_status",
