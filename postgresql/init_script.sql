@@ -59,8 +59,8 @@
 
 -- xt javascript
 \i xt/javascript/data.sql;
+\i xt/javascript/model.sql;
 \i xt/javascript/orm.sql;
-\i xt/javascript/record.sql;
 \i xt/javascript/session.sql;
 
 -- xt views
