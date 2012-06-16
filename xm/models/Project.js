@@ -1,3 +1,42 @@
+/**
+  @namespace
+  
+  Shared task totaling logic.
+*/
+XM.ProjectMixin = {
+  
+  initialize: function() {
+    XT.Model.prototype.initialize.call(this);
+    
+    // add event bindings
+    this.on('add:tasks remove:tasks', this.tasksChanged);
+  },
+  
+  /**
+  Recaclulate task hours and expense totals.
+  */
+  tasksChanged: function() {
+    var budgetedHoursTotal = 0.0;
+    var actualHoursTotal = 0.0;
+    var budgetedExpensesTotal = 0.0;
+    var actualExpensesTotal = 0.0;
+    
+    // total up task data
+    _.each(this.get('tasks').models, function(task) {
+      budgetedHoursTotal += task.get('budgetedHours');
+      actualHoursTotal += task.get('actualHours');
+      budgetedExpensesTotal += task.get('budgetedExpenses');
+      actualExpensesTotal += task.get('actualExpenses');
+    });
+    
+    // update the project
+    this.set("budgetedHoursTotal", budgetedHoursTotal);
+    this.set("actualHoursTotal", actualHoursTotal);
+    this.set("budgetedExpensesTotal", budgetedExpensesTotal);
+    this.set("actualExpensesTotal", actualExpensesTotal);
+  }
+  
+};
 
 /**
   @class
@@ -129,44 +168,11 @@ XM.Project = XT.Model.extend(
     reverseRelation: {
       key: 'project'
     }
-  }],
-  
-  // ..........................................................
-  // METHODS
-  //
-  
-  initialize: function() {
-    XT.Model.prototype.initialize.call(this);
-    
-    // add event bindings
-    this.on('add:tasks remove:tasks', this.tasksChanged);
-  },
-  
-  /**
-  Recaclulate task hours and expense totals.
-  */
-  tasksChanged: function() {
-    var budgetedHoursTotal = 0.0;
-    var actualHoursTotal = 0.0;
-    var budgetedExpensesTotal = 0.0;
-    var actualExpensesTotal = 0.0;
-    
-    // total up task data
-    _.each(this.get('tasks').models, function(task) {
-      budgetedHoursTotal += task.get('budgetedHours');
-      actualHoursTotal += task.get('actualHours');
-      budgetedExpensesTotal += task.get('budgetedExpenses');
-      actualExpensesTotal += task.get('actualExpenses');
-    });
-    
-    // update the project
-    this.set("budgetedHoursTotal", budgetedHoursTotal);
-    this.set("actualHoursTotal", actualHoursTotal);
-    this.set("budgetedExpensesTotal", budgetedExpensesTotal);
-    this.set("actualExpensesTotal", actualExpensesTotal);
-  }
+  }]
   
 });
+
+_.extend(XM.Project.prototype, XM.ProjectMixin);
 
 /**
   @class
@@ -447,6 +453,8 @@ XM.ProjectInfo = XT.Model.extend(
   }]
   
 });
+
+_.extend(XM.ProjectInfo.prototype, XM.ProjectMixin);
 
 /**
   @class
