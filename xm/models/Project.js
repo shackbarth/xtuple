@@ -28,14 +28,6 @@ XM.Project = XT.Model.extend(
     }
   },
   
-  initialize: function() {
-    XT.Model.prototype.initialize.call(this);
-    
-    this.bind('add:tasks', this.taskChanged);
-    this.bind('remove:tasks', this.taskChanged);
-    this.bind('update:tasks', this.taskChanged);
-  },
-  
   defaults: {
     "status":  "C",
     "budgetedHoursTotal": 0,
@@ -139,7 +131,21 @@ XM.Project = XT.Model.extend(
     }
   }],
   
-  taskChanged: function() {
+  // ..........................................................
+  // METHODS
+  //
+  
+  initialize: function() {
+    XT.Model.prototype.initialize.call(this);
+    
+    // add event bindings
+    this.on('add:tasks remove:tasks', this.tasksChanged);
+  },
+  
+  /**
+  Recaclulate task hours and expense totals.
+  */
+  tasksChanged: function() {
     var budgetedHoursTotal = 0.0;
     var actualHoursTotal = 0.0;
     var budgetedExpensesTotal = 0.0;
@@ -159,6 +165,81 @@ XM.Project = XT.Model.extend(
     this.set("budgetedExpensesTotal", budgetedExpensesTotal);
     this.set("actualExpensesTotal", actualExpensesTotal);
   }
+  
+});
+
+/**
+  @class
+  
+  @extends XT.Model
+*/
+XM.ProjectTask = XT.Model.extend(
+  /** @scope XM.ProjectTask.prototype */ {
+
+  recordType: 'XM.ProjectTask',
+  
+  defaults: {
+    "projectTaskStatus":  "C"
+  },
+  
+  required: [
+    "number",
+    "projectTaskStatus",
+    "name",
+    "dueDate"
+  ],
+  
+  relations: [{
+    type: Backbone.HasOne,
+    key: 'owner',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasOne,
+    key: 'assignedTo',
+    relatedModel: 'XM.UserAccountInfo'
+  },{
+    type: Backbone.HasMany,
+    key: 'comments',
+    relatedModel: 'XM.ProjectTaskComment',
+    reverseRelation: {
+      key: 'project'
+    }
+  }],
+  
+  // ..........................................................
+  // METHODS
+  //
+  
+  initialize: function() {
+    var evt = 'change:budgetedHours change:actualHours ' +
+              'change:budgetedExpenses change:actualExpense';
+    this.on(evt, this.valuesChanged);
+  },
+  
+  /**
+  Update project totals when values change.
+  */
+  valuesChanged: function() {
+    var attr;
+    var eligible = [
+      'budgetedHours', 
+      'actualHours', 
+      'budgetedExpenses', 
+      'actualExpense'
+    ];
+    
+    // loop through each changed attribute and recalculate eligible values
+    for (attr in this.changed) {
+      if (_.contains(eligible, attr)) {
+        var project = this.get('project');
+        var delta = this.get(attr) - this.previous(attr);
+        var total = project.get(attr + 'Total');
+        
+        project.set(attr + 'Total', total + delta);
+      }
+    }
+  }
+  
   
 });
 
@@ -310,46 +391,6 @@ XM.ProjectProject = XT.Model.extend(
     type: Backbone.HasOne,
     key: 'project',
     relatedModel: 'XM.ProjectInfo'
-  }]
-  
-});
-
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectTask = XT.Model.extend(
-  /** @scope XM.ProjectTask.prototype */ {
-
-  recordType: 'XM.ProjectTask',
-  
-  defaults: {
-    "projectTaskStatus":  "C"
-  },
-  
-  required: [
-    "number",
-    "projectTaskStatus",
-    "name",
-    "dueDate"
-  ],
-  
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'owner',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'assignedTo',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasMany,
-    key: 'comments',
-    relatedModel: 'XM.ProjectTaskComment',
-    reverseRelation: {
-      key: 'project'
-    }
   }]
   
 });
