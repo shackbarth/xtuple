@@ -437,6 +437,10 @@ XM.ProjectInfo = XT.Model.extend(
   
   relations: [{
     type: Backbone.HasOne,
+    key: 'account',
+    relatedModel: 'XM.AccountInfo'
+  },{
+    type: Backbone.HasOne,
     key: 'owner',
     relatedModel: 'XM.UserAccountInfo'
   },{
