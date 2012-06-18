@@ -40,6 +40,11 @@ enyo.kind(
       // callback
       privilegesOptions.success = function(resp, status, xhr) {
         var privileges = new Backbone.Model();
+        privileges.get = function(attr) {
+          // Sometimes the answer is already known...
+          if (_.isBoolean(attr)) return attr;
+          return Backbone.Model.prototype.get.call(this, attr);
+        };
 
         // Loop through the response and set a privilege for each found.
         resp.forEach(function(item) {

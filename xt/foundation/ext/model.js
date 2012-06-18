@@ -27,8 +27,6 @@
 */
 XT.Model = Backbone.RelationalModel.extend(
   /** @scope XT.Model.prototype */ {
-
-  idAttribute: "guid",
   
   /**
   Set to true if you want an id fetched from the server when the `isNew` option
@@ -38,28 +36,28 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   autoFetchId: true,
   
-  /**
-  Specify the name of a data source model here.
+  /** 
+  Indicates whether the model is busy waiting for a response.
   
-  @type {String}
+  @type {Boolean} 
   */
-  recordType: null,
+  busy: false,
+  
+  idAttribute: "guid",
   
   /**
   A hash structure that defines data access.
 
-  @property
   @type {Hash}
   */
   privileges: {},
   
-  /**
-  An array of required attributes. A validate on the entire model will fail
-  until all the required attributes have values.
+  /** 
+  Indicates whethere the model is read only.
   
-  @type {Array}
+  @type {Boolean}
   */
-  required: [],
+  readOnly: false,
   
   /**
   An array of attribute names designating attributes that are not editable.
@@ -69,11 +67,35 @@ XT.Model = Backbone.RelationalModel.extend(
   @seealso `isReadOnly`
   @type {Array}
   */
-  readOnly: [],
+  readOnlyAttributes: [],
+  
+  /**
+  Specify the name of a data source model here.
+  
+  @type {String}
+  */
+  recordType: null,
+  
+  /**
+  An array of required attributes. A validate on the entire model will fail
+  until all the required attributes have values.
+  
+  @type {Array}
+  */
+  requiredAttributes: [],
   
   // ..........................................................
   // METHODS
   //
+  
+  /** 
+  Update status when any attributes change.
+  */
+  attributeChanged: function() {
+    if (this.get('dataState') === 'read') {
+      this.set('dataState', 'update');
+    }
+  },
   
   /**
     Returns whether the current record can be updated based on privilege
@@ -82,8 +104,8 @@ XT.Model = Backbone.RelationalModel.extend(
     @returns {Boolean}
   */
   canUpdate: function() {
-    var obj = Backbone.Relational.store.getObjectByName(this.recordType);
-    return obj.canUpdate(this);
+    var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+    return klass.canUpdate(this);
   },
 
   /**
@@ -93,10 +115,154 @@ XT.Model = Backbone.RelationalModel.extend(
     @returns {Boolean}
   */
   canDelete: function() {
-    var obj = Backbone.Relational.store.getObjectByName(this.recordType);
-    return obj.canDelete(this);
+    var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+    return klass.canDelete(this);
   },
   
+  /**
+  Reimplemented.
+  */
+  clear: function(options) {
+    options = options ? _.clone(options) : {};
+    options.checkReadOnly = true;
+    options.checkPrivileges = true;
+    return Backbone.RelationalModel.prototype.clear.call(this, options);
+  },
+  
+  /**
+  Reimplemented.
+  */
+  destroy: function(options) {
+    var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+    
+    if (kclass.canDelete(this)) {
+      options = options ? _.clone(options) : {};
+      options.wait = true;
+      model.attributes.dataState = 'delete';
+      return Backbone.RelationalModel.prototype.destroy.call(this, options);
+    }
+    console.log('Insufficient privileges to destroy');
+    return false;
+  },
+  
+  fetch: function(options) {
+    var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+    
+    if (klass.canRead()) {
+       return Backbone.Model.prototype.fetch.call(this, options);
+    }
+    console.log('Insufficient privileges to fetch');
+    return false;
+  },
+  
+  /** 
+  Set the id on this record an id from the server.
+  */
+  fetchId: function() {
+    var that = this;
+    var options = {};
+    
+    if (!_.isEmpty(this.id)) return false;
+
+    // Callback
+    options.success = function(resp, status, xhr) {
+      that.set(that.idAttribute, resp);
+    };
+
+    // Dispatch
+    XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+  },
+  
+  initialize: function() {
+    var options = arguments[1];
+    var that = this;
+
+    // Validate record type
+    if (_.isEmpty(this.recordType)) throw 'No record type defined';
+
+    // Initialize for new record.
+    if (options && options.isNew) {
+      this.attributes.dataState = 'create';
+      if (this.autoFetchId) this.fetchId();
+    }
+
+    // Id Attribute should be required and read only
+    if (this.idAttribute) this.readOnlyAttributes.push(this.idAttribute);
+    if (this.idAttribute) this.requiredAttributes.push(this.idAttribute);
+
+    // Set up state change handler
+    this.on('change', this.attributeChanged);
+
+    // Set up destroy handler
+    this.on('destroy', function() {
+      that.clear({silent: true});
+    });
+  },
+  
+  /**
+  Returns true when dataState is `create` or `update`.
+  */
+  isDirty: function() {
+    var dataState = this.get('dataState');
+    return dataState === 'create' || dataState === 'update';
+  },
+  
+  /**
+  Reimplemented. A model is new if the dataState is `create`.
+  */
+  isNew: function() {
+    return this.get('dataState') === 'create';
+  },
+  
+  /**
+  Return whether the model is in a read-only state. If an attribute name
+  is passed, returns whether that attribute is read-only.
+
+  @seealso `setReadOnly`
+  @seealso `readOnly`
+  @param {String} attribute
+  */
+  isReadOnly: function(attr) {
+    if (!_.isString(attr) || this.readOnly) {
+      return  model.readOnly;
+    }
+    return _.contains(this.readOnly, attr);
+  },
+  
+  /**
+  Reimplemented to check for required attributes.
+  */
+  isValid: function() {
+    var options = {};
+    options.checkRequired = true;
+    
+    return this.validate(model.attributes, options);
+  },
+  
+  /**
+  Reimplemented.
+  */
+  save: function(key, value, options) {
+    if (this.isDirty()) {
+      options = options ? _.clone(options) : {};
+      options.checkRequired = true;
+      return Backbone.Model.prototype.save.call(this, key, value, options);
+    }
+    
+    console.log('No changes to save');
+    return false;
+  },
+  
+  /**
+  Reimplemented.
+  */
+  set: function(key, value, options) {
+    options = options ? _.clone(options) : {};
+    options.checkReadOnly = true;
+    options.checkPrivileges = true;
+    return Backbone.Model.prototype.set.call(this, key, value, options);
+  },
+
   /**
   Set the entire model, or a specific model attribute to readOnly. Privilege
   enforcement supercedes read-only settings.
@@ -117,160 +283,60 @@ XT.Model = Backbone.RelationalModel.extend(
     // handle attribute
     if (_.isString(key)) {
       value = _.isBoolean(value) ? value : true;
-      if (value && !_.contains(this.readOnly, key)) {
-        this.readOnly.push(key);
-      } else if (!value && _.contains(this.readOnly, key)) {
-        this.readOnly = _.without(this.readOnly, key);
+      if (value && !_.contains(this.readOnlyAttributes, key)) {
+        this.readOnlyAttributes.push(key);
+      } else if (!value && _.contains(this.readOnlyAttributes, key)) {
+        this.readOnlyAttributes = _.without(this.readOnlyAttributes, key);
       }
-      return;
-    }
-    
+      
     // handle model
-    key = _.isBoolean(key) ? key : true;
-    this._readOnly = key;
-  },
-  
-  /**
-  Return whether the model is in a read-only state. If an attribute name
-  is passed, returns whether that attribute is read-only.
-
-  @seealso `setReadOnly`
-  @seealso `readOnly`
-  @param {String} attribute
-  */
-  isReadOnly: function(attr) {
-    var canNotUpdate = !this.canUpdate();
-    if (!_.isString(attr) || this._readOnly || canNotUpdate) {
-      return this._readOnly || canNotUpdate;
-    }
-    return _.contains(this.readOnly, attr);
-  },
-
-  initialize: function() {
-    var options = arguments[1];
-   
-    // set data source
-    this._dataSource = XT.dataSource;
-    
-    // initialize for new record
-    if (options && options.isNew) {
-      this.attributes.dataState = 'create';
-      if (this.autoFetchId) this._fetchId();
+    } else {
+      key = _.isBoolean(key) ? key : true;
+      this.readOnly = key;
     }
     
-    // set id to read only
-    if (this.idAttribute && !_.contains(this.readOnly, this.idAttribute)) {
-      this.readOnly.push(this.idAttribute);
-    }
-    
-    // set id as required
-    if (this.idAttribute && !_.contains(this.required, this.idAttribute)) {
-      this.required.push(this.idAttribute);
-    }
-    
-    // set up state change handler
-    this.on('change', this._changed);
-  },
-  
-  /**
-  Reimplemented. A model is new if the dataState is `create`.
-  */
-  isNew: function() {
-    return this.get('dataState') === 'create';
-  },
-  
-  /**
-  Returns true when dataState is `create` or `update`.
-  */
-  isDirty: function() {
-    var dataState = this.get('dataState');
-    return dataState === 'create' || dataState === 'update';
-  },
-  
-  /**
-  Reimplemented to handle state change.
-  */
-  fetch: function(options) {
-    options = options ? _.clone(options) : {};
-    var that = this;
-    var success = options.success;
-    
-    // flip sync flag back on success
-    options.success = function(resp, status, xhr) {
-      that._sync = false;
-      that._attrCache = _.clone(that.attributes);
-      if (success) success(model, resp, options);
-    };
-  
-    return Backbone.Model.prototype.fetch.call(this, options);
-  },
-  
-  /**
-  Reimplemented to handle state change.
-  */
-  save: function(key, value, options) {
-    // Handle both `("key", value)` and `({key: value})` -style calls.
-    if (_.isObject(key) || key === null || key === undefined) options = value;
-    options = options ? _.clone(options) : {};
-
-    var that = this;
-    var success = options.success;
-
-    // flip sync flag back on success
-    options.success = function(resp, status, xhr) {
-      that._sync = false;
-      that._attrCache = _.clone(that.attributes);
-      if (success) success(model, resp, options);
-    };
-    
-    // Handle both `("key", value)` and `({key: value})` -style calls.
-    if (_.isObject(key) || key === null || key === undefined) value = options;
-  
-    return Backbone.Model.prototype.save.call(this, key, value, options);
-  },
-  
-  /**
-  Reimplemented.
-  */
-  destroy: function(options) {
-    options = options ? _.clone(options) : {};
-    var that = this;
-    var success = options.success;
-    
-    // clear on success
-    options.success = function(resp, status, xhr) {
-      that.clear({silent: true});
-      that._attrCache = null;
-      if (success) success(model, resp, options);
-    };
-
-    this.set('dataState', 'delete');
-    return Backbone.Model.prototype.destroy.call(this, options);
+    return this;
   },
   
   /**
   Overload: sync to xtuple datasource.
   */
   sync: function(method, model, options) {
-    var recordType = model.recordType;
-    var id = options.id || this.id;
+    options = options ? _.clone(options) : {};
+    var id = options.id || model.id;
     var success = options.success;
-    
-    if (options === undefined) options = {};
-    this._sync = true;
-    
-    // read
+    var recordType = this.recordType;
+
+    model.busy = true;
+
+    // Cache attributes, flag sync completed.
+    options.success = function(resp, status, xhr) {
+      model.busy = false;
+      if (success) success(resp, status, xhr);
+    };
+
+    // Read
     if (method === 'read' && recordType && id && success) {
-      return this._dataSource.retrieveRecord(recordType, id, options);
-      
-    // write
+      return XT.dataSource.retrieveRecord(recordType, id, options);
+
+    // Write
     } else if (method === 'create' || method === 'update' || method === 'delete') {
-      var ret = this._dataSource.commitRecord(model, options);
-      this.set('dataState', 'busy');
+      var ret = XT.dataSource.commitRecord(model, options);
+      model.set('dataState', 'busy');
       return ret;
     }
-    
+
     return false;
+  },
+  
+  /**
+  Reimplemented.
+  */
+  unset: function(attr, options) {
+    options = options ? _.clone(options) : {};
+    options.checkReadOnly = true;
+    options.checkPrivileges = true;
+    return Backbone.Model.prototype.unset.call(this, attr, options);
   },
   
   /**
@@ -284,77 +350,38 @@ XT.Model = Backbone.RelationalModel.extend(
   @param {Object} options
   */
   validate: function(attributes, options) {
-    // if we're syncing, bail out
-    if (this._sync) return;
-    
-    var prop;
-    var val;
     var attr;
-   
-    //check required
-    if (!attributes) {
-      for (i = 0; i < this.required.length; i++) {
-        if (!this.has(this.required[i])) {
+    var err;
+    options = options || {};
+    
+    // Check if we're waiting on the server.
+    if (this.busy) return 'Busy waiting for server response';
+
+    // Check required.
+    if (options.checkRequired) {
+      for (i = 0; i < this.requiredAttributes.length; i++) {
+        if (_.isEmpty(attributes[this.requiredAttributes[i]])) {
           return "'" + this.required[i] + "' is required.";
         }
       }
     }
-    
-    //check read-only
-    if (attributes) {
-      if (this.isReadOnly()) {
-        return "Record is in a read only state.";
-      } else {
-        for (attr in attributes) {
-          if (this.isReadOnly(attr) && 
-              attributes[attr] !== this.previous(attr)) {
-            return "Can not edit read only attribute " + attr + ".";
-          }
+
+    // Check read-only.
+    if (options.checkReadOnly) {
+      err = this.readOnly ? "Record is in a read only state." :
+                "Can not change read only attribute {attr}.";
+      for (attr in attributes) {
+        if (_.contains(this.readOnlyAttributes, attr) && 
+            !_.isEqual(attributes[attr], this.previous(attr))) {
+          return err.replace(/{attr}/, attr);
         }
       }
     }
-  },
-  
-  // ..........................................................
-  // PRIVATE
-  //
- 
-  /** @private */
-  _attrCache: null,
-  
-  /** @private */
-  _dataSource: null,
-  
-  /** @private */
-  _readOnly: false,
-  
-  /** @private */
-  _sync: false,
-  
-  /** @private */
-  _changed: function() {
-    if (this.get('dataState') === 'read' && !this._sync) {
-      this.set('dataState', 'update');
+    
+    // Check privileges.
+    if (options.checkPrivileges && !this.canUpdate()) {
+      return "Insufficient privileges to update";
     }
-  },
-  
-  /** @private */
-  _fetchId: function() {
-    var that = this;
-    var options = {};
-    
-    // callback
-    options.success = function(resp, status, xhr) {
-      var attr = that.idAttribute;
-      
-      // set the id
-      that.setReadOnly(attr, false);
-      that.set(attr, resp);
-      that.setReadOnly(attr, true);
-    };
-    
-    // fetch id
-    this._dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
   }
   
 });
@@ -372,26 +399,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
     @returns {Boolean}
   */
   canCreate: function() {
-    var privileges = this.prototype.privileges,
-        sessionPrivs = XT.session.getPrivileges(),
-        isGranted = false;
-
-    // if no privileges, nothing to check    
-    if (_.isEmpty(privileges)) return true;
-
-    if (sessionPrivs && sessionPrivs.get) {
-      // check global
-      isGranted = privileges.all && privileges.all.create && 
-                  sessionPrivs.get(privileges.all.create) === true;
-                  
-      // check personal
-      if (!isGranted) {
-        isGranted = privileges.personal && privileges.personal.create && 
-                    sessionPrivs.get(privileges.personal.create) === true;
-      }
-    }
-    
-    return isGranted;
+    return XT.Model.canDo.call(this, 'create');
   },
 
   /**
@@ -401,34 +409,34 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
     @returns {Boolean}
   */
   canRead: function() {
-    var privileges = this.prototype.privileges,
-        sessionPrivs = XT.session.privileges,
-        isGranted = false;
+    var privs = this.privileges;
+    var sessionPrivs = XT.session.privileges;
+    var isGranted = false;
 
-    // if no privileges, nothing to check    
-    if (_.isEmpty(privileges)) return true;
+    // If no privileges, nothing to check. 
+    if (_.isEmpty(privs)) return true;
 
     if (sessionPrivs && sessionPrivs.get) {
-      // check global read privilege
-      isGranted = privileges.all && privileges.all.read && 
-                  sessionPrivs.get(privileges.all.read) === true;
-                  
-      // check global update privilege
+      // Check global read privilege.
+      isGranted = privs.all && privs.all.read ? 
+                  sessionPrivs.get(privs.all.read) : false;
+
+      // Check global update privilege.
       if (!isGranted) {
-        isGranted = privileges.all && privileges.all.update && 
-                    sessionPrivs.get(privileges.all.update) === true;
+        isGranted = privs.all && privs.all.update ? 
+                    sessionPrivs.get(privs.all.update) : false;
       }
-      
-      // check personal view privilege
+
+      // Check personal view privilege.
       if (!isGranted) {
-        isGranted = privileges.personal && privileges.personal.read && 
-                    sessionPrivs.get(privileges.personal.read) === true;
+        isGranted = privs.personal && privs.personal.read ? 
+                    sessionPrivs.get(privs.personal.read) : false;
       }
-      
-      // check personal update privilege
+
+      // Check personal update privilege.
       if (!isGranted) {
-        isGranted = privileges.personal && privileges.personal.update && 
-                    sessionPrivs.get(privileges.personal.update) === true;
+        isGranted = privs.personal && privs.personal.update ? 
+                    sessionPrivs.get(privs.personal.update) : false;
       }
     }
 
@@ -442,8 +450,8 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
     @returns {Boolean}
   */
-  canUpdate: function(record) {
-    return XT.Model._canDo.call(this, 'update', record);
+  canUpdate: function(model) {
+    return XT.Model.canDo.call(this, 'update', model);
   },
 
   /**
@@ -453,47 +461,51 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
     @returns {Boolean}
   */
-  canDelete: function(record) {
-    return XT.Model._canDo.call(this, 'delete', record);
+  canDelete: function(model) {
+    return XT.Model.canDo.call(this, 'delete', model);
   },
 
-  /** @private */
-  _canDo: function(action, record) {
-    var privileges = this.prototype.privileges,
+  /** 
+  Check privilege on `action`. If `model` is passed, checks personal
+  privileges on the model where applicable.
+  
+  @param {String} Action
+  @param {XT.Model} Model
+  */
+  canDo: function(action, model) {
+    var privs = this.privileges,
         sessionPrivs = XT.session.privileges,
         isGrantedAll = false,
         isGrantedPersonal = false,
         userName = XT.session.details.username;
-    
-    // if no privileges, nothing to check    
-    if (_.isEmpty(privileges)) return true;
+
+    // If no privileges, nothing to check    
+    if (_.isEmpty(privs)) return true;
 
     if (sessionPrivs && sessionPrivs.get) {
-      // check global privileges
-      if (privileges.all && privileges.all[action]) {
-        isGrantedAll = sessionPrivs.get(privileges.all[action]) === true;
+      // Check global privileges
+      if (privs.all && privs.all[action]) {
+        isGrantedAll = sessionPrivs.get(privs.all[action]);
       }
 
-      // check personal privileges
-      if (!isGrantedAll && privileges.personal && privileges.personal[action]) {
-        isGrantedPersonal = sessionPrivs.get(privileges.personal[action]) === true;
+      // Check personal privileges
+      if (!isGrantedAll && privs.personal && privs.personal[action]) {
+        isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
       }
     }
 
-    // If only personal privileges, check the original attribute cache against
-    // the personal attribute list to see if we can update
-    if (!isGrantedAll && isGrantedPersonal) {
+    // If only personal privileges, check the personal attribute list to 
+    // see if we can update.
+    if (!isGrantedAll && isGrantedPersonal && model) {
       var i = 0;
       var username = XT.session.details.username;
-      var props = privileges.personal && privileges.personal.properties ? 
-                  privileges.personal.properties : [];
+      var props = privs.personal && privs.personal.properties ? 
+                  privs.personal.properties : [];
 
       isGrantedPersonal = false;
-      if (record && record._attrCache) {
-        while (!isGrantedPersonal && i < props.length) {
-          isGrantedPersonal = m._attrCache[props[i]].get('username') === username;
-          i++;
-        }
+      while (!isGrantedPersonal && i < props.length) {
+        isGrantedPersonal = model.previous(props[i].get('username')) === username;
+        i++;
       }
     }
 
