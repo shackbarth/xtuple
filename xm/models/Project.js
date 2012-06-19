@@ -10,6 +10,10 @@ XM.ProjectMixin = {
   budgetedExpensesTotal: 0.0,
   actualExpensesTotal: 0.0,
   
+  // ..........................................................
+  // METHODS
+  //
+  
   initialize: function() {
     XT.Model.prototype.initialize.call(this);
     
@@ -41,6 +45,20 @@ XM.ProjectMixin = {
     this.actualExpensesTotal = actualExpensesTotal;
   }
   
+};
+
+XM.ProjectStatusMixin = {
+  /**
+  Return the status attribute as a localized string.
+  
+  @returns {String}
+  */
+  getStatusString: function() {
+    var status = this.get('status');
+    if (status === 'P') return 'Concept'.loc();
+    if (status === 'O') return 'In-Process'.loc();
+    if (status === 'C') return 'Closed'.loc();
+  }
 };
 
 /**
@@ -177,7 +195,8 @@ XM.Project = XT.Model.extend(
   
 });
 
-_.extend(XM.Project.prototype, XM.ProjectMixin);
+XM.Project = XM.Project.extend(XM.ProjectMixin);
+XM.Project = XM.Project.extend(XM.ProjectStatusMixin);
 
 /**
   @class
@@ -233,9 +252,10 @@ XM.ProjectTask = XT.Model.extend(
   valuesChanged: function() {
     project.tasksChanged();
   }
-  
-  
+
 });
+
+XM.ProjectTask = XM.ProjectTask.extend(XM.ProjectStatusMixin);
 
 /**
   @class
@@ -423,24 +443,7 @@ XM.ProjectInfo = XT.Model.extend(
 
   recordType: 'XM.ProjectInfo',
   
-  privileges: {
-    "all": {
-      "create": false,
-      "read": "ViewAllProjects",
-      "update": false,
-      "delete": false
-    },
-    "personal": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false,
-      "properties": [
-        "owner",
-        "assignedTo"
-      ]
-    }
-  },
+  readOnly: true,
   
   relations: [{
     type: Backbone.HasOne,
@@ -465,7 +468,8 @@ XM.ProjectInfo = XT.Model.extend(
   
 });
 
-_.extend(XM.ProjectInfo.prototype, XM.ProjectMixin);
+XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectMixin);
+XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatusMixin);
 
 /**
   @class
