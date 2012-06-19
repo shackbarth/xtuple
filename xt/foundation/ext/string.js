@@ -4,6 +4,15 @@
 XT.String = {
   
   /**
+  Localize the string.
+  
+  TODO: Make me do something.
+  */
+  loc: function() {
+    return this.toString();
+  },
+  
+  /**
   */
   format: function() {
     if (arguments.length === 0) return this;

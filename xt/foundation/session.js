@@ -28,18 +28,26 @@ enyo.kind(
     memory. Types `XT.session.SETTINGS` or `XT.session.PRIVILEGES` can be passed 
     as bitwise operators. If no arguments are passed the default is 
     `XT.session.ALL` which will load all session objects.
+    
+    @param {Number} Types
+    @param {Object} Options
   */
-  loadSessionObjects: function(types) {
+  loadSessionObjects: function(types, options) {
     var that = this;
 
     if (types === undefined) types = this.ALL;
 
     if (types & this.PRIVILEGES) {
-      var privilegesOptions = {};
+      var privilegesOptions = options ? _.clone(options) : {};
       
       // callback
       privilegesOptions.success = function(resp, status, xhr) {
         var privileges = new Backbone.Model();
+        privileges.get = function(attr) {
+          // Sometimes the answer is already known...
+          if (_.isBoolean(attr)) return attr;
+          return Backbone.Model.prototype.get.call(this, attr);
+        };
 
         // Loop through the response and set a privilege for each found.
         resp.forEach(function(item) {
@@ -55,7 +63,7 @@ enyo.kind(
     }
 
     if (types & this.SETTINGS) {
-      var settingsOptions = {};
+      var settingsOptions = options ? _.clone(options) : {};
       
       // callback
       settingsOptions.success = function(resp, status, xhr) {
