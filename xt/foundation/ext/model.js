@@ -81,15 +81,6 @@ XT.Model = Backbone.RelationalModel.extend(
   // METHODS
   //
   
-  /** 
-  Update status when any attributes change.
-  */
-  attributeChanged: function() {
-    if (this.get('dataState') === 'read') {
-      this.set('dataState', 'update');
-    }
-  },
-  
   /**
     Returns whether the current record can be updated based on privilege
     settings.
@@ -115,16 +106,6 @@ XT.Model = Backbone.RelationalModel.extend(
   /**
   Reimplemented.
   */
-  clear: function(options) {
-    options = options ? _.clone(options) : {};
-    options.checkReadOnly = true;
-    options.checkPrivileges = true;
-    return Backbone.RelationalModel.prototype.clear.call(this, options);
-  },
-  
-  /**
-  Reimplemented.
-  */
   destroy: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
     
@@ -139,10 +120,11 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /*
-  Reimplemented.
+  Reimplemented. Fetch must not be `silent`.
   */
   fetch: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+    options = _.extend({}, options, {silent: false});
     
     if (klass.canRead()) {
        return Backbone.Model.prototype.fetch.call(this, options);
@@ -186,21 +168,10 @@ XT.Model = Backbone.RelationalModel.extend(
     if (this.idAttribute) this.readOnlyAttributes.push(this.idAttribute);
     if (this.idAttribute) this.requiredAttributes.push(this.idAttribute);
 
-    // Set up state change handler
-    this.on('change', this.attributeChanged);
-
     // Set up destroy handler
     this.on('destroy', function() {
       that.clear({silent: true});
     });
-  },
-  
-  /**
-  Returns true when dataState is `create` or `update`.
-  */
-  isDirty: function() {
-    var dataState = this.get('dataState');
-    return dataState === 'create' || dataState === 'update';
   },
   
   /**
@@ -211,52 +182,99 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Return whether the model is in a read-only state. If an attribute name
-  is passed, returns whether that attribute is read-only.
+  Return whether the model is in a read-only state. If an attribute name or
+  object is passed, returns whether those attributes are read-only.
 
   @seealso `setReadOnly`
   @seealso `readOnly`
-  @param {String} attribute
+  @param {String|Object} attribute(s)
   */
-  isReadOnly: function(attr) {
-    if (!_.isString(attr) || this.readOnly) {
-      return  this.readOnly;
-    }
-    return _.contains(this.readOnly, attr);
-  },
-  
-  /**
-  Reimplemented to check for required attributes.
-  */
-  isValid: function() {
-    var options = {};
-    options.checkRequired = true;
+  isReadOnly: function(value) {
+    var attr;
     
-    return this.validate(this.attributes, options);
+    if ((!_.isString(value) && !_.isObject(value)) || this.readOnly) {
+      return  this.readOnly;
+    } else if (_.isObject(value)) {
+      for (attr in value) {
+        if (_.contains(this.readOnlyAttributes, attr)) return true;
+      }
+      return false;
+    } 
+    return _.contains(this.readOnlyAttributes, value);
   },
   
   /**
-  Reimplemented.
+  Reverts the model to the last state before last `change` was called.
+  */
+  revert: function() {
+    this.attributes = this.clone(_previousAttributes);
+    this.changed = {};
+    this._silent = {};
+    this._pending = {};
+  },
+  
+  /**
+  Reimplemented. Validate before saving.
   */
   save: function(key, value, options) {
-    if (this.isDirty()) {
+    var attrs = {};
+    var err;
+    
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    if (_.isObject(key)) {
+      attrs = key;
+    } else if (_.isString(key)) {
+      attrs[key] = value;
+    }
+    
+    // Only save if we can and should.
+    err = this.validate(_.extend(this.attributes, attrs));
+    if ((this.isDirty() || attrs) && !err) {
       options = options ? _.clone(options) : {};
-      options.checkRequired = true;
+      options.wait = true;
       return Backbone.Model.prototype.save.call(this, key, value, options);
     }
     
-    console.log('No changes to save');
+    console.log(err || 'No changes to save');
     return false;
   },
   
   /**
-  Reimplemented.
+  Reimplemented. All sets are `silent` so that changes are accumulated until `save`.
+  Calling `set` triggers `willChange` event on each attribute.
   */
   set: function(key, value, options) {
+    var result;
+    var attr;
+    var attrs = {};
+    
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    if (_.isObject(key)) {
+      attrs = key;
+    } else if (_.isString(key)) {
+      attrs[key] = value;
+    }
+    
+    // Validate
+    if (this.isReadOnly(attrs) || !this.canUpdate()) return false;
+    
+    //  Make silent unless otherwise specified
     options = options ? _.clone(options) : {};
-    options.checkReadOnly = true;
-    options.checkPrivileges = true;
-    return Backbone.RelationalModel.prototype.set.call(this, key, value, options);
+    options.silent = _isEmpty(options.silent) ? true : options.silent;
+    result = Backbone.RelationalModel.prototype.set.call(this, key, value, options);
+    
+    if (result) {
+      // Trigger `willChange` event on each attribute.
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr)) {
+          this.trigger('willChange:' + attr, this, options);
+        }
+      }
+      
+      // Update state
+      if (this.get('dataState') === 'read') this.dataState = 'update';
+    }
+    return result;
   },
 
   /**
@@ -303,12 +321,6 @@ XT.Model = Backbone.RelationalModel.extend(
     var success = options.success;
     var recordType = this.recordType;
 
-    model.off('change', model.attributeChanged);
-    options.success = function(resp, status, xhr) {
-      if (success) success(resp, status, xhr);
-      model.on('change', model.attributeChanged);
-    };
-
     // Read
     if (method === 'read' && recordType && id && success) {
       return XT.dataSource.retrieveRecord(recordType, id, options);
@@ -322,17 +334,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented.
-  */
-  unset: function(attr, options) {
-    options = options ? _.clone(options) : {};
-    options.checkReadOnly = true;
-    options.checkPrivileges = true;
-    return Backbone.RelationalModel.prototype.unset.call(this, attr, options);
-  },
-  
-  /**
-  Default validation checks required fields and read-only.
+  Default validation checks `attributes` for required attributes.
   Reimplement your own custom validation code here, but make sure
   to call back to the superclass at the top of your function using:
   
@@ -342,34 +344,10 @@ XT.Model = Backbone.RelationalModel.extend(
   @param {Object} options
   */
   validate: function(attributes, options) {
-    var attr;
-    var err;
-    options = options || {};
-
-    // Check required.
-    if (options.checkRequired) {
-      for (i = 0; i < this.requiredAttributes.length; i++) {
-        if (_.isEmpty(attributes[this.requiredAttributes[i]])) {
-          return "'" + this.required[i] + "' is required.";
-        }
+    for (i = 0; i < this.requiredAttributes.length; i++) {
+      if (_.isEmpty(attributes[this.requiredAttributes[i]])) {
+        return "'" + this.required[i] + "' is required.";
       }
-    }
-
-    // Check read-only.
-    if (options.checkReadOnly) {
-      err = this.readOnly ? "Record is in a read only state." :
-                "Can not change read only attribute {attr}.";
-      for (attr in attributes) {
-        if (_.contains(this.readOnlyAttributes, attr) && 
-            !_.isEqual(attributes[attr], this.previous(attr))) {
-          return err.replace("{attr}", attr);
-        }
-      }
-    }
-    
-    // Check privileges.
-    if (options.checkPrivileges && !this.canUpdate()) {
-      return "Insufficient privileges to update";
     }
   }
   
