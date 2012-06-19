@@ -5,6 +5,11 @@
 */
 XM.ProjectMixin = {
   
+  budgetedHoursTotal: 0.0,
+  actualHoursTotal: 0.0,
+  budgetedExpensesTotal: 0.0,
+  actualExpensesTotal: 0.0,
+  
   initialize: function() {
     XT.Model.prototype.initialize.call(this);
     
@@ -30,10 +35,10 @@ XM.ProjectMixin = {
     });
     
     // update the project
-    this.set("budgetedHoursTotal", budgetedHoursTotal);
-    this.set("actualHoursTotal", actualHoursTotal);
-    this.set("budgetedExpensesTotal", budgetedExpensesTotal);
-    this.set("actualExpensesTotal", actualExpensesTotal);
+    this.budgetedHoursTotal = budgetedHoursTotal;
+    this.actualHoursTotal = actualHoursTotal;
+    this.budgetedExpensesTotal = budgetedExpensesTotal;
+    this.actualExpensesTotal = actualExpensesTotal;
   }
   
 };
@@ -226,24 +231,7 @@ XM.ProjectTask = XT.Model.extend(
   Update project totals when values change.
   */
   valuesChanged: function() {
-    var attr;
-    var eligible = [
-      'budgetedHours', 
-      'actualHours', 
-      'budgetedExpenses', 
-      'actualExpense'
-    ];
-    
-    // loop through each changed attribute and recalculate eligible values
-    for (attr in this.changed) {
-      if (_.contains(eligible, attr)) {
-        var project = this.get('project');
-        var delta = this.get(attr) - this.previous(attr);
-        var total = project.get(attr + 'Total');
-        
-        project.set(attr + 'Total', total + delta);
-      }
-    }
+    project.tasksChanged();
   }
   
   

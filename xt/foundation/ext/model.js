@@ -135,7 +135,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   fetch: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    options = _.extend({}, options, {silent: false, force: true});
+    options = _.extend({}, options, {silent: false, sync: true});
     if (klass.canRead()) {
       return Backbone.Model.prototype.fetch.call(this, options);
     }
@@ -240,7 +240,7 @@ XT.Model = Backbone.RelationalModel.extend(
     if ((this.isDirty() || attrs) && !err) {
       options = options ? _.clone(options) : {};
       options.wait = true;
-      options.force = true;
+      options.sync = true;
       return Backbone.Model.prototype.save.call(this, key, value, options);
     }
     
@@ -272,7 +272,7 @@ XT.Model = Backbone.RelationalModel.extend(
     options.silent = _.isEmpty(options.silent) ? true : options.silent;
     
     // Validate
-    if (!options.force && (this.isReadOnly(attrs) || !this.canUpdate())) {
+    if (!options.sync && (this.isReadOnly(attrs) || !this.canUpdate())) {
       return false;
     }
     
@@ -287,8 +287,9 @@ XT.Model = Backbone.RelationalModel.extend(
     result = Backbone.RelationalModel.prototype.set.call(this, key, value, options);
     
     // Update dataState
-    if (result && this.get('dataState') === 'read') this.dataState = 'update';
-
+    if (result && !options.sync && this.get('dataState') === 'read') {
+      this.dataState = 'update';
+    }
     return result;
   },
 
