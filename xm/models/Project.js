@@ -435,6 +435,8 @@ XM.ProjectInfo = XT.Model.extend(
 
   recordType: 'XM.ProjectInfo',
   
+  readOnly: true,
+  
   relations: [{
     type: Backbone.HasOne,
     key: 'account',
