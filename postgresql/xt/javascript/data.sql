@@ -500,7 +500,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @returns Object
     */
     retrieveRecord: function(recordType, id, encryptionKey) {
-      return this.retrieveRecords(recordType, [id], encryptionKey)[0];
+      return this.retrieveRecords(recordType, [id], encryptionKey)[0] || {}; 
     },
 
     /**
@@ -535,9 +535,6 @@ select xt.install_js('XT','Data','xtuple', $$
       /* query the map */
       if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
       ret = plv8.execute(sql);
-      if(!ret.length) throw new Error('No record found for {recordType} id(s) {ids}'
-                                      .replace(/{recordType}/, recordType)
-                                      .replace(/{ids}/, ids.join(',')));
 
       for (var i = 0; i < ret.length; i++) {
         /* check privileges again, this time against record specific criteria where applicable */
