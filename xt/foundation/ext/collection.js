@@ -7,10 +7,6 @@
 XT.Collection = Backbone.Collection.extend(
   /** @scope XT.Collection.prototype */ {
 
-  initialize: function() {
-    this._dataSource =  XT.dataSource;
-  },
-
   /**
   Overload: sync to xtuple datasource.
   */
@@ -20,13 +16,10 @@ XT.Collection = Backbone.Collection.extend(
     options.query.recordType = model.model.prototype.recordType;
     
     if (method === 'read' && options.query.recordType && options.success) {
-      return this._dataSource.fetch(options);
+      return XT.dataSource.fetch(options);
     }
     
     return false;
-  },
-  
-  /** @private */
-  _dataSource: null
+  }
   
 });
