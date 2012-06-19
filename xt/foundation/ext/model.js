@@ -36,13 +36,6 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   autoFetchId: true,
   
-  /** 
-  Indicates whether the model is busy waiting for a response.
-  
-  @type {Boolean} 
-  */
-  busy: false,
-  
   idAttribute: "guid",
   
   /**
@@ -145,6 +138,9 @@ XT.Model = Backbone.RelationalModel.extend(
     return false;
   },
   
+  /*
+  Reimplemented.
+  */
   fetch: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
     
@@ -307,12 +303,10 @@ XT.Model = Backbone.RelationalModel.extend(
     var success = options.success;
     var recordType = this.recordType;
 
-    model.busy = true;
-
-    // Cache attributes, flag sync completed.
+    model.off('change', model.attributeChanged);
     options.success = function(resp, status, xhr) {
-      model.busy = false;
       if (success) success(resp, status, xhr);
+      model.on('change', model.attributeChanged);
     };
 
     // Read
@@ -321,9 +315,7 @@ XT.Model = Backbone.RelationalModel.extend(
 
     // Write
     } else if (method === 'create' || method === 'update' || method === 'delete') {
-      var ret = XT.dataSource.commitRecord(model, options);
-      model.set('dataState', 'busy');
-      return ret;
+      return XT.dataSource.commitRecord(model, options);
     }
 
     return false;
@@ -353,9 +345,6 @@ XT.Model = Backbone.RelationalModel.extend(
     var attr;
     var err;
     options = options || {};
-    
-    // Check if we're waiting on the server.
-    if (this.busy) return 'Busy waiting for server response';
 
     // Check required.
     if (options.checkRequired) {
