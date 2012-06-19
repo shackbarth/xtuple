@@ -70,8 +70,8 @@ XT.Model = Backbone.RelationalModel.extend(
   recordType: null,
   
   /**
-  An array of required attributes. A validate on the entire model will fail
-  until all the required attributes have values.
+  An array of required attributes. A `validate` will fail until all the required 
+  attributes have values.
   
   @type {Array}
   */
@@ -80,6 +80,16 @@ XT.Model = Backbone.RelationalModel.extend(
   // ..........................................................
   // METHODS
   //
+  
+  /**
+  Reverts the model to the last state before last `change` was called.
+  */
+  cancel: function() {
+    this.attributes = this.clone(_previousAttributes);
+    this.changed = {};
+    this._silent = {};
+    this._pending = {};
+  },
   
   /**
     Returns whether the current record can be updated based on privilege
@@ -108,7 +118,6 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   destroy: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    
     if (kclass.canDelete(this)) {
       options = options ? _.clone(options) : {};
       options.wait = true;
@@ -121,11 +130,12 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /*
   Reimplemented. Fetch must not be `silent`.
+  
+  @returns {XT.Request} Request
   */
   fetch: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
     options = _.extend({}, options, {silent: false});
-    
     if (klass.canRead()) {
        return Backbone.Model.prototype.fetch.call(this, options);
     }
@@ -135,11 +145,12 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /** 
   Set the id on this record an id from the server.
+  
+  @returns {XT.Request} Request
   */
   fetchId: function() {
     var that = this;
     var options = {};
-    
     if (!_.isEmpty(this.id)) return false;
 
     // Callback
@@ -151,6 +162,9 @@ XT.Model = Backbone.RelationalModel.extend(
     XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
   },
   
+  /**
+  Called when model is instantiated.
+  */
   initialize: function() {
     var options = arguments[1];
     var that = this;
@@ -176,6 +190,8 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /**
   Reimplemented. A model is new if the dataState is `create`.
+  
+  @returns {Boolean}
   */
   isNew: function() {
     return this.get('dataState') === 'create';
@@ -188,10 +204,10 @@ XT.Model = Backbone.RelationalModel.extend(
   @seealso `setReadOnly`
   @seealso `readOnly`
   @param {String|Object} attribute(s)
+  @returns {Boolean}
   */
   isReadOnly: function(value) {
     var attr;
-    
     if ((!_.isString(value) && !_.isObject(value)) || this.readOnly) {
       return  this.readOnly;
     } else if (_.isObject(value)) {
@@ -204,17 +220,9 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reverts the model to the last state before last `change` was called.
-  */
-  revert: function() {
-    this.attributes = this.clone(_previousAttributes);
-    this.changed = {};
-    this._silent = {};
-    this._pending = {};
-  },
-  
-  /**
   Reimplemented. Validate before saving.
+  
+  @retuns {XT.Request} Request
   */
   save: function(key, value, options) {
     var attrs = {};
@@ -242,6 +250,8 @@ XT.Model = Backbone.RelationalModel.extend(
   /**
   Reimplemented. All sets are `silent` so that changes are accumulated until `save`.
   Calling `set` triggers `willChange` event on each attribute.
+  
+  @returns {Object} Receiver
   */
   set: function(key, value, options) {
     var result;
@@ -258,22 +268,21 @@ XT.Model = Backbone.RelationalModel.extend(
     // Validate
     if (this.isReadOnly(attrs) || !this.canUpdate()) return false;
     
-    //  Make silent unless otherwise specified
+    // Trigger `willChange` event on each attribute.
+    for (attr in attrs) {
+      if (attrs.hasOwnProperty(attr)) {
+        this.trigger('willChange:' + attr, this, options);
+      }
+    }
+    
+    // Set silently unless otherwise specified
     options = options ? _.clone(options) : {};
     options.silent = _isEmpty(options.silent) ? true : options.silent;
     result = Backbone.RelationalModel.prototype.set.call(this, key, value, options);
     
-    if (result) {
-      // Trigger `willChange` event on each attribute.
-      for (attr in attrs) {
-        if (attrs.hasOwnProperty(attr)) {
-          this.trigger('willChange:' + attr, this, options);
-        }
-      }
-      
-      // Update state
-      if (this.get('dataState') === 'read') this.dataState = 'update';
-    }
+    // Update dataState
+    if (result && this.get('dataState') === 'read') this.dataState = 'update';
+
     return result;
   },
 
@@ -283,15 +292,15 @@ XT.Model = Backbone.RelationalModel.extend(
   
   Examples:
   
-  model.setReadOnly() // sets model to read only
-  model.setReadOnly(false) // sets model to be editable
-  model.setReadOnly('name') // sets 'name' attribute to read-only
-  model.setReadOnly('name', false) // sets 'name' attribute to be editable 
+  m.setReadOnly() // sets model to read only
+  m.setReadOnly(false) // sets model to be editable
+  m.setReadOnly('name') // sets 'name' attribute to read-only
+  m.setReadOnly('name', false) // sets 'name' attribute to be editable 
   
   @seealso `isReadOnly`
   @seealso `readOnly`
   @param {String|Boolean} Attribute to set, or boolean if setting the model
-  @param {Boolean} boolean - default = true.
+  @param {Boolean} Boolean - default = true.
   */
   setReadOnly: function(key, value) {
     // handle attribute
@@ -329,7 +338,6 @@ XT.Model = Backbone.RelationalModel.extend(
     } else if (method === 'create' || method === 'update' || method === 'delete') {
       return XT.dataSource.commitRecord(model, options);
     }
-
     return false;
   },
   
@@ -340,8 +348,8 @@ XT.Model = Backbone.RelationalModel.extend(
   
   return XT.Model.prototype.validate.call(this, attributes, options); 
   
-  @param {Object} attributes
-  @param {Object} options
+  @param {Object} Attributes
+  @param {Object} Options
   */
   validate: function(attributes, options) {
     for (i = 0; i < this.requiredAttributes.length; i++) {
@@ -446,16 +454,17 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
         isGrantedPersonal = false,
         userName = XT.session.details.username;
 
-    // If no privileges, nothing to check    
+    // If no privileges, nothing to check.  
     if (_.isEmpty(privs)) return true;
-
+    
+    // If we have session prvileges perform the check.
     if (sessionPrivs && sessionPrivs.get) {
-      // Check global privileges
+      // Check global privileges.
       if (privs.all && privs.all[action]) {
         isGrantedAll = sessionPrivs.get(privs.all[action]);
       }
 
-      // Check personal privileges
+      // Check personal privileges.
       if (!isGrantedAll && privs.personal && privs.personal[action]) {
         isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
       }
