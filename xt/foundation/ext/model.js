@@ -319,7 +319,8 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Trigger `willChange` event on each attribute.
     for (attr in attrs) {
-      if (attrs.hasOwnProperty(attr)) {
+      if (attrs.hasOwnProperty(attr) &&
+          !_.isEqual(attrs[attr], this.previous(attr))) {
         this.trigger('willChange:' + attr, this, options);
       }
     }

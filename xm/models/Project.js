@@ -19,6 +19,15 @@ XM.ProjectMixin = {
     
     // add event bindings
     this.on('add:tasks remove:tasks', this.tasksChanged);
+    this.on('willChange:name', function() {
+      console.log('name will change!');
+    }
+    );
+    
+    this.on('change:name', function() {
+      console.log('name did change!');
+    }
+    );
   },
   
   /**
@@ -91,14 +100,10 @@ XM.Project = XT.Model.extend(
   },
   
   defaults: {
-    "status":  "C",
-    "budgetedHoursTotal": 0,
-    "actualHoursTotal": 0,
-    "budgetedExpensesTotal": 0,
-    "actualExpensesTotal": 0
+    "status":  "C"
   },
   
-  required: [
+  requiredAttributes: [
     "number",
     "status",
     "name",
@@ -212,7 +217,7 @@ XM.ProjectTask = XT.Model.extend(
     "projectTaskStatus":  "C"
   },
   
-  required: [
+  requiredAttributes: [
     "number",
     "projectTaskStatus",
     "name",
