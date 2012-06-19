@@ -160,12 +160,15 @@ XT.Model = Backbone.RelationalModel.extend(
   initialize: function() {
     var options = arguments[1];
     var that = this;
+    var klass;
 
     // Validate record type
     if (_.isEmpty(this.recordType)) throw 'No record type defined';
 
     // Initialize for new record.
     if (options && options.isNew) {
+      klass = Backbone.Relational.store.getObjectByName(this.recordType);
+      if (!klass.canCreate()) throw 'Insufficent privileges to create a record.';
       this.attributes.dataState = 'create';
       if (this.autoFetchId) this.fetchId();
     }
@@ -284,13 +287,22 @@ XT.Model = Backbone.RelationalModel.extend(
       attrs[key] = value;
     }
     
+    // If nothing here bail
+    if (_.isEmpty(attrs)) return this;
+    
     // Set silently unless otherwise specified
     options = options ? _.clone(options) : {};
     options.silent = _.isEmpty(options.silent) ? true : options.silent;
     
     // Validate
-    if (!options.sync && (this.isReadOnly(attrs) || !this.canUpdate())) {
-      return false;
+    if (!options.sync) {
+      if (this.isReadOnly(attrs)) {
+        console.log('Can not update read only attribute(s).');
+        return false;
+      } else if (!this.canUpdate()) {
+        console.log('Insufficient privileges to update attribute(s)');
+        return false;
+      }
     }
     
     // Trigger `willChange` event on each attribute.
