@@ -12,12 +12,6 @@
     
   To load an existing record include a guid in the options like so:
     XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-    m = new XM.Contact({guid: 1});
-    m.fetch();
-    
-    OR
-  
-    XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
     m = XM.Contact();
     m.fetch({id: 1});
   
@@ -97,7 +91,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   canUpdate: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    return klass.canUpdate.call(this, this);
+    return klass.canUpdate(this);
   },
 
   /**
@@ -108,7 +102,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   canDelete: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    return klass.canDelete.call(this, this);
+    return klass.canDelete(this);
   },
   
   /**
@@ -415,7 +409,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
     @returns {Boolean}
   */
   canRead: function() {
-    var privs = this.privileges;
+    var privs = this.prototype.privileges;
     var sessionPrivs = XT.session.privileges;
     var isGranted = false;
 
@@ -479,7 +473,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
   @param {XT.Model} Model
   */
   canDo: function(action, model) {
-    var privs = this.privileges;
+    var privs = this.prototype.privileges;
     var sessionPrivs = XT.session.privileges;
     var isGrantedAll = false;
     var isGrantedPersonal = false;
