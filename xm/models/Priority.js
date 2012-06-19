@@ -19,7 +19,7 @@ XM.Priority = XT.Model.extend(
     order: 0
   },
   
-  required: [
+  requiredAttributes: [
     "name"
   ]
   
