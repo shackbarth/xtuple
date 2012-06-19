@@ -32,6 +32,8 @@ XT.Model = Backbone.RelationalModel.extend(
   
   idAttribute: "guid",
   
+  initialized: false,
+  
   /**
   A hash structure that defines data access.
 
@@ -182,6 +184,8 @@ XT.Model = Backbone.RelationalModel.extend(
       that.attributes = {};
       that.reset();
     });
+    
+    this.initialized = true;
   },
   
   /**
@@ -280,7 +284,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var attrs = {};
     
     // Handle both `"key", value` and `{key: value}` -style arguments.
-    if (_.isObject(key)) {
+    if (_.isObject(key) || _.isEmpty(key)) {
       attrs = key;
       options = value;
     } else if (_.isString(key)) {
@@ -295,7 +299,7 @@ XT.Model = Backbone.RelationalModel.extend(
     options.silent = _.isEmpty(options.silent) ? true : options.silent;
     
     // Validate
-    if (!options.sync) {
+    if (!options.sync && this.initialized) {
       if (this.isReadOnly(attrs)) {
         console.log('Can not update read only attribute(s).');
         return false;
@@ -316,7 +320,8 @@ XT.Model = Backbone.RelationalModel.extend(
     result = Backbone.RelationalModel.prototype.set.call(this, key, value, options);
     
     // Update dataState
-    if (result && !options.sync && this.get('dataState') === 'read') {
+    if (result && !options.sync && 
+        this.initialized && this.get('dataState') === 'read') {
       this.set('dataState', 'update', options);
     }
     return result;
@@ -523,7 +528,28 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
     }
 
     return isGrantedAll || isGrantedPersonal;
+  },
+  
+  /**
+  Include 'sync' option.
+  */
+  findOrCreate: function(attributes, options) {
+    options = options ? _.clone(options) : {};
+    options.sync = true;
+    return Backbone.RelationalModel.findOrCreate.apply(this, arguments);
   }
   
 });
+
+// Stomp on this function that MUST include the 'sync' option
+(function() {
+  var func = Backbone.Relation.prototype.setRelated;
+  Backbone.Relation.prototype.setRelated = function(related, options) {
+    options = options ? _.clone(options) : {};
+    options.sync = true;
+
+    func.call(this, related, options);
+  };
+}());
+
 
