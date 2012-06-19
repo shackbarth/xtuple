@@ -86,9 +86,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   cancel: function() {
     this.attributes = this.clone(_previousAttributes);
-    this.changed = {};
-    this._silent = {};
-    this._pending = {};
+    this.reset();
   },
   
   /**
@@ -118,7 +116,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   destroy: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    if (kclass.canDelete(this)) {
+    if (klass.canDelete(this)) {
       options = options ? _.clone(options) : {};
       options.wait = true;
       this.attributes.dataState = 'delete';
@@ -184,7 +182,8 @@ XT.Model = Backbone.RelationalModel.extend(
 
     // Set up destroy handler
     this.on('destroy', function() {
-      that.clear({silent: true});
+      that.attributes = {};
+      that.reset();
     });
   },
   
@@ -227,6 +226,15 @@ XT.Model = Backbone.RelationalModel.extend(
       return false;
     } 
     return _.contains(this.readOnlyAttributes, value);
+  },
+  
+  /**
+  Reset the change log.
+  */
+  reset: function() {
+    this.changed = {};
+    this._silent = {};
+    this._pending = {};
   },
   
   /**
@@ -374,6 +382,7 @@ XT.Model = Backbone.RelationalModel.extend(
   @param {Object} Options
   */
   validate: function(attributes, options) {
+    attributes = attributes || {};
     for (i = 0; i < this.requiredAttributes.length; i++) {
       if (attributes[this.requiredAttributes[i]] === undefined) {
         return "'" + this.requiredAttributes[i] + "' is required.";
