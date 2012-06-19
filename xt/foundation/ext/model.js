@@ -150,12 +150,12 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   fetchId: function() {
     var that = this;
-    var options = {};
+    var options = {sync: true};
     if (!_.isEmpty(this.id)) return false;
 
     // Callback
     options.success = function(resp, status, xhr) {
-      that.set(that.idAttribute, resp);
+      that.set(that.idAttribute, resp, options);
     };
 
     // Dispatch
