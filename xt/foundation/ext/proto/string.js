@@ -16,6 +16,10 @@ enyo.mixin(String.prototype,
     return XT.String.format.apply(this, arguments);
   },
   
+  loc: function() {
+    return XT.String.loc.apply(this, arguments);
+  },
+  
   /**
   */
   trim: function() {
