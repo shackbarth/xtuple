@@ -54,10 +54,11 @@ enyo.kind({
       
       map[item.name] = {
         list: listType,
-        collection: collectionTypeName
+        collection: collectionTypeName,
+        query: item.query
       };
       
-      console.log(map[item.name]);
+      console.log(item.name, map[item.name]);
     }
     
     this.setListMap(map);
@@ -79,8 +80,11 @@ enyo.kind({
     var item = map[inName];
     var menu = this.$.menu;
     var menuItem = menu.$[inName];
+    var sub = this.$.subModuleContent;
     var list;
     var collection;
+    
+    this.log(map);
     
     if (!item) {
       this.log("Could not find the requested sub module");
@@ -90,11 +94,16 @@ enyo.kind({
       if (!(collection instanceof Object)) {
         item.collection = collection = new (XT.getObjectByName(collection))();
       }
+      
+      if (item.query) {
+        collection._listQuery = item.query;
+      } else { console.warn("NOOOOO", item); }
           
       list = item.list;
       list.setCollection(collection);
     }
     
     menu.getSelection().select(menuItem.getIndex());
+    sub.setCurrentView(menuItem.name);
   }
 });

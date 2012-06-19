@@ -1,8 +1,6 @@
 
 enyo.kind({
   name: "XT.SubModuleContent",
-  kind: "Panels",
-  classes: "xt-sub-module-content",
-  draggable: false,
-  fit: true
+  kind: "XT.ScreenCarousel",
+  classes: "xt-sub-module-content"
 });

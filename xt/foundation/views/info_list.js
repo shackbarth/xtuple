@@ -77,21 +77,27 @@ enyo.kind(
   */
   collectionChanged: function() {
     var col = this.getCollection();
+    var query = this._listQuery || {};
     
     if (!col) {
       this.setIndex(1);
       return;
     }
     
+    this.log("query", query);
+    
     // bind the change event to our handler
     col.bind("change", enyo.bind(this, "_collectionChanged", col));
     
     // attempt to fetch (if not already fetched) and handle the
     // various states appropriately
+    
     col.fetch({
       success: enyo.bind(this, "_collectionFetchSuccess"),
-      error: enyo.bind(this, "_collectionFetchError")
+      error: enyo.bind(this, "_collectionFetchError"),
+      query: { rowLimit: 100 }
     });
+  
       
   },
   
