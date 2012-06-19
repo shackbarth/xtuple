@@ -109,15 +109,14 @@ enyo.kind(
       
       // handle ok or complete hash response
       dataHash = JSON.parse(response.data.rows[0].commit_record);
-      if (options && options.success && dataHash.status === 'ok') { 
-        options.success.call(that, { dataState: 'read'} ); 
-      } else if (options && options.success) { 
+      if (options && options.success) { 
         options.success.call(that, dataHash ); 
       }
     };
     
     payload.requestType = 'commitRecord';
     payload.recordType = model.recordType;
+    payload.requery = options.requery;
     payload.dataHash = model.toJSON();
     
     XT.Request

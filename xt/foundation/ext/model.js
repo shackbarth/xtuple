@@ -99,7 +99,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   canUpdate: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    return klass.canUpdate(this);
+    return klass.canUpdate.call(this, this);
   },
 
   /**
@@ -110,7 +110,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   canDelete: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    return klass.canDelete(this);
+    return klass.canDelete.call(this, this);
   },
   
   /**
@@ -198,6 +198,16 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
+  Returns true if dataState is `"create"` or `"update"`.
+  
+  @returns {Boolean}
+  */
+  isDirty: function() {
+    var dataState = this.get('dataState');
+    return dataState === 'create' || dataState === 'update';
+  },
+  
+  /**
   Return whether the model is in a read-only state. If an attribute name or
   object is passed, returns whether those attributes are read-only.
 
@@ -229,8 +239,9 @@ XT.Model = Backbone.RelationalModel.extend(
     var err;
     
     // Handle both `"key", value` and `{key: value}` -style arguments.
-    if (_.isObject(key)) {
+    if (_.isObject(key) || _.isEmpty(key)) {
       attrs = key;
+      options = value;
     } else if (_.isString(key)) {
       attrs[key] = value;
     }
@@ -241,6 +252,10 @@ XT.Model = Backbone.RelationalModel.extend(
       options = options ? _.clone(options) : {};
       options.wait = true;
       options.sync = true;
+      
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) value = options;
+      
       return Backbone.Model.prototype.save.call(this, key, value, options);
     }
     
@@ -288,7 +303,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Update dataState
     if (result && !options.sync && this.get('dataState') === 'read') {
-      this.dataState = 'update';
+      this.set('dataState', 'update', options);
     }
     return result;
   },
@@ -455,11 +470,11 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
   @param {XT.Model} Model
   */
   canDo: function(action, model) {
-    var privs = this.privileges,
-        sessionPrivs = XT.session.privileges,
-        isGrantedAll = false,
-        isGrantedPersonal = false,
-        userName = XT.session.details.username;
+    var privs = this.privileges;
+    var sessionPrivs = XT.session.privileges;
+    var isGrantedAll = false;
+    var isGrantedPersonal = false;
+    var userName = XT.session.details.username;
 
     // If no privileges, nothing to check.  
     if (_.isEmpty(privs)) return true;
