@@ -6,6 +6,15 @@ XM.Priority = XT.Model.extend(
 
   recordType: 'XM.Priority',
   
+  privileges: {
+    "all": {
+      "create": "MaintainIncidentPriorities",
+      "read": true,
+      "update": "MaintainIncidentPriorities",
+      "delete": "MaintainIncidentPriorities"
+    }
+  },
+  
   defaults: {
     order: 0
   },
