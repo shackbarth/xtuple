@@ -135,9 +135,9 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   fetch: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    options = _.extend({}, options, {silent: false});
+    options = _.extend({}, options, {silent: false, force: true});
     if (klass.canRead()) {
-       return Backbone.Model.prototype.fetch.call(this, options);
+      return Backbone.Model.prototype.fetch.call(this, options);
     }
     console.log('Insufficient privileges to fetch');
     return false;
@@ -240,6 +240,7 @@ XT.Model = Backbone.RelationalModel.extend(
     if ((this.isDirty() || attrs) && !err) {
       options = options ? _.clone(options) : {};
       options.wait = true;
+      options.force = true;
       return Backbone.Model.prototype.save.call(this, key, value, options);
     }
     
@@ -261,12 +262,19 @@ XT.Model = Backbone.RelationalModel.extend(
     // Handle both `"key", value` and `{key: value}` -style arguments.
     if (_.isObject(key)) {
       attrs = key;
+      options = value;
     } else if (_.isString(key)) {
       attrs[key] = value;
     }
     
+    // Set silently unless otherwise specified
+    options = options ? _.clone(options) : {};
+    options.silent = _.isEmpty(options.silent) ? true : options.silent;
+    
     // Validate
-    if (this.isReadOnly(attrs) || !this.canUpdate()) return false;
+    if (!options.force && (this.isReadOnly(attrs) || !this.canUpdate())) {
+      return false;
+    }
     
     // Trigger `willChange` event on each attribute.
     for (attr in attrs) {
@@ -275,9 +283,7 @@ XT.Model = Backbone.RelationalModel.extend(
       }
     }
     
-    // Set silently unless otherwise specified
-    options = options ? _.clone(options) : {};
-    options.silent = _isEmpty(options.silent) ? true : options.silent;
+    // Call super `set`.
     result = Backbone.RelationalModel.prototype.set.call(this, key, value, options);
     
     // Update dataState
@@ -353,8 +359,8 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   validate: function(attributes, options) {
     for (i = 0; i < this.requiredAttributes.length; i++) {
-      if (_.isEmpty(attributes[this.requiredAttributes[i]])) {
-        return "'" + this.required[i] + "' is required.";
+      if (attributes[this.requiredAttributes[i]] === undefined) {
+        return "'" + this.requiredAttributes[i] + "' is required.";
       }
     }
   }
