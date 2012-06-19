@@ -5,6 +5,5 @@ enyo.depends(
   "response.js",
   "session.js",
   "screen.js",
-  "ext",
-  "startup.js"
+  "ext"
 );
