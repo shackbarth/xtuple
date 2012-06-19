@@ -131,7 +131,7 @@ XT.Model = Backbone.RelationalModel.extend(
     if (kclass.canDelete(this)) {
       options = options ? _.clone(options) : {};
       options.wait = true;
-      model.attributes.dataState = 'delete';
+      this.attributes.dataState = 'delete';
       return Backbone.Model.prototype.destroy.call(this, options);
     }
     console.log('Insufficient privileges to destroy');
@@ -220,7 +220,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   isReadOnly: function(attr) {
     if (!_.isString(attr) || this.readOnly) {
-      return  model.readOnly;
+      return  this.readOnly;
     }
     return _.contains(this.readOnly, attr);
   },
@@ -232,7 +232,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var options = {};
     options.checkRequired = true;
     
-    return this.validate(model.attributes, options);
+    return this.validate(this.attributes, options);
   },
   
   /**
