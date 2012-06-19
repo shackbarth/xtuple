@@ -8,6 +8,8 @@
 @import "compass/css3/box-shadow";
 @import "compass/css3/images";
 
+$highlight  : #d6f1ff;
+
 body {}
 
 .bggrad {
@@ -41,7 +43,7 @@ body {}
       font-size: 14px;
       background-color: #fff;
       &:hover {
-        background-color: #ddd;
+        background-color: $highlight;
       }
       &:active {
         background-color: #fff;
@@ -149,5 +151,63 @@ body {}
   }
   &:hover {
     background-color: #eee;
+  }
+}
+
+.xt-info-list-row {
+  background-color: #fff;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #ddd;
+  &:hover {
+    background-color: $highlight;
+    cursor: pointer;
+  }
+  .xt-info-list-row-column {
+    width: 320px;
+    min-width: 320px;
+    max-width: 320px;
+    .xt-info-list-row-column-cell {
+      padding: 5px;
+      font-size: 11px;
+    }
+  }
+}
+
+
+.project-due-date {
+  text-align: right;
+}
+.project-number {
+  font-weight: bold;
+}
+
+
+
+
+
+.xt-sub-module-content {
+  @include box-shadow(#000 -4px 0 10px -4px);
+}
+
+.xt-module-screen {
+  .xt-module-menu {
+    width: 320px !important;
+    background-color: #fff;
+    .xt-module-menu-item {
+      padding: 15px;
+      vertical-align: middle;
+      border-bottom: 1px solid #ddd;
+      &:hover {
+        background-color: $highlight;
+        cursor: pointer;
+      }
+      &:active {
+        background-color: #fff;
+      }
+      &.selected {
+        background-color: $highlight;
+      }
+    }
   }
 }
