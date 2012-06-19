@@ -132,7 +132,7 @@ XT.Model = Backbone.RelationalModel.extend(
       options = options ? _.clone(options) : {};
       options.wait = true;
       model.attributes.dataState = 'delete';
-      return Backbone.RelationalModel.prototype.destroy.call(this, options);
+      return Backbone.Model.prototype.destroy.call(this, options);
     }
     console.log('Insufficient privileges to destroy');
     return false;
@@ -256,7 +256,7 @@ XT.Model = Backbone.RelationalModel.extend(
     options = options ? _.clone(options) : {};
     options.checkReadOnly = true;
     options.checkPrivileges = true;
-    return Backbone.Model.prototype.set.call(this, key, value, options);
+    return Backbone.RelationalModel.prototype.set.call(this, key, value, options);
   },
 
   /**
@@ -295,7 +295,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Overload: sync to xtuple datasource.
+  Sync to xTuple datasource.
   */
   sync: function(method, model, options) {
     options = options ? _.clone(options) : {};
@@ -328,7 +328,7 @@ XT.Model = Backbone.RelationalModel.extend(
     options = options ? _.clone(options) : {};
     options.checkReadOnly = true;
     options.checkPrivileges = true;
-    return Backbone.Model.prototype.unset.call(this, attr, options);
+    return Backbone.RelationalModel.prototype.unset.call(this, attr, options);
   },
   
   /**
@@ -362,7 +362,7 @@ XT.Model = Backbone.RelationalModel.extend(
       for (attr in attributes) {
         if (_.contains(this.readOnlyAttributes, attr) && 
             !_.isEqual(attributes[attr], this.previous(attr))) {
-          return err.replace(/{attr}/, attr);
+          return err.replace("{attr}", attr);
         }
       }
     }
