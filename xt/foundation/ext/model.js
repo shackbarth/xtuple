@@ -39,7 +39,7 @@ XT.Model = Backbone.RelationalModel.extend(
 
   @type {Hash}
   */
-  privileges: {},
+  privileges: null,
   
   /** 
   Indicates whethere the model is read only.
@@ -56,7 +56,7 @@ XT.Model = Backbone.RelationalModel.extend(
   @seealso `isReadOnly`
   @type {Array}
   */
-  readOnlyAttributes: [],
+  readOnlyAttributes: null,
   
   /**
   Specify the name of a data source model here.
@@ -71,7 +71,7 @@ XT.Model = Backbone.RelationalModel.extend(
   
   @type {Array}
   */
-  requiredAttributes: [],
+  requiredAttributes: null,
   
   // ..........................................................
   // METHODS
@@ -166,6 +166,11 @@ XT.Model = Backbone.RelationalModel.extend(
 
     // Validate record type
     if (_.isEmpty(this.recordType)) throw 'No record type defined';
+    
+    // Set defaults if not provided
+    this.privileges = this.privileges || {};
+    this.readOnlyAttributes = this.readOnlyAttributes || [];
+    this.requiredAttributes = this.requiredAttributes || [];
 
     // Initialize for new record.
     if (options && options.isNew) {
@@ -176,9 +181,12 @@ XT.Model = Backbone.RelationalModel.extend(
     }
 
     // Id Attribute should be required and read only
-    if (this.idAttribute) this.readOnlyAttributes.push(this.idAttribute);
-    if (this.idAttribute) this.requiredAttributes.push(this.idAttribute);
-
+    if (this.idAttribute) this.setReadOnly(this.idAttribute);
+    if (this.idAttribute && 
+        !_.contains(this.requiredAttributes, this.idAttribute)) {
+      this.requiredAttributes.push(this.idAttribute);
+    }
+    
     // Set up destroy handler
     this.on('destroy', function() {
       that.attributes = {};
