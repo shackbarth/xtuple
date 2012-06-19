@@ -39,7 +39,7 @@ XT.Model = Backbone.RelationalModel.extend(
 
   @type {Hash}
   */
-  privileges: {},
+  privileges: null,
   
   /** 
   Indicates whethere the model is read only.
@@ -56,7 +56,7 @@ XT.Model = Backbone.RelationalModel.extend(
   @seealso `isReadOnly`
   @type {Array}
   */
-  readOnlyAttributes: [],
+  readOnlyAttributes: null,
   
   /**
   Specify the name of a data source model here.
@@ -71,7 +71,7 @@ XT.Model = Backbone.RelationalModel.extend(
   
   @type {Array}
   */
-  requiredAttributes: [],
+  requiredAttributes: null,
   
   // ..........................................................
   // METHODS
@@ -129,7 +129,7 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   fetch: function(options) {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    options = _.extend({}, options, {silent: false, sync: true});
+    options = _.extend({}, options, {sync: true});
     if (klass.canRead()) {
       return Backbone.Model.prototype.fetch.call(this, options);
     }
@@ -166,6 +166,11 @@ XT.Model = Backbone.RelationalModel.extend(
 
     // Validate record type
     if (_.isEmpty(this.recordType)) throw 'No record type defined';
+    
+    // Set defaults if not provided
+    this.privileges = this.privileges || {};
+    this.readOnlyAttributes = this.readOnlyAttributes || [];
+    this.requiredAttributes = this.requiredAttributes || [];
 
     // Initialize for new record.
     if (options && options.isNew) {
@@ -176,9 +181,12 @@ XT.Model = Backbone.RelationalModel.extend(
     }
 
     // Id Attribute should be required and read only
-    if (this.idAttribute) this.readOnlyAttributes.push(this.idAttribute);
-    if (this.idAttribute) this.requiredAttributes.push(this.idAttribute);
-
+    if (this.idAttribute) this.setReadOnly(this.idAttribute);
+    if (this.idAttribute && 
+        !_.contains(this.requiredAttributes, this.idAttribute)) {
+      this.requiredAttributes.push(this.idAttribute);
+    }
+    
     // Set up destroy handler
     this.on('destroy', function() {
       that.attributes = {};
@@ -296,10 +304,11 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Set silently unless otherwise specified
     options = options ? _.clone(options) : {};
-    options.silent = _.isEmpty(options.silent) ? true : options.silent;
     
-    // Validate
     if (!options.sync && this.initialized) {
+      options.silent = _.isEmpty(options.silent) ? true : options.silent;
+      
+      // Validate
       if (this.isReadOnly(attrs)) {
         console.log('Can not update read only attribute(s).');
         return false;
@@ -307,12 +316,13 @@ XT.Model = Backbone.RelationalModel.extend(
         console.log('Insufficient privileges to update attribute(s)');
         return false;
       }
-    }
     
-    // Trigger `willChange` event on each attribute.
-    for (attr in attrs) {
-      if (attrs.hasOwnProperty(attr)) {
-        this.trigger('willChange:' + attr, this, options);
+      // Trigger `willChange` event on each attribute.
+      for (attr in attrs) {
+        if (attrs.hasOwnProperty(attr) &&
+            !_.isEqual(attrs[attr], this.previous(attr))) {
+          this.trigger('willChange:' + attr, this, options);
+        }
       }
     }
     
@@ -320,8 +330,8 @@ XT.Model = Backbone.RelationalModel.extend(
     result = Backbone.RelationalModel.prototype.set.call(this, key, value, options);
     
     // Update dataState
-    if (result && !options.sync && 
-        this.initialized && this.get('dataState') === 'read') {
+    if (!options.sync && this.initialized && 
+        result && this.get('dataState') === 'read') {
       this.set('dataState', 'update', options);
     }
     return result;
