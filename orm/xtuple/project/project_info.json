@@ -2,7 +2,7 @@
   "context": "xtuple",
   "nameSpace": "XM",
   "type": "ProjectInfo",
-  "table": "prj",
+  "table": "xt.prjinfo",
   "comment": "Project Info Map",
   "privileges": {
     "all": {
@@ -86,12 +86,45 @@
       }
     },
     {
-      "name": "tasks",
-      "toMany": {
-        "isNested": true,
-        "type": "ProjectTask",
-        "column": "prj_id",
-        "inverse": "project"
+      "name": "budgetedHours",
+      "attr": {
+        "type": "Number",
+        "column": "prj_hours_budget"
+      }
+    },
+    {
+      "name": "actualHours",
+      "attr": {
+        "type": "Number",
+        "column": "prj_hours_actual"
+      }
+    },
+    {
+      "name": "balanceHours",
+      "attr": {
+        "type": "Number",
+        "column": "prj_hours_balance"
+      }
+    },
+    {
+      "name": "budgetedExpenses",
+      "attr": {
+        "type": "Number",
+        "column": "prj_exp_budget"
+      }
+    },
+    {
+      "name": "actualExpenses",
+      "attr": {
+        "type": "Number",
+        "column": "prj_exp_actual"
+      }
+    },
+    {
+      "name": "balanceExpenses",
+      "attr": {
+        "type": "Number",
+        "column": "prj_exp_balance"
       }
     }
   ],

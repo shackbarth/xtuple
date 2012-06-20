@@ -73,6 +73,7 @@
 \i xt/views/gl.sql;
 \i xt/views/invcheadtaxadj.sql;
 \i xt/views/jrnl.sql;
+\i xt/views/prjinfo.sql;
 \i xt/views/unrec.sql;
 \i xt/views/usr.sql;
 
