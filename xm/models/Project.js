@@ -91,6 +91,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'tasks',
+    isParent: true,
     relatedModel: 'XM.ProjectTask',
     reverseRelation: {
       key: 'project'
@@ -98,6 +99,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'comments',
+    isParent: true,
     relatedModel: 'XM.ProjectComment',
     reverseRelation: {
       key: 'project'
@@ -105,6 +107,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'accounts',
+    isParent: true,
     relatedModel: 'XM.ProjectAccount',
     reverseRelation: {
       key: 'project'
@@ -112,6 +115,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'contacts',
+    isParent: true,
     relatedModel: 'XM.ProjectContact',
     reverseRelation: {
       key: 'project'
@@ -119,6 +123,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'items',
+    isParent: true,
     relatedModel: 'XM.ProjectItem',
     reverseRelation: {
       key: 'project'
@@ -126,6 +131,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'files',
+    isParent: true,
     relatedModel: 'XM.ProjectFile',
     reverseRelation: {
       key: 'project'
@@ -133,6 +139,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'images',
+    isParent: true,
     relatedModel: 'XM.ProjectImage',
     reverseRelation: {
       key: 'project'
@@ -140,6 +147,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'urls',
+    isParent: true,
     relatedModel: 'XM.ProjectUrl',
     reverseRelation: {
       key: 'project'
@@ -147,6 +155,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'projects',
+    isParent: true,
     relatedModel: 'XM.ProjectProject',
     reverseRelation: {
       key: 'project'
@@ -154,6 +163,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'recurrences',
+    isParent: true,
     relatedModel: 'XM.ProjectRecurrence',
     reverseRelation: {
       key: 'project'
@@ -229,9 +239,10 @@ XM.ProjectTask = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'comments',
+    isParent: true,
     relatedModel: 'XM.ProjectTaskComment',
     reverseRelation: {
-      key: 'project'
+      key: 'projectTask'
     }
   }],
   
@@ -457,13 +468,6 @@ XM.ProjectInfo = XT.Model.extend(
     type: Backbone.HasOne,
     key: 'assignedTo',
     relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasMany,
-    key: 'tasks',
-    relatedModel: 'XM.ProjectTask',
-    reverseRelation: {
-      key: 'project'
-    }
   }]
   
 });
