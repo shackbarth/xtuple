@@ -9,6 +9,8 @@ XM.UserAccountInfo = XT.Model.extend(
 
   idAttribute: 'username',
 
-  recordType: 'XM.UserAccountInfo'
+  recordType: 'XM.UserAccountInfo',
+  
+  readOnly: true
   
 });

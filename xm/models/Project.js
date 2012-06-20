@@ -10,6 +10,10 @@ XM.ProjectMixin = {
   budgetedExpensesTotal: 0.0,
   actualExpensesTotal: 0.0,
   
+  // ..........................................................
+  // METHODS
+  //
+  
   initialize: function() {
     XT.Model.prototype.initialize.call(this);
     
@@ -43,6 +47,20 @@ XM.ProjectMixin = {
   
 };
 
+XM.ProjectStatusMixin = {
+  /**
+  Return the status attribute as a localized string.
+  
+  @returns {String}
+  */
+  getStatusString: function() {
+    var status = this.get('status');
+    if (status === 'P') return 'Concept'.loc();
+    if (status === 'O') return 'In-Process'.loc();
+    if (status === 'C') return 'Closed'.loc();
+  }
+};
+
 /**
   @class
   
@@ -73,14 +91,10 @@ XM.Project = XT.Model.extend(
   },
   
   defaults: {
-    "status":  "C",
-    "budgetedHoursTotal": 0,
-    "actualHoursTotal": 0,
-    "budgetedExpensesTotal": 0,
-    "actualExpensesTotal": 0
+    "status":  "C"
   },
   
-  required: [
+  requiredAttributes: [
     "number",
     "status",
     "name",
@@ -177,7 +191,8 @@ XM.Project = XT.Model.extend(
   
 });
 
-_.extend(XM.Project.prototype, XM.ProjectMixin);
+XM.Project = XM.Project.extend(XM.ProjectMixin);
+XM.Project = XM.Project.extend(XM.ProjectStatusMixin);
 
 /**
   @class
@@ -193,7 +208,7 @@ XM.ProjectTask = XT.Model.extend(
     "projectTaskStatus":  "C"
   },
   
-  required: [
+  requiredAttributes: [
     "number",
     "projectTaskStatus",
     "name",
@@ -222,8 +237,9 @@ XM.ProjectTask = XT.Model.extend(
   //
   
   initialize: function() {
-    var evt = 'change:budgetedHours change:actualHours ' +
-              'change:budgetedExpenses change:actualExpense';
+   XT.Model.prototype.initialize.call(this, arguments);
+   var evt = 'willChange:budgetedHours willChange:actualHours ' +
+              'willChange:budgetedExpenses willChange:actualExpense';
     this.on(evt, this.valuesChanged);
   },
   
@@ -233,9 +249,10 @@ XM.ProjectTask = XT.Model.extend(
   valuesChanged: function() {
     project.tasksChanged();
   }
-  
-  
+
 });
+
+XM.ProjectTask = XM.ProjectTask.extend(XM.ProjectStatusMixin);
 
 /**
   @class
@@ -423,24 +440,7 @@ XM.ProjectInfo = XT.Model.extend(
 
   recordType: 'XM.ProjectInfo',
   
-  privileges: {
-    "all": {
-      "create": false,
-      "read": "ViewAllProjects",
-      "update": false,
-      "delete": false
-    },
-    "personal": {
-      "create": false,
-      "read": true,
-      "update": false,
-      "delete": false,
-      "properties": [
-        "owner",
-        "assignedTo"
-      ]
-    }
-  },
+  readOnly: true,
   
   relations: [{
     type: Backbone.HasOne,
@@ -465,7 +465,8 @@ XM.ProjectInfo = XT.Model.extend(
   
 });
 
-_.extend(XM.ProjectInfo.prototype, XM.ProjectMixin);
+XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectMixin);
+XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatusMixin);
 
 /**
   @class
