@@ -1,3 +1,5 @@
+// Contributions of status related functionality borrowed from SproutCore:
+// https://github.com/sproutcore/sproutcore
 
 /**
   @class
@@ -32,7 +34,10 @@ XT.Model = Backbone.RelationalModel.extend(
   
   idAttribute: "guid",
   
-  initialized: false,
+  /**
+  A hash of attributes originally fetched from the server.
+  */
+  prime: null,
   
   /**
   A hash structure that defines data access.
@@ -73,15 +78,26 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   requiredAttributes: null,
   
+  /**
+  Model's status. You should never modify this directly.
+  
+  @seealso `getStatus`
+  @seealse `setStatus`
+  @type {Number}
+  @default XT.Model.EMPTY
+  */
+  status: null,
+  
   // ..........................................................
   // METHODS
   //
   
   /**
-  Reverts the model to the last state before last `change` was called.
+  Reverts the model to the last set of attributes fetched from the server and
+  resets the change log.
   */
   cancel: function() {
-    this.attributes = this.clone(_previousAttributes);
+    _.extend(this.attributes, this.originalAttributes());
     this.reset();
   },
   
@@ -108,29 +124,60 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented.
+  When any attributes change, store the original value(s) in `prime` and update
+  the status if applicable.
+  */
+  didChange: function() {
+    var K = XT.Model;
+    var status = this.getStatus();
+    _.defaults(this.prime, this.changed);
+    if (status === K.READY_CLEAN) {
+      this.setStatus(K.READY_DIRTY);
+    }
+  },
+  
+  /**
+  Reimplemented to handle state change.
   */
   destroy: function(options) {
+    options = options ? _.clone(options) : {};
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+    var success = options.success;
+    var model = this;
     if (klass.canDelete(this)) {
-      options = options ? _.clone(options) : {};
-      options.wait = true;
-      this.attributes.dataState = 'delete';
-      return Backbone.Model.prototype.destroy.call(this, options);
+      this.setStatus(K.BUSY_DESTROYING);
+      if (this.set('dataState', 'delete')) {
+        options.wait = true;
+        options.success = function(resp, status, xhr) {
+          model.clear();
+          model.setStatus(K.DESTROYED_CLEAN);
+          if (success) success(model, resp, options);
+        };
+        return Backbone.Model.prototype.destroy.call(this, options);
+      }
     }
     console.log('Insufficient privileges to destroy');
     return false;
   },
   
   /*
-  Reimplemented. Fetch must not be `silent`.
+  Reimplemented to handle state change.
   
   @returns {XT.Request} Request
   */
   fetch: function(options) {
+    options = options ? _.clone(options) : {};
+    var model = this;
+    var K = XT.Model;
+    var success = options.success;
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    options = _.extend({}, options, {sync: true});
+    var status = this.getStatus();
     if (klass.canRead()) {
+      this.setStatus(K.BUSY_FETCHING);
+      options.success = function(resp, status, xhr) {
+        model.setStatus(K.READY_CLEAN);
+        if (success) success(model, resp, options);
+      };
       return Backbone.Model.prototype.fetch.call(this, options);
     }
     console.log('Insufficient privileges to fetch');
@@ -144,16 +191,27 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   fetchId: function() {
     var that = this;
-    var options = {sync: true};
+    var options = {silent: true};
     if (!_.isEmpty(this.id)) return false;
-
-    // Callback
     options.success = function(resp, status, xhr) {
       that.set(that.idAttribute, resp, options);
     };
-
-    // Dispatch
     XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+  },
+  
+  getStatus: function() {
+    return this.status;
+  },
+  
+  getStatusString: function() {
+    var ret = [];
+    var status = this.getStatus();
+    for(var prop in XT.Model) {
+      if(prop.match(/[A-Z_]$/) && XT.Model[prop] === status) {
+        ret.push(prop);
+      }
+    }
+    return ret.join(" ");
   },
   
   /**
@@ -163,11 +221,13 @@ XT.Model = Backbone.RelationalModel.extend(
     var options = arguments[1];
     var that = this;
     var klass;
+    var K = XT.Model;
 
     // Validate record type
     if (_.isEmpty(this.recordType)) throw 'No record type defined';
     
     // Set defaults if not provided
+    this.prime = {};
     this.privileges = this.privileges || {};
     this.readOnlyAttributes = this.readOnlyAttributes || [];
     this.requiredAttributes = this.requiredAttributes || [];
@@ -177,6 +237,7 @@ XT.Model = Backbone.RelationalModel.extend(
       klass = Backbone.Relational.store.getObjectByName(this.recordType);
       if (!klass.canCreate()) throw 'Insufficent privileges to create a record.';
       this.attributes.dataState = 'create';
+      this.setStatus(K.READY_NEW);
       if (this.autoFetchId) this.fetchId();
     }
 
@@ -187,13 +248,8 @@ XT.Model = Backbone.RelationalModel.extend(
       this.requiredAttributes.push(this.idAttribute);
     }
     
-    // Set up destroy handler
-    this.on('destroy', function() {
-      that.attributes = {};
-      that.reset();
-    });
-    
-    this.initialized = true;
+    // Bind on change event
+    this.on('change', this.didChange);
   },
   
   /**
@@ -202,7 +258,8 @@ XT.Model = Backbone.RelationalModel.extend(
   @returns {Boolean}
   */
   isNew: function() {
-    return this.get('dataState') === 'create';
+    K = XT.Model;
+    return this.getStatus === K.READY_NEW;
   },
   
   /**
@@ -211,8 +268,9 @@ XT.Model = Backbone.RelationalModel.extend(
   @returns {Boolean}
   */
   isDirty: function() {
-    var dataState = this.get('dataState');
-    return dataState === 'create' || dataState === 'update';
+    var status = this.getStatus();
+    var K = XT.Model;
+    return status === K.READY_NEW || status === K.READY_DIRTY;
   },
   
   /**
@@ -237,6 +295,14 @@ XT.Model = Backbone.RelationalModel.extend(
     return _.contains(this.readOnlyAttributes, value);
   },
   
+  original: function(attr) {
+    return this.prime[attr] || this.get(attr);
+  },
+  
+  originalAttributes: function() {
+    return _.defaults(_.clone(this.prime), _.clone(this.attributes));
+  },
+  
   /**
   Reset the change log.
   */
@@ -252,89 +318,44 @@ XT.Model = Backbone.RelationalModel.extend(
   @retuns {XT.Request} Request
   */
   save: function(key, value, options) {
+    options = options ? _.clone(options) : {};
     var attrs = {};
     var err;
+    var model = this;
+    var K = XT.Model;
+    var success = options.success;
+    var result;
+    var oldStatus = this.getStatus(status);
     
     // Handle both `"key", value` and `{key: value}` -style arguments.
     if (_.isObject(key) || _.isEmpty(key)) {
       attrs = key;
-      options = value;
+      options = value ? _.clone(value) : {};
     } else if (_.isString(key)) {
       attrs[key] = value;
     }
     
-    // Only save if we can and should.
-    err = this.validate(_.extend(this.attributes, attrs));
-    if ((this.isDirty() || attrs) && !err) {
-      options = options ? _.clone(options) : {};
+    // Only save if we should.
+    if (this.isDirty() || attrs) {
+      options.checkRequired = true;
       options.wait = true;
-      options.sync = true;
+      options.success = function(resp, status, xhr) {
+        model.setStatus(K.READY_CLEAN);
+        if (success) success(model, resp, options);
+      };
       
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (_.isObject(key) || _.isEmpty(key)) value = options;
       
-      return Backbone.Model.prototype.save.call(this, key, value, options);
+      // Call the super version
+      this.setStatus(K.BUSY_COMMITTING);
+      result = Backbone.Model.prototype.save.call(this, key, value, options);
+      if (!result) this.setStatus(oldStatus);
+      return result;
     }
     
-    console.log(err || 'No changes to save');
+    console.log('No changes to save');
     return false;
-  },
-  
-  /**
-  Reimplemented. All sets are `silent` so that changes are accumulated until `save`.
-  Calling `set` triggers `willChange` event on each attribute.
-  
-  @returns {Object} Receiver
-  */
-  set: function(key, value, options) {
-    var result;
-    var attr;
-    var attrs = {};
-    
-    // Handle both `"key", value` and `{key: value}` -style arguments.
-    if (_.isObject(key) || _.isEmpty(key)) {
-      attrs = key;
-      options = value;
-    } else if (_.isString(key)) {
-      attrs[key] = value;
-    }
-    
-    // If nothing here bail
-    if (_.isEmpty(attrs)) return this;
-    
-    // Set silently unless otherwise specified
-    options = options ? _.clone(options) : {};
-    
-    if (!options.sync && this.initialized) {
-      options.silent = _.isEmpty(options.silent) ? true : options.silent;
-      
-      // Validate
-      if (this.isReadOnly(attrs)) {
-        console.log('Can not update read only attribute(s).');
-        return false;
-      } else if (!this.canUpdate()) {
-        console.log('Insufficient privileges to update attribute(s)');
-        return false;
-      }
-    
-      // Trigger `willChange` event on each attribute.
-      for (attr in attrs) {
-        if (attrs.hasOwnProperty(attr) &&
-            !_.isEqual(attrs[attr], this.previous(attr))) {
-          this.trigger('willChange:' + attr, this, options);
-        }
-      }
-    }
-    
-    // Call super `set`.
-    result = Backbone.RelationalModel.prototype.set.call(this, key, value, options);
-    
-    // Update dataState
-    if (!options.sync && this.initialized && 
-        result && this.get('dataState') === 'read') {
-      this.set('dataState', 'update', options);
-    }
-    return result;
   },
 
   /**
@@ -373,16 +394,32 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
+  Set the status on the model. Triggers `statusChanged` event.
+  
+  @param {Number} Status
+  */
+  setStatus: function(status) {
+    var K = XT.Model;
+    this.status = status;
+    this.trigger('statusChanged', this);
+    if (status === K.READY_DIRTY) {
+      this.set('dataState', 'update');
+    }
+    
+    console.log(this.recordType + ' id: ' + 
+                this.id + ' changed to ' + this.getStatusString());
+  },
+  
+  /**
   Sync to xTuple datasource.
   */
   sync: function(method, model, options) {
     options = options ? _.clone(options) : {};
     var id = options.id || model.id;
-    var success = options.success;
     var recordType = this.recordType;
 
     // Read
-    if (method === 'read' && recordType && id && success) {
+    if (method === 'read' && recordType && id && options.success) {
       return XT.dataSource.retrieveRecord(recordType, id, options);
 
     // Write
@@ -404,13 +441,40 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   validate: function(attributes, options) {
     attributes = attributes || {};
-    for (i = 0; i < this.requiredAttributes.length; i++) {
-      if (attributes[this.requiredAttributes[i]] === undefined) {
-        return "'" + this.requiredAttributes[i] + "' is required.";
+    var K = XT.Model;
+    var keys = _.keys(attributes);
+    var original = _.pick(this.originalAttributes(), keys);
+    var status = this.getStatus();
+    var attr;
+    var err;
+    
+    // Check required.
+    if (status === K.BUSY_COMMITTING) {
+      for (i = 0; i < this.requiredAttributes.length; i++) {
+        if (attributes[this.requiredAttributes[i]] === undefined) {
+          err = "'" + this.requiredAttributes[i] + "' is required.";
+        }
       }
     }
+    
+    // Validate
+    if ((status & K.READY) && !_.isEqual(attributes, original)) {
+      for (attr in attributes) {
+        if (attributes[attr] !== this.original(attr) &&
+            this.isReadOnly(attr)) {
+          err = 'Can not update read only attribute(s).';
+        } 
+      }
+      
+      if (!this.canUpdate()) {
+        err = 'Insufficient privileges to update attribute(s)';
+      }
+    }
+    
+    if (err) console.log(err);
+    return err;
   }
-  
+
 });
 
 // ..........................................................
@@ -532,7 +596,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
       isGrantedPersonal = false;
       while (!isGrantedPersonal && i < props.length) {
-        isGrantedPersonal = model.previous(props[i].get('username')) === username;
+        isGrantedPersonal = model.original(props[i].get('username')) === username;
         i++;
       }
     }
@@ -547,9 +611,194 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
     options = options ? _.clone(options) : {};
     options.sync = true;
     return Backbone.RelationalModel.findOrCreate.apply(this, arguments);
-  }
+  },
+  
+  // ..........................................................
+  // CONSTANTS
+  //
+  
+  /**
+    Generic state for records with no local changes.
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0001
+  */
+  CLEAN:            0x0001, // 1
+
+  /**
+    Generic state for records with local changes.
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0002
+  */
+  DIRTY:            0x0002, // 2
+
+  /**
+    State for records that are still loaded.
+
+    A record instance should never be in this state.  You will only run into
+    it when working with the low-level data hash API on `SC.Store`. Use a
+    logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0100
+  */
+  EMPTY:            0x0100, // 256
+
+  /**
+    State for records in an error state.
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x1000
+  */
+  ERROR:            0x1000, // 4096
+
+  /**
+    Generic state for records that are loaded and ready for use
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0200
+  */
+  READY:            0x0200, // 512
+
+  /**
+    State for records that are loaded and ready for use with no local changes
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0201
+  */
+  READY_CLEAN:      0x0201, // 513
+
+
+  /**
+    State for records that are loaded and ready for use with local changes
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0202
+  */
+  READY_DIRTY:      0x0202, // 514
+
+
+  /**
+    State for records that are new - not yet committed to server
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0203
+  */
+  READY_NEW:        0x0203, // 515
+
+
+  /**
+    Generic state for records that have been destroyed
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0400
+  */
+  DESTROYED:        0x0400, // 1024
+
+
+  /**
+    State for records that have been destroyed and committed to server
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0401
+  */
+  DESTROYED_CLEAN:  0x0401, // 1025
+
+
+  /**
+    Generic state for records that have been submitted to data source
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0800
+  */
+  BUSY:             0x0800, // 2048
+
+
+  /**
+    State for records that are still loading data from the server
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0804
+  */
+  BUSY_FETCHING:     0x0804, // 2052
+
+
+  /**
+    State for records that have been modified and submitted to server
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0810
+  */
+  BUSY_COMMITTING:  0x0810, // 2064
+
+  /**
+    State for records that have been destroyed and submitted to server
+
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0840
+  */
+  BUSY_DESTROYING:  0x0840 // 2112
+  
+  
   
 });
+
+XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
 
 // Stomp on this function that MUST include the 'sync' option
 (function() {

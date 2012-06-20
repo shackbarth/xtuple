@@ -8,7 +8,7 @@ enyo.kind(
   
   published: {
     datasourceUrl: "asteroidbelt.xtuple.com",
-    //datasourceUrl: "192.168.0.146",
+    //datasourceUrl: "localhost",
     datasourcePort: 9000,
     isConnected: false
   },
@@ -47,10 +47,10 @@ enyo.kind(
     payload.requestType = 'fetch';
     payload.query = options.query;
   
-    XT.Request
-      .handle("function/fetch")
-      .notify(complete)
-      .send(payload); 
+    return XT.Request
+             .handle("function/fetch")
+             .notify(complete)
+             .send(payload); 
   },
 
   /*
@@ -83,10 +83,10 @@ enyo.kind(
     payload.recordType = recordType;
     payload.id = id;
     
-    XT.Request
-      .handle("function/retrieveRecord")
-      .notify(complete)
-      .send(payload); 
+    return XT.Request
+             .handle("function/retrieveRecord")
+             .notify(complete)
+             .send(payload); 
   },
   
   /*
@@ -119,10 +119,10 @@ enyo.kind(
     payload.requery = options.requery;
     payload.dataHash = model.toJSON();
     
-    XT.Request
-      .handle("function/commitRecord")
-      .notify(complete)
-      .send(payload); 
+    return XT.Request
+             .handle("function/commitRecord")
+             .notify(complete)
+             .send(payload); 
   },
   
   /*
@@ -159,10 +159,10 @@ enyo.kind(
       }
     };
 
-    XT.Request
-      .handle('function/dispatch')
-      .notify(complete)
-      .send(payload);
+    return XT.Request
+             .handle('function/dispatch')
+             .notify(complete)
+             .send(payload);
   },
   
   /* @private */

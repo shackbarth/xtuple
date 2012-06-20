@@ -36,6 +36,8 @@ enyo.kind(
     enyo.log("Socket sending: %@".f(handle), payload);
     
     sock.json.emit(handle, payload, callback);
+    
+    return this;
   },
   
   handle: function(event) {
