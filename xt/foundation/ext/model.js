@@ -175,7 +175,7 @@ XT.Model = Backbone.RelationalModel.extend(
     if (klass.canRead()) {
       this.setStatus(K.BUSY_FETCHING);
       options.success = function(resp, status, xhr) {
-        model.setStatus(K.READY_CLEAN);
+        model.setStatus(K.READY_CLEAN, options);
         if (success) success(model, resp, options);
       };
       return Backbone.Model.prototype.fetch.call(this, options);
@@ -199,10 +199,31 @@ XT.Model = Backbone.RelationalModel.extend(
     XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
   },
   
+  /**
+  Searches attributes first, then the model for a value on a property with the
+  given key.
+  
+  @param {String} Key
+  @returns {Any}
+  */
+  getProperty: function(key) {
+    return _.has(this.attributes, key) ? this.attributes[key] : this[key];
+  },
+  
+  /**
+  Return the current status.
+  
+  @returns {Number}
+  */
   getStatus: function() {
     return this.status;
   },
   
+  /**
+  Return the current status as as string.
+  
+  @returns {String}
+  */
   getStatusString: function() {
     var ret = [];
     var status = this.getStatus();
@@ -253,7 +274,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented. A model is new if the dataState is `create`.
+  Reimplemented. A model is new if the status is `READY_NEW`.
   
   @returns {Boolean}
   */
@@ -263,7 +284,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Returns true if dataState is `"create"` or `"update"`.
+  Returns true if status is `"create"` or `"update"`.
   
   @returns {Boolean}
   */
@@ -337,10 +358,10 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Only save if we should.
     if (this.isDirty() || attrs) {
-      options.checkRequired = true;
       options.wait = true;
+      options.cascade = true; // Cascade status to children
       options.success = function(resp, status, xhr) {
-        model.setStatus(K.READY_CLEAN);
+        model.setStatus(K.READY_CLEAN, options);
         if (success) success(model, resp, options);
       };
       
@@ -359,7 +380,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
 
   /**
-  Set the entire model, or a specific model attribute to readOnly. Privilege
+  Set the entire model, or a specific model attribute to `readOnly`. Privilege
   enforcement supercedes read-only settings.
   
   Examples:
@@ -394,17 +415,55 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Set the status on the model. Triggers `statusChanged` event.
+  Set the status on the model. Triggers `statusChange` event. Option set to
+  `cascade` will propagate status to children.
   
   @param {Number} Status
   */
-  setStatus: function(status) {
+  setStatus: function(status, options) {
     var K = XT.Model;
+    var i;
+    var n;
+    var rel;
+    var attr;
+    
+    // Prevent recursion
+    if ( this.isLocked() ) {
+			return;
+		}
+		this.acquire();
     this.status = status;
-    this.trigger('statusChanged', this);
-    if (status === K.READY_DIRTY) {
+    this.trigger('statusChange', this);
+    
+    // Cascade changes through relations if specified
+    if (options && options.cascade) {
+      for (i = 0; i < this.relations.length; i++) {
+        rel = this.relations[i];
+        attr = this.attributes[rel.key];
+        if (attr) {
+          if (rel.type === Backbone.HasOne && attr.setStatus) {
+            attr.setStatus(status, options);
+          } else if (rel.type === Backbone.HasMany) {
+            if (attr.models) {
+              for (n = 0; n < attr.models.length; n++) {
+                if (attr.models[n] && attr.models[n].setStatus) {
+                  attr.models[n].setStatus(status, options);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    // Update data state.
+    if (status === K.READY_CLEAN) {
+      this.set('dataState', 'read');
+    } else if (status === K.READY_DIRTY) {
       this.set('dataState', 'update');
     }
+    
+    this.release();
     
     console.log(this.recordType + ' id: ' + 
                 this.id + ' changed to ' + this.getStatusString());
@@ -458,7 +517,8 @@ XT.Model = Backbone.RelationalModel.extend(
     }
     
     // Validate
-    if ((status & K.READY) && !_.isEqual(attributes, original)) {
+    if ((status & K.READY || status === K.EMPTY) && 
+        !_.isEqual(attributes, original)) {
       for (attr in attributes) {
         if (attributes[attr] !== this.original(attr) &&
             this.isReadOnly(attr)) {
@@ -607,11 +667,14 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
   /**
   Include 'sync' option.
   */
+  /*
   findOrCreate: function(attributes, options) {
-    options = options ? _.clone(options) : {};
-    options.sync = true;
-    return Backbone.RelationalModel.findOrCreate.apply(this, arguments);
+    var K = XT.Model;
+    var result = Backbone.RelationalModel.findOrCreate.apply(this, arguments);
+    if (result && result.setStatus) result.setStatus(K.READY_CLEAN);
+    return result;
   },
+  */
   
   // ..........................................................
   // CONSTANTS
@@ -794,21 +857,6 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
   */
   BUSY_DESTROYING:  0x0840 // 2112
   
-  
-  
 });
 
 XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
-
-// Stomp on this function that MUST include the 'sync' option
-(function() {
-  var func = Backbone.Relation.prototype.setRelated;
-  Backbone.Relation.prototype.setRelated = function(related, options) {
-    options = options ? _.clone(options) : {};
-    options.sync = true;
-
-    func.call(this, related, options);
-  };
-}());
-
-
