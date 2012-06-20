@@ -102,10 +102,10 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-    Returns whether the current record can be updated based on privilege
-    settings.
+  Returns whether the current record can be updated based on privilege
+  settings.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canUpdate: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
@@ -113,10 +113,10 @@ XT.Model = Backbone.RelationalModel.extend(
   },
 
   /**
-    Returns whether the current record can be deleted based on privilege
-    settings.
+  Returns whether the current record can be deleted based on privilege
+  settings.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canDelete: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
@@ -338,7 +338,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Returns true if status is `"create"` or `"update"`.
+  Returns true if status is `READY_NEW` or `READY_DIRTY`.
   
   @returns {Boolean}
   */
@@ -577,7 +577,7 @@ XT.Model = Backbone.RelationalModel.extend(
     }
     
     // Validate
-    if ((status & K.READY || status === K.EMPTY) && 
+    if (((status & K.READY) || status === K.EMPTY) && 
         !_.isEqual(attributes, original)) {
       for (attr in attributes) {
         if (attributes[attr] !== this.original(attr) &&
@@ -655,22 +655,22 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
   },
 
   /**
-    Returns whether a user has access to update a record of this type. If a
-    record is passed that involves personal privileges, it will validate
-    whether that particular record is updatable.
+  Returns whether a user has access to update a record of this type. If a
+  record is passed that involves personal privileges, it will validate
+  whether that particular record is updatable.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canUpdate: function(model) {
     return XT.Model.canDo.call(this, 'update', model);
   },
 
   /**
-    Returns whether a user has access to delete a record of this type. If a
-    record is passed that involves personal privileges, it will validate
-    whether that particular record is deletable.
+  Returns whether a user has access to delete a record of this type. If a
+  record is passed that involves personal privileges, it will validate
+  whether that particular record is deletable.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canDelete: function(model) {
     return XT.Model.canDo.call(this, 'delete', model);
@@ -723,19 +723,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
     return isGrantedAll || isGrantedPersonal;
   },
-  
-  /**
-  Include 'sync' option.
-  */
-  /*
-  findOrCreate: function(attributes, options) {
-    var K = XT.Model;
-    var result = Backbone.RelationalModel.findOrCreate.apply(this, arguments);
-    if (result && result.setStatus) result.setStatus(K.READY_CLEAN);
-    return result;
-  },
-  */
-  
+
   // ..........................................................
   // CONSTANTS
   //
