@@ -155,6 +155,20 @@ XT.Model = Backbone.RelationalModel.extend(
         !parent && klass.canDelete(this)) {
       this.setStatus(K.DESTROYED_DIRTY); // Will update the data state
     
+      // Loop through and destroy child relations
+      _.each(this.relations, function(relation) {
+        var attr = relation.isParent ? model.get(relation.key) : false;
+        if (attr) {
+          if (relation.type === Backbone.HasOne) {
+            attr.destroy();
+          } else if (relation.type === Backbone.HasMany) {
+            _.each(attr.models, function(child) {
+              child.destroy();
+            });
+          }
+        }
+      });
+    
       // If it's top level commit to the server now.
       if (!parent) {
         if (klass.canDelete(this)) {
@@ -234,7 +248,7 @@ XT.Model = Backbone.RelationalModel.extend(
     });
     parent = relation && relation.key ? this.get(relation.key) : false;
     if (parent && getRoot) {
-      root = parent.parent(getRoot);
+      root = parent.getParent(getRoot);
     }
     return root || parent;
   },
