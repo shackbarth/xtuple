@@ -17,22 +17,6 @@ body {}
   background-color: #999;
 }
 
-.login-screen {
-  .user-login-screen-container {
-    width: 166px;
-    height: 300px;
-    margin-top: -150px;
-    margin-left: -83px;
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    .user-login-block {
-      .user-login-block-row { 
-      }
-    }
-  } 
-}
-
 .available-sessions-container {
   .session-selection-row {
     margin-bottom: 1px;
@@ -124,22 +108,6 @@ body {}
   }
 }
 
-
-
-
-
-.module-left-panel-container {
-  background-color: #333;
-  color: #fff;
-  width: 320px;
-}
-
-.module-right-panel-container {
-  @include box-shadow(#000 -4px 0 10px -4px);
-  background-color: #555;
-  color: #fff;
-}
-
 .crm-menu-item {
   padding: 10px;
   margin: 10px 0;
@@ -210,4 +178,62 @@ body {}
       }
     }
   }
+}
+
+
+
+
+
+
+
+
+.xt-app {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  .xt-postbooks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .xt-postbooks-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      .xt-login {
+        .xt-login-screen {
+          .xt-user-login-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            .xt-user-login-block {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              margin-top: -150px;
+              margin-left: -83px;
+              height: 300px;
+              width: 166px;
+            }
+          }
+          .xt-session-selection-screen {
+            height: 100%;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.xt-screen-carousel {
+  height: 100%;
+  width: 100%;
 }

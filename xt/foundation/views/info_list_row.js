@@ -31,7 +31,7 @@ enyo.kind({
   renderModel: function(model) {
     // TEMPORARY IMPLEMENTATION
         
-    this.log(model);
+    //this.log(model);
         
     var $ = this.$;
     var elem;
@@ -160,7 +160,7 @@ enyo.kind({
     var curr = inComponent;
     var elem = inElement;
     
-    console.log("CREATECOMPONENTFROMOBJECT", elem);
+    //console.log("CREATECOMPONENTFROMOBJECT", elem);
     
     curr = curr.createComponent({
       kind: "XT.InfoListRowColumnCell"

@@ -1,5 +1,5 @@
 enyo.depends(
-  "screen.js",
+  "screen_carousel.js",
   "info_list.js",
   "info_list_row.js",
   "module_toolbar.js",

@@ -1,42 +1,15 @@
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.ScreenCarousel",
-  
-  /** */
   kind: "Panels",
-  
-  /** */
-  fit: true,
-  
-  /** */
-  classes: "enyo-stretch onyx",
-  
-  /** */
+  classes: "xt-screen-carousel enyo-unselectable onyx",
   layoutKind: "CarouselArranger",
-  
-  /** */
   draggable: false,
-  
-  /** */
-  //arrangerKind: "CarouselArranger",
-  
-  /** */
   published: {
-    
-    /** */
     currentView: "",
-    
-    /** */
     carouselEvents: null
   },
-  
-  /** */
   previousView: "",
-  
-  /** */
   currentViewChanged: function() {
     var children = this.children;
     var viewName = this.getCurrentView();
@@ -69,8 +42,6 @@ enyo.kind(
       this.setIndex(idx);
     }
   },
-  
-  /** */
   create: function() {
     
     // need to point any special carousel events to the
@@ -91,13 +62,10 @@ enyo.kind(
     // carry on
     this.inherited(arguments);
   },
-  
   dispatch: function() {
     //this.log(this.name, arguments);
     this.inherited(arguments);
   },
-  
-  /** */
   handleCarouselEvent: function(inSender, inEvent) {
     var carouselEvents = this.getCarouselEvents();
     var evt = inEvent.eventName;
@@ -110,12 +78,9 @@ enyo.kind(
     // we got this, stop bubbling
     return true;
   },
-  
   indexChanged: function() {
     this.inherited(arguments);
   },
-  
-  /** */
 	bubble: function(inEventName, inEvent, inSender) {
 		var e = inEvent || {};
 		// FIXME: is this the right place?
@@ -131,8 +96,6 @@ enyo.kind(
 		
 		return this.dispatchBubble(inEventName, e, inSender);
 	},
-	
-	/** */
 	completed: function() {
     var active;
     
@@ -141,6 +104,5 @@ enyo.kind(
     if (active && active.didBecomeActive) {
       active.didBecomeActive();
     }
-	}
-    
+	} 
 });

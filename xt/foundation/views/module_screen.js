@@ -57,8 +57,6 @@ enyo.kind({
         collection: collectionTypeName,
         query: item.query
       };
-      
-      console.log(item.name, map[item.name]);
     }
     
     this.setListMap(map);

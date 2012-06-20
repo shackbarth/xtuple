@@ -1,20 +1,8 @@
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.UserLoginBlock",
-  
-  /** */
-  kind: "FittableRows",
-  
-  /** */
-  fit: true,
-  
-  /** */
-  classes: "user-login-block",
-  
-  /** */
+  kind: "Control",
+  classes: "xt-user-login-block",
   components: [
     { kind: "XT.UserLoginBlockRow", components: [
       { kind: "onyx.InputDecorator", components: [
@@ -28,30 +16,16 @@ enyo.kind(
     { kind: "XT.UserLoginBlockButtonRow", components: [
       { name: "button", kind: "onyx.Button", content: "Login" } ]}
   ]
-    
 });
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.UserLoginBlockRow",
-  
-  /** */
   classes: "user-login-block-row"
-    
 });
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.UserLoginBlockButtonRow",
-  
-  /** */
   kind: "XT.UserLoginBlockRow",
-  
-  /** */
   tap: function() {
     var owner = this.owner.$;
     var credentials = {
@@ -69,6 +43,5 @@ enyo.kind(
         self.bubble("multipleSessions", {eventName:"multipleSessions"});
       } else { self.bubble("sessionAcquired", {eventName:"sessionAcquired"}); }
     });
-  }
-    
+  } 
 });

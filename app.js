@@ -1,51 +1,20 @@
 
-/**
-*/
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "App",
-  
-  /** */
   fit: true,
-  
-  /** */
-  classes: "enyo-unselectable",
-  
-  /** */
+  classes: "xt-app enyo-unselectable onyx",
   published: {
-    
-    /** */
     isStarted: false
   },
-  
-  /** */
   components: [
-    
-    /** */
     { name: "postbooks", kind: "XT.Postbooks" }
   ],
-  
-  /** */
   create: function() {
     this.inherited(arguments);
-    
-    if (DEVELOPMENT_MODE) {
-      this.createComponent({
-        name: "developer",
-        kind: "XT.DeveloperUI"
-      });
-    }
   },
-  
   start: function() {
     
-    if (this.getIsStarted()) {
-      
-      // nothing to re-start
-      return;
-    }
+    if (this.getIsStarted()) return;
     
     // on application start, create a datasource we can use
     XT.dataSource = new XT.DataSource();
@@ -57,8 +26,5 @@ enyo.kind(
     
     // lets not allow this to happen again
     this.setIsStarted(true);
-    
-    
-  }
-    
+  }  
 });
