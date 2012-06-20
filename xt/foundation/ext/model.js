@@ -137,25 +137,42 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented to handle state change.
+  Reimplemented to handle state change and parent child relationships. Calling
+  `destroy` on a parent will cause the model to commit to the server
+  immediately. Calling destroy on a child relation will simply mark it for 
+  deletion on the next save of the parent.
+  
+  @returns {XT.Request|Boolean}
   */
   destroy: function(options) {
     options = options ? _.clone(options) : {};
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
     var success = options.success;
     var model = this;
-    if (klass.canDelete(this)) {
-      this.setStatus(K.BUSY_DESTROYING);
-      if (this.set('dataState', 'delete')) {
-        options.wait = true;
-        options.success = function(resp, status, xhr) {
-          model.clear();
-          model.setStatus(K.DESTROYED_CLEAN);
-          if (success) success(model, resp, options);
-        };
-        return Backbone.Model.prototype.destroy.call(this, options);
+    var K = XT.Model;
+    var parent = this.getParent(true);
+    if (parent && parent.canUpdate(this) ||
+        !parent && klass.canDelete(this)) {
+      this.setStatus(K.DESTROYED_DIRTY); // Will update the data state
+    
+      // If it's top level commit to the server now.
+      if (!parent) {
+        if (klass.canDelete(this)) {
+          this.setStatus(K.BUSY_DESTROYING);
+          options.wait = true;
+          options.success = function(resp, status, xhr) {
+            model.clear();
+            model.setStatus(K.DESTROYED_CLEAN);
+            if (success) success(model, resp, options);
+          };
+          return Backbone.Model.prototype.destroy.call(this, options);
+        }
       }
+      
+      // Otherwise just marked for deletion.
+      return true;
     }
+    
     enyo.log('Insufficient privileges to destroy');
     return false;
   },
@@ -198,6 +215,28 @@ XT.Model = Backbone.RelationalModel.extend(
       that.set(that.idAttribute, resp, options);
     };
     XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+  },
+  
+  /**
+  Return the parent model if one exists. If the `getRoot` parameter is
+  passed, it will return the top level parent of the model hierarchy.
+  
+  @param {Boolean} Get Root 
+  @returns {XT.Model}
+  */
+  getParent: function(getRoot) {
+    var parent;
+    var root;
+    var relation = _.find(this.relations, function(rel) {
+      if (rel.reverseRelation && rel.reverseRelation.isParent) {
+        return true;
+      }
+    });
+    parent = relation && relation.key ? this.get(relation.key) : false;
+    if (parent && getRoot) {
+      root = parent.parent(getRoot);
+    }
+    return root || parent;
   },
   
   /**
@@ -349,6 +388,12 @@ XT.Model = Backbone.RelationalModel.extend(
     var result;
     var oldStatus = this.getStatus(status);
     
+    // Can't save unless root
+    if (this.getParent()) {
+      enyo.log('You must save on the root level model of this relation');
+      return false;
+    }
+    
     // Handle both `"key", value` and `{key: value}` -style arguments.
     if (_.isObject(key) || _.isEmpty(key)) {
       attrs = key;
@@ -425,14 +470,14 @@ XT.Model = Backbone.RelationalModel.extend(
     var K = XT.Model;
     var attr;
     var that = this;
+    var parent;
     
     // Prevent recursion
-    if ( this.isLocked() ) {
-			return;
-		}
+    if ( this.isLocked() || this.status === status ) return;
 		this.acquire();
     this.status = status;
     this.trigger('statusChange', this);
+    parent = this.getParent();
     
     // Cascade changes through relations if specified
     if (options && options.cascade) {
@@ -452,19 +497,22 @@ XT.Model = Backbone.RelationalModel.extend(
           }
         }
       });
-    }
+    
+    // Percolate changes up to parent when applicable
+    } else if ((status & K.DIRTY) && parent && parent.getStatus &&
+               parent.getStatus() === K.READY_CLEAN) {
+      parent.setStatus(K.READY_DIRTY);
+    } 
     
     // Update data state.
-    if (status === K.READY_CLEAN) {
-      this.set('dataState', 'read');
-    } else if (status === K.READY_DIRTY) {
-      this.set('dataState', 'update');
-    }
+    if (status === K.READY_CLEAN) this.set('dataState', 'read');
+    else if (status === K.READY_DIRTY) this.set('dataState', 'update');
+    else if (status === K.DESTROYED_DIRTY) this.set('dataState', 'delete');
     
     this.release();
     
-    enyo.log(this.recordType + ' id: ' + 
-                this.id + ' changed to ' + this.getStatusString());
+    enyo.log(this.recordType + ' id: ' +  this.id + 
+             ' changed to ' + this.getStatusString());
   },
   
   /**
@@ -803,7 +851,18 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
     @default 0x0401
   */
   DESTROYED_CLEAN:  0x0401, // 1025
+  
+  /**
+    State for records that have been destroyed but not yet committed to server
 
+    Use a logical AND (single `&`) to test record status
+
+    @static
+    @constant
+    @type Number
+    @default 0x0402
+  */
+  DESTROYED_DIRTY:  0x0402, // 1026
 
   /**
     Generic state for records that have been submitted to data source
