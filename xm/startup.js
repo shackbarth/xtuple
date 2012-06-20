@@ -7,6 +7,16 @@ XT.StartupTask.addTask(function() {
   XT.session.loadSessionObjects(XT.session.ALL, options);
 });
 
+XT.StartupTask.addTask(function() {
+  var options = {};
+  options.id = XT.session.details.username;
+  options.success = function() {
+    XT.StartupTask.taskComplete();
+  };
+  XM.currentUser = new XM.UserAccountInfo();
+  XM.currentUser.fetch(options);
+});
+
 // Crm
 XT.StartupTask.addTask(function() {
   var options = {};
