@@ -19,15 +19,6 @@ XM.ProjectMixin = {
     
     // add event bindings
     this.on('add:tasks remove:tasks', this.tasksChanged);
-    this.on('willChange:name', function() {
-      console.log('name will change!');
-    }
-    );
-    
-    this.on('change:name', function() {
-      console.log('name did change!');
-    }
-    );
   },
   
   /**
@@ -246,8 +237,9 @@ XM.ProjectTask = XT.Model.extend(
   //
   
   initialize: function() {
-    var evt = 'change:budgetedHours change:actualHours ' +
-              'change:budgetedExpenses change:actualExpense';
+   XT.Model.prototype.initialize.call(this, arguments);
+   var evt = 'willChange:budgetedHours willChange:actualHours ' +
+              'willChange:budgetedExpenses willChange:actualExpense';
     this.on(evt, this.valuesChanged);
   },
   
