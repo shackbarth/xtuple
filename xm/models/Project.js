@@ -1,14 +1,6 @@
-/**
-  @namespace
+XM.ProjectStatusMixin = {
   
-  Shared task totaling logic.
-*/
-XM.ProjectMixin = {
-  
-  budgetedHoursTotal: 0.0,
-  actualHoursTotal: 0.0,
-  budgetedExpensesTotal: 0.0,
-  actualExpensesTotal: 0.0,
+  projectStatusString: '',
   
   // ..........................................................
   // METHODS
@@ -19,46 +11,25 @@ XM.ProjectMixin = {
     
     // add event bindings
     this.on('add:tasks remove:tasks', this.tasksChanged);
+    this.on('change:status', this.setProjectStatusString); // directly changed
+    this.on('statusChange', this.setProjectStatusString); // sync change
+    this.setProjectStatusString();
   },
   
-  /**
-  Recaclulate task hours and expense totals.
-  */
-  tasksChanged: function() {
-    var budgetedHoursTotal = 0.0;
-    var actualHoursTotal = 0.0;
-    var budgetedExpensesTotal = 0.0;
-    var actualExpensesTotal = 0.0;
-    
-    // total up task data
-    _.each(this.get('tasks').models, function(task) {
-      budgetedHoursTotal += task.get('budgetedHours');
-      actualHoursTotal += task.get('actualHours');
-      budgetedExpensesTotal += task.get('budgetedExpenses');
-      actualExpensesTotal += task.get('actualExpenses');
-    });
-    
-    // update the project
-    this.budgetedHoursTotal = budgetedHoursTotal;
-    this.actualHoursTotal = actualHoursTotal;
-    this.budgetedExpensesTotal = budgetedExpensesTotal;
-    this.actualExpensesTotal = actualExpensesTotal;
-  }
-  
-};
-
-XM.ProjectStatusMixin = {
   /**
   Return the status attribute as a localized string.
   
   @returns {String}
   */
-  getStatusString: function() {
+  setProjectStatusString: function() {
     var status = this.get('status');
-    if (status === 'P') return 'Concept'.loc();
-    if (status === 'O') return 'In-Process'.loc();
-    if (status === 'C') return 'Closed'.loc();
+    var str = 'Unknown'.loc();
+    if (status === 'P') str = 'Concept'.loc();
+    else if (status === 'O') str = 'In-Process'.loc();
+    else if (status === 'C') str = 'Closed'.loc();
+    this.projectStatusString = str;
   }
+  
 };
 
 /**
@@ -91,7 +62,7 @@ XM.Project = XT.Model.extend(
   },
   
   defaults: {
-    "status":  "C"
+    "status":  "P"
   },
   
   requiredAttributes: [
@@ -120,6 +91,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'tasks',
+    isParent: true,
     relatedModel: 'XM.ProjectTask',
     reverseRelation: {
       key: 'project'
@@ -127,6 +99,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'comments',
+    isParent: true,
     relatedModel: 'XM.ProjectComment',
     reverseRelation: {
       key: 'project'
@@ -134,6 +107,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'accounts',
+    isParent: true,
     relatedModel: 'XM.ProjectAccount',
     reverseRelation: {
       key: 'project'
@@ -141,6 +115,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'contacts',
+    isParent: true,
     relatedModel: 'XM.ProjectContact',
     reverseRelation: {
       key: 'project'
@@ -148,6 +123,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'items',
+    isParent: true,
     relatedModel: 'XM.ProjectItem',
     reverseRelation: {
       key: 'project'
@@ -155,6 +131,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'files',
+    isParent: true,
     relatedModel: 'XM.ProjectFile',
     reverseRelation: {
       key: 'project'
@@ -162,6 +139,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'images',
+    isParent: true,
     relatedModel: 'XM.ProjectImage',
     reverseRelation: {
       key: 'project'
@@ -169,6 +147,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'urls',
+    isParent: true,
     relatedModel: 'XM.ProjectUrl',
     reverseRelation: {
       key: 'project'
@@ -176,6 +155,7 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'projects',
+    isParent: true,
     relatedModel: 'XM.ProjectProject',
     reverseRelation: {
       key: 'project'
@@ -183,15 +163,48 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'recurrences',
+    isParent: true,
     relatedModel: 'XM.ProjectRecurrence',
     reverseRelation: {
       key: 'project'
     }
-  }]
+  }],
+  
+  budgetedHoursTotal: 0.0,
+  actualHoursTotal: 0.0,
+  budgetedExpensesTotal: 0.0,
+  actualExpensesTotal: 0.0,
+  
+  // ..........................................................
+  // METHODS
+  //
+  
+  /**
+  Recaclulate task hours and expense totals.
+  */
+  tasksChanged: function() {
+    var budgetedHoursTotal = 0.0;
+    var actualHoursTotal = 0.0;
+    var budgetedExpensesTotal = 0.0;
+    var actualExpensesTotal = 0.0;
+    
+    // total up task data
+    _.each(this.get('tasks').models, function(task) {
+      budgetedHoursTotal += task.get('budgetedHours');
+      actualHoursTotal += task.get('actualHours');
+      budgetedExpensesTotal += task.get('budgetedExpenses');
+      actualExpensesTotal += task.get('actualExpenses');
+    });
+    
+    // update the project
+    this.budgetedHoursTotal = budgetedHoursTotal;
+    this.actualHoursTotal = actualHoursTotal;
+    this.budgetedExpensesTotal = budgetedExpensesTotal;
+    this.actualExpensesTotal = actualExpensesTotal;
+  }
   
 });
 
-XM.Project = XM.Project.extend(XM.ProjectMixin);
 XM.Project = XM.Project.extend(XM.ProjectStatusMixin);
 
 /**
@@ -205,7 +218,7 @@ XM.ProjectTask = XT.Model.extend(
   recordType: 'XM.ProjectTask',
   
   defaults: {
-    "projectTaskStatus":  "C"
+    "projectTaskStatus":  "P"
   },
   
   requiredAttributes: [
@@ -226,9 +239,10 @@ XM.ProjectTask = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'comments',
+    isParent: true,
     relatedModel: 'XM.ProjectTaskComment',
     reverseRelation: {
-      key: 'project'
+      key: 'projectTask'
     }
   }],
   
@@ -238,8 +252,8 @@ XM.ProjectTask = XT.Model.extend(
   
   initialize: function() {
    XT.Model.prototype.initialize.call(this, arguments);
-   var evt = 'willChange:budgetedHours willChange:actualHours ' +
-              'willChange:budgetedExpenses willChange:actualExpense';
+   var evt = 'change:budgetedHours change:actualHours ' +
+              'change:budgetedExpenses change:actualExpense';
     this.on(evt, this.valuesChanged);
   },
   
@@ -454,18 +468,10 @@ XM.ProjectInfo = XT.Model.extend(
     type: Backbone.HasOne,
     key: 'assignedTo',
     relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasMany,
-    key: 'tasks',
-    relatedModel: 'XM.ProjectTask',
-    reverseRelation: {
-      key: 'project'
-    }
   }]
   
 });
 
-XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectMixin);
 XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatusMixin);
 
 /**
