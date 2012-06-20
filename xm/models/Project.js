@@ -76,6 +76,7 @@ XM.ProjectBase = XT.Model.extend(
   
   initialize: function() {
     XT.Model.prototype.initialize.call(this);
+    this.on('change:number', this.numberChanged);
     this.on('statusChange', this.statusChanged);
     this.setProjectStatusString();
     if (this.initMixin) this.initMixin();
@@ -86,6 +87,14 @@ XM.ProjectBase = XT.Model.extend(
     if (this.getStatus() === K.READY_CLEAN) {
       this.setReadOnly('number');
     } 
+  },
+  
+  numberChanged: function() {
+    var number = this.get('number');
+    var upper = number.toUpperCase();
+    if (number !== upper) {
+      this.set('number', upper);
+    }
   }
   
 });
