@@ -38,8 +38,10 @@ XM.ProjectStatusMixin =
 XM.ProjectBase = XT.Model.extend(
   /** @scope XM.ProjectBase.prototype */ {
   
-  defaults: {
-    "status":  "P"
+  defaults: function() {
+    var result = { status: "P" };
+    result.owner = result.assignedTo = XM.currentUser;
+    return result;
   },
   
   privileges: {
@@ -189,8 +191,10 @@ XM.Project = XM.ProjectBase.extend(
   
   budgetedHoursTotal: 0.0,
   actualHoursTotal: 0.0,
+  balanceHoursTotal: 0.0,
   budgetedExpensesTotal: 0.0,
   actualExpensesTotal: 0.0,
+  balanceExpensesTotal: 0.0,
   
   // ..........................................................
   // METHODS
@@ -205,24 +209,25 @@ XM.Project = XM.ProjectBase.extend(
   Recaclulate task hours and expense totals.
   */
   tasksChanged: function() {
-    var budgetedHoursTotal = 0.0;
-    var actualHoursTotal = 0.0;
-    var budgetedExpensesTotal = 0.0;
-    var actualExpensesTotal = 0.0;
+    var that = this;
+    this.budgetedHoursTotal = 0.0;
+    this.actualHoursTotal = 0.0;
+    this.budgetedExpensesTotal = 0.0;
+    this.actualExpensesTotal = 0.0;
     
     // total up task data
+    // TODO: Use XT.Math object to handle rounding correctly
     _.each(this.get('tasks').models, function(task) {
-      budgetedHoursTotal += task.get('budgetedHours');
-      actualHoursTotal += task.get('actualHours');
-      budgetedExpensesTotal += task.get('budgetedExpenses');
-      actualExpensesTotal += task.get('actualExpenses');
+      that.budgetedHoursTotal += task.get('budgetedHours');
+      that.actualHoursTotal += task.get('actualHours');
+      that.budgetedExpensesTotal += task.get('budgetedExpenses');
+      that.actualExpensesTotal += task.get('actualExpenses');
     });
     
-    // update the project
-    this.budgetedHoursTotal = budgetedHoursTotal;
-    this.actualHoursTotal = actualHoursTotal;
-    this.budgetedExpensesTotal = budgetedExpensesTotal;
-    this.actualExpensesTotal = actualExpensesTotal;
+    this.actualHoursBalance = this.budgetedHoursTotal - 
+                              this.actualHoursTotal;
+    this.balanceExpensesTotal = this.budgetedExpensesTotal - 
+                                this.actualExpensesTotal;
   }
   
 });
@@ -264,7 +269,7 @@ XM.ProjectTask = XM.ProjectBase.extend(
   initialize: function() {
    XM.ProjectBase.prototype.initialize.call(this);
    var evt = 'change:budgetedHours change:actualHours ' +
-             'change:budgetedExpenses change:actualExpense';
+             'change:budgetedExpenses change:actualExpenses';
     this.on(evt, this.valuesChanged);
   },
   
