@@ -156,7 +156,7 @@ XT.Model = Backbone.RelationalModel.extend(
         return Backbone.Model.prototype.destroy.call(this, options);
       }
     }
-    console.log('Insufficient privileges to destroy');
+    enyo.log('Insufficient privileges to destroy');
     return false;
   },
   
@@ -180,7 +180,7 @@ XT.Model = Backbone.RelationalModel.extend(
       };
       return Backbone.Model.prototype.fetch.call(this, options);
     }
-    console.log('Insufficient privileges to fetch');
+    enyo.log('Insufficient privileges to fetch');
     return false;
   },
   
@@ -375,7 +375,7 @@ XT.Model = Backbone.RelationalModel.extend(
       return result;
     }
     
-    console.log('No changes to save');
+    enyo.log('No changes to save');
     return false;
   },
 
@@ -465,7 +465,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     this.release();
     
-    console.log(this.recordType + ' id: ' + 
+    enyo.log(this.recordType + ' id: ' + 
                 this.id + ' changed to ' + this.getStatusString());
   },
   
@@ -531,7 +531,7 @@ XT.Model = Backbone.RelationalModel.extend(
       }
     }
     
-    if (err) console.log(err);
+    if (err) enyo.log(err);
     return err;
   }
 
