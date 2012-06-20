@@ -423,10 +423,8 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   setStatus: function(status, options) {
     var K = XT.Model;
-    var i;
-    var n;
-    var rel;
     var attr;
+    var that = this;
     
     // Prevent recursion
     if ( this.isLocked() ) {
@@ -438,23 +436,22 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Cascade changes through relations if specified
     if (options && options.cascade) {
-      for (i = 0; i < this.relations.length; i++) {
-        rel = this.relations[i];
-        attr = this.attributes[rel.key];
+      _.each (this.relations, function(relation) {
+        attr = that.attributes[relation.key];
         if (attr) {
-          if (rel.type === Backbone.HasOne && attr.setStatus) {
+          if (relation.type === Backbone.HasOne && attr.setStatus) {
             attr.setStatus(status, options);
-          } else if (rel.type === Backbone.HasMany) {
+          } else if (relation.type === Backbone.HasMany) {
             if (attr.models) {
-              for (n = 0; n < attr.models.length; n++) {
-                if (attr.models[n] && attr.models[n].setStatus) {
-                  attr.models[n].setStatus(status, options);
+              _.each(attr.models, function(model) {
+                if (model.setStatus) {
+                 model.setStatus(status, options);
                 }
-              }
+              });
             }
           }
         }
-      }
+      });
     }
     
     // Update data state.
