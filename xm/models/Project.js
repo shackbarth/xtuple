@@ -1,4 +1,5 @@
-XM.ProjectStatusMixin = {
+XM.ProjectStatusMixin = 
+ /** @scope XM.ProjectStatus */ {
   
   projectStatusString: '',
   
@@ -6,11 +7,7 @@ XM.ProjectStatusMixin = {
   // METHODS
   //
   
-  initialize: function() {
-    XT.Model.prototype.initialize.call(this);
-    
-    // add event bindings
-    this.on('add:tasks remove:tasks', this.tasksChanged);
+  initMixin: function() {
     this.on('change:status', this.setProjectStatusString); // directly changed
     this.on('statusChange', this.setProjectStatusString); // sync change
     this.setProjectStatusString();
@@ -35,12 +32,15 @@ XM.ProjectStatusMixin = {
 /**
   @class
   
-  @extends XT.Model
+  A base class shared by `XM.Project`,`XM.ProjectTask` and potentially other
+  project related classes.
 */
-XM.Project = XT.Model.extend(
-  /** @scope XM.Project.prototype */ {
-
-  recordType: 'XM.Project',
+XM.ProjectBase = XT.Model.extend(
+  /** @scope XM.ProjectBase.prototype */ {
+  
+  defaults: {
+    "status":  "P"
+  },
   
   privileges: {
     "all": {
@@ -61,16 +61,43 @@ XM.Project = XT.Model.extend(
     }
   },
   
-  defaults: {
-    "status":  "P"
-  },
-  
   requiredAttributes: [
     "number",
     "status",
     "name",
     "dueDate"
   ],
+  
+  // ..........................................................
+  // METHODS
+  //
+  
+  initialize: function() {
+    XT.Model.prototype.initialize.call(this);
+    this.on('statusChange', this.statusChanged);
+    this.setProjectStatusString();
+    if (this.initMixin) this.initMixin();
+  },
+  
+  statusChanged: function() {
+    var K = XT.Model;
+    if (this.getStatus() === K.READY_CLEAN) {
+      this.setReadOnly('number');
+    } 
+  }
+  
+});
+
+/**
+  @class
+  
+  @extends XM.ProjectBase
+  @extends XM.ProjectStatusMixin
+*/
+XM.Project = XM.ProjectBase.extend(
+  /** @scope XM.Project.prototype */ {
+
+  recordType: 'XM.Project',
 
   relations: [{
     type: Backbone.HasOne,
@@ -91,7 +118,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'tasks',
-    isParent: true,
     relatedModel: 'XM.ProjectTask',
     reverseRelation: {
       key: 'project'
@@ -99,7 +125,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'comments',
-    isParent: true,
     relatedModel: 'XM.ProjectComment',
     reverseRelation: {
       key: 'project'
@@ -107,7 +132,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'accounts',
-    isParent: true,
     relatedModel: 'XM.ProjectAccount',
     reverseRelation: {
       key: 'project'
@@ -115,7 +139,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'contacts',
-    isParent: true,
     relatedModel: 'XM.ProjectContact',
     reverseRelation: {
       key: 'project'
@@ -123,7 +146,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'items',
-    isParent: true,
     relatedModel: 'XM.ProjectItem',
     reverseRelation: {
       key: 'project'
@@ -131,7 +153,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'files',
-    isParent: true,
     relatedModel: 'XM.ProjectFile',
     reverseRelation: {
       key: 'project'
@@ -139,7 +160,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'images',
-    isParent: true,
     relatedModel: 'XM.ProjectImage',
     reverseRelation: {
       key: 'project'
@@ -147,7 +167,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'urls',
-    isParent: true,
     relatedModel: 'XM.ProjectUrl',
     reverseRelation: {
       key: 'project'
@@ -155,7 +174,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'projects',
-    isParent: true,
     relatedModel: 'XM.ProjectProject',
     reverseRelation: {
       key: 'project'
@@ -163,7 +181,6 @@ XM.Project = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'recurrences',
-    isParent: true,
     relatedModel: 'XM.ProjectRecurrence',
     reverseRelation: {
       key: 'project'
@@ -178,6 +195,11 @@ XM.Project = XT.Model.extend(
   // ..........................................................
   // METHODS
   //
+  
+  initialize: function() {
+    XM.ProjectBase.prototype.initialize.call(this);
+    this.on('add:tasks remove:tasks', this.tasksChanged);
+  },
   
   /**
   Recaclulate task hours and expense totals.
@@ -210,23 +232,13 @@ XM.Project = XM.Project.extend(XM.ProjectStatusMixin);
 /**
   @class
   
-  @extends XT.Model
+  @extends XM.ProjectBase
+  @extends XM.ProjectStatusMixin
 */
-XM.ProjectTask = XT.Model.extend(
+XM.ProjectTask = XM.ProjectBase.extend(
   /** @scope XM.ProjectTask.prototype */ {
 
   recordType: 'XM.ProjectTask',
-  
-  defaults: {
-    "projectTaskStatus":  "P"
-  },
-  
-  requiredAttributes: [
-    "number",
-    "projectTaskStatus",
-    "name",
-    "dueDate"
-  ],
   
   relations: [{
     type: Backbone.HasOne,
@@ -239,7 +251,6 @@ XM.ProjectTask = XT.Model.extend(
   },{
     type: Backbone.HasMany,
     key: 'comments',
-    isParent: true,
     relatedModel: 'XM.ProjectTaskComment',
     reverseRelation: {
       key: 'projectTask'
@@ -251,9 +262,9 @@ XM.ProjectTask = XT.Model.extend(
   //
   
   initialize: function() {
-   XT.Model.prototype.initialize.call(this, arguments);
+   XM.ProjectBase.prototype.initialize.call(this);
    var evt = 'change:budgetedHours change:actualHours ' +
-              'change:budgetedExpenses change:actualExpense';
+             'change:budgetedExpenses change:actualExpense';
     this.on(evt, this.valuesChanged);
   },
   
@@ -261,7 +272,7 @@ XM.ProjectTask = XT.Model.extend(
   Update project totals when values change.
   */
   valuesChanged: function() {
-    project.tasksChanged();
+    this.get('project').tasksChanged();
   }
 
 });
@@ -448,6 +459,7 @@ XM.ProjectTaskComment = XT.Model.extend(
   @class
   
   @extends XT.Model
+  @extends XM.ProjectStatusMixin
 */
 XM.ProjectInfo = XT.Model.extend(
   /** @scope XM.ProjectInfo.prototype */ {
