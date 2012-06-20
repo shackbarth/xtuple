@@ -157,7 +157,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
       // Loop through and destroy child relations
       _.each(this.relations, function(relation) {
-        var attr = relation.isParent ? model.get(relation.key) : false;
+        var attr = relation.isAutoRelation ? model.get(relation.key) : false;
         if (attr) {
           if (relation.type === Backbone.HasOne) {
             attr.destroy();
@@ -242,7 +242,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var parent;
     var root;
     var relation = _.find(this.relations, function(rel) {
-      if (rel.reverseRelation && rel.reverseRelation.isParent) {
+      if (rel.reverseRelation && rel.isAutoRelation) {
         return true;
       }
     });
