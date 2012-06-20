@@ -254,17 +254,6 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Searches attributes first, then the model for a value on a property with the
-  given key.
-  
-  @param {String} Key
-  @returns {Any}
-  */
-  getProperty: function(key) {
-    return _.has(this.attributes, key) ? this.attributes[key] : this[key];
-  },
-  
-  /**
   Return the current status.
   
   @returns {Number}
@@ -287,6 +276,17 @@ XT.Model = Backbone.RelationalModel.extend(
       }
     }
     return ret.join(" ");
+  },
+  
+  /**
+  Searches attributes first, then the model for a value on a property with the
+  given key.
+  
+  @param {String} Key
+  @returns {Any}
+  */
+  getValue: function(key) {
+    return _.has(this.attributes, key) ? this.attributes[key] : this[key];
   },
   
   /**
