@@ -2,7 +2,7 @@
 enyo.kind({
   name: "App",
   fit: true,
-  classes: "xt-app enyo-unselectable onyx",
+  classes: "xt-app enyo-unselectable",
   published: {
     isStarted: false
   },

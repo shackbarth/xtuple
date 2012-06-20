@@ -14,10 +14,9 @@ enyo.kind({
     this.inherited(arguments);
     
     // temporary
-    this.$.userLogin.$.block.$.username.setValue("admin");
-    this.$.userLogin.$.block.$.password.setValue("Assemble!Aurora");
-    this.$.userLogin.$.block.$.organization.setValue("aurora");
-    //this.$.userLogin.$.block.$.password.setValue("admin");
-    //this.$.userLogin.$.block.$.organization.setValue("40beta");
+    var form = XT.loginForm;
+    form.$.username.setValue("admin");
+    form.$.password.setValue("Assemble!Aurora");
+    form.$.organization.setValue("aurora");
   }
 });

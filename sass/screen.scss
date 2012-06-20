@@ -183,9 +183,12 @@ body {}
 
 
 
+/******** ********/
+$blue1      : #99ccff;
 
-
-
+body {
+  font-family: "arial", "arial black";
+}
 
 .xt-app {
   position: absolute;
@@ -213,19 +216,56 @@ body {}
             left: 0;
             right: 0;
             bottom: 0;
+            background-color: #fff;
             .xt-user-login-block {
               position: absolute;
               top: 50%;
               left: 50%;
-              margin-top: -150px;
-              margin-left: -83px;
-              height: 300px;
-              width: 166px;
+              margin-top: -125px;
+              margin-left: -300px;
+              height: 250px;
+              width: 300px;
+              .xt-user-login-sub-block {
+                position: absolute;
+                top: 30px;
+                left: 30px;
+                right: 0;
+                bottom: 30px;
+                background-color: $blue1;
+                overflow: hidden;
+                .xt-user-login-form {
+                  .xt-input {
+                    &.xt-login-input {
+                      display: block;
+                      margin: 10px;
+                      margin-left: 35px;
+                    }
+                  }
+                  .xt-button {
+                    &.xt-login-button {
+                      display: block;
+                      margin-left: 152px;
+                      width: 80px;
+                    }
+                  }
+                }
+              }
+            }
+            .xt-login-logo-block {
+              @include box-shadow(#000 -9px 0 20px -14px);
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              margin-top: -125px;
+              height: 250px;
+              width: 300px;
+              background: url("../images/login-logo.png") 0 0 no-repeat;
             }
           }
           .xt-session-selection-screen {
-            height: 100%;
-            width: 100%;
+            .xt-available-sessions {
+
+            }
           }
         }
       }
@@ -233,7 +273,59 @@ body {}
   }
 }
 
-.xt-screen-carousel {
-  height: 100%;
-  width: 100%;
+.xt-login-screen {
+  .xt-session-selection-screen {
+    .xt-available-sessions {
+      .xt-available-sessions-wrapper {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        .xt-available-sessions-list {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.xt-app {
+  .xt-postbooks {
+    .xt-input {
+      @include border-radius(5px);
+      padding: 8px 8px 10px 8px;
+      border: 1px solid #ddd;
+      margin: 0;
+      outline: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: "arial", "arial black";
+      width: 180px;
+    }
+    
+    .xt-button {
+      @include border-radius(5px);
+      padding: 5px;
+      border: 1px solid #ddd;
+      margin: 0;
+      cursor: pointer;
+      font-family: "arial", "arial black";
+      font-size: 14px;
+      background-color: #fff;
+      color: #aaa;
+      &:active {
+        background-color: #ddd;
+      }
+    }
+    
+    .xt-screen-carousel {
+      height: 100%;
+      width: 100%;
+    }
+  }
 }

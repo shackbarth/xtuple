@@ -2,7 +2,7 @@
 enyo.kind({
   name: "XT.Postbooks",
   kind: "Control",
-  classes: "xt-postbooks enyo-unselectable onyx",
+  classes: "xt-postbooks enyo-unselectable",
   components: [
     { name: "container", kind: "XT.PostbooksContainer" }
   ] 

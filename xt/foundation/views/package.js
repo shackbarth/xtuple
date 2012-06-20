@@ -6,5 +6,6 @@ enyo.depends(
   "module_screen.js",
   "module_menu.js",
   "module_menu_item.js",
-  "sub_module_content.js"
+  "sub_module_content.js",
+  "input.js"
 );

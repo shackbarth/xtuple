@@ -2,7 +2,7 @@
 enyo.kind({
   name: "XT.ScreenCarousel",
   kind: "Panels",
-  classes: "xt-screen-carousel enyo-unselectable onyx",
+  classes: "xt-screen-carousel enyo-unselectable",
   layoutKind: "CarouselArranger",
   draggable: false,
   published: {
