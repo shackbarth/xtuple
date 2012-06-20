@@ -84,7 +84,7 @@ XT.Model = Backbone.RelationalModel.extend(
   @seealso `getStatus`
   @seealse `setStatus`
   @type {Number}
-  @default XT.Model.EMPTY
+  @default `EMPTY`
   */
   status: null,
   
@@ -174,6 +174,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var status = this.getStatus();
     if (klass.canRead()) {
       this.setStatus(K.BUSY_FETCHING);
+      options.cascade = true; // Update status of children
       options.success = function(resp, status, xhr) {
         model.setStatus(K.READY_CLEAN, options);
         if (success) success(model, resp, options);
