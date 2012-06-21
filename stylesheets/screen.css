@@ -78,50 +78,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #999;
 }
 
-/* line 21, ../sass/screen.scss */
-.available-sessions-container .session-selection-row {
-  margin-bottom: 1px;
-}
-/* line 23, ../sass/screen.scss */
-.available-sessions-container .session-selection-row.header {
-  padding: 15px 5px;
-}
-/* line 26, ../sass/screen.scss */
-.available-sessions-container .session-selection-row.table-row {
-  font-size: 14px;
-  background-color: #fff;
-}
-/* line 29, ../sass/screen.scss */
-.available-sessions-container .session-selection-row.table-row:hover {
-  background-color: #d6f1ff;
-}
-/* line 32, ../sass/screen.scss */
-.available-sessions-container .session-selection-row.table-row:active {
-  background-color: #fff;
-}
-/* line 35, ../sass/screen.scss */
-.available-sessions-container .session-selection-row.table-row div {
-  padding: 15px 5px;
-  overflow-x: hidden;
-}
-/* line 40, ../sass/screen.scss */
-.available-sessions-container .session-selection-row .session-row-username {
-  width: 100px;
-}
-/* line 43, ../sass/screen.scss */
-.available-sessions-container .session-selection-row .session-row-organization {
-  width: 120px;
-}
-/* line 46, ../sass/screen.scss */
-.available-sessions-container .session-selection-row .session-row-created {
-  width: 120px;
-}
-/* line 49, ../sass/screen.scss */
-.available-sessions-container .session-selection-row .session-row-sid {
-  width: 300px;
-}
-
-/* line 56, ../sass/screen.scss */
+/* line 22, ../sass/screen.scss */
 .dashboard .dashboard-icons-container {
   width: 100%;
   height: 113px;
@@ -129,24 +86,24 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   top: 50%;
   margin-top: -56px;
 }
-/* line 62, ../sass/screen.scss */
+/* line 28, ../sass/screen.scss */
 .dashboard .dashboard-icons-container .dashboard-icons {
   text-align: center;
 }
-/* line 64, ../sass/screen.scss */
+/* line 30, ../sass/screen.scss */
 .dashboard .dashboard-icons-container .dashboard-icons .dashboard-icon-column {
   text-align: center;
   min-width: 200px;
   display: inline-block;
   cursor: pointer;
 }
-/* line 71, ../sass/screen.scss */
+/* line 37, ../sass/screen.scss */
 .dashboard .dashboard-icons-container .dashboard-icons .dashboard-icon-column .dashboard-icon-label {
   color: #fff;
   font-weight: bold;
 }
 
-/* line 81, ../sass/screen.scss */
+/* line 47, ../sass/screen.scss */
 .developer-ui-container {
   -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
@@ -164,12 +121,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #d8d8d8;
   z-index: 10;
 }
-/* line 91, ../sass/screen.scss */
+/* line 57, ../sass/screen.scss */
 .developer-ui-container .developer-rows .row {
   display: block;
   margin: 10px;
 }
-/* line 97, ../sass/screen.scss */
+/* line 63, ../sass/screen.scss */
 .developer-ui-container .onyx-grabber.developer-grabber {
   -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
@@ -195,7 +152,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   width: 50px;
 }
 
-/* line 111, ../sass/screen.scss */
+/* line 77, ../sass/screen.scss */
 .crm-menu-item {
   padding: 10px;
   margin: 10px 0;
@@ -203,50 +160,50 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #fff;
   color: #000;
 }
-/* line 117, ../sass/screen.scss */
+/* line 83, ../sass/screen.scss */
 .crm-menu-item.selected {
   background-color: #eee;
 }
-/* line 120, ../sass/screen.scss */
+/* line 86, ../sass/screen.scss */
 .crm-menu-item:hover {
   background-color: #eee;
 }
 
-/* line 125, ../sass/screen.scss */
+/* line 91, ../sass/screen.scss */
 .xt-info-list-row {
   background-color: #fff;
   padding-top: 3px;
   padding-bottom: 3px;
   border-bottom: 1px solid #ddd;
 }
-/* line 130, ../sass/screen.scss */
+/* line 96, ../sass/screen.scss */
 .xt-info-list-row:hover {
   background-color: #d6f1ff;
   cursor: pointer;
 }
-/* line 134, ../sass/screen.scss */
+/* line 100, ../sass/screen.scss */
 .xt-info-list-row .xt-info-list-row-column {
   width: 320px;
   min-width: 320px;
   max-width: 320px;
 }
-/* line 138, ../sass/screen.scss */
+/* line 104, ../sass/screen.scss */
 .xt-info-list-row .xt-info-list-row-column .xt-info-list-row-column-cell {
   padding: 5px;
   font-size: 11px;
 }
 
-/* line 146, ../sass/screen.scss */
+/* line 112, ../sass/screen.scss */
 .project-due-date {
   text-align: right;
 }
 
-/* line 149, ../sass/screen.scss */
+/* line 115, ../sass/screen.scss */
 .project-number {
   font-weight: bold;
 }
 
-/* line 157, ../sass/screen.scss */
+/* line 123, ../sass/screen.scss */
 .xt-sub-module-content {
   -moz-box-shadow: black -4px 0 10px -4px;
   -webkit-box-shadow: black -4px 0 10px -4px;
@@ -254,38 +211,38 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   box-shadow: black -4px 0 10px -4px;
 }
 
-/* line 162, ../sass/screen.scss */
+/* line 128, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu {
   width: 320px !important;
   background-color: #fff;
 }
-/* line 165, ../sass/screen.scss */
+/* line 131, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item {
   padding: 15px;
   vertical-align: middle;
   border-bottom: 1px solid #ddd;
 }
-/* line 169, ../sass/screen.scss */
+/* line 135, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:hover {
   background-color: #d6f1ff;
   cursor: pointer;
 }
-/* line 173, ../sass/screen.scss */
+/* line 139, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:active {
   background-color: #fff;
 }
-/* line 176, ../sass/screen.scss */
+/* line 142, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item.selected {
   background-color: #d6f1ff;
 }
 
 /******** ********/
-/* line 189, ../sass/screen.scss */
+/* line 155, ../sass/screen.scss */
 body {
   font-family: "arial", "arial black";
 }
 
-/* line 193, ../sass/screen.scss */
+/* line 159, ../sass/screen.scss */
 .xt-app {
   position: absolute;
   top: 0;
@@ -293,7 +250,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 199, ../sass/screen.scss */
+/* line 165, ../sass/screen.scss */
 .xt-app .xt-postbooks {
   position: absolute;
   top: 0;
@@ -301,7 +258,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 205, ../sass/screen.scss */
+/* line 171, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container {
   position: absolute;
   top: 0;
@@ -309,7 +266,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 213, ../sass/screen.scss */
+/* line 179, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen {
   position: absolute;
   top: 0;
@@ -318,7 +275,7 @@ body {
   bottom: 0;
   background-color: #fff;
 }
-/* line 220, ../sass/screen.scss */
+/* line 186, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block {
   position: absolute;
   top: 50%;
@@ -328,7 +285,7 @@ body {
   height: 250px;
   width: 300px;
 }
-/* line 228, ../sass/screen.scss */
+/* line 194, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block {
   position: absolute;
   top: 30px;
@@ -338,19 +295,19 @@ body {
   background-color: #99ccff;
   overflow: hidden;
 }
-/* line 238, ../sass/screen.scss */
+/* line 204, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-input.xt-login-input {
   display: block;
   margin: 10px;
   margin-left: 35px;
 }
-/* line 245, ../sass/screen.scss */
+/* line 211, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-button.xt-login-button {
   display: block;
   margin-left: 152px;
   width: 80px;
 }
-/* line 254, ../sass/screen.scss */
+/* line 220, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-login-logo-block {
   -moz-box-shadow: black -9px 0 20px -14px;
   -webkit-box-shadow: black -9px 0 20px -14px;
@@ -365,7 +322,7 @@ body {
   background: url("../images/login-logo.png") 0 0 no-repeat;
 }
 
-/* line 279, ../sass/screen.scss */
+/* line 240, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper {
   position: absolute;
   top: 80px;
@@ -373,7 +330,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 285, ../sass/screen.scss */
+/* line 246, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list {
   position: absolute;
   top: 0;
@@ -381,8 +338,13 @@ body {
   right: 0;
   bottom: 0;
 }
+/* line 253, ../sass/screen.scss */
+.xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list .xt-session-selection-row div {
+  display: inline-block;
+  padding: 5px;
+}
 
-/* line 299, ../sass/screen.scss */
+/* line 266, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-input {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -399,7 +361,7 @@ body {
   font-family: "arial", "arial black";
   width: 180px;
 }
-/* line 311, ../sass/screen.scss */
+/* line 278, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -416,11 +378,11 @@ body {
   background-color: #fff;
   color: #aaa;
 }
-/* line 321, ../sass/screen.scss */
+/* line 288, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button:active {
   background-color: #ddd;
 }
-/* line 326, ../sass/screen.scss */
+/* line 293, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-screen-carousel {
   height: 100%;
   width: 100%;

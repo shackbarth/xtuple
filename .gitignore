@@ -16,3 +16,5 @@ enyo
 # do not include any third-party libs
 # except what is explicitly added
 lib/*
+
+\.sass-cache

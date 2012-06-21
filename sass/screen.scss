@@ -17,40 +17,6 @@ body {}
   background-color: #999;
 }
 
-.available-sessions-container {
-  .session-selection-row {
-    margin-bottom: 1px;
-    &.header {
-      padding: 15px 5px;
-    }
-    &.table-row {
-      font-size: 14px;
-      background-color: #fff;
-      &:hover {
-        background-color: $highlight;
-      }
-      &:active {
-        background-color: #fff;
-      }
-      div {
-        padding: 15px 5px;
-        overflow-x: hidden;
-      }
-    }
-    .session-row-username {
-      width: 100px;
-    }
-    .session-row-organization {
-      width: 120px;
-    }
-    .session-row-created {
-      width: 120px;
-    }
-    .session-row-sid {
-      width: 300px;
-    }
-  }
-}
 
 .dashboard {
   .dashboard-icons-container {
@@ -262,11 +228,6 @@ body {
               background: url("../images/login-logo.png") 0 0 no-repeat;
             }
           }
-          .xt-session-selection-screen {
-            .xt-available-sessions {
-
-            }
-          }
         }
       }
     }
@@ -288,6 +249,12 @@ body {
           left: 0;
           right: 0;
           bottom: 0;
+          .xt-session-selection-row {
+            div {
+              display: inline-block;
+              padding: 5px;
+            }
+          }
         }
       }
     }
