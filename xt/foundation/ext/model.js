@@ -601,11 +601,19 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Default validation checks `attributes` for required attributes.
+  Default validation checks `attributes` for:
+  
+    * Data type integrity.
+    * Required fields (when committing).
+    * Read Only and Privileges (when editing).
+    
   Reimplement your own custom validation code here, but make sure
   to call back to the superclass at the top of your function using:
   
   return XT.Model.prototype.validate.call(this, attributes, options); 
+  
+  Returns `undefined` if the validation succeeded, or value, usually
+  an error if it fails.
   
   @param {Object} Attributes
   @param {Object} Options
@@ -641,7 +649,8 @@ XT.Model = Backbone.RelationalModel.extend(
          !_.isUndefined(attributes[attr])) {
         msg = 'The value of "' + attr + '" must be a{type}.';
         value = attributes[attr];
-        category = XT.Model.getColumn(type, attr).category;
+        column = XT.Model.getColumn(type, attr);
+        category = column ? column.category : false;
         switch (category) {
           case S.DB_BYTEA:
           case S.DB_UNKNOWN:
@@ -678,7 +687,7 @@ XT.Model = Backbone.RelationalModel.extend(
             }
             break;
           default:
-            err = undefined;
+            err = '"' + attr + '" does not exist in the schema.';
         }
         if (err) break;
       }
@@ -693,7 +702,7 @@ XT.Model = Backbone.RelationalModel.extend(
       }
     }
     
-    // Validate
+    // Check read only and privileges.
     if (((status & K.READY) || status === K.EMPTY) && 
         !_.isEqual(attributes, original)) {
       for (attr in attributes) {
@@ -864,7 +873,7 @@ _.extend( XT.Model,
   @param {String} Type
   @returns {Object}
   */
-  getColumns: function(type, column) {
+  getColumns: function(type) {
     return XT.session.getSchema().get(type).columns;
   },
 
