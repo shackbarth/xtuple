@@ -232,7 +232,7 @@ XT.Model = Backbone.RelationalModel.extend(
       XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
     }
     
-    // Cascade through `HasMany` relations if specified
+    // Cascade through `HasMany` relations if specified.
     if (options && options.cascade) {
       _.each (this.relations, function(relation) {
         attr = that.attributes[relation.key];
@@ -393,6 +393,40 @@ XT.Model = Backbone.RelationalModel.extend(
   
   originalAttributes: function() {
     return _.defaults(_.clone(this.prime), _.clone(this.attributes));
+  },
+  
+  /**
+  Recursively checks the object against the schema and converts date strings to
+  date objects.
+  
+  @param {Object} Response
+  
+  */
+  parse: function(resp, xhr) {
+    var K = XT.Session;
+    var column;
+    var parseIter = function(iter) {
+      iter = parse(iter);
+    };
+    var parse = function(obj) {
+      var attr;
+      for (attr in obj) {
+        if (_.has(obj, attr)) {
+          if (_.isArray(obj[attr])) {
+            _.each(obj[attr], parseIter);
+          } else if (_.isObject(obj[attr])) {
+            obj[attr] = parse(obj[attr]);
+          } else {
+            column = XT.Model.getColumn(obj.type, attr);
+            if (column && column.category && column.category === K.DB_DATE) {
+              obj[attr] = new Date(obj[attr]);
+            }
+          }
+        }
+      }
+      return obj;
+    };
+    return parse(resp);
   },
   
   /**
@@ -584,6 +618,17 @@ XT.Model = Backbone.RelationalModel.extend(
     var status = this.getStatus();
     var attr;
     var err;
+    var type = this.recordType.replace(/\w+\./i, '');
+    var column;
+    
+    // Check type integrity
+    /*
+    for (attr in attributes) {
+      if (_.has(attributes, attr) {
+        XT.Model.getColumn(type, blah);
+      }
+    }
+    */
     
     // Check required.
     if (status === K.BUSY_COMMITTING) {
@@ -741,6 +786,32 @@ _.extend( XT.Model,
     }
 
     return isGrantedAll || isGrantedPersonal;
+  },
+  
+  /**
+  Return a column definition from the session schema for a given
+  type and attribute.
+  
+  @param {String} Type
+  @param {String} Column or Attribute name
+  @returns {Object}
+  */
+  getColumn: function(type, column) {
+    result = _.find(XT.Model.getColumns(type), function(col) {
+      return col.name === column;
+    });
+    return result;
+  },
+  
+  /**
+  Return the column definition array from the session schema for a given
+  type.
+  
+  @param {String} Type
+  @returns {Object}
+  */
+  getColumns: function(type, column) {
+    return XT.session.getSchema().get(type).columns;
   },
 
   // ..........................................................
