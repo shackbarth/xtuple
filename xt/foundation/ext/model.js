@@ -311,7 +311,6 @@ XT.Model = Backbone.RelationalModel.extend(
     if (options && options.isNew) {
       klass = Backbone.Relational.store.getObjectByName(this.recordType);
       if (!klass.canCreate()) throw 'Insufficent privileges to create a record.';
-      this.attributes.dataState = 'create';
       this.setStatus(K.READY_NEW);
       if (this.autoFetchId) this.fetchId();
     }
@@ -519,7 +518,8 @@ XT.Model = Backbone.RelationalModel.extend(
     } 
     
     // Update data state.
-    if (status === K.READY_CLEAN) this.set('dataState', 'read');
+    if (status === K.READY_NEW) this.set('dataState', 'create');
+    else if (status === K.READY_CLEAN) this.set('dataState', 'read');
     else if (status === K.READY_DIRTY) this.set('dataState', 'update');
     else if (status === K.DESTROYED_DIRTY) this.set('dataState', 'delete');
     
@@ -601,7 +601,8 @@ XT.Model = Backbone.RelationalModel.extend(
 // CLASS METHODS
 //
 
-enyo.mixin( /** @scope XT.Model */ XT.Model, {
+_.extend( XT.Model, 
+  /** @scope XT.Model */ {
 
   /**
     Use this function to find out whether a user can create records before 

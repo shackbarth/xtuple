@@ -1,5 +1,5 @@
-XM.ProjectStatusMixin = 
- /** @scope XM.ProjectStatus */ {
+XM.ProjectStatus = XT.Model.extend(
+  /** @scope XM.ProjectStatus.prototype */ {
   
   projectStatusString: '',
   
@@ -8,38 +8,42 @@ XM.ProjectStatusMixin =
   //
   
   initMixin: function() {
-    this.on('change:status', this.setProjectStatusString); // directly changed
-    this.on('statusChange', this.setProjectStatusString); // sync change
-    this.setProjectStatusString();
+    this.on('change:status', this.projectStatusChanged); // directly changed
+    this.on('statusChange', this.projectStatusChanged); // sync change
+    this.projectStatusChanged();
   },
   
   /**
-  Return the status attribute as a localized string.
+  Update the project status string to a localized value.
   
   @returns {String}
   */
-  setProjectStatusString: function() {
+  projectStatusChanged: function() {
+    var K = XM.Project;
     var status = this.get('status');
     var str = 'Unknown'.loc();
-    if (status === 'P') str = 'Concept'.loc();
-    else if (status === 'O') str = 'In-Process'.loc();
-    else if (status === 'C') str = 'Closed'.loc();
+    if (status === K.CONCEPT) str = '_concept'.loc();
+    else if (status === K.IN_PROCESS) str = '_inProcess'.loc();
+    else if (status === K.COMPLETED) str = '_completed'.loc();
     this.projectStatusString = str;
   }
   
-};
+});
 
 /**
   @class
   
   A base class shared by `XM.Project`,`XM.ProjectTask` and potentially other
   project related classes.
+  
+  @extends XM.ProjectStatus
 */
-XM.ProjectBase = XT.Model.extend(
+XM.ProjectBase = XM.ProjectStatus.extend(
   /** @scope XM.ProjectBase.prototype */ {
   
   defaults: function() {
-    var result = { status: "P" };
+    var K = XM.Project;
+    var result = { status: K.CONCEPT };
     result.owner = result.assignedTo = XM.currentUser;
     return result;
   },
@@ -75,11 +79,10 @@ XM.ProjectBase = XT.Model.extend(
   //
   
   initialize: function() {
-    XT.Model.prototype.initialize.call(this);
+    XM.ProjectStatus.prototype.initialize.apply(this, arguments);
     this.on('change:number', this.numberChanged);
+    this.on('change:status', this.projectStatusChanged);
     this.on('statusChange', this.statusChanged);
-    this.setProjectStatusString();
-    if (this.initMixin) this.initMixin();
   },
   
   statusChanged: function() {
@@ -94,6 +97,21 @@ XM.ProjectBase = XT.Model.extend(
     var upper = number.toUpperCase();
     if (number !== upper) {
       this.set('number', upper);
+    }
+  },
+  
+  projectStatusChanged: function() {
+    XM.ProjectStatus.prototype.projectStatusChanged.call(this);
+    var status = this.get('status');
+    var date;
+    var K = XM.Project;
+    if (this.isDirty()) {
+      date = new Date().toISOString();
+      if (status === K.IN_PROCESS && !this.get('assignDate')) {
+        this.set('assignDate', date);
+      } else if (status === K.COMPLETED && !this.get('completeDate')) {
+        this.set('completeDate', date);
+      }
     }
   }
   
@@ -210,7 +228,7 @@ XM.Project = XM.ProjectBase.extend(
   //
   
   initialize: function() {
-    XM.ProjectBase.prototype.initialize.call(this);
+    XM.ProjectBase.prototype.initialize.apply(this, arguments);
     this.on('add:tasks remove:tasks', this.tasksChanged);
   },
   
@@ -241,7 +259,48 @@ XM.Project = XM.ProjectBase.extend(
   
 });
 
-XM.Project = XM.Project.extend(XM.ProjectStatusMixin);
+// ..........................................................
+// CLASS METHODS
+//
+
+_.extend(XM.Project,
+  /** @scope XM.Project */ {
+
+// ..........................................................
+// CONSTANTS
+//
+
+/**
+  Concept status for project.
+  
+  @static
+  @constant
+  @type String
+  @default P
+*/
+  CONCEPT: 'P',
+
+/**
+  In-Process status for project.
+  
+  @static
+  @constant
+  @type String
+  @default O
+*/
+  IN_PROCESS: 'O',
+
+/**
+  Completed status for project.
+  @static
+  @constant
+  @type String
+  @default C
+*/
+  COMPLETED: 'C'
+  
+});
+
 
 /**
   @class
@@ -290,8 +349,6 @@ XM.ProjectTask = XM.ProjectBase.extend(
   }
 
 });
-
-XM.ProjectTask = XM.ProjectTask.extend(XM.ProjectStatusMixin);
 
 /**
   @class
@@ -472,10 +529,9 @@ XM.ProjectTaskComment = XT.Model.extend(
 /**
   @class
   
-  @extends XT.Model
-  @extends XM.ProjectStatusMixin
+  @extends XM.ProjectStatus
 */
-XM.ProjectInfo = XT.Model.extend(
+XM.ProjectInfo = XM.ProjectStatus.extend(
   /** @scope XM.ProjectInfo.prototype */ {
 
   recordType: 'XM.ProjectInfo',
@@ -498,7 +554,6 @@ XM.ProjectInfo = XT.Model.extend(
   
 });
 
-XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatusMixin);
 
 /**
   @class
