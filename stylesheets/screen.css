@@ -322,7 +322,24 @@ body {
   background: url("../images/login-logo.png") 0 0 no-repeat;
 }
 
-/* line 240, ../sass/screen.scss */
+/* line 238, ../sass/screen.scss */
+.xt-login .xt-dashboard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+/* line 244, ../sass/screen.scss */
+.xt-login .xt-dashboard .xt-dashboard-container {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  margin-top: -100px;
+  height: 200px;
+}
+
+/* line 257, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper {
   position: absolute;
   top: 80px;
@@ -330,7 +347,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 246, ../sass/screen.scss */
+/* line 263, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list {
   position: absolute;
   top: 0;
@@ -338,13 +355,13 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 253, ../sass/screen.scss */
+/* line 270, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list .xt-session-selection-row div {
   display: inline-block;
   padding: 5px;
 }
 
-/* line 266, ../sass/screen.scss */
+/* line 283, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-input {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -361,7 +378,7 @@ body {
   font-family: "arial", "arial black";
   width: 180px;
 }
-/* line 278, ../sass/screen.scss */
+/* line 295, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -378,11 +395,11 @@ body {
   background-color: #fff;
   color: #aaa;
 }
-/* line 288, ../sass/screen.scss */
+/* line 305, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button:active {
   background-color: #ddd;
 }
-/* line 293, ../sass/screen.scss */
+/* line 310, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-screen-carousel {
   height: 100%;
   width: 100%;

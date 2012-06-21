@@ -234,6 +234,23 @@ body {
   }
 }
 
+.xt-login {
+  .xt-dashboard {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .xt-dashboard-container {
+      position: absolute;
+      width: 100%;
+      top: 50%;
+      margin-top: -100px;
+      height: 200px;
+    }
+  }
+}
+
 .xt-login-screen {
   .xt-session-selection-screen {
     .xt-available-sessions {
