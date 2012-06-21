@@ -18,8 +18,8 @@
     m.fetch({id: 1});
   
   @extends Backbone.RelationalModel
-  @param {Object} attributes
-  @param {Object} options
+  @param {Object} Attributes
+  @param {Object} Options
 */
 XT.Model = Backbone.RelationalModel.extend(
   /** @scope XT.Model.prototype */ {
@@ -187,7 +187,7 @@ XT.Model = Backbone.RelationalModel.extend(
       return true;
     }
     
-    enyo.log('Insufficient privileges to destroy');
+    console.log('Insufficient privileges to destroy');
     return false;
   },
   
@@ -212,23 +212,41 @@ XT.Model = Backbone.RelationalModel.extend(
       };
       return Backbone.Model.prototype.fetch.call(this, options);
     }
-    enyo.log('Insufficient privileges to fetch');
+    console.log('Insufficient privileges to fetch');
     return false;
   },
   
   /** 
-  Set the id on this record an id from the server.
+  Set the id on this record an id from the server. Including the `cascade` 
+  option will call ids to be fetched recursively for `HasMany` relations.
   
   @returns {XT.Request} Request
   */
-  fetchId: function() {
+  fetchId: function(options) {
+    options = _.defaults(options ? _.clone(options) : {}, {silent: true});   
     var that = this;
-    var options = {silent: true};
-    if (!_.isEmpty(this.id)) return false;
-    options.success = function(resp, status, xhr) {
-      that.set(that.idAttribute, resp, options);
-    };
-    XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+    if (!this.id) {
+      options.success = function(resp, status, xhr) {
+        that.set(that.idAttribute, resp, options);
+      };
+      XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+    }
+    
+    // Cascade through `HasMany` relations if specified
+    if (options && options.cascade) {
+      _.each (this.relations, function(relation) {
+        attr = that.attributes[relation.key];
+        if (attr) {
+          if (relation.type === Backbone.HasMany) {
+            if (attr.models) {
+              _.each(attr.models, function(model) {
+                if (model.fetchId) model.fetchId(options);
+              });
+            }
+          }
+        }
+      });
+    }
   },
   
   /**
@@ -311,8 +329,8 @@ XT.Model = Backbone.RelationalModel.extend(
     if (options && options.isNew) {
       klass = Backbone.Relational.store.getObjectByName(this.recordType);
       if (!klass.canCreate()) throw 'Insufficent privileges to create a record.';
-      this.setStatus(K.READY_NEW);
-      if (this.autoFetchId) this.fetchId();
+      this.setStatus(K.READY_NEW, {cascade: true});
+      if (this.autoFetchId) this.fetchId({cascade: true});
     }
 
     // Id Attribute should be required and read only
@@ -403,7 +421,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Can't save unless root
     if (this.getParent()) {
-      enyo.log('You must save on the root level model of this relation');
+      console.log('You must save on the root level model of this relation');
       return false;
     }
     
@@ -434,7 +452,7 @@ XT.Model = Backbone.RelationalModel.extend(
       return result;
     }
     
-    enyo.log('No changes to save');
+    console.log('No changes to save');
     return false;
   },
 
@@ -475,7 +493,7 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /**
   Set the status on the model. Triggers `statusChange` event. Option set to
-  `cascade` will propagate status to children.
+  `cascade` will propagate status recursively to children.
   
   @param {Number} Status
   */
@@ -525,7 +543,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     this.release();
     
-    enyo.log(this.recordType + ' id: ' +  this.id + 
+    console.log(this.recordType + ' id: ' +  this.id + 
              ' changed to ' + this.getStatusString());
   },
   
@@ -591,7 +609,7 @@ XT.Model = Backbone.RelationalModel.extend(
       }
     }
     
-    if (err) enyo.log(err);
+    if (err) console.log(err);
     return err;
   }
 

@@ -1,3 +1,11 @@
+/**
+  @class
+  
+  A base class shared by project models that share common project status
+  functionality.
+  
+  @extends XT.Model
+*/
 XM.ProjectStatus = XT.Model.extend(
   /** @scope XM.ProjectStatus.prototype */ {
   
@@ -227,6 +235,18 @@ XM.Project = XM.ProjectBase.extend(
   // METHODS
   //
   
+  /**
+  Return a copy of this project with a given number and date offset.
+  
+  @param {String} Project number
+  @param {Offset} Days to offset due date(s).
+  @returns {XM.Project}
+  */
+  copy: function(number, offset) {
+    return XM.Project.copy(this, number, offset);
+  },
+  
+  
   initialize: function() {
     XM.ProjectBase.prototype.initialize.apply(this, arguments);
     this.on('add:tasks remove:tasks', this.tasksChanged);
@@ -265,38 +285,102 @@ XM.Project = XM.ProjectBase.extend(
 
 _.extend(XM.Project,
   /** @scope XM.Project */ {
+    
+  /**
+  Return a copy of this project with a given number and date offset.
+
+  @param {XM.Project} Project
+  @param {String} Project number
+  @param {Number} Due date offset
+  @return {XM.Project} copy of the project
+  */
+  copy: function(project, number, offset) {
+    if ((project instanceof XM.Project) === false) {
+      console.log("Passed object must be an instance of 'XM.Project'");
+      return false;
+    }
+    if (number === undefined) {
+      console.log("Number is required");
+      return false;
+    }
+    var obj;
+    var prop;
+    var i;
+    var dueDate = new Date(project.get('dueDate'));
+    var idAttribute = XM.Project.prototype.idAttribute;
+    var keys;
+    offset = offset || 0;
+    dueDate.setDate(dueDate.getDate() + offset);     
+         
+    // Deep copy the project and fix up
+    obj = JSON.parse(JSON.stringify(project.toJSON()));
+    _.extend(obj, {
+      number: number,
+      dueDate: dueDate
+    });
+    delete obj[idAttribute];
+    delete obj.status;
+    delete obj.comments;
+    delete obj.recurrences;
+    
+    // Fix up tasks
+    idAttribute = XM.ProjectTask.prototype.idAttribute;
+    if (obj.tasks) {
+      _.each(obj.tasks, function(task) {
+        delete task[idAttribute];
+        delete task.status;
+        delete task.comments;
+        delete task.alarms;
+        dueDate = new Date(task.dueDate);
+        dueDate.setDate(dueDate.getDate() + offset);
+      });
+    }
+    
+    // Fix up remaining arrays
+    for (prop in obj) {
+      if (prop !== 'tasks' && _.isArray(obj[prop])) {
+        idAttribute = project.get(prop).model.prototype.idAttribute;
+        for (i = 0; i < obj[prop].length; i++) {
+          delete obj[prop][i][idAttribute];
+        }
+      }
+    }
+    
+    return new XM.Project(obj, {isNew: true});
+  },
+
 
 // ..........................................................
 // CONSTANTS
 //
 
-/**
+  /**
   Concept status for project.
-  
+
   @static
   @constant
   @type String
   @default P
-*/
+  */
   CONCEPT: 'P',
 
-/**
+  /**
   In-Process status for project.
-  
+
   @static
   @constant
   @type String
   @default O
-*/
+  */
   IN_PROCESS: 'O',
 
-/**
+  /**
   Completed status for project.
   @static
   @constant
   @type String
   @default C
-*/
+  */
   COMPLETED: 'C'
   
 });
