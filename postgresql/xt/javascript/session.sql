@@ -71,12 +71,55 @@ select xt.install_js('XT','Session','xtuple', $$
   /** 
     Returns a hash of key, value pairs of privileges and their granted state for the effective user.
 
-    @returns {hash}
+    @returns {Hash}
   */ 
   XT.Session.privileges = function() {
     var rec = plv8.execute( 'select privilege, granted as "isGranted" from privgranted' );
 
     return rec.length ? JSON.stringify (rec) : '{}';
+  }
+
+  /**
+    Returns a type map for a schema.
+
+    @param {String} Schema name
+    @returns {Hash}
+  */
+  XT.Session.schema = function(schema) {
+    var sql = 'select c.relname as "recordType", ' +
+              '  attname as "column", ' +
+              '  typcategory as "category" ' +
+              'from pg_class c' +
+              '  join pg_namespace n on n.oid = c.relnamespace' +
+              '  join pg_attribute a on a.attrelid = c.oid ' +
+              '  join pg_type t on a.atttypid = t.oid ' +
+              'where n.nspname = $1 ' +
+              'order by c.relname, attnum';
+    var recs = plv8.execute(sql, [ schema ]);
+    var recordType;
+    var prev = '';
+    var name;
+    var column;
+    var result = {};
+    var i;
+
+    /* Loop through each field and add to the object */
+    for (i = 0; i < recs.length; i++) {
+      recordType = recs[i].recordType.classify();
+      name = recs[i].column;
+      if (recordType !== prev) {
+        result[recordType] = {};
+        result[recordType].columns = [];
+      }
+      column = { 
+        name: name,
+        category: recs[i].category
+      }
+      result[recordType]['columns'].push(column);
+      prev = recordType;
+    }
+
+    return JSON.stringify(result);
   }
   
 $$ );
