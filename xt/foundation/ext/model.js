@@ -637,7 +637,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var isRelation = function(attr, value, type) {
       var rel;
       rel = _.find(that.relations, function(relation) {
-        return relation.key = attr && relation.type === type;
+        return relation.key === attr && relation.type === type;
       });
       return rel ? _.isObject(value) : false;
     };
