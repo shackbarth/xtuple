@@ -612,23 +612,77 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   validate: function(attributes, options) {
     attributes = attributes || {};
+    var that = this;
     var K = XT.Model;
+    var S = XT.Session;
     var keys = _.keys(attributes);
     var original = _.pick(this.originalAttributes(), keys);
     var status = this.getStatus();
     var attr;
+    var value;
+    var msg;
     var err;
     var type = this.recordType.replace(/\w+\./i, '');
-    var column;
+    var category;
     
-    // Check type integrity
-    /*
+    // Helper function to test if values are really relations
+    var isRelation = function(attr, value, type) {
+      var rel;
+      rel = _.find(that.relations, function(relation) {
+        return relation.key = attr && relation.type === type;
+      });
+      return rel ? _.isObject(value) : false;
+    };
+    
+    // Check data type integrity
     for (attr in attributes) {
-      if (_.has(attributes, attr) {
-        XT.Model.getColumn(type, blah);
+      if (_.has(attributes, attr) && 
+         !_.isNull(attributes[attr]) && 
+         !_.isUndefined(attributes[attr])) {
+        msg = 'The value of "' + attr + '" must be a{type}.';
+        value = attributes[attr];
+        category = XT.Model.getColumn(type, attr).category;
+        switch (category) {
+          case S.DB_BYTEA:
+          case S.DB_UNKNOWN:
+          case S.DB_STRING:
+            if (!_.isString(value)) {
+              err = msg.replace('{type}', ' string');
+            }
+            break;
+          case S.DB_NUMBER:
+            if (!_.isNumber(value) && 
+                !isRelation(attr, value, Backbone.HasOne)) {
+              err = msg.replace('{type}', ' number');
+            }
+            break;
+          case S.DB_DATE:
+            if (!_.isDate(value)) {
+              err = msg.replace('{type}', ' date');
+            }
+            break;
+          case S.DB_BOOLEAN:
+            if (!_.isBoolean(value)) {
+              err = msg.replace('{type}', ' boolean');
+            }
+            break;
+          case S.DB_ARRAY:
+            if (!_.isArray(value) &&
+                !isRelation(attr, value, Backbone.HasMany)) {
+              err = msg.replace('{type}', 'n array');
+            }
+            break;
+          case S.DB_COMPOUND:
+            if (!_.isObject(value)) {
+              err = msg.replace('{type}', 'n object');
+            }
+            break;
+          default:
+            err = undefined;
+        }
+        if (err) break;
       }
     }
-    */
     
     // Check required.
     if (status === K.BUSY_COMMITTING) {
