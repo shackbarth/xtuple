@@ -18,8 +18,8 @@
     m.fetch({id: 1});
   
   @extends Backbone.RelationalModel
-  @param {Object} attributes
-  @param {Object} options
+  @param {Object} Attributes
+  @param {Object} Options
 */
 XT.Model = Backbone.RelationalModel.extend(
   /** @scope XT.Model.prototype */ {
@@ -102,10 +102,10 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-    Returns whether the current record can be updated based on privilege
-    settings.
+  Returns whether the current record can be updated based on privilege
+  settings.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canUpdate: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
@@ -113,10 +113,10 @@ XT.Model = Backbone.RelationalModel.extend(
   },
 
   /**
-    Returns whether the current record can be deleted based on privilege
-    settings.
+  Returns whether the current record can be deleted based on privilege
+  settings.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canDelete: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
@@ -157,7 +157,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
       // Loop through and destroy child relations
       _.each(this.relations, function(relation) {
-        var attr = relation.isParent ? model.get(relation.key) : false;
+        var attr = relation.isAutoRelation ? model.get(relation.key) : false;
         if (attr) {
           if (relation.type === Backbone.HasOne) {
             attr.destroy();
@@ -187,7 +187,7 @@ XT.Model = Backbone.RelationalModel.extend(
       return true;
     }
     
-    enyo.log('Insufficient privileges to destroy');
+    console.log('Insufficient privileges to destroy');
     return false;
   },
   
@@ -212,23 +212,41 @@ XT.Model = Backbone.RelationalModel.extend(
       };
       return Backbone.Model.prototype.fetch.call(this, options);
     }
-    enyo.log('Insufficient privileges to fetch');
+    console.log('Insufficient privileges to fetch');
     return false;
   },
   
   /** 
-  Set the id on this record an id from the server.
+  Set the id on this record an id from the server. Including the `cascade` 
+  option will call ids to be fetched recursively for `HasMany` relations.
   
   @returns {XT.Request} Request
   */
-  fetchId: function() {
+  fetchId: function(options) {
+    options = _.defaults(options ? _.clone(options) : {}, {silent: true});   
     var that = this;
-    var options = {silent: true};
-    if (!_.isEmpty(this.id)) return false;
-    options.success = function(resp, status, xhr) {
-      that.set(that.idAttribute, resp, options);
-    };
-    XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+    if (!this.id) {
+      options.success = function(resp, status, xhr) {
+        that.set(that.idAttribute, resp, options);
+      };
+      XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+    }
+    
+    // Cascade through `HasMany` relations if specified
+    if (options && options.cascade) {
+      _.each (this.relations, function(relation) {
+        attr = that.attributes[relation.key];
+        if (attr) {
+          if (relation.type === Backbone.HasMany) {
+            if (attr.models) {
+              _.each(attr.models, function(model) {
+                if (model.fetchId) model.fetchId(options);
+              });
+            }
+          }
+        }
+      });
+    }
   },
   
   /**
@@ -242,7 +260,7 @@ XT.Model = Backbone.RelationalModel.extend(
     var parent;
     var root;
     var relation = _.find(this.relations, function(rel) {
-      if (rel.reverseRelation && rel.reverseRelation.isParent) {
+      if (rel.reverseRelation && rel.isAutoRelation) {
         return true;
       }
     });
@@ -251,17 +269,6 @@ XT.Model = Backbone.RelationalModel.extend(
       root = parent.getParent(getRoot);
     }
     return root || parent;
-  },
-  
-  /**
-  Searches attributes first, then the model for a value on a property with the
-  given key.
-  
-  @param {String} Key
-  @returns {Any}
-  */
-  getProperty: function(key) {
-    return _.has(this.attributes, key) ? this.attributes[key] : this[key];
   },
   
   /**
@@ -290,6 +297,17 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
+  Searches attributes first, then the model for a value on a property with the
+  given key.
+  
+  @param {String} Key
+  @returns {Any}
+  */
+  getValue: function(key) {
+    return _.has(this.attributes, key) ? this.attributes[key] : this[key];
+  },
+  
+  /**
   Called when model is instantiated.
   */
   initialize: function() {
@@ -311,9 +329,8 @@ XT.Model = Backbone.RelationalModel.extend(
     if (options && options.isNew) {
       klass = Backbone.Relational.store.getObjectByName(this.recordType);
       if (!klass.canCreate()) throw 'Insufficent privileges to create a record.';
-      this.attributes.dataState = 'create';
-      this.setStatus(K.READY_NEW);
-      if (this.autoFetchId) this.fetchId();
+      this.setStatus(K.READY_NEW, {cascade: true});
+      if (this.autoFetchId) this.fetchId({cascade: true});
     }
 
     // Id Attribute should be required and read only
@@ -338,7 +355,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Returns true if status is `"create"` or `"update"`.
+  Returns true if status is `READY_NEW` or `READY_DIRTY`.
   
   @returns {Boolean}
   */
@@ -404,7 +421,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Can't save unless root
     if (this.getParent()) {
-      enyo.log('You must save on the root level model of this relation');
+      console.log('You must save on the root level model of this relation');
       return false;
     }
     
@@ -435,7 +452,7 @@ XT.Model = Backbone.RelationalModel.extend(
       return result;
     }
     
-    enyo.log('No changes to save');
+    console.log('No changes to save');
     return false;
   },
 
@@ -476,7 +493,7 @@ XT.Model = Backbone.RelationalModel.extend(
   
   /**
   Set the status on the model. Triggers `statusChange` event. Option set to
-  `cascade` will propagate status to children.
+  `cascade` will propagate status recursively to children.
   
   @param {Number} Status
   */
@@ -519,13 +536,14 @@ XT.Model = Backbone.RelationalModel.extend(
     } 
     
     // Update data state.
-    if (status === K.READY_CLEAN) this.set('dataState', 'read');
+    if (status === K.READY_NEW) this.set('dataState', 'create');
+    else if (status === K.READY_CLEAN) this.set('dataState', 'read');
     else if (status === K.READY_DIRTY) this.set('dataState', 'update');
     else if (status === K.DESTROYED_DIRTY) this.set('dataState', 'delete');
     
     this.release();
     
-    enyo.log(this.recordType + ' id: ' +  this.id + 
+    console.log(this.recordType + ' id: ' +  this.id + 
              ' changed to ' + this.getStatusString());
   },
   
@@ -577,7 +595,7 @@ XT.Model = Backbone.RelationalModel.extend(
     }
     
     // Validate
-    if ((status & K.READY || status === K.EMPTY) && 
+    if (((status & K.READY) || status === K.EMPTY) && 
         !_.isEqual(attributes, original)) {
       for (attr in attributes) {
         if (attributes[attr] !== this.original(attr) &&
@@ -591,7 +609,7 @@ XT.Model = Backbone.RelationalModel.extend(
       }
     }
     
-    if (err) enyo.log(err);
+    if (err) console.log(err);
     return err;
   }
 
@@ -601,7 +619,8 @@ XT.Model = Backbone.RelationalModel.extend(
 // CLASS METHODS
 //
 
-enyo.mixin( /** @scope XT.Model */ XT.Model, {
+_.extend( XT.Model, 
+  /** @scope XT.Model */ {
 
   /**
     Use this function to find out whether a user can create records before 
@@ -655,22 +674,22 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
   },
 
   /**
-    Returns whether a user has access to update a record of this type. If a
-    record is passed that involves personal privileges, it will validate
-    whether that particular record is updatable.
+  Returns whether a user has access to update a record of this type. If a
+  record is passed that involves personal privileges, it will validate
+  whether that particular record is updatable.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canUpdate: function(model) {
     return XT.Model.canDo.call(this, 'update', model);
   },
 
   /**
-    Returns whether a user has access to delete a record of this type. If a
-    record is passed that involves personal privileges, it will validate
-    whether that particular record is deletable.
+  Returns whether a user has access to delete a record of this type. If a
+  record is passed that involves personal privileges, it will validate
+  whether that particular record is deletable.
 
-    @returns {Boolean}
+  @returns {Boolean}
   */
   canDelete: function(model) {
     return XT.Model.canDo.call(this, 'delete', model);
@@ -723,19 +742,7 @@ enyo.mixin( /** @scope XT.Model */ XT.Model, {
 
     return isGrantedAll || isGrantedPersonal;
   },
-  
-  /**
-  Include 'sync' option.
-  */
-  /*
-  findOrCreate: function(attributes, options) {
-    var K = XT.Model;
-    var result = Backbone.RelationalModel.findOrCreate.apply(this, arguments);
-    if (result && result.setStatus) result.setStatus(K.READY_CLEAN);
-    return result;
-  },
-  */
-  
+
   // ..........................................................
   // CONSTANTS
   //
