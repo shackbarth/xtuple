@@ -232,7 +232,7 @@ XT.Model = Backbone.RelationalModel.extend(
       XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
     }
     
-    // Cascade through `HasMany` relations if specified
+    // Cascade through `HasMany` relations if specified.
     if (options && options.cascade) {
       _.each (this.relations, function(relation) {
         attr = that.attributes[relation.key];
@@ -393,6 +393,40 @@ XT.Model = Backbone.RelationalModel.extend(
   
   originalAttributes: function() {
     return _.defaults(_.clone(this.prime), _.clone(this.attributes));
+  },
+  
+  /**
+  Recursively checks the object against the schema and converts date strings to
+  date objects.
+  
+  @param {Object} Response
+  
+  */
+  parse: function(resp, xhr) {
+    var K = XT.Session;
+    var column;
+    var parseIter = function(iter) {
+      iter = parse(iter);
+    };
+    var parse = function(obj) {
+      var attr;
+      for (attr in obj) {
+        if (_.has(obj, attr)) {
+          if (_.isArray(obj[attr])) {
+            _.each(obj[attr], parseIter);
+          } else if (_.isObject(obj[attr])) {
+            obj[attr] = parse(obj[attr]);
+          } else {
+            column = XT.Model.getColumn(obj.type, attr);
+            if (column && column.category && column.category === K.DB_DATE) {
+              obj[attr] = new Date(obj[attr]);
+            }
+          }
+        }
+      }
+      return obj;
+    };
+    return parse(resp);
   },
   
   /**
@@ -578,12 +612,77 @@ XT.Model = Backbone.RelationalModel.extend(
   */
   validate: function(attributes, options) {
     attributes = attributes || {};
+    var that = this;
     var K = XT.Model;
+    var S = XT.Session;
     var keys = _.keys(attributes);
     var original = _.pick(this.originalAttributes(), keys);
     var status = this.getStatus();
     var attr;
+    var value;
+    var msg;
     var err;
+    var type = this.recordType.replace(/\w+\./i, '');
+    var category;
+    
+    // Helper function to test if values are really relations
+    var isRelation = function(attr, value, type) {
+      var rel;
+      rel = _.find(that.relations, function(relation) {
+        return relation.key = attr && relation.type === type;
+      });
+      return rel ? _.isObject(value) : false;
+    };
+    
+    // Check data type integrity
+    for (attr in attributes) {
+      if (_.has(attributes, attr) && 
+         !_.isNull(attributes[attr]) && 
+         !_.isUndefined(attributes[attr])) {
+        msg = 'The value of "' + attr + '" must be a{type}.';
+        value = attributes[attr];
+        category = XT.Model.getColumn(type, attr).category;
+        switch (category) {
+          case S.DB_BYTEA:
+          case S.DB_UNKNOWN:
+          case S.DB_STRING:
+            if (!_.isString(value)) {
+              err = msg.replace('{type}', ' string');
+            }
+            break;
+          case S.DB_NUMBER:
+            if (!_.isNumber(value) && 
+                !isRelation(attr, value, Backbone.HasOne)) {
+              err = msg.replace('{type}', ' number');
+            }
+            break;
+          case S.DB_DATE:
+            if (!_.isDate(value)) {
+              err = msg.replace('{type}', ' date');
+            }
+            break;
+          case S.DB_BOOLEAN:
+            if (!_.isBoolean(value)) {
+              err = msg.replace('{type}', ' boolean');
+            }
+            break;
+          case S.DB_ARRAY:
+            if (!_.isArray(value) &&
+                !isRelation(attr, value, Backbone.HasMany)) {
+              err = msg.replace('{type}', 'n array');
+            }
+            break;
+          case S.DB_COMPOUND:
+            if (!_.isObject(value)) {
+              err = msg.replace('{type}', 'n object');
+            }
+            break;
+          default:
+            err = undefined;
+        }
+        if (err) break;
+      }
+    }
     
     // Check required.
     if (status === K.BUSY_COMMITTING) {
@@ -741,6 +840,32 @@ _.extend( XT.Model,
     }
 
     return isGrantedAll || isGrantedPersonal;
+  },
+  
+  /**
+  Return a column definition from the session schema for a given
+  type and attribute.
+  
+  @param {String} Type
+  @param {String} Column or Attribute name
+  @returns {Object}
+  */
+  getColumn: function(type, column) {
+    result = _.find(XT.Model.getColumns(type), function(col) {
+      return col.name === column;
+    });
+    return result;
+  },
+  
+  /**
+  Return the column definition array from the session schema for a given
+  type.
+  
+  @param {String} Type
+  @returns {Object}
+  */
+  getColumns: function(type, column) {
+    return XT.session.getSchema().get(type).columns;
   },
 
   // ..........................................................
