@@ -1,11 +1,31 @@
 
 XT.StartupTask.create({
-  taskName: "loadSessionObjects",
+  taskName: "loadSessionSettings",
   task: function() {
     var options = {
       success: enyo.bind(this, "didComplete")
     };
-    XT.session.loadSessionObjects(XT.session.ALL, options);
+    XT.session.loadSessionObjects(XT.session.SETTINGS, options);
+  }
+});
+
+XT.StartupTask.create({
+  taskName: "loadSessionPrivileges",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XT.session.loadSessionObjects(XT.session.PRIVILEGES, options);
+  }
+});
+
+XT.StartupTask.create({
+  taskName: "loadSessionSchema",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XT.session.loadSessionObjects(XT.session.SCHEMA, options);
   }
 });
 
@@ -18,7 +38,7 @@ XT.StartupTask.create({
     XM.priorities = new XM.PriorityCollection();
     XM.priorities.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -31,7 +51,7 @@ XT.StartupTask.create({
     XM.currentUser = new XM.UserAccountInfo();
     XM.currentUser.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -43,7 +63,7 @@ XT.StartupTask.create({
     XM.priorities = new XM.PriorityCollection();
     XM.priorities.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -55,7 +75,7 @@ XT.StartupTask.create({
     XM.incidentCategories = new XM.IncidentCategoryCollection();
     XM.incidentCategories.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -64,10 +84,10 @@ XT.StartupTask.create({
     var options = {
       success: enyo.bind(this, "didComplete")
     };
-    XM.incidentResolutions = new XM.IncidentResolutionsCollection();
+    XM.incidentResolutions = new XM.IncidentResolutionCollection();
     XM.incidentResolutions.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -79,7 +99,7 @@ XT.StartupTask.create({
     XM.incidentSeverities = new XM.IncidentSeverityCollection();
     XM.incidentSeverities.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -91,7 +111,7 @@ XT.StartupTask.create({
     XM.opportunityStages = new XM.OpportunityStageCollection();
     XM.opportunityStages.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -103,7 +123,7 @@ XT.StartupTask.create({
     XM.opportunityTypes = new XM.OpportunityTypeCollection();
     XM.opportunityTypes.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
 XT.StartupTask.create({
@@ -115,5 +135,5 @@ XT.StartupTask.create({
     XM.opportunitySources = new XM.OpportunitySourceCollection();
     XM.opportunitySources.fetch(options);
   },
-  waitingList: ["loadSessionObjects"]
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });

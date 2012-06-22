@@ -42,6 +42,11 @@ enyo.kind(
     var settings;
     var schemaOptions;
     var schema;
+    var callback;
+    
+    if (options && options.success && options.success instanceof Function) {
+      callback = options.success;
+    } else { callback = XT.K; }
 
     if (types === undefined) types = this.ALL;
 
@@ -64,6 +69,8 @@ enyo.kind(
 
         // Attach the privileges to the session object.
         that.setPrivileges(privileges);
+        
+        callback();
       };
 
       // dispatch
@@ -84,6 +91,8 @@ enyo.kind(
 
         // Attach the settings to the session object
         that.setSettings(settings);
+        
+        callback();
       };
 
       XT.dataSource.dispatch('XT.Session', 'settings', null, settingsOptions);
@@ -96,6 +105,8 @@ enyo.kind(
       schemaOptions.success = function(resp, status, xhr) {
         schema = new Backbone.Model(resp);
         that.setSchema(schema);
+        
+        callback();
       };
 
       XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);

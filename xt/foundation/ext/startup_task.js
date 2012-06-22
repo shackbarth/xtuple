@@ -26,9 +26,6 @@ enyo.kind({
         this.log(this.getTaskName(), "needs to remove %@ from waiting list".f(inTaskName));
         this.setWaitingList((wl = _.without(wl, inTaskName)));
         this.log(this.getTaskName(), wl);
-        if (wl.length <= 0) {
-          XT.getStartupManager().start();
-        }
       }
     }
   },
