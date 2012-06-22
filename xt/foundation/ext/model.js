@@ -139,12 +139,22 @@
       the status if applicable.
     */
     didChange: function (model, options) {
+      model = model || {};
       var K = XT.Model,
         status = this.getStatus();
       _.defaults(this.prime, this.changed);
       if (status === K.READY_CLEAN && !options.isClean) {
         this.setStatus(K.READY_DIRTY);
       }
+    },
+
+    /**
+      Called after confirmation that the model was destroyed on the datatsource.
+    */
+    didDestroy: function () {
+      var K = XT.Model;
+      this.setStatus(K.DESTROYED_CLEAN);
+      this.clear({silent: true});
     },
 
     /**
@@ -178,22 +188,38 @@
         success = options.success,
         model = this,
         K = XT.Model,
-        parent = this.getParent(true);
+        parent = this.getParent(true),
+        children = [],
+        findChildren = function (model) {
+          _.each(model.relations, function (relation) {
+            var i, attr = model.attributes[relation.key];
+            if (attr && attr.models &&
+                relation.type === Backbone.HasMany) {
+              for (i = 0; i < attr.models.length; i += 1) {
+                findChildren(attr.models[i]);
+              }
+              children = _.union(children, attr.models);
+            }
+          });
+        };
       if ((parent && parent.canUpdate(this)) ||
           (!parent && klass.canDelete(this))) {
         this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
 
         // If it's top level commit to the server now.
-        if (!parent) {
-          if (klass.canDelete(this)) {
-            this.setStatus(K.BUSY_DESTROYING);
-            options.wait = true;
-            options.success = function (resp) {
-              model.setStatus(K.DESTROYED_CLEAN, {cascade: true});
-              if (success) { success(model, resp, options); }
-            };
-            return Backbone.Model.prototype.destroy.call(this, options);
-          }
+        if (!parent && klass.canDelete(this)) {
+          findChildren(this); // Lord Vader ... rise
+          this.setStatus(K.BUSY_DESTROYING, {cascade: true});
+          options.wait = true;
+          options.success = function (resp) {
+            var i;
+            // Do not hesitate, show no mercy!
+            for (i = 0; i < children.length; i += 1) {
+              children[i].didDestroy();
+            }
+            if (success) { success(model, resp, options); }
+          };
+          return Backbone.Model.prototype.destroy.call(this, options);
         }
 
         // Otherwise just marked for deletion.
@@ -259,7 +285,7 @@
         });
       }
     },
-    
+
     /**
       Return a matching record id for a passed user `key` and `value`. If none
       found, returns zero.
@@ -283,7 +309,7 @@
     getAttributeNames: function () {
       return this.getClass().getAttributeNames.call(this);
     },
-    
+
     /**
       Returns the current model class.
       
@@ -396,7 +422,7 @@
       // Bind events
       this.on('change', this.didChange);
       this.on('error', this.didError);
-      this.on('statusChange', this.statusDidChange);
+      this.on('destroy', this.didDestroy);
     },
 
     /**
@@ -634,16 +660,7 @@
       this.release();
       console.log(this.recordType + ' id: ' +  this.id +
                ' changed to ' + this.getStatusString());
-    },
-    
-    /**
-      Executed when status changed.
-    */
-    statusDidChange: function () {
-      var K = XT.Model;
-      if (this.status === K.DESTROYED_CLEAN) {
-        this.clear({silent: true});
-      }
+      return this;
     },
 
     /**
@@ -946,7 +963,7 @@
           type = recordType.replace(/\w+\./i, '');
         return _.pluck(XT.session.getSchema().get(type).columns, 'name');
       },
-      
+
       /**
         Return a matching record id for a passed user `key` and `value`. If none
         found, returns zero.
@@ -957,15 +974,14 @@
         @returns {Object} Receiever
       */
       findExisting: function (key, value, options) {
-        var that = this,
-          recordType = this.recordType || this.prototype.recordType,
+        var recordType = this.recordType || this.prototype.recordType,
           params = [ recordType, key, value, this.id || -1 ];
         XT.dataSource.dispatch('XT.Model', 'findExisting',
                                params, options);
         console.log("XT.Model.findExisting for: " + recordType);
         return this;
       },
-      
+
       /**
       Include 'isClean' option.
       */
@@ -1170,7 +1186,7 @@
     });
 
   XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
-  
+
   // Stomp on this function that MUST include the 'isClean' option
   var func = Backbone.Relation.prototype.setRelated;
   Backbone.Relation.prototype.setRelated = function (related, options) {

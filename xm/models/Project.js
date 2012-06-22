@@ -103,6 +103,7 @@
       XM.ProjectStatus.prototype.initialize.apply(this, arguments);
       this.on('change:number', this.numberDidChange);
       this.on('change:status', this.projectStatusDidChange);
+      this.on('statusChange', this.statusDidChange);
     },
 
     numberDidChange: function () {
@@ -118,7 +119,6 @@
       if (this.getStatus() === K.READY_CLEAN) {
         this.setReadOnly('number');
       }
-      XM.ProjectStatus.prototype.statusDidChange.call(this);
     },
 
     projectStatusDidChange: function () {
