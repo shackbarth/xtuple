@@ -143,7 +143,7 @@
       var K = XT.Model,
         status = this.getStatus();
       _.defaults(this.prime, this.changed);
-      if (status === K.READY_CLEAN && !options.isClean) {
+      if (status === K.READY_CLEAN && !options.force) {
         this.setStatus(K.READY_DIRTY);
       }
     },
@@ -406,7 +406,7 @@
         }
         this.setStatus(K.READY_NEW, {cascade: true});
         if (this.autoFetchId) { this.fetchId({cascade: true}); }
-      } else if (options.isClean) {
+      } else if (options.force) {
         this.setStatus(K.READY_CLEAN);
       }
 
@@ -706,9 +706,9 @@
       Returns `undefined` if the validation succeeded, or value, usually
       an error if it fails.
       
-      If the `force = true` option is passed in, validatation will be ignored.
-      this is useful when higher level function calls passing through `set`
-      need to skip validation to work properly.
+      Use the `force` option to ignore validation. This is useful when
+      higher level function calls passing through `set` need to skip
+      validation to work properly.
   
       @param {Object} Attributes
       @param {Object} Options
@@ -983,11 +983,11 @@
       },
 
       /**
-      Include 'isClean' option.
+      Include 'force' option.
       */
       findOrCreate: function (attributes, options) {
         options = options ? _.clone(options) : {};
-        options.isClean = true;
+        options.force = true;
         return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
       },
 
@@ -1187,11 +1187,11 @@
 
   XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
 
-  // Stomp on this function that MUST include the 'isClean' option
+  // Stomp on this function that MUST include the 'force' option
   var func = Backbone.Relation.prototype.setRelated;
   Backbone.Relation.prototype.setRelated = function (related, options) {
     options = options ? _.clone(options) : {};
-    options.isClean = true;
+    options.force = true;
 
     func.call(this, related, options);
   };
