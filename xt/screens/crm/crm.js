@@ -9,10 +9,11 @@ enyo.kind({
     { name: "projects", label: "Projects", collectionType: "XM.ProjectInfoCollection", 
       listType: "XT.ProjectInfoList" }
   ],
+  firstTime: true,
   didBecomeActive: function() {
-    if (!this._firstTime) {
+    if (this.firstTime) {
       this.selectSubModule("contacts");
-      this._firstTime = true;
+      this.firstTime = false;
     }
   }
 });
