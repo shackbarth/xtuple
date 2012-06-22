@@ -33,7 +33,9 @@ enyo.kind(
       
       // handle error
       if (response.data.isError) { 
-        if (options && options.error) options.error.call(that);
+        if (options && options.error) {
+          options.error.call(that, response.data.reason);
+        }
         return;
       }
       
@@ -68,7 +70,9 @@ enyo.kind(
       
       // handle error
       if (response.data.isError) { 
-        if (options && options.error) options.error.call(that);
+        if (options && options.error) {
+          options.error.call(that, response.data.reason);
+        }
         return;
       }
       
@@ -103,7 +107,9 @@ enyo.kind(
     
       // handle error
       if (response.data.isError) { 
-        if (options && options.error) options.error.call(that);
+        if (options && options.error) {
+          options.error.call(that, response.data.reason);
+        }
         return;
       }
       
@@ -148,7 +154,9 @@ enyo.kind(
       
       // handle error
       if (response.data.isError) { 
-        if (options && options.error) options.error.call(that);
+        if (options && options.error) {
+          options.error.call(that, response.data.reason);
+        }
         return;
       }
       
