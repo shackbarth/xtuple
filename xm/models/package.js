@@ -1,4 +1,5 @@
 enyo.depends(
+  "Document.js",
   "Account.js",
   "Address.js",
   "Contact.js",

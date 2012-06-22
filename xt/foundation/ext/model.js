@@ -121,8 +121,7 @@
       @returns {Boolean}
     */
     canUpdate: function () {
-      var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-      return klass.canUpdate(this);
+      return this.getClass().canUpdate(this);
     },
 
     /**
@@ -132,19 +131,18 @@
       @returns {Boolean}
     */
     canDelete: function () {
-      var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-      return klass.canDelete(this);
+      return this.getClass().canDelete(this);
     },
 
     /**
       When any attributes change, store the original value(s) in `prime` and update
       the status if applicable.
     */
-    didChange: function () {
+    didChange: function (model, options) {
       var K = XT.Model,
         status = this.getStatus();
       _.defaults(this.prime, this.changed);
-      if (status === K.READY_CLEAN) {
+      if (status === K.READY_CLEAN && !options.isClean) {
         this.setStatus(K.READY_DIRTY);
       }
     },
@@ -176,28 +174,14 @@
     */
     destroy: function (options) {
       options = options ? _.clone(options) : {};
-      var klass = Backbone.Relational.store.getObjectByName(this.recordType),
+      var klass = this.getClass(),
         success = options.success,
         model = this,
         K = XT.Model,
         parent = this.getParent(true);
       if ((parent && parent.canUpdate(this)) ||
           (!parent && klass.canDelete(this))) {
-        this.setStatus(K.DESTROYED_DIRTY); // Will update the data state
-
-        // Loop through and destroy child relations
-        _.each(this.relations, function (relation) {
-          var attr = relation.isAutoRelation ? model.get(relation.key) : false;
-          if (attr) {
-            if (relation.type === Backbone.HasOne) {
-              attr.destroy();
-            } else if (relation.type === Backbone.HasMany) {
-              _.each(attr.models, function (child) {
-                child.destroy();
-              });
-            }
-          }
-        });
+        this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
 
         // If it's top level commit to the server now.
         if (!parent) {
@@ -205,8 +189,7 @@
             this.setStatus(K.BUSY_DESTROYING);
             options.wait = true;
             options.success = function (resp) {
-              model.clear();
-              model.setStatus(K.DESTROYED_CLEAN);
+              model.setStatus(K.DESTROYED_CLEAN, {cascade: true});
               if (success) { success(model, resp, options); }
             };
             return Backbone.Model.prototype.destroy.call(this, options);
@@ -216,7 +199,6 @@
         // Otherwise just marked for deletion.
         return true;
       }
-
       console.log('Insufficient privileges to destroy');
       return false;
     },
@@ -231,7 +213,7 @@
       var model = this,
         K = XT.Model,
         success = options.success,
-        klass = Backbone.Relational.store.getObjectByName(this.recordType);
+        klass = this.getClass();
       if (klass.canRead()) {
         this.setStatus(K.BUSY_FETCHING);
         options.cascade = true; // Update status of children
@@ -277,6 +259,19 @@
         });
       }
     },
+    
+    /**
+      Return a matching record id for a passed user `key` and `value`. If none
+      found, returns zero.
+
+      @param {String} Property to search on, typically a user key
+      @param {String} Value to search for
+      @param {Object} options
+      @returns {Object} Receiever
+    */
+    findExisting: function (key, value, options) {
+      return this.getClass().findExisting.call(this, key, value, options);
+    },
 
     /**
       Valid attribute names that can be used on this model based on the
@@ -286,8 +281,16 @@
       @returns {Array}
     */
     getAttributeNames: function () {
-      var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-      return klass.getAttributeNames.call(this);
+      return this.getClass().getAttributeNames.call(this);
+    },
+    
+    /**
+      Returns the current model class.
+      
+      @returns {XT.Model}
+    */
+    getClass: function () {
+      return Backbone.Relational.store.getObjectByName(this.recordType);
     },
 
     /**
@@ -356,6 +359,7 @@
     */
     initialize: function (attributes, options) {
       attributes = attributes || {};
+      options = options || {};
       var klass,
         K = XT.Model;
 
@@ -368,14 +372,16 @@
       this.readOnlyAttributes = this.readOnlyAttributes || [];
       this.requiredAttributes = this.requiredAttributes || [];
 
-      // Initialize for new record.
-      if (options && options.isNew) {
-        klass = Backbone.Relational.store.getObjectByName(this.recordType);
+      // Handle options
+      if (options.isNew) {
+        klass = this.getClass();
         if (!klass.canCreate()) {
           throw 'Insufficent privileges to create a record.';
         }
         this.setStatus(K.READY_NEW, {cascade: true});
         if (this.autoFetchId) { this.fetchId({cascade: true}); }
+      } else if (options.isClean) {
+        this.setStatus(K.READY_CLEAN);
       }
 
       // Set attributes that should be required and read only
@@ -390,6 +396,7 @@
       // Bind events
       this.on('change', this.didChange);
       this.on('error', this.didError);
+      this.on('statusChange', this.statusDidChange);
     },
 
     /**
@@ -576,7 +583,7 @@
 
     /**
       Set the status on the model. Triggers `statusChange` event. Option set to
-      `cascade` will propagate status recursively to children.
+      `cascade` will propagate status recursively to all HasMany children.
   
       @param {Number} Status
     */
@@ -591,25 +598,19 @@
       if (this.isLocked() || this.status === status) { return; }
       this.acquire();
       this.status = status;
-      this.trigger('statusChange', this);
       parent = this.getParent();
 
       // Cascade changes through relations if specified
       if (options && options.cascade) {
         _.each(this.relations, function (relation) {
           attr = that.attributes[relation.key];
-          if (attr) {
-            if (relation.type === Backbone.HasOne && attr.setStatus) {
-              attr.setStatus(status, options);
-            } else if (relation.type === Backbone.HasMany) {
-              if (attr.models) {
-                _.each(attr.models, function (model) {
-                  if (model.setStatus) {
-                    model.setStatus(status, options);
-                  }
-                });
+          if (attr && attr.models &&
+              relation.type === Backbone.HasMany) {
+            _.each(attr.models, function (model) {
+              if (model.setStatus) {
+                model.setStatus(status, options);
               }
-            }
+            });
           }
         });
 
@@ -629,11 +630,20 @@
       } else if (status === K.DESTROYED_DIRTY) {
         this.set('dataState', 'delete', setOptions);
       }
-
+      this.trigger('statusChange', this);
       this.release();
-
       console.log(this.recordType + ' id: ' +  this.id +
                ' changed to ' + this.getStatusString());
+    },
+    
+    /**
+      Executed when status changed.
+    */
+    statusDidChange: function () {
+      var K = XT.Model;
+      if (this.status === K.DESTROYED_CLEAN) {
+        this.clear({silent: true});
+      }
     },
 
     /**
@@ -789,7 +799,7 @@
           }
         }
 
-        if (this.canUpdate()) {
+        if (!this.canUpdate()) {
           return 'Insufficient privileges to update attribute(s)';
         }
       }
@@ -932,8 +942,37 @@
         @returns {Array}
       */
       getAttributeNames: function () {
-        var type = this.recordType.replace(/\w+\./i, '');
+        var recordType = this.recordType || this.prototype.recordType,
+          type = recordType.replace(/\w+\./i, '');
         return _.pluck(XT.session.getSchema().get(type).columns, 'name');
+      },
+      
+      /**
+        Return a matching record id for a passed user `key` and `value`. If none
+        found, returns zero.
+
+        @param {String} Property to search on, typically a user key
+        @param {String} Value to search for
+        @param {Object} Options
+        @returns {Object} Receiever
+      */
+      findExisting: function (key, value, options) {
+        var that = this,
+          recordType = this.recordType || this.prototype.recordType,
+          params = [ recordType, key, value, this.id || -1 ];
+        XT.dataSource.dispatch('XT.Model', 'findExisting',
+                               params, options);
+        console.log("XT.Model.findExisting for: " + recordType);
+        return this;
+      },
+      
+      /**
+      Include 'isClean' option.
+      */
+      findOrCreate: function (attributes, options) {
+        options = options ? _.clone(options) : {};
+        options.isClean = true;
+        return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
       },
 
       // ..........................................................
@@ -1131,5 +1170,14 @@
     });
 
   XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
+  
+  // Stomp on this function that MUST include the 'isClean' option
+  var func = Backbone.Relation.prototype.setRelated;
+  Backbone.Relation.prototype.setRelated = function (related, options) {
+    options = options ? _.clone(options) : {};
+    options.isClean = true;
+
+    func.call(this, related, options);
+  };
 
 }());

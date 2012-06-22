@@ -24,8 +24,8 @@
     //
 
     initMixin: function () {
-      this.on('change:status', this.projectStatusChanged); // directly changed
-      this.on('statusChange', this.projectStatusChanged); // sync change
+      this.on('change:status', this.projectStatusDidChange); // directly changed
+      this.on('statusChange', this.projectStatusDidChange); // sync change
       this.projectStatusChanged();
     },
 
@@ -34,7 +34,7 @@
   
     @returns {String}
     */
-    projectStatusChanged: function () {
+    projectStatusDidChange: function () {
       var K = XM.Project,
         status = this.get('status'),
         str = 'Unknown'.loc();
@@ -57,6 +57,7 @@
     project related classes.
   
     @extends XM.ProjectStatus
+    @extends XM.Document
   */
   XM.ProjectBase = XM.ProjectStatus.extend({
     /** @scope XM.ProjectBase.prototype */
@@ -100,19 +101,11 @@
 
     initialize: function () {
       XM.ProjectStatus.prototype.initialize.apply(this, arguments);
-      this.on('change:number', this.numberChanged);
-      this.on('change:status', this.projectStatusChanged);
-      this.on('statusChange', this.statusChanged);
+      this.on('change:number', this.numberDidChange);
+      this.on('change:status', this.projectStatusDidChange);
     },
 
-    statusChanged: function () {
-      var K = XT.Model;
-      if (this.getStatus() === K.READY_CLEAN) {
-        this.setReadOnly('number');
-      }
-    },
-
-    numberChanged: function () {
+    numberDidChange: function () {
       var number = this.get('number'),
         upper = number.toUpperCase();
       if (number !== upper) {
@@ -120,8 +113,16 @@
       }
     },
 
-    projectStatusChanged: function () {
-      XM.ProjectStatus.prototype.projectStatusChanged.call(this);
+    statusDidChange: function () {
+      var K = XT.Model;
+      if (this.getStatus() === K.READY_CLEAN) {
+        this.setReadOnly('number');
+      }
+      XM.ProjectStatus.prototype.statusDidChange.call(this);
+    },
+
+    projectStatusDidChange: function () {
+      XM.ProjectStatus.prototype.projectStatusDidChange.call(this);
       var status = this.get('status'),
         date,
         K = XM.Project;
@@ -136,6 +137,9 @@
     }
 
   });
+  
+  // Add in document mixin
+  XM.ProjectBase = XM.ProjectBase.extend(XM.DocumentMixin);
 
   /**
     @class
@@ -260,13 +264,13 @@
 
     initialize: function () {
       XM.ProjectBase.prototype.initialize.apply(this, arguments);
-      this.on('add:tasks remove:tasks', this.tasksChanged);
+      this.on('add:tasks remove:tasks', this.tasksDidChange);
     },
 
     /**
     Recaclulate task hours and expense totals.
     */
-    tasksChanged: function () {
+    tasksDidChange: function () {
       var that = this;
       this.budgetedHoursTotal = 0.0;
       this.actualHoursTotal = 0.0;
@@ -431,13 +435,13 @@
       XM.ProjectBase.prototype.initialize.call(this);
       var evt = 'change:budgetedHours change:actualHours ' +
                 'change:budgetedExpenses change:actualExpenses';
-      this.on(evt, this.valuesChanged);
+      this.on(evt, this.valuesDidChange);
     },
 
     /**
     Update project totals when values change.
     */
-    valuesChanged: function () {
+    valuesDidChange: function () {
       this.get('project').tasksChanged();
     }
 
