@@ -5,12 +5,14 @@ create or replace function xt.commit_record(data_hash text) returns text as $$
   var dataHash = JSON.parse(data_hash),
       recordType = dataHash.recordType,
       encryptionKey = dataHash.encryptionKey,
-      data = Object.create(XT.Data);
+      data = Object.create(XT.Data),
+      key, orm;
 
   delete dataHash.recordType;
   data.commitRecord(recordType, dataHash.dataHash, encryptionKey);
-
-  return '{ "status":"ok" }';
+  orm = XT.Orm.fetch(recordType.beforeDot(), recordType.afterDot());
+  key = XT.Orm.primaryKey(orm);
+  return JSON.stringify(data.retrieveRecord(recordType, dataHash.dataHash[key]));
   
 $$ language plv8;
 /*

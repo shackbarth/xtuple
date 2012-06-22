@@ -66,7 +66,7 @@
       }
     },
     {
-      "name": "projectTaskStatus",
+      "name": "status",
       "attr": {
         "type": "String",
         "column": "prjtask_status",
