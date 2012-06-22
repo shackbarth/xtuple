@@ -1,12 +1,13 @@
 
 enyo.kind({
   name: "XT.InfoListRow",
-  kind: "FittableColumns",
-  fit: true,
   classes: "xt-info-list-row",
   published: {
     leftColumn: [],
     rightColumn: []
+  },
+  events: {
+    onInfoListRowTapped:""
   },
   create: function() {
     this.inherited(arguments);
@@ -44,19 +45,15 @@ enyo.kind({
     for (elem in $) {
       if ($.hasOwnProperty(elem)) {
         view = $[elem];
-        
         if (view.isLabel) {
           continue;
         }
-        
         if (elem.indexOf('.') > -1) {
-          parts = elem.split('.');
-                    
+          parts = elem.split('.'); 
           idx = 0;
           curr = model;
           for (; idx < parts.length; ++idx) {
             curr = curr.get(parts[idx]);
-            
             if (curr && typeof curr === "object") {
                             
             } else if (typeof curr === "string") {
@@ -66,16 +63,10 @@ enyo.kind({
               break; 
             }
           }
-      
-          
           view.setContent(curr);
-          
         } else {
-          
           curr = model.get(elem);
-
         }
-        
         if (view.formatter) {
           formatter = this[view.formatter];
                     
@@ -83,22 +74,21 @@ enyo.kind({
             curr = formatter(curr, model);
           }
         }
-        
         if (curr) {
           view.setContent(curr);
         }
-        
       }
     }
+  },
+  tap: function(inSender, inEvent) {
+    this.doInfoListRowTapped(inEvent);
   }
     
 });
 
 enyo.kind({
   name: "XT.InfoListRowColumn",
-  kind: "FittableRows",
   classes: "xt-info-list-row-column",
-  fit: true,
   published: {
     structure: null
   },
@@ -125,27 +115,39 @@ enyo.kind({
     var curr = inComponent;
     var elems = inElement;
     
+    console.log("found array", inComponent, inElement);
+
+    
     // TODO: this could be handled in much better ways...
     var width = elems.shift().width;
     
     var idx = 0;
     var elem;
     var ret;
-    
-    if (curr.kind !== "FittableColumns") {
+        
+    if (curr.kind !== "XT.InfoListBasicColumn") {
+      
+      console.log("creating new basic column");
+      
+      ret = curr;
+      
       curr = curr.createComponent({
-        kind: "FittableColumns"
+        kind: "XT.InfoListBasicColumn",
+        style: "width:" + width + "px;"
       });
     }
-
-    ret = curr;
     
-    curr = curr.createComponent({
-      kind: "FittableRows",
-      style: "width: " + width + "px;"
-    });
+    //curr = curr.createComponent({
+    //  kind: "XT.InfoListBasicRow",
+    //  style: "width: " + width + "px;"
+    //});
+    
+    console.log("begin");
     
     for (; idx < elems.length; ++idx) {
+      
+      console.log(elems[idx]);
+      
       elem = elems[idx];
       if (elem instanceof Array) {
         curr = this.createComponentFromArray(inOwner, curr, elem, elems.length);
@@ -153,6 +155,8 @@ enyo.kind({
         this.createComponentFromObject(inOwner, curr, elem);
       }
     }
+    
+    console.log("end");
     
     return ret;
   },
@@ -163,7 +167,7 @@ enyo.kind({
     //console.log("CREATECOMPONENTFROMOBJECT", elem);
     
     curr = curr.createComponent({
-      kind: "XT.InfoListRowColumnCell"
+      kind: "XT.InfoListBasicCell"
     }, elem);
     
     if (!inOwner.$[elem.name]) {
@@ -173,6 +177,16 @@ enyo.kind({
 });
 
 enyo.kind({
-  name:"XT.InfoListRowColumnCell",
-  classes: "xt-info-list-row-column-cell"
+  name: "XT.InfoListBasicRow",
+  classes: "xt-info-list-basic-row"
+});
+
+enyo.kind({
+  name: "XT.InfoListBasicColumn",
+  classes: "xt-info-list-basic-column"
+});
+
+enyo.kind({
+  name:"XT.InfoListBasicCell",
+  classes: "xt-info-list-basic-cell"
 });

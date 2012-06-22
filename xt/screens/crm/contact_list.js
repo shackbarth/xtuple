@@ -11,14 +11,19 @@ enyo.kind({
   leftColumn: [
     [ 
       { width: 200 },
-      { name: "name", classes: "contact-name" }
+      { name: "name", classes: "contact-name" },
+      { name: "jobTitle", classes: "contact-job-title" }
+    ],
+    [
+      { width: 120 },
+      { name: "phone", classes: "contact-phone" },
+      { name: "email", classes: "contact-email" }
     ]
   ],
   rightColumn: [
     [
-      { width: 70 },
-      { name: "phone", classes: "contact-phone" },
-      { name: "primaryEmail", classes: "contact-primary-email" }
+      { width: 320 },
+      { name: "account.name", classes: "contact-account-name" }
     ]
   ]
 });

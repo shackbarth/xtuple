@@ -7,6 +7,7 @@
 @import "compass/css3/border-radius";
 @import "compass/css3/box-shadow";
 @import "compass/css3/images";
+@import "compass/css3/box-sizing";
 
 $highlight  : #d6f1ff;
 
@@ -88,26 +89,32 @@ body {}
   }
 }
 
-.xt-info-list-row {
-  background-color: #fff;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #ddd;
-  &:hover {
-    background-color: $highlight;
-    cursor: pointer;
-  }
-  .xt-info-list-row-column {
-    width: 320px;
-    min-width: 320px;
-    max-width: 320px;
-    .xt-info-list-row-column-cell {
-      padding: 5px;
-      font-size: 11px;
+.xt-info-list {
+  .xt-info-list-row {
+    @include box-sizing(border-box);
+    background-color: #fff;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #ddd;
+    .xt-info-list-row-column {
+      @include box-sizing(border-box);
+      width: 320px;
+      min-width: 320px;
+      max-width: 320px;
+      display: inline-block;
+      .xt-info-list-basic-column {
+        @include box-sizing(border-box);
+        display: inline-block;
+        vertical-align: top;
+          .xt-info-list-basic-cell {
+            @include box-sizing(border-box);
+            padding: 5px;
+            font-size: 11px;
+          }
+      }
     }
   }
 }
-
 
 .project-due-date {
   text-align: right;
@@ -116,6 +123,9 @@ body {}
   font-weight: bold;
 }
 
+.contact-phone, .contact-email {
+  text-align: right;
+}
 
 
 

@@ -2,13 +2,11 @@
 enyo.kind({
   name: "XT.InfoList",
   kind: "Panels",
-  fit: true,
-  layoutKind: "CarouselArranger",
   classes: "xt-info-list",
   draggable: false,
   components: [
-    { name: "loader", style: "height: 300px;", content: "Loading content..." },
-    { name: "error", content: "There was an error" },
+    { name: "loader", classes: "xt-info-list-loader", content: "Loading content..." },
+    { name: "error", classes: "xt-info-list-error", content: "There was an error" },
     { name: "list", kind: "XT.InfoListPrivate" }
   ],
   published: {
@@ -23,8 +21,6 @@ enyo.kind({
       this.setIndex(1);
       return;
     }
-    
-    this.log("query", query);
     
     // bind the change event to our handler
     col.bind("change", enyo.bind(this, "_collectionChanged", col));
@@ -60,10 +56,10 @@ enyo.kind({
 enyo.kind({
   name: "XT.InfoListPrivate",
   kind: "List",
+  classes: "xt-info-list-private",
   published: {
     rowClass:""
   },
-  rowsPerPage: 10,
   handlers: {
     onSetupItem: "setupRow",
     onCollectionUpdated: "collectionUpdated"
@@ -79,7 +75,6 @@ enyo.kind({
     // visible now
     this.parent.setIndex(2);
   },
-  fit: true,
   rowClassChanged: function() {
     this.log(this.owner.name);
     
@@ -115,10 +110,6 @@ enyo.kind({
     var row = this.$.item;
     var idx = inEvent.index;
     var mod = col.models[idx];
-            
-    if (row.getShowing()) {
-      console.log("I'm SHOWING");
-    }
             
     // as the rows need to be rendered, we proxy the data to their
     // render function if they have it, otherwise, we skip
