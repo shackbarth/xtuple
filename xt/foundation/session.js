@@ -126,7 +126,7 @@ enyo.kind(
     if (payload.code === 4) {
       this.setDetails(payload.data);
       
-      XT.StartupTask.flush();
+      XT.getStartupManager().start();
     }
     
     if (callback && callback instanceof Function) {

@@ -81,7 +81,7 @@ enyo.kind({
   },
   fit: true,
   rowClassChanged: function() {
-    this.log();
+    this.log(this.owner.name);
     
     var rowClass = this.getRowClass();
     var component;

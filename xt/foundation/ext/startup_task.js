@@ -1,114 +1,193 @@
 
-
-enyo.mixin(XT,
-  /** */ {
-    
-  _startupTasks: [],
-  
-  _startupCompleted: false,
-  
-  _startupListeners: []
-  
-
-});
-
-
-enyo.kind(
-  /** */ {
-
-  name: "XT.StartupTaskManager",
-  
+enyo.kind({
+  name: "XT.StartupTask",
   kind: "Component",
-  
-  addTask: function(task) {
-    if (XT._startupCompleted) {
-      if (task instanceof Function) {
-        task();
-      }
-    } else {
-      XT._startupTasks.push(task);
-    }
+  published: {
+    taskName: "",
+    waitingList: [],
+    isComplete: false,
+    task: null
   },
-  
-  addListener: function(listener, method) {
-    var callback;
-    
-    if (listener && method) {
-      if (listener[method] instanceof Function) {
-        callback = listener[method];
-      }
-    } else if (listener && !method && listener instanceof Function) {
-      callback = listener;
-    }
-    
-    if (XT._startupCompelted) {
-      callback();
-    } else {
-      XT._startupListeners.push(callback);
-    }
-
+  events: {
+    onComplete:"",
+    onNotifyDidComplete:""
   },
-  
-  flush: function() {
-    var tasks;
-    var task;
-    var idx = 0;
+  handlers: {
+    onComplete: "didComplete",
+    onOtherTaskDidComplete: "checkWaitingList"
+  },
+  checkWaitingList: function(inSender, inTaskName) {
+    // check to see if this is one we're waiting for...
+    this.log(this.getTaskName(), arguments);
+    var wl = this.getWaitingList();
     
-    if (XT._startupCompleted) {
-      
-      enyo.log("Flush called for startup tasks but already completed");
-      
-      return;
-    } else if (XT._startupTasks.length <= 0) {
-      
-      enyo.log("No startup tasks to issue");
-      
-      return;
-    } else {
-      
-      enyo.log("Flushing startup tasks");
-      
-      tasks = XT._startupTasks;
-      for (; idx < tasks.length; ++idx) {
-        task = tasks[idx];
-        if (task && task instanceof Function) {
-          task();
+    if (wl && wl.length > 0) {
+      if (wl.indexOf(inTaskName) > -1) {
+        this.log(this.getTaskName(), "needs to remove %@ from waiting list".f(inTaskName));
+        this.setWaitingList((wl = _.without(wl, inTaskName)));
+        this.log(this.getTaskName(), wl);
+        if (wl.length <= 0) {
+          XT.getStartupManager().start();
         }
       }
     }
   },
-  
-  taskComplete: function() {    
-    if (XT._startupCompleted) {
-      return;
+  exec: function() {
+    // execute the task
+    this.log(this.getTaskName());
+    
+    if (this.getIsComplete()) {
+      this.log("Called my exec again?");
+      return true;
     }
     
-    if (XT._startupTasks.length <= 0) {
-      return;
-    }
-    
-    XT._startupTasks.pop();
-    
-    if (XT._startupTasks.length === 0) {
-      XT._startupComplete = true;
-      this.notifyCompleted();
+    var task = this.getTask();
+    if (!task || !(task instanceof Function)) {
+      this.error("Could not execute without an actual task");
+      return false;
+    } else if (this.getWaitingList().length > 0) {
+      this.log(this.getTaskName(), "waiting on ", this.getWaitingList());
+      return false;
+    } else { 
+      task.call(this);
+      return true;
     }
   },
-  
-  notifyCompleted: function() {
-    var listeners = XT._startupListeners;
-    var idx = 0;
-    var listener;
-    if (listeners && listeners.length > 0) {
-      for (; idx < listeners.length; ++idx) {
-        listener = listeners[idx];
-        if (listener && listener instanceof Function) {
-          listener();
-        }
-      }
+  didComplete: function() {
+    this.log(this.getTaskName());
+    this.setIsComplete(true);
+    this.doNotifyDidComplete();
+  },
+  create: function() {
+    this.inherited(arguments);
+    if (!this.getTaskName()) {
+      this.setTaskName(_.uniqueId("xt_task_"));
     }
+    XT.getStartupManager().registerTask(this);
   }
-    
 });
 
-XT.StartupTask = new XT.StartupTaskManager();
+XT.StartupTask.create = function(inProps) {
+  return new XT.StartupTask(inProps);
+};
+
+new (enyo.kind({
+  name: "XT.StartupTaskManager",
+  kind: "Component",
+  published: {
+    queue: [],
+    tasks: {},
+    completed: [],
+    isStarted: false
+  },
+  create: function() {
+    this.inherited(arguments);
+    
+    // create an accessible global that all
+    // startup tasks can depend on
+    XT.getStartupManager = enyo.bind(this, "_this");
+  },
+  registerTask: function(task) {
+    var name = task.getTaskName();
+    var tasks = this.getTasks();
+    var queue = this.getQueue();
+    if (!tasks[name]) {
+      tasks[name] = {
+        task: task
+      };
+      
+      // we want to be able to send/receive events
+      // through the chain
+      task.setOwner(this);
+      
+      if (this.getIsStarted()) {
+        
+        this.log("this bitch was started yo");
+        
+        task.exec();
+      } else {
+        
+        this.log("pushing %@ to the queue".f(task.getTaskName()));
+        queue.push(task);
+      }
+    } else {
+      this.log("Attempt to register task multiple times");
+    }    
+  },
+  handlers: {
+    onNotifyDidComplete: "taskDidComplete"
+  },
+  taskDidComplete: function(inEvent) {
+    var taskName = inEvent.getTaskName();
+    var completed = this.getCompleted();
+    var tasks = this.getTasks();
+    var task;
+    var entry;
+    var num = Object.keys(tasks).length;
+    
+    completed.push(taskName);
+    
+    this.log(taskName);
+    
+    for (task in tasks) {
+      if (tasks.hasOwnProperty(task)) {
+        entry = tasks[task];
+        task = entry.task;
+        if (task.getIsComplete()) {
+          continue;
+        }
+        task.waterfall("onOtherTaskDidComplete", taskName, this);
+      }
+    }
+    
+    if (num > completed.length) {
+      this.start();
+    } else { this.log("All tasks have checked in"); }
+  },
+  start: function() {
+    if (this.getIsStarted()) {
+      return false;
+    }
+    
+    var queue = this.getQueue();
+    var re = [];
+    var idx = 0;
+    var task;
+    var len = queue.length;
+    
+    this.log(queue);
+    
+    if (!queue || queue.length <= 0) {
+      this.log("No tasks in queue");
+      this.setIsStarted(true);
+      return;
+    }
+    
+    for (; idx < len; ++idx) {
+      task = queue.shift();
+      if (!task.exec()) {
+        
+        this.log("task %@ was not ready and is being re-added to queue".f(task.getTaskName()));
+        re.push(task);
+      }
+    }
+    
+    if (re.length > 0) {
+      this.setQueue(re);
+    } else {
+      
+      // to let it auto-finish
+      this.start();
+    }
+  },
+  isCompleted: function(inTaskName) {
+    var completed = this.getCompleted();
+    var idx;
+    if ((idx = completed.indexOf(inTaskName)) > -1) {
+      return idx;
+    } else { return false; }
+  },
+  _this: function() {
+    return this;
+  }
+}))();
