@@ -1,6 +1,11 @@
 // Contributions of status related functionality borrowed from SproutCore:
 // https://github.com/sproutcore/sproutcore
 
+/*global XT:true, Backbone:true, _:true, console:true */
+
+(function() {
+  "use strict";
+
 /**
   @class
   
@@ -25,66 +30,66 @@ XT.Model = Backbone.RelationalModel.extend(
   /** @scope XT.Model.prototype */ {
   
   /**
-  Set to true if you want an id fetched from the server when the `isNew` option
-  is passed on a new model.
+    Set to true if you want an id fetched from the server when the `isNew` option
+    is passed on a new model.
   
-  @type {Boolean}
+    @type {Boolean}
   */
   autoFetchId: true,
   
   idAttribute: "guid",
   
   /**
-  A hash of attributes originally fetched from the server.
+    A hash of attributes originally fetched from the server.
   */
   prime: null,
   
   /**
-  A hash structure that defines data access.
+    A hash structure that defines data access.
 
-  @type {Hash}
+    @type {Hash}
   */
   privileges: null,
   
   /** 
-  Indicates whethere the model is read only.
+    Indicates whethere the model is read only.
   
-  @type {Boolean}
+    @type {Boolean}
   */
   readOnly: false,
   
   /**
-  An array of attribute names designating attributes that are not editable.
-  Use `setReadOnly` to edit this array. 
+    An array of attribute names designating attributes that are not editable.
+    Use `setReadOnly` to edit this array. 
   
-  @seealso `setReadOnly`
-  @seealso `isReadOnly`
-  @type {Array}
+    @seealso `setReadOnly`
+    @seealso `isReadOnly`
+    @type {Array}
   */
   readOnlyAttributes: null,
   
   /**
-  Specify the name of a data source model here.
+    Specify the name of a data source model here.
   
-  @type {String}
+    @type {String}
   */
   recordType: null,
   
   /**
-  An array of required attributes. A `validate` will fail until all the required 
-  attributes have values.
+    An array of required attributes. A `validate` will fail until all the required 
+    attributes have values.
   
-  @type {Array}
+    @type {Array}
   */
   requiredAttributes: null,
   
   /**
-  Model's status. You should never modify this directly.
+    Model's status. You should never modify this directly.
   
-  @seealso `getStatus`
-  @seealse `setStatus`
-  @type {Number}
-  @default `EMPTY`
+    @seealso `getStatus`
+    @seealse `setStatus`
+    @type {Number}
+    @default `EMPTY`
   */
   status: null,
   
@@ -93,8 +98,8 @@ XT.Model = Backbone.RelationalModel.extend(
   //
   
   /**
-  Reverts the model to the last set of attributes fetched from the server and
-  resets the change log.
+    Reverts the model to the last set of attributes fetched from the server and
+    resets the change log.
   */
   cancel: function() {
     _.extend(this.attributes, this.originalAttributes());
@@ -102,10 +107,10 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Returns whether the current record can be updated based on privilege
-  settings.
+    Returns whether the current record can be updated based on privilege
+    settings.
 
-  @returns {Boolean}
+    @returns {Boolean}
   */
   canUpdate: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
@@ -113,10 +118,10 @@ XT.Model = Backbone.RelationalModel.extend(
   },
 
   /**
-  Returns whether the current record can be deleted based on privilege
-  settings.
+    Returns whether the current record can be deleted based on privilege
+    settings.
 
-  @returns {Boolean}
+    @returns {Boolean}
   */
   canDelete: function() {
     var klass = Backbone.Relational.store.getObjectByName(this.recordType);
@@ -124,12 +129,12 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  When any attributes change, store the original value(s) in `prime` and update
-  the status if applicable.
+    When any attributes change, store the original value(s) in `prime` and update
+    the status if applicable.
   */
   didChange: function() {
-    var K = XT.Model;
-    var status = this.getStatus();
+    var K = XT.Model,
+    status = this.getStatus();
     _.defaults(this.prime, this.changed);
     if (status === K.READY_CLEAN) {
       this.setStatus(K.READY_DIRTY);
@@ -137,22 +142,22 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented to handle state change and parent child relationships. Calling
-  `destroy` on a parent will cause the model to commit to the server
-  immediately. Calling destroy on a child relation will simply mark it for 
-  deletion on the next save of the parent.
+    Reimplemented to handle state change and parent child relationships. Calling
+    `destroy` on a parent will cause the model to commit to the server
+    immediately. Calling destroy on a child relation will simply mark it for 
+    deletion on the next save of the parent.
   
-  @returns {XT.Request|Boolean}
+    @returns {XT.Request|Boolean}
   */
   destroy: function(options) {
     options = options ? _.clone(options) : {};
-    var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    var success = options.success;
-    var model = this;
-    var K = XT.Model;
-    var parent = this.getParent(true);
-    if (parent && parent.canUpdate(this) ||
-        !parent && klass.canDelete(this)) {
+    var klass = Backbone.Relational.store.getObjectByName(this.recordType),
+        success = options.success,
+        model = this,
+        K = XT.Model,
+        parent = this.getParent(true);
+    if ((parent && parent.canUpdate(this)) ||
+        (!parent && klass.canDelete(this))) {
       this.setStatus(K.DESTROYED_DIRTY); // Will update the data state
     
       // Loop through and destroy child relations
@@ -177,7 +182,7 @@ XT.Model = Backbone.RelationalModel.extend(
           options.success = function(resp, status, xhr) {
             model.clear();
             model.setStatus(K.DESTROYED_CLEAN);
-            if (success) success(model, resp, options);
+            if (success) { success(model, resp, options); }
           };
           return Backbone.Model.prototype.destroy.call(this, options);
         }
@@ -192,23 +197,23 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /*
-  Reimplemented to handle state change.
+    Reimplemented to handle state change.
   
-  @returns {XT.Request} Request
+    @returns {XT.Request} Request
   */
   fetch: function(options) {
     options = options ? _.clone(options) : {};
-    var model = this;
-    var K = XT.Model;
-    var success = options.success;
-    var klass = Backbone.Relational.store.getObjectByName(this.recordType);
-    var status = this.getStatus();
+    var model = this,
+        K = XT.Model,
+        success = options.success,
+        klass = Backbone.Relational.store.getObjectByName(this.recordType),
+        status = this.getStatus();
     if (klass.canRead()) {
       this.setStatus(K.BUSY_FETCHING);
       options.cascade = true; // Update status of children
       options.success = function(resp, status, xhr) {
         model.setStatus(K.READY_CLEAN, options);
-        if (success) success(model, resp, options);
+        if (success) { success(model, resp, options); }
       };
       return Backbone.Model.prototype.fetch.call(this, options);
     }
@@ -217,14 +222,14 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /** 
-  Set the id on this record an id from the server. Including the `cascade` 
-  option will call ids to be fetched recursively for `HasMany` relations.
+    Set the id on this record an id from the server. Including the `cascade` 
+    option will call ids to be fetched recursively for `HasMany` relations.
   
-  @returns {XT.Request} Request
+    @returns {XT.Request} Request
   */
   fetchId: function(options) {
     options = _.defaults(options ? _.clone(options) : {}, {silent: true});   
-    var that = this;
+    var that = this, attr;
     if (!this.id) {
       options.success = function(resp, status, xhr) {
         that.set(that.idAttribute, resp, options);
@@ -240,7 +245,7 @@ XT.Model = Backbone.RelationalModel.extend(
           if (relation.type === Backbone.HasMany) {
             if (attr.models) {
               _.each(attr.models, function(model) {
-                if (model.fetchId) model.fetchId(options);
+                if (model.fetchId) { model.fetchId(options); }
               });
             }
           }
@@ -250,16 +255,16 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Return the parent model if one exists. If the `getRoot` parameter is
-  passed, it will return the top level parent of the model hierarchy.
+    Return the parent model if one exists. If the `getRoot` parameter is
+    passed, it will return the top level parent of the model hierarchy.
   
-  @param {Boolean} Get Root 
-  @returns {XT.Model}
+    @param {Boolean} Get Root 
+    @returns {XT.Model}
   */
   getParent: function(getRoot) {
-    var parent;
-    var root;
-    var relation = _.find(this.relations, function(rel) {
+    var parent,
+        root,
+        relation = _.find(this.relations, function(rel) {
       if (rel.reverseRelation && rel.isAutoRelation) {
         return true;
       }
@@ -272,52 +277,54 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Return the current status.
+    Return the current status.
   
-  @returns {Number}
+    @returns {Number}
   */
   getStatus: function() {
     return this.status;
   },
   
   /**
-  Return the current status as as string.
+    Return the current status as as string.
   
-  @returns {String}
+    @returns {String}
   */
   getStatusString: function() {
-    var ret = [];
-    var status = this.getStatus();
-    for(var prop in XT.Model) {
-      if(prop.match(/[A-Z_]$/) && XT.Model[prop] === status) {
-        ret.push(prop);
+    var ret = [],
+        status = this.getStatus(),
+        prop;
+    for (prop in XT.Model) {
+      if (XT.Model.hasOwnProperty(prop)) {
+        if (prop.match(/[A-Z_]$/) && XT.Model[prop] === status) {
+          ret.push(prop);
+        }
       }
     }
     return ret.join(" ");
   },
   
   /**
-  Searches attributes first, then the model for a value on a property with the
-  given key.
+    Searches attributes first, then the model for a value on a property with the
+    given key.
   
-  @param {String} Key
-  @returns {Any}
+    @param {String} Key
+    @returns {Any}
   */
   getValue: function(key) {
     return _.has(this.attributes, key) ? this.attributes[key] : this[key];
   },
   
   /**
-  Called when model is instantiated.
+    Called when model is instantiated.
   */
-  initialize: function() {
-    var options = arguments[1];
-    var that = this;
-    var klass;
-    var K = XT.Model;
+  initialize: function(attributes, options) {
+    var that = this,
+        klass,
+        K = XT.Model;
 
     // Validate record type
-    if (_.isEmpty(this.recordType)) throw 'No record type defined';
+    if (_.isEmpty(this.recordType)) { throw 'No record type defined'; }
     
     // Set defaults if not provided
     this.prime = {};
@@ -328,13 +335,15 @@ XT.Model = Backbone.RelationalModel.extend(
     // Initialize for new record.
     if (options && options.isNew) {
       klass = Backbone.Relational.store.getObjectByName(this.recordType);
-      if (!klass.canCreate()) throw 'Insufficent privileges to create a record.';
+      if (!klass.canCreate()) { 
+        throw 'Insufficent privileges to create a record.'; 
+      }
       this.setStatus(K.READY_NEW, {cascade: true});
-      if (this.autoFetchId) this.fetchId({cascade: true});
+      if (this.autoFetchId) { this.fetchId({cascade: true}); }
     }
 
     // Id Attribute should be required and read only
-    if (this.idAttribute) this.setReadOnly(this.idAttribute);
+    if (this.idAttribute) { this.setReadOnly(this.idAttribute); }
     if (this.idAttribute && 
         !_.contains(this.requiredAttributes, this.idAttribute)) {
       this.requiredAttributes.push(this.idAttribute);
@@ -345,46 +354,50 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented. A model is new if the status is `READY_NEW`.
+    Reimplemented. A model is new if the status is `READY_NEW`.
   
-  @returns {Boolean}
+    @returns {Boolean}
   */
   isNew: function() {
-    K = XT.Model;
+    var K = XT.Model;
     return this.getStatus === K.READY_NEW;
   },
   
   /**
-  Returns true if status is `READY_NEW` or `READY_DIRTY`.
+    Returns true if status is `READY_NEW` or `READY_DIRTY`.
   
-  @returns {Boolean}
+    @returns {Boolean}
   */
   isDirty: function() {
-    var status = this.getStatus();
-    var K = XT.Model;
+    var status = this.getStatus(),
+        K = XT.Model;
     return status === K.READY_NEW || status === K.READY_DIRTY;
   },
   
   /**
-  Return whether the model is in a read-only state. If an attribute name or
-  object is passed, returns whether those attributes are read-only.
+    Return whether the model is in a read-only state. If an attribute name or
+    object is passed, returns whether those attributes are read-only.
 
-  @seealso `setReadOnly`
-  @seealso `readOnly`
-  @param {String|Object} attribute(s)
-  @returns {Boolean}
+    @seealso `setReadOnly`
+    @seealso `readOnly`
+    @param {String|Object} attribute(s)
+    @returns {Boolean}
   */
   isReadOnly: function(value) {
-    var attr;
+    var attr, result;
     if ((!_.isString(value) && !_.isObject(value)) || this.readOnly) {
-      return  this.readOnly;
+      result = this.readOnly;
     } else if (_.isObject(value)) {
       for (attr in value) {
-        if (_.contains(this.readOnlyAttributes, attr)) return true;
+        if (value.hasOwnProperty(attr)) {
+          if (_.contains(this.readOnlyAttributes, attr)) { result = true; }
+        }
       }
-      return false;
-    } 
-    return _.contains(this.readOnlyAttributes, value);
+      result = false;
+    } else {
+      result = _.contains(this.readOnlyAttributes, value);
+    }
+    return result;
   },
   
   original: function(attr) {
@@ -396,22 +409,23 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Recursively checks the object against the schema and converts date strings to
-  date objects.
+    Recursively checks the object against the schema and converts date strings to
+    date objects.
   
-  @param {Object} Response
-  
+    @param {Object} Response
   */
   parse: function(resp, xhr) {
-    var K = XT.Session;
-    var column;
-    var parseIter = function(iter) {
+    var K = XT.Session,
+        column,
+        iter,
+        parse,
+    parseIter = function(iter) {
       iter = parse(iter);
     };
-    var parse = function(obj) {
+    parse = function(obj) {
       var attr;
       for (attr in obj) {
-        if (_.has(obj, attr)) {
+        if (obj.hasOwnProperty(attr)) {
           if (_.isArray(obj[attr])) {
             _.each(obj[attr], parseIter);
           } else if (_.isObject(obj[attr])) {
@@ -430,7 +444,7 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reset the change log.
+    Reset the change log.
   */
   reset: function() {
     this.changed = {};
@@ -439,19 +453,19 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Reimplemented. Validate before saving.
+    Reimplemented. Validate before saving.
   
-  @retuns {XT.Request} Request
+    @retuns {XT.Request} Request
   */
   save: function(key, value, options) {
     options = options ? _.clone(options) : {};
-    var attrs = {};
-    var err;
-    var model = this;
-    var K = XT.Model;
-    var success = options.success;
-    var result;
-    var oldStatus = this.getStatus(status);
+    var attrs = {},
+        err,
+        model = this,
+        K = XT.Model,
+        success = options.success,
+        result,
+        oldStatus = this.getStatus();
     
     // Can't save unless root
     if (this.getParent()) {
@@ -473,16 +487,16 @@ XT.Model = Backbone.RelationalModel.extend(
       options.cascade = true; // Cascade status to children
       options.success = function(resp, status, xhr) {
         model.setStatus(K.READY_CLEAN, options);
-        if (success) success(model, resp, options);
+        if (success) { success(model, resp, options); }
       };
       
       // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) value = options;
+      if (_.isObject(key) || _.isEmpty(key)) { value = options; }
       
       // Call the super version
       this.setStatus(K.BUSY_COMMITTING);
       result = Backbone.Model.prototype.save.call(this, key, value, options);
-      if (!result) this.setStatus(oldStatus);
+      if (!result) { this.setStatus(oldStatus); }
       return result;
     }
     
@@ -491,20 +505,20 @@ XT.Model = Backbone.RelationalModel.extend(
   },
 
   /**
-  Set the entire model, or a specific model attribute to `readOnly`. Privilege
-  enforcement supercedes read-only settings.
+    Set the entire model, or a specific model attribute to `readOnly`. Privilege
+    enforcement supercedes read-only settings.
   
-  Examples:
+    Examples:
   
-  m.setReadOnly() // sets model to read only
-  m.setReadOnly(false) // sets model to be editable
-  m.setReadOnly('name') // sets 'name' attribute to read-only
-  m.setReadOnly('name', false) // sets 'name' attribute to be editable 
+    m.setReadOnly() // sets model to read only
+    m.setReadOnly(false) // sets model to be editable
+    m.setReadOnly('name') // sets 'name' attribute to read-only
+    m.setReadOnly('name', false) // sets 'name' attribute to be editable 
   
-  @seealso `isReadOnly`
-  @seealso `readOnly`
-  @param {String|Boolean} Attribute to set, or boolean if setting the model
-  @param {Boolean} Boolean - default = true.
+    @seealso `isReadOnly`
+    @seealso `readOnly`
+    @param {String|Boolean} Attribute to set, or boolean if setting the model
+    @param {Boolean} Boolean - default = true.
   */
   setReadOnly: function(key, value) {
     // handle attribute
@@ -526,19 +540,19 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Set the status on the model. Triggers `statusChange` event. Option set to
-  `cascade` will propagate status recursively to children.
+    Set the status on the model. Triggers `statusChange` event. Option set to
+    `cascade` will propagate status recursively to children.
   
-  @param {Number} Status
+    @param {Number} Status
   */
   setStatus: function(status, options) {
-    var K = XT.Model;
-    var attr;
-    var that = this;
-    var parent;
+    var K = XT.Model,
+        attr,
+        that = this,
+        parent;
     
     // Prevent recursion
-    if ( this.isLocked() || this.status === status ) return;
+    if ( this.isLocked() || this.status === status ) { return; }
 		this.acquire();
     this.status = status;
     this.trigger('statusChange', this);
@@ -570,10 +584,10 @@ XT.Model = Backbone.RelationalModel.extend(
     } 
     
     // Update data state.
-    if (status === K.READY_NEW) this.set('dataState', 'create');
-    else if (status === K.READY_CLEAN) this.set('dataState', 'read');
-    else if (status === K.READY_DIRTY) this.set('dataState', 'update');
-    else if (status === K.DESTROYED_DIRTY) this.set('dataState', 'delete');
+    if (status === K.READY_NEW) { this.set('dataState', 'create'); }
+    else if (status === K.READY_CLEAN) { this.set('dataState', 'read'); }
+    else if (status === K.READY_DIRTY) { this.set('dataState', 'update'); }
+    else if (status === K.DESTROYED_DIRTY) { this.set('dataState', 'delete'); }
     
     this.release();
     
@@ -582,59 +596,56 @@ XT.Model = Backbone.RelationalModel.extend(
   },
   
   /**
-  Sync to xTuple datasource.
+    Sync to xTuple datasource.
   */
   sync: function(method, model, options) {
     options = options ? _.clone(options) : {};
-    var id = options.id || model.id;
-    var recordType = this.recordType;
+    var id = options.id || model.id,
+        recordType = this.recordType,
+        result;
 
     // Read
     if (method === 'read' && recordType && id && options.success) {
-      return XT.dataSource.retrieveRecord(recordType, id, options);
+      result = XT.dataSource.retrieveRecord(recordType, id, options);
 
     // Write
     } else if (method === 'create' || method === 'update' || method === 'delete') {
-      return XT.dataSource.commitRecord(model, options);
+      result = XT.dataSource.commitRecord(model, options);
     }
-    return false;
+    return result || false;
   },
   
   /**
-  Default validation checks `attributes` for:
+    Default validation checks `attributes` for:
   
-    * Data type integrity.
-    * Required fields (when committing).
-    * Read Only and Privileges (when editing).
+      * Data type integrity.
+      * Required fields (when committing).
+      * Read Only and Privileges (when editing).
     
-  Reimplement your own custom validation code here, but make sure
-  to call back to the superclass at the top of your function using:
+    Reimplement your own custom validation code here, but make sure
+    to call back to the superclass at the top of your function using:
   
-  return XT.Model.prototype.validate.call(this, attributes, options); 
+    return XT.Model.prototype.validate.call(this, attributes, options); 
   
-  Returns `undefined` if the validation succeeded, or value, usually
-  an error if it fails.
+    Returns `undefined` if the validation succeeded, or value, usually
+    an error if it fails.
   
-  @param {Object} Attributes
-  @param {Object} Options
+    @param {Object} Attributes
+    @param {Object} Options
   */
   validate: function(attributes, options) {
     attributes = attributes || {};
-    var that = this;
-    var K = XT.Model;
-    var S = XT.Session;
-    var keys = _.keys(attributes);
-    var original = _.pick(this.originalAttributes(), keys);
-    var status = this.getStatus();
-    var attr;
-    var value;
-    var msg;
-    var err;
-    var type = this.recordType.replace(/\w+\./i, '');
-    var category;
+    var that = this, i,
+        K = XT.Model,
+        S = XT.Session,
+        keys = _.keys(attributes),
+        original = _.pick(this.originalAttributes(), keys),
+        status = this.getStatus(),
+        attr, value, msg, err, category, column,
+        type = this.recordType.replace(/\w+\./i, ''),
     
     // Helper function to test if values are really relations
-    var isRelation = function(attr, value, type) {
+    isRelation = function(attr, value, type) {
       var rel;
       rel = _.find(that.relations, function(relation) {
         return relation.key === attr && relation.type === type;
@@ -644,7 +655,7 @@ XT.Model = Backbone.RelationalModel.extend(
     
     // Check data type integrity
     for (attr in attributes) {
-      if (_.has(attributes, attr) && 
+      if (attributes.hasOwnProperty(attr) && 
          !_.isNull(attributes[attr]) && 
          !_.isUndefined(attributes[attr])) {
         msg = 'The value of "' + attr + '" must be a{type}.';
@@ -689,13 +700,13 @@ XT.Model = Backbone.RelationalModel.extend(
           default:
             err = '"' + attr + '" does not exist in the schema.';
         }
-        if (err) break;
+        if (err) { break; }
       }
     }
     
     // Check required.
     if (status === K.BUSY_COMMITTING) {
-      for (i = 0; i < this.requiredAttributes.length; i++) {
+      for (i = 0; i < this.requiredAttributes.length; i+=1) {
         if (attributes[this.requiredAttributes[i]] === undefined) {
           err = "'" + this.requiredAttributes[i] + "' is required.";
         }
@@ -717,7 +728,7 @@ XT.Model = Backbone.RelationalModel.extend(
       }
     }
     
-    if (err) console.log(err);
+    if (err) { console.log(err); }
     return err;
   }
 
@@ -747,12 +758,12 @@ _.extend( XT.Model,
     @returns {Boolean}
   */
   canRead: function() {
-    var privs = this.prototype.privileges;
-    var sessionPrivs = XT.session.privileges;
-    var isGranted = false;
+    var privs = this.prototype.privileges,
+        sessionPrivs = XT.session.privileges,
+        isGranted = false;
 
     // If no privileges, nothing to check. 
-    if (_.isEmpty(privs)) return true;
+    if (_.isEmpty(privs)) { return true; }
 
     if (sessionPrivs && sessionPrivs.get) {
       // Check global read privilege.
@@ -782,43 +793,44 @@ _.extend( XT.Model,
   },
 
   /**
-  Returns whether a user has access to update a record of this type. If a
-  record is passed that involves personal privileges, it will validate
-  whether that particular record is updatable.
+    Returns whether a user has access to update a record of this type. If a
+    record is passed that involves personal privileges, it will validate
+    whether that particular record is updatable.
 
-  @returns {Boolean}
+    @returns {Boolean}
   */
   canUpdate: function(model) {
     return XT.Model.canDo.call(this, 'update', model);
   },
 
   /**
-  Returns whether a user has access to delete a record of this type. If a
-  record is passed that involves personal privileges, it will validate
-  whether that particular record is deletable.
+    Returns whether a user has access to delete a record of this type. If a
+    record is passed that involves personal privileges, it will validate
+    whether that particular record is deletable.
 
-  @returns {Boolean}
+    @returns {Boolean}
   */
   canDelete: function(model) {
     return XT.Model.canDo.call(this, 'delete', model);
   },
 
   /** 
-  Check privilege on `action`. If `model` is passed, checks personal
-  privileges on the model where applicable.
+    Check privilege on `action`. If `model` is passed, checks personal
+    privileges on the model where applicable.
   
-  @param {String} Action
-  @param {XT.Model} Model
+    @param {String} Action
+    @param {XT.Model} Model
   */
   canDo: function(action, model) {
-    var privs = this.prototype.privileges;
-    var sessionPrivs = XT.session.privileges;
-    var isGrantedAll = false;
-    var isGrantedPersonal = false;
-    var userName = XT.session.details.username;
+    var privs = this.prototype.privileges,
+        sessionPrivs = XT.session.privileges,
+        isGrantedAll = false,
+        isGrantedPersonal = false,
+        username = XT.session.details.username,
+        i, props;
 
     // If no privileges, nothing to check.  
-    if (_.isEmpty(privs)) return true;
+    if (_.isEmpty(privs)) { return true; }
     
     // If we have session prvileges perform the check.
     if (sessionPrivs && sessionPrivs.get) {
@@ -836,15 +848,14 @@ _.extend( XT.Model,
     // If only personal privileges, check the personal attribute list to 
     // see if we can update.
     if (!isGrantedAll && isGrantedPersonal && model) {
-      var i = 0;
-      var username = XT.session.details.username;
-      var props = privs.personal && privs.personal.properties ? 
+      i = 0;
+      props = privs.personal && privs.personal.properties ? 
                   privs.personal.properties : [];
 
       isGrantedPersonal = false;
       while (!isGrantedPersonal && i < props.length) {
         isGrantedPersonal = model.original(props[i].get('username')) === username;
-        i++;
+        i+=1;
       }
     }
 
@@ -852,26 +863,26 @@ _.extend( XT.Model,
   },
   
   /**
-  Return a column definition from the session schema for a given
-  type and attribute.
+    Return a column definition from the session schema for a given
+    type and attribute.
   
-  @param {String} Type
-  @param {String} Column or Attribute name
-  @returns {Object}
+    @param {String} Type
+    @param {String} Column or Attribute name
+    @returns {Object}
   */
   getColumn: function(type, column) {
-    result = _.find(XT.Model.getColumns(type), function(col) {
+    var result = _.find(XT.Model.getColumns(type), function(col) {
       return col.name === column;
     });
     return result;
   },
   
   /**
-  Return the column definition array from the session schema for a given
-  type.
+    Return the column definition array from the session schema for a given
+    type.
   
-  @param {String} Type
-  @returns {Object}
+    @param {String} Type
+    @returns {Object}
   */
   getColumns: function(type) {
     return XT.session.getSchema().get(type).columns;
@@ -1072,3 +1083,5 @@ _.extend( XT.Model,
 });
 
 XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
+
+}());
