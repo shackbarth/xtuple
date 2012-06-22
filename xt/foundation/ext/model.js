@@ -569,7 +569,8 @@
       var K = XT.Model,
         attr,
         that = this,
-        parent;
+        parent,
+        setOptions = { force: true };
 
       // Prevent recursion
       if (this.isLocked() || this.status === status) { return; }
@@ -604,17 +605,15 @@
       }
 
       // Update data state.
-      this.setReadOnly('dataState', false);
       if (status === K.READY_NEW) {
-        this.set('dataState', 'create');
+        this.set('dataState', 'create', setOptions);
       } else if (status === K.READY_CLEAN) {
-        this.set('dataState', 'read');
+        this.set('dataState', 'read', setOptions);
       } else if (status === K.READY_DIRTY) {
-        this.set('dataState', 'update');
+        this.set('dataState', 'update', setOptions);
       } else if (status === K.DESTROYED_DIRTY) {
-        this.set('dataState', 'delete');
+        this.set('dataState', 'delete', setOptions);
       }
-      this.setReadOnly('dataState', true);
 
       this.release();
 
@@ -656,6 +655,10 @@
   
       Returns `undefined` if the validation succeeded, or value, usually
       an error if it fails.
+      
+      If the `force = true` option is passed in, validatation will be ignored.
+      this is useful when higher level function calls passing through `set`
+      need to skip validation to work properly.
   
       @param {Object} Attributes
       @param {Object} Options
@@ -663,6 +666,7 @@
     validate: function (attributes, options) {
       attributes = attributes || {};
       options = options || {};
+      if (options.force) { return; }
       var that = this, i,
         K = XT.Model,
         S = XT.Session,
