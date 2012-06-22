@@ -43,6 +43,11 @@
     idAttribute: "guid",
 
     /**
+      The last error message reported.
+    */
+    lastError: null,
+
+    /**
       A hash of attributes originally fetched from the server.
     */
     prime: null,
@@ -142,6 +147,23 @@
       if (status === K.READY_CLEAN) {
         this.setStatus(K.READY_DIRTY);
       }
+    },
+
+    /**
+      Handle a `sync` response that was an error.
+    */
+    didError: function (model, resp) {
+      model = model || {};
+      this.lastError = resp;
+      console.log(resp);
+    },
+
+    original: function (attr) {
+      return this.prime[attr] || this.get(attr);
+    },
+
+    originalAttributes: function () {
+      return _.defaults(_.clone(this.prime), _.clone(this.attributes));
     },
 
     /**
@@ -257,6 +279,18 @@
     },
 
     /**
+      Valid attribute names that can be used on this model based on the
+      data source definition, whether or not they already exist yet on the
+      current instance.
+
+      @returns {Array}
+    */
+    getAttributeNames: function () {
+      var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+      return klass.getAttributeNames.call(this);
+    },
+
+    /**
       Return the parent model if one exists. If the `getRoot` parameter is
       passed, it will return the top level parent of the model hierarchy.
   
@@ -344,15 +378,18 @@
         if (this.autoFetchId) { this.fetchId({cascade: true}); }
       }
 
-      // Id Attribute should be required and read only
+      // Set attributes that should be required and read only
       if (this.idAttribute) { this.setReadOnly(this.idAttribute); }
       if (this.idAttribute &&
           !_.contains(this.requiredAttributes, this.idAttribute)) {
         this.requiredAttributes.push(this.idAttribute);
       }
+      this.setReadOnly('dataState');
+      this.setReadOnly('type');
 
-      // Bind on change event
+      // Bind events
       this.on('change', this.didChange);
+      this.on('error', this.didError);
     },
 
     /**
@@ -402,14 +439,6 @@
       return result;
     },
 
-    original: function (attr) {
-      return this.prime[attr] || this.get(attr);
-    },
-
-    originalAttributes: function () {
-      return _.defaults(_.clone(this.prime), _.clone(this.attributes));
-    },
-
     /**
       Recursively checks the object against the schema and converts date strings to
       date objects.
@@ -422,6 +451,12 @@
         parse,
         parseIter = function (iter) {
           iter = parse(iter);
+        },
+        getColumn = function (type, attr) {
+          var columns = XT.session.getSchema().get(type).columns;
+          return _.find(columns, function (column) {
+            return column.name === attr;
+          });
         };
       parse = function (obj) {
         var attr;
@@ -432,7 +467,7 @@
             } else if (_.isObject(obj[attr])) {
               obj[attr] = parse(obj[attr]);
             } else {
-              column = XT.Model.getColumn(obj.type, attr);
+              column = getColumn(obj.type, attr);
               if (column && column.category && column.category === K.DB_DATE) {
                 obj[attr] = new Date(obj[attr]);
               }
@@ -549,7 +584,8 @@
       var K = XT.Model,
         attr,
         that = this,
-        parent;
+        parent,
+        setOptions = { force: true };
 
       // Prevent recursion
       if (this.isLocked() || this.status === status) { return; }
@@ -585,13 +621,13 @@
 
       // Update data state.
       if (status === K.READY_NEW) {
-        this.set('dataState', 'create');
+        this.set('dataState', 'create', setOptions);
       } else if (status === K.READY_CLEAN) {
-        this.set('dataState', 'read');
+        this.set('dataState', 'read', setOptions);
       } else if (status === K.READY_DIRTY) {
-        this.set('dataState', 'update');
+        this.set('dataState', 'update', setOptions);
       } else if (status === K.DESTROYED_DIRTY) {
-        this.set('dataState', 'delete');
+        this.set('dataState', 'delete', setOptions);
       }
 
       this.release();
@@ -605,9 +641,17 @@
     */
     sync: function (method, model, options) {
       options = options ? _.clone(options) : {};
-      var id = options.id || model.id,
+      var that = this,
+        id = options.id || model.id,
         recordType = this.recordType,
-        result;
+        result,
+        error = options.error;
+
+      options.error = function (resp) {
+        var K = XT.Model;
+        that.setStatus(K.ERROR);
+        if (error) { error(model, resp, options); }
+      };
 
       // Read
       if (method === 'read' && recordType && id && options.success) {
@@ -634,11 +678,16 @@
   
       Returns `undefined` if the validation succeeded, or value, usually
       an error if it fails.
+      
+      If the `force = true` option is passed in, validatation will be ignored.
+      this is useful when higher level function calls passing through `set`
+      need to skip validation to work properly.
   
       @param {Object} Attributes
       @param {Object} Options
     */
     validate: function (attributes, options) {
+      if (options.force) { return; }
       attributes = attributes || {};
       options = options || {};
       var that = this, i,
@@ -647,17 +696,29 @@
         keys = _.keys(attributes),
         original = _.pick(this.originalAttributes(), keys),
         status = this.getStatus(),
-        attr, value, msg, err, category, column,
+        attr, value, msg, category, column,
         type = this.recordType.replace(/\w+\./i, ''),
+        columns = XT.session.getSchema().get(type).columns,
 
-        // Helper function to test if values are really relations
+        // Helper functions
         isRelation = function (attr, value, type) {
           var rel;
           rel = _.find(that.relations, function (relation) {
             return relation.key === attr && relation.type === type;
           });
           return rel ? _.isObject(value) : false;
+        },
+
+        getColumn = function (attr) {
+          return _.find(columns, function (column) {
+            return column.name === attr;
+          });
         };
+
+      // Don't allow editing of records that are in error state.
+      if (status === K.ERROR) {
+        return 'Record is in an error state: ' + this.lastError;
+      }
 
       // Check data type integrity
       for (attr in attributes) {
@@ -666,47 +727,46 @@
             !_.isUndefined(attributes[attr])) {
           msg = 'The value of "' + attr + '" must be a{type}.';
           value = attributes[attr];
-          column = XT.Model.getColumn(type, attr);
+          column = getColumn(attr);
           category = column ? column.category : false;
           switch (category) {
           case S.DB_BYTEA:
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value)) {
-              err = msg.replace('{type}', ' string');
+              return msg.replace('{type}', ' string');
             }
             break;
           case S.DB_NUMBER:
             if (!_.isNumber(value) &&
                 !isRelation(attr, value, Backbone.HasOne)) {
-              err = msg.replace('{type}', ' number');
+              return msg.replace('{type}', ' number');
             }
             break;
           case S.DB_DATE:
             if (!_.isDate(value)) {
-              err = msg.replace('{type}', ' date');
+              return msg.replace('{type}', ' date');
             }
             break;
           case S.DB_BOOLEAN:
             if (!_.isBoolean(value)) {
-              err = msg.replace('{type}', ' boolean');
+              return msg.replace('{type}', ' boolean');
             }
             break;
           case S.DB_ARRAY:
             if (!_.isArray(value) &&
                 !isRelation(attr, value, Backbone.HasMany)) {
-              err = msg.replace('{type}', 'n array');
+              return msg.replace('{type}', 'n array');
             }
             break;
           case S.DB_COMPOUND:
             if (!_.isObject(value)) {
-              err = msg.replace('{type}', 'n object');
+              return msg.replace('{type}', 'n object');
             }
             break;
           default:
-            err = '"' + attr + '" does not exist in the schema.';
+            return '"' + attr + '" does not exist in the schema.';
           }
-          if (err) { break; }
         }
       }
 
@@ -714,7 +774,7 @@
       if (status === K.BUSY_COMMITTING) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
           if (attributes[this.requiredAttributes[i]] === undefined) {
-            err = "'" + this.requiredAttributes[i] + "' is required.";
+            return "'" + this.requiredAttributes[i] + "' is required.";
           }
         }
       }
@@ -725,17 +785,14 @@
         for (attr in attributes) {
           if (attributes[attr] !== this.original(attr) &&
               this.isReadOnly(attr)) {
-            err = 'Can not update read only attribute(s).';
+            return 'Can not update read only attribute(s).';
           }
         }
 
-        if (!this.canUpdate()) {
-          err = 'Insufficient privileges to update attribute(s)';
+        if (this.canUpdate()) {
+          return 'Insufficient privileges to update attribute(s)';
         }
       }
-
-      if (err) { console.log(err); }
-      return err;
     }
 
   });
@@ -870,29 +927,13 @@
       },
 
       /**
-        Return a column definition from the session schema for a given
-        type and attribute.
+        Return an array of valid attribute names on the model.
   
-        @param {String} Type
-        @param {String} Column or Attribute name
-        @returns {Object}
+        @returns {Array}
       */
-      getColumn: function (type, column) {
-        var result = _.find(XT.Model.getColumns(type), function (col) {
-          return col.name === column;
-        });
-        return result;
-      },
-
-      /**
-        Return the column definition array from the session schema for a given
-        type.
-  
-        @param {String} Type
-        @returns {Object}
-      */
-      getColumns: function (type) {
-        return XT.session.getSchema().get(type).columns;
+      getAttributeNames: function () {
+        var type = this.recordType.replace(/\w+\./i, '');
+        return _.pluck(XT.session.getSchema().get(type).columns, 'name');
       },
 
       // ..........................................................
