@@ -356,12 +356,14 @@
         if (this.autoFetchId) { this.fetchId({cascade: true}); }
       }
 
-      // Id Attribute should be required and read only
+      // Set attributes that should be required and read only
       if (this.idAttribute) { this.setReadOnly(this.idAttribute); }
       if (this.idAttribute &&
           !_.contains(this.requiredAttributes, this.idAttribute)) {
         this.requiredAttributes.push(this.idAttribute);
       }
+      this.setReadOnly('dataState');
+      this.setReadOnly('type');
 
       // Bind on change event
       this.on('change', this.didChange);
@@ -602,6 +604,7 @@
       }
 
       // Update data state.
+      this.setReadOnly('dataState', false);
       if (status === K.READY_NEW) {
         this.set('dataState', 'create');
       } else if (status === K.READY_CLEAN) {
@@ -611,6 +614,7 @@
       } else if (status === K.DESTROYED_DIRTY) {
         this.set('dataState', 'delete');
       }
+      this.setReadOnly('dataState', true);
 
       this.release();
 
