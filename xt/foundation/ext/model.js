@@ -43,6 +43,11 @@
     idAttribute: "guid",
 
     /**
+      The last error message reported.
+    */
+    lastError: null,
+
+    /**
       A hash of attributes originally fetched from the server.
     */
     prime: null,
@@ -142,6 +147,23 @@
       if (status === K.READY_CLEAN) {
         this.setStatus(K.READY_DIRTY);
       }
+    },
+
+    /**
+      Handle a `sync` response that was an error.
+    */
+    didError: function (model, resp) {
+      model = model || {};
+      this.lastError = resp;
+      console.log(resp);
+    },
+
+    original: function (attr) {
+      return this.prime[attr] || this.get(attr);
+    },
+
+    originalAttributes: function () {
+      return _.defaults(_.clone(this.prime), _.clone(this.attributes));
     },
 
     /**
@@ -365,8 +387,9 @@
       this.setReadOnly('dataState');
       this.setReadOnly('type');
 
-      // Bind on change event
+      // Bind events
       this.on('change', this.didChange);
+      this.on('error', this.didError);
     },
 
     /**
@@ -414,14 +437,6 @@
         result = _.contains(this.readOnlyAttributes, value);
       }
       return result;
-    },
-
-    original: function (attr) {
-      return this.prime[attr] || this.get(attr);
-    },
-
-    originalAttributes: function () {
-      return _.defaults(_.clone(this.prime), _.clone(this.attributes));
     },
 
     /**
@@ -626,9 +641,17 @@
     */
     sync: function (method, model, options) {
       options = options ? _.clone(options) : {};
-      var id = options.id || model.id,
+      var that = this,
+        id = options.id || model.id,
         recordType = this.recordType,
-        result;
+        result,
+        error = options.error;
+
+      options.error = function (resp) {
+        var K = XT.Model;
+        that.setStatus(K.ERROR);
+        if (error) { error(model, resp, options); }
+      };
 
       // Read
       if (method === 'read' && recordType && id && options.success) {
@@ -664,16 +687,16 @@
       @param {Object} Options
     */
     validate: function (attributes, options) {
+      if (options.force) { return; }
       attributes = attributes || {};
       options = options || {};
-      if (options.force) { return; }
       var that = this, i,
         K = XT.Model,
         S = XT.Session,
         keys = _.keys(attributes),
         original = _.pick(this.originalAttributes(), keys),
         status = this.getStatus(),
-        attr, value, msg, err, category, column,
+        attr, value, msg, category, column,
         type = this.recordType.replace(/\w+\./i, ''),
         columns = XT.session.getSchema().get(type).columns,
 
@@ -692,6 +715,11 @@
           });
         };
 
+      // Don't allow editing of records that are in error state.
+      if (status === K.ERROR) {
+        return 'Record is in an error state: ' + this.lastError;
+      }
+
       // Check data type integrity
       for (attr in attributes) {
         if (attributes.hasOwnProperty(attr) &&
@@ -706,40 +734,39 @@
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value)) {
-              err = msg.replace('{type}', ' string');
+              return msg.replace('{type}', ' string');
             }
             break;
           case S.DB_NUMBER:
             if (!_.isNumber(value) &&
                 !isRelation(attr, value, Backbone.HasOne)) {
-              err = msg.replace('{type}', ' number');
+              return msg.replace('{type}', ' number');
             }
             break;
           case S.DB_DATE:
             if (!_.isDate(value)) {
-              err = msg.replace('{type}', ' date');
+              return msg.replace('{type}', ' date');
             }
             break;
           case S.DB_BOOLEAN:
             if (!_.isBoolean(value)) {
-              err = msg.replace('{type}', ' boolean');
+              return msg.replace('{type}', ' boolean');
             }
             break;
           case S.DB_ARRAY:
             if (!_.isArray(value) &&
                 !isRelation(attr, value, Backbone.HasMany)) {
-              err = msg.replace('{type}', 'n array');
+              return msg.replace('{type}', 'n array');
             }
             break;
           case S.DB_COMPOUND:
             if (!_.isObject(value)) {
-              err = msg.replace('{type}', 'n object');
+              return msg.replace('{type}', 'n object');
             }
             break;
           default:
-            err = '"' + attr + '" does not exist in the schema.';
+            return '"' + attr + '" does not exist in the schema.';
           }
-          if (err) { break; }
         }
       }
 
@@ -747,7 +774,7 @@
       if (status === K.BUSY_COMMITTING) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
           if (attributes[this.requiredAttributes[i]] === undefined) {
-            err = "'" + this.requiredAttributes[i] + "' is required.";
+            return "'" + this.requiredAttributes[i] + "' is required.";
           }
         }
       }
@@ -758,17 +785,14 @@
         for (attr in attributes) {
           if (attributes[attr] !== this.original(attr) &&
               this.isReadOnly(attr)) {
-            err = 'Can not update read only attribute(s).';
+            return 'Can not update read only attribute(s).';
           }
         }
 
-        if (!this.canUpdate()) {
-          err = 'Insufficient privileges to update attribute(s)';
+        if (this.canUpdate()) {
+          return 'Insufficient privileges to update attribute(s)';
         }
       }
-
-      if (err) { console.log(err); }
-      return err;
     }
 
   });
