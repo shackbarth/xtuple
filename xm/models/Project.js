@@ -306,14 +306,14 @@ _.extend(XM.Project,
     var obj;
     var prop;
     var i;
-    var dueDate = new Date(project.get('dueDate'));
+    var dueDate = new Date(project.get('dueDate').valueOf());
     var idAttribute = XM.Project.prototype.idAttribute;
     var keys;
     offset = offset || 0;
     dueDate.setDate(dueDate.getDate() + offset);     
          
     // Deep copy the project and fix up
-    obj = JSON.parse(JSON.stringify(project.toJSON()));
+    obj = project.parse(JSON.parse(JSON.stringify(project.toJSON())));
     _.extend(obj, {
       number: number,
       dueDate: dueDate
@@ -331,7 +331,7 @@ _.extend(XM.Project,
         delete task.status;
         delete task.comments;
         delete task.alarms;
-        dueDate = new Date(task.dueDate);
+        dueDate = new Date(task.dueDate.valueOf());
         dueDate.setDate(dueDate.getDate() + offset);
       });
     }
