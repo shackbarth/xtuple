@@ -1,18 +1,4 @@
 
-//new XT.StartupTaskManager();
-//
-//var t1 = new XT.StartupTask({taskName:"task1yo",task:function(){var self=this;setTimeout(function(){self.doComplete();},3000);}});
-//var t2 = new XT.StartupTask({taskName:"task2yo",waitingList:["task3yo"],task:function(){var self=this;setTimeout(function(){self.doComplete();},2000);}});
-//var t4 = new XT.StartupTask({taskName:"task3yo",waitingList:["task4yo"],task:function(){var self=this;setTimeout(function(){self.doComplete();},4000);}});
-//var t5 = new XT.StartupTask({taskName:"task4yo",waitingList:["task1yo"],task:function(){var self=this;setTimeout(function(){self.doComplete();},1000);}});
-//
-//
-//setTimeout(function() {
-//  //debugger
-//  XT.getStartupManager().start();
-//},1000);
-
-
 XT.StartupTask.create({
   taskName: "loadSessionObjects",
   task: function() {
@@ -21,6 +7,31 @@ XT.StartupTask.create({
     };
     XT.session.loadSessionObjects(XT.session.ALL, options);
   }
+});
+
+XT.StartupTask.create({
+  taskName: "loadPriorities",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.priorities = new XM.PriorityCollection();
+    XM.priorities.fetch(options);
+  },
+  waitingList: ["loadSessionObjects"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadCurrentUser",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete"),
+      id: XT.session.details.username
+    };
+    XM.currentUser = new XM.UserAccountInfo();
+    XM.currentUser.fetch(options);
+  },
+  waitingList: ["loadSessionObjects"]
 });
 
 XT.StartupTask.create({

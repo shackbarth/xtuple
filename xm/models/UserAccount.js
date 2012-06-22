@@ -1,16 +1,25 @@
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
+  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jslint bitwise: true, nomen: true, indent:2 */
+/*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.UserAccountInfo = XT.Model.extend(
-  /** @scope XM.UserAccountInfo.prototype */ {
+(function () {
+  "use strict";
 
-  idAttribute: 'username',
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.UserAccountInfo = XT.Model.extend({
+    /** @scope XM.UserAccountInfo.prototype */
 
-  recordType: 'XM.UserAccountInfo',
-  
-  readOnly: true
-  
-});
+    idAttribute: 'username',
+
+    recordType: 'XM.UserAccountInfo',
+
+    readOnly: true
+
+  });
+
+}());

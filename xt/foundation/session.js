@@ -12,12 +12,14 @@ enyo.kind(
     details: {},
     availableSessions: [],
     privileges: {},
-    settings: {}
+    settings: {},
+    schema: {},
   },
   
   SETTINGS: 0x01,
   PRIVILEGES: 0x02,
-  ALL: 0x01 | 0x02,
+  SCHEMA: 0x04,
+  ALL: 0x01 | 0x02 | 0x04,
   
   create: function() {
     this.inherited(arguments);
@@ -34,15 +36,21 @@ enyo.kind(
   */
   loadSessionObjects: function(types, options) {
     var that = this;
+    var privilegesOptions;
+    var privileges;
+    var settingsOptions;
+    var settings;
+    var schemaOptions;
+    var schema;
 
     if (types === undefined) types = this.ALL;
 
     if (types & this.PRIVILEGES) {
-      var privilegesOptions = options ? _.clone(options) : {};
+      privilegesOptions = options ? _.clone(options) : {};
       
       // callback
       privilegesOptions.success = function(resp, status, xhr) {
-        var privileges = new Backbone.Model();
+        privileges = new Backbone.Model();
         privileges.get = function(attr) {
           // Sometimes the answer is already known...
           if (_.isBoolean(attr)) return attr;
@@ -63,11 +71,11 @@ enyo.kind(
     }
 
     if (types & this.SETTINGS) {
-      var settingsOptions = options ? _.clone(options) : {};
+      settingsOptions = options ? _.clone(options) : {};
       
       // callback
       settingsOptions.success = function(resp, status, xhr) {
-        var settings = new Backbone.Model();
+        settings = new Backbone.Model();
 
         // Loop through the response and set a setting for each found
         resp.forEach(function(item) {
@@ -79,6 +87,18 @@ enyo.kind(
       };
 
       XT.dataSource.dispatch('XT.Session', 'settings', null, settingsOptions);
+    }
+    
+    if (types & this.SCHEMA) {
+      schemaOptions = options ? _.clone(options) : {};
+      
+      // callback
+      schemaOptions.success = function(resp, status, xhr) {
+        schema = new Backbone.Model(resp);
+        that.setSchema(schema);
+      };
+
+      XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
     }
 
     return true;
@@ -134,4 +154,21 @@ enyo.kind(
     }
   }
     
+});
+
+// ..........................................................
+// CLASS CONSTANTS
+//
+
+enyo.mixin( XT.Session, {
+
+  DB_BOOLEAN: 'B',
+  DB_STRING: 'S',
+  DB_COMPOUND: 'C',
+  DB_DATE: 'D',
+  DB_NUMBER: 'N',
+  DB_ARRAY: 'A',
+  DB_BYTEA: 'U',
+  DB_UNKNOWN: 'X'
+  
 });

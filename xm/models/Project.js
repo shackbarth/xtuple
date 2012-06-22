@@ -1,487 +1,662 @@
-XM.ProjectStatusMixin = {
-  
-  projectStatusString: '',
-  
-  // ..........................................................
-  // METHODS
-  //
-  
-  initialize: function() {
-    XT.Model.prototype.initialize.call(this);
-    
-    // add event bindings
-    this.on('add:tasks remove:tasks', this.tasksChanged);
-    this.on('change:status', this.setProjectStatusString); // directly changed
-    this.on('statusChange', this.setProjectStatusString); // sync change
-    this.setProjectStatusString();
-  },
-  
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
+  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jslint bitwise: true, nomen: true, indent:2 */
+/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+
+(function () {
+  "use strict";
+
   /**
-  Return the status attribute as a localized string.
+    @class
   
-  @returns {String}
+    A base class shared by project models that share common project status
+    functionality.
+  
+    @extends XT.Model
   */
-  setProjectStatusString: function() {
-    var status = this.get('status');
-    var str = 'Unknown'.loc();
-    if (status === 'P') str = 'Concept'.loc();
-    else if (status === 'O') str = 'In-Process'.loc();
-    else if (status === 'C') str = 'Closed'.loc();
-    this.projectStatusString = str;
-  }
-  
-};
+  XM.ProjectStatus = XT.Model.extend({
+    /** @scope XM.ProjectStatus.prototype */
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.Project = XT.Model.extend(
-  /** @scope XM.Project.prototype */ {
+    projectStatusString: '',
 
-  recordType: 'XM.Project',
-  
-  privileges: {
-    "all": {
-      "create": "MaintainAllProjects",
-      "read": "ViewAllProjects",
-      "update": "MaintainAllProjects",
-      "delete": "MaintainAllProjects"
+    // ..........................................................
+    // METHODS
+    //
+
+    initMixin: function () {
+      this.on('change:status', this.projectStatusChanged); // directly changed
+      this.on('statusChange', this.projectStatusChanged); // sync change
+      this.projectStatusChanged();
     },
-    "personal": {
-      "create": "MaintainPersonalProjects",
-      "read": "ViewPersonalProjects",
-      "update": "MaintainPersonalProjects",
-      "delete": "MaintainPersonalProjects",
-      "properties": [
-        "owner",
-        "assignedTo"
-      ]
-    }
-  },
-  
-  defaults: {
-    "status":  "P"
-  },
-  
-  requiredAttributes: [
-    "number",
-    "status",
-    "name",
-    "dueDate"
-  ],
 
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'account',
-    relatedModel: 'XM.AccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'contact',
-    relatedModel: 'XM.ContactInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'owner',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'assignedTo',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasMany,
-    key: 'tasks',
-    isParent: true,
-    relatedModel: 'XM.ProjectTask',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'comments',
-    isParent: true,
-    relatedModel: 'XM.ProjectComment',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'accounts',
-    isParent: true,
-    relatedModel: 'XM.ProjectAccount',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'contacts',
-    isParent: true,
-    relatedModel: 'XM.ProjectContact',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'items',
-    isParent: true,
-    relatedModel: 'XM.ProjectItem',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'files',
-    isParent: true,
-    relatedModel: 'XM.ProjectFile',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'images',
-    isParent: true,
-    relatedModel: 'XM.ProjectImage',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'urls',
-    isParent: true,
-    relatedModel: 'XM.ProjectUrl',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'projects',
-    isParent: true,
-    relatedModel: 'XM.ProjectProject',
-    reverseRelation: {
-      key: 'project'
-    }
-  },{
-    type: Backbone.HasMany,
-    key: 'recurrences',
-    isParent: true,
-    relatedModel: 'XM.ProjectRecurrence',
-    reverseRelation: {
-      key: 'project'
-    }
-  }],
+    /**
+    Update the project status string to a localized value.
   
-  budgetedHoursTotal: 0.0,
-  actualHoursTotal: 0.0,
-  budgetedExpensesTotal: 0.0,
-  actualExpensesTotal: 0.0,
-  
-  // ..........................................................
-  // METHODS
-  //
-  
+    @returns {String}
+    */
+    projectStatusChanged: function () {
+      var K = XM.Project,
+        status = this.get('status'),
+        str = 'Unknown'.loc();
+      if (status === K.CONCEPT) {
+        str = '_concept'.loc();
+      } else if (status === K.IN_PROCESS) {
+        str = '_inProcess'.loc();
+      } else if (status === K.COMPLETED) {
+        str = '_completed'.loc();
+      }
+      this.projectStatusString = str;
+    }
+
+  });
+
   /**
-  Recaclulate task hours and expense totals.
+    @class
+  
+    A base class shared by `XM.Project`,`XM.ProjectTask` and potentially other
+    project related classes.
+  
+    @extends XM.ProjectStatus
   */
-  tasksChanged: function() {
-    var budgetedHoursTotal = 0.0;
-    var actualHoursTotal = 0.0;
-    var budgetedExpensesTotal = 0.0;
-    var actualExpensesTotal = 0.0;
-    
-    // total up task data
-    _.each(this.get('tasks').models, function(task) {
-      budgetedHoursTotal += task.get('budgetedHours');
-      actualHoursTotal += task.get('actualHours');
-      budgetedExpensesTotal += task.get('budgetedExpenses');
-      actualExpensesTotal += task.get('actualExpenses');
-    });
-    
-    // update the project
-    this.budgetedHoursTotal = budgetedHoursTotal;
-    this.actualHoursTotal = actualHoursTotal;
-    this.budgetedExpensesTotal = budgetedExpensesTotal;
-    this.actualExpensesTotal = actualExpensesTotal;
-  }
-  
-});
+  XM.ProjectBase = XM.ProjectStatus.extend({
+    /** @scope XM.ProjectBase.prototype */
 
-XM.Project = XM.Project.extend(XM.ProjectStatusMixin);
+    defaults: function () {
+      var K = XM.Project,
+        result = { status: K.CONCEPT };
+      result.owner = result.assignedTo = XM.currentUser;
+      return result;
+    },
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectTask = XT.Model.extend(
-  /** @scope XM.ProjectTask.prototype */ {
+    privileges: {
+      "all": {
+        "create": "MaintainAllProjects",
+        "read": "ViewAllProjects",
+        "update": "MaintainAllProjects",
+        "delete": "MaintainAllProjects"
+      },
+      "personal": {
+        "create": "MaintainPersonalProjects",
+        "read": "ViewPersonalProjects",
+        "update": "MaintainPersonalProjects",
+        "delete": "MaintainPersonalProjects",
+        "properties": [
+          "owner",
+          "assignedTo"
+        ]
+      }
+    },
 
-  recordType: 'XM.ProjectTask',
-  
-  defaults: {
-    "projectTaskStatus":  "P"
-  },
-  
-  requiredAttributes: [
-    "number",
-    "projectTaskStatus",
-    "name",
-    "dueDate"
-  ],
-  
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'owner',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'assignedTo',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasMany,
-    key: 'comments',
-    isParent: true,
-    relatedModel: 'XM.ProjectTaskComment',
-    reverseRelation: {
-      key: 'projectTask'
+    requiredAttributes: [
+      "number",
+      "status",
+      "name",
+      "dueDate"
+    ],
+
+    // ..........................................................
+    // METHODS
+    //
+
+    initialize: function () {
+      XM.ProjectStatus.prototype.initialize.apply(this, arguments);
+      this.on('change:number', this.numberChanged);
+      this.on('change:status', this.projectStatusChanged);
+      this.on('statusChange', this.statusChanged);
+    },
+
+    statusChanged: function () {
+      var K = XT.Model;
+      if (this.getStatus() === K.READY_CLEAN) {
+        this.setReadOnly('number');
+      }
+    },
+
+    numberChanged: function () {
+      var number = this.get('number'),
+        upper = number.toUpperCase();
+      if (number !== upper) {
+        this.set('number', upper);
+      }
+    },
+
+    projectStatusChanged: function () {
+      XM.ProjectStatus.prototype.projectStatusChanged.call(this);
+      var status = this.get('status'),
+        date,
+        K = XM.Project;
+      if (this.isDirty()) {
+        date = new Date().toISOString();
+        if (status === K.IN_PROCESS && !this.get('assignDate')) {
+          this.set('assignDate', date);
+        } else if (status === K.COMPLETED && !this.get('completeDate')) {
+          this.set('completeDate', date);
+        }
+      }
     }
-  }],
-  
-  // ..........................................................
-  // METHODS
-  //
-  
-  initialize: function() {
-   XT.Model.prototype.initialize.call(this, arguments);
-   var evt = 'change:budgetedHours change:actualHours ' +
-              'change:budgetedExpenses change:actualExpense';
-    this.on(evt, this.valuesChanged);
-  },
-  
+
+  });
+
   /**
-  Update project totals when values change.
+    @class
+  
+    @extends XM.ProjectBase
+    @extends XM.ProjectStatusMixin
   */
-  valuesChanged: function() {
-    project.tasksChanged();
-  }
+  XM.Project = XM.ProjectBase.extend({
+    /** @scope XM.Project.prototype */
 
-});
+    recordType: 'XM.Project',
 
-XM.ProjectTask = XM.ProjectTask.extend(XM.ProjectStatusMixin);
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'account',
+      relatedModel: 'XM.AccountInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'contact',
+      relatedModel: 'XM.ContactInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'owner',
+      relatedModel: 'XM.UserAccountInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'assignedTo',
+      relatedModel: 'XM.UserAccountInfo'
+    }, {
+      type: Backbone.HasMany,
+      key: 'tasks',
+      relatedModel: 'XM.ProjectTask',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'comments',
+      relatedModel: 'XM.ProjectComment',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'accounts',
+      relatedModel: 'XM.ProjectAccount',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'contacts',
+      relatedModel: 'XM.ProjectContact',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'items',
+      relatedModel: 'XM.ProjectItem',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'files',
+      relatedModel: 'XM.ProjectFile',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'images',
+      relatedModel: 'XM.ProjectImage',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'urls',
+      relatedModel: 'XM.ProjectUrl',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'projects',
+      relatedModel: 'XM.ProjectProject',
+      reverseRelation: {
+        key: 'project'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'recurrences',
+      relatedModel: 'XM.ProjectRecurrence',
+      reverseRelation: {
+        key: 'project'
+      }
+    }],
 
-/**
-  @class
+    budgetedHoursTotal: 0.0,
+    actualHoursTotal: 0.0,
+    balanceHoursTotal: 0.0,
+    budgetedExpensesTotal: 0.0,
+    actualExpensesTotal: 0.0,
+    balanceExpensesTotal: 0.0,
+
+    // ..........................................................
+    // METHODS
+    //
+
+    /**
+    Return a copy of this project with a given number and date offset.
   
-  @extends XT.Model
-*/
-XM.ProjectComment = XT.Model.extend(
-  /** @scope XM.ProjectComment.prototype */ {
+    @param {String} Project number
+    @param {Offset} Days to offset due date(s).
+    @returns {XM.Project}
+    */
+    copy: function (number, offset) {
+      return XM.Project.copy(this, number, offset);
+    },
 
-  recordType: 'XM.ProjectComment',
+    initialize: function () {
+      XM.ProjectBase.prototype.initialize.apply(this, arguments);
+      this.on('add:tasks remove:tasks', this.tasksChanged);
+    },
+
+    /**
+    Recaclulate task hours and expense totals.
+    */
+    tasksChanged: function () {
+      var that = this;
+      this.budgetedHoursTotal = 0.0;
+      this.actualHoursTotal = 0.0;
+      this.budgetedExpensesTotal = 0.0;
+      this.actualExpensesTotal = 0.0;
+
+      // total up task data
+      // TODO: Use XT.Math object to handle rounding correctly
+      _.each(this.get('tasks').models, function (task) {
+        that.budgetedHoursTotal += task.get('budgetedHours');
+        that.actualHoursTotal += task.get('actualHours');
+        that.budgetedExpensesTotal += task.get('budgetedExpenses');
+        that.actualExpensesTotal += task.get('actualExpenses');
+      });
+
+      this.actualHoursBalance = this.budgetedHoursTotal -
+                                this.actualHoursTotal;
+      this.balanceExpensesTotal = this.budgetedExpensesTotal -
+                                  this.actualExpensesTotal;
+    }
+
+  });
+
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.Project, {
+    /** @scope XM.Project */
+
+    /**
+    Return a copy of this project with a given number and date offset.
+
+    @param {XM.Project} Project
+    @param {String} Project number
+    @param {Number} Due date offset
+    @return {XM.Project} copy of the project
+    */
+    copy: function (project, number, offset) {
+      if ((project instanceof XM.Project) === false) {
+        console.log("Passed object must be an instance of 'XM.Project'");
+        return false;
+      }
+      if (number === undefined) {
+        console.log("Number is required");
+        return false;
+      }
+      var obj,
+        prop,
+        i,
+        dueDate = new Date(project.get('dueDate').valueOf()),
+        idAttribute = XM.Project.prototype.idAttribute;
+      offset = offset || 0;
+      dueDate.setDate(dueDate.getDate() + offset);
+
+      // Deep copy the project and fix up
+      obj = project.parse(JSON.parse(JSON.stringify(project.toJSON())));
+      _.extend(obj, {
+        number: number,
+        dueDate: dueDate
+      });
+      delete obj[idAttribute];
+      delete obj.status;
+      delete obj.comments;
+      delete obj.recurrences;
+
+      // Fix up tasks
+      idAttribute = XM.ProjectTask.prototype.idAttribute;
+      if (obj.tasks) {
+        _.each(obj.tasks, function (task) {
+          delete task[idAttribute];
+          delete task.status;
+          delete task.comments;
+          delete task.alarms;
+          dueDate = new Date(task.dueDate.valueOf());
+          dueDate.setDate(dueDate.getDate() + offset);
+        });
+      }
+
+      // Fix up remaining arrays
+      for (prop in obj) {
+        if (obj.hasOwnProperty(prop)  && prop !== 'tasks' &&
+            _.isArray(obj[prop])) {
+          idAttribute = project.get(prop).model.prototype.idAttribute;
+          for (i = 0; i < obj[prop].length; i += 1) {
+            delete obj[prop][i][idAttribute];
+          }
+        }
+      }
+
+      return new XM.Project(obj, {isNew: true});
+    },
+
+    // ..........................................................
+    // CONSTANTS
+    //
+
+    /**
+      Concept status for project.
+
+      @static
+      @constant
+      @type String
+      @default P
+    */
+    CONCEPT: 'P',
+
+    /**
+      In-Process status for project.
+
+      @static
+      @constant
+      @type String
+      @default O
+    */
+    IN_PROCESS: 'O',
+
+    /**
+      Completed status for project.
+      @static
+      @constant
+      @type String
+      @default C
+    */
+    COMPLETED: 'C'
+
+  });
+
+  /**
+    @class
   
-});
+    @extends XM.ProjectBase
+    @extends XM.ProjectStatusMixin
+  */
+  XM.ProjectTask = XM.ProjectBase.extend({
+    /** @scope XM.ProjectTask.prototype */
 
-/**
-  @class
+    recordType: 'XM.ProjectTask',
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'owner',
+      relatedModel: 'XM.UserAccountInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'assignedTo',
+      relatedModel: 'XM.UserAccountInfo'
+    }, {
+      type: Backbone.HasMany,
+      key: 'comments',
+      relatedModel: 'XM.ProjectTaskComment',
+      reverseRelation: {
+        key: 'projectTask'
+      }
+    }],
+
+    // ..........................................................
+    // METHODS
+    //
+
+    initialize: function () {
+      XM.ProjectBase.prototype.initialize.call(this);
+      var evt = 'change:budgetedHours change:actualHours ' +
+                'change:budgetedExpenses change:actualExpenses';
+      this.on(evt, this.valuesChanged);
+    },
+
+    /**
+    Update project totals when values change.
+    */
+    valuesChanged: function () {
+      this.get('project').tasksChanged();
+    }
+
+  });
+
+  /**
+    @class
   
-  @extends XT.Model
-*/
-XM.ProjectAccount = XT.Model.extend(
-  /** @scope XM.ProjectAccount.prototype */ {
+    @extends XT.Model
+  */
+  XM.ProjectComment = XT.Model.extend({
+    /** @scope XM.ProjectComment.prototype */
 
-  recordType: 'XM.ProjectAccount',
+    recordType: 'XM.ProjectComment'
 
-  isDocumentAssignment: true,
+  });
 
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'account',
-    relatedModel: 'XM.AccountInfo'
-  }]
-
-});
-
-/**
-  @class
+  /**
+    @class
   
-  @extends XT.Model
-*/
-XM.ProjectContact = XT.Model.extend(
-  /** @scope XM.ProjectContact.prototype */ {
+    @extends XT.Model
+  */
+  XM.ProjectAccount = XT.Model.extend({
+    /** @scope XM.ProjectAccount.prototype */
 
-  recordType: 'XM.ProjectContact',
+    recordType: 'XM.ProjectAccount',
 
-  isDocumentAssignment: true,
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'account',
+      relatedModel: 'XM.AccountInfo'
+    }]
+
+  });
+
+  /**
+    @class
   
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'contact',
-    relatedModel: 'XM.ContactInfo'
-  }]
-  
-});
+    @extends XT.Model
+  */
+  XM.ProjectContact = XT.Model.extend({
+    /** @scope XM.ProjectContact.prototype */
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectItem = XT.Model.extend(
-  /** @scope XM.ProjectItem.prototype */ {
+    recordType: 'XM.ProjectContact',
 
-  recordType: 'XM.ProjectItem',
+    isDocumentAssignment: true,
 
-  isDocumentAssignment: true,
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'contact',
+      relatedModel: 'XM.ContactInfo'
+    }]
 
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'item',
-    relatedModel: 'XM.ItemInfo'
-  }]
-  
-});
+  });
 
-/**
-  @class
+  /**
+    @class
   
-  @extends XT.Model
-*/
-XM.ProjectFile = XT.Model.extend(
-  /** @scope XM.ProjectFile.prototype */ {
+    @extends XT.Model
+  */
+  XM.ProjectItem = XT.Model.extend({
+    /** @scope XM.ProjectItem.prototype */
 
-  recordType: 'XM.ProjectFile',
+    recordType: 'XM.ProjectItem',
 
-  isDocumentAssignment: true,
-  
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'file',
-    relatedModel: 'XM.FileInfo'
-  }]
-  
-});
+    isDocumentAssignment: true,
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectImage = XT.Model.extend(
-  /** @scope XM.ProjectImage.prototype */ {
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'item',
+      relatedModel: 'XM.ItemInfo'
+    }]
 
-  recordType: 'XM.ProjectImage',
+  });
 
-  isDocumentAssignment: true,
+  /**
+    @class
   
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'image',
-    relatedModel: 'XM.ImageInfo'
-  }]
-  
-});
+    @extends XT.Model
+  */
+  XM.ProjectFile = XT.Model.extend({
+    /** @scope XM.ProjectFile.prototype */
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectUrl = XT.Model.extend(
-  /** @scope XM.ProjectUrl.prototype */ {
+    recordType: 'XM.ProjectFile',
 
-  recordType: 'XM.ProjectUrl',
+    isDocumentAssignment: true,
 
-  isDocumentAssignment: true,
-  
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'url',
-    relatedModel: 'XM.Url'
-  }]
-  
-});
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'file',
+      relatedModel: 'XM.FileInfo'
+    }]
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectProject = XT.Model.extend(
-  /** @scope XM.ProjectProject.prototype */ {
+  });
 
-  recordType: 'XM.ProjectProject',
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.ProjectImage = XT.Model.extend({
+    /** @scope XM.ProjectImage.prototype */
 
-  isDocumentAssignment: true,
-  
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'project',
-    relatedModel: 'XM.ProjectInfo'
-  }]
-  
-});
+    recordType: 'XM.ProjectImage',
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectRecurrence = XT.Model.extend(
-  /** @scope XM.ProjectRecurrence.prototype */ {
+    isDocumentAssignment: true,
 
-  recordType: 'XM.ProjectRecurrence'
-  
-});
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'image',
+      relatedModel: 'XM.ImageInfo'
+    }]
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectTaskComment = XT.Model.extend(
-  /** @scope XM.ProjectTaskComment.prototype */ {
+  });
 
-  recordType: 'XM.ProjectTaskComment',
+  /**
+    @class
   
-});
+    @extends XT.Model
+  */
+  XM.ProjectUrl = XT.Model.extend({
+    /** @scope XM.ProjectUrl.prototype */
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.ProjectInfo = XT.Model.extend(
-  /** @scope XM.ProjectInfo.prototype */ {
+    recordType: 'XM.ProjectUrl',
 
-  recordType: 'XM.ProjectInfo',
-  
-  readOnly: true,
-  
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'account',
-    relatedModel: 'XM.AccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'owner',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'assignedTo',
-    relatedModel: 'XM.UserAccountInfo'
-  }]
-  
-});
+    isDocumentAssignment: true,
 
-XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatusMixin);
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'url',
+      relatedModel: 'XM.Url'
+    }]
 
-/**
-  @class
-  
-  @extends XT.Collection
-*/
-XM.ProjectInfoCollection = XT.Collection.extend(
-  /** @scope XM.ProjectInfoCollection.prototype */ {
+  });
 
-  model: XM.ProjectInfo
+  /**
+    @class
   
-});
+    @extends XT.Model
+  */
+  XM.ProjectProject = XT.Model.extend({
+    /** @scope XM.ProjectProject.prototype */
+
+    recordType: 'XM.ProjectProject',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'project',
+      relatedModel: 'XM.ProjectInfo'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.ProjectRecurrence = XT.Model.extend({
+    /** @scope XM.ProjectRecurrence.prototype */
+
+    recordType: 'XM.ProjectRecurrence'
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.ProjectTaskComment = XT.Model.extend({
+    /** @scope XM.ProjectTaskComment.prototype */
+
+    recordType: 'XM.ProjectTaskComment'
+
+  });
+
+  /**
+    @class
+  
+    @extends XM.ProjectStatus
+  */
+  XM.ProjectInfo = XM.ProjectStatus.extend({
+    /** @scope XM.ProjectInfo.prototype */
+
+    recordType: 'XM.ProjectInfo',
+
+    readOnly: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'account',
+      relatedModel: 'XM.AccountInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'owner',
+      relatedModel: 'XM.UserAccountInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'assignedTo',
+      relatedModel: 'XM.UserAccountInfo'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Collection
+  */
+  XM.ProjectInfoCollection = XT.Collection.extend({
+    /** @scope XM.ProjectInfoCollection.prototype */
+
+    model: XM.ProjectInfo
+
+  });
+
+}());

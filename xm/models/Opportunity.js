@@ -1,125 +1,134 @@
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
+  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jslint bitwise: true, nomen: true, indent:2 */
+/*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.OpportunityType = XT.Model.extend(
-  /** @scope XM.OpportunityType.prototype */ {
+(function () {
+  "use strict";
 
-  recordType: 'XM.OpportunityType'
+  /**
+    @class
   
-});
+    @extends XT.Model
+  */
+  XM.OpportunityType = XT.Model.extend({
+    /** @scope XM.OpportunityType.prototype */
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.OpportunityStage = XT.Model.extend(
-  /** @scope XM.OpportunityStage.prototype */ {
+    recordType: 'XM.OpportunityType'
 
-  recordType: 'XM.OpportunityStage'
-  
-});
+  });
 
-/**
-  @class
+  /**
+    @class
   
-  @extends XT.Model
-*/
-XM.OpportunitySource = XT.Model.extend(
-  /** @scope XM.OpportunitySource.prototype */ {
+    @extends XT.Model
+  */
+  XM.OpportunityStage = XT.Model.extend({
+    /** @scope XM.OpportunityStage.prototype */
 
-  recordType: 'XM.OpportunitySource'
-  
-});
+    recordType: 'XM.OpportunityStage'
 
-/**
-  @class
-  
-  @extends XT.Model
-*/
-XM.OpportunityInfo = XT.Model.extend(
-  /** @scope XM.OpportunityInfo.prototype */ {
+  });
 
-  recordType: 'XM.OpportunityInfo',
+  /**
+    @class
   
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'account',
-    relatedModel: 'XM.AccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'contact',
-    relatedModel: 'XM.ContactInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'assignedTo',
-    relatedModel: 'XM.UserAccountInfo'
-  },{
-    type: Backbone.HasOne,
-    key: 'priority',
-    relatedModel: 'XM.Priority',
-    includeInJSON: 'guid'
-  },{
-    type: Backbone.HasOne,
-    key: 'opportunityStage',
-    relatedModel: 'XM.OpportunityStage',
-    includeInJSON: 'guid'
-  },{
-    type: Backbone.HasOne,
-    key: 'opportunityType',
-    relatedModel: 'XM.OpportunityType',
-    includeInJSON: 'guid'
-  }]
-  
-});
+    @extends XT.Model
+  */
+  XM.OpportunitySource = XT.Model.extend({
+    /** @scope XM.OpportunitySource.prototype */
 
-/**
-  @class
-  
-  @extends XT.Collection
-*/
-XM.OpportunityTypeCollection = XT.Collection.extend(
-  /** @scope XM.OpportunityTypeCollection.prototype */ {
+    recordType: 'XM.OpportunitySource'
 
-  model: XM.OpportunityType
-  
-});
+  });
 
-/**
-  @class
+  /**
+    @class
   
-  @extends XT.Collection
-*/
-XM.OpportunityStageCollection = XT.Collection.extend(
-  /** @scope XM.OpportunityStageCollection.prototype */ {
+    @extends XT.Model
+  */
+  XM.OpportunityInfo = XT.Model.extend({
+    /** @scope XM.OpportunityInfo.prototype */
 
-  model: XM.OpportunityStage
-  
-});
+    recordType: 'XM.OpportunityInfo',
 
-/**
-  @class
-  
-  @extends XT.Collection
-*/
-XM.OpportunitySourceCollection = XT.Collection.extend(
-  /** @scope XM.OpportunitySourceCollection.prototype */ {
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'account',
+      relatedModel: 'XM.AccountInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'contact',
+      relatedModel: 'XM.ContactInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'assignedTo',
+      relatedModel: 'XM.UserAccountInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'priority',
+      relatedModel: 'XM.Priority',
+      includeInJSON: 'guid'
+    }, {
+      type: Backbone.HasOne,
+      key: 'opportunityStage',
+      relatedModel: 'XM.OpportunityStage',
+      includeInJSON: 'guid'
+    }, {
+      type: Backbone.HasOne,
+      key: 'opportunityType',
+      relatedModel: 'XM.OpportunityType',
+      includeInJSON: 'guid'
+    }]
 
-  model: XM.OpportunitySource
-  
-});
+  });
 
-/**
-  @class
+  /**
+    @class
   
-  @extends XT.Collection
-*/
-XM.OpportunityInfoCollection = XT.Collection.extend(
-  /** @scope XM.OpportunityInfoCollection.prototype */ {
+    @extends XT.Collection
+  */
+  XM.OpportunityTypeCollection = XT.Collection.extend({
+    /** @scope XM.OpportunityTypeCollection.prototype */
 
-  model: XM.OpportunityInfo
+    model: XM.OpportunityType
+
+  });
+
+  /**
+    @class
   
-});
+    @extends XT.Collection
+  */
+  XM.OpportunityStageCollection = XT.Collection.extend({
+    /** @scope XM.OpportunityStageCollection.prototype */
+
+    model: XM.OpportunityStage
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Collection
+  */
+  XM.OpportunitySourceCollection = XT.Collection.extend({
+    /** @scope XM.OpportunitySourceCollection.prototype */
+
+    model: XM.OpportunitySource
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Collection
+  */
+  XM.OpportunityInfoCollection = XT.Collection.extend({
+    /** @scope XM.OpportunityInfoCollection.prototype */
+
+    model: XM.OpportunityInfo
+
+  });
+
+}());
