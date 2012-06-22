@@ -257,6 +257,18 @@
     },
 
     /**
+      Valid attribute names that can be used on this model based on the
+      data source definition, whether or not they already exist yet on the
+      current instance.
+
+      @returns {Array}
+    */
+    getAttributeNames: function () {
+      var klass = Backbone.Relational.store.getObjectByName(this.recordType);
+      return klass.getAttributeNames.call(this);
+    },
+
+    /**
       Return the parent model if one exists. If the `getRoot` parameter is
       passed, it will return the top level parent of the model hierarchy.
   
@@ -422,6 +434,12 @@
         parse,
         parseIter = function (iter) {
           iter = parse(iter);
+        },
+        getColumn = function (type, attr) {
+          var columns = XT.session.getSchema().get(type).columns;
+          return _.find(columns, function (column) {
+            return column.name === attr;
+          });
         };
       parse = function (obj) {
         var attr;
@@ -432,7 +450,7 @@
             } else if (_.isObject(obj[attr])) {
               obj[attr] = parse(obj[attr]);
             } else {
-              column = XT.Model.getColumn(obj.type, attr);
+              column = getColumn(obj.type, attr);
               if (column && column.category && column.category === K.DB_DATE) {
                 obj[attr] = new Date(obj[attr]);
               }
@@ -649,14 +667,21 @@
         status = this.getStatus(),
         attr, value, msg, err, category, column,
         type = this.recordType.replace(/\w+\./i, ''),
+        columns = XT.session.getSchema().get(type).columns,
 
-        // Helper function to test if values are really relations
+        // Helper functions
         isRelation = function (attr, value, type) {
           var rel;
           rel = _.find(that.relations, function (relation) {
             return relation.key === attr && relation.type === type;
           });
           return rel ? _.isObject(value) : false;
+        },
+
+        getColumn = function (attr) {
+          return _.find(columns, function (column) {
+            return column.name === attr;
+          });
         };
 
       // Check data type integrity
@@ -666,7 +691,7 @@
             !_.isUndefined(attributes[attr])) {
           msg = 'The value of "' + attr + '" must be a{type}.';
           value = attributes[attr];
-          column = XT.Model.getColumn(type, attr);
+          column = getColumn(attr);
           category = column ? column.category : false;
           switch (category) {
           case S.DB_BYTEA:
@@ -870,29 +895,13 @@
       },
 
       /**
-        Return a column definition from the session schema for a given
-        type and attribute.
+        Return an array of valid attribute names on the model.
   
-        @param {String} Type
-        @param {String} Column or Attribute name
-        @returns {Object}
+        @returns {Array}
       */
-      getColumn: function (type, column) {
-        var result = _.find(XT.Model.getColumns(type), function (col) {
-          return col.name === column;
-        });
-        return result;
-      },
-
-      /**
-        Return the column definition array from the session schema for a given
-        type.
-  
-        @param {String} Type
-        @returns {Object}
-      */
-      getColumns: function (type) {
-        return XT.session.getSchema().get(type).columns;
+      getAttributeNames: function () {
+        var type = this.recordType.replace(/\w+\./i, '');
+        return _.pluck(XT.session.getSchema().get(type).columns, 'name');
       },
 
       // ..........................................................
