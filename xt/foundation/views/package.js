@@ -1,0 +1,11 @@
+enyo.depends(
+  "screen_carousel.js",
+  "info_list.js",
+  "info_list_row.js",
+  "module_toolbar.js",
+  "module_screen.js",
+  "module_menu.js",
+  "module_menu_item.js",
+  "sub_module_content.js",
+  "input.js"
+);

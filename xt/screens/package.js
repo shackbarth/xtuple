@@ -1,5 +1,4 @@
 enyo.depends(
-  "shared",
   "postbooks",
   "login",
   "dashboard",

@@ -1,31 +1,18 @@
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.AvailableSessions",
-  
-  /** */
-  classes: "available-sessions-container",
-  
-  /** */
-  kind: "FittableRows",
-  
-  /** */
-  fit: true,
-  
-  /** */
+  kind: "Control",
+  classes: "xt-available-sessions",
   components: [
-    { name: "header", kind: "FittableColumns", classes: "session-selection-row header", components: [
-      { content: "Username", classes: "session-row-username header" },
-      { content: "Organization", classes: "session-row-organization header" },
-      { content: "Created", classes: "session-row-created header" },
-      { content: "Session ID", classes: "session-row-sid header" } ]},
-    { name: "list", kind: "List", fit: true, multiSelect: false, onSetupItem: "setupRow", components: [
-      { name: "item", kind: "XT.SessionSelectionRow" } ]}
+    { name: "wrapper", classes: "xt-available-sessions-wrapper", components: [
+      { name: "list", kind: "List", classes: "xt-available-sessions-list", multiSelect: false, onSetupItem: "setupRow", components: [
+        { name: "item", kind: "XT.SessionSelectionRow" } ] } ] }
   ],
   
-  /** */
+  //components: [
+  //  { name: "list", kind: "List", multiSelect: false, onSetupItem: "setupRow", components: [
+  //    { name: "item", kind: "XT.SessionSelectionRow" } ]}
+  //],
   rendered: function() {
     var sessions;
     
@@ -37,15 +24,12 @@ enyo.kind(
       this.$.list.reset();
     }
   },
-  
-  /** */
   setupRow: function(inSender, inEvent) {
     var row = this.$.item;
     var idx = inEvent.index;
     var data = XT.session.getAvailableSessions()[idx].sessionData;
     
     var ts = XT.toReadableTimestamp(data.created);
-        
     row.$.username.setContent(data.username);
     row.$.organization.setContent(data.organization);
     row.$.created.setContent(ts);
@@ -54,24 +38,15 @@ enyo.kind(
     
 });
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.SessionSelectionRow",
-  
-  /** */
-  kind: "FittableColumns",
-  
-  /** */
-  classes: "session-selection-row table-row",
-  
-  /** */
+  kind: "Control",
+  classes: "xt-session-selection-row",
   components: [
-    { name: "username", classes: "session-row-username" },
-    { name: "organization", classes: "session-row-organization" },
-    { name: "created", classes: "session-row-created" },
-    { name: "sid", classes: "session-row-sid" }
+    { name: "username", classes: "xt-session-row-element" },
+    { name: "organization", classes: "xt-session-row-element" },
+    { name: "created", classes: "xt-session-row-element" },
+    { name: "sid", classes: "xt-session-row-element" }
   ]
     
 });

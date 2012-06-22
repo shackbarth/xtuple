@@ -1,49 +1,25 @@
 
-enyo.kind(
-  /** */ {
-
+enyo.kind({
   name: "XT.Postbooks",
-  kind: "FittableRows",
-  fit: true,
+  kind: "Control",
+  classes: "xt-postbooks enyo-unselectable",
   components: [
     { name: "container", kind: "XT.PostbooksContainer" }
-  ],
-  style: "position: absolute; height: 100%; width: 100%;"
-    
+  ] 
 });
 
-enyo.kind(
-  /** */ {
-    
-  /** */
+enyo.kind({
   name: "XT.PostbooksContainer",
-  
-  /** */
-  kind: "XT.ScreenCarousel",
-  
-  /** */  
-  classes: "enyo-unselectable",
-  
-  fit: true,
-  
-  /** */
+  kind: "XT.ScreenCarousel",  
+  classes: "xt-postbooks-container enyo-unselectable",
   components: [
     { name: "login", kind: "XT.Login" },
     { name: "crm", kind: "XT.Crm" },
     { name: "billing", kind: "XT.Billing" }
   ],
-  
-  /** */
   carouselEvents: {
-    
-    /** */
     dashboard: "login",
-    
-    /** */
     crm: "crm",
-    
-    /** */
     billing: "billing"
   }
-    
 });

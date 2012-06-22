@@ -1,84 +1,139 @@
-// Session
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XT.session.loadSessionObjects(XT.session.ALL, options);
+
+XT.StartupTask.create({
+  taskName: "loadSessionSettings",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XT.session.loadSessionObjects(XT.session.SETTINGS, options);
+  }
 });
 
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.id = XT.session.details.username;
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.currentUser = new XM.UserAccountInfo();
-  XM.currentUser.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadSessionPrivileges",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XT.session.loadSessionObjects(XT.session.PRIVILEGES, options);
+  }
 });
 
-// Crm
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.priorities = new XM.PriorityCollection();
-  XM.priorities.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadSessionSchema",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XT.session.loadSessionObjects(XT.session.SCHEMA, options);
+  }
 });
 
-// Incident
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.incidentCategories = new XM.IncidentCategoryCollection();
-  XM.incidentCategories.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadPriorities",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.priorities = new XM.PriorityCollection();
+    XM.priorities.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.incidentResolutions = new XM.IncidentResolutionCollection();
-  XM.incidentResolutions.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadCurrentUser",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete"),
+      id: XT.session.details.username
+    };
+    XM.currentUser = new XM.UserAccountInfo();
+    XM.currentUser.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.incidentSeverities = new XM.IncidentSeverityCollection();
-  XM.incidentSeverities.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadPriorities",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.priorities = new XM.PriorityCollection();
+    XM.priorities.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
-// Opportunity
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.opportunityStages = new XM.OpportunityStageCollection();
-  XM.opportunityStages.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadIncidentCategories",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.incidentCategories = new XM.IncidentCategoryCollection();
+    XM.incidentCategories.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.opportunityTypes = new XM.OpportunityTypeCollection();
-  XM.opportunityTypes.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadIncidentResolutions",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.incidentResolutions = new XM.IncidentResolutionCollection();
+    XM.incidentResolutions.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
-XT.StartupTask.addTask(function() {
-  var options = {};
-  options.success = function() {
-    XT.StartupTask.taskComplete();
-  };
-  XM.opportunitySources = new XM.OpportunitySourceCollection();
-  XM.opportunitySources.fetch(options);
+XT.StartupTask.create({
+  taskName: "loadIncidentSeverities",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.incidentSeverities = new XM.IncidentSeverityCollection();
+    XM.incidentSeverities.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadOpportunityStages",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.opportunityStages = new XM.OpportunityStageCollection();
+    XM.opportunityStages.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadOpportunityTypes",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.opportunityTypes = new XM.OpportunityTypeCollection();
+    XM.opportunityTypes.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadOpportunitySources",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.opportunitySources = new XM.OpportunitySourceCollection();
+    XM.opportunitySources.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
