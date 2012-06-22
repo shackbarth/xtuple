@@ -1,25 +1,14 @@
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.SessionSelectionScreen",
-  
-  /** */
-  kind: "FittableRows",
-  
-  /** */
-  fit: true,
-  
-  /** */
+  kind: "Control",
+  classes: "xt-session-selection-screen",
   components: [
     { name: "toolbar", kind: "onyx.Toolbar", components: [
       { name: "label", content: "Please select from the following sessions" },
       { name: "button", kind: "onyx.Button", content: "New Session" } ]},
     { name: "sessions", kind: "XT.AvailableSessions" }
   ],
-  
-  /** */
   tap: function(inSender, inEvent) {
     var self = this;
     var origin = inEvent.originator;
@@ -42,9 +31,7 @@ enyo.kind(
       }
     }
   },
-  
   didBecomeActive: function() {
     this.$.sessions.rendered();
   }
-    
 });

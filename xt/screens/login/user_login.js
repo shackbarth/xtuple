@@ -1,20 +1,16 @@
 
-enyo.kind(
-  /** */ {
-
-  /** */
+enyo.kind({
   name: "XT.UserLoginScreen",
-  
-  /** */
-  kind: "FittableRows",
-  
-  /** */
-  fit: true,
-  
-  /** */
+  kind: "Control",
+  classes: "xt-user-login-screen",
   components: [
-    { classes: "user-login-screen-container", components: [
-        { name: "block", kind: "XT.UserLoginBlock" } ]}
+    { name: "block", kind: "XT.UserLoginBlock" },
+    { name: "logo", kind: "XT.LoginLogoBlock" }
   ]
+});
 
+enyo.kind({
+  name: "XT.LoginLogoBlock",
+  kind: "Control",
+  classes: "xt-login-logo-block"
 });

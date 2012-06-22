@@ -23,6 +23,8 @@ enyo.mixin(XT,
     var re = XT._date || (XT._date = new Date());
     re.setTime(millis);
     return re.toLocaleTimeString();
-  }
+  },
+  
+  getObjectByName: Backbone.Relational.store.getObjectByName
 
 });
