@@ -14,7 +14,7 @@
   
     @extends XT.Model
   */
-  XM.ProjectStatus = XT.Model.extend({
+  XM.ProjectStatus = XM.Document.extend({
     /** @scope XM.ProjectStatus.prototype */
 
     projectStatusString: '',
@@ -23,10 +23,11 @@
     // METHODS
     //
 
-    initMixin: function () {
+    initialize: function () {
+      XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:status', this.projectStatusDidChange); // directly changed
       this.on('statusChange', this.projectStatusDidChange); // sync change
-      this.projectStatusChanged();
+      this.projectStatusDidChange();
     },
 
     /**
@@ -101,17 +102,8 @@
 
     initialize: function () {
       XM.ProjectStatus.prototype.initialize.apply(this, arguments);
-      this.on('change:number', this.numberDidChange);
       this.on('change:status', this.projectStatusDidChange);
       this.on('statusChange', this.statusDidChange);
-    },
-
-    numberDidChange: function () {
-      var number = this.get('number'),
-        upper = number.toUpperCase();
-      if (number !== upper) {
-        this.set('number', upper);
-      }
     },
 
     statusDidChange: function () {
@@ -121,6 +113,9 @@
       }
     },
 
+    /**
+    Reimplemented to handle automatic date setting.
+    */
     projectStatusDidChange: function () {
       XM.ProjectStatus.prototype.projectStatusDidChange.call(this);
       var status = this.get('status'),
@@ -322,7 +317,8 @@
         prop,
         i,
         dueDate = new Date(project.get('dueDate').valueOf()),
-        idAttribute = XM.Project.prototype.idAttribute;
+        idAttribute = XM.Project.prototype.idAttribute,
+        result;
       offset = offset || 0;
       dueDate.setDate(dueDate.getDate() + offset);
 
@@ -361,7 +357,9 @@
         }
       }
 
-      return new XM.Project(obj, {isNew: true});
+      result = new XM.Project(obj, {isNew: true});
+      result.documentKeyDidChange();
+      return result;
     },
 
     // ..........................................................

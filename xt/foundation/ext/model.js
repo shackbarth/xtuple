@@ -812,7 +812,7 @@
         for (attr in attributes) {
           if (attributes[attr] !== this.original(attr) &&
               this.isReadOnly(attr)) {
-            return 'Can not update read only attribute(s).';
+            return 'Can not edit read only attribute(s).';
           }
         }
 
