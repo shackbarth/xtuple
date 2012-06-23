@@ -742,9 +742,12 @@
           });
         };
 
-      // Don't allow editing of records that are in error state.
+      // Don't allow editing of records that are ineligable
       if (status === K.ERROR) {
         return 'Record is in an error state: ' + this.lastError;
+      } else if (status === K.EMPTY) {
+        return 'Record with status of `EMPTY` is not editable. Fetch an ' +
+               'existing record or initialize with the `isNew` option.';
       }
 
       // Check data type integrity
@@ -807,8 +810,7 @@
       }
 
       // Check read only and privileges.
-      if (((status & K.READY) || status === K.EMPTY) &&
-          !_.isEqual(attributes, original)) {
+      if ((status & K.READY) && !_.isEqual(attributes, original)) {
         for (attr in attributes) {
           if (attributes[attr] !== this.original(attr) &&
               this.isReadOnly(attr)) {
