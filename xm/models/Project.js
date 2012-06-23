@@ -407,6 +407,17 @@
     /** @scope XM.ProjectTask.prototype */
 
     recordType: 'XM.ProjectTask',
+    
+    defaults: function () {
+      var result = XM.ProjectBase.prototype.defaults.call(this);
+      _.extend(result, {
+        actualExpenses: 0,
+        actualHours: 0,
+        budgetedExpenses: 0,
+        budgetedHours: 0
+      });
+      return result;
+    },
 
     relations: [{
       type: Backbone.HasOne,
@@ -430,7 +441,7 @@
     //
 
     initialize: function () {
-      XM.ProjectBase.prototype.initialize.call(this);
+      XM.ProjectBase.prototype.initialize.apply(this, arguments);
       var evt = 'change:budgetedHours change:actualHours ' +
                 'change:budgetedExpenses change:actualExpenses';
       this.on(evt, this.valuesDidChange);

@@ -421,6 +421,8 @@
 
       // Bind events
       this.on('change', this.didChange);
+      this.on('add', this.didChange);
+      this.on('remove', this.didChange);
       this.on('error', this.didError);
       this.on('destroy', this.didDestroy);
     },
@@ -830,8 +832,8 @@
   // CLASS METHODS
   //
 
-  _.extend(XT.Model,
-      /** @scope XT.Model */ {
+  _.extend(XT.Model, {
+      /** @scope XT.Model */
 
       /**
         Use this function to find out whether a user can create records before
@@ -1185,7 +1187,8 @@
       */
       BUSY_DESTROYING:  0x0840 // 2112
 
-    });
+    }
+  );
 
   XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
 
@@ -1196,6 +1199,51 @@
     options.force = true;
 
     func.call(this, related, options);
+  };
+  
+  // Add generic `add` trigger
+  var handleAddition = Backbone.HasMany.prototype.handleAddition;
+  Backbone.HasMany.prototype.handleAddition = function (model, coll, options) {
+    handleAddition.call(this, model, coll, options);
+    if (!(model instanceof Backbone.Model)) {
+      return;
+    }
+
+    options = this.sanitizeOptions(options);
+
+    _.each(this.getReverseRelations(model), function (relation) {
+      relation.addRelated(this.instance, options);
+    }, this);
+
+    // Only trigger 'add' once the newly added model is initialized (so, has it's relations set up)
+    var dit = this;
+    Backbone.Relational.eventQueue.add(function () {
+      if (!options.silentChange) {
+        dit.instance.trigger('add', model, dit.related, options);
+      }
+    });
+  };
+
+  // Add generic `remove` trigger
+  var handleRemoval = Backbone.HasMany.prototype.handleRemoveal;
+  Backbone.HasMany.prototype.handleRemoval = function (model, coll, options) {
+    handleRemoval.call(this, model, coll, options);
+    if (!(model instanceof Backbone.Model)) {
+      return;
+    }
+
+    options = this.sanitizeOptions(options);
+
+    _.each(this.getReverseRelations(model), function (relation) {
+      relation.removeRelated(this.instance, options);
+    }, this);
+
+    var dit = this;
+    Backbone.Relational.eventQueue.add(function () {
+      if (!options.silentChange) {
+        dit.instance.trigger('remove', model, dit.related, options);
+      }
+    });
   };
 
 }());
