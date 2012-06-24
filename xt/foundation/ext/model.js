@@ -133,10 +133,10 @@
       model = model || {};
       var K = XT.Model,
         status = this.getStatus();
-        
+
       // Update `prime` with original attributes for tracking
       _.defaults(this.prime, this.changed);
-      
+
       // Mark dirty if we should
       if (status === K.READY_CLEAN && !options.force) {
         this.setStatus(K.READY_DIRTY);
@@ -307,7 +307,7 @@
     },
 
     /**
-      Returns the current model class.
+      Returns the current model prototype class.
       
       @returns {XT.Model}
     */
@@ -738,10 +738,12 @@
       // Don't allow editing of records that are ineligable
       if (status === K.ERROR) {
         return 'Record is in an error state: ' + this.lastError;
-      } else if (status === K.EMPTY) {
+      }
+      if (status === K.EMPTY) {
         return 'Record with status of `EMPTY` is not editable. Fetch an ' +
                'existing record or initialize with the `isNew` option.';
-      } else if (status & K.DESTROYED) {
+      }
+      if (status & K.DESTROYED) {
         return 'Can not edit destroyed record.';
       }
 
@@ -828,360 +830,359 @@
   _.extend(XT.Model, {
       /** @scope XT.Model */
 
-      /**
-        Use this function to find out whether a user can create records before
-        instantiating one.
+    /**
+      Use this function to find out whether a user can create records before
+      instantiating one.
 
-        @returns {Boolean}
-      */
-      canCreate: function () {
-        return XT.Model.canDo.call(this, 'create');
-      },
+      @returns {Boolean}
+    */
+    canCreate: function () {
+      return XT.Model.canDo.call(this, 'create');
+    },
 
-      /**
-        Use this function to find out whether a user can read this record type
-        before any have been loaded.
+    /**
+      Use this function to find out whether a user can read this record type
+      before any have been loaded.
 
-        @returns {Boolean}
-      */
-      canRead: function () {
-        var privs = this.prototype.privileges,
-          sessionPrivs = XT.session.privileges,
-          isGranted = false;
+      @returns {Boolean}
+    */
+    canRead: function () {
+      var privs = this.prototype.privileges,
+        sessionPrivs = XT.session.privileges,
+        isGranted = false;
 
-        // If no privileges, nothing to check.
-        if (_.isEmpty(privs)) { return true; }
+      // If no privileges, nothing to check.
+      if (_.isEmpty(privs)) { return true; }
 
-        if (sessionPrivs && sessionPrivs.get) {
-          // Check global read privilege.
-          isGranted = privs.all && privs.all.read ?
-                      sessionPrivs.get(privs.all.read) : false;
+      if (sessionPrivs && sessionPrivs.get) {
+        // Check global read privilege.
+        isGranted = privs.all && privs.all.read ?
+                    sessionPrivs.get(privs.all.read) : false;
 
-          // Check global update privilege.
-          if (!isGranted) {
-            isGranted = privs.all && privs.all.update ?
-                        sessionPrivs.get(privs.all.update) : false;
-          }
-
-          // Check personal view privilege.
-          if (!isGranted) {
-            isGranted = privs.personal && privs.personal.read ?
-                        sessionPrivs.get(privs.personal.read) : false;
-          }
-
-          // Check personal update privilege.
-          if (!isGranted) {
-            isGranted = privs.personal && privs.personal.update ?
-                        sessionPrivs.get(privs.personal.update) : false;
-          }
+        // Check global update privilege.
+        if (!isGranted) {
+          isGranted = privs.all && privs.all.update ?
+                      sessionPrivs.get(privs.all.update) : false;
         }
 
-        return isGranted;
-      },
-
-      /**
-        Returns whether a user has access to update a record of this type. If a
-        record is passed that involves personal privileges, it will validate
-        whether that particular record is updatable.
-
-        @returns {Boolean}
-      */
-      canUpdate: function (model) {
-        return XT.Model.canDo.call(this, 'update', model);
-      },
-
-      /**
-        Returns whether a user has access to delete a record of this type. If a
-        record is passed that involves personal privileges, it will validate
-        whether that particular record is deletable.
-
-        @returns {Boolean}
-      */
-      canDelete: function (model) {
-        return XT.Model.canDo.call(this, 'delete', model);
-      },
-
-      /**
-        Check privilege on `action`. If `model` is passed, checks personal
-        privileges on the model where applicable.
-  
-        @param {String} Action
-        @param {XT.Model} Model
-      */
-      canDo: function (action, model) {
-        var privs = this.prototype.privileges,
-          sessionPrivs = XT.session.privileges,
-          isGrantedAll = false,
-          isGrantedPersonal = false,
-          username = XT.session.details.username,
-          i,
-          props;
-
-        // If no privileges, nothing to check.
-        if (_.isEmpty(privs)) { return true; }
-
-        // If we have session prvileges perform the check.
-        if (sessionPrivs && sessionPrivs.get) {
-          // Check global privileges.
-          if (privs.all && privs.all[action]) {
-            isGrantedAll = sessionPrivs.get(privs.all[action]);
-          }
-
-          // Check personal privileges.
-          if (!isGrantedAll && privs.personal && privs.personal[action]) {
-            isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
-          }
+        // Check personal view privilege.
+        if (!isGranted) {
+          isGranted = privs.personal && privs.personal.read ?
+                      sessionPrivs.get(privs.personal.read) : false;
         }
 
-        // If only personal privileges, check the personal attribute list to
-        // see if we can update.
-        if (!isGrantedAll && isGrantedPersonal && model) {
-          i = 0;
-          props = privs.personal && privs.personal.properties ?
-                      privs.personal.properties : [];
+        // Check personal update privilege.
+        if (!isGranted) {
+          isGranted = privs.personal && privs.personal.update ?
+                      sessionPrivs.get(privs.personal.update) : false;
+        }
+      }
 
-          isGrantedPersonal = false;
-          while (!isGrantedPersonal && i < props.length) {
-            isGrantedPersonal = model.original(props[i].get('username')) === username;
-            i += 1;
-          }
+      return isGranted;
+    },
+
+    /**
+      Returns whether a user has access to update a record of this type. If a
+      record is passed that involves personal privileges, it will validate
+      whether that particular record is updatable.
+
+      @returns {Boolean}
+    */
+    canUpdate: function (model) {
+      return XT.Model.canDo.call(this, 'update', model);
+    },
+
+    /**
+      Returns whether a user has access to delete a record of this type. If a
+      record is passed that involves personal privileges, it will validate
+      whether that particular record is deletable.
+
+      @returns {Boolean}
+    */
+    canDelete: function (model) {
+      return XT.Model.canDo.call(this, 'delete', model);
+    },
+
+    /**
+      Check privilege on `action`. If `model` is passed, checks personal
+      privileges on the model where applicable.
+
+      @param {String} Action
+      @param {XT.Model} Model
+    */
+    canDo: function (action, model) {
+      var privs = this.prototype.privileges,
+        sessionPrivs = XT.session.privileges,
+        isGrantedAll = false,
+        isGrantedPersonal = false,
+        username = XT.session.details.username,
+        i,
+        props;
+
+      // If no privileges, nothing to check.
+      if (_.isEmpty(privs)) { return true; }
+
+      // If we have session prvileges perform the check.
+      if (sessionPrivs && sessionPrivs.get) {
+        // Check global privileges.
+        if (privs.all && privs.all[action]) {
+          isGrantedAll = sessionPrivs.get(privs.all[action]);
         }
 
-        return isGrantedAll || isGrantedPersonal;
-      },
+        // Check personal privileges.
+        if (!isGrantedAll && privs.personal && privs.personal[action]) {
+          isGrantedPersonal = sessionPrivs.get(privs.personal[action]);
+        }
+      }
 
-      /**
-        Return an array of valid attribute names on the model.
-  
-        @returns {Array}
-      */
-      getAttributeNames: function () {
-        var recordType = this.recordType || this.prototype.recordType,
-          type = recordType.replace(/\w+\./i, '');
-        return _.pluck(XT.session.getSchema().get(type).columns, 'name');
-      },
+      // If only personal privileges, check the personal attribute list to
+      // see if we can update.
+      if (!isGrantedAll && isGrantedPersonal && model) {
+        i = 0;
+        props = privs.personal && privs.personal.properties ?
+                    privs.personal.properties : [];
 
-      /**
-        Return a matching record id for a passed user `key` and `value`. If none
-        found, returns zero.
+        isGrantedPersonal = false;
+        while (!isGrantedPersonal && i < props.length) {
+          isGrantedPersonal = model.original(props[i].get('username')) === username;
+          i += 1;
+        }
+      }
 
-        @param {String} Property to search on, typically a user key
-        @param {String} Value to search for
-        @param {Object} Options
-        @returns {Object} Receiever
-      */
-      findExisting: function (key, value, options) {
-        var recordType = this.recordType || this.prototype.recordType,
-          params = [ recordType, key, value, this.id || -1 ];
-        XT.dataSource.dispatch('XT.Model', 'findExisting',
-                               params, options);
-        console.log("XT.Model.findExisting for: " + recordType);
-        return this;
-      },
+      return isGrantedAll || isGrantedPersonal;
+    },
 
-      /**
-      Include 'force' option.
-      */
-      findOrCreate: function (attributes, options) {
-        options = options ? _.clone(options) : {};
-        options.force = true;
-        return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
-      },
+    /**
+      Return an array of valid attribute names on the model.
 
-      // ..........................................................
-      // CONSTANTS
-      //
+      @returns {Array}
+    */
+    getAttributeNames: function () {
+      var recordType = this.recordType || this.prototype.recordType,
+        type = recordType.replace(/\w+\./i, '');
+      return _.pluck(XT.session.getSchema().get(type).columns, 'name');
+    },
 
-      /**
-        Generic state for records with no local changes.
+    /**
+      Return a matching record id for a passed user `key` and `value`. If none
+      found, returns zero.
 
-        Use a logical AND (single `&`) to test record status
+      @param {String} Property to search on, typically a user key
+      @param {String} Value to search for
+      @param {Object} Options
+      @returns {Object} Receiever
+    */
+    findExisting: function (key, value, options) {
+      var recordType = this.recordType || this.prototype.recordType,
+        params = [ recordType, key, value, this.id || -1 ];
+      XT.dataSource.dispatch('XT.Model', 'findExisting',
+                             params, options);
+      console.log("XT.Model.findExisting for: " + recordType);
+      return this;
+    },
 
-        @static
-        @constant
-        @type Number
-        @default 0x0001
-      */
-      CLEAN:            0x0001, // 1
+    /**
+    Include 'force' option.
+    */
+    findOrCreate: function (attributes, options) {
+      options = options ? _.clone(options) : {};
+      options.force = true;
+      return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
+    },
 
-      /**
-        Generic state for records with local changes.
+    // ..........................................................
+    // CONSTANTS
+    //
 
-        Use a logical AND (single `&`) to test record status
+    /**
+      Generic state for records with no local changes.
 
-        @static
-        @constant
-        @type Number
-        @default 0x0002
-      */
-      DIRTY:            0x0002, // 2
+      Use a logical AND (single `&`) to test record status
 
-      /**
-        State for records that are still loaded.
+      @static
+      @constant
+      @type Number
+      @default 0x0001
+    */
+    CLEAN:            0x0001, // 1
 
-        A record instance should never be in this state.  You will only run into
-        it when working with the low-level data hash API on `SC.Store`. Use a
-        logical AND (single `&`) to test record status
+    /**
+      Generic state for records with local changes.
 
-        @static
-        @constant
-        @type Number
-        @default 0x0100
-      */
-      EMPTY:            0x0100, // 256
+      Use a logical AND (single `&`) to test record status
 
-      /**
-        State for records in an error state.
+      @static
+      @constant
+      @type Number
+      @default 0x0002
+    */
+    DIRTY:            0x0002, // 2
 
-        Use a logical AND (single `&`) to test record status
+    /**
+      State for records that are still loaded.
 
-        @static
-        @constant
-        @type Number
-        @default 0x1000
-      */
-      ERROR:            0x1000, // 4096
+      A record instance should never be in this state.  You will only run into
+      it when working with the low-level data hash API on `SC.Store`. Use a
+      logical AND (single `&`) to test record status
 
-      /**
-        Generic state for records that are loaded and ready for use
+      @static
+      @constant
+      @type Number
+      @default 0x0100
+    */
+    EMPTY:            0x0100, // 256
 
-        Use a logical AND (single `&`) to test record status
+    /**
+      State for records in an error state.
 
-        @static
-        @constant
-        @type Number
-        @default 0x0200
-      */
-      READY:            0x0200, // 512
+      Use a logical AND (single `&`) to test record status
 
-      /**
-        State for records that are loaded and ready for use with no local changes
+      @static
+      @constant
+      @type Number
+      @default 0x1000
+    */
+    ERROR:            0x1000, // 4096
 
-        Use a logical AND (single `&`) to test record status
+    /**
+      Generic state for records that are loaded and ready for use
 
-        @static
-        @constant
-        @type Number
-        @default 0x0201
-      */
-      READY_CLEAN:      0x0201, // 513
+      Use a logical AND (single `&`) to test record status
 
+      @static
+      @constant
+      @type Number
+      @default 0x0200
+    */
+    READY:            0x0200, // 512
 
-      /**
-        State for records that are loaded and ready for use with local changes
+    /**
+      State for records that are loaded and ready for use with no local changes
 
-        Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status
 
-        @static
-        @constant
-        @type Number
-        @default 0x0202
-      */
-      READY_DIRTY:      0x0202, // 514
-
-
-      /**
-        State for records that are new - not yet committed to server
-
-        Use a logical AND (single `&`) to test record status
-
-        @static
-        @constant
-        @type Number
-        @default 0x0203
-      */
-      READY_NEW:        0x0203, // 515
+      @static
+      @constant
+      @type Number
+      @default 0x0201
+    */
+    READY_CLEAN:      0x0201, // 513
 
 
-      /**
-        Generic state for records that have been destroyed
+    /**
+      State for records that are loaded and ready for use with local changes
 
-        Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status
 
-        @static
-        @constant
-        @type Number
-        @default 0x0400
-      */
-      DESTROYED:        0x0400, // 1024
-
-
-      /**
-        State for records that have been destroyed and committed to server
-
-        Use a logical AND (single `&`) to test record status
-
-        @static
-        @constant
-        @type Number
-        @default 0x0401
-      */
-      DESTROYED_CLEAN:  0x0401, // 1025
-
-      /**
-        State for records that have been destroyed but not yet committed to server
-
-        Use a logical AND (single `&`) to test record status
-
-        @static
-        @constant
-        @type Number
-        @default 0x0402
-      */
-      DESTROYED_DIRTY:  0x0402, // 1026
-
-      /**
-        Generic state for records that have been submitted to data source
-
-        Use a logical AND (single `&`) to test record status
-
-        @static
-        @constant
-        @type Number
-        @default 0x0800
-      */
-      BUSY:             0x0800, // 2048
+      @static
+      @constant
+      @type Number
+      @default 0x0202
+    */
+    READY_DIRTY:      0x0202, // 514
 
 
-      /**
-        State for records that are still loading data from the server
+    /**
+      State for records that are new - not yet committed to server
 
-        Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status
 
-        @static
-        @constant
-        @type Number
-        @default 0x0804
-      */
-      BUSY_FETCHING:     0x0804, // 2052
+      @static
+      @constant
+      @type Number
+      @default 0x0203
+    */
+    READY_NEW:        0x0203, // 515
 
 
-      /**
-        State for records that have been modified and submitted to server
+    /**
+      Generic state for records that have been destroyed
 
-        Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status
 
-        @static
-        @constant
-        @type Number
-        @default 0x0810
-      */
-      BUSY_COMMITTING:  0x0810, // 2064
+      @static
+      @constant
+      @type Number
+      @default 0x0400
+    */
+    DESTROYED:        0x0400, // 1024
 
-      /**
-        State for records that have been destroyed and submitted to server
 
-        Use a logical AND (single `&`) to test record status
+    /**
+      State for records that have been destroyed and committed to server
 
-        @static
-        @constant
-        @type Number
-        @default 0x0840
-      */
-      BUSY_DESTROYING:  0x0840 // 2112
+      Use a logical AND (single `&`) to test record status
 
-    }
-  );
+      @static
+      @constant
+      @type Number
+      @default 0x0401
+    */
+    DESTROYED_CLEAN:  0x0401, // 1025
+
+    /**
+      State for records that have been destroyed but not yet committed to server
+
+      Use a logical AND (single `&`) to test record status
+
+      @static
+      @constant
+      @type Number
+      @default 0x0402
+    */
+    DESTROYED_DIRTY:  0x0402, // 1026
+
+    /**
+      Generic state for records that have been submitted to data source
+
+      Use a logical AND (single `&`) to test record status
+
+      @static
+      @constant
+      @type Number
+      @default 0x0800
+    */
+    BUSY:             0x0800, // 2048
+
+
+    /**
+      State for records that are still loading data from the server
+
+      Use a logical AND (single `&`) to test record status
+
+      @static
+      @constant
+      @type Number
+      @default 0x0804
+    */
+    BUSY_FETCHING:     0x0804, // 2052
+
+
+    /**
+      State for records that have been modified and submitted to server
+
+      Use a logical AND (single `&`) to test record status
+
+      @static
+      @constant
+      @type Number
+      @default 0x0810
+    */
+    BUSY_COMMITTING:  0x0810, // 2064
+
+    /**
+      State for records that have been destroyed and submitted to server
+
+      Use a logical AND (single `&`) to test record status
+
+      @static
+      @constant
+      @type Number
+      @default 0x0840
+    */
+    BUSY_DESTROYING:  0x0840 // 2112
+
+  });
 
   XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
 
@@ -1193,9 +1194,10 @@
 
     func.call(this, related, options);
   };
-  
+
   // Reimplement with generic `change` trigger to parent relations
   Backbone.HasMany.prototype.handleAddition = function (model, coll, options) {
+    coll = coll || {};
     if (!(model instanceof Backbone.Model)) { return; }
     var that = this;
     options = this.sanitizeOptions(options);
