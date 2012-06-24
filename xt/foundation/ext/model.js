@@ -106,15 +106,6 @@
     //
 
     /**
-      Reverts the model to the last set of attributes fetched from the server and
-      resets the change log.
-    */
-    cancel: function () {
-      _.extend(this.attributes, this.originalAttributes());
-      this.reset();
-    },
-
-    /**
       Returns whether the current record can be updated based on privilege
       settings.
 
@@ -518,15 +509,6 @@
     },
 
     /**
-      Reset the change log.
-    */
-    reset: function () {
-      this.changed = {};
-      this._silent = {};
-      this._pending = {};
-    },
-
-    /**
       Reimplemented. Validate before saving.
   
       @retuns {XT.Request} Request
@@ -631,6 +613,22 @@
       this.status = status;
       parent = this.getParent();
 
+      // Reset original attributes if applicable
+      if (status === K.READY_NEW || status === K.READY_CLEAN) {
+        this.prime = {};
+      }
+
+      // Update data state.
+      if (status === K.READY_NEW) {
+        this.set('dataState', 'create', setOptions);
+      } else if (status === K.READY_CLEAN) {
+        this.set('dataState', 'read', setOptions);
+      } else if (status === K.READY_DIRTY) {
+        this.set('dataState', 'update', setOptions);
+      } else if (status === K.DESTROYED_DIRTY) {
+        this.set('dataState', 'delete', setOptions);
+      }
+
       // Cascade changes through relations if specified
       if (options && options.cascade) {
         _.each(this.relations, function (relation) {
@@ -644,23 +642,13 @@
             });
           }
         });
+      }
 
       // Percolate changes up to parent when applicable
-      } else if ((status & K.DIRTY) && parent && parent.getStatus &&
-                 parent.getStatus() === K.READY_CLEAN) {
-        parent.setStatus(K.READY_DIRTY);
+      if (parent) {
+        parent.trigger('change', this, options);
       }
 
-      // Update data state.
-      if (status === K.READY_NEW) {
-        this.set('dataState', 'create', setOptions);
-      } else if (status === K.READY_CLEAN) {
-        this.set('dataState', 'read', setOptions);
-      } else if (status === K.READY_DIRTY) {
-        this.set('dataState', 'update', setOptions);
-      } else if (status === K.DESTROYED_DIRTY) {
-        this.set('dataState', 'delete', setOptions);
-      }
       this.trigger('statusChange', this);
       this.release();
       console.log(this.recordType + ' id: ' +  this.id +
@@ -753,6 +741,8 @@
       } else if (status === K.EMPTY) {
         return 'Record with status of `EMPTY` is not editable. Fetch an ' +
                'existing record or initialize with the `isNew` option.';
+      } else if (status & K.DESTROYED) {
+        return 'Can not edit destroyed record.';
       }
 
       // Check data type integrity
@@ -1204,7 +1194,7 @@
     func.call(this, related, options);
   };
   
-  // Reimplement with generic `change` triggers to parent relations
+  // Reimplement with generic `change` trigger to parent relations
   Backbone.HasMany.prototype.handleAddition = function (model, coll, options) {
     if (!(model instanceof Backbone.Model)) { return; }
     var that = this;
@@ -1217,21 +1207,6 @@
     Backbone.Relational.eventQueue.add(function () {
       if (!options.silentChange) {
         that.instance.trigger('add:' + that.key, model, that.related, options);
-        that.instance.trigger('change', model, that.related, options);
-      }
-    });
-  };
-
-  Backbone.HasMany.prototype.handleRemoval = function (model, coll, options) {
-    if (!(model instanceof Backbone.Model)) { return; }
-    var that = this;
-    options = this.sanitizeOptions(options);
-    _.each(this.getReverseRelations(model), function (relation) {
-      relation.removeRelated(this.instance, options);
-    }, this);
-    Backbone.Relational.eventQueue.add(function () {
-      if (!options.silentChange) {
-        that.instance.trigger('remove:' + that.key, model, that.related, options);
         that.instance.trigger('change', model, that.related, options);
       }
     });
