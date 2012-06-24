@@ -997,7 +997,7 @@
     /**
       Generic state for records with no local changes.
 
-      Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status.
 
       @static
       @constant
@@ -1009,7 +1009,7 @@
     /**
       Generic state for records with local changes.
 
-      Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status.
 
       @static
       @constant
@@ -1021,9 +1021,9 @@
     /**
       State for records that are still loaded.
 
-      A record instance should never be in this state.  You will only run into
-      it when working with the low-level data hash API on `SC.Store`. Use a
-      logical AND (single `&`) to test record status
+      This is the initial state of a new record. It will not be editable until
+      a record is fetch from the store, or it is initialied with the `isNew`
+      option.
 
       @static
       @constant
@@ -1035,8 +1035,6 @@
     /**
       State for records in an error state.
 
-      Use a logical AND (single `&`) to test record status
-
       @static
       @constant
       @type Number
@@ -1045,9 +1043,9 @@
     ERROR:            0x1000, // 4096
 
     /**
-      Generic state for records that are loaded and ready for use
+      Generic state for records that are loaded and ready for use.
 
-      Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status.
 
       @static
       @constant
@@ -1057,9 +1055,7 @@
     READY:            0x0200, // 512
 
     /**
-      State for records that are loaded and ready for use with no local changes
-
-      Use a logical AND (single `&`) to test record status
+      State for records that are loaded and ready for use with no local changes.
 
       @static
       @constant
@@ -1072,8 +1068,6 @@
     /**
       State for records that are loaded and ready for use with local changes
 
-      Use a logical AND (single `&`) to test record status
-
       @static
       @constant
       @type Number
@@ -1083,9 +1077,7 @@
 
 
     /**
-      State for records that are new - not yet committed to server
-
-      Use a logical AND (single `&`) to test record status
+      State for records that are new - not yet committed to server.
 
       @static
       @constant
@@ -1096,9 +1088,9 @@
 
 
     /**
-      Generic state for records that have been destroyed
+      Generic state for records that have been destroyed.
 
-      Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status.
 
       @static
       @constant
@@ -1109,9 +1101,7 @@
 
 
     /**
-      State for records that have been destroyed and committed to server
-
-      Use a logical AND (single `&`) to test record status
+      State for records that have been destroyed and committed to server.
 
       @static
       @constant
@@ -1121,9 +1111,8 @@
     DESTROYED_CLEAN:  0x0401, // 1025
 
     /**
-      State for records that have been destroyed but not yet committed to server
-
-      Use a logical AND (single `&`) to test record status
+      State for records that have been destroyed but not yet committed to
+      the server.
 
       @static
       @constant
@@ -1133,9 +1122,9 @@
     DESTROYED_DIRTY:  0x0402, // 1026
 
     /**
-      Generic state for records that have been submitted to data source
+      Generic state for records that have been submitted to data source.
 
-      Use a logical AND (single `&`) to test record status
+      Use a logical AND (single `&`) to test record status.
 
       @static
       @constant
@@ -1146,9 +1135,7 @@
 
 
     /**
-      State for records that are still loading data from the server
-
-      Use a logical AND (single `&`) to test record status
+      State for records that are still loading data from the server.
 
       @static
       @constant
@@ -1159,9 +1146,7 @@
 
 
     /**
-      State for records that have been modified and submitted to server
-
-      Use a logical AND (single `&`) to test record status
+      State for records that have been modified and submitted to server.
 
       @static
       @constant
@@ -1171,9 +1156,7 @@
     BUSY_COMMITTING:  0x0810, // 2064
 
     /**
-      State for records that have been destroyed and submitted to server
-
-      Use a logical AND (single `&`) to test record status
+      State for records that have been destroyed and submitted to server.
 
       @static
       @constant
@@ -1186,7 +1169,7 @@
 
   XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
 
-  // Stomp on this function that MUST include the 'force' option
+  // Overload this function to include the 'force' option
   var func = Backbone.Relation.prototype.setRelated;
   Backbone.Relation.prototype.setRelated = function (related, options) {
     options = options ? _.clone(options) : {};
