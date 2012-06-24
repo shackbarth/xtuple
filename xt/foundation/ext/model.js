@@ -106,15 +106,6 @@
     //
 
     /**
-      Reverts the model to the last set of attributes fetched from the server and
-      resets the change log.
-    */
-    cancel: function () {
-      _.extend(this.attributes, this.originalAttributes());
-      this.reset();
-    },
-
-    /**
       Returns whether the current record can be updated based on privilege
       settings.
 
@@ -135,21 +126,26 @@
     },
 
     /**
-      When any attributes change, store the original value(s) in `prime` and update
-      the status if applicable.
+      When any attributes change, store the original value(s) in `prime`
+      and update the status if applicable.
     */
     didChange: function (model, options) {
       model = model || {};
       var K = XT.Model,
         status = this.getStatus();
+        
+      // Update `prime` with original attributes for tracking
       _.defaults(this.prime, this.changed);
+      
+      // Mark dirty if we should
       if (status === K.READY_CLEAN && !options.force) {
         this.setStatus(K.READY_DIRTY);
       }
     },
 
     /**
-      Called after confirmation that the model was destroyed on the datatsource.
+      Called after confirmation that the model was destroyed on the
+      datatsource.
     */
     didDestroy: function () {
       var K = XT.Model;
@@ -513,15 +509,6 @@
     },
 
     /**
-      Reset the change log.
-    */
-    reset: function () {
-      this.changed = {};
-      this._silent = {};
-      this._pending = {};
-    },
-
-    /**
       Reimplemented. Validate before saving.
   
       @retuns {XT.Request} Request
@@ -626,6 +613,22 @@
       this.status = status;
       parent = this.getParent();
 
+      // Reset original attributes if applicable
+      if (status === K.READY_NEW || status === K.READY_CLEAN) {
+        this.prime = {};
+      }
+
+      // Update data state.
+      if (status === K.READY_NEW) {
+        this.set('dataState', 'create', setOptions);
+      } else if (status === K.READY_CLEAN) {
+        this.set('dataState', 'read', setOptions);
+      } else if (status === K.READY_DIRTY) {
+        this.set('dataState', 'update', setOptions);
+      } else if (status === K.DESTROYED_DIRTY) {
+        this.set('dataState', 'delete', setOptions);
+      }
+
       // Cascade changes through relations if specified
       if (options && options.cascade) {
         _.each(this.relations, function (relation) {
@@ -639,23 +642,13 @@
             });
           }
         });
+      }
 
       // Percolate changes up to parent when applicable
-      } else if ((status & K.DIRTY) && parent && parent.getStatus &&
-                 parent.getStatus() === K.READY_CLEAN) {
-        parent.setStatus(K.READY_DIRTY);
+      if (parent) {
+        parent.trigger('change', this, options);
       }
 
-      // Update data state.
-      if (status === K.READY_NEW) {
-        this.set('dataState', 'create', setOptions);
-      } else if (status === K.READY_CLEAN) {
-        this.set('dataState', 'read', setOptions);
-      } else if (status === K.READY_DIRTY) {
-        this.set('dataState', 'update', setOptions);
-      } else if (status === K.DESTROYED_DIRTY) {
-        this.set('dataState', 'delete', setOptions);
-      }
       this.trigger('statusChange', this);
       this.release();
       console.log(this.recordType + ' id: ' +  this.id +
@@ -742,9 +735,14 @@
           });
         };
 
-      // Don't allow editing of records that are in error state.
+      // Don't allow editing of records that are ineligable
       if (status === K.ERROR) {
         return 'Record is in an error state: ' + this.lastError;
+      } else if (status === K.EMPTY) {
+        return 'Record with status of `EMPTY` is not editable. Fetch an ' +
+               'existing record or initialize with the `isNew` option.';
+      } else if (status & K.DESTROYED) {
+        return 'Can not edit destroyed record.';
       }
 
       // Check data type integrity
@@ -807,8 +805,7 @@
       }
 
       // Check read only and privileges.
-      if (((status & K.READY) || status === K.EMPTY) &&
-          !_.isEqual(attributes, original)) {
+      if ((status & K.READY) && !_.isEqual(attributes, original)) {
         for (attr in attributes) {
           if (attributes[attr] !== this.original(attr) &&
               this.isReadOnly(attr)) {
@@ -828,8 +825,8 @@
   // CLASS METHODS
   //
 
-  _.extend(XT.Model,
-      /** @scope XT.Model */ {
+  _.extend(XT.Model, {
+      /** @scope XT.Model */
 
       /**
         Use this function to find out whether a user can create records before
@@ -1183,7 +1180,8 @@
       */
       BUSY_DESTROYING:  0x0840 // 2112
 
-    });
+    }
+  );
 
   XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
 
@@ -1194,6 +1192,24 @@
     options.force = true;
 
     func.call(this, related, options);
+  };
+  
+  // Reimplement with generic `change` trigger to parent relations
+  Backbone.HasMany.prototype.handleAddition = function (model, coll, options) {
+    if (!(model instanceof Backbone.Model)) { return; }
+    var that = this;
+    options = this.sanitizeOptions(options);
+    _.each(this.getReverseRelations(model), function (relation) {
+      relation.addRelated(this.instance, options);
+    }, this);
+
+    // Only trigger 'add' once the newly added model is initialized (so, has it's relations set up)
+    Backbone.Relational.eventQueue.add(function () {
+      if (!options.silentChange) {
+        that.instance.trigger('add:' + that.key, model, that.related, options);
+        that.instance.trigger('change', model, that.related, options);
+      }
+    });
   };
 
 }());
