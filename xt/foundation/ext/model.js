@@ -135,21 +135,26 @@
     },
 
     /**
-      When any attributes change, store the original value(s) in `prime` and update
-      the status if applicable.
+      When any attributes change, store the original value(s) in `prime`
+      and update the status if applicable.
     */
     didChange: function (model, options) {
       model = model || {};
       var K = XT.Model,
         status = this.getStatus();
+        
+      // Update `prime` with original attributes for tracking
       _.defaults(this.prime, this.changed);
+      
+      // Mark dirty if we should
       if (status === K.READY_CLEAN && !options.force) {
         this.setStatus(K.READY_DIRTY);
       }
     },
 
     /**
-      Called after confirmation that the model was destroyed on the datatsource.
+      Called after confirmation that the model was destroyed on the
+      datatsource.
     */
     didDestroy: function () {
       var K = XT.Model;
@@ -421,8 +426,6 @@
 
       // Bind events
       this.on('change', this.didChange);
-      this.on('add', this.didChange);
-      this.on('remove', this.didChange);
       this.on('error', this.didError);
       this.on('destroy', this.didDestroy);
     },
@@ -1201,47 +1204,35 @@
     func.call(this, related, options);
   };
   
-  // Add generic `add` trigger
-  var handleAddition = Backbone.HasMany.prototype.handleAddition;
+  // Reimplement with generic `change` triggers to parent relations
   Backbone.HasMany.prototype.handleAddition = function (model, coll, options) {
-    handleAddition.call(this, model, coll, options);
-    if (!(model instanceof Backbone.Model)) {
-      return;
-    }
-
+    if (!(model instanceof Backbone.Model)) { return; }
+    var that = this;
     options = this.sanitizeOptions(options);
-
     _.each(this.getReverseRelations(model), function (relation) {
       relation.addRelated(this.instance, options);
     }, this);
 
     // Only trigger 'add' once the newly added model is initialized (so, has it's relations set up)
-    var dit = this;
     Backbone.Relational.eventQueue.add(function () {
       if (!options.silentChange) {
-        dit.instance.trigger('add', model, dit.related, options);
+        that.instance.trigger('add:' + that.key, model, that.related, options);
+        that.instance.trigger('change', model, that.related, options);
       }
     });
   };
 
-  // Add generic `remove` trigger
-  var handleRemoval = Backbone.HasMany.prototype.handleRemoveal;
   Backbone.HasMany.prototype.handleRemoval = function (model, coll, options) {
-    handleRemoval.call(this, model, coll, options);
-    if (!(model instanceof Backbone.Model)) {
-      return;
-    }
-
+    if (!(model instanceof Backbone.Model)) { return; }
+    var that = this;
     options = this.sanitizeOptions(options);
-
     _.each(this.getReverseRelations(model), function (relation) {
       relation.removeRelated(this.instance, options);
     }, this);
-
-    var dit = this;
     Backbone.Relational.eventQueue.add(function () {
       if (!options.silentChange) {
-        dit.instance.trigger('remove', model, dit.related, options);
+        that.instance.trigger('remove:' + that.key, model, that.related, options);
+        that.instance.trigger('change', model, that.related, options);
       }
     });
   };
