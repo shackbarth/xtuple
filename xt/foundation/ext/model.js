@@ -549,7 +549,7 @@
         if (_.isObject(key) || _.isEmpty(key)) { value = options; }
 
         // Call the super version
-        this.setStatus(K.BUSY_COMMITTING);
+        this.setStatus(K.BUSY_COMMITTING, {cascade: true});
         result = Backbone.Model.prototype.save.call(this, key, value, options);
         if (!result) { this.setStatus(oldStatus); }
         return result;
@@ -1174,6 +1174,7 @@
   Backbone.Relation.prototype.setRelated = function (related, options) {
     options = options ? _.clone(options) : {};
     options.force = true;
+    options.silent = false;
 
     func.call(this, related, options);
   };

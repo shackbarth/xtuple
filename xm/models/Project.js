@@ -66,7 +66,6 @@
     defaults: function () {
       var K = XM.Project,
         result = { status: K.CONCEPT };
-      result.owner = result.assignedTo = XM.currentUser;
       return result;
     },
 
@@ -146,6 +145,12 @@
     /** @scope XM.Project.prototype */
 
     recordType: 'XM.Project',
+    
+    defaults: function () {
+      var result = XM.ProjectBase.prototype.defaults.call(this);
+      result.owner = result.assignedTo = XM.currentUser;
+      return result;
+    },
 
     relations: [{
       type: Backbone.HasOne,
@@ -442,16 +447,35 @@
 
     initialize: function () {
       XM.ProjectBase.prototype.initialize.apply(this, arguments);
-      var evt = 'change:budgetedHours change:actualHours ' +
-                'change:budgetedExpenses change:actualExpenses';
-      this.on(evt, this.valuesDidChange);
+      var event = 'change:budgetedHours change:actualHours ' +
+                  'change:budgetedExpenses change:actualExpenses';
+      this.on(event, this.valuesDidChange);
+      this.on('change:project', this.projectDidChange);
     },
 
     /**
-    Update project totals when values change.
+      Set defaults from project.
+    */
+    projectDidChange: function () {
+      var project = this.get('project'),
+        K = XT.Model,
+        status = this.getStatus();
+      if (project && status === K.READY_NEW) {
+        this.set('owner', this.get('owner') || project.get('owner'));
+        this.set('assignedTo', this.get('owner') || project.get('assignedTo'));
+        this.set('startDate', this.get('startDate') || project.get('startDate'));
+        this.set('assignDate', this.get('assignDate') || project.get('assignDate'));
+        this.set('dueDate', this.get('dueDate') || project.get('dueDate'));
+        this.set('completeDate', this.get('completeDate') || project.get('completeDate'));
+      }
+    },
+
+    /**
+      Update project totals when values change.
     */
     valuesDidChange: function () {
-      this.get('project').tasksChanged();
+      var project = this.get('project');
+      if (project) { project.tasksDidChange(); }
     }
 
   });
