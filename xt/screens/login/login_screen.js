@@ -16,8 +16,7 @@ enyo.kind({
     // temporary
     var form = XT.loginForm;
     form.$.username.setValue("admin");
-    //form.$.password.setValue("Assemble!Aurora");
-    form.$.password.setValue("admin");
+    form.$.password.setValue("Assemble!Aurora");
     form.$.organization.setValue("aurora");
   }
 });
