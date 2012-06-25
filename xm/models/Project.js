@@ -131,7 +131,7 @@
     }
 
   });
-  
+
   // Add in document mixin
   XM.ProjectBase = XM.ProjectBase.extend(XM.DocumentMixin);
 
@@ -145,7 +145,7 @@
     /** @scope XM.Project.prototype */
 
     recordType: 'XM.Project',
-    
+
     defaults: function () {
       var result = XM.ProjectBase.prototype.defaults.call(this);
       result.owner = result.assignedTo = XM.currentUser;
@@ -415,7 +415,7 @@
     /** @scope XM.ProjectTask.prototype */
 
     recordType: 'XM.ProjectTask',
-    
+
     defaults: function () {
       var result = XM.ProjectBase.prototype.defaults.call(this);
       _.extend(result, {
