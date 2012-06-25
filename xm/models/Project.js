@@ -277,19 +277,22 @@
       this.budgetedExpensesTotal = 0.0;
       this.actualExpensesTotal = 0.0;
 
-      // total up task data
-      // TODO: Use XT.Math object to handle rounding correctly
+      // Total up task data
       _.each(this.get('tasks').models, function (task) {
-        that.budgetedHoursTotal += task.get('budgetedHours');
-        that.actualHoursTotal += task.get('actualHours');
-        that.budgetedExpensesTotal += task.get('budgetedExpenses');
-        that.actualExpensesTotal += task.get('actualExpenses');
+        that.budgetedHoursTotal = XT.math.add(that.budgetedHoursTotal,
+          task.get('budgetedHours'), XT.QTY_SCALE);
+        that.actualHoursTotal = XT.math.add(that.actualHoursTotal,
+          task.get('actualHours'), XT.QTY_SCALE);
+        that.budgetedExpensesTotal = XT.math.add(that.budgetedExpensesTotal,
+          task.get('budgetedExpenses'), XT.MONEY_SCALE);
+        that.actualExpensesTotal = XT.math.add(that.actualExpensesTotal,
+          task.get('actualExpenses'), XT.MONEY_SCALE);
       });
 
-      this.actualHoursBalance = this.budgetedHoursTotal -
-                                this.actualHoursTotal;
-      this.balanceExpensesTotal = this.budgetedExpensesTotal -
-                                  this.actualExpensesTotal;
+      this.actualHoursBalance = XT.math.subtract(this.budgetedHoursTotal,
+        this.actualHoursTotal, XT.QTY_SCALE);
+      this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal,
+        this.actualExpensesTotal, XT.QTY_SCALE);
     }
 
   });
