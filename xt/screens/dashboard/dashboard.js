@@ -12,7 +12,13 @@ enyo.kind({
 
 enyo.kind({
   name: "XT.DashboardIcons",
-  classes: "dashboard-icons",
+  classes: "xt-dashboard-icons",
+  create: function() {
+    this.inherited(arguments);
+    
+    var c$ = this.children.length;
+    this.applyStyle("width", ((114 /*width*/ + 20 /*margin*/)*c$) + "px");
+  },
   components: [
     { name: "crm", kind: "XT.DashboardIcon" },
     { name: "billing", kind: "XT.DashboardIcon" }
@@ -21,8 +27,8 @@ enyo.kind({
 
 enyo.kind({
   name: "XT.DashboardIcon",
-  kind: "FittableRows",
-  classes: "dashboard-icon-column",
+  kind: "Control",
+  classes: "xt-dashboard-icon",
   tap: function() {
     var name = this.name;
     this.bubble(name, {eventName:name});
@@ -38,7 +44,7 @@ enyo.kind({
     this.createComponent({
       name: componentName,
       kind: "Image",
-      classes: "dashboard-icon-image",
+      classes: "xt-dashboard-icon-image",
       src: "images/" + name + "-icon.png"
     });
     
@@ -46,7 +52,7 @@ enyo.kind({
     this.createComponent({
       name: "%@Label".f(componentName),
       content: name,
-      classes: "dashboard-icon-label"
+      classes: "xt-dashboard-icon-label"
     });
   }
 });
