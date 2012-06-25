@@ -6,6 +6,8 @@ var _exec   = require('child_process').exec;
 
 var XT      = {};
 
+XT.enyoVersion = "2.0-beta5";
+
 XT.fileContents = function(path) {
   var contents;
   try {
@@ -87,7 +89,12 @@ if (!_path.existsSync(_path.join(__dirname, "enyo"))) {
   console.log("Pulling enyo source into project");
   var child = _exec("git clone git@github.com:enyojs/enyo.git", function(){});
   child.once("exit", function() {
-    console.log("Enyo has been setup");
+    process.chdir(_path.join(__dirname, "enyo"));
+    var sub = _exec("git checkout " + XT.enyoVersion, function(){});
+    sub.once("exit", function() {
+      process.chdir(__dirname);
+      console.log("Enyo has been setup");
+    });
   });
 }
 
