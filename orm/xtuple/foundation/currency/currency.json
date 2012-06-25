@@ -3,14 +3,14 @@
   "nameSpace": "XM",
   "type": "Currency",
   "table": "curr_symbol",
-  "idSequenceName": "public.curr_symbol_curr_id_seq",
+  "idSequenceName": "curr_symbol_curr_id_seq",
   "comment": "Currency Map",
   "privileges": {
     "all": {
-      "create": true,
+      "create": "CreateNewCurrency",
       "read": true,
-      "update": true,
-      "delete": true
+      "update": "MaintainCurrencies",
+      "delete": "MaintainCurrencies"
     }
   },
   "properties": [
