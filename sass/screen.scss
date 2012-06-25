@@ -209,6 +209,7 @@ body {
             bottom: 0;
             background-color: #fff;
             .xt-user-login-block {
+              background: url("../images/login-blue-scr.png") 0 0 no-repeat;
               position: absolute;
               top: 50%;
               left: 50%;
@@ -219,10 +220,10 @@ body {
               .xt-user-login-sub-block {
                 position: absolute;
                 top: 30px;
-                left: 30px;
+                left: 20px;
                 right: 0;
                 bottom: 30px;
-                background-color: $blue1;
+                /*background-color: $blue1;*/
                 overflow: hidden;
                 .xt-user-login-form {
                   .xt-input {
@@ -243,7 +244,7 @@ body {
               }
             }
             .xt-login-logo-block {
-              @include box-shadow(#000 -9px 0 20px -14px);
+              /*@include box-shadow(#000 -9px 0 20px -14px);*/
               position: absolute;
               top: 50%;
               left: 50%;
