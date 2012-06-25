@@ -50,12 +50,12 @@
     documentKeyDidChange: function () {
       var documentKey = this.documentKey,
         value = this.get(documentKey),
-        upper = value.toUpperCase(),
+        upper = value ? value.toUpperCase() : undefined,
         model = this,
         options = {};
       if (value !== upper) {
         this.set(this.documentKey, upper); // Will check existing on next pass
-      } else {
+      } else if (value) {
         options.success = function (resp) {
           var err = 'Document with key of "' +
                     value + '" already exists.';
