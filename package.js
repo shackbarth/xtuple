@@ -4,7 +4,6 @@ enyo.depends(
   "$lib/Backbone-relational",
   "$lib/layout",
   "$lib/onyx",
-  "$lib/newness-labs",
   "$lib/socket.io",
   "xt",
   "xm",

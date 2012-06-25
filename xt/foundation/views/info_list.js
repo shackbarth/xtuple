@@ -50,7 +50,12 @@ enyo.kind({
   rowClassChanged: function() {
     // need to pass down some information to the list
     this.$.list.setRowClass(this.getRowClass());
-  } 
+  },
+  //showingChanged: function() {
+  //  this.log(this.name, this.showing, this);
+  //  this.inherited(arguments);
+  //  this.log(this.name, this.showing, this);
+  //}
 });
 
 enyo.kind({
@@ -75,8 +80,17 @@ enyo.kind({
     // visible now
     this.parent.setIndex(2);
   },
+  resizeHandler: function(inSender, inEvent) {
+    this.inherited(arguments);
+    //this.log(this.owner.name, this);
+    //if (!this.owner.getShowing()) {
+    //  return true;
+    //} else {
+    //  this.inherited(arguments);
+    //}
+  },
   rowClassChanged: function() {
-    this.log(this.owner.name);
+    //this.log(this.owner.name);
     
     var rowClass = this.getRowClass();
     var component;
@@ -101,10 +115,7 @@ enyo.kind({
     }
   },
   setupRow: function(inSender, inEvent) {
-    
-    if (!this.getShowing()) {
-      return;
-    }
+    //this.log(this.owner.name, this.owner.showing, this);
     
     var col = this.parent.getCollection();
     var row = this.$.item;

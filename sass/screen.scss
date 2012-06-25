@@ -18,31 +18,46 @@ body {}
   background-color: #999;
 }
 
+/** DASHBOARD */
 
-.dashboard {
-  .dashboard-icons-container {
-    width: 100%;
-    height: 113px;
+.xt-app {
+  .xt-dashboard {
+    @include background-image(radial-gradient(#666, #333 70%));
+    background-color: #999;
+    color: #fff;
+    font-weight: bold;
     position: absolute;
-    top: 50%;
-    margin-top: -56px;
-    .dashboard-icons {
-      text-align: center;
-      .dashboard-icon-column {
-        text-align: center;
-        min-width: 200px;
-        display: inline-block;
-        cursor: pointer;
-        .dashboard-icon-image {
-        }
-        .dashboard-icon-label {
-          color: #fff;
-          font-weight: bold;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    .xt-dashboard-container {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      margin-top: -65px;
+      height: 131px;
+      .xt-dashboard-icons {
+        margin: auto auto;
+        .xt-dashboard-icon {
+          @include box-sizing(border-box);
+          display: inline-block;
+          margin: 0 10px;
+          &:hover {
+            cursor: pointer;
+          }
+          .xt-dashboard-icon-label {
+            width: 100%;
+            text-align: center;
+          }
         }
       }
     }
   }
 }
+
+/** END DASHBOARD */
 
 
 .developer-ui-container {
@@ -194,6 +209,7 @@ body {
             bottom: 0;
             background-color: #fff;
             .xt-user-login-block {
+              background: url("../images/login-blue-scr.png") 0 0 no-repeat;
               position: absolute;
               top: 50%;
               left: 50%;
@@ -204,10 +220,10 @@ body {
               .xt-user-login-sub-block {
                 position: absolute;
                 top: 30px;
-                left: 30px;
+                left: 20px;
                 right: 0;
                 bottom: 30px;
-                background-color: $blue1;
+                /*background-color: $blue1;*/
                 overflow: hidden;
                 .xt-user-login-form {
                   .xt-input {
@@ -228,7 +244,7 @@ body {
               }
             }
             .xt-login-logo-block {
-              @include box-shadow(#000 -9px 0 20px -14px);
+              /*@include box-shadow(#000 -9px 0 20px -14px);*/
               position: absolute;
               top: 50%;
               left: 50%;
@@ -240,23 +256,6 @@ body {
           }
         }
       }
-    }
-  }
-}
-
-.xt-login {
-  .xt-dashboard {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    .xt-dashboard-container {
-      position: absolute;
-      width: 100%;
-      top: 50%;
-      margin-top: -100px;
-      height: 200px;
     }
   }
 }

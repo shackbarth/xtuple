@@ -78,32 +78,58 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #999;
 }
 
-/* line 23, ../sass/screen.scss */
-.dashboard .dashboard-icons-container {
-  width: 100%;
-  height: 113px;
-  position: absolute;
-  top: 50%;
-  margin-top: -56px;
-}
-/* line 29, ../sass/screen.scss */
-.dashboard .dashboard-icons-container .dashboard-icons {
-  text-align: center;
-}
-/* line 31, ../sass/screen.scss */
-.dashboard .dashboard-icons-container .dashboard-icons .dashboard-icon-column {
-  text-align: center;
-  min-width: 200px;
-  display: inline-block;
-  cursor: pointer;
-}
-/* line 38, ../sass/screen.scss */
-.dashboard .dashboard-icons-container .dashboard-icons .dashboard-icon-column .dashboard-icon-label {
+/** DASHBOARD */
+/* line 24, ../sass/screen.scss */
+.xt-app .xt-dashboard {
+  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 70, color-stop(0%, #666666), color-stop(70%, #333333));
+  background-image: -webkit-radial-gradient(#666666, #333333 70%);
+  background-image: -moz-radial-gradient(#666666, #333333 70%);
+  background-image: -o-radial-gradient(#666666, #333333 70%);
+  background-image: -ms-radial-gradient(#666666, #333333 70%);
+  background-image: radial-gradient(#666666, #333333 70%);
+  background-color: #999;
   color: #fff;
   font-weight: bold;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+/* line 34, ../sass/screen.scss */
+.xt-app .xt-dashboard .xt-dashboard-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  margin-top: -65px;
+  height: 131px;
+}
+/* line 41, ../sass/screen.scss */
+.xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons {
+  margin: auto auto;
+}
+/* line 43, ../sass/screen.scss */
+.xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 0 10px;
+}
+/* line 47, ../sass/screen.scss */
+.xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon:hover {
+  cursor: pointer;
+}
+/* line 50, ../sass/screen.scss */
+.xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon .xt-dashboard-icon-label {
+  width: 100%;
+  text-align: center;
 }
 
-/* line 48, ../sass/screen.scss */
+/** END DASHBOARD */
+/* line 63, ../sass/screen.scss */
 .developer-ui-container {
   -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
@@ -121,12 +147,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #d8d8d8;
   z-index: 10;
 }
-/* line 58, ../sass/screen.scss */
+/* line 73, ../sass/screen.scss */
 .developer-ui-container .developer-rows .row {
   display: block;
   margin: 10px;
 }
-/* line 64, ../sass/screen.scss */
+/* line 79, ../sass/screen.scss */
 .developer-ui-container .onyx-grabber.developer-grabber {
   -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
@@ -152,7 +178,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   width: 50px;
 }
 
-/* line 78, ../sass/screen.scss */
+/* line 93, ../sass/screen.scss */
 .crm-menu-item {
   padding: 10px;
   margin: 10px 0;
@@ -160,16 +186,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #fff;
   color: #000;
 }
-/* line 84, ../sass/screen.scss */
+/* line 99, ../sass/screen.scss */
 .crm-menu-item.selected {
   background-color: #eee;
 }
-/* line 87, ../sass/screen.scss */
+/* line 102, ../sass/screen.scss */
 .crm-menu-item:hover {
   background-color: #eee;
 }
 
-/* line 93, ../sass/screen.scss */
+/* line 108, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -180,7 +206,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   padding-bottom: 3px;
   border-bottom: 1px solid #ddd;
 }
-/* line 99, ../sass/screen.scss */
+/* line 114, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -191,7 +217,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   max-width: 320px;
   display: inline-block;
 }
-/* line 105, ../sass/screen.scss */
+/* line 120, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column .xt-info-list-basic-column {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -200,7 +226,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: inline-block;
   vertical-align: top;
 }
-/* line 109, ../sass/screen.scss */
+/* line 124, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column .xt-info-list-basic-column .xt-info-list-basic-cell {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -210,22 +236,22 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   font-size: 11px;
 }
 
-/* line 119, ../sass/screen.scss */
+/* line 134, ../sass/screen.scss */
 .project-due-date {
   text-align: right;
 }
 
-/* line 122, ../sass/screen.scss */
+/* line 137, ../sass/screen.scss */
 .project-number {
   font-weight: bold;
 }
 
-/* line 126, ../sass/screen.scss */
+/* line 141, ../sass/screen.scss */
 .contact-phone, .contact-email {
   text-align: right;
 }
 
-/* line 133, ../sass/screen.scss */
+/* line 148, ../sass/screen.scss */
 .xt-sub-module-content {
   -moz-box-shadow: black -4px 0 10px -4px;
   -webkit-box-shadow: black -4px 0 10px -4px;
@@ -233,38 +259,38 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   box-shadow: black -4px 0 10px -4px;
 }
 
-/* line 138, ../sass/screen.scss */
+/* line 153, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu {
   width: 320px !important;
   background-color: #fff;
 }
-/* line 141, ../sass/screen.scss */
+/* line 156, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item {
   padding: 15px;
   vertical-align: middle;
   border-bottom: 1px solid #ddd;
 }
-/* line 145, ../sass/screen.scss */
+/* line 160, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:hover {
   background-color: #d6f1ff;
   cursor: pointer;
 }
-/* line 149, ../sass/screen.scss */
+/* line 164, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:active {
   background-color: #fff;
 }
-/* line 152, ../sass/screen.scss */
+/* line 167, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item.selected {
   background-color: #d6f1ff;
 }
 
 /******** ********/
-/* line 165, ../sass/screen.scss */
+/* line 180, ../sass/screen.scss */
 body {
   font-family: "arial", "arial black";
 }
 
-/* line 169, ../sass/screen.scss */
+/* line 184, ../sass/screen.scss */
 .xt-app {
   position: absolute;
   top: 0;
@@ -272,7 +298,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 175, ../sass/screen.scss */
+/* line 190, ../sass/screen.scss */
 .xt-app .xt-postbooks {
   position: absolute;
   top: 0;
@@ -280,7 +306,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 181, ../sass/screen.scss */
+/* line 196, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container {
   position: absolute;
   top: 0;
@@ -288,7 +314,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 189, ../sass/screen.scss */
+/* line 204, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen {
   position: absolute;
   top: 0;
@@ -297,8 +323,9 @@ body {
   bottom: 0;
   background-color: #fff;
 }
-/* line 196, ../sass/screen.scss */
+/* line 211, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block {
+  background: url("../images/login-blue-scr.png") 0 0 no-repeat;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -307,34 +334,31 @@ body {
   height: 250px;
   width: 300px;
 }
-/* line 204, ../sass/screen.scss */
+/* line 220, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block {
   position: absolute;
   top: 30px;
-  left: 30px;
+  left: 20px;
   right: 0;
   bottom: 30px;
-  background-color: #99ccff;
+  /*background-color: $blue1;*/
   overflow: hidden;
 }
-/* line 214, ../sass/screen.scss */
+/* line 230, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-input.xt-login-input {
   display: block;
   margin: 10px;
   margin-left: 35px;
 }
-/* line 221, ../sass/screen.scss */
+/* line 237, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-button.xt-login-button {
   display: block;
   margin-left: 152px;
   width: 80px;
 }
-/* line 230, ../sass/screen.scss */
+/* line 246, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-login-logo-block {
-  -moz-box-shadow: black -9px 0 20px -14px;
-  -webkit-box-shadow: black -9px 0 20px -14px;
-  -o-box-shadow: black -9px 0 20px -14px;
-  box-shadow: black -9px 0 20px -14px;
+  /*@include box-shadow(#000 -9px 0 20px -14px);*/
   position: absolute;
   top: 50%;
   left: 50%;
@@ -344,24 +368,7 @@ body {
   background: url("../images/login-logo.png") 0 0 no-repeat;
 }
 
-/* line 248, ../sass/screen.scss */
-.xt-login .xt-dashboard {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-/* line 254, ../sass/screen.scss */
-.xt-login .xt-dashboard .xt-dashboard-container {
-  position: absolute;
-  width: 100%;
-  top: 50%;
-  margin-top: -100px;
-  height: 200px;
-}
-
-/* line 267, ../sass/screen.scss */
+/* line 266, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper {
   position: absolute;
   top: 80px;
@@ -369,7 +376,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 273, ../sass/screen.scss */
+/* line 272, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list {
   position: absolute;
   top: 0;
@@ -377,13 +384,13 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 280, ../sass/screen.scss */
+/* line 279, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list .xt-session-selection-row div {
   display: inline-block;
   padding: 5px;
 }
 
-/* line 293, ../sass/screen.scss */
+/* line 292, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-input {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -400,7 +407,7 @@ body {
   font-family: "arial", "arial black";
   width: 180px;
 }
-/* line 305, ../sass/screen.scss */
+/* line 304, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -417,11 +424,11 @@ body {
   background-color: #fff;
   color: #aaa;
 }
-/* line 315, ../sass/screen.scss */
+/* line 314, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button:active {
   background-color: #ddd;
 }
-/* line 320, ../sass/screen.scss */
+/* line 319, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-screen-carousel {
   height: 100%;
   width: 100%;

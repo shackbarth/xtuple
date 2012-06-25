@@ -16,7 +16,7 @@ enyo.kind({
     var idx = children.indexOf(view);
     var prev = this.previousView;
     
-    this.log(this.name, "currentViewChanged", viewName);
+    //this.log(this.name, "currentViewChanged", viewName);
     
     if (idx === -1) {
       
