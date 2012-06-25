@@ -18,23 +18,23 @@ enyo.kind({
   },
   checkWaitingList: function(inSender, inTaskName) {
     // check to see if this is one we're waiting for...
-    this.log(this.getTaskName(), arguments);
+    //this.log(this.getTaskName(), arguments);
     var wl = this.getWaitingList();
     
     if (wl && wl.length > 0) {
       if (wl.indexOf(inTaskName) > -1) {
-        this.log(this.getTaskName(), "needs to remove %@ from waiting list".f(inTaskName));
+        //this.log(this.getTaskName(), "needs to remove %@ from waiting list".f(inTaskName));
         this.setWaitingList((wl = _.without(wl, inTaskName)));
-        this.log(this.getTaskName(), wl);
+        //this.log(this.getTaskName(), wl);
       }
     }
   },
   exec: function() {
     // execute the task
-    this.log(this.getTaskName());
+    //this.log(this.getTaskName());
     
     if (this.getIsComplete()) {
-      this.log("Called my exec again?");
+      //this.log("Called my exec again?");
       return true;
     }
     
@@ -43,7 +43,7 @@ enyo.kind({
       this.error("Could not execute without an actual task");
       return false;
     } else if (this.getWaitingList().length > 0) {
-      this.log(this.getTaskName(), "waiting on ", this.getWaitingList());
+      //this.log(this.getTaskName(), "waiting on ", this.getWaitingList());
       return false;
     } else { 
       task.call(this);
@@ -51,7 +51,7 @@ enyo.kind({
     }
   },
   didComplete: function() {
-    this.log(this.getTaskName());
+    //this.log(this.getTaskName());
     this.setIsComplete(true);
     this.doNotifyDidComplete();
   },
@@ -99,16 +99,16 @@ new (enyo.kind({
       
       if (this.getIsStarted()) {
         
-        this.log("this bitch was started yo");
+        //this.log("this bitch was started yo");
         
         task.exec();
       } else {
         
-        this.log("pushing %@ to the queue".f(task.getTaskName()));
+        //this.log("pushing %@ to the queue".f(task.getTaskName()));
         queue.push(task);
       }
     } else {
-      this.log("Attempt to register task multiple times");
+      //this.log("Attempt to register task multiple times");
     }    
   },
   handlers: {
@@ -124,7 +124,7 @@ new (enyo.kind({
     
     completed.push(taskName);
     
-    this.log(taskName);
+    //this.log(taskName);
     
     for (task in tasks) {
       if (tasks.hasOwnProperty(task)) {
@@ -139,7 +139,7 @@ new (enyo.kind({
     
     if (num > completed.length) {
       this.start();
-    } else { this.log("All tasks have checked in"); }
+    } else { /*this.log("All tasks have checked in");*/ }
   },
   start: function() {
     if (this.getIsStarted()) {
@@ -152,10 +152,10 @@ new (enyo.kind({
     var task;
     var len = queue.length;
     
-    this.log(queue);
+    //this.log(queue);
     
     if (!queue || queue.length <= 0) {
-      this.log("No tasks in queue");
+      //this.log("No tasks in queue");
       this.setIsStarted(true);
       return;
     }
@@ -164,7 +164,7 @@ new (enyo.kind({
       task = queue.shift();
       if (!task.exec()) {
         
-        this.log("task %@ was not ready and is being re-added to queue".f(task.getTaskName()));
+        //this.log("task %@ was not ready and is being re-added to queue".f(task.getTaskName()));
         re.push(task);
       }
     }

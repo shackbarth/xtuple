@@ -115,7 +115,7 @@ enyo.kind({
     var curr = inComponent;
     var elems = inElement;
     
-    console.log("found array", inComponent, inElement);
+    //console.log("found array", inComponent, inElement);
 
     
     // TODO: this could be handled in much better ways...
@@ -127,7 +127,7 @@ enyo.kind({
         
     if (curr.kind !== "XT.InfoListBasicColumn") {
       
-      console.log("creating new basic column");
+      //console.log("creating new basic column");
       
       ret = curr;
       
@@ -142,11 +142,11 @@ enyo.kind({
     //  style: "width: " + width + "px;"
     //});
     
-    console.log("begin");
+    //console.log("begin");
     
     for (; idx < elems.length; ++idx) {
       
-      console.log(elems[idx]);
+      //console.log(elems[idx]);
       
       elem = elems[idx];
       if (elem instanceof Array) {
@@ -156,7 +156,7 @@ enyo.kind({
       }
     }
     
-    console.log("end");
+    //console.log("end");
     
     return ret;
   },
