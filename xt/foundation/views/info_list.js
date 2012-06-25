@@ -90,7 +90,7 @@ enyo.kind({
     //}
   },
   rowClassChanged: function() {
-    this.log(this.owner.name);
+    //this.log(this.owner.name);
     
     var rowClass = this.getRowClass();
     var component;
