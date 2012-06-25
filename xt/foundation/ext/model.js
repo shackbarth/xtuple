@@ -985,8 +985,7 @@
     findExisting: function (key, value, options) {
       var recordType = this.recordType || this.prototype.recordType,
         params = [ recordType, key, value, this.id || -1 ];
-      XT.dataSource.dispatch('XT.Model', 'findExisting',
-                             params, options);
+      XT.dataSource.dispatch('XT.Model', 'findExisting', params, options);
       console.log("XT.Model.findExisting for: " + recordType);
       return this;
     },

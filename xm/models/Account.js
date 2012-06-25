@@ -8,6 +8,307 @@
 
   /**
     @class
+
+    @extends XT.Model
+    @extends XM.Document
+  */
+  XM.Account = XM.Document.extend({
+    /** @scope XM.Account.prototype */
+
+    defaults: {
+      owner: XM.currentUser,
+      isActive: true,
+      accountType: 'O'
+    },
+
+    privileges: {
+      "all": {
+        "create": "MaintainAllCRMAccounts",
+        "read": "ViewAllCRMAccounts",
+        "update": "MaintainAllCRMAccounts",
+        "delete": "MaintainAllCRMAccounts"
+      },
+      "personal": {
+        "create": "MaintainPersonalCRMAccounts",
+        "read": "ViewPersonalCRMAccounts",
+        "update": "MaintainPersonalCRMAccounts",
+        "delete": "MaintainPersonalCRMAccounts",
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+
+    requiredAttributes: [
+      "accountType",
+      "isActive",
+      "number",
+      "name"
+    ],
+    
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'primaryContact',
+      relatedModel: 'XM.ContactInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'secondaryContact',
+      relatedModel: 'XM.ContactInfo'
+    }, {
+      type: Backbone.HasOne,
+      key: 'owner',
+      relatedModel: 'XM.UserAccountInfo'
+    }, {
+      type: Backbone.HasMany,
+      key: 'comments',
+      relatedModel: 'XM.AccountComment',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'characteristics',
+      relatedModel: 'XM.AccountCharacteristic',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'accounts',
+      relatedModel: 'XM.AccountAccount',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'contacts',
+      relatedModel: 'XM.AccountContact',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'items',
+      relatedModel: 'XM.AccountItem',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'files',
+      relatedModel: 'XM.AccountFile',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'images',
+      relatedModel: 'XM.AccountImage',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'urls',
+      relatedModel: 'XM.AccountUrl',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasMany,
+      key: 'projects',
+      relatedModel: 'XM.AccountProject',
+      reverseRelation: {
+        key: 'account'
+      }
+    }, {
+      type: Backbone.HasOne,
+      key: 'userAccount',
+      relatedModel: 'XM.UserAccountInfo',
+      includeInJSON: 'username'
+    }, {
+      type: Backbone.HasOne,
+      key: 'salesRep',
+      relatedModel: 'XM.SalesRep',
+      includeInJSON: 'guid'
+    }, {
+      type: Backbone.HasOne,
+      key: 'taxAuthority',
+      relatedModel: 'XM.TaxAuthority',
+      includeInJSON: 'guid'
+    }]
+
+  });
+
+  // Add in document mixin
+  XM.Account = XM.Account.extend(XM.DocumentMixin);
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountComment = XT.Model.extend({
+    /** @scope XM.AccountComment.prototype */
+
+    recordType: 'XM.AccountComment'
+
+  });
+  
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountCharacteristic = XT.Model.extend({
+    /** @scope XM.AccountCharacteristic.prototype */
+
+    recordType: 'XM.AccountCharacteristic'
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountAccount = XT.Model.extend({
+    /** @scope XM.AccountAccount.prototype */
+
+    recordType: 'XM.AccountAccount',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'accounts',
+      relatedModel: 'XM.AccountInfo'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountContact = XT.Model.extend({
+    /** @scope XM.AccountContact.prototype */
+
+    recordType: 'XM.AccountContact',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'contacts',
+      relatedModel: 'XM.ContactInfo'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountItem = XT.Model.extend({
+    /** @scope XM.AccountItem.prototype */
+
+    recordType: 'XM.AccountItem',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'items',
+      relatedModel: 'XM.ItemInfo'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountFile = XT.Model.extend({
+    /** @scope XM.AccountFile.prototype */
+
+    recordType: 'XM.AccountFile',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'files',
+      relatedModel: 'XM.FileInfo'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountImage = XT.Model.extend({
+    /** @scope XM.AccountImage.prototype */
+
+    recordType: 'XM.AccountImage',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'images',
+      relatedModel: 'XM.ImageInfo'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountUrl = XT.Model.extend({
+    /** @scope XM.AccountUrl.prototype */
+
+    recordType: 'XM.AccountUrl',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'url',
+      relatedModel: 'XM.Url'
+    }]
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.AccountProject = XT.Model.extend({
+    /** @scope XM.AccountProject.prototype */
+
+    recordType: 'XM.AccountProject',
+
+    isDocumentAssignment: true,
+
+    relations: [{
+      type: Backbone.HasOne,
+      key: 'project',
+      relatedModel: 'XM.ProjectInfo'
+    }]
+
+  });
+
+  /**
+    @class
   
     @extends XT.Model
   */
@@ -38,6 +339,24 @@
 
     recordType: 'XM.AccountInfo',
 
+    privileges: {
+      "all": {
+        "create": false,
+        "read": "ViewAllCRMAccounts",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": true,
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+
     relations: [{
       type: Backbone.HasOne,
       key: 'primaryContact',
@@ -49,6 +368,10 @@
     }]
 
   });
+
+  // ..........................................................
+  // COLLECTIONS
+  //
 
   /**
     @class
