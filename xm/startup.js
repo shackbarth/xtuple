@@ -55,6 +55,32 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
+  taskName: "loadCountries",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.countries = new XM.CountryCollection();
+    XM.countries.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+
+XT.StartupTask.create({
+  taskName: "loadStates",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.states = new XM.StateCollection();
+    XM.states.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+
+XT.StartupTask.create({
   taskName: "loadPriorities",
   task: function() {
     var options = {

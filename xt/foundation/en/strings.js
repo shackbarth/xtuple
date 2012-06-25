@@ -631,6 +631,7 @@ SC.stringsFor("en_US", {
   // Messages
   // ********
 
+  "_attributeLengthInvalid": "Length of {attr} must be {length}.",
   "_attributeIsRequired": "'{attr}' is required.",
   "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.", 
   "_attributeNotInSchema": "'{attr}' does not exist in the schema.", 
