@@ -127,6 +127,32 @@ enyo.mixin(XT,
     return re.toLocaleTimeString();
   },
   
-  getObjectByName: Backbone.Relational.store.getObjectByName
+  getObjectByName: Backbone.Relational.store.getObjectByName,
+  
+  /**
+    @NOTE: some logic borrowed from SproutCore
+  */
+  A: function(obj) {
+    if (obj === null || obj === undefined) return [];
+    if (obj.slice instanceof Function) {
+      if (typeof obj === "string") return [obj];
+      else return obj.slice();
+    }
+    
+    var ret = [];
+    
+    // case of function arguments that has length property
+    if (obj.length) {
+      var len = obj.length;
+      while(--len >= 0) ret[len] = obj[len];
+      return ret;
+    }
+    
+    // for cases where we just convert the values from an
+    // object to an array and discard the keys...
+    return _.values(obj);
+  }
 
 });
+
+XT.$A = XT.A;

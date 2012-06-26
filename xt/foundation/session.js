@@ -19,7 +19,8 @@ enyo.kind(
   SETTINGS: 0x01,
   PRIVILEGES: 0x02,
   SCHEMA: 0x04,
-  ALL: 0x01 | 0x02 | 0x04,
+  LOCALE: 0x08,
+  ALL: 0x01 | 0x02 | 0x04 | 0x08,
   
   create: function() {
     this.inherited(arguments);
@@ -110,6 +111,23 @@ enyo.kind(
       };
 
       XT.dataSource.dispatch('XT.Session', 'schema', 'xm', schemaOptions);
+    }
+
+    if (types & this.LOCALE) {
+      
+      // TEMPORARY IMPLEMENTATION TO INTERPRET FROM SOURCE
+      if (!XT.locale) {
+        XT.locale = new XT.Locale();
+      }
+      
+      if (XT.lang) {
+        XT.locale.setLanguage(XT.lang);
+      } else { enyo.log("XT.session.loadSessionObjects(): could not find " +
+        "a valid language to load"); }
+        
+      if (callback && callback instanceof Function) {
+        setTimeout(callback, 1);
+      }
     }
 
     return true;
