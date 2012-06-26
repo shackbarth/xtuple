@@ -132,14 +132,23 @@
     didChange: function (model, options) {
       model = model || {};
       var K = XT.Model,
-        status = this.getStatus();
-
-      // Update `prime` with original attributes for tracking
-      _.defaults(this.prime, this.changed);
+        status = this.getStatus(),
+        attr;
+      if (options.force) { return; }
 
       // Mark dirty if we should
-      if (status === K.READY_CLEAN && !options.force) {
+      if (status === K.READY_CLEAN) {
         this.setStatus(K.READY_DIRTY);
+      }
+
+      // Update `prime` with original attributes for tracking
+      if (status & K.READY) {
+        for (attr in this.changed) {
+          if (this.changed.hasOwnProperty(attr) &&
+              this.prime[attr] === undefined) {
+            this.prime[attr] = this.previous(attr);
+          }
+        }
       }
     },
 
@@ -417,7 +426,6 @@
           !_.contains(this.requiredAttributes, this.idAttribute)) {
         this.requiredAttributes.push(this.idAttribute);
       }
-      this.setReadOnly('dataState');
       this.setReadOnly('type');
 
       // Bind events
