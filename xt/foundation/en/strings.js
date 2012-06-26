@@ -11,7 +11,7 @@
 // localized string added to this file!
 //
 
-SC.stringsFor("en_US", {
+XT.stringsFor("en_US", {
 
   // ********
   // Labels

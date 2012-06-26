@@ -80,21 +80,6 @@ enyo.kind({
   indexChanged: function() {
     this.inherited(arguments);
   },
-	bubble: function(inEventName, inEvent, inSender) {
-		var e = inEvent || {};
-		// FIXME: is this the right place?
-		if (!("originator" in e)) {
-			e.originator = inSender || this;
-			// FIXME: use indirection here?
-			//e.delegate = e.originator.delegate || e.originator.owner;
-		}
-		
-		if (!("eventName" in e)) {
-      e.eventName = inEventName;
-		}
-		
-		return this.dispatchBubble(inEventName, e, inSender);
-	},
 	completed: function() {
     var active;
     
