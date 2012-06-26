@@ -485,9 +485,9 @@
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Comment
   */
-  XM.ProjectComment = XT.Model.extend({
+  XM.ProjectComment = XM.Comment.extend({
     /** @scope XM.ProjectComment.prototype */
 
     recordType: 'XM.ProjectComment'
@@ -649,9 +649,9 @@
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Comment
   */
-  XM.ProjectTaskComment = XT.Model.extend({
+  XM.ProjectTaskComment = XM.Comment.extend({
     /** @scope XM.ProjectTaskComment.prototype */
 
     recordType: 'XM.ProjectTaskComment'

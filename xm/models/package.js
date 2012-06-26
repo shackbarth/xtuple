@@ -1,6 +1,10 @@
 enyo.depends(
+  // Base classes
   "document.js",
+  "comment.js",
   "account.js",
+  
+  // Sub classes
   "address.js",
   "contact.js",
   "currency.js",

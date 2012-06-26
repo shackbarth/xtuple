@@ -183,9 +183,9 @@
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Comment
   */
-  XM.AccountComment = XT.Model.extend({
+  XM.AccountComment = XM.Comment.extend({
     /** @scope XM.AccountComment.prototype */
 
     recordType: 'XM.AccountComment'

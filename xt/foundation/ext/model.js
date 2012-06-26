@@ -131,6 +131,7 @@
     */
     didChange: function (model, options) {
       model = model || {};
+      options = options || {};
       var K = XT.Model,
         status = this.getStatus(),
         attr;
@@ -939,8 +940,7 @@
         isGrantedAll = false,
         isGrantedPersonal = false,
         username = XT.session.details.username,
-        i,
-        props;
+        value, i, props;
 
       // If no privileges, nothing to check.
       if (_.isEmpty(privs)) { return true; }
@@ -967,7 +967,9 @@
 
         isGrantedPersonal = false;
         while (!isGrantedPersonal && i < props.length) {
-          isGrantedPersonal = model.original(props[i].get('username')) === username;
+          value = model.original(props[i]);
+          value = typeof value === 'object' ? value.get('username') : value;
+          isGrantedPersonal = value === username;
           i += 1;
         }
       }
