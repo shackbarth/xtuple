@@ -5,6 +5,10 @@ enyo.depends(
   "request.js",
   "response.js",
   "session.js",
+  "locale.js",
   "ext",
-  "views"
+  "views",
+  
+  // LANG FILE -- TEMPORARY
+  "en"
 );

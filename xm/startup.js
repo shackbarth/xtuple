@@ -30,6 +30,17 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
+  taskName: "loadSessionLocale",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XT.session.loadSessionObjects(XT.session.LOCALE, options);
+  }
+});
+
+
+XT.StartupTask.create({
   taskName: "loadPriorities",
   task: function() {
     var options = {

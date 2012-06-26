@@ -4,25 +4,39 @@
 XT.String = {
   
   /**
-  Localize the string.
-  
-  TODO: Make me do something.
+    Localize the string.
   */
-  loc: function() {
-    return this.toString();
+  loc: function(str) {
+    if (!XT.locale) {
+      enyo.warn("XT.String.loc(): attempt to localize string but no locale set");
+      return str;
+    }
+    
+    var args = XT.$A(arguments);
+    var localized = XT.locale.loc(str);
+        
+    args.shift();
+    
+    if (args.length > 0) {
+      try {
+        return XT.String.format(localized, args);
+      } catch(err) {
+        enyo.error("could not localize string, %@".f(str), err);
+      }
+    } else { return localized; }
   },
   
   /**
+    @NOTE: does not currently detect recursion depth...
   */
-  format: function() {
-    if (arguments.length === 0) return this;
+  format: function(str, args) {    
+    if (arguments.length === 0) return "";
+    if (arguments.length === 1) return str;
     
-    var args = Array.prototype.slice.call(arguments);
     var idx = 0;
-    var str = this;
     var type;
     var arg;
-    
+        
     for (; idx < args.length; ++idx) {
       arg = args[idx];
       if (!arg) continue;
@@ -33,7 +47,7 @@ XT.String = {
         str = str.replace(/\%@/, arg);
       } else { continue; }
     }
-    
+        
     return str;
   },
   
@@ -62,8 +76,9 @@ XT.String = {
   
   /**
   */
-  trim: function trim() {
-    return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+  trim: function trim(str) {
+    if (!str || !(string instanceof String)) return "";
+    return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
   }
   
 };

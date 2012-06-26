@@ -1,29 +1,21 @@
 
 /**
 */
-enyo.mixin(String.prototype,
-  /** @scope String.prototype */ {
-
-  /**
-  */
+enyo.mixin(String.prototype, {
   format: function() {
-    return XT.String.format.apply(this, arguments);
+    var args = XT.$A(arguments);
+    return XT.String.format(this, args);
   },
-  
-  /**
-  */
   f: function() {
-    return XT.String.format.apply(this, arguments);
+    var args = XT.$A(arguments);
+    return XT.String.format(this, args);
   },
-  
   loc: function() {
-    return XT.String.loc.apply(this, arguments);
+    var args = XT.$A(arguments);
+    args.unshift(this);    
+    return XT.String.loc.apply(XT.String, args);
   },
-  
-  /**
-  */
   trim: function() {
-    return XT.String.trim.call(this);
-  }
-    
+    return XT.String.trim(this);
+  }  
 });
