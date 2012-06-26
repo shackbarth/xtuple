@@ -102,7 +102,6 @@
     initialize: function () {
       XM.ProjectStatus.prototype.initialize.apply(this, arguments);
       this.on('change:status', this.projectStatusDidChange);
-      this.on('statusChange', this.statusDidChange);
     },
 
     statusDidChange: function () {
@@ -686,6 +685,10 @@
     }]
 
   });
+  
+  // ..........................................................
+  // COLLECTIONS
+  //
 
   /**
     @class

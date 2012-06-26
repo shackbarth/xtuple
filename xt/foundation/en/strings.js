@@ -68,6 +68,7 @@ XT.stringsFor("en_US", {
   "_apply": "Apply",
   "_applyBalanceAs": "Apply Balance as",
   "_applyCredit": "Apply Credit",
+  "_array": "Array",
   "_assignDate": "Assign Date",
   "_assigned": "Assigned",
   "_assignedTo": "Assigned To",
@@ -101,6 +102,7 @@ XT.stringsFor("en_US", {
   "_billtoName": "Bill-to Name",
   "_billtoPostalCode": "Bill-to Postal Code",
   "_billtoState": "Bill-to State",
+  "_boolean": "Boolean",
   "_budget": "Budget",
   "_budgets": "Budgets",
   "_budgetLabel": "Budget Label",
@@ -401,6 +403,7 @@ XT.stringsFor("en_US", {
   "_nextCheckNumber": "Next Check Number",
   "_notes": "Notes",
   "_number": "Number",
+  "_object": "Object",
   "_Open…": "Open…",
   "_offset": "Offset",
   "_other": "Other",
@@ -551,6 +554,7 @@ XT.stringsFor("en_US", {
   "_state": "State",
   "_states": "States",
   "_status": "Status",
+  "_string": "String",
   "_subAccount": "Sub Account",
   "_subtotal": "Subtotal",
   "_subType": "Sub Type",
@@ -626,6 +630,16 @@ XT.stringsFor("en_US", {
   // ********
   // Messages
   // ********
+
+  "_attributeLengthInvalid": "Length of {attr} must be {length}.",
+  "_attributeIsRequired": "'{attr}' is required.",
+  "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.", 
+  "_attributeNotInSchema": "'{attr}' does not exist in the schema.", 
+  "_attributeReadOnly": "Can not edit read only attribute(s).",
+  "_canNotUpdate": "Insufficient privileges to edit the record.",
+  "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
+  "_recursiveParentDisallowed": "Record is no allowed to reference itself as the parent.",
+  "_valueExists": "Record with {attr} of '{value}' already exists.",
 
   /** ******** LEGACY MESSAGES - REUSE IF USEFUL ********
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",

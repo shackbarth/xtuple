@@ -132,14 +132,23 @@
     didChange: function (model, options) {
       model = model || {};
       var K = XT.Model,
-        status = this.getStatus();
-
-      // Update `prime` with original attributes for tracking
-      _.defaults(this.prime, this.changed);
+        status = this.getStatus(),
+        attr;
+      if (options.force) { return; }
 
       // Mark dirty if we should
-      if (status === K.READY_CLEAN && !options.force) {
+      if (status === K.READY_CLEAN) {
         this.setStatus(K.READY_DIRTY);
+      }
+
+      // Update `prime` with original attributes for tracking
+      if (status & K.READY) {
+        for (attr in this.changed) {
+          if (this.changed.hasOwnProperty(attr) &&
+              this.prime[attr] === undefined) {
+            this.prime[attr] = this.previous(attr);
+          }
+        }
       }
     },
 
@@ -183,6 +192,7 @@
       var klass = this.getClass(),
         success = options.success,
         model = this,
+        result,
         K = XT.Model,
         parent = this.getParent(true),
         children = [],
@@ -201,6 +211,7 @@
       if ((parent && parent.canUpdate(this)) ||
           (!parent && klass.canDelete(this))) {
         this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
+        this._wasNew = this.isNew(); // Hack so prototype call will still work
 
         // If it's top level commit to the server now.
         if (!parent && klass.canDelete(this)) {
@@ -215,7 +226,10 @@
             }
             if (success) { success(model, resp, options); }
           };
-          return Backbone.Model.prototype.destroy.call(this, options);
+          result = Backbone.Model.prototype.destroy.call(this, options);
+          delete this._wasNew;
+          return result;
+          
         }
 
         // Otherwise just marked for deletion.
@@ -412,7 +426,6 @@
           !_.contains(this.requiredAttributes, this.idAttribute)) {
         this.requiredAttributes.push(this.idAttribute);
       }
-      this.setReadOnly('dataState');
       this.setReadOnly('type');
 
       // Bind events
@@ -428,7 +441,7 @@
     */
     isNew: function () {
       var K = XT.Model;
-      return this.getStatus === K.READY_NEW;
+      return this.getStatus() === K.READY_NEW || this._wasNew;
     },
 
     /**
@@ -690,19 +703,19 @@
         * Data type integrity.
         * Required fields (when committing).
         * Read Only and Privileges (when editing).
-    
-      Reimplement your own custom validation code here, but make sure
-      to call back to the superclass at the top of your function using:
   
-      return XT.Model.prototype.validate.call(this, attributes, options);
-  
-      Returns `undefined` if the validation succeeded, or value, usually
-      an error if it fails.
+      Returns `undefined` if the validation succeeded, or some value, usually
+      an error message, if it fails.
       
       Use the `force` option to ignore validation. This is useful when
       higher level function calls passing through `set` need to skip
       validation to work properly.
+      
+      It is recommended customizations be implemented on `validateEdit` to
+      reduce risk of accidentally over-writing or losing logic included in the
+      base validate function.
   
+      @seealso `validateEdit`
       @param {Object} Attributes
       @param {Object} Options
     */
@@ -728,7 +741,6 @@
           });
           return rel ? _.isObject(value) : false;
         },
-
         getColumn = function (attr) {
           return _.find(columns, function (column) {
             return column.name === attr;
@@ -736,15 +748,9 @@
         };
 
       // Don't allow editing of records that are ineligable
-      if (status === K.ERROR) {
-        return 'Record is in an error state: ' + this.lastError;
-      }
-      if (status === K.EMPTY) {
-        return 'Record with status of `EMPTY` is not editable. Fetch an ' +
-               'existing record or initialize with the `isNew` option.';
-      }
-      if (status & K.DESTROYED) {
-        return 'Can not edit destroyed record.';
+      if (status === K.ERROR || status === K.EMPTY || (status & K.DESTROYED)) {
+        return "_recordStatusNotEditable".loc()
+               .replace("{status}", this.getStatusString());
       }
 
       // Check data type integrity
@@ -752,7 +758,7 @@
         if (attributes.hasOwnProperty(attr) &&
             !_.isNull(attributes[attr]) &&
             !_.isUndefined(attributes[attr])) {
-          msg = 'The value of "' + attr + '" must be a{type}.';
+          msg = "_attributeTypeMismatch".loc();
           value = attributes[attr];
           column = getColumn(attr);
           category = column ? column.category : false;
@@ -761,38 +767,38 @@
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value)) {
-              return msg.replace('{type}', ' string');
+              return msg.replace('{type}', "_string".loc());
             }
             break;
           case S.DB_NUMBER:
             if (!_.isNumber(value) &&
                 !isRelation(attr, value, Backbone.HasOne)) {
-              return msg.replace('{type}', ' number');
+              return msg.replace('{type}', "_number".loc());
             }
             break;
           case S.DB_DATE:
             if (!_.isDate(value)) {
-              return msg.replace('{type}', ' date');
+              return msg.replace('{type}', "_date".loc());
             }
             break;
           case S.DB_BOOLEAN:
             if (!_.isBoolean(value)) {
-              return msg.replace('{type}', ' boolean');
+              return msg.replace('{type}', "_boolean".loc());
             }
             break;
           case S.DB_ARRAY:
             if (!_.isArray(value) &&
                 !isRelation(attr, value, Backbone.HasMany)) {
-              return msg.replace('{type}', 'n array');
+              return msg.replace('{type}', "_array".loc());
             }
             break;
           case S.DB_COMPOUND:
             if (!_.isObject(value)) {
-              return msg.replace('{type}', 'n object');
+              return msg.replace('{type}', "_object".loc());
             }
             break;
           default:
-            return '"' + attr + '" does not exist in the schema.';
+            return "_attributeNotInSchema".loc().replace("{attr}", attr);
           }
         }
       }
@@ -801,7 +807,8 @@
       if (status === K.BUSY_COMMITTING) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
           if (attributes[this.requiredAttributes[i]] === undefined) {
-            return "'" + this.requiredAttributes[i] + "' is required.";
+            msg = ("_" + this.requiredAttributes[i]).loc();
+            return "_attributeIsRequired".loc().replace("{attr}", msg);
           }
         }
       }
@@ -811,14 +818,30 @@
         for (attr in attributes) {
           if (attributes[attr] !== this.original(attr) &&
               this.isReadOnly(attr)) {
-            return 'Can not edit read only attribute(s).';
+            return "_attributeReadOnly".loc();
           }
         }
 
         if (!this.canUpdate()) {
-          return 'Insufficient privileges to update attribute(s)';
+          return "_canNotUpdate".loc();
         }
       }
+      
+      return this.validateEdit(attributes, options);
+    },
+
+    /**
+      Called at the end of the `validate` function if the function has not
+      returned a result for any other reason. This is the safest place to
+      implement custom validation. The default implementation returns
+      `undefined`.
+
+      @seealso `validate`
+      @param {Object} Attributes
+      @param {Object} Options
+    */
+    validateEdit: function (attributes, options) {
+      // Implement custom code here on your own class
     }
 
   });
@@ -975,8 +998,7 @@
     findExisting: function (key, value, options) {
       var recordType = this.recordType || this.prototype.recordType,
         params = [ recordType, key, value, this.id || -1 ];
-      XT.dataSource.dispatch('XT.Model', 'findExisting',
-                             params, options);
+      XT.dataSource.dispatch('XT.Model', 'findExisting', params, options);
       console.log("XT.Model.findExisting for: " + recordType);
       return this;
     },
