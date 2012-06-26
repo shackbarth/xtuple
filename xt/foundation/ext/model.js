@@ -183,6 +183,7 @@
       var klass = this.getClass(),
         success = options.success,
         model = this,
+        result,
         K = XT.Model,
         parent = this.getParent(true),
         children = [],
@@ -201,6 +202,7 @@
       if ((parent && parent.canUpdate(this)) ||
           (!parent && klass.canDelete(this))) {
         this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
+        this._wasNew = true; // Hack so prototype function will still work
 
         // If it's top level commit to the server now.
         if (!parent && klass.canDelete(this)) {
@@ -215,7 +217,10 @@
             }
             if (success) { success(model, resp, options); }
           };
-          return Backbone.Model.prototype.destroy.call(this, options);
+          result = Backbone.Model.prototype.destroy.call(this, options);
+          delete this._wasNew;
+          return result;
+          
         }
 
         // Otherwise just marked for deletion.
@@ -428,7 +433,7 @@
     */
     isNew: function () {
       var K = XT.Model;
-      return this.getStatus === K.READY_NEW;
+      return this.getStatus() === K.READY_NEW || this._wasNew;
     },
 
     /**

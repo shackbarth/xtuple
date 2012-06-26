@@ -29,10 +29,25 @@
       If set, the number Policy property will be set based on the number
       generation policy on this setting.
       
-      @seealso `getNumberPolicy`
+      @seealso `numberPolicy`
       @type {String}
     */
     numberPolicySetting: null,
+    
+    /**
+      Number generation method for the document key that can be one of three constants:
+        XM.Document.MANUAL_NUMBER
+        XM.Document.AUTO_NUMBER
+        XM.Document.AUTO_OVERRIDE_NUMBER
+
+      Can be inferred from the setting that controls this for a given record type
+      if it is set.
+
+      @seealso `numberPolicySetting`
+      @type {String}
+      @default XT.MANUAL_NUMBER
+    */
+    numberPolicy: null,
 
     // ..........................................................
     // METHODS
@@ -55,7 +70,7 @@
         that = this,
         status = this.getStatus(),
         value = this.get(this.documentKey),
-        upper = value ? value.toUpperCase() : undefined,
+        upper = value && value.toUpperCase ? value.toUpperCase() : value,
         options = {};
         
       // Handle uppercase
@@ -83,39 +98,33 @@
     
     initialize: function (attributes, options) {
       XT.Model.prototype.initialize.apply(this, arguments);
-      var K = XM.Document;
+      var K = XM.Document,
+        policy;
       attributes = attributes || {};
+      
+      // Set number policy if not already set
+      if (!this.numberPolicy) {
+        if (this.numberPolicySetting) {
+          policy = XT.session.getSettings.get(this.numberPolicySetting);
+        }
+        this.numberPolicy =  policy ? policy : K.MANUAL_NUMBER;
+      }
+      
+      // Fetch number if auto
       if (options && options.isNew &&
-         (this.getNumberPolicy() === K.AUTO_NUMBER ||
-          this.getNumberPolicy() === K.AUTO_OVERRIDE_NUMBER)) {
+         (this.numberPolicy === K.AUTO_NUMBER ||
+          this.numberPolicy === K.AUTO_OVERRIDE_NUMBER)) {
         this.fetchNumber();
       }
-      this.requiredAttributes.push(this.documentKey);
+      
+      // Make document key required
+      if (!_.contains(this.requiredAttributes, this.documentKey)) {
+        this.requiredAttributes.push(this.documentKey);
+      }
+      
+      // Bind events
       this.on('change:' + this.documentKey, this.documentKeyDidChange);
       this.on('statusChange', this.statusDidChange);
-    },
-    
-    /**
-      Number generation method for the document key that can be one of three constants:
-        XM.Document.MANUAL_NUMBER
-        XM.Document.AUTO_NUMBER
-        XT.Document.AUTO_OVERRIDE_NUMBER
-
-      Can be inferred from the setting that controls this for a given record type
-      if it is set.
-
-      @seealso `numberPolicySetting`
-      @seealso `setNumberPolicy`
-      @default XT.MANUAL_NUMBER
-    */
-    getNumberPolicy: function () {
-      var setting,
-        K = XM.Document;
-      if (!this._numberPolicy) {
-        setting =  this.get('numberPolicySetting');
-        this._numberPolicy = setting ? XT.session.getSettings.get(setting) : K.MANUAL_NUMBER;
-      }
-      return this._numberPolicy;
     },
     
     /**
@@ -191,19 +200,10 @@
       }
     },
     
-    /**
-      @param {Number} Number Policy
-      @returns Receiver
-    */
-    setNumberPolicy: function (value) {
-      this._numberPolicy = value;
-      return this;
-    },
-    
     statusDidChange: function () {
       var K = XT.Model,
         D = XM.Document;
-      if (this.getNumberPolicy() === D.AUTO_NUMBER &&
+      if (this.numberPolicy === D.AUTO_NUMBER &&
           this.getStatus() === K.READY_CLEAN) {
         this.setReadOnly(this.documentKey);
       }

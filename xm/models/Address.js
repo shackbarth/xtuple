@@ -90,12 +90,14 @@
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Document
   */
-  XM.Address = XT.Model.extend({
+  XM.Address = XM.Document.extend({
     /** @scope XM.Address.prototype */
 
     recordType: 'XM.Address',
+
+    numberPolicy: XM.Document.AUTO_NUMBER,
 
     privileges: {
       "all": {
@@ -120,7 +122,62 @@
       reverseRelation: {
         key: 'address'
       }
-    }]
+    }],
+
+    // ..........................................................
+    // METHODS
+    //
+
+    /**
+      Success response returns an integer from the server indicating how many times the address
+      is used by other records.
+
+      @param {Object} Options
+      @returns Receiver
+    */
+    useCount: function (options) {
+      console.log("XM.Address.useCount for: " + this.id);
+      XT.dataSource.dispatch('XM.Address', 'useCount', this.id, options);
+      return this;
+    }
+
+  });
+
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XM.Address, {
+
+    /**
+      Success response returns an address id for an address with the same fields
+      as those passed.
+
+      @param {String} Line1
+      @param {String} Line2
+      @param {String} Line3
+      @param {String} City
+      @param {String} State
+      @param {String} Postal Code
+      @param {String} Country
+      @param {Object} Options
+      @returns Receiver
+    */
+    findExisting: function (line1, line2, line3, city, state, postalcode, country, options) {
+      var params = {
+          type: 'Address',
+          line1: line1,
+          line2: line2,
+          line3: line3,
+          city: city,
+          state: state,
+          postalcode: postalcode,
+          country: country
+        };
+      XT.dataSource.dispatch('XM.Address', 'findExisting', params, options);
+      console.log("XM.Address.findExisting");
+      return this;
+    }
 
   });
 
