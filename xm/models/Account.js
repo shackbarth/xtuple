@@ -6,20 +6,47 @@
 (function () {
   "use strict";
 
+  /** @class
+
+    Provides special number handling capabilities for documents that are Accounts.
+
+    @extends XM.Document
+  */
+
+  XM.AccountDocument = XM.Document.extend({
+    /** @scope XM.AccountDocument.prototype */
+
+    numberPolicySetting: 'CRMAccountNumberGeneration',
+    
+    requiredAttributes: [
+      "number"
+    ],
+
+    // ..........................................................
+    // METHODS
+    //
+
+    /**
+      To always check `XM.Account` for duplicates since it is the parent of all.
+    */
+    documentKeyDidChange: function () {
+      var oldType = this.recordType;
+      this.recordType = 'XM.Account';
+      XM.Document.prototype.documentKeyDidChange.apply(this, arguments);
+      this.recordType = oldType;
+    }
+
+  });
+
   /**
     @class
 
-    @extends XT.Model
-    @extends XM.Document
+    @extends XT.AccountDocument
   */
-  XM.Account = XM.Document.extend({
+  XM.Account = XM.AccountDocument.extend({
     /** @scope XM.Account.prototype */
-
-    defaults: {
-      owner: XM.currentUser,
-      isActive: true,
-      accountType: 'O'
-    },
+    
+    recordType: 'XM.Account',
 
     privileges: {
       "all": {
@@ -38,6 +65,12 @@
         ]
       }
     },
+    
+    defaults: {
+      owner: XM.currentUser,
+      isActive: true,
+      accountType: 'O'
+    },
 
     requiredAttributes: [
       "accountType",
@@ -47,6 +80,10 @@
     ],
     
     relations: [{
+      type: Backbone.HasOne,
+      key: 'parent',
+      relatedModel: 'XM.AccountInfo'
+    }, {
       type: Backbone.HasOne,
       key: 'primaryContact',
       relatedModel: 'XM.ContactInfo'
@@ -115,13 +152,6 @@
         key: 'account'
       }
     }, {
-      type: Backbone.HasMany,
-      key: 'projects',
-      relatedModel: 'XM.AccountProject',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
       type: Backbone.HasOne,
       key: 'userAccount',
       relatedModel: 'XM.UserAccountInfo',
@@ -136,12 +166,19 @@
       key: 'taxAuthority',
       relatedModel: 'XM.TaxAuthority',
       includeInJSON: 'guid'
-    }]
+    }],
+    
+    // ..........................................................
+    // METHODS
+    //
+
+    validateEdit: function (attributes) {
+      if (attributes.parent && attributes.parent.id === this.id) {
+        return "_recursiveParentDisallowed".loc();
+      }
+    }
 
   });
-
-  // Add in document mixin
-  XM.Account = XM.Account.extend(XM.DocumentMixin);
 
   /**
     @class

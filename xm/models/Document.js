@@ -24,16 +24,7 @@
       @type {String}
     */
     documentKey: 'number',
-    
-    /**
-      If set, the number Policy property will be set based on the number
-      generation policy on this setting.
-      
-      @seealso `numberPolicy`
-      @type {String}
-    */
-    numberPolicySetting: null,
-    
+
     /**
       Number generation method for the document key that can be one of three constants:
         XM.Document.MANUAL_NUMBER
@@ -48,6 +39,15 @@
       @default XT.MANUAL_NUMBER
     */
     numberPolicy: null,
+
+    /**
+      If set, the number Policy property will be set based on the number
+      generation policy on this setting.
+      
+      @seealso `numberPolicy`
+      @type {String}
+    */
+    numberPolicySetting: null,
 
     // ..........................................................
     // METHODS
@@ -107,7 +107,7 @@
       // Set number policy if not already set
       if (!this.numberPolicy) {
         if (this.numberPolicySetting) {
-          policy = XT.session.getSettings.get(this.numberPolicySetting);
+          policy = XT.session.getSettings().get(this.numberPolicySetting);
         }
         this.numberPolicy =  policy ? policy : K.MANUAL_NUMBER;
       }
