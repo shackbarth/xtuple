@@ -1,7 +1,7 @@
 enyo.depends(
   "$lib/underscore",
   "$lib/backbone",
-  "$lib/Backbone-relational",
+  "$lib/backbone_relational",
   "$lib/layout",
   "$lib/onyx",
   "$lib/socket.io",
