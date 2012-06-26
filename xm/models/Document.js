@@ -87,7 +87,9 @@
       // Check for conflicts
       if (value && this.isDirty() && !this._number) {
         options.success = function (resp) {
-          var err = "_documentKeyExists".loc().replace("{value}", value);
+          var err = "_valueExists".loc()
+                                  .replace("{attr}", ("_" + this.documentKey).loc())
+                                  .replace("{value}", value);
           if (resp) {
             that.trigger('error', that, err, options);
           }
@@ -183,8 +185,9 @@
       if ((status === K.READY_NEW && currValue && !this._number) ||
           (status === K.READY_DIRTY && currValue !== origValue)) {
         checkOptions.success = function (resp) {
-          var err = 'Save failed. Document with key of "' +
-                    currValue + '" already exists.';
+          var err = "_valueExists".loc()
+                                  .replace("{attr}", ("_" + model.documentKey).loc())
+                                  .replace("{value}", currValue);
           if (resp === 0) {
             XT.Model.prototype.save.call(model, key, value, options);
           } else {

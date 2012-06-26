@@ -55,6 +55,18 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
+  taskName: "loadCurrencies",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.currencies = new XM.CurrencyCollection();
+    XM.currencies.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
   taskName: "loadCountries",
   task: function() {
     var options = {

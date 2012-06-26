@@ -211,7 +211,7 @@
       if ((parent && parent.canUpdate(this)) ||
           (!parent && klass.canDelete(this))) {
         this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
-        this._wasNew = true; // Hack so prototype function will still work
+        this._wasNew = this.isNew(); // Hack so prototype call will still work
 
         // If it's top level commit to the server now.
         if (!parent && klass.canDelete(this)) {

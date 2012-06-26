@@ -637,8 +637,9 @@ SC.stringsFor("en_US", {
   "_attributeNotInSchema": "'{attr}' does not exist in the schema.", 
   "_attributeReadOnly": "Can not edit read only attribute(s).",
   "_canNotUpdate": "Insufficient privileges to edit the record.",
-  "_documentKeyExists": "Document with key of '{value}' already exists.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
+  "_recursiveParentDisallowed": "Record is no allowed to reference itself as the parent.",
+  "_valueExists": "Record with {attr} of '{value}' already exists.",
 
   /** ******** LEGACY MESSAGES - REUSE IF USEFUL ********
   "_assignedToRequiredForAssigned": "Assigned to is required when status is assigned.",
