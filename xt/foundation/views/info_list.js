@@ -51,11 +51,10 @@ enyo.kind({
     // need to pass down some information to the list
     this.$.list.setRowClass(this.getRowClass());
   },
-  //showingChanged: function() {
-  //  this.log(this.name, this.showing, this);
-  //  this.inherited(arguments);
-  //  this.log(this.name, this.showing, this);
-  //}
+  showingChanged: function() {
+    this.inherited(arguments);
+    this.log(this.name, this.showing, this);
+  }
 });
 
 enyo.kind({
