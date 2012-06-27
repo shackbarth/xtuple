@@ -31,7 +31,7 @@ enyo.kind(
     var complete = function(response) {
       var dataHash;
       
-      // handle error
+      // Handle error
       if (response.data.isError) { 
         if (options && options.error) {
           options.error.call(that, response.data.reason);
@@ -39,7 +39,7 @@ enyo.kind(
         return;
       }
       
-      // handle success
+      // Handle success
       dataHash = JSON.parse(response.data.rows[0].fetch);
       if (options && options.success) { 
         options.success.call(that, dataHash); 
@@ -68,16 +68,24 @@ enyo.kind(
     var complete = function(response) {
       var dataHash;
       
-      // handle error
+      // Handle error
       if (response.data.isError) { 
         if (options && options.error) {
           options.error.call(that, response.data.reason);
         }
         return;
       }
-      
-      // handle success
       dataHash = JSON.parse(response.data.rows[0].retrieve_record);
+      
+      // Handle no data as error
+      if (_.isEmpty(dataHash)) {
+        if (options && options.error) {
+          options.error.call(that, "_recordNotFound".loc());
+        }
+        return;      
+      }
+      
+      // Handle success
       if (options && options.success) { 
         options.success.call(that, dataHash); 
       }
@@ -105,7 +113,7 @@ enyo.kind(
     var complete = function(response) {
       var dataHash;
     
-      // handle error
+      // Handle error
       if (response.data.isError) { 
         if (options && options.error) {
           options.error.call(that, response.data.reason);
@@ -113,7 +121,7 @@ enyo.kind(
         return;
       }
       
-      // handle ok or complete hash response
+      // Handle ok or complete hash response
       dataHash = JSON.parse(response.data.rows[0].commit_record);
       if (options && options.success) { 
         options.success.call(that, dataHash ); 

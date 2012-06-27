@@ -39,19 +39,6 @@ XT.StartupTask.create({
   }
 });
 
-
-XT.StartupTask.create({
-  taskName: "loadPriorities",
-  task: function() {
-    var options = {
-      success: enyo.bind(this, "didComplete")
-    };
-    XM.priorities = new XM.PriorityCollection();
-    XM.priorities.fetch(options);
-  },
-  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
-});
-
 XT.StartupTask.create({
   taskName: "loadCurrentUser",
   task: function() {
@@ -66,10 +53,51 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
-  taskName: "loadCurrencies",
+  taskName: "loadCommentTypes",
   task: function() {
     var options = {
       success: enyo.bind(this, "didComplete")
+    };
+    XM.commentTypes = new XM.CommentTypeCollection();
+    XM.commentTypes.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadCharacteristics",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.characteristics = new XM.CharacteristicCollection();
+    XM.characteristics.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadPriorities",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.priorities = new XM.PriorityCollection();
+    XM.priorities.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadCurrencies",
+  task: function() {
+    var that = this,
+      options = {};
+    options.success = function () {
+      enyo.bind(that, "didComplete");
+      XM.baseCurrency = _.find(XM.currencies.models, function (currency) { 
+        return currency.get('isBase'); 
+      });
     };
     XM.currencies = new XM.CurrencyCollection();
     XM.currencies.fetch(options);
