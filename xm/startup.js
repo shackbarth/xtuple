@@ -53,6 +53,18 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
+  taskName: "loadHonorifics",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.honorifics = new XM.HonorificCollection();
+    XM.honorifics.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
   taskName: "loadCommentTypes",
   task: function() {
     var options = {

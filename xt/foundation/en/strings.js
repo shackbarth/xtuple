@@ -639,6 +639,7 @@ XT.stringsFor("en_US", {
   "_canNotUpdate": "Insufficient privileges to edit the record.",
   "_characteristicContextRequired": "You must set at least one characteristic context to true.",
   "_duplicateValues": "Duplicate values are not allowed.",
+  "_nameRequired": "A name is required.",
   "_recordNotFound": "Record not found.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
   "_recursiveParentDisallowed": "Record is no allowed to reference itself as the parent.",

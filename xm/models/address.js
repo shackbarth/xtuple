@@ -214,6 +214,8 @@
     /** @scope XM.AddressInfo.prototype */
 
     recordType: 'XM.AddressInfo',
+    
+    readOnly: true,
 
     privileges: {
       "all": {
