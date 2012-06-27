@@ -3,6 +3,7 @@ enyo.depends(
   "document.js",
   "comment.js",
   "characteristic.js",
+  "alarm.js",
   "account.js",
   
   // Sub classes

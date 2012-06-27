@@ -652,6 +652,19 @@
     recordType: 'XM.ProjectTaskComment'
 
   });
+  
+  /**
+    @class
+  
+    @extends XM.Alarm
+  */
+  XM.ProjectTaskAlarm = XM.Alarm.extend({
+    /** @scope XM.ProjectTaskAlarm.prototype */
+
+    recordType: 'XM.ProjectTaskAlarm'
+
+  });
+
 
   /**
     @class

@@ -631,6 +631,7 @@ XT.stringsFor("en_US", {
   // Messages
   // ********
 
+  "_assignedToRequiredAssigned": "Assigned to is required when status is 'Assigned'",
   "_attributeLengthInvalid": "Length of {attr} must be {length}.",
   "_attributeIsRequired": "'{attr}' is required.",
   "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.", 
