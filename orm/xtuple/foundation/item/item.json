@@ -7,10 +7,10 @@
   "comment": "Item Map",
   "privileges": {
     "all": {
-      "create": "ViewItemMasters",
+      "create": "MaintainItemMasters",
       "read": "ViewItemMasters",
-      "update": "ViewItemMasters",
-      "delete": "ViewItemMasters"
+      "update": "MaintainItemMasters",
+      "delete": "MaintainItemMasters"
     }
   },
   "properties": [
@@ -43,16 +43,14 @@
       "name": "description1",
       "attr": {
         "type": "String",
-        "column": "item_descrip1",
-        "isRequired": true
+        "column": "item_descrip1"
       }
     },
     {
       "name": "description2",
       "attr": {
         "type": "String",
-        "column": "item_descrip2",
-        "isRequired": true
+        "column": "item_descrip2"
       }
     },
     {
@@ -155,24 +153,6 @@
         "type": "ItemCharacteristic",
         "column": "item_id",
 		    "inverse": "item",
-        "isNested": true
-      }
-    },
-    {
-      "name": "conversions",
-      "toMany": {
-        "type": "ItemConversion",
-        "column": "item_id",
-        "inverse": "item",
-		    "isNested": true
-      }
-    },
-    {
-      "name": "aliases",
-      "toMany": {
-        "type": "ItemAlias",
-        "column": "item_id",
-        "inverse": "item",
         "isNested": true
       }
     },
