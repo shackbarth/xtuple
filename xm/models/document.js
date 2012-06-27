@@ -150,7 +150,7 @@
       var that = this,
         options = {};
       options.success = function (resp) {
-        that._number = resp;
+        that._number = resp + "";
         that.set(that.documentKey, resp + "", {force: true});
       };
       XT.dataSource.dispatch('XT.Model', 'fetchNumber',

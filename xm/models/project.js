@@ -7,49 +7,34 @@
   "use strict";
 
   /**
-    @class
+    @namespace
   
-    A base class shared by project models that share common project status
+    A mixin shared by project models that share common project status
     functionality.
-  
-    @extends XT.Model
   */
-  XM.ProjectStatus = XM.Document.extend({
-    /** @scope XM.ProjectStatus.prototype */
-
-    projectStatusString: '',
-
-    // ..........................................................
-    // METHODS
-    //
-
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('change:status', this.projectStatusDidChange); // directly changed
-      this.on('statusChange', this.projectStatusDidChange); // sync change
-      this.projectStatusDidChange();
-    },
+  XM.ProjectStatus = {
+    /** @scope XM.ProjectStatus */
 
     /**
-    Update the project status string to a localized value.
+    Returns project status as a localized string.
   
     @returns {String}
     */
-    projectStatusDidChange: function () {
+    getProjectStatusString: function () {
       var K = XM.Project,
-        status = this.get('status'),
-        str = 'Unknown'.loc();
+        status = this.get('status');
       if (status === K.CONCEPT) {
-        str = '_concept'.loc();
-      } else if (status === K.IN_PROCESS) {
-        str = '_inProcess'.loc();
-      } else if (status === K.COMPLETED) {
-        str = '_completed'.loc();
+        return '_concept'.loc();
       }
-      this.projectStatusString = str;
+      if (status === K.IN_PROCESS) {
+        return '_inProcess'.loc();
+      }
+      if (status === K.COMPLETED) {
+        return '_completed'.loc();
+      }
     }
 
-  });
+  };
 
   /**
     @class
@@ -57,10 +42,10 @@
     A base class shared by `XM.Project`,`XM.ProjectTask` and potentially other
     project related classes.
   
-    @extends XM.ProjectStatus
     @extends XM.Document
+    @extends XM.ProjectStatus
   */
-  XM.ProjectBase = XM.ProjectStatus.extend({
+  XM.ProjectBase = XM.Document.extend({
     /** @scope XM.ProjectBase.prototype */
 
     defaults: function () {
@@ -100,7 +85,7 @@
     //
 
     initialize: function () {
-      XM.ProjectStatus.prototype.initialize.apply(this, arguments);
+      XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:status', this.projectStatusDidChange);
     },
 
@@ -115,7 +100,6 @@
     Reimplemented to handle automatic date setting.
     */
     projectStatusDidChange: function () {
-      XM.ProjectStatus.prototype.projectStatusDidChange.call(this);
       var status = this.get('status'),
         date,
         K = XM.Project;
@@ -131,8 +115,8 @@
 
   });
 
-  // Add in document mixin
-  XM.ProjectBase = XM.ProjectBase.extend(XM.DocumentMixin);
+  // Add in project status mixin
+  XM.ProjectBase = XM.ProjectBase.extend(XM.ProjectStatus);
 
   /**
     @class
@@ -657,13 +641,27 @@
     recordType: 'XM.ProjectTaskComment'
 
   });
+  
+  /**
+    @class
+  
+    @extends XM.Alarm
+  */
+  XM.ProjectTaskAlarm = XM.Alarm.extend({
+    /** @scope XM.ProjectTaskAlarm.prototype */
+
+    recordType: 'XM.ProjectTaskAlarm'
+
+  });
+
 
   /**
     @class
   
+    @extends XT.Model
     @extends XM.ProjectStatus
   */
-  XM.ProjectInfo = XM.ProjectStatus.extend({
+  XM.ProjectInfo = XT.Model.extend({
     /** @scope XM.ProjectInfo.prototype */
 
     recordType: 'XM.ProjectInfo',
@@ -685,6 +683,8 @@
     }]
 
   });
+  
+  XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatus);
   
   // ..........................................................
   // COLLECTIONS

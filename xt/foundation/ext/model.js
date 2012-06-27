@@ -381,14 +381,15 @@
     },
 
     /**
-      Searches attributes first, then the model for a value on a property with the
-      given key.
+      Searches attributes first, if not found then returns either a function call
+      or property value on the model that matches the key.
   
       @param {String} Key
       @returns {Any}
     */
     getValue: function (key) {
-      return _.has(this.attributes, key) ? this.attributes[key] : this[key];
+      if (_.has(this.attributes, key)) { return this.attributes[key]; }
+      return _.isFunction(this[key]) ? this[key]() : this[key];
     },
 
     /**
@@ -809,7 +810,8 @@
       // Check required.
       if (status === K.BUSY_COMMITTING) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
-          if (attributes[this.requiredAttributes[i]] === undefined) {
+          value = attributes[this.requiredAttributes[i]];
+          if (value === undefined || value === null || value === '') {
             msg = ("_" + this.requiredAttributes[i]).loc();
             return "_attributeIsRequired".loc().replace("{attr}", msg);
           }
