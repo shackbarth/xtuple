@@ -82,7 +82,7 @@
         options = {};
         
       // Handle uppercase
-      if (this.enforceKeyUpper && value !== upper) {
+      if (this.enforceUpperKey && value !== upper) {
         this.set(this.documentKey, upper);
         return;  // Will check again on next pass
       }

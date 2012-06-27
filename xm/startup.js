@@ -89,18 +89,6 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
-  taskName: "loadPriorities",
-  task: function() {
-    var options = {
-      success: enyo.bind(this, "didComplete")
-    };
-    XM.priorities = new XM.PriorityCollection();
-    XM.priorities.fetch(options);
-  },
-  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
-});
-
-XT.StartupTask.create({
   taskName: "loadCurrencies",
   task: function() {
     var that = this,
@@ -129,7 +117,6 @@ XT.StartupTask.create({
   waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
-
 XT.StartupTask.create({
   taskName: "loadStates",
   task: function() {
@@ -142,6 +129,41 @@ XT.StartupTask.create({
   waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
 });
 
+XT.StartupTask.create({
+  taskName: "loadUnits",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.units = new XM.UnitCollection();
+    XM.units.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadClassCodes",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.classCodes = new XM.ClassCodeCollection();
+    XM.classCodes.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadProductCategories",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.productCategories = new XM.ProductCategoryCollection();
+    XM.productCategories.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
 
 XT.StartupTask.create({
   taskName: "loadPriorities",
