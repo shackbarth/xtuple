@@ -65,6 +65,18 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
+  taskName: "loadCharacteristics",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.characteristics = new XM.CharacteristicCollection();
+    XM.characteristics.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
   taskName: "loadPriorities",
   task: function() {
     var options = {

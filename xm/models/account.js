@@ -195,9 +195,9 @@
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.CharacteristicAssignment
   */
-  XM.AccountCharacteristic = XT.Model.extend({
+  XM.AccountCharacteristic = XM.CharacteristicAssignment.extend({
     /** @scope XM.AccountCharacteristic.prototype */
 
     recordType: 'XM.AccountCharacteristic'

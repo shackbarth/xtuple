@@ -712,11 +712,12 @@
       higher level function calls passing through `set` need to skip
       validation to work properly.
       
-      It is recommended customizations be implemented on `validateEdit` to
-      reduce risk of accidentally over-writing or losing logic included in the
-      base validate function.
+      It is recommended customizations be implemented on `validateEdit` or
+      `validateSave` to reduce risk of accidentally over-writing or losing
+      logic included in the base validate function.
   
       @seealso `validateEdit`
+      @seealso `validateSave`
       @param {Object} Attributes
       @param {Object} Options
     */
@@ -724,7 +725,7 @@
       if (options.force) { return; }
       attributes = attributes || {};
       options = options || {};
-      var that = this, i,
+      var that = this, i, result,
         K = XT.Model,
         S = XT.Session,
         keys = _.keys(attributes),
@@ -812,6 +813,8 @@
             return "_attributeIsRequired".loc().replace("{attr}", msg);
           }
         }
+        result = this.validateSave(attributes, options);
+        if (result) { return result; }
       }
 
       // Check read only and privileges.
@@ -834,7 +837,7 @@
     /**
       Called at the end of the `validate` function if the function has not
       returned a result for any other reason. This is the safest place to
-      implement custom validation. The default implementation returns
+      implement custom editing validation. The default implementation returns
       `undefined`.
 
       @seealso `validate`
@@ -843,7 +846,23 @@
     */
     validateEdit: function (attributes, options) {
       // Implement custom code here on your own class
+    },
+    
+    /**
+      Called by the `validate` function if the status is `BUSY_COMMITTING`
+      (saving) after checking required fields and the function has not
+      returned a result for any other reason. Implement custom validation
+      before committing to the server here. The default implementation
+      returns `undefined`.
+
+      @seealso `validate`
+      @param {Object} Attributes
+      @param {Object} Options
+    */
+    validateSave: function (attributes, options) {
+      // Implement custom code here on your own class
     }
+
 
   });
 
