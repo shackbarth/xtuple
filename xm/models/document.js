@@ -24,6 +24,14 @@
       @type {String}
     */
     documentKey: 'number',
+    
+    /**
+      Forces the document key to always be upper case.
+      
+      @type {Boolean}
+      @default true
+    */
+    enforceUpperKey: true,
 
     /**
       Number generation method for the document key that can be one of three constants:
@@ -74,7 +82,7 @@
         options = {};
         
       // Handle uppercase
-      if (value !== upper) {
+      if (this.enforceKeyUpper && value !== upper) {
         this.set(this.documentKey, upper);
         return;  // Will check again on next pass
       }
@@ -88,7 +96,7 @@
       if (value && this.isDirty() && !this._number) {
         options.success = function (resp) {
           var err = "_valueExists".loc()
-                                  .replace("{attr}", ("_" + this.documentKey).loc())
+                                  .replace("{attr}", ("_" + that.documentKey).loc())
                                   .replace("{value}", value);
           if (resp) {
             that.trigger('error', that, err, options);
@@ -143,7 +151,7 @@
         options = {};
       options.success = function (resp) {
         that._number = resp;
-        that.set(that.documentKey, resp, {force: true});
+        that.set(that.documentKey, resp + "", {force: true});
       };
       XT.dataSource.dispatch('XT.Model', 'fetchNumber',
                              this.recordType, options);

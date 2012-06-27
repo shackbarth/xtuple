@@ -760,7 +760,8 @@
         if (attributes.hasOwnProperty(attr) &&
             !_.isNull(attributes[attr]) &&
             !_.isUndefined(attributes[attr])) {
-          msg = "_attributeTypeMismatch".loc();
+          msg = "_attributeTypeMismatch".loc()
+                                        .replace("{attr}", ("_" + attr).loc());
           value = attributes[attr];
           column = getColumn(attr);
           category = column ? column.category : false;

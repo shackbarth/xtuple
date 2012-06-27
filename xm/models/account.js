@@ -375,6 +375,8 @@
     /** @scope XM.AccountInfo.prototype */
 
     recordType: 'XM.AccountInfo',
+    
+    readOnly: true,
 
     privileges: {
       "all": {
