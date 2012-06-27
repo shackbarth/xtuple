@@ -8,7 +8,7 @@
   "privileges": {
     "all": {
       "create": "MaintainCharacteristics",
-      "read": "ViewCharacteristics",
+      "read": true,
       "update": "MaintainCharacteristics",
       "delete": "MaintainCharacteristics"
     }
