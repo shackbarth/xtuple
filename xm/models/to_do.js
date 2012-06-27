@@ -169,7 +169,7 @@
     */
     toDoStatusDidChange: function (model, value, options) {
       var status = this.getStatus(),
-          toDoStatus = this.getToDoStatusProxy(),
+          proxy = this.getToDoStatusProxy(),
           startDate = this.get('startDate'),
           completeDate = this.get('completeDate'),
           K = XM.ToDo,
@@ -180,9 +180,9 @@
       if (completeDate) {
         attrStatus = K.COMPLETED;
         this.setToDoStatusProxy(K.NEITHER);
-      } else if (toDoStatus === K.DEFERRED) {
+      } else if (proxy === K.DEFERRED) {
         attrStatus = K.DEFERRED;
-      } else if (toDoStatus === K.PENDING) {
+      } else if (proxy === K.PENDING) {
         attrStatus = K.PENDING;
       } else if (startDate) {
         attrStatus = K.IN_PROCESS;
