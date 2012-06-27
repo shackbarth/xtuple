@@ -512,7 +512,9 @@
               obj[attr] = parse(obj[attr]);
             } else {
               column = getColumn(obj.type, attr);
-              if (column && column.category && column.category === K.DB_DATE) {
+              if (column && column.category &&
+                  column.category === K.DB_DATE &&
+                  obj[attr] !== null) {
                 obj[attr] = new Date(obj[attr]);
               }
             }
