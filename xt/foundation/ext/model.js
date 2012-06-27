@@ -381,14 +381,15 @@
     },
 
     /**
-      Searches attributes first, then the model for a value on a property with the
-      given key.
+      Searches attributes first, if not found then returns either a function call
+      or property value on the model that matches the key.
   
       @param {String} Key
       @returns {Any}
     */
     getValue: function (key) {
-      return _.has(this.attributes, key) ? this.attributes[key] : this[key];
+      if (_.has(this.attributes, key)) { return this.attributes[key]; }
+      return _.isFunction(this[key]) ? this[key]() : this[key];
     },
 
     /**

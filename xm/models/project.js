@@ -17,8 +17,6 @@
   XM.ProjectStatus = XM.Document.extend({
     /** @scope XM.ProjectStatus.prototype */
 
-    projectStatusString: '',
-
     // ..........................................................
     // METHODS
     //
@@ -26,27 +24,25 @@
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:status', this.projectStatusDidChange); // directly changed
-      this.on('statusChange', this.projectStatusDidChange); // sync change
-      this.projectStatusDidChange();
     },
 
     /**
-    Update the project status string to a localized value.
+    Returns project status as a localized string.
   
     @returns {String}
     */
-    projectStatusDidChange: function () {
+    getProjectStatusString: function () {
       var K = XM.Project,
-        status = this.get('status'),
-        str = 'Unknown'.loc();
+        status = this.get('status');
       if (status === K.CONCEPT) {
-        str = '_concept'.loc();
-      } else if (status === K.IN_PROCESS) {
-        str = '_inProcess'.loc();
-      } else if (status === K.COMPLETED) {
-        str = '_completed'.loc();
+        return '_concept'.loc();
       }
-      this.projectStatusString = str;
+      if (status === K.IN_PROCESS) {
+        return '_inProcess'.loc();
+      }
+      if (status === K.COMPLETED) {
+        return '_completed'.loc();
+      }
     }
 
   });
@@ -115,7 +111,6 @@
     Reimplemented to handle automatic date setting.
     */
     projectStatusDidChange: function () {
-      XM.ProjectStatus.prototype.projectStatusDidChange.call(this);
       var status = this.get('status'),
         date,
         K = XM.Project;
