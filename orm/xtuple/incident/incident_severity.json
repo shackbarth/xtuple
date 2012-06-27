@@ -8,7 +8,7 @@
   "privileges": {
     "all": {
       "create": "MaintainIncidentSeverities",
-      "read": "MaintainIncidentSeverities",
+      "read": true,
       "update": "MaintainIncidentSeverities",
       "delete": "MaintainIncidentSeverities"
     }

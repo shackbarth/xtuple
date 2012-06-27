@@ -8,7 +8,7 @@
   "privileges": {
     "all": {
       "create": "MaintainIncidentCategories",
-      "read": "MaintainIncidentCategories",
+      "read": true,
       "update": "MaintainIncidentCategories",
       "delete": "MaintainIncidentCategories"
     }

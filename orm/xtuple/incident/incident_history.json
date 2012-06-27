@@ -5,24 +5,6 @@
   "table": "incdthist",
   "idSequenceName": "public.incdthist_incdthist_id_seq",
   "comment": "Incident History Map",
-  "privileges": {
-    "all": {
-      "create": "MaintainAllIncidentHistory",
-      "read": "ViewAllIncidentHistory",
-      "update": "MaintainAllIncidentHistory",
-      "delete": "MaintainAllIncidentHistory"
-    },
-    "personal": {
-      "create": "MaintainPersonalIncidentHistory",
-      "read": "ViewPersonalIncidentHistory",
-      "update": "MaintainPersonalIncidentHistory",
-      "delete": "MaintainPersonalIncidentHistory",
-      "properties": [
-        "owner",
-        "assignedTo"
-       ]
-    }
-  },
   "properties": [
     {
       "name": "guid",

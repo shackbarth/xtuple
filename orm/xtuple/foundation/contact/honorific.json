@@ -8,7 +8,7 @@
   "privileges": {
     "all": {
       "create": "MaintainTitles",
-      "read": "ViewTitles",
+      "read": true,
       "update": "MaintainTitles",
       "delete": "MaintainTitles"
     }

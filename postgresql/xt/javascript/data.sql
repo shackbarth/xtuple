@@ -308,10 +308,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
       columns = props.join(', ');
       expressions = params.join(', ');
-      sql = 'insert into {recordType} ({columns}) values ({expressions})'
-            .replace(/{recordType}/, key.decamelize())
-            .replace(/{columns}/, columns)
-            .replace(/{expressions}/, expressions)
+      sql = 'insert into ' + key.decamelize() + ' (' + columns + ') values (' + expressions + ')';
       
       if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
       
@@ -371,10 +368,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       expressions = params.join(', ');
-      sql = 'update {recordType} set {expressions} where {primaryKey} = $1;'
-            .replace(/{recordType}/, key.decamelize())
-            .replace(/{expressions}/, expressions)
-            .replace(/{primaryKey}/, pkey);    
+      sql = 'update ' + key.decamelize() + ' set ' + expressions + ' where ' + pkey + ' = $1;';
       if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
       
       /* commit the record */
@@ -394,9 +388,7 @@ select xt.install_js('XT','Data','xtuple', $$
       var record = XT.decamelize(value), sql = '',
           orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
           pkey = XT.Orm.primaryKey(orm);
-      sql = 'delete from {recordType} where {primaryKey} = $1;'
-            .replace(/{recordType}/, key.decamelize())
-            .replace(/{primaryKey}/, pkey);     
+      sql = 'delete from '+ key.decamelize() + ' where ' + pkey + ' = $1;';
       if(DEBUG) plv8.elog(NOTICE, 'sql =', sql);
       
       /* commit the record */
