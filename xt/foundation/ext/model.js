@@ -225,6 +225,7 @@
             for (i = 0; i < children.length; i += 1) {
               children[i].didDestroy();
             }
+            console.log('Destroy successful');
             if (success) { success(model, resp, options); }
           };
           result = Backbone.Model.prototype.destroy.call(this, options);
@@ -252,10 +253,11 @@
         success = options.success,
         klass = this.getClass();
       if (klass.canRead()) {
-        this.setStatus(K.BUSY_FETCHING);
+        this.setStatus(K.BUSY_FETCHING, {cascade: true});
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
+          console.log('Fetch successful');
           if (success) { success(model, resp, options); }
         };
         return Backbone.Model.prototype.fetch.call(this, options);
@@ -559,6 +561,7 @@
         options.cascade = true; // Cascade status to children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
+          console.log('Save successful');
           if (success) { success(model, resp, options); }
         };
 
@@ -568,7 +571,7 @@
         // Call the super version
         this.setStatus(K.BUSY_COMMITTING, {cascade: true});
         result = Backbone.Model.prototype.save.call(this, key, value, options);
-        if (!result) { this.setStatus(oldStatus); }
+        if (!result) { this.setStatus(oldStatus, {cascade: true}); }
         return result;
       }
 
@@ -668,8 +671,8 @@
 
       this.trigger('statusChange', this);
       this.release();
-      console.log(this.recordType + ' id: ' +  this.id +
-               ' changed to ' + this.getStatusString());
+      //console.log(this.recordType + ' id: ' +  this.id +
+      //         ' changed to ' + this.getStatusString());
       return this;
     },
 
@@ -813,7 +816,7 @@
       if (status === K.BUSY_COMMITTING) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
           value = attributes[this.requiredAttributes[i]];
-          if (value === undefined || value === null || value === '') {
+          if (value === undefined || value === null) {
             msg = ("_" + this.requiredAttributes[i]).loc();
             return "_attributeIsRequired".loc().replace("{attr}", msg);
           }

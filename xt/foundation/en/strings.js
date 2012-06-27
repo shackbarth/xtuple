@@ -641,6 +641,7 @@ XT.stringsFor("en_US", {
   "_characteristicContextRequired": "You must set at least one characteristic context to true.",
   "_duplicateValues": "Duplicate values are not allowed.",
   "_nameRequired": "A name is required.",
+  "_productCategoryRequiredOnSold": "A Product Category is required for sold items.",
   "_recordNotFound": "Record not found.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
   "_recursiveParentDisallowed": "Record is no allowed to reference itself as the parent.",
