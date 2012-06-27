@@ -112,7 +112,7 @@
     functionality.
   */
   XM.IncidentStatus = {
-    /** @scope XM.ProjectStatus */
+    /** @scope XM.IncidentStatus */
 
     /**
     Returns incident status as a localized string.
@@ -175,8 +175,11 @@
       }
     },
     
-    defaults: {
-      status: "N"
+    defaults: function () {
+      return {
+        owner: XM.currentUser,
+        status: XM.Incident.NEW
+      };
     },
     
     requiredAttributes: [
