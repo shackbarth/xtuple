@@ -7,24 +7,13 @@
   "use strict";
 
   /**
-    @class
+    @namespace
   
-    A base class shared by project models that share common project status
+    A mixin shared by project models that share common project status
     functionality.
-  
-    @extends XT.Model
   */
-  XM.ProjectStatus = XM.Document.extend({
-    /** @scope XM.ProjectStatus.prototype */
-
-    // ..........................................................
-    // METHODS
-    //
-
-    initialize: function () {
-      XM.Document.prototype.initialize.apply(this, arguments);
-      this.on('change:status', this.projectStatusDidChange); // directly changed
-    },
+  XM.ProjectStatus = {
+    /** @scope XM.ProjectStatus */
 
     /**
     Returns project status as a localized string.
@@ -45,7 +34,7 @@
       }
     }
 
-  });
+  };
 
   /**
     @class
@@ -53,10 +42,10 @@
     A base class shared by `XM.Project`,`XM.ProjectTask` and potentially other
     project related classes.
   
-    @extends XM.ProjectStatus
     @extends XM.Document
+    @extends XM.ProjectStatus
   */
-  XM.ProjectBase = XM.ProjectStatus.extend({
+  XM.ProjectBase = XM.Document.extend({
     /** @scope XM.ProjectBase.prototype */
 
     defaults: function () {
@@ -96,7 +85,7 @@
     //
 
     initialize: function () {
-      XM.ProjectStatus.prototype.initialize.apply(this, arguments);
+      XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:status', this.projectStatusDidChange);
     },
 
@@ -126,8 +115,8 @@
 
   });
 
-  // Add in document mixin
-  XM.ProjectBase = XM.ProjectBase.extend(XM.DocumentMixin);
+  // Add in project status mixin
+  XM.ProjectBase = XM.ProjectBase.extend(XM.ProjectStatus);
 
   /**
     @class
@@ -669,9 +658,10 @@
   /**
     @class
   
+    @extends XT.Model
     @extends XM.ProjectStatus
   */
-  XM.ProjectInfo = XM.ProjectStatus.extend({
+  XM.ProjectInfo = XT.Model.extend({
     /** @scope XM.ProjectInfo.prototype */
 
     recordType: 'XM.ProjectInfo',
@@ -693,6 +683,8 @@
     }]
 
   });
+  
+  XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatus);
   
   // ..........................................................
   // COLLECTIONS

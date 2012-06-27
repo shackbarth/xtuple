@@ -106,6 +106,45 @@
   });
   
   /**
+    @namespace
+  
+    A mixin shared by incident models that share common incident status
+    functionality.
+  */
+  XM.IncidentStatus = {
+    /** @scope XM.ProjectStatus */
+
+    /**
+    Returns incident status as a localized string.
+
+    @returns {String}
+    */
+    getIncidentStatusString: function () {
+      var K = XM.Incident,
+        status = this.get('status');
+      if (status === K.NEW) {
+        return '_new'.loc();
+      }
+      if (status === K.FEEDBACK) {
+        return '_feedback'.loc();
+      }
+      if (status === K.CONFIRMED) {
+        return '_confirmed'.loc();
+      }
+      if (status === K.ASSIGNED) {
+        return '_assigned'.loc();
+      }
+      if (status === K.RESOLVED) {
+        return '_resolved'.loc();
+      }
+      if (status === K.CLOSED) {
+        return '_closed'.loc();
+      }
+    }
+
+  };
+  
+  /**
     @class
   
     @extends XM.Document
@@ -277,34 +316,6 @@
     // METHODS
     //
     
-    /**
-    Returns incident status as a localized string.
-  
-    @returns {String}
-    */
-    getIncidentStatusString: function () {
-      var K = XM.Incident,
-        status = this.get('status');
-      if (status === K.NEW) {
-        return '_new'.loc();
-      }
-      if (status === K.FEEDBACK) {
-        return '_feedback'.loc();
-      }
-      if (status === K.CONFIRMED) {
-        return '_confirmed'.loc();
-      }
-      if (status === K.ASSIGNED) {
-        return '_assigned'.loc();
-      }
-      if (status === K.RESOLVED) {
-        return '_resolved'.loc();
-      }
-      if (status === K.CLOSED) {
-        return '_closed'.loc();
-      }
-    },
-    
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:assignedTo', this.assignedToDidChange);
@@ -391,6 +402,9 @@
     CLOSED: 'L'
 
   });
+  
+  // Incident status mixin
+  XM.Incident = XM.Incident.extend(XM.IncidentStatus);
   
   /**
     @class
@@ -633,6 +647,9 @@
     }]
 
   });
+  
+  // Incident status mixin
+  XM.IncidentInfo = XM.IncidentInfo.extend(XM.IncidentStatus);
 
   // ..........................................................
   // COLLECTIONS

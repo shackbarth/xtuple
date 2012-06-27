@@ -810,7 +810,8 @@
       // Check required.
       if (status === K.BUSY_COMMITTING) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
-          if (attributes[this.requiredAttributes[i]] === undefined) {
+          value = attributes[this.requiredAttributes[i]];
+          if (value === undefined || value === null || value === '') {
             msg = ("_" + this.requiredAttributes[i]).loc();
             return "_attributeIsRequired".loc().replace("{attr}", msg);
           }
