@@ -147,7 +147,7 @@
       }
     },  
     {
-      "name": "recurring",
+      "name": "recurrences",
       "toMany": {
         "isNested": true,
         "type": "IncidentRecurrence",
