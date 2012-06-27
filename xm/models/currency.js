@@ -26,6 +26,8 @@
     },
     
     documentKey: 'name',
+    
+    enforceUpperKey: false,
 
     defaults: {
       isBase: false
