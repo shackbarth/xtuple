@@ -4,6 +4,7 @@
   "type": "Opportunity",
   "table": "ophead",
   "idSequenceName": "ophead_ophead_id_seq",
+  "orderSequence": "OpportunityNumber",
   "comment": "Opportunity Map",
   "privileges": {
     "all": {
