@@ -91,6 +91,13 @@
       }
     },
     {
+      "name": "isAccounts",
+      "attr": {
+        "type": "Boolean",
+        "column": "char_crmaccounts"
+      }
+    },
+    {
       "name": "isItems",
       "attr": {
         "type": "Boolean",
