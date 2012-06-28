@@ -528,7 +528,7 @@
     },
 
     /**
-      Reimplemented. Validate before saving.
+      Reimplemented.
   
       @retuns {XT.Request} Request
     */
@@ -580,8 +580,7 @@
     },
 
     /**
-      Set the entire model, or a specific model attribute to `readOnly`. Privilege
-      enforcement supercedes read-only settings.
+      Set the entire model, or a specific model attribute to `readOnly`.
   
       Examples:
   
@@ -589,6 +588,8 @@
       m.setReadOnly(false) // sets model to be editable
       m.setReadOnly('name') // sets 'name' attribute to read-only
       m.setReadOnly('name', false) // sets 'name' attribute to be editable
+  
+      Note: Privilege enforcement supercedes read-only settings.
   
       @seealso `isReadOnly`
       @seealso `readOnly`
@@ -1033,7 +1034,7 @@
     },
 
     /**
-    Include 'force' option.
+      Include `force` option.
     */
     findOrCreate: function (attributes, options) {
       options = options ? _.clone(options) : {};
