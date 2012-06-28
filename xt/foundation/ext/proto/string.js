@@ -1,7 +1,7 @@
 
 /**
 */
-enyo.mixin(String.prototype, {
+_.extend(String.prototype, {
   format: function() {
     var args = XT.$A(arguments);
     return XT.String.format(this, args);

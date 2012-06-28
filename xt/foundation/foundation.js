@@ -1,7 +1,7 @@
 
 /**
 */
-XT = window.XT = {
+XT = {
   
   /**
     System precision scale for money.
@@ -107,11 +107,11 @@ XT = window.XT = {
 
 /**
 */
-XM = window.XM = {};
+XM = {};
 
 /**
 */
-enyo.mixin(XT,
+_.extend(XT,
   /** */ {
     
   /** */
@@ -127,7 +127,23 @@ enyo.mixin(XT,
     return re.toLocaleTimeString();
   },
   
-  getObjectByName: Backbone.Relational.store.getObjectByName,
+  getObjectByName: function(target) {
+    
+    if (!target.split) return null;
+    
+    var parts = target.split(".");
+    var ret;
+    var part;
+    var idx = 0;
+    for (; idx < parts.length; ++idx) {
+      part = parts[idx];
+      ret = ret? ret[part] : window[part];
+      if (ret === null || ret === undefined) {
+        return null;
+      }
+    }
+    return ret;
+  },
   
   /**
     @NOTE: some logic borrowed from SproutCore

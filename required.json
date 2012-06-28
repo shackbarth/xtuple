@@ -12,7 +12,7 @@
       "backbone.js"
     ]
   },
-  "Backbone-relational": {
+  "backbone_relational": {
     "origin": "git@github.com:PaulUithol/Backbone-relational.git",
     "entries": [
       "$lib/backbone",
