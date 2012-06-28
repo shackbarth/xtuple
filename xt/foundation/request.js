@@ -1,80 +1,61 @@
+// Contributions of status related functionality borrowed from SproutCore:
+// https://github.com/sproutcore/sproutcore
 
-/**
-*/
-enyo.kind(
-  /** @scope XT.Request.prototype */ {
-   
-  name: "XT.Request",
-  
-  kind: "Component",
-  
-  create: function() {
-    this.inherited(arguments);
-  },
-  
-  send: function(data) {
-    var details = XT.session.details;
-    var sock = XT.dataSource._sock;
-    var notify = this._notify;
-    var handle = this._handle;
-    var payload = {
-      payload: data
-    };
-    var callback;
-    
-    if (!notify || !(notify instanceof Function)) {
-      callback = XT.K;
-    } else {
-      callback = function(response) {
-        notify(new XT.Response(response));
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
+  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jslint bitwise: true, nomen: true, indent:2 */
+/*global XT:true, _:true, console:true */
+
+(function () {
+  "use strict";
+
+  /**
+  */
+  XT.Request = {
+    /** @scope XT.Request.prototype */
+
+    send: function (data) {
+      var details = XT.session.details,
+        sock = XT.dataSource._sock,
+        notify = this._notify,
+        handle = this._handle,
+        payload = {
+          payload: data
+        },
+        callback;
+
+      if (!notify || !(notify instanceof Function)) {
+        callback = XT.K;
+      } else {
+        callback = function (response) {
+          notify(_.extend(Object.create(XT.Response), response));
+        };
+      }
+
+      // attach the session details to the payload
+      payload = _.extend(payload, details);
+
+      console.log("Socket sending: %@".replace("%@", handle), payload);
+
+      sock.json.emit(handle, payload, callback);
+
+      return this;
+    },
+
+    handle: function (event) {
+      this._handle = event;
+      return this;
+    },
+
+    notify: function (method) {
+      var args = Array.prototype.slice.call(arguments).slice(1);
+      this._notify = function (response) {
+        args.unshift(response);
+        method.apply(null, args);
       };
+      return this;
     }
-    
-    // attach the session details to the payload
-    payload = enyo.mixin(payload, details);
-    
-    enyo.log("Socket sending: %@".f(handle), payload);
-    
-    sock.json.emit(handle, payload, callback);
-    
-    return this;
-  },
-  
-  handle: function(event) {
-    this._handle = event;
-    return this;
-  },
-  
-  notify: function(method) {
-    var args = Array.prototype.slice.call(arguments).slice(1);
-    this._notify = function(response) {
-      args.unshift(response);
-      method.apply(window, args);
-    };
-    return this;
-  } 
-    
-});
 
-/**
-*/
-enyo.mixin(XT.Request,
-  /** @scope XT.Request */ {
-   
-  handle: function(event) {
-    var req = new XT.Request();
-    req._handle = event;
-    return req;
-  },
-  
-  notify: function(method) {
-    var req = new XT.Request();
-    var args = Array.prototype.slice.call(arguments).slice(1);
-    req._notify = function(response) {
-      args.unshift(response);
-      method.apply(window, args);
-    };
-    return req;
-  }
-    
-});
+  };
+
+}());
