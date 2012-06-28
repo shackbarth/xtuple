@@ -222,7 +222,7 @@
       // go ahead and create the session object for the
       // application if it does not already exist
       if (!XT.session) {
-        XT.session = new XT.Session();
+        XT.session = Object.create(XT.Session);
       }
     },
 
