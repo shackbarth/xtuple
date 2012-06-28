@@ -43,24 +43,6 @@
         "type": "Boolean",
         "column": "uom_item_weight"
       }
-    },
-    {
-      "name": "conversionTo",
-      "toMany": {
-        "isNested": true,
-        "type": "UnitConversion",
-        "column": "uom_id",
-        "inverse": "to_unit"
-      }
-    },
-    {
-      "name": "conversionFrom",
-      "toMany": {
-        "isNested": true,
-        "type": "UnitConversion",
-        "column": "uom_id",
-        "inverse": "from_unit"
-      }
     }
   ],
   "isSystem": true

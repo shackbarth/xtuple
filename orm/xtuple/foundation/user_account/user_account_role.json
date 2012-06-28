@@ -37,11 +37,12 @@
       }
     },
     {
-      "name": "privileges",
+      "name": "grantedPrivileges",
       "toMany": {
         "type": "UserAccountRolePrivilegeAssignment",
         "column": "grp_id",
-        "inverse": "user_account_role"
+        "inverse": "user_account_role",
+        "isNested": true
       }
     }
   ],
