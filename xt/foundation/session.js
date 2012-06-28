@@ -116,10 +116,6 @@
       if (types & this.LOCALE) {
 
         // TEMPORARY IMPLEMENTATION TO INTERPRET FROM SOURCE
-        if (!XT.locale) {
-          XT.locale = new XT.Locale();
-        }
-
         if (XT.lang) {
           XT.locale.setLanguage(XT.lang);
         } else {
