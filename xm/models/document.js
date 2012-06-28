@@ -72,14 +72,14 @@
       XT.Model.prototype.destroy.apply(this, arguments);
     },
     
-    documentKeyDidChange: function () {
+    documentKeyDidChange: function (model, value, options) {
       var K = XT.Model,
         D = XM.Document,
         that = this,
         status = this.getStatus(),
-        value = this.get(this.documentKey),
-        upper = value && value.toUpperCase ? value.toUpperCase() : value,
-        options = {};
+        upper = value && value.toUpperCase ? value.toUpperCase() : value;
+      options = options || {};
+      if (options.force || !(status & K.READY)) { return; }
         
       // Handle uppercase
       if (this.enforceUpperKey && value !== upper) {

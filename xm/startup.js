@@ -89,6 +89,42 @@ XT.StartupTask.create({
 });
 
 XT.StartupTask.create({
+  taskName: "loadLanguages",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.languages = new XM.LanguageCollection();
+    XM.languages.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadLocales",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.locales = new XM.LocaleCollection();
+    XM.locales.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
+  taskName: "loadPrivileges",
+  task: function() {
+    var options = {
+      success: enyo.bind(this, "didComplete")
+    };
+    XM.privileges = new XM.PrivilegeCollection();
+    XM.privileges.fetch(options);
+  },
+  waitingList: ["loadSessionSettings","loadSessionSchema","loadSessionPrivileges"]
+});
+
+XT.StartupTask.create({
   taskName: "loadCurrencies",
   task: function() {
     var that = this,
