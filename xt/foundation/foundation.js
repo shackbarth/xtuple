@@ -1,7 +1,7 @@
 
 /**
 */
-XT = window.XT = {
+XT = {
   
   /**
     System precision scale for money.
@@ -107,11 +107,11 @@ XT = window.XT = {
 
 /**
 */
-XM = window.XM = {};
+XM = {};
 
 /**
 */
-enyo.mixin(XT,
+_.extend(XT,
   /** */ {
     
   /** */
