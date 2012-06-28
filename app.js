@@ -16,8 +16,8 @@ enyo.kind({
     
     if (this.getIsStarted()) return;
     
-    // on application start, create a datasource we can use
-    XT.dataSource = new XT.DataSource();
+    // on application start, connect the datasource
+    XT.dataSource.connect();
     
     // now that we've started, we need to render something
     // to the screen
