@@ -32,7 +32,6 @@
     {
       "name": "privilege",
       "toOne": {
-        "isNested": true,
         "type": "Privilege",
         "column": "grppriv_priv_id"
       }
