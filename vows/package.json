@@ -13,7 +13,8 @@
     "backbone-relational":"",
     "vows":"",
     "underscore":"",
-    "socket.io-client":""
+    "socket.io-client":"",
+    "tinycolor":""
   },
   "devDependencies": {},
   "optionalDependencies": {},
