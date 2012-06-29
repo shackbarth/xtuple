@@ -211,7 +211,7 @@ XVOWS.start = function() {
   } else {
     XVOWS.console("running %@ tests".f(run.length));
   }
-  
+
   this.next();
 };
 
@@ -230,7 +230,8 @@ XVOWS.next = function() {
   }
   
   if (this.running) {
-    XVOWS.console("finished running %@".f(this.running));
+    console.log("\n"); // to break it up some
+    XVOWS.console("finished running %@".f(this.running).red);
     this.running = null;
   }
   
@@ -240,7 +241,8 @@ XVOWS.next = function() {
       XVOWS.console("could not run test %@, skipping".f(running));
     } else {
       this.running = running;
-      XVOWS.console("running %@".f(running));
+      console.log("\n"); // to break it up some
+      XVOWS.console("running %@\n".f(running).red);
       running = tests[running];
       break;
     }
