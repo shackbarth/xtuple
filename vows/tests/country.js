@@ -9,8 +9,6 @@
 (function () {
   "use strict";
   
-  require('../main.js');
-  
   vows.describe('Country CRUD').addBatch({
     'CREATE a record': {
       topic: function () {
