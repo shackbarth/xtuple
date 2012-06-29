@@ -108,7 +108,7 @@
                   callback = function (model) {
                     var status = model.getStatus(),
                       K = XT.Model;
-                    if (status === K.DESTROYED_CLEAN) {
+                    if (status === K.READY_CLEAN) {
                       clearTimeout(timeoutId);
                       model.off('statusChange', callback);
                       return that.callback(null, model);
