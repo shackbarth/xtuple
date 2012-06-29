@@ -77,7 +77,7 @@ XT.String = {
   /**
   */
   trim: function trim(str) {
-    if (!str || !(string instanceof String)) return "";
+    if (!str || !(str instanceof String)) return "";
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
   }
   
