@@ -127,13 +127,13 @@ XT.StartupTask.create({
 XT.StartupTask.create({
   taskName: "loadCurrencies",
   task: function() {
-    var that = this,
-      options = {};
-    options.success = function () {
-      enyo.bind(that, "didComplete");
-      XM.baseCurrency = _.find(XM.currencies.models, function (currency) { 
-        return currency.get('isBase'); 
-      });
+    var options = {
+      success: _.bind(function() {
+        XM.baseCurrency = _.find(XM.currencies.models, function(currency) {
+          return currency.get("isBase");
+        });
+        this.didComplete();
+      }, this)
     };
     XM.currencies = new XM.CurrencyCollection();
     XM.currencies.fetch(options);
