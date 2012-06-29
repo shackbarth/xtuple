@@ -9,6 +9,7 @@ _util           = require("util");
 Backbone            = require("backbone");
 BackboneRelational  = require("backbone-relational");
 vows                = require("vows");
+assert              = require("assert");
 _                   = require("underscore");
 io                  = require("socket.io-client");
 
