@@ -105,7 +105,8 @@
       queue: [],
       tasks: {},
       completed: [],
-      isStarted: false
+      isStarted: false,
+      callbacks: []
     };
   };
   
@@ -187,6 +188,7 @@
     
     if (!queue || queue.length <= 0) {
       this.set("isStarted", true);
+      this.allDone();
       return;
     }
     
@@ -202,6 +204,16 @@
     } else {
       this.start();
     }
+  };
+  
+  stm.prototype.registerCallback = function(callback) {
+    var callbacks = this.get("callbacks") || [];
+    callbacks.push(callback);
+  };
+  
+  stm.prototype.allDone = function() {
+    var callbacks = this.get("callbacks") || [];
+    while (callbacks.length > 0) (callbacks.shift())();
   };
   
   new XT.StartupTaskManager();
