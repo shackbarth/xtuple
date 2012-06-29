@@ -14,10 +14,26 @@ _                   = require("underscore");
 io                  = require("socket.io-client");
 
 //......................................
+// XVOWS IS THE GLOBAL NAMESPACE AVAILABLE
+// FOR SHARING VOWS SPECIFIC INFORMATION
+// AND FUNCTIONALITY
+XVOWS = {};
+// PROCESS ANY INCOMING ARGS REAL QUICK
+(function(args) {
+  XVOWS.args = args.slice(2);
+  XVOWS.console = function() {
+    var args = XT.$A(arguments);
+    args.unshift("[XVOWS] ");
+    console.log.apply(console, args);
+    XVOWS.log(args);
+  };
+})(process.argv);
+//......................................
 // INCLUDE ALL THE NECESSARY XT FRAMEWORK
 // DEPENDENCIES
 [
   "foundation",
+  "log",
   "datasource",
   "math",
   "request",
@@ -35,6 +51,39 @@ io                  = require("socket.io-client");
 }).forEach(function(path) {
   require(path);
 });
+// CRUSH QUIET SMASH AND DESTROY ANY NORMAL OUTPUT FOR NOW
+// ...actually just...pipe it to some file...
+(function() {
+  XVOWS.log = XT.log = function() {
+    var out = XT.$A(arguments).map(function(arg) {
+      return typeof arg === "string"? arg: _util.inspect(arg,true,3);
+    }).join('\n');
+    if (XVOWS.outfile && XVOWS.outfile.writable) {
+      XVOWS.outfile.write("%@\n".f(out), "utf8");
+    } else {
+      XVOWS.outfile = _fs.createWriteStream(_path.join(__dirname, "run.log"), {
+        flags: "a",
+        encoding: "utf8"
+      });
+      XVOWS.outfile.on("error", function(err) {
+        throw err;
+      });
+      XVOWS.outfile.write("\n[ENTRY] started %@\n".f((new Date()).toLocaleString()));
+    }
+  };
+  
+  // make sure on process SIGINT that we catch it and
+  // properly close the pipe
+  process.on("SIGINT", function() {
+    console.log("\n"); // to clear the line
+    XVOWS.console("caught SIGINT waiting for logfile to drain");
+    XVOWS.outfile.on("close", function() {
+      XVOWS.console("all done, see ya");
+      process.exit(0);
+    });
+    XVOWS.outfile.destroySoon();
+  });
+})();
 //......................................
 // INCLUDE ALL THE NECESSARY XM FRAMEWORK
 // DEPENDENCIES
@@ -61,19 +110,137 @@ require(_path.join(__dirname, "../xm", "startup.js"));
 //console.log(_util.inspect(XT));
 //console.log(_util.inspect(XM));
 
-XT.dataSource.connect();
-
-var timer = setInterval(function() {
-  if (XT.dataSource.isConnected) {
-    clearInterval(timer);
+(function(){
+  // for when a session is retrieved or needs to be
+  // selected and completes...
+  var selectionDone = function() {
+    // register a callback for when startup tasks are
+    // completed
+    XVOWS.console("session acquired, starting tasks");
+    XT.getStartupManager().registerCallback(XVOWS.begin);
+    XT.getStartupManager().start();
+  };
+  
+  XVOWS.console("connecting to the datasource");
+  XT.dataSource.connect(function() {
     XT.session.acquireSession({
       username: "admin",
       password: "Assemble!Aurora",
       organization: "aurora"
     }, function(result) {
-      console.log(result);
+      if (result.code === 1) {
+        // force new session, always
+        XT.session.selectSession("FORCE_NEW_SESSION", selectionDone);
+      } else if (result.code === 4) {
+        // we're ok? not sure how but, whatever...
+        selectionDone();
+      } else {
+        throw new Error("could not acquire valid session");
+      }
+    });
+  });
+})();
+
+XVOWS.findAllTests = function() {
+  var path = _path.join(__dirname, "tests");
+  var tests = XVOWS.tests = {};
+  _fs.readdirSync(path).filter(function(file) {
+    return _path.extname(file) === ".js"? true: false;
+  }).forEach(function(file) {
+    tests[file] = _path.join(__dirname, "tests", file);
+  });
+};
+
+XVOWS.begin = function() {
+  XVOWS.console("all startup tasks completed");
+  XVOWS.console("searching for available tests");
+  
+  XVOWS.findAllTests();
+  
+  XVOWS.console("found %@ total".f((Object.keys(XVOWS.tests)).length));
+  
+  // were there special requests from the command line
+  if (XVOWS.args.length > 0) {
+    XVOWS.args.map(function(file) {
+      return _path.extname(file) === ".js"? file: file + ".js";
+    }).forEach(function(file) {
+      XVOWS.addTest(file);
     });
   }
-}, 1000);
+  
+  // start testing
+  XVOWS.start();
+};
 
+XVOWS.addTest = function(file) {
+  if (!this.toRun) this.toRun = [];
+  this.toRun.push(file);
+};
 
+XVOWS.start = function() {
+  
+  if (this.isStarted) {
+    return false;
+  }
+  
+  XVOWS.console("starting tests");
+  
+  this.isStarted = true;
+  
+  var run = this.toRun || [];
+  var tests = this.tests;
+  var testNames = Object.keys(tests);
+  var len = testNames.length;
+  
+  if (run.length <= 0) {
+    if (len > 0) {
+      
+      XVOWS.console("running all tests");
+      
+      this.toRun = run = testNames;
+    } else { 
+      
+      XVOWS.console("no tests to run");
+      
+      return this.finish(); 
+    }
+  } else {
+    XVOWS.console("running %@ tests".f(run.length));
+  }
+  
+  this.next();
+};
+
+XVOWS.finish = function() {
+  XVOWS.console("testing finished");
+  process.emit("SIGINT"); // let the log cleanup
+};
+
+XVOWS.next = function() {
+  var run = this.toRun;
+  var tests = this.tests;
+  var running;
+  
+  if (!run || run.length <= 0) {
+    return this.finish();
+  }
+  
+  if (this.running) {
+    XVOWS.console("finished running %@".f(this.running));
+    this.running = null;
+  }
+  
+  while(true && run.length > 0) {
+    running = run.shift();
+    if (!running || !tests[running]) {
+      XVOWS.console("could not run test %@, skipping".f(running));
+    } else {
+      this.running = running;
+      XVOWS.console("running %@".f(running));
+      running = tests[running];
+      break;
+    }
+  }
+  
+  require(running);
+};

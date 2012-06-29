@@ -4,12 +4,10 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
   immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XT:true, XM:true, setTimeout:true, clearTimeout:true, vows:true, assert:true, console:true */
+/*global XVOWS:true, XT:true, XM:true, setTimeout:true, clearTimeout:true, vows:true, assert:true, console:true */
 
 (function () {
   "use strict";
-  
-  require('../main.js');
   
   vows.describe('Country CRUD').addBatch({
     'CREATE a record': {
@@ -18,7 +16,7 @@
           timeoutId,
           model = new XM.Country(),
           callback = function (model, value) {
-            console.log('id:', value);
+            XVOWS.log("topic(): callback(): ", 'id:', value);
             clearTimeout(timeoutId);
             model.off('change:guid', callback);
             that.callback(null, model);

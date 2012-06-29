@@ -257,7 +257,7 @@
         options.cascade = true; // Update status of children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
-          console.log('Fetch successful');
+          XT.log('Fetch successful');
           if (success) { success(model, resp, options); }
         };
         return Backbone.Model.prototype.fetch.call(this, options);

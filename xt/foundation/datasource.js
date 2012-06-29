@@ -180,10 +180,15 @@
     },
 
     /* @private */
-    connect: function () {
-      if (this.isConnected) { return; }
+    connect: function (callback) {
+      if (this.isConnected) {
+        if (callback && callback instanceof Function) {
+          callback();
+        }
+        return;
+      }
 
-      console.log("Attempting to connect to the datasource");
+      XT.log("Attempting to connect to the datasource");
 
       var url = this.datasourceUrl,
         port = this.datasourcePort,
@@ -196,26 +201,29 @@
       // responders for the connect and error events
       this._sock = io.connect(datasource);
       this._sock.on("connect", function () {
-        didConnect.call(self);
+        didConnect.call(self, callback);
       });
       this._sock.on("error", function (err) {
-        didError.call(self, err);
+        didError.call(self, err, callback);
       });
       this._sock.on("debug", function (msg) {
-        console.log("SERVER DEBUG => ", msg);
+        XT.log("SERVER DEBUG => ", msg);
       });
     },
 
     /* @private */
-    sockDidError: function (err) {
+    sockDidError: function (err, callback) {
       // TODO: need some handling here
       console.warn(err);
+      if (callback && callback instanceof Function) {
+        callback(err);
+      }
     },
 
     /* @private */
-    sockDidConnect: function () {
+    sockDidConnect: function (callback) {
 
-      console.log("Successfully connected to the datasource");
+      XT.log("Successfully connected to the datasource");
 
       this.isConnected = true;
 
@@ -223,6 +231,10 @@
       // application if it does not already exist
       if (!XT.session) {
         XT.session = Object.create(XT.Session);
+      }
+      
+      if (callback && callback instanceof Function) {
+        callback();
       }
     },
 

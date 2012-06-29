@@ -105,7 +105,8 @@
       queue: [],
       tasks: {},
       completed: [],
-      isStarted: false
+      isStarted: false,
+      callbacks: []
     };
   };
   
@@ -171,6 +172,9 @@
     
     if (num > completed.length) {
       this.start();
+    } else {
+      // we're all done
+      this.allDone();
     }
   };
   
@@ -201,6 +205,21 @@
       this.set("queue", re);
     } else {
       this.start();
+    }
+  };
+  
+  stm.prototype.registerCallback = function(callback) {
+    var callbacks = this.get("callbacks") || [];
+    callbacks.push(callback);
+  };
+  
+  stm.prototype.allDone = function() {
+    var callbacks = this.get("callbacks") || [];
+    while (callbacks.length > 0) {
+      var cb = callbacks.shift();
+      if (cb && cb instanceof Function) {
+        cb();
+      }
     }
   };
   

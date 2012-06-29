@@ -119,7 +119,7 @@
         if (XT.lang) {
           XT.locale.setLanguage(XT.lang);
         } else {
-          console.log("XT.session.loadSessionObjects(): could not find " +
+          XT.log("XT.session.loadSessionObjects(): could not find " +
             "a valid language to load");
         }
 
