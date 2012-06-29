@@ -639,17 +639,6 @@
         this.prime = {};
       }
 
-      // Update data state.
-      if (status === K.READY_NEW) {
-        this.set('dataState', 'create', setOptions);
-      } else if (status === K.READY_CLEAN) {
-        this.set('dataState', 'read', setOptions);
-      } else if (status === K.READY_DIRTY) {
-        this.set('dataState', 'update', setOptions);
-      } else if (status === K.DESTROYED_DIRTY) {
-        this.set('dataState', 'delete', setOptions);
-      }
-
       // Cascade changes through relations if specified
       if (options && options.cascade) {
         _.each(this.relations, function (relation) {
@@ -663,6 +652,17 @@
             });
           }
         });
+      }
+
+      // Update data state at this level.
+      if (status === K.READY_NEW) {
+        this.set('dataState', 'create', setOptions);
+      } else if (status === K.READY_CLEAN) {
+        this.set('dataState', 'read', setOptions);
+      } else if (status === K.READY_DIRTY) {
+        this.set('dataState', 'update', setOptions);
+      } else if (status === K.DESTROYED_DIRTY) {
+        this.set('dataState', 'delete', setOptions);
       }
 
       // Percolate changes up to parent when applicable
