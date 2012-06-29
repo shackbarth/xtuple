@@ -35,7 +35,7 @@
       // attach the session details to the payload
       payload = _.extend(payload, details);
 
-      console.log("Socket sending: %@".replace("%@", handle), payload);
+      XT.log("Socket sending: %@".replace("%@", handle), payload);
 
       sock.json.emit(handle, payload, callback);
 

@@ -1,8 +1,9 @@
 
 XT.log = function() {
+  var args = XT.$A(arguments);
   if (console.log.apply) {
-    console.log.apply(arguments);
+    console.log.apply(console, args);
   } else {
-    console.log(XT.$A(arguments).join(" "));
+    console.log(args.join(" "));
   }
 };

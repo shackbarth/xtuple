@@ -188,7 +188,7 @@
         return;
       }
 
-      console.log("Attempting to connect to the datasource");
+      XT.log("Attempting to connect to the datasource");
 
       var url = this.datasourceUrl,
         port = this.datasourcePort,
@@ -207,7 +207,7 @@
         didError.call(self, err, callback);
       });
       this._sock.on("debug", function (msg) {
-        console.log("SERVER DEBUG => ", msg);
+        XT.log("SERVER DEBUG => ", msg);
       });
     },
 
@@ -223,7 +223,7 @@
     /* @private */
     sockDidConnect: function (callback) {
 
-      console.log("Successfully connected to the datasource");
+      XT.log("Successfully connected to the datasource");
 
       this.isConnected = true;
 
