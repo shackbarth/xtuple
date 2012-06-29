@@ -172,6 +172,9 @@
     
     if (num > completed.length) {
       this.start();
+    } else {
+      // we're all done
+      this.allDone();
     }
   };
   
@@ -188,7 +191,6 @@
     
     if (!queue || queue.length <= 0) {
       this.set("isStarted", true);
-      this.allDone();
       return;
     }
     
@@ -213,7 +215,12 @@
   
   stm.prototype.allDone = function() {
     var callbacks = this.get("callbacks") || [];
-    while (callbacks.length > 0) (callbacks.shift())();
+    while (callbacks.length > 0) {
+      var cb = callbacks.shift();
+      if (cb && cb instanceof Function) {
+        cb();
+      }
+    }
   };
   
   new XT.StartupTaskManager();
