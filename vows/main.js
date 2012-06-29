@@ -12,6 +12,7 @@ vows                = require("vows");
 assert              = require("assert");
 _                   = require("underscore");
 io                  = require("socket.io-client");
+/*tinycolor*/         require("tinycolor");
 
 //......................................
 // XVOWS IS THE GLOBAL NAMESPACE AVAILABLE
@@ -23,7 +24,7 @@ XVOWS = {};
   XVOWS.args = args.slice(2);
   XVOWS.console = function() {
     var args = XT.$A(arguments);
-    args.unshift("[XVOWS] ");
+    args.unshift("[XVOWS] ".yellow);
     console.log.apply(console, args);
     XVOWS.log(args);
   };
@@ -69,6 +70,9 @@ XVOWS = {};
         throw err;
       });
       XVOWS.outfile.write("\n[ENTRY] started %@\n".f((new Date()).toLocaleString()));
+      // write the first output that caused this to open
+      // the stream to begin with
+      XVOWS.outfile.write("%@\n".f(out));
     }
   };
   
@@ -207,7 +211,7 @@ XVOWS.start = function() {
   } else {
     XVOWS.console("running %@ tests".f(run.length));
   }
-  
+
   this.next();
 };
 
@@ -226,7 +230,8 @@ XVOWS.next = function() {
   }
   
   if (this.running) {
-    XVOWS.console("finished running %@".f(this.running));
+    console.log("\n"); // to break it up some
+    XVOWS.console("finished running %@".f(this.running).red);
     this.running = null;
   }
   
@@ -236,7 +241,8 @@ XVOWS.next = function() {
       XVOWS.console("could not run test %@, skipping".f(running));
     } else {
       this.running = running;
-      XVOWS.console("running %@".f(running));
+      console.log("\n"); // to break it up some
+      XVOWS.console("running %@\n".f(running).red);
       running = tests[running];
       break;
     }
