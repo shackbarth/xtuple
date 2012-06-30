@@ -9,7 +9,7 @@
 (function () {
   "use strict";
   
-  vows.describe('Country CRUD').addBatch({
+  vows.describe('XM.Country CRUD test').addBatch({
     'CREATE a record': {
       topic: function () {
         var that = this,
@@ -48,7 +48,7 @@
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
-        'Save and READ the record': {
+        '-> Save and READ the record': {
           topic: function (model) {
             var that = this,
               timeoutId,
@@ -84,7 +84,7 @@
           'Currency Abbreviation is `PIC`': function (model) {
             assert.equal(model.get('currencyAbbreviation'), 'PIC');
           },
-          'UPDATE the record': {
+          '-> UPDATE the record': {
             topic: function (model) {
               model.set('abbreviation', 'EB');
               return model;
@@ -98,7 +98,7 @@
             'Status is READY_DIRTY': function (model) {
               assert.equal(model.getStatusString(), 'READY_DIRTY');
             },
-            'Commit the Update': {
+            '-> Commit the Update': {
               topic: function (model) {
                 var that = this,
                   timeoutId,
@@ -125,7 +125,7 @@
               'Status is READY_CLEAN': function (model) {
                 assert.equal(model.getStatusString(), 'READY_CLEAN');
               },
-              'DESTROY the record': {
+              '-> DESTROY the record': {
                 topic: function (model) {
                   var that = this,
                     timeoutId,
@@ -148,6 +148,9 @@
                 },
                 'Status is DESTORYED_CLEAN': function (model) {
                   assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
+                },
+                'FINISH XM.Country': function () {
+                  XVOWS.next();
                 }
               }
             }

@@ -4,7 +4,7 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
   immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XT:true, Backbone:true, _:true, console:true */
+/*global XT:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
@@ -169,7 +169,7 @@
     didError: function (model, resp) {
       model = model || {};
       this.lastError = resp;
-      console.log(resp);
+      XT.log(resp);
     },
 
     original: function (attr) {
@@ -225,7 +225,7 @@
             for (i = 0; i < children.length; i += 1) {
               children[i].didDestroy();
             }
-            console.log('Destroy successful');
+            XT.log('Destroy successful');
             if (success) { success(model, resp, options); }
           };
           result = Backbone.Model.prototype.destroy.call(this, options);
@@ -237,7 +237,7 @@
         // Otherwise just marked for deletion.
         return true;
       }
-      console.log('Insufficient privileges to destroy');
+      XT.log('Insufficient privileges to destroy');
       return false;
     },
 
@@ -262,7 +262,7 @@
         };
         return Backbone.Model.prototype.fetch.call(this, options);
       }
-      console.log('Insufficient privileges to fetch');
+      XT.log('Insufficient privileges to fetch');
       return false;
     },
 
@@ -543,7 +543,7 @@
 
       // Can't save unless root
       if (this.getParent()) {
-        console.log('You must save on the root level model of this relation');
+        XT.log('You must save on the root level model of this relation');
         return false;
       }
 
@@ -561,7 +561,7 @@
         options.cascade = true; // Cascade status to children
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
-          console.log('Save successful');
+          XT.log('Save successful');
           if (success) { success(model, resp, options); }
         };
 
@@ -575,7 +575,7 @@
         return result;
       }
 
-      console.log('No changes to save');
+      XT.log('No changes to save');
       return false;
     },
 
@@ -671,7 +671,7 @@
       }
       this.release();
       this.trigger('statusChange', this);
-      //console.log(this.recordType + ' id: ' +  this.id +
+      //XT.log(this.recordType + ' id: ' +  this.id +
       //         ' changed to ' + this.getStatusString());
       return this;
     },
@@ -1028,7 +1028,7 @@
       var recordType = this.recordType || this.prototype.recordType,
         params = [ recordType, key, value, this.id || -1 ];
       XT.dataSource.dispatch('XT.Model', 'findExisting', params, options);
-      console.log("XT.Model.findExisting for: " + recordType);
+      XT.log("XT.Model.findExisting for: " + recordType);
       return this;
     },
 
