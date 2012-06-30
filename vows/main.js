@@ -104,10 +104,13 @@ XVOWS = {};
   // make sure on process SIGINT that we catch it and
   // properly close the pipe
   process.on("SIGINT", function() {
-    console.log("\n"); // to clear the line
-    XVOWS.console("caught SIGINT waiting for logfile to drain");
-    XVOWS.outfile.on("close", function() {
+    //console.log("\n"); // to clear the line
+    //XVOWS.console("caught SIGINT waiting for logfile to drain");
+    process.on("EXIT", function() {
       XVOWS.console("all done, see ya");
+    });
+    XVOWS.outfile.on("close", function() {
+      //XVOWS.console("all done, see ya");
       process.exit(0);
     });
     XVOWS.outfile.destroySoon();
@@ -252,19 +255,24 @@ XVOWS.finish = function() {
   process.emit("SIGINT"); // let the log cleanup
 };
 
-XVOWS.next = function() {
+XVOWS.next = function(waited) {
+  if (!waited) {
+    return setTimeout(XVOWS.nexted, 300);
+  }
+
   var run = this.toRun;
   var tests = this.tests;
   var running;
   
-  if (!run || run.length <= 0) {
-    return this.finish();
-  }
   
   if (this.running) {
-    console.log("\n"); // to break it up some
+    console.log("\r"); // to break it up some
     XVOWS.console("finished running %@".f(this.running).red);
     this.running = null;
+  }
+  
+  if (!run || run.length <= 0) {
+    return this.finish();
   }
   
   while(true && run.length > 0) {
@@ -282,3 +290,5 @@ XVOWS.next = function() {
   
   require(running);
 };
+
+XVOWS.nexted = _.bind(XVOWS.next, XVOWS, [true]);
