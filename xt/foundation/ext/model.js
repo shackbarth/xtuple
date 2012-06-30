@@ -669,9 +669,8 @@
       if (parent) {
         parent.trigger('change', this, options);
       }
-
-      this.trigger('statusChange', this);
       this.release();
+      this.trigger('statusChange', this);
       //console.log(this.recordType + ' id: ' +  this.id +
       //         ' changed to ' + this.getStatusString());
       return this;
