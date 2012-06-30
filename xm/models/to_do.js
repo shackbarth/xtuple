@@ -174,7 +174,6 @@
           completeDate = this.get('completeDate'),
           K = XM.ToDo,
           attrStatus = K.NEITHER;
-      if (options && options.force || !(status & XT.Model.READY)) { return; }
       
       // Set the `status` attribute with appropriate value
       if (completeDate) {

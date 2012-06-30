@@ -51,17 +51,15 @@
         checkOptions = {};
       
       // Check for conflicts
-      if (value && !(status & K.BUSY) && !options.force) {
-        checkOptions.success = function (resp) {
-          var err = "_valueExists".loc()
-                                  .replace("{attr}", "_abbreviation".loc())
-                                  .replace("{value}", value);
-          if (resp) {
-            that.trigger('error', that, err, options);
-          }
-        };
-        this.findExisting('abbreviation', value, checkOptions);
-      }
+      checkOptions.success = function (resp) {
+        var err = "_valueExists".loc()
+                                .replace("{attr}", "_abbreviation".loc())
+                                .replace("{value}", value);
+        if (resp) {
+          that.trigger('error', that, err, options);
+        }
+      };
+      this.findExisting('abbreviation', value, checkOptions);
     },
 
     initialize: function () {

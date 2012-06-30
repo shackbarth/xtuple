@@ -204,7 +204,6 @@
     characteristicDidChange: function (model, value, options) {
       var status = this.getStatus(),
         K = XT.Model;
-      if (options && options.force || !(status & K.READY)) { return; }
       this.set('value', '');
     }
 

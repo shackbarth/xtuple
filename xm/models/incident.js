@@ -328,7 +328,6 @@
       var status = this.getStatus(),
         I = XM.Incident,
         K = XT.Model;
-      if (options && options.force || !(status & K.READY)) { return; }
       if (value) { this.set('incidentStatus', I.ASSIGNED); }
     },
     
