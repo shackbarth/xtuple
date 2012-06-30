@@ -257,6 +257,11 @@ XVOWS.finish = function() {
 
 XVOWS.next = function(waited) {
   if (!waited) {
+    // this is only necessary because of a delay by vows
+    // when it finally determines its batch is complete
+    // TODO: if it can/does emit an event detectable
+    // on completion this should be modified to use that
+    // because this is just plain sloppy
     return setTimeout(XVOWS.nexted, 300);
   }
 
