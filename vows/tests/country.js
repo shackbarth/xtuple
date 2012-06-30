@@ -10,7 +10,7 @@
   "use strict";
   
   vows.describe('XM.Country CRUD test').addBatch({
-    'CREATE a record': {
+    'CREATE': {
       topic: function () {
         var that = this,
           timeoutId,
@@ -34,7 +34,7 @@
       'id is valid': function (model) {
         assert.isNumber(model.id);
       },
-      'Set values': {
+      '-> Set values': {
         topic: function (model) {
           model.set({
             name: 'Elbonia',
@@ -48,7 +48,7 @@
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
-        '-> Save and READ the record': {
+        '-> Save and READ': {
           topic: function (model) {
             var that = this,
               timeoutId,
@@ -84,7 +84,7 @@
           'Currency Abbreviation is `PIC`': function (model) {
             assert.equal(model.get('currencyAbbreviation'), 'PIC');
           },
-          '-> UPDATE the record': {
+          '-> UPDATE': {
             topic: function (model) {
               model.set('abbreviation', 'EB');
               return model;
@@ -98,7 +98,7 @@
             'Status is READY_DIRTY': function (model) {
               assert.equal(model.getStatusString(), 'READY_DIRTY');
             },
-            '-> Commit the Update': {
+            '-> Commit': {
               topic: function (model) {
                 var that = this,
                   timeoutId,
@@ -125,7 +125,7 @@
               'Status is READY_CLEAN': function (model) {
                 assert.equal(model.getStatusString(), 'READY_CLEAN');
               },
-              '-> DESTROY the record': {
+              '-> DESTROY': {
                 topic: function (model) {
                   var that = this,
                     timeoutId,
