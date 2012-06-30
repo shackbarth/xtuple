@@ -25,6 +25,7 @@
       var status = this.getStatus(),
         K = XT.Model,
         offset, qualifier, time, trigger;
+      if (options && options.force || !(status & K.READY)) { return; }
   
       // Recalculate trigger time based on alarm settings
       offset = this.get('offset');

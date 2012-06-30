@@ -217,6 +217,7 @@
     assignedToDidChange: function (model, value, options) {
       var status = this.getStatus(),
         K = XT.Model, assignedTo, assignDate;
+      if (options && options.force || !(status & K.READY)) { return; }
       
       // Set the assign date if it hasn't been already
       assignedTo = this.get('assignedTo');

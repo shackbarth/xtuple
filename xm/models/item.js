@@ -233,6 +233,7 @@
     inventoryUnitDidChange: function (model, value, options) {
       var status = this.getStatus(),
         K = XT.Model;
+      if (options && options.force || !(status & K.READY)) { return; }
       if (value) { this.set('priceUnit', value); }
     },
  

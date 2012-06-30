@@ -79,6 +79,7 @@
         status = this.getStatus(),
         upper = value && value.toUpperCase ? value.toUpperCase() : value;
       options = options || {};
+      if (options.force || !(status & K.READY)) { return; }
         
       // Handle uppercase
       if (this.enforceUpperKey && value !== upper) {
