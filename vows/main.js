@@ -88,7 +88,7 @@ XVOWS = {};
       XVOWS.outfile.write("%@\n".f(out), "utf8");
     } else {
       XVOWS.outfile = _fs.createWriteStream(_path.join(__dirname, "run.log"), {
-        flags: "w",
+        flags: "a",
         encoding: "utf8"
       });
       XVOWS.outfile.on("error", function(err) {
@@ -257,6 +257,11 @@ XVOWS.finish = function() {
 
 XVOWS.next = function(waited) {
   if (!waited) {
+    // this is only necessary because of a delay by vows
+    // when it finally determines its batch is complete
+    // TODO: if it can/does emit an event detectable
+    // on completion this should be modified to use that
+    // because this is just plain sloppy
     return setTimeout(XVOWS.nexted, 300);
   }
 
@@ -279,6 +284,7 @@ XVOWS.next = function(waited) {
     running = run.shift();
     if (!running || !tests[running]) {
       XVOWS.console("could not run test %@, skipping".f(running));
+      running = false;
     } else {
       this.running = running;
       console.log("\n"); // to break it up some
@@ -288,7 +294,9 @@ XVOWS.next = function(waited) {
     }
   }
   
-  require(running);
+  if (running) {
+    require(running);
+  } else { this.finish(); }
 };
 
 XVOWS.nexted = _.bind(XVOWS.next, XVOWS, [true]);
