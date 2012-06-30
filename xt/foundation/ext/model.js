@@ -273,7 +273,7 @@
       @returns {XT.Request} Request
     */
     fetchId: function (options) {
-      options = _.defaults(options ? _.clone(options) : {}, {silent: true});
+      options = _.defaults(options ? _.clone(options) : {}, {force: true});
       var that = this, attr;
       if (!this.id) {
         options.success = function (resp) {
@@ -729,9 +729,9 @@
       @param {Object} Options
     */
     validate: function (attributes, options) {
-      if (options.force) { return; }
       attributes = attributes || {};
       options = options || {};
+      if (options.force) { return; }
       var that = this, i, result,
         K = XT.Model,
         S = XT.Session,
