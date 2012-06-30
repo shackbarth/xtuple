@@ -279,6 +279,7 @@ XVOWS.next = function(waited) {
     running = run.shift();
     if (!running || !tests[running]) {
       XVOWS.console("could not run test %@, skipping".f(running));
+      running = false;
     } else {
       this.running = running;
       console.log("\n"); // to break it up some
@@ -288,7 +289,9 @@ XVOWS.next = function(waited) {
     }
   }
   
-  require(running);
+  if (running) {
+    require(running);
+  } else { this.finish(); }
 };
 
 XVOWS.nexted = _.bind(XVOWS.next, XVOWS, [true]);
