@@ -51,7 +51,7 @@ XVOWS = {};
     var args = XT.$A(arguments);
     args.unshift("[XVOWS] ".yellow);
     console.log.apply(console, args);
-    XVOWS.log(args);
+    if (XVOWS.outfile && XVOWS.outfile.writeable) XVOWS.log(args);
   };
 })();
 //......................................
