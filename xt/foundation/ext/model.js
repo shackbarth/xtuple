@@ -273,7 +273,7 @@
       @returns {XT.Request} Request
     */
     fetchId: function (options) {
-      options = _.defaults(options ? _.clone(options) : {}, {silent: true});
+      options = _.defaults(options ? _.clone(options) : {}, {force: true});
       var that = this, attr;
       if (!this.id) {
         options.success = function (resp) {
@@ -669,9 +669,8 @@
       if (parent) {
         parent.trigger('change', this, options);
       }
-
-      this.trigger('statusChange', this);
       this.release();
+      this.trigger('statusChange', this);
       //console.log(this.recordType + ' id: ' +  this.id +
       //         ' changed to ' + this.getStatusString());
       return this;
@@ -729,9 +728,9 @@
       @param {Object} Options
     */
     validate: function (attributes, options) {
-      if (options.force) { return; }
       attributes = attributes || {};
       options = options || {};
+      if (options.force) { return; }
       var that = this, i, result,
         K = XT.Model,
         S = XT.Session,

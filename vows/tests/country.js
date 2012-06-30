@@ -16,7 +16,6 @@
           timeoutId,
           model = new XM.Country(),
           callback = function (model, value) {
-            XVOWS.log("topic(): callback(): ", 'id:', value);
             clearTimeout(timeoutId);
             model.off('change:guid', callback);
             that.callback(null, model);
@@ -46,8 +45,8 @@
           });
           return model;
         },
-        'Last Error is `Empty`': function (model) {
-          assert.isEmpty(model.lastError);
+        'Last Error is null': function (model) {
+          assert.isNull(model.lastError);
         },
         'Save and READ the record': {
           topic: function (model) {
@@ -82,16 +81,16 @@
           'Currency Name is `Pico`': function (model) {
             assert.equal(model.get('currencyName'), 'Pico');
           },
-          'Currency Abbreviation is `!`': function (model) {
-            assert.equal(model.get('currencyAbbreviation'), '!');
+          'Currency Abbreviation is `PIC`': function (model) {
+            assert.equal(model.get('currencyAbbreviation'), 'PIC');
           },
           'UPDATE the record': {
             topic: function (model) {
               model.set('abbreviation', 'EB');
               return model;
             },
-            'Last Error is Empty': function (model) {
-              assert.isEmpty(model.lastError);
+            'Last Error is null': function (model) {
+              assert.isNull(model.lastError);
             },
             'Abbreviation is EB': function (model) {
               assert.equal(model.get('abbreviation'), 'EB');
