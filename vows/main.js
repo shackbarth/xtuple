@@ -88,7 +88,7 @@ XVOWS = {};
       XVOWS.outfile.write("%@\n".f(out), "utf8");
     } else {
       XVOWS.outfile = _fs.createWriteStream(_path.join(__dirname, "run.log"), {
-        flags: "w",
+        flags: "a",
         encoding: "utf8"
       });
       XVOWS.outfile.on("error", function(err) {
