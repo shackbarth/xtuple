@@ -9,6 +9,18 @@
 (function () {
   "use strict";
   
+  var createHash = {
+    name: 'Elbonia',
+    abbreviation: 'EL',
+    currencyAbbreviation: 'PIC',
+    currencyName: 'Pico',
+    currencySymbol: '!'
+  };
+  
+  var updateHash = {
+    abbreviation: 'EB'
+  };
+  
   vows.describe('XM.Country CRUD test').addBatch({
     'CREATE': {
       topic: function () {
@@ -36,13 +48,7 @@
       },
       '-> Set values': {
         topic: function (model) {
-          model.set({
-            name: 'Elbonia',
-            abbreviation: 'EL',
-            currencyAbbreviation: 'PIC',
-            currencyName: 'Pico',
-            currencySymbol: '!'
-          });
+          model.set(createHash);
           return model;
         },
         'Last Error is null': function (model) {
@@ -86,7 +92,7 @@
           },
           '-> UPDATE': {
             topic: function (model) {
-              model.set('abbreviation', 'EB');
+              model.set(updateHash);
               return model;
             },
             'Last Error is null': function (model) {
