@@ -14,7 +14,8 @@
     "vows":"",
     "underscore":"",
     "socket.io-client":"",
-    "tinycolor":""
+    "tinycolor":"",
+    "commander":""
   },
   "devDependencies": {},
   "optionalDependencies": {},

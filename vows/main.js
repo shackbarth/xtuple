@@ -12,23 +12,48 @@ vows                = require("vows");
 assert              = require("assert");
 _                   = require("underscore");
 io                  = require("socket.io-client");
+program             = require("commander");
 /*tinycolor*/         require("tinycolor");
 
+//......................................
+// COMMAND LINE PARSING
+(function() {
+  var tests = function(val) {
+    return val.split(" ").map(String);
+  };
+  program
+    .option("--spec", "Use the spec reporter")
+    .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
+    .option("-u, --user [user]", "The database user", "admin")
+    .option("-p, --password [password]", "The database user's password", "Assemble!Aurora")
+    .option("-o, --organization [organization]", "The database user's organization", "aurora")
+    .option("-h, --host [host]", "The datasource hostname/url/ip", "asteroidbelt.xtuple.com")
+    .option("-P, --port [port]", "The datasource port", 9000, parseInt)
+    .parse(process.argv);
+  if (program.spec) {
+    var spec = require(_path.join(__dirname, "node_modules/vows/lib/vows/reporters/spec"));
+    var suite = require(_path.join(__dirname, "node_modules/vows/lib/vows/suite")).Suite.prototype;
+    suite.ext_run = suite.run;
+    suite.run = function() {
+      return suite.ext_run.call(this, {reporter:spec});
+    };
+  }
+})();
 //......................................
 // XVOWS IS THE GLOBAL NAMESPACE AVAILABLE
 // FOR SHARING VOWS SPECIFIC INFORMATION
 // AND FUNCTIONALITY
 XVOWS = {};
 // PROCESS ANY INCOMING ARGS REAL QUICK
-(function(args) {
-  XVOWS.args = args.slice(2);
+(function() {
+  XVOWS.args = program.tests;
   XVOWS.console = function() {
     var args = XT.$A(arguments);
     args.unshift("[XVOWS] ".yellow);
     console.log.apply(console, args);
     XVOWS.log(args);
   };
-})(process.argv);
+})();
 //......................................
 // INCLUDE ALL THE NECESSARY XT FRAMEWORK
 // DEPENDENCIES
@@ -63,7 +88,7 @@ XVOWS = {};
       XVOWS.outfile.write("%@\n".f(out), "utf8");
     } else {
       XVOWS.outfile = _fs.createWriteStream(_path.join(__dirname, "run.log"), {
-        flags: "a",
+        flags: "w",
         encoding: "utf8"
       });
       XVOWS.outfile.on("error", function(err) {
@@ -126,11 +151,13 @@ require(_path.join(__dirname, "../xm", "startup.js"));
   };
   
   XVOWS.console("connecting to the datasource");
+  XT.dataSource.datasourceUrl = program.host;
+  XT.dataSource.datasourcePort = program.port;
   XT.dataSource.connect(function() {
     XT.session.acquireSession({
-      username: "admin",
-      password: "Assemble!Aurora",
-      organization: "aurora"
+      username: program.user,
+      password: program.password,
+      organization: program.organization
     }, function(result) {
       if (result.code === 1) {
         // force new session, always
@@ -164,12 +191,17 @@ XVOWS.begin = function() {
   XVOWS.console("found %@ total".f((Object.keys(XVOWS.tests)).length));
   
   // were there special requests from the command line
-  if (XVOWS.args.length > 0) {
+  
+  if (XVOWS.args.length === 1 && XVOWS.args[0] === "*") {
+    // running all available tests
+  } else if (XVOWS.args.length >= 1) {
     XVOWS.args.map(function(file) {
       return _path.extname(file) === ".js"? file: file + ".js";
     }).forEach(function(file) {
       XVOWS.addTest(file);
     });
+  } else { 
+    throw new Error("cannot figure out what to do"); 
   }
   
   // start testing
