@@ -12,6 +12,8 @@
   var vows = require('vows'),
       assert = require('assert');
 
+  vows.watch = true;
+  
     // Create a Test Suite
   vows.describe('Division by Zero').addBatch({
     'when dividing a number by zero': {
@@ -33,6 +35,6 @@
         }
       }
     }
-  }).run();
+  }).export(module);
 
 }());
