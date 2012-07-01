@@ -737,7 +737,7 @@
         keys = _.keys(attributes),
         original = _.pick(this.originalAttributes(), keys),
         status = this.getStatus(),
-        attr, value, msg, category, column,
+        attr, value, msg, category, column, error,
         type = this.recordType.replace(/\w+\./i, ''),
         columns = XT.session.getSchema().get(type).columns,
 
@@ -757,8 +757,7 @@
 
       // Don't allow editing of records that are ineligable
       if (status === K.ERROR || status === K.EMPTY || (status & K.DESTROYED)) {
-        return "_recordStatusNotEditable".loc()
-               .replace("{status}", this.getStatusString());
+        return XT.Error.clone('xt1009', { params: { status: this.getStatusString() } });
       }
 
       // Check data type integrity
@@ -807,7 +806,7 @@
             }
             break;
           default:
-            return "_attributeNotInSchema".loc().replace("{attr}", attr);
+            return XT.Error.clone('xt1002', { params: { attr: attr } });
           }
         }
       }

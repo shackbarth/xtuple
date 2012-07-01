@@ -59,6 +59,7 @@ XVOWS = {};
 // DEPENDENCIES
 [
   "foundation",
+  "error",
   "log",
   "datasource",
   "math",
