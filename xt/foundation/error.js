@@ -1,0 +1,207 @@
+// Contributions of status related functionality borrowed from SproutCore:
+// https://github.com/sproutcore/sproutcore
+
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
+  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jslint bitwise: true, nomen: true, indent:2 */
+/*global XT:true, _:true */
+
+(function () {
+  "use strict";
+  
+  /**
+    @class
+    
+    A standard error object. Standard errors are created and pushed into
+    `XT.errors` on application startup. You should use the `clone` function
+    to find and create a copy of an error for use in reporting in the
+    application. Errors may include one or more parameters that can be replaced
+    at runtime to add context to the error message.
+    
+      var params, err;
+      params = {
+        attr: 'name',
+        type: 'String'
+      }
+      err = XT.Error.clone('xt1003', { params: params });
+      return err.message(); // returns "The value of 'name' must be type: String."
+      
+    Note: You should always use `clone` to make an error rather than reference
+    the error from `XT.errors` directly. Otherwise if you set `params` on the
+    orginial error, you will be setting parameters for that error globally.
+    
+  */
+  XT.Error = function () {};
+  XT.Error.prototype = {
+    /** @scope XT.Error.prototype */
+    
+    /**
+      A unique code for the error.
+    */
+    code: null,
+    
+    /**
+      A translatable text string.
+    */
+    messageKey: null,
+    
+    /**
+      Parameters used for interpreting the text string.
+    */
+    params: {},
+    
+    // ..........................................................
+    // METHODS
+    //
+    
+    /**
+      Localized message calculated from `messageKey` and `params`.
+    */
+    message: function () {
+      var message = (this.messageKey || '').loc(),
+        param;
+      for (param in this.params) {
+        if (this.params.hasOwnProperty(param)) {
+          var loc = this.params[param].loc();
+          message = message.replace("{" + param + "}", loc);
+        }
+      }
+      return message;
+    }
+    
+  };
+  
+  // Class methods
+  _.extend(XT.Error, {
+    /** @scope XT.Error */
+    
+    /**
+      Create a copy of error with `code` found in XT.errors.
+      If an error with a matching code is not found, returns false.
+  
+      @param {String} Code
+      @param {Hash} Extended properties
+      @returns {XT.Error}
+    */
+    clone: function (code, hash) {
+      var found;
+      hash = hash || {};
+      if (code) {
+        found = _.find(XT.errors, function (error) {
+          return error.code === code;
+        });
+        if (!found) { return false; }
+      }
+      found = _.clone(found);
+      if (found.params) {
+        found.params = _.clone(found.params);
+      }
+      _.extend(found, hash);
+      return XT.Error.create(found);
+    },
+
+    /**
+      Create an instance of this error extended with `hash`.
+  
+      @param {Hash} Extended properties
+      @returns {XT.Error}
+    */
+    create: function (hash) {
+      var error;
+      hash = hash || {};
+      error = new XT.Error();
+      _.extend(error, hash);
+      return error;
+    }
+    
+  });
+  
+  var errors = [
+    // Core errors
+    {
+      code: "xt1001",
+      params: {
+        error: '_unknown'
+      },
+      messageKey: "_datasourceError",
+    }, {
+      code: "xt1002",
+      params: {
+        attr: '_unknown'
+      },
+      messageKey: "_attributeNotInSchema",
+    }, {
+      code: "xt1003",
+      params: {
+        attr: '_unknown',
+        type: '_unknown',
+      },
+      messageKey: "_attributeTypeMismatch",
+    }, {
+      code: "xt1004",
+      params: {
+        attr: '_unknown'
+      },
+      messageKey: "_attributeIsRequired",
+    }, {
+      code: "xt1005",
+      messageKey: "_attributeReadOnly",
+    }, {
+      code: "xt1006",
+      params: {
+        attr: '_unknown',
+        length: '_unknown',
+      },
+      messageKey: "_lengthInvalid",
+    }, {
+      code: "xt1007",
+      messageKey: "_recordNotFound",
+    }, {
+      code: "xt1008",
+      params: {
+        attr: '_unknown',
+        value: '_unknown',
+      },
+      messageKey: "_valueExists",
+    }, {
+      code: "xt1009",
+      params: {
+        status: '_unknown'
+      },
+      messageKey: "_recordStatusNotEditable",
+    }, {
+      code: "xt1010",
+      messageKey: "_canNotUpdate",
+    },
+  
+    // Application errors
+  
+    {
+      code: "xt2001",
+      messageKey: "_assignedToRequiredAssigned",
+    }, {
+      code: "xt2002",
+      messageKey: "_characteristicContextRequired",
+    }, {
+      code: "xt2003",
+      messageKey: "_duplicateValues",
+    }, {
+      code: "xt2004",
+      messageKey: "_nameRequired",
+    }, {
+      code: "xt2005",
+      messageKey: "_productCategoryRequiredOnSold",
+    }, {
+      code: "xt2006",
+      messageKey: "_recursiveParentDisallowed",
+    }
+  ], i;
+  
+  // Instaniate error objects
+  XT.errors = [];
+  _.each(errors, function (error) {
+    var obj = XT.Error.create(error);
+    XT.errors.push(obj);
+  });
+
+}());

@@ -155,6 +155,8 @@
     recordType: 'XM.Incident',
     
     numberPolicy: XM.Document.AUTO_NUMBER,
+    
+    keyIsString: false,
 
     privileges: {
       "all": {
@@ -335,7 +337,7 @@
     validateSave: function () {
       var K = XM.Incident;
       if (this.get('status') === K.ASSIGNED && !this.get('assignedTo')) {
-        return "_assignedToRequiredAssigned".loc();
+        return XT.Error.clone('xt2001');
       }
     }
 

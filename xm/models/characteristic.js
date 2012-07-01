@@ -103,7 +103,7 @@
       // Validate at least one context selected
       if (!(this.get('isItems') || this.get('isContacts') ||
             this.get('isAddresses') || this.get('isAccounts'))) {
-        return "_characteristicContextRequired".loc();
+        return XT.Error.clone('xt2002');
       }
 
       // Validate options for duplicates
@@ -111,7 +111,7 @@
         values.push(models[i].get('value'));
       }
       if (!_.isEqual(values, _.unique(values))) {
-        return "_duplicateValues".loc();
+        return XT.Error.clone('xt2003');
       }
     }
 

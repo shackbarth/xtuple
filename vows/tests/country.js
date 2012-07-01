@@ -9,8 +9,20 @@
 (function () {
   "use strict";
   
+  var createHash = {
+    name: 'Elbonia',
+    abbreviation: 'EL',
+    currencyAbbreviation: 'PIC',
+    currencyName: 'Pico',
+    currencySymbol: '!'
+  };
+  
+  var updateHash = {
+    abbreviation: 'EB'
+  };
+  
   vows.describe('XM.Country CRUD test').addBatch({
-    'CREATE a record': {
+    'CREATE': {
       topic: function () {
         var that = this,
           timeoutId,
@@ -34,21 +46,26 @@
       'id is valid': function (model) {
         assert.isNumber(model.id);
       },
-      'Set values': {
+      '-> Set values': {
         topic: function (model) {
-          model.set({
-            name: 'Elbonia',
-            abbreviation: 'EL',
-            currencyAbbreviation: 'PIC',
-            currencyName: 'Pico',
-            currencySymbol: '!'
-          });
+          model.set(createHash);
           return model;
         },
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
-        '-> Save and READ the record': {
+        // Validation tests
+        'Abbreviation must be 2 letters': function (model) {
+          var err = model.validate({ abbreviation: 'TOO_LONG'});
+          assert.equal(err.code, 'xt1006'); // Error code for invalid length
+          assert.equal(err.params.length, 2); // The length it should be
+        },
+        'Currency Abbreviation must be 3 letters': function (model) {
+          var err = model.validate({ currencyAbbreviation: 'TOO_LONG'});
+          assert.equal(err.code, 'xt1006'); // Error code for invalid length
+          assert.equal(err.params.length, 3); // The length it should be
+        },
+        '-> Save and READ': {
           topic: function (model) {
             var that = this,
               timeoutId,
@@ -84,9 +101,9 @@
           'Currency Abbreviation is `PIC`': function (model) {
             assert.equal(model.get('currencyAbbreviation'), 'PIC');
           },
-          '-> UPDATE the record': {
+          '-> UPDATE': {
             topic: function (model) {
-              model.set('abbreviation', 'EB');
+              model.set(updateHash);
               return model;
             },
             'Last Error is null': function (model) {
@@ -98,7 +115,7 @@
             'Status is READY_DIRTY': function (model) {
               assert.equal(model.getStatusString(), 'READY_DIRTY');
             },
-            '-> Commit the Update': {
+            '-> Commit': {
               topic: function (model) {
                 var that = this,
                   timeoutId,
@@ -125,7 +142,7 @@
               'Status is READY_CLEAN': function (model) {
                 assert.equal(model.getStatusString(), 'READY_CLEAN');
               },
-              '-> DESTROY the record': {
+              '-> DESTROY': {
                 topic: function (model) {
                   var that = this,
                     timeoutId,

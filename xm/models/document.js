@@ -32,6 +32,14 @@
       @default true
     */
     enforceUpperKey: true,
+    
+    /**
+      Converts auto numbered keys to strings.
+      
+      @type {Boolean}
+      @default true
+    */
+    keyIsString: true,
 
     /**
       Number generation method for the document key that can be one of three constants:
@@ -77,8 +85,11 @@
         D = XM.Document,
         that = this,
         status = this.getStatus(),
-        upper = value && value.toUpperCase ? value.toUpperCase() : value;
+        upper = value;
       options = options || {};
+      if (this.valueIsString && value && value.toUpperCase) {
+        upper = upper.toUpperCase();
+      }
       if (options.force || !(status & K.READY)) { return; }
         
       // Handle uppercase
@@ -95,10 +106,11 @@
       // Check for conflicts
       if (value && this.isDirty() && !this._number) {
         options.success = function (resp) {
-          var err = "_valueExists".loc()
-                                  .replace("{attr}", ("_" + that.documentKey).loc())
-                                  .replace("{value}", value);
+          var err, params = {};
           if (resp) {
+            params.attr = ("_" + that.documentKey).loc();
+            params.value = value;
+            err = XT.Error.clone('xt1008', { params: params });
             that.trigger('error', that, err, options);
           }
         };
@@ -150,8 +162,8 @@
       var that = this,
         options = {};
       options.success = function (resp) {
-        that._number = resp + "";
-        that.set(that.documentKey, resp + "", {force: true});
+        that._number = that.keyIsString ? resp + "" : resp;
+        that.set(that.documentKey, that._number, {force: true});
       };
       XT.dataSource.dispatch('XT.Model', 'fetchNumber',
                              this.recordType, options);
@@ -193,12 +205,13 @@
       if ((status === K.READY_NEW && currValue && !this._number) ||
           (status === K.READY_DIRTY && currValue !== origValue)) {
         checkOptions.success = function (resp) {
-          var err = "_valueExists".loc()
-                                  .replace("{attr}", ("_" + model.documentKey).loc())
-                                  .replace("{value}", currValue);
+          var err, params = {};
           if (resp === 0) {
             XT.Model.prototype.save.call(model, key, value, options);
           } else {
+            params.attr = ("_" + model.documentKey).loc();
+            params.value = currValue;
+            err = XT.Error.clone('xt1008', { params: params });
             model.trigger('error', model, err, options);
           }
         };

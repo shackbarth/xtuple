@@ -36,18 +36,20 @@
     //
 
     validateEdit: function (attributes) {
+      var params = {};
+      
       if (attributes.abbreviation &&
           attributes.abbreviation.length !== 2) {
-        return "_lengthInvalid".loc()
-                               .replace("{attr}", "_abbreviation".loc())
-                               .replace("{length}", "2");
+        params.attr = "_abbreviation".loc();
+        params.length = "2";
+        return XT.Error.clone('xt1006', { params: params });
       }
 
       if (attributes.currencyAbbreviation &&
           attributes.currencyAbbreviation.length !== 3) {
-        return "_lengthInvalid".loc()
-                               .replace("{attr}", "_currencyAbbreviation".loc())
-                               .replace("{length}", "3");
+        params.attr = "_currencyAbbreviation".loc();
+        params.length = "3";
+        return XT.Error.clone('xt1006', { params: params });
       }
     }
 

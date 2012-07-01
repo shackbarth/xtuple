@@ -597,6 +597,7 @@ XT.stringsFor("en_US", {
   "_unitType": "Unit Type",
   "_unit_conversion": "Unit Conversion",
   "_unit_type": "Unit Type",
+  "_unknown": "(unknown)",
   "_unreconciled": "Unreconciled",
   "_updated": "Updated",
   "_updatedBy": "Updated By",
@@ -632,20 +633,20 @@ XT.stringsFor("en_US", {
   // ********
 
   "_assignedToRequiredAssigned": "Assigned to is required when status is 'Assigned'",
-  "_attributeLengthInvalid": "Length of {attr} must be {length}.",
   "_attributeIsRequired": "'{attr}' is required.",
   "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.", 
   "_attributeNotInSchema": "'{attr}' does not exist in the schema.", 
   "_attributeReadOnly": "Can not edit read only attribute(s).",
   "_canNotUpdate": "Insufficient privileges to edit the record.",
   "_characteristicContextRequired": "You must set at least one characteristic context to true.",
+  "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
   "_lengthInvalid": "Length of {attr} must be {length}.",
   "_nameRequired": "A name is required.",
   "_productCategoryRequiredOnSold": "A Product Category is required for sold items.",
   "_recordNotFound": "Record not found.",
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
-  "_recursiveParentDisallowed": "Record is no allowed to reference itself as the parent.",
+  "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
   "_valueExists": "Record with {attr} of '{value}' already exists.",
 
 });
