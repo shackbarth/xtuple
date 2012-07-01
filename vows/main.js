@@ -108,7 +108,7 @@ XVOWS.save = function (vows) {
           if (status === K.READY_CLEAN) {
             clearTimeout(timeoutId);
             model.off('statusChange', callback);
-            return that.callback(null, model);
+            that.callback(null, model);
           }
         };
       model.on('statusChange', callback);
@@ -135,7 +135,7 @@ XVOWS.save = function (vows) {
   
   @param {Object} Vows
 */
-XVOWS.destroy = function (vows) {
+XVOWS.destroy = function (vows, obj) {
   vows = vows || {};
   var context = {
     topic: function (model) {
@@ -147,7 +147,7 @@ XVOWS.destroy = function (vows) {
           if (status === K.DESTROYED_CLEAN) {
             clearTimeout(timeoutId);
             model.off('statusChange', callback);
-            return that.callback(null, model);
+            that.callback(null, model);
           }
         };
       model.on('statusChange', callback);

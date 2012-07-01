@@ -87,7 +87,7 @@
         status = this.getStatus(),
         upper = value;
       options = options || {};
-      if (this.valueIsString && value && value.toUpperCase) {
+      if (this.keyIsString && value && value.toUpperCase) {
         upper = upper.toUpperCase();
       }
       if (options.force || !(status & K.READY)) { return; }
