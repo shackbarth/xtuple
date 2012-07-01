@@ -8,7 +8,7 @@
 
 (function () {
   "use strict";
-  
+
   /**
     @class
     
@@ -29,52 +29,53 @@
     Note: You should always use `clone` to make an error rather than reference
     the error from `XT.errors` directly. Otherwise if you set `params` on the
     orginial error, you will be setting parameters for that error globally.
-    
+
   */
   XT.Error = function () {};
   XT.Error.prototype = {
     /** @scope XT.Error.prototype */
-    
+
     /**
       A unique code for the error.
     */
     code: null,
-    
+
     /**
       A translatable text string.
     */
     messageKey: null,
-    
+
     /**
       Parameters used for interpreting the text string.
     */
     params: {},
-    
+
     // ..........................................................
     // METHODS
     //
-    
+
     /**
       Localized message calculated from `messageKey` and `params`.
     */
     message: function () {
       var message = (this.messageKey || '').loc(),
-        param;
+        param,
+        loc;
       for (param in this.params) {
         if (this.params.hasOwnProperty(param)) {
-          var loc = this.params[param].loc();
+          loc = (this.params[param] || '_unknown').loc();
           message = message.replace("{" + param + "}", loc);
         }
       }
       return message;
     }
-    
+
   };
-  
+
   // Class methods
   _.extend(XT.Error, {
     /** @scope XT.Error */
-    
+
     /**
       Create a copy of error with `code` found in XT.errors.
       If an error with a matching code is not found, returns false.
@@ -101,7 +102,7 @@
     },
 
     /**
-      Create an instance of this error extended with `hash`.
+      Create an instance of `XT.error` extended with `hash`.
   
       @param {Hash} Extended properties
       @returns {XT.Error}
@@ -113,90 +114,90 @@
       _.extend(error, hash);
       return error;
     }
-    
+
   });
-  
+
   var errors = [
+
     // Core errors
     {
       code: "xt1001",
       params: {
-        error: '_unknown'
+        error: null
       },
-      messageKey: "_datasourceError",
+      messageKey: "_datasourceError"
     }, {
       code: "xt1002",
       params: {
-        attr: '_unknown'
+        attr: null
       },
-      messageKey: "_attributeNotInSchema",
+      messageKey: "_attributeNotInSchema"
     }, {
       code: "xt1003",
       params: {
-        attr: '_unknown',
-        type: '_unknown',
+        attr: null,
+        type: null
       },
-      messageKey: "_attributeTypeMismatch",
+      messageKey: "_attributeTypeMismatch"
     }, {
       code: "xt1004",
       params: {
-        attr: '_unknown'
+        attr: null
       },
-      messageKey: "_attributeIsRequired",
+      messageKey: "_attributeIsRequired"
     }, {
       code: "xt1005",
-      messageKey: "_attributeReadOnly",
+      messageKey: "_attributeReadOnly"
     }, {
       code: "xt1006",
       params: {
-        attr: '_unknown',
-        length: '_unknown',
+        attr: null,
+        length: null
       },
-      messageKey: "_lengthInvalid",
+      messageKey: "_lengthInvalid"
     }, {
       code: "xt1007",
-      messageKey: "_recordNotFound",
+      messageKey: "_recordNotFound"
     }, {
       code: "xt1008",
       params: {
-        attr: '_unknown',
-        value: '_unknown',
+        attr: null,
+        value: null
       },
-      messageKey: "_valueExists",
+      messageKey: "_valueExists"
     }, {
       code: "xt1009",
       params: {
-        status: '_unknown'
+        status: null
       },
-      messageKey: "_recordStatusNotEditable",
+      messageKey: "_recordStatusNotEditable"
     }, {
       code: "xt1010",
-      messageKey: "_canNotUpdate",
+      messageKey: "_canNotUpdate"
     },
-  
+
     // Application errors
-  
     {
       code: "xt2001",
-      messageKey: "_assignedToRequiredAssigned",
+      messageKey: "_assignedToRequiredAssigned"
     }, {
       code: "xt2002",
-      messageKey: "_characteristicContextRequired",
+      messageKey: "_characteristicContextRequired"
     }, {
       code: "xt2003",
-      messageKey: "_duplicateValues",
+      messageKey: "_duplicateValues"
     }, {
       code: "xt2004",
-      messageKey: "_nameRequired",
+      messageKey: "_nameRequired"
     }, {
       code: "xt2005",
-      messageKey: "_productCategoryRequiredOnSold",
+      messageKey: "_productCategoryRequiredOnSold"
     }, {
       code: "xt2006",
-      messageKey: "_recursiveParentDisallowed",
+      messageKey: "_recursiveParentDisallowed"
     }
-  ], i;
-  
+  ];
+
   // Instaniate error objects
   XT.errors = [];
   _.each(errors, function (error) {

@@ -4,48 +4,27 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
   immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XVOWS:true, XT:true, XM:true, setTimeout:true, clearTimeout:true, vows:true, assert:true, console:true */
+/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true, clearTimeout:true, vows:true, assert:true */
 
 (function () {
   "use strict";
-  
-  var createHash = {
+
+  var createHash, updateHash;
+
+  createHash = {
     name: 'Elbonia',
     abbreviation: 'EL',
     currencyAbbreviation: 'PIC',
     currencyName: 'Pico',
     currencySymbol: '!'
   };
-  
-  var updateHash = {
+
+  updateHash = {
     abbreviation: 'EB'
   };
-  
-  vows.describe('XM.Country CRUD test').addBatch({
-    'CREATE': {
-      topic: function () {
-        var that = this,
-          timeoutId,
-          model = new XM.Country(),
-          callback = function (model, value) {
-            clearTimeout(timeoutId);
-            model.off('change:guid', callback);
-            that.callback(null, model);
-          };
-        model.on('change:guid', callback);
-        model.initialize(null, {isNew: true});
 
-        // If we don't hear back, keep going
-        timeoutId = setTimeout(function () {
-          that.callback(null, model);
-        }, 5000); // five seconds
-      },
-      'Status is READY_NEW': function (model) {
-        assert.equal(model.getStatusString(), 'READY_NEW');
-      },
-      'id is valid': function (model) {
-        assert.isNumber(model.id);
-      },
+  vows.describe('XM.Country CRUD test').addBatch({
+    'CREATE': XVOWS.create('XM.Country', {
       '-> Set values': {
         topic: function (model) {
           model.set(createHash);
@@ -65,30 +44,7 @@
           assert.equal(err.code, 'xt1006'); // Error code for invalid length
           assert.equal(err.params.length, 3); // The length it should be
         },
-        '-> Save and READ': {
-          topic: function (model) {
-            var that = this,
-              timeoutId,
-              callback = function (model) {
-                var status = model.getStatus(),
-                  K = XT.Model;
-                if (status === K.READY_CLEAN) {
-                  clearTimeout(timeoutId);
-                  model.off('statusChange', callback);
-                  return that.callback(null, model);
-                }
-              };
-            model.on('statusChange', callback);
-            model.save();
-            
-            // If we don't hear back, keep going
-            timeoutId = setTimeout(function () {
-              that.callback(null, model);
-            }, 5000); // five seconds
-          },
-          'Status is READY_CLEAN': function (model) {
-            assert.equal(model.getStatusString(), 'READY_CLEAN');
-          },
+        '-> Save and READ': XVOWS.save({
           'Name is `Elbonia`': function (model) {
             assert.equal(model.get('name'), 'Elbonia');
           },
@@ -115,65 +71,19 @@
             'Status is READY_DIRTY': function (model) {
               assert.equal(model.getStatusString(), 'READY_DIRTY');
             },
-            '-> Commit': {
-              topic: function (model) {
-                var that = this,
-                  timeoutId,
-                  callback = function (model) {
-                    var status = model.getStatus(),
-                      K = XT.Model;
-                    if (status === K.READY_CLEAN) {
-                      clearTimeout(timeoutId);
-                      model.off('statusChange', callback);
-                      return that.callback(null, model);
-                    }
-                  };
-                model.on('statusChange', callback);
-                model.save();
-
-                // If we don't hear back, keep going
-                timeoutId = setTimeout(function () {
-                  that.callback(null, model);
-                }, 5000); // five seconds
-              },
+            '-> Commit': XVOWS.save({
               'Abbreviation is EB': function (model) {
                 assert.equal(model.get('abbreviation'), 'EB');
               },
-              'Status is READY_CLEAN': function (model) {
-                assert.equal(model.getStatusString(), 'READY_CLEAN');
-              },
-              '-> DESTROY': {
-                topic: function (model) {
-                  var that = this,
-                    timeoutId,
-                    callback = function (model) {
-                      var status = model.getStatus(),
-                        K = XT.Model;
-                      if (status === K.DESTROYED_CLEAN) {
-                        clearTimeout(timeoutId);
-                        model.off('statusChange', callback);
-                        return that.callback(null, model);
-                      }
-                    };
-                  model.on('statusChange', callback);
-                  model.destroy();
-
-                  // If we don't hear back, keep going
-                  timeoutId = setTimeout(function () {
-                    that.callback(null, model);
-                  }, 5000); // five seconds
-                },
-                'Status is DESTORYED_CLEAN': function (model) {
-                  assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
-                },
+              '-> DESTROY': XVOWS.destroy({
                 'FINISH XM.Country': function () {
                   XVOWS.next();
                 }
-              }
-            }
+              })
+            })
           }
-        }
+        })
       }
-    }
+    })
   }).run();
 }());

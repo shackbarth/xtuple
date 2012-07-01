@@ -44,6 +44,129 @@ program             = require("commander");
 // FOR SHARING VOWS SPECIFIC INFORMATION
 // AND FUNCTIONALITY
 XVOWS = {};
+
+/**
+  Creates a working model and automatically checks state
+  is `READY_NEW` and a valid `id` immediately afterward.
+  
+  Note: This function assumes the `id` is fetched automatically.
+  For models with manually created ids such as 'XM.UserAccount', 
+  create a topic manually.
+  
+  @param {String} Record type
+  @param {Object} Vows
+*/
+XVOWS.create = function (recordType, vows) {
+  vows = vows || {};
+  var context = {
+    topic: function (model) {
+      var that = this,
+        timeoutId,
+        Klass = Backbone.Relational.store.getObjectByName(recordType);
+        model = new Klass(),
+        callback = function (model, value) {
+          clearTimeout(timeoutId);
+          model.off('change:guid', callback);
+          that.callback(null, model);
+        };
+      model.on('change:guid', callback);
+      model.initialize(null, {isNew: true});
+
+      // If we don't hear back, keep going
+      timeoutId = setTimeout(function () {
+        that.callback(null, model);
+      }, 5000); // five seconds
+    },
+    'Status is READY_NEW': function (model) {
+      assert.equal(model.getStatusString(), 'READY_NEW');
+    },
+    'id is valid': function (model) {
+      assert.isNumber(model.id);
+    }
+  };
+  
+  // Add in any other passed vows
+  _.extend(context, vows);
+  return context;
+},
+
+/**
+  Saves the working model and automatically checks state
+  is `READY_CLEAN` immediately afterward.
+  
+  @param {Object} Vows
+*/
+XVOWS.save = function (vows) {
+  vows = vows || {};
+  var context = {
+    topic: function (model) {
+      var that = this,
+        timeoutId,
+        callback = function () {
+          var status = model.getStatus(),
+            K = XT.Model;
+          if (status === K.READY_CLEAN) {
+            clearTimeout(timeoutId);
+            model.off('statusChange', callback);
+            that.callback(null, model);
+          }
+        };
+      model.on('statusChange', callback);
+      model.save();
+
+      // If we don't hear back, keep going
+      timeoutId = setTimeout(function () {
+        that.callback(null, model);
+      }, 5000); // five seconds
+    },
+    'Status is READY_CLEAN': function (model) {
+      assert.equal(model.getStatusString(), 'READY_CLEAN');
+    },
+  };
+  
+  // Add in any other passed vows
+  _.extend(context, vows);
+  return context;
+},
+
+/**
+  Destorys the working model and automatically checks state
+  is `DESTROYED_CLEAN` immediately afterward.
+  
+  @param {Object} Vows
+*/
+XVOWS.destroy = function (vows, obj) {
+  vows = vows || {};
+  var context = {
+    topic: function (model) {
+      var that = this,
+        timeoutId,
+        callback = function () {
+          var status = model.getStatus(),
+            K = XT.Model;
+          if (status === K.DESTROYED_CLEAN) {
+            clearTimeout(timeoutId);
+            model.off('statusChange', callback);
+            that.callback(null, model);
+          }
+        };
+      model.on('statusChange', callback);
+      model.destroy();
+
+      // If we don't hear back, keep going
+      timeoutId = setTimeout(function () {
+        that.callback(null, model);
+      }, 5000); // five seconds
+    },
+    'Status is DESTORYED_CLEAN': function (model) {
+      assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
+    }
+  };
+  // Add in any other passed vows
+  _.extend(context, vows);
+  return context;
+},
+
 // PROCESS ANY INCOMING ARGS REAL QUICK
 (function() {
   XVOWS.args = program.tests;
