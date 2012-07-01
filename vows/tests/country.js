@@ -8,19 +8,21 @@
 
 (function () {
   "use strict";
-  
-  var createHash = {
+
+  var createHash, updateHash;
+
+  createHash = {
     name: 'Elbonia',
     abbreviation: 'EL',
     currencyAbbreviation: 'PIC',
     currencyName: 'Pico',
     currencySymbol: '!'
   };
-  
-  var updateHash = {
+
+  updateHash = {
     abbreviation: 'EB'
   };
-  
+
   vows.describe('XM.Country CRUD test').addBatch({
     'CREATE': {
       topic: function () {
@@ -80,7 +82,7 @@
               };
             model.on('statusChange', callback);
             model.save();
-            
+
             // If we don't hear back, keep going
             timeoutId = setTimeout(function () {
               that.callback(null, model);
