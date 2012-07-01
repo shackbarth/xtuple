@@ -54,6 +54,17 @@
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
+        // Validation tests
+        'Abbreviation must be 2 letters': function (model) {
+          var err = model.validate({ abbreviation: 'TOO_LONG'});
+          assert.equal(err.code, 'xt1006'); // Error code for invalid length
+          assert.equal(err.params.length, 2); // The length it should be
+        },
+        'Currency Abbreviation must be 3 letters': function (model) {
+          var err = model.validate({ currencyAbbreviation: 'TOO_LONG'});
+          assert.equal(err.code, 'xt1006'); // Error code for invalid length
+          assert.equal(err.params.length, 3); // The length it should be
+        },
         '-> Save and READ': {
           topic: function (model) {
             var that = this,
