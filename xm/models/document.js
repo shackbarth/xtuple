@@ -32,6 +32,14 @@
       @default true
     */
     enforceUpperKey: true,
+    
+    /**
+      Converts auto numbered keys to strings.
+      
+      @type {Boolean}
+      @default true
+    */
+    keyIsString: true,
 
     /**
       Number generation method for the document key that can be one of three constants:
@@ -77,8 +85,11 @@
         D = XM.Document,
         that = this,
         status = this.getStatus(),
-        upper = value && value.toUpperCase ? value.toUpperCase() : value;
+        upper = value;
       options = options || {};
+      if (this.valueIsString && value && value.toUpperCase) {
+        upper = upper.toUpperCase();
+      }
       if (options.force || !(status & K.READY)) { return; }
         
       // Handle uppercase
@@ -150,8 +161,8 @@
       var that = this,
         options = {};
       options.success = function (resp) {
-        that._number = resp + "";
-        that.set(that.documentKey, resp + "", {force: true});
+        that._number = that.keyIsString ? resp + "" : resp;
+        that.set(that.documentKey, that._number, {force: true});
       };
       XT.dataSource.dispatch('XT.Model', 'fetchNumber',
                              this.recordType, options);

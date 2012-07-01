@@ -155,6 +155,8 @@
     recordType: 'XM.Incident',
     
     numberPolicy: XM.Document.AUTO_NUMBER,
+    
+    keyIsString: false,
 
     privileges: {
       "all": {
