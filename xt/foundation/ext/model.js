@@ -737,7 +737,7 @@
         keys = _.keys(attributes),
         original = _.pick(this.originalAttributes(), keys),
         status = this.getStatus(),
-        attr, value, msg, category, column, error,
+        attr, value, category, column, params = {},
         type = this.recordType.replace(/\w+\./i, ''),
         columns = XT.session.getSchema().get(type).columns,
 
@@ -765,8 +765,8 @@
         if (attributes.hasOwnProperty(attr) &&
             !_.isNull(attributes[attr]) &&
             !_.isUndefined(attributes[attr])) {
-          msg = "_attributeTypeMismatch".loc()
-                                        .replace("{attr}", ("_" + attr).loc());
+          params.attr = ("_" + attr).loc();
+          
           value = attributes[attr];
           column = getColumn(attr);
           category = column ? column.category : false;
@@ -775,38 +775,44 @@
           case S.DB_UNKNOWN:
           case S.DB_STRING:
             if (!_.isString(value)) {
-              return msg.replace('{type}', "_string".loc());
+              params.type = "_string".loc();
+              return XT.Error.clone('xt1003', { params: params });
             }
             break;
           case S.DB_NUMBER:
             if (!_.isNumber(value) &&
                 !isRelation(attr, value, Backbone.HasOne)) {
-              return msg.replace('{type}', "_number".loc());
+              params.type = "_number".loc();
+              return XT.Error.clone('xt1003', { params: params });
             }
             break;
           case S.DB_DATE:
             if (!_.isDate(value)) {
-              return msg.replace('{type}', "_date".loc());
+              params.type = "_date".loc();
+              return XT.Error.clone('xt1003', { params: params });
             }
             break;
           case S.DB_BOOLEAN:
             if (!_.isBoolean(value)) {
-              return msg.replace('{type}', "_boolean".loc());
+              params.type = "_boolean".loc();
+              return XT.Error.clone('xt1003', { params: params });
             }
             break;
           case S.DB_ARRAY:
             if (!_.isArray(value) &&
                 !isRelation(attr, value, Backbone.HasMany)) {
-              return msg.replace('{type}', "_array".loc());
+              params.type = "_array".loc();
+              return XT.Error.clone('xt1003', { params: params });
             }
             break;
           case S.DB_COMPOUND:
             if (!_.isObject(value)) {
-              return msg.replace('{type}', "_object".loc());
+              params.type = "_object".loc();
+              return XT.Error.clone('xt1003', { params: params });
             }
             break;
           default:
-            return XT.Error.clone('xt1002', { params: { attr: attr } });
+            return XT.Error.clone('xt1002', { params: params });
           }
         }
       }
@@ -816,8 +822,8 @@
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
           value = attributes[this.requiredAttributes[i]];
           if (value === undefined || value === null) {
-            msg = ("_" + this.requiredAttributes[i]).loc();
-            return "_attributeIsRequired".loc().replace("{attr}", msg);
+            params.attr = ("_" + this.requiredAttributes[i]).loc();
+            return XT.Error.clone('xt1004', { params: params });
           }
         }
         result = this.validateSave(attributes, options);
@@ -829,12 +835,12 @@
         for (attr in attributes) {
           if (attributes[attr] !== this.original(attr) &&
               this.isReadOnly(attr)) {
-            return "_attributeReadOnly".loc();
+            return XT.Error.clone('xt1005');
           }
         }
 
         if (!this.canUpdate()) {
-          return "_canNotUpdate".loc();
+          return XT.Error.clone('xt1010');
         }
       }
       

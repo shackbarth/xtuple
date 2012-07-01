@@ -10,9 +10,31 @@
   "use strict";
   
   /**
-    A standard error object.
+    @class
+    
+    A standard error object. Standard errors are created and pushed into
+    `XT.errors` on application startup. You should use the `clone` function
+    to find and create a copy of an error for use in reporting in the
+    application. Errors may include one or more parameters that can be replaced
+    at runtime to add context to the error message.
+    
+      var params, err;
+      params = {
+        attr: 'name',
+        type: 'String'
+      }
+      err = XT.Error.clone('xt1003', { params: params });
+      return err.message(); // returns "The value of 'name' must be type: String."
+      
+    Note: You should always use `clone` to make an error rather than reference
+    the error from `XT.errors` directly. Otherwise if you set `params` on the
+    orginial error, you will be setting parameters for that error globally.
+    
   */
-  XT.Error = {
+  XT.Error = function () {};
+  XT.Error.prototype = {
+    /** @scope XT.Error.prototype */
+    
     /**
       A unique code for the error.
     */
@@ -33,55 +55,66 @@
     //
     
     /**
-      Create a copy of error with `code` if found in XT.errors. If no
-      code is found or provided, a copy of `this` instance will be returned.
-      
-      @param {String} Code
-      @param {Hash} Extended properties
-      @returns {XT.Error}
-    */
-    clone: function (code, hash) {
-      var ret, found;
-      hash = hash || {};
-      if (code) {
-        found = _.find(XT.errors, function (error) {
-          return error.code === code;
-        });
-      }
-      ret = found || this;
-      return ret.create.call(ret, hash);
-    },
-    
-    /**
-      Create an instance of this error extended with `hash`.
-      
-      @param {Hash} Extended properties
-      @returns {XT.Error}
-    */
-    create: function (hash) {
-      var Error = function () {}, error;
-      hash = hash || {};
-      Error.prototype = this;
-      error = new Error();
-      _.extend(error, hash);
-      return error;
-    },
-    
-    /**
-      Localized message.
+      Localized message calculated from `messageKey` and `params`.
     */
     message: function () {
       var message = (this.messageKey || '').loc(),
         param;
       for (param in this.params) {
         if (this.params.hasOwnProperty(param)) {
-          message = message.replace("{" + param + "}", this.params[param].loc());
+          var loc = this.params[param].loc();
+          message = message.replace("{" + param + "}", loc);
         }
       }
       return message;
     }
     
   };
+  
+  // Class methods
+  _.extend(XT.Error, {
+    /** @scope XT.Error */
+    
+    /**
+      Create a copy of error with `code` found in XT.errors.
+      If an error with a matching code is not found, returns false.
+  
+      @param {String} Code
+      @param {Hash} Extended properties
+      @returns {XT.Error}
+    */
+    clone: function (code, hash) {
+      var found;
+      hash = hash || {};
+      if (code) {
+        found = _.find(XT.errors, function (error) {
+          return error.code === code;
+        });
+        if (!found) { return false; }
+      }
+      found = _.clone(found);
+      if (found.params) {
+        found.params = _.clone(found.params);
+      }
+      _.extend(found, hash);
+      return XT.Error.create(found);
+    },
+
+    /**
+      Create an instance of this error extended with `hash`.
+  
+      @param {Hash} Extended properties
+      @returns {XT.Error}
+    */
+    create: function (hash) {
+      var error;
+      hash = hash || {};
+      error = new XT.Error();
+      _.extend(error, hash);
+      return error;
+    }
+    
+  });
   
   var errors = [
     // Core errors
