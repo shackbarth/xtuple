@@ -27,12 +27,14 @@
       var that = this,
         payload = {},
         complete = function (response) {
-          var dataHash;
+          var dataHash, params = {}, error;
 
           // Handle error
           if (response.data.isError) {
             if (options && options.error) {
-              options.error.call(that, response.data.reason);
+              params.error = response.data.reason;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
             }
             return;
           }
@@ -64,12 +66,14 @@
       var that = this,
         payload = {},
         complete = function (response) {
-          var dataHash;
+          var dataHash, params = {}, error;
 
           // Handle error
           if (response.data.isError) {
             if (options && options.error) {
-              options.error.call(that, response.data.reason);
+              params.error = response.data.reason;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
             }
             return;
           }
@@ -78,7 +82,8 @@
           // Handle no data as error
           if (_.isEmpty(dataHash)) {
             if (options && options.error) {
-              options.error.call(that, "_recordNotFound".loc());
+              error = XT.Error.clone('xt1007');
+              options.error.call(that, error);
             }
             return;
           }
@@ -109,12 +114,14 @@
       var that = this,
         payload = {},
         complete = function (response) {
-          var dataHash;
+          var dataHash, params = {}, error;
 
           // Handle error
           if (response.data.isError) {
             if (options && options.error) {
-              options.error.call(that, response.data.reason);
+              params.error = response.data.reason;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
             }
             return;
           }
@@ -156,12 +163,14 @@
           parameters: params
         },
         complete = function (response) {
-          var dataHash;
+          var dataHash, params = {}, error;
 
           // handle error
           if (response.data.isError) {
             if (options && options.error) {
-              options.error.call(that, response.data.reason);
+              params.error = response.data.reason;
+              error = XT.Error.clone('xt1001', { params: params });
+              options.error.call(that, error);
             }
             return;
           }
