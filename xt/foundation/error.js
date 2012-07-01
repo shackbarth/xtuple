@@ -192,7 +192,7 @@
       code: "xt2005",
       messageKey: "_productCategoryRequiredOnSold",
     }, {
-      code: "xt3006",
+      code: "xt2006",
       messageKey: "_recursiveParentDisallowed",
     }
   ], i;

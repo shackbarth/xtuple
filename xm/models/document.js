@@ -106,10 +106,11 @@
       // Check for conflicts
       if (value && this.isDirty() && !this._number) {
         options.success = function (resp) {
-          var err = "_valueExists".loc()
-                                  .replace("{attr}", ("_" + that.documentKey).loc())
-                                  .replace("{value}", value);
+          var err, params = {};
           if (resp) {
+            params.attr = ("_" + that.documentKey).loc();
+            params.value = value;
+            err = XT.Error.clone('xt1008', { params: params });
             that.trigger('error', that, err, options);
           }
         };
@@ -204,12 +205,13 @@
       if ((status === K.READY_NEW && currValue && !this._number) ||
           (status === K.READY_DIRTY && currValue !== origValue)) {
         checkOptions.success = function (resp) {
-          var err = "_valueExists".loc()
-                                  .replace("{attr}", ("_" + model.documentKey).loc())
-                                  .replace("{value}", currValue);
+          var err, params = {};
           if (resp === 0) {
             XT.Model.prototype.save.call(model, key, value, options);
           } else {
+            params.attr = ("_" + model.documentKey).loc();
+            params.value = currValue;
+            err = XT.Error.clone('xt1008', { params: params });
             model.trigger('error', model, err, options);
           }
         };

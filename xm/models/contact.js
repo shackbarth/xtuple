@@ -167,7 +167,7 @@
 
     validateSave: function () {
       if (!this.get('firstName') && !this.get('lastName')) {
-        return "_nameRequired".loc();
+        return XT.Error.clone('xt2004');
       }
     }
 

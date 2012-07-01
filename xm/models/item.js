@@ -259,7 +259,7 @@
       var isSold = this.get('isSold'),
         productCategory = this.get('productCategory');
       if (isSold && (productCategory.id || -1) === -1) {
-        return "_productCategoryRequiredOnSold".loc();
+        return XT.Error.clone('xt2005');
       }
     }
 

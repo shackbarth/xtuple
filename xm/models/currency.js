@@ -52,10 +52,11 @@
       if (options && options.force || !(status & K.READY)) { return; }
     
       checkOptions.success = function (resp) {
-        var err = "_valueExists".loc()
-                                .replace("{attr}", "_abbreviation".loc())
-                                .replace("{value}", value);
+        var err, params = {};
         if (resp) {
+          params.attr = "_abbreviation".loc();
+          params.value = value;
+          err = XT.Error.clone('xt1008', { params: params });
           that.trigger('error', that, err, options);
         }
       };
@@ -83,12 +84,13 @@
       if (status === K.READY_NEW ||
          (status === K.READY_DIRTY && currAbbr !== origAbbr)) {
         checkOptions.success = function (resp) {
-          var err = "_valueExists".loc()
-                                  .replace("{attr}", "_abbreviation".loc())
-                                  .replace("{value}", currAbbr);
+          var err, params = {};
           if (resp === 0) {
             XM.Document.prototype.save.call(model, key, value, options);
           } else {
+            params.attr = "_abbreviation".loc();
+            params.value = currAbbr;
+            err = XT.Error.clone('xt1008', { params: params });
             model.trigger('error', model, err, options);
           }
         };
@@ -106,11 +108,12 @@
     },
 
     validateEdit: function (attributes) {
+      var params = {};
       if (attributes.abbreviation &&
           attributes.abbreviation.length !== 3) {
-        return "_lengthInvalid".loc()
-                               .replace("{attr}", "_abbreviation".loc())
-                               .replace("{length}", "3");
+        params.attr = "_abbreviation".loc();
+        params.length = "3";
+        return XT.Error.clone('xt1006', { params: params });
       }
     }
 

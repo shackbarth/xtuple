@@ -174,7 +174,7 @@
 
     validateEdit: function (attributes) {
       if (attributes.parent && attributes.parent.id === this.id) {
-        return "_recursiveParentDisallowed".loc();
+        return XT.Error.clone('xt2006');
       }
     }
 
