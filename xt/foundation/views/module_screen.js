@@ -90,7 +90,7 @@ enyo.kind({
     
       collection = item.collection;
       if (!(collection instanceof Object)) {
-        item.collection = collection = new (XT.getObjectByName(collection))();
+        item.collection = collection = XT.getObjectByName(collection).create();
       }
       
       if (item.query) {

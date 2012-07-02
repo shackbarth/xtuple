@@ -1008,6 +1008,19 @@
 
       return isGrantedAll || isGrantedPersonal;
     },
+    
+    /**
+    Create a new instance of this model.
+    
+    @param {Object} Attributes
+    @param {Object} Options
+    @returns {XT.Model}
+    */
+    create: function (attributes, options) {
+      var Klass = this,
+        child =  new Klass(attributes, options);
+      return child;
+    },
 
     /**
       Return an array of valid attribute names on the model.

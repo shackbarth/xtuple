@@ -44,5 +44,27 @@
     }
 
   });
+  
+  // ..........................................................
+  // CLASS METHODS
+  //
+
+  _.extend(XT.Collection, {
+    /** @scope XT.Collection */
+  
+    /**
+    Create a new instance of this collection.
+
+    @param {Object} Models
+    @param {Object} Options
+    @returns {XT.Model}
+    */
+    create: function (models, options) {
+      var Klass = this,
+        child =  new Klass(models, options);
+      return child;
+    }
+      
+  });
 
 }());
