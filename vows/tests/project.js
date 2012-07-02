@@ -67,7 +67,7 @@
                 topic: function (model) {
                   var that = this,
                     timeoutId,
-                    task = new XM.ProjectTask(),
+                    task = XM.ProjectTask.create(),
                     callback = function () {
                       clearTimeout(timeoutId);
                       task.off('change:guid', callback);
