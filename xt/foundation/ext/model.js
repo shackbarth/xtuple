@@ -18,11 +18,11 @@
   
     To create a new model include `isNew` in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-      m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
+      m = XM.Contact.create({firstName: 'Randy'}, {isNew: true});
     
     To load an existing record include a guid in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-      m = XM.Contact();
+      m = XM.Contact.create();
       m.fetch({id: 1});
   
     @extends Backbone.RelationalModel
