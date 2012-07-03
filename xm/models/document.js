@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -14,7 +12,7 @@
   */
   XM.Document = XT.Model.extend({
     /** @scope XM.Document */
-    
+
     /**
       The unique property for the document, typically a number, code or name.
       This property will be checked when a user edits it to ensure it has not already
@@ -24,7 +22,7 @@
       @type {String}
     */
     documentKey: 'number',
-    
+
     /**
       Forces the document key to always be upper case.
       
@@ -32,7 +30,7 @@
       @default true
     */
     enforceUpperKey: true,
-    
+
     /**
       Converts auto numbered keys to strings.
       
@@ -68,7 +66,7 @@
     // ..........................................................
     // METHODS
     //
-    
+
     destroy: function () {
       var K = XT.Model,
         status = this.getStatus();
@@ -79,10 +77,9 @@
       }
       XT.Model.prototype.destroy.apply(this, arguments);
     },
-    
+
     documentKeyDidChange: function (model, value, options) {
       var K = XT.Model,
-        D = XM.Document,
         that = this,
         status = this.getStatus(),
         upper = value;
@@ -91,18 +88,18 @@
         upper = upper.toUpperCase();
       }
       if (options.force || !(status & K.READY)) { return; }
-        
+
       // Handle uppercase
       if (this.enforceUpperKey && value !== upper) {
         this.set(this.documentKey, upper);
         return;  // Will check again on next pass
       }
-      
+
       // Release the fetched number if applicable
       if (status === K.READY_NEW && this._number && this._number !== value) {
         this.releaseNumber();
       }
-      
+
       // Check for conflicts
       if (value && this.isDirty() && !this._number) {
         options.success = function (resp) {
@@ -117,38 +114,38 @@
         this.findExisting(this.documentKey, value, options);
       }
     },
-    
+
     initialize: function (attributes, options) {
-      XT.Model.prototype.initialize.apply(this, arguments);
+      XT.Model.prototype.initialize.call(this, attributes, options);
       var K = XM.Document,
         policy;
       attributes = attributes || {};
-      
+
       // Set number policy if not already set
       if (!this.numberPolicy) {
         if (this.numberPolicySetting) {
           policy = XT.session.getSettings().get(this.numberPolicySetting);
         }
-        this.numberPolicy =  policy ? policy : K.MANUAL_NUMBER;
+        this.numberPolicy =  policy || K.MANUAL_NUMBER;
       }
-      
+
       // Fetch number if auto
       if (options && options.isNew &&
-         (this.numberPolicy === K.AUTO_NUMBER ||
+          (this.numberPolicy === K.AUTO_NUMBER ||
           this.numberPolicy === K.AUTO_OVERRIDE_NUMBER)) {
         this.fetchNumber();
       }
-      
+
       // Make document key required
       if (!_.contains(this.requiredAttributes, this.documentKey)) {
         this.requiredAttributes.push(this.documentKey);
       }
-      
+
       // Bind events
       this.on('change:' + this.documentKey, this.documentKeyDidChange);
       this.on('statusChange', this.statusDidChange);
     },
-    
+
     /**
       A utility function to sets the next sequential number on a record.
 
@@ -162,7 +159,8 @@
       var that = this,
         options = {};
       options.success = function (resp) {
-        that._number = that.keyIsString ? resp + "" : resp;
+        that._number = that.keyIsString && resp.toString() ?
+            resp.toString() : resp;
         that.set(that.documentKey, that._number, {force: true});
       };
       XT.dataSource.dispatch('XT.Model', 'fetchNumber',
@@ -188,7 +186,7 @@
       console.log("XT.Model.releaseNumber for: " + this.recordType);
       return this;
     },
-    
+
     /**
       This version of `save` first checks to see if the document key already
       exists before committing.
@@ -200,7 +198,7 @@
         origValue = this.original(this.documentKey),
         status = this.getStatus(),
         checkOptions = {};
-        
+
       // Check for number conflicts if we should
       if ((status === K.READY_NEW && currValue && !this._number) ||
           (status === K.READY_DIRTY && currValue !== origValue)) {
@@ -217,13 +215,13 @@
         };
         checkOptions.error = Backbone.wrapError(null, model, options);
         this.findExisting(this.documentKey, currValue, checkOptions);
-        
+
       // Otherwise just go ahead and save
       } else {
         XT.Model.prototype.save.call(model, key, value, options);
       }
     },
-    
+
     statusDidChange: function () {
       var K = XT.Model,
         D = XM.Document;
@@ -232,43 +230,43 @@
         this.setReadOnly(this.documentKey);
       }
     }
-    
+
   });
-  
+
   _.extend(XM.Document, {
       /** @scope XM.Document */
 
-      /**
-        Numbers are manually generated.
-  
-        @static
-        @constant
-        @type String
-        @default M
-      */
-      MANUAL_NUMBER: 'M',
+    /**
+      Numbers are manually generated.
 
-      /**
-        Numbers are automatically generated by the server.
+      @static
+      @constant
+      @type String
+      @default M
+    */
+    MANUAL_NUMBER: 'M',
 
-        @static
-        @constant
-        @type String
-        @default A
-      */
-      AUTO_NUMBER: 'A',
+    /**
+      Numbers are automatically generated by the server.
 
-      /**
-        Numbers are automatically generated, but can be over-ridden by the user.
-  
-        @static
-        @constant
-        @type Number
-        @default O
-      */
-      AUTO_OVERRIDE_NUMBER: 'O'
+      @static
+      @constant
+      @type String
+      @default A
+    */
+    AUTO_NUMBER: 'A',
 
-    }
-  );
+    /**
+      Numbers are automatically generated, but can be over-ridden by the user.
+
+      @static
+      @constant
+      @type Number
+      @default O
+    */
+    AUTO_OVERRIDE_NUMBER: 'O'
+
+  }
+     );
 
 }());

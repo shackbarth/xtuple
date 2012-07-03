@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -47,7 +45,7 @@
   */
   XM.Comment = XT.Model.extend({
     /** @scope XM.Comment.prototype */
-    
+
     privileges: {
       "all": {
         "create": true,
@@ -79,11 +77,11 @@
         publicDefault = XT.session.getSettings().get('CommentPublicDefault');
       result.created = new Date();
       result.createdBy = XM.currentUser;
-      result.isPublic = publicDefault ? publicDefault : false;
+      result.isPublic = publicDefault || false;
       return result;
     },
 
-    isReadOnly: function (value) {
+    isReadOnly: function () {
       var commentType = this.get('commentType'),
         editable = commentType && commentType.get('commentsEditable');
 
@@ -91,7 +89,7 @@
     }
 
   });
-  
+
   // ..........................................................
   // COLLECTIONS
   //

@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -11,8 +9,8 @@
   
     @extends XM.Document
   */
-  XM.Alarm = XM.Document.extend(
-  /** @scope XM.Alarm.prototype */ {
+  XM.Alarm = XM.Document.extend({
+  /** @scope XM.Alarm.prototype */
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 
@@ -24,9 +22,12 @@
     alarmDidChange: function (model, value, options) {
       var status = this.getStatus(),
         K = XT.Model,
-        offset, qualifier, time, trigger;
-      if (options && options.force || !(status & K.READY)) { return; }
-  
+        offset,
+        qualifier,
+        time,
+        trigger;
+      if ((options && options.force) || !(status & K.READY)) { return; }
+
       // Recalculate trigger time based on alarm settings
       offset = this.get('offset');
       qualifier = this.get('qualifier');

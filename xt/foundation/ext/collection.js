@@ -1,8 +1,5 @@
-
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XT:true, Backbone:true, _:true, console:true */
+/*global XT:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
@@ -44,27 +41,27 @@
     }
 
   });
-  
+
   // ..........................................................
   // CLASS METHODS
   //
 
   _.extend(XT.Collection, {
     /** @scope XT.Collection */
-  
-    /**
-    Create a new instance of this collection.
 
-    @param {Object} Models
-    @param {Object} Options
-    @returns {XT.Model}
+    /**
+      Create a new instance of this collection.
+
+      @param {Object} Models
+      @param {Object} Options
+      @returns {XT.Model}
     */
     create: function (models, options) {
       var Klass = this,
         child =  new Klass(models, options);
       return child;
     }
-      
+
   });
 
 }());

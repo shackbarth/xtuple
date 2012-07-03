@@ -1,8 +1,6 @@
 // Contributions of status related functionality borrowed from SproutCore:
 // https://github.com/sproutcore/sproutcore
 
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, Backbone:true, _:true */
 
@@ -231,7 +229,7 @@
           result = Backbone.Model.prototype.destroy.call(this, options);
           delete this._wasNew;
           return result;
-          
+
         }
 
         // Otherwise just marked for deletion.
@@ -766,7 +764,7 @@
             !_.isNull(attributes[attr]) &&
             !_.isUndefined(attributes[attr])) {
           params.attr = ("_" + attr).loc();
-          
+
           value = attributes[attr];
           column = getColumn(attr);
           category = column ? column.category : false;
@@ -843,7 +841,7 @@
           return XT.Error.clone('xt1010');
         }
       }
-      
+
       return this.validateEdit(attributes, options);
     },
 
@@ -860,7 +858,7 @@
     validateEdit: function (attributes, options) {
       // Implement custom code here on your own class
     },
-    
+
     /**
       Called by the `validate` function if the status is `BUSY_COMMITTING`
       (saving) after checking required fields and the function has not
@@ -972,7 +970,9 @@
         isGrantedAll = false,
         isGrantedPersonal = false,
         username = XT.session.details.username,
-        value, i, props;
+        value,
+        i,
+        props;
 
       // If no privileges, nothing to check.
       if (_.isEmpty(privs)) { return true; }
@@ -1008,7 +1008,7 @@
 
       return isGrantedAll || isGrantedPersonal;
     },
-    
+
     /**
     Create a new instance of this model.
     

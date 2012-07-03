@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -15,7 +13,7 @@
     /** @scope XM.OpportunityType.prototype */
 
     recordType: 'XM.OpportunityType',
-    
+
     documentKey: 'name',
 
     privileges: {
@@ -40,7 +38,7 @@
     recordType: 'XM.OpportunityStage',
 
     documentKey: 'name',
-    
+
     privileges: {
       "all": {
         "create": "MaintainOpportunityStages",
@@ -49,11 +47,11 @@
         "delete": "MaintainOpportunityStages"
       }
     },
-    
+
     defaults: {
       deactivate: false
     },
-    
+
     requiredAttributes: [
       "deactivate"
     ]
@@ -69,9 +67,9 @@
     /** @scope XM.OpportunitySource.prototype */
 
     recordType: 'XM.OpportunitySource',
-    
+
     documentKey: 'name',
-    
+
     privileges: {
       "all": {
         "create": "MaintainOpportunitySources",
@@ -82,7 +80,7 @@
     }
 
   });
-  
+
   /**
     @class
   
@@ -98,7 +96,7 @@
     defaults: {
       isActive: true
     },
-    
+
     requiredAttributes: [
       "account",
       "name",
@@ -204,21 +202,23 @@
         key: 'opportunity'
       }
     }],
-  
+
     // ..........................................................
     // METHODS
     //
-    
+
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:assignedTo', this.assignedToDidChange);
     },
-    
+
     assignedToDidChange: function (model, value, options) {
       var status = this.getStatus(),
-        K = XT.Model, assignedTo, assignDate;
-      if (options && options.force || !(status & K.READY)) { return; }
-      
+        K = XT.Model,
+        assignedTo,
+        assignDate;
+      if ((options && options.force) || !(status & K.READY)) { return; }
+
       // Set the assign date if it hasn't been already
       assignedTo = this.get('assignedTo');
       assignDate = this.get('assignDate');
@@ -228,7 +228,7 @@
     }
 
   });
-  
+
   /**
     @class
   
@@ -240,7 +240,7 @@
     recordType: 'XM.OpportunityComment'
 
   });
-  
+
   /**
     @class
   
@@ -402,7 +402,7 @@
     /** @scope XM.OpportunityInfo.prototype */
 
     recordType: 'XM.OpportunityInfo',
-    
+
     readOnly: true,
 
     relations: [{
@@ -435,7 +435,7 @@
     }]
 
   });
-  
+
   // ..........................................................
   // COLLECTIONS
   //

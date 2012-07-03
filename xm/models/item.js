@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -15,11 +13,11 @@
     /** @scope XM.ClassCode.prototype */
 
     recordType: 'XM.ClassCode',
-    
+
     documentKey: 'code',
-    
+
     enforceUpperKey: false,
-    
+
     privileges: {
       "all": {
         "create": "MaintainClassCodes",
@@ -30,7 +28,7 @@
     }
 
   });
-  
+
   /**
     @class
 
@@ -40,9 +38,9 @@
     /** @scope XM.ProductCategory.prototype */
 
     recordType: 'XM.ProductCategory',
-    
+
     documentKey: 'code',
-    
+
     privileges: {
       "all": {
         "create": "MaintainProductCategories",
@@ -53,7 +51,7 @@
     }
 
   });
-  
+
   /**
     @instance
     
@@ -65,7 +63,7 @@
     code: 'EMPTY',
     description: 'Use for indicating no product category'
   });
-  
+
   /**
     @class
 
@@ -75,9 +73,9 @@
     /** @scope XM.Unit.prototype */
 
     recordType: 'XM.Unit',
-    
+
     documentKey: 'name',
-    
+
     privileges: {
       "all": {
         "create": "MaintainUOMs",
@@ -86,11 +84,11 @@
         "delete": "MaintainUOMs"
       }
     },
-    
+
     defaults: {
       isWeight: false
     },
-    
+
     requiredAttributes: [
       "isWeight"
     ]
@@ -106,7 +104,7 @@
     /** @scope XM.Item.prototype */
 
     recordType: 'XM.Item',
-    
+
     privileges: {
       "all": {
         "create": "MaintainItemMasters",
@@ -115,7 +113,7 @@
         "delete": "MaintainItemMasters"
       }
     },
-    
+
     defaults: function () {
       return {
         description1: '',
@@ -127,7 +125,7 @@
         productCategory: XM.emptyProductCategory
       };
     },
-    
+
     requiredAttributes: [
       "classCode",
       "description1",
@@ -140,7 +138,7 @@
       "priceUnit",
       "productCategory"
     ],
-    
+
     relations: [{
       type: Backbone.HasOne,
       key: 'classCode',
@@ -218,26 +216,26 @@
         key: 'item'
       }
     }],
- 
+
     // ..........................................................
     // METHODS
     //
-     
+
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:inventoryUnit', this.inventoryUnitDidChange);
       this.on('change:isSold', this.isSoldDidChange);
       this.on('statusChange', this.isSoldDidChange);
     },
-    
+
     inventoryUnitDidChange: function (model, value, options) {
       var status = this.getStatus(),
         K = XT.Model;
-      if (options && options.force || !(status & K.READY)) { return; }
+      if ((options && options.force) || !(status & K.READY)) { return; }
       if (value) { this.set('priceUnit', value); }
     },
- 
-    isSoldDidChange: function (model, value, options) {
+
+    isSoldDidChange: function () {
       var K = XT.Model,
         isNotSold = !(this.get('isSold') || false);
       if (this.getStatus() & K.READY) {
@@ -246,7 +244,7 @@
         this.setReadOnly('listPrice', isNotSold);
       }
     },
-    
+
     statusDidChange: function () {
       var K = XT.Model;
       if (this.getStatus() === K.READY_CLEAN) {
@@ -254,7 +252,7 @@
         this.setReadOnly('inventoryUnit');
       }
     },
-    
+
     validateSave: function () {
       var isSold = this.get('isSold'),
         productCategory = this.get('productCategory');
@@ -264,7 +262,7 @@
     }
 
   });
-  
+
   /**
     @class
   
@@ -276,7 +274,7 @@
     recordType: 'XM.ItemComment'
 
   });
-  
+
   /**
     @class
   
@@ -418,15 +416,15 @@
     /** @scope XM.ItemInfo.prototype */
 
     recordType: 'XM.ItemInfo',
-    
+
     readOnly: true
 
   });
-  
+
   // ..........................................................
   // COLLECTIONS
   //
- 
+
   /**
    @class
 
@@ -450,7 +448,7 @@
     model: XM.ProductCategory
 
   });
-  
+
   /**
    @class
 
@@ -462,7 +460,7 @@
     model: XM.Unit
 
   });
-  
+
   /**
     @class
   
