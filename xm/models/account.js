@@ -1,7 +1,5 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XT:true, XM:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
@@ -17,7 +15,7 @@
     /** @scope XM.AccountDocument.prototype */
 
     numberPolicySetting: 'CRMAccountNumberGeneration',
-    
+
     requiredAttributes: [
       "number"
     ],
@@ -45,7 +43,7 @@
   */
   XM.Account = XM.AccountDocument.extend({
     /** @scope XM.Account.prototype */
-    
+
     recordType: 'XM.Account',
 
     privileges: {
@@ -65,7 +63,7 @@
         ]
       }
     },
-    
+
     defaults: {
       owner: XM.currentUser,
       isActive: true,
@@ -78,7 +76,7 @@
       "number",
       "name"
     ],
-    
+
     relations: [{
       type: Backbone.HasOne,
       key: 'parent',
@@ -167,7 +165,7 @@
       relatedModel: 'XM.TaxAuthority',
       includeInJSON: 'guid'
     }],
-    
+
     // ..........................................................
     // METHODS
     //
@@ -191,7 +189,7 @@
     recordType: 'XM.AccountComment'
 
   });
-  
+
   /**
     @class
   
@@ -375,7 +373,7 @@
     /** @scope XM.AccountInfo.prototype */
 
     recordType: 'XM.AccountInfo',
-    
+
     readOnly: true,
 
     privileges: {

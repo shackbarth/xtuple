@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -24,15 +22,15 @@
         "delete": "MaintainCurrencies"
       }
     },
-    
+
     documentKey: 'name',
-    
+
     enforceUpperKey: false,
 
     defaults: {
       isBase: false
     },
-    
+
     requiredAttributes: [
       'abbreviation',
       'isBase',
@@ -49,8 +47,8 @@
         that = this,
         status = this.getStatus(),
         checkOptions = {};
-      if (options && options.force || !(status & K.READY)) { return; }
-    
+      if ((options && options.force) || !(status & K.READY)) { return; }
+
       checkOptions.success = function (resp) {
         var err, params = {};
         if (resp) {
@@ -79,10 +77,10 @@
         origAbbr = this.original('abbreviation'),
         status = this.getStatus(),
         checkOptions = {};
-        
+
       // Check for number conflicts if we should
       if (status === K.READY_NEW ||
-         (status === K.READY_DIRTY && currAbbr !== origAbbr)) {
+          (status === K.READY_DIRTY && currAbbr !== origAbbr)) {
         checkOptions.success = function (resp) {
           var err, params = {};
           if (resp === 0) {
@@ -96,7 +94,7 @@
         };
         checkOptions.error = Backbone.wrapError(null, model, options);
         this.findExisting('abbreviation', currAbbr, checkOptions);
-        
+
       // Otherwise just go ahead and save
       } else {
         XM.Document.prototype.save.call(model, key, value, options);

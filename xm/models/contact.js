@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -15,11 +13,11 @@
     /** @scope XM.Honorific.prototype */
 
     recordType: 'XM.Honorific',
-    
+
     documentKey: 'code',
-    
+
     enforceUpperKey: false,
-    
+
     privileges: {
       "all": {
         "create": "MaintainTitles",
@@ -40,9 +38,9 @@
     /** @scope XM.Contact.prototype */
 
     recordType: 'XM.Contact',
-    
+
     numberPolicy: XM.Document.AUTO_NUMBER,
-    
+
     defaults: {
       owner: XM.currentUser,
       isActive: true
@@ -142,11 +140,11 @@
         key: 'contact'
       }
     }],
-    
+
     // ..........................................................
     // METHODS
     //
-    
+
     /**
     Full contact name.
     
@@ -154,10 +152,10 @@
     */
     getName: function () {
       var name = [],
-          first = this.get('firstName'),
-          middle = this.get('middleName'),
-          last = this.get('lastName'),
-          suffix = this.get('suffix');
+        first = this.get('firstName'),
+        middle = this.get('middleName'),
+        last = this.get('lastName'),
+        suffix = this.get('suffix');
       if (first) { name.push(first); }
       if (middle) { name.push(middle); }
       if (last) { name.push(last); }
@@ -172,7 +170,7 @@
     }
 
   });
-  
+
   /**
     @class
   
@@ -188,7 +186,7 @@
     ]
 
   });
-  
+
   /**
     @class
   
@@ -200,7 +198,7 @@
     recordType: 'XM.ContactComment'
 
   });
-  
+
   /**
     @class
   
@@ -342,7 +340,7 @@
     /** @scope XM.ContactInfo.prototype */
 
     recordType: 'XM.ContactInfo',
-    
+
     readOnly: true,
 
     relations: [{

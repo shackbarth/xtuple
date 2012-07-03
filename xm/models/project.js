@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -641,7 +639,7 @@
     recordType: 'XM.ProjectTaskComment'
 
   });
-  
+
   /**
     @class
   
@@ -683,9 +681,9 @@
     }]
 
   });
-  
+
   XM.ProjectInfo = XM.ProjectInfo.extend(XM.ProjectStatus);
-  
+
   // ..........................................................
   // COLLECTIONS
   //

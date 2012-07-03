@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -15,15 +13,15 @@
     /** @scope XM.Language.prototype */
 
     recordType: 'XM.Language',
-    
+
     documentKey: 'name',
-    
+
     enforceUpperKey: false,
 
     readOnly: true
 
   });
-  
+
   /**
     @class
 
@@ -33,9 +31,9 @@
     /** @scope XM.Locale.prototype */
 
     recordType: 'XM.Locale',
-    
+
     documentKey: 'code',
-    
+
     enforceUpperKey: false,
 
     privileges: {
@@ -46,7 +44,7 @@
         "delete": "MaintainLocales"
       }
     },
-    
+
     defaults: {
       altEmphasisColor: "",
       costScale: 2,
@@ -66,7 +64,7 @@
       warningColor: "",
       weightScale: 2
     },
-    
+
     requiredAttributes: [
       "altEmphasisColor",
       "costScale",
@@ -86,7 +84,7 @@
       "warningColor",
       "weightScale"
     ],
-    
+
     relations: [{
       type: Backbone.HasOne,
       key: 'language',
@@ -105,11 +103,11 @@
     /** @scope XM.Privilege.prototype */
 
     recordType: 'XM.Privilege',
-    
+
     readOnly: true
 
   });
-  
+
   /**
     @class
 
@@ -119,9 +117,9 @@
     /** @scope XM.UserAccountRole.prototype */
 
     recordType: 'XM.UserAccountRole',
-    
+
     documentKey: 'name',
-    
+
     privileges: {
       "all": {
         "create": "MaintainGroups",
@@ -130,7 +128,7 @@
         "delete": "MaintainGroups"
       }
     },
-    
+
     relations: [{
       type: Backbone.HasMany,
       key: 'grantedPrivileges',
@@ -141,7 +139,7 @@
     }]
 
   });
-  
+
   /**
     @class
 
@@ -151,9 +149,9 @@
     /** @scope XM.UserAccountRoleInfo.prototype */
 
     recordType: 'UserAccountRole',
-    
+
     readOnly: true,
-    
+
     relations: [{
       type: Backbone.HasMany,
       key: 'grantedPrivileges',
@@ -164,7 +162,7 @@
     }]
 
   });
-  
+
   /**
     @class
 
@@ -174,7 +172,7 @@
     /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */
 
     recordType: 'UserAccountRolePrivilegeAssignment',
-    
+
     relations: [{
       type: Backbone.HasOne,
       key: 'privilege',
@@ -195,9 +193,9 @@
     idAttribute: 'username',
 
     recordType: 'XM.UserAccount',
-    
+
     documentKey: 'username',
-    
+
     enforceUpperKey: false,
 
     privileges: {
@@ -208,19 +206,19 @@
         "delete": false
       }
     },
-    
+
     defaults: {
       canCreateUsers: false,
       disableExport: false,
       isDatabaseUser: false
     },
-    
+
     requiredAttributes: [
       "canCreateUsers",
       "disableExport",
       "isDatabaseUser"
     ],
-    
+
     relations: [{
       type: Backbone.HasOne,
       key: 'locale',
@@ -250,7 +248,7 @@
     }]
 
   });
-  
+
   /**
     @class
 
@@ -260,7 +258,7 @@
     /** @scope XM.UserAccountPrivilegeAssignment.prototype */
 
     recordType: 'XM.UserAccountPrivilegeAssignment',
-    
+
     privileges: {
       "all": {
         "create": true,
@@ -269,7 +267,7 @@
         "delete": true
       }
     },
-    
+
     requiredAttributes: [
       "userAccount",
       "privilege"
@@ -283,7 +281,7 @@
     }]
 
   });
-  
+
   /**
     @class
 
@@ -293,7 +291,7 @@
     /** @scope XM.UserAccountUserAccountRoleAssignment.prototype */
 
     recordType: 'UserAccountUserAccountRoleAssignment',
-    
+
     relations: [{
       type: Backbone.HasOne,
       key: 'userAccountRole',
@@ -318,11 +316,11 @@
     readOnly: true
 
   });
-  
+
   // ..........................................................
   // COLLECTIONS
   //
-  
+
   /**
    @class
 
@@ -334,7 +332,7 @@
     model: XM.Language
 
   });
-  
+
   /**
    @class
 
@@ -346,7 +344,7 @@
     model: XM.Locale
 
   });
-  
+
   /**
    @class
 
@@ -358,7 +356,7 @@
     model: XM.Privilege
 
   });
-  
+
   /**
    @class
 

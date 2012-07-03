@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -104,7 +102,7 @@
     ]
 
   });
-  
+
   /**
     @namespace
   
@@ -143,7 +141,7 @@
     }
 
   };
-  
+
   /**
     @class
   
@@ -153,9 +151,9 @@
     /** @scope XM.Incident.prototype */
 
     recordType: 'XM.Incident',
-    
+
     numberPolicy: XM.Document.AUTO_NUMBER,
-    
+
     keyIsString: false,
 
     privileges: {
@@ -176,14 +174,14 @@
         ]
       }
     },
-    
+
     defaults: function () {
       return {
         owner: XM.currentUser,
         status: XM.Incident.NEW
       };
     },
-    
+
     requiredAttributes: [
       "account",
       "category",
@@ -316,24 +314,24 @@
         key: 'incident'
       }
     }],
-    
+
     // ..........................................................
     // METHODS
     //
-    
+
     initialize: function () {
       XM.Document.prototype.initialize.apply(this, arguments);
       this.on('change:assignedTo', this.assignedToDidChange);
     },
-    
+
     assignedToDidChange: function (model, value, options) {
       var status = this.getStatus(),
         I = XM.Incident,
         K = XT.Model;
-      if (options && options.force || !(status & K.READY)) { return; }
+      if ((options && options.force) || !(status & K.READY)) { return; }
       if (value) { this.set('incidentStatus', I.ASSIGNED); }
     },
-    
+
     validateSave: function () {
       var K = XM.Incident;
       if (this.get('status') === K.ASSIGNED && !this.get('assignedTo')) {
@@ -342,7 +340,7 @@
     }
 
   });
-  
+
   _.extend(XM.Incident, {
     /** @scope XM.Incident */
 
@@ -407,10 +405,10 @@
     CLOSED: 'L'
 
   });
-  
+
   // Incident status mixin
   XM.Incident = XM.Incident.extend(XM.IncidentStatus);
-  
+
   /**
     @class
   
@@ -422,7 +420,7 @@
     recordType: 'XM.IncidentComment'
 
   });
-  
+
   /**
     @class
   
@@ -434,7 +432,7 @@
     recordType: 'XM.IncidentCharacteristic'
 
   });
-  
+
   /**
     @class
   
@@ -446,7 +444,7 @@
     recordType: 'XM.IncidentAlarm'
 
   });
-  
+
   /**
     @class
   
@@ -620,7 +618,7 @@
     /** @scope XM.IncidentInfo.prototype */
 
     recordType: 'XM.IncidentInfo',
-    
+
     readOnly: true,
 
     relations: [{
@@ -652,7 +650,7 @@
     }]
 
   });
-  
+
   // Incident status mixin
   XM.IncidentInfo = XM.IncidentInfo.extend(XM.IncidentStatus);
 

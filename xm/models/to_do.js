@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -70,7 +68,7 @@
         ]
       }
     },
-    
+
     defaults: function () {
       return {
         isActive: true,
@@ -79,7 +77,7 @@
         status: XM.ToDo.NEITHER
       };
     },
-    
+
     requiredAttributes: [
       "dueDate",
       "name"
@@ -136,11 +134,11 @@
         key: 'toDo'
       }
     }],
-    
+
     // ..........................................................
     // METHODS
     //
-    
+
     /**
       This is the source of data for the user three-way status interface where
       the only possible status options are `PENDING`, `DEFERRED` and `NEITHER`.
@@ -151,31 +149,31 @@
       var K = XM.ToDo;
       return this._status || K.NEITHER;
     },
-    
+
     initialize: function () {
       XT.Model.prototype.initialize.apply(this, arguments);
       this.on('change:startDate change:completeDate', this.toDoStatusDidChange);
       this.on('change:status', this.toDoDidChange);
       this.on('changeStatus', this.toDoDidChange);
     },
-    
-    toDoDidChange: function (model, value, options) {
+
+    toDoDidChange: function () {
       this.setToDoStatusProxy(this.get('status'));
     },
-    
+
     /**
       Handles upkeep of the internal `status` value stored on the to-do record
       which can be one of five options.
     */
     toDoStatusDidChange: function (model, value, options) {
       var status = this.getStatus(),
-          proxy = this.getToDoStatusProxy(),
-          startDate = this.get('startDate'),
-          completeDate = this.get('completeDate'),
-          K = XM.ToDo,
-          attrStatus = K.NEITHER;
-      if (options && options.force || !(status & XT.Model.READY)) { return; }
-      
+        proxy = this.getToDoStatusProxy(),
+        startDate = this.get('startDate'),
+        completeDate = this.get('completeDate'),
+        K = XM.ToDo,
+        attrStatus = K.NEITHER;
+      if ((options && options.force) || !(status & XT.Model.READY)) { return; }
+
       // Set the `status` attribute with appropriate value
       if (completeDate) {
         attrStatus = K.COMPLETED;
@@ -189,7 +187,7 @@
       }
       this.set('status', attrStatus);
     },
-    
+
     /**
       Set the three-way status option.
       
@@ -210,10 +208,10 @@
     }
 
   });
-  
+
   // To-Do status mixin
   XM.ToDo = XM.ToDo.extend(XM.ToDoStatus);
-  
+
   _.extend(XM.ToDo, {
      /** @scope XM.ToDo */
 
@@ -265,7 +263,7 @@
     COMPLETED: 'C'
 
   });
-  
+
   /**
     @class
   
@@ -407,7 +405,7 @@
     }]
 
   });
-  
+
   // To-Do status mixin
   XM.ToDoInfo = XM.ToDoInfo.extend(XM.ToDoStatus);
 

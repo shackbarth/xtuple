@@ -1,5 +1,3 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
@@ -43,7 +41,7 @@
       "isItems",
       "order"
     ],
-    
+
     relations: [{
       type: Backbone.HasMany,
       key: 'options',
@@ -52,7 +50,7 @@
         key: 'characteristic'
       }
     }],
-    
+
     //..................................................
     // METHODS
     //
@@ -85,7 +83,7 @@
         this.setReadOnly('validator', true);
       }
     },
-    
+
     statusDidChange: function () {
       var status = this.getStatus(),
         K = XT.Model;
@@ -95,10 +93,11 @@
       }
       XM.Document.prototype.statusDidChange.apply(this, arguments);
     },
-    
+
     validateSave: function () {
       var models = this.get('options').models,
-        values = [], i, j;
+        values = [],
+        i;
 
       // Validate at least one context selected
       if (!(this.get('isItems') || this.get('isContacts') ||
@@ -116,7 +115,7 @@
     }
 
   });
-  
+
   _.extend(XM.Characteristic, {
     /** @scope XM.Characteristic */
 
@@ -145,7 +144,7 @@
     DATE: 2
 
   });
-  
+
   /**
     @class
 
@@ -155,7 +154,7 @@
     /** @scope XM.CharacteristicOption.prototype */
 
     recordType: 'XM.CharacteristicOption',
-    
+
     privileges: {
       "all": {
         "create": true,
@@ -171,7 +170,7 @@
 
     requiredAttributes: [
       "order"
-    ],
+    ]
 
   });
 
@@ -200,16 +199,16 @@
       XT.Model.prototype.initialize.apply(this, arguments);
       this.on('change:characteristic', this.characteristicDidChange);
     },
- 
+
     characteristicDidChange: function (model, value, options) {
       var status = this.getStatus(),
         K = XT.Model;
-      if (options && options.force || !(status & K.READY)) { return; }
+      if ((options && options.force) || !(status & K.READY)) { return; }
       this.set('value', '');
     }
 
   });
-  
+
   // ..........................................................
   // COLLECTIONS
   //
