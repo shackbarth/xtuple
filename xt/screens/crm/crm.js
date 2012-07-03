@@ -1,24 +1,27 @@
-/*jslint indent:2 */
+/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
+regexp:true, undef:true, strict:true, trailing:true white:true*/
 /*global XT:true, enyo:true*/
 
 (function () {
   "use strict";
-  
+
   enyo.kind({
     name: "XT.Crm",
     kind: "XT.ModuleScreen",
     menuItems: [{
-      name: "incidents",
-      label: "Incidents"
-    }, {
       name: "contacts",
-      label: "Contacts",
+      label: "Contacts".loc(),
       collectionType: "XM.ContactInfoCollection",
       listType: "XT.ContactInfoList",
       query: { rowLimit: 30 }
     }, {
+      name: "incidents",
+      label: "Incidents".loc(),
+      collectionType: "XM.IncidentInfoCollection",
+      listType: "XT.IncidentInfoList"
+    }, {
       name: "projects",
-      label: "Projects",
+      label: "Projects".loc(),
       collectionType: "XM.ProjectInfoCollection",
       listType: "XT.ProjectInfoList"
     }],

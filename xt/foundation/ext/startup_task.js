@@ -1,7 +1,6 @@
-// Contributions of status related functionality borrowed from SproutCore:
-// https://github.com/sproutcore/sproutcore
-
-/*jslint bitwise: true, nomen: true, indent:2 */
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+white:true*/
 /*global XT:true, Backbone:true, _:true */
 
 (function () {
