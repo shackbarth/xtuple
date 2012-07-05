@@ -121,14 +121,17 @@ body {}
         @include box-sizing(border-box);
         display: inline-block;
         vertical-align: top;
-          .xt-info-list-basic-cell {
-            @include box-sizing(border-box);
-            padding: 5px;
-            font-size: 11px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .xt-info-list-basic-cell {
+          @include box-sizing(border-box);
+          padding: 5px;
+          font-size: 11px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          &.error {
+            color: #ff0000;
           }
+        }
       }
     }
   }

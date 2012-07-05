@@ -220,61 +220,65 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* line 131, ../sass/screen.scss */
+.xt-info-list .xt-info-list-row .xt-info-list-row-column .xt-info-list-basic-column .xt-info-list-basic-cell.error {
+  color: #ff0000;
+}
 
-/* line 137, ../sass/screen.scss */
+/* line 140, ../sass/screen.scss */
 .cell-key {
   font-weight: bold;
 }
 
-/* line 141, ../sass/screen.scss */
+/* line 144, ../sass/screen.scss */
 .cell-align-right {
   text-align: right;
 }
 
-/* line 145, ../sass/screen.scss */
+/* line 148, ../sass/screen.scss */
 .cell-italic {
   font-style: italic;
 }
 
-/* line 149, ../sass/screen.scss */
+/* line 152, ../sass/screen.scss */
 .xt-sub-module-content {
   -webkit-box-shadow: black -4px 0 10px -4px;
   -moz-box-shadow: black -4px 0 10px -4px;
   box-shadow: black -4px 0 10px -4px;
 }
 
-/* line 154, ../sass/screen.scss */
+/* line 157, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu {
   width: 320px !important;
   background-color: #fff;
 }
-/* line 157, ../sass/screen.scss */
+/* line 160, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item {
   padding: 15px;
   vertical-align: middle;
   border-bottom: 1px solid #ddd;
 }
-/* line 161, ../sass/screen.scss */
+/* line 164, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:hover {
   background-color: #d6f1ff;
   cursor: pointer;
 }
-/* line 165, ../sass/screen.scss */
+/* line 168, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:active {
   background-color: #fff;
 }
-/* line 168, ../sass/screen.scss */
+/* line 171, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item.selected {
   background-color: #d6f1ff;
 }
 
 /******** ********/
-/* line 181, ../sass/screen.scss */
+/* line 184, ../sass/screen.scss */
 body {
   font-family: "arial", "arial black";
 }
 
-/* line 185, ../sass/screen.scss */
+/* line 188, ../sass/screen.scss */
 .xt-app {
   position: absolute;
   top: 0;
@@ -282,7 +286,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 191, ../sass/screen.scss */
+/* line 194, ../sass/screen.scss */
 .xt-app .xt-postbooks {
   position: absolute;
   top: 0;
@@ -290,7 +294,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 197, ../sass/screen.scss */
+/* line 200, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container {
   position: absolute;
   top: 0;
@@ -298,7 +302,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 205, ../sass/screen.scss */
+/* line 208, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen {
   position: absolute;
   top: 0;
@@ -307,7 +311,7 @@ body {
   bottom: 0;
   background-color: #fff;
 }
-/* line 212, ../sass/screen.scss */
+/* line 215, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block {
   background: url("../images/login-blue-scr.png") 0 0 no-repeat;
   position: absolute;
@@ -318,7 +322,7 @@ body {
   height: 250px;
   width: 300px;
 }
-/* line 221, ../sass/screen.scss */
+/* line 224, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block {
   position: absolute;
   top: 30px;
@@ -328,19 +332,19 @@ body {
   /*background-color: $blue1;*/
   overflow: hidden;
 }
-/* line 231, ../sass/screen.scss */
+/* line 234, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-input.xt-login-input {
   display: block;
   margin: 10px;
   margin-left: 35px;
 }
-/* line 238, ../sass/screen.scss */
+/* line 241, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-button.xt-login-button {
   display: block;
   margin-left: 152px;
   width: 80px;
 }
-/* line 247, ../sass/screen.scss */
+/* line 250, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-login-logo-block {
   /*@include box-shadow(#000 -9px 0 20px -14px);*/
   position: absolute;
@@ -352,7 +356,7 @@ body {
   background: url("../images/login-logo.png") 0 0 no-repeat;
 }
 
-/* line 267, ../sass/screen.scss */
+/* line 270, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper {
   position: absolute;
   top: 80px;
@@ -360,7 +364,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 273, ../sass/screen.scss */
+/* line 276, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list {
   position: absolute;
   top: 0;
@@ -368,13 +372,13 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 280, ../sass/screen.scss */
+/* line 283, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list .xt-session-selection-row div {
   display: inline-block;
   padding: 5px;
 }
 
-/* line 293, ../sass/screen.scss */
+/* line 296, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-input {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -390,7 +394,7 @@ body {
   font-family: "arial", "arial black";
   width: 180px;
 }
-/* line 305, ../sass/screen.scss */
+/* line 308, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -406,11 +410,11 @@ body {
   background-color: #fff;
   color: #aaa;
 }
-/* line 315, ../sass/screen.scss */
+/* line 318, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button:active {
   background-color: #ddd;
 }
-/* line 320, ../sass/screen.scss */
+/* line 323, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-screen-carousel {
   height: 100%;
   width: 100%;

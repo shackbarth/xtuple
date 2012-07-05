@@ -76,14 +76,14 @@ white:true*/
           } else {
             curr = model.getValue(elem);
           }
-        if (view.formatter) {
-          formatter = this[view.formatter];
+          if (view.formatter) {
+            formatter = this[view.formatter];
                     
-          if (formatter && formatter instanceof Function) {
-            curr = formatter(curr, model, view);
+            if (formatter && formatter instanceof Function) {
+              curr = formatter(curr, model, view);
+            }
           }
-        }
-        if (curr) {
+          if (curr) {
           view.setContent(curr);
           }
         }

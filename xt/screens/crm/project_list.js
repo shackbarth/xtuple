@@ -43,7 +43,9 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
         { name: "actualHoursTotal", classes: "project-actual-hours-total" }
       ]
     ],
-    formatDate: function (content) {
+    formatDate: function (content, model, view) {
+      var today = new Date();
+      content < today ? view.addClass("error") : view.removeClass("error");
       return Globalize.format(new Date(content), 'd');
     }
   });
