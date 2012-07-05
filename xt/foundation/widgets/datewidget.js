@@ -1,6 +1,8 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, enyo:true, _:true */
+(function() {
+"use strict";
 
 enyo.kind({
   name: "DateWidget",
@@ -11,16 +13,62 @@ enyo.kind({
   components: [
     {
       kind: "onyx.InputDecorator", components: [
-        { kind: "onyx.TextArea", placeholder: "Search term", onchange: "doInputChanged" },
-        { kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped"}
+        { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" },
+        { kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped" },
+        { kind: "onyx.Popup", name: "datePickPopup",
+          modal: true, floating: true,
+          components: [
+            // this is third party code that doesn't look great under the best of
+            // conditions and needs some work to get even there.
+            { kind: "calendarSelector", name: "datePick" }
+          ]}
       ]
     }
   ],
+  dateObjectChanged: function () {
+    this.$.dateField.setValue(this.dateObject.toLocaleDateString());
+  },
   doInputChanged: function () {
-    console.log("input changed");
+    // lucky: no infinite loop! This function only gets triggered from an
+    // actual user input, and not if the field is changed via the dateObjectChanged
+    // function
+    this.setDateObject(this.textToDate(this.$.dateField.getValue()));
+  },
+  textToDate: function (value) {
+    var date = null;
+    var daysInMilliseconds = 1000 * 60 * 60 * 24;
+    //
+    // Try to parse out a date given the various allowable shortcuts
+    //
+    if (value === '0'
+        || value.indexOf('+') === 0
+        || value.indexOf('-') === 0) {
+      // 0 means today, +1 means tomorrow, -2 means 2 days ago, etc.
+      date = new Date(new Date().getTime() + value * daysInMilliseconds);
+
+    } else if (value.indexOf('#') === 0) {
+      // #40 means the fortieth day of this year, so set the month to 0
+      // and set the date accordingly. JS appropriately pushes the date
+      // into subsequent months as necessary
+      date = new Date();
+      date.setMonth(0);
+      date.setDate(value.substring(1));
+
+    } else if(value.length && !isNaN(value)) {
+      // a positive integer by itself means that day of this month
+      date = new Date();
+      date.setDate(value);
+
+    } else {
+      // dates in the format of dates as we're used to them.
+      // we're counting on JS to parse the date correctly
+      date = new Date(value);
+    }
+    return date;
   },
   doIconTapped: function () {
-    console.log("icon tapped");
-
+    this.$.datePickPopup.show();
   }
 });
+
+})()
