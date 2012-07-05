@@ -71,7 +71,7 @@ enyo.kind({
           formatter = this[view.formatter];
                     
           if (formatter && formatter instanceof Function) {
-            curr = formatter(curr, model);
+            curr = formatter(curr, model, view);
           }
         }
         if (curr) {
