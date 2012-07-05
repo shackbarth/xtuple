@@ -76,17 +76,15 @@ white:true*/
           } else {
             curr = model.getValue(elem);
           }
-          if (view.formatter) {
-            formatter = this[view.formatter];
-
-            if (formatter && formatter instanceof Function) {
-              curr = formatter(curr, model);
-            }
-          } else if (curr && curr instanceof Date) {
-            curr = Globalize.format(curr, 'd');
+        if (view.formatter) {
+          formatter = this[view.formatter];
+                    
+          if (formatter && formatter instanceof Function) {
+            curr = formatter(curr, model, view);
           }
-          if (curr) {
-            view.setContent(curr);
+        }
+        if (curr) {
+          view.setContent(curr);
           }
         }
       }
