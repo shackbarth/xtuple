@@ -9,8 +9,10 @@ tmp
 npm-debug.log
 # do not include enyo
 enyo
+sandbox.html
 # do not include any third-party libs
 # except what is explicitly added
 lib/*
 \.sass-cache
 /node_modules/
+/.sass-cache/

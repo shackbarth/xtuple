@@ -1,4 +1,6 @@
-/*jslint bitwise: true, nomen: true, indent:2 */
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
 (function () {
@@ -127,6 +129,26 @@
     // ..........................................................
     // METHODS
     //
+    
+    /**
+      Formats the multiple lines of an address into a
+      text block separating the elements of the address by line breaks.
+
+      @params {Boolean} Is HTML
+      @return {String}
+    */
+    format: function (isHtml) {
+      return XM.Address.format(this, isHtml);
+    },
+
+    /**
+      A formatted address that includes city, state and country.
+
+      @return {String}
+    */
+    formatShort: function () {
+      return XM.Address.formatShort(this);
+    },
 
     /**
       Success response returns an integer from the server indicating how many times the address
@@ -177,6 +199,85 @@
       XT.dataSource.dispatch('XM.Address', 'findExisting', params, options);
       console.log("XM.Address.findExisting");
       return this;
+    },
+    
+    /**
+      This function formats the multiple lines of an address into a
+      text block separating the elements of the address by line breaks.
+
+      Address format accepts multiple argument formats:
+        XM.Address.format(address);
+        XM.Address.format(address, isHtml);
+        XM.Address.format(name, line1, line2, line3, city, state, postalcode, country);
+        XM.Address.format(name, line1, line2, line3, city, state, postalcode, country, isHtml);
+
+      Where address is an XM.Address and isHtml determines whether to
+      use HTML line breaks instead of ASCII new line characters. The
+      default for isHtml is false. The longer signatures accept string
+      components of an address.
+
+      @return {String}
+    */
+    format: function () {
+      var fmtlines   = [],
+        name, line1, line2, line3,
+        city, state, postalcode, country,
+        breaks, result = '', csz;
+
+      if (typeof arguments[0] === 'object') {
+        name = '';
+        line1 = arguments[0].get('line1');
+        line2 = arguments[0].get('line2');
+        line3 = arguments[0].get('line3');
+        city = arguments[0].get('city');
+        state = arguments[0].get('state');
+        postalcode = arguments[0].get('postalcode');
+        country = arguments[0].get('country');
+        breaks = (arguments[1] === undefined ? false : arguments[1]) ? '<br />' : '\n';
+      } else if (typeof arguments[0] === 'string')  {
+        name = arguments[0];
+        line1 = arguments[1];
+        line2 = arguments[2];
+        line3 = arguments[3];
+        city = arguments[4];
+        state = arguments[5];
+        postalcode = arguments[6];
+        country = arguments[7];
+        breaks = (arguments[8] === undefined ? false : arguments[8]) ? '<br />' : '\n';
+      } else { return false; }
+
+      if (name) { fmtlines.push(name); }
+      if (line1) { fmtlines.push(line1); }
+      if (line2) { fmtlines.push(line2); }
+      if (line3) { fmtlines.push(line3); }
+      if (city || state || postalcode) {
+        csz = (city || '') +
+              (city && (state || postalcode) ? ', '  : '') +
+              (state || '') +
+              (state && postalcode ? ' '  : '') +
+              (postalcode || '');
+        fmtlines.push(csz);
+      }
+      if (country) { fmtlines.push(country); }
+
+      if (fmtlines.length) { result = fmtlines.join(breaks); }
+
+      return result;
+    },
+
+    /**
+      A formatted address that includes city, state and country.
+
+      @return {String}
+    */
+    formatShort: function (address) {
+      var ret,
+        city = address.get('city') || '',
+        state = address.get('state') || '',
+        country = address.get('country') || '';
+      ret = city + (city && state ? ', ' : '') + state;
+      ret += (ret ? ' ' : '') + country;
+      return ret;
     }
 
   });
@@ -224,6 +325,30 @@
         "update": false,
         "delete": false
       }
+    },
+    
+    // ..........................................................
+    // METHODS
+    //
+    
+    /**
+      Formats the multiple lines of an address into a
+      text block separating the elements of the address by line breaks.
+
+      @params {Boolean} Is HTML
+      @return {String}
+    */
+    format: function (isHtml) {
+      return XM.Address.format(this, isHtml);
+    },
+
+    /**
+      A formatted address that includes city, state and country.
+
+      @return {String}
+    */
+    formatShort: function () {
+      return XM.Address.formatShort(this);
     }
 
   });
