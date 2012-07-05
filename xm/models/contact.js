@@ -1,4 +1,6 @@
-/*jslint bitwise: true, nomen: true, indent:2 */
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
 (function () {
@@ -28,6 +30,32 @@
     }
 
   });
+  
+  /**
+    @namespace
+    
+  */
+  XM.ContactMixin = {
+    /* @scope XM.ContactMixin */
+    
+    /**
+    Full contact name.
+    
+    @returns String
+    */
+    getName: function () {
+      var name = [],
+        first = this.get('firstName'),
+        middle = this.get('middleName'),
+        last = this.get('lastName'),
+        suffix = this.get('suffix');
+      if (first) { name.push(first); }
+      if (middle) { name.push(middle); }
+      if (last) { name.push(last); }
+      if (suffix) { name.push(suffix); }
+      return name.join(' ');
+    }
+  };
 
   /**
     @class
@@ -145,24 +173,6 @@
     // METHODS
     //
 
-    /**
-    Full contact name.
-    
-    @returns String
-    */
-    getName: function () {
-      var name = [],
-        first = this.get('firstName'),
-        middle = this.get('middleName'),
-        last = this.get('lastName'),
-        suffix = this.get('suffix');
-      if (first) { name.push(first); }
-      if (middle) { name.push(middle); }
-      if (last) { name.push(last); }
-      if (suffix) { name.push(suffix); }
-      return name.join(' ');
-    },
-
     validateSave: function () {
       if (!this.get('firstName') && !this.get('lastName')) {
         return XT.Error.clone('xt2004');
@@ -170,6 +180,9 @@
     }
 
   });
+  
+  // Add mixin
+  XM.Contact = XM.Contact.extend(XM.ContactMixin);
 
   /**
     @class
@@ -358,6 +371,9 @@
     }]
 
   });
+  
+  // Add mixin
+  XM.ContactInfo = XM.ContactInfo.extend(XM.ContactMixin);
 
   // ..........................................................
   // METHODS
