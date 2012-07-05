@@ -124,6 +124,43 @@ white:true*/
     canDelete: function () {
       return this.getClass().canDelete(this);
     },
+    
+    /**
+      Returns only attribute records that have changed.
+
+      @property
+      @type Hash
+    */
+    changeSet: function () {
+      var attributes = this.toJSON();
+
+      // recursive function that does the work
+      var changedOnly = function (attrs) {
+        var ret = null,
+          i,
+          prop,
+          val;
+        if (attrs && attrs.dataState !== 'read') {
+          ret = {};
+          for (prop in attrs) {
+            if (attrs[prop] instanceof Array) {
+              ret[prop] = [];
+              // loop through array and only include dirty items
+              for (i = 0; i < attrs[prop].length; i++) {
+                val = changedOnly(attrs[prop][i]);
+                if (val) {ret[prop].push(val); }
+              }
+            } else {
+              ret[prop] = attrs[prop];
+            }
+          }
+        }
+        return ret;
+      };
+
+      // do the work
+      return changedOnly(attributes);
+    },
 
     /**
       When any attributes change, store the original value(s) in `prime`

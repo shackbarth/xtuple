@@ -133,7 +133,7 @@ white:true*/
       payload.requestType = 'commitRecord';
       payload.recordType = model.recordType;
       payload.requery = options.requery;
-      payload.dataHash = model.toJSON();
+      payload.dataHash = model.changeSet();
 
       return XT.Request
                .handle("function/commitRecord")
