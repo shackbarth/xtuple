@@ -27,12 +27,15 @@ enyo.kind({
   setupRow: function(inSender, inEvent) {
     var row = this.$.item;
     var idx = inEvent.index;
-    var data = XT.session.getAvailableSessions()[idx].sessionData;
     
-    var ts = XT.toReadableTimestamp(data.created);
+    //console.log(XT.session.getAvailableSessions());
+    
+    var data = XT.session.getAvailableSessions()[idx];
+    
+    //var ts = XT.toReadableTimestamp(data.created);
     row.$.username.setContent(data.username);
     row.$.organization.setContent(data.organization);
-    row.$.created.setContent(ts);
+    row.$.created.setContent(data.created);
     row.$.sid.setContent(data.sid);
   }
     
