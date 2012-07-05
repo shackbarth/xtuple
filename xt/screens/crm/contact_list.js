@@ -29,7 +29,8 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     rightColumn: [
       [
         { width: 320 },
-        { name: "account.name", classes: "contact-account-name" }
+        { name: "account.name", classes: "contact-account-name" },
+        { name: "address.formatShort", classes: "contact-account-name" }
       ]
     ]
   });

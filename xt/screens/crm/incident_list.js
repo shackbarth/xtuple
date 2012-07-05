@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true white:true */
 
-/*global XT:true, enyo:true, Globalize:true, _:true */
+/*global XT:true, enyo:true, Globalize:true,*/
 
 (function () {
   "use strict";
@@ -18,20 +18,29 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
     leftColumn: [
       [
         { width: 200 },
-        { name: "number", classes: "incident-number" },
-        { name: "name", classes: "incident-name" },
-        { name: "account.name", classes: "incident-account-name" }
+        { name: "number", classes: "project-number" },
+        { name: "description", classes: "incident-description" }
       ],
       [
         { width: 120 },
-        { name: "updated", classes: "incident-last-updated", formatter: "formatDate" }
+        { name: "updated", classes: "contact-phone", formatter: "formatDate" }
       ]
     ],
     rightColumn: [
       [
-        { width: 70 },
+        { width: 165 },
+        { name: "account.name", classes: "incident-account-name" },
+        { name: "contact.getName", classes: "incident-contact-name" }
+      ],
+      [
+        { width: 75 },
         { name: "getIncidentStatusString", classes: "incident-status" },
         { name: "owner.username", classes: "incident-owner-username" }
+      ],
+      [
+        { width: 75 },
+        { name: "priority.name", classes: "incident-priority" },
+        { name: "category.name", classes: "incident-category" }
       ]
     ],
     formatDate: function (content) {

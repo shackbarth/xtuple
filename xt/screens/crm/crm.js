@@ -15,6 +15,11 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       listType: "XT.ContactInfoList",
       query: { rowLimit: 30 }
     }, {
+      name: "opportunities",
+      label: "Opportunities".loc(),
+      collectionType: "XM.OpportunityInfoCollection",
+      listType: "XT.OpportunityInfoList"
+    }, {
       name: "incidents",
       label: "Incidents".loc(),
       collectionType: "XM.IncidentInfoCollection",
