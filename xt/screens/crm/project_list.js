@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true white:true*/
-/*global XT:true, enyo:true, Globalize:true, _:true */
+/*global XT:true, XM:true, enyo:true, Globalize:true, _:true */
 
 (function () {
   "use strict";
@@ -23,7 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       ],
       [
         { width: 120 },
-        { name: "dueDate", classes: "cell-align-right project-due-date", formatter: "formatDate" }
+        { name: "dueDate", classes: "cell-align-right project-due-date", formatter: "formatDueDate" }
       ]
     ],
     rightColumn: [
@@ -43,11 +43,17 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
         { name: "actualHoursTotal", classes: "project-actual-hours-total" }
       ]
     ],
-    formatDate: function (content, model, view) {
-      var today = new Date();
-      content < today ? view.addClass("error") : view.removeClass("error");
-      return Globalize.format(new Date(content), 'd');
-    }
+    formatDueDate: function (content, model, view) {
+        var today = new Date(),
+          K = XM.Project;
+        if (model.get('status') !== K.COMPLETED &&
+            XT.date.compareDate(content, today) < 1) {
+          view.addClass("error");
+        } else {
+          view.removeClass("error");
+        }
+        return content;
+      }
   });
 
 }());
