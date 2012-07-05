@@ -17,13 +17,13 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     leftColumn: [
       [
         { width: 200 },
-        { name: "name", classes: "contact-name" },
+        { name: "name", classes: "cell-key contact-name" },
         { name: "jobTitle", classes: "contact-job-title" }
       ],
       [
         { width: 120 },
-        { name: "phone", classes: "contact-phone" },
-        { name: "email", classes: "contact-email" }
+        { name: "phone", classes: "cell-align-right contact-phone" },
+        { name: "primaryEmail", classes: "cell-align-right contact-email" }
       ]
     ],
     rightColumn: [

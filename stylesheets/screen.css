@@ -2,7 +2,7 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-/* line 17, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -19,50 +19,50 @@ time, mark, audio, video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
+  font-size: 100%;
   vertical-align: baseline;
 }
 
-/* line 20, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-body {
+/* line 22, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html {
   line-height: 1;
 }
 
-/* line 22, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 24, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 26, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 28, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 101, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 30, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 114, ../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
 }
@@ -73,7 +73,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-image: -webkit-radial-gradient(#666666, #333333 70%);
   background-image: -moz-radial-gradient(#666666, #333333 70%);
   background-image: -o-radial-gradient(#666666, #333333 70%);
-  background-image: -ms-radial-gradient(#666666, #333333 70%);
   background-image: radial-gradient(#666666, #333333 70%);
   background-color: #999;
 }
@@ -85,7 +84,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-image: -webkit-radial-gradient(#666666, #333333 70%);
   background-image: -moz-radial-gradient(#666666, #333333 70%);
   background-image: -o-radial-gradient(#666666, #333333 70%);
-  background-image: -ms-radial-gradient(#666666, #333333 70%);
   background-image: radial-gradient(#666666, #333333 70%);
   background-color: #999;
   color: #fff;
@@ -111,9 +109,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 43, ../sass/screen.scss */
 .xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
   margin: 0 10px;
@@ -131,15 +128,11 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** END DASHBOARD */
 /* line 63, ../sass/screen.scss */
 .developer-ui-container {
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -o-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
   box-shadow: #333333 4px 4px 10px -4px;
   -moz-border-radius-bottomright: 10px;
   -webkit-border-bottom-right-radius: 10px;
-  -o-border-bottom-right-radius: 10px;
-  -ms-border-bottom-right-radius: 10px;
-  -khtml-border-bottom-right-radius: 10px;
   border-bottom-right-radius: 10px;
   top: 100px;
   left: 0;
@@ -154,21 +147,14 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 79, ../sass/screen.scss */
 .developer-ui-container .onyx-grabber.developer-grabber {
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -o-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
   box-shadow: #333333 4px 4px 10px -4px;
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
-  -o-border-top-right-radius: 10px;
-  -ms-border-top-right-radius: 10px;
-  -khtml-border-top-right-radius: 10px;
   border-top-right-radius: 10px;
   -moz-border-radius-bottomright: 10px;
   -webkit-border-bottom-right-radius: 10px;
-  -o-border-bottom-right-radius: 10px;
-  -ms-border-bottom-right-radius: 10px;
-  -khtml-border-bottom-right-radius: 10px;
   border-bottom-right-radius: 10px;
   background-color: #d8d8d8;
   position: absolute;
@@ -197,9 +183,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 /* line 108, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   background-color: #fff;
   padding-top: 3px;
@@ -208,9 +193,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 114, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 320px;
   min-width: 320px;
@@ -219,78 +203,73 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 120, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column .xt-info-list-basic-column {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
   vertical-align: top;
 }
 /* line 124, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column .xt-info-list-basic-column .xt-info-list-basic-cell {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 5px;
   font-size: 11px;
-}
-
-/* line 134, ../sass/screen.scss */
-.project-due-date {
-  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* line 137, ../sass/screen.scss */
-.project-number {
+.cell-key {
   font-weight: bold;
 }
 
 /* line 141, ../sass/screen.scss */
-.contact-phone, .contact-email {
+.cell-align-right {
   text-align: right;
 }
 
-/* line 148, ../sass/screen.scss */
+/* line 145, ../sass/screen.scss */
 .xt-sub-module-content {
-  -moz-box-shadow: black -4px 0 10px -4px;
   -webkit-box-shadow: black -4px 0 10px -4px;
-  -o-box-shadow: black -4px 0 10px -4px;
+  -moz-box-shadow: black -4px 0 10px -4px;
   box-shadow: black -4px 0 10px -4px;
 }
 
-/* line 153, ../sass/screen.scss */
+/* line 150, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu {
   width: 320px !important;
   background-color: #fff;
 }
-/* line 156, ../sass/screen.scss */
+/* line 153, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item {
   padding: 15px;
   vertical-align: middle;
   border-bottom: 1px solid #ddd;
 }
-/* line 160, ../sass/screen.scss */
+/* line 157, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:hover {
   background-color: #d6f1ff;
   cursor: pointer;
 }
-/* line 164, ../sass/screen.scss */
+/* line 161, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:active {
   background-color: #fff;
 }
-/* line 167, ../sass/screen.scss */
+/* line 164, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item.selected {
   background-color: #d6f1ff;
 }
 
 /******** ********/
-/* line 180, ../sass/screen.scss */
+/* line 177, ../sass/screen.scss */
 body {
   font-family: "arial", "arial black";
 }
 
-/* line 184, ../sass/screen.scss */
+/* line 181, ../sass/screen.scss */
 .xt-app {
   position: absolute;
   top: 0;
@@ -298,7 +277,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 190, ../sass/screen.scss */
+/* line 187, ../sass/screen.scss */
 .xt-app .xt-postbooks {
   position: absolute;
   top: 0;
@@ -306,7 +285,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 196, ../sass/screen.scss */
+/* line 193, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container {
   position: absolute;
   top: 0;
@@ -314,7 +293,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 204, ../sass/screen.scss */
+/* line 201, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen {
   position: absolute;
   top: 0;
@@ -323,7 +302,7 @@ body {
   bottom: 0;
   background-color: #fff;
 }
-/* line 211, ../sass/screen.scss */
+/* line 208, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block {
   background: url("../images/login-blue-scr.png") 0 0 no-repeat;
   position: absolute;
@@ -334,7 +313,7 @@ body {
   height: 250px;
   width: 300px;
 }
-/* line 220, ../sass/screen.scss */
+/* line 217, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block {
   position: absolute;
   top: 30px;
@@ -344,19 +323,19 @@ body {
   /*background-color: $blue1;*/
   overflow: hidden;
 }
-/* line 230, ../sass/screen.scss */
+/* line 227, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-input.xt-login-input {
   display: block;
   margin: 10px;
   margin-left: 35px;
 }
-/* line 237, ../sass/screen.scss */
+/* line 234, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-button.xt-login-button {
   display: block;
   margin-left: 152px;
   width: 80px;
 }
-/* line 246, ../sass/screen.scss */
+/* line 243, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-login-logo-block {
   /*@include box-shadow(#000 -9px 0 20px -14px);*/
   position: absolute;
@@ -368,7 +347,7 @@ body {
   background: url("../images/login-logo.png") 0 0 no-repeat;
 }
 
-/* line 266, ../sass/screen.scss */
+/* line 263, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper {
   position: absolute;
   top: 80px;
@@ -376,7 +355,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 272, ../sass/screen.scss */
+/* line 269, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list {
   position: absolute;
   top: 0;
@@ -384,19 +363,18 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 279, ../sass/screen.scss */
+/* line 276, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list .xt-session-selection-row div {
   display: inline-block;
   padding: 5px;
 }
 
-/* line 292, ../sass/screen.scss */
+/* line 289, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-input {
-  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -o-border-radius: 5px;
+  -moz-border-radius: 5px;
   -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 8px 8px 10px 8px;
   border: 1px solid #ddd;
@@ -407,13 +385,12 @@ body {
   font-family: "arial", "arial black";
   width: 180px;
 }
-/* line 304, ../sass/screen.scss */
+/* line 301, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button {
-  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -o-border-radius: 5px;
+  -moz-border-radius: 5px;
   -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 5px;
   border: 1px solid #ddd;
@@ -424,11 +401,11 @@ body {
   background-color: #fff;
   color: #aaa;
 }
-/* line 314, ../sass/screen.scss */
+/* line 311, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button:active {
   background-color: #ddd;
 }
-/* line 319, ../sass/screen.scss */
+/* line 316, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-screen-carousel {
   height: 100%;
   width: 100%;

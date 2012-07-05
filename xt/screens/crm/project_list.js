@@ -17,13 +17,13 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     leftColumn: [
       [
         { width: 200 },
-        { name: "number", classes: "project-number" },
+        { name: "number", classes: "cell-key project-number" },
         { name: "name", classes: "project-name" },
         { name: "account.name", classes: "project-account-name" }
       ],
       [
         { width: 120 },
-        { name: "dueDate", classes: "project-due-date", formatter: "formatDate" }
+        { name: "dueDate", classes: "cell-align-right project-due-date", formatter: "formatDate" }
       ]
     ],
     rightColumn: [

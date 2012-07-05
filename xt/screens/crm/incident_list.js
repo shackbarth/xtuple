@@ -18,12 +18,12 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
     leftColumn: [
       [
         { width: 200 },
-        { name: "number", classes: "project-number" },
-        { name: "description", classes: "incident-description" }
+        { name: "number", classes: "cell-key project-number" },
+        { name: "description", classes: "cell incident-description" }
       ],
       [
         { width: 120 },
-        { name: "updated", classes: "contact-phone", formatter: "formatDate" }
+        { name: "updated", classes: "cell-align-right incident-updated", formatter: "formatDate" }
       ]
     ],
     rightColumn: [

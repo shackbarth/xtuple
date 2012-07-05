@@ -14,3 +14,4 @@ enyo
 lib/*
 \.sass-cache
 /node_modules/
+/.sass-cache/

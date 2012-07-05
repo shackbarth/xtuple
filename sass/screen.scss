@@ -125,25 +125,22 @@ body {}
             @include box-sizing(border-box);
             padding: 5px;
             font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
       }
     }
   }
 }
 
-.project-due-date {
-  text-align: right;
-}
-.project-number {
+.cell-key {
   font-weight: bold;
 }
 
-.contact-phone, .contact-email {
+.cell-align-right {
   text-align: right;
 }
-
-
-
 
 .xt-sub-module-content {
   @include box-shadow(#000 -4px 0 10px -4px);
