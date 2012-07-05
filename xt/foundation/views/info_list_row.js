@@ -61,7 +61,9 @@ white:true*/
             curr = model;
             for (; idx < parts.length; ++idx) {
               curr = curr.getValue(parts[idx]);
-              if (curr && typeof curr === "object") {
+              if (curr && curr instanceof Date) {
+                break;
+              } else if (curr && typeof curr === "object") {
 
               } else if (typeof curr === "string") {
                 break;
@@ -80,6 +82,8 @@ white:true*/
             if (formatter && formatter instanceof Function) {
               curr = formatter(curr, model);
             }
+          } else if (curr && curr instanceof Date) {
+            curr = Globalize.format(curr, 'd');
           }
           if (curr) {
             view.setContent(curr);

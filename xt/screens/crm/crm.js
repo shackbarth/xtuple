@@ -13,7 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       label: "Contacts".loc(),
       collectionType: "XM.ContactInfoCollection",
       listType: "XT.ContactInfoList",
-      query: { rowLimit: 30 }
+      query: { orderBy: '"lastName", "firstName"' }
     }, {
       name: "opportunities",
       label: "Opportunities".loc(),

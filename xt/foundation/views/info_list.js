@@ -15,7 +15,7 @@ enyo.kind({
   },
   collectionChanged: function() {
     var col = this.getCollection();
-    var query = this._listQuery || {};
+    var query = col._listQuery || { rowLimit: 25 };
     
     if (!col) {
       this.setIndex(1);
@@ -30,7 +30,7 @@ enyo.kind({
     col.fetch({
       success: enyo.bind(this, "_collectionFetchSuccess"),
       error: enyo.bind(this, "_collectionFetchError"),
-      query: { rowLimit: 100 }
+      query: query
     });
   },
   _collectionChanged: function(collection) {

@@ -16,12 +16,12 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     kind: "XT.InfoListRow",
     leftColumn: [
       [
-        { width: 200 },
+        { width: 160 },
         { name: "name", classes: "cell-key contact-name" },
         { name: "jobTitle", classes: "contact-job-title" }
       ],
       [
-        { width: 120 },
+        { width: 160 },
         { name: "phone", classes: "cell-align-right contact-phone" },
         { name: "primaryEmail", classes: "cell-align-right contact-email" }
       ]
@@ -29,7 +29,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     rightColumn: [
       [
         { width: 320 },
-        { name: "account.name", classes: "contact-account-name" },
+        { name: "account.name", classes: "cell-italic contact-account-name" },
         { name: "address.formatShort", classes: "contact-account-name" }
       ]
     ]

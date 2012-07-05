@@ -29,12 +29,12 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
     rightColumn: [
       [
         { width: 120 },
-        { name: "account.name", classes: "opportunity-account-name" },
+        { name: "account.name", classes: "cell-italic opportunity-account-name" },
         { name: "contact.getName", classes: "opportunity-contact-name" }
       ],
       [
         { width: 70 },
-        { name: "opportunityStage.name", classes: "opportunity-opportunityStage" },
+        { name: "opportunityStage.name", classes: "opportunity-opportunityStage-name" },
         { name: "owner.username", classes: "opportunity-owner-username" }
       ]
     ],

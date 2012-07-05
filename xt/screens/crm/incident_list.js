@@ -29,7 +29,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
     rightColumn: [
       [
         { width: 165 },
-        { name: "account.name", classes: "incident-account-name" },
+        { name: "account.name", classes: "cell-italic incident-account-name" },
         { name: "contact.getName", classes: "incident-contact-name" }
       ],
       [
