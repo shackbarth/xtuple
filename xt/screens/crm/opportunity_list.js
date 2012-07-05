@@ -23,7 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
       ],
       [
         { width: 120 },
-        { name: "targetClose", classes: "cell-align-right", formatter: "formatDate" }
+        { name: "targetClose", classes: "cell-align-right", formatter: "formatTargetClose" }
       ]
     ],
     rightColumn: [
@@ -38,8 +38,15 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
         { name: "owner.username", classes: "opportunity-owner-username" }
       ]
     ],
-    formatDate: function (content) {
-      return Globalize.format(new Date(content), 'd');
+    formatTargetClose: function (content, model, view) {
+      var today = new Date();
+      if (model.get('isActive') &&
+          content && XT.date.compareDate(content, today) < 1) {
+        view.addClass("error");
+      } else {
+        view.removeClass("error");
+      }
+      return content;
     }
   });
 

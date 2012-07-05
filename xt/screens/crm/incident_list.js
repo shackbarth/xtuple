@@ -43,8 +43,14 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
         { name: "category.name", classes: "incident-category" }
       ]
     ],
-    formatDate: function (content) {
-      return Globalize.format(new Date(content), 'd');
+    formatDate: function (content, model, view) {
+      var today = new Date();
+      if (XT.date.compareDate(content, today)) {
+        view.removeClass("bold");
+      } else {
+        view.addClass("bold");
+      }
+      return content;
     }
   });
 

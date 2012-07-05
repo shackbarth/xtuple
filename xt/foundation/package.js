@@ -3,6 +3,7 @@ enyo.depends(
   "error.js",
   "log.js",
   "datasource.js",
+  "date.js",
   "math.js",
   "request.js",
   "response.js",
