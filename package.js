@@ -4,9 +4,8 @@ enyo.depends(
   "$lib/backbone_relational",
   "$lib/layout",
   "$lib/onyx",
+  "$lib/Enyo-2-Components",
   "$lib/socket.io",
-  //"$lib/Enyo-2-Components/addons/DatePicker/package.js",
-  //"$lib/Enyo-2-Components/addons/calendarSelector/package.js",
   "xt",
   "xm",
   "app.js"

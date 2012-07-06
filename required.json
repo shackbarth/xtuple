@@ -25,5 +25,12 @@
   "onyx": {
     "origin": "git@github.com:enyojs/onyx.git",
     "tag": "2.0-beta5"
+  },
+  "Enyo-2-Components": {
+    "origin": "git://github.com/MachiApps/Enyo-2-Components.git",
+    "entries": [
+      "$lib/Enyo-2-Components/addons/DatePicker/package.js",
+      "$lib/Enyo-2-Components/addons/calendarSelector/package.js"
+    ]
   }
 }
