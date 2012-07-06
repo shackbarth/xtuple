@@ -48,6 +48,15 @@ clearTimeout:true, vows:true, assert:true */
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
+        'Abbreviation is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
+        },
+        'Country is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "country"));
+        },
+        'Name is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "name"));
+        },
         '-> Save and READ': XVOWS.save({
           'Name is `Plasma`': function (model) {
             assert.equal(model.get('name'), createHash.name);
