@@ -1,8 +1,14 @@
 enyo.depends(
-  "foundation",
-  "screens",
-  
-  // if development mode is true go ahead and load
-  // the developer helper bar
-  DEVELOPMENT_MODE? "developer": ""
+  "foundation.js",
+  "error.js",
+  "log.js",
+  "datasource.js",
+  "date.js",
+  "math.js",
+  "request.js",
+  "response.js",
+  "session.js",
+  "locale.js",
+  "en", // LANG FILE -- TEMPORARY
+  "ext"
 );
