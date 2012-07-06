@@ -78,7 +78,7 @@ white:true*/
           }
           if (view.formatter) {
             formatter = this[view.formatter];
-                    
+
             if (formatter && formatter instanceof Function) {
               curr = formatter(curr, model, view);
             }
