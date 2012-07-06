@@ -6,10 +6,10 @@ create or replace view xt.prjinfo as
    prj_id, prj_number, prj_name, prj_status, prj_due_date, prj_username, prj_owner_username, prj_crmacct_id,
    coalesce(sum(prjtask_hours_budget),0) as prj_hours_budget,
    coalesce(sum(prjtask_hours_actual),0) as prj_hours_actual,
-   coalesce(sum(prjtask_hours_budget),0) - sum(prjtask_hours_actual) as prj_hours_balance,
+   coalesce(sum(prjtask_hours_budget),0) - coalesce(sum(prjtask_hours_actual),0) as prj_hours_balance,
    coalesce(sum(prjtask_exp_budget),0) as prj_exp_budget,
    coalesce(sum(prjtask_exp_actual),0) as prj_exp_actual,
-   coalesce(sum(prjtask_exp_budget),0) - sum(prjtask_exp_actual) as prj_exp_balance
+   coalesce(sum(prjtask_exp_budget),0) - coalesce(sum(prjtask_exp_actual),0) as prj_exp_balance
    from prj
    left join prjtask on prjtask_prj_id=prj_id
    group by prj_id, prj_number, prj_name, prj_status, prj_due_date, prj_username, prj_owner_username, prj_crmacct_id;
