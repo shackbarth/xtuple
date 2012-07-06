@@ -1,7 +1,9 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, 
+  plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
+  newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true, clearTimeout:true, vows:true, assert:true */
+/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
+  clearTimeout:true, vows:true, assert:true */
 
 (function () {
   "use strict";
@@ -52,7 +54,8 @@
             assert.equal(model.get('currencyName'), createHash.currencyName);
           },
           'Currency Abbreviation is `PIC`': function (model) {
-            assert.equal(model.get('currencyAbbreviation'), createHash.currencyAbbreviation);
+            assert.equal(model.get('currencyAbbreviation'),
+              createHash.currencyAbbreviation);
           },
           '-> UPDATE': {
             topic: function (model) {
@@ -70,7 +73,8 @@
             },
             '-> Commit': XVOWS.save({
               'Abbreviation is EB' : function (model) {
-                assert.equal(model.get('abbreviation'), updateHash.abbreviation);
+                assert.equal(model.get('abbreviation'),
+                  updateHash.abbreviation);
               },
               '-> DESTROY': XVOWS.destroy({
                 'FINISH XM.Country': function () {
