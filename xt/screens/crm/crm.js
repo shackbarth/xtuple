@@ -10,23 +10,23 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     kind: "XT.ModuleScreen",
     menuItems: [{
       name: "contacts",
-      label: "Contacts".loc(),
+      label: "_contacts".loc(),
       collectionType: "XM.ContactInfoCollection",
       listType: "XT.ContactInfoList",
       query: { orderBy: '"lastName", "firstName"' }
     }, {
       name: "opportunities",
-      label: "Opportunities".loc(),
+      label: "_opportunities".loc(),
       collectionType: "XM.OpportunityInfoCollection",
       listType: "XT.OpportunityInfoList"
     }, {
       name: "incidents",
-      label: "Incidents".loc(),
+      label: "_incidents".loc(),
       collectionType: "XM.IncidentInfoCollection",
       listType: "XT.IncidentInfoList"
     }, {
       name: "projects",
-      label: "Projects".loc(),
+      label: "_projects".loc(),
       collectionType: "XM.ProjectInfoCollection",
       listType: "XT.ProjectInfoList"
     }],
