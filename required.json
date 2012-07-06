@@ -32,7 +32,7 @@
       "$lib/globalize/lib/globalize.js"
     ]
   },
-  "Enyo-2-Components": {
+  "enyo_2_components": {
     "origin": "git://github.com/MachiApps/Enyo-2-Components.git",
     "entries": [
       "$lib/Enyo-2-Components/addons/DatePicker/package.js",
