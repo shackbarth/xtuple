@@ -13,6 +13,9 @@ require('./lib/model_generator');
 // temporary settings fixed to aurora dev database
 var settings = {
   user: 'admin',
+  //password: 'admin',
+  //hostname: 'localhost',
+  //port: 5432
   password: 'Assemble!Aurora',
   hostname: 'asteroidbelt.xtuple.com',
   port: 19689
