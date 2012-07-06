@@ -1,7 +1,9 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, 
+  plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
+  newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true, clearTimeout:true, vows:true, assert:true */
+/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
+clearTimeout:true, vows:true, assert:true */
 
 (function () {
   "use strict";
@@ -80,7 +82,8 @@
               assert.isObject(model.get('country'));
             },
             'Country guid is Australia\'s': function (model) {
-              assert.equal(model.get('country').get('guid'), updateHash.country);
+              assert.equal(model.get('country').get('guid'),
+                updateHash.country);
             },
             'Status is READY_DIRTY': function (model) {
               assert.equal(model.getStatusString(), 'READY_DIRTY');
@@ -90,13 +93,15 @@
                 assert.equal(model.get('name'), updateHash.name);
               },
               'Abbreviation is GS': function (model) {
-                assert.equal(model.get('abbreviation'), updateHash.abbreviation);
+                assert.equal(model.get('abbreviation'),
+                  updateHash.abbreviation);
               },
               'Country is an object': function (model) {
                 assert.isObject(model.get('country'));
               },
               'Country guid is Australia\'s': function (model) {
-                assert.equal(model.get('country').get('guid'), updateHash.country);
+                assert.equal(model.get('country').get('guid'),
+                  updateHash.country);
               },
               '-> DESTROY': XVOWS.destroy({
                 'FINISH XM.State': function () {
