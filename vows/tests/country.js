@@ -32,6 +32,15 @@
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
+        'Abbreviation is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
+        },
+        'currencyAbbreviation is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "currencyAbbreviation"));
+        },
+        'Name is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "name"));
+        },
         // Validation tests
         'Abbreviation must be 2 letters': function (model) {
           var err = model.validate({ abbreviation: 'TOO_LONG'});
