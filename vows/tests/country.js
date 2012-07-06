@@ -43,16 +43,16 @@
         },
         '-> Save and READ': XVOWS.save({
           'Name is `Elbonia`': function (model) {
-            assert.equal(model.get('name'), 'Elbonia');
+            assert.equal(model.get('name'), createHash.name);
           },
           'Abbreviation is `EL`': function (model) {
-            assert.equal(model.get('abbreviation'), 'EL');
+            assert.equal(model.get('abbreviation'), createHash.abbreviation);
           },
           'Currency Name is `Pico`': function (model) {
-            assert.equal(model.get('currencyName'), 'Pico');
+            assert.equal(model.get('currencyName'), createHash.currencyName);
           },
           'Currency Abbreviation is `PIC`': function (model) {
-            assert.equal(model.get('currencyAbbreviation'), 'PIC');
+            assert.equal(model.get('currencyAbbreviation'), createHash.currencyAbbreviation);
           },
           '-> UPDATE': {
             topic: function (model) {
@@ -63,14 +63,14 @@
               assert.isNull(model.lastError);
             },
             'Abbreviation is EB': function (model) {
-              assert.equal(model.get('abbreviation'), 'EB');
+              assert.equal(model.get('abbreviation'), updateHash.abbreviation);
             },
             'Status is READY_DIRTY': function (model) {
               assert.equal(model.getStatusString(), 'READY_DIRTY');
             },
             '-> Commit': XVOWS.save({
-              'Abbreviation is EB': function (model) {
-                assert.equal(model.get('abbreviation'), 'EB');
+              'Abbreviation is EB' : function (model) {
+                assert.equal(model.get('abbreviation'), updateHash.abbreviation);
               },
               '-> DESTROY': XVOWS.destroy({
                 'FINISH XM.Country': function () {
