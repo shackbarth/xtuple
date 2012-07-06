@@ -17,12 +17,12 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
     kind: "XT.InfoListRow",
     leftColumn: [
       [
-        { width: 200 },
+        { width: 245 },
         { name: "number", classes: "cell-key project-number" },
         { name: "description", classes: "cell incident-description" }
       ],
       [
-        { width: 120 },
+        { width: 75 },
         { name: "updated", classes: "cell-align-right incident-updated", formatter: "formatDate" }
       ]
     ],
@@ -39,8 +39,8 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
       ],
       [
         { width: 75 },
-        { name: "priority.name", classes: "incident-priority" },
-        { name: "category.name", classes: "incident-category" }
+        { name: "priority.name", classes: "incident-priority", emptyText: "_noPriority".loc() },
+        { name: "category.name", classes: "incident-category", emptyText: "_noCategory".loc() }
       ]
     ],
     formatDate: function (content, model, view) {
