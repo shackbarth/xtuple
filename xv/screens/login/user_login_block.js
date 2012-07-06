@@ -47,7 +47,9 @@ enyo.kind({
         self.bubble("multipleSessions", {eventName:"multipleSessions"});
       } else if (response.code === 4) { 
         self.bubble("sessionAcquired", {eventName:"sessionAcquired"}); 
-      } else { /* error? */ }
+      } else { 
+        console.warn("could not connect! ", response);
+      }
     });
   }
 });
