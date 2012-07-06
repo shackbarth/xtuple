@@ -39,8 +39,8 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
       ],
       [
         { width: 75 },
-        { name: "priority.name", classes: "incident-priority", emptyText: "_noPriority".loc() },
-        { name: "category.name", classes: "incident-category", emptyText: "_noCategory".loc() }
+        { name: "priority.name", classes: "incident-priority", placeholder: "_noPriority".loc() },
+        { name: "category.name", classes: "incident-category", placeholder: "_noCategory".loc() }
       ]
     ],
     formatDate: function (content, model, view) {

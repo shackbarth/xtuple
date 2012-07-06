@@ -29,7 +29,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
     rightColumn: [
       [
         { width: 165 },
-        { name: "account.name", classes: "cell-italic toDo-account-name", emptyText: "_noAccountName".loc() },
+        { name: "account.name", classes: "cell-italic toDo-account-name", placeholder: "_noAccountName".loc() },
         { name: "contact.getName", classes: "toDo-contact-name" }
       ],
       [
@@ -39,7 +39,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
       ],
       [
         { width: 75 },
-        { name: "priority.name", classes: "toDo-priority", emptyText: "_noPriority".loc() }
+        { name: "priority.name", classes: "toDo-priority", placeholder: "_noPriority".loc() }
       ]
     ],
     formatDueDate: function (content, model, view) {

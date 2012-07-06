@@ -86,7 +86,7 @@ white:true*/
           if (curr && curr instanceof Date) {
             curr = Globalize.format(curr, 'd');
           }
-          view.setContent(curr || view.emptyText || "");
+          view.setContent(curr || view.placeholder || "");
           if (curr) {
             view.removeClass("empty");
           } else {

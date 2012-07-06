@@ -18,7 +18,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       [
         { width: 160 },
         { name: "number", classes: "cell-key account-number" },
-        { name: "name", classes: "account-name", emptyText: "_noJobTitle".loc() }
+        { name: "name", classes: "account-name", placeholder: "_noJobTitle".loc() }
       ],
       [
         { width: 160 },
@@ -29,7 +29,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     rightColumn: [
       [
         { width: 320 },
-        { name: "primaryContact.name", classes: "cell-italic account-primaryContact-name", emptyText: "_noContact".loc() },
+        { name: "primaryContact.name", classes: "cell-italic account-primaryContact-name", placeholder: "_noContact".loc() },
         { name: "primaryContact.address.formatShort", classes: "account-primaryContact-address" }
       ]
     ]
