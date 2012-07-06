@@ -5,7 +5,7 @@ enyo.depends(
   "$lib/layout",
   "$lib/onyx",
   "$lib/globalize",
-  "$lib/Enyo-2-Components",
+  "$lib/enyo_2_components",
   "$lib/socket.io",
   "xt",
   "xm",
