@@ -63,7 +63,7 @@ XVOWS.create = function (recordType, vows) {
       var that = this,
         timeoutId,
         Klass = Backbone.Relational.store.getObjectByName(recordType);
-        model = Klass.create(),
+        model = new Klass(),
         callback = function (model, value) {
           clearTimeout(timeoutId);
           model.off('change:guid', callback);

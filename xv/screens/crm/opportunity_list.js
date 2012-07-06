@@ -1,6 +1,6 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true white:true */
-
+/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, 
+latedef:true, newcap:true, noarg:true, regexp:true, undef:true, strict:true,
+trailing:true white:true*/
 /*global XT:true, enyo:true, Globalize:true,*/
 
 (function () {
@@ -23,24 +23,30 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
       ],
       [
         { width: 120 },
-        { name: "targetClose", classes: "cell-align-right", formatter: "formatTargetClose", emptyText: "_noCloseTarget".loc() }
+        { name: "targetClose", classes: "cell-align-right",
+            formatter: "formatTargetClose",
+            placeholder: "_noCloseTarget".loc() }
       ]
     ],
     rightColumn: [
       [
         { width: 165 },
         { name: "account.name", classes: "cell-italic opportunity-account-name" },
-        { name: "contact.getName", classes: "opportunity-contact-name", emptyText: "_noContact".loc() }
+        { name: "contact.getName", classes: "opportunity-contact-name",
+           placeholder: "_noContact".loc() }
       ],
       [
         { width: 75 },
-        { name: "opportunityStage.name", classes: "opportunity-opportunityStage-name", emptyText: "_noStage".loc() },
+        { name: "opportunityStage.name", classes: "opportunity-opportunityStage-name",
+            placeholder: "_noStage".loc() },
         { name: "owner.username", classes: "opportunity-owner-username" }
       ],
       [
         { width: 75 },
-        { name: "priority.name", classes: "opportunity-priority-name", emptyText: "_noPriority".loc() },
-        { name: "opportunityType.name", classes: "opportunity-opportunityType-name", emptyText: "_noType".loc() }
+        { name: "priority.name", classes: "opportunity-priority-name",
+            placeholder: "_noPriority".loc() },
+        { name: "opportunityType.name", classes: "opportunity-opportunityType-name",
+            placeholder: "_noType".loc() }
       ]
     ],
     formatTargetClose: function (content, model, view) {

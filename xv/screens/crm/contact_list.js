@@ -1,5 +1,6 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true white:true*/
+/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, 
+latedef:true, newcap:true, noarg:true, regexp:true, undef:true, strict:true,
+trailing:true white:true*/
 /*global XT:true, enyo:true, Globalize:true */
 
 (function () {
@@ -18,7 +19,8 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       [
         { width: 160 },
         { name: "name", classes: "cell-key contact-name" },
-        { name: "jobTitle", classes: "contact-job-title", emptyText: "_noJobTitle".loc() }
+        { name: "jobTitle", classes: "contact-job-title", 
+            placeholder: "_noJobTitle".loc() }
       ],
       [
         { width: 160 },
@@ -29,7 +31,8 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     rightColumn: [
       [
         { width: 320 },
-        { name: "account.name", classes: "cell-italic contact-account-name", emptyText: "_noAccountName".loc() },
+        { name: "account.name", classes: "cell-italic contact-account-name", 
+            placeholder: "_noAccountName".loc() },
         { name: "address.formatShort", classes: "contact-account-name" }
       ]
     ]

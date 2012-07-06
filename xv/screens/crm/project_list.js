@@ -1,5 +1,6 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true white:true*/
+/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, 
+latedef:true, newcap:true, noarg:true, regexp:true, undef:true, strict:true,
+trailing:true white:true*/
 /*global XT:true, XM:true, enyo:true, Globalize:true, _:true */
 
 (function () {
@@ -23,7 +24,8 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       ],
       [
         { width: 120 },
-        { name: "dueDate", classes: "cell-align-right project-due-date", formatter: "formatDueDate" }
+        { name: "dueDate", classes: "cell-align-right project-due-date",
+            formatter: "formatDueDate" }
       ]
     ],
     rightColumn: [
@@ -40,15 +42,27 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       ],
       [
         { width: 80 },
-        { name: "budgetedExpenses", classes: "cell-align-right project-budgeted-expenses", formatter: "formatExpenses" },
-        { name: "actualExpenses", classes: "cell-align-right project-actual-expenses", formatter: "formatExpenses" },
-        { name: "balanceExpenses", classes: "cell-align-right project-balance-expenses", formatter: "formatExpenses" }
+        { name: "budgetedExpenses",
+            classes: "cell-align-right project-budgeted-expenses",
+            formatter: "formatExpenses" },
+        { name: "actualExpenses",
+            classes: "cell-align-right project-actual-expenses",
+            formatter: "formatExpenses" },
+        { name: "balanceExpenses",
+            classes: "cell-align-right project-balance-expenses",
+            formatter: "formatExpenses" }
       ],
       [
         { width: 80 },
-        { name: "budgetedHours", classes: "cell-align-right project-budgeted-hours", formatter: "formatHours" },
-        { name: "actualHours", classes: "cell-align-right project-actual-hours", formatter: "formatHours" },
-        { name: "balanceHours", classes: "cell-align-right project-balance-hours", formatter: "formatHours" }
+        { name: "budgetedHours",
+            classes: "cell-align-right project-budgeted-hours",
+            formatter: "formatHours" },
+        { name: "actualHours",
+            classes: "cell-align-right project-actual-hours",
+            formatter: "formatHours" },
+        { name: "balanceHours",
+            classes: "cell-align-right project-balance-hours",
+            formatter: "formatHours" }
       ]
     ],
     formatDueDate: function (content, model, view) {
