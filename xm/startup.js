@@ -53,7 +53,7 @@ white:true*/
         success: _.bind(this.didComplete, this),
         id: XT.session.details.username
       };
-      XM.currentUser = XM.UserAccountInfo.create();
+      XM.currentUser = new XM.UserAccountInfo();
       XM.currentUser.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -65,7 +65,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.honorifics = XM.HonorificCollection.create();
+      XM.honorifics = new XM.HonorificCollection();
       XM.honorifics.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -77,7 +77,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.commentTypes = XM.CommentTypeCollection.create();
+      XM.commentTypes = new XM.CommentTypeCollection();
       XM.commentTypes.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -89,7 +89,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.characteristics = XM.CharacteristicCollection.create();
+      XM.characteristics = new XM.CharacteristicCollection();
       XM.characteristics.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -101,7 +101,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.languages = XM.LanguageCollection.create();
+      XM.languages = new XM.LanguageCollection();
       XM.languages.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -113,7 +113,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.locales = XM.LocaleCollection.create();
+      XM.locales = new XM.LocaleCollection();
       XM.locales.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -125,7 +125,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.privileges = XM.PrivilegeCollection.create();
+      XM.privileges = new XM.PrivilegeCollection();
       XM.privileges.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -142,7 +142,7 @@ white:true*/
           this.didComplete();
         }, this)
       };
-      XM.currencies = XM.CurrencyCollection.create();
+      XM.currencies = new XM.CurrencyCollection();
       XM.currencies.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -154,7 +154,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.countries = XM.CountryCollection.create();
+      XM.countries = new XM.CountryCollection();
       XM.countries.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -166,7 +166,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.states = XM.StateCollection.create();
+      XM.states = new XM.StateCollection();
       XM.states.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -178,7 +178,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.units = XM.UnitCollection.create();
+      XM.units = new XM.UnitCollection();
       XM.units.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -190,7 +190,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.classCodes = XM.ClassCodeCollection.create();
+      XM.classCodes = new XM.ClassCodeCollection();
       XM.classCodes.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -202,7 +202,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.productCategories = XM.ProductCategoryCollection.create();
+      XM.productCategories = new XM.ProductCategoryCollection();
       XM.productCategories.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -214,7 +214,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.priorities = XM.PriorityCollection.create();
+      XM.priorities = new XM.PriorityCollection();
       XM.priorities.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -226,7 +226,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.incidentCategories = XM.IncidentCategoryCollection.create();
+      XM.incidentCategories = new XM.IncidentCategoryCollection();
       XM.incidentCategories.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -238,7 +238,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.incidentResolutions = XM.IncidentResolutionCollection.create();
+      XM.incidentResolutions = new XM.IncidentResolutionCollection();
       XM.incidentResolutions.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -250,7 +250,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.incidentSeverities = XM.IncidentSeverityCollection.create();
+      XM.incidentSeverities = new XM.IncidentSeverityCollection();
       XM.incidentSeverities.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -262,7 +262,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.opportunityStages = XM.OpportunityStageCollection.create();
+      XM.opportunityStages = new XM.OpportunityStageCollection();
       XM.opportunityStages.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -274,7 +274,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.opportunityTypes = XM.OpportunityTypeCollection.create();
+      XM.opportunityTypes = new XM.OpportunityTypeCollection();
       XM.opportunityTypes.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
@@ -286,7 +286,7 @@ white:true*/
       var options = {
         success: _.bind(this.didComplete, this)
       };
-      XM.opportunitySources = XM.OpportunitySourceCollection.create();
+      XM.opportunitySources = new XM.OpportunitySourceCollection();
       XM.opportunitySources.fetch(options);
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
