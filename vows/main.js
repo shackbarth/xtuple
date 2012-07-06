@@ -197,7 +197,7 @@ XVOWS.destroy = function (vows, obj) {
   "ext/startup_task",
   "en/strings"
 ].map(function(path) {
-  return _path.join(__dirname, "../xt/foundation", path) + ".js";
+  return _path.join(__dirname, "../xt", path) + ".js";
 }).forEach(function(path) {
   require(path);
 });
