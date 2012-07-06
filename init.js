@@ -107,13 +107,14 @@ if (_path.existsSync(XT.packagePath)) {
   Object.keys(XT.required).forEach(function(libName) {
     XT.packagesContent.push("  \"$lib/" + libName + "\"");
   });
-  
+
   // arbitrary collection...
   XT.packagesContent.push("  \"$lib/socket.io\"");
   XT.packagesContent.push("  \"xt\"");
   XT.packagesContent.push("  \"xm\"");
+  XT.packagesContent.push("  \"xv\"");
   XT.packagesContent.push("  \"app.js\"");
-  
+
   XT.packagesContent = XT.packagesContent.join(",\n");
   XT.packageContent.push(XT.packagesContent);
   XT.packageContent.push(");");

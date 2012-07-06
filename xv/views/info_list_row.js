@@ -83,8 +83,14 @@ white:true*/
               curr = formatter(curr, model, view);
             }
           }
+          if (curr && curr instanceof Date) {
+            curr = Globalize.format(curr, 'd');
+          }
+          view.setContent(curr || view.placeholder || "");
           if (curr) {
-          view.setContent(curr);
+            view.removeClass("empty");
+          } else {
+            view.addClass("empty");
           }
         }
       }

@@ -32,6 +32,7 @@ white:true*/
 
     requiredAttributes: [
       "name",
+      "commentType",
       "commentsEditable",
       "order"
     ]

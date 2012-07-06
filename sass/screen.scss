@@ -131,6 +131,13 @@ body {}
           &.error {
             color: #ff0000;
           }
+          &.bold {
+            font-weight: bold;
+          }
+          &.empty {
+            font-style: italic;
+            color: #93a1a1;
+          }
         }
       }
     }

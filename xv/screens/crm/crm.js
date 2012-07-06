@@ -9,31 +9,43 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     name: "XT.Crm",
     kind: "XT.ModuleScreen",
     menuItems: [{
+      name: "accounts",
+      label: "_accounts".loc(),
+      collectionType: "XM.AccountInfoCollection",
+      listType: "XT.AccountInfoList",
+      query: { orderBy: '"number"' }
+    }, {
       name: "contacts",
-      label: "Contacts".loc(),
+      label: "_contacts".loc(),
       collectionType: "XM.ContactInfoCollection",
       listType: "XT.ContactInfoList",
       query: { orderBy: '"lastName", "firstName"' }
     }, {
+      name: "to_dos",
+      label: "_toDos".loc(),
+      collectionType: "XM.ToDoInfoCollection",
+      listType: "XT.ToDoInfoList"
+    }, {
       name: "opportunities",
-      label: "Opportunities".loc(),
+      label: "_opportunities".loc(),
       collectionType: "XM.OpportunityInfoCollection",
       listType: "XT.OpportunityInfoList"
     }, {
       name: "incidents",
-      label: "Incidents".loc(),
+      label: "_incidents".loc(),
       collectionType: "XM.IncidentInfoCollection",
       listType: "XT.IncidentInfoList"
     }, {
       name: "projects",
-      label: "Projects".loc(),
+      label: "_projects".loc(),
       collectionType: "XM.ProjectInfoCollection",
-      listType: "XT.ProjectInfoList"
+      listType: "XT.ProjectInfoList",
+      query: { orderBy: '"number"' }
     }],
     firstTime: true,
     didBecomeActive: function () {
       if (this.firstTime) {
-        this.selectSubModule("contacts");
+        this.selectSubModule("accounts");
         this.firstTime = false;
       }
     }

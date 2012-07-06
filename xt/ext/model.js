@@ -18,11 +18,11 @@ white:true*/
   
     To create a new model include `isNew` in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-      m = XM.Contact.create({firstName: 'Randy'}, {isNew: true});
+      m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
     
     To load an existing record include a guid in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
-      m = XM.Contact.create();
+      m = new XM.Contact;
       m.fetch({id: 1});
   
     @extends Backbone.RelationalModel
@@ -1046,19 +1046,6 @@ white:true*/
       }
 
       return isGrantedAll || isGrantedPersonal;
-    },
-
-    /**
-    Create a new instance of this model.
-    
-    @param {Object} Attributes
-    @param {Object} Options
-    @returns {XT.Model}
-    */
-    create: function (attributes, options) {
-      var Klass = this,
-        child =  new Klass(attributes, options);
-      return child;
     },
 
     /**
