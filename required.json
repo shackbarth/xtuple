@@ -20,7 +20,8 @@
     ]
   },
   "layout": {
-    "origin": "git@github.com:enyojs/layout.git"
+    "origin": "git@github.com:enyojs/layout.git",
+    "tag": "2.0-beta5"
   },
   "onyx": {
     "origin": "git@github.com:enyojs/onyx.git",
@@ -29,7 +30,7 @@
   "globalize": {
     "origin": "git://github.com/jquery/globalize.git",
     "entries": [
-      "$lib/globalize/lib/globalize.js"
+      "lib/globalize.js"
     ]
   },
   "enyo_2_components": {
