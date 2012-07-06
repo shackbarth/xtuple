@@ -8,15 +8,32 @@
 
   var createHash, updateHash;
 
+  // Get the country id from it's name.
+  var cid = function (cname) {
+    var iterator = function (country) {
+      return country.get('name') === cname;
+    };
+
+    var found = _.find(XM.countries.models, iterator);
+
+    if (found && found.hasOwnProperty('id')) {
+      return found.id;
+    }
+    else {
+      return null;
+    }
+  };
+
   createHash = {
     name: 'Plasma',
     abbreviation: 'PL',
-    country: 230
+    country: cid('United States')
   };
 
   updateHash = {
-    abbreviation: 'PM',
-    country: 13
+    name: 'Gas',
+    abbreviation: 'GS',
+    country: cid('Australia')
   };
 
   vows.describe('XM.State CRUD test').addBatch({
@@ -42,7 +59,7 @@
           'Country is an object': function (model) {
             assert.isObject(model.get('country'));
           },
-          'Country is `230`': function (model) {
+          'Country guid is United States\'s': function (model) {
             assert.equal(model.get('country').get('guid'), createHash.country);
           },
           '-> UPDATE': {
@@ -53,20 +70,32 @@
             'Last Error is null': function (model) {
               assert.isNull(model.lastError);
             },
-            'Abbreviation is PM': function (model) {
+            'Name is Gas': function (model) {
+              assert.equal(model.get('name'), updateHash.name);
+            },
+            'Abbreviation is GS': function (model) {
               assert.equal(model.get('abbreviation'), updateHash.abbreviation);
             },
-            'Country is `13`': function (model) {
+            'Country is an object': function (model) {
+              assert.isObject(model.get('country'));
+            },
+            'Country guid is Australia\'s': function (model) {
               assert.equal(model.get('country').get('guid'), updateHash.country);
             },
             'Status is READY_DIRTY': function (model) {
               assert.equal(model.getStatusString(), 'READY_DIRTY');
             },
             '-> Commit': XVOWS.save({
-              'Abbreviation is PM': function (model) {
+              'Name is Gas': function (model) {
+                assert.equal(model.get('name'), updateHash.name);
+              },
+              'Abbreviation is GS': function (model) {
                 assert.equal(model.get('abbreviation'), updateHash.abbreviation);
               },
-              'Country is `13`': function (model) {
+              'Country is an object': function (model) {
+                assert.isObject(model.get('country'));
+              },
+              'Country guid is Australia\'s': function (model) {
                 assert.equal(model.get('country').get('guid'), updateHash.country);
               },
               '-> DESTROY': XVOWS.destroy({
