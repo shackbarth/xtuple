@@ -9,6 +9,12 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     name: "XT.Crm",
     kind: "XT.ModuleScreen",
     menuItems: [{
+      name: "accounts",
+      label: "_accounts".loc(),
+      collectionType: "XM.AccountInfoCollection",
+      listType: "XT.AccountInfoList",
+      query: { orderBy: '"number"' }
+    }, {
       name: "contacts",
       label: "_contacts".loc(),
       collectionType: "XM.ContactInfoCollection",
@@ -28,12 +34,13 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       name: "projects",
       label: "_projects".loc(),
       collectionType: "XM.ProjectInfoCollection",
-      listType: "XT.ProjectInfoList"
+      listType: "XT.ProjectInfoList",
+      query: { orderBy: '"number"' }
     }],
     firstTime: true,
     didBecomeActive: function () {
       if (this.firstTime) {
-        this.selectSubModule("contacts");
+        this.selectSubModule("accounts");
         this.firstTime = false;
       }
     }
