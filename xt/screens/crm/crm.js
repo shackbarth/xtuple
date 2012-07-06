@@ -21,6 +21,11 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       listType: "XT.ContactInfoList",
       query: { orderBy: '"lastName", "firstName"' }
     }, {
+      name: "to_dos",
+      label: "_toDos".loc(),
+      collectionType: "XM.ToDoInfoCollection",
+      listType: "XT.ToDoInfoList"
+    }, {
       name: "opportunities",
       label: "_opportunities".loc(),
       collectionType: "XM.OpportunityInfoCollection",

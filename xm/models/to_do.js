@@ -87,6 +87,15 @@ white:true*/
 
     relations: [{
       type: Backbone.HasOne,
+      key: 'priority',
+      relatedModel: 'XM.Priority',
+      includeInJSON: 'guid'
+    }, {
+      type: Backbone.HasOne,
+      key: 'account',
+      relatedModel: 'XM.AccountInfo'
+    }, {
+      type: Backbone.HasOne,
       key: 'contact',
       relatedModel: 'XM.ContactInfo'
     }, {
@@ -397,6 +406,15 @@ white:true*/
     recordType: 'XM.ToDoInfo',
 
     relations: [{
+      type: Backbone.HasOne,
+      key: 'priority',
+      relatedModel: 'XM.Priority',
+      includeInJSON: 'guid'
+    }, {
+      type: Backbone.HasOne,
+      key: 'account',
+      relatedModel: 'XM.AccountInfo'
+    }, {
       type: Backbone.HasOne,
       key: 'contact',
       relatedModel: 'XM.ContactInfo'
