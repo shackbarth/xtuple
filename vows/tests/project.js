@@ -72,12 +72,12 @@ clearTimeout:true, vows:true, assert:true */
                       task.off('change:guid', callback);
                       that.callback(null, task);
                     };
-                    
+
                   // Must add task to the project first then initialize
                   model.get('tasks').add(task);
                   task.on('change:guid', callback);
                   task.initialize(null, {isNew: true});
-                  
+
                   // If we don't hear back, keep going
                   timeoutId = setTimeout(function () {
                     that.callback(null, model);
