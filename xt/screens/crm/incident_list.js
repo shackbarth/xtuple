@@ -18,7 +18,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true */
     leftColumn: [
       [
         { width: 245 },
-        { name: "number", classes: "cell-key project-number" },
+        { name: "number", classes: "cell-key incident-number" },
         { name: "description", classes: "cell incident-description" }
       ],
       [
