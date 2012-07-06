@@ -21,7 +21,7 @@ clearTimeout:true, vows:true, assert:true */
     name: 'Test Update operation'
   };
 
-  vows.describe('XM.Country CRUD test').addBatch({
+  vows.describe('XM.Project CRUD test').addBatch({
     'CREATE': XVOWS.create('XM.Project', {
       '-> Set values': {
         topic: function (model) {
