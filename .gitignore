@@ -14,7 +14,4 @@ sandbox.html
 # except what is explicitly added
 lib/*
 \.sass-cache
-/node_modules/
-/.sass-cache/
-#ignore the generated package file
 package.js
