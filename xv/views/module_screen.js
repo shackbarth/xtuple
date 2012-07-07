@@ -1,15 +1,48 @@
+enyo.kind({
+	name: "SamplePanels",
+	kind: "Panels",
+	realtimeFit: true,
+	classes: "panels enyo-border-box",
+	bgcolors: ["red", "orange", "yellow", "green", "blue", "indigo", "violet"],
+	components: [
+		{},
+		{},
+		{},
+		{},
+		{},
+		{},
+		{}
+	],
+	addControl: function(inControl) {
+		this.inherited(arguments);
+		var i = this.indexOfControl(inControl);
+		inControl.setContent(i);
+		inControl.applyStyle("background", this.bgcolors[i % this.bgcolors.length]);
+	}
+});
+
 
 enyo.kind({
   name: "XT.ModuleScreen",
-  kind: "FittableRows",
+  kind: "Panels",
   classes: "xt-module-screen",
-  fit: true,
-  components: [
-    { name: "toolbar", kind: "XT.ModuleToolbar" },
-    { name: "moduleContent", fit: true, kind: "FittableColumns", components: [
-      { name: "menu", kind: "XT.ModuleMenu" },
-      { name: "subModuleContent", kind: "XT.SubModuleContent" } ] }
-  ],
+	realtimeFit: true,
+	arrangerKind: "CollapsingArranger",
+	components: [
+		{kind: "FittableRows", classes: "left", components: [
+			{ name: "toolbar", kind: "XT.ModuleToolbar" },
+      { name: "menu", kind: "XT.ModuleMenu" }
+		]},
+		{kind: "FittableRows", components: [
+			{kind: "FittableColumns", noStretch: true, classes: "onyx-toolbar onyx-toolbar-inline", components: [
+				{kind: "onyx.Grabber"},
+				{kind: "Scroller", thumb: false, fit: true, touch: true, vertical: "hidden", style: "margin: 0;", components: [
+					{classes: "onyx-toolbar-inline", style: "white-space: nowrap;"}
+				]}
+			]},
+			{ name: "subModuleContent", kind: "XT.SubModuleContent" }
+		]}
+	],
   published: {
     menuItems: [],
     listMap: {}
@@ -106,4 +139,5 @@ enyo.kind({
     menu.getSelection().select(menuItem.getIndex());
     sub.setCurrentView(menuItem.name);
   }
+
 });
