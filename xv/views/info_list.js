@@ -34,14 +34,14 @@ enyo.kind({
     });
   },
   _collectionChanged: function(collection) {
-    this.log();
+    //this.log();
   },
   _collectionFetchSuccess: function() {
-    this.log();
+    //this.log();
     this.waterfall("onCollectionUpdated");
   },
   _collectionFetchError: function() {
-    this.log();
+    this.log(this.name);
   },
   create: function() {
     this.inherited(arguments);
@@ -53,7 +53,7 @@ enyo.kind({
   },
   showingChanged: function() {
     this.inherited(arguments);
-    this.log(this.name, this.showing, this);
+    //this.log(this.name, this.showing, this);
   }
 });
 
