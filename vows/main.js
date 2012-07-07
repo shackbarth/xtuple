@@ -121,7 +121,7 @@ XVOWS.save = function (vows) {
     },
     'Status is READY_CLEAN': function (model) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
-    },
+    }
   };
   
   // Add in any other passed vows
