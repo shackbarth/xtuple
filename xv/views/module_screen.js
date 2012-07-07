@@ -81,6 +81,7 @@ enyo.kind({
     var sub = this.$.subModuleContent;
     var list;
     var collection;
+    var Klass;
     
     this.log(map);
     
@@ -90,7 +91,8 @@ enyo.kind({
     
       collection = item.collection;
       if (!(collection instanceof Object)) {
-        item.collection = collection = XT.getObjectByName(collection).create();
+        Klass = XT.getObjectByName(collection);
+        item.collection = collection = new Klass();
       }
       
       if (item.query) {
