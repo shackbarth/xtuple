@@ -7,9 +7,14 @@ trailing:true white:true*/
   "use strict";
 
   enyo.kind({
-    name: "XT.ProjectInfoList",
+    name: "ProjectInfoList",
     kind: "XT.InfoList",
-    rowClass: "XT.ProjectInfoCollectionRow"
+    published: {
+      label: "_projects".loc(),
+      collection: "XM.ProjectInfoCollection",
+      query: {orderBy: '"number"'},
+      rowClass: "XT.ProjectInfoCollectionRow"
+    }
   });
 
   enyo.kind({

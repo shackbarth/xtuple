@@ -7,9 +7,14 @@ trailing:true white:true*/
   "use strict";
 
   enyo.kind({
-    name: "XT.AccountInfoList",
+    name: "AccountInfoList",
     kind: "XT.InfoList",
-    rowClass: "XT.AccountInfoCollectionRow"
+    published: {
+      label: "_accounts".loc(),
+      collection: "XM.AccountInfoCollection",
+      query: {orderBy: '"number"'},
+      rowClass: "XT.AccountInfoCollectionRow"
+    }
   });
 
   enyo.kind({

@@ -7,9 +7,13 @@ trailing:true white:true*/
   "use strict";
 
   enyo.kind({
-    name: "XT.ToDoInfoList",
+    name: "ToDoInfoList",
     kind: "XT.InfoList",
-    rowClass: "XT.ToDoInfoCollectionRow"
+    published: {
+      label: "_toDos".loc(),
+      collection: "XM.ToDoInfoCollection",
+      rowClass: "XT.ToDoInfoCollectionRow"
+    }
   });
 
   enyo.kind({

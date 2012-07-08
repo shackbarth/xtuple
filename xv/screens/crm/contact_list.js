@@ -7,9 +7,14 @@ trailing:true white:true*/
   "use strict";
 
   enyo.kind({
-    name: "XT.ContactInfoList",
+    name: "ContactInfoList",
     kind: "XT.InfoList",
-    rowClass: "XT.ContactInfoCollectionRow"
+    published: {
+      label: "_contacts".loc(),
+      collection: "XM.ContactInfoCollection",
+      query: {orderBy: '"lastName", "firstName"'},
+      rowClass: "XT.ContactInfoCollectionRow"
+    }
   });
 
   enyo.kind({
@@ -19,7 +24,7 @@ trailing:true white:true*/
       [
         { width: 160 },
         { name: "name", classes: "cell-key contact-name" },
-        { name: "jobTitle", classes: "contact-job-title", 
+        { name: "jobTitle", classes: "contact-job-title",
             placeholder: "_noJobTitle".loc() }
       ],
       [
@@ -31,7 +36,7 @@ trailing:true white:true*/
     rightColumn: [
       [
         { width: 320 },
-        { name: "account.name", classes: "cell-italic contact-account-name", 
+        { name: "account.name", classes: "cell-italic contact-account-name",
             placeholder: "_noAccountName".loc() },
         { name: "address.formatShort", classes: "contact-account-name" }
       ]

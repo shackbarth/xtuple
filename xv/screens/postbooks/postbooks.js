@@ -14,7 +14,7 @@ enyo.kind({
   classes: "xt-postbooks-container enyo-unselectable",
   components: [
     { name: "login", kind: "XT.Login" },
-    { name: "crm", kind: "XT.Crm" },
+    { name: "crm", kind: "Crm" },
     { name: "billing", kind: "XT.Billing" }
   ],
   carouselEvents: {

@@ -3,52 +3,72 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
 /*global XT:true, enyo:true*/
 
 (function () {
-  "use strict";
+  //"use strict";
 
   enyo.kind({
-    name: "XT.Crm",
-    kind: "XT.ModuleScreen",
-    menuItems: [{
-      name: "accounts",
-      label: "_accounts".loc(),
-      collectionType: "XM.AccountInfoCollection",
-      listType: "XT.AccountInfoList",
-      query: { orderBy: '"number"' }
-    }, {
-      name: "contacts",
-      label: "_contacts".loc(),
-      collectionType: "XM.ContactInfoCollection",
-      listType: "XT.ContactInfoList",
-      query: { orderBy: '"lastName", "firstName"' }
-    }, {
-      name: "to_dos",
-      label: "_toDos".loc(),
-      collectionType: "XM.ToDoInfoCollection",
-      listType: "XT.ToDoInfoList"
-    }, {
-      name: "opportunities",
-      label: "_opportunities".loc(),
-      collectionType: "XM.OpportunityInfoCollection",
-      listType: "XT.OpportunityInfoList"
-    }, {
-      name: "incidents",
-      label: "_incidents".loc(),
-      collectionType: "XM.IncidentInfoCollection",
-      listType: "XT.IncidentInfoList"
-    }, {
-      name: "projects",
-      label: "_projects".loc(),
-      collectionType: "XM.ProjectInfoCollection",
-      listType: "XT.ProjectInfoList",
-      query: { orderBy: '"number"' }
-    }],
+    name: "Crm",
+    kind: "Panels",
+    label: "_crm".loc(),
+    classes: "app enyo-unselectable",
+    realtimeFit: true,
+    arrangerKind: "CollapsingArranger",
+    components: [
+      {kind: "FittableRows", classes: "left", components: [
+        {kind: "onyx.Toolbar", components: [
+          {name: "leftLabel"}
+        ]},
+        {name: "menu", kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
+          {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
+        ]}
+      ]},
+      {kind: "FittableRows", components: [
+        {kind: "FittableColumns", noStretch: true, classes: "onyx-toolbar onyx-toolbar-inline", components: [
+          {kind: "onyx.Grabber"},
+          {kind: "Scroller", thumb: false, fit: true, touch: true, vertical: "hidden", style: "margin: 0;", components: [
+            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;", components: [
+              {kind: "onyx.Button", content: "Setup", ontap: "showSetup"}
+            ]}
+          ]}
+        ]},
+        {name: "lists", kind: "Panels", arrangerKind: "CardArranger", fit: true, components: [
+          {kind: "AccountInfoList"},
+          {kind: "ContactInfoList"},
+          {kind: "ToDoInfoList"},
+          {kind: "OpportunityInfoList"},
+          {kind: "IncidentInfoList"},
+          {kind: "ProjectInfoList"}
+        ]}
+      ]}
+    ],
+    // menu
+    setupItem: function (inSender, inEvent) {
+      var list = this.$.lists.components[inEvent.index].kind.camelize();
+      this.$.item.setContent(this.$[list].getLabel());
+      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
+    create: function () {
+      this.inherited(arguments);
+      this.$.menu.setCount(this.$.lists.components.length);
+      this.$.leftLabel.setContent(this.label);
+    },
+    itemTap: function (inSender, inEvent) {
+      var list = this.$.lists.components[inEvent.index].kind.camelize();
+      this.$[list].fetch();
+      this.$.lists.setIndex(inEvent.index);
+    },
     firstTime: true,
     didBecomeActive: function () {
+      var list;
       if (this.firstTime) {
-        this.selectSubModule("accounts");
-        this.firstTime = false;
+        this.$.menu.select(0);
+        list = this.$.lists.components[0].kind.camelize();
+        this.$[list].fetch();
       }
+    },
+    showSetup: function () {
+      // todo
     }
+
   });
 
 }());

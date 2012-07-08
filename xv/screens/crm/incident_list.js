@@ -7,9 +7,13 @@ trailing:true white:true*/
   "use strict";
 
   enyo.kind({
-    name: "XT.IncidentInfoList",
+    name: "IncidentInfoList",
     kind: "XT.InfoList",
-    rowClass: "XT.IncidentInfoCollectionRow"
+    published: {
+      label: "_incidents".loc(),
+      collection: "XM.IncidentInfoCollection",
+      rowClass: "XT.IncidentInfoCollectionRow"
+    }
   });
 
   enyo.kind({

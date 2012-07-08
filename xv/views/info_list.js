@@ -11,11 +11,19 @@ enyo.kind({
   ],
   published: {
     collection: null,
-    rowClass: ""
+    rowClass: "",
+    query: null
   },
   collectionChanged: function() {
-    var col = this.getCollection();
-    var query = col._listQuery || { rowLimit: 25 };
+    var col = this.getCollection(),
+      query = this.getQuery() || { rowLimit: 25 },
+      Klass;
+    
+    // Change string to an object if necessary
+    if (typeof col === 'string') {
+      Klass = XT.getObjectByName(col);
+      col = this.collection = new Klass();
+    }
     
     if (!col) {
       this.setIndex(1);
@@ -24,14 +32,6 @@ enyo.kind({
     
     // bind the change event to our handler
     col.bind("change", enyo.bind(this, "_collectionChanged", col));
-    
-    // attempt to fetch (if not already fetched) and handle the
-    // various states appropriately
-    col.fetch({
-      success: enyo.bind(this, "_collectionFetchSuccess"),
-      error: enyo.bind(this, "_collectionFetchError"),
-      query: query
-    });
   },
   _collectionChanged: function(collection) {
     this.log();
@@ -45,7 +45,8 @@ enyo.kind({
   },
   create: function() {
     this.inherited(arguments);
-    this.rowClassChanged();            
+    this.rowClassChanged();
+    this.collectionChanged();         
   },
   rowClassChanged: function() {
     // need to pass down some information to the list
@@ -54,6 +55,18 @@ enyo.kind({
   showingChanged: function() {
     this.inherited(arguments);
     this.log(this.name, this.showing, this);
+  },
+  fetch: function() {
+    var col = this.getCollection(),
+     query = this.getQuery();
+    
+    // attempt to fetch (if not already fetched) and handle the
+    // various states appropriately
+    col.fetch({
+      success: enyo.bind(this, "_collectionFetchSuccess"),
+      error: enyo.bind(this, "_collectionFetchError"),
+      query: query
+    });
   }
 });
 
