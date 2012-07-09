@@ -15,6 +15,7 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", components: [
+          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
           {name: "leftLabel"}
         ]},
         {name: "menu", kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
@@ -25,9 +26,7 @@ trailing:true white:true*/
         {kind: "FittableColumns", noStretch: true, classes: "onyx-toolbar onyx-toolbar-inline", components: [
           {kind: "onyx.Grabber"},
           {kind: "Scroller", thumb: false, fit: true, touch: true, vertical: "hidden", style: "margin: 0;", components: [
-            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;", components: [
-              {kind: "onyx.Button", content: "Setup", ontap: "showSetup"}
-            ]}
+            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"}
           ]}
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "CardArranger", fit: true, components: []}
@@ -65,6 +64,9 @@ trailing:true white:true*/
         this.$.lists.$[list].fetch();
         this.fetched[list] = true;
       }
+    },
+    showDashBoard: function () {
+      this.bubble("dashboard", {eventName: "dashboard"});
     },
     showSetup: function () {
       // todo
