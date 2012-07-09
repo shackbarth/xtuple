@@ -66,7 +66,7 @@
           'Address format(false) returns ASCII new lines': function (model) {
             assert.include(model.format(false), '\n');
           },
-          'Address format(true) returns a HTML line breaks': function (model) {
+          'Address format(true) returns HTML line breaks': function (model) {
             assert.include(model.format(true), '<br />');
           },
           'Address formatShort returns a string': function (model) {
