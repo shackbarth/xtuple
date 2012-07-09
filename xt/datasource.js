@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, io:true, _:true, console:true */
@@ -15,7 +15,7 @@ white:true*/
 
     /*
     Returns a record array based on a query.
-  
+
     @param {Object} query
     @param {Object} options
     */
@@ -54,7 +54,7 @@ white:true*/
 
     /*
     Returns a single record.
-  
+
     @param {String} record type
     @param {Number} id
     @param {Object} options
@@ -103,7 +103,7 @@ white:true*/
 
     /*
     Commit a single record.
-  
+
     @param {XT.Model} model
     @param {Object} options
     */
@@ -143,7 +143,7 @@ white:true*/
 
     /*
     Dispatch a server side function call to the datasource.
-  
+
     @param {String} class name
     @param {String} function name
     @param {Object} parameters
