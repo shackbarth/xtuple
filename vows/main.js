@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 
+/*jshint trailing:true, indent:2, strict:true, curly:true,
+  plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
+  newcap:true, noarg:true, undef:true */
+/*jslint bitwise: true, nomen: true, indent:2 */
+/*global XVOWS:true, XT:true, XM:true, setTimeout:true,
+  clearTimeout:true, _fs:true, _util:true, _path:true, Backbone:true,
+  BackboneRelational:true, vows:true, assert:true, _:true, io:true,
+  program:true, require:true, process:true, __dirname:true, console:true */
+
 // native
 _fs             = require("fs");
 _path           = require("path");
@@ -13,12 +22,13 @@ assert              = require("assert");
 _                   = require("underscore");
 io                  = require("socket.io-client");
 program             = require("commander");
-/*tinycolor*/         require("tinycolor");
+require("tinycolor"); /*tinycolor*/
 
 //......................................
 // COMMAND LINE PARSING
-(function() {
-  var tests = function(val) {
+(function () {
+  "use strict";
+  var tests = function (val) {
     return val.split(" ").map(String);
   };
   program
@@ -34,11 +44,11 @@ program             = require("commander");
     var spec = require(_path.join(__dirname, "node_modules/vows/lib/vows/reporters/spec"));
     var suite = require(_path.join(__dirname, "node_modules/vows/lib/vows/suite")).Suite.prototype;
     suite.ext_run = suite.run;
-    suite.run = function() {
-      return suite.ext_run.call(this, {reporter:spec});
+    suite.run = function () {
+      return suite.ext_run.call(this, {reporter: spec});
     };
   }
-})();
+}());
 //......................................
 // XVOWS IS THE GLOBAL NAMESPACE AVAILABLE
 // FOR SHARING VOWS SPECIFIC INFORMATION
@@ -57,37 +67,36 @@ XVOWS = {};
   @param {Object} Vows
 */
 XVOWS.create = function (recordType, vows) {
+  "use strict";
   vows = vows || {};
   var context = {
     topic: function (model) {
       var that = this,
         timeoutId,
         Klass = Backbone.Relational.store.getObjectByName(recordType);
-        model = new Klass(),
-        callback = function (model, value) {
-          if (model instanceof XM.Document &&
-            model.numberPolicy === 'A') {
-              var number = model.documentKey;
-              // TODO - debug check.
-              var test3 = model.get(number);
-              // Check that they AUTO_NUMBER has been set.
-              if (typeof model.get(number) != 'undefined') {
-                clearTimeout(timeoutId);
-                model.off('change:documentKey', callback);
-                model.off('change:guid', callback);
-                that.callback(null, model);
-              }
-          } else {
+
+      model = new Klass();
+
+      var callback = function (model, value) {
+        if (model instanceof XM.Document && model.numberPolicy === 'A') {
+          // Check that the AUTO_NUMBER property has been set.
+          if (typeof model.get(model.documentKey) !== 'undefined') {
             clearTimeout(timeoutId);
+            model.off('change:' + model.documentKey, callback);
             model.off('change:guid', callback);
             that.callback(null, model);
           }
-        };
+        } else {
+          clearTimeout(timeoutId);
+          model.off('change:guid', callback);
+          that.callback(null, model);
+        }
+      };
+
       model.on('change:guid', callback);
       // Add an event handler when using a model with AUTO_NUMBER.
-      if (model instanceof XM.Document &&
-        model.numberPolicy === 'A') {
-          model.on('change:documentKey', callback);
+      if (model instanceof XM.Document && model.numberPolicy === 'A') {
+        model.on('change:' + model.documentKey, callback);
       }
       model.initialize(null, {isNew: true});
 
@@ -116,6 +125,7 @@ XVOWS.create = function (recordType, vows) {
   @param {Object} Vows
 */
 XVOWS.save = function (vows) {
+  "use strict";
   vows = vows || {};
   var context = {
     topic: function (model) {
@@ -155,6 +165,7 @@ XVOWS.save = function (vows) {
   @param {Object} Vows
 */
 XVOWS.destroy = function (vows, obj) {
+  "use strict";
   vows = vows || {};
   var context = {
     topic: function (model) {
@@ -187,15 +198,18 @@ XVOWS.destroy = function (vows, obj) {
 },
 
 // PROCESS ANY INCOMING ARGS REAL QUICK
-(function() {
+(function () {
+  "use strict";
   XVOWS.args = program.tests;
-  XVOWS.console = function() {
+  XVOWS.console = function () {
     var args = XT.$A(arguments);
     args.unshift("[XVOWS] ".yellow);
     console.log.apply(console, args);
-    if (XVOWS.outfile && XVOWS.outfile.writeable) XVOWS.log(args);
+    if (XVOWS.outfile && XVOWS.outfile.writeable) {
+      XVOWS.log(args);
+    }
   };
-})();
+}());
 //......................................
 // INCLUDE ALL THE NECESSARY XT FRAMEWORK
 // DEPENDENCIES
@@ -215,17 +229,20 @@ XVOWS.destroy = function (vows, obj) {
   "ext/collection",
   "ext/startup_task",
   "en/strings"
-].map(function(path) {
+].map(function (path) {
+  "use strict";
   return _path.join(__dirname, "../xt", path) + ".js";
-}).forEach(function(path) {
+}).forEach(function (path) {
+  "use strict";
   require(path);
 });
 // CRUSH QUIET SMASH AND DESTROY ANY NORMAL OUTPUT FOR NOW
 // ...actually just...pipe it to some file...
-(function() {
-  XVOWS.log = XT.log = function() {
-    var out = XT.$A(arguments).map(function(arg) {
-      return typeof arg === "string"? arg: _util.inspect(arg,true,3);
+(function () {
+  "use strict";
+  XVOWS.log = XT.log = function () {
+    var out = XT.$A(arguments).map(function (arg) {
+      return typeof arg === "string" ? arg: _util.inspect(arg, true, 3);
     }).join('\n');
     if (XVOWS.outfile && XVOWS.outfile.writable) {
       XVOWS.outfile.write("%@\n".f(out), "utf8");
@@ -234,7 +251,7 @@ XVOWS.destroy = function (vows, obj) {
         flags: "a",
         encoding: "utf8"
       });
-      XVOWS.outfile.on("error", function(err) {
+      XVOWS.outfile.on("error", function (err) {
         throw err;
       });
       XVOWS.outfile.write("\n[ENTRY] started %@\n".f((new Date()).toLocaleString()));
@@ -246,19 +263,19 @@ XVOWS.destroy = function (vows, obj) {
 
   // make sure on process SIGINT that we catch it and
   // properly close the pipe
-  process.on("SIGINT", function() {
+  process.on("SIGINT", function () {
     //console.log("\n"); // to clear the line
     //XVOWS.console("caught SIGINT waiting for logfile to drain");
-    process.on("EXIT", function() {
+    process.on("EXIT", function () {
       XVOWS.console("all done, see ya");
     });
-    XVOWS.outfile.on("close", function() {
+    XVOWS.outfile.on("close", function () {
       //XVOWS.console("all done, see ya");
       process.exit(0);
     });
     XVOWS.outfile.destroySoon();
   });
-})();
+}());
 //......................................
 // INCLUDE ALL THE NECESSARY XM FRAMEWORK
 // DEPENDENCIES
@@ -285,12 +302,12 @@ require(_path.join(__dirname, "../xm", "startup.js"));
 //console.log(_util.inspect(XT));
 //console.log(_util.inspect(XM));
 
-(function(){
+(function () {
+  "use strict";
   // for when a session is retrieved or needs to be
   // selected and completes...
-  var selectionDone = function() {
-    // register a callback for when startup tasks are
-    // completed
+  var selectionDone = function () {
+    // register a callback for when startup tasks are completed
     XVOWS.console("session acquired, starting tasks");
     XT.getStartupManager().registerCallback(XVOWS.begin);
     XT.getStartupManager().start();
@@ -299,12 +316,12 @@ require(_path.join(__dirname, "../xm", "startup.js"));
   XVOWS.console("connecting to the datasource");
   XT.dataSource.datasourceUrl = program.host;
   XT.dataSource.datasourcePort = program.port;
-  XT.dataSource.connect(function() {
+  XT.dataSource.connect(function () {
     XT.session.acquireSession({
       username: program.user,
       password: program.password,
       organization: program.organization
-    }, function(result) {
+    }, function (result) {
       if (result.code === 1) {
         // force new session, always
         XT.session.selectSession("FORCE_NEW_SESSION", selectionDone);
@@ -316,19 +333,21 @@ require(_path.join(__dirname, "../xm", "startup.js"));
       }
     });
   });
-})();
+}());
 
-XVOWS.findAllTests = function() {
+XVOWS.findAllTests = function () {
+  "use strict";
   var path = _path.join(__dirname, "tests");
   var tests = XVOWS.tests = {};
-  _fs.readdirSync(path).filter(function(file) {
-    return _path.extname(file) === ".js"? true: false;
-  }).forEach(function(file) {
+  _fs.readdirSync(path).filter(function (file) {
+    return _path.extname(file) === ".js" ? true: false;
+  }).forEach(function (file) {
     tests[file] = _path.join(__dirname, "tests", file);
   });
 };
 
-XVOWS.begin = function() {
+XVOWS.begin = function () {
+  "use strict";
   XVOWS.console("all startup tasks completed");
   XVOWS.console("searching for available tests");
 
@@ -341,9 +360,9 @@ XVOWS.begin = function() {
   if (XVOWS.args.length === 1 && XVOWS.args[0] === "*") {
     // running all available tests
   } else if (XVOWS.args.length >= 1) {
-    XVOWS.args.map(function(file) {
-      return _path.extname(file) === ".js"? file: file + ".js";
-    }).forEach(function(file) {
+    XVOWS.args.map(function (file) {
+      return _path.extname(file) === ".js" ? file: file + ".js";
+    }).forEach(function (file) {
       XVOWS.addTest(file);
     });
   } else {
@@ -354,13 +373,16 @@ XVOWS.begin = function() {
   XVOWS.start();
 };
 
-XVOWS.addTest = function(file) {
-  if (!this.toRun) this.toRun = [];
+XVOWS.addTest = function (file) {
+  "use strict";
+  if (!this.toRun) {
+    this.toRun = [];
+  }
   this.toRun.push(file);
 };
 
-XVOWS.start = function() {
-
+XVOWS.start = function () {
+  "use strict";
   if (this.isStarted) {
     return false;
   }
@@ -393,12 +415,14 @@ XVOWS.start = function() {
   this.next();
 };
 
-XVOWS.finish = function() {
+XVOWS.finish = function () {
+  "use strict";
   XVOWS.console("testing finished");
   process.emit("SIGINT"); // let the log cleanup
 };
 
-XVOWS.next = function(waited) {
+XVOWS.next = function (waited) {
+  "use strict";
   if (!waited) {
     // this is only necessary because of a delay by vows
     // when it finally determines its batch is complete
@@ -423,7 +447,7 @@ XVOWS.next = function(waited) {
     return this.finish();
   }
 
-  while(true && run.length > 0) {
+  while (true && run.length > 0) {
     running = run.shift();
     if (!running || !tests[running]) {
       XVOWS.console("could not run test %@, skipping".f(running));
