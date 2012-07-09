@@ -48,11 +48,11 @@ XVOWS = {};
 /**
   Creates a working model and automatically checks state
   is `READY_NEW` and a valid `id` immediately afterward.
-  
+
   Note: This function assumes the `id` is fetched automatically.
-  For models with manually created ids such as 'XM.UserAccount', 
+  For models with manually created ids such as 'XM.UserAccount',
   create a topic manually.
-  
+
   @param {String} Record type
   @param {Object} Vows
 */
@@ -65,11 +65,30 @@ XVOWS.create = function (recordType, vows) {
         Klass = Backbone.Relational.store.getObjectByName(recordType);
         model = new Klass(),
         callback = function (model, value) {
-          clearTimeout(timeoutId);
-          model.off('change:guid', callback);
-          that.callback(null, model);
+          if (model instanceof XM.Document &&
+            model.numberPolicy === 'A') {
+              var number = model.documentKey;
+              // TODO - debug check.
+              var test3 = model.get(number);
+              // Check that they AUTO_NUMBER has been set.
+              if (typeof model.get(number) != 'undefined') {
+                clearTimeout(timeoutId);
+                model.off('change:documentKey', callback);
+                model.off('change:guid', callback);
+                that.callback(null, model);
+              }
+          } else {
+            clearTimeout(timeoutId);
+            model.off('change:guid', callback);
+            that.callback(null, model);
+          }
         };
       model.on('change:guid', callback);
+      // Add an event handler when using a model with AUTO_NUMBER.
+      if (model instanceof XM.Document &&
+        model.numberPolicy === 'A') {
+          model.on('change:documentKey', callback);
+      }
       model.initialize(null, {isNew: true});
 
       // If we don't hear back, keep going
@@ -84,7 +103,7 @@ XVOWS.create = function (recordType, vows) {
       assert.isNumber(model.id);
     }
   };
-  
+
   // Add in any other passed vows
   _.extend(context, vows);
   return context;
@@ -93,7 +112,7 @@ XVOWS.create = function (recordType, vows) {
 /**
   Saves the working model and automatically checks state
   is `READY_CLEAN` immediately afterward.
-  
+
   @param {Object} Vows
 */
 XVOWS.save = function (vows) {
@@ -123,7 +142,7 @@ XVOWS.save = function (vows) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
     }
   };
-  
+
   // Add in any other passed vows
   _.extend(context, vows);
   return context;
@@ -132,7 +151,7 @@ XVOWS.save = function (vows) {
 /**
   Destorys the working model and automatically checks state
   is `DESTROYED_CLEAN` immediately afterward.
-  
+
   @param {Object} Vows
 */
 XVOWS.destroy = function (vows, obj) {
@@ -224,7 +243,7 @@ XVOWS.destroy = function (vows, obj) {
       XVOWS.outfile.write("%@\n".f(out));
     }
   };
-  
+
   // make sure on process SIGINT that we catch it and
   // properly close the pipe
   process.on("SIGINT", function() {
@@ -276,7 +295,7 @@ require(_path.join(__dirname, "../xm", "startup.js"));
     XT.getStartupManager().registerCallback(XVOWS.begin);
     XT.getStartupManager().start();
   };
-  
+
   XVOWS.console("connecting to the datasource");
   XT.dataSource.datasourceUrl = program.host;
   XT.dataSource.datasourcePort = program.port;
@@ -312,13 +331,13 @@ XVOWS.findAllTests = function() {
 XVOWS.begin = function() {
   XVOWS.console("all startup tasks completed");
   XVOWS.console("searching for available tests");
-  
+
   XVOWS.findAllTests();
-  
+
   XVOWS.console("found %@ total".f((Object.keys(XVOWS.tests)).length));
-  
+
   // were there special requests from the command line
-  
+
   if (XVOWS.args.length === 1 && XVOWS.args[0] === "*") {
     // running all available tests
   } else if (XVOWS.args.length >= 1) {
@@ -327,10 +346,10 @@ XVOWS.begin = function() {
     }).forEach(function(file) {
       XVOWS.addTest(file);
     });
-  } else { 
-    throw new Error("cannot figure out what to do"); 
+  } else {
+    throw new Error("cannot figure out what to do");
   }
-  
+
   // start testing
   XVOWS.start();
 };
@@ -341,31 +360,31 @@ XVOWS.addTest = function(file) {
 };
 
 XVOWS.start = function() {
-  
+
   if (this.isStarted) {
     return false;
   }
-  
+
   XVOWS.console("starting tests");
-  
+
   this.isStarted = true;
-  
+
   var run = this.toRun || [];
   var tests = this.tests;
   var testNames = Object.keys(tests);
   var len = testNames.length;
-  
+
   if (run.length <= 0) {
     if (len > 0) {
-      
+
       XVOWS.console("running all tests");
-      
+
       this.toRun = run = testNames;
-    } else { 
-      
+    } else {
+
       XVOWS.console("no tests to run");
-      
-      return this.finish(); 
+
+      return this.finish();
     }
   } else {
     XVOWS.console("running %@ tests".f(run.length));
@@ -392,18 +411,18 @@ XVOWS.next = function(waited) {
   var run = this.toRun;
   var tests = this.tests;
   var running;
-  
-  
+
+
   if (this.running) {
     console.log("\r"); // to break it up some
     XVOWS.console("finished running %@".f(this.running).red);
     this.running = null;
   }
-  
+
   if (!run || run.length <= 0) {
     return this.finish();
   }
-  
+
   while(true && run.length > 0) {
     running = run.shift();
     if (!running || !tests[running]) {
@@ -417,7 +436,7 @@ XVOWS.next = function(waited) {
       break;
     }
   }
-  
+
   if (running) {
     require(running);
   } else { this.finish(); }
