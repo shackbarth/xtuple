@@ -26,10 +26,11 @@ trailing:true white:true*/
         {kind: "FittableColumns", noStretch: true, classes: "onyx-toolbar onyx-toolbar-inline", components: [
           {kind: "onyx.Grabber"},
           {kind: "Scroller", thumb: false, fit: true, touch: true, vertical: "hidden", style: "margin: 0;", components: [
-            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"}
+            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
+            {name: "rightLabel", style: "text-align: center"}
           ]}
         ]},
-        {name: "lists", kind: "Panels", arrangerKind: "CardArranger", fit: true, components: []}
+        {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger", margin: 0, fit: true, components: []}
       ]}
     ],
     // menu
@@ -52,6 +53,7 @@ trailing:true white:true*/
       var list = this.lists[inEvent.index].name;
       if (!this.fetched[list]) { this.$.lists.$[list].fetch(); }
       this.$.lists.setIndex(inEvent.index);
+      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
       this.fetched[list] = true;
     },
     firstTime: true,
@@ -62,6 +64,7 @@ trailing:true white:true*/
         this.$.menu.select(0);
         list = this.lists[0].name;
         this.$.lists.$[list].fetch();
+        this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
         this.fetched[list] = true;
       }
     },
