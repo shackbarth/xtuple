@@ -11,7 +11,6 @@
   var createHash, updateHash;
 
   createHash = {
-    number: '99',
     line1: 'add1',
     line2: 'add2',
     line3: 'add3',
@@ -37,8 +36,11 @@
           assert.isNull(model.lastError);
         },
         '-> Save and READ': XVOWS.save({
-          'Number is `99`': function (model) {
-            assert.equal(model.get('number'), createHash.number);
+          'GUID is a number': function (model) {
+            assert.isNumber(model.get('guid'));
+          },
+          'Number property is a string': function (model) {
+            assert.isString(model.get('number'));
           },
           'Line1 is `add1`': function (model) {
             assert.equal(model.get('line1'), createHash.line1);
