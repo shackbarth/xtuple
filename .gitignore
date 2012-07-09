@@ -13,3 +13,10 @@ npm-debug.log
 # ignore local version of config file
 # if named correctly
 lib/config_local.js
+
+# ignore top-level node-modules directory
+lib/node_modules
+
+# ignore the .log file
+datasource.log
+datasource-err.log
