@@ -1,5 +1,6 @@
 enyo.depends(
-  "screen_carousel.js",
   "info_list.js",
-  "input.js"
+  "input.js",
+  "module.js",
+  "screen_carousel.js"
 );
