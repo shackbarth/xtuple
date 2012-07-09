@@ -2,6 +2,10 @@
 /**
 */
 _.extend(String.prototype, {
+  camelize: function() {
+    var args = XT.$A(arguments);
+    return XT.String.camelize(this, args);
+  },
   format: function() {
     var args = XT.$A(arguments);
     return XT.String.format(this, args);
