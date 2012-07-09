@@ -63,7 +63,7 @@ XVOWS.create = function (recordType, vows) {
       var that = this,
         timeoutId,
         Klass = Backbone.Relational.store.getObjectByName(recordType);
-        model = Klass.create(),
+        model = new Klass(),
         callback = function (model, value) {
           clearTimeout(timeoutId);
           model.off('change:guid', callback);
@@ -121,7 +121,7 @@ XVOWS.save = function (vows) {
     },
     'Status is READY_CLEAN': function (model) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
-    },
+    }
   };
   
   // Add in any other passed vows
@@ -197,7 +197,7 @@ XVOWS.destroy = function (vows, obj) {
   "ext/startup_task",
   "en/strings"
 ].map(function(path) {
-  return _path.join(__dirname, "../xt/foundation", path) + ".js";
+  return _path.join(__dirname, "../xt", path) + ".js";
 }).forEach(function(path) {
   require(path);
 });

@@ -1,7 +1,9 @@
-/*jshint trailing:true, white:true, indent:2, strict:true, curly:true, plusplus:true
-  immed:true, eqeqeq:true, forin:true, latedef:true, newcap:true, noarg:true, undef:true */
+/*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
+  plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
+  newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
-/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true, clearTimeout:true, vows:true, assert:true */
+/*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
+clearTimeout:true, vows:true, assert:true */
 
 (function () {
   "use strict";
@@ -19,7 +21,7 @@
     name: 'Test Update operation'
   };
 
-  vows.describe('XM.Country CRUD test').addBatch({
+  vows.describe('XM.Project CRUD test').addBatch({
     'CREATE': XVOWS.create('XM.Project', {
       '-> Set values': {
         topic: function (model) {
@@ -64,18 +66,18 @@
                 topic: function (model) {
                   var that = this,
                     timeoutId,
-                    task = XM.ProjectTask.create(),
+                    task = new XM.ProjectTask(),
                     callback = function () {
                       clearTimeout(timeoutId);
                       task.off('change:guid', callback);
                       that.callback(null, task);
                     };
-                    
+
                   // Must add task to the project first then initialize
                   model.get('tasks').add(task);
                   task.on('change:guid', callback);
                   task.initialize(null, {isNew: true});
-                  
+
                   // If we don't hear back, keep going
                   timeoutId = setTimeout(function () {
                     that.callback(null, model);
