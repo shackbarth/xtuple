@@ -79,7 +79,7 @@ trailing:true white:true*/
     name: "XV.UserLoginForm",
     kind: "Control",
     classes: "xt-user-login-form enyo-unselectable",
-    create: function() {
+    create: function () {
       this.inherited(arguments);
       XV.loginForm = this;
     },
@@ -92,7 +92,7 @@ trailing:true white:true*/
     handlers: {
       onButtonTapped: "buttonTapped"
     },
-    buttonTapped: function() {
+    buttonTapped: function () {
       var owner = this.$;
       var credentials = {
         username: owner.username.getValue(),
@@ -100,11 +100,11 @@ trailing:true white:true*/
         organization: owner.organization.getValue()
       };
       var self = this;
-      XT.session.acquireSession(credentials, function(response) {
+      XT.session.acquireSession(credentials, function (response) {
         if (response.code === 1) {
-          self.bubble("multipleSessions", {eventName:"multipleSessions"});
-        } else if (response.code === 4) { 
-          self.bubble("sessionAcquired", {eventName:"sessionAcquired"}); 
+          self.bubble("multipleSessions", {eventName: "multipleSessions"});
+        } else if (response.code === 4) {
+          self.bubble("sessionAcquired", {eventName: "sessionAcquired"});
         } else { /* error? */ }
       });
     }
@@ -135,14 +135,16 @@ trailing:true white:true*/
     components: [
       { name: "wrapper", classes: "xt-available-sessions-wrapper", components: [
         { name: "list", kind: "List", classes: "xt-available-sessions-list", multiSelect: false, onSetupItem: "setupRow", components: [
-          { name: "item", kind: "XV.SessionSelectionRow" } ] } ] }
+          { name: "item", kind: "XV.SessionSelectionRow" }
+        ] }
+      ] }
     ],
 
     //components: [
     //  { name: "list", kind: "List", multiSelect: false, onSetupItem: "setupRow", components: [
     //    { name: "item", kind: "XV.SessionSelectionRow" } ]}
     //],
-    rendered: function() {
+    rendered: function () {
       var sessions;
 
       this.inherited(arguments);
@@ -153,7 +155,7 @@ trailing:true white:true*/
         this.$.list.reset();
       }
     },
-    setupRow: function(inSender, inEvent) {
+    setupRow: function (inSender, inEvent) {
       var row = this.$.item;
       var idx = inEvent.index;
       var data = XT.session.getAvailableSessions()[idx].sessionData;
@@ -187,10 +189,11 @@ trailing:true white:true*/
     components: [
       { name: "toolbar", kind: "onyx.Toolbar", components: [
         { name: "label", content: "Please select from the following sessions" },
-        { name: "button", kind: "onyx.Button", content: "New Session" } ]},
+        { name: "button", kind: "onyx.Button", content: "New Session" }
+      ]},
       { name: "sessions", kind: "XV.AvailableSessions" }
     ],
-    tap: function(inSender, inEvent) {
+    tap: function (inSender, inEvent) {
       var self = this;
       var origin = inEvent.originator;
       var idx = inEvent.index;
@@ -198,21 +201,21 @@ trailing:true white:true*/
 
       // if the originator is the new-session button
       if (origin.name === "button") {
-        XT.session.selectSession("FORCE_NEW_SESSION", function() {
-          self.bubble("acquiredSession", {eventName:"acquiredSession"});
+        XT.session.selectSession("FORCE_NEW_SESSION", function () {
+          self.bubble("acquiredSession", {eventName: "acquiredSession"});
         });
       } else {
 
         // we check to see if this was a row and if so handle
         // that instead
         if (owner.name === "item" || idx) {
-          XT.session.selectSession(idx, function() {
-            self.bubble("acquiredSession", {eventName:"acquiredSession"});
+          XT.session.selectSession(idx, function () {
+            self.bubble("acquiredSession", {eventName: "acquiredSession"});
           });
         }
       }
     },
-    didBecomeActive: function() {
+    didBecomeActive: function () {
       this.$.sessions.rendered();
     }
   });
