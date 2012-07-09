@@ -15,17 +15,32 @@ enyo.kind({
       kind: "onyx.InputDecorator", components: [
         { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" },
         { kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped" },
-        { kind: "onyx.Popup", name: "datePickPopup",
+        /*{ kind: "onyx.Popup", name: "datePickPopup",
           modal: true, floating: true,
           components: [
             // this is third party code that doesn't look great under the best of
             // conditions and needs some work to get even there.
-            { kind: "calendarSelector", name: "datePick" }
-          ]}
+            { kind: "calendarSelector", name: "datePick", style: "width: 800px;" }
+          ]
+        },*/
+        {
+          kind: "calendarSelector",
+          name: "datePick2",
+          style: "width: 600px; visibility: hidden;",
+          onSelected: "pickDate"
+        }
       ]
     }
   ],
+  pickDate: function (inSender, date) {
+    this.setDateObject(this.textToDate(date.month + "/" + date.day + "/" + date.year));
+    console.log(inEvent);
+  },
   dateObjectChanged: function () {
+    this.$.datePick2.setSelectedDay(this.dateObject.getDate());
+    this.$.datePick2.setSelectedMonth(this.dateObject.getMonth());
+    this.$.datePick2.setSelectedYear(this.dateObject.getYear());
+    this.$.datePick2.render();
     this.$.dateField.setValue(this.dateObject.toLocaleDateString());
   },
   doInputChanged: function () {
@@ -67,7 +82,8 @@ enyo.kind({
     return date;
   },
   doIconTapped: function () {
-    this.$.datePickPopup.show();
+    //this.$.datePickPopup.show();
+    this.$.datePick2.setStyle("visibility: visible");
   }
 });
 
