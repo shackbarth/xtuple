@@ -25,8 +25,12 @@ enyo.kind({
       // we check to see if this was a row and if so handle
       // that instead
       if (owner.name === "item" || idx) {
-        XT.session.selectSession(idx, function() {
-          self.bubble("acquiredSession", {eventName:"acquiredSession"});
+        XT.session.selectSession(idx, function(payload) {
+          if (payload.isError) {
+            console.warn("could not retrieve the selected session");
+          } else {
+            self.bubble("acquiredSession", {eventName:"acquiredSession"});
+          }
         });
       }
     }
