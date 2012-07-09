@@ -7,7 +7,7 @@ enyo.kind({
     isStarted: false
   },
   components: [
-    { name: "postbooks", kind: "XT.Postbooks" }
+    { name: "postbooks", kind: "XV.Postbooks" }
   ],
   create: function() {
     this.inherited(arguments);

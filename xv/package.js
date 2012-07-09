@@ -1,5 +1,5 @@
 enyo.depends(
+  "widgets",
   "views",
-  "screens",
-  "widgets"
+  "application"
 );
