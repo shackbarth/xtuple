@@ -18,10 +18,10 @@ enyo.kind({
     onDeselect: "onDeselect"
   },
   onSelect: function() {
-    var child = this.getSelectedChild();
-
+    var child = this.getSelectedChild();    
+    
     this.log(child);
-
+    
     if (child) {
       child.addClass("selected");
     }
@@ -29,9 +29,9 @@ enyo.kind({
   onDeselect: function() {
     var selected = this.getSelection().lastSelected;
     var child = this.getChildByIndex(selected);
-
+    
     this.log(selected, child);
-
+    
     if (child) {
       child.removeClass("selected");
     }
