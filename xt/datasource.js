@@ -8,7 +8,7 @@ white:true*/
 
   XT.dataSource = {
 
-    datasourceUrl: "asteroidbelt.xtuple.com",
+    datasourceUrl: "purpletie.xtuple.com",
     //datasourceUrl: "localhost",
     datasourcePort: 9000,
     isConnected: false,
