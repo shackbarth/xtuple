@@ -1,16 +1,16 @@
 
 enyo.kind({
-  name: "XT.UserLoginScreen",
+  name: "XV.UserLoginScreen",
   kind: "Control",
   classes: "xt-user-login-screen",
   components: [
-    { name: "block", kind: "XT.UserLoginBlock" },
-    { name: "logo", kind: "XT.LoginLogoBlock" }
+    { name: "block", kind: "XV.UserLoginBlock" },
+    { name: "logo", kind: "XV.LoginLogoBlock" }
   ]
 });
 
 enyo.kind({
-  name: "XT.LoginLogoBlock",
+  name: "XV.LoginLogoBlock",
   kind: "Control",
   classes: "xt-login-logo-block"
 });

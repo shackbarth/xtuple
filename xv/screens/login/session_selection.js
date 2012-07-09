@@ -1,13 +1,13 @@
 
 enyo.kind({
-  name: "XT.SessionSelectionScreen",
+  name: "XV.SessionSelectionScreen",
   kind: "Control",
   classes: "xt-session-selection-screen",
   components: [
     { name: "toolbar", kind: "onyx.Toolbar", components: [
       { name: "label", content: "Please select from the following sessions" },
       { name: "button", kind: "onyx.Button", content: "New Session" } ]},
-    { name: "sessions", kind: "XT.AvailableSessions" }
+    { name: "sessions", kind: "XV.AvailableSessions" }
   ],
   tap: function(inSender, inEvent) {
     var self = this;

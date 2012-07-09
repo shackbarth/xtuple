@@ -1,35 +1,35 @@
 
 enyo.kind({
-  name: "XT.UserLoginBlock",
+  name: "XV.UserLoginBlock",
   kind: "Control",
   classes: "xt-user-login-block enyo-unselectable",
   components: [
-    { name: "subBlock", kind: "XT.UserLoginSubBlock" }
+    { name: "subBlock", kind: "XV.UserLoginSubBlock" }
   ]
 });
 
 enyo.kind({
-  name: "XT.UserLoginSubBlock",
+  name: "XV.UserLoginSubBlock",
   kind: "Control",
   classes: "xt-user-login-sub-block enyo-unselectable",
   components: [
-    { name: "form", kind: "XT.UserLoginForm" }
+    { name: "form", kind: "XV.UserLoginForm" }
   ]
 });
   
 enyo.kind({
-  name: "XT.UserLoginForm",
+  name: "XV.UserLoginForm",
   kind: "Control",
   classes: "xt-user-login-form enyo-unselectable",
   create: function() {
     this.inherited(arguments);
-    XT.loginForm = this;
+    XV.loginForm = this;
   },
   components: [
-    { name: "username", kind: "XT.LoginInput", placeholder: "Username" },
-    { name: "password", kind: "XT.LoginInputPassword", placeholder: "Password" },
-    { name: "organization", kind: "XT.LoginInput", placeholder: "Organization" },
-    { name: "login", kind: "XT.LoginButton", content: "Login" }
+    { name: "username", kind: "XV.LoginInput", placeholder: "Username" },
+    { name: "password", kind: "XV.LoginInputPassword", placeholder: "Password" },
+    { name: "organization", kind: "XV.LoginInput", placeholder: "Organization" },
+    { name: "login", kind: "XV.LoginButton", content: "Login" }
   ],
   handlers: {
     onButtonTapped: "buttonTapped"
@@ -53,63 +53,20 @@ enyo.kind({
 });
   
 enyo.kind({
-  name: "XT.LoginInput",
-  kind: "XT.Input",
+  name: "XV.LoginInput",
+  kind: "XV.Input",
   classes: "xt-login-input"
 });
 
 enyo.kind({
-  name: "XT.LoginInputPassword",
-  kind: "XT.LoginInput",
+  name: "XV.LoginInputPassword",
+  kind: "XV.LoginInput",
   type: "password"
 });
 
 enyo.kind({
-  name: "XT.LoginButton",
-  kind: "XT.Button",
+  name: "XV.LoginButton",
+  kind: "XV.Button",
   classes: "xt-login-button"
 });
   
-    //{ classes: "xt-user-login-form", components: [
-    //  { kind: "XT.UserLoginBlockRow", components: [
-    //    { kind: "onyx.InputDecorator", components: [
-    //      { name: "username", kind: "onyx.Input", placeholder: "Username" } ]} ]},
-    //  { kind: "XT.UserLoginBlockRow", components: [
-    //    { kind: "onyx.InputDecorator", components: [
-    //      { name: "password", kind: "onyx.Input", type: "password", placeholder: "Password" } ]} ]},
-    //  { kind: "XT.UserLoginBlockRow", components: [
-    //    { kind: "onyx.InputDecorator", components: [
-    //      { name: "organization", kind: "onyx.Input", placeholder: "Organization" } ]} ]},
-    //  { kind: "XT.UserLoginBlockButtonRow", components: [
-    //    { name: "button", kind: "onyx.Button", content: "Login" } ]}
-    //    ]}
-  //]
-//});
-
-//enyo.kind({
-//  name: "XT.UserLoginBlockRow",
-//  classes: "user-login-block-row"
-//});
-
-//enyo.kind({
-//  name: "XT.UserLoginBlockButtonRow",
-//  kind: "XT.UserLoginBlockRow",
-//  tap: function() {
-//    var owner = this.owner.$;
-//    var credentials = {
-//      username: owner.username.getValue(),
-//      password: owner.password.getValue(),
-//      organization: owner.organization.getValue()
-//    };
-//    var self = this;
-//    XT.session.acquireSession(credentials, function(response) {
-//      //owner.username.clear();
-//      //owner.password.clear();
-//      //owner.organization.clear();
-//      
-//      if (response.code === 1) {
-//        self.bubble("multipleSessions", {eventName:"multipleSessions"});
-//      } else { self.bubble("sessionAcquired", {eventName:"sessionAcquired"}); }
-//    });
-//  } 
-//});

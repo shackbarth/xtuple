@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
 
   enyo.kind({
-    name: "Crm",
+    name: "XV.Crm",
     kind: "Panels",
     label: "_crm".loc(),
     classes: "app enyo-unselectable",
@@ -31,18 +31,18 @@ trailing:true white:true*/
           ]}
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "CardArranger", fit: true, components: [
-          {kind: "AccountInfoList"},
-          {kind: "ContactInfoList"},
-          {kind: "ToDoInfoList"},
-          {kind: "OpportunityInfoList"},
-          {kind: "IncidentInfoList"},
-          {kind: "ProjectInfoList"}
+          {name: "accountInfoList", kind: "XV.AccountInfoList"},
+          {name: "contactInfoList", kind: "XV.ContactInfoList"},
+          {name: "toDoInfoList", kind: "XV.ToDoInfoList"},
+          {name: "opportunityInfoList", kind: "XV.OpportunityInfoList"},
+          {name: "incidentInfoList", kind: "XV.IncidentInfoList"},
+          {name: "projectInfoList", kind: "XV.ProjectInfoList"}
         ]}
       ]}
     ],
     // menu
     setupItem: function (inSender, inEvent) {
-      var list = this.$.lists.components[inEvent.index].kind.camelize();
+      var list = this.$.lists.components[inEvent.index].name;
       this.$.item.setContent(this.$[list].getLabel());
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
@@ -52,17 +52,20 @@ trailing:true white:true*/
       this.$.leftLabel.setContent(this.label);
     },
     itemTap: function (inSender, inEvent) {
-      var list = this.$.lists.components[inEvent.index].kind.camelize();
-      this.$[list].fetch();
+      var list = this.$.lists.components[inEvent.index].name;
+      if (!this.fetched[list]) { this.$[list].fetch(); }
       this.$.lists.setIndex(inEvent.index);
+      this.fetched[list] = true;
     },
     firstTime: true,
+    fetched: {},
     didBecomeActive: function () {
       var list;
       if (this.firstTime) {
         this.$.menu.select(0);
-        list = this.$.lists.components[0].kind.camelize();
+        list = this.$.lists.components[0].name;
         this.$[list].fetch();
+        this.fetched[list] = true;
       }
     },
     showSetup: function () {

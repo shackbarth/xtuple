@@ -1,12 +1,12 @@
 
 enyo.kind({
-  name: "XT.Input",
+  name: "XV.Input",
   kind: "Input",
   classes: "xt-input"
 });
 
 enyo.kind({
-  name: "XT.Button",
+  name: "XV.Button",
   kind: "Button",
   classes: "xt-button",
   events: {

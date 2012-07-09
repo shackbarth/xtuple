@@ -1,17 +1,17 @@
 
 enyo.kind({
-  name: "XT.AvailableSessions",
+  name: "XV.AvailableSessions",
   kind: "Control",
   classes: "xt-available-sessions",
   components: [
     { name: "wrapper", classes: "xt-available-sessions-wrapper", components: [
       { name: "list", kind: "List", classes: "xt-available-sessions-list", multiSelect: false, onSetupItem: "setupRow", components: [
-        { name: "item", kind: "XT.SessionSelectionRow" } ] } ] }
+        { name: "item", kind: "XV.SessionSelectionRow" } ] } ] }
   ],
   
   //components: [
   //  { name: "list", kind: "List", multiSelect: false, onSetupItem: "setupRow", components: [
-  //    { name: "item", kind: "XT.SessionSelectionRow" } ]}
+  //    { name: "item", kind: "XV.SessionSelectionRow" } ]}
   //],
   rendered: function() {
     var sessions;
@@ -39,7 +39,7 @@ enyo.kind({
 });
 
 enyo.kind({
-  name: "XT.SessionSelectionRow",
+  name: "XV.SessionSelectionRow",
   kind: "Control",
   classes: "xt-session-selection-row",
   components: [

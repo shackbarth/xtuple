@@ -1,21 +1,21 @@
 
 enyo.kind({
-  name: "XT.Postbooks",
+  name: "XV.Postbooks",
   kind: "Control",
   classes: "xt-postbooks enyo-unselectable",
   components: [
-    { name: "container", kind: "XT.PostbooksContainer" }
+    { name: "container", kind: "XV.PostbooksContainer" }
   ] 
 });
 
 enyo.kind({
-  name: "XT.PostbooksContainer",
-  kind: "XT.ScreenCarousel",  
+  name: "XV.PostbooksContainer",
+  kind: "XV.ScreenCarousel",  
   classes: "xt-postbooks-container enyo-unselectable",
   components: [
-    { name: "login", kind: "XT.Login" },
-    { name: "crm", kind: "Crm" },
-    { name: "billing", kind: "Billing" }
+    { name: "login", kind: "XV.Login" },
+    { name: "crm", kind: "XV.Crm" },
+    { name: "billing", kind: "XV.Billing" }
   ],
   carouselEvents: {
     dashboard: "login",

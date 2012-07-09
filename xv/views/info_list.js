@@ -1,6 +1,6 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true white:true*/
-/*global XT:true, enyo:true*/
+regexp:true, undef:true, trailing:true white:true*/
+/*global XT:true, XM:true, enyo:true, Globalize:true*/
 
 (function () {
   
@@ -9,23 +9,22 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   //
   
   enyo.kind({
-    name: "InfoList",
+    name: "XV.InfoList",
     kind: "Panels",
     classes: "xt-info-list",
     draggable: false,
     components: [
       { name: "loader", classes: "xt-info-list-loader", content: "Loading content..." },
       { name: "error", classes: "xt-info-list-error", content: "There was an error" },
-      { name: "list", kind: "InfoListPrivate" }
+      { name: "list", kind: "XV.InfoListPrivate" }
     ],
     published: {
       collection: null,
       rowClass: "",
       query: null
     },
-    collectionChanged: function() {
+    collectionChanged: function () {
       var col = this.getCollection(),
-        query = this.getQuery() || { rowLimit: 25 },
         Klass;
     
       // Change string to an object if necessary
@@ -42,30 +41,30 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       // bind the change event to our handler
       col.bind("change", enyo.bind(this, "_collectionChanged", col));
     },
-    _collectionChanged: function(collection) {
+    _collectionChanged: function (collection) {
       this.log();
     },
-    _collectionFetchSuccess: function() {
+    _collectionFetchSuccess: function () {
       this.log();
       this.waterfall("onCollectionUpdated");
     },
-    _collectionFetchError: function() {
+    _collectionFetchError: function () {
       this.log();
     },
-    create: function() {
+    create: function () {
       this.inherited(arguments);
       this.rowClassChanged();
-      this.collectionChanged();         
+      this.collectionChanged();
     },
-    rowClassChanged: function() {
+    rowClassChanged: function () {
       // need to pass down some information to the list
       this.$.list.setRowClass(this.getRowClass());
     },
-    showingChanged: function() {
+    showingChanged: function () {
       this.inherited(arguments);
       this.log(this.name, this.showing, this);
     },
-    fetch: function() {
+    fetch: function () {
       var col = this.getCollection(),
        query = this.getQuery();
     
@@ -80,17 +79,17 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   });
 
   enyo.kind({
-    name: "InfoListPrivate",
+    name: "XV.InfoListPrivate",
     kind: "List",
     classes: "xt-info-list-private",
     published: {
-      rowClass:""
+      rowClass: ""
     },
     handlers: {
       onSetupItem: "setupRow",
       onCollectionUpdated: "collectionUpdated"
     },
-    collectionUpdated: function() {    
+    collectionUpdated: function () {
       var col = this.parent.getCollection();
     
       // take the properties as necessary...
@@ -101,16 +100,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       // visible now
       this.parent.setIndex(2);
     },
-    resizeHandler: function(inSender, inEvent) {
-      this.inherited(arguments);
-      //this.log(this.owner.name, this);
-      //if (!this.owner.getShowing()) {
-      //  return true;
-      //} else {
-      //  this.inherited(arguments);
-      //}
-    },
-    rowClassChanged: function() {
+    rowClassChanged: function () {
       //this.log(this.owner.name);
     
       var rowClass = this.getRowClass();
@@ -135,7 +125,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
         }
       }
     },
-    setupRow: function(inSender, inEvent) {
+    setupRow: function (inSender, inEvent) {
       //this.log(this.owner.name, this.owner.showing, this);
     
       var col = this.parent.getCollection();
@@ -153,7 +143,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   });
   
   enyo.kind({
-    name: "InfoListRow",
+    name: "XV.InfoListRow",
     classes: "xt-info-list-row",
     published: {
       leftColumn: [],
@@ -172,13 +162,13 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
 
       lc = this.createComponent({
         name: "leftColumn",
-        kind: "InfoListRowColumn",
+        kind: "XV.InfoListRowColumn",
         structure: lcs
       });
 
       rc = this.createComponent({
         name: "rightColumn",
-        kind: "InfoListRowColumn",
+        kind: "XV.InfoListRowColumn",
         structure: rcs
       });
     },
@@ -248,7 +238,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   });
 
   enyo.kind({
-    name: "InfoListRowColumn",
+    name: "XV.InfoListRowColumn",
     classes: "xt-info-list-row-column",
     published: {
       structure: null
@@ -293,15 +283,10 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
         ret = curr;
 
         curr = curr.createComponent({
-          kind: "InfoListBasicColumn",
+          kind: "XV.InfoListBasicColumn",
           style: "width:" + width + "px;"
         });
       }
-
-      //curr = curr.createComponent({
-      //  kind: "InfoListBasicRow",
-      //  style: "width: " + width + "px;"
-      //});
 
       //console.log("begin");
 
@@ -328,7 +313,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       //console.log("CREATECOMPONENTFROMOBJECT", elem);
 
       curr = curr.createComponent({
-        kind: "InfoListBasicCell"
+        kind: "XV.InfoListBasicCell"
       }, elem);
 
       if (!inOwner.$[elem.name]) {
@@ -338,17 +323,17 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   });
 
   enyo.kind({
-    name: "InfoListBasicRow",
+    name: "XV.InfoListBasicRow",
     classes: "xt-info-list-basic-row"
   });
 
   enyo.kind({
-    name: "InfoListBasicColumn",
+    name: "XV.InfoListBasicColumn",
     classes: "xt-info-list-basic-column"
   });
 
   enyo.kind({
-    name: "InfoListBasicCell",
+    name: "XV.InfoListBasicCell",
     classes: "xt-info-list-basic-cell"
   });
   
@@ -357,19 +342,19 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   //
   
   enyo.kind({
-    name: "AccountInfoList",
-    kind: "InfoList",
+    name: "XV.AccountInfoList",
+    kind: "XV.InfoList",
     published: {
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
       query: {orderBy: '"number"'},
-      rowClass: "AccountInfoCollectionRow"
+      rowClass: "XV.AccountInfoCollectionRow"
     }
   });
 
   enyo.kind({
-    name: "AccountInfoCollectionRow",
-    kind: "InfoListRow",
+    name: "XV.AccountInfoCollectionRow",
+    kind: "XV.InfoListRow",
     leftColumn: [
       [
         { width: 160 },
@@ -401,19 +386,19 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   //
   
   enyo.kind({
-    name: "ContactInfoList",
-    kind: "InfoList",
+    name: "XV.ContactInfoList",
+    kind: "XV.InfoList",
     published: {
       label: "_contacts".loc(),
       collection: "XM.ContactInfoCollection",
       query: {orderBy: '"lastName", "firstName"'},
-      rowClass: "ContactInfoCollectionRow"
+      rowClass: "XV.ContactInfoCollectionRow"
     }
   });
 
   enyo.kind({
-    name: "ContactInfoCollectionRow",
-    kind: "InfoListRow",
+    name: "XV.ContactInfoCollectionRow",
+    kind: "XV.InfoListRow",
     leftColumn: [
       [
         { width: 160 },
@@ -442,77 +427,77 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   //
   
   enyo.kind({
-     name: "IncidentInfoList",
-     kind: "InfoList",
-     published: {
-       label: "_incidents".loc(),
-       collection: "XM.IncidentInfoCollection",
-       rowClass: "IncidentInfoCollectionRow"
-     }
-   });
+    name: "XV.IncidentInfoList",
+    kind: "XV.InfoList",
+    published: {
+      label: "_incidents".loc(),
+      collection: "XM.IncidentInfoCollection",
+      rowClass: "XV.IncidentInfoCollectionRow"
+    }
+  });
 
-   enyo.kind({
-     name: "IncidentInfoCollectionRow",
-     kind: "InfoListRow",
-     leftColumn: [
-       [
-         { width: 245 },
-         { name: "number", classes: "cell-key incident-number" },
-         { name: "description", classes: "cell incident-description" }
-       ],
-       [
-         { width: 75 },
-         { name: "updated", classes: "cell-align-right incident-updated",
-             formatter: "formatDate" }
-       ]
-     ],
-     rightColumn: [
-       [
-         { width: 165 },
-         { name: "account.name", classes: "cell-italic incident-account-name" },
-         { name: "contact.getName", classes: "incident-contact-name" }
-       ],
-       [
-         { width: 75 },
-         { name: "getIncidentStatusString", classes: "incident-status" },
-         { name: "owner.username", classes: "incident-owner-username" }
-       ],
-       [
-         { width: 75 },
-         { name: "priority.name", classes: "incident-priority",
-             placeholder: "_noPriority".loc() },
-         { name: "category.name", classes: "incident-category",
-             placeholder: "_noCategory".loc() }
-       ]
-     ],
-     formatDate: function (content, model, view) {
-       var today = new Date();
-       if (XT.date.compareDate(content, today)) {
-         view.removeClass("bold");
-       } else {
-         view.addClass("bold");
-       }
-       return content;
-     }
-   });
+  enyo.kind({
+    name: "XV.IncidentInfoCollectionRow",
+    kind: "XV.InfoListRow",
+    leftColumn: [
+      [
+        { width: 245 },
+        { name: "number", classes: "cell-key incident-number" },
+        { name: "description", classes: "cell incident-description" }
+      ],
+      [
+        { width: 75 },
+        { name: "updated", classes: "cell-align-right incident-updated",
+           formatter: "formatDate" }
+      ]
+    ],
+    rightColumn: [
+      [
+        { width: 165 },
+        { name: "account.name", classes: "cell-italic incident-account-name" },
+        { name: "contact.getName", classes: "incident-contact-name" }
+      ],
+      [
+        { width: 75 },
+        { name: "getIncidentStatusString", classes: "incident-status" },
+        { name: "owner.username", classes: "incident-owner-username" }
+      ],
+      [
+        { width: 75 },
+        { name: "priority.name", classes: "incident-priority",
+           placeholder: "_noPriority".loc() },
+        { name: "category.name", classes: "incident-category",
+           placeholder: "_noCategory".loc() }
+      ]
+    ],
+    formatDate: function (content, model, view) {
+      var today = new Date();
+      if (XT.date.compareDate(content, today)) {
+        view.removeClass("bold");
+      } else {
+        view.addClass("bold");
+      }
+      return content;
+    }
+  });
   
   // ..........................................................
   // OPPORTUNITY
   //
   
   enyo.kind({
-    name: "OpportunityInfoList",
-    kind: "InfoList",
+    name: "XV.OpportunityInfoList",
+    kind: "XV.InfoList",
     published: {
       collection: "XM.OpportunityInfoCollection",
       label: "_opportunities".loc(),
-      rowClass: "OpportunityInfoCollectionRow"
+      rowClass: "XV.OpportunityInfoCollectionRow"
     }
   });
 
   enyo.kind({
-    name: "OpportunityInfoCollectionRow",
-    kind: "InfoListRow",
+    name: "XV.OpportunityInfoCollectionRow",
+    kind: "XV.InfoListRow",
     leftColumn: [
       [
         { width: 200 },
@@ -564,19 +549,19 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   //
   
   enyo.kind({
-    name: "ProjectInfoList",
-    kind: "InfoList",
+    name: "XV.ProjectInfoList",
+    kind: "XV.InfoList",
     published: {
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
       query: {orderBy: '"number"'},
-      rowClass: "ProjectInfoCollectionRow"
+      rowClass: "XV.ProjectInfoCollectionRow"
     }
   });
 
   enyo.kind({
-    name: "ProjectInfoCollectionRow",
-    kind: "InfoListRow",
+    name: "XV.ProjectInfoCollectionRow",
+    kind: "XV.InfoListRow",
     leftColumn: [
       [
         { width: 200 },
@@ -651,18 +636,18 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   //
   
   enyo.kind({
-    name: "ToDoInfoList",
-    kind: "InfoList",
+    name: "XV.ToDoInfoList",
+    kind: "XV.InfoList",
     published: {
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
-      rowClass: "ToDoInfoCollectionRow"
+      rowClass: "XV.ToDoInfoCollectionRow"
     }
   });
 
   enyo.kind({
-    name: "ToDoInfoCollectionRow",
-    kind: "InfoListRow",
+    name: "XV.ToDoInfoCollectionRow",
+    kind: "XV.InfoListRow",
     leftColumn: [
       [
         { width: 245 },

@@ -1,11 +1,11 @@
 
 enyo.kind({
-  name: "XT.Login",
-  kind: "XT.ScreenCarousel",
+  name: "XV.Login",
+  kind: "XV.ScreenCarousel",
   classes: "xt-login",
   components: [
-    { name: "loginScreen", kind: "XT.LoginScreen" },
-    { name: "dashboard", kind: "Dashboard" }
+    { name: "loginScreen", kind: "XV.LoginScreen" },
+    { name: "dashboard", kind: "XV.Dashboard" }
   ],
   carouselEvents: {
     acquiredSession: "dashboard"

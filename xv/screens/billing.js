@@ -6,7 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
   //"use strict";
 
   enyo.kind({
-    name: "Billing",
+    name: "XV.Billing",
     kind: "Panels",
     label: "_billing".loc(),
     classes: "app enyo-unselectable",
@@ -35,7 +35,7 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
     ],
     // menu
     setupItem: function (inSender, inEvent) {
-      var list = this.$.lists.components[inEvent.index].kind.camelize();
+      var list = this.$.lists.components[inEvent.index].name;
       this.$.item.setContent(this.$[list].getLabel());
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
@@ -45,17 +45,20 @@ regexp:true, undef:true, strict:true, trailing:true white:true*/
       this.$.leftLabel.setContent(this.label);
     },
     itemTap: function (inSender, inEvent) {
-      var list = this.$.lists.components[inEvent.index].kind.camelize();
-      this.$[list].fetch();
+      var list = this.$.lists.components[inEvent.index].name;
+      if (!this.fetched[list]) { this.$[list].fetch(); }
       this.$.lists.setIndex(inEvent.index);
+      this.fetched[list] = true;
     },
     firstTime: true,
+    fetched: {},
     didBecomeActive: function () {
       var list;
       if (this.firstTime) {
         this.$.menu.select(0);
-        list = this.$.lists.components[0].kind.camelize();
+        list = this.$.lists.components[0].name;
         this.$[list].fetch();
+        this.fetched[list] = true;
       }
     },
     showSetup: function () {

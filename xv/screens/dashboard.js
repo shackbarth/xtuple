@@ -6,39 +6,39 @@ trailing:true white:true*/
 (function () {
   
   enyo.kind({
-    name: "Dashboard",
+    name: "XV.Dashboard",
     kind: "Control",
     classes: "xt-dashboard",
     components: [
       { name: "container", classes: "xt-dashboard-container", components: [
-        { name: "icons", kind: "DashboardIcons" }
+        { name: "icons", kind: "XV.DashboardIcons" }
       ]}
     ]
     
   });
 
   enyo.kind({
-    name: "DashboardIcons",
+    name: "XV.DashboardIcons",
     classes: "xt-dashboard-icons",
     create: function () {
       this.inherited(arguments);
     
       var c$ = this.children.length;
-      this.applyStyle("width", ((114 /*width*/ + 20 /*margin*/)*c$) + "px");
+      this.applyStyle("width", ((114 /*width*/ + 20 /*margin*/) * c$) + "px");
     },
     components: [
-      { name: "crm", kind: "DashboardIcon" },
-      { name: "billing", kind: "DashboardIcon" }
+      { name: "crm", kind: "XV.DashboardIcon" },
+      { name: "billing", kind: "XV.DashboardIcon" }
     ]
   });
 
   enyo.kind({
-    name: "DashboardIcon",
+    name: "XV.DashboardIcon",
     kind: "Control",
     classes: "xt-dashboard-icon",
     tap: function () {
       var name = this.name;
-      this.bubble(name, {eventName:name});
+      this.bubble(name, {eventName: name});
     },
     create: function () {
       this.inherited(arguments);
