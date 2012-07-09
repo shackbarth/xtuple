@@ -1,6 +1,6 @@
 
 enyo.kind({
-  name: "XT.ScreenCarousel",
+  name: "XV.ScreenCarousel",
   kind: "Panels",
   classes: "xt-screen-carousel enyo-unselectable",
   draggable: false,

@@ -4,6 +4,20 @@
 XT.String = {
 
   /**
+     Change sting with underscores '_' to camel case.
+
+     @returns {String}
+  */
+  camelize: function(str) {
+    var ret = str.replace( (/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g), function(str, separater, character) {
+          return character ? character.toUpperCase() : '';
+    });
+    var first = ret.charAt(0),
+        lower = first.toLowerCase();
+    return first !== lower ? lower + ret.slice(1) : ret;
+  },
+
+  /**
     Localize the string.
   */
   loc: function(str) {
