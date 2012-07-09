@@ -15,7 +15,7 @@ enyo.kind({
   components: [
     { name: "login", kind: "XT.Login" },
     { name: "crm", kind: "Crm" },
-    { name: "billing", kind: "XT.Billing" }
+    { name: "billing", kind: "Billing" }
   ],
   carouselEvents: {
     dashboard: "login",
