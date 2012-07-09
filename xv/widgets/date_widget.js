@@ -12,9 +12,9 @@ enyo.kind({
   },
   components: [
     {
-      kind: "onyx.InputDecorator", components: [
-        { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" },
-        { kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped" },
+      kind: "onyx.InputDecorator", style: "height: 18px;", components: [
+        { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" }
+        //{ kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped" },
         /*{ kind: "onyx.Popup", name: "datePickPopup",
           modal: true, floating: true,
           components: [
@@ -22,13 +22,13 @@ enyo.kind({
             // conditions and needs some work to get even there.
             { kind: "calendarSelector", name: "datePick", style: "width: 800px;" }
           ]
-        },*/
+        },
         {
           kind: "calendarSelector",
           name: "datePick2",
           style: "width: 600px; visibility: hidden;",
           onSelected: "pickDate"
-        }
+        }*/
       ]
     }
   ],
@@ -37,10 +37,10 @@ enyo.kind({
     console.log(inEvent);
   },
   dateObjectChanged: function () {
-    this.$.datePick2.setSelectedDay(this.dateObject.getDate());
-    this.$.datePick2.setSelectedMonth(this.dateObject.getMonth());
-    this.$.datePick2.setSelectedYear(this.dateObject.getYear());
-    this.$.datePick2.render();
+    //this.$.datePick2.setSelectedDay(this.dateObject.getDate());
+    //this.$.datePick2.setSelectedMonth(this.dateObject.getMonth());
+    //this.$.datePick2.setSelectedYear(this.dateObject.getYear());
+    //this.$.datePick2.render();
     this.$.dateField.setValue(this.dateObject.toLocaleDateString());
   },
   doInputChanged: function () {
@@ -83,7 +83,8 @@ enyo.kind({
   },
   doIconTapped: function () {
     //this.$.datePickPopup.show();
-    this.$.datePick2.setStyle("visibility: visible");
+    //this.$.datePick2.setStyle("visibility: visible");
+    alert("There are two implementations of this commented out in the code. Both are imperfect.");
   }
 });
 
