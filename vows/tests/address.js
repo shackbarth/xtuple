@@ -60,6 +60,22 @@
           'Country is `United States`': function (model) {
             assert.equal(model.get('country'), createHash.country);
           },
+          'Address format returns a string': function (model) {
+            assert.isString(model.format(false));
+          },
+          'Address format(false) returns ASCII new lines': function (model) {
+            assert.include(model.format(false), '\n');
+          },
+          'Address format(true) returns a HTML line breaks': function (model) {
+            assert.include(model.format(true), '<br />');
+          },
+          'Address formatShort returns a string': function (model) {
+            assert.isString(model.formatShort());
+          },
+          // TODO - figure out how this works.
+          'Address useCount returns an object': function (model) {
+            assert.isObject(model.useCount());
+          },
           '-> UPDATE': {
             topic: function (model) {
               model.set(updateHash);
