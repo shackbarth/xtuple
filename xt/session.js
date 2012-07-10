@@ -210,7 +210,7 @@ white:true*/
 
       // if this is a valid session acquisition, go ahead
       // and store the properties
-      if (payload.code === 4) {
+      else if (payload.code === 4) {
         this.setDetails(payload.data);
 
         XT.getStartupManager().start();
