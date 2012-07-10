@@ -335,7 +335,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           return issue(XT.fatal("error polling cache", err.message, err.stack));
         }
         
-        ok = (XT.opts.datasource.sessionTimeout || 15) * 60000;
+        ok = (XT.options.datasource.sessionTimeout || 15) * 60000;
         now = XT.Session.timestamp();
         
         if (res && res.length > 0) {

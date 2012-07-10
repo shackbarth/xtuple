@@ -262,16 +262,18 @@ XT = {};
         process.exit(0);
       }
       task = queue.shift();
-      if (task && XT.typeOf(task) === XT.T_FUNCTION) {
+      if (task) {
         // TODO: come back and do the elaborate check if it
         // is taking to long test so that it won't hang if
         // a cleanup task fails
-        task();
+        task.once("isComplete", _.bind(this.cleanup, this));
+        task.exec();
       }
     },
     
-    addCleanupTask: function (task) {
+    addCleanupTask: function (task, context) {
       var queue = this.cleanupQueue || (this.cleanupQueue = []);
+      task = XT.CleanupTask.create({ task: task, context: context });
       queue.push(task);
     },
   
@@ -319,9 +321,10 @@ XT = {};
     }
   });
     
-  require('./proto');
-  require('./object');
-  require('./io');
-  require('./exception');
-  require('./filesystem');
+  require("./proto");
+  require("./object");
+  require("./io");
+  require("./exception");
+  require("./filesystem");
+  require("./ext/cleanup_task");
 }());

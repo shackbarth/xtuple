@@ -13,8 +13,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     init: function () {
       var schemaFiles = this.get("schemaFiles"), i, host, port;
 
-      host = XT.opts.cache.hostname || "localhost";
-      port = XT.opts.cache.port || 27017;
+      host = XT.options.cache.hostname || "localhost";
+      port = XT.options.cache.port || 27017;
       this.set("hostname", host);
       this.set("port", port);
 
@@ -30,7 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // catch SIGINT to close connection but don't
       // run it multiple times
-      process.once("SIGINT", _.bind(this.cleanup, this));
+      XT.addCleanupTask(_.bind(this.cleanup, this));
     },
 
     conString: function () {
@@ -63,13 +63,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }.property(),
 
     schemaFiles: function () {
+      var dir, schemaFiles;
       if (this._schemaFiles) {
         return this._schemaFiles;
       }
-      var dir = _path.join(XT.basePath, XT.opts.mongo.schemas);
-      var schemaFiles = this._schemaFiles = XT.directoryFiles(dir, { extension: "js", fullPath: true });
+      dir = _path.join(XT.basePath, "node_modules", "xt", "database", "mongo_schemas");
+      schemaFiles = this._schemaFiles = XT.directoryFiles(dir, { extension: "js", fullPath: true });
       return schemaFiles;
     }.property()
+  });
+  
+  XT.run(function () {
+    XT.cache = XT.Cache.create();
+    XT.cachePollingInterval = setInterval(XT.Session.pollCache, 60000);
+    XT.addCleanupTask(function () {
+      clearInterval(XT.cachePollingInterval);
+    });
   });
   
 }());

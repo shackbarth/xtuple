@@ -5,6 +5,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
   
+  var _ = XT._;
+  
   XT.database = XT.Object.create({
   
     conString: function (options) {
@@ -52,6 +54,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       });
     },
   
+    cleanup: function () {
+      XT.log("Waiting for database pool to drain");
+      if (XT.pg) XT.pg.end();
+      this.emit(this.cleanupCompletedEvent);
+    },
+  
+    cleanupCompletedEvent: "cleanupCompleted",
+  
     className: "XT.database"
   });
   
@@ -63,4 +73,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   require('./cache');
   require("./ext/mongoose_schema");
+  
+  XT.addCleanupTask(_.bind(XT.db.cleanup, XT.db), XT.db);
 }());

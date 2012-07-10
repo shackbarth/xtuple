@@ -144,7 +144,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         server = servers[name];
         if (server) server.close();
       }
-      XT.cleanup();
     }
   });
   
