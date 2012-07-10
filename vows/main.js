@@ -35,9 +35,9 @@ require("tinycolor"); /*tinycolor*/
     .option("--spec", "Use the spec reporter")
     .option("-t, --tests [tests]", "Specify space-separated string of test names", tests, ["*"])
     .option("-u, --user [user]", "The database user", "admin")
-    .option("-p, --password [password]", "The database user's password", "Assemble!Aurora")
-    .option("-o, --organization [organization]", "The database user's organization", "aurora")
-    .option("-h, --host [host]", "The datasource hostname/url/ip", "asteroidbelt.xtuple.com")
+    .option("-p, --password [password]", "The database user's password", "admin")
+    .option("-o, --organization [organization]", "The database user's organization", "production")
+    .option("-h, --host [host]", "The datasource hostname/url/ip", "purpletie.xtuple.com")
     .option("-P, --port [port]", "The datasource port", 9000, parseInt)
     .parse(process.argv);
   if (program.spec) {
