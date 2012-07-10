@@ -15,3 +15,4 @@ sandbox.html
 lib/*
 \.sass-cache
 package.js
+/.sass-cache/
