@@ -15,7 +15,7 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", components: [
-          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
+          {kind: "onyx.Button", content: "_dashboard".loc(), ontap: "showDashboard"},
           {name: "leftLabel"}
         ]},
         {name: "menu", kind: "List", fit: true, touch: true,
@@ -85,7 +85,7 @@ trailing:true white:true*/
         this.setList(0);
       }
     },
-    showDashBoard: function () {
+    showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
     },
     showSetup: function () {
