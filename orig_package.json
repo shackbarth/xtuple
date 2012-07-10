@@ -1,0 +1,25 @@
+{
+    "name": "xt"
+  , "version": "0.1.1"
+  , "description": "Framework for xTuple Postbooks series applications"
+  , "homepage": "http://github.com/xtuple/datasource"
+  , "keywords": ["xtuple", "xt", "framework", "postbooks"]
+  , "author": "W. Cole Davis <cole@xtuple.com>"
+  , "repository": {
+        "type": "git"
+      , "url": "https://github.com/xtuple/datasource.git"
+    }
+  , "dependencies": {
+        "colors": "0.6.x"
+      , "connect": "2.x"
+      , "pg": "0.6.x"
+      , "redis": "0.7.x"
+      , "socket.io": "0.9.x"
+      , "underscore": "1.3.x"
+      , "watch": "0.5.x"
+      , "diveSync": "0.2.x"
+      , "mongoose": ""
+    }
+  , "main": "xt"
+  , "engines": { "node": ">= 0.6.x" }
+}

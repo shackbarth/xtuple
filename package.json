@@ -1,0 +1,24 @@
+{
+  "author": "W. Cole Davis <cole@xtuple.com>",
+  "name": "xt",
+  "description": "Node.js framework for xTuple",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuple/node-xt.git"
+  },
+  "dependencies": {
+    "colors":"",
+    "connect":"",
+    "pg":"",
+    "socket.io":"",
+    "underscore":"",
+    "mongoose":""
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "main": "xt"
+}
