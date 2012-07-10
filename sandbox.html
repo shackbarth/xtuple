@@ -20,10 +20,7 @@
 			width: 320px;
 			box-shadow: -4px -4px 4px rgba(0,0,0,0.3);
 			background: #555;
-		}
-
-		.left {
-			color: white;
+            font-size: 4px;
 		}
 
 		.item {
@@ -33,40 +30,7 @@
 			background-color: #333333;
 		}
 
-		.item.onyx-selected {
-			background-color: #226B9A;
-		}
 
-		.panels {
-			min-height: 320px;
-			min-width: 320px;
-		}
-
-		.panels > * {
-			border: 2px solid #333;
-		}
-
-		.wide > * {
-			min-width: 33%;
-		}
-
-		.collapsible > * {
-			min-width: 250px;
-		}
-
-		.spiral > * {
-			min-width:150px;
-			min-height:150px;
-			max-height:150px;
-			max-width:150px;
-		}
-
-		.grid > * {
-			min-width:300px;
-			min-height:300px;
-			max-height:300px;
-			max-width:300px;
-		}
 	</style>
     <link rel="stylesheet" type="text/css" href="stylesheets/screen.css" />
   </head>
@@ -75,6 +39,7 @@
 
 
   XT.app = new XV.Workspace();
+  XT.app.$.workspacePanels.setModelType("Project");
   XT.app.renderInto(document.body);
   </script>
   </body>

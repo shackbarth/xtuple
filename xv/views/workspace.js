@@ -6,57 +6,59 @@ trailing:true white:true*/
 (function () {
 
   var XV = XV || {};
-  XV.WorkspacePanelDescriptor = [
-    {
-      title: "Project Info",
-      location: "top",
-      fields: [
-        { label: "Number", fieldName: "projectNumber", placeholder: "Enter project number" },
-        { label: "Name", fieldName: "projectName", placeholder: "Enter project name" },
-        { label: "Description", fieldName: "projectDescription", placeholder: "Enter project description" }
-      ]
-    },
-    {
-      title: "Schedule",
-      location: "top",
-      fields: [
-        { label: "Owner", fieldName: "projectOwner", placeholder: "This will have to be a dropdown" },
-        { label: "Assigned To", fieldName: "projectAssignedTo", placeholder: "This will have to be a dropdown" },
-        { label: "Due", fieldName: "projectDateDue", fieldType: "DateWidget", placeholder: "This will have to be a dateselect" }
-      ]
-    },
-    {
-      title: "Billing",
-      location: "top",
-      fields: [
-        { label: "Customer", fieldName: "projectCustomer", placeholder: "The customer to be billed" },
-        { label: "Rate", fieldName: "projectRate", placeholder: "Enter project rate" },
-      ]
-    },
-    {
-      title: "Tasks",
-      location: "bottom",
-      boxType: "Grid",
-      fields: [
-        { label: "Number", width: "100" },
-        { label: "Name", width: "100" },
-        { label: "Description", width: "120" },
-        { label: "Hours Balance", width: "120" },
-        { label: "Expense Balance", width: "120" }
-      ]
-    },
-    {
-      title: "Comments",
-      location: "bottom",
-      boxType: "Grid",
-      fields: [
-        { label: "Date", width: "120" },
-        { label: "Type", width: "80" },
-        { label: "User", width: "80" },
-        { label: "Comment", width: "300" }
-      ]
-    }
-  ];
+  XV.WorkspacePanelDescriptor = {
+    Project: // the key is uppercase because the model name is uppercase
+      [{
+        title: "Project Info",
+        location: "top",
+        fields: [
+          { label: "Number", fieldName: "number", placeholder: "Enter project number" },
+          { label: "Name", fieldName: "name", placeholder: "Enter project name" },
+          { label: "Notes", fieldName: "notes", placeholder: "Enter project notes" }
+        ]
+      },
+      {
+        title: "Schedule",
+        location: "top",
+        fields: [
+          { label: "Owner", fieldName: "owner.propername", placeholder: "This will have to be a dropdown" },
+          { label: "Assigned To", fieldName: "assignedTo.propername", placeholder: "This will have to be a dropdown" },
+          { label: "Due", fieldName: "dueDate", fieldType: "DateWidget" }
+        ]
+      },
+      //{
+        //title: "Billing",
+        //location: "top",
+        //fields: [
+        //  { label: "Customer", fieldName: "projectCustomer", placeholder: "The customer to be billed" },
+        //  { label: "Rate", fieldName: "projectRate", placeholder: "Enter project rate" },
+        //]
+      //},
+      {
+        title: "Tasks",
+        location: "bottom",
+        boxType: "Grid",
+        fields: [
+          { label: "Number", fieldName: "tasks.number", width: "100" },
+          { label: "Name", fieldName: "tasks.name", width: "100" },
+          { label: "Notes", fieldName: "tasks.notes", width: "120" },
+          { label: "Actual Hours", fieldName: "tasks.actualHours", width: "120" },
+          { label: "Actual Expenses", fieldName: "tasks.actualExpenses", width: "120" }
+        ]
+      }/*,
+      {
+        title: "Comments",
+        location: "bottom",
+        boxType: "Grid",
+        fields: [
+          { label: "Date", width: "120" },
+          { label: "Type", width: "80" },
+          { label: "User", width: "80" },
+          { label: "Comment", width: "300" }
+        ]
+      }*/
+    ]
+  };
 
 
   enyo.kind({
@@ -66,22 +68,24 @@ trailing:true white:true*/
       wrap: false,
       classes: "panels enyo-border-box",
       bgcolors: ["red", "green", "blue", "indigo", "violet"],
+      published: {
+        modelType: ""
+      },
       components: [
         { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
         { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
       ],
-      create: function () {
-        this.inherited(arguments);
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor.length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[iBox];
+      modelTypeChanged: function () {
+        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
+          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
           if (boxDesc.boxType === 'Grid') {
 
             var box = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
-                style: "height: 200px; width: 700px; margin-right: 5px;",
+                style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
                 components: [
-                  { kind: "onyx.GroupboxHeader", content: boxDesc.title}
+                  { kind: "onyx.GroupboxHeader", content: boxDesc.title }
                 ]
               });
 
@@ -105,7 +109,7 @@ trailing:true white:true*/
                 this.createComponent({
                   kind: "onyx.Input",
                   container: boxColumn,
-                  name: fieldDesc.fieldName,
+                  name: fieldDesc.fieldName + "_" + iRow,
                   placeholder: fieldDesc.label,
                   style: "width: " + fieldDesc.width + "px; "
                 });
@@ -127,7 +131,7 @@ trailing:true white:true*/
               var fieldDesc = boxDesc.fields[iField];
               var field = this.createComponent({
                 kind: "onyx.InputDecorator",
-                style: "",
+                style: "font-size: 12px",
                 container: box,
                 components: [
                   { tag: "b", content: fieldDesc.label + ": ", style: "padding-right: 10px;"}
@@ -138,6 +142,7 @@ trailing:true white:true*/
                 this.createComponent(
                   { kind: fieldDesc.fieldType,
                     style: "",
+                    name: fieldDesc.fieldName,
                     container: field
                   }
                 );
@@ -155,6 +160,7 @@ trailing:true white:true*/
             }
           }
         }
+        this.render();
       },
       addControl: function (inControl) {
         this.inherited(arguments);
@@ -167,8 +173,8 @@ trailing:true white:true*/
 
         var topIndex = 0;
         var bottomIndex = 0;
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor.length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[iBox];
+        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
+          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
           if (boxDesc.title === name && boxDesc.location === 'top') {
             this.$.topPanel.setIndex(topIndex);
             return;
@@ -181,6 +187,50 @@ trailing:true white:true*/
             bottomIndex++;
           }
         }
+      },
+      updateFields: function (model) {
+        // TODO: this is more of a reset-all than an update
+
+        //
+        // Look through the entire specification...
+        //
+        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
+          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
+          for (var iField = 0; iField < boxDesc.fields.length; iField++) {
+            var fieldDesc = boxDesc.fields[iField];
+            var fieldName = boxDesc.fields[iField].fieldName;
+            if(fieldName) {
+              console.log("field is " + fieldName);
+
+              //
+              // Find the corresponding field in the model
+              //
+              var applicableModel = model;
+              var fieldNameDetail = fieldName;
+              while(fieldNameDetail.indexOf('\.') >= 0) {
+                var prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('\.'));
+                var suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('\.') + 1);
+                applicableModel = applicableModel.get(prefix);
+                fieldNameDetail = suffix;
+              }
+
+              if(applicableModel && applicableModel.length) {
+                // this is a collection. Fill in the grid.
+                for(var iList = 0; iList < applicableModel.length; iList++) {
+                  this.$[fieldName + "_" + iList].setValue(applicableModel.models[iList].get(fieldNameDetail));
+                }
+
+
+              } else if(applicableModel && applicableModel.get(fieldNameDetail)) {
+                //
+                // Update the view field with the model value
+                //
+                //console.log("value is " + applicableModel.get(fieldNameDetail));
+                this.$[fieldName].setValue(applicableModel.get(fieldNameDetail));
+              }
+            }
+          }
+        }
       }
     });
 
@@ -191,6 +241,8 @@ trailing:true white:true*/
       realtimeFit: true,
       arrangerKind: "CollapsingArranger",
       published: {
+        modelType: "Project", // TODO: this has to be the empty string
+        // TODO: wait to load the menu items until we know the model type for real
         model: null
       },
       components: [
@@ -208,7 +260,7 @@ trailing:true white:true*/
       ],
       create: function () {
         this.inherited(arguments);
-        this.$.list.setCount(XV.WorkspacePanelDescriptor.length);
+        this.$.list.setCount(XV.WorkspacePanelDescriptor[this.getModelType()].length);
       },
       rendered: function () {
         this.inherited(arguments);
@@ -216,12 +268,52 @@ trailing:true white:true*/
       },
       // list
       setupItem: function (inSender, inEvent) {
-        this.$.item.setContent(XV.WorkspacePanelDescriptor[inEvent.index].title);
+        this.$.item.setContent(XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title);
         this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
       },
       itemTap: function (inSender, inEvent) {
-        var p = XV.WorkspacePanelDescriptor[inEvent.index];
+        var p = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
+      },
+      setOptions: function (options) {
+        //
+        // Determine the model that will back this view
+        //
+        var modelType = options.get("type");
+        // Magic/convention: trip off the word Info to get the heavyweight class
+        if(modelType.substring(modelType.length - 4) === "Info") {
+          modelType = modelType.substring(0, modelType.length - 4);
+        }
+        var id = options.get("guid");
+
+        //
+        // Setting the model type also renders the workspace. We really can't do
+        // that until we know the model type.
+        //
+        this.$.workspacePanels.setModelType(modelType);
+
+        //console.log("Workspace is fetching " + modelType + " " + id);
+
+        //
+        // Set up a listener for changes in the model
+        //
+        var Klass = Backbone.Relational.store.getObjectByName("XM." + modelType);
+        var m = new Klass();
+        m.on("change", enyo.bind(this, "modelDidChange"));
+
+
+        //
+        // Fetch the model
+        //
+        m.fetch({id: id});
+        console.log("Workspace is fetching " + modelType + " " + id);
+
+
+      },
+      modelDidChange: function (model, value, options) {
+        //console.log("Model changed: " + JSON.stringify(model.toJSON()));
+        this.$.workspacePanels.updateFields(model);
       }
+
     });
 }());

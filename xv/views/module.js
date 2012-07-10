@@ -64,7 +64,7 @@ trailing:true white:true*/
     setList: function (index) {
       if (this.firstTime) { return; }
       var list = this.lists[index].name;
-      
+
       // Select menu
       if (!this.$.menu.isSelected(index)) {
         this.$.menu.select(index);
@@ -95,23 +95,20 @@ trailing:true white:true*/
       // todo
     },
     doInfoListRowTapped: function (inSender, inEvent) {
+      //
+      // Determine which item was tapped
+      //
       var listIndex = this.$.lists.index;
       var tappedList = this.$.lists.children[listIndex];
 
       var itemIndex = inEvent.index;
       var tappedModel = tappedList.collection.models[itemIndex];
-      XT.log("model was tapped: " + JSON.stringify(tappedModel.toJSON()));
-      // TODO: send the tapped model to the workspace panel
-      // something like this:
-      this.createComponent({
-        kind: "Control",
-        container: this.$.lists,
-        components: [
-          { kind: "XV.Workspace", model: tappedModel }
-        ]
-      });
-      this.$.menu.setCount(this.lists.length);
-      this.$.lists.setIndex(this.lists.length - 1);
+
+      //
+      // Bubble up an event so that we can transition to workspace view.
+      // Add the tapped model as a payload in the event
+      //
+      this.bubble("workspace", {eventName: "workspace", options: tappedModel });
     }
 
   });
