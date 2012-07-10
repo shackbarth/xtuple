@@ -103,7 +103,7 @@
                 }
               };
             // TODO - Something's broken with XM.Address.findExisting.
-            assert.isObject(model.findExisting(createHash.line1, createHash.line2, createHash.line3, 'test', createHash.state, createHash.postalCode, createHash.country, options));
+            assert.isObject(model.findExisting(createHash.line1, createHash.line2, createHash.line3, createHash.city, createHash.state, createHash.postalCode, createHash.country, options));
           },
           '-> UPDATE': {
             topic: function (model) {
