@@ -18,23 +18,30 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", components: [
-          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
+          {kind: "onyx.Button", content: "_dashboard".loc(), ontap: "showDashboard"},
           {name: "leftLabel"}
         ]},
-        {name: "menu", kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
+        {name: "menu", kind: "List", fit: true, touch: true,
+           onSetupItem: "setupItem", components: [
           {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
         ]}
       ]},
       {kind: "FittableRows", components: [
-        {kind: "FittableColumns", noStretch: true, classes: "onyx-toolbar onyx-toolbar-inline", components: [
+        {kind: "FittableColumns", noStretch: true,
+           classes: "onyx-toolbar onyx-toolbar-inline", components: [
           {kind: "onyx.Grabber"},
-          {kind: "Scroller", thumb: false, fit: true, touch: true, vertical: "hidden", style: "margin: 0;", components: [
-            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"}
+          {kind: "Scroller", thumb: false, fit: true, touch: true,
+             vertical: "hidden", style: "margin: 0;", components: [
+            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
+            {name: "rightLabel", style: "text-align: center"}
           ]}
         ]},
-        {name: "lists", kind: "Panels", arrangerKind: "CardArranger", fit: true, components: []}
+        {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
+           margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
       ]}
     ],
+    firstTime: true,
+    fetched: {},
     // menu
     setupItem: function (inSender, inEvent) {
       var list = this.lists[inEvent.index].name;
@@ -52,23 +59,36 @@ trailing:true white:true*/
       this.$.menu.setCount(this.lists.length);
     },
     itemTap: function (inSender, inEvent) {
-      var list = this.lists[inEvent.index].name;
-      if (!this.fetched[list]) { this.$.lists.$[list].fetch(); }
-      this.$.lists.setIndex(inEvent.index);
-      this.fetched[list] = true;
+      this.setList(inEvent.index);
     },
-    firstTime: true,
-    fetched: {},
-    didBecomeActive: function () {
-      var list;
-      if (this.firstTime) {
-        this.$.menu.select(0);
-        list = this.lists[0].name;
+    setList: function (index) {
+      if (this.firstTime) { return; }
+      var list = this.lists[index].name;
+      
+      // Select menu
+      if (!this.$.menu.isSelected(index)) {
+        this.$.menu.select(index);
+      }
+      // Select list
+      if (this.$.lists.getIndex() !== index) {
+        this.$.lists.setIndex(index);
+      }
+      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
+      if (!this.fetched[list]) {
         this.$.lists.$[list].fetch();
         this.fetched[list] = true;
       }
     },
-    showDashBoard: function () {
+    didFinishTransition: function (inSender, inEvent) {
+      this.setList(inSender.index);
+    },
+    didBecomeActive: function () {
+      if (this.firstTime) {
+        this.firstTime = false;
+        this.setList(0);
+      }
+    },
+    showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
     },
     showSetup: function () {
