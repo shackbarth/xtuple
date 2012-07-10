@@ -1,0 +1,22 @@
+{
+  "author": "W. Cole Davis <cole@xtuple.com>",
+  "name": "datasource",
+  "description": "",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuple/datasource.git"
+  },
+  "dependencies": {
+    "xt": "git://github.com/clinuz/node-xt.git#master"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "main": "xt",
+  "scripts": {
+    "test": "test/test.js"
+  }
+}
