@@ -75,9 +75,10 @@ XVOWS.create = function (recordType, vows) {
         timeoutId,
         Klass = Backbone.Relational.store.getObjectByName(recordType),
         newModel = new Klass(),
+        auto_regex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER,
         callback = function (model, value) {
-          if (model instanceof XM.Document && model.numberPolicy === 'A') {
-            // Check that the AUTO_NUMBER property has been set.
+          if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
+            // Check that the AUTO...NUMBER property has been set.
             if (typeof model.get(model.documentKey) !== 'undefined') {
               clearTimeout(timeoutId);
               model.off('change:' + model.documentKey, callback);
@@ -92,8 +93,8 @@ XVOWS.create = function (recordType, vows) {
         };
 
       newModel.on('change:guid', callback);
-      // Add an event handler when using a model with AUTO_NUMBER.
-      if (newModel instanceof XM.Document && newModel.numberPolicy === 'A') {
+      // Add an event handler when using a model with an AUTO...NUMBER.
+      if (newModel instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
         newModel.on('change:' + newModel.documentKey, callback);
       }
       newModel.initialize(null, {isNew: true});
