@@ -73,36 +73,34 @@ XVOWS.create = function (recordType, vows) {
     topic: function (model) {
       var that = this,
         timeoutId,
-        Klass = Backbone.Relational.store.getObjectByName(recordType);
-
-      model = new Klass();
-
-      var callback = function (model, value) {
-        if (model instanceof XM.Document && model.numberPolicy === 'A') {
-          // Check that the AUTO_NUMBER property has been set.
-          if (typeof model.get(model.documentKey) !== 'undefined') {
+        Klass = Backbone.Relational.store.getObjectByName(recordType),
+        newModel = new Klass(),
+        callback = function (model, value) {
+          if (model instanceof XM.Document && model.numberPolicy === 'A') {
+            // Check that the AUTO_NUMBER property has been set.
+            if (typeof model.get(model.documentKey) !== 'undefined') {
+              clearTimeout(timeoutId);
+              model.off('change:' + model.documentKey, callback);
+              model.off('change:guid', callback);
+              that.callback(null, model);
+            }
+          } else {
             clearTimeout(timeoutId);
-            model.off('change:' + model.documentKey, callback);
             model.off('change:guid', callback);
             that.callback(null, model);
           }
-        } else {
-          clearTimeout(timeoutId);
-          model.off('change:guid', callback);
-          that.callback(null, model);
-        }
-      };
+        };
 
-      model.on('change:guid', callback);
+      newModel.on('change:guid', callback);
       // Add an event handler when using a model with AUTO_NUMBER.
-      if (model instanceof XM.Document && model.numberPolicy === 'A') {
-        model.on('change:' + model.documentKey, callback);
+      if (newModel instanceof XM.Document && newModel.numberPolicy === 'A') {
+        newModel.on('change:' + newModel.documentKey, callback);
       }
-      model.initialize(null, {isNew: true});
+      newModel.initialize(null, {isNew: true});
 
       // If we don't hear back, keep going
       timeoutId = setTimeout(function () {
-        that.callback(null, model);
+        that.callback(null, newModel);
       }, 5000); // five seconds
     },
     'Status is READY_NEW': function (model) {
