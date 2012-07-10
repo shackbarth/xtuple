@@ -94,7 +94,7 @@ XVOWS.create = function (recordType, vows) {
 
       newModel.on('change:guid', callback);
       // Add an event handler when using a model with an AUTO...NUMBER.
-      if (newModel instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
+      if (newModel instanceof XM.Document && newModel.numberPolicy.match(auto_regex)) {
         newModel.on('change:' + newModel.documentKey, callback);
       }
       newModel.initialize(null, {isNew: true});
