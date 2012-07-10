@@ -94,6 +94,11 @@ trailing:true white:true*/
     showSetup: function () {
       // todo
     },
+    /**
+     * Catches the tap event from the {XV.InfoListRow}
+     * and repackages it into a carousel event to be
+     * caught further up.
+    */
     doInfoListRowTapped: function (inSender, inEvent) {
       //
       // Determine which item was tapped
@@ -109,6 +114,7 @@ trailing:true white:true*/
       // Add the tapped model as a payload in the event
       //
       this.bubble("workspace", {eventName: "workspace", options: tappedModel });
+      return true;
     }
 
   });

@@ -1,65 +1,9 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, enyo:true*/
+/*global XV:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-
-  var XV = XV || {};
-  XV.WorkspacePanelDescriptor = {
-    Project: // the key is uppercase because the model name is uppercase
-      [{
-        title: "Project Info",
-        location: "top",
-        fields: [
-          { label: "Number", fieldName: "number", placeholder: "Enter project number" },
-          { label: "Name", fieldName: "name", placeholder: "Enter project name" },
-          { label: "Notes", fieldName: "notes", placeholder: "Enter project notes" }
-        ]
-      },
-      {
-        title: "Schedule",
-        location: "top",
-        fields: [
-          { label: "Owner", fieldName: "owner.propername", placeholder: "This will have to be a dropdown" },
-          { label: "Assigned To", fieldName: "assignedTo.propername", placeholder: "This will have to be a dropdown" },
-          { label: "Due", fieldName: "dueDate", fieldType: "DateWidget" }
-        ]
-      },
-      //{
-        //title: "Billing",
-        //location: "top",
-        //fields: [
-        //  { label: "Customer", fieldName: "projectCustomer", placeholder: "The customer to be billed" },
-        //  { label: "Rate", fieldName: "projectRate", placeholder: "Enter project rate" },
-        //]
-      //},
-      {
-        title: "Tasks",
-        location: "bottom",
-        boxType: "Grid",
-        fields: [
-          { label: "Number", fieldName: "tasks.number", width: "100" },
-          { label: "Name", fieldName: "tasks.name", width: "100" },
-          { label: "Notes", fieldName: "tasks.notes", width: "120" },
-          { label: "Actual Hours", fieldName: "tasks.actualHours", width: "120" },
-          { label: "Actual Expenses", fieldName: "tasks.actualExpenses", width: "120" }
-        ]
-      }/*,
-      {
-        title: "Comments",
-        location: "bottom",
-        boxType: "Grid",
-        fields: [
-          { label: "Date", width: "120" },
-          { label: "Type", width: "80" },
-          { label: "User", width: "80" },
-          { label: "Comment", width: "300" }
-        ]
-      }*/
-    ]
-  };
-
 
   enyo.kind({
       name: "XV.WorkspacePanels",
@@ -75,12 +19,23 @@ trailing:true white:true*/
         { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
         { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
       ],
+      /**
+       * Set the layout of the workspace as soon as we know what the model is.
+       * The layout is determined by the XV.WorkspacePanelDescriptor variable
+       * in XT/foundation.js. This function is very much a work in progress. It
+       * will have to accommodate every kind of input type.
+       *
+       */
       modelTypeChanged: function () {
+        var box, boxContent, iField, iRow, fieldDesc, field, boxColumn;
         for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
           var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
           if (boxDesc.boxType === 'Grid') {
-
-            var box = this.createComponent({
+            /**
+             * Grids are a special case that must be rendered per their own logic.
+             * All one-to-many relationships will be rendered as a grid (?)
+             */
+            box = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
                 style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
@@ -89,23 +44,28 @@ trailing:true white:true*/
                 ]
               });
 
-            var boxContent = this.createComponent({
+
+            /**
+             * I'm not crazy about this solution. I set the columns first, and then the rows from
+             * there. This lets the column spacing be consistent between the labels and the fields,
+             * but the tab order is not good. Some sort of grid would be better.
+             */
+            boxContent = this.createComponent({
                 kind: "onyx.Groupbox",
                 classes: "onyx-toolbar-inline",
                 container: box,
                 style: "background-color: white;"
               });
-
-            for (var iField = 0; iField < boxDesc.fields.length; iField++) {
-              var fieldDesc = boxDesc.fields[iField];
-              var boxColumn = this.createComponent({
+            for (iField = 0; iField < boxDesc.fields.length; iField++) {
+              fieldDesc = boxDesc.fields[iField];
+              boxColumn = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxContent,
                 style: "width: " + fieldDesc.width + "px; "
               });
 
               this.createComponent({ container: boxColumn, content: fieldDesc.label, style: "width: " + fieldDesc.width + "px;" });
-              for (var iRow = 0; iRow < 8; iRow++) {
+              for (iRow = 0; iRow < 8; iRow++) {
                 this.createComponent({
                   kind: "onyx.Input",
                   container: boxColumn,
@@ -118,8 +78,10 @@ trailing:true white:true*/
             }
 
           } else {
-
-            var box = this.createComponent({
+            /**
+             * General case: this box is not a grid, it's just a list of labeled fields
+             */
+            box = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
                 style: "height: 250px; width: 400px; background-color: AntiqueWhite; margin-right: 5px;",
@@ -127,9 +89,9 @@ trailing:true white:true*/
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
                 ]
               });
-            for (var iField = 0; iField < boxDesc.fields.length; iField++) {
-              var fieldDesc = boxDesc.fields[iField];
-              var field = this.createComponent({
+            for (iField = 0; iField < boxDesc.fields.length; iField++) {
+              fieldDesc = boxDesc.fields[iField];
+              field = this.createComponent({
                 kind: "onyx.InputDecorator",
                 style: "font-size: 12px",
                 container: box,
@@ -139,6 +101,10 @@ trailing:true white:true*/
               });
 
               if (fieldDesc.fieldType) {
+                /**
+                 * Special case: the field descriptor defines a fieldType, such as DateWidget.
+                 * Use that fieldType.
+                 */
                 this.createComponent(
                   { kind: fieldDesc.fieldType,
                     style: "",
@@ -147,6 +113,10 @@ trailing:true white:true*/
                   }
                 );
               } else {
+                /**
+                 * General case: the field descriptor does not define a fieldType, so it's just
+                 * an input field
+                 */
                 this.createComponent(
                   {
                     kind: "onyx.Input",
@@ -167,9 +137,14 @@ trailing:true white:true*/
         var i = this.indexOfControl(inControl);
         inControl.setContent(i);
       },
+      /**
+       * Scrolls the display to the requested box.
+       * @Param {String} name The title of the box to scroll to
+       */
       gotoBox: function (name) {
         // fun! we have to find if the box is on the top or bottom,
-        // and if so, which index it is
+        // and if so, which index it is. Once we know if it's in the
+        // top or the bottom, and which index, it's easy to jump there.
 
         var topIndex = 0;
         var bottomIndex = 0;
@@ -199,29 +174,29 @@ trailing:true white:true*/
           for (var iField = 0; iField < boxDesc.fields.length; iField++) {
             var fieldDesc = boxDesc.fields[iField];
             var fieldName = boxDesc.fields[iField].fieldName;
-            if(fieldName) {
-              console.log("field is " + fieldName);
+            if (fieldName) {
+              XT.log("field is " + fieldName);
 
               //
               // Find the corresponding field in the model
               //
               var applicableModel = model;
               var fieldNameDetail = fieldName;
-              while(fieldNameDetail.indexOf('\.') >= 0) {
-                var prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('\.'));
-                var suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('\.') + 1);
+              while (fieldNameDetail.indexOf('.') >= 0) {
+                var prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('.'));
+                var suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('.') + 1);
                 applicableModel = applicableModel.get(prefix);
                 fieldNameDetail = suffix;
               }
 
-              if(applicableModel && applicableModel.length) {
+              if (applicableModel && applicableModel.length) {
                 // this is a collection. Fill in the grid.
-                for(var iList = 0; iList < applicableModel.length; iList++) {
+                for (var iList = 0; iList < applicableModel.length; iList++) {
                   this.$[fieldName + "_" + iList].setValue(applicableModel.models[iList].get(fieldNameDetail));
                 }
 
 
-              } else if(applicableModel && applicableModel.get(fieldNameDetail)) {
+              } else if (applicableModel && applicableModel.get(fieldNameDetail)) {
                 //
                 // Update the view field with the model value
                 //
@@ -281,7 +256,7 @@ trailing:true white:true*/
         //
         var modelType = options.get("type");
         // Magic/convention: trip off the word Info to get the heavyweight class
-        if(modelType.substring(modelType.length - 4) === "Info") {
+        if (modelType.substring(modelType.length - 4) === "Info") {
           modelType = modelType.substring(0, modelType.length - 4);
         }
         var id = options.get("guid");
@@ -306,7 +281,7 @@ trailing:true white:true*/
         // Fetch the model
         //
         m.fetch({id: id});
-        console.log("Workspace is fetching " + modelType + " " + id);
+        XT.log("Workspace is fetching " + modelType + " " + id);
 
 
       },
