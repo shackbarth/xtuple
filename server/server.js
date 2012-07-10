@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global XT:true, issue:true */
 
 (function () {
   "use strict";
@@ -52,7 +52,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     start: function () {
       var s = this,
           p = this.get('port'),
-          r = this.get('router'),
           w = this.get('useWebSocket');
       try {
   
@@ -93,22 +92,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return this;
     },
 
-    setSocketHandler: function(namespace, event, callback, context) {
+    setSocketHandler: function (namespace, event, callback, context) {
       var io = this._io;
       callback = context? _.bind(callback, context): callback;
-      io.of(namespace).on(event, function(socket) {
+      io.of(namespace).on(event, function (socket) {
         callback(socket);
       });
     },
 
-    socketsFor: function(namespace) {
+    socketsFor: function (namespace) {
       var io = this._io,
           ns = io.namespaces[namespace];
-      if(ns && ns.sockets) return ns.sockets;
+      if (ns && ns.sockets) return ns.sockets;
     },
 
-    close: function() {
-      if(this.server) {
+    close: function () {
+      if (this.server) {
         XT.log("Server: '%@' shutting down.".f(this.get('name')));
         this.server.close();
       }
@@ -124,27 +123,30 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     activeServers: {},
 
-    registerServer: function(server) {
+    registerServer: function (server) {
       var name = server.get('name'),
           servers = this.activeServers;
-      if(servers[name]) {
-        issue(XT.warning("Registering server but under unique name "
-          + "because a server by that name already existed (%@ => %@)".f(
+      if (servers[name]) {
+        issue(XT.warning("Registering server but under unique name " +
+          "because a server by that name already existed (%@ => %@)".f(
           name, server.get('uid'))));
-        name = server.get('uid'); 
+        name = server.get('uid');
       }
       this.activeServers[name] = server;
     },
 
-    closeAll: function() {
+    closeAll: function () {
       XT.log("Shutting down all active servers.");
       var servers = this.activeServers,
           names = Object.keys(servers), i, name, server;
-      for(i=0; i<names.length; ++i) {
+      for (i = 0; i < names.length; ++i) {
         name = names[i];
         server = servers[name];
-        if(server) server.close();
+        if (server) server.close();
       }
+      XT.cleanup();
     }
   });
+  
+  XT.addCleanupTask(_.bind(XT.Server.closeAll, XT.Server));
 }());

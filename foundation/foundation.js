@@ -23,8 +23,6 @@ XT = {};
   
   XT.connect      = require("connect");
   XT.pg           = require("pg").native;
-  XT.watch        = require("watch");
-  XT.dive         = require("diveSync");
   XT.mongoose     = require("mongoose");
   
   XT.$P = function () { return this; };
@@ -135,8 +133,6 @@ XT = {};
     T_ARRAY:      'array',
     T_REGEX:      'regex',
     T_ERROR:      'error',
-    
-    version: '0.1.1Alpha',
     
     typeOf: function (obj) {
       if (XT.none(obj)) {
@@ -296,7 +292,10 @@ XT = {};
     setup: function (options) {
       var name, option, prop, unused;
       if (XT.isSetup) return;
-      if (!options) return;
+      if (!options) {
+        this.isSetup = true;
+        return;
+      }
       unused = this.options = {};
       for (name in options) {
         if (!options.hasOwnProperty(name)) continue;

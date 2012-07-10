@@ -31,26 +31,28 @@ require('./foundation');
 (function () {
   "use strict";
   
+  var _ = XT._;
+  
   // the first method to run once the framework has been told it is
   // ready
   XT.run(function () {
     
-    if (XT.options.requireDatabase) require("./database");
-    if (XT.options.requireServer) require("./server");
+    if (XT.requireDatabase) require("./database");
+    if (XT.requireServer) require("./server");
     
     // special case where the desired output requires calling console directly
     XT.io.console(XT.StringBuffer.create({ color: 'blue', prefix: null }),
       "\n================================================" +
-      "\nXTUPLE NODE.JS SERVER FRAMEWORK ({version})".f({ version: XT.version }) +
+      "\nXTUPLE NODE.JS FRAMEWORK ({version})".f({ version: XT.version }) +
       "\n================================================" +
-      "\nThis server is highly experimental." +
+      "\nThis framework is highly experimental." +
       "\n\nPlease report bugs to the project git issue tracker and for blocking" +
       "\nissues please also report those via email to Cole Davis (cole@xtuple.com)\n"
     );
     
     // give any running process the opportunity to save state
     // or log as gracefully as possible
-    process.once('exit', XT.cleanup);
+    process.once('exit', _.bind(XT.cleanup, XT));
     
     process.once('SIGINT', function () {
       XT.io.console(XT.StringBuffer.create({ color: 'blue', prefix: null }),

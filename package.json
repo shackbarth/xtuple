@@ -20,5 +20,8 @@
   "engines": {
     "node": "*"
   },
-  "main": "xt"
+  "main": "xt",
+  "scripts": {
+    "test": "test/test.js"
+  }
 }
