@@ -3,7 +3,7 @@
   newcap:true, noarg:true, undef:true */
 /*jslint bitwise: true, nomen: true, indent:2 */
 /*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, assert:true */
+  clearTimeout:true, vows:true, assert:true, console:true */
 
 (function () {
   "use strict";
@@ -57,6 +57,9 @@
           'State is `Alabama`': function (model) {
             assert.equal(model.get('state'), createHash.state);
           },
+          'Postal Code is `12345`': function (model) {
+            assert.equal(model.get('postalCode'), createHash.postalCode);
+          },
           'Country is `United States`': function (model) {
             assert.equal(model.get('country'), createHash.country);
           },
@@ -74,7 +77,33 @@
           },
           // TODO - figure out how this works.
           'Address useCount returns an object': function (model) {
-            assert.isObject(model.useCount());
+            var that = this,
+              options = {
+                success: function (response) {
+                  XVOWS.console('Address count is ' + response);
+                  // TODO - Doesn't work.
+                  //that.callback(response);
+                },
+                error: function (response) {
+                  console.log('XM.Address.useCount failed.');
+                }
+              };
+            assert.isObject(model.useCount(options));
+          },
+          'Address findExisting returns an object': function (model) {
+            var that = this,
+              options = {
+                success: function (response) {
+                  XVOWS.console('Address found ');
+                  // TODO - Doesn't work.
+                  //that.callback(response);
+                },
+                error: function (response) {
+                  console.log('XM.Address.findExisting failed.');
+                }
+              };
+            // TODO - Something's broken with XM.Address.findExisting.
+            assert.isObject(model.findExisting(createHash.line1, createHash.line2, createHash.line3, 'test', createHash.state, createHash.postalCode, createHash.country, options));
           },
           '-> UPDATE': {
             topic: function (model) {
