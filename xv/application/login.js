@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, 
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XV:true, enyo:true*/
+/*global XT:true, XV:true, enyo:true, console:true*/
 
 (function () {
   
@@ -36,8 +36,10 @@ trailing:true white:true*/
       // temporary
       var form = XV.loginForm;
       form.$.username.setValue("admin");
-      form.$.password.setValue("Assemble!Aurora");
-      form.$.organization.setValue("aurora");
+      form.$.password.setValue("admin");
+      //form.$.password.setValue("Assemble!Aurora");
+      form.$.password.setValue("production");
+      //form.$.organization.setValue("aurora");
     }
   });
   
@@ -158,12 +160,12 @@ trailing:true white:true*/
     setupRow: function (inSender, inEvent) {
       var row = this.$.item;
       var idx = inEvent.index;
-      var data = XT.session.getAvailableSessions()[idx].sessionData;
+      var data = XT.session.getAvailableSessions()[idx];
 
-      var ts = XT.toReadableTimestamp(data.created);
+      //var ts = XT.toReadableTimestamp(data.created);
       row.$.username.setContent(data.username);
       row.$.organization.setContent(data.organization);
-      row.$.created.setContent(ts);
+      row.$.created.setContent(data.created);
       row.$.sid.setContent(data.sid);
     }
 
@@ -209,8 +211,15 @@ trailing:true white:true*/
         // we check to see if this was a row and if so handle
         // that instead
         if (owner.name === "item" || idx) {
-          XT.session.selectSession(idx, function () {
-            self.bubble("acquiredSession", {eventName: "acquiredSession"});
+          XT.session.selectSession(idx, function (payload) {
+            if (payload.isError) {
+              // temporary warning until this can be handled by the user
+              // or some mitigation is in place where this scenario cannot
+              // exist?
+              console.warn("could not retrieve selected session?");
+            } else {
+              self.bubble("acquiredSession", {eventName: "acquiredSession"});
+            }
           });
         }
       }
