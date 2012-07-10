@@ -1,4 +1,4 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, 
+/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
 /*global XT:true, enyo:true*/
@@ -10,6 +10,9 @@ trailing:true white:true*/
     kind: "Panels",
     label: "",
     classes: "app enyo-unselectable",
+    handlers: {
+      onInfoListRowTapped: "doInfoListRowTapped"
+    },
     realtimeFit: true,
     arrangerKind: "CollapsingArranger",
     components: [
@@ -70,6 +73,25 @@ trailing:true white:true*/
     },
     showSetup: function () {
       // todo
+    },
+    doInfoListRowTapped: function (inSender, inEvent) {
+      var listIndex = this.$.lists.index;
+      var tappedList = this.$.lists.children[listIndex];
+
+      var itemIndex = inEvent.index;
+      var tappedModel = tappedList.collection.models[itemIndex];
+      XT.log("model was tapped: " + JSON.stringify(tappedModel.toJSON()));
+      // TODO: send the tapped model to the workspace panel
+      // something like this:
+      this.createComponent({
+        kind: "Control",
+        container: this.$.lists,
+        components: [
+          { kind: "XV.Workspace", model: tappedModel }
+        ]
+      });
+      this.$.menu.setCount(this.lists.length);
+      this.$.lists.setIndex(this.lists.length - 1);
     }
 
   });

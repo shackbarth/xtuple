@@ -73,58 +73,6 @@
   <body>
   <script type="text/javascript">
 
-  var XV = XV || {};
-  XV.WorkspacePanelDescriptor = [
-    {
-      title: "Project Info",
-      location: "top",
-      fields: [
-        { label: "Number", fieldName: "projectNumber", placeholder: "Enter project number" },
-        { label: "Name", fieldName: "projectName", placeholder: "Enter project name" },
-        { label: "Description", fieldName: "projectDescription", placeholder: "Enter project description" }
-      ]
-    },
-    {
-      title: "Schedule",
-      location: "top",
-      fields: [
-        { label: "Owner", fieldName: "projectOwner", placeholder: "This will have to be a dropdown" },
-        { label: "Assigned To", fieldName: "projectAssignedTo", placeholder: "This will have to be a dropdown" },
-        { label: "Due", fieldName: "projectDateDue", fieldType: "DateWidget", placeholder: "This will have to be a dateselect" }
-      ]
-    },
-    {
-      title: "Billing",
-      location: "top",
-      fields: [
-        { label: "Customer", fieldName: "projectCustomer", placeholder: "The customer to be billed" },
-        { label: "Rate", fieldName: "projectRate", placeholder: "Enter project rate" },
-      ]
-    },
-    {
-      title: "Tasks",
-      location: "bottom",
-      boxType: "Grid",
-      fields: [
-        { label: "Number", width: "100" },
-        { label: "Name", width: "100" },
-        { label: "Description", width: "120" },
-        { label: "Hours Balance", width: "120" },
-        { label: "Expense Balance", width: "120" }
-      ]
-    },
-    {
-      title: "Comments",
-      location: "bottom",
-      boxType: "Grid",
-      fields: [
-        { label: "Date", width: "120" },
-        { label: "Type", width: "80" },
-        { label: "User", width: "80" },
-        { label: "Comment", width: "300" }
-      ]
-    }
-  ];
 
   XT.app = new XV.Workspace();
   XT.app.renderInto(document.body);
