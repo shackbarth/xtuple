@@ -18,6 +18,37 @@ body {}
   background-color: #999;
 }
 
+.app > * {
+	width: 320px;
+	box-shadow: -4px -4px 4px rgba(0,0,0,0.3);
+	background: #555;
+}
+
+.left {
+	color: white;			
+}
+
+.item {
+	position: relative;
+	border-bottom: 1px solid #0E0E0E;
+	padding: 16px 12px;
+	background-color: #333333;
+}
+
+.item.onyx-selected {
+	background-color: #226B9A;
+}
+
+.panels > * {
+	border: 2px solid #333;
+	font-size: 5em;
+	text-align: center;
+}
+
+.wide > * {
+	min-width: 50%;
+}
+
 /** DASHBOARD */
 
 .xt-app {
