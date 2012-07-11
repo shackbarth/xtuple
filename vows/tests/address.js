@@ -34,6 +34,11 @@
       'Last Error is null': function (model) {
         assert.isNull(model.lastError);
       },
+      '-> `useCount`': {
+        // TODO - Test useCount with existing address to see if it is > 0.
+
+        // XM.Address.useCount is tested below after the model is created.
+      },
       '-> `findExisting`': {
         topic: function () {
           var callback = this.callback,
@@ -53,6 +58,47 @@
         'Address found': function (response) {
           assert.isTrue(response > 0);
         }
+      },
+      '-> `format`': {
+        topic: function () {
+          return model;
+        },
+        'Last Error is null': function (model) {
+          assert.isNull(model.lastError);
+        },
+        '-> `format(strings, ..., false)`': {
+          topic: function () {
+            var response = XM.Address.format("Name", "Tremendous Toys Inc.", "101 Toys Place", "",
+              "Walnut Hills", "VA", "22209", "United States", false);
+
+            return response;
+          },
+          'XM.Address.format(strings, ..., false) returns ASCII new lines': function (response) {
+            assert.include(response, '\n');
+          }
+        },
+        '-> `format(strings, ..., true)`': {
+          topic: function () {
+            var response = XM.Address.format("Name", "Tremendous Toys Inc.", "101 Toys Place", "",
+              "Walnut Hills", "VA", "22209", "United States", true);
+
+            return response;
+          },
+          'XM.Address.format(strings, ..., true) returns HTML line breaks': function (response) {
+            assert.include(response, '<br />');
+          }
+        },
+        '-> `format(object, false)`': {
+          // XM.Address.format(object, false) is tested below after
+          // the model is created.
+        },
+        '-> `format(object, true)`': {
+          // XM.Address.format(object, true) is tested below after
+          // the model is created.
+        }
+      },
+      '-> `formatShort`': {
+        // XM.Address.formatShort is tested below after the model is created.
       }
     }
   }).addBatch({
