@@ -37,34 +37,50 @@
       }
     })
   }).addBatch({
-    'Check `requiredAttributes`': {
+    'CHECKS PARAMETERS ': {
       topic: function () {
         return model;
       },
-      'Abbreviation is required': function (model) {
-        assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
+      'Last Error is null': function (model) {
+        assert.isNull(model.lastError);
       },
-      'currencyAbbreviation is required': function (model) {
-        assert.isTrue(_.contains(model.requiredAttributes, "currencyAbbreviation"));
-      },
-      'Name is required': function (model) {
-        assert.isTrue(_.contains(model.requiredAttributes, "name"));
+      '-> `requiredAttributes`': {
+        topic: function () {
+          return model;
+        },
+        'Abbreviation is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
+        },
+        'currencyAbbreviation is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "currencyAbbreviation"));
+        },
+        'Name is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "name"));
+        }
       }
     }
   }).addBatch({
-    'Check `validateEdit`': {
+    'CHECKS METHODS ': {
       topic: function () {
         return model;
       },
-      'Abbreviation must be 2 letters': function (model) {
-        var err = model.validate({ abbreviation: 'TOO_LONG'});
-        assert.equal(err.code, 'xt1006'); // Error code for invalid length
-        assert.equal(err.params.length, 2); // The length it should be
+      'Last Error is null': function (model) {
+        assert.isNull(model.lastError);
       },
-      'Currency Abbreviation must be 3 letters': function (model) {
-        var err = model.validate({ currencyAbbreviation: 'TOO_LONG'});
-        assert.equal(err.code, 'xt1006'); // Error code for invalid length
-        assert.equal(err.params.length, 3); // The length it should be
+      '-> `validateEdit`': {
+        topic: function () {
+          return model;
+        },
+        'Abbreviation must be 2 letters': function (model) {
+          var err = model.validate({ abbreviation: 'TOO_LONG'});
+          assert.equal(err.code, 'xt1006'); // Error code for invalid length
+          assert.equal(err.params.length, 2); // The length it should be
+        },
+        'Currency Abbreviation must be 3 letters': function (model) {
+          var err = model.validate({ currencyAbbreviation: 'TOO_LONG'});
+          assert.equal(err.code, 'xt1006'); // Error code for invalid length
+          assert.equal(err.params.length, 3); // The length it should be
+        }
       }
     }
   }).addBatch({

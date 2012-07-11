@@ -27,24 +27,32 @@
   };
 
   vows.describe('XM.Address CRUD test').addBatch({
-    'Check `findExisting`': {
+    'CHECK CLASS METHODS ': {
       topic: function () {
-        var callback = this.callback,
-          timeoutId,
-          success = function (response) {
-            clearTimeout(timeoutId);
-            callback(null, response);
-          };
-        XM.Address.findExisting("Tremendous Toys Inc.", "101 Toys Place", "",
-          "Walnut Hills", "VA", "22209", "United States", {success: success});
-
-        // If we don't hear back, keep going
-        timeoutId = setTimeout(function () {
-          callback(null, 0);
-        }, XVOWS.wait);
+        return model;
       },
-      'Address found': function (response) {
-        assert.isTrue(response > 0);
+      'Last Error is null': function (model) {
+        assert.isNull(model.lastError);
+      },
+      '-> `findExisting`': {
+        topic: function () {
+          var callback = this.callback,
+            timeoutId,
+            success = function (response) {
+              clearTimeout(timeoutId);
+              callback(null, response);
+            };
+          XM.Address.findExisting("Tremendous Toys Inc.", "101 Toys Place", "",
+            "Walnut Hills", "VA", "22209", "United States", {success: success});
+
+          // If we don't hear back, keep going
+          timeoutId = setTimeout(function () {
+            callback(null, 0);
+          }, XVOWS.wait);
+        },
+        'Address found': function (response) {
+          assert.isTrue(response > 0);
+        }
       }
     }
   }).addBatch({
@@ -61,50 +69,56 @@
       }
     })
   }).addBatch({
-    'Check `format`': {
+    'CHECK METHODS ': {
       topic: function () {
         return model;
       },
-      'Address format returns a string': function (model) {
-        assert.isString(model.format(false));
+      'Last Error is null': function (model) {
+        assert.isNull(model.lastError);
       },
-      'Address format(false) returns ASCII new lines': function (model) {
-        assert.include(model.format(false), '\n');
+      '-> `format`': {
+        topic: function () {
+          return model;
+        },
+        'Address format returns a string': function (model) {
+          assert.isString(model.format(false));
+        },
+        'Address format(false) returns ASCII new lines': function (model) {
+          assert.include(model.format(false), '\n');
+        },
+        'Address format(true) returns HTML line breaks': function (model) {
+          assert.include(model.format(true), '<br />');
+        }
       },
-      'Address format(true) returns HTML line breaks': function (model) {
-        assert.include(model.format(true), '<br />');
-      }
-    }
-  }).addBatch({
-    'Check `formatShort`': {
-      topic: function () {
-        return model;
+      '-> `formatShort`': {
+        topic: function () {
+          return model;
+        },
+        'Address formatShort returns a string': function (model) {
+          assert.isString(model.formatShort());
+        }
       },
-      'Address formatShort returns a string': function (model) {
-        assert.isString(model.formatShort());
-      }
-    }
-  }).addBatch({
-    'Check `useCount`': {
-      topic: function () {
-        var callback = this.callback,
-          timeoutId,
-          success = function (response) {
-            clearTimeout(timeoutId);
-            callback(null, response);
-          };
-        model.useCount({success: success});
+      '-> `useCount`': {
+        topic: function () {
+          var callback = this.callback,
+            timeoutId,
+            success = function (response) {
+              clearTimeout(timeoutId);
+              callback(null, response);
+            };
+          model.useCount({success: success});
 
-        // If we don't hear back, keep going
-        timeoutId = setTimeout(function () {
-          callback(null, 0);
-        }, XVOWS.wait);
-      },
-      'Address useCount is a Number': function (response) {
-        assert.isNumber(response);
-      },
-      'Address created is used zero times': function (response) {
-        assert.isTrue(response === 0);
+          // If we don't hear back, keep going
+          timeoutId = setTimeout(function () {
+            callback(null, 0);
+          }, XVOWS.wait);
+        },
+        'Address useCount is a Number': function (response) {
+          assert.isNumber(response);
+        },
+        'Address created is used zero times': function (response) {
+          assert.isTrue(response === 0);
+        }
       }
     }
   }).addBatch({

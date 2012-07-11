@@ -52,18 +52,26 @@
       }
     })
   }).addBatch({
-    'Check `requiredAttributes`': {
+    'CHECKS PARAMETERS ': {
       topic: function () {
         return model;
       },
-      'Abbreviation is required': function (model) {
-        assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
+      'Last Error is null': function (model) {
+        assert.isNull(model.lastError);
       },
-      'Country is required': function (model) {
-        assert.isTrue(_.contains(model.requiredAttributes, "country"));
-      },
-      'Name is required': function (model) {
-        assert.isTrue(_.contains(model.requiredAttributes, "name"));
+      '-> `requiredAttributes`': {
+        topic: function () {
+          return model;
+        },
+        'Abbreviation is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
+        },
+        'Country is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "country"));
+        },
+        'Name is required': function (model) {
+          assert.isTrue(_.contains(model.requiredAttributes, "name"));
+        }
       }
     }
   }).addBatch({
