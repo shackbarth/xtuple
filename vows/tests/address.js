@@ -37,7 +37,7 @@
           };
         XM.Address.findExisting("Tremendous Toys Inc.", "101 Toys Place", "",
           "Walnut Hills", "VA", "22209", "United States", {success: success});
-      
+
         // If we don't hear back, keep going
         timeoutId = setTimeout(function () {
           callback(null, 0);
@@ -60,6 +60,29 @@
         '-> Save': XVOWS.save(model)
       }
     })
+  }).addBatch({
+    'Check `useCount`': {
+      topic: function () {
+        var callback = this.callback,
+          timeoutId,
+          success = function (response) {
+            clearTimeout(timeoutId);
+            callback(null, response);
+          };
+        model.useCount({success: success});
+
+        // If we don't hear back, keep going
+        timeoutId = setTimeout(function () {
+          callback(null, 0);
+        }, XVOWS.wait);
+      },
+      'Address useCount is a Number': function (response) {
+        assert.isNumber(response);
+      },
+      'Address created is used zero times': function (response) {
+        assert.isTrue(response === 0);
+      }
+    }
   }).addBatch({
     'READ': {
       topic: function () {
@@ -106,11 +129,30 @@
       }
     }
   }).addBatch({
+    'UPDATE ': XVOWS.update(model, {
+      '-> Set values': {
+        topic: function () {
+          model.set(updateHash);
+          return model;
+        },
+        'Last Error is null': function (model) {
+          assert.isNull(model.lastError);
+        },
+        'Line1 is `123 Four St.`': function (model) {
+          assert.equal(model.get('line1'), updateHash.line1);
+        },
+        'Status is READY_DIRTY': function (model) {
+          assert.equal(model.getStatusString(), 'READY_DIRTY');
+        },
+        '-> Commit': XVOWS.save(model)
+      }
+    })
+  }).addBatch({
     'DESTROY': XVOWS.destroy(model, {
       'FINISH XM.Address': function () {
         XVOWS.next();
       }
     })
   }).run();
-  
+
 }());
