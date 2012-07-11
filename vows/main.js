@@ -214,7 +214,7 @@ XVOWS.destroy = function (model, vows, obj) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is `DESTORYED_CLEAN`': function (model) {
+    'Status is `DESTROYED_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
     }
   };
