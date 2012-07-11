@@ -15,6 +15,9 @@ trailing:true white:true*/
       published: {
         modelType: ""
       },
+      events: {
+        onFieldChanged: ""
+      },
       components: [
         { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
         { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
@@ -67,11 +70,12 @@ trailing:true white:true*/
               this.createComponent({ container: boxColumn, content: fieldDesc.label, style: "width: " + fieldDesc.width + "px;" });
               for (iRow = 0; iRow < 8; iRow++) {
                 this.createComponent({
-                  kind: "onyx.Input",
+                  kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
                   container: boxColumn,
                   name: fieldDesc.fieldName + "_" + iRow,
                   placeholder: fieldDesc.label,
-                  style: "width: " + fieldDesc.width + "px; "
+                  style: "width: " + fieldDesc.width + "px; ",
+                  onchange: "doFieldChanged"
                 });
 
               }
@@ -100,33 +104,13 @@ trailing:true white:true*/
                 ]
               });
 
-              if (fieldDesc.fieldType) {
-                /**
-                 * Special case: the field descriptor defines a fieldType, such as DateWidget.
-                 * Use that fieldType.
-                 */
-                this.createComponent(
-                  { kind: fieldDesc.fieldType,
-                    style: "",
-                    name: fieldDesc.fieldName,
-                    container: field
-                  }
-                );
-              } else {
-                /**
-                 * General case: the field descriptor does not define a fieldType, so it's just
-                 * an input field
-                 */
-                this.createComponent(
-                  {
-                    kind: "onyx.Input",
-                    style: "",
-                    container: field,
-                    name: fieldDesc.fieldName,
-                    placeholder: fieldDesc.placeholder
-                  }
-                );
-              }
+              this.createComponent({
+                kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
+                style: "",
+                name: fieldDesc.fieldName,
+                container: field,
+                onchange: "doFieldChanged"
+              });
             }
           }
         }
@@ -165,6 +149,18 @@ trailing:true white:true*/
       },
       updateFields: function (model) {
         // TODO: this is more of a reset-all than an update
+
+
+        // XXX this gets called for all the relational subobjects
+        // as well and we don't really want to deal with those
+        // because we've already dealt with them under the master
+        // model.
+        if (model.get("type") !== this.getModelType()) {
+          return;
+        }
+        XT.log("update with model: " + model.get("type"));
+
+
 
         //
         // Look through the entire specification...
@@ -220,6 +216,9 @@ trailing:true white:true*/
         // TODO: wait to load the menu items until we know the model type for real
         model: null
       },
+      handlers: {
+        onFieldChanged: "doFieldChanged"
+      },
       components: [
         {kind: "FittableRows", classes: "left", components: [
           {kind: "onyx.Toolbar", components: [
@@ -241,6 +240,43 @@ trailing:true white:true*/
         this.inherited(arguments);
         this.$.list.select(0);
       },
+      doFieldChanged: function (inEvent, inSender) {
+        var prefix, suffix;
+
+        XT.log("field changed");
+        //var fieldName = inSender.name;
+        var newValue = inSender.getValue();
+        //
+        // Find the corresponding field in the model
+        // This string parsing is a little hackish I admit.
+        // A more robust way would be to create subkinds that
+        // link to the submodels, but I'm not sure if it's worth
+        // the extra effort at the moment.
+        //
+        var applicableModel = this.getModel();
+        var fieldNameDetail = inSender.name;
+        while (fieldNameDetail.indexOf('.') >= 0) {
+          prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('.'));
+          suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('.') + 1);
+          applicableModel = applicableModel.get(prefix);
+          fieldNameDetail = suffix;
+        }
+        if(fieldNameDetail.indexOf("_") >= 0) {
+          prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('_'));
+          suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('_') + 1);
+          applicableModel = applicableModel.models[suffix];
+          fieldNameDetail = prefix;
+        }
+        var updateObject = {};
+        updateObject[fieldNameDetail] = newValue;
+        applicableModel.set(updateObject);
+
+        //
+        // persist immediately
+        // XXX this is an important design decision TBD
+        //
+        this.getModel().save();
+      },
       // list
       setupItem: function (inSender, inEvent) {
         this.$.item.setContent(XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title);
@@ -250,16 +286,16 @@ trailing:true white:true*/
         var p = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
-      setOptions: function (options) {
+      setOptions: function (model) {
         //
         // Determine the model that will back this view
         //
-        var modelType = options.get("type");
+        var modelType = model.get("type");
         // Magic/convention: trip off the word Info to get the heavyweight class
         if (modelType.substring(modelType.length - 4) === "Info") {
           modelType = modelType.substring(0, modelType.length - 4);
         }
-        var id = options.get("guid");
+        var id = model.get("guid");
 
         //
         // Setting the model type also renders the workspace. We really can't do
@@ -274,6 +310,7 @@ trailing:true white:true*/
         //
         var Klass = Backbone.Relational.store.getObjectByName("XM." + modelType);
         var m = new Klass();
+        this.setModel(m);
         m.on("change", enyo.bind(this, "modelDidChange"));
 
 
@@ -286,7 +323,7 @@ trailing:true white:true*/
 
       },
       modelDidChange: function (model, value, options) {
-        //console.log("Model changed: " + JSON.stringify(model.toJSON()));
+        XT.log("Model changed: " + JSON.stringify(model.toJSON()));
         this.$.workspacePanels.updateFields(model);
       }
 

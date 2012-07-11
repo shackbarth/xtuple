@@ -192,7 +192,10 @@ XV.WorkspacePanelDescriptor = {
       fields: [
         { label: "Owner", fieldName: "owner.propername", placeholder: "This will have to be a dropdown" },
         { label: "Assigned To", fieldName: "assignedTo.propername", placeholder: "This will have to be a dropdown" },
-        { label: "Due", fieldName: "dueDate", fieldType: "DateWidget" }
+        { label: "Due", fieldName: "dueDate", fieldType: "DateWidget" },
+        { label: "Assigned", fieldName: "assignDate", fieldType: "DateWidget" },
+        { label: "Started", fieldName: "startDate", fieldType: "DateWidget" },
+        { label: "Completed", fieldName: "completeDate", fieldType: "DateWidget" }
       ]
     },
     //{
@@ -208,11 +211,11 @@ XV.WorkspacePanelDescriptor = {
       location: "bottom",
       boxType: "Grid",
       fields: [
-        { label: "Number", fieldName: "tasks.number", width: "100" },
-        { label: "Name", fieldName: "tasks.name", width: "100" },
-        { label: "Notes", fieldName: "tasks.notes", width: "120" },
-        { label: "Actual Hours", fieldName: "tasks.actualHours", width: "120" },
-        { label: "Actual Expenses", fieldName: "tasks.actualExpenses", width: "120" }
+        { label: "Number", fieldName: "tasks.number", width: "120" },
+        { label: "Name", fieldName: "tasks.name", width: "120" },
+        { label: "Notes", fieldName: "tasks.notes", width: "220" },
+        { label: "Actual Hours", fieldName: "tasks.actualHours", fieldType: "NumberWidget", width: "40" },
+        { label: "Actual Expenses", fieldName: "tasks.actualExpenses", fieldType: "NumberWidget", width: "40" }
       ]
     }/*,
     {
