@@ -48,18 +48,24 @@
         'Last Error is null': function (model) {
           assert.isNull(model.lastError);
         },
-        'Abbreviation is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
-        },
-        'Country is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "country"));
-        },
-        'Name is required': function (model) {
-          assert.isTrue(_.contains(model.requiredAttributes, "name"));
-        },
         '-> Save': XVOWS.save(model)
       }
     })
+  }).addBatch({
+    'Check `requiredAttributes`': {
+      topic: function () {
+        return model;
+      },
+      'Abbreviation is required': function (model) {
+        assert.isTrue(_.contains(model.requiredAttributes, "abbreviation"));
+      },
+      'Country is required': function (model) {
+        assert.isTrue(_.contains(model.requiredAttributes, "country"));
+      },
+      'Name is required': function (model) {
+        assert.isTrue(_.contains(model.requiredAttributes, "name"));
+      }
+    }
   }).addBatch({
     'READ': {
       topic: function () {
