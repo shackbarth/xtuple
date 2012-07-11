@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -91,7 +91,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.Address = XM.Document.extend({
@@ -129,7 +129,7 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
+
     /**
       Formats the multiple lines of an address into a
       text block separating the elements of the address by line breaks.
@@ -198,9 +198,13 @@ white:true*/
         };
       XT.dataSource.dispatch('XM.Address', 'findExisting', params, options);
       console.log("XM.Address.findExisting");
+
+      // TODO - Returns undefined??? WTF
+      console.log('line3 works- ' + line3);
+      console.log('City does not work - ' + city);
       return this;
     },
-    
+
     /**
       This function formats the multiple lines of an address into a
       text block separating the elements of the address by line breaks.
@@ -284,7 +288,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AddressComment = XT.Model.extend({
@@ -296,7 +300,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AddressCharacteristic = XT.Model.extend({
@@ -308,7 +312,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AddressInfo = XT.Model.extend({
@@ -326,11 +330,11 @@ white:true*/
         "delete": false
       }
     },
-    
+
     // ..........................................................
     // METHODS
     //
-    
+
     /**
       Formats the multiple lines of an address into a
       text block separating the elements of the address by line breaks.
@@ -371,7 +375,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Collection
   */
   XM.CountryCollection = XT.Collection.extend({
@@ -383,7 +387,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Collection
   */
   XM.StateCollection = XT.Collection.extend({
