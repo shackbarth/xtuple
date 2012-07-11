@@ -1,7 +1,6 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*jslint bitwise: true, nomen: true, indent:2 */
 /*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
 clearTimeout:true, vows:true, assert:true */
 
@@ -114,7 +113,7 @@ clearTimeout:true, vows:true, assert:true */
                     // If we don't hear back, keep going
                     timeoutId = setTimeout(function () {
                       that.callback(null, model);
-                    }, 5000); // five seconds
+                    }, XVOWS.wait);
                   },
                   'Status is READY_CLEAN': function (model) {
                     assert.equal(model.getStatusString(), 'READY_CLEAN');

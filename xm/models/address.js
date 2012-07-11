@@ -198,10 +198,6 @@ white:true*/
         };
       XT.dataSource.dispatch('XM.Address', 'findExisting', params, options);
       console.log("XM.Address.findExisting");
-
-      // TODO - Returns undefined??? WTF
-      console.log('line3 works- ' + line3);
-      console.log('City does not work - ' + city);
       return this;
     },
 

@@ -1,7 +1,6 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
   plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*jslint bitwise: true, nomen: true, indent:2 */
 /*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
 clearTimeout:true, vows:true, assert:true */
 
