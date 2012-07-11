@@ -61,6 +61,30 @@
       }
     })
   }).addBatch({
+    'Check `format`': {
+      topic: function () {
+        return model;
+      },
+      'Address format returns a string': function (model) {
+        assert.isString(model.format(false));
+      },
+      'Address format(false) returns ASCII new lines': function (model) {
+        assert.include(model.format(false), '\n');
+      },
+      'Address format(true) returns HTML line breaks': function (model) {
+        assert.include(model.format(true), '<br />');
+      }
+    }
+  }).addBatch({
+    'Check `formatShort`': {
+      topic: function () {
+        return model;
+      },
+      'Address formatShort returns a string': function (model) {
+        assert.isString(model.formatShort());
+      }
+    }
+  }).addBatch({
     'Check `useCount`': {
       topic: function () {
         var callback = this.callback,
@@ -114,18 +138,6 @@
       },
       'Country is `United States`': function (model) {
         assert.equal(model.get('country'), createHash.country);
-      },
-      'Address format returns a string': function (model) {
-        assert.isString(model.format(false));
-      },
-      'Address format(false) returns ASCII new lines': function (model) {
-        assert.include(model.format(false), '\n');
-      },
-      'Address format(true) returns HTML line breaks': function (model) {
-        assert.include(model.format(true), '<br />');
-      },
-      'Address formatShort returns a string': function (model) {
-        assert.isString(model.formatShort());
       }
     }
   }).addBatch({
