@@ -107,10 +107,10 @@ XVOWS.create = function (model, vows) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is READY_NEW': function (model) {
+    'Status is `READY_NEW`': function (model) {
       assert.equal(model.getStatusString(), 'READY_NEW');
     },
-    'id is valid': function (model) {
+    'ID is valid': function (model) {
       assert.isNumber(model.id);
     }
   };
@@ -124,6 +124,7 @@ XVOWS.create = function (model, vows) {
   Saves the working model and automatically checks state
   is `READY_CLEAN` immediately afterward.
 
+  @param {String|Object} Model
   @param {Object} Vows
 */
 XVOWS.save = function (model, vows) {
@@ -150,7 +151,30 @@ XVOWS.save = function (model, vows) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is READY_CLEAN': function (model) {
+    'Status is `READY_CLEAN`': function (model) {
+      assert.equal(model.getStatusString(), 'READY_CLEAN');
+    }
+  };
+
+  // Add in any other passed vows
+  _.extend(context, vows);
+  return context;
+};
+
+/**
+  Check before updating the working model that the state is `READY_CLEAN`.
+
+  @param {String|Object} Model
+  @param {Object} Vows
+*/
+XVOWS.update = function (model, vows) {
+  "use strict";
+  vows = vows || {};
+  var context = {
+    topic: function () {
+      return model;
+    },
+    'Status is `READY_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
     }
   };
@@ -190,7 +214,7 @@ XVOWS.destroy = function (model, vows, obj) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is DESTORYED_CLEAN': function (model) {
+    'Status is `DESTROYED_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
     }
   };
