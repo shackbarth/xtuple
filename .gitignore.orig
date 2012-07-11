@@ -14,4 +14,7 @@ enyo
 lib/*
 \.sass-cache
 package.js
+<<<<<<< HEAD
+=======
 /.sass-cache/
+>>>>>>> xtuple

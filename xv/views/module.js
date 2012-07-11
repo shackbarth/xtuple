@@ -1,4 +1,4 @@
-/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, 
+/*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
 /*global XT:true, enyo:true*/
@@ -10,6 +10,9 @@ trailing:true white:true*/
     kind: "Panels",
     label: "",
     classes: "app enyo-unselectable",
+    handlers: {
+      onInfoListRowTapped: "doInfoListRowTapped"
+    },
     realtimeFit: true,
     arrangerKind: "CollapsingArranger",
     components: [
@@ -61,7 +64,7 @@ trailing:true white:true*/
     setList: function (index) {
       if (this.firstTime) { return; }
       var list = this.lists[index].name;
-      
+
       // Select menu
       if (!this.$.menu.isSelected(index)) {
         this.$.menu.select(index);
@@ -90,6 +93,28 @@ trailing:true white:true*/
     },
     showSetup: function () {
       // todo
+    },
+    /**
+     * Catches the tap event from the {XV.InfoListRow}
+     * and repackages it into a carousel event to be
+     * caught further up.
+    */
+    doInfoListRowTapped: function (inSender, inEvent) {
+      //
+      // Determine which item was tapped
+      //
+      var listIndex = this.$.lists.index;
+      var tappedList = this.$.lists.children[listIndex];
+
+      var itemIndex = inEvent.index;
+      var tappedModel = tappedList.collection.models[itemIndex];
+
+      //
+      // Bubble up an event so that we can transition to workspace view.
+      // Add the tapped model as a payload in the event
+      //
+      this.bubble("workspace", {eventName: "workspace", options: tappedModel });
+      return true;
     }
 
   });
