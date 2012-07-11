@@ -141,7 +141,7 @@
         'Line1 is `123 Four St.`': function (model) {
           assert.equal(model.get('line1'), updateHash.line1);
         },
-        'Status is READY_DIRTY': function (model) {
+        'Status is `READY_DIRTY`': function (model) {
           assert.equal(model.getStatusString(), 'READY_DIRTY');
         },
         '-> Commit': XVOWS.save(model)

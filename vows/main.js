@@ -107,7 +107,7 @@ XVOWS.create = function (model, vows) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is READY_NEW': function (model) {
+    'Status is `READY_NEW`': function (model) {
       assert.equal(model.getStatusString(), 'READY_NEW');
     },
     'id is valid': function (model) {
@@ -151,7 +151,7 @@ XVOWS.save = function (model, vows) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is READY_CLEAN': function (model) {
+    'Status is `READY_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
     }
   };
@@ -174,7 +174,7 @@ XVOWS.update = function (model, vows) {
     topic: function () {
       return model;
     },
-    'Status is READY_CLEAN': function (model) {
+    'Status is `READY_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
     }
   };

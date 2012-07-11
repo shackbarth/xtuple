@@ -104,7 +104,7 @@
           assert.equal(model.get('country').get('guid'),
             updateHash.country);
         },
-        'Status is READY_DIRTY': function (model) {
+        'Status is `READY_DIRTY`': function (model) {
           assert.equal(model.getStatusString(), 'READY_DIRTY');
         },
         '-> Commit': XVOWS.save(model)
