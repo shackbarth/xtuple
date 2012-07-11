@@ -3,7 +3,6 @@
 /*jshint trailing:true, indent:2, strict:true, curly:true,
   plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*jslint bitwise: true, nomen: true, indent:2 */
 /*global XVOWS:true, XT:true, XM:true, setTimeout:true,
   clearTimeout:true, _fs:true, _util:true, _path:true, Backbone:true,
   BackboneRelational:true, vows:true, assert:true, _:true, io:true,
@@ -54,6 +53,7 @@ require("tinycolor"); /*tinycolor*/
 // FOR SHARING VOWS SPECIFIC INFORMATION
 // AND FUNCTIONALITY
 XVOWS = {};
+XVOWS.wait = 10000;
 
 /**
   Creates a working model and automatically checks state
@@ -102,7 +102,7 @@ XVOWS.create = function (recordType, vows) {
       // If we don't hear back, keep going
       timeoutId = setTimeout(function () {
         that.callback(null, newModel);
-      }, 5000); // five seconds
+      }, XVOWS.wait);
     },
     'Status is READY_NEW': function (model) {
       assert.equal(model.getStatusString(), 'READY_NEW');
@@ -115,7 +115,7 @@ XVOWS.create = function (recordType, vows) {
   // Add in any other passed vows
   _.extend(context, vows);
   return context;
-},
+};
 
 /**
   Saves the working model and automatically checks state
@@ -145,7 +145,7 @@ XVOWS.save = function (vows) {
       // If we don't hear back, keep going
       timeoutId = setTimeout(function () {
         that.callback(null, model);
-      }, 5000); // five seconds
+      }, XVOWS.wait);
     },
     'Status is READY_CLEAN': function (model) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
@@ -155,7 +155,7 @@ XVOWS.save = function (vows) {
   // Add in any other passed vows
   _.extend(context, vows);
   return context;
-},
+};
 
 /**
   Destorys the working model and automatically checks state
@@ -185,7 +185,7 @@ XVOWS.destroy = function (vows, obj) {
       // If we don't hear back, keep going
       timeoutId = setTimeout(function () {
         that.callback(null, model);
-      }, 5000); // five seconds
+      }, XVOWS.wait);
     },
     'Status is DESTORYED_CLEAN': function (model) {
       assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
@@ -194,7 +194,7 @@ XVOWS.destroy = function (vows, obj) {
   // Add in any other passed vows
   _.extend(context, vows);
   return context;
-},
+};
 
 // PROCESS ANY INCOMING ARGS REAL QUICK
 (function () {

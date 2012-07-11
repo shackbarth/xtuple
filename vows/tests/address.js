@@ -1,14 +1,13 @@
 /*jshint trailing:true, white:true, indent:2, strict:true, curly:true,
-  plusplus:true, immed:true, eqeqeq:true, forin:true, latedef:true,
+  immed:true, eqeqeq:true, forin:true, latedef:true,
   newcap:true, noarg:true, undef:true */
-/*jslint bitwise: true, nomen: true, indent:2 */
 /*global XVOWS:true, XT:true, XM:true, _:true, setTimeout:true,
-  clearTimeout:true, vows:true, assert:true, console:true */
+  clearTimeout:true, vows:true, module:true, assert:true, console:true */
 
 (function () {
   "use strict";
 
-  var createHash, updateHash;
+  var createHash, updateHash, count = 0, max = 2;
 
   createHash = {
     line1: 'add1',
@@ -26,6 +25,30 @@
   };
 
   vows.describe('XM.Address CRUD test').addBatch({
+    'Check `findExisting`': {
+      topic: function () {
+        var callback = this.callback,
+          timeoutId,
+          success = function (response) {
+            clearTimeout(timeoutId);
+            callback(null, response);
+          };  
+        XM.Address.findExisting("Tremendous Toys Inc.", "101 Toys Place", "",
+          "Walnut Hills", "VA", "22209", "United States", {success: success});
+      
+        // If we don't hear back, keep going
+        timeoutId = setTimeout(function () {
+          callback(null, 0);
+        }, XVOWS.wait); 
+      },
+      'Address found': function (response) {
+        assert.isTrue(response > 0);
+      },
+      'FINISH XM.Address': function () {
+        count++;
+        if (count === max) { XVOWS.next(); }
+      }
+    },
     'CREATE': XVOWS.create('XM.Address', {
       '-> Set values': {
         topic: function (model) {
@@ -36,8 +59,8 @@
           assert.isNull(model.lastError);
         },
         '-> Save and READ': XVOWS.save({
-          'GUID is a number': function (model) {
-            assert.isNumber(model.get('guid'));
+          'ID is a number': function (model) {
+            assert.isNumber(model.id);
           },
           'Number property is a string': function (model) {
             assert.isString(model.get('number'));
@@ -74,36 +97,6 @@
           },
           'Address formatShort returns a string': function (model) {
             assert.isString(model.formatShort());
-          },
-          // TODO - figure out how this works.
-          'Address useCount returns an object': function (model) {
-            var that = this,
-              options = {
-                success: function (response) {
-                  XVOWS.console('Address count is ' + response);
-                  // TODO - Doesn't work.
-                  //that.callback(response);
-                },
-                error: function (response) {
-                  console.log('XM.Address.useCount failed.');
-                }
-              };
-            assert.isObject(model.useCount(options));
-          },
-          'Address findExisting returns an object': function (model) {
-            var that = this,
-              options = {
-                success: function (response) {
-                  XVOWS.console('Address found ');
-                  // TODO - Doesn't work.
-                  //that.callback(response);
-                },
-                error: function (response) {
-                  console.log('XM.Address.findExisting failed.');
-                }
-              };
-            // TODO - Something's broken with XM.Address.findExisting.
-            assert.isObject(model.findExisting(createHash.line1, createHash.line2, createHash.line3, createHash.city, createHash.state, createHash.postalCode, createHash.country, options));
           },
           '-> UPDATE': {
             topic: function (model) {
