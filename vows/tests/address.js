@@ -7,7 +7,7 @@
 (function () {
   "use strict";
 
-  var createHash, updateHash, count = 0, max = 2;
+  var createHash, updateHash;
 
   createHash = {
     line1: 'add1',
@@ -32,23 +32,20 @@
           success = function (response) {
             clearTimeout(timeoutId);
             callback(null, response);
-          };  
+          };
         XM.Address.findExisting("Tremendous Toys Inc.", "101 Toys Place", "",
           "Walnut Hills", "VA", "22209", "United States", {success: success});
       
         // If we don't hear back, keep going
         timeoutId = setTimeout(function () {
           callback(null, 0);
-        }, XVOWS.wait); 
+        }, XVOWS.wait);
       },
       'Address found': function (response) {
         assert.isTrue(response > 0);
-      },
-      'FINISH XM.Address': function () {
-        count++;
-        if (count === max) { XVOWS.next(); }
       }
-    },
+    }
+  }).addBatch({
     'CREATE': XVOWS.create('XM.Address', {
       '-> Set values': {
         topic: function (model) {
