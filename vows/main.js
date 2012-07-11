@@ -110,7 +110,7 @@ XVOWS.create = function (model, vows) {
     'Status is `READY_NEW`': function (model) {
       assert.equal(model.getStatusString(), 'READY_NEW');
     },
-    'id is valid': function (model) {
+    'ID is valid': function (model) {
       assert.isNumber(model.id);
     }
   };
@@ -214,7 +214,7 @@ XVOWS.destroy = function (model, vows, obj) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is DESTORYED_CLEAN': function (model) {
+    'Status is `DESTORYED_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
     }
   };
