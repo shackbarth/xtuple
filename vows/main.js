@@ -79,7 +79,7 @@ XVOWS.create = function (recordType, vows) {
         callback = function (model, value) {
           if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
             // Check that the AUTO...NUMBER property has been set.
-            if (typeof model.get(model.documentKey) !== 'undefined') {
+            if (model.get(model.documentKey) && model.id) {
               clearTimeout(timeoutId);
               model.off('change:' + model.documentKey, callback);
               model.off('change:guid', callback);
