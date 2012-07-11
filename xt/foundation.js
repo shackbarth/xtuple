@@ -181,21 +181,22 @@ XV.WorkspacePanelDescriptor = {
       title: "Project Info",
       location: "top",
       fields: [
-        { label: "Number", fieldName: "number", placeholder: "Enter project number" },
-        { label: "Name", fieldName: "name", placeholder: "Enter project name" },
-        { label: "Notes", fieldName: "notes", placeholder: "Enter project notes" }
+        { fieldName: "number", placeholder: "Enter project number" },
+        { fieldName: "name", placeholder: "Enter project name" },
+        { fieldName: "notes", placeholder: "Enter project notes" },
+        { label: "status", fieldName: "getProjectStatusString" }
       ]
     },
     {
       title: "Schedule",
       location: "top",
       fields: [
-        { label: "Owner", fieldName: "owner.propername", fieldType: "ObjectWidget" },
-        { label: "Assigned To", fieldName: "assignedTo.propername", fieldType: "ObjectWidget" },
-        { label: "Due", fieldName: "dueDate", fieldType: "DateWidget" },
-        { label: "Assigned", fieldName: "assignDate", fieldType: "DateWidget" },
-        { label: "Started", fieldName: "startDate", fieldType: "DateWidget" },
-        { label: "Completed", fieldName: "completeDate", fieldType: "DateWidget" }
+        { fieldName: "owner", fieldType: "RelationalWidget" },
+        { fieldName: "assignedTo", fieldType: "RelationalWidget" },
+        { fieldName: "dueDate", fieldType: "DateWidget" },
+        { fieldName: "assignDate", fieldType: "DateWidget" },
+        { fieldName: "startDate", fieldType: "DateWidget" },
+        { fieldName: "completeDate", fieldType: "DateWidget" }
       ]
     },
     //{
@@ -211,11 +212,11 @@ XV.WorkspacePanelDescriptor = {
       location: "bottom",
       boxType: "Grid",
       fields: [
-        { label: "Number", fieldName: "tasks.number", width: "120" },
-        { label: "Name", fieldName: "tasks.name", width: "120" },
-        { label: "Notes", fieldName: "tasks.notes", width: "220" },
-        { label: "Actual Hours", fieldName: "tasks.actualHours", fieldType: "NumberWidget", width: "40" },
-        { label: "Actual Expenses", fieldName: "tasks.actualExpenses", fieldType: "NumberWidget", width: "40" }
+        { label: "number", fieldName: "tasks.number", width: "120" },
+        { label: "name", fieldName: "tasks.name", width: "120" },
+        { label: "notes", fieldName: "tasks.notes", width: "220" },
+        { label: "actualHours", fieldName: "tasks.actualHours", fieldType: "NumberWidget", width: "40" },
+        { label: "actualExpenses", fieldName: "tasks.actualExpenses", fieldType: "NumberWidget", width: "40" }
       ]
     }/*,
     {
@@ -233,3 +234,7 @@ XV.WorkspacePanelDescriptor = {
 };
 
 
+XV.ObjectWidgetTitleFields = {
+  UserAccountInfo: "propername",
+  SomethingElse: "somethingElse"
+}

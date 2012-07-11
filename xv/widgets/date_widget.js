@@ -52,7 +52,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //this.$.datePick2.setSelectedMonth(this.dateObject.getMonth());
       //this.$.datePick2.setSelectedYear(this.dateObject.getYear());
       //this.$.datePick2.render();
-      this.$.dateField.setValue(this.dateObject.toLocaleDateString());
+      this.$.dateField.setValue(Globalize.format(this.dateObject, "d"));
     },
     doInputChanged: function () {
       // lucky: no infinite loop! This function only gets triggered from an

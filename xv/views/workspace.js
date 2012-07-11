@@ -30,7 +30,7 @@ trailing:true white:true*/
        *
        */
       modelTypeChanged: function () {
-        var box, boxContent, iField, iRow, fieldDesc, field, boxColumn;
+        var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
           var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
           if (boxDesc.boxType === 'Grid') {
@@ -53,31 +53,38 @@ trailing:true white:true*/
              * there. This lets the column spacing be consistent between the labels and the fields,
              * but the tab order is not good. Some sort of grid would be better.
              */
-            boxContent = this.createComponent({
+
+
+            for (iRow = -1; iRow < 8; iRow++) {
+
+              boxRow = this.createComponent({
                 kind: "onyx.Groupbox",
                 classes: "onyx-toolbar-inline",
                 container: box,
                 style: "background-color: white;"
               });
-            for (iField = 0; iField < boxDesc.fields.length; iField++) {
-              fieldDesc = boxDesc.fields[iField];
-              boxColumn = this.createComponent({
-                kind: "onyx.Groupbox",
-                container: boxContent,
-                style: "width: " + fieldDesc.width + "px; "
-              });
 
-              this.createComponent({ container: boxColumn, content: fieldDesc.label, style: "width: " + fieldDesc.width + "px;" });
-              for (iRow = 0; iRow < 8; iRow++) {
+
+              for (iField = 0; iField < boxDesc.fields.length; iField++) {
+                fieldDesc = boxDesc.fields[iField];
+                label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
+                if (iRow === -1) {
+                  this.createComponent({
+                    container: boxRow,
+                    content: label.loc(),
+                    style: "text-weight: bold; border-width: 0px; width: " + fieldDesc.width + "px;"
+                  });
+                  continue;
+                }
+
                 this.createComponent({
                   kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
-                  container: boxColumn,
+                  container: boxRow,
                   name: fieldDesc.fieldName + "_" + iRow,
                   placeholder: fieldDesc.label,
-                  style: "width: " + fieldDesc.width + "px; ",
+                  style: "border-width: 0px; width: " + fieldDesc.width + "px; ",
                   onchange: "doFieldChanged"
                 });
-
               }
             }
 
@@ -95,12 +102,13 @@ trailing:true white:true*/
               });
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
+              label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
               field = this.createComponent({
                 kind: "onyx.InputDecorator",
                 style: "font-size: 12px",
                 container: box,
                 components: [
-                  { tag: "b", content: fieldDesc.label + ": ", style: "padding-right: 10px;"}
+                  { tag: "b", content: label.loc() + ": ", style: "padding-right: 10px;"}
                 ]
               });
 
@@ -188,16 +196,16 @@ trailing:true white:true*/
               if (applicableModel && applicableModel.length) {
                 // this is a collection. Fill in the grid.
                 for (var iList = 0; iList < applicableModel.length; iList++) {
-                  this.$[fieldName + "_" + iList].setValue(applicableModel.models[iList].get(fieldNameDetail));
+                  this.$[fieldName + "_" + iList].setValue(applicableModel.models[iList].getValue(fieldNameDetail));
                 }
 
 
-              } else if (applicableModel && applicableModel.get(fieldNameDetail)) {
+              } else if (applicableModel && applicableModel.getValue(fieldNameDetail)) {
                 //
                 // Update the view field with the model value
                 //
                 //console.log("value is " + applicableModel.get(fieldNameDetail));
-                this.$[fieldName].setValue(applicableModel.get(fieldNameDetail));
+                this.$[fieldName].setValue(applicableModel.getValue(fieldNameDetail));
               }
             }
           }
