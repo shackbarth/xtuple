@@ -4,17 +4,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
+  /**
+   * TODO: I'm sure the right way to do this is just to extend onyx.Input directly.
+   * enyo.Input has a published field called type, but you can't just set that to
+   * number and have everything else work perfectly.
+   *
+   */
   enyo.kind({
     name: "NumberWidget",
     kind: "enyo.Control",
     published: {
       numberObject: null
     },
-    //components: [{
-    //  kind: "onyx.InputDecorator",
-      components: [
-        { kind: "onyx.Input", name: "numberField", placeholder: "Enter number", onchange: "doInputChanged" }
-    //  ]
+    components: [
+      { kind: "onyx.Input", name: "numberField", placeholder: "Enter number", onchange: "doInputChanged" }
     ],
     /**
      * A convenience function so that this object can be treated generally like an input

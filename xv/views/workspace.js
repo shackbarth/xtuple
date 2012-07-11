@@ -261,7 +261,7 @@ trailing:true white:true*/
           applicableModel = applicableModel.get(prefix);
           fieldNameDetail = suffix;
         }
-        if(fieldNameDetail.indexOf("_") >= 0) {
+        if (fieldNameDetail.indexOf("_") >= 0) {
           prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('_'));
           suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('_') + 1);
           applicableModel = applicableModel.models[suffix];

@@ -190,8 +190,8 @@ XV.WorkspacePanelDescriptor = {
       title: "Schedule",
       location: "top",
       fields: [
-        { label: "Owner", fieldName: "owner.propername", placeholder: "This will have to be a dropdown" },
-        { label: "Assigned To", fieldName: "assignedTo.propername", placeholder: "This will have to be a dropdown" },
+        { label: "Owner", fieldName: "owner.propername", fieldType: "ObjectWidget" },
+        { label: "Assigned To", fieldName: "assignedTo.propername", fieldType: "ObjectWidget" },
         { label: "Due", fieldName: "dueDate", fieldType: "DateWidget" },
         { label: "Assigned", fieldName: "assignDate", fieldType: "DateWidget" },
         { label: "Started", fieldName: "startDate", fieldType: "DateWidget" },
