@@ -172,45 +172,37 @@ trailing:true white:true*/
       handlers: {
         onFieldChanged: "doFieldChanged"
       },
+      /*
+			{name: "layout1", kind: "FittableRows", classes: "enyo-fit", components: [
+				{kind: "onyx.Toolbar", components: [
+					{content: "Header"},
+					{kind: "onyx.Button", content: "Button"},
+					{kind: "onyx.InputDecorator", components: [
+						{kind: "onyx.Input"}
+					]}
+				]},
+				{kind: "FittableColumns", fit: true, components: [
+					{style: "width: 300px;"},
+					{kind: "FittableRows", fit: true, style: "box-shadow: -6px 0px 6px rgba(0,0,0,0.3);", components: [
+						{style: "height: 300px; box-shadow: 6px 6px 6px rgba(0,0,0,0.3); position: relative; z-index: 1;"},
+						{fit: true, classes: "fitting-color"}
+					]}
+				]}
+			]},
+      */
       components: [
-        {
-          kind: "FittableColumns",
-          noStretch: true,
-          style: "height: 50px;",
-          classes: "onyx-toolbar onyx-toolbar-inline",
-          components: [
 
-            {kind: "FittableRows", classes: "left", components: [
-              {kind: "onyx.Toolbar", components: [
-                {content: "Project"},
-                {kind: "onyx.Grabber"},
-                {kind: "Scroller", thumb: false, fit: true, touch: true,
-                   vertical: "hidden", style: "margin: 0;", components: [
-                  {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
-                  {name: "rightLabel", style: "text-align: center"}
-                ]}
-              ]}
-            ]}
-          ]
-        },
-        {
-          kind: "FittableColumns",
-          noStretch: true,
-          //classes: "onyx-toolbar onyx-toolbar-inline",
-          components: [
-            //{kind: "FittableRows", components: [
-            {kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
-              {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
-            ]},
-            {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
-            //]}
-
-
-          ]
-
-
-        }
-
+        {kind: "FittableRows", classes: "left", components: [
+          {kind: "onyx.Toolbar", components: [
+            {content: "Project"}
+          ]},
+          {kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
+            {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
+          ]}
+        ]},
+        {kind: "FittableRows", components: [
+          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
+        ]}
       ],
       create: function () {
         this.inherited(arguments);
