@@ -179,7 +179,7 @@ XV.WorkspacePanelDescriptor = {
   Project: // the key is uppercase because the model name is uppercase
     [{
       title: "Project Info",
-      location: "top",
+      location: "bottom",
       fields: [
         { fieldName: "number", placeholder: "Enter project number" },
         { fieldName: "name", placeholder: "Enter project name" },
@@ -189,7 +189,7 @@ XV.WorkspacePanelDescriptor = {
     },
     {
       title: "Schedule",
-      location: "top",
+      location: "bottom",
       fields: [
         { fieldName: "owner", fieldType: "RelationalWidget" },
         { fieldName: "assignedTo", fieldType: "RelationalWidget" },
@@ -207,16 +207,18 @@ XV.WorkspacePanelDescriptor = {
       //  { label: "Rate", fieldName: "projectRate", placeholder: "Enter project rate" },
       //]
     //},
+
+
     {
       title: "Tasks",
-      location: "bottom",
-      boxType: "Grid",
+      location: "top",
+      boxType: "GridWidget",
       fields: [
-        { label: "number", fieldName: "tasks.number", width: "120" },
-        { label: "name", fieldName: "tasks.name", width: "120" },
-        { label: "notes", fieldName: "tasks.notes", width: "220" },
-        { label: "actualHours", fieldName: "tasks.actualHours", fieldType: "NumberWidget", width: "40" },
-        { label: "actualExpenses", fieldName: "tasks.actualExpenses", fieldType: "NumberWidget", width: "40" }
+        { label: "number", fieldName: "number", width: "120" },
+        { label: "name", fieldName: "name", width: "120" },
+        { label: "notes", fieldName: "notes", width: "220" },
+        { label: "actualHours", fieldName: "actualHours", fieldType: "NumberWidget", width: "40" },
+        { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "NumberWidget", width: "40" }
       ]
     }/*,
     {
@@ -237,4 +239,4 @@ XV.WorkspacePanelDescriptor = {
 XV.ObjectWidgetTitleFields = {
   UserAccountInfo: "propername",
   SomethingElse: "somethingElse"
-}
+};

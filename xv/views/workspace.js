@@ -33,60 +33,18 @@ trailing:true white:true*/
         var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
           var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
-          if (boxDesc.boxType === 'Grid') {
+          if (boxDesc.boxType) {
             /**
              * Grids are a special case that must be rendered per their own logic.
              * All one-to-many relationships will be rendered as a grid (?)
              */
             box = this.createComponent({
-                kind: "onyx.Groupbox",
+                kind: boxDesc.boxType,
                 container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
-                style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
-                components: [
-                  { kind: "onyx.GroupboxHeader", content: boxDesc.title }
-                ]
+                name: boxDesc.title
               });
-
-
-            /**
-             * I'm not crazy about this solution. I set the columns first, and then the rows from
-             * there. This lets the column spacing be consistent between the labels and the fields,
-             * but the tab order is not good. Some sort of grid would be better.
-             */
-
-
-            for (iRow = -1; iRow < 8; iRow++) {
-
-              boxRow = this.createComponent({
-                kind: "onyx.Groupbox",
-                classes: "onyx-toolbar-inline",
-                container: box,
-                style: "background-color: white;"
-              });
-
-
-              for (iField = 0; iField < boxDesc.fields.length; iField++) {
-                fieldDesc = boxDesc.fields[iField];
-                label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
-                if (iRow === -1) {
-                  this.createComponent({
-                    container: boxRow,
-                    content: label.loc(),
-                    style: "text-weight: bold; border-width: 0px; width: " + fieldDesc.width + "px;"
-                  });
-                  continue;
-                }
-
-                this.createComponent({
-                  kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
-                  container: boxRow,
-                  name: fieldDesc.fieldName + "_" + iRow,
-                  placeholder: fieldDesc.label,
-                  style: "border-width: 0px; width: " + fieldDesc.width + "px; ",
-                  onchange: "doFieldChanged"
-                });
-              }
-            }
+            box.setDescriptor(boxDesc);
+            box.renderWidget();
 
           } else {
             /**
@@ -179,33 +137,20 @@ trailing:true white:true*/
             var fieldDesc = boxDesc.fields[iField];
             var fieldName = boxDesc.fields[iField].fieldName;
             if (fieldName) {
-              XT.log("field is " + fieldName);
-
-              //
-              // Find the corresponding field in the model
-              //
-              var applicableModel = model;
-              var fieldNameDetail = fieldName;
-              while (fieldNameDetail.indexOf('.') >= 0) {
-                var prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('.'));
-                var suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('.') + 1);
-                applicableModel = applicableModel.get(prefix);
-                fieldNameDetail = suffix;
-              }
-
-              if (applicableModel && applicableModel.length) {
-                // this is a collection. Fill in the grid.
-                for (var iList = 0; iList < applicableModel.length; iList++) {
-                  this.$[fieldName + "_" + iList].setValue(applicableModel.models[iList].getValue(fieldNameDetail));
-                }
-
-
-              } else if (applicableModel && applicableModel.getValue(fieldNameDetail)) {
-                //
-                // Update the view field with the model value
-                //
-                //console.log("value is " + applicableModel.get(fieldNameDetail));
-                this.$[fieldName].setValue(applicableModel.getValue(fieldNameDetail));
+              /**
+               * Update the view field with the model value
+               */
+              if (boxDesc.boxType === 'GridWidget') {
+                /**
+                 * Don't send just the field over. Send the whole model over
+                 */
+                this.$[boxDesc.title].setValue(model.getValue(boxDesc.title.toLowerCase()));
+                // TODO: toLowerCase is a hackish way to navigate case sensitivity here
+              } else {
+                /**
+                 * Default case: populate the field
+                 */
+                this.$[fieldName].setValue(model.getValue(fieldName));
               }
             }
           }
@@ -228,17 +173,44 @@ trailing:true white:true*/
         onFieldChanged: "doFieldChanged"
       },
       components: [
-        {kind: "FittableRows", classes: "left", components: [
-          {kind: "onyx.Toolbar", components: [
-            {content: "Project"}
-          ]},
-          {kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
-            {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
-          ]}
-        ]},
-        {kind: "FittableRows", components: [
-          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
-        ]}
+        {
+          kind: "FittableColumns",
+          noStretch: true,
+          style: "height: 50px;",
+          classes: "onyx-toolbar onyx-toolbar-inline",
+          components: [
+
+            {kind: "FittableRows", classes: "left", components: [
+              {kind: "onyx.Toolbar", components: [
+                {content: "Project"},
+                {kind: "onyx.Grabber"},
+                {kind: "Scroller", thumb: false, fit: true, touch: true,
+                   vertical: "hidden", style: "margin: 0;", components: [
+                  {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
+                  {name: "rightLabel", style: "text-align: center"}
+                ]}
+              ]}
+            ]}
+          ]
+        },
+        {
+          kind: "FittableColumns",
+          noStretch: true,
+          //classes: "onyx-toolbar onyx-toolbar-inline",
+          components: [
+            //{kind: "FittableRows", components: [
+            {kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
+              {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
+            ]},
+            {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
+            //]}
+
+
+          ]
+
+
+        }
+
       ],
       create: function () {
         this.inherited(arguments);
@@ -254,30 +226,10 @@ trailing:true white:true*/
         XT.log("field changed");
         //var fieldName = inSender.name;
         var newValue = inSender.getValue();
-        //
-        // Find the corresponding field in the model
-        // This string parsing is a little hackish I admit.
-        // A more robust way would be to create subkinds that
-        // link to the submodels, but I'm not sure if it's worth
-        // the extra effort at the moment.
-        //
-        var applicableModel = this.getModel();
-        var fieldNameDetail = inSender.name;
-        while (fieldNameDetail.indexOf('.') >= 0) {
-          prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('.'));
-          suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('.') + 1);
-          applicableModel = applicableModel.get(prefix);
-          fieldNameDetail = suffix;
-        }
-        if (fieldNameDetail.indexOf("_") >= 0) {
-          prefix = fieldNameDetail.substring(0, fieldNameDetail.indexOf('_'));
-          suffix = fieldNameDetail.substring(fieldNameDetail.indexOf('_') + 1);
-          applicableModel = applicableModel.models[suffix];
-          fieldNameDetail = prefix;
-        }
+
         var updateObject = {};
-        updateObject[fieldNameDetail] = newValue;
-        applicableModel.set(updateObject);
+        updateObject[inSender.name] = newValue;
+        this.getModel().set(updateObject);
 
         //
         // persist immediately
