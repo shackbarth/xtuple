@@ -16,7 +16,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if ((event = context.cleanupCompletedEvent)) {
         context.once(event, _.bind(this.completed, this));
         this.waitForEvent = true;
-        console.log("FOUND ONE");
       }
     },
     exec: function () {

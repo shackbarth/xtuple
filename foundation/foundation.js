@@ -264,7 +264,7 @@ XT = {};
       task = queue.shift();
       if (task) {
         // TODO: come back and do the elaborate check if it
-        // is taking to long test so that it won't hang if
+        // is taking too long test so that it won't hang if
         // a cleanup task fails
         task.once("isComplete", _.bind(this.cleanup, this));
         task.exec();

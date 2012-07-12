@@ -24,5 +24,10 @@ var c = XT.Object.extend({
   }.observes("something")
 });
 
-var d = c.create();
+var d = c.create({
+  some2: function () {
+    console.log("somenew2");
+    this._super.some2();
+  }.observes("something")
+});
 d.set("something", true);
