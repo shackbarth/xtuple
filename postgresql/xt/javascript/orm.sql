@@ -182,16 +182,18 @@ select xt.install_js('XT','Orm','xtuple', $$
 
   /**
     Returns the primary key name as designated in an ORM map.
+    If column is true, returns the column name.
 
     @param {Object} ORM
+    @param {Boolean} Get column - default false.
     @returns String
   */
-  XT.Orm.primaryKey = function(orm) {
+  XT.Orm.primaryKey = function(orm, getColumn) {
     /* find primary key */
     for(var i = 0; i < orm.properties.length; i++) {
       if(orm.properties[i].attr && 
          orm.properties[i].attr.isPrimaryKey)
-        return orm.properties[i].name;
+        return getColumn ? orm.properties[i].attr.column : orm.properties[i].name;
     }
     return false;
   }
