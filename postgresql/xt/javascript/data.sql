@@ -386,13 +386,34 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     deleteRecord: function(key, value) {
       var record = XT.decamelize(value), sql = '',
-          orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-          pkey = XT.Orm.primaryKey(orm);
-      sql = 'delete from '+ key.decamelize() + ' where ' + pkey + ' = $1;';
-      if(DEBUG) plv8.elog(NOTICE, 'sql =', sql);
+        orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+        nameKey = XT.Orm.primaryKey(orm),
+        columnKey = XT.Orm.primaryKey(orm, true),
+        prop,
+        ormp,
+        childKey,
+        values;
+          
+      /* Delete children first */
+     for (prop in record) {
+       ormp = XT.Orm.getProperty(orm, prop);
+
+       /* if the property is an array of objects they must be records so delete them */
+       if (ormp.toMany && ormp.toMany.isNested) {
+         childKey = key.beforeDot() + '.' + ormp.toMany.type,
+         values = record[prop]; 
+         for (var i = 0; i < values.length; i++) {
+            this.deleteRecord(childKey, values[i]);
+         }
+       }
+     }   
+
+      /* Now delete the top */
+      sql = 'delete from '+ orm.table + ' where ' + columnKey + ' = $1;';
+      if(DEBUG) plv8.elog(NOTICE, 'sql =', sql,  record[nameKey]);
       
       /* commit the record */
-      plv8.execute(sql, [record[pkey]]); 
+      plv8.execute(sql, [record[nameKey]]); 
     },
 
     /** 
