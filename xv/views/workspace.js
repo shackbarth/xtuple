@@ -172,24 +172,6 @@ trailing:true white:true*/
       handlers: {
         onFieldChanged: "doFieldChanged"
       },
-      /*
-			{name: "layout1", kind: "FittableRows", classes: "enyo-fit", components: [
-				{kind: "onyx.Toolbar", components: [
-					{content: "Header"},
-					{kind: "onyx.Button", content: "Button"},
-					{kind: "onyx.InputDecorator", components: [
-						{kind: "onyx.Input"}
-					]}
-				]},
-				{kind: "FittableColumns", fit: true, components: [
-					{style: "width: 300px;"},
-					{kind: "FittableRows", fit: true, style: "box-shadow: -6px 0px 6px rgba(0,0,0,0.3);", components: [
-						{style: "height: 300px; box-shadow: 6px 6px 6px rgba(0,0,0,0.3); position: relative; z-index: 1;"},
-						{fit: true, classes: "fitting-color"}
-					]}
-				]}
-			]},
-      */
       components: [
 
         {kind: "FittableRows", classes: "left", components: [
@@ -201,6 +183,10 @@ trailing:true white:true*/
           ]}
         ]},
         {kind: "FittableRows", components: [
+          {kind: "onyx.Toolbar", components: [
+            {content: "Project"},
+            { kind: "onyx.Button", content: "Save Changes" }
+          ]},
           {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
         ]}
       ],

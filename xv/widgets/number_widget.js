@@ -2,43 +2,27 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, enyo:true, _:true */
 (function () {
-  "use strict";
+  //"use strict";
 
-  /**
-   * TODO: I'm sure the right way to do this is just to extend onyx.Input directly.
-   * enyo.Input has a published field called type, but you can't just set that to
-   * number and have everything else work perfectly.
-   *
-   */
+
+  // TODO: validate input and complain if invalid
+
   enyo.kind({
     name: "NumberWidget",
-    kind: "enyo.Control",
-    published: {
-      numberObject: null
-    },
-    components: [
-      { kind: "onyx.Input", name: "numberField", placeholder: "Enter number", onchange: "doInputChanged" }
-    ],
+    kind: "onyx.Input",
+    numberObject: null,
     /**
-     * A convenience function so that this object can be treated generally like an input
+     * Sets the value of the field. Validates as well, and clears shown input if invalid.
      */
-    setValue: function (number) {
-      this.setNumberObject(number);
+    setValue: function (value) {
+      this.inherited(arguments);
+      this.numberObject = value ? Number(value) : null;
     },
     /**
-     * A convenience function so that this object can be treated generally like an input
+     * Returns the number value and not the string
      */
     getValue: function () {
-      return this.getNumberObject();
-    },
-    numberObjectChanged: function () {
-      this.$.numberField.setValue(this.numberObject.toLocaleString());
-    },
-    doInputChanged: function () {
-      // lucky: no infinite loop! This function only gets triggered from an
-      // actual user input, and not if the field is changed via the numberObjectChanged
-      // function
-      this.setNumberObject(Number(this.$.numberField.getValue()));
+      return isFinite(this.numberObject) ? this.numberObject : null;
     }
   });
 }());
