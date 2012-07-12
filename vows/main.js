@@ -63,23 +63,22 @@ XVOWS.wait = 10000;
   For models with manually created ids such as 'XM.UserAccount',
   create a topic manually.
 
-  @param {String} Record type
+  @param {String|Object} Model
   @param {Object} Vows
 */
-XVOWS.create = function (recordType, vows) {
+XVOWS.create = function (model, vows) {
   "use strict";
   vows = vows || {};
   var context = {
-    topic: function (model) {
+    topic: function () {
       var that = this,
         timeoutId,
-        Klass = Backbone.Relational.store.getObjectByName(recordType),
-        newModel = new Klass(),
+        Klass,
         auto_regex = XM.Document.AUTO_NUMBER + "|" + XM.Document.AUTO_OVERRIDE_NUMBER,
         callback = function (model, value) {
           if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
             // Check that the AUTO...NUMBER property has been set.
-            if (typeof model.get(model.documentKey) !== 'undefined') {
+            if (model.get(model.documentKey) && model.id) {
               clearTimeout(timeoutId);
               model.off('change:' + model.documentKey, callback);
               model.off('change:guid', callback);
@@ -92,22 +91,26 @@ XVOWS.create = function (recordType, vows) {
           }
         };
 
-      newModel.on('change:guid', callback);
-      // Add an event handler when using a model with an AUTO...NUMBER.
-      if (newModel instanceof XM.Document && newModel.numberPolicy.match(auto_regex)) {
-        newModel.on('change:' + newModel.documentKey, callback);
+      if (typeof model === 'string') {
+        Klass = Backbone.Relational.store.getObjectByName(model);
+        model = new Klass();
       }
-      newModel.initialize(null, {isNew: true});
+      model.on('change:guid', callback);
+      // Add an event handler when using a model with an AUTO...NUMBER.
+      if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
+        model.on('change:' + model.documentKey, callback);
+      }
+      model.initialize(null, {isNew: true});
 
       // If we don't hear back, keep going
       timeoutId = setTimeout(function () {
-        that.callback(null, newModel);
+        that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is READY_NEW': function (model) {
+    'Status is `READY_NEW`': function (model) {
       assert.equal(model.getStatusString(), 'READY_NEW');
     },
-    'id is valid': function (model) {
+    'ID is valid': function (model) {
       assert.isNumber(model.id);
     }
   };
@@ -121,13 +124,14 @@ XVOWS.create = function (recordType, vows) {
   Saves the working model and automatically checks state
   is `READY_CLEAN` immediately afterward.
 
+  @param {String|Object} Model
   @param {Object} Vows
 */
-XVOWS.save = function (vows) {
+XVOWS.save = function (model, vows) {
   "use strict";
   vows = vows || {};
   var context = {
-    topic: function (model) {
+    topic: function () {
       var that = this,
         timeoutId,
         callback = function () {
@@ -147,7 +151,30 @@ XVOWS.save = function (vows) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is READY_CLEAN': function (model) {
+    'Status is `READY_CLEAN`': function (model) {
+      assert.equal(model.getStatusString(), 'READY_CLEAN');
+    }
+  };
+
+  // Add in any other passed vows
+  _.extend(context, vows);
+  return context;
+};
+
+/**
+  Check before updating the working model that the state is `READY_CLEAN`.
+
+  @param {String|Object} Model
+  @param {Object} Vows
+*/
+XVOWS.update = function (model, vows) {
+  "use strict";
+  vows = vows || {};
+  var context = {
+    topic: function () {
+      return model;
+    },
+    'Status is `READY_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'READY_CLEAN');
     }
   };
@@ -163,11 +190,11 @@ XVOWS.save = function (vows) {
 
   @param {Object} Vows
 */
-XVOWS.destroy = function (vows, obj) {
+XVOWS.destroy = function (model, vows, obj) {
   "use strict";
   vows = vows || {};
   var context = {
-    topic: function (model) {
+    topic: function () {
       var that = this,
         timeoutId,
         callback = function () {
@@ -187,7 +214,7 @@ XVOWS.destroy = function (vows, obj) {
         that.callback(null, model);
       }, XVOWS.wait);
     },
-    'Status is DESTORYED_CLEAN': function (model) {
+    'Status is `DESTROYED_CLEAN`': function (model) {
       assert.equal(model.getStatusString(), 'DESTROYED_CLEAN');
     }
   };
