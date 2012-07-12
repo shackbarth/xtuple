@@ -24,7 +24,7 @@
   updateHash = {
     name: 'Test Update operation'
   };
-  
+
   // Get the comment type id from it's name.
   commentType = _.find(XM.commentTypes.models, function (item) {
     return item.get('name') === 'General';
