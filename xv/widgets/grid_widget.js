@@ -11,6 +11,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       models: null,
       descriptor: null
     },
+    events: {
+      onModelUpdate: ""
+    },
     style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
     components: [
       { kind: "onyx.GroupboxHeader", name: "title" }
@@ -87,7 +90,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         for (var iField = 0; iField < this.getDescriptor().fields.length; iField++) {
           var rowDescription = this.getDescriptor().fields[iField];
           this.$[rowDescription.fieldName + iRow].setValue(model.get(rowDescription.fieldName));
-          XT.log("hi");
         }
       }
     },
@@ -104,6 +106,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var updateObject = {};
       updateObject[fieldName] = newValue;
       this.getModels().models[rowIndex].set(updateObject);
+      this.doModelUpdate();
     }
   });
 }());

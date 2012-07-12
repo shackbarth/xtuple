@@ -176,20 +176,39 @@ XT.$A = XT.A;
 
 var XV = XV || {};
 XV.WorkspacePanelDescriptor = {
-  Project: // the key is uppercase because the model name is uppercase
-    [{
-      title: "Project Info",
-      location: "bottom",
+
+  Account: [
+    {
+      title: "Account Info",
+      location: "top",
       fields: [
-        { fieldName: "number", placeholder: "Enter project number" },
-        { fieldName: "name", placeholder: "Enter project name" },
-        { fieldName: "notes", placeholder: "Enter project notes" },
+        { fieldName: "name" },
+        { fieldName: "number" }
+      ]
+    },
+    {
+      title: "Tax Info", // I know this doesn't really merit its own box
+      location: "top",
+      fields: [
+        { fieldName: "taxAuthority" }
+      ]
+    }
+  ],
+
+  Project: [// the key is uppercase because the model name is uppercase
+    {
+      title: "Project Info",
+      location: "top",
+      fields: [
+        { fieldName: "number", placeholder: "Enter the project number" },
+        { fieldName: "name" },
+        { fieldName: "notes" },
         { label: "status", fieldName: "getProjectStatusString" }
       ]
     },
     {
       title: "Schedule",
-      location: "bottom",
+      location: "top",
       fields: [
         { fieldName: "owner", fieldType: "RelationalWidget" },
         { fieldName: "assignedTo", fieldType: "RelationalWidget" },
@@ -199,19 +218,9 @@ XV.WorkspacePanelDescriptor = {
         { fieldName: "completeDate", fieldType: "DateWidget" }
       ]
     },
-    //{
-      //title: "Billing",
-      //location: "top",
-      //fields: [
-      //  { label: "Customer", fieldName: "projectCustomer", placeholder: "The customer to be billed" },
-      //  { label: "Rate", fieldName: "projectRate", placeholder: "Enter project rate" },
-      //]
-    //},
-
-
     {
       title: "Tasks",
-      location: "top",
+      location: "bottom",
       boxType: "GridWidget",
       fields: [
         { label: "number", fieldName: "number", width: "120" },
@@ -220,18 +229,7 @@ XV.WorkspacePanelDescriptor = {
         { label: "actualHours", fieldName: "actualHours", fieldType: "NumberWidget", width: "40" },
         { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "NumberWidget", width: "40" }
       ]
-    }/*,
-    {
-      title: "Comments",
-      location: "bottom",
-      boxType: "Grid",
-      fields: [
-        { label: "Date", width: "120" },
-        { label: "Type", width: "80" },
-        { label: "User", width: "80" },
-        { label: "Comment", width: "300" }
-      ]
-    }*/
+    }
   ]
 };
 

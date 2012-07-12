@@ -11,7 +11,6 @@ trailing:true white:true*/
       realtimeFit: true,
       wrap: false,
       classes: "panels enyo-border-box",
-      bgcolors: ["red", "green", "blue", "indigo", "violet"],
       published: {
         modelType: ""
       },
@@ -75,7 +74,8 @@ trailing:true white:true*/
                 style: "",
                 name: fieldDesc.fieldName,
                 container: field,
-                onchange: "doFieldChanged"
+                onchange: "doFieldChanged",
+                placeholder: fieldDesc.placeholder ? fieldDesc.placeholder : "Enter " + label.loc()
               });
             }
           }
@@ -165,60 +165,84 @@ trailing:true white:true*/
       realtimeFit: true,
       arrangerKind: "CollapsingArranger",
       published: {
-        modelType: "Project", // TODO: this has to be the empty string
-        // TODO: wait to load the menu items until we know the model type for real
+        modelType: "",
         model: null
       },
       handlers: {
-        onFieldChanged: "doFieldChanged"
+        onFieldChanged: "doFieldChanged",
+        onModelUpdate: "doEnableSaveButton"
       },
       components: [
 
         {kind: "FittableRows", classes: "left", components: [
           {kind: "onyx.Toolbar", components: [
-            {content: "Project"}
+            {name: "workspaceHeader", content: "Thanks for using this workspace."}
           ]},
-          {kind: "List", fit: true, touch: true, onSetupItem: "setupItem", components: [
-            {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
-          ]}
+          {
+            kind: "Repeater",
+            fit: true,
+            touch: true,
+            onSetupItem: "setupItem",
+            name: "menuItems",
+            components: [
+              { name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
+            ]
+          }
         ]},
         {kind: "FittableRows", components: [
           {kind: "onyx.Toolbar", components: [
-            {content: "Project"},
-            { kind: "onyx.Button", content: "Save Changes" }
+            {content: ""},
+            {
+              kind: "onyx.Button",
+              name: "saveButton",
+              disabled: true,
+              content: "No Changes",
+              classes: "onyx-affirmative",
+              onclick: "doPersist"
+            }
           ]},
           {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
         ]}
       ],
       create: function () {
         this.inherited(arguments);
-        this.$.list.setCount(XV.WorkspacePanelDescriptor[this.getModelType()].length);
       },
       rendered: function () {
         this.inherited(arguments);
-        this.$.list.select(0);
       },
       doFieldChanged: function (inEvent, inSender) {
         var prefix, suffix;
 
-        XT.log("field changed");
-        //var fieldName = inSender.name;
         var newValue = inSender.getValue();
 
         var updateObject = {};
         updateObject[inSender.name] = newValue;
         this.getModel().set(updateObject);
 
-        //
-        // persist immediately
-        // XXX this is an important design decision TBD
-        //
+        this.doEnableSaveButton();
+      },
+      doEnableSaveButton: function () {
+        this.$.saveButton.setContent("Save Changes");
+        this.$.saveButton.setDisabled(false);
+      },
+      doPersist: function () {
         this.getModel().save();
+        this.$.saveButton.setContent("Changes Saved");
+        this.$.saveButton.setDisabled(true);
       },
       // list
       setupItem: function (inSender, inEvent) {
-        this.$.item.setContent(XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title);
-        this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+        var title = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title;
+        inEvent.item.children[0].setContent(title);
+        //inEvent.item.children[0].setValue(title);
+        //this.$.item.setContent(XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title);
+        //this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+
+        return true;
+      },
+      setWorkspaceList: function () {
+        var menuItems = XV.WorkspacePanelDescriptor[this.getModelType()];
+        this.$.menuItems.setCount(menuItems.length);
       },
       itemTap: function (inSender, inEvent) {
         var p = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index];
@@ -233,15 +257,17 @@ trailing:true white:true*/
         if (modelType.substring(modelType.length - 4) === "Info") {
           modelType = modelType.substring(0, modelType.length - 4);
         }
-        var id = model.get("guid");
 
         //
         // Setting the model type also renders the workspace. We really can't do
         // that until we know the model type.
         //
+        this.setModelType(modelType);
+        this.$.workspaceHeader.setContent(modelType);
+        this.setWorkspaceList();
+        this.$.menuItems.render();
         this.$.workspacePanels.setModelType(modelType);
 
-        //console.log("Workspace is fetching " + modelType + " " + id);
 
         //
         // Set up a listener for changes in the model
@@ -255,6 +281,7 @@ trailing:true white:true*/
         //
         // Fetch the model
         //
+        var id = model.get("guid");
         m.fetch({id: id});
         XT.log("Workspace is fetching " + modelType + " " + id);
 
