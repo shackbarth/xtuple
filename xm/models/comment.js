@@ -79,14 +79,16 @@ white:true*/
       var result = {},
         publicDefault = XT.session.getSettings().get('CommentPublicDefault');
       result.created = new Date();
-      result.createdBy = XM.currentUser;
+      result.createdBy = XM.currentUser.get('username');
       result.isPublic = publicDefault || false;
       return result;
     },
 
     isReadOnly: function () {
       var commentType = this.get('commentType'),
-        editable = commentType && commentType.get('commentsEditable');
+        isNew = this.getStatus() === XT.Model.READY_NEW,
+        editable = isNew || (commentType &&
+          commentType.get('commentsEditable'));
 
       return !editable || XT.Model.prototype.isReadOnly.apply(this, arguments);
     }

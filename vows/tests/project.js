@@ -10,7 +10,8 @@
   var createHash,
     updateHash,
     dueDate = new Date(),
-    model = new XM.Project();
+    model = new XM.Project(),
+    commentType;
 
   dueDate.setDate(dueDate.getDate() + 30);
 
@@ -23,6 +24,11 @@
   updateHash = {
     name: 'Test Update operation'
   };
+  
+  // Get the comment type id from it's name.
+  commentType = _.find(XM.commentTypes.models, function (item) {
+    return item.get('name') === 'General';
+  });
 
   vows.describe('XM.Project CRUD test').addBatch({
     'CREATE ': XVOWS.create(model, {
@@ -89,7 +95,78 @@
       }
     })
   }).addBatch({
-    'CHILDREN ': {
+    'COMMENT ': {
+      topic: function () {
+        return model;
+      },
+      'Last Error is null': function (model) {
+        assert.isNull(model.lastError);
+      },
+      '-> add comment': {
+        topic: function (model) {
+          var that = this,
+            timeoutId,
+            comment = new XM.ProjectComment(),
+            callback = function () {
+              clearTimeout(timeoutId);
+              comment.off('change:guid', callback);
+              that.callback(null, comment);
+            };
+
+          // Must add comment to the project first then initialize
+          model.get('comments').add(comment);
+          comment.on('change:guid', callback);
+          comment.initialize(null, {isNew: true});
+
+          // If we don't hear back, keep going
+          timeoutId = setTimeout(function () {
+            that.callback(null, model);
+          }, 5000); // five seconds
+        },
+        'Comment Status is READY_NEW': function (comment) {
+          assert.equal(comment.getStatusString(), 'READY_NEW');
+        },
+        'Comment id is valid': function (comment) {
+          assert.isNumber(comment.id);
+        },
+        '-> Set and Save comment': {
+          topic: function (comment) {
+            var that = this,
+              timeoutId,
+              model = comment.getParent(), // Model is now Project
+              callback = function () {
+                var status = model.getStatus(),
+                  K = XT.Model;
+                if (status === K.READY_CLEAN) {
+                  clearTimeout(timeoutId);
+                  model.off('statusChange', callback);
+                  that.callback(null, model);
+                }
+              };
+            comment.set({
+              commentType: commentType.id,
+              text: 'My first comment'
+            });
+            model.on('statusChange', callback);
+            model.save();
+
+            // If we don't hear back, keep going
+            timeoutId = setTimeout(function () {
+              that.callback(null, model);
+            }, XVOWS.wait);
+          },
+          'Status is READY_CLEAN': function (model) {
+            assert.equal(model.getStatusString(), 'READY_CLEAN');
+          },
+          'Last Error is null': function (model) {
+            assert.isNull(model.lastError);
+          }
+        }
+      }
+    }
+  })
+  .addBatch({
+    'TASK': {
       topic: function () {
         return model;
       },
@@ -152,13 +229,17 @@
           },
           'Status is READY_CLEAN': function (model) {
             assert.equal(model.getStatusString(), 'READY_CLEAN');
+          },
+          'Last Error is null': function (model) {
+            assert.isNull(model.lastError);
           }
         }
       }
     }
-  }).addBatch({
+  })
+  .addBatch({
     'DESTROY': XVOWS.destroy(model, {
-      'FINISH XM.Address': function () {
+      'FINISH XM.Project': function () {
         XVOWS.next();
       }
     })
