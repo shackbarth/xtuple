@@ -198,7 +198,7 @@ XV.WorkspacePanelDescriptor = {
   Project: [// the key is uppercase because the model name is uppercase
     {
       title: "Project Info",
-      location: "top",
+      location: "bottom",
       fields: [
         { fieldName: "number", placeholder: "Enter the project number" },
         { fieldName: "name" },
@@ -208,26 +208,26 @@ XV.WorkspacePanelDescriptor = {
     },
     {
       title: "Schedule",
-      location: "top",
+      location: "bottom",
       fields: [
-        { fieldName: "owner", fieldType: "RelationalWidget" },
-        { fieldName: "assignedTo", fieldType: "RelationalWidget" },
-        { fieldName: "dueDate", fieldType: "DateWidget" },
-        { fieldName: "assignDate", fieldType: "DateWidget" },
-        { fieldName: "startDate", fieldType: "DateWidget" },
-        { fieldName: "completeDate", fieldType: "DateWidget" }
+        { fieldName: "owner", fieldType: "XV.RelationalWidget" },
+        { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
+        { fieldName: "dueDate", fieldType: "XV.DateWidget" },
+        { fieldName: "assignDate", fieldType: "XV.DateWidget" },
+        { fieldName: "startDate", fieldType: "XV.DateWidget" },
+        { fieldName: "completeDate", fieldType: "XV.DateWidget" }
       ]
     },
     {
       title: "Tasks",
-      location: "bottom",
-      boxType: "GridWidget",
+      location: "top",
+      boxType: "XV.GridWidget",
       fields: [
         { label: "number", fieldName: "number", width: "120" },
         { label: "name", fieldName: "name", width: "120" },
         { label: "notes", fieldName: "notes", width: "220" },
-        { label: "actualHours", fieldName: "actualHours", fieldType: "NumberWidget", width: "40" },
-        { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "NumberWidget", width: "40" }
+        { label: "actualHours", fieldName: "actualHours", fieldType: "XV.NumberWidget", width: "40" },
+        { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "XV.NumberWidget", width: "40" }
       ]
     }
   ]

@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   enyo.kind({
-    name: "RelationalWidget",
+    name: "XV.RelationalWidget",
     kind: enyo.Control,
     published: {
       baseObject: null

@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   enyo.kind({
-    name: "DateWidget",
+    name: "XV.DateWidget",
     kind: enyo.Control,
     published: {
       dateObject: null

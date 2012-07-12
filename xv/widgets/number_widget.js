@@ -8,21 +8,41 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // TODO: validate input and complain if invalid
 
   enyo.kind({
-    name: "NumberWidget",
-    kind: "onyx.Input",
+    name: "XV.NumberWidget",
+    kind: "enyo.Control",
     numberObject: null,
+    components: [
+      { kind: "onyx.Input", name: "numberField", onchange: "doFieldChanged", style: "border: 0px; "}
+    ],
+
+    create: function () {
+      this.inherited(arguments);
+      /**
+       * the field should inherit the style of the widget. I do this for
+       * the width property, which works nicely. It might not work nicely
+       * for other properties
+       */
+      this.$.numberField.setStyle(this.style);
+    },
     /**
      * Sets the value of the field. Validates as well, and clears shown input if invalid.
      */
     setValue: function (value) {
-      this.inherited(arguments);
       this.numberObject = value ? Number(value) : null;
+      this.$.numberField.setValue(Globalize.format(this.numberObject, "n"));
     },
     /**
      * Returns the number value and not the string
      */
-    getValue: function () {
+    getNumberObject: function () {
       return isFinite(this.numberObject) ? this.numberObject : null;
+    },
+    getValue: function () {
+      return this.getNumberObject();
+    },
+
+    doFieldChanged: function (inSender, inEvent) {
+      this.setValue(inSender.getValue());
     }
   });
 }());

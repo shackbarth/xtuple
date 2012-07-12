@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   enyo.kind({
-    name: "GridWidget",
+    name: "XV.GridWidget",
     kind: enyo.Control,
     published: {
       models: null,
@@ -93,9 +93,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       }
     },
-    doFieldChanged: function (inEvent, inSender) {
-      var fieldNameWithNumber = inEvent.getName();
-      var newValue = inEvent.getValue();
+    doFieldChanged: function (inSender, inEvent) {
+      var fieldNameWithNumber = inSender.getName();
+      var newValue = inSender.getValue();
       // split the field name into the (alpha) prefix and the (numeric) suffix
       var fieldNameSplit = fieldNameWithNumber.match(/(\D+)(\d+)/);
 

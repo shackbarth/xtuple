@@ -38,8 +38,9 @@
   <script type="text/javascript">
 
 
-  XT.app = new XV.Workspace();
-  XT.app.$.workspacePanels.setModelType("Project");
+  XT.app = new enyo.Control();
+  XT.app.createComponent({ kind: "XV.NumberWidget", onchange: "ege" });
+  XT.app.createComponent({ kind: "XV.NumberWidget" });
   XT.app.renderInto(document.body);
 
   </script>

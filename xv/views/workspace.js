@@ -140,7 +140,7 @@ trailing:true white:true*/
               /**
                * Update the view field with the model value
                */
-              if (boxDesc.boxType === 'GridWidget') {
+              if (boxDesc.boxType === 'XV.GridWidget') {
                 /**
                  * Don't send just the field over. Send the whole model over
                  */
@@ -218,7 +218,6 @@ trailing:true white:true*/
         var updateObject = {};
         updateObject[inSender.name] = newValue;
         this.getModel().set(updateObject);
-
         this.doEnableSaveButton();
       },
       doEnableSaveButton: function () {
