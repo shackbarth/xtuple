@@ -27,9 +27,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // Handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -66,9 +66,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // Handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -114,9 +114,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // Handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -163,9 +163,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
