@@ -36,6 +36,34 @@
       },
       '-> `useCount`': {
         // TODO - Test useCount with existing address to see if it is > 0.
+        topic: function () {
+          var callback = this.callback,
+            timeoutId,
+            success = function (response) {
+              clearTimeout(timeoutId);
+              callback(null, response);
+            };
+
+          // If we don't hear back, keep going
+          timeoutId = setTimeout(function () {
+            callback(null, 0);
+          }, XVOWS.wait);
+
+          //debugger;
+
+          // TODO - Need to load an address object and then call userCount on it.
+          // This retruns a function and equals 1, not what we want...
+          var id = XM.Address.findExisting("Tremendous Toys Inc.", "101 Toys Place", "",
+            "Walnut Hills", "VA", "22209", "United States", {success: success});
+
+          // TODO - How do we take the id=1 and load an XM.Address object???
+          //var test = XM.Address.useCount({success: success});
+
+          return id;
+        },
+        'Address found': function (addr) {
+          assert.equal(addr, 2);
+        }
 
         // XM.Address.useCount is tested below after the model is created.
       },
