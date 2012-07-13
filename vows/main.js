@@ -36,7 +36,7 @@ require("tinycolor"); /*tinycolor*/
     .option("-u, --user [user]", "The database user", "admin")
     .option("-p, --password [password]", "The database user's password", "admin")
     .option("-o, --organization [organization]", "The database user's organization", "production")
-    .option("-h, --host [host]", "The datasource hostname/url/ip", "purpletie.xtuple.com")
+    .option("-h, --host [host]", "The datasource hostname/url/ip", "23.21.76.27")
     .option("-P, --port [port]", "The datasource port", 9000, parseInt)
     .parse(process.argv);
   if (program.spec) {
