@@ -294,11 +294,12 @@ select xt.install_js('XT','Data','xtuple', $$
       delete record['type'];
 
       /* build up the content for insert of this record */
-      for (prop in record) {
-        ormp = XT.Orm.getProperty(orm, prop),
+      for (i = 0; i < orm.properties.length; i++) {
+        ormp = orm.properties[i];
+        prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
-        if (!ormp.toMany) { 
+        if (record[prop] !== undefined && !ormp.toMany) {
           props.push('"' + attr.column + '"');
 
           /* handle encryption if applicable */
@@ -350,48 +351,68 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     updateRecord: function(key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
-          schemaName = key.beforeDot().decamelize(),
-          orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-          pkey = XT.Orm.primaryKey(orm),
-          record = value,
-          sql = '', expressions, params = [];
+        schemaName = key.beforeDot(),
+        orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+        pkey = XT.Orm.primaryKey(orm),
+        columnKey =  XT.Orm.primaryKey(orm, true),
+        record = value,
+        sql = '', 
+        expressions, 
+        params = [],
+        prop,
+        ormp,
+        attr,
+        type,
+        qprop,
+        toOneOrm,
+        toOneKey,
+        toOneProp,
+        toOneVal;
       delete record['dataState'];
       delete record['type'];
 
       /* build up the content for update of this record */
-      for(var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop),
-            type = ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type,
-            qprop = '"' + prop + '"';
+      for (i = 0; i < orm.properties.length; i++) {
+        ormp = orm.properties[i];
+        prop = ormp.name;
+        attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
+        type = attr.type;
+        qprop = '"' + attr.column + '"';
 
-        /* handle encryption if applicable */
-        if(ormp && ormp.attr && ormp.attr.isEncrypted) {
-          if(encryptionKey) {
-            record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                           .replace(/{value}/, record[prop])
-                           .replace(/{encryptionKey}/, encryptionKey);
-            params.push(qprop.concat(" = ", record[prop]));
-          } else {
-            throw new Error("No encryption key provided.");
-          }
-        } else if (!ormp.toMany && ormp.name !== pkey) {
-          if(record[prop] !== null) {
-            if (ormp.toOne && ormp.toOne.isNested) {
-              var row = this.rowify(schemaName + '.' + ormp.toOne.type, record[prop]);         
-              params.push(qprop.concat(" = ", row));
-            } else if (type === 'String' || type === 'Date') { 
-              params.push(qprop.concat(" = '", record[prop], "'"));
-            } else {
+        if (record[prop] !== undefined && !ormp.toMany) {
+          /* handle encryption if applicable */
+          if(attr.isEncrypted) {
+            if(encryptionKey) {
+              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                             .replace(/{value}/, record[prop])
+                             .replace(/{encryptionKey}/, encryptionKey);
               params.push(qprop.concat(" = ", record[prop]));
+            } else {
+              throw new Error("No encryption key provided.");
             }
-          } else {
-            params.push(qprop.concat(' = null'));
+          } else if (ormp.name !== pkey) {
+            if (record[prop] !== null) {
+              if (ormp.toOne && ormp.toOne.isNested) {
+                toOneOrm = XT.Orm.fetch(schemaName, ormp.toOne.type);
+                toOneKey = XT.Orm.primaryKey(toOneOrm);
+                toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
+                toOneVal = toOneProp.attr.type === 'String' ?
+                  "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
+                params.push(qprop.concat(" = ", toOneVal));
+              } else if (type === 'String' || type === 'Date') { 
+                params.push(qprop.concat(" = '", record[prop], "'"));
+              } else {
+                params.push(qprop.concat(" = ", record[prop]));
+              }
+            } else {
+              params.push(qprop.concat(' = null'));
+            }
           }
         }
       }
 
       expressions = params.join(', ');
-      sql = 'update ' + key.decamelize() + ' set ' + expressions + ' where ' + pkey + ' = $1;';
+      sql = 'update ' + orm.table + ' set ' + expressions + ' where ' + columnKey + ' = $1;';
       if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
       
       /* commit the record */
