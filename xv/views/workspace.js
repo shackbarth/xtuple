@@ -69,7 +69,7 @@ trailing:true white:true*/
                 ]
               });
 
-              this.createComponent({
+              var widget = this.createComponent({
                 kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
                 style: "",
                 name: fieldDesc.fieldName,
@@ -77,6 +77,14 @@ trailing:true white:true*/
                 onchange: "doFieldChanged",
                 placeholder: fieldDesc.placeholder ? fieldDesc.placeholder : "Enter " + label.loc()
               });
+
+              /**
+               * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
+               * type we want to send that down to the widget
+               */
+              if(fieldDesc.modelType) {
+                widget.setModelType(fieldDesc.modelType);
+              }
             }
           }
         }

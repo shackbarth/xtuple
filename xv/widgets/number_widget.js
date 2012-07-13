@@ -6,6 +6,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
   // TODO: validate input and complain if invalid
+  // XXX these are implemented by wrapping onyx.Input instead of extending onyx.Input
+  // not sure if this is the best approach. I tried it the other way, though, and
+  // it was tough to separate the number "value" from the field "value"
 
   enyo.kind({
     name: "XV.NumberWidget",

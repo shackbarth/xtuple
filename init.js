@@ -8,7 +8,7 @@ var XT      = {};
 
 XT.enyoVersion = "2.0-beta5";
 
-XT.fileContents = function(path) {
+XT.fileContents = function (path) {
   var contents;
   try {
     contents = _fs.readFileSync(path, "utf8");
@@ -44,14 +44,14 @@ for (var libName in XT.required) {
     var path = _path.join(basePath, libName);
     var packagePath = _path.join(path, "package.js");
     var child;
-    var callback = (function(lib, packagePath, libName, path) {
-      return function() {
+    var callback = (function (lib, packagePath, libName, path) {
+      return function () {
         var packageFile = [];
         var entries = [];
         if (!_path.existsSync(packagePath)) {
           if (lib.entries) {
             packageFile.push("enyo.depends(");
-            lib.entries.forEach(function(entry) {
+            lib.entries.forEach(function (entry) {
               entries.push("  \"" + entry + "\"");
             });
             entries = entries.join(",\n");
@@ -65,7 +65,7 @@ for (var libName in XT.required) {
         }
         if (lib.tag) {
           process.chdir(path);
-          var child = _exec("git checkout " + lib.tag, function(err, stdout, stderr) {
+          var child = _exec("git checkout " + lib.tag, function (err, stdout, stderr) {
             if (err) {
               console.error("Could not checkout the requested tag for " + libName, err);
             } else { console.log("Checked out the requested tag " + lib.tag + " for " + libName); }
@@ -76,7 +76,7 @@ for (var libName in XT.required) {
     console.log("Attempting to setup " + libName);
     process.chdir(basePath);
     if (!_path.existsSync(path)) {
-      child = _exec("git clone " + lib.origin + " " + libName, { cwd: basePath }, function(){});
+      child = _exec("git clone " + lib.origin + " " + libName, { cwd: basePath }, function (){});
       child.once("exit", callback);
     } else { callback(); }
   }
@@ -87,11 +87,11 @@ if (!_path.existsSync(_path.join(__dirname, "enyo"))) {
     process.chdir(__dirname);
   }
   console.log("Pulling enyo source into project");
-  var child = _exec("git clone git@github.com:enyojs/enyo.git", function(){});
-  child.once("exit", function() {
+  var child = _exec("git clone git@github.com:enyojs/enyo.git", function (){});
+  child.once("exit", function () {
     process.chdir(_path.join(__dirname, "enyo"));
-    var sub = _exec("git checkout " + XT.enyoVersion, function(){});
-    sub.once("exit", function() {
+    var sub = _exec("git checkout " + XT.enyoVersion, function (){});
+    sub.once("exit", function () {
       process.chdir(__dirname);
       console.log("Enyo has been setup");
     });
@@ -104,7 +104,7 @@ XT.packagesContent = [];
 if (_path.existsSync(XT.packagePath)) {
   _fs.unlinkSync(XT.packagePath);
   XT.packageContent.push("enyo.depends(");
-  Object.keys(XT.required).forEach(function(libName) {
+  Object.keys(XT.required).forEach(function (libName) {
     XT.packagesContent.push("  \"$lib/" + libName + "\"");
   });
 
@@ -114,6 +114,7 @@ if (_path.existsSync(XT.packagePath)) {
   XT.packagesContent.push("  \"xm\"");
   XT.packagesContent.push("  \"xv\"");
   XT.packagesContent.push("  \"app.js\"");
+  XT.packagesContent.push("  \"$lib/onyx/source/wip-package.js\""); // XXX temp for dropdown widget
 
   XT.packagesContent = XT.packagesContent.join(",\n");
   XT.packageContent.push(XT.packagesContent);

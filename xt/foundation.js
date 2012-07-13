@@ -203,12 +203,12 @@ XV.WorkspacePanelDescriptor = {
         { fieldName: "number", placeholder: "Enter the project number" },
         { fieldName: "name" },
         { fieldName: "notes" },
-        { label: "status", fieldName: "getProjectStatusString" }
+        { fieldName: "status", fieldType: "XV.DropdownWidget", modelType: "XM.projectStatuses" }
       ]
     },
     {
       title: "Schedule",
-      location: "bottom",
+      location: "top",
       fields: [
         { fieldName: "owner", fieldType: "XV.RelationalWidget" },
         { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
@@ -220,7 +220,7 @@ XV.WorkspacePanelDescriptor = {
     },
     {
       title: "Tasks",
-      location: "top",
+      location: "bottom",
       boxType: "XV.GridWidget",
       fields: [
         { label: "number", fieldName: "number", width: "120" },
