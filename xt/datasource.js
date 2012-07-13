@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, io:true, _:true, console:true */
@@ -8,14 +8,15 @@ white:true*/
 
   XT.dataSource = {
 
-    datasourceUrl: "purpletie.xtuple.com",
+    datasourceUrl: "23.21.76.27",
+    //datasourceUrl: "purpletie.xtuple.com",
     //datasourceUrl: "localhost",
     datasourcePort: 9000,
     isConnected: false,
 
     /*
     Returns a record array based on a query.
-  
+
     @param {Object} query
     @param {Object} options
     */
@@ -27,9 +28,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // Handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -54,7 +55,7 @@ white:true*/
 
     /*
     Returns a single record.
-  
+
     @param {String} record type
     @param {Number} id
     @param {Object} options
@@ -66,9 +67,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // Handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -103,7 +104,7 @@ white:true*/
 
     /*
     Commit a single record.
-  
+
     @param {XT.Model} model
     @param {Object} options
     */
@@ -114,9 +115,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // Handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -143,7 +144,7 @@ white:true*/
 
     /*
     Dispatch a server side function call to the datasource.
-  
+
     @param {String} class name
     @param {String} function name
     @param {Object} parameters
@@ -163,9 +164,9 @@ white:true*/
           var dataHash, params = {}, error;
 
           // handle error
-          if (response.data.isError) {
+          if (response.isError) {
             if (options && options.error) {
-              params.error = response.data.reason;
+              params.error = response.message.data.detail;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }

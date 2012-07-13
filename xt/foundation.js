@@ -2,107 +2,107 @@
 /**
 */
 XT = {
-  
+
   /**
     System precision scale for money.
-    
+
     @static
     @constant
     @type Number
     @default 2
   */
   MONEY_SCALE: 2,
-  
+
   /**
     System precision scale for quantity.
-    
+
     @static
     @constant
     @type Number
     @default 6
   */
   QTY_SCALE: 6,
-  
+
   /**
     System precision scale for quantity per.
-    
+
     @static
     @constant
     @type Number
     @default 7
   */
   QTY_PER_SCALE: 7,
-  
+
   /**
     System precision scale for costs.
-    
+
     @static
     @constant
     @type Number
     @default 6
   */
   COST_SCALE: 6,
-  
+
   /**
     System precision scale for sales prices.
-    
+
     @static
     @constant
     @type Number
     @default 4
   */
   SALES_PRICE_SCALE: 4,
-  
+
   /**
     System precision scale for purchase prices.
-    
+
     @static
     @constant
     @type Number
     @default 6
   */
   PURCHASE_PRICE_SCALE: 6,
-  
+
   /**
     System precision scale for extended prices.
-    
+
     @static
     @constant
     @type Number
     @default 0
   */
   EXTENDED_PRICE_SCALE:4,
-  
+
   /**
     System precision scale for unit conversion ratios.
-    
+
     @static
     @constant
     @type Number
     @default 7
   */
   UNIT_RATIO_SCALE: 8,
-  
+
   /**
     System precision scale for percentages.
-    
+
     @static
     @constant
     @type Number
     @default 4
   */
   PERCENT_SCALE: 4,
-  
+
   /**
     System precision scale for weight.
-    
+
     @static
     @constant
     @type Number
     @default 2
   */
   WEIGHT_SCALE: 2
-  
+
 };
 
 /**
@@ -113,24 +113,24 @@ XM = {};
 */
 _.extend(XT,
   /** */ {
-    
+
   /** */
-  K: function(){},
-  
+  K: function (){},
+
   /** */
   _date: new Date(),
-  
+
   /** */
-  toReadableTimestamp: function(millis) {
+  toReadableTimestamp: function (millis) {
     var re = XT._date || (XT._date = new Date());
     re.setTime(millis);
     return re.toLocaleTimeString();
   },
-  
-  getObjectByName: function(target) {
-    
+
+  getObjectByName: function (target) {
+
     if (!target.split) return null;
-    
+
     var parts = target.split(".");
     var ret;
     var part;
@@ -144,26 +144,26 @@ _.extend(XT,
     }
     return ret;
   },
-  
+
   /**
     @NOTE: some logic borrowed from SproutCore
   */
-  A: function(obj) {
+  A: function (obj) {
     if (obj === null || obj === undefined) return [];
     if (obj.slice instanceof Function) {
       if (typeof obj === "string") return [obj];
       else return obj.slice();
     }
-    
+
     var ret = [];
-    
+
     // case of function arguments that has length property
     if (obj.length) {
       var len = obj.length;
       while(--len >= 0) ret[len] = obj[len];
       return ret;
     }
-    
+
     // for cases where we just convert the values from an
     // object to an array and discard the keys...
     return _.values(obj);
@@ -172,3 +172,69 @@ _.extend(XT,
 });
 
 XT.$A = XT.A;
+
+
+var XV = XV || {};
+XV.WorkspacePanelDescriptor = {
+
+  Account: [
+    {
+      title: "Account Info",
+      location: "top",
+      fields: [
+        { fieldName: "name" },
+        { fieldName: "number" }
+      ]
+    },
+    {
+      title: "Tax Info", // I know this doesn't really merit its own box
+      location: "top",
+      fields: [
+        { fieldName: "taxAuthority" }
+      ]
+    }
+  ],
+
+  Project: [// the key is uppercase because the model name is uppercase
+    {
+      title: "Project Info",
+      location: "bottom",
+      fields: [
+        { fieldName: "number", placeholder: "Enter the project number" },
+        { fieldName: "name" },
+        { fieldName: "notes" },
+        { label: "status", fieldName: "getProjectStatusString" }
+      ]
+    },
+    {
+      title: "Schedule",
+      location: "bottom",
+      fields: [
+        { fieldName: "owner", fieldType: "XV.RelationalWidget" },
+        { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
+        { fieldName: "dueDate", fieldType: "XV.DateWidget" },
+        { fieldName: "assignDate", fieldType: "XV.DateWidget" },
+        { fieldName: "startDate", fieldType: "XV.DateWidget" },
+        { fieldName: "completeDate", fieldType: "XV.DateWidget" }
+      ]
+    },
+    {
+      title: "Tasks",
+      location: "top",
+      boxType: "XV.GridWidget",
+      fields: [
+        { label: "number", fieldName: "number", width: "120" },
+        { label: "name", fieldName: "name", width: "120" },
+        { label: "notes", fieldName: "notes", width: "220" },
+        { label: "actualHours", fieldName: "actualHours", fieldType: "XV.NumberWidget", width: "40" },
+        { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "XV.NumberWidget", width: "40" }
+      ]
+    }
+  ]
+};
+
+
+XV.ObjectWidgetTitleFields = {
+  UserAccountInfo: "propername",
+  SomethingElse: "somethingElse"
+};

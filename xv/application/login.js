@@ -37,9 +37,7 @@ trailing:true white:true*/
       var form = XV.loginForm;
       form.$.username.setValue("admin");
       form.$.password.setValue("admin");
-      //form.$.password.setValue("Assemble!Aurora");
       form.$.organization.setValue("production");
-      //form.$.organization.setValue("aurora");
     }
   });
   

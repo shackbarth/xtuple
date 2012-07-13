@@ -1,0 +1,18 @@
+enyo.depends(
+  "info_list.js",
+<<<<<<< HEAD
+  "info_list_row.js",
+  "module_toolbar.js",
+  "module_screen.js",
+  "module_menu.js",
+  "module_menu_item.js",
+  "sub_module_content.js",
+  "input.js",
+  "workspace.js"
+);
+=======
+  "input.js",
+  "module.js",
+  "screen_carousel.js"
+);
+>>>>>>> xtuple
