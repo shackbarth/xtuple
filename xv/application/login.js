@@ -38,7 +38,7 @@ trailing:true white:true*/
       form.$.username.setValue("admin");
       form.$.password.setValue("admin");
       //form.$.password.setValue("Assemble!Aurora");
-      form.$.password.setValue("production");
+      form.$.organization.setValue("production");
       //form.$.organization.setValue("aurora");
     }
   });
