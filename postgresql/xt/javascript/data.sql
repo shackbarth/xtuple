@@ -626,48 +626,8 @@ select xt.install_js('XT','Data','xtuple', $$
         else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
       }
       return ret;
-    },
-
-    /** 
-      Convert a record object to PostgresSQL row formatted string.
-
-      @param {String} the column type
-      @param {Object} data to convert
-      @returns {String} a string formatted like a postgres RECORD datatype 
-    */
-    rowify: function (key, value) {
-      if (value === null) return 'null';
-      
-      var type = key.afterDot().classify(), 
-        nameSpace = key.beforeDot().toUpperCase(),
-        orm = XT.Orm.fetch(nameSpace, type),
-        record = value,
-        props = [], ret = '';
-
-      for (var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop),
-        type = ormp ? (ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type) : 'String';
-        if (prop && record[prop] !== null) {
-          if (ormp.toMany) { 
-            /* orm rules ignore arrays, but we need this place holder so type signatures match */
-            props.push("'{}'");  
-          } else if (ormp.toOne && ormp.toOne.isNested) { 
-            record[prop] = this.rowify(nameSpace + '.' + type, record[prop]);
-            props.push(record[prop]); 
-          } else if (type === 'String' ||
-                     type === 'Date') {
-            props.push("'" + record[prop] + "'"); 
-          } else {
-            props.push(record[prop]);
-          }
-        } else {
-          props.push('null');
-        }
-      }
-      ret = ret.concat('(', props.join(','), ')');
-      if(DEBUG) { plv8.elog(NOTICE, 'rowify = ', ret); }    
-      return ret;
     }
+    
   }
 
 $$ );
