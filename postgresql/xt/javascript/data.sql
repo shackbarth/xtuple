@@ -35,33 +35,40 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} parameters - optional
       @returns {Boolean}
     */
-    buildClause: function(nameSpace, type, conditions, parameters) {
-      var ret = ' true ', cond = '', pcond = '',
-          map = XT.Orm.fetch(nameSpace, type),
-          privileges = map.privileges;
+    buildClause: function (nameSpace, type, conditions, parameters) {
+      var ret = ' true ', 
+        cond = '', 
+        pcond = '',
+        map = XT.Orm.fetch(nameSpace, type),
+        privileges = map.privileges,
+        type,
+        i,
+        val,
+        param,
+        regExp;
           
       /* handle passed conditions */
-      if(conditions) {
+      if (conditions) {
         /* helper function */
         format = function(arg) { 
-          var type = XT.typeOf(arg);
+          type = XT.typeOf(arg);
           if(type === 'string') return "'" + arg + "'"; 
           else if(type === 'array') return "array[" + arg + "]";   
           return arg;
         }      
 
         /* evaluate */
-        if(parameters) {
-          if(conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
-            for(var i = 0; i < parameters.length; i++) {
-              var val =  format(parameters[i]);
+        if (parameters) {
+          if (conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
+            for (i = 0; i < parameters.length; i++) {
+              val =  format(parameters[i]);
               conditions = conditions.replace(/%@/,val);
             }
           } else {  /* replace parameterized tokens */
-            for(var prop in parameters) {
-              var param = '{' + prop + '}',
-                  val = format(parameters[prop]),
-                  regExp = new RegExp(param, "g"); 
+            for (var prop in parameters) {
+              param = '{' + prop + '}',
+              val = format(parameters[prop]),
+              regExp = new RegExp(param, "g"); 
               conditions = conditions.replace(regExp, val);
             }
           }
@@ -69,7 +76,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* handle privileges */
-      if((privileges &&
+      if ((privileges &&
          (!privileges.all || (privileges.all &&
          (!this.checkPrivilege(privileges.all.read) && 
           !this.checkPrivilege(privileges.all.update)))) &&
@@ -94,7 +101,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} privilege
       @returns {Boolean}
     */
-    checkPrivilege: function(privilege) {
+    checkPrivilege: function (privilege) {
       var ret = privilege;
       if (typeof privilege === 'string') {
         if(!this._grantedPrivs) this._grantedPrivs = [];
@@ -117,7 +124,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Boolean} is top level, default is true
       @returns {Boolean}
     */
-    checkPrivileges: function(nameSpace, type, record, isTopLevel) {
+    checkPrivileges: function (nameSpace, type, record, isTopLevel) {
       var isTopLevel = isTopLevel !== false ? true : false,
           isGrantedAll = true,
           isGrantedPersonal = false,
@@ -200,9 +207,11 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} record object to be committed
       @param {Object} view definition object
     */
-    commitArrays: function(nameSpace, record, orm) {
-      for(var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop);
+    commitArrays: function (nameSpace, record, orm) {
+      var prop,
+        ormp;
+      for(prop in record) {
+        ormp = XT.Orm.getProperty(orm, prop);
 
         /* if the property is an array of objects they must be records so commit them */
         if (ormp.toMany && ormp.toMany.isNested) {
@@ -221,9 +230,11 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} metrics
       @returns Boolean
     */
-    commitMetrics: function(metrics) {
-      for(var key in metrics) {
-        var value = metrics[key];      
+    commitMetrics: function (metrics) {
+      var key,
+        value;
+      for (key in metrics) {
+        value = metrics[key];      
         if(typeof value === 'boolean') value = value ? 't' : 'f';
         else if(typeof value === 'number') value = value.toString();    
         plv8.execute('select setMetric($1,$2)', [key, value]);
@@ -237,10 +248,10 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} name space qualified record type
       @param {Object} data object
     */
-    commitRecord: function(key, value, encryptionKey) {
+    commitRecord: function (key, value, encryptionKey) {
       var nameSpace = key.beforeDot().camelize().toUpperCase(),
-          type = key.afterDot().classify();
-      var hasAccess = this.checkPrivileges(nameSpace, type, value, false);
+        type = key.afterDot().classify(),
+        hasAccess = this.checkPrivileges(nameSpace, type, value, false);
       if(!hasAccess) throw new Error("Access Denied.");    
       if(value && value.dataState) {
         if(value.dataState === this.CREATED_STATE) { 
@@ -261,26 +272,38 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} name space qualified record type
       @param {Object} the record to be committed
     */
-    createRecord: function(key, value, encryptionKey) {
+    createRecord: function (key, value, encryptionKey) {
       var viewName = key.afterDot().decamelize(), 
-          schemaName = key.beforeDot().decamelize(),    
-          orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-          record = value,
-          sql = '', columns, expressions,
-          props = [], params = [];
+        schemaName = key.beforeDot(),    
+        orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
+        record = value,
+        sql = '', 
+        columns,
+        expressions,
+        props = [], 
+        params = [],
+        ormp,
+        attr,
+        type,
+        prop,
+        toOneOrm,
+        toOneKey,
+        toOneProp,
+        toOneVal;
       delete record['dataState'];
       delete record['type'];
 
       /* build up the content for insert of this record */
-      for(var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop),
-            type = ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type;
+      for (prop in record) {
+        ormp = XT.Orm.getProperty(orm, prop),
+        attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
+        type = attr.type;
         if (!ormp.toMany) { 
-          props.push('"' + prop + '"');
+          props.push('"' + attr.column + '"');
 
           /* handle encryption if applicable */
-          if(ormp && ormp.attr && ormp.attr.isEncrypted) {
-            if(encryptionKey) {
+          if (ormp && ormp.attr && ormp.attr.isEncrypted) {
+            if (encryptionKey) {
               record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                              .replace(/{value}/, record[prop])
                              .replace(/{encryptionKey}/, encryptionKey);
@@ -288,15 +311,15 @@ select xt.install_js('XT','Data','xtuple', $$
             } else { 
               throw new Error("No encryption key provided.");
             }
-          } else if(record[prop] !== null) { 
+          } else if (record[prop] !== null) { 
             if (ormp && ormp.toOne && ormp.toOne.isNested) { 
-              if(record[prop] !== null) {
-                var row = this.rowify(schemaName + '.' + ormp.toOne.type, record[prop]);
-                params.push(row);
-              } else {
-                record[prop] = "null::" + schemaName + '.' + ormp.toOne.type;
-              }
-            } else if(type === 'String' || type === 'Date') { 
+              toOneOrm = XT.Orm.fetch(schemaName, ormp.toOne.type);
+              toOneKey = XT.Orm.primaryKey(toOneOrm);
+              toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
+              toOneVal = toOneProp.attr.type === 'String' ?
+                "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
+              params.push(toOneVal);
+            } else if (type === 'String' || type === 'Date') { 
               params.push("'" + record[prop] + "'");
             } else {
               params.push(record[prop]);
@@ -308,9 +331,9 @@ select xt.install_js('XT','Data','xtuple', $$
       }
       columns = props.join(', ');
       expressions = params.join(', ');
-      sql = 'insert into ' + key.decamelize() + ' (' + columns + ') values (' + expressions + ')';
+      sql = 'insert into ' + orm.table + ' (' + columns + ') values (' + expressions + ')';
       
-      if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
+      if(true) { plv8.elog(NOTICE, 'sql =', sql); }
       
       /* commit the record */
       plv8.execute(sql); 
@@ -421,7 +444,7 @@ select xt.install_js('XT','Data','xtuple', $$
       
       @returns {String} 
     */
-    currentUser: function() {
+    currentUser: function () {
       var res;
       if(!this._currentUser) {
         res = plv8.execute("select getEffectiveXtUser() as curr_user");
@@ -441,7 +464,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} encryption key
       @returns {Object} 
     */
-    decrypt: function(nameSpace, type, record, encryptionKey) {
+    decrypt: function (nameSpace, type, record, encryptionKey) {
       var orm = XT.Orm.fetch(nameSpace, type);
       for(var prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop.camelize());
@@ -474,7 +497,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number} row offset - optional
       @returns Array
     */
-    fetch: function(recordType, conditions, parameters, orderBy, rowLimit, rowOffset) {
+    fetch: function (recordType, conditions, parameters, orderBy, rowLimit, rowOffset) {
       var nameSpace = recordType.beforeDot(),
           type = recordType.afterDot(),
           table = (nameSpace + '.' + type).decamelize(),
@@ -567,16 +590,16 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Array} array of metric names
       @returns {Array} 
     */
-    retrieveMetrics: function(keys) {
+    retrieveMetrics: function (keys) {
       var sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
               + 'where metric_name in ({keys})', ret; 
-      for(var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
+      for (var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
       sql = sql.replace(/{keys}/, keys.join(','));
       ret =  plv8.execute(sql);
 
       /* recast where applicable */
-      for(var i = 0; i < ret.length; i++) {
+      for (var i = 0; i < ret.length; i++) {
         if(ret[i].value === 't') ret[i].value = true;
         else if(ret[i].value === 'f') ret[i].value = false
         else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
@@ -591,14 +614,14 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} data to convert
       @returns {String} a string formatted like a postgres RECORD datatype 
     */
-    rowify: function(key, value) {
+    rowify: function (key, value) {
       if (value === null) return 'null';
       
       var type = key.afterDot().classify(), 
-          nameSpace = key.beforeDot().toUpperCase(),
-          orm = XT.Orm.fetch(nameSpace, type),
-          record = value,
-          props = [], ret = '';
+        nameSpace = key.beforeDot().toUpperCase(),
+        orm = XT.Orm.fetch(nameSpace, type),
+        record = value,
+        props = [], ret = '';
 
       for (var prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop),

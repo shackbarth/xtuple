@@ -188,9 +188,10 @@ select xt.install_js('XT','Orm','xtuple', $$
     @param {Boolean} Get column - default false.
     @returns String
   */
-  XT.Orm.primaryKey = function(orm, getColumn) {
+  XT.Orm.primaryKey = function (orm, getColumn) {
+    var i;
     /* find primary key */
-    for(var i = 0; i < orm.properties.length; i++) {
+    for (i = 0; i < orm.properties.length; i++) {
       if(orm.properties[i].attr && 
          orm.properties[i].attr.isPrimaryKey)
         return getColumn ? orm.properties[i].attr.column : orm.properties[i].name;
