@@ -17,9 +17,17 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     components: [
       {kind: "FittableRows", classes: "left", components: [
-        {kind: "onyx.Toolbar", components: [
+
+
+        {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", content: "_dashboard".loc(), ontap: "showDashboard"},
+          {kind: "onyx.MenuDecorator", components: [
+            {content: "_history".loc(), ontap: "fillHistory" },
+            {kind: "onyx.Tooltip", content: "Tap to open..."},
+            {kind: "onyx.Menu", name: "historyMenu", components: [], ontap: "doHistoryItemSelected" }
+          ]},
           {name: "leftLabel"}
+
         ]},
         {name: "menu", kind: "List", fit: true, touch: true,
            onSetupItem: "setupItem", components: [
@@ -115,7 +123,36 @@ trailing:true white:true*/
       //
       this.bubble("workspace", {eventName: "workspace", options: tappedModel });
       return true;
+    },
+    fillHistory: function () {
+
+      // Clear out the history menu
+      var historyMenu = this.$.historyMenu; // just for re-use
+
+      // It's necessary to save the length into a variable or else the loop ends
+      // prematurely. It's also necessary to delete the children always from the
+      // 0 spot and not the i spot, because the target moves as you delete.
+      var historyLength = historyMenu.children.length;
+      for (var i = 0; i < historyLength; i++) {
+        historyMenu.removeChild(this.$.historyMenu.children[0]);
+      }
+
+      for(var i = 0; i < XV.history.length; i++) {
+        this.$.historyMenu.createComponent({
+          content: XV.history[i].modelType + ": " + XV.history[i].modelName,
+          modelType: XV.history[i].modelType,
+          modelId: XV.history[i].modelId
+        });
+      }
+      this.$.historyMenu.render();
+    },
+    doHistoryItemSelected: function (inSender, inEvent) {
+      var modelId = inEvent.originator.modelId;
+      var modelType = inEvent.originator.modelType;
+      console.log("Now it's time to load " + modelType + " " + modelId);
+      // TODO: actually load
     }
+
 
   });
 

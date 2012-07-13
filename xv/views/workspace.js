@@ -82,7 +82,7 @@ trailing:true white:true*/
                * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
                * type we want to send that down to the widget
                */
-              if(fieldDesc.modelType) {
+              if (fieldDesc.modelType) {
                 widget.setModelType(fieldDesc.modelType);
               }
             }
@@ -124,14 +124,6 @@ trailing:true white:true*/
       updateFields: function (model) {
         // TODO: this is more of a reset-all than an update
 
-
-        // XXX this gets called for all the relational subobjects
-        // as well and we don't really want to deal with those
-        // because we've already dealt with them under the master
-        // model.
-        if (model.get("type") !== this.getModelType()) {
-          return;
-        }
         XT.log("update with model: " + model.get("type"));
 
 
@@ -183,8 +175,20 @@ trailing:true white:true*/
       components: [
 
         {kind: "FittableRows", classes: "left", components: [
-          {kind: "onyx.Toolbar", components: [
-            {name: "workspaceHeader", content: "Thanks for using this workspace."}
+
+
+          {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
+            {name: "workspaceHeader" },
+            {kind: "onyx.MenuDecorator", components: [
+              {content: "_navigation".loc() },
+              {kind: "onyx.Tooltip", content: "Tap to open..."},
+              {kind: "onyx.Menu", name: "navigationMenu", components: [
+                { content: "Dashboard" },
+                { content: "CRM" },
+                { content: "Billing" }
+              ], ontap: "doNavigationSelected" }
+            ]}
+
           ]},
           {
             kind: "Repeater",
@@ -305,7 +309,36 @@ trailing:true white:true*/
       },
       modelDidChange: function (model, value, options) {
         XT.log("Model changed: " + JSON.stringify(model.toJSON()));
+
+
+        // XXX this gets called for all the relational subobjects
+        // as well and we don't really want to deal with those
+        // because we've already dealt with them under the master
+        // model.
+        if (model.get("type") !== this.getModelType()) {
+          return;
+        }
+
+
+        /**
+         * Save this in the history array. It's necessary to wait until
+         * we actually have the model returned so that we can give
+         * a nice title to the history item.
+         */
+        XV.history.push({
+          modelType: model.get("type"),
+          modelId: model.get("guid"),
+          modelName: model.get("name")
+        });
+
+        /**
+         * Pass this model onto the panels to update
+         */
         this.$.workspacePanels.updateFields(model);
+      },
+      doNavigationSelected: function (inSender, inEvent) {
+        var module = inEvent.originator.content.toLowerCase();
+        this.bubble(module, {eventName: module});
       }
 
     });

@@ -238,3 +238,5 @@ XV.RelationalWidgetTitleFields = {
   UserAccountInfo: "propername",
   SomethingElse: "somethingElse"
 };
+
+XV.history = XV.history || [];
