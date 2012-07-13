@@ -203,11 +203,11 @@ select xt.install_js('XT','Data','xtuple', $$
     
     /**
       Commit array columns with their own statements 
-      
-      @param {Object} record object to be committed
-      @param {Object} view definition object
+
+      @param {Object} Orm     
+      @param {Object} Record
     */
-    commitArrays: function (nameSpace, record, orm) {
+    commitArrays: function (orm, record) {
       var prop,
         ormp;
       for(prop in record) {
@@ -215,7 +215,7 @@ select xt.install_js('XT','Data','xtuple', $$
 
         /* if the property is an array of objects they must be records so commit them */
         if (ormp.toMany && ormp.toMany.isNested) {
-            var key = nameSpace.toUpperCase() + '.' + ormp.toMany.type,
+            var key = orm.nameSpace + '.' + ormp.toMany.type,
                 values = record[prop]; 
           for (var i = 0; i < values.length; i++) {
             this.commitRecord(key, values[i], false);
@@ -269,29 +269,51 @@ select xt.install_js('XT','Data','xtuple', $$
     /**
       Commit insert to the database 
 
-      @param {String} name space qualified record type
-      @param {Object} the record to be committed
+      @param {String} Name space qualified record type
+      @param {Object} Record
     */
     createRecord: function (key, value, encryptionKey) {
-      var viewName = key.afterDot().decamelize(), 
-        schemaName = key.beforeDot(),    
-        orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-        record = value,
-        sql = '', 
-        columns,
+      var orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
+        params = this.prepareInsert(orm, value);
+
+      /* commit the record */
+      plv8.execute(params.statement); 
+
+      /* okay, now lets handle arrays */
+      this.commitArrays(orm, value);
+    },
+
+   /**
+     Use an orm object and a record and build an insert statement. It
+     returns an object with a table name string, columns array, expressions
+     array and insert statement string that can be executed.
+
+     The optional params object includes objects columns, expressions
+     that can be cumulatively added to the result.
+
+     @params {Object} Orm
+     @params {Object} Record
+     @params {Object} Params - optional
+   */
+    prepareInsert: function (orm, record, params) {
+      var columns,
         expressions,
-        props = [], 
-        params = [],
         ormp,
+        prop,
         attr,
         type,
-        prop,
         toOneOrm,
         toOneKey,
         toOneProp,
         toOneVal;
+      params = params || { 
+        table: "", 
+        columns: [], 
+        expressions: []
+      }
       delete record['dataState'];
       delete record['type'];
+      params.table = orm.table;
 
       /* build up the content for insert of this record */
       for (i = 0; i < orm.properties.length; i++) {
@@ -300,65 +322,78 @@ select xt.install_js('XT','Data','xtuple', $$
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
         if (record[prop] !== undefined && !ormp.toMany) {
-          props.push('"' + attr.column + '"');
+          params.columns.push('"' + attr.column + '"');
 
           /* handle encryption if applicable */
-          if (ormp && ormp.attr && ormp.attr.isEncrypted) {
+          if (attr.isEncrypted) {
             if (encryptionKey) {
               record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                              .replace(/{value}/, record[prop])
                              .replace(/{encryptionKey}/, encryptionKey);
-              params.push(record[prop]);
+              params.expressions.push(record[prop]);
             } else { 
               throw new Error("No encryption key provided.");
             }
           } else if (record[prop] !== null) { 
             if (ormp && ormp.toOne && ormp.toOne.isNested) { 
-              toOneOrm = XT.Orm.fetch(schemaName, ormp.toOne.type);
+              toOneOrm = XT.Orm.fetch(orm.nameSpace, ormp.toOne.type);
               toOneKey = XT.Orm.primaryKey(toOneOrm);
               toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
               toOneVal = toOneProp.attr.type === 'String' ?
                 "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
-              params.push(toOneVal);
+              params.expressions.push(toOneVal);
             } else if (type === 'String' || type === 'Date') { 
-              params.push("'" + record[prop] + "'");
+              params.expressions.push("'" + record[prop] + "'");
             } else {
-              params.push(record[prop]);
+              params.expressions.push(record[prop]);
             }
           } else {
-            params.push('null');
+            params.expressions.push('null');
           }
         }
       }
-      columns = props.join(', ');
-      expressions = params.join(', ');
-      sql = 'insert into ' + orm.table + ' (' + columns + ') values (' + expressions + ')';
-      
-      if(true) { plv8.elog(NOTICE, 'sql =', sql); }
-      
-      /* commit the record */
-      plv8.execute(sql); 
 
-      /* okay, now lets handle arrays */
-      this.commitArrays(schemaName, record, orm);
+      /* Build the insert statement */
+      columns = params.columns.join(', ');
+      expressions = params.expressions.join(', ');
+      params.statement = 'insert into ' + params.table + ' (' + columns + ') values (' + expressions + ')';
+      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+      return params;
     },
 
     /**
       Commit update to the database 
 
-      @param {String} name space qualified record type
-      @param {Object} the record to be committed
+      @param {String} Name space qualified record type
+      @param {Object} Record
     */
     updateRecord: function(key, value, encryptionKey) {
-      var viewName = key.afterDot().decamelize(), 
-        schemaName = key.beforeDot(),
-        orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        pkey = XT.Orm.primaryKey(orm),
-        columnKey =  XT.Orm.primaryKey(orm, true),
-        record = value,
-        sql = '', 
+      var orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+        params = this.prepareUpdate(orm, value);
+        
+      /* commit the record */
+      plv8.execute(params.statement); 
+
+      /* okay, now lets handle arrays */
+      this.commitArrays(orm, value); 
+    },
+
+    /**
+     Use an orm object and a record and build an update statement. It
+     returns an object with a table name string, expressions array and
+     insert statement string that can be executed.
+
+     The optional params object includes objects columns, expressions
+     that can be cumulatively added to the result.
+
+     @params {Object} Orm
+     @params {Object} Record
+     @params {Object} Params - optional
+   */
+    prepareUpdate: function (orm, record, params) {
+      var pkey = XT.Orm.primaryKey(orm),
+        columnKey = XT.Orm.primaryKey(orm, true),
         expressions, 
-        params = [],
         prop,
         ormp,
         attr,
@@ -367,9 +402,16 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneOrm,
         toOneKey,
         toOneProp,
-        toOneVal;
+        toOneVal,
+        keyType,
+        keyValue;
+      params = params || { 
+        table: "", 
+        expressions: []
+      }
       delete record['dataState'];
       delete record['type'];
+      params.table = orm.table;
 
       /* build up the content for update of this record */
       for (i = 0; i < orm.properties.length; i++) {
@@ -386,40 +428,36 @@ select xt.install_js('XT','Data','xtuple', $$
               record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
                              .replace(/{value}/, record[prop])
                              .replace(/{encryptionKey}/, encryptionKey);
-              params.push(qprop.concat(" = ", record[prop]));
+              params.expressions.push(qprop.concat(" = ", record[prop]));
             } else {
               throw new Error("No encryption key provided.");
             }
           } else if (ormp.name !== pkey) {
             if (record[prop] !== null) {
               if (ormp.toOne && ormp.toOne.isNested) {
-                toOneOrm = XT.Orm.fetch(schemaName, ormp.toOne.type);
+                toOneOrm = XT.Orm.fetch(orm.nameSpace, ormp.toOne.type);
                 toOneKey = XT.Orm.primaryKey(toOneOrm);
                 toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
                 toOneVal = toOneProp.attr.type === 'String' ?
                   "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
-                params.push(qprop.concat(" = ", toOneVal));
+                params.expressions.push(qprop.concat(" = ", toOneVal));
               } else if (type === 'String' || type === 'Date') { 
-                params.push(qprop.concat(" = '", record[prop], "'"));
+                params.expressions.push(qprop.concat(" = '", record[prop], "'"));
               } else {
-                params.push(qprop.concat(" = ", record[prop]));
+                params.expressions.push(qprop.concat(" = ", record[prop]));
               }
             } else {
-              params.push(qprop.concat(' = null'));
+              params.expressions.push(qprop.concat(' = null'));
             }
           }
         }
       }
-
-      expressions = params.join(', ');
-      sql = 'update ' + orm.table + ' set ' + expressions + ' where ' + columnKey + ' = $1;';
-      if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
-      
-      /* commit the record */
-      plv8.execute(sql, [record[pkey]]); 
-
-      /* okay, now lets handle arrays */
-      this.commitArrays(schemaName, record, orm); 
+      keyType = XT.Orm.getProperty(orm, pkey).attr.type;
+      keyValue = keyType === 'String' ? "'" + record[pkey] + "'" : record[pkey];
+      expressions = params.expressions.join(', ');
+      params.statement = 'update ' + params.table + ' set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
+      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+      return params;
     },
 
     /**
