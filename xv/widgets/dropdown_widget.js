@@ -5,15 +5,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   // XXX again I'm doing these widgets as wrappers instead of subclassing the kind
-  // I have an uneasy feeling about this.
+  // this is worth a conversation
+
   enyo.kind({
     name: "XV.DropdownWidget",
     kind: enyo.Control,
+    events: {
+      onFieldChanged: ""
+    },
     published: {
       modelType: null
-    },
-    events: {
-      onModelUpdate: ""
     },
     components: [{
       kind: "onyx.InputDecorator",
@@ -21,7 +22,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       components: [
         {kind: "onyx.PickerDecorator", components: [
           {},
-          { kind: "onyx.Picker", name: "dropdown", onchange: "doInputChanged" }
+          // FIXME: onblur is not the event we want here, but onselect and
+          // onchange don't work. Overriding the picker's onselected
+          // function didn't work either, because the "model update" event
+          // was being thrown not just by manual changes but in the
+          // initialization change of the widget
+          { kind: "onyx.Picker", name: "dropdown", onblur: "doDropdownChanged" }
         ]}
       ]
     }],
@@ -35,8 +41,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //});
       //this.$.dropdown.setSelected(tempSelected);
 
-      for(var i = 0; i < this.$.dropdown.getComponents().length; i++) {
-        if(this.$.dropdown.getComponents()[i].value === value) {
+      for (var i = 0; i < this.$.dropdown.getComponents().length; i++) {
+        if (this.$.dropdown.getComponents()[i].value === value) {
           this.$.dropdown.setSelected(this.$.dropdown.getComponents()[i]);
           break;
         }
@@ -62,9 +68,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       this.$.dropdown.render();
     },
-    doInputChanged: function () {
-      alert("change");
-      this.doModelUpdate(); // let Dad know that something has changed
+    doDropdownChanged: function (inSender, inEvent) {
+      this.doFieldChanged(this, inEvent); // pass this up the stream
+      return true;
     }
   });
 }());

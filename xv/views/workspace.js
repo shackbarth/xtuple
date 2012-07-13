@@ -218,13 +218,22 @@ trailing:true white:true*/
       rendered: function () {
         this.inherited(arguments);
       },
-      doFieldChanged: function (inEvent, inSender) {
+      /**
+       * The parameters coming in here are different if the sender is an Input
+       * or a picker, so we have to be careful when we parse out the appropriate
+       * values
+       */
+      doFieldChanged: function (inSender, inEvent) {
         var prefix, suffix;
 
-        var newValue = inSender.getValue();
+        var newValue = inEvent.getValue() ? inEvent.getValue() : inEvent.getSelected().value;
 
         var updateObject = {};
-        updateObject[inSender.name] = newValue;
+
+        // XXX isn't it strange that inEvent.name is the name of the field that's throwing the
+        // event? both inEvent and inSender look like senders here. This is true for Inputs
+        // and Pickers
+        updateObject[inEvent.name] = newValue;
         this.getModel().set(updateObject);
         this.doEnableSaveButton();
       },
