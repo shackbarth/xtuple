@@ -274,25 +274,25 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     createRecord: function (key, value, encryptionKey) {
       var orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-        params = this.prepareInsert(orm, value),
+        sql = this.prepareInsert(orm, value),
         i;
         
       /* handle extensions on the same table */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table === orm.table) {
-          params = this.prepareInsert(orm.extensions[i], value, params);
+          sql = this.prepareInsert(orm.extensions[i], value, sql);
         }
       }
 
       /* commit the base record */
-      plv8.execute(params.statement); 
+      plv8.execute(sql.statement); 
 
       /* handle extensions on other tables */
       for (i = 0; i < orm.extensions.length; i++) {
         if (orm.extensions[i].table !== orm.table && 
            !orm.extensions[i].isChild) {
-          params = this.prepareInsert(orm.extensions[i], value);
-          plv8.execute(params.statement); 
+          sql = this.prepareInsert(orm.extensions[i], value);
+          plv8.execute(sql.statement); 
         }
       }
 
@@ -311,6 +311,7 @@ select xt.install_js('XT','Data','xtuple', $$
      @params {Object} Orm
      @params {Object} Record
      @params {Object} Params - optional
+     @returns {Object}
    */
     prepareInsert: function (orm, record, params) {
       var column,
@@ -399,10 +400,10 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     updateRecord: function(key, value, encryptionKey) {
       var orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        params = this.prepareUpdate(orm, value);
+        sql = this.prepareUpdate(orm, value);
         
       /* commit the record */
-      plv8.execute(params.statement); 
+      plv8.execute(sql.statement); 
 
       /* okay, now lets handle arrays */
       this.commitArrays(orm, value); 
@@ -419,6 +420,7 @@ select xt.install_js('XT','Data','xtuple', $$
      @params {Object} Orm
      @params {Object} Record
      @params {Object} Params - optional
+     @returns {Object}
    */
     prepareUpdate: function (orm, record, params) {
       var pkey = XT.Orm.primaryKey(orm),
@@ -499,12 +501,14 @@ select xt.install_js('XT','Data','xtuple', $$
     deleteRecord: function(key, value) {
       var record = XT.decamelize(value), sql = '',
         orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        nameKey = XT.Orm.primaryKey(orm),
-        columnKey = XT.Orm.primaryKey(orm, true),
+        sql,
+        nameKey,
+        columnKey,
         prop,
         ormp,
         childKey,
-        values;
+        values,
+        i;
           
       /* Delete children first */
      for (prop in record) {
@@ -514,13 +518,25 @@ select xt.install_js('XT','Data','xtuple', $$
        if (ormp.toMany && ormp.toMany.isNested) {
          childKey = key.beforeDot() + '.' + ormp.toMany.type,
          values = record[prop]; 
-         for (var i = 0; i < values.length; i++) {
+         for (i = 0; i < values.length; i++) {
             this.deleteRecord(childKey, values[i]);
          }
        }
      }   
 
+     /* Next delete from extension tables */
+     for (i = 0; i < orm.extensions.length; i++) {
+       if (orm.extensions[i].table !== orm.table) {
+         columnKey = orm.extensions[i].relations[0].column;
+         nameKey = orm.extensions[i].relations[0].inverse;     
+         sql = 'delete from '+ orm.extensions[i].table + ' where ' + columnKey + ' = $1;';
+         plv8.execute(sql, [record[nameKey]]);
+       }
+     }
+
       /* Now delete the top */
+      nameKey = XT.Orm.primaryKey(orm),
+      columnKey = XT.Orm.primaryKey(orm, true);
       sql = 'delete from '+ orm.table + ' where ' + columnKey + ' = $1;';
       if(DEBUG) plv8.elog(NOTICE, 'sql =', sql,  record[nameKey]);
       
