@@ -274,10 +274,27 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     createRecord: function (key, value, encryptionKey) {
       var orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-        params = this.prepareInsert(orm, value);
+        params = this.prepareInsert(orm, value),
+        i;
+        
+      /* handle extensions on the same table */
+      for (i = 0; i < orm.extensions.length; i++) {
+        if (orm.extensions[i].table === orm.table) {
+          params = this.prepareInsert(orm.extensions[i], value, params);
+        }
+      }
 
-      /* commit the record */
+      /* commit the base record */
       plv8.execute(params.statement); 
+
+      /* handle extensions on other tables */
+      for (i = 0; i < orm.extensions.length; i++) {
+        if (orm.extensions[i].table !== orm.table && 
+           !orm.extensions[i].isChild) {
+          params = this.prepareInsert(orm.extensions[i], value);
+          plv8.execute(params.statement); 
+        }
+      }
 
       /* okay, now lets handle arrays */
       this.commitArrays(orm, value);
@@ -296,7 +313,8 @@ select xt.install_js('XT','Data','xtuple', $$
      @params {Object} Params - optional
    */
     prepareInsert: function (orm, record, params) {
-      var columns,
+      var column,
+        columns,
         expressions,
         ormp,
         prop,
@@ -305,7 +323,8 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneOrm,
         toOneKey,
         toOneProp,
-        toOneVal;
+        toOneVal,
+        i;
       params = params || { 
         table: "", 
         columns: [], 
@@ -314,6 +333,17 @@ select xt.install_js('XT','Data','xtuple', $$
       delete record['dataState'];
       delete record['type'];
       params.table = orm.table;
+
+      /* if extension handle key */
+      if (orm.relations) {
+        for (i = 0; i < orm.relations.length; i++) {
+          column = '"' + orm.relations[i].column + '"';
+          if (!params.columns.contains(column)) {
+            params.columns.push(column);
+            params.expressions.push(record[orm.relations[i].inverse]);
+          }
+        }
+      }
 
       /* build up the content for insert of this record */
       for (i = 0; i < orm.properties.length; i++) {

@@ -166,6 +166,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             ext = {};
         ext.context = orm.context;
         ext.comment = orm.comment;
+        ext.nameSpace = nameSpace;
         ext.table = orm.table;
         ext.isChild = orm.isChild;
         ext.relations = orm.relations;
