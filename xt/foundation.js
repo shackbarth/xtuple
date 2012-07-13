@@ -180,7 +180,7 @@ XV.WorkspacePanelDescriptor = {
   Account: [
     {
       title: "Account Info",
-      location: "top",
+      location: "bottom",
       fields: [
         { fieldName: "name" },
         { fieldName: "number" }
@@ -188,7 +188,7 @@ XV.WorkspacePanelDescriptor = {
     },
     {
       title: "Tax Info", // I know this doesn't really merit its own box
-      location: "top",
+      location: "bottom",
       fields: [
         { fieldName: "taxAuthority" }
       ]
@@ -198,7 +198,7 @@ XV.WorkspacePanelDescriptor = {
   Project: [// the key is uppercase because the model name is uppercase
     {
       title: "Project Info",
-      location: "bottom",
+      location: "top",
       fields: [
         { fieldName: "number", placeholder: "Enter the project number" },
         { fieldName: "name" },
@@ -234,7 +234,7 @@ XV.WorkspacePanelDescriptor = {
 };
 
 
-XV.ObjectWidgetTitleFields = {
+XV.RelationalWidgetTitleFields = {
   UserAccountInfo: "propername",
   SomethingElse: "somethingElse"
 };

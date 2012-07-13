@@ -47,7 +47,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     baseObjectChanged: function () {
       var type = this.getBaseObject().get("type");
-      var titleField = XV.ObjectWidgetTitleFields[type];
+      var titleField = XV.RelationalWidgetTitleFields[type];
       this.$.nameField.setValue(this.getBaseObject().get(titleField));
     },
     doInputChanged: function () {
