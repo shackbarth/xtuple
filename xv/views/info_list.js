@@ -692,4 +692,44 @@ trailing:true white:true*/
     }
   });
   
+  // ..........................................................
+  // USER ACCOUNT
+  //
+  
+  enyo.kind({
+    name: "XV.UserAccountInfoList",
+    kind: "XV.InfoList",
+    published: {
+      label: "_userAccounts".loc(),
+      collection: "XM.UserAccountInfoCollection",
+      //query: {orderBy: '"username"'},
+      rowClass: "XV.UserAccountInfoCollectionRow"
+    }
+  });
+
+  enyo.kind({
+    name: "XV.UserAccountInfoCollectionRow",
+    kind: "XV.InfoListRow",
+    leftColumn: [
+      [
+        { width: 160 },
+        { name: "username", classes: "cell-key user-account-username" }
+      ],
+      [
+        { width: 160 },
+        { name: "propername", classes: "user-account-proper-name"  }
+      ]
+    ],
+    rightColumn: [
+      [
+        { width: 320 },
+        { name: "isActive", classes: "cell-align-right user-account-active",
+          formatter: "formatActive" }
+      ]
+    ],
+    formatActive: function (content) {
+      return content ? "_active".loc() : "";
+    }
+  });
+  
 }());
