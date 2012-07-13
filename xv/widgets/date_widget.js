@@ -1,11 +1,11 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, enyo:true, _:true */
+/*global XT:true, enyo:true, _:true, Globalize:true */
 (function () {
   "use strict";
 
   enyo.kind({
-    name: "DateWidget",
+    name: "XV.DateWidget",
     kind: enyo.Control,
     published: {
       dateObject: null
@@ -52,7 +52,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       //this.$.datePick2.setSelectedMonth(this.dateObject.getMonth());
       //this.$.datePick2.setSelectedYear(this.dateObject.getYear());
       //this.$.datePick2.render();
-      this.$.dateField.setValue(this.dateObject.toLocaleDateString());
+      this.$.dateField.setValue(Globalize.format(this.dateObject, "d"));
     },
     doInputChanged: function () {
       // lucky: no infinite loop! This function only gets triggered from an

@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
 
   enyo.kind({
-    name: "ObjectWidget",
+    name: "XV.RelationalWidget",
     kind: enyo.Control,
     published: {
       baseObject: null
@@ -46,8 +46,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * render this object onto the name field
      */
     baseObjectChanged: function () {
-      // TODO: right now the base object is just a string but it has to be more general
-      this.$.nameField.setValue(this.getBaseObject());
+      var type = this.getBaseObject().get("type");
+      var titleField = XV.ObjectWidgetTitleFields[type];
+      this.$.nameField.setValue(this.getBaseObject().get(titleField));
     },
     doInputChanged: function () {
       // TODO: deal with user input

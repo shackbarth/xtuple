@@ -176,60 +176,65 @@ XT.$A = XT.A;
 
 var XV = XV || {};
 XV.WorkspacePanelDescriptor = {
-  Project: // the key is uppercase because the model name is uppercase
-    [{
-      title: "Project Info",
+
+  Account: [
+    {
+      title: "Account Info",
       location: "top",
       fields: [
-        { label: "Number", fieldName: "number", placeholder: "Enter project number" },
-        { label: "Name", fieldName: "name", placeholder: "Enter project name" },
-        { label: "Notes", fieldName: "notes", placeholder: "Enter project notes" }
+        { fieldName: "name" },
+        { fieldName: "number" }
+      ]
+    },
+    {
+      title: "Tax Info", // I know this doesn't really merit its own box
+      location: "top",
+      fields: [
+        { fieldName: "taxAuthority" }
+      ]
+    }
+  ],
+
+  Project: [// the key is uppercase because the model name is uppercase
+    {
+      title: "Project Info",
+      location: "bottom",
+      fields: [
+        { fieldName: "number", placeholder: "Enter the project number" },
+        { fieldName: "name" },
+        { fieldName: "notes" },
+        { label: "status", fieldName: "getProjectStatusString" }
       ]
     },
     {
       title: "Schedule",
-      location: "top",
+      location: "bottom",
       fields: [
-        { label: "Owner", fieldName: "owner.propername", fieldType: "ObjectWidget" },
-        { label: "Assigned To", fieldName: "assignedTo.propername", fieldType: "ObjectWidget" },
-        { label: "Due", fieldName: "dueDate", fieldType: "DateWidget" },
-        { label: "Assigned", fieldName: "assignDate", fieldType: "DateWidget" },
-        { label: "Started", fieldName: "startDate", fieldType: "DateWidget" },
-        { label: "Completed", fieldName: "completeDate", fieldType: "DateWidget" }
+        { fieldName: "owner", fieldType: "XV.RelationalWidget" },
+        { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
+        { fieldName: "dueDate", fieldType: "XV.DateWidget" },
+        { fieldName: "assignDate", fieldType: "XV.DateWidget" },
+        { fieldName: "startDate", fieldType: "XV.DateWidget" },
+        { fieldName: "completeDate", fieldType: "XV.DateWidget" }
       ]
     },
-    //{
-      //title: "Billing",
-      //location: "top",
-      //fields: [
-      //  { label: "Customer", fieldName: "projectCustomer", placeholder: "The customer to be billed" },
-      //  { label: "Rate", fieldName: "projectRate", placeholder: "Enter project rate" },
-      //]
-    //},
     {
       title: "Tasks",
-      location: "bottom",
-      boxType: "Grid",
+      location: "top",
+      boxType: "XV.GridWidget",
       fields: [
-        { label: "Number", fieldName: "tasks.number", width: "120" },
-        { label: "Name", fieldName: "tasks.name", width: "120" },
-        { label: "Notes", fieldName: "tasks.notes", width: "220" },
-        { label: "Actual Hours", fieldName: "tasks.actualHours", fieldType: "NumberWidget", width: "40" },
-        { label: "Actual Expenses", fieldName: "tasks.actualExpenses", fieldType: "NumberWidget", width: "40" }
+        { label: "number", fieldName: "number", width: "120" },
+        { label: "name", fieldName: "name", width: "120" },
+        { label: "notes", fieldName: "notes", width: "220" },
+        { label: "actualHours", fieldName: "actualHours", fieldType: "XV.NumberWidget", width: "40" },
+        { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "XV.NumberWidget", width: "40" }
       ]
-    }/*,
-    {
-      title: "Comments",
-      location: "bottom",
-      boxType: "Grid",
-      fields: [
-        { label: "Date", width: "120" },
-        { label: "Type", width: "80" },
-        { label: "User", width: "80" },
-        { label: "Comment", width: "300" }
-      ]
-    }*/
+    }
   ]
 };
 
 
+XV.ObjectWidgetTitleFields = {
+  UserAccountInfo: "propername",
+  SomethingElse: "somethingElse"
+};

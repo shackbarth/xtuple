@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, _:true, console:true */
@@ -20,7 +20,7 @@ white:true*/
                       "YYYY/MM/DD", "MM/DD/YYYY", "Jan 31 2009" etc.
        an object     : Interpreted as an object with year, month and date
                       attributes.  **NOTE** month is 0-11.
-                      
+
     @param {Any}
     @returns {Date}
     */
@@ -34,7 +34,7 @@ white:true*/
         NaN
       );
     },
-    
+
     /**
       Compare two dates (could be of any type supported by the convert
       function above) and returns:
@@ -43,7 +43,7 @@ white:true*/
        1 : if a > b
      NaN : if a or b is an illegal date
      NOTE: The code inside isFinite does an assignment (=).
-     
+
      @param {Date} Date a
      @param {Date} Date b
      @returns {Number}
@@ -56,7 +56,7 @@ white:true*/
         NaN
       );
     },
-    
+
     /**
     Compare two dates on date part (could be of any type supported by the
     convert function above) and returns:
@@ -65,19 +65,22 @@ white:true*/
        1 : if a > b
      NaN : if a or b is an illegal date
      NOTE: The code inside isFinite does an assignment (=).
-     
+
      @param {Any} Date a
      @param {Any} Date b
      @returns {Number}
     */
     compareDate: function (a, b) {
+      if (!a || !b) {
+        return NaN;
+      }
       var x = new Date(a.valueOf()),
         y = new Date(b.valueOf());
       x.setHours(0, 0, 0, 0);
       y.setHours(0, 0, 0, 0);
       return this.compare(x, y);
     },
-    
+
     /**
     Checks if date in d is between dates in start and end.
     Returns a boolean or NaN:
@@ -85,7 +88,7 @@ white:true*/
       false : if d is before start or after end
       NaN   : if one or more of the dates is illegal.
     NOTE: The code inside isFinite does an assignment (=).
-    
+
     @param {Date} Reference
     @param {Date} Start
     @param {Date} End
@@ -99,7 +102,7 @@ white:true*/
         NaN
       );
     }
-    
+
   };
 
 }());
