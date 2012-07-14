@@ -331,8 +331,6 @@ select xt.install_js('XT','Data','xtuple', $$
         columns: [], 
         expressions: []
       }
-      delete record['dataState'];
-      delete record['type'];
       params.table = orm.table;
 
       /* if extension handle key */
@@ -400,10 +398,41 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     updateRecord: function(key, value, encryptionKey) {
       var orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        sql = this.prepareUpdate(orm, value);
+        sql = this.prepareUpdate(orm, value),
+        pkey = XT.Orm.primaryKey(orm),
+        ext,
+        rows,
+        i;
         
-      /* commit the record */
+      /* handle extensions on the same table */
+      for (i = 0; i < orm.extensions.length; i++) {
+        if (orm.extensions[i].table === orm.table) {
+          sql = this.prepareUpdate(orm.extensions[i], value, sql);
+        }
+      }
+
+      /* commit the base record */
       plv8.execute(sql.statement); 
+
+      /* handle extensions on other tables */
+      for (i = 0; i < orm.extensions.length; i++) {
+        ext = orm.extensions[i];
+        if (ext.table !== orm.table && 
+           !ext.isChild) {
+           
+          /* Determine whether to insert or update */
+          sql = 'select ' + ext.relations[0].column + ' from ' + ext.table +
+                ' where ' + ext.relations[0].column + ' = $1;';
+                plv8.elog(NOTICE, 'sql =', sql, value[pkey]);
+          rows = plv8.execute(sql, [value[pkey]]);
+          if (rows.length) {
+            sql = this.prepareUpdate(ext, value);
+          } else {
+            sql = this.prepareInsert(ext, value);
+          }
+          plv8.execute(sql.statement); 
+        }
+      }
 
       /* okay, now lets handle arrays */
       this.commitArrays(orm, value); 
@@ -423,8 +452,8 @@ select xt.install_js('XT','Data','xtuple', $$
      @returns {Object}
    */
     prepareUpdate: function (orm, record, params) {
-      var pkey = XT.Orm.primaryKey(orm),
-        columnKey = XT.Orm.primaryKey(orm, true),
+      var pkey,
+        columnKey,
         expressions, 
         prop,
         ormp,
@@ -435,15 +464,22 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneKey,
         toOneProp,
         toOneVal,
-        keyType,
         keyValue;
       params = params || { 
         table: "", 
         expressions: []
       }
-      delete record['dataState'];
-      delete record['type'];
       params.table = orm.table;
+
+      if (orm.relations) {
+        /* extension */
+        pkey = orm.relations[0].inverse;
+        columnKey = orm.relations[0].column;
+      } else {
+        /* base */
+        pkey = XT.Orm.primaryKey(orm);
+        columnKey = XT.Orm.primaryKey(orm, true);
+      }
 
       /* build up the content for update of this record */
       for (i = 0; i < orm.properties.length; i++) {
@@ -484,8 +520,7 @@ select xt.install_js('XT','Data','xtuple', $$
           }
         }
       }
-      keyType = XT.Orm.getProperty(orm, pkey).attr.type;
-      keyValue = keyType === 'String' ? "'" + record[pkey] + "'" : record[pkey];
+      keyValue = typeof record[pkey] === 'string' ? "'" + record[pkey] + "'" : record[pkey];
       expressions = params.expressions.join(', ');
       params.statement = 'update ' + params.table + ' set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
       if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
