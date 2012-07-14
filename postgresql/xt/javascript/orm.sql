@@ -233,11 +233,7 @@ select xt.install_js('XT','Orm','xtuple', $$
   */
   XT.Orm.createView = function(orm) {
     /* constants */
-    var SELECT = 'select {columns} from {table} where {conditions}'
-        INSERT = 'insert into {table} ({columns}) values ({expressions})',
-        UPDATE = 'update {table} set {expressions} where {conditions}',
-        DELETE = 'delete from {table} where {conditions};',
-        CREATE_RULE = 'create rule {name} as on {event} to {table} do instead {command};',
+    var SELECT = 'select {columns} from {table} where {conditions}',
 
     // ..........................................................
     // METHODS
@@ -250,10 +246,6 @@ select xt.install_js('XT','Orm','xtuple', $$
           pKey = orm.isExtension && orm.properties ? orm.properties.findProperty('name', XT.Orm.primaryKey(orm)) : null,
           pKeyCol = pKey ? pKey.attr.column : null, 
           pKeyAlias = pKey ? pKey.name : null,
-          insTgtCols = [], insSrcCols = [], updCols = [], delCascade = [], 
-          canCreate = orm.privileges && orm.privileges.all && orm.privileges.all.create ? true : false,
-          canUpdate = orm.privileges && orm.privileges.all && orm.privileges.all.update ? true : false,
-          canDelete = orm.privileges && orm.privileges.all && orm.privileges.all.delete ? true : false,
           toOneJoins = [], ormClauses = [];
       for(var i = 0; i < props.length; i++) {
         var col, alias = props[i].name;
@@ -274,28 +266,12 @@ select xt.install_js('XT','Orm','xtuple', $$
             cols.push(col);
           }
 
-          /* for update and delete rules */
-          if(isPrimaryKey) {
-            pKeyCol = attr.column;
-            pKeyAlias = alias;
-          }
-
           /* handle fixed value */
           if(attr.value !== undefined) {
-            var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;
-
-            /* for select */     
+            var value = isNaN(attr.value - 0) ? "'" + attr.value + "'" : attr.value;   
             ormClauses.push('"' + attr.column + '" = ' + value);
-            
-            /* for insert */
-            insSrcCols.push(value);
-          } else insSrcCols.push('new."' + alias + '"');
-
-          /* for insert rule */
-          insTgtCols.push('"' + attr.column + '"');
-
-          /* for update rule */
-          if(isVisible && isEditable && !isPrimaryKey) updCols.push(attr.column + ' = new."' + alias + '"');
+          };
+          
         }
 
         /* process toOne  */
@@ -327,13 +303,6 @@ select xt.install_js('XT','Orm','xtuple', $$
               orm.order[o] = orm.order[o].replace(RegExp(type + ".", "g"), toOneAlias + ".");
             }   
           } 
-
-          /* for insert rule */
-          insTgtCols.push('"' + toOne.column + '"');
-          insSrcCols.push('(new."' + alias + '").' + inverse);
-
-          /* for update rule */
-          if(isEditable) updCols.push(toOne.column + ' = (new."' + alias + '").' + inverse );
         }
 
         /* process toMany */
@@ -363,48 +332,12 @@ select xt.install_js('XT','Orm','xtuple', $$
                    .replace(/{conditions}/, conditions))
                    .replace(/{alias}/, alias);             
           cols.push(col);
-          
-          /* build array for delete cascade */
-          if(toMany.isNested &&
-             toMany.deleteDelegate && 
-             toMany.deleteDelegate.table && 
-             toMany.deleteDelegate.relations) {
-            var rel = toMany.deleteDelegate.relations,
-                table = toMany.deleteDelegate.table,
-                conditions = [];
-            for(var n = 0; n < rel.length; n++) {
-              var col = rel[n].column,
-                  value = rel[n].inverse ? 
-                          'old.' + rel[n].inverse : 
-                          isNaN(rel[n].value - 0) ? 
-                          "'" + rel[n].value + "'" :
-                          rel[n].value;                         
-              conditions.push(col + ' = ' + value);
-            }
-            sql = DELETE.replace(/{table}/, table)
-                        .replace(/{conditions}/, conditions.join(' and '));
-            delCascade.push(sql);
-          } else if (toMany.isNested) {
-            if(ormp && ormp.toOne && ormp.toOne.isNested) {
-              sql = DELETE.replace(/{table}/, table)
-                          .replace(/{conditions}/, '(' + type + '."' + inverse  + '").guid = ' + 'old."{pKeyAlias}"');   
-            } else {
-              sql = DELETE.replace(/{table}/, table)
-                          .replace(/{conditions}/, type + '."' + inverse  + '" = ' + 'old."{pKeyAlias}"');                        
-            }
-            delCascade.push(sql);
-          }
         }
       }
-
-      /* build crud rules */
-      if(DEBUG) plv8.elog(NOTICE, 'building CRUD rules');
       
       /* process extension */
       if(orm.isExtension) {
-        var upsTgtCols = [],
-            upsSrcCols = [];
-        if(DEBUG) plv8.elog(NOTICE, 'process CRUD extension');
+        if(DEBUG) plv8.elog(NOTICE, 'process extension');
 
         /* process relations (if different table) */
         if(orm.table !== base.table) {
@@ -447,98 +380,6 @@ select xt.install_js('XT','Orm','xtuple', $$
             value = '{state}.guid';
           }                  
           conditions.push(rel.column + ' = ' + value);
-          upsTgtCols.push(rel.column);
-          upsSrcCols.push(value);
-        }
-
-        /* insert rules for extensions */
-        if(DEBUG) plv8.elog(NOTICE, 'process extension INSERT');       
-        if(canCreate && insSrcCols.length) {
-          if(base.table === orm.table) {
-            rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
-                              .replace(/{event}/, 'insert')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/, 
-                        UPDATE.replace(/{table}/, orm.table)
-                              .replace(/{expressions}/, updCols.join(','))
-                              .replace(/{conditions}/, conditions.join(' and '))
-                              .replace(/{state}/, 'new'));
-          } else {
-            rule = CREATE_RULE.replace(/{name}/,'"_INSERT_' + tblAlias.toUpperCase() + '"')
-                              .replace(/{event}/, 'insert')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/, 
-                        INSERT.replace(/{table}/, orm.table)
-                              .replace(/{columns}/, upsTgtCols.join(',') + ',' + insTgtCols.join(','))
-                              .replace(/{expressions}/, upsSrcCols.join(',')
-                              .replace(/{state}/, 'new') + ',' + insSrcCols.join(',')));
-          }       
-          rules.push(rule); 
-        }
-
-        /* update rules for extensions */
-        if(DEBUG) plv8.elog(NOTICE, 'process extension UPDATE');     
-        if(canUpdate && updCols.length) {
-          var rule;
-          if(!orm.isChild && base.table !== orm.table) {
-            /* insert rule for case where record doesn't yet exist */
-            rule = CREATE_RULE.replace(/{name}/,'"_UPSERT_' + tblAlias.toUpperCase() + '"')
-                              .replace(/{event}/, 'update')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '(' +
-                        SELECT.replace(/{columns}/,'count(*) = 0') 
-                              .replace(/{table}/, orm.table) 
-                              .replace(/{conditions}/, conditions.join(' and ') 
-                              .replace(/{state}/, 'old') + ' )') + ')') 
-                              .replace(/{command}/, 
-                        INSERT.replace(/{table}/, orm.table)
-                              .replace(/{columns}/, upsTgtCols.join(',') + ',' + insTgtCols.join(','))
-                              .replace(/{expressions}/, upsSrcCols.join(',')
-                              .replace(/{state}/, 'old') + ',' + insSrcCols.join(',')));                            
-            rules.push(rule);
-
-            /* update rule for case where record does exist */
-            rule = CREATE_RULE.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"')
-                              .replace(/{event}/, 'update')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '(' +
-                        SELECT.replace(/{columns}/,'count(*) > 0') 
-                              .replace(/{table}/, orm.table) 
-                              .replace(/{conditions}/, conditions.join(' and ') 
-                              .replace(/{state}/, 'old') + ' )') + ')') 
-                              .replace(/{command}/, 
-                        UPDATE.replace(/{table}/, orm.table) 
-                              .replace(/{expressions}/, updCols.join(','))
-                              .replace(/{conditions}/, conditions.join(' and '))
-                              .replace(/{state}/, 'old')); 
-          } else {  
-            rule = CREATE_RULE.replace(/{name}/,'"_UPDATE_' + tblAlias.toUpperCase() + '"')
-                              .replace(/{event}/, 'update')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/, 
-                        UPDATE.replace(/{table}/, orm.table) 
-                              .replace(/{expressions}/, updCols.join(','))
-                              .replace(/{conditions}/, conditions.join(' and '))
-                              .replace(/{state}/, 'old'));                      
-          }
-          rules.push(rule);              
-        }
-
-        /* only delete where circumstances allow */
-        if(DEBUG) plv8.elog(NOTICE, 'process extension DELETE');      
-        if(canDelete && !orm.isChild && base.table !== orm.table) {
-          rule = CREATE_RULE.replace(/{name}/,'"_DELETE_' + tblAlias.toUpperCase() + '"') 
-                            .replace(/{event}/, 'delete')
-                            .replace(/{table}/, viewName)
-                            .replace(/{where}/, '')
-                            .replace(/{command}/,
-                      DELETE.replace(/{table}/, orm.table) 
-                            .replace(/{conditions}/, conditions.join(' and '))
-                            .replace(/{state}/, 'old'));                          
-          rules.push(rule);
         }
 
       /* base orm */
@@ -554,93 +395,6 @@ select xt.install_js('XT','Orm','xtuple', $$
         clauses = clauses.concat(ormClauses);
         tbls.unshift(orm.table + ' ' + tblAlias);
         tbls = tbls.concat(toOneJoins);           
-        if(orm.privileges || orm.isNestedOnly) {
-          
-          /* insert rule */
-         if(DEBUG) plv8.elog(NOTICE, 'process base INSERT');        
-          if(canCreate && insSrcCols.length) {
-            rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
-                              .replace(/{event}/, 'insert')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/,
-                        INSERT.replace(/{table}/, orm.table)
-                              .replace(/{columns}/, insTgtCols.join(',')) 
-                              .replace(/{expressions}/, insSrcCols.join(',')));
-          } else {              
-            rule = CREATE_RULE.replace(/{name}/, '"_INSERT"')
-                              .replace(/{event}/, 'insert')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/,'nothing');
-          }              
-          rules.push(rule);
-
-          /* update rule */
-          if(DEBUG) plv8.elog(NOTICE, 'process base UPDATE');         
-          if(canUpdate && pKeyCol && updCols.length) {
-            rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
-                              .replace(/{event}/, 'update')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/, 
-                        UPDATE.replace(/{table}/, orm.table) 
-                              .replace(/{expressions}/, updCols.join(','))
-                              .replace(/{conditions}/, '"' + pKeyCol + '" = old."' + pKeyAlias + '"')); 
-          } else {
-            rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
-                              .replace(/{event}/, 'update')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/, 'nothing'); 
-          }
-          rules.push(rule); 
-
-          /* delete rule */
-          if(DEBUG) plv8.elog(NOTICE, 'process base DELETE');       
-          if(canDelete && pKeyCol) {
-            rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
-                              .replace(/{event}/, 'delete')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/, '(' + delCascade.join(' ')
-                              .replace(/{pKeyAlias}/g, pKeyAlias) +
-                        DELETE.replace(/{table}/, orm.table) 
-                              .replace(/{conditions}/, '"' + pKeyCol + '" = old."' + pKeyAlias + '"') + ')');  
-          } else {
-            rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
-                              .replace(/{event}/, 'delete')
-                              .replace(/{table}/, viewName)
-                              .replace(/{where}/, '')
-                              .replace(/{command}/, 'nothing'); 
-          };
-
-          rules.push(rule);
-
-        /* must be non-updatable view */
-        } else { 
-          if(DEBUG) plv8.elog(NOTICE, 'process base non-updatable');
-          
-          rule = CREATE_RULE.replace(/{name}/,'"_INSERT"')
-                            .replace(/{event}/, 'insert')
-                            .replace(/{table}/, viewName)
-                            .replace(/{where}/, '')
-                            .replace(/{command}/, 'nothing');                           
-          rules.push(rule);
-          rule = CREATE_RULE.replace(/{name}/,'"_UPDATE"')
-                            .replace(/{event}/, 'update')
-                            .replace(/{table}/, viewName)
-                            .replace(/{where}/, '')
-                            .replace(/{command}/, 'nothing'); 
-                            
-          rules.push(rule);
-          rule = CREATE_RULE.replace(/{name}/,'"_DELETE"')
-                            .replace(/{event}/, 'delete')
-                            .replace(/{table}/, viewName)
-                            .replace(/{where}/, '')
-                            .replace(/{command}/, 'nothing');                            
-          rules.push(rule);
-        }
       }
 
       /* process and add order by array */
@@ -671,7 +425,7 @@ select xt.install_js('XT','Orm','xtuple', $$
 
     var cols = [], tbls = [], clauses = [], orderBy = [],
     comments = 'System view generated by object relation maps: WARNING! Do not make changes, add rules or dependencies directly to this view!',
-    rules = [], query = '', tbl = 1 - 0, sql, base = orm,
+    query = '', tbl = 1 - 0, sql, base = orm,
     viewName = orm.nameSpace.decamelize() + '.' + orm.type.decamelize();
     
     /* do the heavy lifting here. This recursively processes extensions */
@@ -695,12 +449,6 @@ select xt.install_js('XT','Orm','xtuple', $$
             .replace(/{name}/, viewName)
             .replace(/{comments}/, comments);           
     plv8.execute(query);
-    
-    /* Apply the rules */
-    for(var i = 0; i < rules.length; i++) {
-      if(DEBUG) plv8.elog(NOTICE, 'rule', rules[i]);   
-      plv8.execute(rules[i]);
-    }
 
     /* Grant access to xtrole */
     query = 'grant all on {view} to xtrole'
