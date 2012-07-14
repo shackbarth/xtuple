@@ -127,6 +127,11 @@ white:true*/
       includeInJSON: 'guid'
     }, {
       type: Backbone.HasOne,
+      key: 'currency',
+      relatedModel: 'XM.Currency',
+      includeInJSON: 'guid'
+    }, {
+      type: Backbone.HasOne,
       key: 'opportunityStage',
       relatedModel: 'XM.OpportunityStage',
       includeInJSON: 'guid'
@@ -423,6 +428,11 @@ white:true*/
       type: Backbone.HasOne,
       key: 'priority',
       relatedModel: 'XM.Priority',
+      includeInJSON: 'guid'
+    }, {
+      type: Backbone.HasOne,
+      key: 'currency',
+      relatedModel: 'XM.Currency',
       includeInJSON: 'guid'
     }, {
       type: Backbone.HasOne,
