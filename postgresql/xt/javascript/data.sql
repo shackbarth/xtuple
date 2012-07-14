@@ -35,33 +35,40 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} parameters - optional
       @returns {Boolean}
     */
-    buildClause: function(nameSpace, type, conditions, parameters) {
-      var ret = ' true ', cond = '', pcond = '',
-          map = XT.Orm.fetch(nameSpace, type),
-          privileges = map.privileges;
+    buildClause: function (nameSpace, type, conditions, parameters) {
+      var ret = ' true ', 
+        cond = '', 
+        pcond = '',
+        map = XT.Orm.fetch(nameSpace, type),
+        privileges = map.privileges,
+        type,
+        i,
+        val,
+        param,
+        regExp;
           
       /* handle passed conditions */
-      if(conditions) {
+      if (conditions) {
         /* helper function */
         format = function(arg) { 
-          var type = XT.typeOf(arg);
+          type = XT.typeOf(arg);
           if(type === 'string') return "'" + arg + "'"; 
           else if(type === 'array') return "array[" + arg + "]";   
           return arg;
         }      
 
         /* evaluate */
-        if(parameters) {
-          if(conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
-            for(var i = 0; i < parameters.length; i++) {
-              var val =  format(parameters[i]);
+        if (parameters) {
+          if (conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
+            for (i = 0; i < parameters.length; i++) {
+              val =  format(parameters[i]);
               conditions = conditions.replace(/%@/,val);
             }
           } else {  /* replace parameterized tokens */
-            for(var prop in parameters) {
-              var param = '{' + prop + '}',
-                  val = format(parameters[prop]),
-                  regExp = new RegExp(param, "g"); 
+            for (var prop in parameters) {
+              param = '{' + prop + '}',
+              val = format(parameters[prop]),
+              regExp = new RegExp(param, "g"); 
               conditions = conditions.replace(regExp, val);
             }
           }
@@ -69,7 +76,7 @@ select xt.install_js('XT','Data','xtuple', $$
       }
 
       /* handle privileges */
-      if((privileges &&
+      if ((privileges &&
          (!privileges.all || (privileges.all &&
          (!this.checkPrivilege(privileges.all.read) && 
           !this.checkPrivilege(privileges.all.update)))) &&
@@ -94,7 +101,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} privilege
       @returns {Boolean}
     */
-    checkPrivilege: function(privilege) {
+    checkPrivilege: function (privilege) {
       var ret = privilege;
       if (typeof privilege === 'string') {
         if(!this._grantedPrivs) this._grantedPrivs = [];
@@ -117,7 +124,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Boolean} is top level, default is true
       @returns {Boolean}
     */
-    checkPrivileges: function(nameSpace, type, record, isTopLevel) {
+    checkPrivileges: function (nameSpace, type, record, isTopLevel) {
       var isTopLevel = isTopLevel !== false ? true : false,
           isGrantedAll = true,
           isGrantedPersonal = false,
@@ -129,7 +136,7 @@ select xt.install_js('XT','Data','xtuple', $$
                     record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* if there is no ORM, this isn't a table data type so no check required */
-      if (DEBUG) plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map, null, 2));    
+      if (DEBUG) plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map));    
       if(!map) return true;
       
       /* can not access 'nested only' records directly */
@@ -196,17 +203,19 @@ select xt.install_js('XT','Data','xtuple', $$
     
     /**
       Commit array columns with their own statements 
-      
-      @param {Object} record object to be committed
-      @param {Object} view definition object
+
+      @param {Object} Orm     
+      @param {Object} Record
     */
-    commitArrays: function(nameSpace, record, orm) {
-      for(var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop);
+    commitArrays: function (orm, record) {
+      var prop,
+        ormp;
+      for(prop in record) {
+        ormp = XT.Orm.getProperty(orm, prop);
 
         /* if the property is an array of objects they must be records so commit them */
         if (ormp.toMany && ormp.toMany.isNested) {
-            var key = nameSpace.toUpperCase() + '.' + ormp.toMany.type,
+            var key = orm.nameSpace + '.' + ormp.toMany.type,
                 values = record[prop]; 
           for (var i = 0; i < values.length; i++) {
             this.commitRecord(key, values[i], false);
@@ -221,9 +230,11 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} metrics
       @returns Boolean
     */
-    commitMetrics: function(metrics) {
-      for(var key in metrics) {
-        var value = metrics[key];      
+    commitMetrics: function (metrics) {
+      var key,
+        value;
+      for (key in metrics) {
+        value = metrics[key];      
         if(typeof value === 'boolean') value = value ? 't' : 'f';
         else if(typeof value === 'number') value = value.toString();    
         plv8.execute('select setMetric($1,$2)', [key, value]);
@@ -237,10 +248,10 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} name space qualified record type
       @param {Object} data object
     */
-    commitRecord: function(key, value, encryptionKey) {
+    commitRecord: function (key, value, encryptionKey) {
       var nameSpace = key.beforeDot().camelize().toUpperCase(),
-          type = key.afterDot().classify();
-      var hasAccess = this.checkPrivileges(nameSpace, type, value, false);
+        type = key.afterDot().classify(),
+        hasAccess = this.checkPrivileges(nameSpace, type, value, false);
       if(!hasAccess) throw new Error("Access Denied.");    
       if(value && value.dataState) {
         if(value.dataState === this.CREATED_STATE) { 
@@ -258,124 +269,262 @@ select xt.install_js('XT','Data','xtuple', $$
     /**
       Commit insert to the database 
 
-      @param {String} name space qualified record type
-      @param {Object} the record to be committed
+      @param {String} Name space qualified record type
+      @param {Object} Record
     */
-    createRecord: function(key, value, encryptionKey) {
-      var viewName = key.afterDot().decamelize(), 
-          schemaName = key.beforeDot().decamelize(),    
-          orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
-          record = value,
-          sql = '', columns, expressions,
-          props = [], params = [];
-      delete record['dataState'];
-      delete record['type'];
+    createRecord: function (key, value, encryptionKey) {
+      var orm = XT.Orm.fetch(key.beforeDot(), key.afterDot()),
+        sql = this.prepareInsert(orm, value),
+        i;
+        
+      /* handle extensions on the same table */
+      for (i = 0; i < orm.extensions.length; i++) {
+        if (orm.extensions[i].table === orm.table) {
+          sql = this.prepareInsert(orm.extensions[i], value, sql);
+        }
+      }
 
-      /* build up the content for insert of this record */
-      for(var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop),
-            type = ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type;
-        if (!ormp.toMany) { 
-          props.push('"' + prop + '"');
+      /* commit the base record */
+      plv8.execute(sql.statement); 
 
-          /* handle encryption if applicable */
-          if(ormp && ormp.attr && ormp.attr.isEncrypted) {
-            if(encryptionKey) {
-              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                             .replace(/{value}/, record[prop])
-                             .replace(/{encryptionKey}/, encryptionKey);
-              params.push(record[prop]);
-            } else { 
-              throw new Error("No encryption key provided.");
-            }
-          } else if(record[prop] !== null) { 
-            if (ormp && ormp.toOne && ormp.toOne.isNested) { 
-              if(record[prop] !== null) {
-                var row = this.rowify(schemaName + '.' + ormp.toOne.type, record[prop]);
-                params.push(row);
-              } else {
-                record[prop] = "null::" + schemaName + '.' + ormp.toOne.type;
-              }
-            } else if(type === 'String' || type === 'Date') { 
-              params.push("'" + record[prop] + "'");
-            } else {
-              params.push(record[prop]);
-            }
-          } else {
-            params.push('null');
+      /* handle extensions on other tables */
+      for (i = 0; i < orm.extensions.length; i++) {
+        if (orm.extensions[i].table !== orm.table && 
+           !orm.extensions[i].isChild) {
+          sql = this.prepareInsert(orm.extensions[i], value);
+          plv8.execute(sql.statement); 
+        }
+      }
+
+      /* okay, now lets handle arrays */
+      this.commitArrays(orm, value);
+    },
+
+   /**
+     Use an orm object and a record and build an insert statement. It
+     returns an object with a table name string, columns array, expressions
+     array and insert statement string that can be executed.
+
+     The optional params object includes objects columns, expressions
+     that can be cumulatively added to the result.
+
+     @params {Object} Orm
+     @params {Object} Record
+     @params {Object} Params - optional
+     @returns {Object}
+   */
+    prepareInsert: function (orm, record, params) {
+      var column,
+        columns,
+        expressions,
+        ormp,
+        prop,
+        attr,
+        type,
+        toOneOrm,
+        toOneKey,
+        toOneProp,
+        toOneVal,
+        i;
+      params = params || { 
+        table: "", 
+        columns: [], 
+        expressions: []
+      }
+      params.table = orm.table;
+
+      /* if extension handle key */
+      if (orm.relations) {
+        for (i = 0; i < orm.relations.length; i++) {
+          column = '"' + orm.relations[i].column + '"';
+          if (!params.columns.contains(column)) {
+            params.columns.push(column);
+            params.expressions.push(record[orm.relations[i].inverse]);
           }
         }
       }
-      columns = props.join(', ');
-      expressions = params.join(', ');
-      sql = 'insert into ' + key.decamelize() + ' (' + columns + ') values (' + expressions + ')';
-      
-      if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
-      
-      /* commit the record */
-      plv8.execute(sql); 
 
-      /* okay, now lets handle arrays */
-      this.commitArrays(schemaName, record, orm);
+      /* build up the content for insert of this record */
+      for (i = 0; i < orm.properties.length; i++) {
+        ormp = orm.properties[i];
+        prop = ormp.name;
+        attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
+        type = attr.type;
+        if (record[prop] !== undefined && !ormp.toMany) {
+          params.columns.push('"' + attr.column + '"');
+
+          /* handle encryption if applicable */
+          if (attr.isEncrypted) {
+            if (encryptionKey) {
+              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                             .replace(/{value}/, record[prop])
+                             .replace(/{encryptionKey}/, encryptionKey);
+              params.expressions.push(record[prop]);
+            } else { 
+              throw new Error("No encryption key provided.");
+            }
+          } else if (record[prop] !== null) { 
+            if (ormp && ormp.toOne && ormp.toOne.isNested) { 
+              toOneOrm = XT.Orm.fetch(orm.nameSpace, ormp.toOne.type);
+              toOneKey = XT.Orm.primaryKey(toOneOrm);
+              toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
+              toOneVal = toOneProp.attr.type === 'String' ?
+                "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
+              params.expressions.push(toOneVal);
+            } else if (type === 'String' || type === 'Date') { 
+              params.expressions.push("'" + record[prop] + "'");
+            } else {
+              params.expressions.push(record[prop]);
+            }
+          } else {
+            params.expressions.push('null');
+          }
+        }
+      }
+
+      /* Build the insert statement */
+      columns = params.columns.join(', ');
+      expressions = params.expressions.join(', ');
+      params.statement = 'insert into ' + params.table + ' (' + columns + ') values (' + expressions + ')';
+      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+      return params;
     },
 
     /**
       Commit update to the database 
 
-      @param {String} name space qualified record type
-      @param {Object} the record to be committed
+      @param {String} Name space qualified record type
+      @param {Object} Record
     */
     updateRecord: function(key, value, encryptionKey) {
-      var viewName = key.afterDot().decamelize(), 
-          schemaName = key.beforeDot().decamelize(),
-          orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-          pkey = XT.Orm.primaryKey(orm),
-          record = value,
-          sql = '', expressions, params = [];
-      delete record['dataState'];
-      delete record['type'];
-
-      /* build up the content for update of this record */
-      for(var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop),
-            type = ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type,
-            qprop = '"' + prop + '"';
-
-        /* handle encryption if applicable */
-        if(ormp && ormp.attr && ormp.attr.isEncrypted) {
-          if(encryptionKey) {
-            record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
-                           .replace(/{value}/, record[prop])
-                           .replace(/{encryptionKey}/, encryptionKey);
-            params.push(qprop.concat(" = ", record[prop]));
-          } else {
-            throw new Error("No encryption key provided.");
-          }
-        } else if (!ormp.toMany && ormp.name !== pkey) {
-          if(record[prop] !== null) {
-            if (ormp.toOne && ormp.toOne.isNested) {
-              var row = this.rowify(schemaName + '.' + ormp.toOne.type, record[prop]);         
-              params.push(qprop.concat(" = ", row));
-            } else if (type === 'String' || type === 'Date') { 
-              params.push(qprop.concat(" = '", record[prop], "'"));
-            } else {
-              params.push(qprop.concat(" = ", record[prop]));
-            }
-          } else {
-            params.push(qprop.concat(' = null'));
-          }
+      var orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
+        sql = this.prepareUpdate(orm, value),
+        pkey = XT.Orm.primaryKey(orm),
+        ext,
+        rows,
+        i;
+        
+      /* handle extensions on the same table */
+      for (i = 0; i < orm.extensions.length; i++) {
+        if (orm.extensions[i].table === orm.table) {
+          sql = this.prepareUpdate(orm.extensions[i], value, sql);
         }
       }
 
-      expressions = params.join(', ');
-      sql = 'update ' + key.decamelize() + ' set ' + expressions + ' where ' + pkey + ' = $1;';
-      if(DEBUG) { plv8.elog(NOTICE, 'sql =', sql); }
-      
-      /* commit the record */
-      plv8.execute(sql, [record[pkey]]); 
+      /* commit the base record */
+      plv8.execute(sql.statement); 
+
+      /* handle extensions on other tables */
+      for (i = 0; i < orm.extensions.length; i++) {
+        ext = orm.extensions[i];
+        if (ext.table !== orm.table && 
+           !ext.isChild) {
+           
+          /* Determine whether to insert or update */
+          sql = 'select ' + ext.relations[0].column + ' from ' + ext.table +
+                ' where ' + ext.relations[0].column + ' = $1;';
+                plv8.elog(NOTICE, 'sql =', sql, value[pkey]);
+          rows = plv8.execute(sql, [value[pkey]]);
+          if (rows.length) {
+            sql = this.prepareUpdate(ext, value);
+          } else {
+            sql = this.prepareInsert(ext, value);
+          }
+          plv8.execute(sql.statement); 
+        }
+      }
 
       /* okay, now lets handle arrays */
-      this.commitArrays(schemaName, record, orm); 
+      this.commitArrays(orm, value); 
+    },
+
+    /**
+     Use an orm object and a record and build an update statement. It
+     returns an object with a table name string, expressions array and
+     insert statement string that can be executed.
+
+     The optional params object includes objects columns, expressions
+     that can be cumulatively added to the result.
+
+     @params {Object} Orm
+     @params {Object} Record
+     @params {Object} Params - optional
+     @returns {Object}
+   */
+    prepareUpdate: function (orm, record, params) {
+      var pkey,
+        columnKey,
+        expressions, 
+        prop,
+        ormp,
+        attr,
+        type,
+        qprop,
+        toOneOrm,
+        toOneKey,
+        toOneProp,
+        toOneVal,
+        keyValue;
+      params = params || { 
+        table: "", 
+        expressions: []
+      }
+      params.table = orm.table;
+
+      if (orm.relations) {
+        /* extension */
+        pkey = orm.relations[0].inverse;
+        columnKey = orm.relations[0].column;
+      } else {
+        /* base */
+        pkey = XT.Orm.primaryKey(orm);
+        columnKey = XT.Orm.primaryKey(orm, true);
+      }
+
+      /* build up the content for update of this record */
+      for (i = 0; i < orm.properties.length; i++) {
+        ormp = orm.properties[i];
+        prop = ormp.name;
+        attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
+        type = attr.type;
+        qprop = '"' + attr.column + '"';
+
+        if (record[prop] !== undefined && !ormp.toMany) {
+          /* handle encryption if applicable */
+          if(attr.isEncrypted) {
+            if(encryptionKey) {
+              record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"
+                             .replace(/{value}/, record[prop])
+                             .replace(/{encryptionKey}/, encryptionKey);
+              params.expressions.push(qprop.concat(" = ", record[prop]));
+            } else {
+              throw new Error("No encryption key provided.");
+            }
+          } else if (ormp.name !== pkey) {
+            if (record[prop] !== null) {
+              if (ormp.toOne && ormp.toOne.isNested) {
+                toOneOrm = XT.Orm.fetch(orm.nameSpace, ormp.toOne.type);
+                toOneKey = XT.Orm.primaryKey(toOneOrm);
+                toOneProp = XT.Orm.getProperty(toOneOrm, toOneKey);
+                toOneVal = toOneProp.attr.type === 'String' ?
+                  "'" + record[prop][toOneKey] + "'" : record[prop][toOneKey];
+                params.expressions.push(qprop.concat(" = ", toOneVal));
+              } else if (type === 'String' || type === 'Date') { 
+                params.expressions.push(qprop.concat(" = '", record[prop], "'"));
+              } else {
+                params.expressions.push(qprop.concat(" = ", record[prop]));
+              }
+            } else {
+              params.expressions.push(qprop.concat(' = null'));
+            }
+          }
+        }
+      }
+      keyValue = typeof record[pkey] === 'string' ? "'" + record[pkey] + "'" : record[pkey];
+      expressions = params.expressions.join(', ');
+      params.statement = 'update ' + params.table + ' set ' + expressions + ' where ' + columnKey + ' = ' + keyValue + ';';
+      if (DEBUG) { plv8.elog(NOTICE, 'sql =', params.statement); }
+      return params;
     },
 
     /**
@@ -387,12 +536,15 @@ select xt.install_js('XT','Data','xtuple', $$
     deleteRecord: function(key, value) {
       var record = XT.decamelize(value), sql = '',
         orm = XT.Orm.fetch(key.beforeDot(),key.afterDot()),
-        nameKey = XT.Orm.primaryKey(orm),
-        columnKey = XT.Orm.primaryKey(orm, true),
+        sql,
+        nameKey,
+        columnKey,
         prop,
         ormp,
         childKey,
-        values;
+        values,
+        ext,
+        i;
           
       /* Delete children first */
      for (prop in record) {
@@ -402,13 +554,27 @@ select xt.install_js('XT','Data','xtuple', $$
        if (ormp.toMany && ormp.toMany.isNested) {
          childKey = key.beforeDot() + '.' + ormp.toMany.type,
          values = record[prop]; 
-         for (var i = 0; i < values.length; i++) {
+         for (i = 0; i < values.length; i++) {
             this.deleteRecord(childKey, values[i]);
          }
        }
      }   
 
+     /* Next delete from extension tables */
+     for (i = 0; i < orm.extensions.length; i++) {
+       ext = orm.extensions[i];
+       if (ext.table !== orm.table &&
+           !ext.isChild) {
+         columnKey = ext.relations[0].column;
+         nameKey = ext.relations[0].inverse;     
+         sql = 'delete from '+ ext.table + ' where ' + columnKey + ' = $1;';
+         plv8.execute(sql, [record[nameKey]]);
+       }
+     }
+
       /* Now delete the top */
+      nameKey = XT.Orm.primaryKey(orm),
+      columnKey = XT.Orm.primaryKey(orm, true);
       sql = 'delete from '+ orm.table + ' where ' + columnKey + ' = $1;';
       if(DEBUG) plv8.elog(NOTICE, 'sql =', sql,  record[nameKey]);
       
@@ -421,7 +587,7 @@ select xt.install_js('XT','Data','xtuple', $$
       
       @returns {String} 
     */
-    currentUser: function() {
+    currentUser: function () {
       var res;
       if(!this._currentUser) {
         res = plv8.execute("select getEffectiveXtUser() as curr_user");
@@ -441,7 +607,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} encryption key
       @returns {Object} 
     */
-    decrypt: function(nameSpace, type, record, encryptionKey) {
+    decrypt: function (nameSpace, type, record, encryptionKey) {
       var orm = XT.Orm.fetch(nameSpace, type);
       for(var prop in record) {
         var ormp = XT.Orm.getProperty(orm, prop.camelize());
@@ -474,7 +640,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number} row offset - optional
       @returns Array
     */
-    fetch: function(recordType, conditions, parameters, orderBy, rowLimit, rowOffset) {
+    fetch: function (recordType, conditions, parameters, orderBy, rowLimit, rowOffset) {
       var nameSpace = recordType.beforeDot(),
           type = recordType.afterDot(),
           table = (nameSpace + '.' + type).decamelize(),
@@ -567,63 +733,23 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Array} array of metric names
       @returns {Array} 
     */
-    retrieveMetrics: function(keys) {
+    retrieveMetrics: function (keys) {
       var sql = 'select metric_name as setting, metric_value as value '
               + 'from metric '
               + 'where metric_name in ({keys})', ret; 
-      for(var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
+      for (var i = 0; i < keys.length; i++) keys[i] = "'" + keys[i] + "'";
       sql = sql.replace(/{keys}/, keys.join(','));
       ret =  plv8.execute(sql);
 
       /* recast where applicable */
-      for(var i = 0; i < ret.length; i++) {
+      for (var i = 0; i < ret.length; i++) {
         if(ret[i].value === 't') ret[i].value = true;
         else if(ret[i].value === 'f') ret[i].value = false
         else if(!isNaN(ret[i].value)) ret[i].value = ret[i].value - 0;
       }
       return ret;
-    },
-
-    /** 
-      Convert a record object to PostgresSQL row formatted string.
-
-      @param {String} the column type
-      @param {Object} data to convert
-      @returns {String} a string formatted like a postgres RECORD datatype 
-    */
-    rowify: function(key, value) {
-      if (value === null) return 'null';
-      
-      var type = key.afterDot().classify(), 
-          nameSpace = key.beforeDot().toUpperCase(),
-          orm = XT.Orm.fetch(nameSpace, type),
-          record = value,
-          props = [], ret = '';
-
-      for (var prop in record) {
-        var ormp = XT.Orm.getProperty(orm, prop),
-        type = ormp ? (ormp.attr ? ormp.attr.type : ormp.toOne ? ormp.toOne.type : ormp.toMany.type) : 'String';
-        if (prop && record[prop] !== null) {
-          if (ormp.toMany) { 
-            /* orm rules ignore arrays, but we need this place holder so type signatures match */
-            props.push("'{}'");  
-          } else if (ormp.toOne && ormp.toOne.isNested) { 
-            record[prop] = this.rowify(nameSpace + '.' + type, record[prop]);
-            props.push(record[prop]); 
-          } else if (type === 'String' ||
-                     type === 'Date') {
-            props.push("'" + record[prop] + "'"); 
-          } else {
-            props.push(record[prop]);
-          }
-        } else {
-          props.push('null');
-        }
-      }
-      ret = ret.concat('(', props.join(','), ')');
-      if(DEBUG) { plv8.elog(NOTICE, 'rowify = ', ret); }    
-      return ret;
     }
+    
   }
 
 $$ );
