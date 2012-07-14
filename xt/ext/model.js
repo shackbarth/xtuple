@@ -1,7 +1,7 @@
 // Contributions of status related functionality borrowed from SproutCore:
 // https://github.com/sproutcore/sproutcore
 
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, Backbone:true, _:true */
@@ -11,20 +11,20 @@ white:true*/
 
   /**
     @class
-  
+
     `XT.Model` is an abstract class designed to operate with `XT.DataSource`.
     It should be subclassed for any specific implentation. Subtypes should
     include a `recordType` the data source will use to retreive the record.
-  
+
     To create a new model include `isNew` in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
-    
+
     To load an existing record include a guid in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact;
       m.fetch({id: 1});
-  
+
     @extends Backbone.RelationalModel
     @param {Object} Attributes
     @param {Object} Options
@@ -35,7 +35,7 @@ white:true*/
     /**
       Set to true if you want an id fetched from the server when the `isNew` option
       is passed on a new model.
-  
+
       @type {Boolean}
     */
     autoFetchId: true,
@@ -61,7 +61,7 @@ white:true*/
 
     /**
       Indicates whethere the model is read only.
-  
+
       @type {Boolean}
     */
     readOnly: false,
@@ -69,7 +69,7 @@ white:true*/
     /**
       An array of attribute names designating attributes that are not editable.
       Use `setReadOnly` to edit this array.
-  
+
       @seealso `setReadOnly`
       @seealso `isReadOnly`
       @type {Array}
@@ -93,7 +93,7 @@ white:true*/
 
     /**
       Model's status. You should never modify this directly.
-  
+
       @seealso `getStatus`
       @seealse `setStatus`
       @type {Number}
@@ -124,7 +124,7 @@ white:true*/
     canDelete: function () {
       return this.getClass().canDelete(this);
     },
-    
+
     /**
       Returns only attribute records that have changed.
 
@@ -222,7 +222,7 @@ white:true*/
       `destroy` on a parent will cause the model to commit to the server
       immediately. Calling destroy on a child relation will simply mark it for
       deletion on the next save of the parent.
-  
+
       @returns {XT.Request|Boolean}
     */
     destroy: function (options) {
@@ -280,7 +280,7 @@ white:true*/
 
     /*
       Reimplemented to handle state change.
-  
+
       @returns {XT.Request} Request
     */
     fetch: function (options) {
@@ -306,7 +306,7 @@ white:true*/
     /**
       Set the id on this record an id from the server. Including the `cascade`
       option will call ids to be fetched recursively for `HasMany` relations.
-  
+
       @returns {XT.Request} Request
     */
     fetchId: function (options) {
@@ -362,7 +362,7 @@ white:true*/
 
     /**
       Returns the current model prototype class.
-      
+
       @returns {XT.Model}
     */
     getClass: function () {
@@ -372,7 +372,7 @@ white:true*/
     /**
       Return the parent model if one exists. If the `getRoot` parameter is
       passed, it will return the top level parent of the model hierarchy.
-  
+
       @param {Boolean} Get Root
       @returns {XT.Model}
     */
@@ -393,7 +393,7 @@ white:true*/
 
     /**
       Return the current status.
-  
+
       @returns {Number}
     */
     getStatus: function () {
@@ -402,7 +402,7 @@ white:true*/
 
     /**
       Return the current status as as string.
-  
+
       @returns {String}
     */
     getStatusString: function () {
@@ -422,7 +422,7 @@ white:true*/
     /**
       Searches attributes first, if not found then returns either a function call
       or property value on the model that matches the key.
-  
+
       @param {String} Key
       @returns {Any}
     */
@@ -477,7 +477,7 @@ white:true*/
 
     /**
       Reimplemented. A model is new if the status is `READY_NEW`.
-  
+
       @returns {Boolean}
     */
     isNew: function () {
@@ -487,7 +487,7 @@ white:true*/
 
     /**
       Returns true if status is `READY_NEW` or `READY_DIRTY`.
-  
+
       @returns {Boolean}
     */
     isDirty: function () {
@@ -525,7 +525,7 @@ white:true*/
     /**
       Recursively checks the object against the schema and converts date strings to
       date objects.
-  
+
       @param {Object} Response
     */
     parse: function (resp) {
@@ -566,7 +566,7 @@ white:true*/
 
     /**
       Reimplemented.
-  
+
       @retuns {XT.Request} Request
     */
     save: function (key, value, options) {
@@ -618,16 +618,16 @@ white:true*/
 
     /**
       Set the entire model, or a specific model attribute to `readOnly`.
-  
+
       Examples:
-  
+
       m.setReadOnly() // sets model to read only
       m.setReadOnly(false) // sets model to be editable
       m.setReadOnly('name') // sets 'name' attribute to read-only
       m.setReadOnly('name', false) // sets 'name' attribute to be editable
-  
+
       Note: Privilege enforcement supercedes read-only settings.
-  
+
       @seealso `isReadOnly`
       @seealso `readOnly`
       @param {String|Boolean} Attribute to set, or boolean if setting the model
@@ -655,7 +655,7 @@ white:true*/
     /**
       Set the status on the model. Triggers `statusChange` event. Option set to
       `cascade` will propagate status recursively to all HasMany children.
-  
+
       @param {Number} Status
     */
     setStatus: function (status, options) {
@@ -743,22 +743,22 @@ white:true*/
 
     /**
       Default validation checks `attributes` for:
-  
+
         * Data type integrity.
         * Required fields (when committing).
         * Read Only and Privileges (when editing).
-  
+
       Returns `undefined` if the validation succeeded, or some value, usually
       an error message, if it fails.
-      
+
       Use the `force` option to ignore validation. This is useful when
       higher level function calls passing through `set` need to skip
       validation to work properly.
-      
+
       It is recommended customizations be implemented on `validateEdit` or
       `validateSave` to reduce risk of accidentally over-writing or losing
       logic included in the base validate function.
-  
+
       @seealso `validateEdit`
       @seealso `validateSave`
       @param {Object} Attributes
@@ -1084,6 +1084,11 @@ white:true*/
       options.force = true;
       return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
     },
+
+    getObjectByName: function (name) {
+      return Backbone.Relational.store.getObjectByName(name);
+    },
+
 
     // ..........................................................
     // CONSTANTS

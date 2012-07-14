@@ -50,8 +50,20 @@
   testObj.setValue("inval");
   console.log(testObj.getValue() === null);
 
+  XT.app.createComponent({ kind: "XV.DropdownWidget", name: "dropdown" });
+  testObj = XT.app.$.dropdown;
 
+  testObj.setModelType("XM.projectStatuses");
 
+  testObj.setValue("XYZ");
+  console.log(testObj.getValue() === undefined);
+
+  testObj.setValue("O");
+  console.log(testObj.getValue() === "O");
+
+  // keep the old value if the new value is invalid
+  testObj.setValue("XYZ");
+  console.log(testObj.getValue() === "O");
   </script>
   </body>
 </html>
