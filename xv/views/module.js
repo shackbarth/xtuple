@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, enyo:true*/
+/*global XT:true, XV:true, enyo:true*/
 
 (function () {
 
@@ -126,6 +126,8 @@ trailing:true white:true*/
     },
     fillHistory: function () {
 
+      var i;
+
       // Clear out the history menu
       var historyMenu = this.$.historyMenu; // just for re-use
 
@@ -133,11 +135,11 @@ trailing:true white:true*/
       // prematurely. It's also necessary to delete the children always from the
       // 0 spot and not the i spot, because the target moves as you delete.
       var historyLength = historyMenu.children.length;
-      for (var i = 0; i < historyLength; i++) {
+      for (i = 0; i < historyLength; i++) {
         historyMenu.removeChild(this.$.historyMenu.children[0]);
       }
 
-      for(var i = 0; i < XV.history.length; i++) {
+      for (i = 0; i < XV.history.length; i++) {
         this.$.historyMenu.createComponent({
           content: XV.history[i].modelType + ": " + XV.history[i].modelName,
           modelType: XV.history[i].modelType,
@@ -149,8 +151,9 @@ trailing:true white:true*/
     doHistoryItemSelected: function (inSender, inEvent) {
       var modelId = inEvent.originator.modelId;
       var modelType = inEvent.originator.modelType;
-      console.log("Now it's time to load " + modelType + " " + modelId);
-      // TODO: actually load
+      var modelShell = { type: modelType, guid: modelId };
+      XT.log("Load from history: " + modelType + " " + modelId);
+      this.bubble("workspace", {eventName: "workspace", options: modelShell });
     }
 
 

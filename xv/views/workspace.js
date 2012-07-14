@@ -29,6 +29,34 @@ trailing:true white:true*/
        *
        */
       modelTypeChanged: function () {
+
+        /**
+         * Start by clearing out all of the panels
+         */
+
+        // XXX I've copied and pasted this code now 3 times. Refactor to use
+        // a single static method. But where to put it?
+        var i;
+        // Clear out the panels
+        var topPanel = this.$.topPanel; // just for re-use
+
+        // It's necessary to save the length into a variable or else the loop ends
+        // prematurely. It's also necessary to delete the children always from the
+        // 0 spot and not the i spot, because the target moves as you delete.
+        var topPanelLength = topPanel.children.length;
+        for (i = 0; i < topPanelLength; i++) {
+          topPanel.removeChild(this.$.topPanel.children[0]);
+        }
+        var bottomPanel = this.$.bottomPanel; // just for re-use
+
+        // It's necessary to save the length into a variable or else the loop ends
+        // prematurely. It's also necessary to delete the children always from the
+        // 0 spot and not the i spot, because the target moves as you delete.
+        var bottomPanelLength = bottomPanel.children.length;
+        for (i = 0; i < bottomPanelLength; i++) {
+          bottomPanel.removeChild(this.$.bottomPanel.children[0]);
+        }
+
         var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
           var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
@@ -268,11 +296,19 @@ trailing:true white:true*/
         var p = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
+
+      /**
+       * Accepts the object that tells the workspace what to drill down into.
+       * SetOptions is quite generic, because it can be called in a very generic
+       * way from the main carousel event handler. Note also that the model parameter
+       * doesn't need to be a complete model. It just has to have the appropriate
+       * type and guid properties
+       */
       setOptions: function (model) {
         //
         // Determine the model that will back this view
         //
-        var modelType = model.get("type");
+        var modelType = model.get ? model.get("type") : model.type;
         // Magic/convention: trip off the word Info to get the heavyweight class
         if (modelType.substring(modelType.length - 4) === "Info") {
           modelType = modelType.substring(0, modelType.length - 4);
@@ -301,7 +337,7 @@ trailing:true white:true*/
         //
         // Fetch the model
         //
-        var id = model.get("guid");
+        var id = model.get ? model.get("guid") : model.guid;
         m.fetch({id: id});
         XT.log("Workspace is fetching " + modelType + " " + id);
 
