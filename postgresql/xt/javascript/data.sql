@@ -136,7 +136,7 @@ select xt.install_js('XT','Data','xtuple', $$
                     record && record.dataState === this.UPDATED_STATE ? 'update' : 'read';
 
       /* if there is no ORM, this isn't a table data type so no check required */
-      if (DEBUG) plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map, null, 2));    
+      if (DEBUG) plv8.elog(NOTICE, 'orm is ->', JSON.stringify(map));    
       if(!map) return true;
       
       /* can not access 'nested only' records directly */
@@ -543,6 +543,7 @@ select xt.install_js('XT','Data','xtuple', $$
         ormp,
         childKey,
         values,
+        ext,
         i;
           
       /* Delete children first */
@@ -561,10 +562,12 @@ select xt.install_js('XT','Data','xtuple', $$
 
      /* Next delete from extension tables */
      for (i = 0; i < orm.extensions.length; i++) {
-       if (orm.extensions[i].table !== orm.table) {
-         columnKey = orm.extensions[i].relations[0].column;
-         nameKey = orm.extensions[i].relations[0].inverse;     
-         sql = 'delete from '+ orm.extensions[i].table + ' where ' + columnKey + ' = $1;';
+       ext = orm.extensions[i];
+       if (ext.table !== orm.table &&
+           !ext.isChild) {
+         columnKey = ext.relations[0].column;
+         nameKey = ext.relations[0].inverse;     
+         sql = 'delete from '+ ext.table + ' where ' + columnKey + ' = $1;';
          plv8.execute(sql, [record[nameKey]]);
        }
      }
