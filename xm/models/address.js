@@ -84,7 +84,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'country',
       relatedModel: 'XM.Country',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });

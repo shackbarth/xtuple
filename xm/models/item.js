@@ -61,7 +61,7 @@ white:true*/
   */
   XM.emptyProductCategory = new XM.ProductCategory({
     /** @scope XM.emptyProductCategory */
-    guid: -1,
+    id: -1,
     code: 'EMPTY',
     description: 'Use for indicating no product category'
   });
@@ -145,22 +145,22 @@ white:true*/
       type: Backbone.HasOne,
       key: 'classCode',
       relatedModel: 'XM.ClassCode',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'inventoryUnit',
       relatedModel: 'XM.Unit',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'productCategory',
       relatedModel: 'XM.ProductCategory',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'priceUnit',
       relatedModel: 'XM.Unit',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasMany,
       key: 'comments',

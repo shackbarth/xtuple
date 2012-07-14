@@ -280,7 +280,7 @@ trailing:true white:true*/
         //
         // Fetch the model
         //
-        var id = model.get("guid");
+        var id = model.get("id");
         m.fetch({id: id});
         XT.log("Workspace is fetching " + modelType + " " + id);
 

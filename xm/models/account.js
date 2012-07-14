@@ -160,12 +160,12 @@ white:true*/
       type: Backbone.HasOne,
       key: 'salesRep',
       relatedModel: 'XM.SalesRep',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'taxAuthority',
       relatedModel: 'XM.TaxAuthority',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }],
 
     // ..........................................................

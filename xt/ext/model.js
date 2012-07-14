@@ -20,7 +20,7 @@ white:true*/
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
     
-    To load an existing record include a guid in the options like so:
+    To load an existing record include a id in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact;
       m.fetch({id: 1});
@@ -39,8 +39,6 @@ white:true*/
       @type {Boolean}
     */
     autoFetchId: true,
-
-    idAttribute: "guid",
 
     /**
       The last error message reported.

@@ -190,7 +190,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'characteristic',
       relatedModel: 'XM.Characteristic',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }],
 
     //..................................................
