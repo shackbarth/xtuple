@@ -16,7 +16,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "cust_id",
@@ -68,7 +68,7 @@
         "isNested": true,
         "type": "ContactInfo",
         "column": "cust_cntct_id",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
@@ -77,7 +77,7 @@
         "isNested": true,
         "type": "ContactInfo",
         "column": "cust_corrcntct_id",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
@@ -221,7 +221,7 @@
           "relations": [
             {
               "column": "comment_source_id",
-              "inverse": "guid"
+              "inverse": "id"
             },
             {
               "column": "comment_source",

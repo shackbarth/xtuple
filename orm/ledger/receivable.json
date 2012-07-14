@@ -8,7 +8,7 @@
   "relations": [
     {
       "column": "aropen_id",
-      "inverse": "guid"
+      "inverse": "id"
     }
   ],
   "properties": [

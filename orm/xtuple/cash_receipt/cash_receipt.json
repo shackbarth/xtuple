@@ -16,7 +16,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "cashrcpt_id",

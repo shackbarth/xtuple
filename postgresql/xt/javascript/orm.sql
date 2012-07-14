@@ -280,7 +280,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           var toOne = props[i].toOne,
               table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
               type = table.afterDot(),
-              inverse = toOne.inverse ? toOne.inverse : 'guid',
+              inverse = toOne.inverse ? toOne.inverse : 'id',
               isEditable = toOne.isEditable !== false ? true : false,
               toOneAlias, join;
           if(!type) throw new Error('No type was defined on property ' + props[i].name);
@@ -317,10 +317,10 @@ select xt.install_js('XT','Orm','xtuple', $$
               inverse, ormp, sql, col = 'array({select}) as "{alias}"', conditions;
 
            /* handle inverse */
-          inverse = toMany.inverse ? toMany.inverse.camelize() : 'guid';
+          inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
           ormp = XT.Orm.getProperty(iorm, inverse);
           if(ormp && ormp.toOne && ormp.toOne.isNested) {
-            conditions = toMany.column ? '(' + type + '."' + inverse + '").guid = ' + tblAlias + '.' + toMany.column : 'true';
+            conditions = toMany.column ? '(' + type + '."' + inverse + '").id = ' + tblAlias + '.' + toMany.column : 'true';
           } else {
             conditions = toMany.column ? type + '."' + inverse + '" = ' + tblAlias + '.' + toMany.column : 'true';  
           }
@@ -347,7 +347,7 @@ select xt.install_js('XT','Orm','xtuple', $$
             join = join.concat(orm.table, ' ', tblAlias, ' on ');    
             for(var i = 0; i < orm.relations.length; i++) {
               var rel = orm.relations[i], value,
-                  inverse = rel.inverse ? rel.inverse : 'guid',
+                  inverse = rel.inverse ? rel.inverse : 'id',
                   condition;       
               for(var i = 0; i < base.properties.length; i++) {
                 if(base.properties[i].name === inverse) {
@@ -377,7 +377,7 @@ select xt.install_js('XT','Orm','xtuple', $$
           } else if (rel.inverse) {
             value = '{state}.' + rel.inverse;
           } else {
-            value = '{state}.guid';
+            value = '{state}.id';
           }                  
           conditions.push(rel.column + ' = ' + value);
         }

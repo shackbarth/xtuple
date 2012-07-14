@@ -15,7 +15,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "budgitem_id",

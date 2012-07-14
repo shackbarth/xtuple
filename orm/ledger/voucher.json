@@ -8,7 +8,7 @@
   "relations": [
     {
       "column": "vohead_id",
-      "inverse": "guid"
+      "inverse": "id"
     }
   ],
   "properties": [

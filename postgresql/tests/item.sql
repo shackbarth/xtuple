@@ -3,7 +3,7 @@
 	-- insert rule testing
 
 		INSERT INTO xm.item (
-		  guid,
+		  id,
 		  "number",
 		  is_active,
 		  description1,
@@ -57,7 +57,7 @@
 
 		SELECT * 
 		  FROM xm.item 
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- update rule testing
 
@@ -87,7 +87,7 @@
 			warranty_days			= 0,
 			freight_class			= (select max(freightclass_id) from freightclass),
 			max_cost			= 888888.88
-		 WHERE guid 				= 99999;
+		 WHERE id 				= 99999;
 
 -- END xm.item model view test queries
 
@@ -96,7 +96,7 @@
 	-- insert rule testing
 
 		INSERT INTO xm.item_alias (
-		  guid,
+		  id,
 		  item,
 		  "number",
 		  use_description,
@@ -116,7 +116,7 @@
 
 		SELECT * 
 		  FROM xm.item_alias
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- update rule testing
 
@@ -125,12 +125,12 @@
 		   	description1		= '***description1 UPDATE',
 			description2		= '***description2 UPDATE',
 			notes			= '***notes UPDATE'
-		 WHERE  guid 			= 99999;
+		 WHERE  id 			= 99999;
 
 	 -- delete rule testing
 
 		DELETE FROM xm.item_alias
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 -- END xm.item_alias model view test queries
 
@@ -139,7 +139,7 @@
 	-- insert rule testing
 
 		INSERT INTO xm.item_characteristic (
-		  guid,
+		  id,
 		  item,
 		  characteristic,
 		  "value",
@@ -148,7 +148,7 @@
 		VALUES (
 		  99999,
 		  99999,
-		  (select characteristic from xm.characteristic  where is_items order by guid limit 1),
+		  (select characteristic from xm.characteristic  where is_items order by id limit 1),
 		  'value INSERT',
 		  false,
 		  0);
@@ -157,20 +157,20 @@
 
 		SELECT * 
 		  FROM xm.item_characteristic
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- update rule testing
 
 		UPDATE 	xm.item_characteristic
-		   SET 	characteristic		= (select characteristic from xm.characteristic  where is_items order by guid desc limit 1),
+		   SET 	characteristic		= (select characteristic from xm.characteristic  where is_items order by id desc limit 1),
 			"value"			= '**value UPDATE**',
 			is_default		= true
-		 WHERE 	guid 			= 99999;
+		 WHERE 	id 			= 99999;
 
 	 -- delete rule testing
 
 		DELETE FROM xm.item_characteristic
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 -- END xm.item_characteristic model view test queries
 
@@ -179,7 +179,7 @@
 	-- insert rule testing
 
 		INSERT INTO xm.item_comment (
-		  guid,
+		  id,
 		  item,
 		  "date",
 		  "username",
@@ -199,19 +199,19 @@
 
 		SELECT * 
 		  FROM xm.item_comment
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- update rule testing
 
 		UPDATE xm.item_comment
 		   SET 	"text"			= '***comment_text_UPDATE',
 			is_public		= true
-		 WHERE 	guid 			= 99999;
+		 WHERE 	id 			= 99999;
 
 	 -- delete rule testing (should do NOTHING)
 
 		DELETE FROM xm.item_comment
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 -- END xm.item_comment model view test queries
 
@@ -220,7 +220,7 @@
 	-- insert rule testing (Docass)
 
 		INSERT INTO xm.contact_assignment (
-		  guid,
+		  id,
 		  source,
 		  source_type,
 		  contact,
@@ -229,11 +229,11 @@
 		  99999,
 		  99999,
 		  'I',
-		  (select contact_info from xm.contact_info order by guid limit 1),
+		  (select contact_info from xm.contact_info order by id limit 1),
 		  'S');
 
 		INSERT INTO xm.item_assignment (
-		  guid,
+		  id,
 		  source,
 		  source_type,
 		  item,
@@ -242,13 +242,13 @@
 		  99998,
 		  99999,
 		  'I',
-		  (select item_info from xm.item_info order by guid limit 1),
+		  (select item_info from xm.item_info order by id limit 1),
 		  'S');
 
 	-- insert rule testing (Imageass)
 
 		INSERT INTO xm.image_assignment (
-		  guid,
+		  id,
 		  source,
 		  source_type,
 		  image,
@@ -257,7 +257,7 @@
 		  99997,
 		  99999,
 		  'I',
-		  (select image_info from xm.image_info order by guid limit 1),
+		  (select image_info from xm.image_info order by id limit 1),
 		  'S');
 
 	-- confirm INSERT record
@@ -276,7 +276,7 @@
 	-- insert rule testing
 
 		INSERT INTO xm.item_substitute (
-		  guid,
+		  id,
 		  root_item,
 		  substitute_item,
 		  conversion_ratio,
@@ -293,7 +293,7 @@
 
 		SELECT * 
 		  FROM xm.item_substitute
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- update rule testing
 
@@ -302,12 +302,12 @@
 						     FROM item),
 			conversion_ratio	= .5,
 			rank			= 10
-		 WHERE 	guid 			= 99999;
+		 WHERE 	id 			= 99999;
 
 	 -- delete rule testing
 
 		DELETE FROM xm.item_substitute
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 -- END xm.item_substitute model view test queries
 
@@ -316,7 +316,7 @@
 	-- insert rule testing
 
 		INSERT INTO xm.item_conversion (
-		  guid,
+		  id,
 		  item,
 		  from_unit,
 		  from_value,
@@ -336,7 +336,7 @@
 
 		SELECT * 
 		  FROM xm.item_conversion
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- update rule testing
 
@@ -344,7 +344,7 @@
 		   SET 	from_value		= 2.0,
 			to_value		= 1.0,
 			fractional		= true
-		 WHERE 	guid 			= 99999;
+		 WHERE 	id 			= 99999;
 
 -- END xm.item_conversion model view test queries
 
@@ -353,7 +353,7 @@
 	-- insert rule testing
 
 		INSERT INTO xm.item_conversion_type_assignment (
-		  guid,
+		  id,
 		  item_conversion,
 		  unit_type)
 		VALUES (
@@ -365,7 +365,7 @@
 
 		SELECT * 
 		  FROM xm.item_conversion_type_assignment
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- update rule testing
 
@@ -374,12 +374,12 @@
 	 -- delete rule testing
 
 		DELETE FROM xm.item_conversion_type_assignment
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 	-- delete rule testing
 
 		DELETE FROM xm.item_conversion
-		 WHERE guid = 99999;
+		 WHERE id = 99999;
 
 -- END xm.item_conversion_type_assignment model view test queries
 
@@ -393,4 +393,4 @@
 -- delete rule testing
 
         DELETE FROM xm.item
-        WHERE guid = 99999;
+        WHERE id = 99999;

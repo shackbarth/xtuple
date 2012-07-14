@@ -7,7 +7,7 @@
   "comment": "Incident History Map",
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "incdthist_id",

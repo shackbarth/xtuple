@@ -3,7 +3,7 @@
   -- insert rule testing...
 
 	INSERT INTO xm.project (
-	  guid,
+	  id,
 	  "number",
 	  "name",
 	  notes,
@@ -36,7 +36,7 @@
 	-- confirm insert into xm.project view
 	SELECT *
 	  FROM xm.project
-	 WHERE guid = 9999;
+	 WHERE id = 9999;
 
   -- update rule testing...
 
@@ -51,14 +51,14 @@
 		assigned_to		= null,
 		project_status		= 'C' 
 					-- = 'open' -- used to test both remaining options
-	 WHERE guid = 9999;
+	 WHERE id = 9999;
 
 
 -- remove the recurrance
 
 update xm.project set
   recurrence_period = null
-where guid = 9999;
+where id = 9999;
 
 -- add a new recurrance
 update xm.project set
@@ -67,7 +67,7 @@ update xm.project set
   recurrence_start = (current_date + 4)::timestamp with time zone, 
   recurrence_end = null,
   recurrence_max = 2
-where guid = 9999;
+where id = 9999;
 
 -- update the recurrance
 
@@ -77,7 +77,7 @@ update xm.project set
   recurrence_start = (current_date + 2)::timestamp with time zone, 
   recurrence_end = null,
   recurrence_max = 3
-where guid = 9999;
+where id = 9999;
 -- END xm.project model view testing...
 
 -- BEGIN xm.project_comment model view testing...
@@ -85,7 +85,7 @@ where guid = 9999;
    -- insert rule testing...
 
 	INSERT INTO xm.project_comment (
-	guid,
+	id,
 	project,
 	"date",
 	"username",
@@ -109,7 +109,7 @@ where guid = 9999;
 	-- confirm insert into xm.project_comment view
 	SELECT *
 	  FROM xm.project_comment
-	 WHERE guid = (SELECT MAX(comment_id)
+	 WHERE id = (SELECT MAX(comment_id)
 		       FROM "comment");
 
    -- update rule testing...
@@ -117,13 +117,13 @@ where guid = 9999;
 	UPDATE 	xm.project_comment
 	   SET	"text" 		= '***This text is a test of the project_comment view UPDATE rule***',
 		is_public	= true
-	 WHERE	guid 		= (SELECT MAX(comment_id)
+	 WHERE	id 		= (SELECT MAX(comment_id)
 				     FROM "comment");
 
    -- delete rule testing...(should DO NOTHING)
 
 	DELETE 	FROM xm.project_comment
-	WHERE	guid = (SELECT MAX(comment_id)
+	WHERE	id = (SELECT MAX(comment_id)
 		        FROM "comment");
 
 -- END xm.project_comment model view testing...
@@ -133,7 +133,7 @@ where guid = 9999;
   -- insert rule testing...
 
 	INSERT INTO xm.project_task (
-	  guid,
+	  id,
 	  "number",
 	  "name",
 	  notes,
@@ -173,7 +173,7 @@ where guid = 9999;
 	-- confirm insert into xm.project view
 	SELECT *
 	  FROM xm.project_task
-	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
+	 WHERE id = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
 
   -- update rule testing...
 
@@ -191,12 +191,12 @@ where guid = 9999;
 		 assign_date			= assign_date + interval '12 months',
 		 complete_date			= now() + interval '12 months',
 		 assigned_to			= null
-	   WHERE guid = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
+	   WHERE id = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
 
   -- delete rule testing...
 
 	DELETE FROM xm.project_task
-	 WHERE guid = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
+	 WHERE id = (SELECT currval(pg_get_serial_sequence('prjtask','prjtask_id')));
 
 -- END xm.project_task model view testing...
 
@@ -205,7 +205,7 @@ where guid = 9999;
    -- insert rule testing...
 
 	INSERT INTO xm.project_task_comment (
-	guid,
+	id,
 	project_task,
 	"date",
 	"username",
@@ -229,20 +229,20 @@ where guid = 9999;
 	-- confirm insert into xm.project_task_comment view
 	SELECT *
 	  FROM xm.project_task_comment
-	 WHERE guid = (SELECT MAX(comment_id)
+	 WHERE id = (SELECT MAX(comment_id)
 		       FROM "comment");
 
    -- update rule testing...
 
 	UPDATE 	xm.project_task_comment
 	   SET	"text" = '***This text is a test of the project_task_comment view UPDATE rule***'
-	 WHERE	guid = (SELECT MAX(comment_id)
+	 WHERE	id = (SELECT MAX(comment_id)
 		        FROM "comment");
 
    -- delete rule testing...(should DO NOTHING)
 
 	DELETE 	FROM xm.project_task_comment
-	WHERE	guid = (SELECT MAX(comment_id)
+	WHERE	id = (SELECT MAX(comment_id)
 		        FROM "comment");
 
 -- END xm.project_task_comment model view testing...
@@ -252,7 +252,7 @@ where guid = 9999;
   -- insert rule testing...
 
 	INSERT INTO xm.project_task_alarm (
-	  guid,
+	  id,
 	  project_task,
 	  event,
 	  event_recipient,
@@ -284,7 +284,7 @@ where guid = 9999;
 	-- confirm insert into xm.project view
 	SELECT *
 	  FROM xm.project_task_alarm
-	 WHERE guid = 26; --(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
+	 WHERE id = 26; --(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
 
   -- update rule testing...
 
@@ -299,12 +299,12 @@ where guid = 9999;
 		 "time"				= now(),
 		 "offset"			= 10,
 		 qualifier			= 'DA'
-	   WHERE guid = 26; --currval(pg_get_serial_sequence('alarm','alarm_id'));
+	   WHERE id = 26; --currval(pg_get_serial_sequence('alarm','alarm_id'));
 
   -- delete rule testing...
 
 	DELETE FROM xm.project_task_alarm
-	 WHERE guid = 26;--(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
+	 WHERE id = 26;--(SELECT currval(pg_get_serial_sequence('alarm','alarm_id')));
 
 -- END xm.project_task_alarm model view testing...
 

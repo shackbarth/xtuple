@@ -8,7 +8,7 @@
   "relations": [
     {
       "column": "taxauth_id",
-      "inverse": "guid"
+      "inverse": "id"
     }
   ],
   "properties": [

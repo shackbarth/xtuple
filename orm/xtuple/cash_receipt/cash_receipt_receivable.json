@@ -14,7 +14,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "aropen_id",
@@ -26,7 +26,7 @@
       "toOne": {
         "type": "CustomerInfo",
         "column": "aropen_cust_id",
-        "inverse" : "guid",
+        "inverse" : "id",
         "isEditable": false
       }
     },

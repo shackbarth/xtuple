@@ -27,7 +27,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "prjtask_id",
@@ -168,7 +168,7 @@
           "relations": [
             {
               "column": "comment_source_id",
-              "inverse": "guid"
+              "inverse": "id"
             },
             {
               "column": "comment_source",

@@ -20,7 +20,7 @@ select xt.js_init();
 select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
-      "guid":12171,
+      "id":12171,
       "number":"14832",
       "honorific":"Mr.",
       "firstName":"John",
@@ -45,7 +45,7 @@ select xt.commit_record(
       "primaryEmail":"jdr@gmail.com",
       "address": null,
       "comments":[{
-        "guid":739893,
+        "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
@@ -55,7 +55,7 @@ select xt.commit_record(
         "type": "ContactComment",
         "dataState":"create"
         },{
-        "guid":739894,
+        "id":739894,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
@@ -77,7 +77,7 @@ select xt.commit_record(
 select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
-      "guid":12171,
+      "id":12171,
       "number":"14832",
       "honorific":"Mrs.",
       "firstName":"Jane",
@@ -102,7 +102,7 @@ select xt.commit_record(
       },
       "primaryEmail":"jane@gmail.com",
       "address":{
-        "guid":1,
+        "id":1,
         "number": "1",
         "isActive": true,
         "line1":"Tremendous Toys Inc.",
@@ -116,7 +116,7 @@ select xt.commit_record(
         "dataState":"read"
       },
       "comments":[{
-        "guid":739893,
+        "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
@@ -125,7 +125,7 @@ select xt.commit_record(
         "isPublic":false,
         "dataState":"update"
         },{
-        "guid":739894,
+        "id":739894,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
@@ -146,7 +146,7 @@ select xt.commit_record(
 select xt.commit_record(
  E'{"recordType":"XM.Contact",
     "dataHash":{
-      "guid":12171,
+      "id":12171,
       "number":"14832",
       "honorific":"Mrs.",
       "firstName":"Jane",
@@ -171,7 +171,7 @@ select xt.commit_record(
       },
       "primaryEmail":"jane@gmail.com",
       "address":{
-        "guid":1,
+        "id":1,
         "number": "1",
         "isActive": true,
         "line1":"Tremendous Toys Inc.",
@@ -186,7 +186,7 @@ select xt.commit_record(
       },
       "comments":[{
         "dataState":"delete",
-        "guid":739893,
+        "id":739893,
         "contact":12171,
         "created":"2011-12-21 12:47:12.756437-05",
         "createdBy":"admin", 
@@ -197,7 +197,7 @@ select xt.commit_record(
         "dataState":"read"
         },{
         "dataState":"delete",
-        "guid":739894,
+        "id":739894,
         "contact":12171,
         "date":"2011-12-21 12:47:12.756437-05",
         "username":"admin", 

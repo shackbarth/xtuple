@@ -25,7 +25,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "crmacct_id",
@@ -72,7 +72,7 @@
         "isNested": true,
         "type": "AccountInfo",
         "column": "crmacct_parent_id",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
@@ -88,7 +88,7 @@
         "isNested": true,
         "type": "ContactInfo",
         "column": "crmacct_cntct_id_1",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
@@ -97,7 +97,7 @@
         "isNested": true,
         "type": "ContactInfo",
         "column": "crmacct_cntct_id_2",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
@@ -133,7 +133,7 @@
       "toOne": {
         "type": "SalesRep",
         "column": "crmacct_salesrep_id",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
@@ -141,7 +141,7 @@
       "toOne": {
         "type": "TaxAuthority",
         "column": "crmacct_taxauth_id",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
@@ -156,7 +156,7 @@
           "relations": [
             {
               "column": "comment_source_id",
-              "inverse": "guid"
+              "inverse": "id"
             },
             {
               "column": "comment_source",

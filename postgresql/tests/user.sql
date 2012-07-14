@@ -6,13 +6,13 @@ values (
   false, false, false );
 
 insert into xm.user_account_privilege_assignment (
-  guid, user_account, privilege )
+  id, user_account, privilege )
 values (
   99999, 'sbsquarepants', (select privilege from xm.privilege where name = 'MaintainItemMasters')
 );
 
 insert into xm.user_account_role (
-  guid, name, description )
+  id, name, description )
 values (
   99999, 'FRYCOOK', 'Can make crabby patties'
 );
@@ -29,8 +29,8 @@ where username = 'sbsquarepants';
 
 drop user sbsquarepants;
 delete from usrpref where usrpref_username = 'sbsquarepants';
-delete from xm.user_account_role where guid = 99999;
-delete from xm.user_account_privilege_assignment where guid = 99999;
+delete from xm.user_account_role where id = 99999;
+delete from xm.user_account_privilege_assignment where id = 99999;
 
 select * from xm.user_account where username = 'sbsquarepants';
 
@@ -53,13 +53,13 @@ update xm.user_account set
   password = 'crabbypatty',
   is_active = false,
   email = 'sb.quarepants@xm.ple.com'
-where guid = 'sbsquarepants';
+where id = 'sbsquarepants';
 
-select * from xm.user_account where guid = 'sbsquarepants';
+select * from xm.user_account where id = 'sbsquarepants';
 
-delete from xm.user_account where guid = 'sbsquareparts';
+delete from xm.user_account where id = 'sbsquareparts';
 
 drop user sbsquarepants;
 delete from usrpref where usrpref_username = 'sbsquarepants';
-delete from xm.user_account_role where guid = 99999;
-delete from xm.user_account_privilege_assignment where guid = 99999;
+delete from xm.user_account_role where id = 99999;
+delete from xm.user_account_privilege_assignment where id = 99999;

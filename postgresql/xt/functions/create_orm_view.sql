@@ -70,7 +70,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
         var toOne = props[i].toOne,
             table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
             type = table.replace((/\w+\./i),''),
-            inverse = toOne.inverse ? toOne.inverse.decamelize() : 'guid',
+            inverse = toOne.inverse ? toOne.inverse.decamelize() : 'id',
             isEditable = toOne.isEditable !== false ? true : false,
             toOneAlias, join;
 
@@ -113,7 +113,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
             table = orm.nameSpace + '.' + toMany.type.decamelize(),
             type = toMany.type.decamelize(), 
             column = toMany.isNested ? type : XT.getPrimaryKey(XT.getORM(orm.nameSpace, toMany.type)),
-            inverse = toMany.inverse ? toMany.inverse.decamelize() : 'guid',
+            inverse = toMany.inverse ? toMany.inverse.decamelize() : 'id',
             sql, col = 'array({select}) as "{alias}"',
             conditions = toMany.column ? type + '.' + inverse + ' = ' + tblAlias + '.' + toMany.column : 'true';
             
@@ -176,7 +176,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
     
           for(var i = 0; i < orm.relations.length; i++) {
             var rel = orm.relations[i], value,
-                inverse = rel.inverse ? rel.inverse : 'guid',
+                inverse = rel.inverse ? rel.inverse : 'id',
                 condition; 
       
             for(var i = 0; i < base.properties.length; i++) {
@@ -209,7 +209,7 @@ create or replace function xt.create_orm_view(view_name text) returns void as $$
         } else if (rel.inverse) {
           value = '{state}.' + rel.inverse;
         } else {
-          value = '{state}.guid';
+          value = '{state}.id';
         }
                    
         conditions.push(rel.column + ' = ' + value);

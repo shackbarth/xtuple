@@ -8,7 +8,7 @@
   "canUpdate": false,
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "id",

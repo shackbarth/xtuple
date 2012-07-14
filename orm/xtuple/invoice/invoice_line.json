@@ -15,7 +15,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "invcitem_id",
@@ -65,7 +65,7 @@
       "toOne": {
         "type": "SalesCategory",
         "column": "invcitem_salescat_id",
-        "inverse" : "guid",
+        "inverse" : "id",
         "defaultValue": -1
       }
     },

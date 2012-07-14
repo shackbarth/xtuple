@@ -9,7 +9,7 @@
   "relations": [
     {
       "column": "crmacct_salesrep_id",
-      "inverse": "guid"
+      "inverse": "id"
     }
   ],
   "properties": [

@@ -16,7 +16,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "aropen_id",
@@ -29,7 +29,7 @@
         "isNested" : true,
         "type": "CustomerInfo",
         "column": "aropen_cust_id",
-        "inverse" : "guid",
+        "inverse" : "id",
         "isRequired" : true,
         "isEditable": false
       }
@@ -82,7 +82,7 @@
       "toOne": {
         "type": "ReasonCode",
         "column": "aropen_rsncode_id",
-        "inverse": "guid",
+        "inverse": "id",
         "isRequired": true,
         "defaultValue": -1
       }

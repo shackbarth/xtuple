@@ -40,7 +40,7 @@ select xt.install_js('XM','Payable','xtuple', $$
       } else {
         sql = "select createAPCreditMemo($1::integer ,$2::integer, NULL::integer, $3::text, $4, $5::date, $6::numeric, $7, $8, $9::date, $10, $11) as result";;
       }
-      ret = plv8.execute(sql, [payable.guid, payable.vendor.guid, payable.number, payable.orderNumber,
+      ret = plv8.execute(sql, [payable.id, payable.vendor.id, payable.number, payable.orderNumber,
                              payable.documentDate, payable.amount, payable.notes, ledgerAccount, 
                              payable.dueDate, payable.terms, payable.currency])[0].result;
       if (ret === 0) err = "Amount must be greater than zero.";

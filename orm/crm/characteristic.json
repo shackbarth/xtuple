@@ -8,7 +8,7 @@
   "relations": [
     {
       "column": "char_id",
-      "inverse": "guid"
+      "inverse": "id"
     }
   ],
   "properties": [

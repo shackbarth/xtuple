@@ -8,7 +8,7 @@
   "relations": [
     {
       "column": "prj_id",
-      "inverse": "guid"
+      "inverse": "id"
     }
   ],
   "properties": [

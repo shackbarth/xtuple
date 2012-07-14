@@ -14,10 +14,10 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
-        "column": "guid",
+        "column": "id",
         "isPrimaryKey": true
       }
     },

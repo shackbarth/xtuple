@@ -20,7 +20,7 @@ select xt.install_js('XM','Invoice','xtuple', $$
         data = Object.create(XT.Data),
         conditions = 'name = {name}',
         parameters = { name: 'Freight' };
-    freightTypeId = data.fetch('XM.TaxType', conditions, parameters)[0].guid;
+    freightTypeId = data.fetch('XM.TaxType', conditions, parameters)[0].id;
     res = XM.Tax.calculate(taxZoneId, freightTypeId, effective, currencyId, amount);
     
     /* reduce the result set */

@@ -7,7 +7,7 @@
   "comment": "Voucher Recurrence Map",
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "recur_id",

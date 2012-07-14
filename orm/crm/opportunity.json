@@ -8,7 +8,7 @@
   "relations": [
     {
       "column": "ophead_id",
-      "inverse": "guid"
+      "inverse": "id"
     }
   ],
   "properties": [

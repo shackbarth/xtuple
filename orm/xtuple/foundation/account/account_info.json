@@ -23,7 +23,7 @@
   },
   "properties": [
     {
-      "name": "guid",
+      "name": "id",
       "attr": {
         "type": "Number",
         "column": "crmacct_id",
@@ -60,7 +60,7 @@
         "isNested": true,
         "type": "AccountContactInfo",
         "column": "crmacct_cntct_id_1",
-        "inverse": "guid"
+        "inverse": "id"
       }
     },
     {
