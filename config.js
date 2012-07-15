@@ -9,8 +9,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     version: "beta1",
     requireDatabase: true,
     requireServer: true,
+    functorsDirectory: "./lib/functors",
+    routesDirectory: "./lib/routes",
+    routersDirectory: "./lib/routers",
     datasource: {
-      sessionTimeout: 15
+      sessionTimeout: 15,
+      port: 9000
     },
     cache: {
       hostname: "localhost",

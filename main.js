@@ -16,4 +16,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // set the options
   XT.setup(options);
 
+  // load up the dataserver
+  require("./lib/dataserver");
+
 }());
