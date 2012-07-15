@@ -1,0 +1,78 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "File",
+    "table": "file",
+    "idSequenceName": "file_file_id_seq",
+    "comment": "File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "file_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "file_title"
+        }
+      },
+      {
+        "name": "data",
+        "attr": {
+          "type": "String",
+          "column": "file_stream"
+        }
+      }
+    ],
+    "isSystem": true,
+    "sourceCode": "FILE"
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "FileInfo",
+    "table": "file",
+    "comment": "File Info Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "file_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "file_title"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]

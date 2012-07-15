@@ -256,7 +256,7 @@ select xt.install_js('XT','Orm','xtuple', $$
         if(props[i].attr || (props[i].toOne && !props[i].toOne.isNested)) {
           if(DEBUG) plv8.elog(NOTICE, 'building attribute');      
           var attr = props[i].attr ? props[i].attr : props[i].toOne,
-              isVisible = attr.isVisible !== false ? true : false,
+              isVisible = attr.value ? false : true,
               isEditable = attr.isEditable !== false ? true : false,
               isPrimaryKey = attr.isPrimaryKey ? true : false;
           if(!attr.type) throw new Error('No type was defined on property ' + props[i].name);

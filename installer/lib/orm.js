@@ -315,38 +315,50 @@ XT.ormInstaller = XT.Object.create(
         // care of missing dependencies or errors
         try {
           var json = XT.json(_fs.readFileSync(file, 'utf8'), true),
-              fn = _path.basename(file),
-              ext = json.isExtension ? true : false,
-              ns = json.nameSpace,
-              type = json.type,
-              context = json.context;
-              
-          // set the filename as an added separate property
-          json.fileName = fn;
+            fn = _path.basename(file),
+            ext,
+            ns,
+            type,
+            context,
+            i;
 
-          // set the FULL path to the file for generation later
-          json.fullPath = file;
+          for (i = 0; i < json.length; i++) {
+            ext = json[i].isExtension ? true : false;
+            ns = json[i].nameSpace;
+            type = json[i].type;
+            context = json[i].context;
+            // set the filename as an added separate property
+            //json.fileName = fn;
+
+            // set the FULL path to the file for generation later
+            //json.fullPath = file;
   
-          json.writePath = writePath(file);
+            //json.writePath = writePath(file);
 
-          // if the definition is for an extension it has special
-          // requirements (slightly) and is handled separately
-          if(ext) extensions = XT.addProperties(extensions, context, ns, type, json);
+            // if the definition is for an extension it has special
+            // requirements (slightly) and is handled separately
+            if (ext) {
+              extensions = XT.addProperties(extensions, context, ns, type, json[i]);
 
-          // normal ORM's are handled in the main tree being
-          // organized by namespace
-          else orms = XT.addProperties(orms, ns, type, json);
-
-          if(XT.modelGenerator) {
-            var recordType = "%@.%@".f(ns, type);
-            if(!models[recordType]) models[recordType] = {};
-            if(ext) {
-              if(!models[recordType].patches) models[recordType].patches = {};
-              models[recordType].patches[json.writePath] = XT.modelGenerator.generate(json, true);
+            // normal ORM's are handled in the main tree being
+            // organized by namespace
             } else {
-              models[recordType].superclass = XT.modelGenerator.generate(json, true);
-              models[recordType].subclass = XT.modelGenerator.generate(json, false);
+               orms = XT.addProperties(orms, ns, type, json[i]);
             }
+
+            /*
+            if(XT.modelGenerator) {
+              var recordType = "%@.%@".f(ns, type);
+              if(!models[recordType]) models[recordType] = {};
+              if(ext) {
+                if(!models[recordType].patches) models[recordType].patches = {};
+                models[recordType].patches[json.writePath] = XT.modelGenerator.generate(json, true);
+              } else {
+                models[recordType].superclass = XT.modelGenerator.generate(json, true);
+                models[recordType].subclass = XT.modelGenerator.generate(json, false);
+              }
+            }
+            */
           }
         } catch(err) {
           socket.json.emit('error',
@@ -640,7 +652,7 @@ XT.ormInstaller = XT.Object.create(
       socket.emit('error', { message: "could not retrieve ORM",
         context: next });
       return issue(XT.fatal(
-        "Could not find requested ORM during installation: %@".f(next)));
+        "Could not find requested ORM during installation: " + next));
     }
 
     // if it is disabled just skip it and reap the wonderful
