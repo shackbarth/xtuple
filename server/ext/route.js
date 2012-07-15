@@ -13,7 +13,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   });
   
   XT.run(function () {
-    var path = _path.join(__dirname, "../routes"), files;
+    var path, files;
+
+    if (!XT.routesDirectory) return;
+    
+    path = _path.join(XT.basePath, XT.routesDirectory);
 
     XT.log("Loading available routes from %@".f(
       XT.shorten(path, 5)));

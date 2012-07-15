@@ -14,19 +14,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   var _ = XT._;
 
   XT.Server = XT.Object.extend({
-    
     autoStart: false,
-
     port: null,
-
     name: null,
-
     useWebSocket: false,
-
     router: null,
-
     server: null,
-  
     init: function () {
       var auto = this.get("autoStart"),
           port = this.get("port"),
@@ -34,64 +27,49 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           router = this.get("router"),
           sockets = this.get("useWebSocket");
           
-      if (!port) issue(XT.fatal("cannot create a server with no port"));
-      if (!router && !sockets) issue(XT.fatal("cannot create a non-websocket server with no router"));
       if (!name) name = this.name = "NONAME%@".f(_.uniqueId("_server"));
+      if (!port) issue(XT.fatal("cannot create a server with no port %@".f(name)));
+      if (!router && !sockets) issue(XT.fatal("cannot create a non-websocket server with no router"));
       
-      if (auto) {
-        this.start();
-      }
+      if (auto) this.start();
   
       XT.Server.registerServer(this);
     },
-
     sockets: function () {
       return this._io && this._io.sockets ? this._io.sockets : null;
     }.property(),
-
+    route: function (req, res) {
+      var router = this.get("router");
+      if (router) router.handle.call(router, req, res);
+    },
     start: function () {
-      var s = this,
-          p = this.get('port'),
-          w = this.get('useWebSocket');
+      var port = this.get("port"), useSockets = this.get("useWebSocket"), server;
+      // TODO: remove this from a try/catch but test for consequences in fail case...
+      // right now it wraps unintended sub-calls
       try {
-  
-        // if a server has been manually created and set
-        // just start it
-        if (XT.none(s.server))
-          s.server = XT.connect.createServer(
-            function (req, res) {
-              var r = s.get('router'); // allow swapping of routers
-                                       // is that good?
-              r.handle.call(r, req, res);
-            }
-          );
-  
-        // for overloaded server types such as one created
-        // via connect this is the only way to ensure we
-        // have the actual server object and not just the
-        // handler
-        s.server = s.server.listen(p);
-        if (w) {
-          s._io = require('socket.io').listen(s.server, {
-            'log level': 0,
-            'browser client': false,
-            'origins': '*:*',
-            'transports': [
-              'websocket',
-              'xhr-polling',
-              'jsonp-polling'
+        if (XT.none(this.server)) {
+          this.server = XT.connect.createServer(_.bind(this.route, this));
+        }
+        server = this.server = this.server.listen(port);
+        if (useSockets) {
+          this._io = require("socket.io").listen(server, {
+            "log level": 0,
+            "browser client": false,
+            "origins": "*:*",
+            "transports": [
+              "websocket",
+              "xhr-polling",
+              "jsonp-polling"
             ]
           });
-          s.emit('xtSocketsSet', s._io.sockets);
         }
-      } catch (e) { issue(XT.fatal(e)); }
+      } catch (err) { issue(XT.fatal(err)); }
   
       XT.log("Started server, {name}, listening on port {port}".f(
-        { name: s.get('name'), port: p }));
+        { name: this.get('name'), port: port }));
   
       return this;
     },
-
     setSocketHandler: function (namespace, event, callback, context) {
       var io = this._io;
       callback = context? _.bind(callback, context): callback;
@@ -99,13 +77,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         callback(socket);
       });
     },
-
     socketsFor: function (namespace) {
       var io = this._io,
           ns = io.namespaces[namespace];
       if (ns && ns.sockets) return ns.sockets;
     },
-
     close: function () {
       if (this.server) {
         XT.log("Server: '%@' shutting down.".f(this.get('name')));
@@ -113,9 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       return this;
     },
-    
     className: "XT.Server"
-  
   });
   
   

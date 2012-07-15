@@ -28,7 +28,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   });
   
   XT.run(function () {
-    var path = _path.join(__dirname, "../functors"), files;
+    var path, files;
+    
+    if (!XT.functorsDirectory) return;
+    
+    path = _path.join(XT.basePath, XT.functorsDirectory);
     
     XT.functors = [];
     XT.functorMap = {};

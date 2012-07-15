@@ -26,7 +26,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     route: function (xtr) {
       var path = xtr.get("path");
       
-      console.log("route(): ", path, Object.keys(this.routes), this.routes[path]);
+      //console.log("route(): ", path, Object.keys(this.routes), this.routes[path]);
       
       // arbitrary check since some browsers automatically
       // request a favicon.ico
@@ -53,7 +53,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   });
   
   XT.run(function () {
-    var path = _path.join(__dirname, "../routers"), files;
+    var path, files;
+    
+    if (!XT.routersDirectory) return;
+    
+    path = _path.join(XT.basePath, XT.routersDirectory);
     
     XT.log("Loading available routers from %@".f(
       XT.shorten(path, 5)));
