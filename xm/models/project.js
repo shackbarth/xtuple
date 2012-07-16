@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @namespace
-  
+
     A mixin shared by project models that share common project status
     functionality.
   */
@@ -17,7 +17,7 @@ white:true*/
 
     /**
     Returns project status as a localized string.
-  
+
     @returns {String}
     */
     getProjectStatusString: function () {
@@ -38,10 +38,10 @@ white:true*/
 
   /**
     @class
-  
+
     A base class shared by `XM.Project`,`XM.ProjectTask` and potentially other
     project related classes.
-  
+
     @extends XM.Document
     @extends XM.ProjectStatus
   */
@@ -120,7 +120,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.ProjectBase
     @extends XM.ProjectStatusMixin
   */
@@ -236,7 +236,7 @@ white:true*/
 
     /**
     Return a copy of this project with a given number and date offset.
-  
+
     @param {String} Project number
     @param {Offset} Days to offset due date(s).
     @returns {XM.Project}
@@ -390,7 +390,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.ProjectBase
     @extends XM.ProjectStatusMixin
   */
@@ -468,7 +468,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.ProjectComment = XM.Comment.extend({
@@ -480,7 +480,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectAccount = XT.Model.extend({
@@ -500,7 +500,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectContact = XT.Model.extend({
@@ -520,7 +520,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectItem = XT.Model.extend({
@@ -540,7 +540,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectFile = XT.Model.extend({
@@ -560,7 +560,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectImage = XT.Model.extend({
@@ -580,7 +580,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectUrl = XT.Model.extend({
@@ -600,7 +600,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectProject = XT.Model.extend({
@@ -620,7 +620,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ProjectRecurrence = XT.Model.extend({
@@ -632,7 +632,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.ProjectTaskComment = XM.Comment.extend({
@@ -644,7 +644,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Alarm
   */
   XM.ProjectTaskAlarm = XM.Alarm.extend({
@@ -657,7 +657,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
     @extends XM.ProjectStatus
   */
@@ -692,7 +692,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Collection
   */
   XM.ProjectInfoCollection = XT.Collection.extend({

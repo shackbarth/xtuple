@@ -180,7 +180,7 @@ XV.WorkspacePanelDescriptor = {
   Account: [
     {
       title: "Account Info",
-      location: "top",
+      location: "bottom",
       fields: [
         { fieldName: "name" },
         { fieldName: "number" }
@@ -188,7 +188,7 @@ XV.WorkspacePanelDescriptor = {
     },
     {
       title: "Tax Info", // I know this doesn't really merit its own box
-      location: "top",
+      location: "bottom",
       fields: [
         { fieldName: "taxAuthority" }
       ]
@@ -198,17 +198,17 @@ XV.WorkspacePanelDescriptor = {
   Project: [// the key is uppercase because the model name is uppercase
     {
       title: "Project Info",
-      location: "bottom",
+      location: "top",
       fields: [
         { fieldName: "number", placeholder: "Enter the project number" },
         { fieldName: "name" },
         { fieldName: "notes" },
-        { label: "status", fieldName: "getProjectStatusString" }
+        { fieldName: "status", fieldType: "XV.DropdownWidget", modelType: "XM.projectStatuses" }
       ]
     },
     {
       title: "Schedule",
-      location: "bottom",
+      location: "top",
       fields: [
         { fieldName: "owner", fieldType: "XV.RelationalWidget" },
         { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
@@ -220,7 +220,7 @@ XV.WorkspacePanelDescriptor = {
     },
     {
       title: "Tasks",
-      location: "top",
+      location: "bottom",
       boxType: "XV.GridWidget",
       fields: [
         { label: "number", fieldName: "number", width: "120" },
@@ -234,7 +234,9 @@ XV.WorkspacePanelDescriptor = {
 };
 
 
-XV.ObjectWidgetTitleFields = {
+XV.RelationalWidgetTitleFields = {
   UserAccountInfo: "propername",
   SomethingElse: "somethingElse"
 };
+
+XV.history = XV.history || [];

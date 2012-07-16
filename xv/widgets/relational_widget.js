@@ -23,8 +23,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           floating: true,
           centered: true,
           components: [
-            // this is third party code that doesn't look great under the best of
-            // conditions and needs some work to get even there.
             { tag: "div", content: "Gear popup is here" }
           ]
         }
@@ -47,7 +45,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     baseObjectChanged: function () {
       var type = this.getBaseObject().get("type");
-      var titleField = XV.ObjectWidgetTitleFields[type];
+      var titleField = XV.RelationalWidgetTitleFields[type];
       this.$.nameField.setValue(this.getBaseObject().get(titleField));
     },
     doInputChanged: function () {

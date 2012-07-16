@@ -29,6 +29,34 @@ trailing:true white:true*/
        *
        */
       modelTypeChanged: function () {
+
+        /**
+         * Start by clearing out all of the panels
+         */
+
+        // XXX I've copied and pasted this code now 3 times. Refactor to use
+        // a single static method. But where to put it?
+        var i;
+        // Clear out the panels
+        var topPanel = this.$.topPanel; // just for re-use
+
+        // It's necessary to save the length into a variable or else the loop ends
+        // prematurely. It's also necessary to delete the children always from the
+        // 0 spot and not the i spot, because the target moves as you delete.
+        var topPanelLength = topPanel.children.length;
+        for (i = 0; i < topPanelLength; i++) {
+          topPanel.removeChild(this.$.topPanel.children[0]);
+        }
+        var bottomPanel = this.$.bottomPanel; // just for re-use
+
+        // It's necessary to save the length into a variable or else the loop ends
+        // prematurely. It's also necessary to delete the children always from the
+        // 0 spot and not the i spot, because the target moves as you delete.
+        var bottomPanelLength = bottomPanel.children.length;
+        for (i = 0; i < bottomPanelLength; i++) {
+          bottomPanel.removeChild(this.$.bottomPanel.children[0]);
+        }
+
         var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
           var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
@@ -69,7 +97,7 @@ trailing:true white:true*/
                 ]
               });
 
-              this.createComponent({
+              var widget = this.createComponent({
                 kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
                 style: "",
                 name: fieldDesc.fieldName,
@@ -77,6 +105,14 @@ trailing:true white:true*/
                 onchange: "doFieldChanged",
                 placeholder: fieldDesc.placeholder ? fieldDesc.placeholder : "Enter " + label.loc()
               });
+
+              /**
+               * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
+               * type we want to send that down to the widget
+               */
+              if (fieldDesc.modelType) {
+                widget.setModelType(fieldDesc.modelType);
+              }
             }
           }
         }
@@ -116,14 +152,6 @@ trailing:true white:true*/
       updateFields: function (model) {
         // TODO: this is more of a reset-all than an update
 
-
-        // XXX this gets called for all the relational subobjects
-        // as well and we don't really want to deal with those
-        // because we've already dealt with them under the master
-        // model.
-        if (model.get("type") !== this.getModelType()) {
-          return;
-        }
         XT.log("update with model: " + model.get("type"));
 
 
@@ -175,8 +203,20 @@ trailing:true white:true*/
       components: [
 
         {kind: "FittableRows", classes: "left", components: [
-          {kind: "onyx.Toolbar", components: [
-            {name: "workspaceHeader", content: "Thanks for using this workspace."}
+
+
+          {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
+            {name: "workspaceHeader" },
+            {kind: "onyx.MenuDecorator", components: [
+              {content: "_navigation".loc() },
+              {kind: "onyx.Tooltip", content: "Tap to open..."},
+              {kind: "onyx.Menu", name: "navigationMenu", components: [
+                { content: "Dashboard" },
+                { content: "CRM" },
+                { content: "Billing" }
+              ], ontap: "doNavigationSelected" }
+            ]}
+
           ]},
           {
             kind: "Repeater",
@@ -210,13 +250,22 @@ trailing:true white:true*/
       rendered: function () {
         this.inherited(arguments);
       },
-      doFieldChanged: function (inEvent, inSender) {
+      /**
+       * The parameters coming in here are different if the sender is an Input
+       * or a picker, so we have to be careful when we parse out the appropriate
+       * values
+       */
+      doFieldChanged: function (inSender, inEvent) {
         var prefix, suffix;
 
-        var newValue = inSender.getValue();
+        var newValue = inEvent.getValue() ? inEvent.getValue() : inEvent.getSelected().value;
 
         var updateObject = {};
-        updateObject[inSender.name] = newValue;
+
+        // XXX isn't it strange that inEvent.name is the name of the field that's throwing the
+        // event? both inEvent and inSender look like senders here. This is true for Inputs
+        // and Pickers
+        updateObject[inEvent.name] = newValue;
         this.getModel().set(updateObject);
         this.doEnableSaveButton();
       },
@@ -247,11 +296,19 @@ trailing:true white:true*/
         var p = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
+
+      /**
+       * Accepts the object that tells the workspace what to drill down into.
+       * SetOptions is quite generic, because it can be called in a very generic
+       * way from the main carousel event handler. Note also that the model parameter
+       * doesn't need to be a complete model. It just has to have the appropriate
+       * type and guid properties
+       */
       setOptions: function (model) {
         //
         // Determine the model that will back this view
         //
-        var modelType = model.get("type");
+        var modelType = model.get ? model.get("type") : model.type;
         // Magic/convention: trip off the word Info to get the heavyweight class
         if (modelType.substring(modelType.length - 4) === "Info") {
           modelType = modelType.substring(0, modelType.length - 4);
@@ -280,7 +337,7 @@ trailing:true white:true*/
         //
         // Fetch the model
         //
-        var id = model.get("id");
+        var id = model.id;
         m.fetch({id: id});
         XT.log("Workspace is fetching " + modelType + " " + id);
 
@@ -288,7 +345,36 @@ trailing:true white:true*/
       },
       modelDidChange: function (model, value, options) {
         XT.log("Model changed: " + JSON.stringify(model.toJSON()));
+
+
+        // XXX this gets called for all the relational subobjects
+        // as well and we don't really want to deal with those
+        // because we've already dealt with them under the master
+        // model.
+        if (model.get("type") !== this.getModelType()) {
+          return;
+        }
+
+
+        /**
+         * Save this in the history array. It's necessary to wait until
+         * we actually have the model returned so that we can give
+         * a nice title to the history item.
+         */
+        XV.history.push({
+          modelType: model.get("type"),
+          modelId: model.get("guid"),
+          modelName: model.get("name")
+        });
+
+        /**
+         * Pass this model onto the panels to update
+         */
         this.$.workspacePanels.updateFields(model);
+      },
+      doNavigationSelected: function (inSender, inEvent) {
+        var module = inEvent.originator.content.toLowerCase();
+        this.bubble(module, {eventName: module});
       }
 
     });
