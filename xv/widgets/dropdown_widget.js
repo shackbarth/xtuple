@@ -27,6 +27,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           // function didn't work either, because the "model update" event
           // was being thrown not just by manual changes but in the
           // initialization change of the widget
+
+          // XXX QA: onblur is really terrible. Doesn't really work unless you
+          // tab out of it. This widget isn't even in the beta yet, though, so
+          // I'm happy to wait and see if it has better support in a few weeks.
           { kind: "onyx.Picker", name: "dropdown", onblur: "doDropdownChanged" }
         ]}
       ]
@@ -35,7 +39,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * A convenience function so that this object can be treated generally like an input
      */
     setValue: function (value) {
-      // not sure why this cleaner approach doesn't work
+      // XXX not sure why this cleaner approach doesn't work
       //var tempSelected = _.find(this.$.dropdown.getComponents(), function (component) {
       //  component.value === value;
       //});

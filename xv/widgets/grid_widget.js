@@ -29,6 +29,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        */
       this.$.title.setContent(boxDesc.title);
 
+      /**
+       * Row -1 is the header row. This lets us neatly number the real rows
+       * starting at zero.
+       */
       for (iRow = -1; iRow < 8; iRow++) {
         /**
          * This is the row that all the fields will be put in.
@@ -97,6 +101,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var fieldNameWithNumber = inSender.getName();
       var newValue = inSender.getValue();
       // split the field name into the (alpha) prefix and the (numeric) suffix
+      // XXX here's where we make use of the magical naming convention
+
+      // REGEX: capture an alpha prefix as well as a numeric suffix
       var fieldNameSplit = fieldNameWithNumber.match(/(\D+)(\d+)/);
 
 

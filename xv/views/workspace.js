@@ -5,6 +5,12 @@ trailing:true white:true*/
 
 (function () {
 
+  /**
+   * Manages the main content pane of the workspace. This is implemented
+   * as two panels (top and bottom). The code in this kind is general-purpose
+   * across all possible workspaces, and so it takes its cues from a JSON
+   * descriptor object called XT.WorkspacePanelDescriptor.
+   */
   enyo.kind({
       name: "XV.WorkspacePanels",
       kind: "FittableRows",
@@ -251,9 +257,19 @@ trailing:true white:true*/
         this.inherited(arguments);
       },
       /**
+       * Update the model from changes to the UI. The interaction is handled here
+       * and not in the widgets, which themselves are unaware of the model.
+       * Exception: GridWidgets and (TODO) RelationalWidgets manage their own
+       * model, so those updates are not performed here.
        * The parameters coming in here are different if the sender is an Input
        * or a picker, so we have to be careful when we parse out the appropriate
-       * values
+       * values.
+       * FIXME: If you click the persist button before a changed field is blurred,
+       * then I think the change will not be persisted, as this function might not
+       * be executed before the persist method. The way we disable the save button
+       * until this function has successfully executed will help with this, but it's
+       * not foolproof: let's say a user changes one field (which enables the save
+       * button) and then changes a second but persists before blurring the second.
        */
       doFieldChanged: function (inSender, inEvent) {
         var prefix, suffix;
@@ -273,10 +289,14 @@ trailing:true white:true*/
         this.$.saveButton.setContent("Save Changes");
         this.$.saveButton.setDisabled(false);
       },
+      /**
+       * Persist the model (with whatever changes have been made) to the datastore.
+       */
       doPersist: function () {
         this.getModel().save();
         this.$.saveButton.setContent("Changes Saved");
         this.$.saveButton.setDisabled(true);
+        // XXX TODO This persist is not reflected in the Info objects in the summary view
       },
       // list
       setupItem: function (inSender, inEvent) {
@@ -350,7 +370,9 @@ trailing:true white:true*/
         // XXX this gets called for all the relational subobjects
         // as well and we don't really want to deal with those
         // because we've already dealt with them under the master
-        // model.
+        // model. So I just ignore any calls to this function that
+        // are not for the function in question. It'd be better if
+        // I dealt with the reason this was getting called so much.
         if (model.get("type") !== this.getModelType()) {
           return;
         }
@@ -359,9 +381,24 @@ trailing:true white:true*/
         /**
          * Save this in the history array. It's necessary to wait until
          * we actually have the model returned so that we can give
-         * a nice title to the history item.
+         * a nice title to the history item. We also don't want to have
+         * duplicate entries in the history stack, so delete any entry
+         * that's identical. (But do push this one, so it's at the top of
+         * the stack.)
+         * XXX this could be a static method outside of enyo but where
+         * do we put those?
          */
-        XV.history.push({
+        for (var i = 0; i < XV.history.length; i++) {
+          if (XV.history[i].modelType === model.get("type") &&
+              XV.history[i].modelId === model.get("guid")) {
+            XV.history.splice(i, 1);
+            i--;
+          }
+        }
+        /**
+         * Unshift instead of push because we want the newest entries at the top
+         */
+        XV.history.unshift({
           modelType: model.get("type"),
           modelId: model.get("guid"),
           modelName: model.get("name")

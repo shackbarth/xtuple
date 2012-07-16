@@ -124,6 +124,9 @@ trailing:true white:true*/
       this.bubble("workspace", {eventName: "workspace", options: tappedModel });
       return true;
     },
+    /**
+     * Populates the history dropdown with the components of the XV.history array
+     */
     fillHistory: function () {
 
       var i;
@@ -134,6 +137,9 @@ trailing:true white:true*/
       // It's necessary to save the length into a variable or else the loop ends
       // prematurely. It's also necessary to delete the children always from the
       // 0 spot and not the i spot, because the target moves as you delete.
+
+      // XXX a "remove all children from menu" status method would be a good idea.
+      // where to put these?
       var historyLength = historyMenu.children.length;
       for (i = 0; i < historyLength; i++) {
         historyMenu.removeChild(this.$.historyMenu.children[0]);
@@ -148,6 +154,11 @@ trailing:true white:true*/
       }
       this.$.historyMenu.render();
     },
+    /**
+     * When a history item is selected we bubble an event way up the application.
+     * Note that we create a sort of ersatz model to mimic the way the handler
+     * expects to have a model with the event to know what to drill down into.
+     */
     doHistoryItemSelected: function (inSender, inEvent) {
       var modelId = inEvent.originator.modelId;
       var modelType = inEvent.originator.modelType;
