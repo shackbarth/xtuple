@@ -81,12 +81,12 @@ XVOWS.create = function (model, vows) {
             if (model.get(model.documentKey) && model.id) {
               clearTimeout(timeoutId);
               model.off('change:' + model.documentKey, callback);
-              model.off('change:guid', callback);
+              model.off('change:id', callback);
               that.callback(null, model);
             }
           } else {
             clearTimeout(timeoutId);
-            model.off('change:guid', callback);
+            model.off('change:id', callback);
             that.callback(null, model);
           }
         };
@@ -95,7 +95,7 @@ XVOWS.create = function (model, vows) {
         Klass = Backbone.Relational.store.getObjectByName(model);
         model = new Klass();
       }
-      model.on('change:guid', callback);
+      model.on('change:id', callback);
       // Add an event handler when using a model with an AUTO...NUMBER.
       if (model instanceof XM.Document && model.numberPolicy.match(auto_regex)) {
         model.on('change:' + model.documentKey, callback);

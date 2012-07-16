@@ -215,22 +215,22 @@ white:true*/
       type: Backbone.HasOne,
       key: 'priority',
       relatedModel: 'XM.Priority',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'category',
       relatedModel: 'XM.IncidentCategory',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'severity',
       relatedModel: 'XM.IncidentSeverity',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'resolution',
       relatedModel: 'XM.IncidentResolution',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasMany,
       key: 'comments',
@@ -643,12 +643,12 @@ white:true*/
       type: Backbone.HasOne,
       key: 'priority',
       relatedModel: 'XM.Priority',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'category',
       relatedModel: 'XM.IncidentCategory',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });
