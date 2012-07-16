@@ -86,13 +86,13 @@
         assert.equal(model.get('abbreviation'), createHash.abbreviation);
       },
       'ID is a number': function (model) {
-        assert.isNumber(model.get('guid'));
+        assert.isNumber(model.get('id'));
       },
       'Country is an object': function (model) {
         assert.isObject(model.get('country'));
       },
       'Country ID is `United States\'s`': function (model) {
-        assert.equal(model.get('country').get('guid'), createHash.country);
+        assert.equal(model.get('country').get('id'), createHash.country);
       }
     }
   }).addBatch({
@@ -115,7 +115,7 @@
           assert.isObject(model.get('country'));
         },
         'Country ID is `Australia\'s`': function (model) {
-          assert.equal(model.get('country').get('guid'),
+          assert.equal(model.get('country').get('id'),
             updateHash.country);
         },
         'Status is `READY_DIRTY`': function (model) {

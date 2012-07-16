@@ -33,7 +33,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'currency',
       relatedModel: 'XM.Currency',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });
