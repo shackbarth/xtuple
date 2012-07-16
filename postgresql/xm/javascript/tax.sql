@@ -20,8 +20,8 @@ select xt.install_js('XM','Tax','xtuple', $$
             + '  taxdetail_taxclass_sequence as "sequence", taxdetail_taxrate_percent as "percent", '
             + '  taxdetail_taxrate_amount as "amount", taxdetail_tax as "tax" '
             + 'from calculatetaxdetail($1::integer, $2::integer, $3::date, $4::integer, $5::numeric) '
-            + '  join xm.tax_code tx on tx.guid=taxdetail_tax_id '
-            + '  left join xm.tax_code bs on bs.guid=taxdetail_tax_basis_tax_id '
+            + '  join xm.tax_code tx on tx.id=taxdetail_tax_id '
+            + '  left join xm.tax_code bs on bs.id=taxdetail_tax_basis_tax_id '
             + 'order by sequence, tx.code;'
     ret = plv8.execute(sql, [taxZoneId || -1, taxTypeId || -1, effective, currencyId, amount]);
     for (var i = 0; i < ret.length; i++) ret[i].taxCode = XT.camelize(ret[i].taxCode);

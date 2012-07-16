@@ -325,7 +325,8 @@ select xt.install_js('XT','Data','xtuple', $$
         toOneKey,
         toOneProp,
         toOneVal,
-        i;
+        i,
+        value;
       params = params || { 
         table: "", 
         columns: [], 
@@ -350,10 +351,17 @@ select xt.install_js('XT','Data','xtuple', $$
         prop = ormp.name;
         attr = ormp.attr ? ormp.attr : ormp.toOne ? ormp.toOne : ormp.toMany;
         type = attr.type;
-        if (record[prop] !== undefined && !ormp.toMany) {
+
+        /* handle fixed values */
+        if (attr.value) {
+          value = typeof attr.value === 'string' ? "'" + attr.value + "'" : attr.value;
+          params.columns.push('"' + attr.column + '"');
+          params.expressions.push(value);
+
+        /* handle passed values */
+        } else if (record[prop] !== undefined && !ormp.toMany) {
           params.columns.push('"' + attr.column + '"');
 
-          /* handle encryption if applicable */
           if (attr.isEncrypted) {
             if (encryptionKey) {
               record[prop] = "(select encrypt(setbytea('{value}'), setbytea('{encryptionKey}'), 'bf'))"

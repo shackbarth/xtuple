@@ -71,7 +71,7 @@ select xt.install_js('XM','Receivable','xtuple', $$
       } else {
         sql = "select createARCreditMemo( $1,$2::integer, $3::text, $4, $5::date, $6::numeric, $7, $8, $9, $10, $11::date, $12, $13, $14::numeric, $15 ) as result";;
       }
-      ret = plv8.execute(sql, [receivable.guid, receivable.customer.guid, receivable.number, receivable.orderNumber,
+      ret = plv8.execute(sql, [receivable.id, receivable.customer.id, receivable.number, receivable.orderNumber,
                              receivable.documentDate, receivable.amount, receivable.notes, receivable.reasonCode,
                              salesCategory, ledgerAccount, receivable.dueDate, receivable.terms, receivable.salesRep,
                              receivable.commissionDue, receivable.currency])[0].result;
@@ -102,7 +102,7 @@ select xt.install_js('XM','Receivable','xtuple', $$
               'sum(araging_ninety_val) AS "ninetyDays", ' +
               'sum(araging_plus_val) AS "overNinetyDays", ' +
               'from araging($1::date, $2) ' +
-              ' join xm.customer_info on guid=cust_id '
+              ' join xm.customer_info on id=cust_id '
               'where {clause} ' + 
               'group by araging_cust_number, araging_cust_id, araging_cust_name ' +
               'order by araging_cust_number ';

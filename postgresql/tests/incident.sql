@@ -1,11 +1,11 @@
 --[select = return]
 select * from incdt;
 select * from xm.incident;
-select * from xm.incident where guid = 88884;
+select * from xm.incident where id = 88884;
 
 select * from alarm;
 select * from xm.incident_alarm;
-select * from xm.incident_alarm where guid = 29;
+select * from xm.incident_alarm where id = 29;
 
 select * from incdtcat;
 select * from xm.incident_category;
@@ -14,7 +14,7 @@ select * from charass;
 select * from xm.incident_characteristic;
 
 select * from comment;
-select * from xm.incident_comment where guid = 439856;
+select * from xm.incident_comment where id = 439856;
 
 select * from incdthist;
 select * from xm.incident_history where incident = 88884;
@@ -30,11 +30,11 @@ select * from xm.incident_severity;
 
 -- [insert into = create]
 insert into xm.incident (
-  guid, number, account, contact, description, owner, assigned_to, notes, priority, incident_status, is_public, resolution, severity, 
+  id, number, account, contact, description, owner, assigned_to, notes, priority, incident_status, is_public, resolution, severity, 
   recurrence_period, recurrence_frequency, recurrence_start, recurrence_end, recurrence_max )
 values (
-  88884, 88884, (select account_info from xm.account_info where guid = 12), 
-  (select contact_info from xm.contact_info where guid = 6) ,'New name info summary here.', 
+  88884, 88884, (select account_info from xm.account_info where id = 12), 
+  (select contact_info from xm.contact_info where id = 6) ,'New name info summary here.', 
   (select user_account_info from xm.user_account_info where username='admin'), null, 
   'New notes go here.' , '3' , 'C' , true , '4' , '2', 
   'W', 1, (current_date + 2)::timestamp with time zone, null, 2
@@ -44,7 +44,7 @@ values (
 
 update xm.incident set
   recurrence_period = null
-where guid = 88884;
+where id = 88884;
 
 -- add a new recurrance
 update xm.incident set
@@ -53,7 +53,7 @@ update xm.incident set
   recurrence_start = (current_date + 4)::timestamp with time zone, 
   recurrence_end = null,
   recurrence_max = 2
-where guid = 88884;
+where id = 88884;
 
 -- update the recurrance
 
@@ -63,42 +63,42 @@ update xm.incident set
   recurrence_start = (current_date + 2)::timestamp with time zone, 
   recurrence_end = null,
   recurrence_max = 3
-where guid = 88884;
+where id = 88884;
 
 insert into xm.incident_alarm (
-   guid, number, email, email_recipient, event, event_recipient, message, message_recipient, "offset", qualifier, time, trigger, source) 
+   id, number, email, email_recipient, event, event_recipient, message, message_recipient, "offset", qualifier, time, trigger, source) 
 values (
 	29, 15, false, 'insert email here', false, 'admin,snegron', false, 'snegron', 16, 'mb', now(), now(), ' ');
 
 insert into xm.incident_category (
-    guid, description, name, "order")
+    id, description, name, "order")
 values (
      7, 'My Test 2', 'Tester', 11 );
 
 insert into xm.incident_characteristic (
-  guid, incident, characteristic, value )
+  id, incident, characteristic, value )
 values (
   88884, 88884, (select characteristic from xm.characteristic where name like 'I-%' Limit 1), 'Yes' );
 
 insert into xm.incident_comment (
-  guid, incident, date, username, comment_type, text, is_public )
+  id, incident, date, username, comment_type, text, is_public )
 values (
   439856, 88884, now(), current_user, (select cmnttype_id from cmnttype where cmnttype_name = 'Sales'), 'Foo.', true );
 
 insert into xm.incident_history (
-  guid, incident, timestamp, username, description)
+  id, incident, timestamp, username, description)
 values (
   138, 88884, now(), current_user, 'trying history to see if ok');
   
 --No Insert for xm.incident_info;
 
 insert into xm.incident_resolution (
-  guid, "name", "order", description)
+  id, "name", "order", description)
 values (
   5, 'In Process', 4, 'In works');
   
 insert into xm.incident_severity (
-  guid, "name", "order", description)
+  id, "name", "order", description)
 values (
   6, 'VIP', 5, 'Do first');
 --end [insert into = create]
@@ -106,24 +106,24 @@ values (
 --[update]
 update xm.incident set
   assigned_to = (select user_account_info from xm.user_account_info where username= 'admin')
-where guid = 88884;
+where id = 88884;
 
 update xm.incident_category set
   name = 'New Tester'
-where guid = 7;
+where id = 7;
 
 update xm.incident_alarm set
   message = true,
   message_recipient = 'john'
-where guid = 29;
+where id = 29;
 
 update xm.incident_characteristic set
   value = 'the test'
-where guid = 88884;
+where id = 88884;
 
 update xm.incident_comment set
   text = 'I have updated the comments'
-where guid = 439856;
+where id = 439856;
 
 --No update for xm.incident_history;
 
@@ -131,11 +131,11 @@ where guid = 439856;
 
 update xm.incident_resolution set
   description = 'What works'
-where guid = 5;
+where id = 5;
 
 update xm.incident_severity set
   description = 'Last to do'
-where guid = 6;
+where id = 6;
 
 --end [update]
 
@@ -149,16 +149,16 @@ delete from incdthist where incdthist_incdt_id=88884;
 delete from incdt where incdt_id = 88884;
 
 delete from xm.incident_alarm 
-where guid = 29;
+where id = 29;
 
 delete from xm.incident_category
-where guid = 7;
+where id = 7;
 
 delete from xm.incident_resolution 
-where guid = 5;
+where id = 5;
 
 delete from xm.incident_severity 
-where guid = 6;
+where id = 6;
 --end [delete]
 
   

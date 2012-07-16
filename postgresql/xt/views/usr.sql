@@ -3,7 +3,7 @@ drop view if exists xt.usr cascade;
 create or replace view xt.usr as
 
   select 
-    usename::text as guid,
+    usename::text as id,
     usename::text as usr_username,
     coalesce((select 
               case when usrpref_value='t' then true 

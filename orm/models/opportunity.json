@@ -1,0 +1,1100 @@
+[
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "Opportunity",
+    "table": "ophead",
+    "idSequenceName": "ophead_ophead_id_seq",
+    "orderSequence": "OpportunityNumber",
+    "comment": "Opportunity Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainAllOpportunities",
+        "read": "ViewAllOpportunities",
+        "update": "MaintainAllOpportunities",
+        "delete": "MaintainAllOpportunities"
+      },
+      "personal": {
+        "create": "MaintainPersonalOpportunities",
+        "read": "ViewPersonalOpportunities",
+        "update": "MaintainPersonalOpportunities",
+        "delete": "MaintainPersonalOpportunities",
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "ophead_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "ophead_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "ophead_active"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountInfo",
+          "column": "ophead_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactInfo",
+          "column": "ophead_cntct_id"
+        }
+      },
+      {
+        "name": "opportunityStage",
+        "toOne": {
+          "type": "OpportunityStage",
+          "column": "ophead_opstage_id"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "ophead_priority_id"
+        }
+      },
+      {
+        "name": "opportunitySource",
+        "toOne": {
+          "type": "OpportunitySource",
+          "column": "ophead_opsource_id"
+        }
+      },
+      {
+        "name": "opportunityType",
+        "toOne": {
+          "type": "OpportunityType",
+          "column": "ophead_optype_id"
+        }
+      },
+      {
+        "name": "amount",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_amount"
+        }
+      },
+      {
+        "name": "currency",
+        "toOne": {
+          "type": "Currency",
+          "column": "ophead_curr_id"
+        }
+      },
+      {
+        "name": "probability",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_probability_prcnt"
+        }
+      },
+      {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_start_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_assigned_date"
+        }
+      },
+      {
+        "name": "targetClose",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_target_date"
+        }
+      },
+      {
+        "name": "actualClose",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_actual_date"
+        }
+      },
+      {
+        "name": "notes",
+        "attr": {
+          "type": "String",
+          "column": "ophead_notes"
+        }
+      },
+      {
+        "name": "owner",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountInfo",
+          "column": "ophead_owner_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountInfo",
+          "column": "ophead_username",
+          "inverse": "username"
+        }
+      },
+      {
+        "name": "comments",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityComment",
+          "column": "ophead_id",
+          "inverse": "opportunity"
+        }
+      },
+      {
+        "name": "characteristics",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityCharacteristic",
+          "column": "ophead_id",
+          "inverse": "opportunity"
+        }
+      },
+      {
+        "name": "contacts",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityContact",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "items",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityItem",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "files",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityFile",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "images",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityImage",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "urls",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityUrl",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "accounts",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityAccount",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      },
+      {
+        "name": "opportunities",
+        "toMany": {
+          "isNested": true,
+          "type": "OpportunityOpportunity",
+          "column": "ophead_id",
+          "inverse": "source"
+        }
+      }
+    ],
+    "order": [
+      "ophead_target_date",
+      "ophead_number",
+      "ophead_name"
+    ],
+    "isSystem": true,
+    "sourceCode": "OPP",
+    "extensions": []
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityAccount",
+    "table": "xt.docinfo",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Opportunity Account Map",
+    "canUpdate": false,
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "CRMA"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountInfo",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityCharacteristic",
+    "table": "xm.characteristic_assignment",
+    "idSequenceName": "charass_charass_id_seq",
+    "comment": "Opportunity Characteristic Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "targetType",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "opportunity",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "target"
+        }
+      },
+      {
+        "name": "characteristic",
+        "toOne": {
+          "type": "Characteristic",
+          "column": "characteristic"
+        }
+      },
+      {
+        "name": "value",
+        "attr": {
+          "type": "String",
+          "column": "value"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityComment",
+    "table": "comment",
+    "idSequenceName": "comment_comment_id_seq",
+    "comment": "Opportunity Comment Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": "EditOthersComments",
+        "delete": false
+      },
+      "personal": {
+        "update": "EditOwnComments",
+        "properties": [
+          "createdBy"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "comment_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "comment_source",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "opportunity",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "comment_source_id"
+        }
+      },
+      {
+        "name": "commentType",
+        "toOne": {
+          "type": "CommentType",
+          "column": "comment_cmnttype_id"
+        }
+      },
+      {
+        "name": "text",
+        "attr": {
+          "type": "String",
+          "column": "comment_text"
+        }
+      },
+      {
+        "name": "isPublic",
+        "attr": {
+          "type": "Boolean",
+          "column": "comment_public"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "comment_date"
+        }
+      },
+      {
+        "name": "createdBy",
+        "attr": {
+          "type": "String",
+          "column": "comment_user"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityContact",
+    "table": "xt.docinfo",
+    "idSequenceName": "docass_docass_id_seq",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "T"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactInfo",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityFile",
+    "table": "xt.docinfo",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Opportunity File Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "FILE"
+        }
+      },
+      {
+        "name": "file",
+        "toOne": {
+          "isNested": true,
+          "type": "FileInfo",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityImage",
+    "table": "xt.docinfo",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Opportunity Image Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "IMG"
+        }
+      },
+      {
+        "name": "image",
+        "toOne": {
+          "isNested": true,
+          "type": "ImageInfo",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityInfo",
+    "table": "ophead",
+    "comment": "Opporunity Info Map",
+    "privileges": {
+      "all": {
+        "create": false,
+        "read": "ViewAllOpportunities",
+        "update": false,
+        "delete": false
+      },
+      "personal": {
+        "create": false,
+        "read": true,
+        "update": false,
+        "delete": false,
+        "properties": [
+          "owner"
+        ]
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "ophead_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "number",
+        "attr": {
+          "type": "String",
+          "column": "ophead_number"
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "ophead_name"
+        }
+      },
+      {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "ophead_active"
+        }
+      },
+      {
+        "name": "account",
+        "toOne": {
+          "isNested": true,
+          "type": "AccountInfo",
+          "column": "ophead_crmacct_id"
+        }
+      },
+      {
+        "name": "contact",
+        "toOne": {
+          "isNested": true,
+          "type": "ContactInfo",
+          "column": "ophead_cntct_id"
+        }
+      },
+      {
+        "name": "targetClose",
+        "attr": {
+          "type": "Date",
+          "column": "ophead_target_date"
+        }
+      },
+      {
+        "name": "opportunityStage",
+        "toOne": {
+          "type": "OpportunityStage",
+          "column": "ophead_opstage_id"
+        }
+      },
+      {
+        "name": "opportunityType",
+        "toOne": {
+          "type": "OpportunityType",
+          "column": "ophead_optype_id"
+        }
+      },
+      {
+        "name": "priority",
+        "toOne": {
+          "type": "Priority",
+          "column": "ophead_priority_id"
+        }
+      },
+      {
+        "name": "assignedTo",
+        "toOne": {
+          "isNested": true,
+          "type": "UserAccountInfo",
+          "column": "ophead_username",
+          "inverse": "username"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityItem",
+    "table": "xt.docinfo",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Opportunity Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "item",
+        "toOne": {
+          "isNested": true,
+          "type": "ItemInfo",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityOpportunity",
+    "table": "xt.docinfo",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Opportunity Item Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "I"
+        }
+      },
+      {
+        "name": "opportunity",
+        "toOne": {
+          "isNested": true,
+          "type": "OpportunityInfo",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunitySource",
+    "table": "opsource",
+    "idSequenceName": "opsource_opsource_id_seq",
+    "comment": "Opportunity Source Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainOpportunitySources",
+        "read": true,
+        "update": "MaintainOpportunitySources",
+        "delete": "MaintainOpportunitySources"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "opsource_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "opsource_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "opsource_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityStage",
+    "table": "opstage",
+    "idSequenceName": "opstage_opstage_id_seq",
+    "comment": "Opportunity Stage Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainOpportunityStages",
+        "read": true,
+        "update": "MaintainOpportunityStages",
+        "delete": "MaintainOpportunityStages"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "opstage_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "opstage_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "opstage_descrip"
+        }
+      },
+      {
+        "name": "deactivate",
+        "attr": {
+          "type": "Boolean",
+          "column": "opstage_opinactive"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityType",
+    "table": "optype",
+    "idSequenceName": "optype_optype_id_seq",
+    "comment": "Opportunity Type Map",
+    "privileges": {
+      "all": {
+        "create": "MaintainOpportunityTypes",
+        "read": true,
+        "update": "MaintainOpportunityTypes",
+        "delete": "MaintainOpportunityTypes"
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "optype_id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "name",
+        "attr": {
+          "type": "String",
+          "column": "optype_name"
+        }
+      },
+      {
+        "name": "description",
+        "attr": {
+          "type": "String",
+          "column": "optype_descrip"
+        }
+      }
+    ],
+    "isSystem": true
+  },
+  {
+    "context": "xtuple",
+    "nameSpace": "XM",
+    "type": "OpportunityUrl",
+    "table": "xt.docinfo",
+    "idSequenceName": "docass_docass_id_seq",
+    "comment": "Opportunity Url Map",
+    "privileges": {
+      "all": {
+        "create": true,
+        "read": true,
+        "update": false,
+        "delete": true
+      }
+    },
+    "properties": [
+      {
+        "name": "id",
+        "attr": {
+          "type": "Number",
+          "column": "id",
+          "isPrimaryKey": true
+        }
+      },
+      {
+        "name": "sourceType",
+        "attr": {
+          "type": "String",
+          "column": "source_type",
+          "value": "OPP"
+        }
+      },
+      {
+        "name": "source",
+        "toOne": {
+          "type": "Opportunity",
+          "column": "source_id"
+        }
+      },
+      {
+        "name": "targetType",
+        "attr": {
+          "type": "String",
+          "column": "target_type",
+          "value": "URL"
+        }
+      },
+      {
+        "name": "url",
+        "toOne": {
+          "isNested": true,
+          "type": "Url",
+          "column": "target_id"
+        }
+      },
+      {
+        "name": "purpose",
+        "attr": {
+          "type": "String",
+          "column": "purpose"
+        }
+      }
+    ],
+    "isNestedOnly": true,
+    "isSystem": true
+  }
+]
