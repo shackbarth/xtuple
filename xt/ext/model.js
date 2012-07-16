@@ -1056,6 +1056,16 @@ white:true*/
         type = recordType.replace(/\w+\./i, '');
       return _.pluck(XT.session.getSchema().get(type).columns, 'name');
     },
+    
+    /**
+      Returns an object from the relational store matching the `name` provided.
+      
+      @param {String} Name
+      @returns {Object}
+    */
+    getObjectByName: function (name) {
+      return Backbone.Relational.store.getObjectByName(name);
+    },
 
     /**
       Return a matching record id for a passed user `key` and `value`. If none
@@ -1082,11 +1092,6 @@ white:true*/
       options.force = true;
       return Backbone.RelationalModel.findOrCreate.call(this, attributes, options);
     },
-
-    getObjectByName: function (name) {
-      return Backbone.Relational.store.getObjectByName(name);
-    },
-
 
     // ..........................................................
     // CONSTANTS
