@@ -124,22 +124,27 @@ white:true*/
       type: Backbone.HasOne,
       key: 'priority',
       relatedModel: 'XM.Priority',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
+    }, {
+      type: Backbone.HasOne,
+      key: 'currency',
+      relatedModel: 'XM.Currency',
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'opportunityStage',
       relatedModel: 'XM.OpportunityStage',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'opportunityType',
       relatedModel: 'XM.OpportunityType',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'opportunitySource',
       relatedModel: 'XM.OpportunitySource',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasMany,
       key: 'comments',
@@ -423,17 +428,22 @@ white:true*/
       type: Backbone.HasOne,
       key: 'priority',
       relatedModel: 'XM.Priority',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
+    }, {
+      type: Backbone.HasOne,
+      key: 'currency',
+      relatedModel: 'XM.Currency',
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'opportunityStage',
       relatedModel: 'XM.OpportunityStage',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'opportunityType',
       relatedModel: 'XM.OpportunityType',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });

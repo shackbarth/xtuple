@@ -109,13 +109,13 @@
             comment = new XM.ProjectComment(),
             callback = function () {
               clearTimeout(timeoutId);
-              comment.off('change:guid', callback);
+              comment.off('change:id', callback);
               that.callback(null, comment);
             };
 
           // Must add comment to the project first then initialize
           model.get('comments').add(comment);
-          comment.on('change:guid', callback);
+          comment.on('change:id', callback);
           comment.initialize(null, {isNew: true});
 
           // If we don't hear back, keep going
@@ -180,13 +180,13 @@
             task = new XM.ProjectTask(),
             callback = function () {
               clearTimeout(timeoutId);
-              task.off('change:guid', callback);
+              task.off('change:id', callback);
               that.callback(null, task);
             };
 
           // Must add task to the project first then initialize
           model.get('tasks').add(task);
-          task.on('change:guid', callback);
+          task.on('change:id', callback);
           task.initialize(null, {isNew: true});
 
           // If we don't hear back, keep going

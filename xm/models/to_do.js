@@ -89,7 +89,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'priority',
       relatedModel: 'XM.Priority',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'account',
@@ -409,7 +409,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'priority',
       relatedModel: 'XM.Priority',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasOne,
       key: 'account',
