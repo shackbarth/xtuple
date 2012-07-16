@@ -180,25 +180,74 @@ XV.WorkspacePanelDescriptor = {
   Account: [
     {
       title: "Account Info",
-      location: "bottom",
       fields: [
         { fieldName: "name" },
         { fieldName: "number" }
       ]
     },
     {
-      title: "Tax Info", // I know this doesn't really merit its own box
-      location: "bottom",
+      title: "Contact", // I know this doesn't really merit its own box
       fields: [
-        { fieldName: "taxAuthority" }
+        { fieldName: "primaryContact", fieldType: "XV.RelationalWidget" }
       ]
     }
+  ],
+
+  Contact: [
+    {
+      title: "Contact Info",
+      fields: [
+        { fieldName: "firstName" },
+        { fieldName: "lastName" },
+        { fieldName: "jobTitle" },
+        { fieldName: "phone" },
+        { fieldName: "primaryEmail" }
+      ]
+    },
+    {
+      title: "Account Info",
+      fields: [
+        { fieldName: "account", fieldType: "XV.RelationalWidget" }
+      ]
+    }
+  ],
+
+  ToDo: [
+    {
+      title: "ToDo Info",
+      fields: [
+        { fieldName: "name" },
+        { fieldName: "description" },
+        { fieldName: "status", fieldType: "XV.DropdownWidget", modelType: "XM.projectStatuses" },
+        { fieldName: "priority", fieldType: "XV.DropdownWidget", modelType: "XM.priorities" }
+
+        //,
+        // TODO: IncidentInfo has no recordType field, which is a problem
+        //{ fieldName: "incident", fieldType: "XV.RelationalWidget" }
+      ]
+    },
+    {
+      title: "Schedule",
+      fields: [
+        { fieldName: "startDate", fieldType: "XV.DateWidget" },
+        { fieldName: "dueDate", fieldType: "XV.DateWidget" },
+        { fieldName: "assignDate", fieldType: "XV.DateWidget" },
+        { fieldName: "completeDate", fieldType: "XV.DateWidget" },
+      ]
+    }
+  ],
+
+  Opportunity: [
+
+  ],
+
+  Incident: [
+
   ],
 
   Project: [// the key is uppercase because the model name is uppercase
     {
       title: "Project Info",
-      location: "top",
       fields: [
         { fieldName: "number", placeholder: "Enter the project number" },
         { fieldName: "name" },
@@ -208,7 +257,6 @@ XV.WorkspacePanelDescriptor = {
     },
     {
       title: "Summary",
-      location: "top",
       fields: [
         // FIXME: we can grab the field names but they eval to 0 wrongly
         { fieldName: "budgetedHoursTotal", fieldType: "XV.NumberWidget" },
@@ -223,7 +271,6 @@ XV.WorkspacePanelDescriptor = {
 
     {
       title: "Schedule",
-      location: "top",
       fields: [
         { fieldName: "owner", fieldType: "XV.RelationalWidget" },
         { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
@@ -249,9 +296,11 @@ XV.WorkspacePanelDescriptor = {
 };
 
 
-XV.RelationalWidgetTitleFields = {
-  UserAccountInfo: "propername",
-  SomethingElse: "somethingElse"
-};
+XV.RelationalWidgetTitleFields = {};
+XV.RelationalWidgetTitleFields["XM.UserAccountInfo"] = "propername";
+XV.RelationalWidgetTitleFields["XM.ContactInfo"] = "lastName";
+XV.RelationalWidgetTitleFields["XM.IncidentInfo"] = "number";
+XV.RelationalWidgetTitleFields["XM.AccountInfo"] = "name";
+
 
 XV.history = XV.history || [];

@@ -66,8 +66,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.$.dropdown.createComponent({ idValue: "", content: "" });
       var collection = XT.getObjectByName(this.modelType);
       for (var i = 0; i < collection.models.length; i++) {
-        var statusId = collection.models[i].get("status");
-        var statusString = collection.models[i].get("statusString");
+        var statusId = collection.models[i].get("status"); // TODO: should be id for priority
+        var statusString = collection.models[i].get("statusString"); // TODO: should be name for priority
         this.$.dropdown.createComponent({ value: statusId, content: statusString });
       }
       this.$.dropdown.render();

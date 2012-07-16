@@ -73,7 +73,7 @@ trailing:true white:true*/
              */
             box = this.createComponent({
                 kind: boxDesc.boxType,
-                container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
+                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
             box.setDescriptor(boxDesc);
@@ -85,7 +85,7 @@ trailing:true white:true*/
              */
             box = this.createComponent({
                 kind: "onyx.Groupbox",
-                container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
+                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 style: "height: 250px; width: 400px; background-color: white; margin-right: 5px;",
                 components: [
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
@@ -124,11 +124,6 @@ trailing:true white:true*/
         }
         this.render();
       },
-      addControl: function (inControl) {
-        this.inherited(arguments);
-        var i = this.indexOfControl(inControl);
-        inControl.setContent(i);
-      },
       /**
        * Scrolls the display to the requested box.
        * @Param {String} name The title of the box to scroll to
@@ -142,16 +137,18 @@ trailing:true white:true*/
         var bottomIndex = 0;
         for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
           var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
-          if (boxDesc.title === name && boxDesc.location === 'top') {
-            this.$.topPanel.setIndex(topIndex);
-            return;
-          } else if (boxDesc.title === name && boxDesc.location === 'bottom') {
+
+          // Note that if the box location defaults to top if it's left empty in the descriptor
+          if (boxDesc.title === name && boxDesc.location === 'bottom') {
             this.$.bottomPanel.setIndex(bottomIndex);
             return;
-          } else if (boxDesc.location === 'top') {
-            topIndex++;
+          } else if (boxDesc.title === name) {
+            this.$.topPanel.setIndex(topIndex);
+            return;
           } else if (boxDesc.location === 'bottom') {
             bottomIndex++;
+          } else {
+            topIndex++;
           }
         }
       },

@@ -14,8 +14,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     components: [{
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
+      classes: "onyx-menu-toolbar",
       components: [
-        { kind: "onyx.Input", name: "nameField", onchange: "doInputChanged" },
+        { kind: "onyx.Input", name: "nameField", onkeyup: "doInputChanged" },
         { kind: "Image", src: "images/gear-icon.gif", ontap: "doIconTapped" },
         {
           kind: "onyx.Popup",
@@ -24,9 +25,30 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           floating: true,
           centered: true,
           components: [
-            { tag: "div", content: "Gear popup is here" }
+            { tag: "div", content: "TODO: this menu" }
+          ]
+        },
+        /* XXX this menu implementation is a mess and I hope it improves for production!
+        {
+          kind: "onyx.MenuDecorator",
+          components: [
+            { content: "popup", components: [
+              { kind: "Image", src: "images/gear-icon.gif" }
+            ]},
+            { kind: "onyx.Tooltip", content: "Tap to open..."},
+            {
+              kind: "onyx.Menu",
+              name: "navigationMenu",
+              components: [
+                { content: "Dashboard" },
+                { content: "CRM" },
+                { content: "Billing" }
+              ],
+              ontap: "doNavigationSelected"
+            }
           ]
         }
+        */
       ]
     }],
     /**
@@ -45,28 +67,30 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * render this object onto the name field
      */
     baseObjectChanged: function () {
-      var type = this.getBaseObject().get("type");
+      var type = this.getBaseObject().recordType;
 
       /**
        * Now is a good time to set the collection (a published value)
        * that we'll use on operations for this widget. There's no
        * way to get from model to collection except through the store.
        */
-      this.setBaseCollection(Backbone.Relational.store.getCollection(this.getBaseObject()));
+      //var col = new XT.Collection();
+      var Klass = new XT.Collection().getObjectByName(type);
+      this.setBaseCollection(new Klass());
+
+      /**
+       * Populate the input with the applicable field
+       */
       this.$.nameField.setValue(this.getBaseObject().get(this.getTitleField()));
     },
     doInputChanged: function (inSender, inEvent) {
-
-
-
       var queryDesc = {
         query: {
           conditions: this.getTitleField() + " BEGINS_WITH {frag}",
           parameters: { frag: inSender.getValue() }
         }
       };
-      var temp = this.getBaseCollection().fetch(queryDesc);
-      alert(temp);
+      this.getBaseCollection().fetch( /* queryDesc */ );
     },
     /**
      * Every object has a field that is the main one for display. These are kept in
@@ -74,7 +98,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * has with the key of this type of model.
      */
     getTitleField: function () {
-      return XV.RelationalWidgetTitleFields[this.getBaseObject().get("type")];
+      return XV.RelationalWidgetTitleFields[this.getBaseObject().recordType];
     },
     doIconTapped: function () {
       // TODO: icon tapped
