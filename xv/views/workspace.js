@@ -86,7 +86,7 @@ trailing:true white:true*/
             box = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
-                style: "height: 250px; width: 400px; background-color: AntiqueWhite; margin-right: 5px;",
+                style: "height: 250px; width: 400px; background-color: white; margin-right: 5px;",
                 components: [
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
                 ]
@@ -105,7 +105,7 @@ trailing:true white:true*/
 
               var widget = this.createComponent({
                 kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
-                style: "",
+                style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field,
                 onchange: "doFieldChanged",
@@ -155,6 +155,9 @@ trailing:true white:true*/
           }
         }
       },
+      /**
+       * Populates the fields of the workspace with the values from the model
+       */
       updateFields: function (model) {
         // TODO: this is more of a reset-all than an update
 

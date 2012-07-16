@@ -207,6 +207,21 @@ XV.WorkspacePanelDescriptor = {
       ]
     },
     {
+      title: "Summary",
+      location: "top",
+      fields: [
+        // FIXME: we can grab the field names but they eval to 0 wrongly
+        { fieldName: "budgetedHoursTotal", fieldType: "XV.NumberWidget" },
+        { fieldName: "actualHoursTotal", fieldType: "XV.ReadOnlyWidget" },
+        { fieldName: "balanceHoursTotal", fieldType: "XV.ReadOnlyWidget" },
+        { fieldName: "budgetedExpensesTotal", fieldType: "XV.NumberWidget" },
+        { fieldName: "actualExpensesTotal", fieldType: "XV.ReadOnlyWidget" },
+        { fieldName: "balanceExpensesTotal", fieldType: "XV.ReadOnlyWidget" }
+
+      ]
+    },
+
+    {
       title: "Schedule",
       location: "top",
       fields: [
