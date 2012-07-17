@@ -245,6 +245,7 @@ XVOWS.destroy = function (model, vows, obj) {
   "log",
   "datasource",
   "math",
+  "query",
   "request",
   "response",
   "session",
