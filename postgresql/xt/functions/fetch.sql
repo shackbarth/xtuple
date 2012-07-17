@@ -3,14 +3,13 @@ create or replace function xt.fetch(data_hash text) returns text as $$
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
   var query = JSON.parse(data_hash).query,
-      recordType = query.recordType
-      orderBy = query.orderBy,
-      parameters = query.parameters,
-      rowLimit = query.rowLimit;
-      rowOffset = query.rowOffset,
-      data = Object.create(XT.Data), recs = null, 
-      prettyPrint = query.prettyPrint ? 2 : null;
-
+    recordType = query.recordType,
+    orderBy = query.orderBy,
+    parameters = query.parameters,
+    rowLimit = query.rowLimit;
+    rowOffset = query.rowOffset,
+    data = Object.create(XT.Data), recs = null, 
+    prettyPrint = query.prettyPrint ? 2 : null;
   recs = data.fetch(recordType, parameters, orderBy, rowLimit, rowOffset);
  
   /* return the results */
