@@ -41,7 +41,8 @@ select xt.install_js('XT','Data','xtuple', $$
        properties,
        param,
        childOrm,
-       clause = [],
+       clause,
+       orClause,
        clauses = [],
        attr,
        parts,
@@ -49,6 +50,7 @@ select xt.install_js('XT','Data','xtuple', $$
        arg = 1,
        i,
        n,
+       c,
        ret = {},
        conds = [],
        pcond = "";
@@ -59,6 +61,7 @@ select xt.install_js('XT','Data','xtuple', $$
       /* handle parameters */
       if (parameters) {
         for (i = 0; i < parameters.length; i++) {
+          orClause = [];
           param = parameters[i];
           op = param.operator || '=';
           switch (op) {
@@ -85,40 +88,45 @@ select xt.install_js('XT','Data','xtuple', $$
             plv8.elog(ERROR, 'Invalid operator: ' + op);
           };
 
-          /* handle paths if applicable */
-          if (param.attribute.indexOf('.') > -1) {
-            parts = param.attribute.split('.');
-            childOrm = orm;
-            attr = "";
-            for (n = 0; n < parts.length; n++) {
-              /* validate attribute */
-              if (!XT.Orm.getProperty(childOrm, parts[n])) {
-                plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
-              }
-
-              /* build path */
-              attr += '"' + parts[n] + '"';
-              if (n < parts.length - 1) {
-                attr = "(" + attr + ").";
-                childOrm = XT.Orm.fetch(nameSpace, XT.Orm.getProperty(childOrm, parts[n]).toOne.type);
-              }
-            }
-          } else {
-            /* validate attribute */
-            if (!XT.Orm.getProperty(orm, param.attribute)) {
-              plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
-            }
-            attr = '"' + param.attribute + '"';
+          if (XT.typeOf(param.attribute) !== 'array') {
+            param.attribute = [param.attribute];
           }
 
-          clause = [];
-          clause.push('(');
-          clause.push(attr);
-          clause.push(op);
-          clause.push('$' + arg);
-          clause.push(')');
+          for (c = 0; c < param.attribute.length; c++) {       
+            /* handle paths if applicable */
+            if (param.attribute[c].indexOf('.') > -1) {
+              parts = param.attribute[c].split('.');
+              childOrm = orm;
+              attr = "";
+              for (n = 0; n < parts.length; n++) {
+                /* validate attribute */
+                if (!XT.Orm.getProperty(childOrm, parts[n])) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                }
+
+                /* build path */
+                attr += '"' + parts[n] + '"';
+                if (n < parts.length - 1) {
+                  attr = "(" + attr + ").";
+                  childOrm = XT.Orm.fetch(nameSpace, XT.Orm.getProperty(childOrm, parts[n]).toOne.type);
+                }
+              }
+            } else {
+              /* validate attribute */
+              if (!XT.Orm.getProperty(orm, param.attribute[c])) {
+                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+              }
+              attr = '"' + param.attribute[c] + '"';
+            }
+
+            clause = [];
+            clause.push(attr);
+            clause.push(op);
+            clause.push('$' + arg);
+            orClause.push(clause.join(''));
+          }
+          clauses.push('(' + orClause.join(' or ') + ')');
           arg++;
-          clauses.push(clause.join(' '));
           ret.parameters.push(param.value);
         }
       }
