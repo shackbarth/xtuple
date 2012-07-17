@@ -32,6 +32,17 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
+                         "recordType":"XM.ContactInfo",
+                         "parameters":[{
+                           "attribute": "name",
+                           "operator": "MATCHES",
+                           "value": "Frank"
+                          }], 
+                         "prettyPrint": true
+                         }
+                       }$$);
+
+select xt.fetch($${ "query":{
                          "recordType":"XM.AccountInfo",
                          "parameters":[{
                            "attribute":"primaryContact.address.state",
