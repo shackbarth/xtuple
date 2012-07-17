@@ -293,9 +293,9 @@ white:true*/
   });
 
   var projectStatusJson = [
-    { id: "P", name: "Concept" },
-    { id: "O", name: "In-Process" },
-    { id: "C", name: "Completed" }
+    { id: "P", name: "_concept".loc() },
+    { id: "O", name: "_inProcess".loc() },
+    { id: "C", name: "_completed".loc() }
   ];
   XM.ProjectStatusModel = Backbone.Model.extend({
   });

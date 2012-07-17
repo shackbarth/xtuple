@@ -12,7 +12,7 @@ trailing:true white:true*/
    * descriptor object called XT.WorkspacePanelDescriptor.
    */
   enyo.kind({
-      name: "new XV().getWorkspacePanels",
+      name: "XV.WorkspacePanels",
       kind: "FittableRows",
       realtimeFit: true,
       wrap: false,
@@ -29,7 +29,7 @@ trailing:true white:true*/
       ],
       /**
        * Set the layout of the workspace as soon as we know what the model is.
-       * The layout is determined by the new XV().getWorkspacePanelDescriptor() variable
+       * The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
        * in XT/foundation.js. This function is very much a work in progress. It
        * will have to accommodate every kind of input type.
        *
@@ -39,19 +39,19 @@ trailing:true white:true*/
         /**
          * Start by clearing out all of the panels
          */
-        new XV().removeAllChildren(this.$.topPanel);
-        new XV().removeAllChildren(this.$.bottomPanel);
+        XV.util.removeAllChildren(this.$.topPanel);
+        XV.util.removeAllChildren(this.$.bottomPanel);
 
         var box, boxRow, iField, iRow, fieldDesc, field, label;
-        for (var iBox = 0; iBox < new XV().getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
-          var boxDesc = new XV().getWorkspacePanelDescriptor()[this.modelType][iBox];
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
           if (boxDesc.boxType) {
             /**
              * Grids are a special case that must be rendered per their own logic.
              * All one-to-many relationships will be rendered as a grid (?)
              */
             box = this.createComponent({
-                kind: new XV().getFieldType(boxDesc.boxType),
+                kind: XV.util.getFieldType(boxDesc.boxType),
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
@@ -83,7 +83,7 @@ trailing:true white:true*/
               });
 
               var widget = this.createComponent({
-                kind: new XV().getFieldType(fieldDesc.fieldType),
+                kind: XV.util.getFieldType(fieldDesc.fieldType),
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field,
@@ -114,8 +114,8 @@ trailing:true white:true*/
 
         var topIndex = 0;
         var bottomIndex = 0;
-        for (var iBox = 0; iBox < new XV().getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
-          var boxDesc = new XV().getWorkspacePanelDescriptor()[this.modelType][iBox];
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
 
           // Note that if the box location defaults to top if it's left empty in the descriptor
           if (boxDesc.title === name && boxDesc.location === 'bottom') {
@@ -144,8 +144,8 @@ trailing:true white:true*/
         //
         // Look through the entire specification...
         //
-        for (var iBox = 0; iBox < new XV().getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
-          var boxDesc = new XV().getWorkspacePanelDescriptor()[this.modelType][iBox];
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
           for (var iField = 0; iField < boxDesc.fields.length; iField++) {
             var fieldDesc = boxDesc.fields[iField];
             var fieldName = boxDesc.fields[iField].fieldName;
@@ -226,7 +226,7 @@ trailing:true white:true*/
               onclick: "doPersist"
             }
           ]},
-          {kind: "new XV().getWorkspacePanels", name: "workspacePanels", fit: true}
+          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
         ]}
       ],
       create: function () {
@@ -279,16 +279,16 @@ trailing:true white:true*/
       },
       // list
       setupItem: function (inSender, inEvent) {
-        var title = new XV().getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title;
+        var title = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title;
         inEvent.item.children[0].setContent(title);
         return true;
       },
       setWorkspaceList: function () {
-        var menuItems = new XV().getWorkspacePanelDescriptor()[this.getModelType()];
+        var menuItems = XV.util.getWorkspacePanelDescriptor()[this.getModelType()];
         this.$.menuItems.setCount(menuItems.length);
       },
       itemTap: function (inSender, inEvent) {
-        var p = new XV().getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index];
+        var p = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
 

@@ -125,7 +125,7 @@ trailing:true white:true*/
       return true;
     },
     /**
-     * Populates the history dropdown with the components of the XV.history array
+     * Populates the history dropdown with the components of the XT.history array
      */
     fillHistory: function () {
 
@@ -134,7 +134,7 @@ trailing:true white:true*/
       /**
        * Clear out the history menu
        */
-      new XV().removeAllChildren(this.$.historyMenu);
+      XV.util.removeAllChildren(this.$.historyMenu);
 
       for (i = 0; i < XT.getHistory().length; i++) {
         var historyItem = XT.getHistory()[i];

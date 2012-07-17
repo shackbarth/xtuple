@@ -1,11 +1,11 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, enyo:true, _:true */
+/*global XT:true, XV:true, enyo:true, _:true */
 (function () {
   //"use strict";
 
   enyo.kind({
-    name: "XV",
+    name: "XV.Util",
     kind: enyo.Component,
     published: {
       workspacePanelDescriptor: null,
@@ -90,9 +90,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "number" },
               { fieldName: "name" },
               { fieldName: "account", fieldType: "relation" },
-              { fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
-              { fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
-              { fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" },
+              // disabled pending refactor of projectStatus
+              //{ fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
+              //{ fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
+              //{ fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" }
             ]
           },
           {
@@ -237,5 +238,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       }
   });
+
+  XV.util = new XV.Util();
+
 }());
 
