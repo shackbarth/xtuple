@@ -9,7 +9,6 @@ enyo.depends(
   "response.js",
   "session.js",
   "locale.js",
-  "query.js",
   "en", // LANG FILE -- TEMPORARY
   "ext"
 );
