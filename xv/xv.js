@@ -68,7 +68,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "name" },
               { fieldName: "description" },
               { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" },
-              { fieldName: "priority", fieldType: "dropdown", modelType: "XM.priorities" },
+              // TODO disabled pending refactor of projectStatuses
+              //{ fieldName: "priority", fieldType: "dropdown", modelType: "XM.priorities" },
               { fieldName: "incident", fieldType: "relation" }
             ]
           },
@@ -90,7 +91,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "number" },
               { fieldName: "name" },
               { fieldName: "account", fieldType: "relation" },
-              // disabled pending refactor of projectStatus
+              // TODO disabled pending refactor of projectStatus
               //{ fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
               //{ fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
               //{ fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" }
