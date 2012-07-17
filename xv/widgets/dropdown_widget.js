@@ -39,11 +39,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * A convenience function so that this object can be treated generally like an input
      */
     setValue: function (value) {
-      // XXX not sure why this cleaner approach doesn't work
-      //var tempSelected = _.find(this.$.dropdown.getComponents(), function (component) {
-      //  component.value === value;
-      //});
-      //this.$.dropdown.setSelected(tempSelected);
 
       for (var i = 0; i < this.$.dropdown.getComponents().length; i++) {
         if (this.$.dropdown.getComponents()[i].value === value) {

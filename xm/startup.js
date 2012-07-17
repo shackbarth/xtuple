@@ -292,8 +292,6 @@ white:true*/
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
   });
 
-  // XXX I keep the Model and Collection in the global object but the JSON is temporary.
-  // this could be done otherwise TBD.
   var projectStatusJson = [
     { id: "P", name: "Concept" },
     { id: "O", name: "In-Process" },

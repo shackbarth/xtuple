@@ -155,6 +155,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" }
             ]
           },
+          /*
+  disabled pending resolution of synching bug--need to listen to a trigger
           {
             title: "Summary",
             fields: [
@@ -169,7 +171,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
             ]
           },
-
+*/
           {
             title: "Schedule",
             fields: [
