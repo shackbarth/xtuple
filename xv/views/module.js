@@ -134,7 +134,7 @@ trailing:true white:true*/
       /**
        * Clear out the history menu
        */
-      new XM().removeAllChildren(this.$.historyMenu);
+      new XV().removeAllChildren(this.$.historyMenu);
 
       for (i = 0; i < XT.getHistory().length; i++) {
         var historyItem = XT.getHistory()[i];

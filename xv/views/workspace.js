@@ -281,10 +281,6 @@ trailing:true white:true*/
       setupItem: function (inSender, inEvent) {
         var title = new XV().getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title;
         inEvent.item.children[0].setContent(title);
-        //inEvent.item.children[0].setValue(title);
-        //this.$.item.setContent(new XV().getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title);
-        //this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
-
         return true;
       },
       setWorkspaceList: function () {

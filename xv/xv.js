@@ -35,7 +35,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             ]
           },
           {
-            title: "Contact", // I know this doesn't really merit its own box
+            title: "Contact",
             fields: [
               { fieldName: "primaryContact", fieldType: "relation" }
             ]
@@ -90,8 +90,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "number" },
               { fieldName: "name" },
               { fieldName: "account", fieldType: "relation" },
-              { fieldName: "amount", fieldType: "number" },
-              { fieldName: "probability", fieldType: "number" }
+              { fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
+              { fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
+              { fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" },
             ]
           },
           {
@@ -107,6 +108,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             title: "Notes",
             location: "bottom",
             fields: [
+              { fieldName: "amount", fieldType: "number" },
+              { fieldName: "probability", fieldType: "number" },
               { fieldName: "notes" }
             ]
           }
@@ -156,6 +159,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             title: "Summary",
             fields: [
               // FIXME: we can grab the field names but they eval to 0 wrongly
+              // until there's a change to the model
               { fieldName: "budgetedHoursTotal", fieldType: "number" },
               { fieldName: "actualHoursTotal", fieldType: "readonly" },
               { fieldName: "balanceHoursTotal", fieldType: "readonly" },
