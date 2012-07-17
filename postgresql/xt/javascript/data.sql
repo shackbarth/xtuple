@@ -154,7 +154,6 @@ select xt.install_js('XT','Data','xtuple', $$
       ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
       ret.conditions = pcond.length ? (clauses.length ? ret.concat(' and ', pcond) : pcond) : ret.conditions;
       ret.conditions = ret.conditions || true;
-      plv8.elog(NOTICE, JSON.stringify(ret.parameters));
       return ret;
     },
 
@@ -713,15 +712,55 @@ select xt.install_js('XT','Data','xtuple', $$
     */
     fetch: function (recordType, parameters, orderBy, rowLimit, rowOffset) {
       var nameSpace = recordType.beforeDot(),
-          type = recordType.afterDot(),
-          table = (nameSpace + '.' + type).decamelize(),
-          orm = XT.Orm.fetch(nameSpace, type),
-          orderBy = (orderBy ? 'order by ' + orderBy : ''),
-          limit = rowLimit ? 'limit ' + rowLimit : '';
-          offset = rowOffset ? 'offset ' + rowOffset : '',
-          recs = null, 
-          clause = this.buildClause(nameSpace, type, parameters),
-          sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+        type = recordType.afterDot(),
+        table = (nameSpace + '.' + type).decamelize(),
+        orm = XT.Orm.fetch(nameSpace, type),
+        limit = rowLimit ? 'limit ' + rowLimit : '',
+        offset = rowOffset ? 'offset ' + rowOffset : '',
+        recs = null,
+        prop,
+        i,
+        n,
+        attr,
+        parts,
+        list = [],
+        clause = this.buildClause(nameSpace, type, parameters),
+        sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+
+      /* Massage order by with quoted identifiers */
+      if (orderBy) {
+        for (i = 0; i < orderBy.length; i++) {
+          /* handle path case */
+          if (orderBy[i].attribute.indexOf('.') > -1) {
+            attr = "";
+            parts = orderBy[i].attribute.split('.');
+            for (n = 0; n < parts.length; n++) {
+              prop = XT.Orm.getProperty(orm, parts[n]);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
+              }
+              attr += '"' + parts[n] + '"';
+              if (n < parts.length - 1) {
+                attr = "(" + attr + ").";
+                orm = XT.Orm.fetch(nameSpace, prop.toOne.type); 
+              }
+            }
+          /* normal case */
+          } else {
+            prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
+            if (!prop) {
+              plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
+            }
+            attr = '"' + orderBy[i].attribute + '"';
+          }
+        
+          if (orderBy[i].descending) {
+            attr += " desc";
+          }
+          list.push(attr);
+        }
+      }
+      orderBy = list.length ? 'order by ' + list.join(',') : '';
 
       /* validate - don't bother running the query if the user has no privileges */
       if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");

@@ -38,6 +38,11 @@ select xt.fetch($${ "query":{
                            "operator": "MATCHES",
                            "value": "Frank"
                           }], 
+                          "orderBy": [{
+                            "attribute": "lastName"
+                          }, {
+                            "attribute": "firstName"
+                          }],
                          "prettyPrint": true
                          }
                        }$$);
@@ -47,7 +52,11 @@ select xt.fetch($${ "query":{
                          "parameters":[{
                            "attribute":"primaryContact.address.state",
                            "value": "VA"
-                          }], 
+                          }],
+                          "orderBy": [{
+                            "attribute": "primaryContact.name",
+                            "descending": true
+                          }],
                          "prettyPrint": true
                          }
                        }$$);
