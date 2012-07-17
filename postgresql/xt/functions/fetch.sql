@@ -69,11 +69,8 @@ select xt.fetch($${ "query":{
                          "parameters":[{
                            "attribute":"dueDate",
                            "operator": ">=",
-                           "value": "2010-07-17T12:13:01.506Z"
-                          }, {
-                           "attribute": "isActive",
-                           "value": true
-                         }], 
+                           "value": "2009-07-17T12:13:01.506Z"
+                          }], 
                          "prettyPrint": true
                          }
                        }$$);
