@@ -173,134 +173,46 @@ _.extend(XT,
 
 XT.$A = XT.A;
 
+_.extend(XT, {
+  history: [],
 
-var XV = XV || {};
-XV.WorkspacePanelDescriptor = {
-
-  Account: [
-    {
-      title: "Account Info",
-      fields: [
-        { fieldName: "name" },
-        { fieldName: "number" }
-      ]
-    },
-    {
-      title: "Contact", // I know this doesn't really merit its own box
-      fields: [
-        { fieldName: "primaryContact", fieldType: "XV.RelationalWidget" }
-      ]
+  /**
+   * Save this in the history array. It's necessary to wait until
+   * we actually have the model returned so that we can give
+   * a nice title to the history item.
+   */
+  addToHistory: function (model) {
+   /**
+    * We don't want to have duplicate entries in the history stack,
+    * so delete any entry that's identical. We do this instead of
+    * just not adding the new one, because we want the new one
+    * to be at the top of the stack.
+    */
+    for (var i = 0; i < this.history.length; i++) {
+      if (this.history[i].modelType === model.get("type") &&
+          this.history[i].modelId === model.get("guid")) {
+        this.history.splice(i, 1);
+        i--;
+      }
     }
-  ],
 
-  Contact: [
-    {
-      title: "Contact Info",
-      fields: [
-        { fieldName: "firstName" },
-        { fieldName: "lastName" },
-        { fieldName: "jobTitle" },
-        { fieldName: "phone" },
-        { fieldName: "primaryEmail" }
-      ]
-    },
-    {
-      title: "Account Info",
-      fields: [
-        { fieldName: "account", fieldType: "XV.RelationalWidget" }
-      ]
-    }
-  ],
-
-  ToDo: [
-    {
-      title: "ToDo Info",
-      fields: [
-        { fieldName: "name" },
-        { fieldName: "description" },
-        { fieldName: "status", fieldType: "XV.DropdownWidget", modelType: "XM.projectStatuses" },
-        { fieldName: "priority", fieldType: "XV.DropdownWidget", modelType: "XM.priorities" }
-
-        //,
-        // TODO: IncidentInfo has no recordType field, which is a problem
-        //{ fieldName: "incident", fieldType: "XV.RelationalWidget" }
-      ]
-    },
-    {
-      title: "Schedule",
-      fields: [
-        { fieldName: "startDate", fieldType: "XV.DateWidget" },
-        { fieldName: "dueDate", fieldType: "XV.DateWidget" },
-        { fieldName: "assignDate", fieldType: "XV.DateWidget" },
-        { fieldName: "completeDate", fieldType: "XV.DateWidget" },
-      ]
-    }
-  ],
-
-  Opportunity: [
-
-  ],
-
-  Incident: [
-
-  ],
-
-  Project: [// the key is uppercase because the model name is uppercase
-    {
-      title: "Project Info",
-      fields: [
-        { fieldName: "number", placeholder: "Enter the project number" },
-        { fieldName: "name" },
-        { fieldName: "notes" },
-        { fieldName: "status", fieldType: "XV.DropdownWidget", modelType: "XM.projectStatuses" }
-      ]
-    },
-    {
-      title: "Summary",
-      fields: [
-        // FIXME: we can grab the field names but they eval to 0 wrongly
-        { fieldName: "budgetedHoursTotal", fieldType: "XV.NumberWidget" },
-        { fieldName: "actualHoursTotal", fieldType: "XV.ReadOnlyWidget" },
-        { fieldName: "balanceHoursTotal", fieldType: "XV.ReadOnlyWidget" },
-        { fieldName: "budgetedExpensesTotal", fieldType: "XV.NumberWidget" },
-        { fieldName: "actualExpensesTotal", fieldType: "XV.ReadOnlyWidget" },
-        { fieldName: "balanceExpensesTotal", fieldType: "XV.ReadOnlyWidget" }
-
-      ]
-    },
-
-    {
-      title: "Schedule",
-      fields: [
-        { fieldName: "owner", fieldType: "XV.RelationalWidget" },
-        { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
-        { fieldName: "dueDate", fieldType: "XV.DateWidget" },
-        { fieldName: "assignDate", fieldType: "XV.DateWidget" },
-        { fieldName: "startDate", fieldType: "XV.DateWidget" },
-        { fieldName: "completeDate", fieldType: "XV.DateWidget" }
-      ]
-    },
-    {
-      title: "Tasks",
-      location: "bottom",
-      boxType: "XV.GridWidget",
-      fields: [
-        { label: "number", fieldName: "number", width: "120" },
-        { label: "name", fieldName: "name", width: "120" },
-        { label: "notes", fieldName: "notes", width: "220" },
-        { label: "actualHours", fieldName: "actualHours", fieldType: "XV.NumberWidget", width: "40" },
-        { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "XV.NumberWidget", width: "40" }
-      ]
-    }
-  ]
-};
+    /**
+     * Unshift instead of push because we want the newest entries at the top
+     */
+    this.history.unshift({
+      modelType: model.get("type"),
+      modelId: model.get("guid"),
+      modelName: model.get("name")
+    });
+  },
 
 
-XV.RelationalWidgetTitleFields = {};
-XV.RelationalWidgetTitleFields["XM.UserAccountInfo"] = "propername";
-XV.RelationalWidgetTitleFields["XM.ContactInfo"] = "lastName";
-XV.RelationalWidgetTitleFields["XM.IncidentInfo"] = "number";
-XV.RelationalWidgetTitleFields["XM.AccountInfo"] = "name";
+  /**
+   * Returns the history object
+   */
+  getHistory: function () {
+    return this.history;
+  }
+});
 
 
-XV.history = XV.history || [];

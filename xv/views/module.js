@@ -145,11 +145,12 @@ trailing:true white:true*/
         historyMenu.removeChild(this.$.historyMenu.children[0]);
       }
 
-      for (i = 0; i < XV.history.length; i++) {
+      for (i = 0; i < XT.getHistory().length; i++) {
+        var historyItem = XT.getHistory()[i];
         this.$.historyMenu.createComponent({
-          content: XV.history[i].modelType + ": " + XV.history[i].modelName,
-          modelType: XV.history[i].modelType,
-          modelId: XV.history[i].modelId
+          content: historyItem.modelType + ": " + historyItem.modelName,
+          modelType: historyItem.modelType,
+          modelId: historyItem.modelId
         });
       }
       this.$.historyMenu.render();

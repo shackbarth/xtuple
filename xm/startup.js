@@ -295,9 +295,9 @@ white:true*/
   // XXX I keep the Model and Collection in the global object but the JSON is temporary.
   // this could be done otherwise TBD.
   var projectStatusJson = [
-    { status: "P", statusString: "Concept" },
-    { status: "O", statusString: "In-Process" },
-    { status: "C", statusString: "Completed" }
+    { id: "P", name: "Concept" },
+    { id: "O", name: "In-Process" },
+    { id: "C", name: "Completed" }
   ];
   XM.ProjectStatusModel = Backbone.Model.extend({
   });

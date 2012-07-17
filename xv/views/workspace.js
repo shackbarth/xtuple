@@ -12,7 +12,7 @@ trailing:true white:true*/
    * descriptor object called XT.WorkspacePanelDescriptor.
    */
   enyo.kind({
-      name: "XV.WorkspacePanels",
+      name: "new XV().getWorkspacePanels",
       kind: "FittableRows",
       realtimeFit: true,
       wrap: false,
@@ -29,7 +29,7 @@ trailing:true white:true*/
       ],
       /**
        * Set the layout of the workspace as soon as we know what the model is.
-       * The layout is determined by the XV.WorkspacePanelDescriptor variable
+       * The layout is determined by the new XV().getWorkspacePanelDescriptor() variable
        * in XT/foundation.js. This function is very much a work in progress. It
        * will have to accommodate every kind of input type.
        *
@@ -64,8 +64,8 @@ trailing:true white:true*/
         }
 
         var box, boxRow, iField, iRow, fieldDesc, field, label;
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
+        for (var iBox = 0; iBox < new XV().getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = new XV().getWorkspacePanelDescriptor()[this.modelType][iBox];
           if (boxDesc.boxType) {
             /**
              * Grids are a special case that must be rendered per their own logic.
@@ -135,8 +135,8 @@ trailing:true white:true*/
 
         var topIndex = 0;
         var bottomIndex = 0;
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
+        for (var iBox = 0; iBox < new XV().getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = new XV().getWorkspacePanelDescriptor()[this.modelType][iBox];
 
           // Note that if the box location defaults to top if it's left empty in the descriptor
           if (boxDesc.title === name && boxDesc.location === 'bottom') {
@@ -165,8 +165,8 @@ trailing:true white:true*/
         //
         // Look through the entire specification...
         //
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
+        for (var iBox = 0; iBox < new XV().getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = new XV().getWorkspacePanelDescriptor()[this.modelType][iBox];
           for (var iField = 0; iField < boxDesc.fields.length; iField++) {
             var fieldDesc = boxDesc.fields[iField];
             var fieldName = boxDesc.fields[iField].fieldName;
@@ -247,7 +247,7 @@ trailing:true white:true*/
               onclick: "doPersist"
             }
           ]},
-          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
+          {kind: "new XV().getWorkspacePanels", name: "workspacePanels", fit: true}
         ]}
       ],
       create: function () {
@@ -300,20 +300,20 @@ trailing:true white:true*/
       },
       // list
       setupItem: function (inSender, inEvent) {
-        var title = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title;
+        var title = new XV().getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title;
         inEvent.item.children[0].setContent(title);
         //inEvent.item.children[0].setValue(title);
-        //this.$.item.setContent(XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title);
+        //this.$.item.setContent(new XV().getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title);
         //this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
 
         return true;
       },
       setWorkspaceList: function () {
-        var menuItems = XV.WorkspacePanelDescriptor[this.getModelType()];
+        var menuItems = new XV().getWorkspacePanelDescriptor()[this.getModelType()];
         this.$.menuItems.setCount(menuItems.length);
       },
       itemTap: function (inSender, inEvent) {
-        var p = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index];
+        var p = new XV().getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
 
@@ -377,32 +377,11 @@ trailing:true white:true*/
           return;
         }
 
+        /**
+         * Put the model in the history array
+         */
+        XT.addToHistory(model);
 
-        /**
-         * Save this in the history array. It's necessary to wait until
-         * we actually have the model returned so that we can give
-         * a nice title to the history item. We also don't want to have
-         * duplicate entries in the history stack, so delete any entry
-         * that's identical. (But do push this one, so it's at the top of
-         * the stack.)
-         * XXX this could be a static method outside of enyo but where
-         * do we put those?
-         */
-        for (var i = 0; i < XV.history.length; i++) {
-          if (XV.history[i].modelType === model.get("type") &&
-              XV.history[i].modelId === model.get("guid")) {
-            XV.history.splice(i, 1);
-            i--;
-          }
-        }
-        /**
-         * Unshift instead of push because we want the newest entries at the top
-         */
-        XV.history.unshift({
-          modelType: model.get("type"),
-          modelId: model.get("guid"),
-          modelName: model.get("name")
-        });
 
         /**
          * Pass this model onto the panels to update

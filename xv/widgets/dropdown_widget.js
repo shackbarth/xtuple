@@ -66,9 +66,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.$.dropdown.createComponent({ idValue: "", content: "" });
       var collection = XT.getObjectByName(this.modelType);
       for (var i = 0; i < collection.models.length; i++) {
-        var statusId = collection.models[i].get("status"); // TODO: should be id for priority
-        var statusString = collection.models[i].get("statusString"); // TODO: should be name for priority
-        this.$.dropdown.createComponent({ value: statusId, content: statusString });
+        // TODO: these won't necessarily be under the terms id and name.
+        // once we come across such an example we need to write an
+        // overriding metadata object, probably in foundation.js, to
+        // specify what fields to use
+        var id = collection.models[i].get("id");
+        var name = collection.models[i].get("name");
+        this.$.dropdown.createComponent({ value: id, content: name });
       }
       this.$.dropdown.render();
     },

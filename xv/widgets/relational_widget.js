@@ -98,7 +98,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * has with the key of this type of model.
      */
     getTitleField: function () {
-      return XV.RelationalWidgetTitleFields[this.getBaseObject().recordType];
+      return new XV().getRelationalTitleFields[this.getBaseObject().recordType];
     },
     doIconTapped: function () {
       // TODO: icon tapped
