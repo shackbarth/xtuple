@@ -40,11 +40,15 @@ select xt.install_js('XT','Data','xtuple', $$
        privileges = orm.privileges,
        properties,
        param,
+       childOrm,
        clause = [],
        clauses = [],
+       attr,
+       parts,
        op,
        arg = 1,
        i,
+       n,
        ret = {},
        conds = [],
        pcond = "";
@@ -56,13 +60,7 @@ select xt.install_js('XT','Data','xtuple', $$
       if (parameters) {
         for (i = 0; i < parameters.length; i++) {
           param = parameters[i];
-          
-          /* validate attribute */
-          if (!XT.Orm.getProperty(orm, param.attribute)) {
-            plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
-          }
           op = param.operator || '=';
-
           switch (op) {
           case '=':
           case '>':
@@ -87,9 +85,35 @@ select xt.install_js('XT','Data','xtuple', $$
             plv8.elog(ERROR, 'Invalid operator: ' + op);
           };
 
+          /* handle paths if applicable */
+          if (param.attribute.indexOf('.') > -1) {
+            parts = param.attribute.split('.');
+            childOrm = orm;
+            attr = "";
+            for (n = 0; n < parts.length; n++) {
+              /* validate attribute */
+              if (!XT.Orm.getProperty(childOrm, parts[n])) {
+                plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+              }
+
+              /* build path */
+              attr += '"' + parts[n] + '"';
+              if (n < parts.length - 1) {
+                attr = "(" + attr + ").";
+                childOrm = XT.Orm.fetch(nameSpace, XT.Orm.getProperty(childOrm, parts[n]).toOne.type);
+              }
+            }
+          } else {
+            /* validate attribute */
+            if (!XT.Orm.getProperty(orm, param.attribute)) {
+              plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
+            }
+            attr = '"' + param.attribute + '"';
+          }
+
           clause = [];
           clause.push('(');
-          clause.push('"' + param.attribute + '"');
+          clause.push(attr);
           clause.push(op);
           clause.push('$' + arg);
           clause.push(')');

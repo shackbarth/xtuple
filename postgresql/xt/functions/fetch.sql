@@ -18,7 +18,6 @@ create or replace function xt.fetch(data_hash text) returns text as $$
 
 $$ language plv8;
 /*
-select xt.js_init();
 select xt.fetch($${ "query":{
                          "recordType":"XM.ContactInfo",
                          "parameters":[{
@@ -28,6 +27,16 @@ select xt.fetch($${ "query":{
                            "attribute": "lastName",
                            "value": "Farley"
                          }], 
+                         "prettyPrint": true
+                         }
+                       }$$);
+
+select xt.fetch($${ "query":{
+                         "recordType":"XM.AccountInfo",
+                         "parameters":[{
+                           "attribute":"primaryContact.address.state",
+                           "value": "VA"
+                          }], 
                          "prettyPrint": true
                          }
                        }$$);
