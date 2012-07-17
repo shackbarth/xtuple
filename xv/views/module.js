@@ -131,19 +131,10 @@ trailing:true white:true*/
 
       var i;
 
-      // Clear out the history menu
-      var historyMenu = this.$.historyMenu; // just for re-use
-
-      // It's necessary to save the length into a variable or else the loop ends
-      // prematurely. It's also necessary to delete the children always from the
-      // 0 spot and not the i spot, because the target moves as you delete.
-
-      // XXX a "remove all children from menu" status method would be a good idea.
-      // where to put these?
-      var historyLength = historyMenu.children.length;
-      for (i = 0; i < historyLength; i++) {
-        historyMenu.removeChild(this.$.historyMenu.children[0]);
-      }
+      /**
+       * Clear out the history menu
+       */
+      new XM().removeAllChildren(this.$.historyMenu);
 
       for (i = 0; i < XT.getHistory().length; i++) {
         var historyItem = XT.getHistory()[i];

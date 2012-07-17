@@ -62,7 +62,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
            * XXX not sure if this is the best way to do it
            */
           this.createComponent({
-            kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
+            kind: new XV().getFieldType(fieldDesc.fieldType),
             container: boxRow,
             placeholder: fieldDesc.label,
             style: "border-width: 0px; width: " + fieldDesc.width + "px; ",

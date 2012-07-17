@@ -39,29 +39,8 @@ trailing:true white:true*/
         /**
          * Start by clearing out all of the panels
          */
-
-        // XXX I've copied and pasted this code now 3 times. Refactor to use
-        // a single static method. But where to put it?
-        var i;
-        // Clear out the panels
-        var topPanel = this.$.topPanel; // just for re-use
-
-        // It's necessary to save the length into a variable or else the loop ends
-        // prematurely. It's also necessary to delete the children always from the
-        // 0 spot and not the i spot, because the target moves as you delete.
-        var topPanelLength = topPanel.children.length;
-        for (i = 0; i < topPanelLength; i++) {
-          topPanel.removeChild(this.$.topPanel.children[0]);
-        }
-        var bottomPanel = this.$.bottomPanel; // just for re-use
-
-        // It's necessary to save the length into a variable or else the loop ends
-        // prematurely. It's also necessary to delete the children always from the
-        // 0 spot and not the i spot, because the target moves as you delete.
-        var bottomPanelLength = bottomPanel.children.length;
-        for (i = 0; i < bottomPanelLength; i++) {
-          bottomPanel.removeChild(this.$.bottomPanel.children[0]);
-        }
+        new XV().removeAllChildren(this.$.topPanel);
+        new XV().removeAllChildren(this.$.bottomPanel);
 
         var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < new XV().getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
@@ -72,7 +51,7 @@ trailing:true white:true*/
              * All one-to-many relationships will be rendered as a grid (?)
              */
             box = this.createComponent({
-                kind: boxDesc.boxType,
+                kind: new XV().getFieldType(boxDesc.boxType),
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
@@ -104,7 +83,7 @@ trailing:true white:true*/
               });
 
               var widget = this.createComponent({
-                kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
+                kind: new XV().getFieldType(fieldDesc.fieldType),
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field,
@@ -174,7 +153,7 @@ trailing:true white:true*/
               /**
                * Update the view field with the model value
                */
-              if (boxDesc.boxType === 'XV.GridWidget') {
+              if (boxDesc.boxType === 'grid') {
                 /**
                  * Don't send just the field over. Send the whole model over
                  */
@@ -259,7 +238,7 @@ trailing:true white:true*/
       /**
        * Update the model from changes to the UI. The interaction is handled here
        * and not in the widgets, which themselves are unaware of the model.
-       * Exception: GridWidgets and (TODO) RelationalWidgets manage their own
+       * Exception: GridWidgets and  RelationalWidgets manage their own
        * model, so those updates are not performed here.
        * The parameters coming in here are different if the sender is an Input
        * or a picker, so we have to be careful when we parse out the appropriate
