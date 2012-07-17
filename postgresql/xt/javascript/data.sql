@@ -23,17 +23,15 @@ select xt.install_js('XT','Data','xtuple', $$
     DELETED_STATE: 'delete',
 
     /** 
-      Build a SQL clause based on privileges for name space and type, and conditions and parameters passed. Input 
-      Conditions and parameters are presumed to conform to SproutCore's SC.Query syntax. 
+      Build a SQL `where` clause based on privileges for name space and type,
+      and conditions and parameters passed. 
 
       @seealso fetch
-      @seealso http://sproutcore.com/docs/#doc=SC.Query
 
-      @param {String} name space
-      @param {String} type
-      @param {Object} conditions - optional
-      @param {Object} parameters - optional
-      @returns {Boolean}
+      @param {String} Name space
+      @param {String} Type
+      @param {Object} Parameters - optional
+      @returns {Object}
     */
     buildClause: function (nameSpace, type, parameters) {
      var orm = XT.Orm.fetch(nameSpace, type),
@@ -47,13 +45,15 @@ select xt.install_js('XT','Data','xtuple', $$
        attr,
        parts,
        op,
-       arg = 1,
+       arg,
        i,
        n,
        c,
+       cnt = 1,
        ret = {},
        conds = [],
-       pcond = "";
+       pcond = "",
+       prop;
 
       ret.conditions = "";
       ret.parameters = [];
@@ -100,7 +100,8 @@ select xt.install_js('XT','Data','xtuple', $$
               attr = "";
               for (n = 0; n < parts.length; n++) {
                 /* validate attribute */
-                if (!XT.Orm.getProperty(childOrm, parts[n])) {
+                prop = XT.Orm.getProperty(childOrm, parts[n])
+                if (!prop) {
                   plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
                 }
 
@@ -108,25 +109,29 @@ select xt.install_js('XT','Data','xtuple', $$
                 attr += '"' + parts[n] + '"';
                 if (n < parts.length - 1) {
                   attr = "(" + attr + ").";
-                  childOrm = XT.Orm.fetch(nameSpace, XT.Orm.getProperty(childOrm, parts[n]).toOne.type);
+                  childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
                 }
               }
             } else {
               /* validate attribute */
-              if (!XT.Orm.getProperty(orm, param.attribute[c])) {
+              prop = XT.Orm.getProperty(orm, param.attribute[c]);
+              if (!prop) {
                 plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
               }
               attr = '"' + param.attribute[c] + '"';
             }
 
+            arg = '$' + cnt;
+            if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
+
             clause = [];
             clause.push(attr);
             clause.push(op);
-            clause.push('$' + arg);
+            clause.push(arg);
             orClause.push(clause.join(''));
           }
           clauses.push('(' + orClause.join(' or ') + ')');
-          arg++;
+          cnt++;
           ret.parameters.push(param.value);
         }
       }
@@ -148,6 +153,8 @@ select xt.install_js('XT','Data','xtuple', $$
       }
       ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
       ret.conditions = pcond.length ? (clauses.length ? ret.concat(' and ', pcond) : pcond) : ret.conditions;
+      ret.conditions = ret.conditions || true;
+      plv8.elog(NOTICE, JSON.stringify(ret.parameters));
       return ret;
     },
 

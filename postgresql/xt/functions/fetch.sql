@@ -44,6 +44,41 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
+                         "recordType":"XM.AccountInfo",
+                         "parameters":[{
+                           "attribute":"primaryContact.address.state",
+                           "value": "VA"
+                          }], 
+                         "prettyPrint": true
+                         }
+                       }$$);
+
+select xt.fetch($${ "query":{
+                         "recordType":"XM.ItemInfo",
+                         "parameters":[{
+                           "attribute": "number",
+                           "operator": "BEGINS_WITH",
+                           "value": "B"
+                          }], 
+                         "prettyPrint": true
+                         }
+                       }$$);
+
+select xt.fetch($${ "query":{
+                         "recordType":"XM.ToDoInfo",
+                         "parameters":[{
+                           "attribute":"dueDate",
+                           "operator": ">=",
+                           "value": "2010-07-17T12:13:01.506Z"
+                          }, {
+                           "attribute": "isActive",
+                           "value": true
+                         }], 
+                         "prettyPrint": true
+                         }
+                       }$$);
+
+select xt.fetch($${ "query":{
                          "recordType":"XM.ContactInfo",
                          "parameters":[{
                            "attribute": ["account.number", "account.name", "name", "phone", "address.city"],
@@ -59,29 +94,10 @@ select xt.fetch($${ "query":{
                        }$$);
 
 select xt.fetch($${ "query":{
-                         "recordType":"XM.AccountInfo",
-                         "parameters":[{
-                           "attribute":"primaryContact.address.state",
-                           "value": "VA"
-                          }], 
-                         "prettyPrint": true
-                         }
-                       }$$);
-
-select xt.fetch($${ "query":{
                          "recordType":"XM.Contact",
                          "rowLimit": 10,
                          "prettyPrint": true
                          }
                        }$$);
 
-select xt.fetch($${ "query":{
-                         "recordType":"XM.Contact",
-                         "parameters":[ "Jake",  "F" ], 
-                         "conditions":"\"firstName\" = %@ OR \"lastName\" ~^ %@", 
-                         "orderBy":"\"lastName\"", 
-                         "rowLimit": 3,
-                         "prettyPrint":true
-                         }
-                       }$$);
 */
