@@ -245,6 +245,7 @@ XVOWS.destroy = function (model, vows, obj) {
   "log",
   "datasource",
   "math",
+  // TODO - Remove query if John decides against it.
   "query",
   "request",
   "response",
