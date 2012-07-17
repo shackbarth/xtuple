@@ -35,43 +35,67 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Object} parameters - optional
       @returns {Boolean}
     */
-    buildClause: function (nameSpace, type, conditions, parameters) {
-      var ret = ' true ', 
-        cond = '', 
-        pcond = '',
-        map = XT.Orm.fetch(nameSpace, type),
-        privileges = map.privileges,
-        type,
-        i,
-        val,
-        param,
-        regExp;
-          
-      /* handle passed conditions */
-      if (conditions) {
-        /* helper function */
-        format = function(arg) { 
-          type = XT.typeOf(arg);
-          if(type === 'string') return "'" + arg + "'"; 
-          else if(type === 'array') return "array[" + arg + "]";   
-          return arg;
-        }      
+    buildClause: function (nameSpace, type, parameters) {
+     var orm = XT.Orm.fetch(nameSpace, type),
+       privileges = orm.privileges,
+       properties,
+       param,
+       clause = [],
+       clauses = [],
+       op,
+       arg = 1,
+       i,
+       ret = {},
+       conds = [],
+       pcond = "";
 
-        /* evaluate */
-        if (parameters) {
-          if (conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
-            for (i = 0; i < parameters.length; i++) {
-              val =  format(parameters[i]);
-              conditions = conditions.replace(/%@/,val);
-            }
-          } else {  /* replace parameterized tokens */
-            for (var prop in parameters) {
-              param = '{' + prop + '}',
-              val = format(parameters[prop]),
-              regExp = new RegExp(param, "g"); 
-              conditions = conditions.replace(regExp, val);
-            }
+      ret.conditions = "";
+      ret.parameters = [];
+
+      /* handle parameters */
+      if (parameters) {
+        for (i = 0; i < parameters.length; i++) {
+          param = parameters[i];
+          
+          /* validate attribute */
+          if (!XT.Orm.getProperty(orm, param.attribute)) {
+            plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute);
           }
+          op = param.operator || '=';
+
+          switch (op) {
+          case '=':
+          case '>':
+          case '<':
+          case '>=':
+          case '<=':
+          case '!=':
+            break;
+          case 'BEGINS_WITH':
+            op = '~^';
+            break;
+          case 'ENDS_WITH':
+            op = '~?';
+            break;
+          case 'MATCHES':
+            op = '~*';
+            break;
+          case 'ANY':
+            op = '<@';
+            break;
+          default:
+            plv8.elog(ERROR, 'Invalid operator: ' + op);
+          };
+
+          clause = [];
+          clause.push('(');
+          clause.push('"' + param.attribute + '"');
+          clause.push(op);
+          clause.push('$' + arg);
+          clause.push(')');
+          arg++;
+          clauses.push(clause.join(' '));
+          ret.parameters.push(param.value);
         }
       }
 
@@ -83,15 +107,15 @@ select xt.install_js('XT','Data','xtuple', $$
            privileges.personal &&
           (this.checkPrivilege(privileges.personal.read) || 
            this.checkPrivilege(privileges.personal.update)))) {
-        var properties = privileges.personal.properties, conds = [], col;
-        for(var i = 0; i < properties.length; i++) {
+        properties = privileges.personal.properties, conds = [], col;
+        for(i = 0; i < properties.length; i++) {
           col = map.properties.findProperty('name', properties[i]).toOne ? "(" + properties[i] + ").username" : properties[i];
           conds.push(col);
         }
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
-      }    
-      ret = conditions && conditions.length ? '(' + conditions + ')' : ret;
-      ret = pcond.length ? (conditions && conditions.length ? ret.concat(' and ', pcond) : pcond) : ret;
+      }
+      ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
+      ret.conditions = pcond.length ? (clauses.length ? ret.concat(' and ', pcond) : pcond) : ret.conditions;
       return ret;
     },
 
@@ -648,7 +672,7 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number} row offset - optional
       @returns Array
     */
-    fetch: function (recordType, conditions, parameters, orderBy, rowLimit, rowOffset) {
+    fetch: function (recordType, parameters, orderBy, rowLimit, rowOffset) {
       var nameSpace = recordType.beforeDot(),
           type = recordType.afterDot(),
           table = (nameSpace + '.' + type).decamelize(),
@@ -657,7 +681,7 @@ select xt.install_js('XT','Data','xtuple', $$
           limit = rowLimit ? 'limit ' + rowLimit : '';
           offset = rowOffset ? 'offset ' + rowOffset : '',
           recs = null, 
-          conditions = this.buildClause(nameSpace, type, conditions, parameters),
+          clause = this.buildClause(nameSpace, type, parameters),
           sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
 
       /* validate - don't bother running the query if the user has no privileges */
@@ -665,12 +689,12 @@ select xt.install_js('XT','Data','xtuple', $$
 
       /* query the model */
       sql = sql.replace('{table}', table)
-               .replace('{conditions}', conditions)
+               .replace('{conditions}', clause.conditions)
                .replace('{orderBy}', orderBy)
                .replace('{limit}', limit)
-               .replace('{offset}', offset);     
+               .replace('{offset}', offset);
       if(DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
-      recs = plv8.execute(sql);
+      recs = plv8.execute(sql, clause.parameters);
       for (var i = 0; i < recs.length; i++) {  	
         recs[i] = this.decrypt(nameSpace, type, recs[i]);	  	
       }
