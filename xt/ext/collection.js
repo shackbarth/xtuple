@@ -51,9 +51,9 @@ white:true*/
           }, {
            attribute: "lastName",
            value: "Farley"
-          }
+          }]
         }
-      }];
+      };
       call.fetch(options);
       
     The `query` object supports the following:
@@ -63,8 +63,7 @@ white:true*/
         > value - The matching value.
       * orderBy - Object designating sort order
         > attrbute - Attribute to sort by.
-        > descending - `Boolean` value. If false or absent default sort
-          is ascending.
+        > descending - `Boolean` value. If false or absent sort ascending.
       * rowLimit - Maximum rows to return
       * rowOffset - Result offset. Always use together with `orderBy`.
       
@@ -80,12 +79,11 @@ white:true*/
       - `ENDS_WITH` --   (checks if a string ends with another one)
       - `MATCHES` --     (checks if a string is matched by a case insensitive regexp)
       - `ANY` --         (checks if the thing on its left is contained in the array
-                         on its right, you will have to use a parameter
-                         to insert the array)
+                         on its right)
       
     Examples:
 
-    Fetch the first 10 contacts ordered by last name, then first name.
+    Fetch the first 10 Contacts ordered by last name, then first name.
       
       var coll = new XM.ContactInfoCollection();
       var options = {
@@ -100,7 +98,7 @@ white:true*/
       };
       coll.fetch(options);
     
-    Fetch Contacts with 'Frank' in the name, ordered by first then last name:
+    Fetch Contacts with 'Frank' in the name:
       
       var coll = new XM.ContactInfoCollection();
       var options = {
