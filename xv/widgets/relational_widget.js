@@ -29,7 +29,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               name: "autocompleteMenu",
               components: [
                 {content: ""}
-              ]
+              ],
+              ontap: "doRelationSelected"
             }
           ]
         },
@@ -67,6 +68,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         */
       ]
     }],
+    doRelationSelected: function (inSender, inEvent) {
+      this.setBaseObject(inEvent.originator.model);
+    },
     itemSelected: function (inSender, inEvent) {
       alert("Item selected");
     },
@@ -103,11 +107,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // does work, but how to unhardcode the type?
       //var try3 = new XM.ContactInfoCollection();
 
-      var recordType = this.getBaseObject().recordType;
-      // Well, this is magical, and I wish I knew a better way of doing this
-      var collectionType = recordType.substring(3) + "Collection";
-      this.setBaseCollection(new XM[collectionType]());
-
+      /**
+       * We only need to set the collection once, for the first time the model is
+       * set, because any subsequent changes to the model (based on user input, say)
+       * will keep the same modelType
+       */
+      if(!this.getBaseCollection() ) {
+        var recordType = this.getBaseObject().recordType;
+        // Well, this is magical, and I wish I knew a better way of doing this
+        var collectionType = recordType.substring(3) + "Collection";
+        this.setBaseCollection(new XM[collectionType]());
+      }
       /**
        * Populate the input with the applicable field
        */
@@ -119,7 +129,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       for (var i = 0; i < this.getBaseCollection().length; i++) {
         var model = this.getBaseCollection().models[i];
         pocString = pocString + model.get(this.getTitleField()) + ", ";
-        this.$.autocompleteMenu.createComponent( { content: model.get(this.getTitleField()) });
+        // XXX I keep the model in the menuItem. This is a bit heavy, but it
+        // allows us to easily update the base model when a menuItem is chosen.
+        this.$.autocompleteMenu.createComponent( {
+          content: model.get(this.getTitleField()),
+          model: model
+        });
       }
       this.$.autocompleteMenu.reflow();
       this.$.autocompleteMenu.render();
