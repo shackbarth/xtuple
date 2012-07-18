@@ -50,6 +50,9 @@
   testObj.setValue("inval");
   console.log(testObj.getValue() === null);
 
+  testObj.setValue(0);
+  console.log(testObj.getValue() === 0);
+
   XT.app.createComponent({ kind: "XV.DropdownWidget", name: "dropdown" });
   testObj = XT.app.$.dropdown;
 
