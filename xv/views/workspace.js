@@ -135,11 +135,18 @@ trailing:true white:true*/
        * Populates the fields of the workspace with the values from the model
        */
       updateFields: function (model) {
-        // TODO: this is more of a reset-all than an update
+        /**
+         * Fields that are computed asynchronously by the model may not be
+         * accurate right now, so we have those fields trigger an event when
+         * they are set, which we listed for here
+         */
+        var that = this;
+        model.on("announcedSet", function (announcedField, announcedValue) {
+          console.debug(announcedField + " set to " + announcedValue);
+          that.$[announcedField].setValue(announcedValue);
+        });
 
         XT.log("update with model: " + model.get("type"));
-
-
 
         //
         // Look through the entire specification...
