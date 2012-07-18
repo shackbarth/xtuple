@@ -68,7 +68,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return this._schemaFiles;
       }
       dir = _path.join(XT.basePath, "node_modules", "xt", "database", "mongo_schemas");
-      schemaFiles = this._schemaFiles = XT.directoryFiles(dir, { extension: "js", fullPath: true });
+      schemaFiles = this._schemaFiles = XT.directoryFiles(dir, {extension: "js", fullPath: true});
       return schemaFiles;
     }.property()
   });

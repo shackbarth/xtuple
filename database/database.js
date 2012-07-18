@@ -9,6 +9,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   XT.database = XT.Object.create({
   
+    init: function () {
+      var options = XT.options.database;
+      if (options) XT.mixin(this, options);
+    },
+  
     conString: function (options) {
       return "tcp://{user}:{password}@{hostname}:{port}/{database}".f(options);
     },
@@ -26,7 +31,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ret.password = XT.database.password;
       ret.port = XT.database.port;
       ret.hostname = XT.database.hostname;
-      ret.database = organization || XT.database.organization;
+      ret.database = organization || XT.database.organization;      
       return ret;
     },
   
