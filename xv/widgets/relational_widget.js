@@ -2,7 +2,7 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, XV:true, Backbone:true, enyo:true, _:true */
 (function () {
-  "use strict";
+  //"use strict";
 
   enyo.kind({
     name: "XV.RelationalWidget",
@@ -16,7 +16,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       style: "height: 14px;",
       classes: "onyx-menu-toolbar",
       components: [
-        { kind: "onyx.Input", name: "nameField", onkeyup: "doInputChanged" },
+
+
+        {
+          kind: "onyx.MenuDecorator",
+          onSelect: "itemSelected",
+          components: [
+            //{content: "Split Popup menu", kind: "onyx.Button", style: "border-radius: 3px 0 0 3px;"},
+            { kind: "onyx.Input", name: "nameField", onkeyup: "doInputChanged" },
+            {
+              kind: "onyx.Menu",
+              name: "autocompleteMenu",
+              components: [
+                {content: ""}
+              ]
+            }
+          ]
+        },
         { kind: "Image", src: "images/gear-icon.gif", ontap: "doIconTapped" },
         {
           kind: "onyx.Popup",
@@ -28,14 +44,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             { tag: "div", content: "TODO: this menu" }
           ]
         },
-        /* XXX this menu implementation is a mess and I hope it improves for production!
+        // XXX this menu implementation is a mess and I hope it improves for production!
+        /*
         {
           kind: "onyx.MenuDecorator",
           components: [
             { content: "popup", components: [
               { kind: "Image", src: "images/gear-icon.gif" }
             ]},
-            { kind: "onyx.Tooltip", content: "Tap to open..."},
             {
               kind: "onyx.Menu",
               name: "navigationMenu",
@@ -47,10 +63,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               ontap: "doNavigationSelected"
             }
           ]
-        }
+        },
         */
       ]
     }],
+    itemSelected: function (inSender, inEvent) {
+      alert("Item selected");
+    },
     /**
      * A convenience function so that this object can be treated generally like an input
      */
@@ -67,30 +86,67 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * render this object onto the name field
      */
     baseObjectChanged: function () {
-      var type = this.getBaseObject().recordType;
+
+      // XXX: this was difficult. Can we live with my solution (4th try!)?
 
       /**
        * Now is a good time to set the collection (a published value)
-       * that we'll use on operations for this widget. There's no
-       * way to get from model to collection except through the store.
+       * that we'll use on operations for this widget.
        */
-      //var col = new XT.Collection();
-      var Klass = new XT.Collection().getObjectByName(type);
-      this.setBaseCollection(new Klass());
+
+      // doesn't work: the collection from the store doesn't override the sync method
+      //var try1 = Backbone.Relational.store.getCollection(this.getBaseObject());
+
+      // doesn't work: creates whole new collection, which fetch doesn't fill
+      //var try2 = new XT.Collection(this.getBaseObject());
+
+      // does work, but how to unhardcode the type?
+      //var try3 = new XM.ContactInfoCollection();
+
+      var recordType = this.getBaseObject().recordType;
+      // Well, this is magical, and I wish I knew a better way of doing this
+      var collectionType = recordType.substring(3) + "Collection";
+      this.setBaseCollection(new XM[collectionType]());
 
       /**
        * Populate the input with the applicable field
        */
       this.$.nameField.setValue(this.getBaseObject().get(this.getTitleField()));
     },
+    _collectionFetchSuccess: function () {
+      this.log();
+      var pocString = "";
+      for (var i = 0; i < this.getBaseCollection().length; i++) {
+        var model = this.getBaseCollection().models[i];
+        pocString = pocString + model.get(this.getTitleField()) + ", ";
+        this.$.autocompleteMenu.createComponent( { content: model.get(this.getTitleField()) });
+      }
+      this.$.autocompleteMenu.reflow();
+      this.$.autocompleteMenu.render();
+      console.log(pocString);
+      this.$.autocompleteMenu.show();
+    },
+    _collectionFetchError: function () {
+      this.log();
+    },
     doInputChanged: function (inSender, inEvent) {
-      var queryDesc = {
-        query: {
-          conditions: this.getTitleField() + " BEGINS_WITH {frag}",
-          parameters: { frag: inSender.getValue() }
-        }
+      console.log("input changed: " + inSender.getValue());
+
+      var query = {
+        parameters: [{
+          attribute: this.getTitleField(),
+          operator: "BEGINS_WITH",
+          value: inSender.getValue()
+        }]
       };
-      this.getBaseCollection().fetch( /* queryDesc */ );
+      this.getBaseCollection().fetch({
+        success: enyo.bind(this, "_collectionFetchSuccess"),
+        error: enyo.bind(this, "_collectionFetchError"),
+        query: query
+      });
+
+      // stop bubbling
+      return true;
     },
     /**
      * Every object has a field that is the main one for display. These are kept in
