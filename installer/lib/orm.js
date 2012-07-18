@@ -30,22 +30,65 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return ret;
   };
   
-  submit = function (socket, orm, queue, ack) {
-    var query = "select xt.install_orm('%@')".f(XT.json(cleanse(orm)));
+  submit = function (socket, orm, queue, ack, isExtension) {
+    var query, extensions, context, extensionList = [], namespace, type;
+    query = "select xt.install_orm('%@')".f(XT.json(cleanse(orm)));
+    context = orm.context;
+    namespace = orm.nameSpace;
+    extensions = socket.extensions;
+    type = orm.type;
 
-    socket.emit("message", "installing %@.%@".f(orm.nameSpace, orm.type));
+    if (!isExtension) {
+      _.each(extensions, function (context) {
+        var ext, idx;
+        try {
+          ext = context[namespace][type];
+        } catch (err) {}
+        if (ext) extensionList.push(ext);
+        if (orm.extensions && (idx = _.find(orm.extensions, function (sub, i) {
+          if (sub.nameSpace && sub.type)
+            if (sub.nameSpace === ext.nameSpace && sub.type === ext.type) return i;
+          return false;
+        }))) orm.extensions.splice(idx, 1);
+      });
+    }
 
-    XT.db.query(socket.organization, query, function (err, res) {
-      
+    socket.emit("message", "installing %@%@.%@".f(isExtension? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
+
+    XT.db.query(socket.organization, query, _.bind(function (err, res) {
+      var c = extensionList.length;
       if (err) {
-        socket.emit("message", err.message);
-        socket.emit("message", "unable to continue");
-        return;
+        socket.emit("message", err.message);        
+        if (isExtension) socket.emit("message", "skipping ahead");
+        else {
+          socket.emit("message", "unable to continue");
+          return;
+        }
       }
       
-      socket.installed.push(orm);
-      installQueue(socket, ack, queue);
-    });
+      if (!isExtension) socket.installed.push(orm);
+      if (c > 0) {
+        XT.debug("c > 0 ", c);
+        this.on(socket.id, _.bind(function (c) {
+          XT.debug("caught socket.id", socket.id);
+          --c; if (c === 0) {
+            XT.debug("c was 0");
+            this.removeAllListeners(socket.id);
+            installQueue.call(this, socket, ack, queue);
+          } else {
+            XT.debug("c was not 0", c);
+            submit.call(this, socket, extensionList.shift(), queue, ack, true);
+          }
+        }, this, c));
+        submit.call(this, socket, extensionList.shift(), queue, ack, true);
+      } else if (isExtension) {
+        XT.debug("emitting socket.id", socket.id);
+        return this.emit(socket.id);
+      } else {
+        XT.debug("calling installQueue");
+        installQueue.call(this, socket, ack, queue);
+      }
+    }, this));
   };
   
   installQueue = function (socket, ack, queue) {
@@ -60,11 +103,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (dependencies.length > 0) {
         dependencies.push(orm);
         dependencies = dependencies.concat(queue);
-        return installQueue(socket, ack, dependencies);
+        return installQueue.call(this, socket, ack, dependencies);
       }
     }
     
-    submit(socket, orm, queue, ack);
+    submit.call(this, socket, orm, queue, ack);
   };
   
   testConnection = function (socket, ack, organization, err, res) {
@@ -93,9 +136,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         content = parseFile(file);
         if (content.isError) {
           errors.push(content);
-        } else { 
+        } else {
           content = content.map(function (orm) { orm.filename = file; return orm; });
-          ret.push(content); 
+          ret.push(content);
         }
       });
       if (errors.length > 0) ret.unshift({errors: errors});
@@ -143,17 +186,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   calculateDependencies = function (socket) {
     var orms = socket.orms;
     _.each(orms, function (namespace) {
-      _.each(_.keys(namespace), function(name) {
+      _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
         dependenciesFor(socket, orm);
-      })
+      });
     });
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
         orm.enabled = checkDependencies(socket, orm);
-      })
-    })
+      });
+    });
   };
   
   checkDependencies = function (socket, orm) {
@@ -227,7 +270,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       
       // map out the orm's
-      _.each(files, function(file) {
+      _.each(files, function (file) {
         _.each(file, function (orm) {
           var ext, ns, type, ctx;
           ext = !! orm.isExtension;
@@ -258,6 +301,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       
       socket.orms = orms;
       socket.extensions = extensions;
+      
+      XT.debug(extensions);
+      
       calculateDependencies.call(this, socket);
       ack(orms);
     },

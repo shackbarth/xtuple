@@ -21,8 +21,6 @@ enyo.kind({
     this.$.controls.selectAck = _.bind(this.selected, this);
     
     c = this.cookie = this.getCookie();
-    console.log("cookie", c);
-    
     if (c) {
       if (c.datasource) {
         this.$.controls.setDatasourceCredentials(c.datasource);
@@ -62,7 +60,7 @@ enyo.kind({
     sock.on("message", _.bind(this.receivedMessage, this));
   },
   connect: function () {
-    var c = this.cookie, credentials;
+    var credentials;
     log({type: "info", message: "successfully connected to the datasource"});
     this._sock.emit("refresh", this.$.controls.refreshAck);
     this.$.controls.$.buttons.children[1].setDisabled(false);
@@ -79,7 +77,7 @@ enyo.kind({
     log({type: "info", message: "disconnected from datasource"});
   },
   installed: function (values) {
-    console.log("installed(): ", values);
+    log({type: "info", message: "done installing " + values.length + " ORMs"});
   },
   refreshed: function (orms) {
     this.$.left.$.list.setOrms(orms);
@@ -88,7 +86,7 @@ enyo.kind({
     log({type: "server", message: message});
   },
   selected: function (ok) {
-    var c = this.cookie, credentials;
+    var credentials;
     if (ok && !this.validDatabase) {
       this.validDatabase = true;
       if (!this.hasNotifiedConnected) {
