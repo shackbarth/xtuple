@@ -17,8 +17,6 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     components: [
       {kind: "FittableRows", classes: "left", components: [
-
-
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", content: "_dashboard".loc(), ontap: "showDashboard"},
           {kind: "onyx.MenuDecorator", components: [
@@ -27,7 +25,6 @@ trailing:true white:true*/
             {kind: "onyx.Menu", name: "historyMenu", components: [], ontap: "doHistoryItemSelected" }
           ]},
           {name: "leftLabel"}
-
         ]},
         {name: "menu", kind: "List", fit: true, touch: true,
            onSetupItem: "setupItem", components: [
@@ -42,6 +39,11 @@ trailing:true white:true*/
              vertical: "hidden", style: "margin: 0;", components: [
             {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
             {name: "rightLabel", style: "text-align: center"}
+          ]},
+          {kind: "onyx.InputDecorator", components: [
+            {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+              placeholder: "Search", onchange: "inputChanged"},
+            {kind: "Image", src: "images/search-input-search.png"}
           ]}
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
@@ -66,6 +68,12 @@ trailing:true white:true*/
       }
       this.$.menu.setCount(this.lists.length);
     },
+    inputChanged: function (inSender, inEvent) {
+      var index = this.$.lists.getIndex(),
+        list = this.lists[index].name;
+      this.fetched = {};
+      this.fetch(list);
+    },
     itemTap: function (inSender, inEvent) {
       this.setList(inEvent.index);
     },
@@ -83,9 +91,41 @@ trailing:true white:true*/
       }
       this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
       if (!this.fetched[list]) {
-        this.$.lists.$[list].fetch();
-        this.fetched[list] = true;
+        this.fetch(list);
       }
+    },
+    fetch: function (name) {
+      var list = this.$.lists.$[name],
+        query = list.getQuery() || {},
+        input = this.$.searchInput.getValue(),
+        recordType,
+        type,
+        tbldef,
+        attr = [],
+        i;
+
+      if (input) {
+        recordType = list.getCollection().model.prototype.recordType;
+        type = recordType.split('.')[1];
+        tbldef = XT.session.getSchema().get(type);
+        
+        // Search on all strings
+        for (i = 0; i < tbldef.columns.length; i++) {
+          if (tbldef.columns[i].category === 'S') {
+            attr.push(tbldef.columns[i].name);
+          }
+        }
+        query.parameters = [{
+          attribute: attr,
+          operator: 'MATCHES',
+          value: this.$.searchInput.getValue()
+        }];
+      } else {
+        delete query.parameters;
+      }
+      list.setQuery(query);
+      list.fetch();
+      this.fetched[list] = true;
     },
     didFinishTransition: function (inSender, inEvent) {
       this.setList(inSender.index);
