@@ -292,12 +292,10 @@ white:true*/
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
   });
 
-  // XXX I keep the Model and Collection in the global object but the JSON is temporary.
-  // this could be done otherwise TBD.
   var projectStatusJson = [
-    { status: "P", statusString: "Concept" },
-    { status: "O", statusString: "In-Process" },
-    { status: "C", statusString: "Completed" }
+    { id: "P", name: "_concept".loc() },
+    { id: "O", name: "_inProcess".loc() },
+    { id: "C", name: "_completed".loc() }
   ];
   XM.ProjectStatusModel = Backbone.Model.extend({
   });

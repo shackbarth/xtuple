@@ -17,8 +17,6 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     components: [
       {kind: "FittableRows", classes: "left", components: [
-
-
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", content: "_dashboard".loc(), ontap: "showDashboard"},
           {kind: "onyx.MenuDecorator", components: [
@@ -27,7 +25,6 @@ trailing:true white:true*/
             {kind: "onyx.Menu", name: "historyMenu", components: [], ontap: "doHistoryItemSelected" }
           ]},
           {name: "leftLabel"}
-
         ]},
         {name: "menu", kind: "List", fit: true, touch: true,
            onSetupItem: "setupItem", components: [
@@ -42,6 +39,11 @@ trailing:true white:true*/
              vertical: "hidden", style: "margin: 0;", components: [
             {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
             {name: "rightLabel", style: "text-align: center"}
+          ]},
+          {kind: "onyx.InputDecorator", components: [
+            {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+              placeholder: "Search", onchange: "inputChanged"},
+            {kind: "Image", src: "images/search-input-search.png"}
           ]}
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
@@ -66,6 +68,12 @@ trailing:true white:true*/
       }
       this.$.menu.setCount(this.lists.length);
     },
+    inputChanged: function (inSender, inEvent) {
+      var index = this.$.lists.getIndex(),
+        list = this.lists[index].name;
+      this.fetched = {};
+      this.fetch(list);
+    },
     itemTap: function (inSender, inEvent) {
       this.setList(inEvent.index);
     },
@@ -83,9 +91,41 @@ trailing:true white:true*/
       }
       this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
       if (!this.fetched[list]) {
-        this.$.lists.$[list].fetch();
-        this.fetched[list] = true;
+        this.fetch(list);
       }
+    },
+    fetch: function (name) {
+      var list = this.$.lists.$[name],
+        query = list.getQuery() || {},
+        input = this.$.searchInput.getValue(),
+        recordType,
+        type,
+        tbldef,
+        attr = [],
+        i;
+
+      if (input) {
+        recordType = list.getCollection().model.prototype.recordType;
+        type = recordType.split('.')[1];
+        tbldef = XT.session.getSchema().get(type);
+        
+        // Search on all strings
+        for (i = 0; i < tbldef.columns.length; i++) {
+          if (tbldef.columns[i].category === 'S') {
+            attr.push(tbldef.columns[i].name);
+          }
+        }
+        query.parameters = [{
+          attribute: attr,
+          operator: 'MATCHES',
+          value: this.$.searchInput.getValue()
+        }];
+      } else {
+        delete query.parameters;
+      }
+      list.setQuery(query);
+      list.fetch();
+      this.fetched[list] = true;
     },
     didFinishTransition: function (inSender, inEvent) {
       this.setList(inSender.index);
@@ -124,30 +164,33 @@ trailing:true white:true*/
       this.bubble("workspace", {eventName: "workspace", options: tappedModel });
       return true;
     },
+    /**
+     * Populates the history dropdown with the components of the XT.history array
+     */
     fillHistory: function () {
 
       var i;
 
-      // Clear out the history menu
-      var historyMenu = this.$.historyMenu; // just for re-use
+      /**
+       * Clear out the history menu
+       */
+      XV.util.removeAllChildren(this.$.historyMenu);
 
-      // It's necessary to save the length into a variable or else the loop ends
-      // prematurely. It's also necessary to delete the children always from the
-      // 0 spot and not the i spot, because the target moves as you delete.
-      var historyLength = historyMenu.children.length;
-      for (i = 0; i < historyLength; i++) {
-        historyMenu.removeChild(this.$.historyMenu.children[0]);
-      }
-
-      for (i = 0; i < XV.history.length; i++) {
+      for (i = 0; i < XT.getHistory().length; i++) {
+        var historyItem = XT.getHistory()[i];
         this.$.historyMenu.createComponent({
-          content: XV.history[i].modelType + ": " + XV.history[i].modelName,
-          modelType: XV.history[i].modelType,
-          modelId: XV.history[i].modelId
+          content: historyItem.modelType + ": " + historyItem.modelName,
+          modelType: historyItem.modelType,
+          modelId: historyItem.modelId
         });
       }
       this.$.historyMenu.render();
     },
+    /**
+     * When a history item is selected we bubble an event way up the application.
+     * Note that we create a sort of ersatz model to mimic the way the handler
+     * expects to have a model with the event to know what to drill down into.
+     */
     doHistoryItemSelected: function (inSender, inEvent) {
       var modelId = inEvent.originator.modelId;
       var modelType = inEvent.originator.modelType;
