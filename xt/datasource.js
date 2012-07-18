@@ -1,14 +1,14 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, io:true, _:true, console:true */
+/*global XT:true, io:true, Backbone:true, _:true, console:true */
 
 (function () {
   "use strict";
 
   XT.dataSource = {
 
-    datasourceUrl: "23.21.76.27",
+    datasourceUrl: "bigiron.xtuple.com",
     //datasourceUrl: "purpletie.xtuple.com",
     //datasourceUrl: "localhost",
     datasourcePort: 9000,
@@ -24,6 +24,8 @@ white:true*/
       options = options ? _.clone(options) : {};
       var that = this,
         payload = {},
+        parameters = options.query.parameters,
+        prop,
         complete = function (response) {
           var dataHash, params = {}, error;
 
@@ -43,6 +45,24 @@ white:true*/
             options.success.call(that, dataHash);
           }
         };
+
+
+      // Helper function to convert parameters to data source friendly formats
+      var format = function (value) {
+        // Format date if applicable
+        if (value instanceof Date) {
+          return value.toJSON();
+          
+        // Format record if applicable
+        } else if (value instanceof XT.Model) {
+          return value.id;
+        }
+        return value;
+      };
+
+      for (prop in parameters) {
+        parameters[prop].value = format(parameters[prop].value);
+      }
 
       payload.requestType = 'fetch';
       payload.query = options.query;

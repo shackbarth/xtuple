@@ -4,6 +4,7 @@ enyo.depends(
   "$lib/backbone_relational",
   "$lib/layout",
   "$lib/onyx",
+  "$lib/onyx/source/wip-package.js",
   "$lib/globalize",
   "$lib/enyo_2_components",
   "$lib/socket.io",

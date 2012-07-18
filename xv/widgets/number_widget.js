@@ -6,6 +6,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
 
   // TODO: validate input and complain if invalid
+  // XXX these are implemented by wrapping onyx.Input instead of extending onyx.Input
+  // not sure if this is the best approach. I tried it the other way, though, and
+  // it was tough to separate the number "value" from the field "value"
 
   enyo.kind({
     name: "XV.NumberWidget",
@@ -28,7 +31,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Sets the value of the field. Validates as well, and clears shown input if invalid.
      */
     setValue: function (value) {
-      this.numberObject = value ? Number(value) : null;
+      // argh! 0 is falsey in javascript, but it's valid for us
+      this.numberObject = value || value === 0 ? Number(value) : null;
       this.$.numberField.setValue(Globalize.format(this.numberObject, "n"));
     },
     /**

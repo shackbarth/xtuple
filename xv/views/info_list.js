@@ -348,7 +348,7 @@ trailing:true white:true*/
     published: {
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
-      query: {orderBy: '"number"'},
+      query: {orderBy: [{ attribute: 'number' }] },
       rowClass: "XV.AccountInfoCollectionRow"
     }
   });
@@ -392,7 +392,11 @@ trailing:true white:true*/
     published: {
       label: "_contacts".loc(),
       collection: "XM.ContactInfoCollection",
-      query: {orderBy: '"lastName", "firstName"'},
+      query: {orderBy: [{
+        attribute: 'lastName'
+      }, {
+        attribute: 'firstName'
+      }]},
       rowClass: "XV.ContactInfoCollectionRow"
     }
   });
@@ -555,7 +559,7 @@ trailing:true white:true*/
     published: {
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
-      query: {orderBy: '"number"'},
+      query: {orderBy: [{ attribute: 'number' }] },
       rowClass: "XV.ProjectInfoCollectionRow"
     }
   });
@@ -702,7 +706,7 @@ trailing:true white:true*/
     published: {
       label: "_userAccounts".loc(),
       collection: "XM.UserAccountInfoCollection",
-      //query: {orderBy: '"username"'},
+      query: {orderBy: [{ attribute: 'username' }] },
       rowClass: "XV.UserAccountInfoCollectionRow"
     }
   });

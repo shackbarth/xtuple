@@ -68,7 +68,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'commentType',
       relatedModel: 'XM.CommentType',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }],
 
     // ..........................................................

@@ -91,7 +91,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'language',
       relatedModel: 'XM.Language',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });
@@ -179,7 +179,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'privilege',
       relatedModel: 'XM.Privilege',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });
@@ -225,7 +225,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'locale',
       relatedModel: 'XM.Locale',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }, {
       type: Backbone.HasMany,
       key: 'grantedPrivileges',
@@ -279,7 +279,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'privilege',
       relatedModel: 'XM.Privilege',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });
@@ -298,7 +298,7 @@ white:true*/
       type: Backbone.HasOne,
       key: 'userAccountRole',
       relatedModel: 'XM.UserAccountRoleInfo',
-      includeInJSON: 'guid'
+      includeInJSON: 'id'
     }]
 
   });

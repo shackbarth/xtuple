@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -291,5 +291,21 @@ white:true*/
     },
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
   });
+
+  var projectStatusJson = [
+    { id: "P", name: "_concept".loc() },
+    { id: "O", name: "_inProcess".loc() },
+    { id: "C", name: "_completed".loc() }
+  ];
+  XM.ProjectStatusModel = Backbone.Model.extend({
+  });
+  XM.ProjectStatusCollection = Backbone.Collection.extend({
+      model: XM.ProjectStatusModel
+  });
+  XM.projectStatuses = new XM.ProjectStatusCollection();
+  for(var i = 0; i < projectStatusJson.length; i++) {
+    var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
+    XM.projectStatuses.add(projectStatus);
+  }
 
 }());
