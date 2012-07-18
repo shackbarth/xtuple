@@ -173,70 +173,46 @@ _.extend(XT,
 
 XT.$A = XT.A;
 
+_.extend(XT, {
+  history: [],
 
-var XV = XV || {};
-XV.WorkspacePanelDescriptor = {
-
-  Account: [
-    {
-      title: "Account Info",
-      location: "bottom",
-      fields: [
-        { fieldName: "name" },
-        { fieldName: "number" }
-      ]
-    },
-    {
-      title: "Tax Info", // I know this doesn't really merit its own box
-      location: "bottom",
-      fields: [
-        { fieldName: "taxAuthority" }
-      ]
+  /**
+   * Save this in the history array. It's necessary to wait until
+   * we actually have the model returned so that we can give
+   * a nice title to the history item.
+   */
+  addToHistory: function (model) {
+   /**
+    * We don't want to have duplicate entries in the history stack,
+    * so delete any entry that's identical. We do this instead of
+    * just not adding the new one, because we want the new one
+    * to be at the top of the stack.
+    */
+    for (var i = 0; i < this.history.length; i++) {
+      if (this.history[i].modelType === model.get("type") &&
+          this.history[i].modelId === model.get("guid")) {
+        this.history.splice(i, 1);
+        i--;
+      }
     }
-  ],
 
-  Project: [// the key is uppercase because the model name is uppercase
-    {
-      title: "Project Info",
-      location: "top",
-      fields: [
-        { fieldName: "number", placeholder: "Enter the project number" },
-        { fieldName: "name" },
-        { fieldName: "notes" },
-        { fieldName: "status", fieldType: "XV.DropdownWidget", modelType: "XM.projectStatuses" }
-      ]
-    },
-    {
-      title: "Schedule",
-      location: "top",
-      fields: [
-        { fieldName: "owner", fieldType: "XV.RelationalWidget" },
-        { fieldName: "assignedTo", fieldType: "XV.RelationalWidget" },
-        { fieldName: "dueDate", fieldType: "XV.DateWidget" },
-        { fieldName: "assignDate", fieldType: "XV.DateWidget" },
-        { fieldName: "startDate", fieldType: "XV.DateWidget" },
-        { fieldName: "completeDate", fieldType: "XV.DateWidget" }
-      ]
-    },
-    {
-      title: "Tasks",
-      location: "bottom",
-      boxType: "XV.GridWidget",
-      fields: [
-        { label: "number", fieldName: "number", width: "120" },
-        { label: "name", fieldName: "name", width: "120" },
-        { label: "notes", fieldName: "notes", width: "220" },
-        { label: "actualHours", fieldName: "actualHours", fieldType: "XV.NumberWidget", width: "40" },
-        { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "XV.NumberWidget", width: "40" }
-      ]
-    }
-  ]
-};
+    /**
+     * Unshift instead of push because we want the newest entries at the top
+     */
+    this.history.unshift({
+      modelType: model.get("type"),
+      modelId: model.get("guid"),
+      modelName: model.get("name")
+    });
+  },
 
 
-XV.RelationalWidgetTitleFields = {
-  UserAccountInfo: "propername",
-  SomethingElse: "somethingElse"
-};
+  /**
+   * Returns the history object
+   */
+  getHistory: function () {
+    return this.history;
+  }
+});
 
-XV.history = XV.history || [];
+XV = {}

@@ -124,30 +124,33 @@ trailing:true white:true*/
       this.bubble("workspace", {eventName: "workspace", options: tappedModel });
       return true;
     },
+    /**
+     * Populates the history dropdown with the components of the XT.history array
+     */
     fillHistory: function () {
 
       var i;
 
-      // Clear out the history menu
-      var historyMenu = this.$.historyMenu; // just for re-use
+      /**
+       * Clear out the history menu
+       */
+      XV.util.removeAllChildren(this.$.historyMenu);
 
-      // It's necessary to save the length into a variable or else the loop ends
-      // prematurely. It's also necessary to delete the children always from the
-      // 0 spot and not the i spot, because the target moves as you delete.
-      var historyLength = historyMenu.children.length;
-      for (i = 0; i < historyLength; i++) {
-        historyMenu.removeChild(this.$.historyMenu.children[0]);
-      }
-
-      for (i = 0; i < XV.history.length; i++) {
+      for (i = 0; i < XT.getHistory().length; i++) {
+        var historyItem = XT.getHistory()[i];
         this.$.historyMenu.createComponent({
-          content: XV.history[i].modelType + ": " + XV.history[i].modelName,
-          modelType: XV.history[i].modelType,
-          modelId: XV.history[i].modelId
+          content: historyItem.modelType + ": " + historyItem.modelName,
+          modelType: historyItem.modelType,
+          modelId: historyItem.modelId
         });
       }
       this.$.historyMenu.render();
     },
+    /**
+     * When a history item is selected we bubble an event way up the application.
+     * Note that we create a sort of ersatz model to mimic the way the handler
+     * expects to have a model with the event to know what to drill down into.
+     */
     doHistoryItemSelected: function (inSender, inEvent) {
       var modelId = inEvent.originator.modelId;
       var modelType = inEvent.originator.modelType;

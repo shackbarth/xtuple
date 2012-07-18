@@ -5,6 +5,12 @@ trailing:true white:true*/
 
 (function () {
 
+  /**
+   * Manages the main content pane of the workspace. This is implemented
+   * as two panels (top and bottom). The code in this kind is general-purpose
+   * across all possible workspaces, and so it takes its cues from a JSON
+   * descriptor object called XT.WorkspacePanelDescriptor.
+   */
   enyo.kind({
       name: "XV.WorkspacePanels",
       kind: "FittableRows",
@@ -23,7 +29,7 @@ trailing:true white:true*/
       ],
       /**
        * Set the layout of the workspace as soon as we know what the model is.
-       * The layout is determined by the XV.WorkspacePanelDescriptor variable
+       * The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
        * in XT/foundation.js. This function is very much a work in progress. It
        * will have to accommodate every kind of input type.
        *
@@ -33,41 +39,20 @@ trailing:true white:true*/
         /**
          * Start by clearing out all of the panels
          */
-
-        // XXX I've copied and pasted this code now 3 times. Refactor to use
-        // a single static method. But where to put it?
-        var i;
-        // Clear out the panels
-        var topPanel = this.$.topPanel; // just for re-use
-
-        // It's necessary to save the length into a variable or else the loop ends
-        // prematurely. It's also necessary to delete the children always from the
-        // 0 spot and not the i spot, because the target moves as you delete.
-        var topPanelLength = topPanel.children.length;
-        for (i = 0; i < topPanelLength; i++) {
-          topPanel.removeChild(this.$.topPanel.children[0]);
-        }
-        var bottomPanel = this.$.bottomPanel; // just for re-use
-
-        // It's necessary to save the length into a variable or else the loop ends
-        // prematurely. It's also necessary to delete the children always from the
-        // 0 spot and not the i spot, because the target moves as you delete.
-        var bottomPanelLength = bottomPanel.children.length;
-        for (i = 0; i < bottomPanelLength; i++) {
-          bottomPanel.removeChild(this.$.bottomPanel.children[0]);
-        }
+        XV.util.removeAllChildren(this.$.topPanel);
+        XV.util.removeAllChildren(this.$.bottomPanel);
 
         var box, boxRow, iField, iRow, fieldDesc, field, label;
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
           if (boxDesc.boxType) {
             /**
              * Grids are a special case that must be rendered per their own logic.
              * All one-to-many relationships will be rendered as a grid (?)
              */
             box = this.createComponent({
-                kind: boxDesc.boxType,
-                container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
+                kind: XV.util.getFieldType(boxDesc.boxType),
+                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
             box.setDescriptor(boxDesc);
@@ -79,8 +64,8 @@ trailing:true white:true*/
              */
             box = this.createComponent({
                 kind: "onyx.Groupbox",
-                container: boxDesc.location === 'top' ? this.$.topPanel : this.$.bottomPanel,
-                style: "height: 250px; width: 400px; background-color: AntiqueWhite; margin-right: 5px;",
+                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
+                style: "height: 250px; width: 400px; background-color: white; margin-right: 5px;",
                 components: [
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
                 ]
@@ -98,8 +83,8 @@ trailing:true white:true*/
               });
 
               var widget = this.createComponent({
-                kind: fieldDesc.fieldType ? fieldDesc.fieldType : "onyx.Input",
-                style: "",
+                kind: XV.util.getFieldType(fieldDesc.fieldType),
+                style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field,
                 onchange: "doFieldChanged",
@@ -118,11 +103,6 @@ trailing:true white:true*/
         }
         this.render();
       },
-      addControl: function (inControl) {
-        this.inherited(arguments);
-        var i = this.indexOfControl(inControl);
-        inControl.setContent(i);
-      },
       /**
        * Scrolls the display to the requested box.
        * @Param {String} name The title of the box to scroll to
@@ -134,21 +114,26 @@ trailing:true white:true*/
 
         var topIndex = 0;
         var bottomIndex = 0;
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
-          if (boxDesc.title === name && boxDesc.location === 'top') {
-            this.$.topPanel.setIndex(topIndex);
-            return;
-          } else if (boxDesc.title === name && boxDesc.location === 'bottom') {
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
+
+          // Note that if the box location defaults to top if it's left empty in the descriptor
+          if (boxDesc.title === name && boxDesc.location === 'bottom') {
             this.$.bottomPanel.setIndex(bottomIndex);
             return;
-          } else if (boxDesc.location === 'top') {
-            topIndex++;
+          } else if (boxDesc.title === name) {
+            this.$.topPanel.setIndex(topIndex);
+            return;
           } else if (boxDesc.location === 'bottom') {
             bottomIndex++;
+          } else {
+            topIndex++;
           }
         }
       },
+      /**
+       * Populates the fields of the workspace with the values from the model
+       */
       updateFields: function (model) {
         // TODO: this is more of a reset-all than an update
 
@@ -159,8 +144,8 @@ trailing:true white:true*/
         //
         // Look through the entire specification...
         //
-        for (var iBox = 0; iBox < XV.WorkspacePanelDescriptor[this.modelType].length; iBox++) {
-          var boxDesc = XV.WorkspacePanelDescriptor[this.modelType][iBox];
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
           for (var iField = 0; iField < boxDesc.fields.length; iField++) {
             var fieldDesc = boxDesc.fields[iField];
             var fieldName = boxDesc.fields[iField].fieldName;
@@ -168,7 +153,7 @@ trailing:true white:true*/
               /**
                * Update the view field with the model value
                */
-              if (boxDesc.boxType === 'XV.GridWidget') {
+              if (boxDesc.boxType === 'grid') {
                 /**
                  * Don't send just the field over. Send the whole model over
                  */
@@ -251,9 +236,19 @@ trailing:true white:true*/
         this.inherited(arguments);
       },
       /**
+       * Update the model from changes to the UI. The interaction is handled here
+       * and not in the widgets, which themselves are unaware of the model.
+       * Exception: GridWidgets and  RelationalWidgets manage their own
+       * model, so those updates are not performed here.
        * The parameters coming in here are different if the sender is an Input
        * or a picker, so we have to be careful when we parse out the appropriate
-       * values
+       * values.
+       * FIXME: If you click the persist button before a changed field is blurred,
+       * then I think the change will not be persisted, as this function might not
+       * be executed before the persist method. The way we disable the save button
+       * until this function has successfully executed will help with this, but it's
+       * not foolproof: let's say a user changes one field (which enables the save
+       * button) and then changes a second but persists before blurring the second.
        */
       doFieldChanged: function (inSender, inEvent) {
         var prefix, suffix;
@@ -273,27 +268,27 @@ trailing:true white:true*/
         this.$.saveButton.setContent("Save Changes");
         this.$.saveButton.setDisabled(false);
       },
+      /**
+       * Persist the model (with whatever changes have been made) to the datastore.
+       */
       doPersist: function () {
         this.getModel().save();
         this.$.saveButton.setContent("Changes Saved");
         this.$.saveButton.setDisabled(true);
+        // XXX TODO This persist is not reflected in the Info objects in the summary view
       },
       // list
       setupItem: function (inSender, inEvent) {
-        var title = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title;
+        var title = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title;
         inEvent.item.children[0].setContent(title);
-        //inEvent.item.children[0].setValue(title);
-        //this.$.item.setContent(XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index].title);
-        //this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
-
         return true;
       },
       setWorkspaceList: function () {
-        var menuItems = XV.WorkspacePanelDescriptor[this.getModelType()];
+        var menuItems = XV.util.getWorkspacePanelDescriptor()[this.getModelType()];
         this.$.menuItems.setCount(menuItems.length);
       },
       itemTap: function (inSender, inEvent) {
-        var p = XV.WorkspacePanelDescriptor[this.getModelType()][inEvent.index];
+        var p = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
 
@@ -350,22 +345,18 @@ trailing:true white:true*/
         // XXX this gets called for all the relational subobjects
         // as well and we don't really want to deal with those
         // because we've already dealt with them under the master
-        // model.
+        // model. So I just ignore any calls to this function that
+        // are not for the function in question. It'd be better if
+        // I dealt with the reason this was getting called so much.
         if (model.get("type") !== this.getModelType()) {
           return;
         }
 
-
         /**
-         * Save this in the history array. It's necessary to wait until
-         * we actually have the model returned so that we can give
-         * a nice title to the history item.
+         * Put the model in the history array
          */
-        XV.history.push({
-          modelType: model.get("type"),
-          modelId: model.get("guid"),
-          modelName: model.get("name")
-        });
+        XT.addToHistory(model);
+
 
         /**
          * Pass this model onto the panels to update
