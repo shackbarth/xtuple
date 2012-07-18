@@ -8,6 +8,185 @@ white:true*/
 
   /**
     @class
+    
+    `XT.Collection` is a standard class for querying the xTuple data source.
+    It should be sub classed for use with sub classes of `XT.Model` (which
+    themselves typically exist in the `XM` name space). To create a new class,
+    simply extened `XT.Collection` and indicate the model to reference:
+    
+      XM.MyCollection = XT.Collection.extend({
+        model: XM.MyModel
+      })
+      
+    Once your class is created you can intantiate one and call `fetch` to
+    retreive all records of that type.
+    
+      var coll = new XM.MyCollection();
+      coll.fetch();
+      
+    You can access the results on the `models` array.
+    
+      coll.models;
+      
+    You can specify options in fetch including `success` and `query` options.
+    The `success` option is the callback executed when `fetch` sucessfully
+    completes.
+      
+      var options = {
+        success: function() {
+          console.log('Fetch completed!')
+        }
+      };
+      coll.fetch(options);
+      
+    Use a query object to limit the result set. This query will return results
+    with the first name 'Frank' and last name 'Farley':
+    
+      var coll = new XM.ContactInfoCollection();
+      var options = {
+        query: {
+          parameters":[{
+           attribute:"firstName",
+           value: "Mike"
+          }, {
+           attribute: "lastName",
+           value: "Farley"
+          }
+        }
+      }];
+      call.fetch(options);
+      
+    The `query` object supports the following:
+      * parameters - Attributes on which to filter by
+        > attribute - The name of the attrbute to filter on
+        > operator - The operator to perform comparison on.
+        > value - The matching value.
+      * orderBy - Object designating sort order
+        > attrbute - Attribute to sort by.
+        > descending - `Boolean` value. If false or absent default sort
+          is ascending.
+      * rowLimit - Maximum rows to return
+      * rowOffset - Result offset. Always use together with `orderBy`.
+      
+    If no operator is provided in a parameter object, the default will be `=`.
+    Supported operators include:
+      - `=`
+      - `!=`
+      - `<`
+      - `<=`
+      - `>`
+      - `>=`
+      - `BEGINS_WITH` -- (checks if a string starts with another one)
+      - `ENDS_WITH` --   (checks if a string ends with another one)
+      - `MATCHES` --     (checks if a string is matched by a case insensitive regexp)
+      - `ANY` --         (checks if the thing on its left is contained in the array
+                         on its right, you will have to use a parameter
+                         to insert the array)
+      
+    Examples:
+
+    Fetch the first 10 contacts ordered by last name, then first name.
+      
+      var coll = new XM.ContactInfoCollection();
+      var options = {
+        query: {
+          rowLimit: 10,
+          orderBy: [{
+            attribute: "lastName"
+          }, {
+            attribute: "firstName"
+          }]
+        }
+      };
+      coll.fetch(options);
+    
+    Fetch Contacts with 'Frank' in the name, ordered by first then last name:
+      
+      var coll = new XM.ContactInfoCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: "name",
+            operator: "MATCHES",
+            value: "Frank"
+          }],
+        }
+      };
+      coll.fetch(options);
+      
+    Fetch Accounts in Virginia ordering by Contact name descending. Note
+    support for querying object hierchary paths.
+    
+      var coll = new XM.AccountInfoCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: "primaryContact.address.state",
+            value: "VA"
+          }],
+          orderBy: [{
+            attribute: "primaryContact.name",
+            descending: true
+          }]
+        }
+      };
+      coll.fetch(options);
+      
+    Fetch Items with numbers starting with 'B'.
+
+      var coll = new XM.ItemInfoCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: "number",
+            operator: "BEGINS_WITH",
+            value: "B"
+          }]
+        }
+      };
+      coll.fetch(options);
+      
+    Fetch active To Do items due on or after July 17, 2009.
+
+      var coll = new XM.ToDoInfoCollection();
+      var dt = new Date();
+      dt.setMonth(7);
+      dt.setDate(17);
+      dt.setYear(2009);
+      var options = {
+        query: {
+          parameters:[{
+            attribute:"dueDate",
+            operator: ">=",
+            value: dt
+          }, {
+            attribute: "isActive",
+            value: true
+          }]
+        }
+      };
+      coll.fetch(options);
+      
+    Fetch contact(s) with an account number, account name, (contact) name,
+    phone, or city matching 'ttoys' and a first name beginning with 'M'. Note
+    an attribute array uses `OR` logic for comparison against all listed
+    attributes.
+
+      var coll = new XM.ContactInfoCollection();
+      var options = {
+        query: {
+          parameters:[{
+            attribute: ["account.number", "account.name", "name", "phone", "address.city"],
+            operator: "MATCHES",
+            value: "ttoys"
+          }, {
+            attribute: "firstName",
+            operator: "BEGINS_WITH",
+            value: "M"
+          }]
+        }
+      };
+      coll.fetch(options);
 
     @extends Backbone.Collection
   */

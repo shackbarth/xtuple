@@ -57,6 +57,7 @@ white:true*/
         } else if (value instanceof XT.Model) {
           return value.id;
         }
+        return value;
       };
 
       for (prop in parameters) {
