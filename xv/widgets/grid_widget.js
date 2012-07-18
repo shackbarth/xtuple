@@ -112,7 +112,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       var updateObject = {};
       updateObject[fieldName] = newValue;
-      this.getModels().models[rowIndex].set(updateObject);
+
+
+      /**
+       * Update the model. Or add a new model if it's a new grid row
+       */
+      if(rowIndex >= this.getModels().models.length) {
+        // add
+        var newModel = new XM.ProjectTask(updateObject); // FIXME can't hardcode ProjectTask
+        this.getModels().models.push(newModel);
+      } else {
+        // update
+        this.getModels().models[rowIndex].set(updateObject);
+      }
+
+      /**
+       * Send up notice that there's been an update
+       */
       this.doModelUpdate();
     }
   });

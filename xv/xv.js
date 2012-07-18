@@ -150,6 +150,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         Project: [
           {
             title: "Project Info",
+            location: "bottom",
             fields: [
               { fieldName: "number", placeholder: "Enter the project number" },
               { fieldName: "name" },
@@ -176,6 +177,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 */
           {
             title: "Schedule",
+            location: "bottom",
             fields: [
               { fieldName: "owner", fieldType: "relation" },
               { fieldName: "assignedTo", fieldType: "relation" },
@@ -187,7 +189,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Tasks",
-            location: "bottom",
             boxType: "grid",
             fields: [
               { label: "number", fieldName: "number", width: "120" },
