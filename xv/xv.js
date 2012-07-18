@@ -151,7 +151,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         Project: [
           {
             title: "Project Info",
-            location: "bottom",
             fields: [
               { fieldName: "number", placeholder: "Enter the project number" },
               { fieldName: "name" },
@@ -159,26 +158,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" }
             ]
           },
-          /*
-  disabled pending resolution of synching bug--need to listen to a trigger
           {
             title: "Summary",
+            location: "bottom",
             fields: [
-              // FIXME: we can grab the field names but they eval to 0 wrongly
-              // until there's a change to the model
-              { fieldName: "budgetedHoursTotal", fieldType: "number" },
+              { fieldName: "budgetedHoursTotal", fieldType: "readonly" },
               { fieldName: "actualHoursTotal", fieldType: "readonly" },
-              { fieldName: "balanceHoursTotal", fieldType: "readonly" },
-              { fieldName: "budgetedExpensesTotal", fieldType: "number" },
+              { fieldName: "actualHoursBalance", fieldType: "readonly" },
+              { fieldName: "budgetedExpensesTotal", fieldType: "readonly" },
               { fieldName: "actualExpensesTotal", fieldType: "readonly" },
               { fieldName: "balanceExpensesTotal", fieldType: "readonly" }
 
             ]
           },
-*/
           {
             title: "Schedule",
-            location: "bottom",
             fields: [
               { fieldName: "owner", fieldType: "relation" },
               { fieldName: "assignedTo", fieldType: "relation" },
@@ -190,6 +184,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Tasks",
+            location: "bottom",
             boxType: "grid",
             objectName: "tasks",
             fields: [
