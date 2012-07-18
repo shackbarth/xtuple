@@ -155,10 +155,9 @@ trailing:true white:true*/
                */
               if (boxDesc.boxType === 'grid') {
                 /**
-                 * Don't send just the field over. Send the whole model over
+                 * Don't send just the field over. Send the whole collaction over
                  */
-                this.$[boxDesc.title].setValue(model.getValue(boxDesc.title.toLowerCase()));
-                // TODO: toLowerCase is a hackish way to navigate case sensitivity here
+                this.$[boxDesc.title].setValue(model.getValue(boxDesc.objectName));
               } else {
                 /**
                  * Default case: populate the field

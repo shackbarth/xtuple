@@ -138,6 +138,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "History",
             boxType: "grid",
+            objectName: "history",
             location: "bottom",
             fields: [
               { fieldName: "description" },
@@ -190,6 +191,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Tasks",
             boxType: "grid",
+            objectName: "tasks",
             fields: [
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
