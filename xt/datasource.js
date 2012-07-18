@@ -24,6 +24,8 @@ white:true*/
       options = options ? _.clone(options) : {};
       var that = this,
         payload = {},
+        parameters = options.query.parameters,
+        prop,
         complete = function (response) {
           var dataHash, params = {}, error;
 
@@ -43,89 +45,10 @@ white:true*/
             options.success.call(that, dataHash);
           }
         };
-        
-      var query = options.query,
-        Klass = XT.Model.getObjectByName(query.recordType),
-        params = query.parameters,
-        conditions = query.conditions,
-        orderBy = query.orderBy,
-        list = XT.query.tokenizeString(conditions),
-        conds = [],
-        prop,
-        i,
-        len,
-        getRelation = function (relations, recordType) {
-          return _.find(Klass.prototype.relations, function (relation) {
-            return relation.relatedModel === value;
-          });
-        };
-      
-      // Massage conditions so they are compatible with the data source
-      for (i = 0, len = list.length; i < len; i++) {
-        var tokenValue;
-        switch (list[i].tokenType) {
-        case "PROPERTY":
-          var value = list[i].tokenValue,
-              relation = getRelation(Klass.prototype.relations, value);
-          // format nested records to array query format
-          if (relation && relation.type === Backbone.Relational.HasOne &&
-                relation.includeInJSON === undefined) {
-            tokenValue = '("' + value + '").id';
-          } else {
-            tokenValue = value === "id" ? '"id"' : '"' + value + '"';
-          }
-          break;
-        case "YES":
-          tokenValue = "true";
-          break;
-        case "NO":
-          tokenValue = "false";
-          break;
-        case "BEGINS_WITH":
-          tokenValue = '~^';
-          break;
-        case "ENDS_WITH":
-          tokenValue = '~?';
-          break;
-        case "CONTAINS":
-        case "MATCHES":
-          tokenValue = '~';
-          break;
-        case "ANY":
-          tokenValue = '<@';
-          break;
-        case "PARAMETER":
-          tokenValue =  '{' + list[i].tokenValue + '}';
-          break;
-        case "%@":
-          tokenValue = list[i].tokenType;
-          break;
-        default:
-          tokenValue = list[i].tokenValue;
-        }
-        conds.push(tokenValue);
-      }
 
-      // Massage `orderBy` as well
-      if (orderBy) {
-        
-        // Split order by on comma into array
-        list = orderBy.split(',');
-        for (i = 0; i < list.length; i++) {
-          
-          // Strip leading whitespace and separate potential DESC and ASC qualifiers
-          var str = list[i].replace(/^\s+|\s+$/g, ""),
-              sub = str.split(' ');
-          // Quote the property name, then put it all back together
-          sub.splice(0, 1, ['"' + _.first(sub) + '"']);
-          list.splice(i, 1, [sub.join(' ')]);
-        }
-        orderBy = list.join(',');
-      }
 
       // Helper function to convert parameters to data source friendly formats
       var format = function (value) {
-        
         // Format date if applicable
         if (value instanceof Date) {
           return value.toJSON();
@@ -134,27 +57,15 @@ white:true*/
         } else if (value instanceof XT.Model) {
           return value.id;
         }
-        
-        // Return regex source if regex
-        return value.source === undefined ? value : value.source;
+        return value;
       };
 
-      // Massage parameters so they are compatible with the data source
-      if (params instanceof Array) {
-        for (i = 0, len = params.length; i < len; i++) {
-          params[i] = format(params[i]);
-        }
-      } else {
-        for (prop in params) {
-          params[prop] = format(params[prop]);
-        }
+      for (prop in parameters) {
+        parameters[prop].value = format(parameters[prop].value);
       }
 
       payload.requestType = 'fetch';
       payload.query = options.query;
-      payload.query.conditions = conds.join(' ');
-      payload.query.parameters = params;
-      payload.query.orderBy = orderBy;
 
       return XT.Request
                .handle("function/fetch")
