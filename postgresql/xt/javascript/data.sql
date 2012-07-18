@@ -23,55 +23,116 @@ select xt.install_js('XT','Data','xtuple', $$
     DELETED_STATE: 'delete',
 
     /** 
-      Build a SQL clause based on privileges for name space and type, and conditions and parameters passed. Input 
-      Conditions and parameters are presumed to conform to SproutCore's SC.Query syntax. 
+      Build a SQL `where` clause based on privileges for name space and type,
+      and conditions and parameters passed. 
 
       @seealso fetch
-      @seealso http://sproutcore.com/docs/#doc=SC.Query
 
-      @param {String} name space
-      @param {String} type
-      @param {Object} conditions - optional
-      @param {Object} parameters - optional
-      @returns {Boolean}
+      @param {String} Name space
+      @param {String} Type
+      @param {Object} Parameters - optional
+      @returns {Object}
     */
-    buildClause: function (nameSpace, type, conditions, parameters) {
-      var ret = ' true ', 
-        cond = '', 
-        pcond = '',
-        map = XT.Orm.fetch(nameSpace, type),
-        privileges = map.privileges,
-        type,
-        i,
-        val,
-        param,
-        regExp;
-          
-      /* handle passed conditions */
-      if (conditions) {
-        /* helper function */
-        format = function(arg) { 
-          type = XT.typeOf(arg);
-          if(type === 'string') return "'" + arg + "'"; 
-          else if(type === 'array') return "array[" + arg + "]";   
-          return arg;
-        }      
+    buildClause: function (nameSpace, type, parameters) {
+     var orm = XT.Orm.fetch(nameSpace, type),
+       privileges = orm.privileges,
+       properties,
+       param,
+       childOrm,
+       clause,
+       orClause,
+       clauses = [],
+       attr,
+       parts,
+       op,
+       arg,
+       i,
+       n,
+       c,
+       cnt = 1,
+       ret = {},
+       conds = [],
+       pcond = "",
+       prop;
 
-        /* evaluate */
-        if (parameters) {
-          if (conditions.indexOf('%@') > 0) {  /* replace wild card tokens */
-            for (i = 0; i < parameters.length; i++) {
-              val =  format(parameters[i]);
-              conditions = conditions.replace(/%@/,val);
-            }
-          } else {  /* replace parameterized tokens */
-            for (var prop in parameters) {
-              param = '{' + prop + '}',
-              val = format(parameters[prop]),
-              regExp = new RegExp(param, "g"); 
-              conditions = conditions.replace(regExp, val);
-            }
+      ret.conditions = "";
+      ret.parameters = [];
+
+      /* handle parameters */
+      if (parameters) {
+        for (i = 0; i < parameters.length; i++) {
+          orClause = [];
+          param = parameters[i];
+          op = param.operator || '=';
+          switch (op) {
+          case '=':
+          case '>':
+          case '<':
+          case '>=':
+          case '<=':
+          case '!=':
+            break;
+          case 'BEGINS_WITH':
+            op = '~^';
+            break;
+          case 'ENDS_WITH':
+            op = '~?';
+            break;
+          case 'MATCHES':
+            op = '~*';
+            break;
+          case 'ANY':
+            op = '<@';
+            break;
+          default:
+            plv8.elog(ERROR, 'Invalid operator: ' + op);
+          };
+
+          if (XT.typeOf(param.attribute) !== 'array') {
+            param.attribute = [param.attribute];
           }
+
+          for (c = 0; c < param.attribute.length; c++) {       
+            /* handle paths if applicable */
+            if (param.attribute[c].indexOf('.') > -1) {
+              parts = param.attribute[c].split('.');
+              childOrm = orm;
+              attr = "";
+              for (n = 0; n < parts.length; n++) {
+                /* validate attribute */
+                prop = XT.Orm.getProperty(childOrm, parts[n])
+                if (!prop) {
+                  plv8.elog(ERROR, 'Attribute not found in object map: ' + parts[n]);
+                }
+
+                /* build path */
+                attr += '"' + parts[n] + '"';
+                if (n < parts.length - 1) {
+                  attr = "(" + attr + ").";
+                  childOrm = XT.Orm.fetch(nameSpace, prop.toOne.type);
+                }
+              }
+            } else {
+              /* validate attribute */
+              prop = XT.Orm.getProperty(orm, param.attribute[c]);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in object map: ' + param.attribute[c]);
+              }
+              attr = '"' + param.attribute[c] + '"';
+            }
+
+            arg = '$' + cnt;
+            if (prop.attr && prop.attr.type === 'Date') { arg += '::date'; }
+
+            clause = [];
+            clause.push(attr);
+            clause.push(op);
+            clause.push(arg);
+            orClause.push(clause.join(''));
+          }
+          clauses.push('(' + orClause.join(' or ') + ')');
+          cnt++;
+          ret.parameters.push(param.value);
         }
       }
 
@@ -83,15 +144,16 @@ select xt.install_js('XT','Data','xtuple', $$
            privileges.personal &&
           (this.checkPrivilege(privileges.personal.read) || 
            this.checkPrivilege(privileges.personal.update)))) {
-        var properties = privileges.personal.properties, conds = [], col;
-        for(var i = 0; i < properties.length; i++) {
+        properties = privileges.personal.properties, conds = [], col;
+        for(i = 0; i < properties.length; i++) {
           col = map.properties.findProperty('name', properties[i]).toOne ? "(" + properties[i] + ").username" : properties[i];
           conds.push(col);
         }
         pcond = "'" + this.currentUser() + "' in (" + conds.join(",") + ")";
-      }    
-      ret = conditions && conditions.length ? '(' + conditions + ')' : ret;
-      ret = pcond.length ? (conditions && conditions.length ? ret.concat(' and ', pcond) : pcond) : ret;
+      }
+      ret.conditions = clauses.length ? '(' + clauses.join(' and ') + ')' : ret.conditions;
+      ret.conditions = pcond.length ? (clauses.length ? ret.concat(' and ', pcond) : pcond) : ret.conditions;
+      ret.conditions = ret.conditions || true;
       return ret;
     },
 
@@ -648,29 +710,69 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {Number} row offset - optional
       @returns Array
     */
-    fetch: function (recordType, conditions, parameters, orderBy, rowLimit, rowOffset) {
+    fetch: function (recordType, parameters, orderBy, rowLimit, rowOffset) {
       var nameSpace = recordType.beforeDot(),
-          type = recordType.afterDot(),
-          table = (nameSpace + '.' + type).decamelize(),
-          orm = XT.Orm.fetch(nameSpace, type),
-          orderBy = (orderBy ? 'order by ' + orderBy : ''),
-          limit = rowLimit ? 'limit ' + rowLimit : '';
-          offset = rowOffset ? 'offset ' + rowOffset : '',
-          recs = null, 
-          conditions = this.buildClause(nameSpace, type, conditions, parameters),
-          sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+        type = recordType.afterDot(),
+        table = (nameSpace + '.' + type).decamelize(),
+        orm = XT.Orm.fetch(nameSpace, type),
+        limit = rowLimit ? 'limit ' + rowLimit : '',
+        offset = rowOffset ? 'offset ' + rowOffset : '',
+        recs = null,
+        prop,
+        i,
+        n,
+        attr,
+        parts,
+        list = [],
+        clause = this.buildClause(nameSpace, type, parameters),
+        sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
+
+      /* Massage order by with quoted identifiers */
+      if (orderBy) {
+        for (i = 0; i < orderBy.length; i++) {
+          /* handle path case */
+          if (orderBy[i].attribute.indexOf('.') > -1) {
+            attr = "";
+            parts = orderBy[i].attribute.split('.');
+            for (n = 0; n < parts.length; n++) {
+              prop = XT.Orm.getProperty(orm, parts[n]);
+              if (!prop) {
+                plv8.elog(ERROR, 'Attribute not found in map: ' + parts[n]);
+              }
+              attr += '"' + parts[n] + '"';
+              if (n < parts.length - 1) {
+                attr = "(" + attr + ").";
+                orm = XT.Orm.fetch(nameSpace, prop.toOne.type); 
+              }
+            }
+          /* normal case */
+          } else {
+            prop = XT.Orm.getProperty(orm, orderBy[i].attribute);
+            if (!prop) {
+              plv8.elog(ERROR, 'Attribute not found in map: ' + orderBy[i].attribute);
+            }
+            attr = '"' + orderBy[i].attribute + '"';
+          }
+        
+          if (orderBy[i].descending) {
+            attr += " desc";
+          }
+          list.push(attr);
+        }
+      }
+      orderBy = list.length ? 'order by ' + list.join(',') : '';
 
       /* validate - don't bother running the query if the user has no privileges */
       if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
 
       /* query the model */
       sql = sql.replace('{table}', table)
-               .replace('{conditions}', conditions)
+               .replace('{conditions}', clause.conditions)
                .replace('{orderBy}', orderBy)
                .replace('{limit}', limit)
-               .replace('{offset}', offset);     
+               .replace('{offset}', offset);
       if(DEBUG) { plv8.elog(NOTICE, 'sql = ', sql); }
-      recs = plv8.execute(sql);
+      recs = plv8.execute(sql, clause.parameters);
       for (var i = 0; i < recs.length; i++) {  	
         recs[i] = this.decrypt(nameSpace, type, recs[i]);	  	
       }
