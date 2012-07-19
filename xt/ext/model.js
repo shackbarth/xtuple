@@ -1073,15 +1073,35 @@ white:true*/
       @returns {Array}
     */
     getSearchableAttributes: function () {
-      var type = this.prototype.recordType.split('.')[1],
+      var that = this,
+        recordType = this.prototype.recordType,
+        type = recordType.split('.')[1],
         tbldef = XT.session.getSchema().get(type),
         attrs = [],
-        i;
+        name,
+        childAttrs,
+        i,
+        n,
+        Klass,
+        findModel = function (key) {
+          var relations = that.prototype.relations,
+            model = _.find(relations, function (relation) {
+            return relation.key === key;
+          }).relatedModel;
+          return typeof model === 'string' ?
+            that.getObjectByName(model) : model;
+        };
         
-      // Search on all strings
       for (i = 0; i < tbldef.columns.length; i++) {
+        name = tbldef.columns[i].name;
         if (tbldef.columns[i].category === 'S') {
-          attrs.push(tbldef.columns[i].name);
+          attrs.push(name);
+        } else if (tbldef.columns[i].category === 'C') {
+          Klass = findModel(name);
+          childAttrs = Klass.getSearchableAttributes();
+          for (n = 0; n < childAttrs.length; n++) {
+            attrs.push(name + '.' + childAttrs[n]);
+          }
         }
       }
       return attrs;
