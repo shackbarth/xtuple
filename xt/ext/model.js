@@ -1066,6 +1066,26 @@ white:true*/
     getObjectByName: function (name) {
       return Backbone.Relational.store.getObjectByName(name);
     },
+    
+    /**
+      Returns an array of text attribute names on the model.
+    
+      @returns {Array}
+    */
+    getSearchableAttributes: function () {
+      var type = this.prototype.recordType.split('.')[1],
+        tbldef = XT.session.getSchema().get(type),
+        attrs = [],
+        i;
+        
+      // Search on all strings
+      for (i = 0; i < tbldef.columns.length; i++) {
+        if (tbldef.columns[i].category === 'S') {
+          attrs.push(tbldef.columns[i].name);
+        }
+      }
+      return attrs;
+    },
 
     /**
       Return a matching record id for a passed user `key` and `value`. If none
