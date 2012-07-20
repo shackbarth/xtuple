@@ -97,26 +97,11 @@ trailing:true white:true*/
     fetch: function (name) {
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
-        input = this.$.searchInput.getValue(),
-        recordType,
-        type,
-        tbldef,
-        attr = [],
-        i;
+        input = this.$.searchInput.getValue();
 
       if (input) {
-        recordType = list.getCollection().model.prototype.recordType;
-        type = recordType.split('.')[1];
-        tbldef = XT.session.getSchema().get(type);
-        
-        // Search on all strings
-        for (i = 0; i < tbldef.columns.length; i++) {
-          if (tbldef.columns[i].category === 'S') {
-            attr.push(tbldef.columns[i].name);
-          }
-        }
         query.parameters = [{
-          attribute: attr,
+          attribute: list.getCollection().model.getSearchableAttributes(),
           operator: 'MATCHES',
           value: this.$.searchInput.getValue()
         }];
