@@ -65,20 +65,24 @@ trailing:true white:true*/
             box = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
-                style: "height: 250px; width: 400px; background-color: white; margin-right: 5px;",
+                style: "min-height: 250px; width: 400px; background-color: white; margin-right: 5px;",
                 components: [
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
                 ]
               });
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
+
               label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
               field = this.createComponent({
                 kind: "onyx.InputDecorator",
                 style: "font-size: 12px",
                 container: box,
                 components: [
-                  { tag: "b", content: label.loc() + ": ", style: "padding-right: 10px;"}
+                /**
+                 * This is the label
+                 */
+                  { tag: "span", content: label.loc() + ": ", style: "padding-right: 10px;"}
                 ]
               });
 
@@ -244,11 +248,10 @@ trailing:true white:true*/
       /**
        * Update the model from changes to the UI. The interaction is handled here
        * and not in the widgets, which themselves are unaware of the model.
-       * Exception: GridWidgets and  RelationalWidgets manage their own
-       * model, so those updates are not performed here.
-       * The parameters coming in here are different if the sender is an Input
-       * or a picker, so we have to be careful when we parse out the appropriate
-       * values.
+       * Exception: GridWidgets manage their own model, so those updates are not
+       * performed here. The parameters coming in here are different if the sender
+       * is an Input or a picker or a relational widget, so we have to be careful
+       * when we parse out the appropriate values.
        * FIXME: If you click the persist button before a changed field is blurred,
        * then I think the change will not be persisted, as this function might not
        * be executed before the persist method. The way we disable the save button
@@ -259,7 +262,9 @@ trailing:true white:true*/
       doFieldChanged: function (inSender, inEvent) {
         var prefix, suffix;
 
-        var newValue = inEvent.getValue() ? inEvent.getValue() : inEvent.getSelected().value;
+        var newValue = inEvent.getValue ? inEvent.getValue() :
+          inEvent.getSelected ? inEvent.getSelected().value :
+          inEvent.originator.model; // relational_widget
 
         var updateObject = {};
 

@@ -12,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       collection : null
     },
     events: {
-      onModelUpdate: ""
+      onFieldChanged: ""
     },
     components: [{
       kind: "onyx.InputDecorator",
@@ -52,7 +52,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           components: [
             { tag: "div", content: "TODO: this menu" }
           ]
-        },
+        }
         // XXX this menu implementation is a mess and I hope it improves for production!
         /*
         {
@@ -77,18 +77,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ]
     }],
     doRelationSelected: function (inSender, inEvent) {
-      // XXX hits xt1005 readonly error
-      this.getModel().set(inEvent.originator.model);
-      this.modelChanged(); // triggering this method will render the new model onscreen
+      this.setModel(inEvent.originator.model);
+
+      // XXX the container (i.e. the workspace) already catches a doFieldChanged event from this change,
+      // but it gets processed before we set the model, above, and so it gets processed on the old
+      // value. It's necessary to call the function again now that we've changed the value. We
+      // should look at eliminating this redundancy.
+      this.doFieldChanged(this, inEvent);
       this.$.autocompleteMenu.hide();
-
-
-
-
-      /**
-       * Send up notice that there's been an update
-       */
-      this.doModelUpdate();
 
     },
     itemSelected: function (inSender, inEvent) {
@@ -132,7 +128,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        * set, because any subsequent changes to the model (based on user input, say)
        * will keep the same modelType
        */
-      if(!this.getCollection() ) {
+      if (!this.getCollection()) {
         var recordType = this.getModel().recordType;
         // Well, this is magical, and I wish I knew a better way of doing this
         var collectionType = recordType.substring(3) + "Collection";
@@ -145,20 +141,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     _collectionFetchSuccess: function () {
       this.log();
-      var pocString = "";
+      /**
+       * Start by clearing out the dropdown in case there's pre-existing elements
+       */
+      XV.util.removeAllChildren(this.$.autocompleteMenu);
       for (var i = 0; i < this.getCollection().length; i++) {
         var model = this.getCollection().models[i];
-        pocString = pocString + model.get(this.getTitleField()) + ", ";
         // XXX I keep the model in the menuItem. This is a bit heavy, but it
         // allows us to easily update the base model when a menuItem is chosen.
-        this.$.autocompleteMenu.createComponent( {
+        this.$.autocompleteMenu.createComponent({
           content: model.get(this.getTitleField()),
           model: model
         });
       }
       this.$.autocompleteMenu.reflow();
       this.$.autocompleteMenu.render();
-      console.log(pocString);
       this.$.autocompleteMenu.show();
     },
     _collectionFetchError: function () {
