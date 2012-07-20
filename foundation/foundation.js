@@ -22,7 +22,7 @@ XT = {};
   XT.crypto       = require("crypto");
   
   XT.connect      = require("connect");
-  XT.pg           = require("pg").native;
+  XT.pg           = require("pg");
   XT.mongoose     = require("mongoose");
   
   XT.$P = function () { return this; };
