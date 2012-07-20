@@ -27,6 +27,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     delete ret.enabled;
     delete ret.dependencies;
     
+    if (ret.extensions && ret.extensions.length > 0) {
+      _.each(ret.extensions, function (ext, i) {
+        ret.extensions[i] = cleanse(ext);
+      });
+    }
+    
     return ret;
   };
   
@@ -40,16 +46,31 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     if (!isExtension) {
       _.each(extensions, function (context) {
-        var ext, idx;
+        var ext, idx = -1;
         try {
           ext = context[namespace][type];
         } catch (err) {}
         if (ext) extensionList.push(ext);
-        if (orm.extensions && (idx = _.find(orm.extensions, function (sub, i) {
-          if (sub.nameSpace && sub.type)
-            if (sub.nameSpace === ext.nameSpace && sub.type === ext.type) return i;
+        if (orm.extensions && (_.find(orm.extensions, function (sub, i) {
+          XT.debug("finding");
+          if (sub.nameSpace && sub.type) {
+            XT.debug("had a nameSpace and type");
+            if (sub.nameSpace === ext.nameSpace && sub.type === ext.type) {
+              XT.debug("they were the same, returning %@".f(i));
+              idx = i;
+              return true;
+            } else { XT.debug("they were not the same, %@:%@ %@:%@".f(sub.nameSpace, ext.nameSpace, sub.type, ext.type)); }
+          } else { XT.debug("no nameSpce or type on extension"); }
           return false;
-        }))) orm.extensions.splice(idx, 1);
+        }))) {
+          if (idx > -1) {
+            XT.debug("splicing extensions at %@".f(idx));
+            XT.debug(orm.extensions);
+            orm.extensions.splice(idx, 1);
+            XT.debug(orm.extensions);
+            idx = -1;
+          }
+        }
       });
     }
 
@@ -68,24 +89,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       
       if (!isExtension) socket.installed.push(orm);
       if (c > 0) {
-        XT.debug("c > 0 ", c);
         this.on(socket.id, _.bind(function (c) {
-          XT.debug("caught socket.id", socket.id);
           --c; if (c === 0) {
-            XT.debug("c was 0");
             this.removeAllListeners(socket.id);
             installQueue.call(this, socket, ack, queue);
           } else {
-            XT.debug("c was not 0", c);
             submit.call(this, socket, extensionList.shift(), queue, ack, true);
           }
         }, this, c));
         submit.call(this, socket, extensionList.shift(), queue, ack, true);
       } else if (isExtension) {
-        XT.debug("emitting socket.id", socket.id);
         return this.emit(socket.id);
       } else {
-        XT.debug("calling installQueue");
         installQueue.call(this, socket, ack, queue);
       }
     }, this));
@@ -95,10 +110,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     var installed = socket.installed, orms = socket.orms, orm, dependencies = [];
     if (!queue || queue.length === 0) return ack(socket.installed);
     orm = queue.shift();
+    
+    if (installed.indexOf(orm) !== -1) {
+      //XT.debug(orm);
+      //XT.debug(installed);
+      //XT.debug(installed.contains(orm));
+      //XT.err("ATTEMPT TO INSTALL ORM MORE THAN ONCE? %@.%@ (%@)".f(orm.nameSpace, orm.type, installed.indexOf(orm), orm, installed));
+      XT.err("install %@.%@ more than once".f(orm.nameSpace, orm.type));
+      process.exit(-1);
+    }
+    
     if (orm.dependencies) {
+      XT.debug("dependencies for %@.%@: ".f(orm.nameSpace, orm.type), orm.dependencies.map(function (orm){return "%@.%@".f(orm.nameSpace, orm.type);}).join(", "));
       _.each(orm.dependencies, function (dependency) {
-        var d = orms[dependency.namespace][dependency.type];
-        if (!installed.contains(d)) dependencies.push(d);
+        var d = orms[dependency.nameSpace][dependency.type];
+        if (!installed.contains(d)) {
+          XT.debug("dependency for %@.%@ not in installed ".f(orm.nameSpace, orm.type), "%@.%@".f(d.nameSpace, d.type), installed, installed.contains(d));
+          dependencies.push(d);
+        }
       });
       if (dependencies.length > 0) {
         dependencies.push(orm);
@@ -106,6 +135,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return installQueue.call(this, socket, ack, dependencies);
       }
     }
+    
+    XT.warn("SUBMITTING %@.%@".f(orm.nameSpace, orm.type));
     
     submit.call(this, socket, orm, queue, ack);
   };
@@ -147,7 +178,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   };
   
   dependenciesFor = function (socket, orm, dependencies) {
-    var properties, extensions, ignore = "PUBLIC XT".w(), namespace, table, orms;
+    var properties, extensions, ignore = "PUBLIC XT".w(), namespace, table, orms, dep;
     dependencies = dependencies? dependencies: orm.dependencies? orm.dependencies: (orm.dependencies = []);
     properties = orm.properties || [];
     extensions = orm.extensions || [];
@@ -160,7 +191,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         which = property.toOne? property.toOne: property.toMany;
         type = which.type;
         ns = orm.nameSpace;
-        dependencies.push({namespace: ns, type: type});
+        dep = {nameSpace: ns, type: type};
+        if (!dependencies.contains(dep)) dependencies.push({nameSpace: ns, type: type});
       }
     });
     _.each(extensions, function (extension) {
@@ -171,14 +203,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (!XT.none(namespace) && !ignore.contains(namespace[1].toUpperCase())) {
       namespace = namespace[1].toUpperCase();
       table = orm.table.match(/\.(.*)$/)[1].h();
-      dependencies.push({namespace: namespace, type: table});
+      dep = {nameSpace: namespace, type: table};
+      if (!dependencies.contains(dep)) dependencies.push({nameSpace: namespace, type: table});
     }
     _.each(dependencies, function (dependency) {
       var ns, type;
-      ns = orms[dependency.namespace];
+      ns = orms[dependency.nameSpace];
       type = ns[dependency.type];
       if (XT.none(type)) {
-        orm.missingDependencies.push("%@.%@".f(dependency.namespace, dependency.type));
+        orm.missingDependencies.push("%@.%@".f(dependency.nameSpace, dependency.type));
       }
     });
   };
@@ -194,6 +227,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
+        orm.dependencies = _.uniq(orm.dependencies, false, function (cur, i, deps) {
+          var sub = deps.slice(0, i);
+          return _.find(sub, function (dep) {
+            return ((dep.nameSpace === cur.nameSpace) && (dep.type === cur.type));
+          });
+        });
         orm.enabled = checkDependencies(socket, orm);
       });
     });
@@ -205,7 +244,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     if (!dependencies || dependencies.length <= 0) return enabled;
     orms = socket.orms;
     _.each(dependencies, function (dependency) {
-      found = orms[dependency.namespace][dependency.type];
+      found = orms[dependency.nameSpace][dependency.type];
       if (XT.none(found)) {
         if (!orm.undefinedDependencies) orm.undefinedDependencies = [];
         orm.undefinedDependencies.push("%@.%@".f(dependency.namespace, dependency.type));
@@ -301,8 +340,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       
       socket.orms = orms;
       socket.extensions = extensions;
-      
-      XT.debug(extensions);
       
       calculateDependencies.call(this, socket);
       ack(orms);
