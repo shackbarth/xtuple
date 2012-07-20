@@ -26,7 +26,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           onSelect: "itemSelected",
           components: [
             //{content: "Split Popup menu", kind: "onyx.Button", style: "border-radius: 3px 0 0 3px;"},
-            { kind: "onyx.Input", name: "nameField", onkeyup: "doInputChanged" },
+            {
+              kind: "onyx.Input",
+              name: "nameField",
+              onkeyup: "doInputChanged",
+              style: "border: 0px;"
+            },
             {
               kind: "onyx.Menu",
               name: "autocompleteMenu",
