@@ -12,7 +12,7 @@
     "node": "*"
   },
   "dependencies": {
-    "xt":""
+    "xt":"git://github.com/clinuz/node-xt.git"
   },
   "devDependencies": {},
   "optionalDependencies": {}
