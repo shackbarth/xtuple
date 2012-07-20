@@ -1,22 +1,6 @@
-# ignore swap files
-*.swp
-
-# ignore tmp directories
-tmp
-
-# ignore OSX .DS_Store files
-*.DS_Store
-
-# pesky npm debug files
+.DS_Store
+node_modules
 npm-debug.log
-
-# ignore local version of config file
-# if named correctly
-lib/config_local.js
-
-# ignore top-level node-modules directory
-lib/node_modules
-
-# ignore the .log file
+config_local.js
 datasource.log
 datasource-err.log
