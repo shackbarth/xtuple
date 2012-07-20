@@ -9,6 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     kind: enyo.Control,
     published: {
       model: null,
+      modelType: null,
       collection : null
     },
     events: {
@@ -23,7 +24,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         {
           kind: "onyx.MenuDecorator",
-          onSelect: "itemSelected",
           components: [
             //{content: "Split Popup menu", kind: "onyx.Button", style: "border-radius: 3px 0 0 3px;"},
             {
@@ -87,9 +87,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.$.autocompleteMenu.hide();
 
     },
-    itemSelected: function (inSender, inEvent) {
-      alert("Item selected");
-    },
     /**
      * A convenience function so that this object can be treated generally like an input
      */
@@ -103,37 +100,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return this.getModel();
     },
     /**
+     * We're given the model type from the descriptor. Now's a good time to
+     * set the collection object, because if the model is null there's
+     * no other way to know that the collection type is.
+     */
+    modelTypeChanged: function () {
+        // Well, this is magical, and I wish I knew a better way of doing this
+        var collectionType = this.getModelType().substring(3) + "Collection";
+        this.setCollection(new XM[collectionType]());
+    },
+    /**
      * render this object onto the name field
      */
     modelChanged: function () {
-
-      // XXX: this was difficult. Can we live with my solution (4th try!)?
-
-      /**
-       * Now is a good time to set the collection (a published value)
-       * that we'll use on operations for this widget.
-       */
-
-      // doesn't work: the collection from the store doesn't override the sync method
-      //var try1 = Backbone.Relational.store.getCollection(this.getModel());
-
-      // doesn't work: creates whole new collection, which fetch doesn't fill
-      //var try2 = new XT.Collection(this.getModel());
-
-      // does work, but how to unhardcode the type?
-      //var try3 = new XM.ContactInfoCollection();
-
-      /**
-       * We only need to set the collection once, for the first time the model is
-       * set, because any subsequent changes to the model (based on user input, say)
-       * will keep the same modelType
-       */
-      if (!this.getCollection()) {
-        var recordType = this.getModel().recordType;
-        // Well, this is magical, and I wish I knew a better way of doing this
-        var collectionType = recordType.substring(3) + "Collection";
-        this.setCollection(new XM[collectionType]());
-      }
       /**
        * Populate the input with the applicable field
        */
@@ -186,7 +165,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * has with the key of this type of model.
      */
     getTitleField: function () {
-      return XV.util.getRelationalTitleFields[this.getModel().recordType];
+      return XV.util.getRelationalTitleFields[this.getModelType()];
     },
     doIconTapped: function () {
       // TODO: icon tapped

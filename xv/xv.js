@@ -37,7 +37,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Contact",
             fields: [
-              { fieldName: "primaryContact", fieldType: "relation" }
+              { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
           }
         ],
@@ -56,7 +56,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "account", fieldType: "relation" }
+              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" }
             ]
           }
         ],
@@ -69,7 +69,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "description" },
               { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" },
               { fieldName: "priority", fieldType: "dropdown", modelType: "XM.priorities" },
-              { fieldName: "incident", fieldType: "relation" }
+              { fieldName: "incident", fieldType: "relation", modelType: "XM.IncidentInfo" }
             ]
           },
           {
@@ -89,7 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             fields: [
               { fieldName: "number" },
               { fieldName: "name" },
-              { fieldName: "account", fieldType: "relation" },
+              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
               { fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
               { fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
               { fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" }
@@ -127,10 +127,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Relationships",
             fields: [
-              { fieldName: "owner", fieldType: "relation" },
-              { fieldName: "contact", fieldType: "relation" },
-              { fieldName: "account", fieldType: "relation" },
-              { fieldName: "item", fieldType: "relation" }
+              { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
+              { fieldName: "contact", fieldType: "relation", modelType: "XM.ContactInfo" },
+              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
+              { fieldName: "item", fieldType: "relation", modelType: "XM.ItemInfo" }
             ]
           },
           {
@@ -172,8 +172,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Schedule",
             fields: [
-              { fieldName: "owner", fieldType: "relation" },
-              { fieldName: "assignedTo", fieldType: "relation" },
+              { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
+              { fieldName: "assignedTo", fieldType: "relation", modelType: "XM.UserAccountInfo" },
               { fieldName: "dueDate", fieldType: "date" },
               { fieldName: "assignDate", fieldType: "date" },
               { fieldName: "startDate", fieldType: "date" },
