@@ -34,11 +34,6 @@
       'Last Error is null': function (model) {
         assert.isNull(model.lastError);
       },
-      '-> `useCount`': {
-        // TODO - Test useCount with existing address to see if it is > 0.
-
-        // XM.Address.useCount is tested below after the model is created.
-      },
       '-> `findExisting`': {
         topic: function () {
           var callback = this.callback,
@@ -57,6 +52,54 @@
         },
         'Address found': function (response) {
           assert.isTrue(response > 0);
+        },
+        '-> get Address from ID': {
+          topic: function (addr_id) {
+            var that = this,
+              timeoutId,
+              model = new XM.Address(),
+              callback = function () {
+                var status = model.getStatus(),
+                  K = XT.Model;
+                if (status === K.READY_CLEAN) {
+                  clearTimeout(timeoutId);
+                  model.off('statusChange', callback);
+                  that.callback(null, model);
+                }
+              };
+
+            model.on('statusChange', callback);
+
+            model.fetch({id: addr_id});
+
+            // If we don't hear back, keep going
+            timeoutId = setTimeout(function () {
+              callback(null, 0);
+            }, XVOWS.wait);
+          },
+          '-> `useCount`': {
+            topic: function (addr) {
+              var callback = this.callback,
+                timeoutId,
+                success = function (response) {
+                  clearTimeout(timeoutId);
+                  callback(null, response);
+                };
+
+              addr.useCount({success: success});
+
+              // If we don't hear back, keep going
+              timeoutId = setTimeout(function () {
+                callback(null, 0);
+              }, XVOWS.wait);
+            },
+            'Address useCount is a Number': function (response) {
+              assert.isNumber(response);
+            },
+            'Address loaded is used twice': function (response) {
+              assert.isTrue(response > 0);
+            }
+          }
         }
       },
       '-> `format`': {
