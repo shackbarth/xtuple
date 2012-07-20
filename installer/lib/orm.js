@@ -38,7 +38,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   submit = function (socket, orm, queue, ack, isExtension) {
     var query, extensions, context, extensionList = [], namespace, type;
-    query = "select xt.install_orm('%@')".f(XT.json(cleanse(orm)));
     context = orm.context;
     namespace = orm.nameSpace;
     extensions = socket.extensions;
@@ -52,22 +51,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         } catch (err) {}
         if (ext) extensionList.push(ext);
         if (orm.extensions && (_.find(orm.extensions, function (sub, i) {
-          XT.debug("finding");
           if (sub.nameSpace && sub.type) {
-            XT.debug("had a nameSpace and type");
             if (sub.nameSpace === ext.nameSpace && sub.type === ext.type) {
-              XT.debug("they were the same, returning %@".f(i));
               idx = i;
               return true;
-            } else { XT.debug("they were not the same, %@:%@ %@:%@".f(sub.nameSpace, ext.nameSpace, sub.type, ext.type)); }
-          } else { XT.debug("no nameSpce or type on extension"); }
+            }
+          }
           return false;
         }))) {
           if (idx > -1) {
-            XT.debug("splicing extensions at %@".f(idx));
-            XT.debug(orm.extensions);
             orm.extensions.splice(idx, 1);
-            XT.debug(orm.extensions);
             idx = -1;
           }
         }
@@ -75,6 +68,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
 
     socket.emit("message", "installing %@%@.%@".f(isExtension? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
+
+    query = "select xt.install_orm('%@')".f(XT.json(cleanse(orm)));
 
     XT.db.query(socket.organization, query, _.bind(function (err, res) {
       var c = extensionList.length;
@@ -116,11 +111,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
     
     if (orm.dependencies) {
-      XT.debug("dependencies for %@.%@: ".f(orm.nameSpace, orm.type), orm.dependencies.map(function (orm){return "%@.%@".f(orm.nameSpace, orm.type);}).join(", "));
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
         if (!installed.contains(d)) {
-          XT.debug("dependency for %@.%@ not in installed ".f(orm.nameSpace, orm.type), "%@.%@".f(d.nameSpace, d.type), installed.contains(d));
           dependencies.push(d);
         }
       });
@@ -130,8 +123,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return installQueue.call(this, socket, ack, dependencies);
       }
     }
-    
-    XT.warn("SUBMITTING %@.%@".f(orm.nameSpace, orm.type));
     
     submit.call(this, socket, orm, queue, ack);
   };
