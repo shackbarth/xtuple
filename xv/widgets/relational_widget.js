@@ -8,8 +8,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     name: "XV.RelationalWidget",
     kind: enyo.Control,
     published: {
-      baseObject: null,
-      baseCollection : null
+      model: null,
+      collection : null
     },
     events: {
       onModelUpdate: ""
@@ -73,8 +73,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }],
     doRelationSelected: function (inSender, inEvent) {
       // XXX hits xt1005 readonly error
-      this.getBaseObject().set(inEvent.originator.model);
-      this.baseObjectChanged(); // triggering this method will render the new model onscreen
+      this.getModel().set(inEvent.originator.model);
+      this.modelChanged(); // triggering this method will render the new model onscreen
       this.$.autocompleteMenu.hide();
 
 
@@ -93,18 +93,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * A convenience function so that this object can be treated generally like an input
      */
     setValue: function (object) {
-      this.setBaseObject(object);
+      this.setModel(object);
     },
     /**
      * A convenience function so that this object can be treated generally like an input
      */
     getValue: function () {
-      return this.getBaseObject();
+      return this.getModel();
     },
     /**
      * render this object onto the name field
      */
-    baseObjectChanged: function () {
+    modelChanged: function () {
 
       // XXX: this was difficult. Can we live with my solution (4th try!)?
 
@@ -114,10 +114,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        */
 
       // doesn't work: the collection from the store doesn't override the sync method
-      //var try1 = Backbone.Relational.store.getCollection(this.getBaseObject());
+      //var try1 = Backbone.Relational.store.getCollection(this.getModel());
 
       // doesn't work: creates whole new collection, which fetch doesn't fill
-      //var try2 = new XT.Collection(this.getBaseObject());
+      //var try2 = new XT.Collection(this.getModel());
 
       // does work, but how to unhardcode the type?
       //var try3 = new XM.ContactInfoCollection();
@@ -127,22 +127,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        * set, because any subsequent changes to the model (based on user input, say)
        * will keep the same modelType
        */
-      if(!this.getBaseCollection() ) {
-        var recordType = this.getBaseObject().recordType;
+      if(!this.getCollection() ) {
+        var recordType = this.getModel().recordType;
         // Well, this is magical, and I wish I knew a better way of doing this
         var collectionType = recordType.substring(3) + "Collection";
-        this.setBaseCollection(new XM[collectionType]());
+        this.setCollection(new XM[collectionType]());
       }
       /**
        * Populate the input with the applicable field
        */
-      this.$.nameField.setValue(this.getBaseObject().get(this.getTitleField()));
+      this.$.nameField.setValue(this.getModel().get(this.getTitleField()));
     },
     _collectionFetchSuccess: function () {
       this.log();
       var pocString = "";
-      for (var i = 0; i < this.getBaseCollection().length; i++) {
-        var model = this.getBaseCollection().models[i];
+      for (var i = 0; i < this.getCollection().length; i++) {
+        var model = this.getCollection().models[i];
         pocString = pocString + model.get(this.getTitleField()) + ", ";
         // XXX I keep the model in the menuItem. This is a bit heavy, but it
         // allows us to easily update the base model when a menuItem is chosen.
@@ -169,7 +169,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           value: inSender.getValue()
         }]
       };
-      this.getBaseCollection().fetch({
+      this.getCollection().fetch({
         success: enyo.bind(this, "_collectionFetchSuccess"),
         error: enyo.bind(this, "_collectionFetchError"),
         query: query
@@ -184,7 +184,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * has with the key of this type of model.
      */
     getTitleField: function () {
-      return XV.util.getRelationalTitleFields[this.getBaseObject().recordType];
+      return XV.util.getRelationalTitleFields[this.getModel().recordType];
     },
     doIconTapped: function () {
       // TODO: icon tapped
