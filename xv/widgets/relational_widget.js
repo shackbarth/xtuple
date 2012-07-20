@@ -19,9 +19,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
       classes: "onyx-menu-toolbar",
+      onchange: "doFieldLeft", // XXX onleave seems to do onmouseout, which I don't want.
       components: [
-
-
         {
           kind: "onyx.MenuDecorator",
           components: [
@@ -29,6 +28,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             {
               kind: "onyx.Input",
               name: "nameField",
+              // FIXME: this object only throws this event for the first keystroke
+              // so if you type F ... r, the F will get captured but not the Fr
               onkeyup: "doInputChanged",
               style: "border: 0px;"
             },
@@ -87,6 +88,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.$.autocompleteMenu.hide();
 
     },
+    doFieldLeft: function (inSender, inEvent) {
+      console.debug("onchange");
+      if(this.$.autocompleteMenu.children.length > 0) {
+        this.$.nameField.setValue(this.$.autocompleteMenu.children[0].content);
+        this.$.autocompleteMenu.children[0].doSelect();
+      } else {
+        this.$.nameField.setValue("");
+      }
+      this.$.autocompleteMenu.hide();
+      this.render();
+    },
     /**
      * A convenience function so that this object can be treated generally like an input
      */
@@ -135,7 +147,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       this.$.autocompleteMenu.reflow();
       this.$.autocompleteMenu.render();
-      this.$.autocompleteMenu.show();
+      if(this.getCollection().length > 0) {
+        this.$.autocompleteMenu.show();
+      }
     },
     _collectionFetchError: function () {
       this.log();
@@ -143,6 +157,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     doInputChanged: function (inSender, inEvent) {
       console.log("input changed: " + inSender.getValue());
 
+      /**
+       * Start by clearing out the dropdown in case there's pre-existing elements
+       */
+      XV.util.removeAllChildren(this.$.autocompleteMenu);
       var query = {
         parameters: [{
           attribute: this.getTitleField(),

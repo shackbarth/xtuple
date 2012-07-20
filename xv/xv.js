@@ -37,6 +37,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Contact",
             fields: [
+              // TODO: we can avoid having to specify the modelType by looking in the
+              // *relations* of the model, which will work even if the submodel is null
               { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
           }
