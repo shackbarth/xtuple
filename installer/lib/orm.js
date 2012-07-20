@@ -112,12 +112,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     orm = queue.shift();
     
     if (installed.indexOf(orm) !== -1) {
-      //XT.debug(orm);
-      //XT.debug(installed);
-      //XT.debug(installed.contains(orm));
-      //XT.err("ATTEMPT TO INSTALL ORM MORE THAN ONCE? %@.%@ (%@)".f(orm.nameSpace, orm.type, installed.indexOf(orm), orm, installed));
-      XT.err("install %@.%@ more than once".f(orm.nameSpace, orm.type));
-      process.exit(-1);
+      return installQueue.call(this, socket, ack, queue);
     }
     
     if (orm.dependencies) {
@@ -125,7 +120,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       _.each(orm.dependencies, function (dependency) {
         var d = orms[dependency.nameSpace][dependency.type];
         if (!installed.contains(d)) {
-          XT.debug("dependency for %@.%@ not in installed ".f(orm.nameSpace, orm.type), "%@.%@".f(d.nameSpace, d.type), installed, installed.contains(d));
+          XT.debug("dependency for %@.%@ not in installed ".f(orm.nameSpace, orm.type), "%@.%@".f(d.nameSpace, d.type), installed.contains(d));
           dependencies.push(d);
         }
       });
@@ -227,12 +222,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     _.each(orms, function (namespace) {
       _.each(_.keys(namespace), function (name) {
         var orm = namespace[name];
-        orm.dependencies = _.uniq(orm.dependencies, false, function (cur, i, deps) {
-          var sub = deps.slice(0, i);
-          return _.find(sub, function (dep) {
-            return ((dep.nameSpace === cur.nameSpace) && (dep.type === cur.type));
-          });
-        });
+        //orm.dependencies = _.uniq(orm.dependencies, false, function (cur, i, deps) {
+        //  var sub = deps.slice(0, i);
+        //  return _.find(sub, function (dep) {
+        //    return ((dep.nameSpace === cur.nameSpace) && (dep.type === cur.type));
+        //  });
+        //});
         orm.enabled = checkDependencies(socket, orm);
       });
     });
