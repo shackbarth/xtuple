@@ -6,7 +6,7 @@ var _exec   = require('child_process').exec;
 
 var XT      = {};
 
-XT.enyoVersion = "2.0-beta5";
+XT.enyoVersion = "2.0-GA";
 
 XT.fileContents = function (path) {
   var contents;
