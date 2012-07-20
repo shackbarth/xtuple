@@ -11,6 +11,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       baseObject: null,
       baseCollection : null
     },
+    events: {
+      onModelUpdate: ""
+    },
     components: [{
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
@@ -69,7 +72,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ]
     }],
     doRelationSelected: function (inSender, inEvent) {
-      this.setBaseObject(inEvent.originator.model);
+      // XXX hits xt1005 readonly error
+      this.getBaseObject().set(inEvent.originator.model);
+      this.baseObjectChanged(); // triggering this method will render the new model onscreen
+      this.$.autocompleteMenu.hide();
+
+
+
+
+      /**
+       * Send up notice that there's been an update
+       */
+      this.doModelUpdate();
+
     },
     itemSelected: function (inSender, inEvent) {
       alert("Item selected");
