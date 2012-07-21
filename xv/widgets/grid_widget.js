@@ -14,66 +14,67 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     events: {
       onModelUpdate: ""
     },
-    gridSize: 0,
     style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
     components: [
-      { kind: "onyx.GroupboxHeader", name: "title" }
+      { kind: "onyx.GroupboxHeader", name: "title" },
+      { kind: "Repeater", name: "gridRepeater", count: 0, onSetupItem: "setupRow", components: [
+        {
+          kind: "onyx.Groupbox",
+          classes: "onyx-toolbar-inline",
+          style: "background-color: white;",
+          name: "gridRow"
+        }
+      ]}
     ],
 
 
-    descriptorChanged: function () {
-      var iField, iRow, gridRow, fieldDesc, label;
-      var boxDesc = this.getDescriptor();
+    setupRow: function (inSender, inEvent) {
+      var gridRow = inEvent.item.$.gridRow;
 
+      for (var iField = 0; iField < this.getDescriptor().fields.length; iField++) {
+        var fieldDesc = this.getDescriptor().fields[iField];
+        var label = ("_" + fieldDesc.label).loc();
+        if (inEvent.index === 0) {
+          /**
+           * This is the label header at the top of each row
+           */
+          this.createComponent({
+            container: gridRow,
+            content: label,
+            style: "text-weight: bold; border-width: 0px; width: " + fieldDesc.width + "px;",
+          });
+        } else {
+          /**
+           * These are the fields with the data
+           */
+          var field = this.createComponent({
+            kind: XV.util.getFieldType(fieldDesc.fieldType),
+            container: gridRow,
+            name: fieldDesc.fieldName + (inEvent.index - 1),
+            placeholder: label,
+            style: "border: 0px; width: " + fieldDesc.width + "px;",
+            onchange: "doFieldChanged"
+          });
+          if(this.getCollection().size() + 1 > inEvent.index) {
+            var model = this.getCollection().at(inEvent.index - 1);
+            field.setValue(model.get(fieldDesc.fieldName));
+          }
+        }
+      }
+    },
+
+    descriptorChanged: function () {
+      var boxDesc = this.getDescriptor();
       /**
        * First set the title for the box
        */
       this.$.title.setContent(boxDesc.title);
 
       /**
-       * Row -1 is the header row. This lets us neatly number the real rows
-       * starting at zero.
+       * Render the first (label) row of the grid, even if we don't
+       * have any data yet.
        */
-      for (iRow = -1; iRow < 8; iRow++) {
-        /**
-         * This is the row that all the fields will be put in.
-         */
-        gridRow = this.createComponent({
-          kind: "onyx.Groupbox",
-          classes: "onyx-toolbar-inline",
-          style: "background-color: white;",
-          name: "gridRow" + iRow
-        });
-
-        for (iField = 0; iField < boxDesc.fields.length; iField++) {
-          fieldDesc = boxDesc.fields[iField];
-          label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
-          if (iRow === -1) {
-            /**
-             * This is the label header at the top of each row
-             */
-            this.createComponent({
-              container: gridRow,
-              content: label.loc(),
-              style: "text-weight: bold; border-width: 0px; width: " + fieldDesc.width + "px;"
-
-            });
-            continue;
-          }
-          /**
-           * This is the label. The naming convention cribs from enyo's magical convention
-           * XXX not sure if this is the best way to do it
-           */
-          this.createComponent({
-            kind: XV.util.getFieldType(fieldDesc.fieldType),
-            container: gridRow,
-            placeholder: fieldDesc.label,
-            style: "border-width: 0px; width: " + fieldDesc.width + "px; ",
-            onchange: "doFieldChanged",
-            name: fieldDesc.fieldName + iRow
-          });
-        }
-      }
+      this.$.gridRepeater.setCount(1);
     },
 
     /**
@@ -92,31 +93,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Display the collection in the grid when it's passed in
      */
     collectionChanged: function () {
-      var iRow;
-
-
-      for (var iRow = 0; iRow < this.getCollection().size(); iRow++) {
-        var model = this.getCollection().at(iRow);
-        for (var iField = 0; iField < this.getDescriptor().fields.length; iField++) {
-          var rowDescription = this.getDescriptor().fields[iField];
-          this.$[rowDescription.fieldName + iRow].setValue(model.get(rowDescription.fieldName));
-        }
-      }
-      /**
-       * Clear out any lingering deritritus
-       */
-      for (; iRow < this.gridSize; iRow++) {
-        for (var iField = 0; iField < this.getDescriptor().fields.length; iField++) {
-          var rowDescription = this.getDescriptor().fields[iField];
-          // XXX this seems awfully javascripty, but this.$ doesn't have anthing like
-          // a removeChild function
-          delete this.$[rowDescription.fieldName + iRow];
-        }
-        XV.util.removeAllChildren(this.$["gridRow" + iRow]);
-        delete this.$["gridRow" + iRow];
-      }
-      this.render();
-      this.gridSize = this.getCollection().size();
+      // +2: 1 for the labels at the top, one for the entry row at the bottom
+      this.$.gridRepeater.setCount(this.getCollection().size() + 2);
     },
     doFieldChanged: function (inSender, inEvent) {
       var fieldNameWithNumber = inSender.getName();

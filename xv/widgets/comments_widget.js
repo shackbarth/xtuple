@@ -11,9 +11,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       collection: null,
       descriptor: null,
       fields: [
-        { name: "createdBy", label: "creator", type: "text" },
-        { name: "created", label: "date", type: "date" },
-        { name: "text", label: "text", type: "text"}
+        { fieldName: "createdBy", label: "creator", type: "text" },
+        { fieldName: "created", label: "date", type: "date" },
+        { fieldName: "text", label: "text", type: "text"}
       ]
     },
     events: {
@@ -33,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     ],
 
     setupRow: function (inSender, inEvent) {
-      var gridRow = inEvent.item.$.commentRow;
+      var commentRow = inEvent.item.$.commentRow;
 
       for (var iField = 0; iField < this.getFields().length; iField++) {
         var fieldDesc = this.getFields()[iField];
@@ -43,7 +43,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
            * This is the label header at the top of each row
            */
           this.createComponent({
-            container: gridRow,
+            container: commentRow,
             content: label,
             style: "text-weight: bold; border-width: 0px;"
 
@@ -54,18 +54,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
            */
           var model = this.getCollection().at(inEvent.index - 1);
           var field = this.createComponent({
-            container: gridRow,
+            container: commentRow,
             placeholder: label,
             style: "border: 0px;",
             onchange: "doFieldChanged"
           });
-          field.setContent(this.formatContent(model.get(fieldDesc.name), fieldDesc.type));
+          field.setContent(this.formatContent(model.get(fieldDesc.fieldName), fieldDesc.type));
         }
       }
     },
     // this could be out of enyo
     formatContent: function (value, type) {
-      if(type === 'date') {
+      if (type === 'date') {
         return Globalize.format(value, 'd');
       } else {
         return value;
