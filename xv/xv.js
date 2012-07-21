@@ -28,11 +28,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // the key is uppercase because the model name is uppercase
         Account: [
           {
-            title: "Comments",
-            boxType: "comments",
-            objectName: "comments"
-          },
-          {
             title: "Account Info",
             fields: [
               { fieldName: "name" },
@@ -46,7 +41,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               // *relations* of the model, which will work even if the submodel is null
               { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
+
         ],
 
         Contact: [
@@ -65,6 +67,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             fields: [
               { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -87,6 +95,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "assignDate", fieldType: "date" },
               { fieldName: "completeDate", fieldType: "date" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -119,6 +133,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "probability", fieldType: "number" },
               { fieldName: "notes" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -150,6 +170,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "created", fieldType: "readonly" },
               { fieldName: "createdBy", fieldType: "readonly" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -199,6 +225,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { label: "actualHours", fieldName: "actualHours", fieldType: "number", width: "40" },
               { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "number", width: "40" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ]
       });
