@@ -276,7 +276,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         for (var i = 0; i < childrenCount; i++) {
           parent.removeChild(parent.children[0]);
         }
+      },
+
+    // XXX there's got to be a better way to get the name of the model
+    // that's currently being displayed. This way is very hackish.
+    // TODO: this doesn't need to be a view-layer static function
+    formatModelName: function (modelType) {
+      if (modelType && modelType.indexOf("Info") >= 0) {
+        modelType = modelType.substring(0, modelType.length - 4);
       }
+      if (modelType && modelType.indexOf("XM") >= 0) {
+        modelType = modelType.substring(3);
+      }
+      return modelType;
+    }
   });
 
   XV.util = new XV.Util();

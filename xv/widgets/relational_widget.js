@@ -43,38 +43,24 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             }
           ]
         },
-        { kind: "Image", src: "images/gear-icon.gif", ontap: "doIconTapped" },
-        {
-          kind: "onyx.Popup",
-          name: "gearPopup",
-          modal: true,
-          floating: true,
-          centered: true,
-          components: [
-            { tag: "div", content: "TODO: this menu" }
-          ]
-        }
-        // XXX this menu implementation is a mess and I hope it improves for production!
-        /*
         {
           kind: "onyx.MenuDecorator",
           components: [
             { content: "popup", components: [
-              { kind: "Image", src: "images/gear-icon.gif" }
+              { content: "V" }
             ]},
             {
               kind: "onyx.Menu",
-              name: "navigationMenu",
+              name: "optionsMenu",
               components: [
-                { content: "Dashboard" },
-                { content: "CRM" },
-                { content: "Billing" }
+                { content: "View" },
+                { content: "Search" },
+                { content: "Add" }
               ],
-              ontap: "doNavigationSelected"
+              ontap: "doOptionsSelected"
             }
           ]
-        },
-        */
+        }
       ]
     }],
     doRelationSelected: function (inSender, inEvent) {
@@ -90,7 +76,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     doFieldLeft: function (inSender, inEvent) {
       console.debug("onchange");
-      if(this.$.autocompleteMenu.children.length > 0) {
+      if (this.$.autocompleteMenu.children.length > 0) {
         this.$.nameField.setValue(this.$.autocompleteMenu.children[0].content);
         this.$.autocompleteMenu.children[0].doSelect();
       } else {
@@ -147,7 +133,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       this.$.autocompleteMenu.reflow();
       this.$.autocompleteMenu.render();
-      if(this.getCollection().length > 0) {
+      if (this.getCollection().length > 0) {
         this.$.autocompleteMenu.show();
       }
     },
@@ -185,9 +171,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     getTitleField: function () {
       return XV.util.getRelationalTitleFields[this.getModelType()];
     },
-    doIconTapped: function () {
-      // TODO: icon tapped
-      this.$.gearPopup.show();
+    doOptionsSelected: function (inSender, inEvent) {
+      var action = inEvent.originator.content.toLowerCase();
+      if (action === 'add') {
+        var modelType = this.getModelType();
+        var emptyModel = new XM[XV.util.formatModelName(modelType)]();
+        this.bubble("workspace", {eventName: "workspace", options: emptyModel });
+
+      } else if (action === 'search') {
+        alert("Not yet implemented");
+
+      } else if (action === 'view') {
+        if (this.getModel()) {
+          this.bubble("workspace", {eventName: "workspace", options: this.getModel() });
+        } else {
+          alert("You must select a model");
+        }
+      }
     }
   });
 }());

@@ -158,16 +158,8 @@ trailing:true white:true*/
       return true;
     },
     newWorkspace: function (inSender, inEvent) {
-      // XXX there's got to be a better way to get the name of the model
-      // that's currently being displayed. This way is very hackish.
       var modelType = this.$.lists.controls[this.selectedList].query.recordType;
-      if(modelType && modelType.indexOf("Info") >= 0) {
-        modelType = modelType.substring(0, modelType.length - 4);
-      }
-      if(modelType && modelType.indexOf("XM") >= 0) {
-        modelType = modelType.substring(3);
-      }
-      var emptyModel = new XM[modelType]();
+      var emptyModel = new XM[XV.util.formatModelName(modelType)]();
       this.bubble("workspace", {eventName: "workspace", options: emptyModel });
 
     },

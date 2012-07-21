@@ -314,16 +314,7 @@ trailing:true white:true*/
         //
         // Determine the model that will back this view
         //
-        var modelType = model.recordType;
-        // Magic/convention: trip off the word Info to get the heavyweight class
-        if (modelType.substring(modelType.length - 4) === "Info") {
-          modelType = modelType.substring(0, modelType.length - 4);
-        }
-
-        // XXX why is XM. prepended only for a "from new" workspace?
-        if (modelType.substring(0, 3) === "XM.") {
-          modelType = modelType.substring(3);
-        }
+        var modelType = XV.util.formatModelName(model.recordType);
 
         //
         // Setting the model type also renders the workspace. We really can't do
@@ -349,7 +340,7 @@ trailing:true white:true*/
         // Fetch the model
         //
         var id = model.id;
-        if(id) {
+        if (id) {
           // id exists: pull pre-existing record for edit
           m.fetch({id: id});
           XT.log("Workspace is fetching " + modelType + " " + id);
