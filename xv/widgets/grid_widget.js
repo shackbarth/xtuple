@@ -21,7 +21,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     ],
 
 
-    renderWidget: function () {
+    descriptorChanged: function () {
       var iField, iRow, gridRow, fieldDesc, label;
       var boxDesc = this.getDescriptor();
 

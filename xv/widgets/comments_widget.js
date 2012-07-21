@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, XV:true, enyo:true, _:true */
+/*global XT:true, XV:true, enyo:true, Globalize:true, _:true */
 (function () {
   "use strict";
 
@@ -10,72 +10,74 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     published: {
       collection: null,
       descriptor: null,
-      fields: ["createdBy", "created", "text"]
+      fields: [
+        { name: "createdBy", label: "creator", type: "text" },
+        { name: "created", label: "date", type: "date" },
+        { name: "text", label: "text", type: "text"}
+      ]
     },
     events: {
       onModelUpdate: ""
     },
     style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
     components: [
-      { kind: "onyx.GroupboxHeader", name: "title" }
-    ],
-
-
-    renderWidget: function () {
-      var iField, iRow, gridRow, fieldDesc, label;
-      var boxDesc = this.getDescriptor();
-
-      /**
-       * First set the title for the box
-       */
-      this.$.title.setContent(boxDesc.title);
-
-      /**
-       * Row -1 is the header row. This lets us neatly number the real rows
-       * starting at zero.
-       */
-      for (iRow = -1; iRow < 8; iRow++) {
-        /**
-         * This is the row that all the fields will be put in.
-         */
-        gridRow = this.createComponent({
+      { kind: "onyx.GroupboxHeader", name: "title" },
+      { kind: "Repeater", name: "commentsRepeater", count: 1, onSetupItem: "setupRow", components: [
+        {
           kind: "onyx.Groupbox",
           classes: "onyx-toolbar-inline",
           style: "background-color: white;",
-          name: "gridRow" + iRow
-        });
+          name: "commentRow"
+        }
+      ]}
+    ],
 
-        for (iField = 0; iField < this.getFields().length; iField++) {
-          fieldDesc = this.getFields()[iField];
-          label = "_" + fieldDesc;
-          if (iRow === -1) {
-            /**
-             * This is the label header at the top of each row
-             */
-            this.createComponent({
-              container: gridRow,
-              content: label.loc(),
-              style: "text-weight: bold; border-width: 0px; width: " + fieldDesc.width + "px;"
+    setupRow: function (inSender, inEvent) {
+      var gridRow = inEvent.item.$.commentRow;
 
-            });
-            continue;
-          }
+      for (var iField = 0; iField < this.getFields().length; iField++) {
+        var fieldDesc = this.getFields()[iField];
+        var label = ("_" + fieldDesc.label).loc();
+        if (inEvent.index === 0) {
           /**
-           * This is the label. The naming convention cribs from enyo's magical convention
-           * XXX not sure if this is the best way to do it
+           * This is the label header at the top of each row
            */
           this.createComponent({
-            //kind: XV.util.getFieldType(fieldDesc.fieldType),
             container: gridRow,
-            placeholder: fieldDesc,
-            style: "border-width: 0px",
-            onchange: "doFieldChanged",
-            name: fieldDesc + iRow
+            content: label,
+            style: "text-weight: bold; border-width: 0px;"
+
           });
+        } else {
+          /**
+           * These are the fields with the data
+           */
+          var model = this.getCollection().at(inEvent.index - 1);
+          var field = this.createComponent({
+            container: gridRow,
+            placeholder: label,
+            style: "border: 0px;",
+            onchange: "doFieldChanged"
+          });
+          field.setContent(this.formatContent(model.get(fieldDesc.name), fieldDesc.type));
         }
       }
     },
+    // this could be out of enyo
+    formatContent: function (value, type) {
+      if(type === 'date') {
+        return Globalize.format(value, 'd');
+      } else {
+        return value;
+      }
+    },
 
+    descriptorChanged: function () {
+      /**
+       * First set the title for the box
+       */
+      this.$.title.setContent(this.getDescriptor().title);
+    },
     /**
      * A convenience function so that this object can be treated generally like an input
      */
@@ -92,16 +94,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Display the collection in the grid when it's passed in
      */
     collectionChanged: function () {
-      var iRow;
-
-
-      for (var iRow = 0; iRow < this.getCollection().size(); iRow++) {
-        var model = this.getCollection().at(iRow);
-        for (var iField = 0; iField < this.getFields().length; iField++) {
-          var rowDescription = this.getFields()[iField];
-          this.$[rowDescription + iRow].setContent(model.get(rowDescription));
-        }
-      }
+      // the +1 is there because the first row is labels
+      this.$.commentsRepeater.setCount(this.getCollection().size() + 1);
       this.render();
     },
     doFieldChanged: function (inSender, inEvent) {

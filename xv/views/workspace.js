@@ -56,7 +56,6 @@ trailing:true white:true*/
                 name: boxDesc.title
               });
             box.setDescriptor(boxDesc);
-            box.renderWidget();
 
           } else {
             /**
