@@ -1,16 +1,19 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XV:true, enyo:true*/
+/*global XT:true, XV:true, _:true, enyo:true*/
 
 (function () {
-
+  var ROWS_PER_FETCH = 50,
+    FETCH_TRIGGER = 25;
+    
   enyo.kind({
     name: "XV.Module",
     kind: "Panels",
     label: "",
     classes: "app enyo-unselectable",
     handlers: {
+      onScroll: "didScroll",
       onInfoListRowTapped: "doInfoListRowTapped"
     },
     realtimeFit: true,
@@ -56,11 +59,28 @@ trailing:true white:true*/
     ],
     firstTime: true,
     fetched: {},
+    isFetching: false,
     // menu
     setupItem: function (inSender, inEvent) {
       var list = this.lists[inEvent.index].name;
       this.$.item.setContent(this.$.lists.$[list].getLabel());
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
+    didScroll: function (inSender, inEvent) {
+      if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
+      var that = this,
+        list = inEvent.originator,
+        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
+        offset = list.parent.getQuery().rowOffset || 0,
+        isMore = offset + ROWS_PER_FETCH <= list.getCount(),
+        options = {};
+      if (isMore && list.getScrollPosition() > max && !this.isFetching) {
+        options.success = function () {
+          that.isFetching = false;
+        };
+        this.isFetching = true;
+        this.fetch(list.owner.name, true, options);
+      }
     },
     create: function () {
       this.inherited(arguments);
@@ -102,11 +122,11 @@ trailing:true white:true*/
         this.fetch(list);
       }
     },
-    fetch: function (name) {
+    fetch: function (name, showMore, options) {
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
         input = this.$.searchInput.getValue();
-
+      showMore = _.isBoolean(showMore) ? showMore : false;
       if (input) {
         query.parameters = [{
           attribute: list.getCollection().model.getSearchableAttributes(),
@@ -116,8 +136,15 @@ trailing:true white:true*/
       } else {
         delete query.parameters;
       }
+      if (showMore) {
+        query.rowOffset += ROWS_PER_FETCH;
+        options.add = true;
+      } else {
+        query.rowOffset = 0;
+        query.rowLimit = ROWS_PER_FETCH;
+      }
       list.setQuery(query);
-      list.fetch();
+      list.fetch(options);
       this.fetched[list] = true;
     },
     didFinishTransition: function (inSender, inEvent) {
