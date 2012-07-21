@@ -28,6 +28,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // the key is uppercase because the model name is uppercase
         Account: [
           {
+            title: "Comments",
+            boxType: "comments",
+            objectName: "comments"
+          },
+          {
             title: "Account Info",
             fields: [
               { fieldName: "name" },
@@ -222,6 +227,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return "XV.GridWidget";
       } else if (value === 'readonly') {
         return "XV.ReadOnlyWidget";
+      } else if (value === 'comments') {
+        return "XV.CommentsWidget";
       }
     },
     /**

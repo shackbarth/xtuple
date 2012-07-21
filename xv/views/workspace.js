@@ -157,21 +157,23 @@ trailing:true white:true*/
         //
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-          for (var iField = 0; iField < boxDesc.fields.length; iField++) {
-            var fieldDesc = boxDesc.fields[iField];
-            var fieldName = boxDesc.fields[iField].fieldName;
-            if (fieldName) {
-              /**
-               * Update the view field with the model value
-               */
-              if (boxDesc.boxType === 'grid') {
+
+          if (boxDesc.boxType) {
+            /**
+             * Don't send just the field over. Send the whole collection over
+             */
+            this.$[boxDesc.title].setValue(model.getValue(boxDesc.objectName));
+          } else {
+            /**
+             * Default case: populate the fields
+             */
+
+            for (var iField = 0; iField < boxDesc.fields.length; iField++) {
+              var fieldDesc = boxDesc.fields[iField];
+              var fieldName = boxDesc.fields[iField].fieldName;
+              if (fieldName) {
                 /**
-                 * Don't send just the field over. Send the whole collaction over
-                 */
-                this.$[boxDesc.title].setValue(model.getValue(boxDesc.objectName));
-              } else {
-                /**
-                 * Default case: populate the field
+                 * Update the view field with the model value
                  */
                 this.$[fieldName].setValue(model.getValue(fieldName));
               }
@@ -302,22 +304,26 @@ trailing:true white:true*/
         var p = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
-
       /**
        * Accepts the object that tells the workspace what to drill down into.
        * SetOptions is quite generic, because it can be called in a very generic
        * way from the main carousel event handler. Note also that the model parameter
        * doesn't need to be a complete model. It just has to have the appropriate
-       * type and guid properties
+       * type and id properties
        */
       setOptions: function (model) {
         //
         // Determine the model that will back this view
         //
-        var modelType = model.get ? model.get("type") : model.type;
+        var modelType = model.recordType;
         // Magic/convention: trip off the word Info to get the heavyweight class
         if (modelType.substring(modelType.length - 4) === "Info") {
           modelType = modelType.substring(0, modelType.length - 4);
+        }
+
+        // XXX why is XM. prepended only for a "from new" workspace?
+        if (modelType.substring(0, 3) === "XM.") {
+          modelType = modelType.substring(3);
         }
 
         //
@@ -344,8 +350,15 @@ trailing:true white:true*/
         // Fetch the model
         //
         var id = model.id;
-        m.fetch({id: id});
-        XT.log("Workspace is fetching " + modelType + " " + id);
+        if(id) {
+          // id exists: pull pre-existing record for edit
+          m.fetch({id: id});
+          XT.log("Workspace is fetching " + modelType + " " + id);
+        } else {
+          // no id: this is a new record
+          m.fetch();
+          XT.log("Workspace is fetching new " + modelType);
+        }
 
 
       },
