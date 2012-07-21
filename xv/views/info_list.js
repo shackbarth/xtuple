@@ -97,15 +97,13 @@ trailing:true white:true*/
       onSetupItem: "setupRow",
       onCollectionUpdated: "collectionUpdated"
     },
-    isFetching: function () {
-      this.parent.getCollection().isFetching();
-    },
     collectionUpdated: function () {
-      var col = this.parent.getCollection();
+      var col = this.parent.getCollection(),
+        offset = this.parent.getQuery().rowOffset || 0;
     
       // take the properties as necessary...
       this.setCount(col.length);
-      this.reset();
+      if (offset) { this.refresh(); } else { this.reset(); }
     
       // if we updated, let the parent know we want to be
       // visible now

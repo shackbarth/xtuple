@@ -4,7 +4,9 @@ trailing:true white:true*/
 /*global XT:true, XV:true, _:true, enyo:true*/
 
 (function () {
-
+  var ROWS_PER_FETCH = 50,
+    FETCH_TRIGGER = 25;
+    
   enyo.kind({
     name: "XV.Module",
     kind: "Panels",
@@ -53,6 +55,7 @@ trailing:true white:true*/
     ],
     firstTime: true,
     fetched: {},
+    isFetching: false,
     // menu
     setupItem: function (inSender, inEvent) {
       var list = this.lists[inEvent.index].name;
@@ -63,10 +66,11 @@ trailing:true white:true*/
       if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
       var that = this,
         list = inEvent.originator,
-        max = list.getScrollBounds().maxTop - list.rowHeight * 10,
+        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
+        offset = list.parent.getQuery().rowOffset || 0,
+        isMore = offset + ROWS_PER_FETCH <= list.getCount(),
         options = {};
-      if (list.getScrollPosition() > max &&
-          !this.isFetching) {
+      if (isMore && list.getScrollPosition() > max && !this.isFetching) {
         options.success = function () {
           that.isFetching = false;
         };
@@ -125,11 +129,11 @@ trailing:true white:true*/
         delete query.parameters;
       }
       if (showMore) {
-        query.rowOffset += 50;
+        query.rowOffset += ROWS_PER_FETCH;
         options.add = true;
       } else {
         query.rowOffset = 0;
-        query.rowLimit = 50;
+        query.rowLimit = ROWS_PER_FETCH;
       }
       list.setQuery(query);
       list.fetch(options);
