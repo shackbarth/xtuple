@@ -702,10 +702,10 @@ white:true*/
 
       // Percolate changes up to parent when applicable
       if (parent) {
-        parent.trigger('change', this, options);
+        parent.trigger('change', this, status, options);
       }
       this.release();
-      this.trigger('statusChange', this);
+      this.trigger('statusChange', this, status, options);
       //XT.log(this.recordType + ' id: ' +  this.id +
       //         ' changed to ' + this.getStatusString());
       return this;
