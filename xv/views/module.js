@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XV:true, enyo:true*/
+/*global XT:true, XV:true, _:true, enyo:true*/
 
 (function () {
 
@@ -11,6 +11,7 @@ trailing:true white:true*/
     label: "",
     classes: "app enyo-unselectable",
     handlers: {
+      onScroll: "didScroll",
       onInfoListRowTapped: "doInfoListRowTapped"
     },
     realtimeFit: true,
@@ -58,6 +59,21 @@ trailing:true white:true*/
       this.$.item.setContent(this.$.lists.$[list].getLabel());
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
+    didScroll: function (inSender, inEvent) {
+      if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
+      var that = this,
+        list = inEvent.originator,
+        max = list.getScrollBounds().maxTop - list.rowHeight * 10,
+        options = {};
+      if (list.getScrollPosition() > max &&
+          !this.isFetching) {
+        options.success = function () {
+          that.isFetching = false;
+        };
+        this.isFetching = true;
+        this.fetch(list.owner.name, true, options);
+      }
+    },
     create: function () {
       this.inherited(arguments);
       this.$.leftLabel.setContent(this.label);
@@ -94,11 +110,11 @@ trailing:true white:true*/
         this.fetch(list);
       }
     },
-    fetch: function (name) {
+    fetch: function (name, showMore, options) {
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
         input = this.$.searchInput.getValue();
-
+      showMore = _.isBoolean(showMore) ? showMore : false;
       if (input) {
         query.parameters = [{
           attribute: list.getCollection().model.getSearchableAttributes(),
@@ -108,8 +124,15 @@ trailing:true white:true*/
       } else {
         delete query.parameters;
       }
+      if (showMore) {
+        query.rowOffset += 50;
+        options.add = true;
+      } else {
+        query.rowOffset = 0;
+        query.rowLimit = 50;
+      }
       list.setQuery(query);
-      list.fetch();
+      list.fetch(options);
       this.fetched[list] = true;
     },
     didFinishTransition: function (inSender, inEvent) {

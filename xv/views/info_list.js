@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true, 
 trailing:true white:true*/
-/*global XT:true, XM:true, enyo:true, Globalize:true*/
+/*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
   
@@ -65,17 +65,24 @@ trailing:true white:true*/
       this.inherited(arguments);
       this.log(this.name, this.showing, this);
     },
-    fetch: function () {
-      var col = this.getCollection(),
-       query = this.getQuery();
-    
-      // attempt to fetch (if not already fetched) and handle the
-      // various states appropriately
-      col.fetch({
-        success: enyo.bind(this, "_collectionFetchSuccess"),
+    fetch: function (options) {
+      var that = this,
+        col = this.getCollection(),
+        query = this.getQuery(),
+        success;
+      options = options ? _.clone(options) : {};
+      success = options.success;
+      _.extend(options, {
+        success: function (resp, status, xhr) {
+          that._collectionFetchSuccess(resp, status, xhr);
+          if (success) { success(resp, status, xhr); }
+        },
         error: enyo.bind(this, "_collectionFetchError"),
         query: query
       });
+      // attempt to fetch (if not already fetching) and handle the
+      // various states appropriately
+      col.fetch(options);
     }
   });
 
@@ -89,6 +96,9 @@ trailing:true white:true*/
     handlers: {
       onSetupItem: "setupRow",
       onCollectionUpdated: "collectionUpdated"
+    },
+    isFetching: function () {
+      this.parent.getCollection().isFetching();
     },
     collectionUpdated: function () {
       var col = this.parent.getCollection();

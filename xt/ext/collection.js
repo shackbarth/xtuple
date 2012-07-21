@@ -204,6 +204,16 @@ white:true*/
       return result;
     },
 
+    getObjectByName: function (name) {
+      return Backbone.Relational.store.getObjectByName(name);
+    },
+    
+    fetch: function (options) {
+      options = options ? _.clone(options) : {};
+      options.force = true;
+      return Backbone.Collection.prototype.fetch.call(this, options);
+    },
+
     /**
       Sync to xTuple datasource.
     */
@@ -217,10 +227,6 @@ white:true*/
       }
 
       return false;
-    },
-
-    getObjectByName: function (name) {
-      return Backbone.Relational.store.getObjectByName(name);
     }
 
   });
