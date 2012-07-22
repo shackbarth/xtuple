@@ -133,7 +133,7 @@ trailing:true white:true*/
       }
       list.setQuery(query);
       list.fetch(options);
-      this.fetched[list] = true;
+      this.fetched[name] = true;
     },
     didFinishTransition: function (inSender, inEvent) {
       this.setList(inSender.index);

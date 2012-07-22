@@ -105,9 +105,9 @@ trailing:true white:true*/
         offset = query.rowOffset || 0,
         limit = query.rowLimit || 0,
         count = col.length,
-        isMore = limit ? offset + limit <= count : false;
-        
-      if (!isMore) { this.setIsMore(false); }
+        isMore = limit ?
+          (offset + limit <= count) && (this.getCount() !== col.length) : false;
+      this.setIsMore(isMore);
       this.setIsFetching(false);
     
       // take the properties as necessary...
