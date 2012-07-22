@@ -91,7 +91,9 @@ trailing:true white:true*/
     kind: "List",
     classes: "xt-info-list-private",
     published: {
-      rowClass: ""
+      rowClass: "",
+      isFetching: false,
+      isMore: true
     },
     handlers: {
       onSetupItem: "setupRow",
@@ -99,7 +101,14 @@ trailing:true white:true*/
     },
     collectionUpdated: function () {
       var col = this.parent.getCollection(),
-        offset = this.parent.getQuery().rowOffset || 0;
+        query = this.parent.getQuery(),
+        offset = query.rowOffset || 0,
+        limit = query.rowLimit || 0,
+        count = col.length,
+        isMore = limit ? offset + limit <= count : false;
+        
+      if (!isMore) { this.setIsMore(false); }
+      this.setIsFetching(false);
     
       // take the properties as necessary...
       this.setCount(col.length);

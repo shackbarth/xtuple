@@ -5,7 +5,7 @@ trailing:true white:true*/
 
 (function () {
   var ROWS_PER_FETCH = 50,
-    FETCH_TRIGGER = 25;
+    FETCH_TRIGGER = 100;
     
   enyo.kind({
     name: "XV.Module",
@@ -55,7 +55,6 @@ trailing:true white:true*/
     ],
     firstTime: true,
     fetched: {},
-    isFetching: false,
     // menu
     setupItem: function (inSender, inEvent) {
       var list = this.lists[inEvent.index].name;
@@ -64,18 +63,13 @@ trailing:true white:true*/
     },
     didScroll: function (inSender, inEvent) {
       if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
-      var that = this,
-        list = inEvent.originator,
+      var list = inEvent.originator,
         max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
-        offset = list.parent.getQuery().rowOffset || 0,
-        isMore = offset + ROWS_PER_FETCH <= list.getCount(),
         options = {};
-      if (isMore && list.getScrollPosition() > max && !this.isFetching) {
-        options.success = function () {
-          that.isFetching = false;
-        };
-        this.isFetching = true;
-        this.fetch(list.owner.name, true, options);
+      if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
+        list.setIsFetching(true);
+        options.showMore = true;
+        this.fetch(list.owner.name, options);
       }
     },
     create: function () {
@@ -114,11 +108,13 @@ trailing:true white:true*/
         this.fetch(list);
       }
     },
-    fetch: function (name, showMore, options) {
+    fetch: function (name, options) {
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
         input = this.$.searchInput.getValue();
-      showMore = _.isBoolean(showMore) ? showMore : false;
+      options = options ? _.clone(options) : {};
+      options.showMore = _.isBoolean(options.showMore) ?
+        options.showMore : false;
       if (input) {
         query.parameters = [{
           attribute: list.getCollection().model.getSearchableAttributes(),
@@ -128,7 +124,7 @@ trailing:true white:true*/
       } else {
         delete query.parameters;
       }
-      if (showMore) {
+      if (options.showMore) {
         query.rowOffset += ROWS_PER_FETCH;
         options.add = true;
       } else {
