@@ -224,6 +224,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
               { label: "notes", fieldName: "notes", width: "220" },
+              { fieldName: "dueDate", fieldType: "date", width: "100" },
               { label: "actualHours", fieldName: "actualHours", fieldType: "number", width: "40" },
               { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "number", width: "40" }
             ]

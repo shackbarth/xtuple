@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, XV:true, enyo:true, _:true */
+/*global XT:true, XV:true, XM:true, enyo:true, _:true */
 (function () {
   "use strict";
 
@@ -14,7 +14,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     events: {
       onModelUpdate: ""
     },
-    style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
+    style: "height: 200px; width: 900px; margin-right: 5px; font-size: 12px;",
     components: [
       { kind: "onyx.GroupboxHeader", name: "title" },
       { kind: "Repeater", name: "gridRepeater", count: 0, onSetupItem: "setupRow", components: [
@@ -33,7 +33,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       for (var iField = 0; iField < this.getDescriptor().fields.length; iField++) {
         var fieldDesc = this.getDescriptor().fields[iField];
-        var label = ("_" + fieldDesc.label).loc();
+        var rawLabel = fieldDesc.label ? fieldDesc.label : fieldDesc.fieldName;
+        var label = ("_" + rawLabel).loc();
         if (inEvent.index === 0) {
           /**
            * This is the label header at the top of each row
@@ -41,7 +42,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           this.createComponent({
             container: gridRow,
             content: label,
-            style: "text-weight: bold; border-width: 0px; width: " + fieldDesc.width + "px;",
+            style: "text-weight: bold; border-width: 0px; width: " + fieldDesc.width + "px;"
           });
         } else {
           /**
@@ -61,6 +62,47 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
         }
       }
+      /**
+       * Add delete buttons for each row
+       * XXX security implications TBD for grid row delete
+       */
+      this.createComponent({
+        kind: "onyx.Button",
+        container: gridRow,
+        name: "delete" + (inEvent.index - 1),
+        content: "Delete",
+        onclick: "deleteRow"
+      });
+
+    },
+
+    deleteRow: function (inSender, inEvent) {
+      /**
+       * Remove the row from the repeater
+       * XXX the .parent.parent makes me uncomfortable here
+       */
+      this.$.gridRepeater.removeChild(inSender.parent.parent);
+      this.$.gridRepeater.render();
+
+      /**
+       * Remove the model from the collection
+       */
+
+      var fieldNameWithNumber = inSender.getName();
+      // split the field name into the (alpha) prefix and the (numeric) suffix
+      // XXX here's where we make use of the magical naming convention
+      // XXX must be a better way to get the row index of this button
+      // REGEX: capture an alpha prefix as well as a numeric suffix
+      // FIXME: these numbers get out of synch after one delete, so we
+      // start deleting fields we don't want to
+      // XXX either back each row with a model or renumber as necessary
+      var fieldNameSplit = fieldNameWithNumber.match(/(\D+)(\d+)/);
+      var rowIndex = Number(fieldNameSplit[2]);
+      this.getCollection().at(rowIndex).destroy();
+      this.doModelUpdate();
+
+
+
     },
 
     descriptorChanged: function () {
@@ -118,10 +160,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        */
       if (rowIndex >= this.getCollection().size()) {
         // add
-        //var newModel = new XM.ProjectTask(updateObject); // FIXME can't hardcode ProjectTask
-        //newModel.setStatus(515); // nice try! but no. XXX
-        this.getCollection().add(updateObject); //XXX this doens't quite work either
-    } else {
+
+        var newModel = new XM.ProjectTask(updateObject, { isNew: true }); // FIXME can't hardcode ProjectTask
+        /**
+         * Certain fields are required, so include these if they're not set
+         */
+        for (var i = 0; i < newModel.requiredAttributes.length; i++) {
+          var reqAttr = newModel.requiredAttributes[i];
+          if (!newModel.get(reqAttr)) {
+            if (reqAttr === "dueDate") { continue; } // XXX temp hack
+            var reqDefault = {};
+            reqDefault[reqAttr] = "";
+            newModel.set(reqDefault);
+          }
+        }
+
+        this.getCollection().add(newModel);
+      } else {
         // update
         this.getCollection().at(rowIndex).set(updateObject);
       }
