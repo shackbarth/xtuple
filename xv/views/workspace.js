@@ -321,6 +321,7 @@ trailing:true white:true*/
         // that until we know the model type.
         //
         this.setModelType(modelType);
+        // XXX not sure best way to massage the header for the linguist
         this.$.workspaceHeader.setContent(("_" + modelType).loc());
         this.setWorkspaceList();
         this.$.menuItems.render();
@@ -331,9 +332,6 @@ trailing:true white:true*/
         // Set up a listener for changes in the model
         //
         var Klass = Backbone.Relational.store.getObjectByName(modelType);
-        var m = new Klass();
-        this.setModel(m);
-        m.on("statusChange", enyo.bind(this, "modelDidChange"));
 
 
         //
@@ -342,12 +340,17 @@ trailing:true white:true*/
         var id = model.id;
         if (id) {
           // id exists: pull pre-existing record for edit
+          var m = new Klass();
+          this.setModel(m);
+          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch({id: id});
           XT.log("Workspace is fetching " + modelType + " " + id);
         } else {
           // no id: this is a new record
+          var m = new Klass(null, { isNew: true });
+          this.setModel(m);
+          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch();
-          // on.change will never get called for a new model
           XT.log("Workspace is fetching new " + modelType);
         }
 
@@ -359,20 +362,11 @@ trailing:true white:true*/
        */
       modelDidChange: function (model, value, options) {
         XT.log("Model changed: " + JSON.stringify(model.toJSON()));
-
+        // XXX this still isn't working for adding new objects
         if (model.status !== XT.Model.READY_CLEAN &&
             model.status !== XT.Model.READY_NEW) {
           return;
         }
-        // XXX this gets called for all the relational subobjects
-        // as well and we don't really want to deal with those
-        // because we've already dealt with them under the master
-        // model. So I just ignore any calls to this function that
-        // are not for the function in question. It'd be better if
-        // I dealt with the reason this was getting called so much.
-        //if (model.recordType !== this.getModelType()) {
-        //  return;
-        //}
 
         /**
          * Put the model in the history array
