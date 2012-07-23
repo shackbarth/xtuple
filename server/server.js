@@ -9,7 +9,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   require("./ext/route");
   require("./ext/router");
   require('./ext/functor');
-  require('./ext/session');
 
   var _ = XT._, _fs = XT.fs, _path = XT.path;
 
@@ -67,7 +66,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // right now it wraps unintended sub-calls
       try {
         if (XT.none(app)) {
-          app = XT.connect(options).use(_.bind(this.route, this));
+          if (secure) app = XT.connect(options).use(_.bind(this.route, this));
+          else app = XT.connect().use(_.bind(this.route, this));
         }
         
         server = this.server = app.listen(port);

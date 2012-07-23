@@ -21,8 +21,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     handle: function (payload, session) {},
   
     handles: null,
-    
-    needsSession: true,
 
     className: "XT.Functor"
   });

@@ -16,7 +16,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       XT.mixin(this, XT.options.cache);
 
       this.connection = mongoose.createConnection(this.get("conString"));
-      console.log(this.get("conString"), this.connection);
       schemaFiles = this.get("schemaFiles");
 
       if (!schemaFiles || schemaFiles.length <= 0) {

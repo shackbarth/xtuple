@@ -25,6 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     isDestroyed: false,
     data: "",
     code: 200,
+    payload: null,
     
     initMixin: function () {
       var req, chunk, didChunk;
@@ -44,6 +45,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     didChunk: function () {
+      if (XT.typeOf(this.data) === XT.T_STRING) this.payload = XT.json(this.data);
+      else this.payload = this.data;
       this.set("isReady", true);
     },
     
