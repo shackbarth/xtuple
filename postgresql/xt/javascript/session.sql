@@ -86,7 +86,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {Hash}
   */
   XT.Session.schema = function(schema) {
-    var sql = 'select c.relname as "recordType", ' +
+    var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category" ' +
               'from pg_class c' +
@@ -94,29 +94,78 @@ select xt.install_js('XT','Session','xtuple', $$
               '  join pg_attribute a on a.attrelid = c.oid ' +
               '  join pg_type t on a.atttypid = t.oid ' +
               'where n.nspname = $1 ' +
-              'order by c.relname, attnum';
-    var recs = plv8.execute(sql, [ schema ]);
-    var recordType;
-    var prev = '';
-    var name;
-    var column;
-    var result = {};
-    var i;
+              'order by c.relname, attnum',
+      recs = plv8.execute(sql, [ schema ]),
+      type,
+      prev = '',
+      name,
+      column,
+      result = {},
+      i,
+      orm,
+      props,
+      filterToOne = function (value) {
+        return value.toOne;
+      },
+      filterToMany = function (value) {
+        return value.toMany;
+      },
+      addToOne = function (value) {
+        var relations = result[type]['relations'];
+        plv8.elog(NOTICE, 'x!', JSON.stringify(value));
+          var child = XT.Orm.fetch(schema.toUpperCase(), value.type);
+          var pkey = XT.Orm.primaryKey(child),
+          rel = {
+            type: "Backbone.HasOne",
+            key: value.name,
+            relatedModel: schema.toUpperCase() + '.' + type
+          };
+        if (!value.isNested) {
+          rel.includeInJSON = pkey;
+        }
+        relations.push(rel);
+      },
+      addToMany = function (value) {
+        var relations = result[type]['relations'], 
+          rel = {
+            type: "Backbone.HasMany",
+            key: value.name,
+            relatedModel: schema.toUpperCase() + '.' + type,
+            reverseRelation: {
+              key: value.inverse
+            }
+          };
+        relations.push(rel);
+      };
 
     /* Loop through each field and add to the object */
     for (i = 0; i < recs.length; i++) {
-      recordType = recs[i].recordType.classify();
+    plv8.elog(NOTICE, 'wtf', JSON.stringify(recs[i]));
+      type = recs[i].type.classify();
       name = recs[i].column;
-      if (recordType !== prev) {
-        result[recordType] = {};
-        result[recordType].columns = [];
+      if (type !== prev) {
+        result[type] = {};
+        result[type].columns = [];
+        
+        /* Add relations */
+        result[type]['relations'] = [];
+        plv8.elog(NOTICE, '?', schema.toUpperCase(), type);
+        orm = XT.Orm.fetch(schema.toUpperCase(), type);
+
+        /* To One */
+        props = orm.properties.filter(filterToOne);
+        props.forEach(addToOne);
+
+        /* To Many */
+        props = orm.properties.filter(filterToMany);
+        props.forEach(addToMany);
       }
       column = { 
         name: name,
         category: recs[i].category
       }
-      result[recordType]['columns'].push(column);
-      prev = recordType;
+      result[type]['columns'].push(column);
+      prev = type;
     }
 
     return JSON.stringify(result);
