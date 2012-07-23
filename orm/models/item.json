@@ -266,7 +266,7 @@
       {
         "name": "source",
         "toOne": {
-          "type": "Account",
+          "type": "Item",
           "column": "source_id"
         }
       },
@@ -839,7 +839,7 @@
         "attr": {
           "type": "String",
           "column": "target_type",
-          "value": "T"
+          "value": "I"
         }
       },
       {

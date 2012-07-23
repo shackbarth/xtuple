@@ -283,7 +283,7 @@
       {
         "name": "source",
         "toOne": {
-          "type": "Account",
+          "type": "Contact",
           "column": "source_id"
         }
       },
@@ -665,7 +665,7 @@
       {
         "name": "source",
         "toOne": {
-          "type": "Comment",
+          "type": "Contact",
           "column": "source_id"
         }
       },
@@ -854,7 +854,7 @@
       {
         "name": "source",
         "toOne": {
-          "type": "Comment",
+          "type": "Contact",
           "column": "source_id"
         }
       },
@@ -920,7 +920,7 @@
       {
         "name": "source",
         "toOne": {
-          "type": "Comment",
+          "type": "Contact",
           "column": "source_id"
         }
       },
