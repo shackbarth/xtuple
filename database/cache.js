@@ -11,17 +11,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /** @lends XT.cache */
 
     init: function () {
-      var schemaFiles, i, host, port, schemaDir;
+      var schemaFiles, i;
 
-      host = XT.options.cache.hostname || "localhost";
-      port = XT.options.cache.port || 27017;
-      schemaDir = XT.options.cache.schemaDirectory;
-      this.set("hostname", host);
-      this.set("port", port);
-      this.set("schemaDir", schemaDir);
+      XT.mixin(this, XT.options.cache);
 
       this.connection = mongoose.createConnection(this.get("conString"));
-      
+      console.log(this.get("conString"), this.connection);
       schemaFiles = this.get("schemaFiles");
 
       if (!schemaFiles || schemaFiles.length <= 0) {
@@ -38,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     conString: function () {
-      return "mongodb://%@:%@/xtdb".f(this.get("hostname"), this.get("port"));
+      return "mongodb://%@:%@/%@".f(this.get("hostname"), this.get("port"), this.get("database"));
     }.property(),
 
     cleanup: function () {
@@ -65,17 +60,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     schemas: function () {
       return XT.schemas || (XT.schemas = {});
     }.property(),
-    
-    schemaDir: function () {
-      return this.schemaDirectory;
-    }.property(),
 
     schemaFiles: function () {
       var dir, schemaFiles;
       if (this._schemaFiles) {
         return this._schemaFiles;
       }
-      dir = _path.join(XT.basePath, this.get("schemaDir"));
+      dir = _path.join(XT.basePath, this.get("schemaDirectory"));
       schemaFiles = this._schemaFiles = XT.directoryFiles(dir, {extension: "js", fullPath: true});
       return schemaFiles;
     }.property()
