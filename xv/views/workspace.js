@@ -314,14 +314,14 @@ trailing:true white:true*/
         //
         // Determine the model that will back this view
         //
-        var modelType = XV.util.formatModelName(model.recordType);
+        var modelType = XV.util.infoToMasterModelName(model.recordType);
 
         //
         // Setting the model type also renders the workspace. We really can't do
         // that until we know the model type.
         //
         this.setModelType(modelType);
-        this.$.workspaceHeader.setContent(modelType);
+        this.$.workspaceHeader.setContent(("_" + modelType).loc());
         this.setWorkspaceList();
         this.$.menuItems.render();
         this.$.workspacePanels.setModelType(modelType);
@@ -330,10 +330,10 @@ trailing:true white:true*/
         //
         // Set up a listener for changes in the model
         //
-        var Klass = Backbone.Relational.store.getObjectByName("XM." + modelType);
+        var Klass = Backbone.Relational.store.getObjectByName(modelType);
         var m = new Klass();
         this.setModel(m);
-        m.on("change", enyo.bind(this, "modelDidChange"));
+        m.on("statusChange", enyo.bind(this, "modelDidChange"));
 
 
         //
@@ -347,6 +347,7 @@ trailing:true white:true*/
         } else {
           // no id: this is a new record
           m.fetch();
+          // on.change will never get called for a new model
           XT.log("Workspace is fetching new " + modelType);
         }
 
@@ -359,16 +360,19 @@ trailing:true white:true*/
       modelDidChange: function (model, value, options) {
         XT.log("Model changed: " + JSON.stringify(model.toJSON()));
 
-
+        if (model.status !== XT.Model.READY_CLEAN &&
+            model.status !== XT.Model.READY_NEW) {
+          return;
+        }
         // XXX this gets called for all the relational subobjects
         // as well and we don't really want to deal with those
         // because we've already dealt with them under the master
         // model. So I just ignore any calls to this function that
         // are not for the function in question. It'd be better if
         // I dealt with the reason this was getting called so much.
-        if (model.get("type") !== this.getModelType()) {
-          return;
-        }
+        //if (model.recordType !== this.getModelType()) {
+        //  return;
+        //}
 
         /**
          * Put the model in the history array
