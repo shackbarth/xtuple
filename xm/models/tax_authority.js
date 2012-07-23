@@ -23,18 +23,7 @@ white:true*/
         "update": "MaintainTaxAuthorities",
         "delete": "MaintainTaxAuthorities"
       }
-    },
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'address',
-      relatedModel: 'XM.AddressInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'currency',
-      relatedModel: 'XM.Currency',
-      includeInJSON: 'id'
-    }]
+    }
 
   });
 

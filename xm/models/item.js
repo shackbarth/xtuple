@@ -141,84 +141,6 @@ white:true*/
       "productCategory"
     ],
 
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'classCode',
-      relatedModel: 'XM.ClassCode',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasOne,
-      key: 'inventoryUnit',
-      relatedModel: 'XM.Unit',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasOne,
-      key: 'productCategory',
-      relatedModel: 'XM.ProductCategory',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasOne,
-      key: 'priceUnit',
-      relatedModel: 'XM.Unit',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasMany,
-      key: 'comments',
-      relatedModel: 'XM.ItemComment',
-      reverseRelation: {
-        key: 'item'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'characteristics',
-      relatedModel: 'XM.ItemCharacteristic',
-      reverseRelation: {
-        key: 'item'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'accounts',
-      relatedModel: 'XM.ItemAccount',
-      reverseRelation: {
-        key: 'item'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'contacts',
-      relatedModel: 'XM.ItemContact',
-      reverseRelation: {
-        key: 'item'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'items',
-      relatedModel: 'XM.ItemItem',
-      reverseRelation: {
-        key: 'item'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'files',
-      relatedModel: 'XM.ItemFile',
-      reverseRelation: {
-        key: 'item'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'images',
-      relatedModel: 'XM.ItemImage',
-      reverseRelation: {
-        key: 'item'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'urls',
-      relatedModel: 'XM.ItemUrl',
-      reverseRelation: {
-        key: 'item'
-      }
-    }],
-
     // ..........................................................
     // METHODS
     //
@@ -299,13 +221,7 @@ white:true*/
 
     recordType: 'XM.ItemAccount',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -319,13 +235,7 @@ white:true*/
 
     recordType: 'XM.ItemContact',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'contact',
-      relatedModel: 'XM.ContactInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -339,13 +249,7 @@ white:true*/
 
     recordType: 'XM.ItemItem',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'item',
-      relatedModel: 'XM.ItemInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -359,13 +263,7 @@ white:true*/
 
     recordType: 'XM.ItemFile',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'file',
-      relatedModel: 'XM.FileInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -379,13 +277,7 @@ white:true*/
 
     recordType: 'XM.ItemImage',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'image',
-      relatedModel: 'XM.ImageInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -399,13 +291,7 @@ white:true*/
 
     recordType: 'XM.ItemUrl',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'url',
-      relatedModel: 'XM.Url'
-    }]
+    isDocumentAssignment: true
 
   });
 
