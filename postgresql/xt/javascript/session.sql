@@ -117,8 +117,8 @@ select xt.install_js('XT','Session','xtuple', $$
           pkey = XT.Orm.primaryKey(child),
           rel = {
             type: "Backbone.HasOne",
-            key: value.toOne.name,
-            relatedModel: schema.toUpperCase() + '.' + type
+            key: value.name,
+            relatedModel: schema.toUpperCase() + '.' + value.toOne.type
           };
         if (!value.toOne.isNested) {
           rel.includeInJSON = pkey;
@@ -129,8 +129,8 @@ select xt.install_js('XT','Session','xtuple', $$
         var relations = result[type]['relations'], 
           rel = {
             type: "Backbone.HasMany",
-            key: value.toMany.name,
-            relatedModel: schema.toUpperCase() + '.' + type,
+            key: value.name,
+            relatedModel: schema.toUpperCase() + '.' + value.toMany.type,
             reverseRelation: {
               key: value.toMany.inverse
             }
