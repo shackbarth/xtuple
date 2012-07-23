@@ -1,0 +1,43 @@
+{
+  "underscore": {
+    "origin": "git@github.com:documentcloud/underscore.git",
+    "entries": [
+      "underscore-min.js"
+    ]
+  },
+  "backbone": {
+    "origin": "git@github.com:documentcloud/backbone.git",
+    "entries": [
+      "$lib/underscore",
+      "backbone.js"
+    ]
+  },
+  "backbone_relational": {
+    "origin": "git@github.com:PaulUithol/Backbone-relational.git",
+    "entries": [
+      "$lib/backbone",
+      "backbone-relational.js"
+    ]
+  },
+  "layout": {
+    "origin": "git@github.com:enyojs/layout.git",
+    "tag": "2.0-GA"
+  },
+  "onyx": {
+    "origin": "git@github.com:enyojs/onyx.git",
+    "tag": "2.0-GA"
+  },
+  "globalize": {
+    "origin": "git://github.com/jquery/globalize.git",
+    "entries": [
+      "lib/globalize.js"
+    ]
+  },
+  "enyo_2_components": {
+    "origin": "git://github.com/MachiApps/Enyo-2-Components.git",
+    "entries": [
+      "addons/DatePicker/package.js",
+      "addons/calendarSelector/package.js"
+    ]
+  }
+}
