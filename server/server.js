@@ -11,7 +11,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   require('./ext/functor');
   require('./ext/session');
 
-  var _ = XT._;
+  var _ = XT._, _fs = XT.fs, _path = XT.path;
 
   XT.Server = XT.Object.extend({
     autoStart: false,
@@ -20,6 +20,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     useWebSocket: false,
     router: null,
     server: null,
+    secure: false,
+    keyFile: null,
+    certFile: null,
     init: function () {
       var auto = this.get("autoStart"),
           port = this.get("port"),
@@ -30,7 +33,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (!name) name = this.name = "NONAME%@".f(_.uniqueId("_server"));
       if (!port) issue(XT.fatal("cannot create a server with no port %@".f(name)));
       if (!router && !sockets) issue(XT.fatal("cannot create a non-websocket server with no router"));
-      
+
       if (auto) this.start();
   
       XT.Server.registerServer(this);
@@ -42,15 +45,33 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var router = this.get("router");
       if (router) router.handle.call(router, req, res);
     },
+    cert: function () {
+      var file = this.get("certFile");
+      return _fs.readFileSync(_path.join(XT.basePath, file), "utf8");
+    }.property(),
+    key: function () {
+      var file = this.get("keyFile");
+      return _fs.readFileSync(_path.join(XT.basePath, file), "utf8");
+    }.property(),
     start: function () {
-      var port = this.get("port"), useSockets = this.get("useWebSocket"), server;
+      var port = this.get("port"), useSockets = this.get("useWebSocket"), 
+          generator = this.get("generator"), server, app = this.server, options = {},
+          secure = this.get("secure");
+          
+      if (secure) {
+        options.key = this.get("key");
+        options.cert = this.get("cert");
+      }
+          
       // TODO: remove this from a try/catch but test for consequences in fail case...
       // right now it wraps unintended sub-calls
       try {
-        if (XT.none(this.server)) {
-          this.server = XT.connect.createServer(_.bind(this.route, this));
+        if (XT.none(app)) {
+          app = XT.connect(options).use(_.bind(this.route, this));
         }
-        server = this.server = this.server.listen(port);
+        
+        server = this.server = app.listen(port);
+        
         if (useSockets) {
           this._io = require("socket.io").listen(server, {
             "log level": 0,
@@ -65,8 +86,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       } catch (err) { issue(XT.fatal(err)); }
   
-      XT.log("Started server, {name}, listening on port {port}".f(
-        { name: this.get('name'), port: port }));
+      XT.log("Started %@server, %@, listening on port %@".f(secure? "secure ": "", this.get("name"), port));
   
       return this;
     },

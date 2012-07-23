@@ -39,6 +39,10 @@ require('./foundation');
     
     if (XT.requireDatabase) require("./database");
     if (XT.requireServer) require("./server");
+    if (XT.requireCache) {
+      require('./database/cache');
+      require("./database/ext/mongoose_schema");
+    }
     
     // special case where the desired output requires calling console directly
     XT.io.console(XT.StringBuffer.create({ color: 'blue', prefix: null }),

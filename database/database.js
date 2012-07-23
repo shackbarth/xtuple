@@ -76,10 +76,5 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     XT.pg.defaults.poolSize = 12;
   });
   
-  if (XT.requireCache) {
-    require('./cache');
-    require("./ext/mongoose_schema");
-  }
-  
   XT.addCleanupTask(_.bind(XT.db.cleanup, XT.db), XT.db);
 }());

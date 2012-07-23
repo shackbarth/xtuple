@@ -368,4 +368,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return this;
     }
   });
+  
+  XT.run(function () {
+    XT.cachePollingInterval = setInterval(XT.Session.pollCache, 60000);
+    XT.addCleanupTask(function () {
+      clearInterval(XT.cachePollingInterval);
+    });
+  });
 }());

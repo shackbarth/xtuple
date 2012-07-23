@@ -11,14 +11,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /** @lends XT.cache */
 
     init: function () {
-      var schemaFiles = this.get("schemaFiles"), i, host, port;
+      var schemaFiles, i, host, port, schemaDir;
 
       host = XT.options.cache.hostname || "localhost";
       port = XT.options.cache.port || 27017;
+      schemaDir = XT.options.cache.schemaDirectory;
       this.set("hostname", host);
       this.set("port", port);
+      this.set("schemaDir", schemaDir);
 
       this.connection = mongoose.createConnection(this.get("conString"));
+      
+      schemaFiles = this.get("schemaFiles");
 
       if (!schemaFiles || schemaFiles.length <= 0) {
         XT.warn("no mongo schemas available!");
@@ -61,13 +65,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     schemas: function () {
       return XT.schemas || (XT.schemas = {});
     }.property(),
+    
+    schemaDir: function () {
+      return this.schemaDirectory;
+    }.property(),
 
     schemaFiles: function () {
       var dir, schemaFiles;
       if (this._schemaFiles) {
         return this._schemaFiles;
       }
-      dir = _path.join(XT.basePath, "node_modules", "xt", "database", "mongo_schemas");
+      dir = _path.join(XT.basePath, this.get("schemaDir"));
       schemaFiles = this._schemaFiles = XT.directoryFiles(dir, {extension: "js", fullPath: true});
       return schemaFiles;
     }.property()
@@ -75,10 +83,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   XT.run(function () {
     XT.cache = XT.Cache.create();
-    XT.cachePollingInterval = setInterval(XT.Session.pollCache, 60000);
-    XT.addCleanupTask(function () {
-      clearInterval(XT.cachePollingInterval);
-    });
   });
   
 }());
