@@ -352,6 +352,10 @@ trailing:true white:true*/
 
 
       },
+
+      /**
+       * Essentially the callback function from backbone
+       */
       modelDidChange: function (model, value, options) {
         XT.log("Model changed: " + JSON.stringify(model.toJSON()));
 
