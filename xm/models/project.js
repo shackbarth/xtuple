@@ -174,20 +174,25 @@ white:true*/
 
       // Total up task data
       _.each(this.get('tasks').models, function (task) {
-        that.budgetedHoursTotal = XT.math.add(that.budgetedHoursTotal,
-          task.get('budgetedHours'), XT.QTY_SCALE);
-        that.actualHoursTotal = XT.math.add(that.actualHoursTotal,
-          task.get('actualHours'), XT.QTY_SCALE);
-        that.budgetedExpensesTotal = XT.math.add(that.budgetedExpensesTotal,
-          task.get('budgetedExpenses'), XT.MONEY_SCALE);
-        that.actualExpensesTotal = XT.math.add(that.actualExpensesTotal,
-          task.get('actualExpenses'), XT.MONEY_SCALE);
+        that.setAndAnnounce("budgetedHoursTotal", XT.math.add(that.budgetedHoursTotal,
+          task.get('budgetedHours'), XT.QTY_SCALE));
+        that.setAndAnnounce("actualHoursTotal", XT.math.add(that.actualHoursTotal,
+          task.get('actualHours'), XT.QTY_SCALE));
+        that.setAndAnnounce("budgetedExpensesTotal", XT.math.add(that.budgetedExpensesTotal,
+          task.get('budgetedExpenses'), XT.MONEY_SCALE));
+        that.setAndAnnounce("actualExpensesTotal", XT.math.add(that.actualExpensesTotal,
+          task.get('actualExpenses'), XT.MONEY_SCALE));
       });
 
-      this.actualHoursBalance = XT.math.subtract(this.budgetedHoursTotal,
-        this.actualHoursTotal, XT.QTY_SCALE);
-      this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal,
-        this.actualExpensesTotal, XT.QTY_SCALE);
+      this.setAndAnnounce("actualHoursBalance", XT.math.subtract(this.budgetedHoursTotal,
+        this.actualHoursTotal, XT.QTY_SCALE));
+      this.setAndAnnounce("balanceExpensesTotal", XT.math.subtract(this.budgetedExpensesTotal,
+        this.actualExpensesTotal, XT.QTY_SCALE));
+    },
+
+    setAndAnnounce: function (field, value) {
+      this[field] = value;
+      this.trigger("announcedSet", field, value);
     }
 
   });

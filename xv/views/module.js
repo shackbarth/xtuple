@@ -18,6 +18,7 @@ trailing:true white:true*/
     },
     realtimeFit: true,
     arrangerKind: "CollapsingArranger",
+    selectedList: 0, // used for "new", to know what list is being shown
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
@@ -43,6 +44,9 @@ trailing:true white:true*/
             {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
             {name: "rightLabel", style: "text-align: center"}
           ]},
+
+          {kind: "onyx.Button", content: "_new".loc(), ontap: "newWorkspace" },
+
           {kind: "onyx.InputDecorator", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
@@ -99,6 +103,10 @@ trailing:true white:true*/
       if (!this.$.menu.isSelected(index)) {
         this.$.menu.select(index);
       }
+
+      // keep the selected list in state as a kind variable
+      this.selectedList = index;
+
       // Select list
       if (this.$.lists.getIndex() !== index) {
         this.$.lists.setIndex(index);
@@ -171,6 +179,12 @@ trailing:true white:true*/
       //
       this.bubble("workspace", {eventName: "workspace", options: tappedModel });
       return true;
+    },
+    newWorkspace: function (inSender, inEvent) {
+      var modelType = this.$.lists.controls[this.selectedList].query.recordType;
+      var emptyModel = new XM[XV.util.formatModelName(modelType)]();
+      this.bubble("workspace", {eventName: "workspace", options: emptyModel });
+
     },
     /**
      * Populates the history dropdown with the components of the XT.history array

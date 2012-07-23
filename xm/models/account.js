@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true */
@@ -93,7 +93,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.AccountComment = XM.Comment.extend({
@@ -105,7 +105,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.CharacteristicAssignment
   */
   XM.AccountCharacteristic = XM.CharacteristicAssignment.extend({
@@ -117,7 +117,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountAccount = XT.Model.extend({
@@ -131,7 +131,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountContact = XT.Model.extend({
@@ -145,7 +145,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountItem = XT.Model.extend({
@@ -159,7 +159,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountFile = XT.Model.extend({
@@ -173,7 +173,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountImage = XT.Model.extend({
@@ -187,7 +187,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountUrl = XT.Model.extend({
@@ -201,7 +201,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountProject = XT.Model.extend({
@@ -215,7 +215,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountContactInfo = XT.Model.extend({
@@ -227,7 +227,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.AccountInfo = XT.Model.extend({
@@ -263,7 +263,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Collection
   */
   XM.AccountInfoCollection = XT.Collection.extend({

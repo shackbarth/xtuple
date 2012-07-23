@@ -56,7 +56,6 @@ trailing:true white:true*/
                 name: boxDesc.title
               });
             box.setDescriptor(boxDesc);
-            box.renderWidget();
 
           } else {
             /**
@@ -65,20 +64,24 @@ trailing:true white:true*/
             box = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
-                style: "height: 250px; width: 400px; background-color: white; margin-right: 5px;",
+                style: "min-height: 250px; width: 400px; background-color: white; margin-right: 5px;",
                 components: [
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
                 ]
               });
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
+
               label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
               field = this.createComponent({
                 kind: "onyx.InputDecorator",
                 style: "font-size: 12px",
                 container: box,
                 components: [
-                  { tag: "b", content: label.loc() + ": ", style: "padding-right: 10px;"}
+                /**
+                 * This is the label
+                 */
+                  { tag: "span", content: label.loc() + ": ", style: "padding-right: 10px;"}
                 ]
               });
 
@@ -135,33 +138,41 @@ trailing:true white:true*/
        * Populates the fields of the workspace with the values from the model
        */
       updateFields: function (model) {
-        // TODO: this is more of a reset-all than an update
+        /**
+         * Fields that are computed asynchronously by the model may not be
+         * accurate right now, so we have those fields trigger an event when
+         * they are set, which we listed for here
+         */
+        var that = this;
+        model.on("announcedSet", function (announcedField, announcedValue) {
+          console.debug(announcedField + " set to " + announcedValue);
+          that.$[announcedField].setValue(announcedValue);
+        });
 
         XT.log("update with model: " + model.get("type"));
-
-
 
         //
         // Look through the entire specification...
         //
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-          for (var iField = 0; iField < boxDesc.fields.length; iField++) {
-            var fieldDesc = boxDesc.fields[iField];
-            var fieldName = boxDesc.fields[iField].fieldName;
-            if (fieldName) {
-              /**
-               * Update the view field with the model value
-               */
-              if (boxDesc.boxType === 'grid') {
+
+          if (boxDesc.boxType) {
+            /**
+             * Don't send just the field over. Send the whole collection over
+             */
+            this.$[boxDesc.title].setValue(model.getValue(boxDesc.objectName));
+          } else {
+            /**
+             * Default case: populate the fields
+             */
+
+            for (var iField = 0; iField < boxDesc.fields.length; iField++) {
+              var fieldDesc = boxDesc.fields[iField];
+              var fieldName = boxDesc.fields[iField].fieldName;
+              if (fieldName) {
                 /**
-                 * Don't send just the field over. Send the whole model over
-                 */
-                this.$[boxDesc.title].setValue(model.getValue(boxDesc.title.toLowerCase()));
-                // TODO: toLowerCase is a hackish way to navigate case sensitivity here
-              } else {
-                /**
-                 * Default case: populate the field
+                 * Update the view field with the model value
                  */
                 this.$[fieldName].setValue(model.getValue(fieldName));
               }
@@ -238,11 +249,10 @@ trailing:true white:true*/
       /**
        * Update the model from changes to the UI. The interaction is handled here
        * and not in the widgets, which themselves are unaware of the model.
-       * Exception: GridWidgets and  RelationalWidgets manage their own
-       * model, so those updates are not performed here.
-       * The parameters coming in here are different if the sender is an Input
-       * or a picker, so we have to be careful when we parse out the appropriate
-       * values.
+       * Exception: GridWidgets manage their own model, so those updates are not
+       * performed here. The parameters coming in here are different if the sender
+       * is an Input or a picker or a relational widget, so we have to be careful
+       * when we parse out the appropriate values.
        * FIXME: If you click the persist button before a changed field is blurred,
        * then I think the change will not be persisted, as this function might not
        * be executed before the persist method. The way we disable the save button
@@ -253,7 +263,9 @@ trailing:true white:true*/
       doFieldChanged: function (inSender, inEvent) {
         var prefix, suffix;
 
-        var newValue = inEvent.getValue() ? inEvent.getValue() : inEvent.getSelected().value;
+        var newValue = inEvent.getValue ? inEvent.getValue() :
+          inEvent.getSelected ? inEvent.getSelected().value :
+          inEvent.originator.model; // relational_widget
 
         var updateObject = {};
 
@@ -291,23 +303,18 @@ trailing:true white:true*/
         var p = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index];
         this.$.workspacePanels.gotoBox(p.title);
       },
-
       /**
        * Accepts the object that tells the workspace what to drill down into.
        * SetOptions is quite generic, because it can be called in a very generic
        * way from the main carousel event handler. Note also that the model parameter
        * doesn't need to be a complete model. It just has to have the appropriate
-       * type and guid properties
+       * type and id properties
        */
       setOptions: function (model) {
         //
         // Determine the model that will back this view
         //
-        var modelType = model.get ? model.get("type") : model.type;
-        // Magic/convention: trip off the word Info to get the heavyweight class
-        if (modelType.substring(modelType.length - 4) === "Info") {
-          modelType = modelType.substring(0, modelType.length - 4);
-        }
+        var modelType = XV.util.formatModelName(model.recordType);
 
         //
         // Setting the model type also renders the workspace. We really can't do
@@ -333,8 +340,15 @@ trailing:true white:true*/
         // Fetch the model
         //
         var id = model.id;
-        m.fetch({id: id});
-        XT.log("Workspace is fetching " + modelType + " " + id);
+        if (id) {
+          // id exists: pull pre-existing record for edit
+          m.fetch({id: id});
+          XT.log("Workspace is fetching " + modelType + " " + id);
+        } else {
+          // no id: this is a new record
+          m.fetch();
+          XT.log("Workspace is fetching new " + modelType);
+        }
 
 
       },
