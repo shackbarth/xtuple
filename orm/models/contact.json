@@ -549,7 +549,7 @@
       {
         "name": "contact",
         "toOne": {
-          "type": "Comment",
+          "type": "Contact",
           "column": "cntcteml_cntct_id"
         }
       },
@@ -599,7 +599,7 @@
       {
         "name": "source",
         "toOne": {
-          "type": "Comment",
+          "type": "Contact",
           "column": "source_id"
         }
       },
