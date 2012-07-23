@@ -173,8 +173,8 @@ white:true*/
     // METHODS
     //
 
-    validateSave: function () {
-      if (!this.get('firstName') && !this.get('lastName')) {
+    validateSave: function (attributes, options) {
+      if (!attributes.firstName && !attributes.lastName) {
         return XT.Error.clone('xt2004');
       }
     }
