@@ -55,7 +55,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             style: "border: 0px; width: " + fieldDesc.width + "px;",
             onchange: "doFieldChanged"
           });
-          if(this.getCollection().size() + 1 > inEvent.index) {
+          if (this.getCollection().size() + 1 > inEvent.index) {
             var model = this.getCollection().at(inEvent.index - 1);
             field.setValue(model.get(fieldDesc.fieldName));
           }
@@ -116,12 +116,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       /**
        * Update the model. Or add a new model if it's a new grid row
        */
-      if(rowIndex >= this.getCollection().size()) {
+      if (rowIndex >= this.getCollection().size()) {
         // add
-        var newModel = new XM.ProjectTask(updateObject); // FIXME can't hardcode ProjectTask
-        this.getCollection().add(newModel);
-        this.gridSize++;
-      } else {
+        //var newModel = new XM.ProjectTask(updateObject); // FIXME can't hardcode ProjectTask
+        //newModel.setStatus(515); // nice try! but no. XXX
+        this.getCollection().add(updateObject); //XXX this doens't quite work either
+    } else {
         // update
         this.getCollection().at(rowIndex).set(updateObject);
       }
