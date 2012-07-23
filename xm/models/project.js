@@ -135,94 +135,6 @@ white:true*/
       return result;
     },
 
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'contact',
-      relatedModel: 'XM.ContactInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'assignedTo',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasMany,
-      key: 'tasks',
-      relatedModel: 'XM.ProjectTask',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'comments',
-      relatedModel: 'XM.ProjectComment',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'accounts',
-      relatedModel: 'XM.ProjectAccount',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'contacts',
-      relatedModel: 'XM.ProjectContact',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'items',
-      relatedModel: 'XM.ProjectItem',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'files',
-      relatedModel: 'XM.ProjectFile',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'images',
-      relatedModel: 'XM.ProjectImage',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'urls',
-      relatedModel: 'XM.ProjectUrl',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'projects',
-      relatedModel: 'XM.ProjectProject',
-      reverseRelation: {
-        key: 'project'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'recurrences',
-      relatedModel: 'XM.ProjectRecurrence',
-      reverseRelation: {
-        key: 'project'
-      }
-    }],
-
     budgetedHoursTotal: 0.0,
     actualHoursTotal: 0.0,
     balanceHoursTotal: 0.0,
@@ -415,23 +327,6 @@ white:true*/
       return result;
     },
 
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'assignedTo',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasMany,
-      key: 'comments',
-      relatedModel: 'XM.ProjectTaskComment',
-      reverseRelation: {
-        key: 'projectTask'
-      }
-    }],
-
     // ..........................................................
     // METHODS
     //
@@ -493,13 +388,7 @@ white:true*/
 
     recordType: 'XM.ProjectAccount',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -513,13 +402,7 @@ white:true*/
 
     recordType: 'XM.ProjectContact',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'contact',
-      relatedModel: 'XM.ContactInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -533,13 +416,7 @@ white:true*/
 
     recordType: 'XM.ProjectItem',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'item',
-      relatedModel: 'XM.ItemInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -553,13 +430,7 @@ white:true*/
 
     recordType: 'XM.ProjectFile',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'file',
-      relatedModel: 'XM.FileInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -573,13 +444,7 @@ white:true*/
 
     recordType: 'XM.ProjectImage',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'image',
-      relatedModel: 'XM.ImageInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -591,15 +456,7 @@ white:true*/
   XM.ProjectUrl = XT.Model.extend({
     /** @scope XM.ProjectUrl.prototype */
 
-    recordType: 'XM.ProjectUrl',
-
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'url',
-      relatedModel: 'XM.Url'
-    }]
+    recordType: 'XM.ProjectUrl'
 
   });
 
@@ -613,13 +470,7 @@ white:true*/
 
     recordType: 'XM.ProjectProject',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'project',
-      relatedModel: 'XM.ProjectInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -671,21 +522,7 @@ white:true*/
 
     recordType: 'XM.ProjectInfo',
 
-    readOnly: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'assignedTo',
-      relatedModel: 'XM.UserAccountInfo'
-    }]
+    readOnly: true
 
   });
 

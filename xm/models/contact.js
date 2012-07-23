@@ -92,83 +92,6 @@ white:true*/
       }
     },
 
-    relations:   [{
-      type: Backbone.HasOne,
-      key: 'address',
-      relatedModel: 'XM.AddressInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasMany,
-      key: 'comments',
-      relatedModel: 'XM.ContactComment',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'email',
-      relatedModel: 'XM.ContactEmail',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'characteristics',
-      relatedModel: 'XM.ContactCharacteristic',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'accounts',
-      relatedModel: 'XM.ContactAccount',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'contacts',
-      relatedModel: 'XM.ContactContact',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'items',
-      relatedModel: 'XM.ContactItem',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'files',
-      relatedModel: 'XM.ContactFile',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'images',
-      relatedModel: 'XM.ContactImage',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'urls',
-      relatedModel: 'XM.ContactUrl',
-      reverseRelation: {
-        key: 'contact'
-      }
-    }],
-
     // ..........................................................
     // METHODS
     //
@@ -234,13 +157,7 @@ white:true*/
 
     recordType: 'XM.ContactAccount',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -254,13 +171,7 @@ white:true*/
 
     recordType: 'XM.ContactContact',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'contact',
-      relatedModel: 'XM.ContactInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -274,13 +185,7 @@ white:true*/
 
     recordType: 'XM.ContactItem',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'item',
-      relatedModel: 'XM.ItemInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -294,13 +199,7 @@ white:true*/
 
     recordType: 'XM.ContactFile',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'file',
-      relatedModel: 'XM.FileInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -314,13 +213,7 @@ white:true*/
 
     recordType: 'XM.ContactImage',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'image',
-      relatedModel: 'XM.ImageInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -334,13 +227,7 @@ white:true*/
 
     recordType: 'XM.ContactUrl',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'url',
-      relatedModel: 'XM.Url'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -354,21 +241,7 @@ white:true*/
 
     recordType: 'XM.ContactInfo',
 
-    readOnly: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'address',
-      relatedModel: 'XM.AddressInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }]
+    readOnly: true
 
   });
   

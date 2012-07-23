@@ -78,14 +78,7 @@ white:true*/
       "abbreviation",
       "country",
       "name"
-    ],
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'country',
-      relatedModel: 'XM.Country',
-      includeInJSON: 'id'
-    }]
+    ]
 
   });
 
@@ -109,22 +102,6 @@ white:true*/
         "delete": "MaintainAddresses"
       }
     },
-
-    relations: [{
-      type: Backbone.HasMany,
-      key: 'comments',
-      relatedModel: 'XM.AddressComment',
-      reverseRelation: {
-        key: 'address'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'characteristics',
-      relatedModel: 'XM.AddressCharacteristic',
-      reverseRelation: {
-        key: 'address'
-      }
-    }],
 
     // ..........................................................
     // METHODS

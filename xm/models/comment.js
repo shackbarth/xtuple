@@ -64,13 +64,6 @@ white:true*/
       }
     },
 
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'commentType',
-      relatedModel: 'XM.CommentType',
-      includeInJSON: 'id'
-    }],
-
     // ..........................................................
     // METHODS
     //

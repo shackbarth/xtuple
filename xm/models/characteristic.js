@@ -44,15 +44,6 @@ white:true*/
       "order"
     ],
 
-    relations: [{
-      type: Backbone.HasMany,
-      key: 'options',
-      relatedModel: 'XM.CharacteristicOption',
-      reverseRelation: {
-        key: 'characteristic'
-      }
-    }],
-
     //..................................................
     // METHODS
     //
@@ -185,13 +176,6 @@ white:true*/
   */
   XM.CharacteristicAssignment = XT.Model.extend({
     /** @scope XM.CharacteristicAssignment.prototype */
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'characteristic',
-      relatedModel: 'XM.Characteristic',
-      includeInJSON: 'id'
-    }],
 
     //..................................................
     // METHODS
