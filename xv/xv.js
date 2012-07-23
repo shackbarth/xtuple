@@ -37,9 +37,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Contact",
             fields: [
-              { fieldName: "primaryContact", fieldType: "relation" }
+              // TODO: we can avoid having to specify the modelType by looking in the
+              // *relations* of the model, which will work even if the submodel is null
+              { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
+
         ],
 
         Contact: [
@@ -56,8 +65,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "account", fieldType: "relation" }
+              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -68,9 +83,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "name" },
               { fieldName: "description" },
               { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" },
-              // TODO disabled pending refactor of projectStatuses
-              //{ fieldName: "priority", fieldType: "dropdown", modelType: "XM.priorities" },
-              { fieldName: "incident", fieldType: "relation" }
+              { fieldName: "priority", fieldType: "dropdown", modelType: "XM.priorities" },
+              { fieldName: "incident", fieldType: "relation", modelType: "XM.IncidentInfo" }
             ]
           },
           {
@@ -81,6 +95,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "assignDate", fieldType: "date" },
               { fieldName: "completeDate", fieldType: "date" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -90,15 +110,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             fields: [
               { fieldName: "number" },
               { fieldName: "name" },
-              { fieldName: "account", fieldType: "relation" },
-              // TODO disabled pending refactor of projectStatus
-              //{ fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
-              //{ fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
-              //{ fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" }
+              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
+              { fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
+              { fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
+              { fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" }
             ]
           },
           {
             title: "Schedule",
+            location: "bottom", // TODO remove this line
             fields: [
               { fieldName: "startDate", fieldType: "date" },
               { fieldName: "assignDate", fieldType: "date" },
@@ -114,6 +134,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "probability", fieldType: "number" },
               { fieldName: "notes" }
             ]
+          },
+          {
+            title: "Comments",
+            //location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -129,21 +155,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Relationships",
             fields: [
-              { fieldName: "owner", fieldType: "relation" },
-              { fieldName: "contact", fieldType: "relation" },
-              { fieldName: "account", fieldType: "relation" },
-              { fieldName: "item", fieldType: "relation" }
+              { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
+              { fieldName: "contact", fieldType: "relation", modelType: "XM.ContactInfo" },
+              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
+              { fieldName: "item", fieldType: "relation", modelType: "XM.ItemInfo" }
             ]
           },
           {
             title: "History",
             boxType: "grid",
+            objectName: "history",
             location: "bottom",
             fields: [
               { fieldName: "description" },
               { fieldName: "created", fieldType: "readonly" },
               { fieldName: "createdBy", fieldType: "readonly" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ],
 
@@ -157,28 +190,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" }
             ]
           },
-          /*
-  disabled pending resolution of synching bug--need to listen to a trigger
           {
             title: "Summary",
+            location: "bottom",
             fields: [
-              // FIXME: we can grab the field names but they eval to 0 wrongly
-              // until there's a change to the model
-              { fieldName: "budgetedHoursTotal", fieldType: "number" },
+              { fieldName: "budgetedHoursTotal", fieldType: "readonly" },
               { fieldName: "actualHoursTotal", fieldType: "readonly" },
-              { fieldName: "balanceHoursTotal", fieldType: "readonly" },
-              { fieldName: "budgetedExpensesTotal", fieldType: "number" },
+              { fieldName: "actualHoursBalance", fieldType: "readonly" },
+              { fieldName: "budgetedExpensesTotal", fieldType: "readonly" },
               { fieldName: "actualExpensesTotal", fieldType: "readonly" },
               { fieldName: "balanceExpensesTotal", fieldType: "readonly" }
 
             ]
           },
-*/
           {
             title: "Schedule",
+            location: "bottom", // TODO: delete
             fields: [
-              { fieldName: "owner", fieldType: "relation" },
-              { fieldName: "assignedTo", fieldType: "relation" },
+              { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
+              { fieldName: "assignedTo", fieldType: "relation", modelType: "XM.UserAccountInfo" },
               { fieldName: "dueDate", fieldType: "date" },
               { fieldName: "assignDate", fieldType: "date" },
               { fieldName: "startDate", fieldType: "date" },
@@ -187,15 +217,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Tasks",
-            location: "bottom",
+            //location: "bottom",
             boxType: "grid",
+            objectName: "tasks",
             fields: [
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
               { label: "notes", fieldName: "notes", width: "220" },
+              { fieldName: "dueDate", fieldType: "date", width: "100" },
               { label: "actualHours", fieldName: "actualHours", fieldType: "number", width: "40" },
               { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "number", width: "40" }
             ]
+          },
+          {
+            title: "Comments",
+            location: "bottom",
+            boxType: "comments",
+            objectName: "comments"
           }
         ]
       });
@@ -224,6 +262,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return "XV.GridWidget";
       } else if (value === 'readonly') {
         return "XV.ReadOnlyWidget";
+      } else if (value === 'comments') {
+        return "XV.CommentsWidget";
       }
     },
     /**
@@ -237,7 +277,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         for (var i = 0; i < childrenCount; i++) {
           parent.removeChild(parent.children[0]);
         }
+      },
+
+    // XXX there's got to be a better way to get the name of the model
+    // that's currently being displayed. This way is very hackish.
+    // TODO: this doesn't need to be a view-layer static function
+    formatModelName: function (modelType) {
+      if (modelType && modelType.indexOf("Info") >= 0) {
+        modelType = modelType.substring(0, modelType.length - 4);
       }
+      if (modelType && modelType.indexOf("XM") >= 0) {
+        modelType = modelType.substring(3);
+      }
+      return modelType;
+    }
   });
 
   XV.util = new XV.Util();
