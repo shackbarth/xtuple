@@ -118,7 +118,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Schedule",
-            location: "bottom", // TODO remove this line
             fields: [
               { fieldName: "startDate", fieldType: "date" },
               { fieldName: "assignDate", fieldType: "date" },
@@ -137,7 +136,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Comments",
-            //location: "bottom",
+            location: "bottom",
             boxType: "comments",
             objectName: "comments"
           }
@@ -205,7 +204,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Schedule",
-            location: "bottom", // TODO: delete
             fields: [
               { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
               { fieldName: "assignedTo", fieldType: "relation", modelType: "XM.UserAccountInfo" },
@@ -217,7 +215,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Tasks",
-            //location: "bottom",
+            location: "bottom",
             boxType: "grid",
             objectName: "tasks",
             fields: [

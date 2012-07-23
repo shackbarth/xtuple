@@ -63,17 +63,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       }
       /**
-       * Add delete buttons for each row
-       * XXX security implications TBD for grid row delete
+       * Add delete buttons for each row (but not for the "title" row or the "new" row)
        */
-      this.createComponent({
-        kind: "onyx.Button",
-        container: gridRow,
-        name: "delete" + (inEvent.index - 1),
-        content: "Delete",
-        onclick: "deleteRow"
-      });
-
+      if (inEvent.index !== 0 && inEvent.index !== this.getCollection().size() + 1) {
+        this.createComponent({
+          kind: "onyx.Button",
+          container: gridRow,
+          name: "delete" + (inEvent.index - 1),
+          content: "Delete",
+          onclick: "deleteRow"
+        });
+      }
     },
 
     deleteRow: function (inSender, inEvent) {
