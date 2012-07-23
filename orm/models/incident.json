@@ -649,7 +649,7 @@
       {
         "name": "source",
         "toOne": {
-          "type": "Contact",
+          "type": "Incident",
           "column": "source_id"
         }
       },

@@ -410,14 +410,6 @@
           "type": "String",
           "column": "country_curr_number"
         }
-      },
-      {
-        "name": "states",
-        "toMany": {
-          "type": "State",
-          "column": "country_id",
-          "inverse": "country"
-        }
       }
     ],
     "isSystem": true
