@@ -85,7 +85,8 @@ select xt.install_js('XT','Session','xtuple', $$
     @param {String} Schema name
     @returns {Hash}
   */
-  XT.Session.schema = function(schema) {
+  XT.Session.schema = function(schema, refresh) {
+    if (!refresh && this._schema) { return this._schema };
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
               '  typcategory as "category" ' +
@@ -111,16 +112,15 @@ select xt.install_js('XT','Session','xtuple', $$
         return value.toMany;
       },
       addToOne = function (value) {
-        var relations = result[type]['relations'];
-        plv8.elog(NOTICE, 'x!', JSON.stringify(value));
-          var child = XT.Orm.fetch(schema.toUpperCase(), value.type);
-          var pkey = XT.Orm.primaryKey(child),
+        var relations = result[type]['relations'],
+          child = XT.Orm.fetch(schema.toUpperCase(), value.toOne.type),
+          pkey = XT.Orm.primaryKey(child),
           rel = {
             type: "Backbone.HasOne",
-            key: value.name,
+            key: value.toOne.name,
             relatedModel: schema.toUpperCase() + '.' + type
           };
-        if (!value.isNested) {
+        if (!value.toOne.isNested) {
           rel.includeInJSON = pkey;
         }
         relations.push(rel);
@@ -129,10 +129,10 @@ select xt.install_js('XT','Session','xtuple', $$
         var relations = result[type]['relations'], 
           rel = {
             type: "Backbone.HasMany",
-            key: value.name,
+            key: value.toMany.name,
             relatedModel: schema.toUpperCase() + '.' + type,
             reverseRelation: {
-              key: value.inverse
+              key: value.toMany.inverse
             }
           };
         relations.push(rel);
@@ -140,7 +140,6 @@ select xt.install_js('XT','Session','xtuple', $$
 
     /* Loop through each field and add to the object */
     for (i = 0; i < recs.length; i++) {
-    plv8.elog(NOTICE, 'wtf', JSON.stringify(recs[i]));
       type = recs[i].type.classify();
       name = recs[i].column;
       if (type !== prev) {
@@ -149,7 +148,6 @@ select xt.install_js('XT','Session','xtuple', $$
         
         /* Add relations */
         result[type]['relations'] = [];
-        plv8.elog(NOTICE, '?', schema.toUpperCase(), type);
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
 
         /* To One */
@@ -168,7 +166,8 @@ select xt.install_js('XT','Session','xtuple', $$
       prev = type;
     }
 
-    return JSON.stringify(result);
+    this._schema = JSON.stringify(result);
+    return this._schema;
   }
   
 $$ );
