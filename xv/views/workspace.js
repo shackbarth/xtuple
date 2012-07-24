@@ -170,11 +170,12 @@ trailing:true white:true*/
             for (var iField = 0; iField < boxDesc.fields.length; iField++) {
               var fieldDesc = boxDesc.fields[iField];
               var fieldName = boxDesc.fields[iField].fieldName;
+              var fieldValue = model.getValue(fieldName) ? model.getValue(fieldName) : "";
               if (fieldName) {
                 /**
                  * Update the view field with the model value
                  */
-                this.$[fieldName].setValue(model.getValue(fieldName));
+                this.$[fieldName].setValue(fieldValue);
               }
             }
           }
@@ -347,13 +348,12 @@ trailing:true white:true*/
           XT.log("Workspace is fetching " + modelType + " " + id);
         } else {
           // no id: this is a new record
-          var m = new Klass(null, { isNew: true });
+          var m = new Klass();
           this.setModel(m);
           m.on("statusChange", enyo.bind(this, "modelDidChange"));
-          m.fetch();
+          m.initialize(null, { isNew: true });
           XT.log("Workspace is fetching new " + modelType);
         }
-
 
       },
 
