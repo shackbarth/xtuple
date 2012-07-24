@@ -286,8 +286,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -360,8 +360,8 @@
       },
       {
         "name": "incident",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "alarm_source_id"
         }
       },
@@ -570,8 +570,8 @@
       },
       {
         "name": "incident",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "comment_source_id"
         }
       },
@@ -648,8 +648,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -714,8 +714,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -764,8 +764,8 @@
       },
       {
         "name": "incident",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "incdthist_incdt_id"
         }
       },
@@ -831,8 +831,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -897,8 +897,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -1075,8 +1075,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -1141,8 +1141,8 @@
       },
       {
         "name": "incident",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "recur_parent_id"
         }
       },
@@ -1315,8 +1315,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },

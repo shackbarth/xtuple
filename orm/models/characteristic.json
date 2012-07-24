@@ -204,8 +204,8 @@
       },
       {
         "name": "characteristic",
-        "toOne": {
-          "type": "Characteristic",
+        "attr": {
+          "type": "Number",
           "column": "charopt_char_id"
         }
       },

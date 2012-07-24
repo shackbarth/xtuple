@@ -149,8 +149,8 @@
       },
       {
         "name": "address",
-        "toOne": {
-          "type": "Address",
+        "attr": {
+          "type": "Number",
           "column": "target"
         }
       },
@@ -212,8 +212,8 @@
       },
       {
         "name": "address",
-        "toOne": {
-          "type": "Address",
+        "attr": {
+          "type": "Number",
           "column": "comment_source_id"
         }
       },

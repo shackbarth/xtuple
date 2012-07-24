@@ -68,6 +68,27 @@
       }
     ],
     "isSystem": true,
-    "extensions": []
+    "extensions": [
+      {
+        "table": "crmacct",
+        "isChild": true,
+        "relations": [
+          {
+            "column": "crmacct_taxauth_id",
+            "inverse": "id"
+          }
+        ],
+        "properties": [
+          {
+            "name": "account",
+            "toOne": {
+              "type": "Account",
+              "column": "crmacct_id"
+            }
+          }
+        ],
+        "sequence": 0
+      }
+    ]
   }
 ]

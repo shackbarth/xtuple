@@ -290,8 +290,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -356,8 +356,8 @@
       },
       {
         "name": "opportunity",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "target"
         }
       },
@@ -419,8 +419,8 @@
       },
       {
         "name": "opportunity",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "comment_source_id"
         }
       },
@@ -496,8 +496,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -562,8 +562,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -628,8 +628,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -803,8 +803,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -869,8 +869,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -1065,8 +1065,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
