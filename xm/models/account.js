@@ -79,96 +79,6 @@ white:true*/
       "name"
     ],
 
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'parent',
-      relatedModel: 'XM.AccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'primaryContact',
-      relatedModel: 'XM.ContactInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'secondaryContact',
-      relatedModel: 'XM.ContactInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasMany,
-      key: 'comments',
-      relatedModel: 'XM.AccountComment',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'characteristics',
-      relatedModel: 'XM.AccountCharacteristic',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'accounts',
-      relatedModel: 'XM.AccountAccount',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'contacts',
-      relatedModel: 'XM.AccountContact',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'items',
-      relatedModel: 'XM.AccountItem',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'files',
-      relatedModel: 'XM.AccountFile',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'images',
-      relatedModel: 'XM.AccountImage',
-      reverseRelation: {
-        key: 'account'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'urls',
-      relatedModel: 'XM.AccountUrl',
-      reverseRelation: {
-        key: 'account'
-      }
-    }/* These were causing a problem in validation. SH 7/19/2012
-      , {
-      type: Backbone.HasOne,
-      key: 'userAccount',
-      relatedModel: 'XM.UserAccountInfo',
-      includeInJSON: 'username'
-    }, {
-      type: Backbone.HasOne,
-      key: 'salesRep',
-      relatedModel: 'XM.SalesRep',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasOne,
-      key: 'taxAuthority',
-      relatedModel: 'XM.TaxAuthority',
-      includeInJSON: 'id'
-    }*/],
-
     // ..........................................................
     // METHODS
     //
@@ -215,13 +125,7 @@ white:true*/
 
     recordType: 'XM.AccountAccount',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'accounts',
-      relatedModel: 'XM.AccountInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -235,13 +139,7 @@ white:true*/
 
     recordType: 'XM.AccountContact',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'contacts',
-      relatedModel: 'XM.ContactInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -255,13 +153,7 @@ white:true*/
 
     recordType: 'XM.AccountItem',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'items',
-      relatedModel: 'XM.ItemInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -275,13 +167,7 @@ white:true*/
 
     recordType: 'XM.AccountFile',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'files',
-      relatedModel: 'XM.FileInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -295,13 +181,7 @@ white:true*/
 
     recordType: 'XM.AccountImage',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'images',
-      relatedModel: 'XM.ImageInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -315,13 +195,7 @@ white:true*/
 
     recordType: 'XM.AccountUrl',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'url',
-      relatedModel: 'XM.Url'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -335,13 +209,7 @@ white:true*/
 
     recordType: 'XM.AccountProject',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'project',
-      relatedModel: 'XM.ProjectInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -353,17 +221,7 @@ white:true*/
   XM.AccountContactInfo = XT.Model.extend({
     /** @scope XM.AccountContactInfo.prototype */
 
-    recordType: 'XM.AccountContactInfo',
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'address',
-      relatedModel: 'XM.AddressInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }]
+    recordType: 'XM.AccountContactInfo'
 
   });
 
@@ -395,17 +253,7 @@ white:true*/
           "owner"
         ]
       }
-    },
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'primaryContact',
-      relatedModel: 'XM.AccountContactInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'owner',
-      relatedModel: 'XM.UserAccountInfo'
-    }]
+    }
 
   });
 

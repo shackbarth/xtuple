@@ -85,14 +85,7 @@ white:true*/
       "unitRatioScale",
       "warningColor",
       "weightScale"
-    ],
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'language',
-      relatedModel: 'XM.Language',
-      includeInJSON: 'id'
-    }]
+    ]
 
   });
 
@@ -129,16 +122,7 @@ white:true*/
         "update": "MaintainGroups",
         "delete": "MaintainGroups"
       }
-    },
-
-    relations: [{
-      type: Backbone.HasMany,
-      key: 'grantedPrivileges',
-      relatedModel: 'XM.UserAccountRolePrivilegeAssignment',
-      reverseRelation: {
-        key: 'userAccountRole'
-      }
-    }]
+    }
 
   });
 
@@ -152,16 +136,7 @@ white:true*/
 
     recordType: 'UserAccountRole',
 
-    readOnly: true,
-
-    relations: [{
-      type: Backbone.HasMany,
-      key: 'grantedPrivileges',
-      relatedModel: 'XM.UserAccountRolePrivilegeAssignment',
-      reverseRelation: {
-        key: 'userAccountRole'
-      }
-    }]
+    readOnly: true
 
   });
 
@@ -173,14 +148,7 @@ white:true*/
   XM.UserAccountRolePrivilegeAssignment = XM.Document.extend({
     /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */
 
-    recordType: 'UserAccountRolePrivilegeAssignment',
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'privilege',
-      relatedModel: 'XM.Privilege',
-      includeInJSON: 'id'
-    }]
+    recordType: 'UserAccountRolePrivilegeAssignment'
 
   });
 
@@ -219,35 +187,7 @@ white:true*/
       "canCreateUsers",
       "disableExport",
       "isDatabaseUser"
-    ],
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'locale',
-      relatedModel: 'XM.Locale',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasMany,
-      key: 'grantedPrivileges',
-      relatedModel: 'XM.UserAccountPrivilegeAssignment',
-      reverseRelation: {
-        key: 'userAccount'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'userAccountRoles',
-      relatedModel: 'XM.UserAccountRole',
-      reverseRelation: {
-        key: 'userAccount'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'grantedUserAccountRoles',
-      relatedModel: 'XM.UserAccountUserAccountRoleAssignment',
-      reverseRelation: {
-        key: 'userAccount'
-      }
-    }]
+    ]
 
   });
 
@@ -273,14 +213,7 @@ white:true*/
     requiredAttributes: [
       "userAccount",
       "privilege"
-    ],
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'privilege',
-      relatedModel: 'XM.Privilege',
-      includeInJSON: 'id'
-    }]
+    ]
 
   });
 
@@ -292,14 +225,7 @@ white:true*/
   XM.UserAccountUserAccountRoleAssignment = XM.Document.extend({
     /** @scope XM.UserAccountUserAccountRoleAssignment.prototype */
 
-    recordType: 'UserAccountUserAccountRoleAssignment',
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'userAccountRole',
-      relatedModel: 'XM.UserAccountRoleInfo',
-      includeInJSON: 'id'
-    }]
+    recordType: 'UserAccountUserAccountRoleAssignment'
 
   });
 

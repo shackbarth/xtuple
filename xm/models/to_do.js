@@ -84,68 +84,7 @@ white:true*/
       "dueDate",
       "name"
     ],
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'priority',
-      relatedModel: 'XM.Priority',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'contact',
-      relatedModel: 'XM.ContactInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'assignedTo',
-      relatedModel: 'XM.UserAccountInfo'
-    }, {
-      type: Backbone.HasMany,
-      key: 'accounts',
-      relatedModel: 'XM.ToDoAccount',
-      reverseRelation: {
-        key: 'toDo'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'contacts',
-      relatedModel: 'XM.ToDoContact',
-      reverseRelation: {
-        key: 'toDo'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'items',
-      relatedModel: 'XM.ToDoItem',
-      reverseRelation: {
-        key: 'toDo'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'files',
-      relatedModel: 'XM.ToDoFile',
-      reverseRelation: {
-        key: 'toDo'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'images',
-      relatedModel: 'XM.ToDoImage',
-      reverseRelation: {
-        key: 'toDo'
-      }
-    }, {
-      type: Backbone.HasMany,
-      key: 'urls',
-      relatedModel: 'XM.ToDoUrl',
-      reverseRelation: {
-        key: 'toDo'
-      }
-    }],
-
+    
     // ..........................................................
     // METHODS
     //
@@ -285,13 +224,7 @@ white:true*/
 
     recordType: 'XM.ToDoAccount',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -305,13 +238,7 @@ white:true*/
 
     recordType: 'XM.ToDoContact',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'contact',
-      relatedModel: 'XM.ContactInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -325,13 +252,7 @@ white:true*/
 
     recordType: 'XM.ToDoItem',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'item',
-      relatedModel: 'XM.ItemInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -345,13 +266,7 @@ white:true*/
 
     recordType: 'XM.ToDoFile',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'file',
-      relatedModel: 'XM.FileInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -365,13 +280,7 @@ white:true*/
 
     recordType: 'XM.ToDoImage',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'image',
-      relatedModel: 'XM.ImageInfo'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -385,13 +294,7 @@ white:true*/
 
     recordType: 'XM.ToDoUrl',
 
-    isDocumentAssignment: true,
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'url',
-      relatedModel: 'XM.Url'
-    }]
+    isDocumentAssignment: true
 
   });
 
@@ -403,26 +306,7 @@ white:true*/
   XM.ToDoInfo = XT.Model.extend({
     /** @scope XM.ToDoInfo.prototype */
 
-    recordType: 'XM.ToDoInfo',
-
-    relations: [{
-      type: Backbone.HasOne,
-      key: 'priority',
-      relatedModel: 'XM.Priority',
-      includeInJSON: 'id'
-    }, {
-      type: Backbone.HasOne,
-      key: 'account',
-      relatedModel: 'XM.AccountInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'contact',
-      relatedModel: 'XM.ContactInfo'
-    }, {
-      type: Backbone.HasOne,
-      key: 'assignedTo',
-      relatedModel: 'XM.UserAccountInfo'
-    }]
+    recordType: 'XM.ToDoInfo'
 
   });
 

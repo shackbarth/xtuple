@@ -39,7 +39,6 @@ white:true*/
         settingsOptions,
         settings,
         schemaOptions,
-        schema,
         callback;
 
       if (options && options.success && options.success instanceof Function) {
@@ -101,8 +100,35 @@ white:true*/
 
         // callback
         schemaOptions.success = function (resp) {
-          schema = new Backbone.Model(resp);
+          var schema = new Backbone.Model(resp),
+            prop,
+            Klass,
+            relations,
+            i;
           that.setSchema(schema);
+          
+          // Set relations
+          for (prop in schema.attributes) {
+            if (schema.attributes.hasOwnProperty(prop)) {
+              relations = schema.attributes[prop].relations || [];
+              if (relations.length) {
+                Klass = XT.Model.getObjectByName('XM' + '.' + prop);
+                if (Klass) {
+                  Klass.prototype.relations = [];
+                  for (i = 0; i < relations.length; i++) {
+                    if (relations[i].type === "Backbone.HasOne") {
+                      relations[i].type = Backbone.HasOne;
+                    } else if (relations[i].type === "Backbone.HasMany") {
+                      relations[i].type = Backbone.HasMany;
+                    } else {
+                      continue;
+                    }
+                    Klass.prototype.relations.push(relations[i]);
+                  }
+                }
+              }
+            }
+          }
 
           callback();
         };
