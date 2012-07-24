@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, XV:true, Backbone:true, enyo:true, _:true */
+/*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
 (function () {
   //"use strict";
 
@@ -21,21 +21,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       classes: "onyx-menu-toolbar",
       onchange: "doFieldLeft", // XXX onleave seems to do onmouseout, which I don't want.
       components: [
+
         {
           kind: "onyx.MenuDecorator",
           components: [
-            //{content: "Split Popup menu", kind: "onyx.Button", style: "border-radius: 3px 0 0 3px;"},
             {
               kind: "onyx.Input",
               name: "nameField",
-              // FIXME: this object only throws this event for the first keystroke
-              // so if you type F ... r, the F will get captured but not the Fr
-              onkeyup: "doInputChanged",
+              onkeyup: "doKeyUp",
               style: "border: 0px;"
             },
             {
               kind: "onyx.Menu",
               name: "autocompleteMenu",
+              modal: false, // if this dropdown is modal then it
+              // suppresses capture of key events from the namefield
               components: [
                 {content: ""}
               ],
@@ -75,7 +75,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     },
     doFieldLeft: function (inSender, inEvent) {
-      console.debug("onchange");
+      /*
+      FIXME here's a curious bug: I want to monitor when the user leaves this widget
+      so that we can (1) select the top menu option if it wasn't picked, or (2) clear
+      out the field if there's no valid match. The problem is that if the user wants
+      to select a value from the options, that fires this event first! And so the
+      event of actually picking an option never happens.
       if (this.$.autocompleteMenu.children.length > 0) {
         this.$.nameField.setValue(this.$.autocompleteMenu.children[0].content);
         this.$.autocompleteMenu.children[0].doSelect();
@@ -84,6 +89,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       this.$.autocompleteMenu.hide();
       this.render();
+      */
     },
     /**
      * A convenience function so that this object can be treated generally like an input
@@ -103,18 +109,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * no other way to know that the collection type is.
      */
     modelTypeChanged: function () {
-        // Well, this is magical, and I wish I knew a better way of doing this
-        var collectionType = this.getModelType().substring(3) + "Collection";
-        this.setCollection(new XM[collectionType]());
+      // Well, this is magical, and I wish I knew a better way of doing this
+      var collectionType = this.getModelType().substring(3) + "Collection";
+      this.setCollection(new XM[collectionType]());
     },
     /**
      * render this object onto the name field
      */
     modelChanged: function () {
       /**
-       * Populate the input with the applicable field
+       * Populate the input with the applicable field. If there's no model chosen
+       * just leave the field blank.
        */
-      this.$.nameField.setValue(this.getModel().get(this.getTitleField()));
+      var displayValue = this.getModel() ? this.getModel().get(this.getTitleField()) : "";
+      this.$.nameField.setValue(displayValue);
     },
     _collectionFetchSuccess: function () {
       this.log();
@@ -140,13 +148,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     _collectionFetchError: function () {
       this.log();
     },
-    doInputChanged: function (inSender, inEvent) {
-      console.log("input changed: " + inSender.getValue());
+
+    doKeyUp: function (inSender, inEvent) {
+      console.log("input changed: " + inSender.getValue() + inEvent.keyCode);
 
       /**
        * Start by clearing out the dropdown in case there's pre-existing elements
        */
       XV.util.removeAllChildren(this.$.autocompleteMenu);
+
       var query = {
         parameters: [{
           attribute: this.getTitleField(),

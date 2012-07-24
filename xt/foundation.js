@@ -189,8 +189,8 @@ _.extend(XT, {
     * to be at the top of the stack.
     */
     for (var i = 0; i < this.history.length; i++) {
-      if (this.history[i].modelType === model.get("type") &&
-          this.history[i].modelId === model.get("guid")) {
+      if (this.history[i].modelType === model.recordType &&
+          this.history[i].modelId === model.get("id")) {
         this.history.splice(i, 1);
         i--;
       }
@@ -200,8 +200,8 @@ _.extend(XT, {
      * Unshift instead of push because we want the newest entries at the top
      */
     this.history.unshift({
-      modelType: model.get("type"),
-      modelId: model.get("guid"),
+      modelType: model.recordType,
+      modelId: model.get("id"),
       modelName: model.get("name")
     });
   },
