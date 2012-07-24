@@ -314,14 +314,15 @@ trailing:true white:true*/
         //
         // Determine the model that will back this view
         //
-        var modelType = XV.util.formatModelName(model.recordType);
+        var modelType = XV.util.infoToMasterModelName(model.recordType);
 
         //
         // Setting the model type also renders the workspace. We really can't do
         // that until we know the model type.
         //
         this.setModelType(modelType);
-        this.$.workspaceHeader.setContent(modelType);
+        // XXX not sure best way to massage the header for the linguist
+        this.$.workspaceHeader.setContent(("_" + modelType).loc());
         this.setWorkspaceList();
         this.$.menuItems.render();
         this.$.workspacePanels.setModelType(modelType);
@@ -330,10 +331,7 @@ trailing:true white:true*/
         //
         // Set up a listener for changes in the model
         //
-        var Klass = Backbone.Relational.store.getObjectByName("XM." + modelType);
-        var m = new Klass();
-        this.setModel(m);
-        m.on("change", enyo.bind(this, "modelDidChange"));
+        var Klass = Backbone.Relational.store.getObjectByName(modelType);
 
 
         //
@@ -342,27 +340,31 @@ trailing:true white:true*/
         var id = model.id;
         if (id) {
           // id exists: pull pre-existing record for edit
+          var m = new Klass();
+          this.setModel(m);
+          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch({id: id});
           XT.log("Workspace is fetching " + modelType + " " + id);
         } else {
           // no id: this is a new record
+          var m = new Klass(null, { isNew: true });
+          this.setModel(m);
+          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch();
           XT.log("Workspace is fetching new " + modelType);
         }
 
 
       },
+
+      /**
+       * Essentially the callback function from backbone
+       */
       modelDidChange: function (model, value, options) {
         XT.log("Model changed: " + JSON.stringify(model.toJSON()));
-
-
-        // XXX this gets called for all the relational subobjects
-        // as well and we don't really want to deal with those
-        // because we've already dealt with them under the master
-        // model. So I just ignore any calls to this function that
-        // are not for the function in question. It'd be better if
-        // I dealt with the reason this was getting called so much.
-        if (model.get("type") !== this.getModelType()) {
+        // XXX this still isn't working for adding new objects
+        if (model.status !== XT.Model.READY_CLEAN &&
+            model.status !== XT.Model.READY_NEW) {
           return;
         }
 

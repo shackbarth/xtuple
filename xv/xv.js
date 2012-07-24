@@ -25,8 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        * etc. But I think this would fail if the field happens to be null.
        */
       this.setWorkspacePanelDescriptor({
-        // the key is uppercase because the model name is uppercase
-        Account: [
+        "XM.Account": [
           {
             title: "Account Info",
             fields: [
@@ -51,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
         ],
 
-        Contact: [
+        "XM.Contact": [
           {
             title: "Contact Info",
             fields: [
@@ -76,7 +75,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
         ],
 
-        ToDo: [
+        "XM.ToDo": [
           {
             title: "ToDo Info",
             fields: [
@@ -104,7 +103,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
         ],
 
-        Opportunity: [
+        "XM.Opportunity": [
           {
             title: "Opportunity Info",
             fields: [
@@ -118,7 +117,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Schedule",
-            location: "bottom", // TODO remove this line
             fields: [
               { fieldName: "startDate", fieldType: "date" },
               { fieldName: "assignDate", fieldType: "date" },
@@ -137,13 +135,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Comments",
-            //location: "bottom",
+            location: "bottom",
             boxType: "comments",
             objectName: "comments"
           }
         ],
 
-        Incident: [
+        "XM.Incident": [
           {
             title: "Incident Info",
             fields: [
@@ -180,7 +178,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           }
         ],
 
-        Project: [
+        "XM.Project": [
           {
             title: "Project Info",
             fields: [
@@ -205,7 +203,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Schedule",
-            location: "bottom", // TODO: delete
             fields: [
               { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
               { fieldName: "assignedTo", fieldType: "relation", modelType: "XM.UserAccountInfo" },
@@ -217,7 +214,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           },
           {
             title: "Tasks",
-            //location: "bottom",
+            location: "bottom",
             boxType: "grid",
             objectName: "tasks",
             fields: [
@@ -283,14 +280,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // that's currently being displayed. This way is very hackish.
     // TODO: this doesn't need to be a view-layer static function
     formatModelName: function (modelType) {
+      return this.infoToMasterModelName(this.stripModelNamePrefix(modelType));
+    },
+    infoToMasterModelName: function (modelType) {
       if (modelType && modelType.indexOf("Info") >= 0) {
         modelType = modelType.substring(0, modelType.length - 4);
       }
+      return modelType;
+    },
+    stripModelNamePrefix: function (modelType) {
       if (modelType && modelType.indexOf("XM") >= 0) {
         modelType = modelType.substring(3);
       }
       return modelType;
     }
+
   });
 
   XV.util = new XV.Util();

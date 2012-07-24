@@ -95,7 +95,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      */
     collectionChanged: function () {
       // the +1 is there because the first row is labels
-      this.$.commentsRepeater.setCount(this.getCollection().size() + 1);
+      this.$.commentsRepeater.setCount(this.getCollection().length + 1);
       this.render();
     },
     doFieldChanged: function (inSender, inEvent) {
