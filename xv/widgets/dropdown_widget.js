@@ -16,22 +16,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     published: {
       modelType: null
     },
+    handlers: {
+      onSelect: "itemSelected"
+    },
     components: [{
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
       components: [
         {kind: "onyx.PickerDecorator", components: [
           {},
-          // FIXME: onblur is not the event we want here, but onselect and
-          // onchange don't work. Overriding the picker's onselected
-          // function didn't work either, because the "model update" event
-          // was being thrown not just by manual changes but in the
-          // initialization change of the widget
-
-          // XXX QA: onblur is really terrible. Doesn't really work unless you
-          // tab out of it. This widget isn't even in the beta yet, though, so
-          // I'm happy to wait and see if it has better support in a few weeks.
-          { kind: "onyx.Picker", name: "dropdown", onblur: "doDropdownChanged" }
+          { kind: "onyx.Picker", name: "dropdown" }
         ]}
       ]
     }],
@@ -73,7 +67,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       this.$.dropdown.render();
     },
-    doDropdownChanged: function (inSender, inEvent) {
+    itemSelected: function (inSender, inEvent) {
       this.doFieldChanged(this, inEvent); // pass this up the stream
       return true;
     }
