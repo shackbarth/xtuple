@@ -282,8 +282,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -348,8 +348,8 @@
       },
       {
         "name": "contact",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "target"
         }
       },
@@ -412,8 +412,8 @@
       },
       {
         "name": "contact",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "comment_source_id"
         }
       },
@@ -490,8 +490,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -548,8 +548,8 @@
       },
       {
         "name": "contact",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "cntcteml_cntct_id"
         }
       },
@@ -598,8 +598,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -664,8 +664,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -853,8 +853,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -919,8 +919,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Contact",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },

@@ -249,8 +249,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -428,8 +428,8 @@
       },
       {
         "name": "toDo",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "comment_source_id"
         }
       },
@@ -506,8 +506,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -572,8 +572,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -638,8 +638,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -798,8 +798,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -864,8 +864,8 @@
       },
       {
         "name": "toDo",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "recur_parent_id"
         }
       },
@@ -942,8 +942,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -1008,8 +1008,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },

@@ -265,8 +265,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -323,8 +323,8 @@
       },
       {
         "name": "item",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "itemalias_item_id"
         }
       },
@@ -401,8 +401,8 @@
       },
       {
         "name": "item",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "target"
         }
       },
@@ -464,8 +464,8 @@
       },
       {
         "name": "item",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "comment_source_id"
         }
       },
@@ -542,8 +542,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -674,8 +674,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -829,8 +829,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -895,8 +895,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Item",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -963,47 +963,6 @@
         "attr": {
           "type": "String",
           "column": "prodcat_descrip"
-        }
-      }
-    ],
-    "isSystem": true
-  },
-  {
-    "context": "xtuple",
-    "nameSpace": "XM",
-    "type": "ProfitCenter",
-    "table": "prftcntr",
-    "idSequenceName": "prftcntr_prftcntr_id_seq",
-    "comment": "Profit Center Map",
-    "privileges": {
-      "all": {
-        "create": "MaintainChartOfAccounts",
-        "read": true,
-        "update": "MaintainChartOfAccounts",
-        "delete": "MaintainChartOfAccounts"
-      }
-    },
-    "properties": [
-      {
-        "name": "id",
-        "attr": {
-          "type": "Number",
-          "column": "prftcntr_id",
-          "isPrimaryKey": true
-        }
-      },
-      {
-        "name": "number",
-        "attr": {
-          "type": "String",
-          "column": "prftcntr_number"
-        }
-      },
-      {
-        "name": "description",
-        "attr": {
-          "type": "String",
-          "column": "prftcntr_descrip"
         }
       }
     ],

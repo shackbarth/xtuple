@@ -176,8 +176,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -242,8 +242,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -308,8 +308,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Incident",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -418,8 +418,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -484,8 +484,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -550,8 +550,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Opportunity",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -661,8 +661,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Project",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -727,8 +727,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Project",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -793,8 +793,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "Project",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -823,58 +823,6 @@
       }
     ],
     "isNestedOnly": true,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "SalesRep",
-    "table": "crmacct",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "isChild": true,
-    "relations": [
-      {
-        "column": "crmacct_salesrep_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "account",
-        "toOne": {
-          "type": "Account",
-          "column": "crmacct_id"
-        }
-      }
-    ],
-    "sequence": 0,
-    "isSystem": true
-  },
-  {
-    "context": "crm",
-    "nameSpace": "XM",
-    "type": "TaxAuthority",
-    "table": "crmacct",
-    "isExtension": true,
-    "comment": "Extended by Crm",
-    "isChild": true,
-    "relations": [
-      {
-        "column": "crmacct_taxauth_id",
-        "inverse": "id"
-      }
-    ],
-    "properties": [
-      {
-        "name": "account",
-        "toOne": {
-          "type": "Account",
-          "column": "crmacct_id"
-        }
-      }
-    ],
-    "sequence": 0,
     "isSystem": true
   },
   {
@@ -949,6 +897,38 @@
   {
     "context": "crm",
     "nameSpace": "XM",
+    "type": "ToDoInfo",
+    "table": "todoitem",
+    "isExtension": true,
+    "comment": "Extended by Crm",
+    "relations": [
+      {
+        "column": "todoitem_id",
+        "inverse": "id"
+      }
+    ],
+    "properties": [
+      {
+        "name": "incident",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_incdt_id"
+        }
+      },
+      {
+        "name": "opportunity",
+        "attr": {
+          "type": "Number",
+          "column": "todoitem_ophead_id"
+        }
+      }
+    ],
+    "sequence": 0,
+    "isSystem": true
+  },
+  {
+    "context": "crm",
+    "nameSpace": "XM",
     "type": "ToDoIncident",
     "table": "xt.docinfo",
     "idSequenceName": "docass_docass_id_seq",
@@ -980,8 +960,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -1046,8 +1026,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
@@ -1112,8 +1092,8 @@
       },
       {
         "name": "source",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "source_id"
         }
       },
