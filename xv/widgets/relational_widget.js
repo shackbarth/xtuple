@@ -21,21 +21,21 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       classes: "onyx-menu-toolbar",
       onchange: "doFieldLeft", // XXX onleave seems to do onmouseout, which I don't want.
       components: [
+
         {
           kind: "onyx.MenuDecorator",
           components: [
-            //{content: "Split Popup menu", kind: "onyx.Button", style: "border-radius: 3px 0 0 3px;"},
             {
               kind: "onyx.Input",
               name: "nameField",
-              // FIXME: this object only throws this event for the first keystroke
-              // so if you type F ... r, the F will get captured but not the Fr
-              onkeyup: "doInputChanged",
+              onkeyup: "doKeyUp",
               style: "border: 0px;"
             },
             {
               kind: "onyx.Menu",
               name: "autocompleteMenu",
+              modal: false, // if this dropdown is modal then it
+              // suppresses capture of key events from the namefield
               components: [
                 {content: ""}
               ],
@@ -148,13 +148,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     _collectionFetchError: function () {
       this.log();
     },
-    doInputChanged: function (inSender, inEvent) {
-      console.log("input changed: " + inSender.getValue());
+
+    doKeyUp: function (inSender, inEvent) {
+      console.log("input changed: " + inSender.getValue() + inEvent.keyCode);
 
       /**
        * Start by clearing out the dropdown in case there's pre-existing elements
        */
       XV.util.removeAllChildren(this.$.autocompleteMenu);
+
       var query = {
         parameters: [{
           attribute: this.getTitleField(),
