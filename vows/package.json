@@ -1,0 +1,25 @@
+{
+  "author": "W. Cole Davis <cole@xtuple.com>",
+  "name": "vows",
+  "description": "test suite using vows",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "main": "main.js",
+  "dependencies": {
+    "backbone":"",
+    "backbone-relational":"",
+    "vows":"",
+    "underscore":"",
+    "socket.io-client":"",
+    "tinycolor":"",
+    "commander":""
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}

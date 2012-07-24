@@ -1,9 +1,0 @@
-{
-  "type": "demand",
-  "dependencies": [
-    "document",
-    "comment",
-    "characteristic",
-    "user_account"
-  ]
-}

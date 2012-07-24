@@ -1,8 +1,0 @@
-{
-  "type": "demand",
-  "dependencies": [
-    "document",
-    "comment",
-    "characteristic"
-  ]
-}
