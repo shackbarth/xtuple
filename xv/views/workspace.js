@@ -36,12 +36,6 @@ trailing:true white:true*/
        */
       modelTypeChanged: function () {
 
-        /**
-         * Start by clearing out all of the panels
-         */
-        XV.util.removeAllChildren(this.$.topPanel);
-        XV.util.removeAllChildren(this.$.bottomPanel);
-
         var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
@@ -305,6 +299,17 @@ trailing:true white:true*/
         this.$.workspacePanels.gotoBox(p.title);
       },
       /**
+       * Cleans out all the elements from a workspace.
+       * XXX FIXME this looks to work via the command line but not onscreen
+       */
+      wipe: function () {
+        XV.util.removeAll(this.$.workspacePanels.$.topPanel);
+        this.$.workspacePanels.$.topPanel.refresh();
+        XV.util.removeAll(this.$.workspacePanels.$.bottomPanel);
+        this.$.workspacePanels.$.bottomPanel.refresh();
+      },
+
+      /**
        * Accepts the object that tells the workspace what to drill down into.
        * SetOptions is quite generic, because it can be called in a very generic
        * way from the main carousel event handler. Note also that the model parameter
@@ -312,6 +317,12 @@ trailing:true white:true*/
        * type and id properties
        */
       setOptions: function (model) {
+        /**
+         * Delete all boxes before we try to render anything else
+         */
+        this.wipe();
+
+
         //
         // Determine the model that will back this view
         //

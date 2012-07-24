@@ -41,13 +41,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
           },
+          /*
           {
             title: "Comments",
             location: "bottom",
             boxType: "comments",
             objectName: "comments"
           }
-
+*/
+        ],
+        "XM.UserAccount": [
+          {
+            title: "User Account Info",
+            fields: [
+              { fieldName: "properName" }
+            ]
+          }
         ],
 
         "XM.Contact": [
@@ -267,14 +276,38 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Removes all the children from a parent object. This is a simple utility function.
      */
     removeAllChildren: function (parent) {
-        // It's necessary to save the length into a variable or else the loop ends
-        // prematurely. It's also necessary to delete the children always from the
-        // 0 spot and not the i spot, because the target moves as you delete.
-        var childrenCount = parent.children.length;
-        for (var i = 0; i < childrenCount; i++) {
-          parent.removeChild(parent.children[0]);
-        }
-      },
+      // It's necessary to save the length into a variable or else the loop ends
+      // prematurely. It's also necessary to delete the children always from the
+      // 0 spot and not the i spot, because the target moves as you delete.
+      var childrenCount = parent.children.length;
+      for (var i = 0; i < childrenCount; i++) {
+        parent.removeChild(parent.children[0]);
+      }
+    },
+    /**
+     * Removes all the components, controls, and children from a parent object.
+     * This is a simple utility function.
+     */
+    removeAll: function (parent) {
+      // It's necessary to save the length into a variable or else the loop ends
+      // prematurely. It's also necessary to delete the children always from the
+      // 0 spot and not the i spot, because the target moves as you delete.
+      var controlCount = parent.controls.length;
+      for (var i = 0; i < controlCount; i++) {
+        parent.removeControl(parent.controls[0]);
+      }
+      var childrenCount = parent.children.length;
+      for (var i = 0; i < childrenCount; i++) {
+        parent.removeChild(parent.children[0]);
+      }
+      // this causes extra problems
+      //var componentCount = parent.getComponents().length;
+      //for (var i = 0; i < componentCount; i++) {
+      //  parent.removeComponent(parent.getComponents()[0]);
+      //}
+
+
+    },
 
     // XXX there's got to be a better way to get the name of the model
     // that's currently being displayed. This way is very hackish.
