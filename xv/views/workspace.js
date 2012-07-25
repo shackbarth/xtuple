@@ -49,6 +49,9 @@ trailing:true white:true*/
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
+            if (boxDesc.customization) {
+              box.setCustomization(boxDesc.customization);
+            }
             box.setDescriptor(boxDesc);
 
           } else {
@@ -139,7 +142,6 @@ trailing:true white:true*/
          */
         var that = this;
         model.on("announcedSet", function (announcedField, announcedValue) {
-          console.debug(announcedField + " set to " + announcedValue);
           that.$[announcedField].setValue(announcedValue);
         });
 
@@ -350,18 +352,15 @@ trailing:true white:true*/
         // Fetch the model
         //
         var id = model.id;
+        var m = new Klass();
+        this.setModel(m);
+        m.on("statusChange", enyo.bind(this, "modelDidChange"));
         if (id) {
           // id exists: pull pre-existing record for edit
-          var m = new Klass();
-          this.setModel(m);
-          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch({id: id});
           XT.log("Workspace is fetching " + modelType + " " + id);
         } else {
           // no id: this is a new record
-          var m = new Klass();
-          this.setModel(m);
-          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.initialize(null, { isNew: true });
           XT.log("Workspace is fetching new " + modelType);
         }

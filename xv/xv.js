@@ -41,14 +41,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
           },
-          /*
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
+            boxType: "grid",
             objectName: "comments"
           }
-*/
         ],
         "XM.UserAccount": [
           {
@@ -80,8 +78,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -108,8 +117,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -146,8 +166,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -180,11 +211,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "createdBy", fieldType: "readonly" }
             ]
           },
+
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -239,8 +282,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ]
       });

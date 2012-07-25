@@ -44,6 +44,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     getValue: function () {
       return this.getDateObject();
     },
+    // XXX this is the kind of thing we wouldn't have to do if we used inheritance rather than composition
+    setDisabled: function (isDisabled) {
+      this.$.dateField.setDisabled(isDisabled);
+    },
     pickDate: function (inSender, date) {
       this.setDateObject(this.textToDate(date.month + "/" + date.day + "/" + date.year));
     },

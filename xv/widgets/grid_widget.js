@@ -9,7 +9,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     kind: enyo.Control,
     published: {
       collection: null,
-      descriptor: null
+      descriptor: null,
+      customization: {}
     },
     events: {
       onModelUpdate: ""
@@ -56,16 +57,48 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             style: "border: 0px; width: " + fieldDesc.width + "px;",
             onchange: "doFieldChanged"
           });
+
+          /**
+           * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
+           * type we want to send that down to the widget
+           */
+          if (fieldDesc.modelType) {
+            field.setModelType(fieldDesc.modelType);
+          }
+
           if (this.getCollection().size() + 1 > inEvent.index) {
+            // row with data
             var model = this.getCollection().at(inEvent.index - 1);
             field.setValue(model.get(fieldDesc.fieldName));
+
+            if (this.getCustomization().disallowEdit) {
+              field.setDisabled(true);
+            }
+          } else {
+            // this is the "new" row at the bottom
+
+            // XXX this is a work in progress that must be generalized
+            // XXX the functionality isn't actually hooked up yet
+            if ( this.getCustomization().stampUser &&
+                fieldDesc.fieldName === 'createdBy') {
+              field.setValue("<YOU>");
+              field.setDisabled(true);
+            }
+            if ( this.getCustomization().stampDate &&
+                fieldDesc.fieldName === 'created') {
+              field.setValue("<NOW>");
+              field.setDisabled(true);
+            }
+
           }
         }
       }
       /**
        * Add delete buttons for each row (but not for the "title" row or the "new" row)
        */
-      if (inEvent.index !== 0 && inEvent.index !== this.getCollection().size() + 1) {
+      if (!this.getCustomization().disallowEdit
+          && inEvent.index !== 0
+          && inEvent.index !== this.getCollection().size() + 1) {
         this.createComponent({
           kind: "onyx.Button",
           container: gridRow,

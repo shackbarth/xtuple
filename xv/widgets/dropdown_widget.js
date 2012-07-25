@@ -43,6 +43,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       }
     },
+    setDisabled: function (isDisabled) {
+      // XXX TODO
+    },
     /**
      * A convenience function so that this object can be treated generally like an input
      */
