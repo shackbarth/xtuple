@@ -1,6 +1,6 @@
 enyo.depends(
-  "postbooks.js",
   "login.js",
+  "postbooks.js",
   "dashboard.js",
   "crm.js",
   "billing.js"
