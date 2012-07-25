@@ -19,17 +19,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     events: {
       onModelUpdate: ""
     },
+    classes: "xv-widgets-comments",
     style: "height: 200px; width: 700px; margin-right: 5px; font-size: 12px;",
     components: [
-      { kind: "onyx.GroupboxHeader", name: "title" },
-      { kind: "Repeater", name: "commentsRepeater", count: 1, onSetupItem: "setupRow", components: [
-        {
-          kind: "onyx.Groupbox",
-          classes: "onyx-toolbar-inline",
-          style: "background-color: white;",
-          name: "commentRow"
-        }
-      ]}
+      {
+        kind: "onyx.GroupboxHeader",
+        name: "title",
+        classes: "xv-widgets-comments-title"
+      },
+      {
+        kind: "Repeater",
+        name: "commentsRepeater",
+        count: 1,
+        onSetupItem: "setupRow",
+        components: [
+          {
+            kind: "onyx.Groupbox",
+            classes: "onyx-toolbar-inline",
+            style: "background-color: white;",
+            name: "commentRow"
+          }
+        ]
+      }
     ],
 
     setupRow: function (inSender, inEvent) {
