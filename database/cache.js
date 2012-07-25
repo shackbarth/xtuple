@@ -11,9 +11,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /** @lends XT.cache */
 
     init: function () {
-      var schemaFiles, i;
+      var schemaFiles, i, prefix = this.get("prefix"), target;
 
-      XT.mixin(this, XT.options.cache);
+      target = prefix? XT.options.cache[prefix]: XT.options.cache;
+
+      XT.mixin(this, target);
 
       this.connection = mongoose.createConnection(this.get("conString"));
       schemaFiles = this.get("schemaFiles");
@@ -69,10 +71,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       schemaFiles = this._schemaFiles = XT.directoryFiles(dir, {extension: "js", fullPath: true});
       return schemaFiles;
     }.property()
-  });
-  
-  XT.run(function () {
-    XT.cache = XT.Cache.create();
   });
   
 }());

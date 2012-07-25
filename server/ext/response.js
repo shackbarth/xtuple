@@ -82,6 +82,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     path: function () {
       return _url.parse(this.get("request").url).pathname;
     }.property(),
+    
+    url: function () {
+      return this.get("request").url;
+    }.property(),
+    
+    host: function () {
+      return this.get("request").headers.host;
+    }.property(),
 
     write: function () {
       var res = this.get("response"),
@@ -131,6 +139,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       XT.mixin(this.store, chunk);
       return this;
     },
+    
+    url: function () {
+      return this.get("request").url;
+    }.property(),
     
     close: function () {
       this.ack(this.store);

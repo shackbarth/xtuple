@@ -30,7 +30,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           sockets = this.get("useWebSocket");
           
       if (!name) name = this.name = "NONAME%@".f(_.uniqueId("_server"));
-      if (!port) issue(XT.fatal("cannot create a server with no port %@".f(name)));
+      if (!port) {
+        var e = new Error("yo");
+        console.log(e.stack);
+        issue(XT.fatal("cannot create a server with no port %@".f(name)));
+      }
       if (!router && !sockets) issue(XT.fatal("cannot create a non-websocket server with no router"));
 
       if (auto) this.start();
@@ -73,7 +77,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         server = this.server = app.listen(port);
         
         if (useSockets) {
-          this._io = require("socket.io").listen(server, {
+          this._io = require("socket.io").listen(server, XT.mixin({
             "log level": 0,
             "browser client": false,
             "origins": "*:*",
@@ -82,7 +86,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               "xhr-polling",
               "jsonp-polling"
             ]
-          });
+          }, options));
         }
       } catch (err) { issue(XT.fatal(err)); }
   
