@@ -27,7 +27,35 @@
 
   <body>
   <script type="text/javascript">
+
+    var needDB = false;
+
+    if(needDB) {
+       XT.dataSource.connect(function () {
+         XT.session.acquireSession({
+           username: "admin",
+           password: "admin",
+           organization: "production"
+         }, function (result) {
+           if (result.code === 1) {
+             // force new session, always
+             XT.session.selectSession("FORCE_NEW_SESSION", function () {
+               // XXX this doesn't work
+               new enyo.TestRunner().write();
+             });
+           } else if (result.code === 4) {
+             // we're ok? not sure how but, whatever...
+             new enyo.TestRunner().write();
+           } else {
+             throw new Error("could not acquire valid session");
+           }
+         });
+       });
+
+    } else {
+      // don't need a DB.
       new enyo.TestRunner().write();
+    }
   </script>
   </body>
 </html>

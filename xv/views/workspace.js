@@ -372,12 +372,11 @@ trailing:true white:true*/
        * Essentially the callback function from backbone
        */
       modelDidChange: function (model, value, options) {
-        XT.log("Model changed: " + JSON.stringify(model.toJSON()));
-        // XXX this still isn't working for adding new objects
         if (model.status !== XT.Model.READY_CLEAN &&
             model.status !== XT.Model.READY_NEW) {
           return;
         }
+        XT.log("Model changed: " + JSON.stringify(model.toJSON()));
 
         /**
          * Put the model in the history array
