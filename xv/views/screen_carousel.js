@@ -67,10 +67,6 @@ trailing:true white:true*/
       // carry on
       this.inherited(arguments);
     },
-    dispatch: function () {
-      //this.log(this.name, arguments);
-      this.inherited(arguments);
-    },
     handleCarouselEvent: function (inSender, inEvent) {
       var carouselEvents = this.getCarouselEvents();
       var evt = inEvent.eventName;
@@ -92,9 +88,6 @@ trailing:true white:true*/
 
       // we got this, stop bubbling
       return true;
-    },
-    indexChanged: function () {
-      this.inherited(arguments);
     },
     completed: function () {
       var active;
