@@ -7,12 +7,24 @@ enyo.kind({
     isStarted: false
   },
   components: [
-    { name: "postbooks", kind: "XV.Postbooks" }
+    { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
+    { name: "pullout", kind: "enyo.Slideable", classes: "pullout",
+      value: -100, min: -100, unit: '%', components: [
+      {name: "shadow", classes: "pullout-shadow"},
+      {kind: "onyx.Grabber", classes: "pullout-grabbutton"},
+      {kind: "FittableRows", classes: "enyo-fit", components: [
+        {name: "client", classes: "pullout-toolbar"}
+      ]}
+    ]}
   ],
-  create: function() {
+  create: function () {
     this.inherited(arguments);
   },
-  start: function() {
+  handlePullout: function (inSender, inEvent) {
+    var showing = inSender.$.container.getActive().showPullout || false;
+    this.$.pullout.setShowing(showing);
+  },
+  start: function () {
     
     if (this.getIsStarted()) return;
     
