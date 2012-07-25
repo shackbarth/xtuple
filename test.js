@@ -3,16 +3,16 @@ latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
 /*global XV:true, Backbone:true, enyo:true, XT:true */
 
-//(function () {
+(function () {
 
   enyo.kind({
-    name: "test",
-    kind: "enyo.TestSuite"//,
-    //test123: function () {
-    //  this.finish("error1");
-    //}
+    name: "XT.TestSuite",
+    kind: "enyo.TestSuite",
+    test123: function () {
+      this.finish("error1");
+    }
   });
-//}());
+}());
 
 
     /*

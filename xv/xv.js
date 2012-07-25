@@ -66,6 +66,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "firstName" },
               { fieldName: "lastName" },
               { fieldName: "jobTitle" },
+              { fieldName: "address", fieldType: "address" },
               { fieldName: "phone" },
               { fieldName: "primaryEmail" }
             ]
@@ -270,6 +271,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return "XV.ReadOnlyWidget";
       } else if (value === 'comments') {
         return "XV.CommentsWidget";
+      } else if (value === 'address') {
+        return "XV.AddressWidget";
       }
     },
     /**

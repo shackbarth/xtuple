@@ -23,12 +23,15 @@
   </head>
   <body>
   <script type="text/javascript">
-    // doens't work. try later with new release?
-    //XT.app = new enyo.TestRunner();
-    //XT.app.renderInto(document.body);
+  //XT.app = new XT.TestSuite();
+  //XT.app.renderInto(document.body);
 
 
   XT.app = new enyo.Control();
+  XT.app.createComponent({ kind: "XT.TestSuite", name: "num" });
+  XT.app.renderInto(document.body);
+
+  /*
   XT.app.createComponent({ kind: "XV.NumberWidget", name: "num" });
   var testObj = XT.app.$.num;
 
@@ -67,6 +70,7 @@
   // keep the old value if the new value is invalid
   testObj.setValue("XYZ");
   console.log(testObj.getValue() === "O");
+  */
   </script>
   </body>
 </html>
