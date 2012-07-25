@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XT:true, XV:true, _:true, enyo:true*/
+/*global XT:true, XV:true, XM:true, _:true, enyo:true*/
 
 (function () {
   var ROWS_PER_FETCH = 50,
@@ -16,6 +16,7 @@ trailing:true white:true*/
       onScroll: "didScroll",
       onInfoListRowTapped: "doInfoListRowTapped"
     },
+    showPullout: true,
     realtimeFit: true,
     arrangerKind: "CollapsingArranger",
     selectedList: 0, // used for "new", to know what list is being shown
@@ -64,6 +65,15 @@ trailing:true white:true*/
       var list = this.lists[inEvent.index].name;
       this.$.item.setContent(this.$.lists.$[list].getLabel());
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
+    didBecomeActive: function () {
+      if (this.firstTime) {
+        this.firstTime = false;
+        this.setList(0);
+      }
+    },
+    didFinishTransition: function (inSender, inEvent) {
+      this.setList(inSender.index);
     },
     didScroll: function (inSender, inEvent) {
       if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
@@ -142,15 +152,6 @@ trailing:true white:true*/
       list.setQuery(query);
       list.fetch(options);
       this.fetched[name] = true;
-    },
-    didFinishTransition: function (inSender, inEvent) {
-      this.setList(inSender.index);
-    },
-    didBecomeActive: function () {
-      if (this.firstTime) {
-        this.firstTime = false;
-        this.setList(0);
-      }
     },
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
