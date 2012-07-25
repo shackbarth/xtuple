@@ -205,10 +205,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             boxType: "grid",
             objectName: "history",
             location: "bottom",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
             fields: [
               { fieldName: "description" },
-              { fieldName: "created", fieldType: "readonly" },
-              { fieldName: "createdBy", fieldType: "readonly" }
+              { fieldName: "createdBy" },
+              { fieldName: "created", fieldType: "date" }
             ]
           },
 
@@ -349,12 +354,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // It's necessary to save the length into a variable or else the loop ends
       // prematurely. It's also necessary to delete the children always from the
       // 0 spot and not the i spot, because the target moves as you delete.
+      var i;
       var controlCount = parent.controls.length;
-      for (var i = 0; i < controlCount; i++) {
+      for (i = 0; i < controlCount; i++) {
         parent.removeControl(parent.controls[0]);
       }
       var childrenCount = parent.children.length;
-      for (var i = 0; i < childrenCount; i++) {
+      for (i = 0; i < childrenCount; i++) {
         parent.removeChild(parent.children[0]);
       }
       // this causes extra problems
