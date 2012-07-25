@@ -5,11 +5,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 XT.MongooseSchema.create({
   name: "Session",
   definition: {
-    username:     { type: String },
-    sid:          { type: String, index: { unique: true } },
-    lastModified: { type: Date },
-    created:      { type: Date },
-    checksum:     { type: String },
-    organization: { type: String }
+    id:           {type: String},
+    sid:          {type: String, index: { unique: true }},
+    lastModified: {type: Date},
+    created:      {type: Date},
+    checksum:     {type: String},
+    organization: {type: String}
   }
 });
