@@ -36,12 +36,6 @@ trailing:true white:true*/
        */
       modelTypeChanged: function () {
 
-        /**
-         * Start by clearing out all of the panels
-         */
-        XV.util.removeAllChildren(this.$.topPanel);
-        XV.util.removeAllChildren(this.$.bottomPanel);
-
         var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
@@ -170,11 +164,12 @@ trailing:true white:true*/
             for (var iField = 0; iField < boxDesc.fields.length; iField++) {
               var fieldDesc = boxDesc.fields[iField];
               var fieldName = boxDesc.fields[iField].fieldName;
+              var fieldValue = model.getValue(fieldName) ? model.getValue(fieldName) : "";
               if (fieldName) {
                 /**
                  * Update the view field with the model value
                  */
-                this.$[fieldName].setValue(model.getValue(fieldName));
+                this.$[fieldName].setValue(fieldValue);
               }
             }
           }
@@ -304,6 +299,17 @@ trailing:true white:true*/
         this.$.workspacePanels.gotoBox(p.title);
       },
       /**
+       * Cleans out all the elements from a workspace.
+       * XXX FIXME this looks to work via the command line but not onscreen
+       */
+      wipe: function () {
+        XV.util.removeAll(this.$.workspacePanels.$.topPanel);
+        this.$.workspacePanels.$.topPanel.refresh();
+        XV.util.removeAll(this.$.workspacePanels.$.bottomPanel);
+        this.$.workspacePanels.$.bottomPanel.refresh();
+      },
+
+      /**
        * Accepts the object that tells the workspace what to drill down into.
        * SetOptions is quite generic, because it can be called in a very generic
        * way from the main carousel event handler. Note also that the model parameter
@@ -311,17 +317,24 @@ trailing:true white:true*/
        * type and id properties
        */
       setOptions: function (model) {
+        /**
+         * Delete all boxes before we try to render anything else
+         */
+        this.wipe();
+
+
         //
         // Determine the model that will back this view
         //
-        var modelType = XV.util.formatModelName(model.recordType);
+        var modelType = XV.util.infoToMasterModelName(model.recordType);
 
         //
         // Setting the model type also renders the workspace. We really can't do
         // that until we know the model type.
         //
         this.setModelType(modelType);
-        this.$.workspaceHeader.setContent(modelType);
+        // XXX not sure best way to massage the header for the linguist
+        this.$.workspaceHeader.setContent(("_" + modelType).loc());
         this.setWorkspaceList();
         this.$.menuItems.render();
         this.$.workspacePanels.setModelType(modelType);
@@ -330,10 +343,7 @@ trailing:true white:true*/
         //
         // Set up a listener for changes in the model
         //
-        var Klass = Backbone.Relational.store.getObjectByName("XM." + modelType);
-        var m = new Klass();
-        this.setModel(m);
-        m.on("change", enyo.bind(this, "modelDidChange"));
+        var Klass = Backbone.Relational.store.getObjectByName(modelType);
 
 
         //
@@ -342,27 +352,30 @@ trailing:true white:true*/
         var id = model.id;
         if (id) {
           // id exists: pull pre-existing record for edit
+          var m = new Klass();
+          this.setModel(m);
+          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch({id: id});
           XT.log("Workspace is fetching " + modelType + " " + id);
         } else {
           // no id: this is a new record
-          m.fetch();
+          var m = new Klass();
+          this.setModel(m);
+          m.on("statusChange", enyo.bind(this, "modelDidChange"));
+          m.initialize(null, { isNew: true });
           XT.log("Workspace is fetching new " + modelType);
         }
 
-
       },
+
+      /**
+       * Essentially the callback function from backbone
+       */
       modelDidChange: function (model, value, options) {
         XT.log("Model changed: " + JSON.stringify(model.toJSON()));
-
-
-        // XXX this gets called for all the relational subobjects
-        // as well and we don't really want to deal with those
-        // because we've already dealt with them under the master
-        // model. So I just ignore any calls to this function that
-        // are not for the function in question. It'd be better if
-        // I dealt with the reason this was getting called so much.
-        if (model.get("type") !== this.getModelType()) {
+        // XXX this still isn't working for adding new objects
+        if (model.status !== XT.Model.READY_CLEAN &&
+            model.status !== XT.Model.READY_NEW) {
           return;
         }
 

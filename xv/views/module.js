@@ -6,7 +6,7 @@ trailing:true white:true*/
 (function () {
   var ROWS_PER_FETCH = 50,
     FETCH_TRIGGER = 100;
-    
+
   enyo.kind({
     name: "XV.Module",
     kind: "Panels",
@@ -217,7 +217,7 @@ trailing:true white:true*/
     doHistoryItemSelected: function (inSender, inEvent) {
       var modelId = inEvent.originator.modelId;
       var modelType = inEvent.originator.modelType;
-      var modelShell = { type: modelType, guid: modelId };
+      var modelShell = { recordType: modelType, id: modelId };
       XT.log("Load from history: " + modelType + " " + modelId);
       this.bubble("workspace", {eventName: "workspace", options: modelShell });
     }
