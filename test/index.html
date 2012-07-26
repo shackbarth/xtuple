@@ -28,7 +28,7 @@
   <body>
   <script type="text/javascript">
 
-    var needDB = false;
+    var needDB = true;
 
     if(needDB) {
        XT.dataSource.connect(function () {
@@ -40,12 +40,14 @@
            if (result.code === 1) {
              // force new session, always
              XT.session.selectSession("FORCE_NEW_SESSION", function () {
-               // XXX this doesn't work
-               new enyo.TestRunner().write();
+               var app = new enyo.TestRunner();
+               app.renderInto(document.body);
+
              });
            } else if (result.code === 4) {
              // we're ok? not sure how but, whatever...
-             new enyo.TestRunner().write();
+             var app = new enyo.TestRunner();
+             app.renderInto(document.body);
            } else {
              throw new Error("could not acquire valid session");
            }

@@ -13,7 +13,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       customization: {}
     },
     events: {
-      onModelUpdate: ""
+      onSubmodelUpdate: ""
     },
     style: "height: 200px; width: 900px; margin-right: 5px; font-size: 12px;",
     components: [
@@ -132,7 +132,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var fieldNameSplit = fieldNameWithNumber.match(/(\D+)(\d+)/);
       var rowIndex = Number(fieldNameSplit[2]);
       this.getCollection().at(rowIndex).destroy();
-      this.doModelUpdate();
+      this.doSubmodelUpdate();
 
 
 
@@ -193,8 +193,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        */
       if (rowIndex >= this.getCollection().size()) {
         // add
-
-        var newModel = new XM.ProjectTask(updateObject, { isNew: true }); // FIXME can't hardcode ProjectTask
+        var modelType = XV.util.stripModelNamePrefix(this.getDescriptor().modelType);
+        var newModel = new XM[modelType](updateObject, { isNew: true });
+        newModel.initialize(updateObject, { isNew: true });
         /**
          * Certain fields are required, so include these if they're not set
          */
@@ -217,7 +218,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       /**
        * Send up notice that there's been an update
        */
-      this.doModelUpdate();
+      this.doSubmodelUpdate();
     }
   });
 }());

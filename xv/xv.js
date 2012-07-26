@@ -80,6 +80,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "comments",
+            modelType: "XM.ContactComment",
             customization: {
               disallowEdit: true,
               stampUser: true,
@@ -119,6 +120,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "comments",
+            modelType: "XM.ToDoComment",
             customization: {
               disallowEdit: true,
               stampUser: true,
@@ -168,6 +170,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "comments",
+            modelType: "XM.OpportunityComment",
             customization: {
               disallowEdit: true,
               stampUser: true,
@@ -204,7 +207,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             title: "History",
             boxType: "grid",
             objectName: "history",
-            location: "bottom",
+            modelType: "XM.IncidentHistory", // XXX I could do without these if I could find where to introspect
+            //location: "bottom",
             customization: {
               disallowEdit: true,
               stampUser: true,
@@ -222,6 +226,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "comments",
+            modelType: "XM.IncidentComment",
             customization: {
               disallowEdit: true,
               stampUser: true,
@@ -275,6 +280,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "tasks",
+            modelType: "XM.ProjectTasks",
             fields: [
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
@@ -289,6 +295,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "comments",
+            modelType: "XM.ProjectComment",
             customization: {
               disallowEdit: true,
               stampUser: true,

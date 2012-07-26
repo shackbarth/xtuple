@@ -33,11 +33,7 @@
       "lib/globalize.js"
     ]
   },
-  "enyo_2_components": {
-    "origin": "git://github.com/MachiApps/Enyo-2-Components.git",
-    "entries": [
-      "addons/DatePicker/package.js",
-      "addons/calendarSelector/package.js"
-    ]
+  "gts-plugins/DatePicker": {
+    "origin": "https://bitbucket.org/GlitchTechScience/gts-plugins.git"
   }
 }

@@ -189,9 +189,12 @@ trailing:true white:true*/
         modelType: "",
         model: null
       },
+      events: {
+        onModelSave: ""
+      },
       handlers: {
         onFieldChanged: "doFieldChanged",
-        onModelUpdate: "doEnableSaveButton"
+        onSubmodelUpdate: "doEnableSaveButton"
       },
       components: [
 
@@ -284,7 +287,19 @@ trailing:true white:true*/
         this.getModel().save();
         this.$.saveButton.setContent("Changes Saved");
         this.$.saveButton.setDisabled(true);
-        // XXX TODO This persist is not reflected in the Info objects in the summary view
+
+        /**
+         * Update the info object in the summary views
+         */
+        var id = this.getModel().get("id");
+        var recordType = this.getModel().recordType;
+
+        // XXX just refreshing the model in backbone doesn't seem to work
+        //var infoType = XV.util.stripModelNamePrefix(recordType) + 'Info';
+        //var infoModel = new XM[infoType]();
+        //infoModel.fetch({ id: id });
+
+        enyo.Signals.send("onModelSave", { id: id, recordType: recordType });
       },
       // list
       setupItem: function (inSender, inEvent) {

@@ -14,22 +14,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
       components: [
-        { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" }
-        //{ kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped" },
-        /*{ kind: "onyx.Popup", name: "datePickPopup",
-          modal: true, floating: true,
-          components: [
-            // this is third party code that doesn't look great under the best of
-            // conditions and needs some work to get even there.
-            { kind: "calendarSelector", name: "datePick", style: "width: 800px;" }
-          ]
-        },
+        { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" },
+        { kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped" },
         {
-          kind: "calendarSelector",
-          name: "datePick2",
-          style: "width: 600px; visibility: hidden;",
-          onSelected: "pickDate"
-        }*/
+          kind: "onyx.Popup",
+          name: "datePickPopup",
+          modal: true,
+          floating: true,
+          components: [
+            { kind: "GTS.DatePicker", name: "datePick", style: "" }
+          ]
+        }
       ]
     }],
     /**
@@ -97,9 +92,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return date;
     },
     doIconTapped: function () {
-      //this.$.datePickPopup.show();
-      //this.$.datePick2.setStyle("visibility: visible");
-      alert("There are two mediocre implementations of this commented out in the code. ");
+      this.$.datePickPopup.show();
     }
   });
 }());
