@@ -45,7 +45,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             title: "Comments",
             location: "bottom",
             boxType: "grid",
-            objectName: "comments"
+            objectName: "comments",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
         "XM.UserAccount": [
