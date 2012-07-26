@@ -15,14 +15,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       style: "height: 14px;",
       components: [
         { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" },
-        { kind: "Image", src: "images/date-icon.jpg", ontap: "doIconTapped" },
+        { kind: "Image", name: "iconImage", src: "images/date-icon.jpg", ontap: "doIconTapped" },
         {
           kind: "onyx.Popup",
           name: "datePickPopup",
           modal: true,
           floating: true,
           components: [
-            { kind: "GTS.DatePicker", name: "datePick", style: "" }
+            { kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "doDatePicked" }
           ]
         }
       ]
@@ -39,18 +39,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     getValue: function () {
       return this.getDateObject();
     },
-    // XXX this is the kind of thing we wouldn't have to do if we used inheritance rather than composition
     setDisabled: function (isDisabled) {
       this.$.dateField.setDisabled(isDisabled);
-    },
-    pickDate: function (inSender, date) {
-      this.setDateObject(this.textToDate(date.month + "/" + date.day + "/" + date.year));
+      if (isDisabled) {
+        this.$.iconImage.setStyle("visibility: hidden");
+      } else {
+        this.$.iconImage.setStyle("visibility: visible");
+      }
     },
     dateObjectChanged: function () {
-      //this.$.datePick2.setSelectedDay(this.dateObject.getDate());
-      //this.$.datePick2.setSelectedMonth(this.dateObject.getMonth());
-      //this.$.datePick2.setSelectedYear(this.dateObject.getYear());
-      //this.$.datePick2.render();
+      this.$.datePick.setValue(new Date(this.getDateObject().valueOf()));
+      this.$.datePick.render();
       this.$.dateField.setValue(Globalize.format(this.dateObject, "d"));
     },
     doInputChanged: function () {
@@ -93,6 +92,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     doIconTapped: function () {
       this.$.datePickPopup.show();
+    },
+    doDatePicked: function (inSender, inEvent) {
+      /**
+       * Pass a clone to the backing object of this widget. If we assign the
+       * variable itself then the widget and the popup will share the same date
+       * object, which we might not want.
+       */
+      this.setDateObject(new Date(inEvent.valueOf()));
+      this.$.datePickPopup.hide();
     }
   });
 }());
