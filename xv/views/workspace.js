@@ -28,13 +28,12 @@ trailing:true white:true*/
         { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
       ],
       /**
-       * Set the layout of the workspace as soon as we know what the model is.
+       * Set the layout of the workspace.
        * The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
-       * in XT/foundation.js. This function is very much a work in progress. It
-       * will have to accommodate every kind of input type.
+       * in xv/xv.js.
        *
        */
-      modelTypeChanged: function () {
+      updateLayout: function () {
 
         var box, boxRow, iField, iRow, fieldDesc, field, label;
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
@@ -359,8 +358,13 @@ trailing:true white:true*/
         this.$.workspaceHeader.setContent(("_" + modelType).loc());
         this.setWorkspaceList();
         this.$.menuItems.render();
-        this.$.workspacePanels.setModelType(modelType);
 
+
+        this.$.workspacePanels.setModelType(modelType);
+        this.$.workspacePanels.updateLayout();
+        // force a refresh of the structure of the workspace even if the
+        // model type hasn't really changed. This is to solve a bug whereby
+        // the events weren't firing if you drilled down a second time
 
         //
         // Set up a listener for changes in the model
@@ -395,7 +399,7 @@ trailing:true white:true*/
             model.status !== XT.Model.READY_NEW) {
           return;
         }
-        XT.log("Model changed: " + JSON.stringify(model.toJSON()));
+        XT.log("Loading model into workspace: " + JSON.stringify(model.toJSON()));
 
         /**
          * Put the model in the history array

@@ -223,6 +223,12 @@ trailing:true white:true*/
       this.bubble("workspace", {eventName: "workspace", options: modelShell });
     },
 
+    /**
+     * If a model has changed, check the lists of this module to see if we can
+     * update the info object in the list.
+     * XXX if there are multiple modules alive then all of them will catch
+     * XXX the signal, which isn't ideal for performance
+     */
     doRefreshInfoObject: function (inSender, inPayload) {
       var recordType = inPayload.recordType;
       // obnoxious massaging. Can't think of an elegant way to do this.
