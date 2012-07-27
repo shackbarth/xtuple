@@ -24,14 +24,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     route: function (xtr) {
-      var path = xtr.get("path");
+      var path = xtr.get("path"), handler;
       
       //console.log("route(): ", path, Object.keys(this.routes), this.routes[path]);
       
       // arbitrary check since some browsers automatically
       // request a favicon.ico
       if (path.match(/\.ico/g)) xtr.error("I don't offer a favicon.ico");
-      else if (this.routes[path]) this.routes[path].handle(xtr);
+      else if ((handler = this.routes[path]) || (handler = this.routes["*"])) handler.handle(xtr);
       else this.drop(xtr);
     },
     
@@ -62,7 +62,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     XT.log("Loading available routers from %@".f(
       XT.shorten(path, 5)));
     
-    files = XT.directoryFiles(path, {fullPath: true});
+    files = XT.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
       require(file);
     });

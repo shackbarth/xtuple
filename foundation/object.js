@@ -67,6 +67,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           uid = this.uid || "NOUID";
       return "[ %@ (%@) ]".f(klass, uid);
     },
+    
+    mixin: function () {
+      var args = XT.$A(arguments);
+      args.unshift(this);
+      XT.mixin.apply(this, args);
+    },
   
     _XT_OBJECT: true
   });

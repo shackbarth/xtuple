@@ -18,11 +18,12 @@ XT = {};
 
   XT.util         = require("util");
   XT.http         = require("http");
+  XT.https        = require("https");
   XT.url          = require("url");
   XT.crypto       = require("crypto");
   
   XT.connect      = require("connect");
-  XT.pg           = require("pg");
+  XT.pg           = require("pg").native;
   XT.mongoose     = require("mongoose");
   
   XT.$P = function () { return this; };

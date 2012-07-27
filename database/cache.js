@@ -11,14 +11,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /** @lends XT.cache */
 
     init: function () {
-      var schemaFiles = this.get("schemaFiles"), i, host, port;
+      var schemaFiles, i, prefix = this.get("prefix"), target;
 
-      host = XT.options.cache.hostname || "localhost";
-      port = XT.options.cache.port || 27017;
-      this.set("hostname", host);
-      this.set("port", port);
+      target = prefix? XT.options.cache[prefix]: XT.options.cache;
+
+      XT.mixin(this, target);
 
       this.connection = mongoose.createConnection(this.get("conString"));
+      schemaFiles = this.get("schemaFiles");
 
       if (!schemaFiles || schemaFiles.length <= 0) {
         XT.warn("no mongo schemas available!");
@@ -34,7 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     conString: function () {
-      return "mongodb://%@:%@/xtdb".f(this.get("hostname"), this.get("port"));
+      return "mongodb://%@:%@/%@".f(this.get("hostname"), this.get("port"), this.get("database"));
     }.property(),
 
     cleanup: function () {
@@ -67,18 +67,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (this._schemaFiles) {
         return this._schemaFiles;
       }
-      dir = _path.join(XT.basePath, "node_modules", "xt", "database", "mongo_schemas");
+      dir = _path.join(XT.basePath, this.get("schemaDirectory"));
       schemaFiles = this._schemaFiles = XT.directoryFiles(dir, {extension: "js", fullPath: true});
       return schemaFiles;
     }.property()
-  });
-  
-  XT.run(function () {
-    XT.cache = XT.Cache.create();
-    XT.cachePollingInterval = setInterval(XT.Session.pollCache, 60000);
-    XT.addCleanupTask(function () {
-      clearInterval(XT.cachePollingInterval);
-    });
   });
   
 }());
