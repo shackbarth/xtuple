@@ -19,6 +19,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   XT.setup(options);
 
   require("./lib/ext/session");
+  require("./lib/ext/proxy");
+  require("./lib/ext/database");
 
   // load up the dataserver
   require("./lib/dataserver");
