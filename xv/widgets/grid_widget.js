@@ -193,16 +193,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        */
       if (rowIndex >= this.getCollection().size()) {
         // add
+        //var newModel = new XM.ProjectTask(updateObject, { isNew: true });
         var modelType = XV.util.stripModelNamePrefix(this.getDescriptor().modelType);
         var newModel = new XM[modelType](updateObject, { isNew: true });
-        newModel.initialize(updateObject, { isNew: true });
         /**
          * Certain fields are required, so include these if they're not set
          */
         for (var i = 0; i < newModel.requiredAttributes.length; i++) {
           var reqAttr = newModel.requiredAttributes[i];
           if (!newModel.get(reqAttr)) {
-            if (reqAttr === "dueDate") { continue; } // XXX temp hack
+            // XXX these hoops aren't scalable. Could we disable validation on this
+            // new model until the user tries to persist?
+            if (reqAttr === "dueDate") { continue; }
+            if (reqAttr === "id") { continue; }
             var reqDefault = {};
             reqDefault[reqAttr] = "";
             newModel.set(reqDefault);

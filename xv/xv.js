@@ -226,9 +226,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               stampDate: true
             },
             fields: [
-              { fieldName: "description" },
               { fieldName: "createdBy" },
-              { fieldName: "created", fieldType: "date" }
+              { fieldName: "created", fieldType: "date" },
+              { fieldName: "description" }
             ]
           },
 
@@ -291,7 +291,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "tasks",
-            modelType: "XM.ProjectTasks",
+            modelType: "XM.ProjectTask",
             fields: [
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
@@ -391,7 +391,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     // XXX this is all very magical
-    // TODO: this doesn't need to be a view-layer static function
+    // TODO: this doesn't need to be in XV, as it's not enyo-specific
     formatModelName: function (modelType) {
       return this.infoToMasterModelName(this.stripModelNamePrefix(modelType));
     },
