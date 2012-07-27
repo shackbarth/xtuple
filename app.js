@@ -31,12 +31,12 @@ enyo.kind({
     // on application start, connect the datasource
     XT.dataSource.connect();
     
-    // now that we've started, we need to render something
-    // to the screen
-    // TODO: is this really where this belongs?
-    this.renderInto(document.body);
-    
     // lets not allow this to happen again
     this.setIsStarted(true);
-  }  
+  },
+  show: function () {
+    if (this.getShowing() && this.getIsStarted())
+      this.renderInto(document.body);
+    else this.inherited(arguments);
+  }
 });

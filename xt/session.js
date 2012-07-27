@@ -228,6 +228,7 @@ white:true*/
     },
 
     _didValidateSession: function (payload, callback) {
+      var h = document.location.hostname;
 
       // if this is a valid session acquisition, go ahead
       // and store the properties
@@ -235,7 +236,7 @@ white:true*/
         this.setDetails(payload.data);
 
         XT.getStartupManager().start();
-      }
+      } else return document.location = "https://%@/login".f(h);
 
       if (callback && callback instanceof Function) {
         callback(payload);
@@ -244,7 +245,20 @@ white:true*/
     
     start: function () {
       var c = enyo.getCookie("xtsessioncookie");
-      this.validateSession(JSON.parse(c));
+      try {
+        c = JSON.parse(c);
+        this.validateSession(c, function () { XT.app.show(); });
+      } catch (e) { XT.Session.logout(); }
+    },
+
+    logout: function () {
+      var h = document.location.hostname;
+      XT.Request
+        .handle("function/logout")
+        .notify(function () {
+          document.location = "https://%@/login".f(h); 
+        })
+        .send();
     },
 
     // ..........................................................

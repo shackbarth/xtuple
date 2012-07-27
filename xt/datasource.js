@@ -229,7 +229,6 @@ white:true*/
         //didConnect.call(self, callback);
       });
       this._sock.on("ok", function () {
-        console.warn("IT SAID OK DAMNIT");
         didConnect.call(self, callback);
       })
       this._sock.on("error", function (err) {
