@@ -30,7 +30,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             title: "Account Info",
             fields: [
               { fieldName: "name" },
-              { fieldName: "number" }
+              { fieldName: "number" },
+              { fieldName: "accountType", fieldType: "dropdown", modelType: "XM.accountTypes" }
             ]
           },
           {

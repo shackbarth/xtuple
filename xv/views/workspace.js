@@ -239,7 +239,25 @@ trailing:true white:true*/
               onclick: "doPersist"
             }
           ]},
-          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
+          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true},
+          {
+            name: "exitWarningPopup",
+            classes: "onyx-sample-popup",
+            kind: "onyx.Popup",
+            centered: true,
+            modal: true,
+            floating: true,
+            onShow: "popupShown",
+            onHide: "popupHidden",
+            components: [
+              { content: "You have unsaved changes. Are you sure you want to leave?" },
+              { tag: "br"},
+              { kind: "onyx.Button", content: "Leave without saving", ontap: "forceExit" },
+              { kind: "onyx.Button", content: "Save and leave", ontap: "saveAndLeave" },
+              { kind: "onyx.Button", content: "Don't leave. ", ontap: "closeExitWarningPopup" }
+
+            ]
+          }
         ]}
       ],
       create: function () {
@@ -412,10 +430,53 @@ trailing:true white:true*/
          */
         this.$.workspacePanels.updateFields(model);
       },
+      /**
+       * The user has selected a place to go from the navigation menu. Take
+       * him there.
+       */
       doNavigationSelected: function (inSender, inEvent) {
-        var module = inEvent.originator.content.toLowerCase();
-        this.bubble(module, {eventName: module});
-      }
+        var destination = inEvent.originator.content.toLowerCase();
+        /**
+         * First check to see if there are unpersisted changes. If there are,
+         * give the user the option to save them. We'll use the disabled
+         * status of the save button as a rough proxy for the existence
+         * of unsaved changes.
+         */
+        if (!this.$.saveButton.disabled) {
+          this.$.exitWarningPopup.show();
+          this._exitDestination = destination;
+          return;
+        }
 
+        this.bubbleExit(destination);
+      },
+
+      _exitDestination: null,
+      /**
+       * The user wants to leave without saving changes
+       */
+      forceExit: function () {
+        this.closeExitWarningPopup();
+        this.bubbleExit(this._exitDestination);
+      },
+      /**
+       * The user first wants to save changes and then leave
+       */
+      saveAndLeave: function () {
+        this.closeExitWarningPopup();
+        this.doPersist();
+        this.bubbleExit(this._exitDestination);
+      },
+
+      closeExitWarningPopup: function () {
+        this.$.exitWarningPopup.hide();
+      },
+      /**
+       * Used by all of the various functions that want to signal an exit
+       * from this workspace
+       */
+      bubbleExit: function (destination) {
+        this.bubble(destination, {eventName: destination});
+      }
     });
 }());
