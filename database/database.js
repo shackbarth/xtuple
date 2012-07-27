@@ -7,74 +7,38 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   var _ = XT._;
   
-  XT.database = XT.Object.create({
-  
-    init: function () {
-      var options = XT.options.database;
-      if (options) XT.mixin(this, options);
-    },
-  
+  XT.Database = XT.Object.extend({
+    poolSize: 12,
+    className: "XT.Database",
+    cleanupCompletedEvent: "cleanupCompleted",
     conString: function (options) {
-      return "tcp://{user}:{password}@{hostname}:{port}/{database}".f(options);
+      options.password = options.password? options.password.pre(":"): "";
+      return "tcp://{user}{password}@{hostname}:{port}/{database}".f(options);
     },
-
-    // TODO: replace
-    defaults: function (organization) {
-      var ret = {};
-  
-      // NOTE: SINCE THE KEY-MAP ISN'T SET UP THIS
-      // IS PURELY ARBITRARY!!!
-      // THESE HAVE TO BE SUPPLIED SOMEHOW - WHEN USED
-      // IN CONJUNCTION WITH XT AS A WHOLE IT IS SUPPLIED
-      // AUTOMATICALLY FROM THE CONFIGURATION OPTIONS
-      ret.user = XT.database.user;
-      ret.password = XT.database.password;
-      ret.port = XT.database.port;
-      ret.hostname = XT.database.hostname;
-      ret.database = organization || XT.database.organization;      
-      return ret;
+    query: function (query, options, callback) {
+      var str = this.conString(options);
+      XT.pg.connect(str, _.bind(this.connected, this, query, options, callback));
     },
-  
-    // TODO: remove
-    defaultString: function (organization) {
-      return this.conString(this.defaults(organization));
+    connected: function (query, options, callback, err, client, ranInit) {
+      if (err) {
+        issue(XT.warning("Failed to connect to database: " +
+          "{hostname}:{port}/{database}".f(options)));
+        return callback(err);
+      }
+      if (ranInit === true) client.hasRunInit = true;
+      if (!client.hasRunInit) {
+        client.query("set plv8.start_proc = \"xt.js_init\";", _.bind(
+          this.connected, this, query, options, callback, err, client, true));
+      } else client.query(query, callback);
     },
-  
-    // TODO: replace
-    query: function (organization, query, callback) {
-      var str = this.defaultString(organization);
-      XT.pg.connect(str, function (err, client) {
-
-        if (err) {
-          issue(XT.warning("Failed to connect to database", err));
-          return callback(err);
-        }
-        
-        if (!client.hasRunInit) {
-          client.query("set plv8.start_proc = \"xt.js_init\";");
-          client.hasRunInit = true;
-        }
-
-        client.query(query, callback);
-      });
+    init: function () {
+      XT.addCleanupTask(_.bind(this.cleanup, this), this);
+      XT.pg.defaults.poolSize = this.poolSize;
     },
-  
     cleanup: function () {
       XT.log("Waiting for database pool to drain");
       if (XT.pg) XT.pg.end();
       this.emit(this.cleanupCompletedEvent);
-    },
-  
-    cleanupCompletedEvent: "cleanupCompleted",
-  
-    className: "XT.database"
+    }
   });
-  
-  XT.db = XT.database;
-  
-  XT.run(function () {
-    XT.pg.defaults.poolSize = 12;
-  });
-  
-  XT.addCleanupTask(_.bind(XT.db.cleanup, XT.db), XT.db);
 }());

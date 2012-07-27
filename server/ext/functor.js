@@ -38,7 +38,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     XT.log("Loading available functors from %@".f(
       XT.shorten(path, 5)));
     
-    files = XT.directoryFiles(path, {fullPath: true});
+    files = XT.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
       require(file);
     });

@@ -151,7 +151,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     
     error: function (message) {
       //XT.warn("XT.Response.error(): ", message);
-      this.write({message: message, isError: true}).close();
+      this.write({reason: message, isError: true}).close();
       this.destroy();
     },
     
