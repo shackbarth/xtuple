@@ -4,3 +4,4 @@ npm-debug.log
 config_local.js
 datasource.log
 datasource-err.log
+www/client
