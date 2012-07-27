@@ -254,7 +254,7 @@ trailing:true white:true*/
               { tag: "br"},
               { kind: "onyx.Button", content: "Leave without saving", ontap: "forceExit" },
               { kind: "onyx.Button", content: "Save and leave", ontap: "saveAndLeave" },
-              { kind: "onyx.Button", content: "Don't leave. ", ontap: "closeExitWarningPopup" }
+              { kind: "onyx.Button", content: "Don't leave", ontap: "closeExitWarningPopup" }
 
             ]
           }

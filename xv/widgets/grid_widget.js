@@ -168,8 +168,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Display the collection in the grid when it's passed in
      */
     collectionChanged: function () {
+      var collectionSize = this.getCollection() ? this.getCollection().size() : 0;
       // +2: 1 for the labels at the top, one for the entry row at the bottom
-      this.$.gridRepeater.setCount(this.getCollection().size() + 2);
+      this.$.gridRepeater.setCount(collectionSize + 2);
     },
     doFieldChanged: function (inSender, inEvent) {
       var fieldNameWithNumber = inSender.getName();
