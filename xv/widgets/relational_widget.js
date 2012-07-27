@@ -19,7 +19,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
       classes: "onyx-menu-toolbar",
-      onchange: "doFieldLeft", // XXX onleave seems to do onmouseout, which I don't want.
+      onchange: "doFieldLeft",
       components: [
 
         {
@@ -34,8 +34,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             {
               kind: "onyx.Menu",
               name: "autocompleteMenu",
-              modal: false, // if this dropdown is modal then it
-              // suppresses capture of key events from the namefield
+              // the menu must not be modal. If it is modal, then it
+              // suppresses the capture of key events from the name field
+              modal: false,
               components: [
                 {content: ""}
               ],
@@ -132,8 +133,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       XV.util.removeAllChildren(this.$.autocompleteMenu);
       for (var i = 0; i < this.getCollection().length; i++) {
         var model = this.getCollection().models[i];
-        // XXX I keep the model in the menuItem. This is a bit heavy, but it
-        // allows us to easily update the base model when a menuItem is chosen.
+        /**
+         *I keep the model in the menuItem. This is a bit heavy, but it
+         * allows us to easily update the base model when a menuItem is chosen.
+         */
         this.$.autocompleteMenu.createComponent({
           content: model.get(this.getTitleField()),
           model: model

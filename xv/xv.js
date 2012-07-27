@@ -219,7 +219,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             boxType: "grid",
             objectName: "history",
             modelType: "XM.IncidentHistory", // XXX I could do without these if I could find where to introspect
-            //location: "bottom",
+            location: "bottom",
             customization: {
               disallowEdit: true,
               stampUser: true,
@@ -390,8 +390,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     },
 
-    // XXX there's got to be a better way to get the name of the model
-    // that's currently being displayed. This way is very hackish.
+    // XXX this is all very magical
     // TODO: this doesn't need to be a view-layer static function
     formatModelName: function (modelType) {
       return this.infoToMasterModelName(this.stripModelNamePrefix(modelType));

@@ -66,6 +66,9 @@ trailing:true white:true*/
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
                 ]
               });
+
+            // TODO: Cole makes a convincing case that the widgets should include their
+            // own InputDecorator and label
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
 
@@ -254,7 +257,7 @@ trailing:true white:true*/
        * is an Input or a picker or a relational widget, so we have to be careful
        * when we parse out the appropriate values.
        * FIXME: If you click the persist button before a changed field is blurred,
-       * then I think the change will not be persisted, as this function might not
+       * then the change will not be persisted, as this function might not
        * be executed before the persist method. The way we disable the save button
        * until this function has successfully executed will help with this, but it's
        * not foolproof: let's say a user changes one field (which enables the save
@@ -269,9 +272,11 @@ trailing:true white:true*/
 
         var updateObject = {};
 
-        // XXX isn't it strange that inEvent.name is the name of the field that's throwing the
-        // event? both inEvent and inSender look like senders here. This is true for Inputs
-        // and Pickers
+        /**
+         * XXX Isn't it strange that inEvent.name is the name of the field that's throwing the
+         * event? both inEvent and inSender look like senders here. This is true for Inputs
+         * and Pickers
+         */
         updateObject[inEvent.name] = newValue;
         this.getModel().set(updateObject);
         this.doEnableSaveButton();
@@ -317,7 +322,7 @@ trailing:true white:true*/
       },
       /**
        * Cleans out all the elements from a workspace.
-       * XXX FIXME this looks to work via the command line but not onscreen
+       * FIXME this looks to work via the command line but not onscreen
        */
       wipe: function () {
         XV.util.removeAll(this.$.workspacePanels.$.topPanel);
