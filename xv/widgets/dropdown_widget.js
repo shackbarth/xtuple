@@ -35,7 +35,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     setValue: function (value) {
 
       for (var i = 0; i < this.$.dropdown.getComponents().length; i++) {
-        if (this.$.dropdown.getComponents()[i].value === (value.id ? value.id : value)) {
+        if (this.$.dropdown.getComponents()[i].value === (value && value.id ? value.id : value)) {
         // TODO upon successful refactor of projectStatus as a real model then the next line will suffice
         //if (this.$.dropdown.getComponents()[i].value === value.id) {
           this.$.dropdown.setSelected(this.$.dropdown.getComponents()[i]);

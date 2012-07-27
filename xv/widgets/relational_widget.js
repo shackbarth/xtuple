@@ -150,8 +150,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     doKeyUp: function (inSender, inEvent) {
-      console.log("input changed: " + inSender.getValue() + inEvent.keyCode);
-
       /**
        * Start by clearing out the dropdown in case there's pre-existing elements
        */
