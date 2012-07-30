@@ -6,5 +6,6 @@ enyo.depends(
   "relational_widget.js",
   "dropdown_widget.js",
   "grid_widget.js",
-  "read_only_widget.js"
+  "read_only_widget.js",
+  "parameter.js"
 );

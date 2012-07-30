@@ -22,7 +22,8 @@ trailing:true white:true*/
     published: {
       collection: null,
       rowClass: "",
-      query: null
+      query: null,
+      parameterItems: []
     },
     collectionChanged: function () {
       var col = this.getCollection(),
@@ -284,9 +285,6 @@ trailing:true white:true*/
       var curr = inComponent;
       var elems = inElement;
 
-      //console.log("found array", inComponent, inElement);
-
-
       // TODO: this could be handled in much better ways...
       var width = elems.shift().width;
 
@@ -295,9 +293,6 @@ trailing:true white:true*/
       var ret;
 
       if (curr.kind !== "InfoListBasicColumn") {
-
-        //console.log("creating new basic column");
-
         ret = curr;
 
         curr = curr.createComponent({
@@ -306,12 +301,7 @@ trailing:true white:true*/
         });
       }
 
-      //console.log("begin");
-
       for (; idx < elems.length; ++idx) {
-
-        //console.log(elems[idx]);
-
         elem = elems[idx];
         if (elem instanceof Array) {
           curr = this.createComponentFromArray(inOwner, curr, elem, elems.length);
@@ -320,15 +310,11 @@ trailing:true white:true*/
         }
       }
 
-      //console.log("end");
-
       return ret;
     },
     createComponentFromObject: function (inOwner, inComponent, inElement) {
       var curr = inComponent;
       var elem = inElement;
-
-      //console.log("CREATECOMPONENTFROMOBJECT", elem);
 
       curr = curr.createComponent({
         kind: "XV.InfoListBasicCell"
