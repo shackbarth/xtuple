@@ -20,7 +20,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
       components: [
-        {kind: "onyx.PickerDecorator", components: [
+        {kind: "XV.DisableablePickerDecorator", name: "decorator", components: [
           {},
           { kind: "onyx.Picker", name: "dropdown" }
         ]}
@@ -41,7 +41,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     },
     setDisabled: function (isDisabled) {
-      // TODO: set the picker to be diabled
+      this.$.decorator.setDisabled(isDisabled);
     },
     /**
      * A convenience function so that this object can be treated generally like an input
