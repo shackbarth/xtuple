@@ -227,6 +227,30 @@ white:true*/
     isDocumentAssignment: true
 
   });
+  
+  /**
+    @class
+
+    @extends XM.Alarm
+  */
+  XM.ToDoAlarm = XM.Alarm.extend({
+    /** @scope XM.ProjectTaskAlarm.prototype */
+
+    recordType: 'XM.ToDoAlarm'
+
+  });
+  
+  /**
+    @class
+  
+    @extends XM.Comment
+  */
+  XM.ToDoComment = XM.Comment.extend({
+    /** @scope XM.ToDoComment.prototype */
+
+    recordType: 'XM.ToDoComment'
+
+  });
 
   /**
     @class
@@ -279,6 +303,20 @@ white:true*/
     /** @scope XM.ToDoImage.prototype */
 
     recordType: 'XM.ToDoImage',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+  
+    @extends XT.Model
+  */
+  XM.ToDoToDo = XT.Model.extend({
+    /** @scope XM.ToDoToDo.prototype */
+
+    recordType: 'XM.ToDoToDo',
 
     isDocumentAssignment: true
 
