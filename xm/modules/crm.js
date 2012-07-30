@@ -1,11 +1,11 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
 (function () {
   "use strict";
-  
+
   /**
     @class
 
@@ -17,7 +17,7 @@ white:true*/
     recordType: 'XM.ProjectIncident',
 
     isDocumentAssignment: true
-  
+
   });
 
   /**
@@ -31,7 +31,7 @@ white:true*/
     recordType: 'XM.ProjectOpportunity',
 
     isDocumentAssignment: true
-  
+
   });
 
   /**
@@ -43,6 +43,20 @@ white:true*/
     /** @scope XM.ProjectToDo.prototype */ {
 
     recordType: 'XM.ProjectToDo',
+
+    isDocumentAssignment: true
+
+  });
+
+  /**
+    @class
+
+    @extends XT.Model
+  */
+  XM.ToDoIncident = XT.Model.extend(
+    /** @scope XM.ToDoIncident.prototype */ {
+
+    recordType: 'XM.ToDoIncident',
 
     isDocumentAssignment: true
 

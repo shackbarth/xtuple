@@ -372,8 +372,8 @@ trailing:true white:true*/
         // that until we know the model type.
         //
         this.setModelType(modelType);
-        // XXX not sure best way to massage the header for the linguist
-        this.$.workspaceHeader.setContent(("_" + modelType).loc());
+        var modelTypeDisplay = XV.util.stripModelNamePrefix(modelType).camelize();
+        this.$.workspaceHeader.setContent(("_" + modelTypeDisplay).loc());
         this.setWorkspaceList();
         this.$.menuItems.render();
 
