@@ -323,8 +323,8 @@
       },
       {
         "name": "toDo",
-        "toOne": {
-          "type": "ToDo",
+        "attr": {
+          "type": "Number",
           "column": "alarm_source_id"
         }
       },

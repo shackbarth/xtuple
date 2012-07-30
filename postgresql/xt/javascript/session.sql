@@ -136,6 +136,25 @@ select xt.install_js('XT','Session','xtuple', $$
             }
           };
         relations.push(rel);
+      },
+      processProperties = function (orm) {
+        var n;
+        if (orm.properties && orm.properties.length) {
+          /* To One */
+          props = orm.properties.filter(filterToOne);
+          props.forEach(addToOne);
+ 
+          /* To Many */
+          props = orm.properties.filter(filterToMany);
+          props.forEach(addToMany);
+        }
+
+        /* extensions */
+        if (orm.extensions && orm.extensions.length) {
+          for (n = 0; n < orm.extensions.length; n++) {
+            processProperties(orm.extensions[n]);
+          }
+        }
       };
 
     /* Loop through each field and add to the object */
@@ -149,14 +168,7 @@ select xt.install_js('XT','Session','xtuple', $$
         /* Add relations */
         result[type]['relations'] = [];
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
-
-        /* To One */
-        props = orm.properties.filter(filterToOne);
-        props.forEach(addToOne);
-
-        /* To Many */
-        props = orm.properties.filter(filterToMany);
-        props.forEach(addToMany);
+        processProperties(orm);
       }
       column = { 
         name: name,
