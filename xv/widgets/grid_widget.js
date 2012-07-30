@@ -168,9 +168,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Display the collection in the grid when it's passed in
      */
     collectionChanged: function () {
-      var collectionSize = this.getCollection() ? this.getCollection().size() : 0;
+
+      // XXX do we have to worry about the possibiltiy of getting passed null as a
+      // collection here? e.g. if you try to get a new ToDo object, the comments
+      // attribute isn't there, and so by the time you get here there's no collection.
+      // This is where we would make a new collection.
+      /*
+      if (!this.getCollection()) {
+        var modelType = this.getDescriptor().modelType;
+        // XXX argh why isn't XM.ToDoComments cached?
+        var collectionConstructor = Backbone.Collection.extend({
+          model: modelType
+        });
+        XM.projectStatuses = new XM.ProjectStatusCollection();
+        var collectionName = ??? // XV.util.stripModelNamePrefix(modelType).camelize() + "Collection";
+        var emptyCollection = new collectionConstructor();
+        this.setCollection(emptyCollection);
+        return;
+      }
+       */
+
       // +2: 1 for the labels at the top, one for the entry row at the bottom
-      this.$.gridRepeater.setCount(collectionSize + 2);
+      this.$.gridRepeater.setCount(this.getCollection().size() + 2);
     },
     doFieldChanged: function (inSender, inEvent) {
       var fieldNameWithNumber = inSender.getName();

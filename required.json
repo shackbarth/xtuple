@@ -34,6 +34,9 @@
     ]
   },
   "gts-plugins/DatePicker": {
-    "origin": "https://bitbucket.org/GlitchTechScience/gts-plugins.git"
+    "origin": "https://bitbucket.org/GlitchTechScience/gts-plugins.git",
+    "entries": [
+      "$lib/gts-plugins/DatePicker"
+    ]
   }
 }
