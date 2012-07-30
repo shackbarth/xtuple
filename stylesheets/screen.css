@@ -106,7 +106,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .panels > * {
   border: 2px solid #333;
   font-size: 5em;
-  text-align: center;
 }
 
 /* line 48, ../sass/screen.scss */
