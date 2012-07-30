@@ -115,7 +115,6 @@ if (_path.existsSync(XT.packagePath)) {
   XT.packagesContent.push("  \"xm\"");
   XT.packagesContent.push("  \"xv\"");
   XT.packagesContent.push("  \"app.js\"");
-  XT.packagesContent.push("  \"$lib/onyx/source/wip-package.js\""); // XXX temp for dropdown widget
 
   XT.packagesContent = XT.packagesContent.join(",\n");
   XT.packageContent.push(XT.packagesContent);

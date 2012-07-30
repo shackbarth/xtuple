@@ -33,10 +33,10 @@
       "lib/globalize.js"
     ]
   },
-  "gts-plugins/DatePicker": {
+  "gts-plugins": {
     "origin": "https://bitbucket.org/GlitchTechScience/gts-plugins.git",
     "entries": [
-      "$lib/gts-plugins/DatePicker"
+      "DatePicker"
     ]
   }
 }
