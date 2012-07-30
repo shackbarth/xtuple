@@ -1,0 +1,46 @@
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+
+@import "compass/reset";
+
+body {
+
+}
+
+.xv-login {
+  .xv-login-form {
+    position: absolute;
+    height: 250px;
+    width: 300px;
+    top: 50%;
+    left: 50%;
+    margin-top: -125px;
+    margin-left: -150px;
+    .xv-message-box {
+      font-size: 12px;
+      &.error {
+        color: #ff0000;
+      }
+      text-align: center;
+      padding: 10px;
+    }
+  }
+  .xv-organizations-selection {
+    position: absolute;
+    height: 300px;
+    width: 400px;
+    top: 50%;
+    left: 50%;
+    margin-top: -150px;
+    margin-left: -200px;
+    .xv-organization-row {
+      padding: 5px;
+      cursor: pointer;
+      &:hover {
+        background-color: #ddd;
+      }
+    }
+  }
+}
