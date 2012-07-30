@@ -23,11 +23,10 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", content: "_dashboard".loc(), ontap: "showDashboard"},
-          {kind: "onyx.MenuDecorator", components: [
-            {content: "_history".loc(), ontap: "fillHistory" },
-            {kind: "onyx.Tooltip", content: "Tap to open..."},
-            {kind: "onyx.Menu", name: "historyMenu", components: [], ontap: "doHistoryItemSelected" }
+          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
+          {kind: "Group", defaultKind: "onyx.IconButton", tag: null, components: [
+            {src: "images/menu-icon-search.png", panel: "parameterWidget", ontap: "showParameters"},
+            {src: "images/menu-icon-bookmark.png", panel: "history", ontap: "showHistory"}
           ]},
           {name: "leftLabel"}
         ]},
@@ -156,8 +155,13 @@ trailing:true white:true*/
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
     },
-    showSetup: function () {
-      // todo
+    showHistory: function (inSender, inEvent) {
+      var panel = {name: 'history'};
+      this.bubble("onTogglePullout", panel);
+    },
+    showParameters: function (inSender, inEvent) {
+      var panel = this.$.lists.getActive();
+      this.bubble("onTogglePullout", panel);
     },
     /**
      * Catches the tap event from the {XV.InfoListRow}

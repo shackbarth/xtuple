@@ -550,6 +550,7 @@ XT.stringsFor("en_US", {
   "_shiptoPostalCode": "Ship-to Postal Code",
   "_shiptoState": "Ship-to State",
   "_shiptos": "Ship-tos",
+  "_showCompleted": "Show Completed",
   "_showInactive": "Show Inactive",
   "_showTotal": "Show Total",
   "_source": "Source",

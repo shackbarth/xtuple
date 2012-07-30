@@ -346,6 +346,30 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.AccountInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "XV.ParameterItem", attr: "isActive",
+        label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "XV.ParameterItem", attr: "name"},
+      {kind: "XV.ParameterItem", attr: "city"},
+      {kind: "XV.ParameterItem", attr: "state"}
+    ]
+  });
+  
+  enyo.kind({
     name: "XV.AccountInfoList",
     kind: "XV.InfoList",
     published: {
@@ -388,6 +412,32 @@ trailing:true white:true*/
   // ..........................................................
   // CONTACT
   //
+  
+  enyo.kind({
+    name: "XV.ContactInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "XV.ParameterItem", attr: "isActive",
+        label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "XV.ParameterItem", attr: "name"},
+      {kind: "XV.ParameterItem", attr: "city"},
+      {kind: "XV.ParameterItem", attr: "state"},
+      {kind: "XV.ParameterItem", attr: "primaryEmail"},
+      {kind: "XV.ParameterItem", attr: "phone"}
+    ]
+  });
   
   enyo.kind({
     name: "XV.ContactInfoList",
@@ -642,6 +692,28 @@ trailing:true white:true*/
   // ..........................................................
   // TO DO
   //
+  
+  enyo.kind({
+    name: "XV.ToDoInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "XV.ParameterItem", attr: "status",
+        label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '<>',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {kind: "XV.ParameterItem", attr: "name"}
+    ]
+  });
   
   enyo.kind({
     name: "XV.ToDoInfoList",

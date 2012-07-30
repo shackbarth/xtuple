@@ -71,25 +71,6 @@ white:true*/
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "enyo-fit",
-    components: [
-      {kind: "XV.ParameterItem", attr: "isActive",
-        label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: true
-            };
-          }
-          return param;
-        }
-      },
-      {kind: "XV.ParameterItem", attr: "name"},
-      {kind: "XV.ParameterItem", attr: "city"},
-      {kind: "XV.ParameterItem", attr: "state"}
-    ],
     getParameters: function () {
       var i,
         param,
