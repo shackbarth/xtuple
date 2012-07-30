@@ -109,6 +109,7 @@ if (_path.existsSync(XT.packagePath)) {
   });
 
   // arbitrary collection...
+  XT.packagesContent.push("  \"$lib/date_format\"");
   XT.packagesContent.push("  \"$lib/socket.io\"");
   XT.packagesContent.push("  \"xt\"");
   XT.packagesContent.push("  \"xm\"");

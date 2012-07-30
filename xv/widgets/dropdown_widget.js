@@ -4,9 +4,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 (function () {
   "use strict";
 
-  // XXX again I'm doing these widgets as wrappers instead of subclassing the kind
-  // this is worth a conversation
-
   enyo.kind({
     name: "XV.DropdownWidget",
     kind: enyo.Control,
@@ -23,7 +20,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       kind: "onyx.InputDecorator",
       style: "height: 14px;",
       components: [
-        {kind: "onyx.PickerDecorator", components: [
+        {kind: "XV.DisableablePickerDecorator", name: "decorator", components: [
           {},
           { kind: "onyx.Picker", name: "dropdown" }
         ]}
@@ -35,13 +32,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     setValue: function (value) {
 
       for (var i = 0; i < this.$.dropdown.getComponents().length; i++) {
-        if (this.$.dropdown.getComponents()[i].value === (value.id ? value.id : value)) {
+        if (this.$.dropdown.getComponents()[i].value === (value && value.id ? value.id : value)) {
         // TODO upon successful refactor of projectStatus as a real model then the next line will suffice
         //if (this.$.dropdown.getComponents()[i].value === value.id) {
           this.$.dropdown.setSelected(this.$.dropdown.getComponents()[i]);
           break;
         }
       }
+    },
+    setDisabled: function (isDisabled) {
+      this.$.decorator.setDisabled(isDisabled);
     },
     /**
      * A convenience function so that this object can be treated generally like an input

@@ -9,10 +9,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     kind: enyo.Control,
     published: {
       collection: null,
-      descriptor: null
+      descriptor: null,
+      customization: {}
     },
     events: {
-      onModelUpdate: ""
+      onSubmodelUpdate: ""
     },
     style: "height: 200px; width: 900px; margin-right: 5px; font-size: 12px;",
     components: [
@@ -56,16 +57,48 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             style: "border: 0px; width: " + fieldDesc.width + "px;",
             onchange: "doFieldChanged"
           });
+
+          /**
+           * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
+           * type we want to send that down to the widget
+           */
+          if (fieldDesc.modelType) {
+            field.setModelType(fieldDesc.modelType);
+          }
+
           if (this.getCollection().size() + 1 > inEvent.index) {
+            // row with data
             var model = this.getCollection().at(inEvent.index - 1);
             field.setValue(model.get(fieldDesc.fieldName));
+
+            if (this.getCustomization().disallowEdit) {
+              field.setDisabled(true);
+            }
+          } else {
+            // this is the "new" row at the bottom
+
+            // XXX this is a work in progress that must be generalized
+            // XXX the functionality isn't actually hooked up yet
+            if ( this.getCustomization().stampUser &&
+                fieldDesc.fieldName === 'createdBy') {
+              field.setValue("<YOU>");
+              field.setDisabled(true);
+            }
+            if ( this.getCustomization().stampDate &&
+                fieldDesc.fieldName === 'created') {
+              field.setValue("<NOW>");
+              field.setDisabled(true);
+            }
+
           }
         }
       }
       /**
        * Add delete buttons for each row (but not for the "title" row or the "new" row)
        */
-      if (inEvent.index !== 0 && inEvent.index !== this.getCollection().size() + 1) {
+      if (!this.getCustomization().disallowEdit
+          && inEvent.index !== 0
+          && inEvent.index !== this.getCollection().size() + 1) {
         this.createComponent({
           kind: "onyx.Button",
           container: gridRow,
@@ -99,7 +132,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var fieldNameSplit = fieldNameWithNumber.match(/(\D+)(\d+)/);
       var rowIndex = Number(fieldNameSplit[2]);
       this.getCollection().at(rowIndex).destroy();
-      this.doModelUpdate();
+      this.doSubmodelUpdate();
 
 
 
@@ -135,6 +168,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Display the collection in the grid when it's passed in
      */
     collectionChanged: function () {
+
+      // XXX do we have to worry about the possibiltiy of getting passed null as a
+      // collection here? e.g. if you try to get a new ToDo object, the comments
+      // attribute isn't there, and so by the time you get here there's no collection.
+      // This is where we would make a new collection.
+      /*
+      if (!this.getCollection()) {
+        var modelType = this.getDescriptor().modelType;
+        // XXX argh why isn't XM.ToDoComments cached?
+        var collectionConstructor = Backbone.Collection.extend({
+          model: modelType
+        });
+        XM.projectStatuses = new XM.ProjectStatusCollection();
+        var collectionName = ??? // XV.util.stripModelNamePrefix(modelType).camelize() + "Collection";
+        var emptyCollection = new collectionConstructor();
+        this.setCollection(emptyCollection);
+        return;
+      }
+       */
+
       // +2: 1 for the labels at the top, one for the entry row at the bottom
       this.$.gridRepeater.setCount(this.getCollection().size() + 2);
     },
@@ -160,15 +213,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        */
       if (rowIndex >= this.getCollection().size()) {
         // add
-
-        var newModel = new XM.ProjectTask(updateObject, { isNew: true }); // FIXME can't hardcode ProjectTask
+        //var newModel = new XM.ProjectTask(updateObject, { isNew: true });
+        var modelType = XV.util.stripModelNamePrefix(this.getDescriptor().modelType);
+        var newModel = new XM[modelType](updateObject, { isNew: true });
         /**
          * Certain fields are required, so include these if they're not set
          */
         for (var i = 0; i < newModel.requiredAttributes.length; i++) {
           var reqAttr = newModel.requiredAttributes[i];
           if (!newModel.get(reqAttr)) {
-            if (reqAttr === "dueDate") { continue; } // XXX temp hack
+            // XXX these hoops aren't scalable. Could we disable validation on this
+            // new model until the user tries to persist?
+            if (reqAttr === "dueDate") { continue; }
+            if (reqAttr === "id") { continue; }
             var reqDefault = {};
             reqDefault[reqAttr] = "";
             newModel.set(reqDefault);
@@ -184,7 +241,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       /**
        * Send up notice that there's been an update
        */
-      this.doModelUpdate();
+      this.doSubmodelUpdate();
     }
   });
 }());

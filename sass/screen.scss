@@ -367,6 +367,14 @@ body {
 
 /********* PULLOUT ************/
 
+.parameter-item {
+	min-height: 50px;
+}
+
+.parameter-item-input {
+  margin-top: -10px;
+	float: right;
+}
 
 /* adapt to smaller displays */
 @media (max-width: 480px) {

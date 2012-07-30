@@ -30,7 +30,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             title: "Account Info",
             fields: [
               { fieldName: "name" },
-              { fieldName: "number" }
+              { fieldName: "number" },
+              { fieldName: "accountType", fieldType: "dropdown", modelType: "XM.accountTypes" }
             ]
           },
           {
@@ -41,14 +42,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
           },
-          /*
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
-*/
         ],
         "XM.UserAccount": [
           {
@@ -66,6 +76,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "firstName" },
               { fieldName: "lastName" },
               { fieldName: "jobTitle" },
+              { fieldName: "address", fieldType: "address" },
               { fieldName: "phone" },
               { fieldName: "primaryEmail" }
             ]
@@ -79,8 +90,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            modelType: "XM.ContactComment",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -107,8 +130,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            modelType: "XM.ToDoComment",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -145,8 +180,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            modelType: "XM.OpportunityComment",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -172,18 +219,37 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             title: "History",
             boxType: "grid",
             objectName: "history",
+            modelType: "XM.IncidentHistory", // XXX I could do without these if I could find where to introspect
             location: "bottom",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
             fields: [
-              { fieldName: "description" },
-              { fieldName: "created", fieldType: "readonly" },
-              { fieldName: "createdBy", fieldType: "readonly" }
+              { fieldName: "createdBy" },
+              { fieldName: "created", fieldType: "date" },
+              { fieldName: "description" }
             ]
           },
+
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            modelType: "XM.IncidentComment",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ],
 
@@ -226,6 +292,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             location: "bottom",
             boxType: "grid",
             objectName: "tasks",
+            modelType: "XM.ProjectTask",
             fields: [
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
@@ -238,8 +305,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "comments",
-            objectName: "comments"
+            boxType: "grid",
+            objectName: "comments",
+            modelType: "XM.ProjectComment",
+            customization: {
+              disallowEdit: true,
+              stampUser: true,
+              stampDate: true
+            },
+            fields: [
+              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "created", label: "date", fieldType: "date" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "text", label: "text" }
+            ]
           }
         ]
       });
@@ -270,6 +349,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         return "XV.ReadOnlyWidget";
       } else if (value === 'comments') {
         return "XV.CommentsWidget";
+      } else if (value === 'address') {
+        return "XV.AddressWidget";
       }
     },
     /**
@@ -292,12 +373,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // It's necessary to save the length into a variable or else the loop ends
       // prematurely. It's also necessary to delete the children always from the
       // 0 spot and not the i spot, because the target moves as you delete.
+      var i;
       var controlCount = parent.controls.length;
-      for (var i = 0; i < controlCount; i++) {
+      for (i = 0; i < controlCount; i++) {
         parent.removeControl(parent.controls[0]);
       }
       var childrenCount = parent.children.length;
-      for (var i = 0; i < childrenCount; i++) {
+      for (i = 0; i < childrenCount; i++) {
         parent.removeChild(parent.children[0]);
       }
       // this causes extra problems
@@ -309,9 +391,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     },
 
-    // XXX there's got to be a better way to get the name of the model
-    // that's currently being displayed. This way is very hackish.
-    // TODO: this doesn't need to be a view-layer static function
+    // XXX this is all very magical
+    // TODO: this doesn't need to be in XV, as it's not enyo-specific
     formatModelName: function (modelType) {
       return this.infoToMasterModelName(this.stripModelNamePrefix(modelType));
     },

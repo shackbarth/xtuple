@@ -1,109 +1,51 @@
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
+white:true*/
+/*global XT:true, XM:true, Backbone:true, _:true, console:true */
 
-/**
-  @class
+(function () {
+  "use strict";
+  
+  /**
+    @class
 
-  @extends XT.Model
-*/
-XM.ProjectIncident = XT.Model.extend(
-  /** @scope XM.ProjectIncident.prototype */ {
+    @extends XT.Model
+  */
+  XM.ProjectIncident = XT.Model.extend(
+    /** @scope XM.ProjectIncident.prototype */ {
 
-  recordType: 'XM.ProjectIncident',
+    recordType: 'XM.ProjectIncident',
 
-  isDocumentAssignment: true,
+    isDocumentAssignment: true
+  
+  });
 
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'incident',
-    relatedModel: 'XM.IncidentInfo'
-  }]
+  /**
+    @class
 
-});
+    @extends XT.Model
+  */
+  XM.ProjectOpportunity = XT.Model.extend(
+    /** @scope XM.ProjectOpportunity.prototype */ {
 
-/**
-  @class
+    recordType: 'XM.ProjectOpportunity',
 
-  @extends XT.Model
-*/
-XM.ProjectOpportunity = XT.Model.extend(
-  /** @scope XM.ProjectOpportunity.prototype */ {
+    isDocumentAssignment: true
+  
+  });
 
-  recordType: 'XM.ProjectOpportunity',
+  /**
+    @class
 
-  isDocumentAssignment: true,
+    @extends XT.Model
+  */
+  XM.ProjectToDo = XT.Model.extend(
+    /** @scope XM.ProjectToDo.prototype */ {
 
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'opportunity',
-    relatedModel: 'XM.OpportunityInfo'
-  }]
+    recordType: 'XM.ProjectToDo',
 
-});
+    isDocumentAssignment: true
 
-/**
-  @class
+  });
 
-  @extends XT.Model
-*/
-XM.ProjectToDo = XT.Model.extend(
-  /** @scope XM.ProjectToDo.prototype */ {
-
-  recordType: 'XM.ProjectToDo',
-
-  isDocumentAssignment: true,
-
-  relations: [{
-    type: Backbone.HasOne,
-    key: 'toDo',
-    relatedModel: 'XM.ToDoInfo'
-  }]
-
-});
-
-
-
-XM.Project.prototype.relations.push(
-  {
-    type: Backbone.HasMany,
-    key: 'incidents',
-    relatedModel: 'XM.ProjectIncident',
-    reverseRelation: {
-      key: 'project'
-    }
-  },
-  {
-    type: Backbone.HasMany,
-    key: 'opportunities',
-    relatedModel: 'XM.ProjectOpportunity',
-    reverseRelation: {
-      key: 'project'
-    }
-  },
-  {
-    type: Backbone.HasMany,
-    key: 'toDos',
-    relatedModel: 'XM.ProjectToDo',
-    reverseRelation: {
-      key: 'project'
-    }
-  }
-);
-
-XM.ToDo.prototype.relations.push(
-  {
-    type: Backbone.HasOne,
-    key: 'incident',
-    relatedModel: 'XM.IncidentInfo'
-  }
-);
-
-XM.Incident.prototype.relations.push(
-  {
-    type: Backbone.HasMany,
-    key: 'toDos',
-    relatedModel: 'XM.ToDo',
-    reverseRelation: {
-      key: 'incident'
-    }
-  }
-);
-
+}());
