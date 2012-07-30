@@ -21,6 +21,7 @@ enyo.kind({
   carouselEvents: {
     crm: "crm",
     billing: "billing",
-    workspace: "workspace"
+    workspace: "workspace",
+    dashboard: "dashboard"
   }
 });
