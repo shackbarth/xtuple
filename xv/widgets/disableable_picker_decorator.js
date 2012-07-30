@@ -2,7 +2,7 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, enyo:true, _:true */
 (function () {
-  "use strict";
+  //"use strict";
 
   enyo.kind({
     name: "XV.DisableablePickerDecorator",
@@ -10,9 +10,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     published: {
       disabled: false
     },
+    disabledChanged: function () {
+      // TODO: change styling
+    },
 	change: function (inSender, inEvent) {
-      if (!disabled) {
+      if (!this.getDisabled()) {
         this.waterfallDown("onChange", inEvent);
+      }
+    },
+    activated: function (inSender, inEvent) {
+      if (!this.getDisabled()) {
+        this.inherited(arguments);
       }
     }
   });
