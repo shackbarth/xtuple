@@ -363,9 +363,9 @@ trailing:true white:true*/
           return param;
         }
       },
-      {kind: "XV.ParameterItem", attr: "name"},
-      {kind: "XV.ParameterItem", attr: "city"},
-      {kind: "XV.ParameterItem", attr: "state"}
+      {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"},
+      {kind: "XV.ParameterItem", label: "_city".loc(), attr: "primaryContact.address.city"},
+      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "primaryContact.address.state"}
     ]
   });
   
@@ -432,11 +432,11 @@ trailing:true white:true*/
           return param;
         }
       },
-      {kind: "XV.ParameterItem", attr: "name"},
-      {kind: "XV.ParameterItem", attr: "city"},
-      {kind: "XV.ParameterItem", attr: "state"},
-      {kind: "XV.ParameterItem", attr: "primaryEmail"},
-      {kind: "XV.ParameterItem", attr: "phone"}
+      {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"},
+      {kind: "XV.ParameterItem", label: "_city".loc(), attr: "city"},
+      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "state"},
+      {kind: "XV.ParameterItem", label: "_primaryEmail".loc(), attr: "primaryEmail"},
+      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: "phone"}
     ]
   });
   
@@ -713,7 +713,7 @@ trailing:true white:true*/
           return param;
         }
       },
-      {kind: "XV.ParameterItem", attr: "name"}
+      {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"}
     ]
   });
   

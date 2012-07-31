@@ -129,19 +129,34 @@ trailing:true white:true*/
     fetch: function (name, options) {
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
-        input = this.$.searchInput.getValue();
+        input = this.$.searchInput.getValue(),
+        parameterWidget = XT.app.$.pulloutItems.$[name],
+        parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
-      if (input) {
-        query.parameters = [{
-          attribute: list.getCollection().model.getSearchableAttributes(),
-          operator: 'MATCHES',
-          value: this.$.searchInput.getValue()
-        }];
+      
+      // Build parameters
+      if (input || parameters.length) {
+        query.parameters = [];
+        
+        // Input search parameters
+        if (input) {
+          query.parameters = [{
+            attribute: list.getCollection().model.getSearchableAttributes(),
+            operator: 'MATCHES',
+            value: this.$.searchInput.getValue()
+          }];
+        }
+      
+        // Advanced parameters
+        if (parameters) {
+          query.parameters = query.parameters.concat(parameters);
+        }
       } else {
         delete query.parameters;
       }
+      
       if (options.showMore) {
         query.rowOffset += ROWS_PER_FETCH;
         options.add = true;

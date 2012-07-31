@@ -42,11 +42,8 @@ white:true*/
       this.valueChanged();
       this.labelChanged();
     },
-    attrChanged: function () {
-      this.labelChanged();
-    },
     labelChanged: function () {
-      this.$.label.setContent(this.label || ("_" + this.getAttr()).loc());
+      this.$.label.setContent(this.label);
     },
     getParameter: function () {
       var param;
