@@ -363,9 +363,16 @@ trailing:true white:true*/
           return param;
         }
       },
+      {kind: "XV.ParameterItem", label: "_number".loc(), attr: "number"},
       {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"},
+      {kind: "XV.ParameterItem", label: "_primaryContact".loc(), attr: "primaryContact.name"},
+      {kind: "XV.ParameterItem", label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
+      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
+      {kind: "XV.ParameterItem", label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
       {kind: "XV.ParameterItem", label: "_city".loc(), attr: "primaryContact.address.city"},
-      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "primaryContact.address.state"}
+      {kind: "XV.ParameterItem", label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
+      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "primaryContact.address.state"},
+      {kind: "XV.ParameterItem", label: "_country".loc(), attr: "primaryContact.address.country"}
     ]
   });
   
@@ -434,10 +441,11 @@ trailing:true white:true*/
       },
       {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"},
       {kind: "XV.ParameterItem", label: "_primaryEmail".loc(), attr: "primaryEmail"},
-      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: "phone"},
+      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
       {kind: "XV.ParameterItem", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
       {kind: "XV.ParameterItem", label: "_city".loc(), attr: "address.city"},
       {kind: "XV.ParameterItem", label: "_state".loc(), attr: "address.state"},
+      {kind: "XV.ParameterItem", label: "_postalCode".loc(), attr: "address.postalCode"},
       {kind: "XV.ParameterItem", label: "_country".loc(), attr: "address.country"}
     ]
   });
@@ -708,7 +716,7 @@ trailing:true white:true*/
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
-              operator: '<>',
+              operator: '!=',
               value: 'C'
             };
           }
