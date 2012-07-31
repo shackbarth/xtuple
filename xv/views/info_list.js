@@ -23,7 +23,7 @@ trailing:true white:true*/
       collection: null,
       rowClass: "",
       query: null,
-      parameterItems: []
+      parameterWidget: null
     },
     collectionChanged: function () {
       var col = this.getCollection(),
@@ -346,13 +346,44 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.AccountInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_number".loc(), attr: "number"},
+      {label: "_name".loc(), attr: "name"},
+      {label: "_primaryContact".loc(), attr: "primaryContact.name"},
+      {label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
+      {label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
+      {label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
+      {label: "_city".loc(), attr: "primaryContact.address.city"},
+      {label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
+      {label: "_state".loc(), attr: "primaryContact.address.state"},
+      {label: "_country".loc(), attr: "primaryContact.address.country"}
+    ]
+  });
+  
+  enyo.kind({
     name: "XV.AccountInfoList",
     kind: "XV.InfoList",
     published: {
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
-      rowClass: "XV.AccountInfoCollectionRow"
+      rowClass: "XV.AccountInfoCollectionRow",
+      parameterWidget: "XV.AccountInfoParameters"
     }
   });
 
@@ -390,6 +421,34 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.ContactInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_name".loc(), attr: "name"},
+      {label: "_primaryEmail".loc(), attr: "primaryEmail"},
+      {label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
+      {label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
+      {label: "_city".loc(), attr: "address.city"},
+      {label: "_state".loc(), attr: "address.state"},
+      {label: "_postalCode".loc(), attr: "address.postalCode"},
+      {label: "_country".loc(), attr: "address.country"}
+    ]
+  });
+  
+  enyo.kind({
     name: "XV.ContactInfoList",
     kind: "XV.InfoList",
     published: {
@@ -400,7 +459,8 @@ trailing:true white:true*/
       }, {
         attribute: 'firstName'
       }]},
-      rowClass: "XV.ContactInfoCollectionRow"
+      rowClass: "XV.ContactInfoCollectionRow",
+      parameterWidget: "XV.ContactInfoParameters"
     }
   });
 
@@ -644,12 +704,34 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.ToDoInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {attr: "status", label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_name".loc(), attr: "name"}
+    ]
+  });
+  
+  enyo.kind({
     name: "XV.ToDoInfoList",
     kind: "XV.InfoList",
     published: {
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
-      rowClass: "XV.ToDoInfoCollectionRow"
+      rowClass: "XV.ToDoInfoCollectionRow",
+      parameterWidget: "XV.ToDoInfoParameters"
     }
   });
 
