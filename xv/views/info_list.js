@@ -23,7 +23,7 @@ trailing:true white:true*/
       collection: null,
       rowClass: "",
       query: null,
-      parameterItems: []
+      parameterWidget: null
     },
     collectionChanged: function () {
       var col = this.getCollection(),
@@ -348,7 +348,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountInfoParameters",
     kind: "XV.ParameterWidget",
-    items: [
+    components: [
       {kind: "XV.ParameterItem", attr: "isActive",
         label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
@@ -376,7 +376,8 @@ trailing:true white:true*/
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
-      rowClass: "XV.AccountInfoCollectionRow"
+      rowClass: "XV.AccountInfoCollectionRow",
+      parameterWidget: "XV.AccountInfoParameters"
     }
   });
 
@@ -416,7 +417,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ContactInfoParameters",
     kind: "XV.ParameterWidget",
-    items: [
+    components: [
       {kind: "XV.ParameterItem", attr: "isActive",
         label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
@@ -450,7 +451,8 @@ trailing:true white:true*/
       }, {
         attribute: 'firstName'
       }]},
-      rowClass: "XV.ContactInfoCollectionRow"
+      rowClass: "XV.ContactInfoCollectionRow",
+      parameterWidget: "XV.ContactInfoParameters"
     }
   });
 
@@ -696,7 +698,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoInfoParameters",
     kind: "XV.ParameterWidget",
-    items: [
+    components: [
       {kind: "XV.ParameterItem", attr: "status",
         label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
@@ -721,7 +723,8 @@ trailing:true white:true*/
     published: {
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
-      rowClass: "XV.ToDoInfoCollectionRow"
+      rowClass: "XV.ToDoInfoCollectionRow",
+      parameterWidget: "XV.ToDoInfoParameters"
     }
   });
 

@@ -86,12 +86,13 @@ trailing:true white:true*/
       }
     },
     create: function () {
+      var i, component;
       this.inherited(arguments);
       this.$.leftLabel.setContent(this.label);
       // Build lists
-      var i;
       for (i = 0; i < this.lists.length; i++) {
-        this.$.lists.createComponent(this.lists[i]);
+        component = this.$.lists.createComponent(this.lists[i]);
+        this.bubble("onInfoListAdded", component);
       }
       this.$.menu.setCount(this.lists.length);
     },
