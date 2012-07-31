@@ -433,10 +433,12 @@ trailing:true white:true*/
         }
       },
       {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"},
-      {kind: "XV.ParameterItem", label: "_city".loc(), attr: "city"},
-      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "state"},
       {kind: "XV.ParameterItem", label: "_primaryEmail".loc(), attr: "primaryEmail"},
-      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: "phone"}
+      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: "phone"},
+      {kind: "XV.ParameterItem", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
+      {kind: "XV.ParameterItem", label: "_city".loc(), attr: "address.city"},
+      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "address.state"},
+      {kind: "XV.ParameterItem", label: "_country".loc(), attr: "address.country"}
     ]
   });
   

@@ -562,6 +562,7 @@ XT.stringsFor("en_US", {
   "_state": "State",
   "_states": "States",
   "_status": "Status",
+  "_street": "Street",
   "_string": "String",
   "_subAccount": "Sub Account",
   "_subtotal": "Subtotal",
