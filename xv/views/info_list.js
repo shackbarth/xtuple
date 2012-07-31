@@ -707,13 +707,26 @@ trailing:true white:true*/
     name: "XV.ToDoInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {attr: "status", label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
+      {label: "_showCompleted".loc(), attr: "status", defaultKind: "onyx.Checkbox",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
             param = {
               attribute: this.getAttr(),
               operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_showCompletedOnly".loc(), attr: "status", defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
               value: 'C'
             };
           }
