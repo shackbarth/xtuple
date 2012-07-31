@@ -5,7 +5,9 @@ trailing:true white:true*/
 
 (function () {
   // first of 2 types of checks, this being the most obvious test
-  var c = enyo.getCookie("xtsessioncookie"), h = document.location.hostname;
+  var c = enyo.getCookie("xtsessioncookie"), h = document.location.hostname,
+      p = document.location.pathname;
+  if (p.match(/login/g)) return;
   try {
     c = JSON.parse(c);
   } catch (e) { document.location = "https://%@/login".f(h); }
