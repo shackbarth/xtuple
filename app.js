@@ -4,7 +4,7 @@ white:true*/
 /*global enyo:true, XT:true, document:true */
 
 (function () {
-  
+
   enyo.kind({
     name: "App",
     fit: true,
@@ -19,25 +19,7 @@ white:true*/
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
-      { name: "pullout", kind: "enyo.Slideable", classes: "pullout",
-        value: -100, min: -100, unit: '%', components: [
-        {name: "shadow", classes: "pullout-shadow"},
-        {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton"},
-        {kind: "FittableRows", classes: "enyo-fit", components: [
-          {name: "client", classes: "pullout-toolbar"},
-          {name: "pulloutItems", fit: true, style: "position: relative;", components: [
-            {name: "history", kind: "FittableRows", showing: false, classes: "enyo-fit", components: [
-              {kind: "onyx.RadioGroup", classes: "history-header", components: [
-                {content: "Saved", active: true},
-                {content: "Recents"}
-              ]},
-              {fit: true, kind: "Scroller", classes: "history-scroller", components: [
-                {kind: "List", onItemSelect: "itemSelect"}
-              ]}
-            ]}
-          ]}
-        ]}
-      ]}
+      { name: "pullout", kind: "XV.Pullout" }
     ],
     addPulloutItem: function (inSender, inEvent) {
       var item = {
@@ -59,7 +41,7 @@ white:true*/
       var pulloutItems = this._pulloutItems || [],
         i;
       for (i = 0; i < pulloutItems.length; i++) {
-        this.$.pulloutItems.createComponent(pulloutItems[i]);
+        this.$.pullout.$.pulloutItems.createComponent(pulloutItems[i]);
       }
     },
     handlePullout: function (inSender, inEvent) {
@@ -70,20 +52,7 @@ white:true*/
       this.$.postbooks.waterfall("onParameterChange", inEvent);
     },
     togglePullout: function (inSender, inEvent) {
-      var pullout = this.$.pullout,
-        item = this.$.pulloutItems.$[inEvent.name],
-        children = this.$.pulloutItems.children,
-        i;
-      if (item.showing && pullout.isAtMax()) {
-        pullout.animateToMin();
-      } else {
-        pullout.animateToMax();
-        for (i = 0; i < children.length; i++) {
-          children[i].hide();
-        }
-        item.show();
-        item.resized();
-      }
+      this.$.pullout.togglePullout(inEvent.name);
     },
     start: function () {
     

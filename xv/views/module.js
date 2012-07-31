@@ -136,7 +136,7 @@ trailing:true white:true*/
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
         input = this.$.searchInput.getValue(),
-        parameterWidget = XT.app.$.pulloutItems.$[name],
+        parameterWidget = XT.app.$.pullout.getItem(name),
         parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
