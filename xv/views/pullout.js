@@ -30,29 +30,6 @@ white:true*/
         ]}
       ]}
     ],
-    addPulloutItem: function (inSender, inEvent) {
-      var item = {
-        name: inEvent.name,
-        showing: false
-      };
-      if (inEvent.getParameterWidget) {
-        item.kind = inEvent.getParameterWidget();
-      }
-      if (item.kind) {
-        if (this._pulloutItems === undefined) {
-          this._pulloutItems = [];
-        }
-        this._pulloutItems.push(item);
-      }
-    },
-    create: function () {
-      this.inherited(arguments);
-      var pulloutItems = this._pulloutItems || [],
-        i;
-      for (i = 0; i < pulloutItems.length; i++) {
-        this.$.pulloutItems.createComponent(pulloutItems[i]);
-      }
-    },
     getItem: function (name) {
       return this.$.pulloutItems.$[name] || this.$[name];
     },
