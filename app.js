@@ -49,7 +49,7 @@ white:true*/
       this.$.pullout.setShowing(showing);
     },
     parameterDidChange: function (inSender, inEvent) {
-      this.$.postbooks.waterfall("onParameterChange", inEvent);
+      this.$.postbooks.$.container.getActive().waterfall("onParameterChange", inEvent);
     },
     togglePullout: function (inSender, inEvent) {
       this.$.pullout.togglePullout(inEvent.name);
