@@ -349,8 +349,7 @@ trailing:true white:true*/
     name: "XV.AccountInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "XV.ParameterItem", attr: "isActive",
-        label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -363,16 +362,16 @@ trailing:true white:true*/
           return param;
         }
       },
-      {kind: "XV.ParameterItem", label: "_number".loc(), attr: "number"},
-      {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"},
-      {kind: "XV.ParameterItem", label: "_primaryContact".loc(), attr: "primaryContact.name"},
-      {kind: "XV.ParameterItem", label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
-      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
-      {kind: "XV.ParameterItem", label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
-      {kind: "XV.ParameterItem", label: "_city".loc(), attr: "primaryContact.address.city"},
-      {kind: "XV.ParameterItem", label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
-      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "primaryContact.address.state"},
-      {kind: "XV.ParameterItem", label: "_country".loc(), attr: "primaryContact.address.country"}
+      {label: "_number".loc(), attr: "number"},
+      {label: "_name".loc(), attr: "name"},
+      {label: "_primaryContact".loc(), attr: "primaryContact.name"},
+      {label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
+      {label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
+      {label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
+      {label: "_city".loc(), attr: "primaryContact.address.city"},
+      {label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
+      {label: "_state".loc(), attr: "primaryContact.address.state"},
+      {label: "_country".loc(), attr: "primaryContact.address.country"}
     ]
   });
   
@@ -425,8 +424,7 @@ trailing:true white:true*/
     name: "XV.ContactInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "XV.ParameterItem", attr: "isActive",
-        label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -439,14 +437,14 @@ trailing:true white:true*/
           return param;
         }
       },
-      {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"},
-      {kind: "XV.ParameterItem", label: "_primaryEmail".loc(), attr: "primaryEmail"},
-      {kind: "XV.ParameterItem", label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
-      {kind: "XV.ParameterItem", label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
-      {kind: "XV.ParameterItem", label: "_city".loc(), attr: "address.city"},
-      {kind: "XV.ParameterItem", label: "_state".loc(), attr: "address.state"},
-      {kind: "XV.ParameterItem", label: "_postalCode".loc(), attr: "address.postalCode"},
-      {kind: "XV.ParameterItem", label: "_country".loc(), attr: "address.country"}
+      {label: "_name".loc(), attr: "name"},
+      {label: "_primaryEmail".loc(), attr: "primaryEmail"},
+      {label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
+      {label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
+      {label: "_city".loc(), attr: "address.city"},
+      {label: "_state".loc(), attr: "address.state"},
+      {label: "_postalCode".loc(), attr: "address.postalCode"},
+      {label: "_country".loc(), attr: "address.country"}
     ]
   });
   
@@ -709,8 +707,7 @@ trailing:true white:true*/
     name: "XV.ToDoInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {kind: "XV.ParameterItem", attr: "status",
-        label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
+      {attr: "status", label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -723,7 +720,7 @@ trailing:true white:true*/
           return param;
         }
       },
-      {kind: "XV.ParameterItem", label: "_name".loc(), attr: "name"}
+      {label: "_name".loc(), attr: "name"}
     ]
   });
   

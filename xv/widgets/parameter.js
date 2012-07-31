@@ -77,6 +77,7 @@ white:true*/
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "enyo-fit",
+    defaultKind: "XV.ParameterItem",
     /*
     components: [
       {name: "client", classes: "pullout-toolbar"},
