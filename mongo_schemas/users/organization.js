@@ -5,6 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 XT.MongooseSchema.create({
   name: "Organization",
   definition: {
-    name:   {type: String, index: {unique: true}}
+    name:       {type: String, index: {unique: true}},
+    username:   {type: String}
   }
 });
