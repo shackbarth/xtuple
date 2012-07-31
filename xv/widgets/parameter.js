@@ -32,6 +32,12 @@ white:true*/
       attr: "",
       operator: "MATCHES"
     },
+    events: {
+      onParameterChange: ""
+    },
+    handlers: {
+      onchange: "parameterDidChange"
+    },
     components: [
       {name: "label", kind: "Control", classes: 'parameter-label'},
       {name: "input", classes: "parameter-item-input"}
@@ -58,6 +64,9 @@ white:true*/
     },
     getValue: function () {
       return this.$.input.getValue();
+    },
+    parameterDidChange: function () {
+      this.doParameterChange(this.value);
     },
     valueChanged: function () {
       this.$.input.setValue(this.value);

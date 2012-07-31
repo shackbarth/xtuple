@@ -17,6 +17,7 @@ trailing:true white:true*/
       onTogglePullout: ""
     },
     handlers: {
+      onParameterChange: "requery",
       onScroll: "didScroll",
       onInfoListRowTapped: "doInfoListRowTapped"
     },
@@ -131,6 +132,7 @@ trailing:true white:true*/
       }
     },
     fetch: function (name, options) {
+      name = name || this.$.lists.getActive().name;
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
         input = this.$.searchInput.getValue(),
@@ -171,6 +173,9 @@ trailing:true white:true*/
       list.setQuery(query);
       list.fetch(options);
       this.fetched[name] = true;
+    },
+    requery: function (inSender, inEvent) {
+      this.fetch();
     },
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});

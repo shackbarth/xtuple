@@ -14,6 +14,7 @@ white:true*/
     },
     handlers: {
       onInfoListAdded: "addPulloutItem",
+      onParameterChange: "parameterDidChange",
       onTogglePullout: "togglePullout"
     },
     components: [
@@ -64,6 +65,9 @@ white:true*/
     handlePullout: function (inSender, inEvent) {
       var showing = inSender.$.container.getActive().showPullout || false;
       this.$.pullout.setShowing(showing);
+    },
+    parameterDidChange: function (inSender, inEvent) {
+      this.$.postbooks.waterfall("onParameterChange", inEvent);
     },
     togglePullout: function (inSender, inEvent) {
       var pullout = this.$.pullout,
