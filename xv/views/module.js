@@ -12,6 +12,10 @@ trailing:true white:true*/
     kind: "Panels",
     label: "",
     classes: "app enyo-unselectable",
+    events: {
+      onInfoListAdded: "",
+      onTogglePullout: ""
+    },
     handlers: {
       onScroll: "didScroll",
       onInfoListRowTapped: "doInfoListRowTapped"
@@ -92,7 +96,7 @@ trailing:true white:true*/
       // Build lists
       for (i = 0; i < this.lists.length; i++) {
         component = this.$.lists.createComponent(this.lists[i]);
-        this.bubble("onInfoListAdded", component);
+        this.doInfoListAdded(component);
       }
       this.$.menu.setCount(this.lists.length);
     },
@@ -173,11 +177,11 @@ trailing:true white:true*/
     },
     showHistory: function (inSender, inEvent) {
       var panel = {name: 'history'};
-      this.bubble("onTogglePullout", panel);
+      this.doTogglePullout(panel);
     },
     showParameters: function (inSender, inEvent) {
       var panel = this.$.lists.getActive();
-      this.bubble("onTogglePullout", panel);
+      this.doTogglePullout(panel);
     },
     /**
      * Catches the tap event from the {XV.InfoListRow}
