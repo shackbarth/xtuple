@@ -729,6 +729,13 @@
         }
       },
       {
+        "name": "isActive",
+        "attr": {
+          "type": "Boolean",
+          "column": "cntct_active"
+        }
+      },
+      {
         "name": "name",
         "attr": {
           "type": "String",
