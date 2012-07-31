@@ -71,6 +71,19 @@ white:true*/
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "enyo-fit",
+    components: [
+      {name: "client", classes: "pullout-toolbar"},
+      {fit: true, style: "position: relative;", components: [
+        {kind: "Scroller", classes: "enyo-fit"}
+      ]}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      var i;
+      for (i = 0; i < this.items.length; i++) {
+        this.$.scroller.createComponent(this.items[i]);
+      }
+    },
     getParameters: function () {
       var i,
         param,

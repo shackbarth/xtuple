@@ -348,7 +348,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountInfoParameters",
     kind: "XV.ParameterWidget",
-    components: [
+    items: [
       {kind: "XV.ParameterItem", attr: "isActive",
         label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
@@ -416,7 +416,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ContactInfoParameters",
     kind: "XV.ParameterWidget",
-    components: [
+    items: [
       {kind: "XV.ParameterItem", attr: "isActive",
         label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
@@ -696,7 +696,7 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoInfoParameters",
     kind: "XV.ParameterWidget",
-    components: [
+    items: [
       {kind: "XV.ParameterItem", attr: "status",
         label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
         getParameter: function () {
