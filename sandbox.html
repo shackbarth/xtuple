@@ -27,6 +27,10 @@
   XT.app.createComponent({ kind: "XV.DateWidget" });
   XT.app.renderInto(document.body);
 
+
+  var compiled = _.template("hello: <%= name %>");
+  XT.log(compiled({name : 'moe'}));
+
   </script>
   </body>
 </html>
