@@ -11,6 +11,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     published: {
       dateObject: null
     },
+    events: {
+      onchange: ""
+    },
     components: [{
       kind: "onyx.InputDecorator",
       classes: "xv-input-decorator",
@@ -66,11 +69,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.$.datePick.render();
       this.$.dateField.setValue(Globalize.format(this.dateObject, "d"));
     },
-    doInputChanged: function () {
+    doInputChanged: function (inSender, inEvent) {
       // lucky: no infinite loop! This function only gets triggered from an
       // actual user input, and not if the field is changed via the dateObjectChanged
       // function
       this.setDateObject(this.textToDate(this.$.dateField.getValue()));
+      this.bubble("onchange", inEvent);
     },
     textToDate: function (value) {
       var date = null;
