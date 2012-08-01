@@ -1,6 +1,7 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, enyo:true, _:true, Globalize:true */
+
 (function () {
   "use strict";
 
@@ -44,14 +45,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         }
       ]
     }],
-    inputChanged: function (inSender, inEvent) {
-      this.setValue(this.textToDate(this.$.input.getValue()));
-      this.bubble("onchange", inEvent);
-    },
     datePicked: function (inSender, inEvent) {
       // Pass a clone to the backing object of this widget.
       this.setValue(new Date(inEvent.valueOf()));
       this.$.datePickPopup.hide();
+    },
+    inputChanged: function (inSender, inEvent) {
+      this.setValue(this.textToDate(this.$.input.getValue()));
+      this.bubble("onchange", inEvent);
     },
     /**
       Treat enter like a tab out of the field.
@@ -93,15 +94,22 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         // we're counting on JS to parse the date correctly
         date = new Date(value);
       }
-      return date;
+      return isNaN(date.getTime()) ? null : date;
     },
     setDisabled: function (isDisabled) {
       this.$.decorator.setDisabled(isDisabled);
     },
     valueChanged: function () {
-      this.$.datePick.setValue(new Date(this.getValue().valueOf()));
-      this.$.datePick.render();
-      this.$.input.setValue(Globalize.format(this.value, "d"));
+      var date = _.isDate(this.getValue()) ? new Date(this.getValue().valueOf()) : null;
+      if (date) {
+        this.$.datePick.setValue(date);
+        this.$.datePick.render();
+        this.$.input.setValue(Globalize.format(this.value, "d"));
+      } else {
+        this.$.datePick.setValue(new Date());
+        this.$.datePick.render();
+        this.$.input.setValue("");        
+      }
     }
   });
   
