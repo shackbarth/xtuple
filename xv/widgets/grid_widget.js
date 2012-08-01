@@ -62,8 +62,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
            * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
            * type we want to send that down to the widget
            */
-          if (fieldDesc.modelType) {
-            field.setModelType(fieldDesc.modelType);
+          if (fieldDesc.collection) {
+            field.setCollection(fieldDesc.collection);
           }
 
           if (this.getCollection().size() + 1 > inEvent.index) {
@@ -79,12 +79,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
             // XXX this is a work in progress that must be generalized
             // XXX the functionality isn't actually hooked up yet
-            if ( this.getCustomization().stampUser &&
+            if (this.getCustomization().stampUser &&
                 fieldDesc.fieldName === 'createdBy') {
               field.setValue("<YOU>");
               field.setDisabled(true);
             }
-            if ( this.getCustomization().stampDate &&
+            if (this.getCustomization().stampDate &&
                 fieldDesc.fieldName === 'created') {
               field.setValue("<NOW>");
               field.setDisabled(true);
@@ -96,9 +96,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       /**
        * Add delete buttons for each row (but not for the "title" row or the "new" row)
        */
-      if (!this.getCustomization().disallowEdit
-          && inEvent.index !== 0
-          && inEvent.index !== this.getCollection().size() + 1) {
+      if (!this.getCustomization().disallowEdit &&
+          inEvent.index !== 0 &&
+          inEvent.index !== this.getCollection().size() + 1) {
         this.createComponent({
           kind: "onyx.Button",
           container: gridRow,
