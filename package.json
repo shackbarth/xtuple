@@ -8,12 +8,12 @@
     "url": "https://github.com/xtuple/node-xt.git"
   },
   "dependencies": {
-    "colors":"",
-    "connect":"",
-    "pg":"",
-    "socket.io":"",
-    "underscore":"",
-    "mongoose":""
+    "colors":"0.6.0-1",
+    "connect":"1.9.2",
+    "pg":"0.7.2",
+    "socket.io":"0.9.6",
+    "underscore":"1.3.3",
+    "mongoose":"2.7.1"
   },
   "devDependencies": {},
   "optionalDependencies": {},

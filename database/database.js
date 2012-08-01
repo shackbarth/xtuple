@@ -22,7 +22,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     connected: function (query, options, callback, err, client, ranInit) {
       if (err) {
         issue(XT.warning("Failed to connect to database: " +
-          "{hostname}:{port}/{database}".f(options)));
+          "{hostname}:{port}/{database} => %@".f(options, err.message)));
         return callback(err);
       }
       if (ranInit === true) client.hasRunInit = true;
