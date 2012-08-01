@@ -751,6 +751,13 @@
         }
       },
       {
+        "name": "opportunitySource",
+        "toOne": {
+          "type": "OpportunitySource",
+          "column": "ophead_opsource_id"
+        }
+      },
+      {
         "name": "priority",
         "toOne": {
           "type": "Priority",
