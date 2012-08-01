@@ -32,6 +32,12 @@ white:true*/
       attr: "",
       operator: "MATCHES"
     },
+    events: {
+      onParameterChange: ""
+    },
+    handlers: {
+      onchange: "parameterDidChange"
+    },
     components: [
       {name: "label", kind: "Control", classes: 'parameter-label'},
       {name: "input", classes: "parameter-item-input"}
@@ -42,11 +48,8 @@ white:true*/
       this.valueChanged();
       this.labelChanged();
     },
-    attrChanged: function () {
-      this.labelChanged();
-    },
     labelChanged: function () {
-      this.$.label.setContent(this.label || ("_" + this.getAttr()).loc());
+      this.$.label.setContent(this.label);
     },
     getParameter: function () {
       var param;
@@ -62,6 +65,9 @@ white:true*/
     getValue: function () {
       return this.$.input.getValue();
     },
+    parameterDidChange: function () {
+      this.doParameterChange(this.value);
+    },
     valueChanged: function () {
       this.$.input.setValue(this.value);
     }
@@ -71,25 +77,22 @@ white:true*/
     name: "XV.ParameterWidget",
     kind: "FittableRows",
     classes: "enyo-fit",
+    defaultKind: "XV.ParameterItem",
+    /*
     components: [
-      {kind: "XV.ParameterItem", attr: "isActive",
-        label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: true
-            };
-          }
-          return param;
-        }
-      },
-      {kind: "XV.ParameterItem", attr: "name"},
-      {kind: "XV.ParameterItem", attr: "city"},
-      {kind: "XV.ParameterItem", attr: "state"}
+      {name: "client", classes: "pullout-toolbar"},
+      {fit: true, style: "position: relative;", components: [
+        {kind: "Scroller", classes: "enyo-fit"}
+      ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      var i;
+      for (i = 0; i < this.items.length; i++) {
+        this.$.scroller.createComponent(this.items[i]);
+      }
+    },
+    */
     getParameters: function () {
       var i,
         param,

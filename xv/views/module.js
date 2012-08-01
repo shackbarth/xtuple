@@ -12,7 +12,12 @@ trailing:true white:true*/
     kind: "Panels",
     label: "",
     classes: "app enyo-unselectable",
+    events: {
+      onInfoListAdded: "",
+      onTogglePullout: ""
+    },
     handlers: {
+      onParameterChange: "requery",
       onScroll: "didScroll",
       onInfoListRowTapped: "doInfoListRowTapped"
     },
@@ -23,11 +28,10 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", content: "_dashboard".loc(), ontap: "showDashboard"},
-          {kind: "onyx.MenuDecorator", components: [
-            {content: "_history".loc(), ontap: "fillHistory" },
-            {kind: "onyx.Tooltip", content: "Tap to open..."},
-            {kind: "onyx.Menu", name: "historyMenu", components: [], ontap: "doHistoryItemSelected" }
+          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
+          {kind: "Group", defaultKind: "onyx.IconButton", tag: null, components: [
+            {src: "images/menu-icon-search.png", panel: "parameterWidget", ontap: "showParameters"},
+            {src: "images/menu-icon-bookmark.png", panel: "history", ontap: "showHistory"}
           ]},
           {name: "leftLabel"}
         ]},
@@ -88,12 +92,13 @@ trailing:true white:true*/
       }
     },
     create: function () {
+      var i, component;
       this.inherited(arguments);
       this.$.leftLabel.setContent(this.label);
       // Build lists
-      var i;
       for (i = 0; i < this.lists.length; i++) {
-        this.$.lists.createComponent(this.lists[i]);
+        component = this.$.lists.createComponent(this.lists[i]);
+        this.doInfoListAdded(component);
       }
       this.$.menu.setCount(this.lists.length);
     },
@@ -128,21 +133,37 @@ trailing:true white:true*/
       }
     },
     fetch: function (name, options) {
+      name = name || this.$.lists.getActive().name;
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
-        input = this.$.searchInput.getValue();
+        input = this.$.searchInput.getValue(),
+        parameterWidget = XT.app.$.pullout.getItem(name),
+        parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
-      if (input) {
-        query.parameters = [{
-          attribute: list.getCollection().model.getSearchableAttributes(),
-          operator: 'MATCHES',
-          value: this.$.searchInput.getValue()
-        }];
+      
+      // Build parameters
+      if (input || parameters.length) {
+        query.parameters = [];
+        
+        // Input search parameters
+        if (input) {
+          query.parameters = [{
+            attribute: list.getCollection().model.getSearchableAttributes(),
+            operator: 'MATCHES',
+            value: this.$.searchInput.getValue()
+          }];
+        }
+      
+        // Advanced parameters
+        if (parameters) {
+          query.parameters = query.parameters.concat(parameters);
+        }
       } else {
         delete query.parameters;
       }
+      
       if (options.showMore) {
         query.rowOffset += ROWS_PER_FETCH;
         options.add = true;
@@ -154,11 +175,19 @@ trailing:true white:true*/
       list.fetch(options);
       this.fetched[name] = true;
     },
+    requery: function (inSender, inEvent) {
+      this.fetch();
+    },
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
     },
-    showSetup: function () {
-      // todo
+    showHistory: function (inSender, inEvent) {
+      var panel = {name: 'history'};
+      this.doTogglePullout(panel);
+    },
+    showParameters: function (inSender, inEvent) {
+      var panel = this.$.lists.getActive();
+      this.doTogglePullout(panel);
     },
     /**
      * Catches the tap event from the {XV.InfoListRow}

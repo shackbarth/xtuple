@@ -4,7 +4,7 @@ white:true*/
 /*global enyo:true, XT:true, document:true */
 
 (function () {
-  
+
   enyo.kind({
     name: "App",
     fit: true,
@@ -12,21 +12,47 @@ white:true*/
     published: {
       isStarted: false
     },
+    handlers: {
+      onInfoListAdded: "addPulloutItem",
+      onParameterChange: "parameterDidChange",
+      onTogglePullout: "togglePullout"
+    },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
-      { name: "pullout", kind: "enyo.Slideable", classes: "pullout",
-        value: -100, min: -100, unit: '%', components: [
-        {name: "shadow", classes: "pullout-shadow"},
-        {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton"},
-        {name: "parameterWidget", kind: "XV.ParameterWidget"}
-      ]}
+      { name: "pullout", kind: "XV.Pullout" }
     ],
+    addPulloutItem: function (inSender, inEvent) {
+      var item = {
+        name: inEvent.name,
+        showing: false
+      };
+      if (inEvent.getParameterWidget) {
+        item.kind = inEvent.getParameterWidget();
+      }
+      if (item.kind) {
+        if (this._pulloutItems === undefined) {
+          this._pulloutItems = [];
+        }
+        this._pulloutItems.push(item);
+      }
+    },
     create: function () {
       this.inherited(arguments);
+      var pulloutItems = this._pulloutItems || [],
+        i;
+      for (i = 0; i < pulloutItems.length; i++) {
+        this.$.pullout.$.pulloutItems.createComponent(pulloutItems[i]);
+      }
     },
     handlePullout: function (inSender, inEvent) {
       var showing = inSender.$.container.getActive().showPullout || false;
       this.$.pullout.setShowing(showing);
+    },
+    parameterDidChange: function (inSender, inEvent) {
+      this.$.postbooks.waterfall("onParameterChange", inEvent);
+    },
+    togglePullout: function (inSender, inEvent) {
+      this.$.pullout.togglePullout(inEvent.name);
     },
     start: function () {
     
@@ -35,14 +61,13 @@ white:true*/
       // on application start, connect the datasource
       XT.dataSource.connect();
     
-      // now that we've started, we need to render something
-      // to the screen
-      // TODO: is this really where this belongs?
-      this.renderInto(document.body);
-    
       // lets not allow this to happen again
       this.setIsStarted(true);
+    },
+    show: function () {
+      if (this.getShowing() && this.getIsStarted())
+        this.renderInto(document.body);
+      else this.inherited(arguments);
     }
   });
-
 }());

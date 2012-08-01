@@ -213,9 +213,6 @@ body {}
   }
 }
 
-
-
-
 /******** ********/
 $blue1      : #99ccff;
 
@@ -374,6 +371,15 @@ body {
 .parameter-item-input {
   margin-top: -10px;
 	float: right;
+}
+
+.history-header {
+	text-align: center;
+	padding: 10px 0;
+}
+
+.history-scroller {
+	background-color: #fff;
 }
 
 /* adapt to smaller displays */

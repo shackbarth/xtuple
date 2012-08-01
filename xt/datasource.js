@@ -8,10 +8,8 @@ white:true*/
 
   XT.dataSource = {
 
-    datasourceUrl: "bigiron.xtuple.com",
-    //datasourceUrl: "purpletie.xtuple.com",
-    //datasourceUrl: "localhost",
-    datasourcePort: 9000,
+    datasourceUrl: document.location.hostname, // development, not complete
+    datasourcePort: 443,
     isConnected: false,
 
     /*
@@ -219,17 +217,20 @@ white:true*/
 
       var url = this.datasourceUrl,
         port = this.datasourcePort,
-        datasource = "http://%@:%@/client".f(url, port),
+        datasource = "https://%@/clientsock".f(url),
         self = this,
         didConnect = this.sockDidConnect,
         didError = this.sockDidError;
 
       // attempt to connect and supply the appropriate
       // responders for the connect and error events
-      this._sock = io.connect(datasource);
+      this._sock = io.connect(datasource, {port: port, secure: true});
       this._sock.on("connect", function () {
-        didConnect.call(self, callback);
+        //didConnect.call(self, callback);
       });
+      this._sock.on("ok", function () {
+        didConnect.call(self, callback);
+      })
       this._sock.on("error", function (err) {
         didError.call(self, err, callback);
       });
@@ -258,6 +259,7 @@ white:true*/
       // application if it does not already exist
       if (!XT.session) {
         XT.session = Object.create(XT.Session);
+        setTimeout(_.bind(XT.session.start, XT.session), 0);
       }
 
       if (callback && callback instanceof Function) {
