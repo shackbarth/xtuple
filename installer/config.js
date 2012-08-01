@@ -9,7 +9,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     version: "beta1",
     requireDatabase: true,
     requireServer: true,
-    requireCache: false,
     orm: {
       port: 9080
     }
