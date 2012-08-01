@@ -495,12 +495,35 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.IncidentInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {label: "_number".loc(), attr: "number",
+        getParameter: function () {
+          var param,
+            value = this.getValue() - 0;
+          if (value && _.isNumber(value)) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: value
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_description".loc(), attr: "description"}
+    ]
+  });
+  
+  enyo.kind({
     name: "XV.IncidentInfoList",
     kind: "XV.InfoList",
     published: {
       label: "_incidents".loc(),
       collection: "XM.IncidentInfoCollection",
-      rowClass: "XV.IncidentInfoCollectionRow"
+      rowClass: "XV.IncidentInfoCollectionRow",
+      parameterWidget: "XV.IncidentInfoParameters"
     }
   });
 
@@ -554,12 +577,41 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.OpportunityInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {label: "_showInactive".loc(), attr: "isActive",
+        defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_name".loc(), attr: "name"},
+      {label: "_opportunityStage".loc(), attr: "opportunityStage",
+        defaultKind: "XV.DropdownWidget", collection: "XM.opportunityStages"},
+      {label: "_opportunityType".loc(), attr: "opportunityType",
+        defaultKind: "XV.DropdownWidget", collection: "XM.opportunityTypes"},
+      {label: "_opportunitySource".loc(), attr: "opportunitySource",
+        defaultKind: "XV.DropdownWidget", collection: "XM.opportunitySources"}
+    ]
+  });
+  
+  enyo.kind({
     name: "XV.OpportunityInfoList",
     kind: "XV.InfoList",
     published: {
       collection: "XM.OpportunityInfoCollection",
       label: "_opportunities".loc(),
-      rowClass: "XV.OpportunityInfoCollectionRow"
+      rowClass: "XV.OpportunityInfoCollectionRow",
+      parameterWidget: "XV.OpportunityInfoParameters"
     }
   });
 
@@ -617,13 +669,36 @@ trailing:true white:true*/
   //
   
   enyo.kind({
+    name: "XV.ProjectInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {label: "_showCompleted".loc(), attr: "status", defaultKind: "onyx.Checkbox",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '!=',
+              value: 'C'
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_number".loc(), attr: "number"},
+      {label: "_name".loc(), attr: "name"}
+    ]
+  });
+  
+  enyo.kind({
     name: "XV.ProjectInfoList",
     kind: "XV.InfoList",
     published: {
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
-      rowClass: "XV.ProjectInfoCollectionRow"
+      rowClass: "XV.ProjectInfoCollectionRow",
+      parameterWidget: "XV.ProjectInfoParameters"
     }
   });
 
@@ -707,7 +782,7 @@ trailing:true white:true*/
     name: "XV.ToDoInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {attr: "status", label: "_showCompleted".loc(), defaultKind: "onyx.Checkbox",
+      {label: "_showCompleted".loc(), attr: "status", defaultKind: "onyx.Checkbox",
         getParameter: function () {
           var param;
           if (!this.getValue()) {

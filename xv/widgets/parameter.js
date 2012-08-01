@@ -30,7 +30,7 @@ white:true*/
       value: "",
       label: "",
       attr: "",
-      operator: "MATCHES"
+      operator: ""
     },
     events: {
       onParameterChange: ""
@@ -47,6 +47,15 @@ white:true*/
       this.inherited(arguments);
       this.valueChanged();
       this.labelChanged();
+      
+      if (!this.getOperator() && this.defaultKind === "XV.FancyInput") {
+        this.setOperator("MATCHES");
+      }
+      
+      // Set collection if applicable (i.e. dropdown widget)
+      if (this.collection && this.$.input.setCollection) {
+        this.$.input.setCollection(this.collection);
+      }
     },
     labelChanged: function () {
       this.$.label.setContent(this.label);
@@ -67,6 +76,8 @@ white:true*/
     },
     parameterDidChange: function () {
       this.doParameterChange(this.value);
+      console.log('PARAMETER CHANGED');
+      return true; // stop right here
     },
     valueChanged: function () {
       this.$.input.setValue(this.value);

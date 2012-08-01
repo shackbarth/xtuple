@@ -551,6 +551,7 @@ XT.stringsFor("en_US", {
   "_shiptoState": "Ship-to State",
   "_shiptos": "Ship-tos",
   "_showCompleted": "Show Completed",
+  "_showCompletedOnly": "Show Completed Only",
   "_showInactive": "Show Inactive",
   "_showTotal": "Show Total",
   "_source": "Source",
