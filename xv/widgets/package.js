@@ -1,4 +1,5 @@
 enyo.depends(
+  "address_widget.js",
   "comments_widget.js",
   "date_widget.js",
   "number_widget.js",
@@ -6,5 +7,6 @@ enyo.depends(
   "dropdown_widget.js",
   "grid_widget.js",
   "read_only_widget.js",
-  "parameter.js"
+  "parameter.js",
+  "disableable_picker_decorator.js"
 );

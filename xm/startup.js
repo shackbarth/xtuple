@@ -292,6 +292,9 @@ white:true*/
     waitingList: ["loadSessionSettings", "loadSessionSchema", "loadSessionPrivileges"]
   });
 
+
+  var i;
+
   var projectStatusJson = [
     { id: "P", name: "_concept".loc() },
     { id: "O", name: "_inProcess".loc() },
@@ -300,12 +303,28 @@ white:true*/
   XM.ProjectStatusModel = Backbone.Model.extend({
   });
   XM.ProjectStatusCollection = Backbone.Collection.extend({
-      model: XM.ProjectStatusModel
+    model: XM.ProjectStatusModel
   });
   XM.projectStatuses = new XM.ProjectStatusCollection();
-  for(var i = 0; i < projectStatusJson.length; i++) {
+  for (i = 0; i < projectStatusJson.length; i++) {
     var projectStatus = new XM.ProjectStatusModel(projectStatusJson[i]);
     XM.projectStatuses.add(projectStatus);
+  }
+
+
+  var accountTypeJson = [
+    { id: "O", name: "_organization".loc() },
+    { id: "I", name: "_individual".loc() }
+  ];
+  XM.AccountTypeModel = Backbone.Model.extend({
+  });
+  XM.AccountTypeCollection = Backbone.Collection.extend({
+    model: XM.AccountTypeModel
+  });
+  XM.accountTypes = new XM.AccountTypeCollection();
+  for (i = 0; i < accountTypeJson.length; i++) {
+    var accountType = new XM.AccountTypeModel(accountTypeJson[i]);
+    XM.accountTypes.add(accountType);
   }
 
 }());

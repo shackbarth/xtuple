@@ -5,11 +5,11 @@ enyo.depends(
   "$lib/layout",
   "$lib/onyx",
   "$lib/globalize",
-  "$lib/enyo_2_components",
+  "$lib/gts-plugins",
+  "$lib/date_format",
   "$lib/socket.io",
   "xt",
   "xm",
   "xv",
-  "app.js",
-  "$lib/onyx/source/wip-package.js"
+  "app.js"
 );

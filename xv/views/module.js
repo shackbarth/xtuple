@@ -60,7 +60,8 @@ trailing:true white:true*/
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
-      ]}
+      ]},
+      { kind: "Signals", onModelSave: "doRefreshInfoObject" }
     ],
     firstTime: true,
     fetched: {},
@@ -249,6 +250,32 @@ trailing:true white:true*/
       var modelShell = { recordType: modelType, id: modelId };
       XT.log("Load from history: " + modelType + " " + modelId);
       this.bubble("workspace", {eventName: "workspace", options: modelShell });
+    },
+
+    /**
+     * If a model has changed, check the lists of this module to see if we can
+     * update the info object in the list.
+     * XXX if there are multiple modules alive then all of them will catch
+     * XXX the signal, which isn't ideal for performance
+     */
+    doRefreshInfoObject: function (inSender, inPayload) {
+      var recordType = inPayload.recordType;
+      // obnoxious massaging. Can't think of an elegant way to do this.
+      var listName = XV.util.stripModelNamePrefix(inPayload.recordType).camelize() + "InfoList";
+
+      var list = this.$.lists.$[listName]
+      if (!list) {
+        // we don't have this model on our list. No need to update
+        return;
+      }
+      var model = _.find(list.collection.models, function (model) {
+        return model.id === inPayload.id;
+      });
+      if (!model) {
+        // this model isn't in the list. No need to update
+        return;
+      }
+      model.fetch();
     }
 
 

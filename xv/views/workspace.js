@@ -28,20 +28,18 @@ trailing:true white:true*/
         { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
       ],
       /**
-       * Set the layout of the workspace as soon as we know what the model is.
+       * Set the layout of the workspace.
        * The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
-       * in XT/foundation.js. This function is very much a work in progress. It
-       * will have to accommodate every kind of input type.
+       * in xv/xv.js.
        *
        */
-      modelTypeChanged: function () {
+      updateLayout: function () {
         var box,
           iField,
           fieldDesc,
           field,
-          label,
-          iBox;
-        for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          label;
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
           if (boxDesc.boxType) {
             /**
@@ -53,6 +51,9 @@ trailing:true white:true*/
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
+            if (boxDesc.customization) {
+              box.setCustomization(boxDesc.customization);
+            }
             box.setDescriptor(boxDesc);
 
           } else {
@@ -67,6 +68,9 @@ trailing:true white:true*/
                   {kind: "onyx.GroupboxHeader", content: boxDesc.title}
                 ]
               });
+
+            // TODO: Cole makes a convincing case that the widgets should include their
+            // own InputDecorator and label
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
 
@@ -195,9 +199,12 @@ trailing:true white:true*/
         modelType: "",
         model: null
       },
+      events: {
+        onModelSave: ""
+      },
       handlers: {
         onFieldChanged: "doFieldChanged",
-        onModelUpdate: "doEnableSaveButton"
+        onSubmodelUpdate: "doEnableSaveButton"
       },
       components: [
 
@@ -240,7 +247,25 @@ trailing:true white:true*/
               onclick: "doPersist"
             }
           ]},
-          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true}
+          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true},
+          {
+            name: "exitWarningPopup",
+            classes: "onyx-sample-popup",
+            kind: "onyx.Popup",
+            centered: true,
+            modal: true,
+            floating: true,
+            onShow: "popupShown",
+            onHide: "popupHidden",
+            components: [
+              { content: "You have unsaved changes. Are you sure you want to leave?" },
+              { tag: "br"},
+              { kind: "onyx.Button", content: "Leave without saving", ontap: "forceExit" },
+              { kind: "onyx.Button", content: "Save and leave", ontap: "saveAndLeave" },
+              { kind: "onyx.Button", content: "Don't leave", ontap: "closeExitWarningPopup" }
+
+            ]
+          }
         ]}
       ],
       create: function () {
@@ -257,7 +282,7 @@ trailing:true white:true*/
        * is an Input or a picker or a relational widget, so we have to be careful
        * when we parse out the appropriate values.
        * FIXME: If you click the persist button before a changed field is blurred,
-       * then I think the change will not be persisted, as this function might not
+       * then the change will not be persisted, as this function might not
        * be executed before the persist method. The way we disable the save button
        * until this function has successfully executed will help with this, but it's
        * not foolproof: let's say a user changes one field (which enables the save
@@ -270,9 +295,11 @@ trailing:true white:true*/
 
         var updateObject = {};
 
-        // XXX isn't it strange that inEvent.name is the name of the field that's throwing the
-        // event? both inEvent and inSender look like senders here. This is true for Inputs
-        // and Pickers
+        /**
+         * XXX Isn't it strange that inEvent.name is the name of the field that's throwing the
+         * event? both inEvent and inSender look like senders here. This is true for Inputs
+         * and Pickers
+         */
         updateObject[inEvent.name] = newValue;
         this.getModel().set(updateObject);
         this.doEnableSaveButton();
@@ -288,7 +315,19 @@ trailing:true white:true*/
         this.getModel().save();
         this.$.saveButton.setContent("Changes Saved");
         this.$.saveButton.setDisabled(true);
-        // XXX TODO This persist is not reflected in the Info objects in the summary view
+
+        /**
+         * Update the info object in the summary views
+         */
+        var id = this.getModel().get("id");
+        var recordType = this.getModel().recordType;
+
+        // XXX just refreshing the model in backbone doesn't seem to work
+        //var infoType = XV.util.stripModelNamePrefix(recordType) + 'Info';
+        //var infoModel = new XM[infoType]();
+        //infoModel.fetch({ id: id });
+
+        enyo.Signals.send("onModelSave", { id: id, recordType: recordType });
       },
       // list
       setupItem: function (inSender, inEvent) {
@@ -306,7 +345,7 @@ trailing:true white:true*/
       },
       /**
        * Cleans out all the elements from a workspace.
-       * XXX FIXME this looks to work via the command line but not onscreen
+       * FIXME this looks to work via the command line but not onscreen
        */
       wipe: function () {
         XV.util.removeAll(this.$.workspacePanels.$.topPanel);
@@ -347,8 +386,13 @@ trailing:true white:true*/
         this.$.workspaceHeader.setContent(("_" + modelType).loc());
         this.setWorkspaceList();
         this.$.menuItems.render();
-        this.$.workspacePanels.setModelType(modelType);
 
+
+        this.$.workspacePanels.setModelType(modelType);
+        this.$.workspacePanels.updateLayout();
+        // force a refresh of the structure of the workspace even if the
+        // model type hasn't really changed. This is to solve a bug whereby
+        // the events weren't firing if you drilled down a second time
 
         //
         // Set up a listener for changes in the model
@@ -360,18 +404,15 @@ trailing:true white:true*/
         // Fetch the model
         //
         id = model.id;
+        m = new Klass();
+        this.setModel(m);
+        m.on("statusChange", enyo.bind(this, "modelDidChange"));
         if (id) {
           // id exists: pull pre-existing record for edit
-          m = new Klass();
-          this.setModel(m);
-          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch({id: id});
           XT.log("Workspace is fetching " + modelType + " " + id);
         } else {
           // no id: this is a new record
-          m = new Klass();
-          this.setModel(m);
-          m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.initialize(null, { isNew: true });
           XT.log("Workspace is fetching new " + modelType);
         }
@@ -382,12 +423,11 @@ trailing:true white:true*/
        * Essentially the callback function from backbone
        */
       modelDidChange: function (model, value, options) {
-        XT.log("Model changed: " + JSON.stringify(model.toJSON()));
-        // XXX this still isn't working for adding new objects
         if (model.status !== XT.Model.READY_CLEAN &&
             model.status !== XT.Model.READY_NEW) {
           return;
         }
+        XT.log("Loading model into workspace: " + JSON.stringify(model.toJSON()));
 
         /**
          * Put the model in the history array
@@ -400,10 +440,53 @@ trailing:true white:true*/
          */
         this.$.workspacePanels.updateFields(model);
       },
+      /**
+       * The user has selected a place to go from the navigation menu. Take
+       * him there.
+       */
       doNavigationSelected: function (inSender, inEvent) {
-        var module = inEvent.originator.content.toLowerCase();
-        this.bubble(module, {eventName: module});
-      }
+        var destination = inEvent.originator.content.toLowerCase();
+        /**
+         * First check to see if there are unpersisted changes. If there are,
+         * give the user the option to save them. We'll use the disabled
+         * status of the save button as a rough proxy for the existence
+         * of unsaved changes.
+         */
+        if (!this.$.saveButton.disabled) {
+          this.$.exitWarningPopup.show();
+          this._exitDestination = destination;
+          return;
+        }
 
+        this.bubbleExit(destination);
+      },
+
+      _exitDestination: null,
+      /**
+       * The user wants to leave without saving changes
+       */
+      forceExit: function () {
+        this.closeExitWarningPopup();
+        this.bubbleExit(this._exitDestination);
+      },
+      /**
+       * The user first wants to save changes and then leave
+       */
+      saveAndLeave: function () {
+        this.closeExitWarningPopup();
+        this.doPersist();
+        this.bubbleExit(this._exitDestination);
+      },
+
+      closeExitWarningPopup: function () {
+        this.$.exitWarningPopup.hide();
+      },
+      /**
+       * Used by all of the various functions that want to signal an exit
+       * from this workspace
+       */
+      bubbleExit: function (destination) {
+        this.bubble(destination, {eventName: destination});
+      }
     });
 }());
