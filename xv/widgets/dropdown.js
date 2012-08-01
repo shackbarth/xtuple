@@ -9,6 +9,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     name: "XV.DropdownWidget",
     kind: "enyo.Control",
     events: {
+      onchange: "",
       onFieldChanged: ""
     },
     published: {
@@ -32,7 +33,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         collection = XT.getObjectByName(this.getCollection()),
         i,
         id,
-        name;
+        name,
+        callback,
+        didStartup = false,
+        that = this;
+        
+      // If we don't have data yet, try again after start up tasks complete
+      if (!collection) {
+        if (didStartup) {
+          XT.log('Could not find collection ' + this.getCollection());
+          return;
+        }
+        callback = function () {
+          didStartup = true;
+          that.collectionChanged();
+        };
+        XT.getStartupManager().registerCallback(callback);
+        return;
+      }
+      
+      // Get set up
       this.$.picker.createComponent({ idValue: "", content: "" });
       for (i = 0; i < collection.models.length; i++) {
         id = collection.models[i].get(idAttribute);
@@ -48,7 +68,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return this.$.picker.getSelected() ? this.$.picker.getSelected().value : undefined;
     },
     itemSelected: function (inSender, inEvent) {
-      this.doFieldChanged(this, inEvent); // pass this up the stream
+      this.bubble("onchange", inEvent);
+      this.doFieldChanged(this, inEvent); // TODO: remove this
       return true;
     },
     setValue: function (value) {

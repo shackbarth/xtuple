@@ -580,7 +580,8 @@ trailing:true white:true*/
     name: "XV.OpportunityInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "onyx.Checkbox",
+      {label: "_showInactive".loc(), attr: "isActive",
+        defaultKind: "onyx.Checkbox",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -593,7 +594,13 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_name".loc(), attr: "name"}
+      {label: "_name".loc(), attr: "name"},
+      {label: "_opportunityStage".loc(), attr: "opportunityStage",
+        defaultKind: "XV.DropdownWidget", collection: "XM.opportunityStages"},
+      {label: "_opportunityType".loc(), attr: "opportunityType",
+        defaultKind: "XV.DropdownWidget", collection: "XM.opportunityTypes"},
+      {label: "_opportunitySource".loc(), attr: "opportunitySource",
+        defaultKind: "XV.DropdownWidget", collection: "XM.opportunitySources"}
     ]
   });
   
