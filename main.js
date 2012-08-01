@@ -13,10 +13,27 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   // make absolutely sure we're going to start
   options.autoStart = true;
 
+  XT.debugging = true;
+
   // set the options
   XT.setup(options);
 
+  require("./lib/ext/session");
+  require("./lib/ext/proxy");
+  require("./lib/ext/database");
+
   // load up the dataserver
   require("./lib/dataserver");
-
+  
+  // load up the redirector
+  require("./lib/redirect");
+  
+  XT.userCache = XT.Cache.create({prefix: "users"});
+  XT.sessionCache = XT.Cache.create({
+    prefix: "session",
+    init: function () {
+      this._super.init.call(this);
+      XT.Session.cache = this;
+    }
+  });
 }());

@@ -19,7 +19,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     cache: {
       hostname: "localhost",
-      port: 27017
+      port: 27017,
+      schemaDirectory: "./mongo_schemas",
+      database: "xtdb"
     }
   };
 }());
