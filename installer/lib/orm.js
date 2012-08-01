@@ -10,6 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       installQueue, submit;
   
   XT.debugging = true;
+  XT.db = XT.Database.create();
   
   initSocket = function (socket) {
     socket.on("refresh", _.bind(this.refresh, this, socket));
@@ -71,7 +72,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     query = "select xt.install_orm('%@')".f(XT.json(cleanse(orm)));
 
-    XT.db.query(socket.organization, query, _.bind(function (err, res) {
+    //XT.db.query(socket.organization, query, _.bind(function (err, res) {
+    XT.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
       var c = extensionList.length;
       if (err) {
         socket.emit("message", err.message);        
@@ -127,9 +129,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     submit.call(this, socket, orm, queue, ack);
   };
   
-  testConnection = function (socket, ack, organization, err, res) {
+  testConnection = function (socket, ack, options, err, res) {
     if (err) return ack(false);
-    socket.organization = organization;
+    socket.databaseOptions = options;
     ack(true);
   };
   
@@ -331,20 +333,28 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ack(orms);
     },
     select: function (socket, options, ack) {
-      var key, callback;
+      var key, callback, creds = {};
       for (key in options) {
         if (!options.hasOwnProperty(key)) continue;
         if (options[key] === "") return ack(false);
       }
       
-      callback = _.bind(testConnection, this, socket, ack, options.organization);
+      creds.user = options.username;
+      creds.hostname = options.hostname;
+      creds.port = options.port;
+      creds.password = options.password;
+      creds.database = options.organization;
+      
+      callback = _.bind(testConnection, this, socket, ack, creds);
+      
+      XT.db.query("select * from usr limit 1", creds, callback);
       
       // test our connection credentials
-      XT.db.user = options.username;
-      XT.db.hostname = options.hostname;
-      XT.db.port = options.port;
-      XT.db.password = options.password;
-      XT.db.query(options.organization, "select * from usr limit 1", callback);
+      //XT.db.user = options.username;
+      //XT.db.hostname = options.hostname;
+      //XT.db.port = options.port;
+      //XT.db.password = options.password;
+      //XT.db.query(options.organization, "select * from usr limit 1", callback);
     }
   });
   
