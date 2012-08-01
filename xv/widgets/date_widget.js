@@ -7,20 +7,34 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.DateWidget",
     kind: enyo.Control,
+    classes: "xv-widgets-date",
     published: {
       dateObject: null
     },
     components: [{
       kind: "onyx.InputDecorator",
-      style: "height: 14px;",
+      classes: "xv-input-decorator",
       components: [
-        { kind: "onyx.TextArea", name: "dateField", placeholder: "Enter date", onchange: "doInputChanged" },
-        { kind: "Image", name: "iconImage", src: "images/date-icon.jpg", ontap: "doIconTapped" },
+        {
+          kind: "onyx.Input",
+          name: "dateField",
+          classes: "xv-input-field",
+          placeholder: "Enter date",
+          onchange: "doInputChanged",
+          onkeyup: "doKeyup"
+        },
+        {
+          kind: "Image",
+          name: "iconImage",
+          classes: "xv-field-icon",
+          src: "images/date-icon.jpg",
+          ontap: "doIconTapped"
+        },
         {
           kind: "onyx.Popup",
           name: "datePickPopup",
+          classes: "xv-field-popup",
           modal: true,
-          floating: true,
           components: [
             { kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "doDatePicked" }
           ]
@@ -101,6 +115,15 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
        */
       this.setDateObject(new Date(inEvent.valueOf()));
       this.$.datePickPopup.hide();
+    },
+    /**
+     * Treat enter like a tab out of the field.
+     * XXX it would be nice if this also moved the cursor focus to the next field
+     */
+    doKeyup: function (inSender, inEvent) {
+      if (inEvent.keyCode === 13) {
+        this.doInputChanged();
+      }
     }
   });
 }());
