@@ -621,10 +621,31 @@
         }
       },
       {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_start_date"
+        }
+      },
+      {
         "name": "dueDate",
         "attr": {
           "type": "Date",
           "column": "prj_due_date"
+        }
+      },
+      {
+        "name": "assignDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_assigned_date"
+        }
+      },
+      {
+        "name": "completeDate",
+        "attr": {
+          "type": "Date",
+          "column": "prj_completed_date"
         }
       },
       {
