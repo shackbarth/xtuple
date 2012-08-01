@@ -1,6 +1,7 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, enyo:true, _:true */
+
 (function () {
   "use strict";
 
@@ -14,7 +15,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       onFieldChanged: ""
     },
     published: {
-      modelType: null
+      collection: null,
+      idAttribute: "id",
+      nameAttribute: "name"
     },
     handlers: {
       onSelect: "itemSelected"
@@ -30,10 +33,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ]
     }],
     /**
-     * A convenience function so that this object can be treated generally like an input
-     */
+      A convenience function so that this object can be treated generally like an input
+    */
     setValue: function (value) {
-
       for (var i = 0; i < this.$.dropdown.getComponents().length; i++) {
         if (this.$.dropdown.getComponents()[i].value === (value.id ? value.id : value)) {
         // TODO upon successful refactor of projectStatus as a real model then the next line will suffice
@@ -44,25 +46,25 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
     },
     /**
-     * A convenience function so that this object can be treated generally like an input
-     */
+      A convenience function so that this object can be treated generally like an input
+    */
     getValue: function () {
       return this.$.dropdown.getSelected() ? this.$.dropdown.getSelected().value : undefined;
     },
     /**
-     * render this object onto the name field
-     */
-    modelTypeChanged: function () {
-
+      Render this object onto the name field
+    */
+    collectionChanged: function () {
+      var idAttribute = this.getIdAttribute(),
+        nameAttribute = this.getNameAttribute(),
+        collection = XT.getObjectByName(this.getCollection()),
+        i,
+        id,
+        name;
       this.$.dropdown.createComponent({ idValue: "", content: "" });
-      var collection = XT.getObjectByName(this.modelType);
-      for (var i = 0; i < collection.models.length; i++) {
-        // TODO: these won't necessarily be under the terms id and name.
-        // once we come across such an example we need to write an
-        // overriding metadata object, probably in foundation.js, to
-        // specify what fields to use
-        var id = collection.models[i].get("id");
-        var name = collection.models[i].get("name");
+      for (i = 0; i < collection.models.length; i++) {
+        id = collection.models[i].get(idAttribute);
+        name = collection.models[i].get(nameAttribute);
         this.$.dropdown.createComponent({ value: id, content: name });
       }
       this.$.dropdown.render();

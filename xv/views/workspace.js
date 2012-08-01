@@ -35,9 +35,13 @@ trailing:true white:true*/
        *
        */
       modelTypeChanged: function () {
-
-        var box, boxRow, iField, iRow, fieldDesc, field, label;
-        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+        var box,
+          iField,
+          fieldDesc,
+          field,
+          label,
+          iBox;
+        for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
           if (boxDesc.boxType) {
             /**
@@ -92,8 +96,8 @@ trailing:true white:true*/
                * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
                * type we want to send that down to the widget
                */
-              if (fieldDesc.modelType) {
-                widget.setModelType(fieldDesc.modelType);
+              if (fieldDesc.collection) {
+                widget.setCollection(fieldDesc.collection);
               }
             }
           }
@@ -108,10 +112,10 @@ trailing:true white:true*/
         // fun! we have to find if the box is on the top or bottom,
         // and if so, which index it is. Once we know if it's in the
         // top or the bottom, and which index, it's easy to jump there.
-
-        var topIndex = 0;
-        var bottomIndex = 0;
-        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+        var topIndex = 0,
+          bottomIndex = 0,
+          iBox;
+        for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
 
           // Note that if the box location defaults to top if it's left empty in the descriptor
@@ -132,14 +136,18 @@ trailing:true white:true*/
        * Populates the fields of the workspace with the values from the model
        */
       updateFields: function (model) {
+        var that = this,
+          iBox,
+          iField,
+          fieldDesc,
+          fieldName,
+          fieldValue;
         /**
          * Fields that are computed asynchronously by the model may not be
          * accurate right now, so we have those fields trigger an event when
          * they are set, which we listed for here
          */
-        var that = this;
         model.on("announcedSet", function (announcedField, announcedValue) {
-          console.debug(announcedField + " set to " + announcedValue);
           that.$[announcedField].setValue(announcedValue);
         });
 
@@ -148,7 +156,7 @@ trailing:true white:true*/
         //
         // Look through the entire specification...
         //
-        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+        for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
 
           if (boxDesc.boxType) {
@@ -161,10 +169,10 @@ trailing:true white:true*/
              * Default case: populate the fields
              */
 
-            for (var iField = 0; iField < boxDesc.fields.length; iField++) {
-              var fieldDesc = boxDesc.fields[iField];
-              var fieldName = boxDesc.fields[iField].fieldName;
-              var fieldValue = model.getValue(fieldName) ? model.getValue(fieldName) : "";
+            for (iField = 0; iField < boxDesc.fields.length; iField++) {
+              fieldDesc = boxDesc.fields[iField];
+              fieldName = boxDesc.fields[iField].fieldName;
+              fieldValue = model.getValue(fieldName) ? model.getValue(fieldName) : "";
               if (fieldName) {
                 /**
                  * Update the view field with the model value
@@ -256,8 +264,6 @@ trailing:true white:true*/
        * button) and then changes a second but persists before blurring the second.
        */
       doFieldChanged: function (inSender, inEvent) {
-        var prefix, suffix;
-
         var newValue = inEvent.getValue ? inEvent.getValue() :
           inEvent.getSelected ? inEvent.getSelected().value :
           inEvent.originator.model; // relational_widget
@@ -317,6 +323,10 @@ trailing:true white:true*/
        * type and id properties
        */
       setOptions: function (model) {
+        var modelType,
+          Klass,
+          id,
+          m;
         /**
          * Delete all boxes before we try to render anything else
          */
@@ -326,7 +336,7 @@ trailing:true white:true*/
         //
         // Determine the model that will back this view
         //
-        var modelType = XV.util.infoToMasterModelName(model.recordType);
+        modelType = XV.util.infoToMasterModelName(model.recordType);
 
         //
         // Setting the model type also renders the workspace. We really can't do
@@ -343,23 +353,23 @@ trailing:true white:true*/
         //
         // Set up a listener for changes in the model
         //
-        var Klass = Backbone.Relational.store.getObjectByName(modelType);
+        Klass = Backbone.Relational.store.getObjectByName(modelType);
 
 
         //
         // Fetch the model
         //
-        var id = model.id;
+        id = model.id;
         if (id) {
           // id exists: pull pre-existing record for edit
-          var m = new Klass();
+          m = new Klass();
           this.setModel(m);
           m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.fetch({id: id});
           XT.log("Workspace is fetching " + modelType + " " + id);
         } else {
           // no id: this is a new record
-          var m = new Klass();
+          m = new Klass();
           this.setModel(m);
           m.on("statusChange", enyo.bind(this, "modelDidChange"));
           m.initialize(null, { isNew: true });

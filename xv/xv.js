@@ -1,5 +1,5 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, enyo:true, _:true */
 (function () {
   //"use strict";
@@ -36,11 +36,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           {
             title: "Contact",
             fields: [
-              // TODO: we can avoid having to specify the modelType by looking in the
+              // TODO: we can avoid having to specify the model by looking in the
               // *relations* of the model, which will work even if the submodel is null
               { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
-          },
+          }
           /*
           {
             title: "Comments",
@@ -90,8 +90,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "description" },
-              { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" },
-              { fieldName: "priority", fieldType: "dropdown", modelType: "XM.priorities" },
+              { fieldName: "status", fieldType: "dropdown", collection: "XM.projectStatuses" },
+              { fieldName: "priority", fieldType: "dropdown", collection: "XM.priorities" },
               { fieldName: "incident", fieldType: "relation", modelType: "XM.IncidentInfo" }
             ]
           },
@@ -119,9 +119,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "number" },
               { fieldName: "name" },
               { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
-              { fieldName: "opportunityStage", fieldType: "dropdown", modelType: "XM.opportunityStages" },
-              { fieldName: "opportunityType", fieldType: "dropdown", modelType: "XM.opportunityTypes" },
-              { fieldName: "opportunitySource", fieldType: "dropdown", modelType: "XM.opportunitySources" }
+              { fieldName: "opportunityStage", fieldType: "dropdown", collection: "XM.opportunityStages" },
+              { fieldName: "opportunityType", fieldType: "dropdown", collection: "XM.opportunityTypes" },
+              { fieldName: "opportunitySource", fieldType: "dropdown", collection: "XM.opportunitySources" }
             ]
           },
           {
@@ -194,7 +194,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
               { fieldName: "number", placeholder: "Enter the project number" },
               { fieldName: "name" },
               { fieldName: "notes" },
-              { fieldName: "status", fieldType: "dropdown", modelType: "XM.projectStatuses" }
+              { fieldName: "status", fieldType: "dropdown", collection: "XM.projectStatuses" }
             ]
           },
           {
@@ -292,12 +292,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // It's necessary to save the length into a variable or else the loop ends
       // prematurely. It's also necessary to delete the children always from the
       // 0 spot and not the i spot, because the target moves as you delete.
-      var controlCount = parent.controls.length;
-      for (var i = 0; i < controlCount; i++) {
+      var controlCount = parent.controls.length,
+        i;
+      for (i = 0; i < controlCount; i++) {
         parent.removeControl(parent.controls[0]);
       }
       var childrenCount = parent.children.length;
-      for (var i = 0; i < childrenCount; i++) {
+      for (i = 0; i < childrenCount; i++) {
         parent.removeChild(parent.children[0]);
       }
       // this causes extra problems
@@ -312,20 +313,20 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     // XXX there's got to be a better way to get the name of the model
     // that's currently being displayed. This way is very hackish.
     // TODO: this doesn't need to be a view-layer static function
-    formatModelName: function (modelType) {
-      return this.infoToMasterModelName(this.stripModelNamePrefix(modelType));
+    formatModelName: function (model) {
+      return this.infoToMasterModelName(this.stripModelNamePrefix(model));
     },
-    infoToMasterModelName: function (modelType) {
-      if (modelType && modelType.indexOf("Info") >= 0) {
-        modelType = modelType.substring(0, modelType.length - 4);
+    infoToMasterModelName: function (model) {
+      if (model && model.indexOf("Info") >= 0) {
+        model = model.substring(0, model.length - 4);
       }
-      return modelType;
+      return model;
     },
-    stripModelNamePrefix: function (modelType) {
-      if (modelType && modelType.indexOf("XM") >= 0) {
-        modelType = modelType.substring(3);
+    stripModelNamePrefix: function (model) {
+      if (model && model.indexOf("XM") >= 0) {
+        model = model.substring(3);
       }
-      return modelType;
+      return model;
     }
 
   });
