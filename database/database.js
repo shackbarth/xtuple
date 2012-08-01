@@ -16,7 +16,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return "tcp://{user}{password}@{hostname}:{port}/{database}".f(options);
     },
     query: function (query, options, callback) {
-      var str = this.conString(options);
+      var str = this.conString(_.clone(options));
       XT.pg.connect(str, _.bind(this.connected, this, query, options, callback));
     },
     connected: function (query, options, callback, err, client, ranInit) {
