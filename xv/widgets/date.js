@@ -9,29 +9,29 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     kind: enyo.Control,
     classes: "xv-widgets-date",
     published: {
-      dateObject: null
+      value: null
     },
     events: {
       onchange: ""
     },
     components: [{
       kind: "onyx.InputDecorator",
+      name: "decorator",
       classes: "xv-input-decorator",
       components: [
         {
           kind: "onyx.Input",
-          name: "dateField",
+          name: "input",
           classes: "xv-input-field",
-          placeholder: "Enter date",
-          onchange: "doInputChanged",
-          onkeyup: "doKeyup"
+          onchange: "inputChanged",
+          onkeyup: "keyup"
         },
         {
           kind: "Image",
-          name: "iconImage",
+          name: "icon",
           classes: "xv-field-icon",
           src: "images/date-icon.jpg",
-          ontap: "doIconTapped"
+          ontap: "iconTapped"
         },
         {
           kind: "onyx.Popup",
@@ -39,49 +39,36 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           classes: "xv-field-popup",
           modal: true,
           components: [
-            { kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "doDatePicked" }
+            { kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked" }
           ]
         }
       ]
     }],
-    /**
-     * A convenience function so that this object can be treated generally like an input
-     */
-    setValue: function (date) {
-      this.setDateObject(date);
-    },
-    /**
-     * A convenience function so that this object can be treated generally like an input
-     */
-    getValue: function () {
-      return this.getDateObject();
-    },
-    setDisabled: function (isDisabled) {
-      this.$.dateField.setDisabled(isDisabled);
-      if (isDisabled) {
-        this.$.iconImage.setStyle("visibility: hidden");
-      } else {
-        this.$.iconImage.setStyle("visibility: visible");
-      }
-    },
-    dateObjectChanged: function () {
-      this.$.datePick.setValue(new Date(this.getDateObject().valueOf()));
-      this.$.datePick.render();
-      this.$.dateField.setValue(Globalize.format(this.dateObject, "d"));
-    },
-    doInputChanged: function (inSender, inEvent) {
-      // lucky: no infinite loop! This function only gets triggered from an
-      // actual user input, and not if the field is changed via the dateObjectChanged
-      // function
-      this.setDateObject(this.textToDate(this.$.dateField.getValue()));
+    inputChanged: function (inSender, inEvent) {
+      this.setValue(this.textToDate(this.$.input.getValue()));
       this.bubble("onchange", inEvent);
     },
+    datePicked: function (inSender, inEvent) {
+      // Pass a clone to the backing object of this widget.
+      this.setValue(new Date(inEvent.valueOf()));
+      this.$.datePickPopup.hide();
+    },
+    /**
+      Treat enter like a tab out of the field.
+    */
+    keyup: function (inSender, inEvent) {
+      if (inEvent.keyCode === 13) {
+        this.doInputChanged();
+      }
+    },
+    iconTapped: function () {
+      this.$.datePickPopup.show();
+    },
     textToDate: function (value) {
-      var date = null;
-      var daysInMilliseconds = 1000 * 60 * 60 * 24;
-      //
+      var date = null,
+        daysInMilliseconds = 1000 * 60 * 60 * 24;
+      
       // Try to parse out a date given the various allowable shortcuts
-      //
       if (value === '0' ||
         value.indexOf('+') === 0 ||
         value.indexOf('-') === 0) {
@@ -108,26 +95,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       }
       return date;
     },
-    doIconTapped: function () {
-      this.$.datePickPopup.show();
+    setDisabled: function (isDisabled) {
+      this.$.decorator.setDisabled(isDisabled);
     },
-    doDatePicked: function (inSender, inEvent) {
-      /**
-       * Pass a clone to the backing object of this widget. If we assign the
-       * variable itself then the widget and the popup will share the same date
-       * object, which we might not want.
-       */
-      this.setDateObject(new Date(inEvent.valueOf()));
-      this.$.datePickPopup.hide();
-    },
-    /**
-     * Treat enter like a tab out of the field.
-     * XXX it would be nice if this also moved the cursor focus to the next field
-     */
-    doKeyup: function (inSender, inEvent) {
-      if (inEvent.keyCode === 13) {
-        this.doInputChanged();
-      }
+    valueChanged: function () {
+      this.$.datePick.setValue(new Date(this.getValue().valueOf()));
+      this.$.datePick.render();
+      this.$.input.setValue(Globalize.format(this.value, "d"));
     }
   });
+  
 }());
