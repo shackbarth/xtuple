@@ -22,6 +22,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     secure: false,
     keyFile: null,
     certFile: null,
+    bindAddress: null,
     init: function () {
       var auto = this.get("autoStart"),
           port = this.get("port"),
@@ -59,7 +60,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     start: function () {
       var port = this.get("port"), useSockets = this.get("useWebSocket"), 
           generator = this.get("generator"), server, app = this.server, options = {},
-          secure = this.get("secure");
+          secure = this.get("secure"), bindAddress = this.get("bindAddress");
           
       if (secure) {
         options.key = this.get("key");
@@ -74,7 +75,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           else app = XT.connect().use(_.bind(this.route, this));
         }
         
-        server = this.server = app.listen(port);
+        if (bindAddress) server = this.server = app.listen(port, bindAddress);
+        else server = this.server = app.listen(port);
         
         if (useSockets) {
           this._io = require("socket.io").listen(server, XT.mixin({
