@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.IncidentCategory = XM.Document.extend({
@@ -41,7 +41,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.IncidentSeverity = XM.Document.extend({
@@ -74,7 +74,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentResolution = XM.Model.extend({
@@ -107,7 +107,7 @@ white:true*/
 
   /**
     @namespace
-  
+
     A mixin shared by incident models that share common incident status
     functionality.
   */
@@ -146,13 +146,15 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.Incident = XM.Document.extend({
     /** @scope XM.Incident.prototype */
 
     recordType: 'XM.Incident',
+
+    nameAttribute: "number",
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 
@@ -287,7 +289,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.IncidentComment = XM.Comment.extend({
@@ -299,7 +301,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Characteristic
   */
   XM.IncidentCharacteristic = XM.Characteristic.extend({
@@ -311,7 +313,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Alarm
   */
   XM.IncidentAlarm = XM.Alarm.extend({
@@ -323,7 +325,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentHistory = XM.Model.extend({
@@ -335,7 +337,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentAccount = XM.Model.extend({
@@ -349,7 +351,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentContact = XM.Model.extend({
@@ -363,7 +365,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentItem = XM.Model.extend({
@@ -377,7 +379,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentFile = XM.Model.extend({
@@ -391,7 +393,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentImage = XM.Model.extend({
@@ -405,7 +407,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentUrl = XM.Model.extend({
@@ -419,7 +421,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentIncident = XM.Model.extend({
@@ -433,7 +435,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentRecurrence = XM.Model.extend({
@@ -445,7 +447,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.IncidentInfo = XM.Model.extend({
@@ -466,7 +468,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.IncidentCategoryCollection = XM.Collection.extend({
@@ -478,7 +480,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.IncidentSeverityCollection = XM.Collection.extend({
@@ -490,7 +492,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.IncidentResolutionCollection = XM.Collection.extend({
@@ -502,7 +504,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.IncidentInfoCollection = XM.Collection.extend({
