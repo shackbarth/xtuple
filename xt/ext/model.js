@@ -19,7 +19,7 @@ white:true*/
     To create a new model include `isNew` in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
-    
+
     To load an existing record include a id in the options like so:
       XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact;
@@ -88,6 +88,14 @@ white:true*/
       @type {Array}
     */
     requiredAttributes: null,
+
+    /**
+      The attribute that is the display name for the model in any case that we
+      want to show just the most obvious field for the user.
+
+      @type {String}
+    */
+    nameAttribute: "name",
 
     /**
       Model's status. You should never modify this directly.
@@ -1056,20 +1064,20 @@ white:true*/
         type = recordType.replace(/\w+\./i, '');
       return _.pluck(XT.session.getSchema().get(type).columns, 'name');
     },
-    
+
     /**
       Returns an object from the relational store matching the `name` provided.
-      
+
       @param {String} Name
       @returns {Object}
     */
     getObjectByName: function (name) {
       return Backbone.Relational.store.getObjectByName(name);
     },
-    
+
     /**
       Returns an array of text attribute names on the model.
-    
+
       @returns {Array}
     */
     getSearchableAttributes: function () {
@@ -1091,7 +1099,7 @@ white:true*/
           return typeof model === 'string' ?
             that.getObjectByName(model) : model;
         };
-        
+
       for (i = 0; i < tbldef.columns.length; i++) {
         name = tbldef.columns[i].name;
         if (tbldef.columns[i].category === 'S') {

@@ -23,8 +23,10 @@ white:true*/
         {name: "pulloutItems", fit: true, style: "position: relative;", components: [
           {name: "history", kind: "FittableRows", showing: false, classes: "enyo-fit", components: [
             {kind: "onyx.RadioGroup", classes: "history-header", components: [
-              {content: "Saved", active: true},
-              {content: "Recents"}
+              // easy solution to the problem of navigating these two panels: defer until we
+              // have "saved"/bookmarked pages
+              //{content: "Saved", active: true},
+              {content: "Recents", active: true}
             ]},
             {fit: true, name: "historyPanel", kind: "Scroller", classes: "history-scroller", components: [
               {
@@ -48,11 +50,14 @@ white:true*/
     setupHistoryItem: function (inSender, inEvent) {
       var historyItem = inEvent.item.$.historyItem;
       var historyData = XT.getHistory()[inEvent.index];
+      var modelTypeShow = ("_" + XV.util.stripModelNamePrefix(historyData.modelType).camelize()).loc();
       this.createComponent({
         container: historyItem,
-        kind: "onyx.Button",
-        onclick: "doHistoryItemSelected",
-        content: historyData.modelType + ": " + historyData.modelName,
+        classes: "item enyo-border-box",
+        style: "color:white",
+        // XXX color/look TBD
+        ontap: "doHistoryItemSelected",
+        content: modelTypeShow + ": " + historyData.modelName,
         modelType: historyData.modelType,
         modelId: historyData.modelId,
         module: historyData.module

@@ -70,9 +70,12 @@ white:true*/
       var modelType = inEvent.modelType;
       var modelShell = { recordType: modelType, id: modelId };
       XT.log("Load from history: " + modelType + " " + modelId);
-      //this.bubble("workspace", {eventName: "workspace", options: modelShell });
-      var carousel = this.$.postbooks.getContainer().applyWorkspace(modelShell);
-      //debug.waterfall("workspace", {eventName: "workspace", options: modelShell});
+      // XXX we don't apply the module because workspace is a peer to crm etc.
+      // this might become a problem once we're in a true multimodule environment
+      // where for example backing up from a CRM workspace really should land you
+      // in the CRM module
+
+      this.$.postbooks.getContainer().applyWorkspace(modelShell);
     },
     start: function () {
 

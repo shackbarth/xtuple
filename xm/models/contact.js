@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -30,17 +30,17 @@ white:true*/
     }
 
   });
-  
+
   /**
     @namespace
-    
+
   */
   XM.ContactMixin = {
     /* @scope XM.ContactMixin */
-    
+
     /**
     Full contact name.
-    
+
     @returns String
     */
     getName: function () {
@@ -66,6 +66,8 @@ white:true*/
     /** @scope XM.Contact.prototype */
 
     recordType: 'XM.Contact',
+
+    nameAttribute: 'getName',
 
     numberPolicy: XM.Document.AUTO_NUMBER,
 
@@ -103,13 +105,13 @@ white:true*/
     }
 
   });
-  
+
   // Add mixin
   XM.Contact = XM.Contact.extend(XM.ContactMixin);
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactEmail = XT.Model.extend({
@@ -125,7 +127,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.ContactComment = XM.Comment.extend({
@@ -137,7 +139,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Characteristic
   */
   XM.ContactCharacteristic = XM.Characteristic.extend({
@@ -149,7 +151,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactAccount = XT.Model.extend({
@@ -163,7 +165,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactContact = XT.Model.extend({
@@ -177,7 +179,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactItem = XT.Model.extend({
@@ -191,7 +193,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactFile = XT.Model.extend({
@@ -205,7 +207,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactImage = XT.Model.extend({
@@ -219,7 +221,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactUrl = XT.Model.extend({
@@ -233,7 +235,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Model
   */
   XM.ContactInfo = XT.Model.extend({
@@ -244,7 +246,7 @@ white:true*/
     readOnly: true
 
   });
-  
+
   // Add mixin
   XM.ContactInfo = XM.ContactInfo.extend(XM.ContactMixin);
 
@@ -266,7 +268,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XT.Collection
   */
   XM.ContactInfoCollection = XT.Collection.extend({

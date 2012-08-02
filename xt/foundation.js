@@ -203,7 +203,7 @@ _.extend(XT, {
     this.history.unshift({
       modelType: model.recordType,
       modelId: model.get("id"),
-      modelName: model.get("name"),
+      modelName: model.getValue(model.nameAttribute),
       module: module
     });
   },
