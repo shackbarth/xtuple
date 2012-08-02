@@ -88,9 +88,11 @@ white:true*/
       this.setIsStarted(true);
     },
     show: function () {
-      if (this.getShowing() && this.getIsStarted())
+      if (this.getShowing() && this.getIsStarted()) {
         this.renderInto(document.body);
-      else this.inherited(arguments);
+      } else {
+        this.inherited(arguments);
+      }
     }
   });
 }());

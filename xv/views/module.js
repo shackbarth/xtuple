@@ -229,7 +229,7 @@ trailing:true white:true*/
       // obnoxious massaging. Can't think of an elegant way to do this.
       var listName = XV.util.stripModelNamePrefix(inPayload.recordType).camelize() + "InfoList";
 
-      var list = this.$.lists.$[listName]
+      var list = this.$.lists.$[listName];
       if (!list) {
         // we don't have this model on our list. No need to update
         return;
