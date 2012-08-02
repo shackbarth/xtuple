@@ -149,6 +149,13 @@
         }
       },
       {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_timestamp"
+        }
+      },
+      {
         "name": "updated",
         "attr": {
           "type": "Date",
@@ -1029,6 +1036,13 @@
           "type": "UserAccountInfo",
           "column": "incdt_assigned_username",
           "inverse": "username"
+        }
+      },
+      {
+        "name": "created",
+        "attr": {
+          "type": "Date",
+          "column": "incdt_timestamp"
         }
       },
       {
