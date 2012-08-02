@@ -15,9 +15,12 @@ white:true*/
     events: {
       onHistoryItemSelected: ""
     },
+    published: {
+      selectedPanel: ""
+    },
     components: [
       {name: "shadow", classes: "pullout-shadow"},
-      {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton"},
+      {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton", ondragfinish: "grabberDragFinish"},
       {kind: "FittableRows", classes: "enyo-fit", components: [
         {name: "client", classes: "pullout-toolbar"},
         {name: "pulloutItems", fit: true, style: "position: relative;", components: [
@@ -43,8 +46,16 @@ white:true*/
         ]}
       ]}
     ],
+    /**
+     * Called whenever the pullout is pulled via the dragger. We ensure that if
+     * no panel is yet selected, we default to the history panel.
+     */
+    grabberDragFinish: function () {
+      if (!this.getSelectedPanel()) {
+        this.togglePullout("history");
+      }
+    },
     refreshHistoryList: function () {
-      XT.log("refresh history list");
       this.$.historyList.setCount(XT.getHistory().length);
     },
     setupHistoryItem: function (inSender, inEvent) {
@@ -67,6 +78,7 @@ white:true*/
       return this.$.pulloutItems.$[name] || this.$[name];
     },
     togglePullout: function (name) {
+      this.setSelectedPanel(name);
       var item = this.getItem(name),
         children = this.$.pulloutItems.children,
         i;
