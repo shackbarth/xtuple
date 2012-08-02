@@ -88,7 +88,7 @@ trailing:true white:true*/
               });
 
               var widget = this.createComponent({
-                kind: XV.util.getFieldType(fieldDesc.fieldType),
+                kind: fieldDesc.kind || XV.util.getFieldType(fieldDesc.fieldType),
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field,
