@@ -97,7 +97,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       return isNaN(date.getTime()) ? null : date;
     },
     setDisabled: function (isDisabled) {
-      this.$.decorator.setDisabled(isDisabled);
+      this.$.input.setDisabled(isDisabled);
     },
     valueChanged: function () {
       var date = _.isDate(this.getValue()) ? new Date(this.getValue().valueOf()) : null;
