@@ -31,7 +31,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "number" },
-              { fieldName: "accountType", fieldType: "dropdown", modelType: "XM.accountTypes" }
+              { fieldName: "accountType", fieldType: "dropdown", collection: "XM.accountTypes" }
             ]
           },
           {
@@ -179,7 +179,7 @@ regexp:true, undef:true, trailing:true, white:true */
           },
           {
             title: "Comments",
-            // XXX location: "bottom",
+            location: "bottom",
             boxType: "grid",
             objectName: "comments",
             modelType: "XM.OpportunityComment",

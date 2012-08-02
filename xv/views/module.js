@@ -214,8 +214,8 @@ trailing:true white:true*/
     newWorkspace: function (inSender, inEvent) {
       var modelType = this.$.lists.controls[this.selectedList].query.recordType;
       var emptyModel = new XM[XV.util.formatModelName(modelType)]();
+      emptyModel.initialize(null, { isNew: true });
       this.bubble("workspace", {eventName: "workspace", options: emptyModel });
-
     },
 
     /**
