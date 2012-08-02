@@ -423,8 +423,8 @@ trailing:true white:true*/
        * Essentially the callback function from backbone
        */
       modelDidChange: function (model, value, options) {
-        if (model.status !== XT.Model.READY_CLEAN &&
-            model.status !== XT.Model.READY_NEW) {
+        if (model.status !== XM.Model.READY_CLEAN &&
+            model.status !== XM.Model.READY_NEW) {
           return;
         }
         XT.log("Loading model into workspace: " + JSON.stringify(model.toJSON()));

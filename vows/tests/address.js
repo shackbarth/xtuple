@@ -60,7 +60,7 @@
               model = new XM.Address(),
               callback = function () {
                 var status = model.getStatus(),
-                  K = XT.Model;
+                  K = XM.Model;
                 if (status === K.READY_CLEAN) {
                   clearTimeout(timeoutId);
                   model.off('statusChange', callback);

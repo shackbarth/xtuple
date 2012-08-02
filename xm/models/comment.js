@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.CommentType = XT.Model.extend({
+  XM.CommentType = XM.Model.extend({
     /** @scope XM.Comment.prototype */
 
     recordType: 'XM.CommentType',
@@ -44,9 +44,9 @@ white:true*/
     
     Base class for use on comment sub classes.
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.Comment = XT.Model.extend({
+  XM.Comment = XM.Model.extend({
     /** @scope XM.Comment.prototype */
 
     privileges: {
@@ -79,11 +79,11 @@ white:true*/
 
     isReadOnly: function () {
       var commentType = this.get('commentType'),
-        isNew = this.getStatus() === XT.Model.READY_NEW,
+        isNew = this.getStatus() === XM.Model.READY_NEW,
         editable = isNew || (commentType &&
           commentType.get('commentsEditable'));
 
-      return !editable || XT.Model.prototype.isReadOnly.apply(this, arguments);
+      return !editable || XM.Model.prototype.isReadOnly.apply(this, arguments);
     }
 
   });
@@ -95,9 +95,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.CommentTypeCollection = XT.Collection.extend({
+  XM.CommentTypeCollection = XM.Collection.extend({
     /** @scope XM.CommentTypeCollection.prototype */
 
     model: XM.CommentType

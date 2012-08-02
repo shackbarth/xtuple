@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.FileInfo = XT.Model.extend({
+  XM.FileInfo = XM.Model.extend({
     /** @scope XM.FileInfo.prototype */
 
     recordType: 'XM.FileInfo'

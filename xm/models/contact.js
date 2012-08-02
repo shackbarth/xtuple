@@ -110,9 +110,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactEmail = XT.Model.extend({
+  XM.ContactEmail = XM.Model.extend({
     /** @scope XM.ContactEmail.prototype */
 
     recordType: 'XM.ContactEmail',
@@ -150,9 +150,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactAccount = XT.Model.extend({
+  XM.ContactAccount = XM.Model.extend({
     /** @scope XM.ContactAccount.prototype */
 
     recordType: 'XM.ContactAccount',
@@ -164,9 +164,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactContact = XT.Model.extend({
+  XM.ContactContact = XM.Model.extend({
     /** @scope XM.ContactContact.prototype */
 
     recordType: 'XM.ContactContact',
@@ -178,9 +178,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactItem = XT.Model.extend({
+  XM.ContactItem = XM.Model.extend({
     /** @scope XM.ContactItem.prototype */
 
     recordType: 'XM.ContactItem',
@@ -192,9 +192,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactFile = XT.Model.extend({
+  XM.ContactFile = XM.Model.extend({
     /** @scope XM.ContactFile.prototype */
 
     recordType: 'XM.ContactFile',
@@ -206,9 +206,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactImage = XT.Model.extend({
+  XM.ContactImage = XM.Model.extend({
     /** @scope XM.ContactImage.prototype */
 
     recordType: 'XM.ContactImage',
@@ -220,9 +220,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactUrl = XT.Model.extend({
+  XM.ContactUrl = XM.Model.extend({
     /** @scope XM.ContactUrl.prototype */
 
     recordType: 'XM.ContactUrl',
@@ -234,9 +234,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ContactInfo = XT.Model.extend({
+  XM.ContactInfo = XM.Model.extend({
     /** @scope XM.ContactInfo.prototype */
 
     recordType: 'XM.ContactInfo',
@@ -255,9 +255,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.HonorificCollection = XT.Collection.extend({
+  XM.HonorificCollection = XM.Collection.extend({
     /** @scope XM.HonorificCollection.prototype */
 
     model: XM.Honorific
@@ -267,9 +267,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.ContactInfoCollection = XT.Collection.extend({
+  XM.ContactInfoCollection = XM.Collection.extend({
     /** @scope XM.ContactInfoCollection.prototype */
 
     model: XM.ContactInfo

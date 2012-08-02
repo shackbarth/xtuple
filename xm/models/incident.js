@@ -75,9 +75,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentResolution = XT.Model.extend({
+  XM.IncidentResolution = XM.Model.extend({
     /** @scope XM.IncidentResolution.prototype */
 
     recordType: 'XM.IncidentResolution',
@@ -203,7 +203,7 @@ white:true*/
     assignedToDidChange: function (model, value, options) {
       var status = this.getStatus(),
         I = XM.Incident,
-        K = XT.Model;
+        K = XM.Model;
       if ((options && options.force) || !(status & K.READY)) { return; }
       if (value) { this.set('incidentStatus', I.ASSIGNED); }
     },
@@ -324,9 +324,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentHistory = XT.Model.extend({
+  XM.IncidentHistory = XM.Model.extend({
     /** @scope XM.IncidentAccount.prototype */
 
     recordType: 'XM.IncidentHistory'
@@ -336,9 +336,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentAccount = XT.Model.extend({
+  XM.IncidentAccount = XM.Model.extend({
     /** @scope XM.IncidentAccount.prototype */
 
     recordType: 'XM.IncidentAccount',
@@ -350,9 +350,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentContact = XT.Model.extend({
+  XM.IncidentContact = XM.Model.extend({
     /** @scope XM.IncidentContact.prototype */
 
     recordType: 'XM.IncidentContact',
@@ -364,9 +364,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentItem = XT.Model.extend({
+  XM.IncidentItem = XM.Model.extend({
     /** @scope XM.IncidentItem.prototype */
 
     recordType: 'XM.IncidentItem',
@@ -378,9 +378,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentFile = XT.Model.extend({
+  XM.IncidentFile = XM.Model.extend({
     /** @scope XM.IncidentFile.prototype */
 
     recordType: 'XM.IncidentFile',
@@ -392,9 +392,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentImage = XT.Model.extend({
+  XM.IncidentImage = XM.Model.extend({
     /** @scope XM.IncidentImage.prototype */
 
     recordType: 'XM.IncidentImage',
@@ -406,9 +406,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentUrl = XT.Model.extend({
+  XM.IncidentUrl = XM.Model.extend({
     /** @scope XM.IncidentUrl.prototype */
 
     recordType: 'XM.IncidentUrl',
@@ -420,9 +420,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentIncident = XT.Model.extend({
+  XM.IncidentIncident = XM.Model.extend({
     /** @scope XM.IncidentIncident.prototype */
 
     recordType: 'XM.IncidentIncident',
@@ -434,9 +434,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentRecurrence = XT.Model.extend({
+  XM.IncidentRecurrence = XM.Model.extend({
     /** @scope XM.IncidentRecurrence.prototype */
 
     recordType: 'XM.IncidentRecurrence'
@@ -446,9 +446,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.IncidentInfo = XT.Model.extend({
+  XM.IncidentInfo = XM.Model.extend({
     /** @scope XM.IncidentInfo.prototype */
 
     recordType: 'XM.IncidentInfo',
@@ -467,9 +467,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.IncidentCategoryCollection = XT.Collection.extend({
+  XM.IncidentCategoryCollection = XM.Collection.extend({
     /** @scope XM.IncidentCategoryCollection.prototype */
 
     model: XM.IncidentCategory
@@ -479,9 +479,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.IncidentSeverityCollection = XT.Collection.extend({
+  XM.IncidentSeverityCollection = XM.Collection.extend({
     /** @scope XM.IncidentSeverityCollection.prototype */
 
     model: XM.IncidentSeverity
@@ -491,9 +491,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.IncidentResolutionCollection = XT.Collection.extend({
+  XM.IncidentResolutionCollection = XM.Collection.extend({
     /** @scope XM.IncidentResolutionCollection.prototype */
 
     model: XM.IncidentResolution
@@ -503,9 +503,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.IncidentInfoCollection = XT.Collection.extend({
+  XM.IncidentInfoCollection = XM.Collection.extend({
     /** @scope XM.IncidentInfoCollection.prototype */
 
     model: XM.IncidentInfo

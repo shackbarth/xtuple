@@ -23,7 +23,7 @@ white:true*/
 
     alarmDidChange: function (model, value, options) {
       var status = this.getStatus(),
-        K = XT.Model,
+        K = XM.Model,
         offset,
         qualifier,
         time,

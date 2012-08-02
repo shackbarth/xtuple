@@ -12,7 +12,7 @@ white:true*/
     Includes functionality common to xTuple documents uniquely identified by
     a user accessible `documentKey'.
   */
-  XM.Document = XT.Model.extend({
+  XM.Document = XM.Model.extend({
     /** @scope XM.Document */
 
     /**
@@ -70,18 +70,18 @@ white:true*/
     //
 
     destroy: function () {
-      var K = XT.Model,
+      var K = XM.Model,
         status = this.getStatus();
 
       /* release the number if applicable */
       if (status === K.READY_NEW && this._number) {
         this.releaseNumber();
       }
-      XT.Model.prototype.destroy.apply(this, arguments);
+      XM.Model.prototype.destroy.apply(this, arguments);
     },
 
     documentKeyDidChange: function (model, value, options) {
-      var K = XT.Model,
+      var K = XM.Model,
         that = this,
         status = this.getStatus(),
         upper = value;
@@ -118,7 +118,7 @@ white:true*/
     },
 
     initialize: function (attributes, options) {
-      XT.Model.prototype.initialize.call(this, attributes, options);
+      XM.Model.prototype.initialize.call(this, attributes, options);
       var K = XM.Document,
         policy;
       attributes = attributes || {};
@@ -165,9 +165,9 @@ white:true*/
             resp.toString() : resp;
         that.set(that.documentKey, that._number, {force: true});
       };
-      XT.dataSource.dispatch('XT.Model', 'fetchNumber',
+      XT.dataSource.dispatch('XM.Model', 'fetchNumber',
                              this.recordType, options);
-      console.log("XT.Model.fetchNumber for: " + this.recordType);
+      console.log("XM.Model.fetchNumber for: " + this.recordType);
       return this;
     },
 
@@ -182,10 +182,10 @@ white:true*/
       @returns {Object} Receiever
     */
     releaseNumber: function () {
-      XT.dataSource.dispatch('XT.Model', 'releaseNumber',
+      XT.dataSource.dispatch('XM.Model', 'releaseNumber',
                              [this.recordType, this._number]);
       this._number = null;
-      console.log("XT.Model.releaseNumber for: " + this.recordType);
+      console.log("XM.Model.releaseNumber for: " + this.recordType);
       return this;
     },
 
@@ -195,7 +195,7 @@ white:true*/
     */
     save: function (key, value, options) {
       var model = this,
-        K = XT.Model,
+        K = XM.Model,
         currValue = this.get(this.documentKey),
         origValue = this.original(this.documentKey),
         status = this.getStatus(),
@@ -207,7 +207,7 @@ white:true*/
         checkOptions.success = function (resp) {
           var err, params = {};
           if (resp === 0) {
-            XT.Model.prototype.save.call(model, key, value, options);
+            XM.Model.prototype.save.call(model, key, value, options);
           } else {
             params.attr = ("_" + model.documentKey).loc();
             params.value = currValue;
@@ -220,12 +220,12 @@ white:true*/
 
       // Otherwise just go ahead and save
       } else {
-        XT.Model.prototype.save.call(model, key, value, options);
+        XM.Model.prototype.save.call(model, key, value, options);
       }
     },
 
     statusDidChange: function () {
-      var K = XT.Model,
+      var K = XM.Model,
         D = XM.Document;
       if (this.numberPolicy === D.AUTO_NUMBER &&
           this.getStatus() === K.READY_CLEAN) {

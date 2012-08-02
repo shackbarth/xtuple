@@ -45,9 +45,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDo = XT.Model.extend({
+  XM.ToDo = XM.Model.extend({
     /** @scope XM.ToDo.prototype */
 
     recordType: 'XM.ToDo',
@@ -101,7 +101,7 @@ white:true*/
     },
 
     initialize: function () {
-      XT.Model.prototype.initialize.apply(this, arguments);
+      XM.Model.prototype.initialize.apply(this, arguments);
       this.on('change:startDate change:completeDate', this.toDoStatusDidChange);
       this.on('change:status', this.toDoDidChange);
       this.on('changeStatus', this.toDoDidChange);
@@ -122,7 +122,7 @@ white:true*/
         completeDate = this.get('completeDate'),
         K = XM.ToDo,
         attrStatus = K.NEITHER;
-      if ((options && options.force) || !(status & XT.Model.READY)) { return; }
+      if ((options && options.force) || !(status & XM.Model.READY)) { return; }
 
       // Set the `status` attribute with appropriate value
       if (completeDate) {
@@ -217,9 +217,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoAccount = XT.Model.extend({
+  XM.ToDoAccount = XM.Model.extend({
     /** @scope XM.ToDoAccount.prototype */
 
     recordType: 'XM.ToDoAccount',
@@ -255,9 +255,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoContact = XT.Model.extend({
+  XM.ToDoContact = XM.Model.extend({
     /** @scope XM.ToDoContact.prototype */
 
     recordType: 'XM.ToDoContact',
@@ -269,9 +269,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoItem = XT.Model.extend({
+  XM.ToDoItem = XM.Model.extend({
     /** @scope XM.ToDoItem.prototype */
 
     recordType: 'XM.ToDoItem',
@@ -283,9 +283,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoFile = XT.Model.extend({
+  XM.ToDoFile = XM.Model.extend({
     /** @scope XM.ToDoFile.prototype */
 
     recordType: 'XM.ToDoFile',
@@ -297,9 +297,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoImage = XT.Model.extend({
+  XM.ToDoImage = XM.Model.extend({
     /** @scope XM.ToDoImage.prototype */
 
     recordType: 'XM.ToDoImage',
@@ -311,9 +311,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoToDo = XT.Model.extend({
+  XM.ToDoToDo = XM.Model.extend({
     /** @scope XM.ToDoToDo.prototype */
 
     recordType: 'XM.ToDoToDo',
@@ -325,9 +325,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoUrl = XT.Model.extend({
+  XM.ToDoUrl = XM.Model.extend({
     /** @scope XM.ToDoUrl.prototype */
 
     recordType: 'XM.ToDoUrl',
@@ -339,9 +339,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ToDoInfo = XT.Model.extend({
+  XM.ToDoInfo = XM.Model.extend({
     /** @scope XM.ToDoInfo.prototype */
 
     recordType: 'XM.ToDoInfo'
@@ -358,9 +358,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.ToDoInfoCollection = XT.Collection.extend({
+  XM.ToDoInfoCollection = XM.Collection.extend({
     /** @scope XM.ToDoInfoCollection.prototype */
 
     model: XM.ToDoInfo

@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.Priority = XT.Model.extend({
+  XM.Priority = XM.Model.extend({
     /** @scope XM.Priority.prototype */
 
     recordType: 'XM.Priority',
@@ -38,9 +38,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.PriorityCollection = XT.Collection.extend({
+  XM.PriorityCollection = XM.Collection.extend({
     /** @scope XM.PriorityCollection.prototype */
 
     model: XM.Priority

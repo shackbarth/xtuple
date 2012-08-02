@@ -52,7 +52,7 @@ white:true*/
           return value.toJSON();
           
         // Format record if applicable
-        } else if (value instanceof XT.Model) {
+        } else if (value instanceof XM.Model) {
           return value.id;
         }
         return value;
@@ -123,7 +123,7 @@ white:true*/
     /*
     Commit a single record.
 
-    @param {XT.Model} model
+    @param {XM.Model} model
     @param {Object} options
     */
     commitRecord: function (model, options) {

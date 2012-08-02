@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.Url = XT.Model.extend({
+  XM.Url = XM.Model.extend({
     /** @scope XM.Url.prototype */
 
     recordType: 'XM.Url'

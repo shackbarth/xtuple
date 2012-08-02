@@ -90,7 +90,7 @@ white:true*/
     },
 
     statusDidChange: function () {
-      var K = XT.Model;
+      var K = XM.Model;
       if (this.getStatus() === K.READY_CLEAN) {
         this.setReadOnly('number');
       }
@@ -344,7 +344,7 @@ white:true*/
     */
     projectDidChange: function () {
       var project = this.get('project'),
-        K = XT.Model,
+        K = XM.Model,
         status = this.getStatus();
       if (project && status === K.READY_NEW) {
         this.set('owner', this.get('owner') || project.get('owner'));
@@ -381,9 +381,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectAccount = XT.Model.extend({
+  XM.ProjectAccount = XM.Model.extend({
     /** @scope XM.ProjectAccount.prototype */
 
     recordType: 'XM.ProjectAccount',
@@ -395,9 +395,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectContact = XT.Model.extend({
+  XM.ProjectContact = XM.Model.extend({
     /** @scope XM.ProjectContact.prototype */
 
     recordType: 'XM.ProjectContact',
@@ -409,9 +409,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectItem = XT.Model.extend({
+  XM.ProjectItem = XM.Model.extend({
     /** @scope XM.ProjectItem.prototype */
 
     recordType: 'XM.ProjectItem',
@@ -423,9 +423,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectFile = XT.Model.extend({
+  XM.ProjectFile = XM.Model.extend({
     /** @scope XM.ProjectFile.prototype */
 
     recordType: 'XM.ProjectFile',
@@ -437,9 +437,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectImage = XT.Model.extend({
+  XM.ProjectImage = XM.Model.extend({
     /** @scope XM.ProjectImage.prototype */
 
     recordType: 'XM.ProjectImage',
@@ -451,9 +451,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectUrl = XT.Model.extend({
+  XM.ProjectUrl = XM.Model.extend({
     /** @scope XM.ProjectUrl.prototype */
 
     recordType: 'XM.ProjectUrl'
@@ -463,9 +463,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectProject = XT.Model.extend({
+  XM.ProjectProject = XM.Model.extend({
     /** @scope XM.ProjectProject.prototype */
 
     recordType: 'XM.ProjectProject',
@@ -477,9 +477,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectRecurrence = XT.Model.extend({
+  XM.ProjectRecurrence = XM.Model.extend({
     /** @scope XM.ProjectRecurrence.prototype */
 
     recordType: 'XM.ProjectRecurrence'
@@ -514,10 +514,10 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
     @extends XM.ProjectStatus
   */
-  XM.ProjectInfo = XT.Model.extend({
+  XM.ProjectInfo = XM.Model.extend({
     /** @scope XM.ProjectInfo.prototype */
 
     recordType: 'XM.ProjectInfo',
@@ -535,9 +535,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.ProjectInfoCollection = XT.Collection.extend({
+  XM.ProjectInfoCollection = XM.Collection.extend({
     /** @scope XM.ProjectInfoCollection.prototype */
 
     model: XM.ProjectInfo
