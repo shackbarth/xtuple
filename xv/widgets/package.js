@@ -1,9 +1,9 @@
 enyo.depends(
   "address_widget.js",
   "comments_widget.js",
-  "date_widget.js",
+  "date.js",
   "number_widget.js",
-  "relational_widget.js",
+  "relation.js",
   "dropdown.js",
   "grid_widget.js",
   "read_only_widget.js",

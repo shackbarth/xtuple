@@ -92,9 +92,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.Privilege = XT.Model.extend({
+  XM.Privilege = XM.Model.extend({
     /** @scope XM.Privilege.prototype */
 
     recordType: 'XM.Privilege',
@@ -129,9 +129,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.UserAccountRoleInfo = XT.Model.extend({
+  XM.UserAccountRoleInfo = XM.Model.extend({
     /** @scope XM.UserAccountRoleInfo.prototype */
 
     recordType: 'UserAccountRole',
@@ -143,7 +143,7 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
   XM.UserAccountRolePrivilegeAssignment = XM.Document.extend({
     /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */
@@ -194,9 +194,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.UserAccountPrivilegeAssignment = XT.Model.extend({
+  XM.UserAccountPrivilegeAssignment = XM.Model.extend({
     /** @scope XM.UserAccountPrivilegeAssignment.prototype */
 
     recordType: 'XM.UserAccountPrivilegeAssignment',
@@ -220,7 +220,7 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
   XM.UserAccountUserAccountRoleAssignment = XM.Document.extend({
     /** @scope XM.UserAccountUserAccountRoleAssignment.prototype */
@@ -232,9 +232,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.UserAccountInfo = XT.Model.extend({
+  XM.UserAccountInfo = XM.Model.extend({
     /** @scope XM.UserAccountInfo.prototype */
 
     idAttribute: 'username',
@@ -252,9 +252,9 @@ white:true*/
   /**
    @class
 
-   @extends XT.Collection
+   @extends XM.Collection
   */
-  XM.LanguageCollection = XT.Collection.extend({
+  XM.LanguageCollection = XM.Collection.extend({
    /** @scope XM.LanguageCollection.prototype */
 
     model: XM.Language
@@ -264,9 +264,9 @@ white:true*/
   /**
    @class
 
-   @extends XT.Collection
+   @extends XM.Collection
   */
-  XM.LocaleCollection = XT.Collection.extend({
+  XM.LocaleCollection = XM.Collection.extend({
    /** @scope XM.LocaleCollection.prototype */
 
     model: XM.Locale
@@ -276,9 +276,9 @@ white:true*/
   /**
    @class
 
-   @extends XT.Collection
+   @extends XM.Collection
   */
-  XM.PrivilegeCollection = XT.Collection.extend({
+  XM.PrivilegeCollection = XM.Collection.extend({
    /** @scope XM.PrivilegeCollection.prototype */
 
     model: XM.Privilege
@@ -288,9 +288,9 @@ white:true*/
   /**
    @class
 
-   @extends XT.Collection
+   @extends XM.Collection
   */
-  XM.UserAccountInfoCollection = XT.Collection.extend({
+  XM.UserAccountInfoCollection = XM.Collection.extend({
    /** @scope XM.UserAccountInfoCollection.prototype */
 
     model: XM.UserAccountInfo

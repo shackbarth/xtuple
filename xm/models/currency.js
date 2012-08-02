@@ -45,7 +45,7 @@ white:true*/
     //
 
     abbreviationDidChange: function (model, value, options) {
-      var K = XT.Model,
+      var K = XM.Model,
         that = this,
         status = this.getStatus(),
         checkOptions = {};
@@ -74,7 +74,7 @@ white:true*/
     */
     save: function (key, value, options) {
       var model = this,
-        K = XT.Model,
+        K = XM.Model,
         currAbbr = this.get('abbreviation'),
         origAbbr = this.original('abbreviation'),
         status = this.getStatus(),
@@ -126,9 +126,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.CurrencyCollection = XT.Collection.extend({
+  XM.CurrencyCollection = XM.Collection.extend({
     /** @scope XM.CurrencyCollection.prototype */
 
     model: XM.Currency

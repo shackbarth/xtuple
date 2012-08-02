@@ -136,7 +136,7 @@ XVOWS.save = function (model, vows) {
         timeoutId,
         callback = function () {
           var status = model.getStatus(),
-            K = XT.Model;
+            K = XM.Model;
           if (status === K.READY_CLEAN) {
             clearTimeout(timeoutId);
             model.off('statusChange', callback);
@@ -199,7 +199,7 @@ XVOWS.destroy = function (model, vows, obj) {
         timeoutId,
         callback = function () {
           var status = model.getStatus(),
-            K = XT.Model;
+            K = XM.Model;
           if (status === K.DESTROYED_CLEAN) {
             clearTimeout(timeoutId);
             model.off('statusChange', callback);
@@ -324,7 +324,7 @@ require(_path.join(__dirname, "../xm", "startup.js"));
 
 //console.log(_util.inspect(XT.getStartupManager().get("tasks")));
 //console.log(_util.inspect(Backbone));
-//console.log(_util.inspect(XT.Model));
+//console.log(_util.inspect(XM.Model));
 //console.log(_util.inspect(XT));
 //console.log(_util.inspect(XM));
 

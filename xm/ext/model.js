@@ -12,16 +12,16 @@ white:true*/
   /**
     @class
 
-    `XT.Model` is an abstract class designed to operate with `XT.DataSource`.
+    `XM.Model` is an abstract class designed to operate with `XT.DataSource`.
     It should be subclassed for any specific implentation. Subtypes should
     include a `recordType` the data source will use to retreive the record.
 
     To create a new model include `isNew` in the options like so:
-      XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
+      XM.Contact = XM.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact({firstName: 'Randy'}, {isNew: true});
 
     To load an existing record include a id in the options like so:
-      XM.Contact = XT.Model.extend({recordType: 'XM.Contact'});
+      XM.Contact = XM.Model.extend({recordType: 'XM.Contact'});
       m = new XM.Contact;
       m.fetch({id: 1});
 
@@ -29,8 +29,8 @@ white:true*/
     @param {Object} Attributes
     @param {Object} Options
   */
-  XT.Model = Backbone.RelationalModel.extend({
-  /** @scope XT.Model.prototype */
+  XM.Model = Backbone.RelationalModel.extend({
+  /** @scope XM.Model.prototype */
 
     /**
       Set to true if you want an id fetched from the server when the `isNew` option
@@ -175,7 +175,7 @@ white:true*/
     didChange: function (model, options) {
       model = model || {};
       options = options || {};
-      var K = XT.Model,
+      var K = XM.Model,
         status = this.getStatus(),
         attr;
       if (options.force) { return; }
@@ -201,7 +201,7 @@ white:true*/
       datatsource.
     */
     didDestroy: function () {
-      var K = XT.Model;
+      var K = XM.Model;
       this.setStatus(K.DESTROYED_CLEAN);
       this.clear({silent: true});
     },
@@ -237,7 +237,7 @@ white:true*/
         success = options.success,
         model = this,
         result,
-        K = XT.Model,
+        K = XM.Model,
         parent = this.getParent(true),
         children = [],
         findChildren = function (model) {
@@ -292,7 +292,7 @@ white:true*/
     fetch: function (options) {
       options = options ? _.clone(options) : {};
       var model = this,
-        K = XT.Model,
+        K = XM.Model,
         success = options.success,
         klass = this.getClass();
       if (klass.canRead()) {
@@ -322,7 +322,7 @@ white:true*/
         options.success = function (resp) {
           that.set(that.idAttribute, resp, options);
         };
-        XT.dataSource.dispatch('XT.Model', 'fetchId', this.recordType, options);
+        XT.dataSource.dispatch('XM.Model', 'fetchId', this.recordType, options);
       }
 
       // Cascade through `HasMany` relations if specified.
@@ -369,7 +369,7 @@ white:true*/
     /**
       Returns the current model prototype class.
 
-      @returns {XT.Model}
+      @returns {XM.Model}
     */
     getClass: function () {
       return Backbone.Relational.store.getObjectByName(this.recordType);
@@ -380,7 +380,7 @@ white:true*/
       passed, it will return the top level parent of the model hierarchy.
 
       @param {Boolean} Get Root
-      @returns {XT.Model}
+      @returns {XM.Model}
     */
     getParent: function (getRoot) {
       var parent,
@@ -415,9 +415,9 @@ white:true*/
       var ret = [],
         status = this.getStatus(),
         prop;
-      for (prop in XT.Model) {
-        if (XT.Model.hasOwnProperty(prop)) {
-          if (prop.match(/[A-Z_]$/) && XT.Model[prop] === status) {
+      for (prop in XM.Model) {
+        if (XM.Model.hasOwnProperty(prop)) {
+          if (prop.match(/[A-Z_]$/) && XM.Model[prop] === status) {
             ret.push(prop);
           }
         }
@@ -444,7 +444,7 @@ white:true*/
       attributes = attributes || {};
       options = options || {};
       var klass,
-        K = XT.Model;
+        K = XM.Model;
 
       // Validate record type
       if (_.isEmpty(this.recordType)) { throw 'No record type defined'; }
@@ -487,7 +487,7 @@ white:true*/
       @returns {Boolean}
     */
     isNew: function () {
-      var K = XT.Model;
+      var K = XM.Model;
       return this.getStatus() === K.READY_NEW || this._wasNew;
     },
 
@@ -498,7 +498,7 @@ white:true*/
     */
     isDirty: function () {
       var status = this.getStatus(),
-        K = XT.Model;
+        K = XM.Model;
       return status === K.READY_NEW || status === K.READY_DIRTY;
     },
 
@@ -579,7 +579,7 @@ white:true*/
       options = options ? _.clone(options) : {};
       var attrs = {},
         model = this,
-        K = XT.Model,
+        K = XM.Model,
         success = options.success,
         result,
         oldStatus = this.getStatus();
@@ -665,7 +665,7 @@ white:true*/
       @param {Number} Status
     */
     setStatus: function (status, options) {
-      var K = XT.Model,
+      var K = XM.Model,
         attr,
         that = this,
         parent,
@@ -731,7 +731,7 @@ white:true*/
         error = options.error;
 
       options.error = function (resp) {
-        var K = XT.Model;
+        var K = XM.Model;
         that.setStatus(K.ERROR);
         if (error) { error(model, resp, options); }
       };
@@ -775,7 +775,7 @@ white:true*/
       options = options || {};
       if (options.force) { return; }
       var that = this, i, result,
-        K = XT.Model,
+        K = XM.Model,
         S = XT.Session,
         keys = _.keys(attributes),
         original = _.pick(this.originalAttributes(), keys),
@@ -926,8 +926,8 @@ white:true*/
   // CLASS METHODS
   //
 
-  _.extend(XT.Model, {
-      /** @scope XT.Model */
+  _.extend(XM.Model, {
+      /** @scope XM.Model */
 
     /**
       Use this function to find out whether a user can create records before
@@ -936,7 +936,7 @@ white:true*/
       @returns {Boolean}
     */
     canCreate: function () {
-      return XT.Model.canDo.call(this, 'create');
+      return XM.Model.canDo.call(this, 'create');
     },
 
     /**
@@ -988,7 +988,7 @@ white:true*/
       @returns {Boolean}
     */
     canUpdate: function (model) {
-      return XT.Model.canDo.call(this, 'update', model);
+      return XM.Model.canDo.call(this, 'update', model);
     },
 
     /**
@@ -999,7 +999,7 @@ white:true*/
       @returns {Boolean}
     */
     canDelete: function (model) {
-      return XT.Model.canDo.call(this, 'delete', model);
+      return XM.Model.canDo.call(this, 'delete', model);
     },
 
     /**
@@ -1007,7 +1007,7 @@ white:true*/
       privileges on the model where applicable.
 
       @param {String} Action
-      @param {XT.Model} Model
+      @param {XM.Model} Model
     */
     canDo: function (action, model) {
       var privs = this.prototype.privileges,
@@ -1127,8 +1127,8 @@ white:true*/
     findExisting: function (key, value, options) {
       var recordType = this.recordType || this.prototype.recordType,
         params = [ recordType, key, value, this.id || -1 ];
-      XT.dataSource.dispatch('XT.Model', 'findExisting', params, options);
-      XT.log("XT.Model.findExisting for: " + recordType);
+      XT.dataSource.dispatch('XM.Model', 'findExisting', params, options);
+      XT.log("XM.Model.findExisting for: " + recordType);
       return this;
     },
 
@@ -1318,7 +1318,7 @@ white:true*/
 
   });
 
-  XT.Model = XT.Model.extend({status: XT.Model.EMPTY});
+  XM.Model = XM.Model.extend({status: XM.Model.EMPTY});
 
   // Overload this function to include the 'force' option
   var func = Backbone.Relation.prototype.setRelated;

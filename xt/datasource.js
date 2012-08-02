@@ -30,7 +30,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.message.data.detail;
+              params.error = response.reason.data.code;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -52,7 +52,7 @@ white:true*/
           return value.toJSON();
           
         // Format record if applicable
-        } else if (value instanceof XT.Model) {
+        } else if (value instanceof XM.Model) {
           return value.id;
         }
         return value;
@@ -87,7 +87,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.message.data.detail;
+              params.error = response.reason.data.code;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -123,7 +123,7 @@ white:true*/
     /*
     Commit a single record.
 
-    @param {XT.Model} model
+    @param {XM.Model} model
     @param {Object} options
     */
     commitRecord: function (model, options) {
@@ -135,7 +135,7 @@ white:true*/
           // Handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.message.data.detail;
+              params.error = response.reason.data.code;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }
@@ -184,7 +184,7 @@ white:true*/
           // handle error
           if (response.isError) {
             if (options && options.error) {
-              params.error = response.message.data.detail;
+              params.error = response.reason.data.code;
               error = XT.Error.clone('xt1001', { params: params });
               options.error.call(that, error);
             }

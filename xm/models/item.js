@@ -154,13 +154,13 @@ white:true*/
 
     inventoryUnitDidChange: function (model, value, options) {
       var status = this.getStatus(),
-        K = XT.Model;
+        K = XM.Model;
       if ((options && options.force) || !(status & K.READY)) { return; }
       if (value) { this.set('priceUnit', value); }
     },
 
     isSoldDidChange: function () {
-      var K = XT.Model,
+      var K = XM.Model,
         isNotSold = !(this.get('isSold') || false);
       if (this.getStatus() & K.READY) {
         this.setReadOnly('productCategory', isNotSold);
@@ -170,7 +170,7 @@ white:true*/
     },
 
     statusDidChange: function () {
-      var K = XT.Model;
+      var K = XM.Model;
       if (this.getStatus() === K.READY_CLEAN) {
         this.setReadOnly('number');
         this.setReadOnly('inventoryUnit');
@@ -214,9 +214,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ItemAccount = XT.Model.extend({
+  XM.ItemAccount = XM.Model.extend({
     /** @scope XM.ItemAccount.prototype */
 
     recordType: 'XM.ItemAccount',
@@ -228,9 +228,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ItemContact = XT.Model.extend({
+  XM.ItemContact = XM.Model.extend({
     /** @scope XM.ItemContact.prototype */
 
     recordType: 'XM.ItemContact',
@@ -242,9 +242,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ItemItem = XT.Model.extend({
+  XM.ItemItem = XM.Model.extend({
     /** @scope XM.ItemItem.prototype */
 
     recordType: 'XM.ItemItem',
@@ -256,9 +256,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ItemFile = XT.Model.extend({
+  XM.ItemFile = XM.Model.extend({
     /** @scope XM.ItemFile.prototype */
 
     recordType: 'XM.ItemFile',
@@ -270,9 +270,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ItemImage = XT.Model.extend({
+  XM.ItemImage = XM.Model.extend({
     /** @scope XM.ItemImage.prototype */
 
     recordType: 'XM.ItemImage',
@@ -284,9 +284,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ItemUrl = XT.Model.extend({
+  XM.ItemUrl = XM.Model.extend({
     /** @scope XM.ItemUrl.prototype */
 
     recordType: 'XM.ItemUrl',
@@ -298,9 +298,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ItemInfo = XT.Model.extend({
+  XM.ItemInfo = XM.Model.extend({
     /** @scope XM.ItemInfo.prototype */
 
     recordType: 'XM.ItemInfo',
@@ -316,9 +316,9 @@ white:true*/
   /**
    @class
 
-   @extends XT.Collection
+   @extends XM.Collection
   */
-  XM.ClassCodeCollection = XT.Collection.extend({
+  XM.ClassCodeCollection = XM.Collection.extend({
    /** @scope XM.ClassCodeCollection.prototype */
 
     model: XM.ClassCode
@@ -328,9 +328,9 @@ white:true*/
   /**
    @class
 
-   @extends XT.Collection
+   @extends XM.Collection
   */
-  XM.ProductCategoryCollection = XT.Collection.extend({
+  XM.ProductCategoryCollection = XM.Collection.extend({
    /** @scope XM.ProductCategoryCollection.prototype */
 
     model: XM.ProductCategory
@@ -340,9 +340,9 @@ white:true*/
   /**
    @class
 
-   @extends XT.Collection
+   @extends XM.Collection
   */
-  XM.UnitCollection = XT.Collection.extend({
+  XM.UnitCollection = XM.Collection.extend({
    /** @scope XM.UnitCollection.prototype */
 
     model: XM.Unit
@@ -352,9 +352,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.ItemInfoCollection = XT.Collection.extend({
+  XM.ItemInfoCollection = XM.Collection.extend({
     /** @scope XM.ItemInfoCollection.prototype */
 
     model: XM.ItemInfo

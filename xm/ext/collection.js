@@ -9,12 +9,12 @@ white:true*/
   /**
     @class
 
-    `XT.Collection` is a standard class for querying the xTuple data source.
-    It should be sub classed for use with sub classes of `XT.Model` (which
+    `XM.Collection` is a standard class for querying the xTuple data source.
+    It should be sub classed for use with sub classes of `XM.Model` (which
     themselves typically exist in the `XM` name space). To create a new class,
-    simply extened `XT.Collection` and indicate the model to reference:
+    simply extened `XM.Collection` and indicate the model to reference:
 
-      XM.MyCollection = XT.Collection.extend({
+      XM.MyCollection = XM.Collection.extend({
         model: XM.MyModel
       })
 
@@ -188,8 +188,8 @@ white:true*/
 
     @extends Backbone.Collection
   */
-  XT.Collection = Backbone.Collection.extend({
-    /** @scope XT.Collection.prototype */
+  XM.Collection = Backbone.Collection.extend({
+    /** @scope XM.Collection.prototype */
 
     /**
       Handle status change.
@@ -197,7 +197,7 @@ white:true*/
     add: function (models, options) {
       var result = Backbone.Collection.prototype.add.call(this, models, options),
         i,
-        K = XT.Model;
+        K = XM.Model;
       for (i = 0; i < result.models.length; i += 1) {
         result.models[i].setStatus(K.READY_CLEAN);
       }

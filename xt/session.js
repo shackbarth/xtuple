@@ -112,7 +112,7 @@ white:true*/
             if (schema.attributes.hasOwnProperty(prop)) {
               relations = schema.attributes[prop].relations || [];
               if (relations.length) {
-                Klass = XT.Model.getObjectByName('XM' + '.' + prop);
+                Klass = XM.Model.getObjectByName('XM' + '.' + prop);
                 if (Klass) {
                   Klass.prototype.relations = [];
                   for (i = 0; i < relations.length; i++) {
