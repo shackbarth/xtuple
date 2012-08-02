@@ -112,7 +112,7 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
   XM.ContactEmail = XM.Model.extend({
     /** @scope XM.ContactEmail.prototype */

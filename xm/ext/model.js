@@ -75,6 +75,14 @@ white:true*/
     readOnlyAttributes: null,
 
     /**
+      The attribute that is the display name for the model in any case that we
+      want to show just the most obvious field for the user.
+
+      @type {String}
+    */
+    nameAttribute: "name",
+
+    /**
       Specify the name of a data source model here.
 
       @type {String}
@@ -88,14 +96,6 @@ white:true*/
       @type {Array}
     */
     requiredAttributes: null,
-
-    /**
-      The attribute that is the display name for the model in any case that we
-      want to show just the most obvious field for the user.
-
-      @type {String}
-    */
-    nameAttribute: "name",
 
     /**
       Model's status. You should never modify this directly.
