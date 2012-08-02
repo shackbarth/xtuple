@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectIncident = XT.Model.extend(
+  XM.ProjectIncident = XM.Model.extend(
     /** @scope XM.ProjectIncident.prototype */ {
 
     recordType: 'XM.ProjectIncident',
@@ -23,9 +23,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectOpportunity = XT.Model.extend(
+  XM.ProjectOpportunity = XM.Model.extend(
     /** @scope XM.ProjectOpportunity.prototype */ {
 
     recordType: 'XM.ProjectOpportunity',
@@ -37,9 +37,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ProjectToDo = XT.Model.extend(
+  XM.ProjectToDo = XM.Model.extend(
     /** @scope XM.ProjectToDo.prototype */ {
 
     recordType: 'XM.ProjectToDo',

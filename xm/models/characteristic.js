@@ -79,7 +79,7 @@ white:true*/
 
     statusDidChange: function () {
       var status = this.getStatus(),
-        K = XT.Model;
+        K = XM.Model;
 
       if (status !== K.READY_NEW) {
         this.setReadOnly('characteristicType', true);
@@ -141,9 +141,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.CharacteristicOption = XT.Model.extend({
+  XM.CharacteristicOption = XM.Model.extend({
     /** @scope XM.CharacteristicOption.prototype */
 
     recordType: 'XM.CharacteristicOption',
@@ -172,9 +172,9 @@ white:true*/
     
     Base class for use on characteristic assignment classes.
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.CharacteristicAssignment = XT.Model.extend({
+  XM.CharacteristicAssignment = XM.Model.extend({
     /** @scope XM.CharacteristicAssignment.prototype */
 
     //..................................................
@@ -182,13 +182,13 @@ white:true*/
     //
 
     initialize: function () {
-      XT.Model.prototype.initialize.apply(this, arguments);
+      XM.Model.prototype.initialize.apply(this, arguments);
       this.on('change:characteristic', this.characteristicDidChange);
     },
 
     characteristicDidChange: function (model, value, options) {
       var status = this.getStatus(),
-        K = XT.Model;
+        K = XM.Model;
       if ((options && options.force) || !(status & K.READY)) { return; }
       this.set('value', '');
     }
@@ -202,9 +202,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.CharacteristicCollection = XT.Collection.extend({
+  XM.CharacteristicCollection = XM.Collection.extend({
     /** @scope XM.CharacteristicCollection.prototype */
 
     model: XM.Characteristic

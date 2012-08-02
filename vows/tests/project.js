@@ -136,7 +136,7 @@
               model = comment.getParent(), // Model is now Project
               callback = function () {
                 var status = model.getStatus(),
-                  K = XT.Model;
+                  K = XM.Model;
                 if (status === K.READY_CLEAN) {
                   clearTimeout(timeoutId);
                   model.off('statusChange', callback);
@@ -207,7 +207,7 @@
               model = task.getParent(), // Model is now Project
               callback = function () {
                 var status = model.getStatus(),
-                  K = XT.Model;
+                  K = XM.Model;
                 if (status === K.READY_CLEAN) {
                   clearTimeout(timeoutId);
                   model.off('statusChange', callback);

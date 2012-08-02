@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.ImageInfo = XT.Model.extend({
+  XM.ImageInfo = XM.Model.extend({
     /** @scope XM.ImageInfo.prototype */
 
     recordType: 'XM.ImageInfo'

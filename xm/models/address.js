@@ -9,9 +9,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.Country = XT.Model.extend({
+  XM.Country = XM.Model.extend({
     /** @scope XM.Country.prototype */
 
     recordType: 'XM.Country',
@@ -58,9 +58,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.State = XT.Model.extend({
+  XM.State = XM.Model.extend({
     /** @scope XM.State.prototype */
 
     recordType: 'XM.State',
@@ -262,9 +262,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AddressComment = XT.Model.extend({
+  XM.AddressComment = XM.Model.extend({
     /** @scope XM.AddressComment.prototype */
 
     recordType: 'XM.AddressComment'
@@ -274,9 +274,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AddressCharacteristic = XT.Model.extend({
+  XM.AddressCharacteristic = XM.Model.extend({
     /** @scope XM.AddressCharacteristic.prototype */
 
     recordType: 'XM.AddressCharacteristic'
@@ -286,9 +286,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AddressInfo = XT.Model.extend({
+  XM.AddressInfo = XM.Model.extend({
     /** @scope XM.AddressInfo.prototype */
 
     recordType: 'XM.AddressInfo',
@@ -337,9 +337,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.AddressInfoCollection = XT.Collection.extend({
+  XM.AddressInfoCollection = XM.Collection.extend({
     /** @scope XM.AddressInfoCollection.prototype */
 
     model: XM.AddressInfo
@@ -349,9 +349,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.CountryCollection = XT.Collection.extend({
+  XM.CountryCollection = XM.Collection.extend({
     /** @scope XM.CountryCollection.prototype */
 
     model: XM.Country
@@ -361,9 +361,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.StateCollection = XT.Collection.extend({
+  XM.StateCollection = XM.Collection.extend({
     /** @scope XM.StateCollection.prototype */
 
     model: XM.State

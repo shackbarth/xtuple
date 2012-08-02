@@ -119,7 +119,7 @@ white:true*/
 
     assignedToDidChange: function (model, value, options) {
       var status = this.getStatus(),
-        K = XT.Model,
+        K = XM.Model,
         assignedTo,
         assignDate;
       if ((options && options.force) || !(status & K.READY)) { return; }
@@ -161,9 +161,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityAccount = XT.Model.extend({
+  XM.OpportunityAccount = XM.Model.extend({
     /** @scope XM.OpportunityAccount.prototype */
 
     recordType: 'XM.OpportunityAccount',
@@ -175,9 +175,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityContact = XT.Model.extend({
+  XM.OpportunityContact = XM.Model.extend({
     /** @scope XM.OpportunityContact.prototype */
 
     recordType: 'XM.OpportunityContact',
@@ -189,9 +189,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityItem = XT.Model.extend({
+  XM.OpportunityItem = XM.Model.extend({
     /** @scope XM.OpportunityItem.prototype */
 
     recordType: 'XM.OpportunityItem',
@@ -203,9 +203,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityFile = XT.Model.extend({
+  XM.OpportunityFile = XM.Model.extend({
     /** @scope XM.OpportunityFile.prototype */
 
     recordType: 'XM.OpportunityFile',
@@ -217,9 +217,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityImage = XT.Model.extend({
+  XM.OpportunityImage = XM.Model.extend({
     /** @scope XM.OpportunityImage.prototype */
 
     recordType: 'XM.OpportunityImage',
@@ -231,9 +231,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityUrl = XT.Model.extend({
+  XM.OpportunityUrl = XM.Model.extend({
     /** @scope XM.OpportunityUrl.prototype */
 
     recordType: 'XM.OpportunityUrl',
@@ -245,9 +245,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityOpportunity = XT.Model.extend({
+  XM.OpportunityOpportunity = XM.Model.extend({
     /** @scope XM.OpportunityOpportunity.prototype */
 
     recordType: 'XM.OpportunityOpportunity',
@@ -259,9 +259,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.OpportunityInfo = XT.Model.extend({
+  XM.OpportunityInfo = XM.Model.extend({
     /** @scope XM.OpportunityInfo.prototype */
 
     recordType: 'XM.OpportunityInfo',
@@ -277,9 +277,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.OpportunityTypeCollection = XT.Collection.extend({
+  XM.OpportunityTypeCollection = XM.Collection.extend({
     /** @scope XM.OpportunityTypeCollection.prototype */
 
     model: XM.OpportunityType
@@ -289,9 +289,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.OpportunityStageCollection = XT.Collection.extend({
+  XM.OpportunityStageCollection = XM.Collection.extend({
     /** @scope XM.OpportunityStageCollection.prototype */
 
     model: XM.OpportunityStage
@@ -301,9 +301,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.OpportunitySourceCollection = XT.Collection.extend({
+  XM.OpportunitySourceCollection = XM.Collection.extend({
     /** @scope XM.OpportunitySourceCollection.prototype */
 
     model: XM.OpportunitySource
@@ -313,9 +313,9 @@ white:true*/
   /**
     @class
   
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.OpportunityInfoCollection = XT.Collection.extend({
+  XM.OpportunityInfoCollection = XM.Collection.extend({
     /** @scope XM.OpportunityInfoCollection.prototype */
 
     model: XM.OpportunityInfo

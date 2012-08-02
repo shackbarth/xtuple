@@ -118,9 +118,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountAccount = XT.Model.extend({
+  XM.AccountAccount = XM.Model.extend({
     /** @scope XM.AccountAccount.prototype */
 
     recordType: 'XM.AccountAccount',
@@ -132,9 +132,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountContact = XT.Model.extend({
+  XM.AccountContact = XM.Model.extend({
     /** @scope XM.AccountContact.prototype */
 
     recordType: 'XM.AccountContact',
@@ -146,9 +146,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountItem = XT.Model.extend({
+  XM.AccountItem = XM.Model.extend({
     /** @scope XM.AccountItem.prototype */
 
     recordType: 'XM.AccountItem',
@@ -160,9 +160,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountFile = XT.Model.extend({
+  XM.AccountFile = XM.Model.extend({
     /** @scope XM.AccountFile.prototype */
 
     recordType: 'XM.AccountFile',
@@ -174,9 +174,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountImage = XT.Model.extend({
+  XM.AccountImage = XM.Model.extend({
     /** @scope XM.AccountImage.prototype */
 
     recordType: 'XM.AccountImage',
@@ -188,9 +188,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountUrl = XT.Model.extend({
+  XM.AccountUrl = XM.Model.extend({
     /** @scope XM.AccountUrl.prototype */
 
     recordType: 'XM.AccountUrl',
@@ -202,9 +202,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountProject = XT.Model.extend({
+  XM.AccountProject = XM.Model.extend({
     /** @scope XM.AccountProject.prototype */
 
     recordType: 'XM.AccountProject',
@@ -216,9 +216,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountContactInfo = XT.Model.extend({
+  XM.AccountContactInfo = XM.Model.extend({
     /** @scope XM.AccountContactInfo.prototype */
 
     recordType: 'XM.AccountContactInfo'
@@ -228,9 +228,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Model
+    @extends XM.Model
   */
-  XM.AccountInfo = XT.Model.extend({
+  XM.AccountInfo = XM.Model.extend({
     /** @scope XM.AccountInfo.prototype */
 
     recordType: 'XM.AccountInfo',
@@ -264,9 +264,9 @@ white:true*/
   /**
     @class
 
-    @extends XT.Collection
+    @extends XM.Collection
   */
-  XM.AccountInfoCollection = XT.Collection.extend({
+  XM.AccountInfoCollection = XM.Collection.extend({
     /** @scope XM.AccountInfoCollection.prototype */
 
     model: XM.AccountInfo
