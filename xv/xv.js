@@ -31,7 +31,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "number" },
-              { fieldName: "accountType", fieldType: "dropdown", modelType: "XM.accountTypes" }
+              { fieldName: "accountType", fieldType: "dropdown", collection: "XM.accountTypes" }
             ]
           },
           {
@@ -55,7 +55,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -84,7 +84,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" }
+              { fieldName: "account", fieldType: "relation", model: "XM.AccountInfo" }
             ]
           },
           {
@@ -101,7 +101,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -141,7 +141,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -191,7 +191,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -247,7 +247,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -316,7 +316,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -382,13 +382,6 @@ regexp:true, undef:true, trailing:true, white:true */
       for (i = 0; i < childrenCount; i++) {
         parent.removeChild(parent.children[0]);
       }
-      // this causes extra problems
-      //var componentCount = parent.getComponents().length;
-      //for (var i = 0; i < componentCount; i++) {
-      //  parent.removeComponent(parent.getComponents()[0]);
-      //}
-
-
     },
 
     // XXX this is all very magical
