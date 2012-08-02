@@ -69,8 +69,6 @@ trailing:true white:true*/
                 ]
               });
 
-            // TODO: Cole makes a convincing case that the widgets should include their
-            // own InputDecorator and label
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
 
