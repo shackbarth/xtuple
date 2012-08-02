@@ -26,7 +26,7 @@ white:true*/
               // easy solution to the problem of navigating these two panels: defer until we
               // have "saved"/bookmarked pages
               //{content: "Saved", active: true},
-              {content: "Recents", active: true}
+              {content: "History", active: true}
             ]},
             {fit: true, name: "historyPanel", kind: "Scroller", classes: "history-scroller", components: [
               {
