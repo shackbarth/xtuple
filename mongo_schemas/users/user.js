@@ -2,13 +2,11 @@
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true */
 
-require("./organization");
-
 XT.MongooseSchema.create({
   name: "User",
   definition: {
-    id:           {type: String}, // can be anything really?
-    password:     {type: String},
-    organizations:{type: [XT.schemas.OrganizationSchema]}
+    id:           {type: String, required: true, index: {unique: true}}, // can be anything really?
+    password:     {type: String, required: true},
+    organizations:{type: [{}]}
   }
 });
