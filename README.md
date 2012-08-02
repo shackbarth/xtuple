@@ -17,4 +17,7 @@ Build the v8 library then copy the `libv8*` shared libraries to `/usr/local/lib`
 
 Build the plv8js PostgreSQL extension via `make; sudo make install` (make sure to check instructions).  
 
+Add the following to the bottom of the postgresq.conf file:
+  `custom_variable_classes = 'plv8'`
+
 From the repository root (database) run the `resetdb.py` script (`resetdb.py --help` for options) to restore from a backup and automatically run the init script. Once database is installed and init script has been run `cd installer` and make sure to modify the credentials in the `installer.js` script to match your database. Run the installed `./installer.js` and navigate in your browser to `localhost:9080/orm` and in the text field type the name of the database to connect to and press enter. Then click the `select all` and then `install selected` buttons and *cross-fingers* hope they all turn green.
