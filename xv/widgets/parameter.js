@@ -76,7 +76,6 @@ white:true*/
     },
     parameterDidChange: function () {
       this.doParameterChange(this.value);
-      console.log('PARAMETER CHANGED');
       return true; // stop right here
     },
     valueChanged: function () {

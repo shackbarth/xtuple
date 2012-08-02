@@ -53,7 +53,7 @@ regexp:true, undef:true, trailing:true, white:true */
               stampDate: true
             },
             fields: [
-              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
               { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
@@ -99,7 +99,7 @@ regexp:true, undef:true, trailing:true, white:true */
               stampDate: true
             },
             fields: [
-              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
               { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
@@ -139,7 +139,7 @@ regexp:true, undef:true, trailing:true, white:true */
               stampDate: true
             },
             fields: [
-              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
               { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
@@ -189,7 +189,7 @@ regexp:true, undef:true, trailing:true, white:true */
               stampDate: true
             },
             fields: [
-              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
               { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
@@ -245,7 +245,7 @@ regexp:true, undef:true, trailing:true, white:true */
               stampDate: true
             },
             fields: [
-              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
               { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
@@ -314,7 +314,7 @@ regexp:true, undef:true, trailing:true, white:true */
               stampDate: true
             },
             fields: [
-              { fieldName: "createdBy", label: "creator" },
+              { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
               { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
               { fieldName: "text", label: "text" }

@@ -512,7 +512,9 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_description".loc(), attr: "description"}
+      {label: "_description".loc(), attr: "description"},
+      {label: "_startDate".loc(), attr: "created", operator: ">=", defaultKind: "XV.DateWidget"},
+      {label: "_endDate".loc(), attr: "created", operator: "<=", defaultKind: "XV.DateWidget"},
     ]
   });
   
@@ -686,7 +688,15 @@ trailing:true white:true*/
         }
       },
       {label: "_number".loc(), attr: "number"},
-      {label: "_name".loc(), attr: "name"}
+      {label: "_name".loc(), attr: "name"},
+      {label: "_startStartDate".loc(), attr: "startDate", operator: ">=", defaultKind: "XV.DateWidget"},
+      {label: "_startEndDate".loc(), attr: "startDate", operator: "<=", defaultKind: "XV.DateWidget"},
+      {label: "_assignedStartDate".loc(), attr: "assignDate", operator: ">=", defaultKind: "XV.DateWidget"},
+      {label: "_assignedEndDate".loc(), attr: "assignDate", operator: "<=", defaultKind: "XV.DateWidget"},
+      {label: "_dueStartDate".loc(), attr: "dueDate", operator: ">=", defaultKind: "XV.DateWidget"},
+      {label: "_dueEndDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"},
+      {label: "_completedStartDate".loc(), attr: "completeDate", operator: ">=", defaultKind: "XV.DateWidget"},
+      {label: "_completedEndDate".loc(), attr: "completeDate", operator: "<=", defaultKind: "XV.DateWidget"}
     ]
   });
   
@@ -795,7 +805,11 @@ trailing:true white:true*/
           return param;
         }
       },
-      {label: "_name".loc(), attr: "name"}
+      {label: "_name".loc(), attr: "name"},
+      {label: "_startStartDate".loc(), attr: "startDate", operator: ">=", defaultKind: "XV.DateWidget"},
+      {label: "_startEndDate".loc(), attr: "startDate", operator: "<=", defaultKind: "XV.DateWidget"},
+      {label: "_dueStartDate".loc(), attr: "dueDate", operator: ">=", defaultKind: "XV.DateWidget"},
+      {label: "_dueEndDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"}
     ]
   });
   

@@ -42,7 +42,7 @@ body {}
 .panels > * {
 	border: 2px solid #333;
 	font-size: 5em;
-	text-align: center;
+	//text-align: center;
 }
 
 .wide > * {
@@ -425,3 +425,21 @@ body {
 }
 
 /*********END PULLOUT *********/
+
+
+/*********XV WIDGETS***********/
+.xv-widgets-date {
+    .xv-field-icon {
+    }
+    .xv-input-decorator {
+        height: 14px;
+        .xv-input-field {
+        }
+    }
+    .xv-field-popup {
+    }
+}
+
+
+
+/********END XV WIDGETS******/

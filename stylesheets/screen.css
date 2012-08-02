@@ -106,7 +106,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 .panels > * {
   border: 2px solid #333;
   font-size: 5em;
-  text-align: center;
 }
 
 /* line 48, ../sass/screen.scss */
@@ -536,3 +535,10 @@ body {
 }
 
 /*********END PULLOUT *********/
+/*********XV WIDGETS***********/
+/* line 428, ../sass/screen.scss */
+.xv-widgets-date .xv-input-decorator {
+  height: 14px;
+}
+
+/********END XV WIDGETS******/

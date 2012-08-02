@@ -38,7 +38,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         var label = ("_" + rawLabel).loc();
         if (inEvent.index === 0) {
           /**
-           * This is the label header at the top of each row
+           * This is the label header at the top of each column
            */
           this.createComponent({
             container: gridRow,
@@ -59,8 +59,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           });
 
           /**
-           * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
-           * type we want to send that down to the widget
+           * If the descriptor mentions a model type we want to send that
+           * down to the widget, e.g. for DropdownWidgets
            */
           if (fieldDesc.collection) {
             field.setCollection(fieldDesc.collection);
@@ -106,6 +106,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           content: "Delete",
           onclick: "deleteRow"
         });
+      }
+
+      /**
+       * Apply a special style to this "add new" row to make it obvious
+       * to users what it going on. TODO: make the style better and
+       * use a CSS class.
+       */
+      // XXX the first half this "if" will be unnecessary once we
+      // can trust the collections to be sent over.
+      if (this.getCollection() && inEvent.index === this.getCollection().size() + 1) {
+        gridRow.applyStyle("border", "1px solid orange");
       }
     },
 
@@ -168,26 +179,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * Display the collection in the grid when it's passed in
      */
     collectionChanged: function () {
-
-      // XXX do we have to worry about the possibiltiy of getting passed null as a
-      // collection here? e.g. if you try to get a new ToDo object, the comments
-      // attribute isn't there, and so by the time you get here there's no collection.
-      // This is where we would make a new collection.
-      /*
-      if (!this.getCollection()) {
-        var modelType = this.getDescriptor().modelType;
-        // XXX argh why isn't XM.ToDoComments cached?
-        var collectionConstructor = Backbone.Collection.extend({
-          model: modelType
-        });
-        XM.projectStatuses = new XM.ProjectStatusCollection();
-        var collectionName = ??? // XV.util.stripModelNamePrefix(modelType).camelize() + "Collection";
-        var emptyCollection = new collectionConstructor();
-        this.setCollection(emptyCollection);
-        return;
-      }
-       */
-
       // +2: 1 for the labels at the top, one for the entry row at the bottom
       this.$.gridRepeater.setCount(this.getCollection().size() + 2);
     },
