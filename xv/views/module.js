@@ -142,11 +142,11 @@ trailing:true white:true*/
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
-      
+
       // Build parameters
       if (input || parameters.length) {
         query.parameters = [];
-        
+
         // Input search parameters
         if (input) {
           query.parameters = [{
@@ -155,7 +155,7 @@ trailing:true white:true*/
             value: this.$.searchInput.getValue()
           }];
         }
-      
+
         // Advanced parameters
         if (parameters) {
           query.parameters = query.parameters.concat(parameters);
@@ -163,7 +163,7 @@ trailing:true white:true*/
       } else {
         delete query.parameters;
       }
-      
+
       if (options.showMore) {
         query.rowOffset += ROWS_PER_FETCH;
         options.add = true;
@@ -216,40 +216,6 @@ trailing:true white:true*/
       var emptyModel = new XM[XV.util.formatModelName(modelType)]();
       this.bubble("workspace", {eventName: "workspace", options: emptyModel });
 
-    },
-    /**
-     * Populates the history dropdown with the components of the XT.history array
-     */
-    fillHistory: function () {
-
-      var i;
-
-      /**
-       * Clear out the history menu
-       */
-      XV.util.removeAllChildren(this.$.historyMenu);
-
-      for (i = 0; i < XT.getHistory().length; i++) {
-        var historyItem = XT.getHistory()[i];
-        this.$.historyMenu.createComponent({
-          content: historyItem.modelType + ": " + historyItem.modelName,
-          modelType: historyItem.modelType,
-          modelId: historyItem.modelId
-        });
-      }
-      this.$.historyMenu.render();
-    },
-    /**
-     * When a history item is selected we bubble an event way up the application.
-     * Note that we create a sort of ersatz model to mimic the way the handler
-     * expects to have a model with the event to know what to drill down into.
-     */
-    doHistoryItemSelected: function (inSender, inEvent) {
-      var modelId = inEvent.originator.modelId;
-      var modelType = inEvent.originator.modelType;
-      var modelShell = { recordType: modelType, id: modelId };
-      XT.log("Load from history: " + modelType + " " + modelId);
-      this.bubble("workspace", {eventName: "workspace", options: modelShell });
     },
 
     /**

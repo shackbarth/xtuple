@@ -200,7 +200,8 @@ trailing:true white:true*/
         model: null
       },
       events: {
-        onModelSave: ""
+        onModelSave: "",
+        onHistoryChanged: "",
       },
       handlers: {
         onFieldChanged: "doFieldChanged",
@@ -432,8 +433,8 @@ trailing:true white:true*/
         /**
          * Put the model in the history array
          */
-        XT.addToHistory(model);
-
+        XT.addToHistory("crm", model); // TODO: generalize for any module
+        this.doHistoryChanged();
 
         /**
          * Pass this model onto the panels to update

@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XT:true */
@@ -12,6 +12,9 @@ white:true*/
     value: -100,
     min: -100,
     unit: '%',
+    events: {
+      onHistoryItemSelected: ""
+    },
     components: [
       {name: "shadow", classes: "pullout-shadow"},
       {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton"},
@@ -23,13 +26,38 @@ white:true*/
               {content: "Saved", active: true},
               {content: "Recents"}
             ]},
-            {fit: true, kind: "Scroller", classes: "history-scroller", components: [
-              {kind: "List", onItemSelect: "itemSelect"}
+            {fit: true, name: "historyPanel", kind: "Scroller", classes: "history-scroller", components: [
+              {
+                kind: "Repeater",
+                name: "historyList",
+                onSetupItem: "setupHistoryItem",
+                count: 0,
+                components: [
+                  { content: "debug", name: "historyItem" }
+                ]
+              }
             ]}
           ]}
         ]}
       ]}
     ],
+    refreshHistoryList: function () {
+      XT.log("refresh history list");
+      this.$.historyList.setCount(XT.getHistory().length);
+    },
+    setupHistoryItem: function (inSender, inEvent) {
+      var historyItem = inEvent.item.$.historyItem;
+      var historyData = XT.getHistory()[inEvent.index];
+      this.createComponent({
+        container: historyItem,
+        kind: "onyx.Button",
+        onclick: "doHistoryItemSelected",
+        content: historyData.modelType + ": " + historyData.modelName,
+        modelType: historyData.modelType,
+        modelId: historyData.modelId,
+        module: historyData.module
+      });
+    },
     getItem: function (name) {
       return this.$.pulloutItems.$[name] || this.$[name];
     },
