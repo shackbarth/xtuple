@@ -55,7 +55,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -101,7 +101,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -141,7 +141,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -179,7 +179,7 @@ regexp:true, undef:true, trailing:true, white:true */
           },
           {
             title: "Comments",
-            location: "bottom",
+            // XXX location: "bottom",
             boxType: "grid",
             objectName: "comments",
             modelType: "XM.OpportunityComment",
@@ -191,7 +191,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -247,7 +247,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -316,14 +316,14 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "createdBy" },
               { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "commentType", label: "type", fieldType: "dropdown", collection: "XM.commentTypes" },
               { fieldName: "text", label: "text" }
             ]
           }
         ]
       });
 
-
+      // XXX TODO refactor this into the model.getValue(model.nameAttribute) pattern
       this.getRelationalTitleFields = {};
       this.getRelationalTitleFields["XM.UserAccountInfo"] = "username";
       this.getRelationalTitleFields["XM.ContactInfo"] = "lastName";
