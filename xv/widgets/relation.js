@@ -9,7 +9,6 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: enyo.Control,
     published: {
       value: null,
-      model: null,
       collection: null,
       keyAttribute: "number",
       nameAttribute: "name",
@@ -17,6 +16,9 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     events: {
       onFieldChanged: ""
+    },
+    handlers: {
+      onblur: "receiveBlur"
     },
     components: [
       {kind: "onyx.InputDecorator", style: "height: 27px", components: [
@@ -41,27 +43,26 @@ regexp:true, undef:true, trailing:true, white:true */
     ],
     create: function () {
       this.inherited(arguments);
-      if (this.getModel()) { this.modelChanged(); }
+      if (this.getCollection()) { this.collectionChanged(); }
     },
-    modelChanged: function () {
-      var model = this.getModel(),
-        collection = this.getCollection(),
-        Klass;
-      Klass = XM.Model.getObjectByName(model);
-      this._model = new Klass();
-      Klass = XM.Model.getObjectByName(collection);
+    collectionChanged: function () {
+      var collection = this.getCollection(),
+        Klass = XM.Model.getObjectByName(collection);
       this._collection = new Klass();
+      this._model = new Klass.prototype.model();
     },
     keyUp: function (inSender, inEvent) {
       var query,
+        key = this.getKeyAttribute(),
+        attr = this.getValue() ? this.getValue().get(key) : "",
         value = inSender.getValue(),
         menu = this.$.autocompleteMenu;
-      if (value) {
+      if (value && value !== attr) {
         query = {
           parameters: [{
             attribute: this.getKeyAttribute(),
             operator: "BEGINS_WITH",
-            value: inSender.getValue()
+            value: value
           }]
         };
         this._collection.fetch({
@@ -75,6 +76,20 @@ regexp:true, undef:true, trailing:true, white:true */
       
       // Stop bubbling
       return true;
+    },
+    receiveBlur: function () {
+      this.$.autocompleteMenu.hide();
+    },
+    relationSelected: function (inSender, inEvent) {
+      console.log("HOLA");
+      this.setValue(inEvent.originator.model);
+
+      // XXX the container (i.e. the workspace) already catches a doFieldChanged event from this change,
+      // but it gets processed before we set the model, above, and so it gets processed on the old
+      // value. It's necessary to call the function again now that we've changed the value. We
+      // should look at eliminating this redundancy.
+      this.doFieldChanged(this, inEvent);
+      this.$.autocompleteMenu.hide();
     },
     setValue: function (value) {
       var key = this.getKeyAttribute(),
@@ -131,7 +146,6 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.AccountRelation",
     kind: "XV.RelationWidget",
     published: {
-      model: "XM.AccountInfo",
       collection: "XM.AccountInfoCollection"
     }
   });
@@ -144,7 +158,6 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ItemRelation",
     kind: "XV.RelationWidget",
     published: {
-      model: "XM.ItemInfo",
       collection: "XM.ItemInfoCollection",
       nameAttribute: "description1",
       descripAttribute: "description2"
@@ -159,7 +172,6 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.UserAccountRelation",
     kind: "XV.RelationWidget",
     published: {
-      model: "XM.UserAccountInfo",
       collection: "XM.UserAccountInfoCollection",
       keyAttribute: "username",
       nameAttribute: "properName"
