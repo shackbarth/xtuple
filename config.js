@@ -14,15 +14,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     functorsDirectory: "./lib/functors",
     routesDirectory: "./lib/routes",
     routersDirectory: "./lib/routers",
-    //database: {
-    //  user: "admin",
-    //  password: "admin",
-    //  //organization: "production",
-    //  organization: "40beta",
-    //  //hostname: "bigiron.xtuple.com",
-    //  hostname: "localhost",
-    //  port: 5432
-    //},
     proxy: {
       hostname: "localhost",
       port: 9000

@@ -37,7 +37,26 @@ possible to, from the project root, execute `npm install` and have it clone anot
 for you. Rather than do this, from the root of the [node-datasource](http://github.com/xtuple/node-datasource) repository, `mkdir node_modules`. Then `cd node_modules` and `ln -s ../../node-xt ./xt`. This way, the local pieces will be sharing the
 [node-xt](http://github.com/xtuple/node-xt) installation. If you have not already done so, make sure to execute `npm install` from within the [node-xt](http://github.com/xtuple/node-xt) project root, if you have already setup [node-router](http://github.com/xtuple/node-router) you will have already done this. From the [node-datasource](http://github.com/xtuple/node-datasource) project root, you need to initialize the embedded [node-schemas](http://github.com/xtuple/node-schemas) submodule with `git submodule init --update`.
 
-All of the configuration options for the [node-datasource](http://github.com/xtuple/node-datasource) are in the `config.js` file (modified by you) or in any other configuration file and specified by the `-c` flag from the command-line at command invocation. It is recommended that a copy of the `config.js` file be made (e.g. `config_local.js`) so that subsequent pulls will not discard your changes to the file. 
+All of the configuration options for the [node-datasource](http://github.com/xtuple/node-datasource) are in the `config.js` file (modified by you) or in any other configuration file and specified by the `-c` flag from the command-line at command invocation. It is recommended that a copy of the `config.js` file be made (e.g. `config_local.js`) so that subsequent pulls will not discard your changes to the file. Most likely you will only need to modify the portion of the configuration that deals with the server key/certificate/salt files, possibly the proxy service if you are running that from a different server or network interface.
+
+```javascript
+// from config.js
+datasource: {
+  sessionTimeout: 15,
+  securePort: 443,
+  secureKeyFile: "./lib/private/key.pem",
+  secureCertFile: "./lib/private/cert.crt",
+  secureSaltFile: "./lib/private/salt.txt"
+}
+```
+
+```javascript
+// from config.js
+proxy: {
+  hostname: "localhost",
+  port: 9000
+}
+```
 
 The [node-datasource](http://github.com/xtuple/node-datasource) now needs a private key and signed certificate to be able to provide SSL (_https_) encryption. It is beyond the scope of these instructions to direct on how to generate a self-signed certificate for development. Note that once these have been generated they, by convention, should be placed in the `lib/private` directory but can be placed anywhere in the project directory with their paths specified in the `config.js` or `config_local.js` file. 
 
