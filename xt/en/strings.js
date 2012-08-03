@@ -432,6 +432,7 @@ XT.stringsFor("en_US", {
   "_opportunitySource": "Source",
   "_opportunityStage": "Stage",
   "_opportunityType": "Type",
+  "_open": "Open",
   "_options": "Options",
   "_order": "Order",
   "_orderDate": "Order Date",

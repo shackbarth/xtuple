@@ -29,8 +29,8 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "name" },
               { fieldName: "number" },
+              { fieldName: "name" },
               { fieldName: "accountType", kind: "XV.AccountTypeDropdown" }
             ]
           },

@@ -25,9 +25,9 @@ regexp:true, undef:true, trailing:true, white:true */
           {kind: "onyx.IconButton", src: "images/menu-icon-search.png"},
           {name: 'popupMenu', kind: "onyx.Menu",
             components: [
-            {content: "View"},
-            {content: "Search"},
-            {content: "Add"}
+            {content: "_search".loc(), value: 'search'},
+            {content: "_open".loc(), value: 'open'},
+            {content: "_new".loc(), value: 'new'}
           ]}
         ]},
         {kind: "onyx.MenuDecorator", style: "left: -200px; top: 25px;",
@@ -72,7 +72,24 @@ regexp:true, undef:true, trailing:true, white:true */
       var collection = this.getCollection(),
         Klass = XM.Model.getObjectByName(collection);
       this._collection = new Klass();
-      this._model = new Klass.prototype.model();
+    },
+    itemSelected: function (inSender, inEvent) {
+      var action = inEvent.originator.value,
+        model;
+      switch (action)
+      {
+      case 'search':
+        // Not implemented
+        break;
+      case 'open':
+        model = this.getValue();
+        this.bubble("workspace", {eventName: "workspace", options: model});
+        break;
+      case 'new':
+        model = new this._collection.model();
+        this.bubble("workspace", {eventName: "workspace", options: model});
+        break;
+      }
     },
     keyDown: function (inSender, inEvent) {
       // If tabbed out...
@@ -109,9 +126,6 @@ regexp:true, undef:true, trailing:true, white:true */
       } else {
         menu.hide();
       }
-    },
-    itemSelected: function (inSender, inEvent) {
-    
     },
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();

@@ -91,8 +91,7 @@ trailing:true white:true*/
                 kind: fieldDesc.kind || XV.util.getFieldType(fieldDesc.fieldType),
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
-                container: field,
-                placeholder: fieldDesc.placeholder ? fieldDesc.placeholder : "Enter " + label.loc()
+                container: field
               });
 
               /**
