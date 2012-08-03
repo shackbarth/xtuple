@@ -250,7 +250,7 @@ XT = {};
     json: function (json, emitExceptions) {
       var type = XT.typeOf(json);
       try {
-        if (type === XT.T_HASH) json = JSON.stringify(json);
+        if (type === XT.T_HASH || type === XT.T_ARRAY) json = JSON.stringify(json);
         else if (type === XT.T_STRING) json = JSON.parse(json);
       } catch (err) { if (emitExceptions) throw err; }
       return json ? json : undefined;
