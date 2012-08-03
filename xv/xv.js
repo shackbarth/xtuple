@@ -114,7 +114,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "name" },
               { fieldName: "description" },
               { fieldName: "priority", kind: "XV.PriorityDropdown" },
-   //           { fieldName: "incident", fieldType: "relation", modelType: "XM.IncidentInfo" }
+              // { fieldName: "incident", fieldType: "relation", modelType: "XM.IncidentInfo" }
             ]
           },
           {
@@ -360,12 +360,80 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "currencyAbbreviation" },
               { fieldName: "currencyName" },
               { fieldName: "currencyNumber" },
-              { fieldName: "currencySymbol" },
-
+              { fieldName: "currencySymbol" }
             ]
-          },
+          }
+        ],
 
-        ]
+        "XM.IncidentCategory": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.IncidentResolution": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.IncidentSeverity": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.Priority": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.OpportunitySource": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+        "XM.OpportunityStage": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+        "XM.OpportunityType": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+
+
 
       });
     },

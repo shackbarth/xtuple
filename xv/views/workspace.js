@@ -174,7 +174,8 @@ trailing:true white:true*/
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
               fieldName = boxDesc.fields[iField].fieldName;
-              fieldValue = model.getValue(fieldName) ? model.getValue(fieldName) : "";
+              // argh! 0 is falsy but we want to populate 0 into fields if appropriate
+              fieldValue = model.getValue(fieldName) || model.getValue(fieldName) === 0 ? model.getValue(fieldName) : "";
               if (fieldName) {
                 /**
                  * Update the view field with the model value

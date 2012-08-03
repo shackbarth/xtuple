@@ -10,9 +10,16 @@ trailing:true white:true*/
     kind: "XV.Module",
     label: "_setup".loc(),
     lists: [
-      {name: "honorificList", kind: "XV.HonorificList"},
       {name: "stateList", kind: "XV.StateList"},
       {name: "countryList", kind: "XV.CountryList"},
+      {name: "priorityList", kind: "XV.PriorityList"},
+      {name: "honorificList", kind: "XV.HonorificList"},
+      {name: "incidentCategoryList", kind: "XV.IncidentCategoryList"},
+      {name: "incidentResoulutionList", kind: "XV.IncidentResolutionList"},
+      {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
+      {name: "opportunitySourceList", kind: "XV.OpportunitySourceList"},
+      {name: "opportunityStageList", kind: "XV.OpportunityStageList"},
+      {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
     ]
   });
 

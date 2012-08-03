@@ -286,7 +286,10 @@ trailing:true white:true*/
       var elems = inElement;
 
       // TODO: this could be handled in much better ways...
-      var width = elems.shift().width;
+      // XXX SH here... I added a slice to fix the bug of the destructiveness
+      // of this line of code whenever you re-use list kinds. Basically
+      // a band-aid fix.
+      var width = elems.slice(0).shift().width;
 
       var idx = 0;
       var elem;
@@ -919,7 +922,7 @@ trailing:true white:true*/
     name: "XV.HonorificList",
     kind: "XV.InfoList",
     published: {
-      label: "_honorifics".loc(),
+      label: "_honorific".loc(),
       collection: "XM.HonorificCollection",
       query: {orderBy: [{ attribute: 'code' }] },
       rowClass: "XV.HonorificCollectionRow"
@@ -939,53 +942,33 @@ trailing:true white:true*/
 
 
   // ..........................................................
-  // STATES
+  // STATES AND COUNTRIES
   //
 
   enyo.kind({
     name: "XV.StateList",
     kind: "XV.InfoList",
     published: {
-      label: "_states".loc(),
+      label: "_state".loc(),
       collection: "XM.StateCollection",
       query: {orderBy: [{ attribute: 'abbreviation' }] },
-      rowClass: "XV.StateCollectionRow"
+      rowClass: "XV.AbbreviationNameRow"
     }
   });
-
-  enyo.kind({
-    name: "XV.StateCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "abbreviation", classes: "" }
-      ],
-      [
-        { width: 160 },
-        { name: "name", classes: "" }
-      ]
-    ]
-  });
-
-
-  // ..........................................................
-  // COUNTRIES
-  //
 
   enyo.kind({
     name: "XV.CountryList",
     kind: "XV.InfoList",
     published: {
-      label: "_countries".loc(),
+      label: "_country".loc(),
       collection: "XM.CountryCollection",
       query: {orderBy: [{ attribute: 'name' }] },
-      rowClass: "XV.CountryCollectionRow"
+      rowClass: "XV.AbbreviationNameRow"
     }
   });
 
   enyo.kind({
-    name: "XV.CountryCollectionRow",
+    name: "XV.AbbreviationNameRow",
     kind: "XV.InfoListRow",
     leftColumn: [
       [
@@ -999,7 +982,97 @@ trailing:true white:true*/
     ]
   });
 
+  // ..........................................................
+  // INCIDENT CATEGORIES, RESOLUTIONS, SEVERITIES,
+  // PRIORITIES,
+  // OPPORTUNITY SOURCES, STAGES, TYPES,
+  //
+  // Basically anything whose rows are name and description
+  //
 
+  enyo.kind({
+    name: "XV.NameDescriptionList",
+    kind: "XV.InfoList",
+    published: {
+      label: "",
+      collection: null,
+      query: {orderBy: [{ attribute: 'order' }] },
+      rowClass: "XV.NameDescriptionRow"
+    },
+    /**
+     * All of these lists follow a very similar naming convention.
+     * Apply that convention unless the list overrides the label
+     * or collection attribute.
+     */
+    create: function () {
+      this.inherited(arguments);
+      var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
+      if (!this.getLabel()) {
+        this.setLabel(("_" + kindName.camelize()).loc());
+      }
+      if (!this.getCollection()) {
+        this.setCollection("XM." + kindName + "Collection");
+      }
+    }
+  });
 
+  enyo.kind({
+    name: "XV.IncidentCategoryList",
+    kind: "XV.NameDescriptionList"
+  });
+
+  enyo.kind({
+    name: "XV.IncidentResolutionList",
+    kind: "XV.NameDescriptionList"
+  });
+
+  enyo.kind({
+    name: "XV.IncidentSeverityList",
+    kind: "XV.NameDescriptionList"
+  });
+
+  enyo.kind({
+    name: "XV.PriorityList",
+    kind: "XV.NameDescriptionList"
+  });
+
+  enyo.kind({
+    name: "XV.OpportunitySourceList",
+    kind: "XV.NameDescriptionList",
+    published: {
+      query: {orderBy: [{ attribute: 'id' }] },
+    }
+  });
+
+  enyo.kind({
+    name: "XV.OpportunityStageList",
+    kind: "XV.NameDescriptionList",
+    published: {
+      query: {orderBy: [{ attribute: 'id' }] },
+    }
+  });
+
+  enyo.kind({
+    name: "XV.OpportunityTypeList",
+    kind: "XV.NameDescriptionList",
+    published: {
+      query: {orderBy: [{ attribute: 'id' }] },
+    }
+  });
+
+  enyo.kind({
+    name: "XV.NameDescriptionRow",
+    kind: "XV.InfoListRow",
+    leftColumn: [
+      [
+        { width: 160 },
+        { name: "name", classes: "" }
+      ],
+      [
+        { width: 160 },
+        { name: "description", classes: "" }
+      ]
+    ]
+  });
 
 }());
