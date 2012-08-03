@@ -20,6 +20,7 @@
 \i xt/functions/add_primary_key.sql;
 \i xt/functions/any_numeric.sql;
 \i xt/functions/any_text.sql;
+\i xt/functions/begins_with.sql;
 \i xt/functions/commit_record.sql;
 \i xt/functions/create_table.sql;
 \i xt/functions/dispatch.sql;
@@ -33,7 +34,6 @@
 \i xt/functions/is_date.sql;
 \i xt/functions/raise_exception.sql;
 \i xt/functions/retrieve_record.sql;
-\i xt/functions/starts_with.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
 \i xt/functions/validate_user.sql;
@@ -46,8 +46,8 @@
 -- xt operators
 \i xt/operators/any_numeric.sql;
 \i xt/operators/any_text.sql;
+\i xt/operators/begins_with.sql;
 \i xt/operators/ends_with.sql;
-\i xt/operators/starts_with.sql;
 \i xt/operators/text_gt_date.sql;
 \i xt/operators/text_lt_date.sql;
 
