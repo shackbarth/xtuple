@@ -1,14 +1,14 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
-latedef:true, newcap:true, noarg:true, regexp:true, undef:true, 
+latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
 /*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
-  
+
   // ..........................................................
   // BASE CLASSES
   //
-  
+
   enyo.kind({
     name: "XV.InfoList",
     kind: "Panels",
@@ -28,18 +28,18 @@ trailing:true white:true*/
     collectionChanged: function () {
       var col = this.getCollection(),
         Klass;
-    
+
       // Change string to an object if necessary
       if (typeof col === 'string') {
         Klass = XT.getObjectByName(col);
         col = this.collection = new Klass();
       }
-    
+
       if (!col) {
         this.setIndex(1);
         return;
       }
-    
+
       // bind the change event to our handler
       col.bind("change", enyo.bind(this, "_collectionChanged", col));
     },
@@ -110,57 +110,57 @@ trailing:true white:true*/
           (offset + limit <= count) && (this.getCount() !== col.length) : false;
       this.setIsMore(isMore);
       this.setIsFetching(false);
-    
+
       // take the properties as necessary...
       this.setCount(col.length);
       if (offset) { this.refresh(); } else { this.reset(); }
-    
+
       // if we updated, let the parent know we want to be
       // visible now
       this.parent.setIndex(2);
     },
     rowClassChanged: function () {
       //this.log(this.owner.name);
-    
+
       var rowClass = this.getRowClass();
       var component;
       var item;
-        
+
       if (rowClass) {
         if (XT.getObjectByName(rowClass)) {
-        
+
           component = {
             name: "item",
             kind: rowClass
           };
-        
+
           item = this.$.item;
           if (item) {
             this.removeComponent(item);
             item.destroy();
           }
-        
+
           this.createComponent(component);
         }
       }
     },
     setupRow: function (inSender, inEvent) {
       //this.log(this.owner.name, this.owner.showing, this);
-    
+
       var col = this.parent.getCollection();
       var row = this.$.item;
       var idx = inEvent.index;
       var mod = col.models[idx];
-            
+
       // as the rows need to be rendered, we proxy the data to their
       // render function if they have it, otherwise, we skip
       if (row && row.renderModel) {
         row.renderModel(mod);
       }
     }
-  
+
   });
-  
+
   enyo.kind({
     name: "XV.InfoListRow",
     classes: "xt-info-list-row",
@@ -233,7 +233,7 @@ trailing:true white:true*/
           }
           if (view.formatter) {
             formatter = this[view.formatter];
-                    
+
             if (formatter && formatter instanceof Function) {
               curr = formatter(curr, model, view);
             }
@@ -340,11 +340,11 @@ trailing:true white:true*/
     name: "XV.InfoListBasicCell",
     classes: "xt-info-list-basic-cell"
   });
-  
+
   // ..........................................................
   // ACCOUNT
   //
-  
+
   enyo.kind({
     name: "XV.AccountInfoParameters",
     kind: "XV.ParameterWidget",
@@ -374,7 +374,7 @@ trailing:true white:true*/
       {label: "_country".loc(), attr: "primaryContact.address.country"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.AccountInfoList",
     kind: "XV.InfoList",
@@ -415,11 +415,11 @@ trailing:true white:true*/
       ]
     ]
   });
-  
+
   // ..........................................................
   // CONTACT
   //
-  
+
   enyo.kind({
     name: "XV.ContactInfoParameters",
     kind: "XV.ParameterWidget",
@@ -447,7 +447,7 @@ trailing:true white:true*/
       {label: "_country".loc(), attr: "address.country"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.ContactInfoList",
     kind: "XV.InfoList",
@@ -489,11 +489,11 @@ trailing:true white:true*/
       ]
     ]
   });
-  
+
   // ..........................................................
   // INCIDENT
   //
-  
+
   enyo.kind({
     name: "XV.IncidentInfoParameters",
     kind: "XV.ParameterWidget",
@@ -514,10 +514,10 @@ trailing:true white:true*/
       },
       {label: "_description".loc(), attr: "description"},
       {label: "_startDate".loc(), attr: "created", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "created", operator: "<=", defaultKind: "XV.DateWidget"},
+      {label: "_endDate".loc(), attr: "created", operator: "<=", defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.IncidentInfoList",
     kind: "XV.InfoList",
@@ -573,11 +573,11 @@ trailing:true white:true*/
       return content;
     }
   });
-  
+
   // ..........................................................
   // OPPORTUNITY
   //
-  
+
   enyo.kind({
     name: "XV.OpportunityInfoParameters",
     kind: "XV.ParameterWidget",
@@ -605,7 +605,7 @@ trailing:true white:true*/
         defaultKind: "XV.OpportunitySourceDropdown"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.OpportunityInfoList",
     kind: "XV.InfoList",
@@ -665,11 +665,11 @@ trailing:true white:true*/
       return content;
     }
   });
-  
+
   // ..........................................................
   // PROJECT
   //
-  
+
   enyo.kind({
     name: "XV.ProjectInfoParameters",
     kind: "XV.ParameterWidget",
@@ -699,7 +699,7 @@ trailing:true white:true*/
       {label: "_completedEndDate".loc(), attr: "completeDate", operator: "<=", defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.ProjectInfoList",
     kind: "XV.InfoList",
@@ -783,11 +783,11 @@ trailing:true white:true*/
       return Globalize.format(content, "c" + XT.MONEY_SCALE);
     }
   });
-  
+
   // ..........................................................
   // TO DO
   //
-  
+
   enyo.kind({
     name: "XV.ToDoInfoParameters",
     kind: "XV.ParameterWidget",
@@ -812,7 +812,7 @@ trailing:true white:true*/
       {label: "_dueEndDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"}
     ]
   });
-  
+
   enyo.kind({
     name: "XV.ToDoInfoList",
     kind: "XV.InfoList",
@@ -869,11 +869,11 @@ trailing:true white:true*/
       return content;
     }
   });
-  
+
   // ..........................................................
   // USER ACCOUNT
   //
-  
+
   enyo.kind({
     name: "XV.UserAccountInfoList",
     kind: "XV.InfoList",
@@ -909,5 +909,97 @@ trailing:true white:true*/
       return content ? "_active".loc() : "";
     }
   });
-  
+
+
+  // ..........................................................
+  // HONORIFIC
+  //
+
+  enyo.kind({
+    name: "XV.HonorificList",
+    kind: "XV.InfoList",
+    published: {
+      label: "_honorifics".loc(),
+      collection: "XM.HonorificCollection",
+      query: {orderBy: [{ attribute: 'code' }] },
+      rowClass: "XV.HonorificCollectionRow"
+    }
+  });
+
+  enyo.kind({
+    name: "XV.HonorificCollectionRow",
+    kind: "XV.InfoListRow",
+    leftColumn: [
+      [
+        { width: 160 },
+        { name: "code", classes: "" }
+      ]
+    ]
+  });
+
+
+  // ..........................................................
+  // STATES
+  //
+
+  enyo.kind({
+    name: "XV.StateList",
+    kind: "XV.InfoList",
+    published: {
+      label: "_states".loc(),
+      collection: "XM.StateCollection",
+      query: {orderBy: [{ attribute: 'abbreviation' }] },
+      rowClass: "XV.StateCollectionRow"
+    }
+  });
+
+  enyo.kind({
+    name: "XV.StateCollectionRow",
+    kind: "XV.InfoListRow",
+    leftColumn: [
+      [
+        { width: 160 },
+        { name: "abbreviation", classes: "" }
+      ],
+      [
+        { width: 160 },
+        { name: "name", classes: "" }
+      ]
+    ]
+  });
+
+
+  // ..........................................................
+  // COUNTRIES
+  //
+
+  enyo.kind({
+    name: "XV.CountryList",
+    kind: "XV.InfoList",
+    published: {
+      label: "_countries".loc(),
+      collection: "XM.CountryCollection",
+      query: {orderBy: [{ attribute: 'name' }] },
+      rowClass: "XV.CountryCollectionRow"
+    }
+  });
+
+  enyo.kind({
+    name: "XV.CountryCollectionRow",
+    kind: "XV.InfoListRow",
+    leftColumn: [
+      [
+        { width: 160 },
+        { name: "abbreviation", classes: "" }
+      ],
+      [
+        { width: 160 },
+        { name: "name", classes: "" }
+      ]
+    ]
+  });
+
+
+
+
 }());

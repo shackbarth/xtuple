@@ -218,7 +218,7 @@ trailing:true white:true*/
               {kind: "onyx.Menu", name: "navigationMenu", components: [
                 { content: "Dashboard" },
                 { content: "CRM" },
-                { content: "Billing" }
+                { content: "Setup" }
               ], ontap: "doNavigationSelected" }
             ]}
 

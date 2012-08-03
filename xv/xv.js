@@ -325,7 +325,48 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "text", label: "text" }
             ]
           }
+        ],
+
+        "XM.Honorific": [
+          {
+            title: "Honorific Info",
+            fields: [
+              { fieldName: "code" }
+            ]
+          }
+        ],
+
+        "XM.State": [
+          {
+            title: "State Info",
+            fields: [
+              { fieldName: "abbreviation" },
+              { fieldName: "name" }
+            ]
+          }
+        ],
+
+        "XM.Country": [
+          {
+            title: "Country Info",
+            fields: [
+              { fieldName: "abbreviation" },
+              { fieldName: "name" }
+            ]
+          },
+          {
+            title: "Currency Info",
+            fields: [
+              { fieldName: "currencyAbbreviation" },
+              { fieldName: "currencyName" },
+              { fieldName: "currencyNumber" },
+              { fieldName: "currencySymbol" },
+
+            ]
+          },
+
         ]
+
       });
     },
     getFieldType: function (value) {

@@ -22,11 +22,13 @@ enyo.kind({
     { name: "dashboard", kind: "XV.Dashboard" },
     { name: "crm", kind: "XV.Crm" },
     { name: "billing", kind: "XV.Billing" },
+    { name: "setup", kind: "XV.Setup" },
     { name: "workspace", kind: "XV.Workspace" },
   ],
   carouselEvents: {
     crm: "crm",
     billing: "billing",
+    setup: "setup",
     workspace: "workspace",
     dashboard: "dashboard"
   },
