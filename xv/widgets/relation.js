@@ -17,15 +17,12 @@ regexp:true, undef:true, trailing:true, white:true */
     events: {
       onFieldChanged: ""
     },
-    handlers: {
-      onblur: "receiveBlur"
-    },
     components: [
       {kind: "onyx.InputDecorator", style: "height: 27px", components: [
-        {name: 'input', kind: "onyx.Input", onkeyup: "keyUp"},
-        {kind: "onyx.MenuDecorator", components: [
+        {name: 'input', kind: "onyx.Input", onkeyup: "keyUp", onkeydown: "keyDown"},
+        {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
           {kind: "onyx.IconButton", src: "images/menu-icon-search.png"},
-          {name: 'popupMenu', kind: "onyx.Menu", ontap: "doOptionsSelected",
+          {name: 'popupMenu', kind: "onyx.Menu",
             components: [
             {content: "View"},
             {content: "Search"},
@@ -33,14 +30,34 @@ regexp:true, undef:true, trailing:true, white:true */
           ]}
         ]},
         {kind: "onyx.MenuDecorator", style: "left: -200px; top: 25px;",
-          components: [
-          {kind: "onyx.Menu", name: "autocompleteMenu", modal: false,
-            ontap: "relationSelected"}
+          onSelect: "relationSelected", components: [
+          {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
         ]}
       ]},
       {name: "name", content: ""},
       {name: "description", content: ""}
     ],
+    autocomplete: function () {
+      var key = this.getKeyAttribute(),
+        value = this.$.input.getValue(),
+        query;
+      
+      query = {
+        parameters: [{
+          attribute: key,
+          operator: "BEGINS_WITH",
+          value: value,
+          rowLimit: 1
+        }],
+        orderBy: [{
+          attribute: key
+        }]
+      };
+      this._collection.fetch({
+        success: enyo.bind(this, "_fetchSuccess"),
+        query: query
+      });
+    },
     create: function () {
       this.inherited(arguments);
       if (this.getCollection()) { this.collectionChanged(); }
@@ -51,45 +68,56 @@ regexp:true, undef:true, trailing:true, white:true */
       this._collection = new Klass();
       this._model = new Klass.prototype.model();
     },
+    keyDown: function (inSender, inEvent) {
+      var value = this.getValue(),
+        entered = this.$.input.getValue(),
+        key = this.getKeyAttribute();
+        
+      // If tabbed out...
+      if (inEvent.keyCode === 9) {
+        this.$.autocompleteMenu.hide();
+        if (value && value.get(key) !== entered) {
+          this.autocomplete();
+        }
+      }
+    },
     keyUp: function (inSender, inEvent) {
       var query,
         key = this.getKeyAttribute(),
         attr = this.getValue() ? this.getValue().get(key) : "",
-        value = inSender.getValue(),
+        value = this.$.input.getValue(),
         menu = this.$.autocompleteMenu;
-      if (value && value !== attr) {
+      
+      // Look up if value changed
+      if (value && value !== attr &&
+          inEvent.keyCode !== 9) {
         query = {
           parameters: [{
-            attribute: this.getKeyAttribute(),
+            attribute: key,
             operator: "BEGINS_WITH",
-            value: value
+            value: value,
+            rowLimit: 10
+          }],
+          orderBy: [{
+            attribute: key
           }]
         };
         this._collection.fetch({
           success: enyo.bind(this, "_collectionFetchSuccess"),
-          error: enyo.bind(this, "_collectionFetchError"),
           query: query
         });
       } else {
         menu.hide();
       }
-      
-      // Stop bubbling
-      return true;
     },
-    receiveBlur: function () {
-      this.$.autocompleteMenu.hide();
+    itemSelected: function (inSender, inEvent) {
+    
     },
     relationSelected: function (inSender, inEvent) {
-      console.log("HOLA");
       this.setValue(inEvent.originator.model);
-
-      // XXX the container (i.e. the workspace) already catches a doFieldChanged event from this change,
-      // but it gets processed before we set the model, above, and so it gets processed on the old
-      // value. It's necessary to call the function again now that we've changed the value. We
-      // should look at eliminating this redundancy.
       this.doFieldChanged(this, inEvent);
       this.$.autocompleteMenu.hide();
+      return true;
     },
     setValue: function (value) {
       var key = this.getKeyAttribute(),
@@ -114,8 +142,9 @@ regexp:true, undef:true, trailing:true, white:true */
         menu = this.$.autocompleteMenu,
         model,
         i;
-      menu.controls.length = 0;
-      menu.children.length = 0;
+      menu.destroyComponents();
+      menu.controls = [];
+      menu.children = [];
       if (this._collection.length) {
         for (i = 0; i < this._collection.length; i++) {
           model = this._collection.models[i];
@@ -132,8 +161,9 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
     /** @private */
-    _collectionFetchError: function () {
-      this.log();
+    _fetchSuccess: function () {
+      var value = this._collection.length ? this._collection.models[0] : null;
+      this.setValue(value);
     }
     
   });

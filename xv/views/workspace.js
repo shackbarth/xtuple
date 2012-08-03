@@ -92,7 +92,6 @@ trailing:true white:true*/
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field,
-                onchange: "doFieldChanged",
                 placeholder: fieldDesc.placeholder ? fieldDesc.placeholder : "Enter " + label.loc()
               });
 

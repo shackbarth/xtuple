@@ -25,7 +25,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           name: "input",
           classes: "xv-input-field",
           onchange: "inputChanged",
-          onkeyup: "keyup"
+          onkeyup: "keyUp"
         },
         {
           kind: "Image",
@@ -57,7 +57,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     /**
       Treat enter like a tab out of the field.
     */
-    keyup: function (inSender, inEvent) {
+    keyUp: function (inSender, inEvent) {
       if (inEvent.keyCode === 13) {
         this.doInputChanged();
       }
