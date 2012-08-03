@@ -240,7 +240,11 @@ trailing:true white:true*/
      */
     doRefreshInfoObject: function (inSender, inPayload) {
       // obnoxious massaging. Can't think of an elegant way to do this.
-      var listName = XV.util.stripModelNamePrefix(inPayload.recordType).camelize() + "InfoList",
+      // salt in wounds: in setup we massage by adding List on the end, but with
+      // crm we massage by adding InfoList on the end. This is horrible.
+      // XXX not sustainable
+      var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
+        listName = this.name === "setup" ? listBase + "List" : listBase + "InfoList",
         list = this.$.lists.$[listName];
       if (!list) {
         // we don't have this model on our list. No need to update
