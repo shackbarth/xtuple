@@ -6,6 +6,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   "use strict";
   
   module.exports = {
+    debugging: true,
     version: "beta1",
     requireDatabase: true,
     requireServer: true,
@@ -13,15 +14,30 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     functorsDirectory: "./lib/functors",
     routesDirectory: "./lib/routes",
     routersDirectory: "./lib/routers",
-    datasource: {
-      sessionTimeout: 15,
+    proxy: {
+      hostname: "localhost",
       port: 9000
     },
+    datasource: {
+      sessionTimeout: 15,
+      securePort: 443,
+      secureKeyFile: "./lib/private/key.pem",
+      secureCertFile: "./lib/private/cert.crt",
+      secureSaltFile: "./lib/private/salt.txt"
+    },
     cache: {
-      hostname: "localhost",
-      port: 27017,
-      schemaDirectory: "./mongo_schemas",
-      database: "xtdb"
+      session: {
+        hostname: "localhost",
+        port: 27017,
+        schemaDirectory: "./mongo_schemas/session",
+        database: "xtdb"
+      },
+      users: {
+        hostname: "localhost",
+        port: 27017,
+        schemaDirectory: "./mongo_schemas/users",
+        database: "xtusers"
+      }
     }
   };
 }());
