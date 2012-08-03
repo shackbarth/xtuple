@@ -198,6 +198,7 @@ trailing:true white:true*/
         model: null
       },
       events: {
+        onHistoryChanged: "",
         onModelSave: ""
       },
       handlers: {
@@ -430,7 +431,8 @@ trailing:true white:true*/
         /**
          * Put the model in the history array
          */
-        XT.addToHistory(model);
+        XT.addToHistory("crm", model); // TODO: generalize for any module
+        this.doHistoryChanged();
 
 
         /**
