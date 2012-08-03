@@ -84,7 +84,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-  //            { fieldName: "account", fieldType: "relation", model: "XM.AccountInfo" }
+              { fieldName: "account", kind: "XV.AccountRelation" }
             ]
           },
           {
@@ -152,7 +152,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "number" },
               { fieldName: "name" },
-   //           { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
+              { fieldName: "account", kind: "XV.AccountRelation" },
               { fieldName: "opportunityStage", kind: "XV.OpportunityStageDropdown" },
               { fieldName: "opportunityType", kind: "XV.OpportunityTypeDropdown" },
               { fieldName: "opportunitySource", kind: "XV.OpportunitySourceDropdown" }
@@ -206,18 +206,18 @@ regexp:true, undef:true, trailing:true, white:true */
             ]
           },
           {
-            title: "Status",
-            fields: [
-              { fieldName: "priority", kind: "XV.PriorityDropdown" }
-            ]
-          },
-          {
             title: "Relationships",
             fields: [
               { fieldName: "owner", kind: "XV.UserAccountRelation" },
   //            { fieldName: "contact", fieldType: "relation", modelType: "XM.ContactInfo" },
-  //            { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
-  //            { fieldName: "item", fieldType: "relation", modelType: "XM.ItemInfo" }
+              { fieldName: "account", kind: "XV.AccountRelation" },
+              { fieldName: "item", kind: "XV.ItemRelation" }
+            ]
+          },
+          {
+            title: "Status",
+            fields: [
+              { fieldName: "priority", kind: "XV.PriorityDropdown" }
             ]
           },
           {
@@ -284,8 +284,8 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Schedule",
             fields: [
-  //            { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
-  //            { fieldName: "assignedTo", fieldType: "relation", modelType: "XM.UserAccountInfo" },
+              { fieldName: "owner", kind: "XV.UserAccountRelation" },
+              { fieldName: "assignedTo", kind: "XV.UserAccountRelation" },
               { fieldName: "dueDate", kind: "XV.DateWidget" },
               { fieldName: "assignDate", kind: "XV.DateWidget" },
               { fieldName: "startDate", kind: "XV.DateWidget" },
@@ -328,24 +328,12 @@ regexp:true, undef:true, trailing:true, white:true */
         ]
       });
 
-
-      this.getRelationalTitleFields = {};
-      this.getRelationalTitleFields["XM.UserAccountInfo"] = "username";
-      this.getRelationalTitleFields["XM.ContactInfo"] = "lastName";
-      this.getRelationalTitleFields["XM.IncidentInfo"] = "number";
-      this.getRelationalTitleFields["XM.AccountInfo"] = "name";
-      this.getRelationalTitleFields["XM.ItemInfo"] = "number";
-
     },
     getFieldType: function (value) {
       if (!value) {
         return "onyx.Input";
       } else if (value === 'number') {
         return "XV.NumberWidget";
-      } else if (value === 'date') {
-        return "XV.DateWidget";
-      } else if (value === 'relation') {
-        return "XV.RelationalWidget";
       } else if (value === 'dropdown') {
         return "XV.DropdownWidget";
       } else if (value === 'grid') {
