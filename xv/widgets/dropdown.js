@@ -60,7 +60,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       this.render();
     },
-    create: function() {
+    create: function () {
       this.inherited(arguments);
       if (this.getCollection()) { this.collectionChanged(); }
     },
@@ -72,15 +72,17 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     itemSelected: function (inSender, inEvent) {
       this.bubble("onchange", inEvent);
-      this.doFieldChanged(this, inEvent); // TODO: remove this
+      this.doFieldChanged(this, inEvent);
       return true;
     },
-    setValue: function (value) {
+    setValue: function (value, options) {
+      options = options || {};
       var id = value && value.id ? value.id : value,
         component = _.find(this.$.picker.getComponents(), function (component) {
           return component.value === id;
         });
       if (component) { this.$.picker.setSelected(component); }
+      if (!options.silent) { this.doFieldChanged(value); }
     }
   });
 

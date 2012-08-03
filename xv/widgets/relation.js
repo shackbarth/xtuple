@@ -19,7 +19,8 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     components: [
       {kind: "onyx.InputDecorator", style: "height: 27px", components: [
-        {name: 'input', kind: "onyx.Input", onkeyup: "keyUp", onkeydown: "keyDown"},
+        {name: 'input', kind: "onyx.Input", onkeyup: "keyUp",
+          onkeydown: "keyDown", onblur: "receiveBlur"},
         {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
           {kind: "onyx.IconButton", src: "images/menu-icon-search.png"},
           {name: 'popupMenu', kind: "onyx.Menu",
@@ -39,24 +40,29 @@ regexp:true, undef:true, trailing:true, white:true */
     ],
     autocomplete: function () {
       var key = this.getKeyAttribute(),
+        attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
         query;
       
-      query = {
-        parameters: [{
-          attribute: key,
-          operator: "BEGINS_WITH",
-          value: value,
-          rowLimit: 1
-        }],
-        orderBy: [{
-          attribute: key
-        }]
-      };
-      this._collection.fetch({
-        success: enyo.bind(this, "_fetchSuccess"),
-        query: query
-      });
+      if (value && value !== attr) {
+        query = {
+          parameters: [{
+            attribute: key,
+            operator: "BEGINS_WITH",
+            value: value,
+            rowLimit: 1
+          }],
+          orderBy: [{
+            attribute: key
+          }]
+        };
+        this._collection.fetch({
+          success: enyo.bind(this, "_fetchSuccess"),
+          query: query
+        });
+      } else if (!value) {
+        this.setValue(null);
+      }
     },
     create: function () {
       this.inherited(arguments);
@@ -69,16 +75,10 @@ regexp:true, undef:true, trailing:true, white:true */
       this._model = new Klass.prototype.model();
     },
     keyDown: function (inSender, inEvent) {
-      var value = this.getValue(),
-        entered = this.$.input.getValue(),
-        key = this.getKeyAttribute();
-        
       // If tabbed out...
       if (inEvent.keyCode === 9) {
         this.$.autocompleteMenu.hide();
-        if (value && value.get(key) !== entered) {
-          this.autocomplete();
-        }
+        this.autocomplete();
       }
     },
     keyUp: function (inSender, inEvent) {
@@ -113,14 +113,19 @@ regexp:true, undef:true, trailing:true, white:true */
     itemSelected: function (inSender, inEvent) {
     
     },
+    receiveBlur: function (inSender, inEvent) {
+      this.autocomplete();
+    },
     relationSelected: function (inSender, inEvent) {
       this.setValue(inEvent.originator.model);
-      this.doFieldChanged(this, inEvent);
       this.$.autocompleteMenu.hide();
       return true;
     },
-    setValue: function (value) {
-      var key = this.getKeyAttribute(),
+    setValue: function (value, options) {
+      options = options || {};
+      var newId = value ? value.id : null,
+        oldId = this.value ? this.value.id : null,
+        key = this.getKeyAttribute(),
         name = this.getNameAttribute(),
         descrip = this.getDescripAttribute(),
         keyValue = "",
@@ -135,6 +140,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setValue(keyValue);
       this.$.name.setContent(nameValue);
       this.$.description.setContent(descripValue);
+      
+      // Only notify if selection actually changed
+      if (newId !== oldId && !options.silent) { this.doFieldChanged(value); }
     },
     /** @private */
     _collectionFetchSuccess: function () {
