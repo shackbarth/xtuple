@@ -598,11 +598,11 @@ trailing:true white:true*/
       },
       {label: "_name".loc(), attr: "name"},
       {label: "_opportunityStage".loc(), attr: "opportunityStage",
-        defaultKind: "XV.DropdownWidget", collection: "XM.opportunityStages"},
+        defaultKind: "XV.OpportunityStageDropdown"},
       {label: "_opportunityType".loc(), attr: "opportunityType",
-        defaultKind: "XV.DropdownWidget", collection: "XM.opportunityTypes"},
+        defaultKind: "XV.OpportunityTypeDropdown"},
       {label: "_opportunitySource".loc(), attr: "opportunitySource",
-        defaultKind: "XV.DropdownWidget", collection: "XM.opportunitySources"}
+        defaultKind: "XV.OpportunitySourceDropdown"}
     ]
   });
   

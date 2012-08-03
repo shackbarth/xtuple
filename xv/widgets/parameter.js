@@ -51,11 +51,6 @@ white:true*/
       if (!this.getOperator() && this.defaultKind === "XV.FancyInput") {
         this.setOperator("MATCHES");
       }
-      
-      // Set collection if applicable (i.e. dropdown widget)
-      if (this.collection && this.$.input.setCollection) {
-        this.$.input.setCollection(this.collection);
-      }
     },
     labelChanged: function () {
       this.$.label.setContent(this.label);

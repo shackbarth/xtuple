@@ -12,49 +12,87 @@ trailing:true white:true*/
    * descriptor object called XT.WorkspacePanelDescriptor.
    */
   enyo.kind({
-    name: "XV.WorkspacePanels",
-    kind: "FittableRows",
-    realtimeFit: true,
-    wrap: false,
-    classes: "panels enyo-border-box",
-    published: {
-      modelType: ""
-    },
-    events: {
-      onFieldChanged: ""
-    },
-    components: [
-      { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
-      { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
-    ],
-    /**
-     * Set the layout of the workspace.
-     * The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
-     * in xv/xv.js.
-     *
-     */
-    updateLayout: function () {
-      var box,
-        iField,
-        fieldDesc,
-        field,
-        label;
-      for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
-        var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-        if (boxDesc.boxType) {
-          /**
-           * Grids are a special case that must be rendered per their own logic.
-           * All one-to-many relationships will be rendered as a grid (?)
-           */
-          box = this.createComponent({
-              kind: XV.util.getFieldType(boxDesc.boxType),
-              container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
-              name: boxDesc.title
-            });
-          if (boxDesc.customization) {
-            box.setCustomization(boxDesc.customization);
-          }
-          box.setDescriptor(boxDesc);
+      name: "XV.WorkspacePanels",
+      kind: "FittableRows",
+      realtimeFit: true,
+      wrap: false,
+      classes: "panels enyo-border-box",
+      published: {
+        modelType: ""
+      },
+      events: {
+        onFieldChanged: ""
+      },
+      components: [
+        { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
+        { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
+      ],
+      /**
+       * Set the layout of the workspace.
+       * The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
+       * in xv/xv.js.
+       *
+       */
+      updateLayout: function () {
+        var box,
+          iField,
+          fieldDesc,
+          field,
+          label;
+        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
+          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
+          if (boxDesc.boxType) {
+            /**
+             * Grids are a special case that must be rendered per their own logic.
+             * All one-to-many relationships will be rendered as a grid (?)
+             */
+            box = this.createComponent({
+                kind: XV.util.getFieldType(boxDesc.boxType),
+                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
+                name: boxDesc.title
+              });
+            if (boxDesc.customization) {
+              box.setCustomization(boxDesc.customization);
+            }
+            box.setDescriptor(boxDesc);
+
+          } else {
+            /**
+             * General case: this box is not a grid, it's just a list of labeled fields
+             */
+            box = this.createComponent({
+                kind: "onyx.Groupbox",
+                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
+                style: "min-height: 250px; width: 400px; background-color: white; margin-right: 5px;",
+                components: [
+                  {kind: "onyx.GroupboxHeader", content: boxDesc.title}
+                ]
+              });
+
+            for (iField = 0; iField < boxDesc.fields.length; iField++) {
+              fieldDesc = boxDesc.fields[iField];
+
+              label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
+              field = this.createComponent({
+                kind: "onyx.InputDecorator",
+                style: "font-size: 12px",
+                container: box,
+                components: [
+                /**
+                 * This is the label
+                 */
+                  { tag: "span", content: label.loc() + ": ", style: "padding-right: 10px;"}
+                ]
+              });
+
+              var widget = this.createComponent({
+                kind: fieldDesc.kind || XV.util.getFieldType(fieldDesc.fieldType),
+                style: "border: 0px; ",
+                name: fieldDesc.fieldName,
+                container: field,
+                onchange: "doFieldChanged",
+                placeholder: fieldDesc.placeholder ? fieldDesc.placeholder : "Enter " + label.loc()
+              });
 
         } else {
           /**

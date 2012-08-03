@@ -30,8 +30,8 @@ trailing:true white:true*/
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
           {kind: "Group", defaultKind: "onyx.IconButton", tag: null, components: [
-            {src: "images/menu-icon-search.png", panel: "parameterWidget", ontap: "showParameters"},
-            {src: "images/menu-icon-bookmark.png", panel: "history", ontap: "showHistory"}
+            {src: "images/menu-icon-search.png", ontap: "showParameters"},
+            {src: "images/menu-icon-bookmark.png", ontap: "showHistory"}
           ]},
           {name: "leftLabel"}
         ]},
@@ -49,9 +49,7 @@ trailing:true white:true*/
             {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
             {name: "rightLabel", style: "text-align: center"}
           ]},
-
           {kind: "onyx.Button", content: "_new".loc(), ontap: "newWorkspace" },
-
           {kind: "onyx.InputDecorator", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
@@ -61,7 +59,7 @@ trailing:true white:true*/
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
       ]},
-      { kind: "Signals", onModelSave: "doRefreshInfoObject" }
+      {kind: "Signals", onModelSave: "doRefreshInfoObject"}
     ],
     firstTime: true,
     fetched: {},
@@ -225,11 +223,9 @@ trailing:true white:true*/
      * XXX the signal, which isn't ideal for performance
      */
     doRefreshInfoObject: function (inSender, inPayload) {
-      var recordType = inPayload.recordType;
       // obnoxious massaging. Can't think of an elegant way to do this.
-      var listName = XV.util.stripModelNamePrefix(inPayload.recordType).camelize() + "InfoList";
-
-      var list = this.$.lists.$[listName];
+      var listName = XV.util.stripModelNamePrefix(inPayload.recordType).camelize() + "InfoList",
+        list = this.$.lists.$[listName];
       if (!list) {
         // we don't have this model on our list. No need to update
         return;
