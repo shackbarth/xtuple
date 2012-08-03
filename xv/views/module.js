@@ -54,7 +54,23 @@ trailing:true white:true*/
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
             {kind: "Image", src: "images/search-input-search.png"}
-          ]}
+          ]},
+          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout" },
+          {
+            name: "logoutWarningPopup",
+            classes: "onyx-sample-popup",
+            kind: "onyx.Popup",
+            centered: true,
+            modal: true,
+            floating: true,
+            components: [
+              { content: "Are you sure you want to log out?" },
+              { tag: "br"},
+              { kind: "onyx.Button", content: "Yes, logout", ontap: "logout" },
+              { kind: "onyx.Button", content: "No, don't logout.", ontap: "closeLogoutWarningPopup" }
+
+            ]
+          }
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
@@ -238,8 +254,21 @@ trailing:true white:true*/
         return;
       }
       model.fetch();
-    }
+    },
 
+    /**
+     * Logout management. We show the user a warning popup before we log them out.
+     */
+    warnLogout: function () {
+      this.$.logoutWarningPopup.show();
+    },
+    closeLogoutWarningPopup: function () {
+      this.$.logoutWarningPopup.hide();
+    },
+    logout: function () {
+      this.$.logoutWarningPopup.hide();
+      XT.session.logout();
+    }
 
   });
 
