@@ -8,6 +8,7 @@
 ### Dependencies
 
 * [node](http://github.com/joyent/node) -- 0.6.9
+* [mongodb](http://github.com/mongodb/mongo) -- 2.1.2
 * [node-xt](http://github.com/xtuple/node-xt) -- master (npm dependency)
 * [node-schemas](http://github.com/xtuple/node-schemas) -- (embedded submodule)
 * [client](http://github.com/xtuple/client) -- master
@@ -35,7 +36,7 @@ For all of the [node](http://github.com/joyent/node) layer components in the sta
 require the [node-xt](http://github.com/xtuple/node-xt) framework as a dependency. It is
 possible to, from the project root, execute `npm install` and have it clone another copy
 for you. Rather than do this, from the root of the [node-datasource](http://github.com/xtuple/node-datasource) repository, `mkdir node_modules`. Then `cd node_modules` and `ln -s ../../node-xt ./xt`. This way, the local pieces will be sharing the
-[node-xt](http://github.com/xtuple/node-xt) installation. If you have not already done so, make sure to execute `npm install` from within the [node-xt](http://github.com/xtuple/node-xt) project root, if you have already setup [node-router](http://github.com/xtuple/node-router) you will have already done this. From the [node-datasource](http://github.com/xtuple/node-datasource) project root, you need to initialize the embedded [node-schemas](http://github.com/xtuple/node-schemas) submodule with `git submodule init --update`.
+[node-xt](http://github.com/xtuple/node-xt) installation. If you have not already done so, make sure to execute `npm install` from within the [node-xt](http://github.com/xtuple/node-xt) project root, if you have already setup [node-router](http://github.com/xtuple/node-router) you will have already done this. From the [node-datasource](http://github.com/xtuple/node-datasource) project root, you need to initialize the embedded [node-schemas](http://github.com/xtuple/node-schemas) submodule with `git submodule update --init`.
 
 All of the configuration options for the [node-datasource](http://github.com/xtuple/node-datasource) are in the `config.js` file (modified by you) or in any other configuration file and specified by the `-c` flag from the command-line at command invocation. It is recommended that a copy of the `config.js` file be made (e.g. `config_local.js`) so that subsequent pulls will not discard your changes to the file. Most likely you will only need to modify the portion of the configuration that deals with the server key/certificate/salt files, possibly the proxy service if you are running that from a different server or network interface.
 
@@ -73,7 +74,7 @@ mkdir node_modules
 cd node_modules
 ln -s ../../node-xt ./xt
 cd ..
-git submodule init --update
+git submodule update --init
 ```
 
 The files that _need_ to be generated/modified as necessary are:

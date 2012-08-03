@@ -2,13 +2,13 @@
   "author": "W. Cole Davis <cole@xtuple.com>",
   "name": "node-datasource",
   "description": "",
-  "version": "Beta",
+  "version": "beta",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xtuple/datasource.git"
+    "url": "https://github.com/xtuple/node-datasource.git"
   },
   "dependencies": {
-    "xt": "git://github.com/clinuz/node-xt.git#master"
+    "xt": "git://github.com/xtuple/node-xt.git#master"
   },
   "devDependencies": {},
   "optionalDependencies": {},
