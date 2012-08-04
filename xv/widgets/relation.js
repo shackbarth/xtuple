@@ -201,7 +201,20 @@ regexp:true, undef:true, trailing:true, white:true */
       collection: "XM.AccountInfoCollection"
     }
   });
+
+  // ..........................................................
+  // INCIDENT
+  //
   
+  enyo.kind({
+    name: "XV.IncidentRelation",
+    kind: "XV.RelationWidget",
+    published: {
+      collection: "XM.IncidentInfoCollection",
+      nameAttribute: "description"
+    }
+  });
+ 
   // ..........................................................
   // ITEM
   //

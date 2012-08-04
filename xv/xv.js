@@ -114,7 +114,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "name" },
               { fieldName: "description" },
               { fieldName: "priority", kind: "XV.PriorityDropdown" },
-   //           { fieldName: "incident", fieldType: "relation", modelType: "XM.IncidentInfo" }
+              { fieldName: "incident", kind: "XV.IncidentRelation" }
             ]
           },
           {
@@ -171,8 +171,8 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Notes",
             location: "bottom",
             fields: [
-              { fieldName: "amount", fieldType: "number" },
-              { fieldName: "probability", fieldType: "number" },
+              { fieldName: "amount", kind: "XV.Number" },
+              { fieldName: "probability", kind: "XV.Number" },
               { fieldName: "notes" }
             ]
           },

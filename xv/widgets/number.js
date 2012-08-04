@@ -1,6 +1,7 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
 /*global XT:true, Globalize:true, enyo:true, _:true */
+
 (function () {
   //"use strict";
 
@@ -13,7 +14,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     components: [
       { kind: "onyx.Input", name: "numberField", onchange: "doFieldChanged", style: "border: 0px; "}
     ],
-
     create: function () {
       this.inherited(arguments);
       /**
@@ -40,7 +40,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     getValue: function () {
       return this.getNumberObject();
     },
-
     doFieldChanged: function (inSender, inEvent) {
       this.setValue(inSender.getValue());
     }
