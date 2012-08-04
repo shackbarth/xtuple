@@ -69,7 +69,8 @@
 \i xt/views/aropencr.sql;
 \i xt/views/aropenid.sql;
 \i xt/views/arpending.sql;
-\i xt/views/docinfo.sql; 
+\i xt/views/docinfo.sql;
+\i xt/views/incdtinfo.sql;
 \i xt/views/gl.sql;
 \i xt/views/invcheadtaxadj.sql;
 \i xt/views/jrnl.sql;

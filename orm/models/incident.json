@@ -940,7 +940,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentInfo",
-    "table": "incdt",
+    "table": "xt.incdtinfo",
     "comment": "Incident Info Map",
     "privileges": {
       "all": {
@@ -1014,10 +1014,24 @@
         }
       },
       {
+        "name": "severity",
+        "toOne": {
+          "type": "IncidentSeverity",
+          "column": "incdt_incdtseverity_id"
+        }
+      },
+      {
         "name": "priority",
         "toOne": {
           "type": "Priority",
           "column": "incdt_incdtpriority_id"
+        }
+      },
+      {
+        "name": "resolution",
+        "toOne": {
+          "type": "IncidentResolution",
+          "column": "incdt_incdtresolution_id"
         }
       },
       {
