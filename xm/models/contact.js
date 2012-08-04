@@ -30,32 +30,6 @@ white:true*/
     }
 
   });
-  
-  /**
-    @namespace
-    
-  */
-  XM.ContactMixin = {
-    /* @scope XM.ContactMixin */
-    
-    /**
-    Full contact name.
-    
-    @returns String
-    */
-    getName: function () {
-      var name = [],
-        first = this.get('firstName'),
-        middle = this.get('middleName'),
-        last = this.get('lastName'),
-        suffix = this.get('suffix');
-      if (first) { name.push(first); }
-      if (middle) { name.push(middle); }
-      if (last) { name.push(last); }
-      if (suffix) { name.push(suffix); }
-      return name.join(' ');
-    }
-  };
 
   /**
     @class
@@ -95,6 +69,24 @@ white:true*/
     // ..........................................................
     // METHODS
     //
+    
+    /**
+    Full contact name.
+    
+    @returns String
+    */
+    getName: function () {
+      var name = [],
+        first = this.get('firstName'),
+        middle = this.get('middleName'),
+        last = this.get('lastName'),
+        suffix = this.get('suffix');
+      if (first) { name.push(first); }
+      if (middle) { name.push(middle); }
+      if (last) { name.push(last); }
+      if (suffix) { name.push(suffix); }
+      return name.join(' ');
+    },
 
     validateSave: function (attributes, options) {
       if (!attributes.firstName && !attributes.lastName) {
@@ -244,9 +236,6 @@ white:true*/
     readOnly: true
 
   });
-  
-  // Add mixin
-  XM.ContactInfo = XM.ContactInfo.extend(XM.ContactMixin);
 
   // ..........................................................
   // METHODS

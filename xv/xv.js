@@ -29,9 +29,9 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "name" },
               { fieldName: "number" },
-              { fieldName: "accountType", fieldType: "dropdown", modelType: "XM.accountTypes" }
+              { fieldName: "name" },
+              { fieldName: "accountType", kind: "XV.AccountTypeDropdown" }
             ]
           },
           {
@@ -39,7 +39,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               // TODO: we can avoid having to specify the model by looking in the
               // *relations* of the model, which will work even if the submodel is null
-              { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
+  //            { fieldName: "primaryContact", fieldType: "relation", modelType: "XM.ContactInfo" }
             ]
           },
           {
@@ -54,8 +54,8 @@ regexp:true, undef:true, trailing:true, white:true */
             },
             fields: [
               { fieldName: "createdBy" },
-              { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "created", label: "date", kind: "XV.DateWidget" },
+              { fieldName: "commentType", label: "type", kind: "XV.CommentTypeDropdown" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -84,7 +84,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" }
+              { fieldName: "account", kind: "XV.AccountRelation" }
             ]
           },
           {
@@ -100,8 +100,8 @@ regexp:true, undef:true, trailing:true, white:true */
             },
             fields: [
               { fieldName: "createdBy" },
-              { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "created", label: "date", kind: "XV.DateWidget" },
+              { fieldName: "commentType", label: "type", kind: "XV.CommentTypeDropdown" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -113,18 +113,17 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "description" },
-              { fieldName: "status", fieldType: "dropdown", collection: "XM.projectStatuses" },
-              { fieldName: "priority", fieldType: "dropdown", collection: "XM.priorities" },
-              { fieldName: "incident", fieldType: "relation", modelType: "XM.IncidentInfo" }
+              { fieldName: "priority", kind: "XV.PriorityDropdown" },
+              { fieldName: "incident", kind: "XV.IncidentRelation" }
             ]
           },
           {
             title: "Schedule",
             fields: [
-              { fieldName: "startDate", fieldType: "date" },
-              { fieldName: "dueDate", fieldType: "date" },
-              { fieldName: "assignDate", fieldType: "date" },
-              { fieldName: "completeDate", fieldType: "date" }
+              { fieldName: "startDate", kind: "XV.DateWidget" },
+              { fieldName: "dueDate", kind: "XV.DateWidget" },
+              { fieldName: "assignDate", kind: "XV.DateWidget" },
+              { fieldName: "completeDate", kind: "XV.DateWidget" }
             ]
           },
           {
@@ -140,8 +139,8 @@ regexp:true, undef:true, trailing:true, white:true */
             },
             fields: [
               { fieldName: "createdBy" },
-              { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "created", label: "date", kind: "XV.DateWidget" },
+              { fieldName: "commentType", label: "type", kind: "XV.CommentTypeDropdown" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -153,27 +152,27 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "number" },
               { fieldName: "name" },
-              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
-              { fieldName: "opportunityStage", fieldType: "dropdown", collection: "XM.opportunityStages" },
-              { fieldName: "opportunityType", fieldType: "dropdown", collection: "XM.opportunityTypes" },
-              { fieldName: "opportunitySource", fieldType: "dropdown", collection: "XM.opportunitySources" }
+              { fieldName: "account", kind: "XV.AccountRelation" },
+              { fieldName: "opportunityStage", kind: "XV.OpportunityStageDropdown" },
+              { fieldName: "opportunityType", kind: "XV.OpportunityTypeDropdown" },
+              { fieldName: "opportunitySource", kind: "XV.OpportunitySourceDropdown" }
             ]
           },
           {
             title: "Schedule",
             fields: [
-              { fieldName: "startDate", fieldType: "date" },
-              { fieldName: "assignDate", fieldType: "date" },
-              { fieldName: "targetClose", fieldType: "date" },
-              { fieldName: "actualClose", fieldType: "date" }
+              { fieldName: "startDate", kind: "XV.DateWidget" },
+              { fieldName: "assignDate", kind: "XV.DateWidget" },
+              { fieldName: "targetClose", kind: "XV.DateWidget" },
+              { fieldName: "actualClose", kind: "XV.DateWidget" }
             ]
           },
           {
             title: "Notes",
             location: "bottom",
             fields: [
-              { fieldName: "amount", fieldType: "number" },
-              { fieldName: "probability", fieldType: "number" },
+              { fieldName: "amount", kind: "XV.Number" },
+              { fieldName: "probability", kind: "XV.Number" },
               { fieldName: "notes" }
             ]
           },
@@ -190,8 +189,8 @@ regexp:true, undef:true, trailing:true, white:true */
             },
             fields: [
               { fieldName: "createdBy" },
-              { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "created", label: "date", kind: "XV.DateWidget" },
+              { fieldName: "commentType", label: "type", kind: "XV.CommentTypeDropdown" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -209,10 +208,16 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Relationships",
             fields: [
-              { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
-              { fieldName: "contact", fieldType: "relation", modelType: "XM.ContactInfo" },
-              { fieldName: "account", fieldType: "relation", modelType: "XM.AccountInfo" },
-              { fieldName: "item", fieldType: "relation", modelType: "XM.ItemInfo" }
+              { fieldName: "owner", kind: "XV.UserAccountRelation" },
+  //            { fieldName: "contact", fieldType: "relation", modelType: "XM.ContactInfo" },
+              { fieldName: "account", kind: "XV.AccountRelation" },
+              { fieldName: "item", kind: "XV.ItemRelation" }
+            ]
+          },
+          {
+            title: "Status",
+            fields: [
+              { fieldName: "priority", kind: "XV.PriorityDropdown" }
             ]
           },
           {
@@ -228,7 +233,7 @@ regexp:true, undef:true, trailing:true, white:true */
             },
             fields: [
               { fieldName: "createdBy" },
-              { fieldName: "created", fieldType: "date" },
+              { fieldName: "created", kind: "XV.DateWidget" },
               { fieldName: "description" }
             ]
           },
@@ -246,8 +251,8 @@ regexp:true, undef:true, trailing:true, white:true */
             },
             fields: [
               { fieldName: "createdBy" },
-              { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "created", label: "date", kind: "XV.DateWidget" },
+              { fieldName: "commentType", label: "type", kind: "XV.CommentTypeDropdown" },
               { fieldName: "text", label: "text" }
             ]
           }
@@ -267,24 +272,24 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Summary",
             location: "bottom",
             fields: [
-              { fieldName: "budgetedHoursTotal", fieldType: "readonly" },
-              { fieldName: "actualHoursTotal", fieldType: "readonly" },
-              { fieldName: "actualHoursBalance", fieldType: "readonly" },
-              { fieldName: "budgetedExpensesTotal", fieldType: "readonly" },
-              { fieldName: "actualExpensesTotal", fieldType: "readonly" },
-              { fieldName: "balanceExpensesTotal", fieldType: "readonly" }
+              { fieldName: "budgetedHoursTotal", kind: "XV.ReadOnly" },
+              { fieldName: "actualHoursTotal", kind: "XV.ReadOnly" },
+              { fieldName: "balanceHoursTotal", kind: "XV.ReadOnly" },
+              { fieldName: "budgetedExpensesTotal", kind: "XV.ReadOnly" },
+              { fieldName: "actualExpensesTotal", kind: "XV.ReadOnly" },
+              { fieldName: "balanceExpensesTotal", kind: "XV.ReadOnly" }
 
             ]
           },
           {
             title: "Schedule",
             fields: [
-              { fieldName: "owner", fieldType: "relation", modelType: "XM.UserAccountInfo" },
-              { fieldName: "assignedTo", fieldType: "relation", modelType: "XM.UserAccountInfo" },
-              { fieldName: "dueDate", fieldType: "date" },
-              { fieldName: "assignDate", fieldType: "date" },
-              { fieldName: "startDate", fieldType: "date" },
-              { fieldName: "completeDate", fieldType: "date" }
+              { fieldName: "owner", kind: "XV.UserAccountRelation" },
+              { fieldName: "assignedTo", kind: "XV.UserAccountRelation" },
+              { fieldName: "dueDate", kind: "XV.DateWidget" },
+              { fieldName: "assignDate", kind: "XV.DateWidget" },
+              { fieldName: "startDate", kind: "XV.DateWidget" },
+              { fieldName: "completeDate", kind: "XV.DateWidget" }
             ]
           },
           {
@@ -297,7 +302,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
               { label: "notes", fieldName: "notes", width: "220" },
-              { fieldName: "dueDate", fieldType: "date", width: "100" },
+              { fieldName: "dueDate", kind: "XV.DateWidget", width: "100" },
               { label: "actualHours", fieldName: "actualHours", fieldType: "number", width: "40" },
               { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "number", width: "40" }
             ]
@@ -315,21 +320,13 @@ regexp:true, undef:true, trailing:true, white:true */
             },
             fields: [
               { fieldName: "createdBy" },
-              { fieldName: "created", label: "date", fieldType: "date" },
-              { fieldName: "commentType", label: "type", fieldType: "dropdown", modelType: "XM.commentTypes" },
+              { fieldName: "created", label: "date", kind: "XV.DateWidget" },
+              { fieldName: "commentType", label: "type", kind: "XV.CommentTypeDropdown" },
               { fieldName: "text", label: "text" }
             ]
           }
         ]
       });
-
-
-      this.getRelationalTitleFields = {};
-      this.getRelationalTitleFields["XM.UserAccountInfo"] = "username";
-      this.getRelationalTitleFields["XM.ContactInfo"] = "lastName";
-      this.getRelationalTitleFields["XM.IncidentInfo"] = "number";
-      this.getRelationalTitleFields["XM.AccountInfo"] = "name";
-      this.getRelationalTitleFields["XM.ItemInfo"] = "number";
 
     },
     getFieldType: function (value) {
@@ -337,16 +334,10 @@ regexp:true, undef:true, trailing:true, white:true */
         return "onyx.Input";
       } else if (value === 'number') {
         return "XV.NumberWidget";
-      } else if (value === 'date') {
-        return "XV.DateWidget";
-      } else if (value === 'relation') {
-        return "XV.RelationalWidget";
       } else if (value === 'dropdown') {
         return "XV.DropdownWidget";
       } else if (value === 'grid') {
         return "XV.GridWidget";
-      } else if (value === 'readonly') {
-        return "XV.ReadOnlyWidget";
       } else if (value === 'comments') {
         return "XV.CommentsWidget";
       } else if (value === 'address') {
@@ -382,13 +373,6 @@ regexp:true, undef:true, trailing:true, white:true */
       for (i = 0; i < childrenCount; i++) {
         parent.removeChild(parent.children[0]);
       }
-      // this causes extra problems
-      //var componentCount = parent.getComponents().length;
-      //for (var i = 0; i < componentCount; i++) {
-      //  parent.removeComponent(parent.getComponents()[0]);
-      //}
-
-
     },
 
     // XXX this is all very magical

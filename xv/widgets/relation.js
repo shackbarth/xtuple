@@ -1,204 +1,246 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
+
 (function () {
-  //"use strict";
 
   enyo.kind({
-    name: "XV.RelationalWidget",
+    name: "XV.RelationWidget",
     kind: enyo.Control,
     published: {
-      model: null,
-      modelType: null,
-      collection : null
+      value: null,
+      collection: null,
+      keyAttribute: "number",
+      nameAttribute: "name",
+      descripAttribute: ""
     },
     events: {
       onFieldChanged: ""
     },
-    components: [{
-      kind: "onyx.InputDecorator",
-      style: "height: 14px;",
-      classes: "onyx-menu-toolbar",
-      onchange: "doFieldLeft",
-      components: [
-
-        {
-          kind: "onyx.MenuDecorator",
-          components: [
-            {
-              kind: "onyx.Input",
-              name: "nameField",
-              onkeyup: "doKeyUp",
-              style: "border: 0px;"
-            },
-            {
-              kind: "onyx.Menu",
-              name: "autocompleteMenu",
-              // the menu must not be modal. If it is modal, then it
-              // suppresses the capture of key events from the name field
-              modal: false,
-              components: [
-                {content: ""}
-              ],
-              ontap: "doRelationSelected"
-            }
-          ]
-        },
-        {
-          kind: "onyx.MenuDecorator",
-          components: [
-            { content: "popup", components: [
-              { content: "V" }
-            ]},
-            {
-              kind: "onyx.Menu",
-              name: "optionsMenu",
-              components: [
-                { content: "View" },
-                { content: "Search" },
-                { content: "Add" }
-              ],
-              ontap: "doOptionsSelected"
-            }
-          ]
-        }
-      ]
-    }],
-    doRelationSelected: function (inSender, inEvent) {
-      this.setModel(inEvent.originator.model);
-
-      // XXX the container (i.e. the workspace) already catches a doFieldChanged event from this change,
-      // but it gets processed before we set the model, above, and so it gets processed on the old
-      // value. It's necessary to call the function again now that we've changed the value. We
-      // should look at eliminating this redundancy.
-      this.doFieldChanged(this, inEvent);
-      this.$.autocompleteMenu.hide();
-
-    },
-    doFieldLeft: function (inSender, inEvent) {
-      /*
-      FIXME here's a curious bug: I want to monitor when the user leaves this widget
-      so that we can (1) select the top menu option if it wasn't picked, or (2) clear
-      out the field if there's no valid match. The problem is that if the user wants
-      to select a value from the options, that fires this event first! And so the
-      event of actually picking an option never happens.
-      if (this.$.autocompleteMenu.children.length > 0) {
-        this.$.nameField.setValue(this.$.autocompleteMenu.children[0].content);
-        this.$.autocompleteMenu.children[0].doSelect();
-      } else {
-        this.$.nameField.setValue("");
-      }
-      this.$.autocompleteMenu.hide();
-      this.render();
-      */
-    },
-    /**
-     * A convenience function so that this object can be treated generally like an input
-     */
-    setValue: function (object) {
-      this.setModel(object);
-    },
-    /**
-     * A convenience function so that this object can be treated generally like an input
-     */
-    getValue: function () {
-      return this.getModel();
-    },
-    /**
-     * We're given the model type from the descriptor. Now's a good time to
-     * set the collection object, because if the model is null there's
-     * no other way to know that the collection type is.
-     */
-    modelTypeChanged: function () {
-      // Well, this is magical, and I wish I knew a better way of doing this
-      var collectionType = this.getModelType().substring(3) + "Collection";
-      this.setCollection(new XM[collectionType]());
-    },
-    /**
-     * render this object onto the name field
-     */
-    modelChanged: function () {
-      /**
-       * Populate the input with the applicable field. If there's no model chosen
-       * just leave the field blank.
-       */
-      var displayValue = this.getModel() ? this.getModel().get(this.getTitleField()) : "";
-      this.$.nameField.setValue(displayValue);
-    },
-    _collectionFetchSuccess: function () {
-      this.log();
-      /**
-       * Start by clearing out the dropdown in case there's pre-existing elements
-       */
-      XV.util.removeAllChildren(this.$.autocompleteMenu);
-      for (var i = 0; i < this.getCollection().length; i++) {
-        var model = this.getCollection().models[i];
-        /**
-         *I keep the model in the menuItem. This is a bit heavy, but it
-         * allows us to easily update the base model when a menuItem is chosen.
-         */
-        this.$.autocompleteMenu.createComponent({
-          content: model.get(this.getTitleField()),
-          model: model
+    components: [
+      {kind: "onyx.InputDecorator", style: "height: 27px", components: [
+        {name: 'input', kind: "onyx.Input", onkeyup: "keyUp",
+          onkeydown: "keyDown", onblur: "receiveBlur"},
+        {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
+          {kind: "onyx.IconButton", src: "images/menu-icon-search.png"},
+          {name: 'popupMenu', kind: "onyx.Menu",
+            components: [
+            {content: "_search".loc(), value: 'search'},
+            {content: "_open".loc(), value: 'open'},
+            {content: "_new".loc(), value: 'new'}
+          ]}
+        ]},
+        {kind: "onyx.MenuDecorator", style: "left: -200px; top: 25px;",
+          onSelect: "relationSelected", components: [
+          {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
+        ]}
+      ]},
+      {name: "name", content: ""},
+      {name: "description", content: ""}
+    ],
+    autocomplete: function () {
+      var key = this.getKeyAttribute(),
+        attr = this.getValue() ? this.getValue().get(key) : "",
+        value = this.$.input.getValue(),
+        query;
+      
+      if (value && value !== attr) {
+        query = {
+          parameters: [{
+            attribute: key,
+            operator: "BEGINS_WITH",
+            value: value,
+            rowLimit: 1
+          }],
+          orderBy: [{
+            attribute: key
+          }]
+        };
+        this._collection.fetch({
+          success: enyo.bind(this, "_fetchSuccess"),
+          query: query
         });
-      }
-      this.$.autocompleteMenu.reflow();
-      this.$.autocompleteMenu.render();
-      if (this.getCollection().length > 0) {
-        this.$.autocompleteMenu.show();
+      } else if (!value) {
+        this.setValue(null);
       }
     },
-    _collectionFetchError: function () {
-      this.log();
+    create: function () {
+      this.inherited(arguments);
+      if (this.getCollection()) { this.collectionChanged(); }
     },
-
-    doKeyUp: function (inSender, inEvent) {
-      /**
-       * Start by clearing out the dropdown in case there's pre-existing elements
-       */
-      XV.util.removeAllChildren(this.$.autocompleteMenu);
-
-      var query = {
-        parameters: [{
-          attribute: this.getTitleField(),
-          operator: "BEGINS_WITH",
-          value: inSender.getValue()
-        }]
-      };
-      this.getCollection().fetch({
-        success: enyo.bind(this, "_collectionFetchSuccess"),
-        error: enyo.bind(this, "_collectionFetchError"),
-        query: query
-      });
-
-      // stop bubbling
+    collectionChanged: function () {
+      var collection = this.getCollection(),
+        Klass = XM.Model.getObjectByName(collection);
+      this._collection = new Klass();
+    },
+    itemSelected: function (inSender, inEvent) {
+      var action = inEvent.originator.value,
+        model;
+      switch (action)
+      {
+      case 'search':
+        // Not implemented
+        break;
+      case 'open':
+        model = this.getValue();
+        this.bubble("workspace", {eventName: "workspace", options: model});
+        break;
+      case 'new':
+        model = new this._collection.model();
+        this.bubble("workspace", {eventName: "workspace", options: model});
+        break;
+      }
+    },
+    keyDown: function (inSender, inEvent) {
+      // If tabbed out...
+      if (inEvent.keyCode === 9) {
+        this.$.autocompleteMenu.hide();
+        this.autocomplete();
+      }
+    },
+    keyUp: function (inSender, inEvent) {
+      var query,
+        key = this.getKeyAttribute(),
+        attr = this.getValue() ? this.getValue().get(key) : "",
+        value = this.$.input.getValue(),
+        menu = this.$.autocompleteMenu;
+      
+      // Look up if value changed
+      if (value && value !== attr &&
+          inEvent.keyCode !== 9) {
+        query = {
+          parameters: [{
+            attribute: key,
+            operator: "BEGINS_WITH",
+            value: value,
+            rowLimit: 10
+          }],
+          orderBy: [{
+            attribute: key
+          }]
+        };
+        this._collection.fetch({
+          success: enyo.bind(this, "_collectionFetchSuccess"),
+          query: query
+        });
+      } else {
+        menu.hide();
+      }
+    },
+    receiveBlur: function (inSender, inEvent) {
+      this.autocomplete();
+    },
+    relationSelected: function (inSender, inEvent) {
+      this.setValue(inEvent.originator.model);
+      this.$.autocompleteMenu.hide();
       return true;
     },
-    /**
-     * Every object has a field that is the main one for display. These are kept in
-     * the XV.RelationalWidgetTitleFields hash. This function gets the value of that
-     * has with the key of this type of model.
-     */
-    getTitleField: function () {
-      return XV.util.getRelationalTitleFields[this.getModelType()];
-    },
-    doOptionsSelected: function (inSender, inEvent) {
-      var action = inEvent.originator.content.toLowerCase();
-      if (action === 'add') {
-        var modelType = this.getModelType();
-        var emptyModel = new XM[XV.util.formatModelName(modelType)]();
-        this.bubble("workspace", {eventName: "workspace", options: emptyModel });
-
-      } else if (action === 'search') {
-        alert("Not yet implemented");
-
-      } else if (action === 'view') {
-        if (this.getModel()) {
-          this.bubble("workspace", {eventName: "workspace", options: this.getModel() });
-        } else {
-          alert("You must select a model");
-        }
+    setValue: function (value, options) {
+      options = options || {};
+      var newId = value ? value.id : null,
+        oldId = this.value ? this.value.id : null,
+        key = this.getKeyAttribute(),
+        name = this.getNameAttribute(),
+        descrip = this.getDescripAttribute(),
+        keyValue = "",
+        nameValue = "",
+        descripValue = "";
+      this.value = value;
+      if (value && value.get) {
+        keyValue = value.get(key) || "";
+        nameValue = value.get(name) || "";
+        descripValue = value.get(descrip) || "";
       }
+      this.$.input.setValue(keyValue);
+      this.$.name.setContent(nameValue);
+      this.$.description.setContent(descripValue);
+      
+      // Only notify if selection actually changed
+      if (newId !== oldId && !options.silent) { this.doFieldChanged(value); }
+    },
+    /** @private */
+    _collectionFetchSuccess: function () {
+      var key = this.getKeyAttribute(),
+        menu = this.$.autocompleteMenu,
+        model,
+        i;
+      menu.destroyComponents();
+      menu.controls = [];
+      menu.children = [];
+      if (this._collection.length) {
+        for (i = 0; i < this._collection.length; i++) {
+          model = this._collection.models[i];
+          menu.createComponent({
+            content: model.get(key),
+            model: model // for selection reference
+          });
+        }
+        menu.reflow();
+        menu.render();
+        menu.show();
+      } else {
+        menu.hide();
+      }
+    },
+    /** @private */
+    _fetchSuccess: function () {
+      var value = this._collection.length ? this._collection.models[0] : null;
+      this.setValue(value);
+    }
+    
+  });
+  
+  // ..........................................................
+  // ACCOUNT
+  //
+  
+  enyo.kind({
+    name: "XV.AccountRelation",
+    kind: "XV.RelationWidget",
+    published: {
+      collection: "XM.AccountInfoCollection"
     }
   });
+
+  // ..........................................................
+  // INCIDENT
+  //
+  
+  enyo.kind({
+    name: "XV.IncidentRelation",
+    kind: "XV.RelationWidget",
+    published: {
+      collection: "XM.IncidentInfoCollection",
+      nameAttribute: "description"
+    }
+  });
+ 
+  // ..........................................................
+  // ITEM
+  //
+  
+  enyo.kind({
+    name: "XV.ItemRelation",
+    kind: "XV.RelationWidget",
+    published: {
+      collection: "XM.ItemInfoCollection",
+      nameAttribute: "description1",
+      descripAttribute: "description2"
+    }
+  });
+  
+  // ..........................................................
+  // USER ACCOUNT
+  //
+  
+  enyo.kind({
+    name: "XV.UserAccountRelation",
+    kind: "XV.RelationWidget",
+    published: {
+      collection: "XM.UserAccountInfoCollection",
+      keyAttribute: "username",
+      nameAttribute: "properName"
+    }
+  });
+  
 }());

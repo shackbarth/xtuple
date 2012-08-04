@@ -1,7 +1,7 @@
 /*jshint bitwise:true, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
 
@@ -88,12 +88,10 @@ trailing:true white:true*/
               });
 
               var widget = this.createComponent({
-                kind: XV.util.getFieldType(fieldDesc.fieldType),
+                kind: fieldDesc.kind || XV.util.getFieldType(fieldDesc.fieldType),
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
-                container: field,
-                onchange: "doFieldChanged",
-                placeholder: fieldDesc.placeholder ? fieldDesc.placeholder : "Enter " + label.loc()
+                container: field
               });
 
               /**
@@ -181,7 +179,7 @@ trailing:true white:true*/
                 /**
                  * Update the view field with the model value
                  */
-                this.$[fieldName].setValue(fieldValue);
+                this.$[fieldName].setValue(fieldValue, {silent: true});
               }
             }
           }
