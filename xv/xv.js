@@ -325,9 +325,117 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "text", label: "text" }
             ]
           }
-        ]
-      });
+        ],
 
+        "XM.Honorific": [
+          {
+            title: "Honorific Info",
+            fields: [
+              { fieldName: "code" }
+            ]
+          }
+        ],
+
+        "XM.State": [
+          {
+            title: "State Info",
+            fields: [
+              { fieldName: "abbreviation" },
+              { fieldName: "name" }
+            ]
+          }
+        ],
+
+        "XM.Country": [
+          {
+            title: "Country Info",
+            fields: [
+              { fieldName: "abbreviation" },
+              { fieldName: "name" }
+            ]
+          },
+          {
+            title: "Currency Info",
+            fields: [
+              { fieldName: "currencyAbbreviation" },
+              { fieldName: "currencyName" },
+              { fieldName: "currencyNumber" },
+              { fieldName: "currencySymbol" }
+            ]
+          }
+        ],
+
+        "XM.IncidentCategory": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.IncidentResolution": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.IncidentSeverity": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.Priority": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", fieldType: "number" }
+            ]
+          }
+        ],
+        "XM.OpportunitySource": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+        "XM.OpportunityStage": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+        "XM.OpportunityType": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+
+
+
+      });
     },
     getFieldType: function (value) {
       if (!value) {

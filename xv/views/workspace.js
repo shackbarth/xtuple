@@ -69,8 +69,6 @@ trailing:true white:true*/
                 ]
               });
 
-            // TODO: Cole makes a convincing case that the widgets should include their
-            // own InputDecorator and label
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
 
@@ -174,7 +172,8 @@ trailing:true white:true*/
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
               fieldName = boxDesc.fields[iField].fieldName;
-              fieldValue = model.getValue(fieldName) ? model.getValue(fieldName) : "";
+              // argh! 0 is falsy but we want to populate 0 into fields if appropriate
+              fieldValue = model.getValue(fieldName) || model.getValue(fieldName) === 0 ? model.getValue(fieldName) : "";
               if (fieldName) {
                 /**
                  * Update the view field with the model value
@@ -198,6 +197,7 @@ trailing:true white:true*/
         model: null
       },
       events: {
+        onHistoryChanged: "",
         onModelSave: ""
       },
       handlers: {
@@ -217,7 +217,7 @@ trailing:true white:true*/
               {kind: "onyx.Menu", name: "navigationMenu", components: [
                 { content: "Dashboard" },
                 { content: "CRM" },
-                { content: "Billing" }
+                { content: "Setup" }
               ], ontap: "doNavigationSelected" }
             ]}
 
@@ -430,7 +430,8 @@ trailing:true white:true*/
         /**
          * Put the model in the history array
          */
-        XT.addToHistory(model);
+        XT.addToHistory("crm", model); // TODO: generalize for any module
+        this.doHistoryChanged();
 
 
         /**
