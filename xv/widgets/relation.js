@@ -15,7 +15,7 @@ regexp:true, undef:true, trailing:true, white:true */
       descripAttribute: ""
     },
     events: {
-      onFieldChanged: ""
+      onValueChange: ""
     },
     components: [
       {kind: "onyx.InputDecorator", style: "height: 27px", components: [
@@ -144,7 +144,8 @@ regexp:true, undef:true, trailing:true, white:true */
         descrip = this.getDescripAttribute(),
         keyValue = "",
         nameValue = "",
-        descripValue = "";
+        descripValue = "",
+        inEvent = { value: value, originator: this };
       this.value = value;
       if (value && value.get) {
         keyValue = value.get(key) || "";
@@ -156,7 +157,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.description.setContent(descripValue);
       
       // Only notify if selection actually changed
-      if (newId !== oldId && !options.silent) { this.doFieldChanged(value); }
+      if (newId !== oldId && !options.silent) { this.doValueChange(inEvent); }
     },
     /** @private */
     _collectionFetchSuccess: function () {

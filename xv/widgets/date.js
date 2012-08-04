@@ -1,9 +1,8 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
+regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, enyo:true, _:true, Globalize:true */
 
 (function () {
-  "use strict";
 
   enyo.kind({
     name: "XV.DateWidget",
@@ -13,7 +12,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       value: null
     },
     events: {
-      onchange: ""
+      onValueChange: ""
     },
     components: [{
       kind: "onyx.InputDecorator",
@@ -46,13 +45,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       ]
     }],
     datePicked: function (inSender, inEvent) {
-      // Pass a clone to the backing object of this widget.
-      this.setValue(new Date(inEvent.valueOf()));
+      this.setValue(inEvent);
       this.$.datePickPopup.hide();
     },
     inputChanged: function (inSender, inEvent) {
-      this.setValue(this.textToDate(this.$.input.getValue()));
-      this.bubble("onchange", inEvent);
+      var value = this.textToDate(this.$.input.getValue());
+      this.setValue(value);
     },
     /**
       Treat enter like a tab out of the field.
@@ -65,6 +63,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     iconTapped: function () {
       this.$.datePickPopup.show();
     },
+    setValue: function (value, options) {
+      options = options || {};
+      var inEvent = { value: value, originator: this };
+      value = _.isDate(value) ? new Date(value.valueOf()) : null;
+      this.value = value;
+      this.valueChanged();
+      if (!options.silent) { this.doValueChange(inEvent); }
+    },
     textToDate: function (value) {
       var date = null,
         daysInMilliseconds = 1000 * 60 * 60 * 24;
@@ -75,6 +81,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         value.indexOf('-') === 0) {
         // 0 means today, +1 means tomorrow, -2 means 2 days ago, etc.
         date = new Date(new Date().getTime() + value * daysInMilliseconds);
+        date.setHours(0, 0, 0, 0);
 
       } else if (value.indexOf('#') === 0) {
         // #40 means the fortieth day of this year, so set the month to 0
@@ -100,15 +107,18 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.$.input.setDisabled(isDisabled);
     },
     valueChanged: function () {
-      var date = _.isDate(this.getValue()) ? new Date(this.getValue().valueOf()) : null;
-      if (date) {
+      var value = this.getValue(),
+        date;
+      if (value) {
+        date = new Date(value.valueOf());
+        date.setMinutes(value.getTimezoneOffset());
         this.$.datePick.setValue(date);
         this.$.datePick.render();
-        this.$.input.setValue(Globalize.format(this.value, "d"));
+        this.$.input.setValue(Globalize.format(date, "d"));
       } else {
         this.$.datePick.setValue(new Date());
         this.$.datePick.render();
-        this.$.input.setValue("");        
+        this.$.input.setValue("");
       }
     }
   });
