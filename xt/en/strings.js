@@ -80,6 +80,8 @@ XT.stringsFor("en_US", {
   "_automaticAllowOverride": "Automatic Allow Override",
   "_back": "Back",
   "_balance": "Balance",
+  "_balanceExpensesTotal": "Balance Expenses Total",
+  "_balanceHoursTotal": "Balance Hours Total",
   "_balanceMethod": "Balance Method",
   "_bankAccount": "Bank Account",
   "_bankAccounts": "Bank Accounts",

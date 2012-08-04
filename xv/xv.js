@@ -272,12 +272,12 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Summary",
             location: "bottom",
             fields: [
-              { fieldName: "budgetedHoursTotal", fieldType: "readonly" },
-              { fieldName: "actualHoursTotal", fieldType: "readonly" },
-              { fieldName: "actualHoursBalance", fieldType: "readonly" },
-              { fieldName: "budgetedExpensesTotal", fieldType: "readonly" },
-              { fieldName: "actualExpensesTotal", fieldType: "readonly" },
-              { fieldName: "balanceExpensesTotal", fieldType: "readonly" }
+              { fieldName: "budgetedHoursTotal", kind: "XV.ReadOnly" },
+              { fieldName: "actualHoursTotal", kind: "XV.ReadOnly" },
+              { fieldName: "balanceHoursTotal", kind: "XV.ReadOnly" },
+              { fieldName: "budgetedExpensesTotal", kind: "XV.ReadOnly" },
+              { fieldName: "actualExpensesTotal", kind: "XV.ReadOnly" },
+              { fieldName: "balanceExpensesTotal", kind: "XV.ReadOnly" }
 
             ]
           },
@@ -338,8 +338,6 @@ regexp:true, undef:true, trailing:true, white:true */
         return "XV.DropdownWidget";
       } else if (value === 'grid') {
         return "XV.GridWidget";
-      } else if (value === 'readonly') {
-        return "XV.ReadOnlyWidget";
       } else if (value === 'comments') {
         return "XV.CommentsWidget";
       } else if (value === 'address') {
