@@ -29,8 +29,9 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       options = options || {};
-      var oldValue = this.getValue(),
-        newValue = _.isNumber(value) ? value : null,
+      var scale = this.getScale(),
+        oldValue = this.getValue(),
+        newValue = _.isNumber(value) ? XT.math.round(value, scale) : null,
         inEvent;
       if (oldValue !== newValue) {
         this.value = value;
