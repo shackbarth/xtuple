@@ -16,7 +16,6 @@ regexp:true, undef:true, trailing:true, white:true */
       {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
     ],
     inputChanged: function (inSender, inEvent) {
-      if (this._ignoreChange) { return; }
       var value = this.$.input.getValue();
       this.setValue(value);
     },
@@ -31,15 +30,11 @@ regexp:true, undef:true, trailing:true, white:true */
         this.value = value;
         this.valueChanged(value);
         inEvent = { value: value, originator: this };
-        if (!options.silent) {
-          this.doValueChange(inEvent);
-        }
+        if (!options.silent) { this.doValueChange(inEvent); }
       }
     },
     valueChanged: function (value) {
-      this._ignoreChange = true;
       this.$.input.setValue(value);
-      this._ignoreChange = false;
     }
   });
   

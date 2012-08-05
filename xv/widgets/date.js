@@ -1,19 +1,13 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
-/*global XT:true, enyo:true, _:true, Globalize:true */
+/*global XT:true, XV:true, enyo:true, _:true, Globalize:true */
 
 (function () {
 
   enyo.kind({
     name: "XV.DateWidget",
-    kind: enyo.Control,
+    kind: "XV.Input",
     classes: "xv-widgets-date",
-    published: {
-      value: null
-    },
-    events: {
-      onValueChange: ""
-    },
     components: [{
       kind: "onyx.InputDecorator",
       name: "decorator",
@@ -50,39 +44,28 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     inputChanged: function (inSender, inEvent) {
       var value = this.textToDate(this.$.input.getValue());
-      this.setValue(value);
-    },
-    /**
-      Treat enter like a tab out of the field.
-    */
-    keyUp: function (inSender, inEvent) {
-      if (inEvent.keyCode === 13) {
-        this.doInputChanged();
+      if (_.isDate(value) || _.isEmpty(value)) {
+        this.setValue(value);
+      } else {
+        this.valueChanged(this.getValue());
       }
     },
     iconTapped: function () {
       this.$.datePickPopup.show();
     },
     setValue: function (value, options) {
-      options = options || {};
-      var inEvent = { value: value, originator: this };
       value = _.isDate(value) ? new Date(value.valueOf()) : null;
-      this.value = value;
-      this.valueChanged();
-      if (!options.silent) { this.doValueChange(inEvent); }
+      XV.Input.prototype.setValue.call(this, value, options);
     },
     textToDate: function (value) {
       var date = null,
         daysInMilliseconds = 1000 * 60 * 60 * 24;
-      
       // Try to parse out a date given the various allowable shortcuts
       if (value === '0' ||
         value.indexOf('+') === 0 ||
         value.indexOf('-') === 0) {
         // 0 means today, +1 means tomorrow, -2 means 2 days ago, etc.
         date = new Date(new Date().getTime() + value * daysInMilliseconds);
-        date.setHours(0, 0, 0, 0);
-
       } else if (value.indexOf('#') === 0) {
         // #40 means the fortieth day of this year, so set the month to 0
         // and set the date accordingly. JS appropriately pushes the date
@@ -90,7 +73,6 @@ regexp:true, undef:true, trailing:true, white:true */
         date = new Date();
         date.setMonth(0);
         date.setDate(value.substring(1));
-
       } else if (value.length && !isNaN(value)) {
         // a positive integer by itself means that day of this month
         date = new Date();
@@ -101,10 +83,14 @@ regexp:true, undef:true, trailing:true, white:true */
         // we're counting on JS to parse the date correctly
         date = new Date(value);
       }
-      return isNaN(date.getTime()) ? null : date;
-    },
-    setDisabled: function (isDisabled) {
-      this.$.input.setDisabled(isDisabled);
+      
+      // Validate
+      if (isNaN(date.getTime())) {
+        date = null;
+      } else {
+        date.setHours(0, 0, 0, 0);
+      }
+      return date;
     },
     valueChanged: function () {
       var value = this.getValue(),

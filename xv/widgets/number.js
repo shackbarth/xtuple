@@ -11,7 +11,6 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: 2
     },
     inputChanged: function (inSender, inEvent) {
-      if (this._ignoreChange) { return; }
       var value = Number(this.$.input.getValue());
       if (isNaN(value)) {
         this.valueChanged(this.getValue());
