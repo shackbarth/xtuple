@@ -1,21 +1,15 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
-/*global XT:true, Globalize:true, enyo:true, _:true */
+/*global XT:true, XV:true, Globalize:true, enyo:true, _:true */
 
 (function () {
 
   enyo.kind({
     name: "XV.Number",
+    kind: "XV.Input",
     published: {
-      value: null,
       scale: 2
     },
-    events: {
-      "onValueChange": ""
-    },
-    components: [
-      {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
-    ],
     inputChanged: function (inSender, inEvent) {
       if (this._ignoreChange) { return; }
       var value = Number(this.$.input.getValue());
@@ -26,24 +20,12 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
     setValue: function (value, options) {
-      options = options || {};
-      var scale = this.getScale(),
-        oldValue = this.getValue(),
-        newValue = _.isNumber(value) ? XT.math.round(value, scale) : null,
-        inEvent;
-      if (oldValue !== newValue) {
-        this.value = newValue;
-        this.valueChanged(value);
-        inEvent = { value: newValue, originator: this };
-        if (!options.silent) { this.doValueChange(inEvent); }
-      }
+      value = _.isNumber(value) ? XT.math.round(value, this.getScale()) : null;
+      XV.Input.prototype.setValue.call(this, value, options);
     },
     valueChanged: function (value) {
-      var scale = this.getScale(),
-        inputValue = value ? Globalize.format(value, "n" + scale) : "";
-      this._ignoreChange = true;
-      this.$.input.setValue(inputValue);
-      this._ignoreChange = false;
+      value = value ? Globalize.format(value, "n" + this.getScale()) : "";
+      XV.Input.prototype.valueChanged.call(this, value);
     }
   });
   

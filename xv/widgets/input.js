@@ -6,58 +6,51 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.Input",
-    kind: "onyx.Input",
-    classes: "xt-input",
-    events: {
-      "onValueChange": ""
+    published: {
+      value: null
     },
-    handlers: {
-      "onchange": "inputChanged"
-    },
-    setValue: function (value, options) {
-      options = options || {};
-      if (options.silent) { this._silent = true; }
-      this.inherited(arguments);
-      this._silent = false;
-    },
-    inputChanged: function (inSender, inEvent) {
-      inEvent.value = this.getValue();
-      inEvent.originator = this;
-      if (!this._silent) { this.doValueChange(inEvent); }
-    }
-  });
-
-  enyo.kind({
-    name: "XV.InputWidget",
     events: {
       "onValueChange": ""
     },
     components: [
-      {kind: "onyx.InputDecorator", components: [
-        {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
-      ]}
+      {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
     ],
-    getValue: function () {
-      return this.$.input.getValue();
-    },
     inputChanged: function (inSender, inEvent) {
-      inEvent.value = this.getValue();
-      inEvent.originator = this;
-      this.doValueChange(inEvent);
+      if (this._ignoreChange) { return; }
+      var value = this.$.input.getValue();
+      this.setValue(value);
+    },
+    setDisabled: function (value) {
+      this.$.input.setDisabled(value);
     },
     setValue: function (value, options) {
       options = options || {};
-      var inEvent;
-      
-      // Only notify if selection actually changed
-      if (value !== this.getValue()) {
-        this.$.input.setValue(value);
+      var oldValue = this.getValue(),
+        inEvent;
+      if (oldValue !== value) {
+        this.value = value;
+        this.valueChanged(value);
+        inEvent = { value: value, originator: this };
         if (!options.silent) {
-          inEvent = { value: value, originator: this };
           this.doValueChange(inEvent);
         }
       }
+    },
+    valueChanged: function (value) {
+      this._ignoreChange = true;
+      this.$.input.setValue(value);
+      this._ignoreChange = false;
     }
+  });
+  
+  enyo.kind({
+    name: "XV.InputWidget",
+    kind: "XV.Input",
+    components: [
+      {kind: "onyx.InputDecorator", components: [
+        {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
+      ]}
+    ]
   });
   
 }());
