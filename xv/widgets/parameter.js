@@ -18,7 +18,7 @@ white:true*/
       onParameterChange: ""
     },
     handlers: {
-      onchange: "parameterDidChange"
+      onValueChange: "parameterDidChange"
     },
     components: [
       {name: "label", kind: "Control", classes: 'parameter-label'},
@@ -30,7 +30,7 @@ white:true*/
       this.valueChanged();
       this.labelChanged();
       
-      if (!this.getOperator() && this.defaultKind === "XV.FancyInput") {
+      if (!this.getOperator() && this.defaultKind === "XV.InputWidget") {
         this.setOperator("MATCHES");
       }
     },
