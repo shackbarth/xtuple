@@ -10,7 +10,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     widgets in the `XV.Workspace`.
   */
   enyo.kind({
-    name: "XV.LabelWidget",
+    name: "XV.Label",
     kind: "enyo.Control",
     style: "border: 0px;", // TODO: make this an overridable default
     components: [

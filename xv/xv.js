@@ -273,12 +273,12 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Summary",
             location: "bottom",
             fields: [
-              { fieldName: "budgetedHoursTotal", kind: "XV.ReadOnly" },
-              { fieldName: "actualHoursTotal", kind: "XV.ReadOnly" },
-              { fieldName: "balanceHoursTotal", kind: "XV.ReadOnly" },
-              { fieldName: "budgetedExpensesTotal", kind: "XV.ReadOnly" },
-              { fieldName: "actualExpensesTotal", kind: "XV.ReadOnly" },
-              { fieldName: "balanceExpensesTotal", kind: "XV.ReadOnly" }
+              { fieldName: "budgetedHoursTotal", kind: "XV.Label" },
+              { fieldName: "actualHoursTotal", kind: "XV.Label" },
+              { fieldName: "balanceHoursTotal", kind: "XV.Label" },
+              { fieldName: "budgetedExpensesTotal", kind: "XV.Label" },
+              { fieldName: "actualExpensesTotal", kind: "XV.Label" },
+              { fieldName: "balanceExpensesTotal", kind: "XV.Label" }
 
             ]
           },
@@ -286,7 +286,7 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Schedule",
             fields: [
               { fieldName: "owner", kind: "XV.UserAccountRelationWidget" },
-              { fieldName: "assignedTo", kind: "XV.UserAccountRelation" },
+              { fieldName: "assignedTo", kind: "XV.UserAccountRelationWidget" },
               { fieldName: "dueDate", kind: "XV.DateWidget" },
               { fieldName: "assignDate", kind: "XV.DateWidget" },
               { fieldName: "startDate", kind: "XV.DateWidget" },
@@ -303,7 +303,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { label: "number", fieldName: "number", width: "120" },
               { label: "name", fieldName: "name", width: "120" },
               { label: "notes", fieldName: "notes", width: "220" },
-              { fieldName: "dueDate", kind: "XV.DateWidget", width: "100" },
+              { fieldName: "dueDate", kind: "XV.Date", width: "100" },
               { label: "actualHours", fieldName: "actualHours", kind: "XV.Number", width: "40" },
               { label: "actualExpenses", fieldName: "actualExpenses", kind: "XV.Number", width: "40" }
             ]

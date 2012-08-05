@@ -202,7 +202,7 @@ trailing:true white:true*/
       },
       handlers: {
         onValueChange: "valueChanged",
-        onSubmodelUpdate: "doEnableSaveButton"
+        onSubmodelUpdate: "enableSaveButton"
       },
       components: [
         {kind: "FittableRows", classes: "left", components: [
@@ -287,10 +287,9 @@ trailing:true white:true*/
         Essentially the callback function from backbone
       */
       modelDidChange: function (model, value, options) {
-        if (model.status !== XM.Model.READY_CLEAN &&
-            model.status !== XM.Model.READY_NEW) {
-          return;
-        }
+        var status = model.getStatus(),
+          K = model.getClass();
+        if (!(status & K.READY)) { return; }
         XT.log("Loading model into workspace: " + JSON.stringify(model.toJSON()));
 
         // Put the model in the history array
@@ -319,21 +318,15 @@ trailing:true white:true*/
         this.bubbleExit(destination);
       },
       /**
-       * Save the model (with whatever changes have been made) to the datastore.
+       * Save the model to the datastore.
        */
       save: function () {
         this.getModel().save();
         this.$.saveButton.setDisabled(true);
 
         // Update the info object in the summary views
-        var id = this.getModel().get("id");
-        var recordType = this.getModel().recordType;
-
-        // XXX just refreshing the model in backbone doesn't seem to work
-        //var infoType = XV.util.stripModelNamePrefix(recordType) + 'Info';
-        //var infoModel = new XM[infoType]();
-        //infoModel.fetch({ id: id });
-
+        var id = this.getModel().id,
+          recordType = this.getModel().recordType;
         enyo.Signals.send("onModelSave", { id: id, recordType: recordType });
       },
       saveAndLeave: function () {
