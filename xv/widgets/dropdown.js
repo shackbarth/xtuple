@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
-/*global XT:true, enyo:true, _:true */
+/*global XT:true, XM:true, enyo:true, _:true */
 
 (function () {
 
@@ -15,7 +15,8 @@ regexp:true, undef:true, trailing:true, white:true */
       collection: null,
       disabled: false,
       idAttribute: "id",
-      nameAttribute: "name"
+      nameAttribute: "name",
+      valueAttribute: null
     },
     handlers: {
       onSelect: "itemSelected"
@@ -67,8 +68,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.addRemoveClass("onyx-disabled", inEvent.originator.disabled);
     },
     itemSelected: function (inSender, inEvent) {
-      var value = this.$.picker.getSelected().value;
-      this.setValue(value);
+      var value = this.$.picker.getSelected().value,
+        attribute = this.getValueAttribute();
+      this.setValue(attribute ? value[attribute] : value);
     },
     setValue: function (value, options) {
       options = options || {};
@@ -88,8 +90,9 @@ regexp:true, undef:true, trailing:true, white:true */
     /** @private */
     _selectValue: function (value) {
       if (!value) { return; }
+      value = (this.getValueAttribute()) ? value : value.id;
       var component = _.find(this.$.picker.getComponents(), function (c) {
-        return (c.value ? c.value.id : null) === value.id;
+        return (c.value ? c.value.id : null) === value;
       });
       if (component) {
         this.$.picker.setSelected(component);
@@ -215,7 +218,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ProjectStatusDropdown",
     kind: "XV.DropdownWidget",
     published: {
-      collection: "XM.projectStatuses"
+      collection: "XM.projectStatuses",
+      valueAttribute: "id"
     }
   });
   
