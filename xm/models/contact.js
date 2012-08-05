@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -41,6 +41,8 @@ white:true*/
 
     recordType: 'XM.Contact',
 
+    nameAttribute: 'getName',
+
     numberPolicy: XM.Document.AUTO_NUMBER,
 
     defaults: {
@@ -69,10 +71,10 @@ white:true*/
     // ..........................................................
     // METHODS
     //
-    
+
     /**
     Full contact name.
-    
+
     @returns String
     */
     getName: function () {
@@ -95,13 +97,13 @@ white:true*/
     }
 
   });
-  
+
   // Add mixin
   XM.Contact = XM.Contact.extend(XM.ContactMixin);
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactEmail = XM.Model.extend({
@@ -117,7 +119,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.ContactComment = XM.Comment.extend({
@@ -129,7 +131,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Characteristic
   */
   XM.ContactCharacteristic = XM.Characteristic.extend({
@@ -141,7 +143,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactAccount = XM.Model.extend({
@@ -155,7 +157,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactContact = XM.Model.extend({
@@ -169,7 +171,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactItem = XM.Model.extend({
@@ -183,7 +185,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactFile = XM.Model.extend({
@@ -197,7 +199,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactImage = XM.Model.extend({
@@ -211,7 +213,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactUrl = XM.Model.extend({
@@ -225,7 +227,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ContactInfo = XM.Model.extend({
@@ -255,7 +257,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.ContactInfoCollection = XM.Collection.extend({

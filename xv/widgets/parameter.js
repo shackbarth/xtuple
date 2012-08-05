@@ -1,27 +1,9 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, _:true, console:true */
+/*global enyo:true, XM:true, XT:true, _:true, console:true */
 
 (function () {
-  
-  enyo.kind({
-    name: "XV.FancyInput",
-    published: {
-      value: ""
-    },
-    components: [
-      {kind: "onyx.InputDecorator", components: [
-        {kind: "onyx.Input", onchange: "inputChanged"}
-      ]}
-    ],
-    getValue: function () {
-      return this.$.input.getValue();
-    },
-    valueChanged: function () {
-      this.$.input.setValue(this.value);
-    }
-  });
 
   enyo.kind({
     name: "XV.ParameterItem",
@@ -36,19 +18,18 @@ white:true*/
       onParameterChange: ""
     },
     handlers: {
-      onchange: "parameterDidChange"
+      onValueChange: "parameterChanged"
     },
     components: [
       {name: "label", kind: "Control", classes: 'parameter-label'},
       {name: "input", classes: "parameter-item-input"}
     ],
-    defaultKind: "XV.FancyInput",
+    defaultKind: "XV.InputWidget",
     create: function () {
       this.inherited(arguments);
       this.valueChanged();
       this.labelChanged();
-      
-      if (!this.getOperator() && this.defaultKind === "XV.FancyInput") {
+      if (!this.getOperator() && this.defaultKind === "XV.InputWidget") {
         this.setOperator("MATCHES");
       }
     },
@@ -69,8 +50,9 @@ white:true*/
     getValue: function () {
       return this.$.input.getValue();
     },
-    parameterDidChange: function () {
-      this.doParameterChange(this.value);
+    parameterChanged: function () {
+      var inEvent = { value: this.getValue, originator: this };
+      this.doParameterChange(inEvent);
       return true; // stop right here
     },
     valueChanged: function () {
@@ -81,7 +63,6 @@ white:true*/
   enyo.kind({
     name: "XV.ParameterWidget",
     kind: "FittableRows",
-    classes: "enyo-fit",
     defaultKind: "XV.ParameterItem",
     /*
     components: [

@@ -45,7 +45,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             customization: {
               disallowEdit: true,
@@ -76,7 +76,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "firstName" },
               { fieldName: "lastName" },
               { fieldName: "jobTitle" },
-              { fieldName: "address", fieldType: "address" },
+              { fieldName: "address", kind: "XV.Address" },
               { fieldName: "phone" },
               { fieldName: "primaryEmail" }
             ]
@@ -84,13 +84,13 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "account", kind: "XV.AccountRelation" }
+              { fieldName: "account", kind: "XV.AccountRelationWidget" }
             ]
           },
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.ContactComment",
             customization: {
@@ -114,7 +114,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "name" },
               { fieldName: "description" },
               { fieldName: "priority", kind: "XV.PriorityDropdown" },
-              { fieldName: "incident", kind: "XV.IncidentRelation" }
+              { fieldName: "incident", kind: "XV.IncidentRelationWidget" }
             ]
           },
           {
@@ -129,7 +129,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.ToDoComment",
             customization: {
@@ -151,8 +151,9 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Opportunity Info",
             fields: [
               { fieldName: "number" },
+              { fieldName: "isActive", kind: "XV.Checkbox" },
               { fieldName: "name" },
-              { fieldName: "account", kind: "XV.AccountRelation" },
+              { fieldName: "account", kind: "XV.AccountRelationWidget" },
               { fieldName: "opportunityStage", kind: "XV.OpportunityStageDropdown" },
               { fieldName: "opportunityType", kind: "XV.OpportunityTypeDropdown" },
               { fieldName: "opportunitySource", kind: "XV.OpportunitySourceDropdown" }
@@ -171,15 +172,15 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Notes",
             location: "bottom",
             fields: [
-              { fieldName: "amount", kind: "XV.Number" },
-              { fieldName: "probability", kind: "XV.Number" },
+              { fieldName: "amount", kind: "XV.MoneyWidget" },
+              { fieldName: "probability", kind: "XV.PercentWidget" },
               { fieldName: "notes" }
             ]
           },
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.OpportunityComment",
             customization: {
@@ -208,10 +209,10 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Relationships",
             fields: [
-              { fieldName: "owner", kind: "XV.UserAccountRelation" },
+              { fieldName: "owner", kind: "XV.UserAccountRelationWidget" },
   //            { fieldName: "contact", fieldType: "relation", modelType: "XM.ContactInfo" },
-              { fieldName: "account", kind: "XV.AccountRelation" },
-              { fieldName: "item", kind: "XV.ItemRelation" }
+              { fieldName: "account", kind: "XV.AccountRelationWidget" },
+              { fieldName: "item", kind: "XV.ItemRelationWidget" }
             ]
           },
           {
@@ -222,7 +223,7 @@ regexp:true, undef:true, trailing:true, white:true */
           },
           {
             title: "History",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "history",
             modelType: "XM.IncidentHistory", // XXX I could do without these if I could find where to introspect
             location: "bottom",
@@ -241,7 +242,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.IncidentComment",
             customization: {
@@ -265,7 +266,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "number", placeholder: "Enter the project number" },
               { fieldName: "name" },
               { fieldName: "notes" },
-              { fieldName: "status", fieldType: "dropdown", collection: "XM.projectStatuses" }
+              { fieldName: "status", kind: "XV.ProjectStatusDropdown" }
             ]
           },
           {
@@ -284,7 +285,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Schedule",
             fields: [
-              { fieldName: "owner", kind: "XV.UserAccountRelation" },
+              { fieldName: "owner", kind: "XV.UserAccountRelationWidget" },
               { fieldName: "assignedTo", kind: "XV.UserAccountRelation" },
               { fieldName: "dueDate", kind: "XV.DateWidget" },
               { fieldName: "assignDate", kind: "XV.DateWidget" },
@@ -295,7 +296,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Tasks",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "tasks",
             modelType: "XM.ProjectTask",
             fields: [
@@ -303,14 +304,14 @@ regexp:true, undef:true, trailing:true, white:true */
               { label: "name", fieldName: "name", width: "120" },
               { label: "notes", fieldName: "notes", width: "220" },
               { fieldName: "dueDate", kind: "XV.DateWidget", width: "100" },
-              { label: "actualHours", fieldName: "actualHours", fieldType: "number", width: "40" },
-              { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "number", width: "40" }
+              { label: "actualHours", fieldName: "actualHours", kind: "XV.Number", width: "40" },
+              { label: "actualExpenses", fieldName: "actualExpenses", kind: "XV.Number", width: "40" }
             ]
           },
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.ProjectComment",
             customization: {
@@ -325,25 +326,119 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "text", label: "text" }
             ]
           }
-        ]
-      });
+        ],
 
+        "XM.Honorific": [
+          {
+            title: "Honorific Info",
+            fields: [
+              { fieldName: "code" }
+            ]
+          }
+        ],
+
+        "XM.State": [
+          {
+            title: "State Info",
+            fields: [
+              { fieldName: "abbreviation" },
+              { fieldName: "name" }
+            ]
+          }
+        ],
+
+        "XM.Country": [
+          {
+            title: "Country Info",
+            fields: [
+              { fieldName: "abbreviation" },
+              { fieldName: "name" }
+            ]
+          },
+          {
+            title: "Currency Info",
+            fields: [
+              { fieldName: "currencyAbbreviation" },
+              { fieldName: "currencyName" },
+              { fieldName: "currencyNumber" },
+              { fieldName: "currencySymbol" }
+            ]
+          }
+        ],
+
+        "XM.IncidentCategory": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", kind: "XV.Number" }
+            ]
+          }
+        ],
+        "XM.IncidentResolution": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", kind: "XV.Number" }
+            ]
+          }
+        ],
+        "XM.IncidentSeverity": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", kind: "XV.Number" }
+            ]
+          }
+        ],
+        "XM.Priority": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" },
+              { fieldName: "order", kind: "XV.Number" }
+            ]
+          }
+        ],
+        "XM.OpportunitySource": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+        "XM.OpportunityStage": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ],
+        "XM.OpportunityType": [
+          {
+            title: "Info",
+            fields: [
+              { fieldName: "name" },
+              { fieldName: "description" }
+            ]
+          }
+        ]
+
+
+
+      });
     },
-    getFieldType: function (value) {
-      if (!value) {
-        return "onyx.Input";
-      } else if (value === 'number') {
-        return "XV.NumberWidget";
-      } else if (value === 'dropdown') {
-        return "XV.DropdownWidget";
-      } else if (value === 'grid') {
-        return "XV.GridWidget";
-      } else if (value === 'comments') {
-        return "XV.CommentsWidget";
-      } else if (value === 'address') {
-        return "XV.AddressWidget";
-      }
-    },
+
     /**
      * Removes all the children from a parent object. This is a simple utility function.
      */

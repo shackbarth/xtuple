@@ -50,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
            * These are the fields with the data
            */
           var field = this.createComponent({
-            kind: XV.util.getFieldType(fieldDesc.fieldType),
+            kind: fieldDesc.fieldType || "XV.Input",
             container: gridRow,
             name: fieldDesc.fieldName + (inEvent.index - 1),
             placeholder: label,
@@ -69,7 +69,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           if (this.getCollection().size() + 1 > inEvent.index) {
             // row with data
             var model = this.getCollection().at(inEvent.index - 1);
-            field.setValue(model.get(fieldDesc.fieldName));
+            field.setValue(model.get(fieldDesc.fieldName), {silent: true});
 
             if (this.getCustomization().disallowEdit) {
               field.setDisabled(true);
@@ -81,12 +81,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             // XXX the functionality isn't actually hooked up yet
             if (this.getCustomization().stampUser &&
                 fieldDesc.fieldName === 'createdBy') {
-              field.setValue("<YOU>");
+              field.setValue("<YOU>", {silent: true});
               field.setDisabled(true);
             }
             if (this.getCustomization().stampDate &&
                 fieldDesc.fieldName === 'created') {
-              field.setValue("<NOW>");
+              field.setValue("<NOW>", {silent: true});
               field.setDisabled(true);
             }
 

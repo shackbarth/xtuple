@@ -1,7 +1,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, io:true, Backbone:true, _:true, console:true */
+/*global XT:true, XM:true, io:true, Backbone:true, _:true, console:true */
 
 (function () {
   "use strict";
@@ -46,20 +46,36 @@ white:true*/
 
 
       // Helper function to convert parameters to data source friendly formats
-      var format = function (value) {
+      var format = function (param) {
+        var recordType = options.query.recordType,
+          klass = recordType ? XT.getObjectByName(recordType) : null,
+          relations = klass ? klass.prototype.relations : [],
+          relation = _.find(relations, function (rel) {
+            return rel.key === param.attribute;
+          }),
+          idAttribute;
+          
         // Format date if applicable
-        if (value instanceof Date) {
-          return value.toJSON();
+        if (param.value instanceof Date) {
+          param.value = param.value.toJSON();
           
         // Format record if applicable
-        } else if (value instanceof XM.Model) {
-          return value.id;
+        } else if (param.value instanceof XM.Model) {
+          param.value = param.value.id;
         }
-        return value;
+        
+        // Format attribute if it's `HasOne` relation
+        if (relation && relation.type === Backbone.HasOne &&
+            relation.includeInJSON === true) {
+          klass = XT.getObjectByName(relation.relatedModel);
+          idAttribute = klass.prototype.idAttribute;
+          param.attribute = param.attribute + '.' + idAttribute;
+        }
+        
       };
 
       for (prop in parameters) {
-        parameters[prop].value = format(parameters[prop].value);
+        format(parameters[prop]);
       }
 
       payload.requestType = 'fetch';
@@ -230,7 +246,7 @@ white:true*/
       });
       this._sock.on("ok", function () {
         didConnect.call(self, callback);
-      })
+      });
       this._sock.on("error", function (err) {
         didError.call(self, err, callback);
       });

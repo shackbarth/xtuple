@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XT:true, document:true */
@@ -15,7 +15,9 @@ white:true*/
     handlers: {
       onInfoListAdded: "addPulloutItem",
       onParameterChange: "parameterDidChange",
-      onTogglePullout: "togglePullout"
+      onTogglePullout: "togglePullout",
+      onHistoryChanged: "refreshHistoryPanel",
+      onHistoryItemSelected: "selectHistoryItem"
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
@@ -49,25 +51,48 @@ white:true*/
       this.$.pullout.setShowing(showing);
     },
     parameterDidChange: function (inSender, inEvent) {
-      this.$.postbooks.$.container.getActive().waterfall("onParameterChange", inEvent);
+      this.$.postbooks.getActiveModule().waterfall("onParameterChange", inEvent);
     },
     togglePullout: function (inSender, inEvent) {
       this.$.pullout.togglePullout(inEvent.name);
     },
+    refreshHistoryPanel: function (inSender, inEvent) {
+      this.$.pullout.refreshHistoryList();
+    },
+    /**
+     * When a history item is selected we bubble an event way up the application.
+     * Note that we create a sort of ersatz model to mimic the way the handler
+     * expects to have a model with the event to know what to drill down into.
+     */
+    selectHistoryItem: function (inSender, inEvent) {
+      var module = inEvent.module;
+      var modelId = inEvent.modelId;
+      var modelType = inEvent.modelType;
+      var modelShell = { recordType: modelType, id: modelId };
+      XT.log("Load from history: " + modelType + " " + modelId);
+      // XXX we don't apply the module because workspace is a peer to crm etc.
+      // this might become a problem once we're in a true multimodule environment
+      // where for example backing up from a CRM workspace really should land you
+      // in the CRM module
+
+      this.$.postbooks.getContainer().applyWorkspace(modelShell);
+    },
     start: function () {
-    
+
       if (this.getIsStarted()) { return; }
-    
+
       // on application start, connect the datasource
       XT.dataSource.connect();
-    
+
       // lets not allow this to happen again
       this.setIsStarted(true);
     },
     show: function () {
-      if (this.getShowing() && this.getIsStarted())
+      if (this.getShowing() && this.getIsStarted()) {
         this.renderInto(document.body);
-      else this.inherited(arguments);
+      } else {
+        this.inherited(arguments);
+      }
     }
   });
 }());

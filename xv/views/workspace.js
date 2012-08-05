@@ -21,7 +21,7 @@ trailing:true white:true*/
         modelType: ""
       },
       events: {
-        onFieldChanged: ""
+        onValueChanged: ""
       },
       components: [
         { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
@@ -41,13 +41,13 @@ trailing:true white:true*/
           label;
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-          if (boxDesc.boxType) {
+          if (boxDesc.kind) {
             /**
              * Grids are a special case that must be rendered per their own logic.
              * All one-to-many relationships will be rendered as a grid (?)
              */
             box = this.createComponent({
-                kind: XV.util.getFieldType(boxDesc.boxType),
+                kind: boxDesc.kind || "XV.InputWidget",
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
@@ -69,8 +69,6 @@ trailing:true white:true*/
                 ]
               });
 
-            // TODO: Cole makes a convincing case that the widgets should include their
-            // own InputDecorator and label
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
 
@@ -88,7 +86,7 @@ trailing:true white:true*/
               });
 
               var widget = this.createComponent({
-                kind: fieldDesc.kind || XV.util.getFieldType(fieldDesc.fieldType),
+                kind: fieldDesc.kind || "XV.InputWidget",
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field
@@ -161,7 +159,7 @@ trailing:true white:true*/
         for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
 
-          if (boxDesc.boxType) {
+          if (boxDesc.kind) {
             /**
              * Don't send just the field over. Send the whole collection over
              */
@@ -174,7 +172,8 @@ trailing:true white:true*/
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
               fieldName = boxDesc.fields[iField].fieldName;
-              fieldValue = model.getValue(fieldName) ? model.getValue(fieldName) : "";
+              // argh! 0 is falsy but we want to populate 0 into fields if appropriate
+              fieldValue = model.getValue(fieldName) || model.getValue(fieldName) === 0 ? model.getValue(fieldName) : "";
               if (fieldName) {
                 /**
                  * Update the view field with the model value
@@ -198,10 +197,11 @@ trailing:true white:true*/
         model: null
       },
       events: {
+        onHistoryChanged: "",
         onModelSave: ""
       },
       handlers: {
-        onFieldChanged: "doFieldChanged",
+        onValueChange: "valueChanged",
         onSubmodelUpdate: "doEnableSaveButton"
       },
       components: [
@@ -217,7 +217,7 @@ trailing:true white:true*/
               {kind: "onyx.Menu", name: "navigationMenu", components: [
                 { content: "Dashboard" },
                 { content: "CRM" },
-                { content: "Billing" }
+                { content: "Setup" }
               ], ontap: "doNavigationSelected" }
             ]}
 
@@ -286,24 +286,18 @@ trailing:true white:true*/
        * not foolproof: let's say a user changes one field (which enables the save
        * button) and then changes a second but persists before blurring the second.
        */
-      doFieldChanged: function (inSender, inEvent) {
-        var newValue = inEvent.getValue ? inEvent.getValue() :
-          inEvent.getSelected ? inEvent.getSelected().value :
-          inEvent.originator.model; // relational_widget
-
-        var updateObject = {};
-
-        /**
-         * XXX Isn't it strange that inEvent.name is the name of the field that's throwing the
-         * event? both inEvent and inSender look like senders here. This is true for Inputs
-         * and Pickers
-         */
-        updateObject[inEvent.name] = newValue;
-        this.getModel().set(updateObject);
-        this.doEnableSaveButton();
+      valueChanged: function (inSender, inEvent) {
+        var value = inEvent.value,
+          attributes = {},
+          model = this.getModel();
+        if (model) {
+          attributes[inEvent.originator.name] = value;
+          model.set(attributes);
+          this.enableSaveButton();
+        }
       },
-      doEnableSaveButton: function () {
-        this.$.saveButton.setContent("Save Changes");
+      enableSaveButton: function () {
+        this.$.saveButton.setContent("_save".loc());
         this.$.saveButton.setDisabled(false);
       },
       /**
@@ -430,7 +424,8 @@ trailing:true white:true*/
         /**
          * Put the model in the history array
          */
-        XT.addToHistory(model);
+        XT.addToHistory("crm", model); // TODO: generalize for any module
+        this.doHistoryChanged();
 
 
         /**

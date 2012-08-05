@@ -54,7 +54,23 @@ trailing:true white:true*/
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
             {kind: "Image", src: "images/search-input-search.png"}
-          ]}
+          ]},
+          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout" },
+          {
+            name: "logoutWarningPopup",
+            classes: "onyx-sample-popup",
+            kind: "onyx.Popup",
+            centered: true,
+            modal: true,
+            floating: true,
+            components: [
+              { content: "Are you sure you want to log out?" },
+              { tag: "br"},
+              { kind: "onyx.Button", content: "Yes, logout", ontap: "logout" },
+              { kind: "onyx.Button", content: "No, don't logout.", ontap: "closeLogoutWarningPopup" }
+
+            ]
+          }
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
@@ -140,11 +156,11 @@ trailing:true white:true*/
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
-      
+
       // Build parameters
       if (input || parameters.length) {
         query.parameters = [];
-        
+
         // Input search parameters
         if (input) {
           query.parameters = [{
@@ -153,7 +169,7 @@ trailing:true white:true*/
             value: this.$.searchInput.getValue()
           }];
         }
-      
+
         // Advanced parameters
         if (parameters) {
           query.parameters = query.parameters.concat(parameters);
@@ -161,7 +177,7 @@ trailing:true white:true*/
       } else {
         delete query.parameters;
       }
-      
+
       if (options.showMore) {
         query.rowOffset += ROWS_PER_FETCH;
         options.add = true;
@@ -212,42 +228,8 @@ trailing:true white:true*/
     newWorkspace: function (inSender, inEvent) {
       var modelType = this.$.lists.controls[this.selectedList].query.recordType;
       var emptyModel = new XM[XV.util.formatModelName(modelType)]();
+      emptyModel.initialize(null, { isNew: true });
       this.bubble("workspace", {eventName: "workspace", options: emptyModel });
-
-    },
-    /**
-     * Populates the history dropdown with the components of the XT.history array
-     */
-    fillHistory: function () {
-
-      var i;
-
-      /**
-       * Clear out the history menu
-       */
-      XV.util.removeAllChildren(this.$.historyMenu);
-
-      for (i = 0; i < XT.getHistory().length; i++) {
-        var historyItem = XT.getHistory()[i];
-        this.$.historyMenu.createComponent({
-          content: historyItem.modelType + ": " + historyItem.modelName,
-          modelType: historyItem.modelType,
-          modelId: historyItem.modelId
-        });
-      }
-      this.$.historyMenu.render();
-    },
-    /**
-     * When a history item is selected we bubble an event way up the application.
-     * Note that we create a sort of ersatz model to mimic the way the handler
-     * expects to have a model with the event to know what to drill down into.
-     */
-    doHistoryItemSelected: function (inSender, inEvent) {
-      var modelId = inEvent.originator.modelId;
-      var modelType = inEvent.originator.modelType;
-      var modelShell = { recordType: modelType, id: modelId };
-      XT.log("Load from history: " + modelType + " " + modelId);
-      this.bubble("workspace", {eventName: "workspace", options: modelShell });
     },
 
     /**
@@ -258,7 +240,11 @@ trailing:true white:true*/
      */
     doRefreshInfoObject: function (inSender, inPayload) {
       // obnoxious massaging. Can't think of an elegant way to do this.
-      var listName = XV.util.stripModelNamePrefix(inPayload.recordType).camelize() + "InfoList",
+      // salt in wounds: in setup we massage by adding List on the end, but with
+      // crm we massage by adding InfoList on the end. This is horrible.
+      // XXX not sustainable
+      var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
+        listName = this.name === "setup" ? listBase + "List" : listBase + "InfoList",
         list = this.$.lists.$[listName];
       if (!list) {
         // we don't have this model on our list. No need to update
@@ -272,8 +258,21 @@ trailing:true white:true*/
         return;
       }
       model.fetch();
-    }
+    },
 
+    /**
+     * Logout management. We show the user a warning popup before we log them out.
+     */
+    warnLogout: function () {
+      this.$.logoutWarningPopup.show();
+    },
+    closeLogoutWarningPopup: function () {
+      this.$.logoutWarningPopup.hide();
+    },
+    logout: function () {
+      this.$.logoutWarningPopup.hide();
+      XT.session.logout();
+    }
 
   });
 

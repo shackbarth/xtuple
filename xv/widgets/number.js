@@ -1,47 +1,237 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
-regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, Globalize:true, enyo:true, _:true */
+regexp:true, undef:true, trailing:true, white:true */
+/*global XT:true, XV:true, Globalize:true, enyo:true, _:true */
 
 (function () {
-  //"use strict";
 
-
-  // TODO: validate input and complain if invalid
   enyo.kind({
-    name: "XV.NumberWidget",
-    kind: "enyo.Control",
-    numberObject: null,
-    components: [
-      { kind: "onyx.Input", name: "numberField", onchange: "doFieldChanged", style: "border: 0px; "}
-    ],
-    create: function () {
-      this.inherited(arguments);
-      /**
-       * the field should inherit the style of the widget. I do this for
-       * the width property, which works nicely. It might not work nicely
-       * for other properties
-       */
-      this.$.numberField.setStyle(this.style);
+    name: "XV.Number",
+    kind: "XV.Input",
+    published: {
+      scale: 0
     },
-    /**
-     * Sets the value of the field. Validates as well, and clears shown input if invalid.
-     */
-    setValue: function (value) {
-      // argh! 0 is falsey in javascript, but it's valid for us
-      this.numberObject = value || value === 0 ? Number(value) : null;
-      this.$.numberField.setValue(Globalize.format(this.numberObject, "n"));
+    setValue: function (value, options) {
+      value = _.isNumber(value) ? XT.math.round(value, this.getScale()) : null;
+      XV.Input.prototype.setValue.call(this, value, options);
     },
-    /**
-     * Returns the number value and not the string
-     */
-    getNumberObject: function () {
-      return isFinite(this.numberObject) ? this.numberObject : null;
+    validate: function (value) {
+      value = Number(value);
+      return isNaN(value) ? false : value;
     },
-    getValue: function () {
-      return this.getNumberObject();
-    },
-    doFieldChanged: function (inSender, inEvent) {
-      this.setValue(inSender.getValue());
+    valueChanged: function (value) {
+      value = value ? Globalize.format(value, "n" + this.getScale()) : "";
+      return XV.Input.prototype.valueChanged.call(this, value);
     }
   });
+  
+  enyo.kind({
+    name: "XV.NumberWidget",
+    kind: "XV.Number",
+    components: [
+      {kind: "onyx.InputDecorator", components: [
+        {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
+      ]}
+    ]
+  });
+  
+  // ..........................................................
+  // COST
+  //
+  
+  enyo.kind({
+    name: "XV.Cost",
+    kind: "XV.Number",
+    published: {
+      scale: XT.COST_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.CostWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.COST_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // EXTENDED PRICE
+  //
+  
+  enyo.kind({
+    name: "XV.ExtendedPrice",
+    kind: "XV.Number",
+    published: {
+      scale: XT.EXTENDED_PRICE_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.ExtendedPriceWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.EXTENDED_PRICE_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // MONEY
+  //
+  
+  enyo.kind({
+    name: "XV.Money",
+    kind: "XV.Number",
+    published: {
+      scale: XT.MONEY_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.MoneyWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.MONEY_SCALE
+    }
+  });
+
+  // ..........................................................
+  // PERCENT
+  //
+  
+  enyo.kind({
+    name: "XV.Percent",
+    kind: "XV.Number",
+    published: {
+      scale: XT.PERCENT_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.PercentWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.PERCENT_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // PURCHASE PRICE
+  //
+  
+  enyo.kind({
+    name: "XV.PurchasePrice",
+    kind: "XV.Number",
+    published: {
+      scale: XT.PURCHASE_PRICE_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.PurchasePriceWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.PURCHASE_PRICE_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // QUANTITY
+  //
+  
+  enyo.kind({
+    name: "XV.Quantity",
+    kind: "XV.Number",
+    published: {
+      scale: XT.QTY_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.QuantityWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.QTY_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // QUANTITY PER
+  //
+  
+  enyo.kind({
+    name: "XV.QuantityPer",
+    kind: "XV.Number",
+    published: {
+      scale: XT.QTY_PER_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.QuantityPerWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.QTY_PER_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // SALES PRICE
+  //
+  
+  enyo.kind({
+    name: "XV.SalesPrice",
+    kind: "XV.Number",
+    published: {
+      scale: XT.SALES_PRICE_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.SalesPriceWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.SALES_PRICE_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // UNIT RATIO
+  //
+  
+  enyo.kind({
+    name: "XV.UnitRatio",
+    kind: "XV.Number",
+    published: {
+      scale: XT.UNIT_RATIO_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.UnitRatioWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.UNIT_RATIO_SCALE
+    }
+  });
+  
+  // ..........................................................
+  // WEIGHT
+  //
+  
+  enyo.kind({
+    name: "XV.Weight",
+    kind: "XV.Number",
+    published: {
+      scale: XT.WEIGHT_SCALE
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.WeightWidget",
+    kind: "XV.NumberWidget",
+    published: {
+      scale: XT.WEIGHT_SCALE
+    }
+  });
+
 }());

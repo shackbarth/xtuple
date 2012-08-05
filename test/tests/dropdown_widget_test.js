@@ -16,7 +16,7 @@ trailing:true white:true*/
       return this.$.dropdownWidget;
     },
     beforeEach: function () {
-      this.getObj().setModelType("XM.projectStatuses");
+      this.getObj().setCollection("XM.projectStatuses");
     },
     testJunkAsUndefined: function () {
       this.getObj().setValue("XYZ");
