@@ -1,11 +1,13 @@
 enyo.depends(
+  "label.js",
+  "input.js",
+  "button.js",
+  "number.js",
   "dropdown.js",
-  "address_widget.js",
-  "comments_widget.js",
+  "address.js",
+  "comments.js",
   "date.js",
-  "number_widget.js",
   "relation.js",
-  "grid_widget.js",
-  "read_only_widget.js",
+  "grid.js",
   "parameter.js"
 );
