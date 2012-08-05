@@ -84,7 +84,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Account Info",
             fields: [
-              { fieldName: "account", kind: "XV.AccountRelation" }
+              { fieldName: "account", kind: "XV.AccountRelationWidget" }
             ]
           },
           {
@@ -114,7 +114,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "name" },
               { fieldName: "description" },
               { fieldName: "priority", kind: "XV.PriorityDropdown" },
-              { fieldName: "incident", kind: "XV.IncidentRelation" }
+              { fieldName: "incident", kind: "XV.IncidentRelationWidget" }
             ]
           },
           {
@@ -152,7 +152,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "number" },
               { fieldName: "name" },
-              { fieldName: "account", kind: "XV.AccountRelation" },
+              { fieldName: "account", kind: "XV.AccountRelationWidget" },
               { fieldName: "opportunityStage", kind: "XV.OpportunityStageDropdown" },
               { fieldName: "opportunityType", kind: "XV.OpportunityTypeDropdown" },
               { fieldName: "opportunitySource", kind: "XV.OpportunitySourceDropdown" }
@@ -208,10 +208,10 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Relationships",
             fields: [
-              { fieldName: "owner", kind: "XV.UserAccountRelation" },
+              { fieldName: "owner", kind: "XV.UserAccountRelationWidget" },
   //            { fieldName: "contact", fieldType: "relation", modelType: "XM.ContactInfo" },
-              { fieldName: "account", kind: "XV.AccountRelation" },
-              { fieldName: "item", kind: "XV.ItemRelation" }
+              { fieldName: "account", kind: "XV.AccountRelationWidget" },
+              { fieldName: "item", kind: "XV.ItemRelationWidget" }
             ]
           },
           {
@@ -284,7 +284,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Schedule",
             fields: [
-              { fieldName: "owner", kind: "XV.UserAccountRelation" },
+              { fieldName: "owner", kind: "XV.UserAccountRelationWidget" },
               { fieldName: "assignedTo", kind: "XV.UserAccountRelation" },
               { fieldName: "dueDate", kind: "XV.DateWidget" },
               { fieldName: "assignDate", kind: "XV.DateWidget" },

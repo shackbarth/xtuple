@@ -196,7 +196,7 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.AccountRelation",
+    name: "XV.AccountRelationWidget",
     kind: "XV.RelationWidget",
     published: {
       collection: "XM.AccountInfoCollection"
@@ -208,7 +208,7 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.IncidentRelation",
+    name: "XV.IncidentRelationWidget",
     kind: "XV.RelationWidget",
     published: {
       collection: "XM.IncidentInfoCollection",
@@ -221,7 +221,7 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.ItemRelation",
+    name: "XV.ItemRelationWidget",
     kind: "XV.RelationWidget",
     published: {
       collection: "XM.ItemInfoCollection",
@@ -235,7 +235,7 @@ regexp:true, undef:true, trailing:true, white:true */
   //
   
   enyo.kind({
-    name: "XV.UserAccountRelation",
+    name: "XV.UserAccountRelationWidget",
     kind: "XV.RelationWidget",
     published: {
       collection: "XM.UserAccountInfoCollection",
