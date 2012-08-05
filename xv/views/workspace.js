@@ -21,7 +21,7 @@ trailing:true white:true*/
         modelType: ""
       },
       events: {
-        onFieldChanged: ""
+        onValueChanged: ""
       },
       components: [
         { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
@@ -41,13 +41,13 @@ trailing:true white:true*/
           label;
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-          if (boxDesc.boxType) {
+          if (boxDesc.kind) {
             /**
              * Grids are a special case that must be rendered per their own logic.
              * All one-to-many relationships will be rendered as a grid (?)
              */
             box = this.createComponent({
-                kind: XV.util.getFieldType(boxDesc.boxType),
+                kind: boxDesc.kind || "XV.InputWidget",
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
                 name: boxDesc.title
               });
@@ -86,7 +86,7 @@ trailing:true white:true*/
               });
 
               var widget = this.createComponent({
-                kind: fieldDesc.kind || XV.util.getFieldType(fieldDesc.fieldType),
+                kind: fieldDesc.kind || "XV.InputWidget",
                 style: "border: 0px; ",
                 name: fieldDesc.fieldName,
                 container: field
@@ -159,7 +159,7 @@ trailing:true white:true*/
         for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
 
-          if (boxDesc.boxType) {
+          if (boxDesc.kind) {
             /**
              * Don't send just the field over. Send the whole collection over
              */
@@ -201,7 +201,7 @@ trailing:true white:true*/
         onModelSave: ""
       },
       handlers: {
-        onFieldChanged: "doFieldChanged",
+        onValueChange: "valueChanged",
         onSubmodelUpdate: "doEnableSaveButton"
       },
       components: [
@@ -286,24 +286,18 @@ trailing:true white:true*/
        * not foolproof: let's say a user changes one field (which enables the save
        * button) and then changes a second but persists before blurring the second.
        */
-      doFieldChanged: function (inSender, inEvent) {
-        var newValue = inEvent.getValue ? inEvent.getValue() :
-          inEvent.getSelected ? inEvent.getSelected().value :
-          inEvent.originator.model; // relational_widget
-
-        var updateObject = {};
-
-        /**
-         * XXX Isn't it strange that inEvent.name is the name of the field that's throwing the
-         * event? both inEvent and inSender look like senders here. This is true for Inputs
-         * and Pickers
-         */
-        updateObject[inEvent.name] = newValue;
-        this.getModel().set(updateObject);
-        this.doEnableSaveButton();
+      valueChanged: function (inSender, inEvent) {
+        var value = inEvent.value,
+          attributes = {},
+          model = this.getModel();
+        if (model) {
+          attributes[inEvent.originator.name] = value;
+          model.set(attributes);
+          this.enableSaveButton();
+        }
       },
-      doEnableSaveButton: function () {
-        this.$.saveButton.setContent("Save Changes");
+      enableSaveButton: function () {
+        this.$.saveButton.setContent("_save".loc());
         this.$.saveButton.setDisabled(false);
       },
       /**

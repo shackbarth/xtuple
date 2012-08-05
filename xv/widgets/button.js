@@ -4,12 +4,6 @@ trailing:true white:true*/
 /*global XT:true, XM:true, enyo:true, Globalize:true*/
 
 (function () {
-  
-  enyo.kind({
-    name: "XV.Input",
-    kind: "Input",
-    classes: "xt-input"
-  });
 
   enyo.kind({
     name: "XV.Button",

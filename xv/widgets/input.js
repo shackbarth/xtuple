@@ -29,9 +29,6 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.InputWidget",
-    published: {
-      value: ""
-    },
     events: {
       "onValueChange": ""
     },

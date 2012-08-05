@@ -50,7 +50,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
            * These are the fields with the data
            */
           var field = this.createComponent({
-            kind: XV.util.getFieldType(fieldDesc.fieldType),
+            kind: fieldDesc.fieldType || "XV.Input",
             container: gridRow,
             name: fieldDesc.fieldName + (inEvent.index - 1),
             placeholder: label,

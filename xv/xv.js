@@ -45,7 +45,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             customization: {
               disallowEdit: true,
@@ -76,7 +76,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "firstName" },
               { fieldName: "lastName" },
               { fieldName: "jobTitle" },
-              { fieldName: "address", fieldType: "address" },
+              { fieldName: "address", kind: "XV.Address" },
               { fieldName: "phone" },
               { fieldName: "primaryEmail" }
             ]
@@ -90,7 +90,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.ContactComment",
             customization: {
@@ -129,7 +129,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.ToDoComment",
             customization: {
@@ -171,15 +171,15 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Notes",
             location: "bottom",
             fields: [
-              { fieldName: "amount", kind: "XV.Number" },
-              { fieldName: "probability", kind: "XV.Number" },
+              { fieldName: "amount", kind: "XV.NumberWidget" },
+              { fieldName: "probability", kind: "XV.NumberWidget" },
               { fieldName: "notes" }
             ]
           },
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.OpportunityComment",
             customization: {
@@ -222,7 +222,7 @@ regexp:true, undef:true, trailing:true, white:true */
           },
           {
             title: "History",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "history",
             modelType: "XM.IncidentHistory", // XXX I could do without these if I could find where to introspect
             location: "bottom",
@@ -241,7 +241,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.IncidentComment",
             customization: {
@@ -265,7 +265,7 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "number", placeholder: "Enter the project number" },
               { fieldName: "name" },
               { fieldName: "notes" },
-              { fieldName: "status", fieldType: "dropdown", collection: "XM.projectStatuses" }
+              { fieldName: "status", kind: "XV.ProjectStatusDropdown" }
             ]
           },
           {
@@ -295,7 +295,7 @@ regexp:true, undef:true, trailing:true, white:true */
           {
             title: "Tasks",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "tasks",
             modelType: "XM.ProjectTask",
             fields: [
@@ -303,14 +303,14 @@ regexp:true, undef:true, trailing:true, white:true */
               { label: "name", fieldName: "name", width: "120" },
               { label: "notes", fieldName: "notes", width: "220" },
               { fieldName: "dueDate", kind: "XV.DateWidget", width: "100" },
-              { label: "actualHours", fieldName: "actualHours", fieldType: "number", width: "40" },
-              { label: "actualExpenses", fieldName: "actualExpenses", fieldType: "number", width: "40" }
+              { label: "actualHours", fieldName: "actualHours", kind: "XV.Number", width: "40" },
+              { label: "actualExpenses", fieldName: "actualExpenses", kind: "XV.Number", width: "40" }
             ]
           },
           {
             title: "Comments",
             location: "bottom",
-            boxType: "grid",
+            kind: "XV.GridWidget",
             objectName: "comments",
             modelType: "XM.ProjectComment",
             customization: {
@@ -371,7 +371,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "description" },
-              { fieldName: "order", fieldType: "number" }
+              { fieldName: "order", kind: "XV.Number" }
             ]
           }
         ],
@@ -381,7 +381,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "description" },
-              { fieldName: "order", fieldType: "number" }
+              { fieldName: "order", kind: "XV.Number" }
             ]
           }
         ],
@@ -391,7 +391,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "description" },
-              { fieldName: "order", fieldType: "number" }
+              { fieldName: "order", kind: "XV.Number" }
             ]
           }
         ],
@@ -401,7 +401,7 @@ regexp:true, undef:true, trailing:true, white:true */
             fields: [
               { fieldName: "name" },
               { fieldName: "description" },
-              { fieldName: "order", fieldType: "number" }
+              { fieldName: "order", kind: "XV.Number" }
             ]
           }
         ],
@@ -431,27 +431,13 @@ regexp:true, undef:true, trailing:true, white:true */
               { fieldName: "description" }
             ]
           }
-        ],
+        ]
 
 
 
       });
     },
-    getFieldType: function (value) {
-      if (!value) {
-        return "onyx.Input";
-      } else if (value === 'number') {
-        return "XV.NumberWidget";
-      } else if (value === 'dropdown') {
-        return "XV.DropdownWidget";
-      } else if (value === 'grid') {
-        return "XV.GridWidget";
-      } else if (value === 'comments') {
-        return "XV.CommentsWidget";
-      } else if (value === 'address') {
-        return "XV.AddressWidget";
-      }
-    },
+
     /**
      * Removes all the children from a parent object. This is a simple utility function.
      */
