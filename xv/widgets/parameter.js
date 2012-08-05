@@ -4,24 +4,6 @@ white:true*/
 /*global enyo:true, XT:true, _:true, console:true */
 
 (function () {
-  
-  enyo.kind({
-    name: "XV.FancyInput",
-    published: {
-      value: ""
-    },
-    components: [
-      {kind: "onyx.InputDecorator", components: [
-        {kind: "onyx.Input", onchange: "inputChanged"}
-      ]}
-    ],
-    getValue: function () {
-      return this.$.input.getValue();
-    },
-    valueChanged: function () {
-      this.$.input.setValue(this.value);
-    }
-  });
 
   enyo.kind({
     name: "XV.ParameterItem",
@@ -42,7 +24,7 @@ white:true*/
       {name: "label", kind: "Control", classes: 'parameter-label'},
       {name: "input", classes: "parameter-item-input"}
     ],
-    defaultKind: "XV.FancyInput",
+    defaultKind: "XV.InputWidget",
     create: function () {
       this.inherited(arguments);
       this.valueChanged();
