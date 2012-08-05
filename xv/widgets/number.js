@@ -5,7 +5,7 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   enyo.kind({
-    name: "XV.NumberWidget",
+    name: "XV.Number",
     published: {
       value: null,
       scale: 2
@@ -14,15 +14,13 @@ regexp:true, undef:true, trailing:true, white:true */
       "onValueChange": ""
     },
     components: [
-      {kind: "onyx.InputDecorator", components: [
-        {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
-      ]}
+      {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
     ],
     inputChanged: function (inSender, inEvent) {
       if (this._ignoreChange) { return; }
       var value = Number(this.$.input.getValue());
       if (isNaN(value)) {
-        this._setInput(this.getValue());
+        this.valueChanged(this.getValue());
       } else {
         this.setValue(value);
       }
@@ -35,13 +33,12 @@ regexp:true, undef:true, trailing:true, white:true */
         inEvent;
       if (oldValue !== newValue) {
         this.value = value;
-        this._setInput(value);
+        this.valueChanged(value);
         inEvent = { value: value, originator: this };
         if (!options.silent) { this.doValueChange(inEvent); }
       }
     },
-    /** @private */
-    _setInput: function (value) {
+    valueChanged: function (value) {
       var scale = this.getScale(),
         inputValue = value ? Globalize.format(value, "n" + scale) : "";
       this._ignoreChange = true;
@@ -49,5 +46,16 @@ regexp:true, undef:true, trailing:true, white:true */
       this._ignoreChange = false;
     }
   });
+  
+  enyo.kind({
+    name: "XV.NumberWidget",
+    kind: "XV.Number",
+    components: [
+      {kind: "onyx.InputDecorator", components: [
+        {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
+      ]}
+    ]
+  });
+  
 
 }());
