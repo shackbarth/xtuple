@@ -516,6 +516,14 @@ trailing:true white:true*/
         }
       },
       {label: "_description".loc(), attr: "description"},
+      {label: "_category".loc(), attr: "category",
+        defaultKind: "XV.IncidentCategoryDropdown"},
+      {label: "_priority".loc(), attr: "priority",
+        defaultKind: "XV.PriorityDropdown"},
+      {label: "_severity".loc(), attr: "severity",
+        defaultKind: "XV.IncidentSeverityDropdown"},
+      {label: "_resolution".loc(), attr: "resolution",
+          defaultKind: "XV.IncidentResolutionDropdown"},
       {label: "_startDate".loc(), attr: "created", operator: ">=", defaultKind: "XV.DateWidget"},
       {label: "_endDate".loc(), attr: "created", operator: "<=", defaultKind: "XV.DateWidget"}
     ]
@@ -1040,7 +1048,7 @@ trailing:true white:true*/
     name: "XV.OpportunitySourceList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] },
+      query: {orderBy: [{ attribute: 'id' }] }
     }
   });
 
@@ -1048,7 +1056,7 @@ trailing:true white:true*/
     name: "XV.OpportunityStageList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] },
+      query: {orderBy: [{ attribute: 'id' }] }
     }
   });
 
@@ -1056,7 +1064,7 @@ trailing:true white:true*/
     name: "XV.OpportunityTypeList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] },
+      query: {orderBy: [{ attribute: 'id' }] }
     }
   });
 

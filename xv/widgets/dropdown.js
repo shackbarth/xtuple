@@ -72,11 +72,16 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       options = options || {};
-      var inEvent = { originator: this, value: value };
-      if (this._selectValue(value)) {
-        this.value = value;
-        if (!options.silent) {
-          this.doValueChange(inEvent);
+      var inEvent,
+        oldValue = this.getValue();
+      if (value !== oldValue) {
+        if (!this._selectValue(value)) { value = null; }
+        if (value !== oldValue) {
+          this.value = value;
+          if (!options.silent) {
+            inEvent = { originator: this, value: value };
+            this.doValueChange(inEvent);
+          }
         }
       }
     },
@@ -115,6 +120,42 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.DropdownWidget",
     published: {
       collection: "XM.commentTypes"
+    }
+  });
+  
+  // ..........................................................
+  // INCIDENT CATEGORY
+  //
+  
+  enyo.kind({
+    name: "XV.IncidentCategoryDropdown",
+    kind: "XV.DropdownWidget",
+    published: {
+      collection: "XM.incidentCategories"
+    }
+  });
+  
+  // ..........................................................
+  // INCIDENT RESOLUTION
+  //
+  
+  enyo.kind({
+    name: "XV.IncidentResolutionDropdown",
+    kind: "XV.DropdownWidget",
+    published: {
+      collection: "XM.incidentResolutions"
+    }
+  });
+  
+  // ..........................................................
+  // INCIDENT SEVERITY
+  //
+  
+  enyo.kind({
+    name: "XV.IncidentSeverityDropdown",
+    kind: "XV.DropdownWidget",
+    published: {
+      collection: "XM.incidentSeverities"
     }
   });
 
