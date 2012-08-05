@@ -5,46 +5,11 @@ regexp:true, undef:true, trailing:true, white:true */
 (function () {
 
   enyo.kind({
-    name: "XV.DateWidget",
+    name: "XV.Date",
     kind: "XV.Input",
-    classes: "xv-widgets-date",
-    components: [{
-      kind: "onyx.InputDecorator",
-      name: "decorator",
-      classes: "xv-input-decorator",
-      components: [
-        {
-          kind: "onyx.Input",
-          name: "input",
-          classes: "xv-input-field",
-          onchange: "inputChanged",
-          onkeyup: "keyUp"
-        },
-        {
-          kind: "Image",
-          name: "icon",
-          classes: "xv-field-icon",
-          src: "images/date-icon.jpg",
-          ontap: "iconTapped"
-        },
-        {
-          kind: "onyx.Popup",
-          name: "datePickPopup",
-          classes: "xv-field-popup",
-          modal: true,
-          components: [
-            { kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked" }
-          ]
-        }
-      ]
-    }],
-    datePicked: function (inSender, inEvent) {
-      this.setValue(inEvent);
-      this.$.datePickPopup.hide();
-    },
-    iconTapped: function () {
-      this.$.datePickPopup.show();
-    },
+    components: [
+      {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
+    ],
     setValue: function (value, options) {
       value = _.isDate(value) ? new Date(value.valueOf()) : null;
       XV.Input.prototype.setValue.call(this, value, options);
@@ -52,6 +17,7 @@ regexp:true, undef:true, trailing:true, white:true */
     textToDate: function (value) {
       var date = null,
         daysInMilliseconds = 1000 * 60 * 60 * 24;
+        
       // Try to parse out a date given the various allowable shortcuts
       if (value === '0' ||
         value.indexOf('+') === 0 ||
@@ -66,21 +32,22 @@ regexp:true, undef:true, trailing:true, white:true */
         date.setMonth(0);
         date.setDate(value.substring(1));
       } else if (value.length && !isNaN(value)) {
-        // a positive integer by itself means that day of this month
+        // A positive integer by itself means that day of this month
         date = new Date();
         date.setDate(value);
-
-      } else {
-        // dates in the format of dates as we're used to them.
+      } else if (value) {
+        // Dates in the format of dates as we're used to them.
         // we're counting on JS to parse the date correctly
         date = new Date(value);
       }
       
       // Validate
-      if (isNaN(date.getTime())) {
-        date = null;
-      } else {
-        date.setHours(0, 0, 0, 0);
+      if (date) {
+        if (isNaN(date.getTime())) {
+          date = false;
+        } else {
+          date.setHours(0, 0, 0, 0);
+        }
       }
       return date;
     },
@@ -88,20 +55,43 @@ regexp:true, undef:true, trailing:true, white:true */
       value = this.textToDate(value);
       return (_.isDate(value) || _.isEmpty(value)) ? value : false;
     },
-    valueChanged: function () {
-      var value = this.getValue(),
-        date;
+    valueChanged: function (value) {
       if (value) {
-        date = new Date(value.valueOf());
-        date.setMinutes(value.getTimezoneOffset());
-        this.$.datePick.setValue(date);
-        this.$.datePick.render();
-        this.$.input.setValue(Globalize.format(date, "d"));
+        value = new Date(value.valueOf());
+        value.setMinutes(value.getTimezoneOffset());
+        value = Globalize.format(value, "d");
       } else {
-        this.$.datePick.setValue(new Date());
-        this.$.datePick.render();
-        this.$.input.setValue("");
+        value = "";
       }
+      return XV.Input.prototype.valueChanged.call(this, value);
+    }
+  });
+
+  enyo.kind({
+    name: "XV.DateWidget",
+    kind: "XV.Date",
+    components: [
+      {kind: "onyx.InputDecorator", name: "decorator", components: [
+        {name: "input", kind: "onyx.Input", onchange: "inputChanged"},
+        {name: "icon", kind: "Image", src: "images/date-icon.jpg",
+          ontap: "iconTapped"},
+        {name: "datePickPopup", kind: "onyx.Popup", modal: true, components: [
+          {kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked"}
+        ]}
+      ]}
+    ],
+    datePicked: function (inSender, inEvent) {
+      this.setValue(inEvent);
+      this.$.datePickPopup.hide();
+    },
+    iconTapped: function () {
+      this.$.datePickPopup.show();
+    },
+    valueChanged: function (value) {
+      var dateValue = value;
+      value = XV.Date.prototype.valueChanged.call(this, value);
+      this.$.datePick.setValue(value ? dateValue : new Date());
+      this.$.datePick.render();
     }
   });
   

@@ -21,7 +21,8 @@ regexp:true, undef:true, trailing:true, white:true */
       if (value !== false) {
         this.setValue(value);
       } else {
-        this.valueChanged(this.getValue());
+        this.setValue(null);
+        this.valueChanged("");
       }
     },
     setDisabled: function (value) {
@@ -43,6 +44,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     valueChanged: function (value) {
       this.$.input.setValue(value);
+      return value;
     }
   });
   

@@ -20,7 +20,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     valueChanged: function (value) {
       value = value ? Globalize.format(value, "n" + this.getScale()) : "";
-      XV.Input.prototype.valueChanged.call(this, value);
+      return XV.Input.prototype.valueChanged.call(this, value);
     }
   });
   
