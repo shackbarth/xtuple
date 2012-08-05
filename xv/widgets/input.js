@@ -16,8 +16,13 @@ regexp:true, undef:true, trailing:true, white:true */
       {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
     ],
     inputChanged: function (inSender, inEvent) {
-      var value = this.$.input.getValue();
-      this.setValue(value);
+      var input = this.$.input.getValue(),
+        value = this.validate(input);
+      if (value !== false) {
+        this.setValue(value);
+      } else {
+        this.valueChanged(this.getValue());
+      }
     },
     setDisabled: function (value) {
       this.$.input.setDisabled(value);
@@ -32,6 +37,9 @@ regexp:true, undef:true, trailing:true, white:true */
         inEvent = { value: value, originator: this };
         if (!options.silent) { this.doValueChange(inEvent); }
       }
+    },
+    validate: function (value) {
+      return value;
     },
     valueChanged: function (value) {
       this.$.input.setValue(value);

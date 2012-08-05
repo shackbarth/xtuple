@@ -42,14 +42,6 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(inEvent);
       this.$.datePickPopup.hide();
     },
-    inputChanged: function (inSender, inEvent) {
-      var value = this.textToDate(this.$.input.getValue());
-      if (_.isDate(value) || _.isEmpty(value)) {
-        this.setValue(value);
-      } else {
-        this.valueChanged(this.getValue());
-      }
-    },
     iconTapped: function () {
       this.$.datePickPopup.show();
     },
@@ -91,6 +83,10 @@ regexp:true, undef:true, trailing:true, white:true */
         date.setHours(0, 0, 0, 0);
       }
       return date;
+    },
+    validate: function (value) {
+      value = this.textToDate(value);
+      return (_.isDate(value) || _.isEmpty(value)) ? value : false;
     },
     valueChanged: function () {
       var value = this.getValue(),

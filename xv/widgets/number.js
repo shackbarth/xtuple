@@ -10,17 +10,13 @@ regexp:true, undef:true, trailing:true, white:true */
     published: {
       scale: 2
     },
-    inputChanged: function (inSender, inEvent) {
-      var value = Number(this.$.input.getValue());
-      if (isNaN(value)) {
-        this.valueChanged(this.getValue());
-      } else {
-        this.setValue(value);
-      }
-    },
     setValue: function (value, options) {
       value = _.isNumber(value) ? XT.math.round(value, this.getScale()) : null;
       XV.Input.prototype.setValue.call(this, value, options);
+    },
+    validate: function (value) {
+      value = Number(value);
+      return isNaN(value) ? false : value;
     },
     valueChanged: function (value) {
       value = value ? Globalize.format(value, "n" + this.getScale()) : "";
