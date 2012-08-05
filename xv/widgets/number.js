@@ -32,9 +32,9 @@ regexp:true, undef:true, trailing:true, white:true */
         newValue = _.isNumber(value) ? XT.math.round(value, scale) : null,
         inEvent;
       if (oldValue !== newValue) {
-        this.value = value;
+        this.value = newValue;
         this.valueChanged(value);
-        inEvent = { value: value, originator: this };
+        inEvent = { value: newValue, originator: this };
         if (!options.silent) { this.doValueChange(inEvent); }
       }
     },
