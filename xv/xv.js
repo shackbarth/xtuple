@@ -171,8 +171,8 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Notes",
             location: "bottom",
             fields: [
-              { fieldName: "amount", kind: "XV.NumberWidget" },
-              { fieldName: "probability", kind: "XV.NumberWidget" },
+              { fieldName: "amount", kind: "XV.MoneyWidget" },
+              { fieldName: "probability", kind: "XV.PercentWidget" },
               { fieldName: "notes" }
             ]
           },
