@@ -2,6 +2,7 @@ enyo.depends(
   "label.js",
   "input.js",
   "button.js",
+  "checkbox.js",
   "number.js",
   "dropdown.js",
   "address.js",

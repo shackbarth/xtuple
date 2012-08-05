@@ -151,6 +151,7 @@ regexp:true, undef:true, trailing:true, white:true */
             title: "Opportunity Info",
             fields: [
               { fieldName: "number" },
+              { fieldName: "isActive", kind: "XV.Checkbox" },
               { fieldName: "name" },
               { fieldName: "account", kind: "XV.AccountRelationWidget" },
               { fieldName: "opportunityStage", kind: "XV.OpportunityStageDropdown" },
