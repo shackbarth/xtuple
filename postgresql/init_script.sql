@@ -1,14 +1,14 @@
 -- [ START ] initdb
 
+-- create languages
+\i create_plv8.sql;
+
 -- create schemas
 \i create_xt_schema.sql;
 \i create_xm_schema.sql;
 
 -- drop xm views
 \i drop_xm_views.sql;
-
--- create languages
-\i create_plv8.sql;
 
 -- [ END ] initdb
 
@@ -23,6 +23,7 @@
 \i xt/functions/begins_with.sql;
 \i xt/functions/commit_record.sql;
 \i xt/functions/create_table.sql;
+\i xt/functions/createuser.sql;
 \i xt/functions/dispatch.sql;
 \i xt/functions/ends_with.sql;
 \i xt/functions/execute_query.sql;
@@ -41,7 +42,6 @@
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
 \i xt/trigger_functions/comment_did_change.sql
-\i xt/trigger_functions/useracct_duplicate_check.sql
 
 -- xt operators
 \i xt/operators/any_numeric.sql;
@@ -74,9 +74,9 @@
 \i xt/views/gl.sql;
 \i xt/views/invcheadtaxadj.sql;
 \i xt/views/jrnl.sql;
+\i xt/views/nodeusr.sql;
 \i xt/views/prjinfo.sql;
 \i xt/views/unrec.sql;
-\i xt/views/usr.sql;
 
 -- delete system orms
 \i delete_system_orms.sql;
