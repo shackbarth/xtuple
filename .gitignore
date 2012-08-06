@@ -13,5 +13,4 @@ enyo
 # except what is explicitly added
 lib/*
 \.sass-cache
-package.js
 /.sass-cache/
