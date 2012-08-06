@@ -265,8 +265,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccount",
-    "table": "xt.usr",
-    "idSequenceName": "xt.useracct_useracct_id_seq",
+    "table": "xt.nodeusr",
     "comment": "User Account Map",
     "privileges": {
       "all": {
@@ -281,7 +280,7 @@
         "name": "username",
         "attr": {
           "type": "String",
-          "column": "usr_username",
+          "column": "nodeusr_username",
           "isPrimaryKey": true
         }
       },
@@ -289,69 +288,55 @@
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "usr_active"
+          "column": "nodeusr_active"
         }
       },
       {
         "name": "properName",
         "attr": {
           "type": "String",
-          "column": "usr_propername"
-        }
-      },
-      {
-        "name": "password",
-        "attr": {
-          "type": "String",
-          "column": "usr_passwd"
+          "column": "nodeusr_propername"
         }
       },
       {
         "name": "initials",
         "attr": {
           "type": "String",
-          "column": "usr_initials"
+          "column": "nodeusr_initials"
         }
       },
       {
         "name": "email",
         "attr": {
           "type": "String",
-          "column": "usr_email"
+          "column": "nodeusr_email"
         }
       },
       {
         "name": "locale",
         "toOne": {
           "type": "Locale",
-          "column": "usr_locale_id"
+          "column": "nodeusr_locale_id"
         }
       },
       {
         "name": "disableExport",
         "attr": {
           "type": "Boolean",
-          "column": "usr_disable_export"
-        }
-      },
-      {
-        "name": "canCreateUsers",
-        "attr": {
-          "type": "Boolean",
-          "column": "usr_can_create_users"
+          "column": "nodeusr_disable_export"
         }
       },
       {
         "name": "isDatabaseUser",
         "attr": {
           "type": "Boolean",
-          "column": "usr_db_user"
+          "column": "nodeusr_db_user"
         }
       },
       {
         "name": "grantedPrivileges",
         "toMany": {
-          "column": "usr_username",
+          "column": "nodeusr_username",
           "type": "UserAccountPrivilegeAssignment",
           "inverse": "userAccount",
           "isNested": true
@@ -367,7 +352,7 @@
       {
         "name": "grantedUserAccountRoles",
         "toMany": {
-          "column": "usr_username",
+          "column": "nodeusr_username",
           "type": "UserAccountUserAccountRoleAssignment",
           "inverse": "userAccount",
           "isNested": true
@@ -381,7 +366,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "UserAccountInfo",
-    "table": "xt.usr",
+    "table": "xt.nodeusr",
     "comment": "User Account Info Map",
     "privileges": {
       "all": {
@@ -396,7 +381,7 @@
         "name": "username",
         "attr": {
           "type": "String",
-          "column": "usr_username",
+          "column": "nodeusr_username",
           "isPrimaryKey": true
         }
       },
@@ -404,14 +389,21 @@
         "name": "isActive",
         "attr": {
           "type": "Boolean",
-          "column": "usr_active"
+          "column": "nodeusr_active"
         }
       },
       {
         "name": "propername",
         "attr": {
           "type": "String",
-          "column": "usr_propername"
+          "column": "nodeusr_propername"
+        }
+      },
+      {
+        "name": "email",
+        "attr": {
+          "type": "String",
+          "column": "nodeusr_email"
         }
       }
     ],
