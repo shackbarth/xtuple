@@ -6,11 +6,11 @@ trailing:true white:true*/
 (function () {
 
   /**
-   * Manages the main content pane of the workspace. This is implemented
-   * as two panels (top and bottom). The code in this kind is general-purpose
-   * across all possible workspaces, and so it takes its cues from a JSON
-   * descriptor object called XT.WorkspacePanelDescriptor.
-   */
+    Manages the main content pane of the workspace. This is implemented
+    as two panels (top and bottom). The code in this kind is general-purpose
+    across all possible workspaces, and so it takes its cues from a JSON
+    descriptor object called XT.WorkspacePanelDescriptor.
+  */
   enyo.kind({
       name: "XV.WorkspacePanels",
       kind: "FittableRows",
@@ -28,11 +28,10 @@ trailing:true white:true*/
         { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
       ],
       /**
-       * Set the layout of the workspace.
-       * The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
-       * in xv/xv.js.
-       *
-       */
+        Set the layout of the workspace.
+        The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
+        in xv/xv.js.
+      */
       updateLayout: function () {
         var box,
           iField,
@@ -42,10 +41,8 @@ trailing:true white:true*/
         for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
           if (boxDesc.kind) {
-            /**
-             * Grids are a special case that must be rendered per their own logic.
-             * All one-to-many relationships will be rendered as a grid (?)
-             */
+            // Grids are a special case that must be rendered per their own logic.
+            // All one-to-many relationships will be rendered as a grid (?)
             box = this.createComponent({
                 kind: boxDesc.kind || "XV.InputWidget",
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
@@ -56,10 +53,8 @@ trailing:true white:true*/
             }
             box.setDescriptor(boxDesc);
 
+          // General case: this box is not a grid, it's just a list of labeled fields
           } else {
-            /**
-             * General case: this box is not a grid, it's just a list of labeled fields
-             */
             box = this.createComponent({
                 kind: "onyx.Groupbox",
                 container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
@@ -78,9 +73,7 @@ trailing:true white:true*/
                 style: "font-size: 12px",
                 container: box,
                 components: [
-                /**
-                 * This is the label
-                 */
+                  // This is the label
                   { tag: "span", content: label.loc() + ": ", style: "padding-right: 10px;"}
                 ]
               });
@@ -92,10 +85,8 @@ trailing:true white:true*/
                 container: field
               });
 
-              /**
-               * Used only for DropdownWidgets at the moment. If the descriptor mentions a model
-               * type we want to send that down to the widget
-               */
+              // Used only for DropdownWidgets at the moment. If the descriptor mentions a model
+              // type we want to send that down to the widget
               if (fieldDesc.collection) {
                 widget.setCollection(fieldDesc.collection);
               }
@@ -105,9 +96,9 @@ trailing:true white:true*/
         this.render();
       },
       /**
-       * Scrolls the display to the requested box.
-       * @Param {String} name The title of the box to scroll to
-       */
+        Scrolls the display to the requested box.
+        @Param {String} name The title of the box to scroll to
+      */
       gotoBox: function (name) {
         // fun! we have to find if the box is on the top or bottom,
         // and if so, which index it is. Once we know if it's in the
@@ -133,51 +124,33 @@ trailing:true white:true*/
         }
       },
       /**
-       * Populates the fields of the workspace with the values from the model
-       */
+        Populates the fields of the workspace with the values from the model
+      */
       updateFields: function (model) {
-        var that = this,
-          iBox,
+        var iBox,
           iField,
           fieldDesc,
           fieldName,
           fieldValue;
-        /**
-         * Fields that are computed asynchronously by the model may not be
-         * accurate right now, so we have those fields trigger an event when
-         * they are set, which we listed for here
-         */
-        model.on("announcedSet", function (announcedField, announcedValue) {
-          that.$[announcedField].setValue(announcedValue);
-        });
-
         XT.log("update with model: " + model.get("type"));
 
-        //
         // Look through the entire specification...
-        //
         for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
           var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
 
           if (boxDesc.kind) {
-            /**
-             * Don't send just the field over. Send the whole collection over
-             */
+            // Don't send just the field over. Send the whole collection over
             this.$[boxDesc.title].setValue(model.getValue(boxDesc.objectName));
           } else {
-            /**
-             * Default case: populate the fields
-             */
-
+            //Default case: populate the fields
             for (iField = 0; iField < boxDesc.fields.length; iField++) {
               fieldDesc = boxDesc.fields[iField];
               fieldName = boxDesc.fields[iField].fieldName;
+              
               // argh! 0 is falsy but we want to populate 0 into fields if appropriate
               fieldValue = model.getValue(fieldName) || model.getValue(fieldName) === 0 ? model.getValue(fieldName) : "";
               if (fieldName) {
-                /**
-                 * Update the view field with the model value
-                 */
+                // Update the view field with the model value
                 this.$[fieldName].setValue(fieldValue, {silent: true});
               }
             }
