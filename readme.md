@@ -12,6 +12,7 @@
 * [node-xt](http://github.com/xtuple/node-xt) -- master (npm dependency)
 * [node-schemas](http://github.com/xtuple/node-schemas) -- (embedded submodule)
 * [client](http://github.com/xtuple/client) -- master
+* [login](http://github.com/xtuple/login) -- master
 
 ###### Special Note
 
@@ -67,6 +68,7 @@ So, a complete list of the executed commands are as follows:
 git clone git@github.com:xtuple/node-xt.git
 git clone git@github.com:xtuple/node-datasource.git
 git clone git@github.com:xtuple/client.git
+git clone git@github.com:xtuple/login.git
 cd node-xt
 npm install
 cd ../node-datasource
