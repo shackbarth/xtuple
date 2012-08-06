@@ -184,54 +184,34 @@ trailing:true white:true*/
             {kind: "onyx.MenuDecorator", components: [
               {content: "_navigation".loc() },
               {kind: "onyx.Tooltip", content: "Tap to open..."},
-              {kind: "onyx.Menu", name: "navigationMenu", components: [
+              {kind: "onyx.Menu", name: "navigationMenu",
+                ontap: "navigationSelected", components: [
                 { content: "Dashboard" },
                 { content: "CRM" },
-                { content: "Setup" }
-              ], ontap: "navigationSelected" }
+                { content: "Setup"}
+              ]}
             ]}
           ]},
-          {
-            kind: "Repeater",
-            fit: true,
-            touch: true,
-            onSetupItem: "setupItem",
-            name: "menuItems",
-            components: [
-              { name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
-            ]
-          }
+          {kind: "Repeater", fit: true, touch: true, onSetupItem: "setupItem", name: "menuItems",
+            components: [{name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
+          ]}
         ]},
         {kind: "FittableRows", components: [
           {kind: "onyx.Toolbar", components: [
             {content: ""},
-            {
-              kind: "onyx.Button",
-              name: "saveButton",
-              disabled: true,
-              content: "_save".loc(),
-              classes: "onyx-affirmative",
-              onclick: "save"
-            }
+            {kind: "onyx.Button", name: "saveButton", disabled: true,
+              content: "_save".loc(), classes: "onyx-affirmative",
+              onclick: "save"}
           ]},
           {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true},
-          {
-            name: "exitWarningPopup",
-            classes: "onyx-sample-popup",
-            kind: "onyx.Popup",
-            centered: true,
-            modal: true,
-            floating: true,
-            onShow: "popupShown",
-            onHide: "popupHidden",
-            components: [
-              { content: "You have unsaved changes. Are you sure you want to leave?" },
-              { tag: "br"},
-              { kind: "onyx.Button", content: "Leave without saving", ontap: "forceExit" },
-              { kind: "onyx.Button", content: "Save and leave", ontap: "saveAndLeave" },
-              { kind: "onyx.Button", content: "Don't leave", ontap: "closeExitWarningPopup" }
-            ]
-          }
+          {name: "exitWarningPopup", kind: "onyx.Popup", centered: true,
+            modal: true, floating: true, onShow: "popupShown",
+            onHide: "popupHidden", components: [
+            {content: "You have unsaved changes. Are you sure you want to leave?" },
+            {tag: "br"}, {kind: "onyx.Button", content: "Leave without saving", ontap: "forceExit" },
+            {kind: "onyx.Button", content: "Save and leave", ontap: "saveAndLeave" },
+            {kind: "onyx.Button", content: "Don't leave", ontap: "closeExitWarningPopup" }
+          ]}
         ]}
       ],
       _exitDestination: null,
