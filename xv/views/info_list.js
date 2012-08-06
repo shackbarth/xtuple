@@ -516,7 +516,7 @@ trailing:true white:true*/
         }
       },
       {label: "_account".loc(), attr: "account",
-          defaultKind: "XV.AccountRelationWidget"},
+          defaultKind: "XV.AccountWidget"},
       {label: "_description".loc(), attr: "description"},
       {label: "_category".loc(), attr: "category",
         defaultKind: "XV.IncidentCategoryDropdown"},

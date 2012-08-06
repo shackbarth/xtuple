@@ -428,18 +428,35 @@ body {
 
 
 /*********XV WIDGETS***********/
-.xv-widgets-date {
-    .xv-field-icon {
-    }
-    .xv-input-decorator {
-        height: 14px;
-        .xv-input-field {
-        }
-    }
-    .xv-field-popup {
-    }
+
+.xv-groupbox {
+  min-height: 250px; 
+  width: 320px; 
+  margin-right: 5px;
 }
 
+.xv-label {
+  width: 80px;
+  padding-right: 8px;
+  text-align: right;
+}
 
+.xv-inputwidget {
+  background-color: white; 
+}
+
+.xv-inputwidget-decorator {
+  border: 0px;
+}
+
+.xv-relationwidget-completer {
+  left: -200px; 
+  top: 15px;
+}
+
+.xv-relationwidget-description {
+  text-indent: 100px;
+  font-size: small;
+}
 
 /********END XV WIDGETS******/

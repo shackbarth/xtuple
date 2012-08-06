@@ -536,9 +536,40 @@ body {
 
 /*********END PULLOUT *********/
 /*********XV WIDGETS***********/
-/* line 428, ../sass/screen.scss */
-.xv-widgets-date .xv-input-decorator {
-  height: 14px;
+/* line 432, ../sass/screen.scss */
+.xv-groupbox {
+  min-height: 250px;
+  width: 320px;
+  margin-right: 5px;
+}
+
+/* line 438, ../sass/screen.scss */
+.xv-label {
+  width: 80px;
+  padding-right: 8px;
+  text-align: right;
+}
+
+/* line 444, ../sass/screen.scss */
+.xv-inputwidget {
+  background-color: white;
+}
+
+/* line 448, ../sass/screen.scss */
+.xv-inputwidget-decorator {
+  border: 0px;
+}
+
+/* line 452, ../sass/screen.scss */
+.xv-relationwidget-completer {
+  left: -200px;
+  top: 15px;
+}
+
+/* line 457, ../sass/screen.scss */
+.xv-relationwidget-description {
+  text-indent: 100px;
+  font-size: small;
 }
 
 /********END XV WIDGETS******/

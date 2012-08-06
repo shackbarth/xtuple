@@ -27,4 +27,28 @@ regexp:true, undef:true, trailing:true, white:true */
     }
   });
   
+  enyo.kind({
+    name: "XV.CheckboxWidget",
+    kind: "XV.Input",
+    classes: "xv-inputwidget xv-checkboxwidget",
+    published: {
+      label: ""
+    },
+    components: [
+      {kind: "onyx.InputDecorator", classes: "xv-inputwidget-decorator",
+        components: [
+        {name: "label", content: "", classes: "xv-label"},
+        {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
+      ]}
+    ],
+    create: function () {
+      this.inherited(arguments);
+      this.labelChanged();
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      this.$.label.setContent(label);
+    }
+  });
+  
 }());

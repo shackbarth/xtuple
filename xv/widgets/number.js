@@ -27,11 +27,25 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.NumberWidget",
     kind: "XV.Number",
+    classes: "xv-inputwidget xv-numberwidget",
+    published: {
+      label: ""
+    },
     components: [
-      {kind: "onyx.InputDecorator", components: [
+      {kind: "onyx.InputDecorator", classes: "xv-inputwidget-decorator",
+        components: [
+        {name: "label", content: "", classes: "xv-label"},
         {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      this.labelChanged();
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      this.$.label.setContent(label);
+    }
   });
   
   // ..........................................................
