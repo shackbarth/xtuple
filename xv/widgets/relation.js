@@ -82,7 +82,7 @@ regexp:true, undef:true, trailing:true, white:true */
       case 'search':
         listKind = this.kind.replace("RelationWidget", "") + "InfoList";
         // XXX temp
-        //listKind = listKind.replace("UserAccount", "Account");
+        // listKind = listKind.replace("UserAccount", "Account");
         // end XXX
         this.bubble("search", { eventName: "search", options: { listKind: listKind }});
         break;
