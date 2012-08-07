@@ -4,7 +4,7 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, Backbone:true, _:true */
+/*global XT:true, XM:true, Backbone:true, _:true */
 
 (function () {
   "use strict";
@@ -444,7 +444,8 @@ white:true*/
       attributes = attributes || {};
       options = options || {};
       var klass,
-        K = XM.Model;
+        K = XM.Model,
+        defaults;
 
       // Validate record type
       if (_.isEmpty(this.recordType)) { throw 'No record type defined'; }
@@ -474,6 +475,14 @@ white:true*/
         this.requiredAttributes.push(this.idAttribute);
       }
       this.setReadOnly('type');
+      
+      // Set attributes if they weren't already set by the constructor
+      this.clear({force: true});
+      defaults = this.getValue('defaults') || {};
+      attributes = _.defaults(attributes, defaults);
+      if (!_.isEqual(this.attributes, attributes)) {
+        this.set(attributes, {silent: true});
+      }
 
       // Bind events
       this.on('change', this.didChange);
