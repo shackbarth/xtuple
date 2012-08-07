@@ -13,6 +13,9 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     label: "",
     classes: "app enyo-unselectable",
+    published: {
+      widgetSource: null
+    },
     handlers: {
       onParameterChange: "requery",
       onScroll: "didScroll",
@@ -23,7 +26,7 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", name: "leftBar", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
+          {kind: "onyx.Button", content: "_back".loc(), ontap: "tapBack" },
           {name: "leftLabel"}
         ]}
       ]},
@@ -42,10 +45,6 @@ trailing:true white:true*/
             {kind: "Image", src: "images/search-input-search.png"}
           ]},
         ]},
-        { content: "before list" },
-        { kind: "XV.ContactInfoList", name: "searchList" },
-        { content: "after list" }
-        //{ kind: "XV.ContactInfoParameters", name: "searchParameters" }
       ]}
     ],
     setOptions: function (options) {
@@ -54,17 +53,19 @@ trailing:true white:true*/
         parameterKind;
 
       /**
-       * Add the appropriate search list
+       * We want to keep track of the widget that spawned this view
+       * so that we know what to send back as the place to update
+       */
+      this.setWidgetSource(options.source);
 
+      /**
+       * Add the appropriate search list
+       */
       if (this.$.contentArea.$.searchList) {
         this.$.contentArea.removeChild(this.$.contentArea.$.searchList);
       }
-      this.createComponent({ kind: listKind, name: "searchList", container: this.$.contentArea });
+      this.createComponent({ kind: listKind, name: "searchList", container: this.$.contentArea, fit: true });
       this.$.contentArea.render();
-      */
-      XT.log("collection size before fetch is " + this.$.searchList.collection.length);
-      this.fetch();
-      setTimeout(enyo.bind(this, 'renderContentArea'), 10000); // XXX debugging
       /**
        * Add the appropriate search parameters
        */
@@ -74,11 +75,6 @@ trailing:true white:true*/
       parameterKind = this.$.searchList.getParameterWidget();
       this.createComponent({ kind: parameterKind, name: "searchParameters", container: this.$.leftBar });
       this.$.leftBar.render();
-    },
-    renderContentArea: function () {
-      XT.log("collection size after fetch is " + this.$.searchList.collection.length);
-      this.$.searchList.render();
-      this.$.contentArea.render();
     },
 
     fetch: function (options) {
@@ -137,12 +133,8 @@ trailing:true white:true*/
     requery: function (inSender, inEvent) {
       this.fetch();
     },
-    showDashboard: function () {
-      this.bubble("dashboard", {eventName: "dashboard"});
-    },
-    showHistory: function (inSender, inEvent) {
-      var panel = {name: 'history'};
-      this.doTogglePullout(panel);
+    tapBack: function () {
+      this.bubble("workspace", {eventName: "workspace"});
     },
     /**
      * Catches the tap event from the {XV.InfoListRow}
@@ -150,27 +142,26 @@ trailing:true white:true*/
      * caught further up.
     */
     doInfoListRowTapped: function (inSender, inEvent) {
-      //
-      // Determine which item was tapped
-      //
-      var tappedList = this.$.searchList;
-
+      /**
+       * Determine which item was tapped
+       */
       var itemIndex = inEvent.index;
-      var tappedModel = tappedList.collection.models[itemIndex];
+      var tappedModel = this.$.searchList.collection.models[itemIndex];
 
-      //
-      // Bubble up an event so that we can transition to workspace view.
-      // Add the tapped model as a payload in the event
-      //
-      this.bubble("workspace", {eventName: "workspace", options: tappedModel });
+      /**
+       * Update the widget that spawned this search
+       */
+      this.getWidgetSource().setValue(tappedModel);
+
+      /**
+       * Bubble up an event so that we can transition to workspace view.
+       * We don't want to add the tapped model as a payload in the event
+       * because we don't want to drill down to the tapped model; we
+       * want to stay in the workspace that spawned this search.
+       */
+      this.bubble("workspace", {eventName: "workspace" });
       return true;
-    },
-    newWorkspace: function (inSender, inEvent) {
-      var modelType = this.$.selectedList.query.recordType;
-      var emptyModel = new XM[XV.util.formatModelName(modelType)]();
-      emptyModel.initialize(null, { isNew: true });
-      this.bubble("workspace", {eventName: "workspace", options: emptyModel });
-    },
+    }
   });
 
 }());
