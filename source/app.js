@@ -40,11 +40,11 @@ white:true*/
     },
     create: function () {
       this.inherited(arguments);
-      var pulloutItems = this._pulloutItems || [],
-        i;
+      var pulloutItems = this._pulloutItems || [], i;
       for (i = 0; i < pulloutItems.length; i++) {
         this.$.pullout.$.pulloutItems.createComponent(pulloutItems[i]);
       }
+      XT.app = this;
     },
     handlePullout: function (inSender, inEvent) {
       var showing = inSender.$.container.getActive().showPullout || false;
