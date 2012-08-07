@@ -24,13 +24,15 @@ enyo.kind({
     { name: "billing", kind: "XV.Billing" },
     { name: "setup", kind: "XV.Setup" },
     { name: "workspace", kind: "XV.Workspace" },
+    { name: "search", kind: "XV.Search" },
   ],
   carouselEvents: {
     crm: "crm",
     billing: "billing",
     setup: "setup",
     workspace: "workspace",
-    dashboard: "dashboard"
+    dashboard: "dashboard",
+    search: "search"
   },
   getModuleByName: function (name) {
     return this.$[name];

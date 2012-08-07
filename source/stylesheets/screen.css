@@ -559,9 +559,48 @@ body {
 
 /*********END PULLOUT *********/
 /*********XV WIDGETS***********/
-/* line 436, ../sass/screen.scss */
+/* line 434, ../sass/screen.scss */
 .xv-widgets-date .xv-input-decorator {
   height: 14px;
 }
 
 /********END XV WIDGETS******/
+/* line 448, ../sass/screen.scss */
+.xv-login .xv-login-form {
+  position: absolute;
+  height: 250px;
+  width: 300px;
+  top: 50%;
+  left: 50%;
+  margin-top: -125px;
+  margin-left: -150px;
+}
+/* line 456, ../sass/screen.scss */
+.xv-login .xv-login-form .xv-message-box {
+  font-size: 12px;
+  text-align: center;
+  padding: 10px;
+}
+/* line 458, ../sass/screen.scss */
+.xv-login .xv-login-form .xv-message-box.error {
+  color: #ff0000;
+}
+/* line 465, ../sass/screen.scss */
+.xv-login .xv-organizations-selection {
+  position: absolute;
+  height: 300px;
+  width: 400px;
+  top: 50%;
+  left: 50%;
+  margin-top: -150px;
+  margin-left: -200px;
+}
+/* line 473, ../sass/screen.scss */
+.xv-login .xv-organizations-selection .xv-organization-row {
+  padding: 5px;
+  cursor: pointer;
+}
+/* line 476, ../sass/screen.scss */
+.xv-login .xv-organizations-selection .xv-organization-row:hover {
+  background-color: #ddd;
+}

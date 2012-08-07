@@ -43,7 +43,7 @@ regexp:true, undef:true, trailing:true, white:true */
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
         query;
-      
+
       if (value && value !== attr) {
         query = {
           parameters: [{
@@ -75,11 +75,13 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     itemSelected: function (inSender, inEvent) {
       var action = inEvent.originator.value,
-        model;
+        model,
+        listKind;
       switch (action)
       {
       case 'search':
-        // Not implemented
+        listKind = this.kind.replace("RelationWidget", "") + "InfoList";
+        this.bubble("search", { eventName: "search", options: { listKind: listKind, source: this }});
         break;
       case 'open':
         model = this.getValue();
@@ -104,7 +106,7 @@ regexp:true, undef:true, trailing:true, white:true */
         attr = this.getValue() ? this.getValue().get(key) : "",
         value = this.$.input.getValue(),
         menu = this.$.autocompleteMenu;
-      
+
       // Look up if value changed
       if (value && value !== attr &&
           inEvent.keyCode !== 9) {
@@ -155,7 +157,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setValue(keyValue);
       this.$.name.setContent(nameValue);
       this.$.description.setContent(descripValue);
-      
+
       // Only notify if selection actually changed
       if (newId !== oldId && !options.silent) { this.doValueChange(inEvent); }
     },
@@ -188,13 +190,13 @@ regexp:true, undef:true, trailing:true, white:true */
       var value = this._collection.length ? this._collection.models[0] : null;
       this.setValue(value);
     }
-    
+
   });
-  
+
   // ..........................................................
   // ACCOUNT
   //
-  
+
   enyo.kind({
     name: "XV.AccountRelationWidget",
     kind: "XV.RelationWidget",
@@ -206,7 +208,7 @@ regexp:true, undef:true, trailing:true, white:true */
   // ..........................................................
   // INCIDENT
   //
-  
+
   enyo.kind({
     name: "XV.IncidentRelationWidget",
     kind: "XV.RelationWidget",
@@ -215,11 +217,11 @@ regexp:true, undef:true, trailing:true, white:true */
       nameAttribute: "description"
     }
   });
- 
+
   // ..........................................................
   // ITEM
   //
-  
+
   enyo.kind({
     name: "XV.ItemRelationWidget",
     kind: "XV.RelationWidget",
@@ -229,11 +231,11 @@ regexp:true, undef:true, trailing:true, white:true */
       descripAttribute: "description2"
     }
   });
-  
+
   // ..........................................................
   // USER ACCOUNT
   //
-  
+
   enyo.kind({
     name: "XV.UserAccountRelationWidget",
     kind: "XV.RelationWidget",
@@ -243,5 +245,5 @@ regexp:true, undef:true, trailing:true, white:true */
       nameAttribute: "properName"
     }
   });
-  
+
 }());

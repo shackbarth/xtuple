@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.Priority = XM.Model.extend({
@@ -37,13 +37,19 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.PriorityCollection = XM.Collection.extend({
     /** @scope XM.PriorityCollection.prototype */
 
-    model: XM.Priority
+    model: XM.Priority,
+
+    orderAttribute: {
+      orderBy: [{
+        attribute: "order"
+      }]
+    }
 
   });
 
