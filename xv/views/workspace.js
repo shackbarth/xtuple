@@ -88,7 +88,7 @@ trailing:true white:true*/
     newRecord: function () {
       this._model.initialize(null, {isNew: true});
     },
-    refresh: function () {
+    requery: function () {
       var inEvent = {id: this._model.id};
       this.fetch(this, inEvent);
     },
@@ -136,7 +136,7 @@ trailing:true white:true*/
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
-            content: "_refresh".loc(), onclick: "refresh"},
+            content: "_refresh".loc(), onclick: "requery"},
           {name: "title", style: "text-align: center;"},
           {kind: "onyx.Button", name: "saveButton",
             classes: "onyx-affirmative", disabled: true,
@@ -162,12 +162,11 @@ trailing:true white:true*/
       var module = this.getModule();
       this.bubble(module, {eventName: module});
     },
-    /*
     newRecord: function () {
       this.$.workspace.newRecord();
     },
-    refresh: function () {
-      this.$.workspace.refresh();
+    requery: function () {
+      this.$.workspace.requery();
     },
     save: function () {
       this.$.workspace.save();
@@ -192,7 +191,7 @@ trailing:true white:true*/
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
     }
-    */
+    
   });
 
 }());
