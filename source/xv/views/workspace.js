@@ -104,8 +104,8 @@ trailing:true white:true*/
       }
       if (!Klass) { return; }
       
-      // If we don't a session yet then relations won't be available
-      // so wait try again after start up tasks complete
+      // If we don't have a session yet then relations won't be available
+      // so wait and try again after start up tasks complete
       if (!XT.session) {
         callback = function () {
           that.modelChanged();

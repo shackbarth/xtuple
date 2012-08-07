@@ -43,7 +43,7 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     },
     valueChanged: function (value) {
-      this.$.input.setValue(value);
+      this.$.input.setValue(value || "");
       return value;
     }
   });

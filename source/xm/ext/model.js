@@ -456,6 +456,14 @@ white:true*/
       this.readOnlyAttributes = this.readOnlyAttributes || [];
       this.requiredAttributes = this.requiredAttributes || [];
 
+      // Set attributes if they weren't already set by the constructor
+      this.clear({force: true});
+      defaults = this.getValue('defaults') || {};
+      attributes = _.defaults(attributes, defaults);
+      if (!_.isEqual(this.attributes, attributes)) {
+        this.set(attributes, {silent: true});
+      }
+
       // Handle options
       if (options.isNew) {
         klass = this.getClass();
@@ -475,14 +483,6 @@ white:true*/
         this.requiredAttributes.push(this.idAttribute);
       }
       this.setReadOnly('type');
-      
-      // Set attributes if they weren't already set by the constructor
-      this.clear({force: true});
-      defaults = this.getValue('defaults') || {};
-      attributes = _.defaults(attributes, defaults);
-      if (!_.isEqual(this.attributes, attributes)) {
-        this.set(attributes, {silent: true});
-      }
 
       // Bind events
       this.on('change', this.didChange);

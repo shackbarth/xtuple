@@ -59,7 +59,10 @@ regexp:true, undef:true, trailing:true, white:true */
       }
       
       // Get set up
-      this.$.picker.createComponent({ idValue: "", content: "" });
+      this.$.picker.createComponent({
+        value: null,
+        content: "_none".loc()
+      });
       for (i = 0; i < collection.models.length; i++) {
         model = collection.models[i];
         name = model.get(nameAttribute);
@@ -101,16 +104,15 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     /** @private */
     _selectValue: function (value) {
-      if (!value) { return; }
-      value = (this.getValueAttribute()) ? value : value.id;
+      value = (!value || this.getValueAttribute()) ? value : value.id;
       var component = _.find(this.$.picker.getComponents(), function (c) {
-        return (c.value ? c.value.id : null) === value;
+        if (c.kind === "onyx.MenuItem") {
+          return (c.value ? c.value.id : null) === value;
+        }
       });
-      if (component) {
-        this.$.picker.setSelected(component);
-        return true;
-      }
-      return false;
+      if (!component) { value = null; }
+      this.$.picker.setSelected(component);
+      return value;
     }
   });
 
