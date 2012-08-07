@@ -58,7 +58,6 @@ trailing:true white:true*/
         attrs = options.all ? model.attributes : model.changedAttributes();
         
       // Only process if model is in `READY` status
-      /*
       if (status & K.READY) {
         for (prop in attrs) {
           if (attrs.hasOwnProperty(prop)) {
@@ -68,7 +67,6 @@ trailing:true white:true*/
           }
         }
       }
-      */
     },
     create: function () {
       var prop;
@@ -95,7 +93,9 @@ trailing:true white:true*/
     },
     modelChanged: function () {
       var model = this.getModel(),
-        Klass = model ? XT.getObjectByName(model) : null;
+        Klass = model ? XT.getObjectByName(model) : null,
+        callback,
+        that = this;
 
       // Remove old bindings
       if (this._model) {
@@ -104,10 +104,20 @@ trailing:true white:true*/
       }
       if (!Klass) { return; }
       
+      // If we don't a session yet then relations won't be available
+      // so wait try again after start up tasks complete
+      if (!XT.session) {
+        callback = function () {
+          that.modelChanged();
+        };
+        XT.getStartupManager().registerCallback(callback);
+        return;
+      }
+      
       // Create new instance and bindings
       this._model = new Klass();
-      //this._model.on("change", this.attributesChanged, this);
-      //this._model.on("statusChange", this.statusChanged, this);
+      this._model.on("change", this.attributesChanged, this);
+      this._model.on("statusChange", this.statusChanged, this);
     },
     newRecord: function () {
       this._model.initialize(null, {isNew: true});
@@ -123,7 +133,7 @@ trailing:true white:true*/
       var K = XM.Model,
         inEvent = {model: model};
       if (status === K.READY_CLEAN) {
-        //this.attributesChanged(model, {all: true});
+        this.attributesChanged(model, {all: true});
       }
       this.doStatusChange(inEvent);
     },
