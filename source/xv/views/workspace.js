@@ -167,14 +167,14 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", components: [
-        {kind: "onyx.Toolbar", name: "contentToolbar", components: [
+        {kind: "onyx.Toolbar", classes: "onyx-toolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery"},
           {name: "title", style: "text-align: center;"},
           {kind: "onyx.Button", name: "saveButton",
-            classes: "onyx-affirmative", disabled: true,
-            style: "float: right;",
+            disabled: true, // TO DO: Get the affirmative style back into CSS
+            style: "float: right; background-color: #35A8EE;",
             content: "_save".loc(), onclick: "saveAndClose"},
           {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
             style: "float: right;",
@@ -215,12 +215,14 @@ trailing:true white:true*/
     },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
-        isNotNew = (!model.isNew()),
+        K = XM.Model,
+        status = model.getStatus(),
+        isNotReady = !(status & K.READY),
         canNotSave = (!model.isDirty() || !model.canUpdate() ||
           model.isReadOnly());
           
       // Update buttons
-      this.$.refreshButton.setDisabled(isNotNew);
+      this.$.refreshButton.setDisabled(isNotReady);
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);

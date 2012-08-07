@@ -488,7 +488,7 @@ white:true*/
     */
     isNew: function () {
       var K = XM.Model;
-      return this.getStatus() === K.READY_NEW || this._wasNew;
+      return this.getStatus() === K.READY_NEW || this._wasNew || false;
     },
 
     /**
