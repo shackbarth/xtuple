@@ -730,6 +730,13 @@
         }
       },
       {
+        "name": "startDate",
+        "attr": {
+          "type": "Date",
+          "column": "todoitem_start_date"
+        }
+      },
+      {
         "name": "dueDate",
         "attr": {
           "type": "Date",
