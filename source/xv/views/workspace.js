@@ -16,7 +16,8 @@ trailing:true white:true*/
       onStatusChange: ""
     },
     handlers: {
-      onPanelChange: "fetch"
+      onPanelChange: "fetch",
+      onValueChange: "valueChanged"
     },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
@@ -140,6 +141,11 @@ trailing:true white:true*/
     titleChanged: function () {
       var title = this.getTitle();
       this.parent.parent.$.title.setContent(title);
+    },
+    valueChanged: function (inSender, inEvent) {
+      var attrs = {};
+      attrs[inEvent.originator.name] = inEvent.value;
+      this._model.set(attrs);
     }
   });
 
