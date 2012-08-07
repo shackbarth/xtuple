@@ -40,15 +40,35 @@ trailing:true white:true*/
         {content: "Bottom Panel 3"}
       ]}
     ],
-    attributesChanged: function (model, attributes, options) {
-      var prop;
-      for (prop in attributes) {
-        if (attributes.hasOwnProperty(prop)) {
-          if (this.$[prop] && this.$[prop].setValue) {
-            this.$[prop].setValue(attributes[prop], {silent: true});
+    /**
+      Updates all children widgets on the workspace where the name of
+      the widget matches the name of an attribute on the model.
+      
+      By default updates only `changed` attributes on the model.
+      if `all` option equals `true` then will update all attributes.
+      
+      @param {XM.Model} model
+      @param {Object} options
+    */
+    attributesChanged: function (model, options) {
+      options = options || {};
+      var K = XM.Model,
+        status = model.getStatus(),
+        prop,
+        attrs = options.all ? model.attributes : model.changedAttributes();
+        
+      // Only process if model is in `READY` status
+      /*
+      if (status & K.READY) {
+        for (prop in attrs) {
+          if (attrs.hasOwnProperty(prop)) {
+            if (this.$[prop] && this.$[prop].setValue) {
+              this.$[prop].setValue(attrs[prop], {silent: true});
+            }
           }
         }
       }
+      */
     },
     create: function () {
       var prop;
@@ -64,6 +84,10 @@ trailing:true white:true*/
           }
         }
       }
+    },
+    destroy: function () {
+      this.setModel(null);
+      this.inherited(arguments);
     },
     fetch: function (inSender, inEvent) {
       this._model.fetch({id: inEvent.id});
@@ -82,8 +106,8 @@ trailing:true white:true*/
       
       // Create new instance and bindings
       this._model = new Klass();
-      this._model.on("change", this.attributesChanged, this);
-      this._model.on("statusChange", this.statusChanged, this);
+      //this._model.on("change", this.attributesChanged, this);
+      //this._model.on("statusChange", this.statusChanged, this);
     },
     newRecord: function () {
       this._model.initialize(null, {isNew: true});
@@ -99,7 +123,7 @@ trailing:true white:true*/
       var K = XM.Model,
         inEvent = {model: model};
       if (status === K.READY_CLEAN) {
-        this.$.attributesChanged(model, model.attributes);
+        //this.attributesChanged(model, {all: true});
       }
       this.doStatusChange(inEvent);
     },
