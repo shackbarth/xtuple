@@ -30,6 +30,7 @@ trailing:true white:true*/
         ]},
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_status".loc()},
+          {kind: "XV.CheckboxWidget", name: "isActive"},
           {kind: "XV.OpportunityStageDropdown", name: "opportunityStage"},
           {kind: "XV.OpportunityTypeDropdown", name: "opportunityType"},
           {kind: "XV.OpportunitySourceDropdown", name: "opportunitySource"}
@@ -56,7 +57,7 @@ trailing:true white:true*/
       var K = XM.Model,
         status = model.getStatus(),
         prop,
-        attrs = options.all ? model.attributes : model.changedAttributes();
+        attrs = options.changed;
         
       // Only process if model is in `READY` status
       if (status & K.READY) {
@@ -137,10 +138,12 @@ trailing:true white:true*/
       this._model.save();
     },
     statusChanged: function (model, status, options) {
+      options = options || {};
       var K = XM.Model,
         inEvent = {model: model};
       if (status === K.READY_CLEAN || status === K.READY_NEW) {
-        this.attributesChanged(model, {all: true});
+        options.changed = model.attributes;
+        this.attributesChanged(model, options);
       }
       this.doStatusChange(inEvent);
     },

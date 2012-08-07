@@ -45,9 +45,17 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       this.labelChanged();
     },
+    inputChanged: function (inSender, inEvent) {
+      var input = this.$.input.getValue();
+      this.setValue(input);
+    },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
       this.$.label.setContent(label);
+    },
+    valueChanged: function (value) {
+      this.$.input.setValue(value);
+      return value;
     }
   });
   
