@@ -64,10 +64,10 @@ trailing:true white:true*/
             modal: true,
             floating: true,
             components: [
-              { content: "Are you sure you want to log out?" },
+              { content: "_logoutConfirmation".loc() },
               { tag: "br"},
-              { kind: "onyx.Button", content: "Yes, logout", ontap: "logout" },
-              { kind: "onyx.Button", content: "No, don't logout.", ontap: "closeLogoutWarningPopup" }
+              { kind: "onyx.Button", content: "_ok".loc(), ontap: "logout" },
+              { kind: "onyx.Button", content: "_cancel".loc(), ontap: "closeLogoutWarningPopup" }
 
             ]
           }
