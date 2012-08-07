@@ -16,7 +16,7 @@ trailing:true white:true*/
       onStatusChange: ""
     },
     handlers: {
-      onPanelChange: "fetch",
+      onPanelChange: "panelChanged",
       onValueChange: "valueChanged"
     },
     components: [
@@ -88,8 +88,15 @@ trailing:true white:true*/
       this.setModel(null);
       this.inherited(arguments);
     },
-    fetch: function (inSender, inEvent) {
-      this._model.fetch({id: inEvent.id});
+    fetch: function (id) {
+      this._model.fetch({id: id});
+    },
+    panelChanged: function (inSender, inEvent) {
+      if (inEvent.id) {
+        this.fetch(inEvent.id);
+      } else {
+        this.newRecord();
+      }
       return true;
     },
     modelChanged: function () {
@@ -124,8 +131,7 @@ trailing:true white:true*/
       this._model.initialize(null, {isNew: true});
     },
     requery: function () {
-      var inEvent = {id: this._model.id};
-      this.fetch(this, inEvent);
+      this.fetch(this._model.id);
     },
     save: function () {
       this._model.save();
