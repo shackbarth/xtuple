@@ -19,7 +19,7 @@ trailing:true white:true*/
     handlers: {
       onParameterChange: "requery",
       onScroll: "didScroll",
-      onInfoListRowTapped: "doInfoListRowTapped"
+      onInfoListRowTapped: "infoListRowTapped"
     },
     showPullout: true,
     realtimeFit: true,
@@ -116,6 +116,20 @@ trailing:true white:true*/
       }
       this.$.menu.setCount(this.lists.length);
     },
+    infoListRowTapped: function (inSender, inEvent) {
+      var index = this.$.lists.index,
+        list = this.$.lists.children[index],
+        itemIndex = inEvent.index,
+        model = list.collection.models[itemIndex];
+
+      // Transition to workspace view, including the model as a payload
+      this.bubble("workspace", {
+        eventName: "workspace",
+        model: model,
+        id: model.id
+      });
+      return true;
+    },
     inputChanged: function (inSender, inEvent) {
       var index = this.$.lists.getIndex(),
         list = this.lists[index].name;
@@ -202,28 +216,6 @@ trailing:true white:true*/
     showParameters: function (inSender, inEvent) {
       var panel = this.$.lists.getActive();
       this.doTogglePullout(panel);
-    },
-    /**
-     * Catches the tap event from the {XV.InfoListRow}
-     * and repackages it into a carousel event to be
-     * caught further up.
-    */
-    doInfoListRowTapped: function (inSender, inEvent) {
-      //
-      // Determine which item was tapped
-      //
-      var listIndex = this.$.lists.index;
-      var tappedList = this.$.lists.children[listIndex];
-
-      var itemIndex = inEvent.index;
-      var tappedModel = tappedList.collection.models[itemIndex];
-
-      //
-      // Bubble up an event so that we can transition to workspace view.
-      // Add the tapped model as a payload in the event
-      //
-      this.bubble("workspace", {eventName: "workspace", options: tappedModel });
-      return true;
     },
     newWorkspace: function (inSender, inEvent) {
       var modelType = this.$.lists.controls[this.selectedList].query.recordType;

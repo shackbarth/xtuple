@@ -23,7 +23,8 @@ trailing:true white:true*/
       collection: null,
       rowClass: "",
       query: null,
-      parameterWidget: null
+      parameterWidget: null,
+      workspace: "XV.Workspace"
     },
     collectionChanged: function () {
       var col = this.getCollection(),
@@ -352,7 +353,7 @@ trailing:true white:true*/
     name: "XV.AccountInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.Checkbox",
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -427,7 +428,7 @@ trailing:true white:true*/
     name: "XV.ContactInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.Checkbox",
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -596,7 +597,7 @@ trailing:true white:true*/
     kind: "XV.ParameterWidget",
     components: [
       {label: "_showInactive".loc(), attr: "isActive",
-        defaultKind: "XV.Checkbox",
+        defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -687,7 +688,7 @@ trailing:true white:true*/
     name: "XV.ProjectInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.Checkbox",
+      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {
@@ -805,7 +806,7 @@ trailing:true white:true*/
     name: "XV.ToDoInfoParameters",
     kind: "XV.ParameterWidget",
     components: [
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.Checkbox",
+      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
         getParameter: function () {
           var param;
           if (!this.getValue()) {

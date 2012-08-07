@@ -74,16 +74,7 @@ trailing:true white:true*/
 
       if (viewName) {
         this.setCurrentView(viewName);
-        /**
-         * allow a payload to be attached to the event. This
-         * payload will be sent down to the view that's being
-         * rendered, if there is a payload and if the view
-         * is capable of handling it
-         */
-        var view = this.$[viewName];
-        if (inEvent.options && view && view.setOptions) {
-          view.setOptions(inEvent.options);
-        }
+        this.$[viewName].waterfall("onPanelChange", inEvent);
       }
 
       // we got this, stop bubbling
