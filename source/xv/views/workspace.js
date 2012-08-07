@@ -91,14 +91,6 @@ trailing:true white:true*/
     fetch: function (id) {
       this._model.fetch({id: id});
     },
-    panelChanged: function (inSender, inEvent) {
-      if (inEvent.id) {
-        this.fetch(inEvent.id);
-      } else {
-        this.newRecord();
-      }
-      return true;
-    },
     modelChanged: function () {
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
@@ -130,6 +122,14 @@ trailing:true white:true*/
     newRecord: function () {
       this._model.initialize(null, {isNew: true});
     },
+    panelChanged: function (inSender, inEvent) {
+      if (inEvent.id) {
+        this.fetch(inEvent.id);
+      } else {
+        this.newRecord();
+      }
+      return true;
+    },
     requery: function () {
       this.fetch(this._model.id);
     },
@@ -139,7 +139,7 @@ trailing:true white:true*/
     statusChanged: function (model, status, options) {
       var K = XM.Model,
         inEvent = {model: model};
-      if (status === K.READY_CLEAN) {
+      if (status === K.READY_CLEAN || status === K.READY_NEW) {
         this.attributesChanged(model, {all: true});
       }
       this.doStatusChange(inEvent);

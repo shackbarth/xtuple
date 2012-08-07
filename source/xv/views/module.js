@@ -49,7 +49,7 @@ trailing:true white:true*/
             {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
             {name: "rightLabel", style: "text-align: center"}
           ]},
-          {kind: "onyx.Button", content: "_new".loc(), ontap: "newWorkspace" },
+          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord" },
           {kind: "onyx.InputDecorator", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
@@ -117,16 +117,16 @@ trailing:true white:true*/
       this.$.menu.setCount(this.lists.length);
     },
     infoListRowTapped: function (inSender, inEvent) {
-      var index = this.$.lists.index,
-        list = this.$.lists.children[index],
+      var list = this.$.lists.getActive(),
+        workspace = list.getWorkspace(),
         itemIndex = inEvent.index,
-        model = list.collection.models[itemIndex];
+        id = list.collection.models[itemIndex].id;
 
       // Transition to workspace view, including the model as a payload
       this.bubble("workspace", {
         eventName: "workspace",
-        model: model,
-        id: model.id
+        workspace: workspace,
+        id: id
       });
       return true;
     },
@@ -203,6 +203,15 @@ trailing:true white:true*/
       list.fetch(options);
       this.fetched[name] = true;
     },
+    newRecord: function (inSender, inEvent) {
+      var list = this.$.lists.getActive(),
+        workspace = list.getWorkspace();
+      this.bubble("workspace", {
+        eventName: "workspace",
+        workspace: workspace
+      });
+      return true;
+    },
     requery: function (inSender, inEvent) {
       this.fetch();
     },
@@ -217,13 +226,6 @@ trailing:true white:true*/
       var panel = this.$.lists.getActive();
       this.doTogglePullout(panel);
     },
-    newWorkspace: function (inSender, inEvent) {
-      var modelType = this.$.lists.controls[this.selectedList].query.recordType;
-      var emptyModel = new XM[XV.util.formatModelName(modelType)]();
-      emptyModel.initialize(null, { isNew: true });
-      this.bubble("workspace", {eventName: "workspace", options: emptyModel });
-    },
-
     /**
      * If a model has changed, check the lists of this module to see if we can
      * update the info object in the list.
