@@ -35,7 +35,13 @@ white:true*/
 
     requiredAttributes: [
       "order"
-    ]
+    ],
+
+    orderAttribute: {
+      orderBy: [{
+        attribute: "order"
+      }]
+    }
 
   });
 
@@ -68,8 +74,13 @@ white:true*/
 
     requiredAttributes: [
       "order"
-    ]
+    ],
 
+    orderAttribute: {
+      orderBy: [{
+        attribute: "order"
+      }]
+    }
   });
 
   /**
@@ -101,7 +112,13 @@ white:true*/
 
     requiredAttributes: [
       "order"
-    ]
+    ],
+
+    orderAttribute: {
+      orderBy: [{
+        attribute: "order"
+      }]
+    }
 
   });
 

@@ -47,8 +47,7 @@ white:true*/
 
     orderAttribute: {
       orderBy: [{
-        attribute: "order",
-        descending: false
+        attribute: "order"
       }]
     }
 
