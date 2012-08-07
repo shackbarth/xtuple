@@ -76,7 +76,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     components: [
       {kind: "onyx.InputDecorator", name: "decorator",
-        classes: "xv-inputwidget-decorator", components: [
+        classes: "xv-input-decorator", components: [
         {name: "label", content: "", classes: "xv-label"},
         {name: "input", kind: "onyx.Input", onchange: "inputChanged"},
         {name: "icon", kind: "Image", src: "images/date-icon.jpg",

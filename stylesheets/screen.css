@@ -542,36 +542,47 @@ body {
 }
 
 /* line 436, ../sass/screen.scss */
+.xv-dropdownwidget {
+  background-color: white;
+}
+
+/* line 440, ../sass/screen.scss */
+.xv-picker {
+  width: 200px;
+}
+
+/* line 444, ../sass/screen.scss */
 .xv-groupbox {
+  padding: 8px;
   min-height: 250px;
-  width: 320px;
+  width: 330px;
   margin-right: 5px;
 }
 
-/* line 442, ../sass/screen.scss */
+/* line 451, ../sass/screen.scss */
 .xv-label {
   width: 80px;
   padding-right: 8px;
   text-align: right;
 }
 
-/* line 448, ../sass/screen.scss */
+/* line 457, ../sass/screen.scss */
 .xv-inputwidget {
   background-color: white;
 }
 
-/* line 452, ../sass/screen.scss */
-.xv-inputwidget-decorator {
+/* line 461, ../sass/screen.scss */
+.xv-input-decorator {
   border: 0px;
 }
 
-/* line 456, ../sass/screen.scss */
+/* line 465, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 461, ../sass/screen.scss */
+/* line 470, ../sass/screen.scss */
 .xv-relationwidget-description {
   text-indent: 100px;
   font-size: small;

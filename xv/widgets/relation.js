@@ -134,8 +134,9 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
-      this.$.label.setContent(label);
+      var label = (this.getLabel() || ("_" + this.name).loc());
+      this.$.label.setContent(label || ":");
+      this.$.input.setPlaceholder(label);
     },
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();

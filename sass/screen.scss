@@ -433,9 +433,18 @@ body {
   height: 300px;
 }
 
+.xv-dropdownwidget {
+  background-color: white;
+}
+
+.xv-picker {
+  width: 200px;
+}
+
 .xv-groupbox {
+  padding: 8px;
   min-height: 250px; 
-  width: 320px; 
+  width: 330px; 
   margin-right: 5px;
 }
 
@@ -449,7 +458,7 @@ body {
   background-color: white; 
 }
 
-.xv-inputwidget-decorator {
+.xv-input-decorator {
   border: 0px;
 }
 

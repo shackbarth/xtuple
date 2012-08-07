@@ -32,7 +32,7 @@ regexp:true, undef:true, trailing:true, white:true */
       label: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-inputwidget-decorator",
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
         components: [
         {name: "label", content: "", classes: "xv-label"},
         {name: "input", kind: "onyx.Input", onchange: "inputChanged"}

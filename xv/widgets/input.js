@@ -56,7 +56,7 @@ regexp:true, undef:true, trailing:true, white:true */
       label: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-inputwidget-decorator",
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
         components: [
         {name: "label", content: "", classes: "xv-label"},
         {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
@@ -67,8 +67,9 @@ regexp:true, undef:true, trailing:true, white:true */
       this.labelChanged();
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
-      this.$.label.setContent(label);
+      var label = (this.getLabel() || ("_" + this.name).loc());
+      this.$.label.setContent(label + ":");
+      this.$.input.setPlaceholder(label);
     }
   });
   

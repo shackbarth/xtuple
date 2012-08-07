@@ -7,10 +7,12 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.DropdownWidget",
     kind: "enyo.Control",
+    classes: "xv-dropdownwidget",
     events: {
       onValueChange: ""
     },
     published: {
+      label: "",
       value: null,
       collection: null,
       disabled: false,
@@ -22,9 +24,14 @@ regexp:true, undef:true, trailing:true, white:true */
       onSelect: "itemSelected"
     },
     components: [
-      {kind: "onyx.PickerDecorator", components: [
-        {},
-        {name: "picker", kind: "onyx.Picker"}
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+        components: [
+        {name: "label", content: "", classes: "xv-label"},
+        {kind: "onyx.PickerDecorator",
+          components: [
+          {content: "_none".loc(), classes: "xv-picker"},
+          {name: "picker", kind: "onyx.Picker"}
+        ]}
       ]}
     ],
     collectionChanged: function () {
@@ -63,6 +70,7 @@ regexp:true, undef:true, trailing:true, white:true */
     create: function () {
       this.inherited(arguments);
       if (this.getCollection()) { this.collectionChanged(); }
+      this.labelChanged();
     },
     disabledChange: function (inSender, inEvent) {
       this.addRemoveClass("onyx-disabled", inEvent.originator.disabled);
@@ -71,6 +79,10 @@ regexp:true, undef:true, trailing:true, white:true */
       var value = this.$.picker.getSelected().value,
         attribute = this.getValueAttribute();
       this.setValue(attribute ? value[attribute] : value);
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      this.$.label.setContent(label);
     },
     setValue: function (value, options) {
       options = options || {};
