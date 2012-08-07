@@ -53,7 +53,7 @@ trailing:true white:true*/
         name: componentName,
         kind: "Image",
         classes: "xt-dashboard-icon-image",
-        src: "images/" + name + "-icon.png"
+        src: "assets/" + name + "-icon.png"
       });
 
       // dynamically create the label

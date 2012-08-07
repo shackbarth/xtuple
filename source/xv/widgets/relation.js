@@ -22,7 +22,7 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: 'input', kind: "onyx.Input", onkeyup: "keyUp",
           onkeydown: "keyDown", onblur: "receiveBlur"},
         {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-          {kind: "onyx.IconButton", src: "images/menu-icon-search.png"},
+          {kind: "onyx.IconButton", src: "assets/menu-icon-search.png"},
           {name: 'popupMenu', kind: "onyx.Menu",
             components: [
             {content: "_search".loc(), value: 'search'},

@@ -73,7 +73,7 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {kind: "onyx.InputDecorator", name: "decorator", components: [
         {name: "input", kind: "onyx.Input", onchange: "inputChanged"},
-        {name: "icon", kind: "Image", src: "images/date-icon.jpg",
+        {name: "icon", kind: "Image", src: "assets/date-icon.jpg",
           ontap: "iconTapped"},
         {name: "datePickPopup", kind: "onyx.Popup", modal: true, components: [
           {kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked"}

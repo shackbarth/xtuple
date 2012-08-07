@@ -30,8 +30,8 @@ trailing:true white:true*/
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
           {kind: "Group", defaultKind: "onyx.IconButton", tag: null, components: [
-            {src: "images/menu-icon-search.png", ontap: "showParameters"},
-            {src: "images/menu-icon-bookmark.png", ontap: "showHistory"}
+            {src: "assets/menu-icon-search.png", ontap: "showParameters"},
+            {src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
           ]},
           {name: "leftLabel"}
         ]},
@@ -53,7 +53,7 @@ trailing:true white:true*/
           {kind: "onyx.InputDecorator", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
-            {kind: "Image", src: "images/search-input-search.png"}
+            {kind: "Image", src: "assets/search-input-search.png"}
           ]},
           {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout" },
           {

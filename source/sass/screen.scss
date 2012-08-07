@@ -248,7 +248,7 @@ body {
             bottom: 0;
             background-color: #fff;
             .xt-user-login-block {
-              background: url("../images/login-blue-scr.png") 0 0 no-repeat;
+              background: url("../assets/login-blue-scr.png") 0 0 no-repeat;
               position: absolute;
               top: 50%;
               left: 50%;
@@ -290,7 +290,7 @@ body {
               margin-top: -125px;
               height: 250px;
               width: 300px;
-              background: url("../images/login-logo.png") 0 0 no-repeat;
+              background: url("../assets/login-logo.png") 0 0 no-repeat;
             }
           }
         }
@@ -404,7 +404,9 @@ body {
 	height: 100%;
 	width: 20px;
 	right: -20px;
-	background: url(../images/sliding-shadow.png) repeat-y;
+	/** this is weird and indicates the REAL need to change the
+	    whatever the css system is...this relative path is different... **/
+	background: url("../../assets/sliding-shadow.png") repeat-y;
 	background-size: 20px 2px;
 }
 
