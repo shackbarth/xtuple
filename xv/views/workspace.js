@@ -8,6 +8,9 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.WorkspaceContent",
     kind: "FittableRows",
+    published: {
+      title: "_opportunity".loc()
+    },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", components: [
@@ -32,6 +35,7 @@ trailing:true white:true*/
     ],
     create: function () {
       this.inherited(arguments);
+      this.titleChanged();
       var prop;
       // Create a menu for every group box
       for (prop in this.$) {
@@ -41,6 +45,10 @@ trailing:true white:true*/
           }
         }
       }
+    },
+    titleChanged: function () {
+      var title = this.getTitle();
+      this.parent.parent.$.title.setContent(title);
     },
     update: function (attributes) {
       var prop;
@@ -60,13 +68,14 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     classes: "app enyo-unselectable",
     published: {
-      model: null
+      model: null,
+      module: "crm"
     },
     components: [
       {kind: "FittableRows", classes: "left", components: [
-        {kind: "onyx.Toolbar", components: [
+        {kind: "onyx.Toolbar", name: "menuToolbar", components: [
           {kind: "onyx.Button", name: "backButton",
-            content: "_back".loc(), onclick: "back"}
+            content: "_back".loc(), onclick: "close"}
         ]},
         {kind: "Repeater", fit: true, touch: true, onSetupItem: "setupItem", name: "menuItems",
           components: [
@@ -74,20 +83,29 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", components: [
-        {kind: "onyx.Toolbar", components: [
+        {kind: "onyx.Toolbar", name: "contentToolbar", components: [
+          {kind: "onyx.Grabber"},
           {kind: "onyx.Button", name: "refreshButton",
             content: "_refresh".loc(), onclick: "refresh"},
-          {kind: "onyx.Button", name: "applyButton", disabled: true,
-            content: "_apply".loc(), onclick: "apply"},
-          {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
-            content: "_saveAndNew".loc(), onclick: "apply"},
+          {name: "title", style: "text-align: center;"},
           {kind: "onyx.Button", name: "saveButton",
             classes: "onyx-affirmative", disabled: true,
-            content: "_save".loc(), onclick: "save"}
+            style: "float: right;",
+            content: "_save".loc(), onclick: "save"},
+          {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
+            style: "float: right;",
+            content: "_saveAndNew".loc(), onclick: "apply"},
+          {kind: "onyx.Button", name: "applyButton", disabled: true,
+            style: "float: right;",
+            content: "_apply".loc(), onclick: "apply"}
         ]},
         {kind: "XV.WorkspaceContent", name: "workspaceContent", fit: true}
       ]}
     ],
+    close: function () {
+      var module = this.getModule();
+      this.bubble(module, {eventName: module});
+    },
     create: function () {
       this.inherited(arguments);
       this.modelChanged();
@@ -104,10 +122,10 @@ trailing:true white:true*/
       this._model.on("statusChange", this.statusChanged);
     },
     save: function () {
-      
+      this._model.save();
     },
     saveAndClose: function () {
-      
+      this.save();
     },
     statusChanged: function (model, status, options) {
       var isNotDirty = (!model.isDirty());

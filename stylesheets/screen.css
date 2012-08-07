@@ -553,36 +553,38 @@ body {
 
 /* line 444, ../sass/screen.scss */
 .xv-groupbox {
-  padding: 8px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
   min-height: 250px;
   width: 330px;
   margin-right: 5px;
 }
 
-/* line 451, ../sass/screen.scss */
+/* line 453, ../sass/screen.scss */
 .xv-label {
   width: 80px;
   padding-right: 8px;
   text-align: right;
 }
 
-/* line 457, ../sass/screen.scss */
+/* line 459, ../sass/screen.scss */
 .xv-inputwidget {
   background-color: white;
 }
 
-/* line 461, ../sass/screen.scss */
+/* line 463, ../sass/screen.scss */
 .xv-input-decorator {
   border: 0px;
 }
 
-/* line 465, ../sass/screen.scss */
+/* line 467, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 470, ../sass/screen.scss */
+/* line 472, ../sass/screen.scss */
 .xv-relationwidget-description {
   text-indent: 100px;
   font-size: small;
