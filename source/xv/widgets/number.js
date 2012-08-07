@@ -19,11 +19,11 @@ regexp:true, undef:true, trailing:true, white:true */
       return isNaN(value) ? false : value;
     },
     valueChanged: function (value) {
-      value = value ? Globalize.format(value, "n" + this.getScale()) : "";
+      value = value || value === 0 ? Globalize.format(value, "n" + this.getScale()) : "";
       return XV.Input.prototype.valueChanged.call(this, value);
     }
   });
-  
+
   enyo.kind({
     name: "XV.NumberWidget",
     kind: "XV.Number",
@@ -33,11 +33,11 @@ regexp:true, undef:true, trailing:true, white:true */
       ]}
     ]
   });
-  
+
   // ..........................................................
   // COST
   //
-  
+
   enyo.kind({
     name: "XV.Cost",
     kind: "XV.Number",
@@ -45,7 +45,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.COST_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.CostWidget",
     kind: "XV.NumberWidget",
@@ -53,11 +53,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.COST_SCALE
     }
   });
-  
+
   // ..........................................................
   // EXTENDED PRICE
   //
-  
+
   enyo.kind({
     name: "XV.ExtendedPrice",
     kind: "XV.Number",
@@ -65,7 +65,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.EXTENDED_PRICE_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.ExtendedPriceWidget",
     kind: "XV.NumberWidget",
@@ -73,11 +73,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.EXTENDED_PRICE_SCALE
     }
   });
-  
+
   // ..........................................................
   // MONEY
   //
-  
+
   enyo.kind({
     name: "XV.Money",
     kind: "XV.Number",
@@ -85,7 +85,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.MONEY_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.MoneyWidget",
     kind: "XV.NumberWidget",
@@ -97,7 +97,7 @@ regexp:true, undef:true, trailing:true, white:true */
   // ..........................................................
   // PERCENT
   //
-  
+
   enyo.kind({
     name: "XV.Percent",
     kind: "XV.Number",
@@ -105,7 +105,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.PERCENT_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.PercentWidget",
     kind: "XV.NumberWidget",
@@ -113,11 +113,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.PERCENT_SCALE
     }
   });
-  
+
   // ..........................................................
   // PURCHASE PRICE
   //
-  
+
   enyo.kind({
     name: "XV.PurchasePrice",
     kind: "XV.Number",
@@ -125,7 +125,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.PURCHASE_PRICE_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.PurchasePriceWidget",
     kind: "XV.NumberWidget",
@@ -133,11 +133,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.PURCHASE_PRICE_SCALE
     }
   });
-  
+
   // ..........................................................
   // QUANTITY
   //
-  
+
   enyo.kind({
     name: "XV.Quantity",
     kind: "XV.Number",
@@ -145,7 +145,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.QuantityWidget",
     kind: "XV.NumberWidget",
@@ -153,11 +153,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_SCALE
     }
   });
-  
+
   // ..........................................................
   // QUANTITY PER
   //
-  
+
   enyo.kind({
     name: "XV.QuantityPer",
     kind: "XV.Number",
@@ -165,7 +165,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_PER_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.QuantityPerWidget",
     kind: "XV.NumberWidget",
@@ -173,11 +173,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.QTY_PER_SCALE
     }
   });
-  
+
   // ..........................................................
   // SALES PRICE
   //
-  
+
   enyo.kind({
     name: "XV.SalesPrice",
     kind: "XV.Number",
@@ -185,7 +185,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.SALES_PRICE_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.SalesPriceWidget",
     kind: "XV.NumberWidget",
@@ -193,11 +193,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.SALES_PRICE_SCALE
     }
   });
-  
+
   // ..........................................................
   // UNIT RATIO
   //
-  
+
   enyo.kind({
     name: "XV.UnitRatio",
     kind: "XV.Number",
@@ -205,7 +205,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.UNIT_RATIO_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.UnitRatioWidget",
     kind: "XV.NumberWidget",
@@ -213,11 +213,11 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.UNIT_RATIO_SCALE
     }
   });
-  
+
   // ..........................................................
   // WEIGHT
   //
-  
+
   enyo.kind({
     name: "XV.Weight",
     kind: "XV.Number",
@@ -225,7 +225,7 @@ regexp:true, undef:true, trailing:true, white:true */
       scale: XT.WEIGHT_SCALE
     }
   });
-  
+
   enyo.kind({
     name: "XV.WeightWidget",
     kind: "XV.NumberWidget",
