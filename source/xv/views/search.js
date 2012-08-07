@@ -65,6 +65,7 @@ trailing:true white:true*/
         this.$.contentArea.removeChild(this.$.contentArea.$.searchList);
       }
       this.createComponent({ kind: listKind, name: "searchList", container: this.$.contentArea, fit: true });
+      this.$.searchList.fetch(); // never a bad idea to refresh, in case the list doesn't exist
       this.$.contentArea.render();
       /**
        * Add the appropriate search parameters
