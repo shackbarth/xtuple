@@ -21,7 +21,6 @@ white:true*/
       onValueChange: "parameterChanged"
     },
     components: [
-      {name: "label", kind: "Control", classes: 'parameter-label'},
       {name: "input", classes: "parameter-item-input"}
     ],
     defaultKind: "XV.InputWidget",
@@ -34,7 +33,7 @@ white:true*/
       }
     },
     labelChanged: function () {
-      this.$.label.setContent(this.label);
+      this.$.input.setLabel(this.label);
     },
     getParameter: function () {
       var param;

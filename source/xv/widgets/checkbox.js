@@ -13,6 +13,9 @@ regexp:true, undef:true, trailing:true, white:true */
     handlers: {
       onchange: "changed"
     },
+    clear: function (options) {
+      this.setValue(false, options);
+    },
     setValue: function (value, options) {
       options = options || {};
       this._silent = options.silent;
@@ -24,6 +27,41 @@ regexp:true, undef:true, trailing:true, white:true */
         inEvent.value = this.getValue();
         this.doValueChange(inEvent);
       }
+    }
+  });
+  
+  enyo.kind({
+    name: "XV.CheckboxWidget",
+    kind: "XV.Input",
+    classes: "xv-inputwidget xv-checkboxwidget",
+    published: {
+      label: ""
+    },
+    components: [
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+        components: [
+        {name: "label", content: "", classes: "xv-label"},
+        {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
+      ]}
+    ],
+    clear: function (options) {
+      this.setValue(false, options);
+    },
+    create: function () {
+      this.inherited(arguments);
+      this.labelChanged();
+    },
+    inputChanged: function (inSender, inEvent) {
+      var input = this.$.input.getValue();
+      this.setValue(input);
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      this.$.label.setContent(label);
+    },
+    valueChanged: function (value) {
+      this.$.input.setValue(value);
+      return value;
     }
   });
   

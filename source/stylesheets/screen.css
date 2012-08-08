@@ -2,7 +2,7 @@
  * In this file you should write your main styles. (or centralize your imports)
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
-/* line 17, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 17, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -19,50 +19,50 @@ time, mark, audio, video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
   font: inherit;
+  font-size: 100%;
   vertical-align: baseline;
 }
 
-/* line 20, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
-body {
+/* line 22, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+html {
   line-height: 1;
 }
 
-/* line 22, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 24, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 ol, ul {
   list-style: none;
 }
 
-/* line 24, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 26, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 26, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 28, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
   text-align: left;
   font-weight: normal;
   vertical-align: middle;
 }
 
-/* line 28, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 30, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q, blockquote {
   quotes: none;
 }
-/* line 101, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 103, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
   content: none;
 }
 
-/* line 30, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 32, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 a img {
   border: none;
 }
 
-/* line 114, ../../../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.11.7/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
+/* line 116, ../../../../../../../usr/local/lib/ruby/gems/1.9.1/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block;
 }
@@ -73,7 +73,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-image: -webkit-radial-gradient(#666666, #333333 70%);
   background-image: -moz-radial-gradient(#666666, #333333 70%);
   background-image: -o-radial-gradient(#666666, #333333 70%);
-  background-image: -ms-radial-gradient(#666666, #333333 70%);
   background-image: radial-gradient(#666666, #333333 70%);
   background-color: #999;
 }
@@ -121,7 +120,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-image: -webkit-radial-gradient(#666666, #333333 70%);
   background-image: -moz-radial-gradient(#666666, #333333 70%);
   background-image: -o-radial-gradient(#666666, #333333 70%);
-  background-image: -ms-radial-gradient(#666666, #333333 70%);
   background-image: radial-gradient(#666666, #333333 70%);
   background-color: #999;
   color: #fff;
@@ -147,9 +145,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 74, ../sass/screen.scss */
 .xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
   margin: 0 10px;
@@ -167,15 +164,11 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 /** END DASHBOARD */
 /* line 94, ../sass/screen.scss */
 .developer-ui-container {
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -o-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
   box-shadow: #333333 4px 4px 10px -4px;
   -moz-border-radius-bottomright: 10px;
   -webkit-border-bottom-right-radius: 10px;
-  -o-border-bottom-right-radius: 10px;
-  -ms-border-bottom-right-radius: 10px;
-  -khtml-border-bottom-right-radius: 10px;
   border-bottom-right-radius: 10px;
   top: 100px;
   left: 0;
@@ -190,21 +183,14 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 110, ../sass/screen.scss */
 .developer-ui-container .onyx-grabber.developer-grabber {
-  -moz-box-shadow: #333333 4px 4px 10px -4px;
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
-  -o-box-shadow: #333333 4px 4px 10px -4px;
+  -moz-box-shadow: #333333 4px 4px 10px -4px;
   box-shadow: #333333 4px 4px 10px -4px;
   -moz-border-radius-topright: 10px;
   -webkit-border-top-right-radius: 10px;
-  -o-border-top-right-radius: 10px;
-  -ms-border-top-right-radius: 10px;
-  -khtml-border-top-right-radius: 10px;
   border-top-right-radius: 10px;
   -moz-border-radius-bottomright: 10px;
   -webkit-border-bottom-right-radius: 10px;
-  -o-border-bottom-right-radius: 10px;
-  -ms-border-bottom-right-radius: 10px;
-  -khtml-border-bottom-right-radius: 10px;
   border-bottom-right-radius: 10px;
   background-color: #d8d8d8;
   position: absolute;
@@ -233,9 +219,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 /* line 139, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   background-color: #fff;
   padding-top: 3px;
@@ -244,9 +229,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 145, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   width: 320px;
   min-width: 320px;
@@ -255,18 +239,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 }
 /* line 151, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column .xt-info-list-basic-column {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
   vertical-align: top;
 }
 /* line 155, ../sass/screen.scss */
 .xt-info-list .xt-info-list-row .xt-info-list-row-column .xt-info-list-basic-column .xt-info-list-basic-cell {
-  -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 5px;
   font-size: 11px;
@@ -305,9 +287,8 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
 
 /* line 190, ../sass/screen.scss */
 .xt-sub-module-content {
-  -moz-box-shadow: black -4px 0 10px -4px;
   -webkit-box-shadow: black -4px 0 10px -4px;
-  -o-box-shadow: black -4px 0 10px -4px;
+  -moz-box-shadow: black -4px 0 10px -4px;
   box-shadow: black -4px 0 10px -4px;
 }
 
@@ -444,11 +425,10 @@ body {
 
 /* line 331, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-input {
-  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -o-border-radius: 5px;
+  -moz-border-radius: 5px;
   -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 8px 8px 10px 8px;
   border: 1px solid #ddd;
@@ -461,11 +441,10 @@ body {
 }
 /* line 343, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button {
-  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  -o-border-radius: 5px;
+  -moz-border-radius: 5px;
   -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
+  -o-border-radius: 5px;
   border-radius: 5px;
   padding: 5px;
   border: 1px solid #ddd;
@@ -560,8 +539,58 @@ body {
 /*********END PULLOUT *********/
 /*********XV WIDGETS***********/
 /* line 434, ../sass/screen.scss */
-.xv-widgets-date .xv-input-decorator {
-  height: 14px;
+.xv-top-panel {
+  height: 300px;
+}
+
+/* line 438, ../sass/screen.scss */
+.xv-dropdownwidget {
+  background-color: white;
+}
+
+/* line 442, ../sass/screen.scss */
+.xv-picker {
+  width: 200px;
+}
+
+/* line 446, ../sass/screen.scss */
+.xv-groupbox {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  min-height: 300px;
+  width: 350px;
+  margin-right: 5px;
+}
+
+/* line 455, ../sass/screen.scss */
+.xv-label {
+  width: 100px;
+  padding-right: 8px;
+  text-align: right;
+}
+
+/* line 461, ../sass/screen.scss */
+.xv-inputwidget {
+  background-color: white;
+}
+
+/* line 465, ../sass/screen.scss */
+.xv-input-decorator {
+  border: 0px;
+}
+
+/* line 469, ../sass/screen.scss */
+.xv-relationwidget-completer {
+  left: -200px;
+  top: 15px;
+}
+
+/* line 474, ../sass/screen.scss */
+.xv-relationwidget-description {
+  text-indent: 120px;
+  font-size: small;
+  padding-bottom: 4px;
 }
 
 /********END XV WIDGETS******/

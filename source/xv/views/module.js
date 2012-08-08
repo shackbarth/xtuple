@@ -19,7 +19,7 @@ trailing:true white:true*/
     handlers: {
       onParameterChange: "requery",
       onScroll: "didScroll",
-      onInfoListRowTapped: "doInfoListRowTapped"
+      onInfoListRowTapped: "infoListRowTapped"
     },
     showPullout: true,
     realtimeFit: true,
@@ -49,7 +49,7 @@ trailing:true white:true*/
             {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
             {name: "rightLabel", style: "text-align: center"}
           ]},
-          {kind: "onyx.Button", content: "_new".loc(), ontap: "newWorkspace" },
+          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord" },
           {kind: "onyx.InputDecorator", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
@@ -64,10 +64,10 @@ trailing:true white:true*/
             modal: true,
             floating: true,
             components: [
-              { content: "Are you sure you want to log out?" },
+              { content: "_logoutConfirmation".loc() },
               { tag: "br"},
-              { kind: "onyx.Button", content: "Yes, logout", ontap: "logout" },
-              { kind: "onyx.Button", content: "No, don't logout.", ontap: "closeLogoutWarningPopup" }
+              { kind: "onyx.Button", content: "_ok".loc(), ontap: "logout" },
+              { kind: "onyx.Button", content: "_cancel".loc(), ontap: "closeLogoutWarningPopup" }
 
             ]
           }
@@ -115,6 +115,20 @@ trailing:true white:true*/
         this.doInfoListAdded(component);
       }
       this.$.menu.setCount(this.lists.length);
+    },
+    infoListRowTapped: function (inSender, inEvent) {
+      var list = this.$.lists.getActive(),
+        workspace = list.getWorkspace(),
+        itemIndex = inEvent.index,
+        id = list.collection.models[itemIndex].id;
+
+      // Transition to workspace view, including the model as a payload
+      this.bubble("workspace", {
+        eventName: "workspace",
+        workspace: workspace,
+        id: id
+      });
+      return true;
     },
     inputChanged: function (inSender, inEvent) {
       var index = this.$.lists.getIndex(),
@@ -189,6 +203,15 @@ trailing:true white:true*/
       list.fetch(options);
       this.fetched[name] = true;
     },
+    newRecord: function (inSender, inEvent) {
+      var list = this.$.lists.getActive(),
+        workspace = list.getWorkspace();
+      this.bubble("workspace", {
+        eventName: "workspace",
+        workspace: workspace
+      });
+      return true;
+    },
     requery: function (inSender, inEvent) {
       this.fetch();
     },
@@ -203,35 +226,6 @@ trailing:true white:true*/
       var panel = this.$.lists.getActive();
       this.doTogglePullout(panel);
     },
-    /**
-     * Catches the tap event from the {XV.InfoListRow}
-     * and repackages it into a carousel event to be
-     * caught further up.
-    */
-    doInfoListRowTapped: function (inSender, inEvent) {
-      //
-      // Determine which item was tapped
-      //
-      var listIndex = this.$.lists.index;
-      var tappedList = this.$.lists.children[listIndex];
-
-      var itemIndex = inEvent.index;
-      var tappedModel = tappedList.collection.models[itemIndex];
-
-      //
-      // Bubble up an event so that we can transition to workspace view.
-      // Add the tapped model as a payload in the event
-      //
-      this.bubble("workspace", {eventName: "workspace", options: tappedModel });
-      return true;
-    },
-    newWorkspace: function (inSender, inEvent) {
-      var modelType = this.$.lists.controls[this.selectedList].query.recordType;
-      var emptyModel = new XM[XV.util.formatModelName(modelType)]();
-      emptyModel.initialize(null, { isNew: true });
-      this.bubble("workspace", {eventName: "workspace", options: emptyModel });
-    },
-
     /**
      * If a model has changed, check the lists of this module to see if we can
      * update the info object in the list.

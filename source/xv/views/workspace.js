@@ -5,404 +5,286 @@ trailing:true white:true*/
 
 (function () {
 
-  /**
-    Manages the main content pane of the workspace. This is implemented
-    as two panels (top and bottom). The code in this kind is general-purpose
-    across all possible workspaces, and so it takes its cues from a JSON
-    descriptor object called XT.WorkspacePanelDescriptor.
-  */
   enyo.kind({
-      name: "XV.WorkspacePanels",
-      kind: "FittableRows",
-      realtimeFit: true,
-      wrap: false,
-      classes: "panels enyo-border-box",
-      published: {
-        modelType: ""
-      },
-      events: {
-        onValueChanged: ""
-      },
-      components: [
-        { kind: "Panels", name: "topPanel", style: "height: 300px;", arrangerKind: "CarouselArranger"},
-        { kind: "Panels", fit: true, name: "bottomPanel", arrangerKind: "CarouselArranger"}
-      ],
-      /**
-        Set the layout of the workspace.
-        The layout is determined by the XV.util.getWorkspacePanelDescriptor() variable
-        in xv/xv.js.
-      */
-      updateLayout: function () {
-        var box,
-          iField,
-          fieldDesc,
-          field,
-          label;
-        for (var iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
-          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-          if (boxDesc.kind) {
-            // Grids are a special case that must be rendered per their own logic.
-            // All one-to-many relationships will be rendered as a grid (?)
-            box = this.createComponent({
-                kind: boxDesc.kind || "XV.InputWidget",
-                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
-                name: boxDesc.title
-              });
-            if (boxDesc.customization) {
-              box.setCustomization(boxDesc.customization);
-            }
-            box.setDescriptor(boxDesc);
-
-          // General case: this box is not a grid, it's just a list of labeled fields
-          } else {
-            box = this.createComponent({
-                kind: "onyx.Groupbox",
-                container: boxDesc.location === 'bottom' ? this.$.bottomPanel : this.$.topPanel,
-                style: "min-height: 250px; width: 400px; background-color: white; margin-right: 5px;",
-                components: [
-                  {kind: "onyx.GroupboxHeader", content: boxDesc.title}
-                ]
-              });
-
-            for (iField = 0; iField < boxDesc.fields.length; iField++) {
-              fieldDesc = boxDesc.fields[iField];
-
-              label = fieldDesc.label ? "_" + fieldDesc.label : "_" + fieldDesc.fieldName;
-              field = this.createComponent({
-                kind: "onyx.InputDecorator",
-                style: "font-size: 12px",
-                container: box,
-                components: [
-                  // This is the label
-                  { tag: "span", content: label.loc() + ": ", style: "padding-right: 10px;"}
-                ]
-              });
-
-              var widget = this.createComponent({
-                kind: fieldDesc.kind || "XV.InputWidget",
-                style: "border: 0px; ",
-                name: fieldDesc.fieldName,
-                container: field
-              });
-
-              // Used only for DropdownWidgets at the moment. If the descriptor mentions a model
-              // type we want to send that down to the widget
-              if (fieldDesc.collection) {
-                widget.setCollection(fieldDesc.collection);
-              }
-            }
-          }
-        }
-        this.render();
-      },
-      /**
-        Scrolls the display to the requested box.
-        @Param {String} name The title of the box to scroll to
-      */
-      gotoBox: function (name) {
-        // fun! we have to find if the box is on the top or bottom,
-        // and if so, which index it is. Once we know if it's in the
-        // top or the bottom, and which index, it's easy to jump there.
-        var topIndex = 0,
-          bottomIndex = 0,
-          iBox;
-        for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
-          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-
-          // Note that if the box location defaults to top if it's left empty in the descriptor
-          if (boxDesc.title === name && boxDesc.location === 'bottom') {
-            this.$.bottomPanel.setIndex(bottomIndex);
-            return;
-          } else if (boxDesc.title === name) {
-            this.$.topPanel.setIndex(topIndex);
-            return;
-          } else if (boxDesc.location === 'bottom') {
-            bottomIndex++;
-          } else {
-            topIndex++;
-          }
-        }
-      },
-      /**
-        Populates the fields of the workspace with the values from the model
-      */
-      updateFields: function (model) {
-        var iBox,
-          iField,
-          fieldDesc,
-          fieldName,
-          fieldValue;
-        XT.log("update with model: " + model.get("type"));
-
-        // Look through the entire specification...
-        for (iBox = 0; iBox < XV.util.getWorkspacePanelDescriptor()[this.modelType].length; iBox++) {
-          var boxDesc = XV.util.getWorkspacePanelDescriptor()[this.modelType][iBox];
-
-          if (boxDesc.kind) {
-            // Don't send just the field over. Send the whole collection over
-            this.$[boxDesc.title].setValue(model.getValue(boxDesc.objectName));
-          } else {
-            //Default case: populate the fields
-            for (iField = 0; iField < boxDesc.fields.length; iField++) {
-              fieldDesc = boxDesc.fields[iField];
-              fieldName = boxDesc.fields[iField].fieldName;
-              
-              // argh! 0 is falsy but we want to populate 0 into fields if appropriate
-              fieldValue = model.getValue(fieldName) || model.getValue(fieldName) === 0 ? model.getValue(fieldName) : "";
-              if (fieldName) {
-                // Update the view field with the model value
-                this.$[fieldName].setValue(fieldValue, {silent: true});
-              }
-            }
+    name: "XV.Workspace",
+    kind: "FittableRows",
+    published: {
+      title: "_none".loc(),
+      model: ""
+    },
+    events: {
+      onStatusChange: "",
+      onTitleChange: ""
+    },
+    handlers: {
+      onValueChange: "valueChanged"
+    },
+    components: [
+      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+        classes: "xv-top-panel", components: [
+        {content: "Top Panel 1"},
+        {content: "Top Panel 2"},
+        {content: "Top Panel 3"}
+      ]},
+      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
+        {content: "Bottom Panel 1"},
+        {content: "Bottom Panel 2"},
+        {content: "Bottom Panel 3"}
+      ]}
+    ],
+    /**
+      Updates all children widgets on the workspace where the name of
+      the widget matches the name of an attribute on the model.
+      
+      @param {XM.Model} model
+      @param {Object} options
+    */
+    attributesChanged: function (model, options) {
+      options = options || {};
+      var attr,
+        value,
+        changes = options.changes;
+      for (attr in changes) {
+        if (changes.hasOwnProperty(attr)) {
+          value = model.get(attr);
+          if (this.$[attr] && this.$[attr].setValue) {
+            this.$[attr].setValue(value, {silent: true});
           }
         }
       }
-    });
+    },
+    clear: function () {
+      var attrs = this._model ? this._model.getAttributeNames() : [],
+        attr,
+        i;
+      for (i = 0; i < attrs.length; i++) {
+        attr = attrs[i];
+        if (this.$[attr] && this.$[attr].clear) {
+          this.$[attr].clear({silent: true});
+        }
+      }
+    },
+    create: function () {
+      var prop;
+      this.inherited(arguments);
+      this.titleChanged();
+      this.modelChanged();
 
-  enyo.kind({
-      name: "XV.Workspace",
-      kind: "Panels",
-      classes: "app enyo-unselectable",
-      realtimeFit: true,
-      arrangerKind: "CollapsingArranger",
-      published: {
-        modelType: "",
-        model: null
-      },
-      events: {
-        onHistoryChanged: "",
-        onModelSave: ""
-      },
-      handlers: {
-        onValueChange: "valueChanged",
-        onSubmodelUpdate: "enableSaveButton"
-      },
-      components: [
-        {kind: "FittableRows", classes: "left", components: [
-          {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-            {name: "workspaceHeader" },
-            {kind: "onyx.MenuDecorator", components: [
-              {content: "_navigation".loc() },
-              {kind: "onyx.Tooltip", content: "Tap to open..."},
-              {kind: "onyx.Menu", name: "navigationMenu", components: [
-                { content: "Dashboard" },
-                { content: "CRM" },
-                { content: "Setup" }
-              ], ontap: "navigationSelected" }
-            ]}
-          ]},
-          {
-            kind: "Repeater",
-            fit: true,
-            touch: true,
-            onSetupItem: "setupItem",
-            name: "menuItems",
-            components: [
-              { name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
-            ]
+      // Create a menu for every group box
+      for (prop in this.$) {
+        if (this.$.hasOwnProperty(prop)) {
+          if (this.$[prop].kind === "onyx.GroupboxHeader") {
+            // Do something
           }
-        ]},
-        {kind: "FittableRows", components: [
-          {kind: "onyx.Toolbar", components: [
-            {content: ""},
-            {
-              kind: "onyx.Button",
-              name: "saveButton",
-              disabled: true,
-              content: "_save".loc(),
-              classes: "onyx-affirmative",
-              onclick: "save"
-            }
-          ]},
-          {kind: "XV.WorkspacePanels", name: "workspacePanels", fit: true},
-          {
-            name: "exitWarningPopup",
-            classes: "onyx-sample-popup",
-            kind: "onyx.Popup",
-            centered: true,
-            modal: true,
-            floating: true,
-            onShow: "popupShown",
-            onHide: "popupHidden",
-            components: [
-              { content: "You have unsaved changes. Are you sure you want to leave?" },
-              { tag: "br"},
-              { kind: "onyx.Button", content: "Leave without saving", ontap: "forceExit" },
-              { kind: "onyx.Button", content: "Save and leave", ontap: "saveAndLeave" },
-              { kind: "onyx.Button", content: "Don't leave", ontap: "closeExitWarningPopup" }
-            ]
-          }
-        ]}
-      ],
-      _exitDestination: null,
-      /**
-        Used by all of the various functions that want to signal an exit
-        from this workspace
-      */
-      bubbleExit: function (destination) {
-        this.bubble(destination, {eventName: destination});
-      },
-      closeExitWarningPopup: function () {
-        this.$.exitWarningPopup.hide();
-      },
-      enableSaveButton: function () {
-        this.$.saveButton.setDisabled(false);
-      },
-      forceExit: function () {
-        this.closeExitWarningPopup();
-        this.bubbleExit(this._exitDestination);
-      },
-      itemTap: function (inSender, inEvent) {
-        var p = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index];
-        this.$.workspacePanels.gotoBox(p.title);
-      },
-      /**
-        Essentially the callback function from backbone
-      */
-      modelDidChange: function (model, value, options) {
-        var status = model.getStatus(),
-          K = model.getClass();
-        if (!(status & K.READY)) { return; }
-        XT.log("Loading model into workspace: " + JSON.stringify(model.toJSON()));
-
-        // Put the model in the history array
-        XT.addToHistory("crm", model); // TODO: generalize for any module
-        this.doHistoryChanged();
-
-        // Pass this model onto the panels to update
-        this.$.workspacePanels.updateFields(model);
-      },
-      /**
-       * The user has selected a place to go from the navigation menu. Take
-       * him there.
-       */
-      navigationSelected: function (inSender, inEvent) {
-        var destination = inEvent.originator.content.toLowerCase(),
-          model = this.getModel(),
-          status = model.getStatus(),
-          K = model.getClass();
-        
-        // Check for unsaved changes
-        if (status & K.DIRTY) {
-          this.$.exitWarningPopup.show();
-          this._exitDestination = destination;
-          return;
         }
-        this.bubbleExit(destination);
-      },
-      /**
-       * Save the model to the datastore.
-       */
-      save: function () {
-        this.getModel().save();
-        this.$.saveButton.setDisabled(true);
+      }
+    },
+    destroy: function () {
+      this.setModel(null);
+      this.inherited(arguments);
+    },
+    fetch: function (id) {
+      if (!this._model) { return; }
+      this._model.fetch({id: id});
+    },
+    modelChanged: function () {
+      var model = this.getModel(),
+        Klass = model ? XT.getObjectByName(model) : null,
+        callback,
+        that = this,
+        attrs,
+        attr,
+        i,
+        isReadOnly;
 
-        // Update the info object in the summary views
-        var id = this.getModel().id,
-          recordType = this.getModel().recordType;
-        enyo.Signals.send("onModelSave", { id: id, recordType: recordType });
-      },
-      saveAndLeave: function () {
-        this.closeExitWarningPopup();
-        this.save();
-        this.bubbleExit(this._exitDestination);
-      },
-      // list
-      setupItem: function (inSender, inEvent) {
-        var title = XV.util.getWorkspacePanelDescriptor()[this.getModelType()][inEvent.index].title;
-        inEvent.item.children[0].setContent(title);
-        return true;
-      },
-      /**
-       * Accepts the object that tells the workspace what to drill down into.
-       * SetOptions is quite generic, because it can be called in a very generic
-       * way from the main carousel event handler. Note also that the model parameter
-       * doesn't need to be a complete model. It just has to have the appropriate
-       * type and id properties
-       */
-      setOptions: function (model) {
-        var modelType,
-          Klass,
-          id,
-          m;
-        // Delete all boxes before we try to render anything else
-        this.wipe();
-
-        // Determine the model that will back this view
-        modelType = XV.util.infoToMasterModelName(model.recordType);
-
-        // Setting the model type also renders the workspace. We really can't do
-        // that until we know the model type.
-        this.setModelType(modelType);
-        var modelTypeDisplay = XV.util.stripModelNamePrefix(modelType).camelize();
-        this.$.workspaceHeader.setContent(("_" + modelTypeDisplay).loc());
-        this.setWorkspaceList();
-        this.$.menuItems.render();
-
-        this.$.workspacePanels.setModelType(modelType);
-        this.$.workspacePanels.updateLayout();
-        // force a refresh of the structure of the workspace even if the
-        // model type hasn't really changed. This is to solve a bug whereby
-        // the events weren't firing if you drilled down a second time
-
-        // Set up a listener for changes in the model
-        Klass = Backbone.Relational.store.getObjectByName(modelType);
-
-        // Fetch the model
-        id = model.id;
-        m = new Klass();
-        this.setModel(m);
-        m.on("statusChange", enyo.bind(this, "modelDidChange"));
-        if (id) {
-          // id exists: pull pre-existing record for edit
-          m.fetch({id: id});
-          XT.log("Workspace is fetching " + modelType + " " + id);
-        } else {
-          // no id: this is a new record
-          m.initialize(null, { isNew: true });
-          XT.log("Workspace is fetching new " + modelType);
-        }
-
-      },
-      setWorkspaceList: function () {
-        var menuItems = XV.util.getWorkspacePanelDescriptor()[this.getModelType()];
-        this.$.menuItems.setCount(menuItems.length);
-      },
-      /**
-       * Update the model from changes to the UI. The interaction is handled here
-       * and not in the widgets, which themselves are unaware of the model.
-       * Exception: GridWidgets manage their own model, so those updates are not
-       * performed here. The parameters coming in here are different if the sender
-       * is an Input or a picker or a relational widget, so we have to be careful
-       * when we parse out the appropriate values.
-       * FIXME: If you click the persist button before a changed field is blurred,
-       * then the change will not be persisted, as this function might not
-       * be executed before the persist method. The way we disable the save button
-       * until this function has successfully executed will help with this, but it's
-       * not foolproof: let's say a user changes one field (which enables the save
-       * button) and then changes a second but persists before blurring the second.
-       */
-      valueChanged: function (inSender, inEvent) {
-        var value = inEvent.value,
-          attributes = {},
-          model = this.getModel();
-        if (model) {
-          attributes[inEvent.originator.name] = value;
-          model.set(attributes);
-          this.enableSaveButton();
-        }
-      },
-      /**
-       * Cleans out all the elements from a workspace.
-       * FIXME this looks to work via the command line but not onscreen
-       */
-      wipe: function () {
-        XV.util.removeAll(this.$.workspacePanels.$.topPanel);
-        this.$.workspacePanels.$.topPanel.refresh();
-        XV.util.removeAll(this.$.workspacePanels.$.bottomPanel);
-        this.$.workspacePanels.$.bottomPanel.refresh();
+      // Remove old bindings
+      if (this._model) {
+        this._model.off();
+        this._model = null;
+      }
+      if (!Klass) { return; }
+      
+      // If we don't have a session yet then relations won't be available
+      // so wait and try again after start up tasks complete
+      if (!XT.session) {
+        callback = function () {
+          that.modelChanged();
+        };
+        XT.getStartupManager().registerCallback(callback);
+        return;
       }
       
-    });
+      // Create new instance and bindings
+      this._model = new Klass();
+      this._model.on("change", this.attributesChanged, this);
+      this._model.on("statusChange", this.statusChanged, this);
+      
+      // Disable read-only attributes
+      attrs = this._model ? this._model.getAttributeNames() : [];
+      for (i = 0; i < attrs.length; i++) {
+        attr = attrs[i];
+        isReadOnly = this._model.isReadOnly(attr);
+        if (this.$[attr] && this.$[attr].setDisabled) {
+          this.$[attr].setDisabled(isReadOnly);
+        }
+      }
+    },
+    newRecord: function () {
+      var model = this._model,
+        attr,
+        changes = {};
+      if (!model) { return; }
+      model.initialize(null, {isNew: true});
+      this.clear();
+      for (attr in model.attributes) {
+        changes[attr] = true;
+      }
+      this.attributesChanged(model, {changes: changes});
+    },
+    requery: function () {
+      this.fetch(this._model.id);
+    },
+    save: function () {
+      this._model.save();
+    },
+    statusChanged: function (model, status, options) {
+      options = options || {};
+      var K = XM.Model,
+        inEvent = {model: model},
+        attr,
+        changes = {};
+      if (status === K.READY_CLEAN || status === K.READY_NEW) {
+        for (attr in model.attributes) {
+          changes[attr] = true;
+        }
+        options.changes = changes;
+        this.attributesChanged(model, options);
+      }
+      this.doStatusChange(inEvent);
+    },
+    titleChanged: function () {
+      var inEvent = { title: this.getTitle(), originator: this };
+      this.doTitleChange(inEvent);
+    },
+    valueChanged: function (inSender, inEvent) {
+      var attrs = {};
+      attrs[inEvent.originator.name] = inEvent.value;
+      this._model.set(attrs);
+    }
+  });
+
+  enyo.kind({
+    name: "XV.WorkspaceContainer",
+    kind: "Panels",
+    arrangerKind: "CollapsingArranger",
+    classes: "app enyo-unselectable",
+    published: {
+      previous: ""
+    },
+    handlers: {
+      onPanelChange: "changeWorkspace",
+      onStatusChange: "statusChanged",
+      onTitleChange: "titleChanged"
+    },
+    components: [
+      {kind: "FittableRows", name: "navigationPanel", classes: "left", components: [
+        {kind: "onyx.Toolbar", name: "menuToolbar", components: [
+          {kind: "onyx.Button", name: "backButton",
+            content: "_back".loc(), onclick: "close"}
+        ]},
+        {kind: "Repeater", fit: true, touch: true, onSetupItem: "setupItem", name: "menuItems",
+          components: [
+          {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
+        ]}
+      ]},
+      {kind: "FittableRows", name: "contentPanel", components: [
+        {kind: "onyx.Toolbar", classes: "onyx-toolbar", name: "contentToolbar", components: [
+          {kind: "onyx.Grabber"},
+          {kind: "onyx.Button", name: "refreshButton", disabled: true,
+            content: "_refresh".loc(), onclick: "requery"},
+          {name: "title", style: "text-align: center;"},
+          {kind: "onyx.Button", name: "saveButton",
+            disabled: true, // TO DO: Get the affirmative style back into CSS
+            style: "float: right; background-color: #35A8EE;",
+            content: "_save".loc(), onclick: "saveAndClose"},
+          {kind: "onyx.Button", name: "saveAndNewButton", disabled: true,
+            style: "float: right;",
+            content: "_saveAndNew".loc(), onclick: "saveAndNew"},
+          {kind: "onyx.Button", name: "applyButton", disabled: true,
+            style: "float: right;",
+            content: "_apply".loc(), onclick: "apply"}
+        ]}
+      ]}
+    ],
+    apply: function () {
+      this.save();
+    },
+    changeWorkspace: function (inSender, inEvent) {
+      var workspace = this.$.workspace;
+      if (inEvent.workspace) {
+        if (workspace) { 
+          this.removeComponent(workspace);
+          workspace.destroy();
+        }
+        workspace = {
+          name: "workspace",
+          container: this.$.contentPanel,
+          kind: inEvent.workspace,
+          fit: true
+        };
+        workspace = this.createComponent(workspace);
+        if (inEvent.id) {
+          workspace.fetch(inEvent.id);
+        } else {
+          workspace.newRecord();
+        }
+        this.render();
+      }
+      this.setPrevious(inEvent.previous);
+    },
+    close: function () {
+      var previous = this.getPrevious();
+      this.bubble(previous, {eventName: previous});
+    },
+    create: function () {
+      this.inherited(arguments);
+    },
+    newRecord: function () {
+      this.$.workspace.newRecord();
+    },
+    requery: function () {
+      this.$.workspace.requery();
+    },
+    save: function () {
+      this.$.workspace.save();
+    },
+    saveAndNew: function () {
+      this.save();
+      this.newRecord();
+    },
+    saveAndClose: function () {
+      this.save();
+      this.close();
+    },
+    statusChanged: function (inSender, inEvent) {
+      var model = inEvent.model,
+        K = XM.Model,
+        status = model.getStatus(),
+        isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
+        canNotSave = (!model.isDirty() || !model.canUpdate() ||
+          model.isReadOnly());
+          
+      // Update buttons
+      this.$.refreshButton.setDisabled(isNotReady);
+      this.$.applyButton.setDisabled(canNotSave);
+      this.$.saveAndNewButton.setDisabled(canNotSave);
+      this.$.saveButton.setDisabled(canNotSave);
+    },
+    titleChanged: function (inSender, inEvent) {
+      var title = inEvent.title || "";
+      this.$.title.setContent(title);
+    }
     
+  });
+
 }());

@@ -7,7 +7,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Input",
     published: {
-      value: null
+      value: null,
+      disabled: false
     },
     events: {
       "onValueChange": ""
@@ -15,6 +16,16 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
     ],
+    clear: function (options) {
+      this.setValue("", options);
+    },
+    create: function () {
+      this.inherited(arguments);
+      this.disabledChanged();
+    },
+    disabledChanged: function () {
+      this.$.input.setDisabled(this.getDisabled());
+    },
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
         value = this.validate(input);
@@ -24,9 +35,6 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setValue(null);
         this.valueChanged("");
       }
-    },
-    setDisabled: function (value) {
-      this.$.input.setDisabled(value);
     },
     setValue: function (value, options) {
       options = options || {};
@@ -43,7 +51,7 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     },
     valueChanged: function (value) {
-      this.$.input.setValue(value);
+      this.$.input.setValue(value || "");
       return value;
     }
   });
@@ -51,11 +59,26 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.InputWidget",
     kind: "XV.Input",
+    classes: "xv-inputwidget",
+    published: {
+      label: ""
+    },
     components: [
-      {kind: "onyx.InputDecorator", components: [
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+        components: [
+        {name: "label", content: "", classes: "xv-label"},
         {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
       ]}
-    ]
+    ],
+    create: function () {
+      this.inherited(arguments);
+      this.labelChanged();
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.name).loc());
+      this.$.label.setContent(label + ":");
+      this.$.input.setPlaceholder(label);
+    }
   });
   
 }());

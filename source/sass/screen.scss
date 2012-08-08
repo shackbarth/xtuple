@@ -430,19 +430,52 @@ body {
 
 
 /*********XV WIDGETS***********/
-.xv-widgets-date {
-    .xv-field-icon {
-    }
-    .xv-input-decorator {
-        height: 14px;
-        .xv-input-field {
-        }
-    }
-    .xv-field-popup {
-    }
+
+.xv-top-panel {
+  height: 300px;
 }
 
+.xv-dropdownwidget {
+  background-color: white;
+}
 
+.xv-picker {
+  width: 200px;
+}
+
+.xv-groupbox {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  min-height: 300px; 
+  width: 350px; 
+  margin-right: 5px;
+}
+
+.xv-label {
+  width: 100px;
+  padding-right: 8px;
+  text-align: right;
+}
+
+.xv-inputwidget {
+  background-color: white;
+}
+
+.xv-input-decorator {
+  border: 0px;
+}
+
+.xv-relationwidget-completer {
+  left: -200px; 
+  top: 15px;
+}
+
+.xv-relationwidget-description {
+  text-indent: 120px;
+  font-size: small;
+  padding-bottom: 4px;
+}
 
 /********END XV WIDGETS******/
 

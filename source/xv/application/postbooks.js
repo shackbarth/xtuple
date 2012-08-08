@@ -23,8 +23,8 @@ enyo.kind({
     { name: "crm", kind: "XV.Crm" },
     { name: "billing", kind: "XV.Billing" },
     { name: "setup", kind: "XV.Setup" },
-    { name: "workspace", kind: "XV.Workspace" },
-    { name: "search", kind: "XV.Search" },
+    { name: "workspace", kind: "XV.WorkspaceContainer" },
+    { name: "search", kind: "XV.Search" }
   ],
   carouselEvents: {
     crm: "crm",
