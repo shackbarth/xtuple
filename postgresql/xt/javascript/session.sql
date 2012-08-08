@@ -158,9 +158,9 @@
         }
       },
       processPrivileges = function (orm) {
-	if(orm.privileges) {
-	  result[type]['privileges'] = orm.privileges
-	}
+	    if(orm.privileges) {
+	      result[type]['privileges'] = orm.privileges;
+	    }
       };
 
     
