@@ -24,7 +24,7 @@ trailing:true white:true*/
         classes: "xv-top-panel", components: [
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", name: "number", disabled: true},
+          {kind: "XV.InputWidget", name: "number"},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.AccountWidget", name: "account"}
         ]},
@@ -46,20 +46,19 @@ trailing:true white:true*/
       Updates all children widgets on the workspace where the name of
       the widget matches the name of an attribute on the model.
       
-      By default updates only `changed` attributes on the model.
-      if `all` option equals `true` then will update all attributes.
-      
       @param {XM.Model} model
       @param {Object} options
     */
     attributesChanged: function (model, options) {
       options = options || {};
-      var prop,
-        attrs = options.changed;
-      for (prop in attrs) {
-        if (attrs.hasOwnProperty(prop)) {
-          if (this.$[prop] && this.$[prop].setValue) {
-            this.$[prop].setValue(attrs[prop], {silent: true});
+      var attr,
+        value,
+        changes = options.changes;
+      for (attr in changes) {
+        if (changes.hasOwnProperty(attr)) {
+          value = model.get(attr);
+          if (this.$[attr] && this.$[attr].setValue) {
+            this.$[attr].setValue(value, {silent: true});
           }
         }
       }
@@ -101,7 +100,11 @@ trailing:true white:true*/
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
         callback,
-        that = this;
+        that = this,
+        attrs,
+        attr,
+        i,
+        isReadOnly;
 
       // Remove old bindings
       if (this._model) {
@@ -124,12 +127,27 @@ trailing:true white:true*/
       this._model = new Klass();
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
+      
+      // Disable read-only attributes
+      attrs = this._model ? this._model.getAttributeNames() : [];
+      for (i = 0; i < attrs.length; i++) {
+        attr = attrs[i];
+        isReadOnly = this._model.isReadOnly(attr);
+        if (this.$[attr] && this.$[attr].setDisabled) {
+          this.$[attr].setDisabled(isReadOnly);
+        }
+      }
     },
     newRecord: function () {
-      var model = this._model;
+      var model = this._model,
+        attr,
+        changes = {};
       model.initialize(null, {isNew: true});
       this.clear();
-      this.attributesChanged(model, {changed: model.attributes});
+      for (attr in model.attributes) {
+        changes[attr] = true;
+      }
+      this.attributesChanged(model, {changes: changes});
     },
     panelChanged: function (inSender, inEvent) {
       if (inEvent.id) {
@@ -148,9 +166,14 @@ trailing:true white:true*/
     statusChanged: function (model, status, options) {
       options = options || {};
       var K = XM.Model,
-        inEvent = {model: model};
+        inEvent = {model: model},
+        attr,
+        changes = {};
       if (status === K.READY_CLEAN || status === K.READY_NEW) {
-        options.changed = model.attributes;
+        for (attr in model.attributes) {
+          changes[attr] = true;
+        }
+        options.changes = changes;
         this.attributesChanged(model, options);
       }
       this.doStatusChange(inEvent);
