@@ -428,7 +428,8 @@ trailing:true white:true*/
       label: "_honorific".loc(),
       collection: "XM.HonorificCollection",
       query: {orderBy: [{ attribute: 'code' }] },
-      rowClass: "XV.HonorificCollectionRow"
+      rowClass: "XV.HonorificCollectionRow",
+      workspace: "XV.HonorificWorkspace"
     }
   });
 
@@ -455,7 +456,8 @@ trailing:true white:true*/
       label: "_state".loc(),
       collection: "XM.StateCollection",
       query: {orderBy: [{ attribute: 'abbreviation' }] },
-      rowClass: "XV.AbbreviationNameRow"
+      rowClass: "XV.AbbreviationNameRow",
+      workspace: "XV.StateWorkspace"
     }
   });
 
@@ -466,7 +468,8 @@ trailing:true white:true*/
       label: "_country".loc(),
       collection: "XM.CountryCollection",
       query: {orderBy: [{ attribute: 'name' }] },
-      rowClass: "XV.AbbreviationNameRow"
+      rowClass: "XV.AbbreviationNameRow",
+      workspace: "XV.CountryWorkspace"
     }
   });
 
@@ -521,29 +524,42 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.IncidentCategoryList",
-    kind: "XV.NameDescriptionList"
+    kind: "XV.NameDescriptionList",
+    published: {
+      workspace: "XV.IncidentCategoryWorkspace"
+    }
   });
 
   enyo.kind({
     name: "XV.IncidentResolutionList",
-    kind: "XV.NameDescriptionList"
+    kind: "XV.NameDescriptionList",
+    published: {
+      workspace: "XV.IncidentResolutionWorkspace"
+    }
   });
 
   enyo.kind({
     name: "XV.IncidentSeverityList",
-    kind: "XV.NameDescriptionList"
+    kind: "XV.NameDescriptionList",
+    published: {
+      workspace: "XV.IncidentSeverityWorkspace"
+    }
   });
 
   enyo.kind({
     name: "XV.PriorityList",
-    kind: "XV.NameDescriptionList"
+    kind: "XV.NameDescriptionList",
+    published: {
+      workspace: "XV.PriorityWorkspace"
+    }
   });
 
   enyo.kind({
     name: "XV.OpportunitySourceList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] }
+      query: {orderBy: [{ attribute: 'name' }] },
+      workspace: "XV.OpportunitySourceWorkspace"
     }
   });
 
@@ -551,7 +567,8 @@ trailing:true white:true*/
     name: "XV.OpportunityStageList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] }
+      query: {orderBy: [{ attribute: 'name' }] },
+      workspace: "XV.OpportunityStageWorkspace"
     }
   });
 
@@ -559,7 +576,8 @@ trailing:true white:true*/
     name: "XV.OpportunityTypeList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] }
+      query: {orderBy: [{ attribute: 'name' }] },
+      workspace: "XV.OpportunityTypeWorkspace"
     }
   });
 

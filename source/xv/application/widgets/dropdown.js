@@ -30,6 +30,18 @@ regexp:true, undef:true, trailing:true, white:true */
   });
   
   // ..........................................................
+  // COUNTRY
+  //
+  
+  enyo.kind({
+    name: "XV.CountryDropdown",
+    kind: "XV.DropdownWidget",
+    published: {
+      collection: "XM.countries"
+    }
+  });
+  
+  // ..........................................................
   // INCIDENT CATEGORY
   //
   

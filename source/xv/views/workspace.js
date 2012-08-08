@@ -22,14 +22,11 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", components: [
-        {content: "Top Panel 1"},
-        {content: "Top Panel 2"},
-        {content: "Top Panel 3"}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
+        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", name: "name"},
+          {kind: "XV.InputWidget", name: "description"}
+        ]}
       ]}
     ],
     /**
@@ -222,7 +219,7 @@ trailing:true white:true*/
     changeWorkspace: function (inSender, inEvent) {
       var workspace = this.$.workspace;
       if (inEvent.workspace) {
-        if (workspace) { 
+        if (workspace) {
           this.removeComponent(workspace);
           workspace.destroy();
         }
