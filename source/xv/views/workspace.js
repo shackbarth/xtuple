@@ -13,10 +13,10 @@ trailing:true white:true*/
       model: "XM.Opportunity"
     },
     events: {
-      onStatusChange: ""
+      onStatusChange: "",
+      onTitleChange: ""
     },
     handlers: {
-      onPanelChange: "panelChanged",
       onValueChange: "valueChanged"
     },
     components: [
@@ -26,7 +26,9 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "number"},
           {kind: "XV.InputWidget", name: "name"},
-          {kind: "XV.AccountWidget", name: "account"}
+          {kind: "XV.AccountWidget", name: "account"},
+          {kind: "XV.MoneyWidget", name: "amount"},
+          {kind: "XV.PercentWidget", name: "probability"}
         ]},
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_status".loc()},
@@ -34,6 +36,13 @@ trailing:true white:true*/
           {kind: "XV.OpportunityStageDropdown", name: "opportunityStage"},
           {kind: "XV.OpportunityTypeDropdown", name: "opportunityType"},
           {kind: "XV.OpportunitySourceDropdown", name: "opportunitySource"}
+        ]},
+        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+          {kind: "XV.DateWidget", name: "startDate"},
+          {kind: "XV.DateWidget", name: "assignDate"},
+          {kind: "XV.DateWidget", name: "targetClose"},
+          {kind: "XV.DateWidget", name: "actualClose"}
         ]},
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
@@ -154,14 +163,6 @@ trailing:true white:true*/
       }
       this.attributesChanged(model, {changes: changes});
     },
-    panelChanged: function (inSender, inEvent) {
-      if (inEvent.id) {
-        this.fetch(inEvent.id);
-      } else {
-        this.newRecord();
-      }
-      return true;
-    },
     requery: function () {
       this.fetch(this._model.id);
     },
@@ -184,8 +185,8 @@ trailing:true white:true*/
       this.doStatusChange(inEvent);
     },
     titleChanged: function () {
-      var title = this.getTitle();
-      this.parent.parent.$.title.setContent(title);
+      var inEvent = { title: this.getTitle(), originator: this };
+      this.doTitleChange(inEvent);
     },
     valueChanged: function (inSender, inEvent) {
       var attrs = {};
@@ -200,14 +201,15 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     classes: "app enyo-unselectable",
     published: {
-      module: "crm"
+      previous: ""
     },
     handlers: {
       onPanelChange: "changeWorkspace",
-      onStatusChange: "statusChanged"
+      onStatusChange: "statusChanged",
+      onTitleChange: "titleChanged"
     },
     components: [
-      {kind: "FittableRows", classes: "left", components: [
+      {kind: "FittableRows", name: "navigationPanel", classes: "left", components: [
         {kind: "onyx.Toolbar", name: "menuToolbar", components: [
           {kind: "onyx.Button", name: "backButton",
             content: "_back".loc(), onclick: "close"}
@@ -217,7 +219,7 @@ trailing:true white:true*/
           {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
         ]}
       ]},
-      {kind: "FittableRows", components: [
+      {kind: "FittableRows", name: "contentPanel", components: [
         {kind: "onyx.Toolbar", classes: "onyx-toolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
@@ -233,19 +235,38 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "applyButton", disabled: true,
             style: "float: right;",
             content: "_apply".loc(), onclick: "apply"}
-        ]},
-        {kind: "XV.Workspace", name: "workspace", fit: true}
+        ]}
       ]}
     ],
     apply: function () {
       this.save();
     },
     changeWorkspace: function (inSender, inEvent) {
-      // Change the workspace...
+      var workspace = this.$.workspace;
+      if (inEvent.workspace) {
+        if (workspace) { this.removeComponent(workspace); }
+        workspace = {
+          name: "workspace",
+          container: this.$.contentPanel,
+          kind: inEvent.workspace,
+          fit: true
+        };
+        workspace = this.createComponent(workspace);
+        if (inEvent.id) {
+          workspace.fetch(inEvent.id);
+        } else {
+          workspace.newRecord();
+        }
+        this.render();
+      }
+      this.setPrevious(inEvent.previous);
     },
     close: function () {
-      var module = this.getModule();
-      this.bubble(module, {eventName: module});
+      var previous = this.getPrevious();
+      this.bubble(previous, {eventName: previous});
+    },
+    create: function () {
+      this.inherited(arguments);
     },
     newRecord: function () {
       this.$.workspace.newRecord();
@@ -277,6 +298,10 @@ trailing:true white:true*/
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
+    },
+    titleChanged: function (inSender, inEvent) {
+      var title = inEvent.title || "";
+      this.$.title.setContent(title);
     }
     
   });

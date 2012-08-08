@@ -68,12 +68,14 @@ trailing:true white:true*/
       this.inherited(arguments);
     },
     handleCarouselEvent: function (inSender, inEvent) {
-      var carouselEvents = this.getCarouselEvents();
-      var evt = inEvent.eventName;
-      var viewName = carouselEvents[evt];
+      var carouselEvents = this.getCarouselEvents(),
+        evt = inEvent.eventName,
+        viewName = carouselEvents[evt],
+        previous = this.getActive().name;
 
       if (viewName) {
         this.setCurrentView(viewName);
+        inEvent.previous = previous;
         this.$[viewName].waterfall("onPanelChange", inEvent);
       }
 
