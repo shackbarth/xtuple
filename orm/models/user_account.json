@@ -97,7 +97,7 @@
     "privileges": {
       "all": {
         "create": "MaintainLocales",
-        "read": "MaintainLocales",
+        "read": true,
         "update": "MaintainLocales",
         "delete": "MaintainLocales"
       }
