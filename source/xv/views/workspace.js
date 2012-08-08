@@ -84,6 +84,9 @@ trailing:true white:true*/
       if (!this._model) { return; }
       this._model.fetch({id: id});
     },
+    isDirty: function () {
+      return this._model ? this._model.isDirty() : false;
+    },
     modelChanged: function () {
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
@@ -141,8 +144,8 @@ trailing:true white:true*/
     requery: function () {
       this.fetch(this._model.id);
     },
-    save: function () {
-      this._model.save();
+    save: function (options) {
+      this._model.save(null, options);
     },
     statusChanged: function (model, status, options) {
       options = options || {};
@@ -210,6 +213,16 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "applyButton", disabled: true,
             style: "float: right;",
             content: "_apply".loc(), onclick: "apply"}
+        ]},
+        {kind: "onyx.Popup", name: "unsavedChangesPopup", centered: true,
+          modal: true, floating: true, onShow: "popupShown",
+          onHide: "popupHidden", components: [
+          {content: "_unsavedChanges".loc() },
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_discard".loc(), ontap: "unsavedDiscard" },
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "unsavedCancel" },
+          {kind: "onyx.Button", content: "_save".loc(), ontap: "unsavedSave",
+            classes: "onyx-blue"}
         ]}
       ]}
     ],
@@ -219,10 +232,7 @@ trailing:true white:true*/
     changeWorkspace: function (inSender, inEvent) {
       var workspace = this.$.workspace;
       if (inEvent.workspace) {
-        if (workspace) {
-          this.removeComponent(workspace);
-          workspace.destroy();
-        }
+        this.destroyWorkspace();
         workspace = {
           name: "workspace",
           container: this.$.contentPanel,
@@ -239,12 +249,27 @@ trailing:true white:true*/
       }
       this.setPrevious(inEvent.previous);
     },
-    close: function () {
+    close: function (options) {
+      options = options || {};
+      if (!options.force) {
+        if (this.$.workspace.isDirty()) {
+          this.$.unsavedChangesPopup.show();
+          return;
+        }
+      }
       var previous = this.getPrevious();
       this.bubble(previous, {eventName: previous});
+      this.destroyWorkspace();
     },
     create: function () {
       this.inherited(arguments);
+    },
+    destroyWorkspace: function () {
+      var workspace = this.$.workspace;
+      if (workspace) {
+        this.removeComponent(workspace);
+        workspace.destroy();
+      }
     },
     newRecord: function () {
       this.$.workspace.newRecord();
@@ -252,16 +277,26 @@ trailing:true white:true*/
     requery: function () {
       this.$.workspace.requery();
     },
-    save: function () {
-      this.$.workspace.save();
+    save: function (options) {
+      this.$.workspace.save(options);
     },
     saveAndNew: function () {
-      this.save();
-      this.newRecord();
+      var that = this,
+        options = {},
+        success = function () {
+          that.newRecord();
+        };
+      options.success = success;
+      this.save(options);
     },
     saveAndClose: function () {
-      this.save();
-      this.close();
+      var that = this,
+        options = {},
+        success = function () {
+          that.close();
+        };
+      options.success = success;
+      this.save(options);
     },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
@@ -280,8 +315,19 @@ trailing:true white:true*/
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";
       this.$.title.setContent(title);
+    },
+    unsavedCancel: function () {
+      this.$.unsavedChangesPopup.hide();
+    },
+    unsavedDiscard: function () {
+      var options = {force: true};
+      this.$.unsavedChangesPopup.hide();
+      this.close(options);
+    },
+    unsavedSave: function () {
+      this.$.unsavedChangesPopup.hide();
+      this.save();
     }
-    
   });
 
 }());
