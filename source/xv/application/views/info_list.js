@@ -425,7 +425,7 @@ trailing:true white:true*/
     name: "XV.HonorificList",
     kind: "XV.InfoList",
     published: {
-      label: "_honorific".loc(),
+      label: "_honorifics".loc(),
       collection: "XM.HonorificCollection",
       query: {orderBy: [{ attribute: 'code' }] },
       rowClass: "XV.HonorificCollectionRow",
@@ -453,7 +453,7 @@ trailing:true white:true*/
     name: "XV.StateList",
     kind: "XV.InfoList",
     published: {
-      label: "_state".loc(),
+      label: "_states".loc(),
       collection: "XM.StateCollection",
       query: {orderBy: [{ attribute: 'abbreviation' }] },
       rowClass: "XV.AbbreviationNameRow",
@@ -465,7 +465,7 @@ trailing:true white:true*/
     name: "XV.CountryList",
     kind: "XV.InfoList",
     published: {
-      label: "_country".loc(),
+      label: "_countries".loc(),
       collection: "XM.CountryCollection",
       query: {orderBy: [{ attribute: 'name' }] },
       rowClass: "XV.AbbreviationNameRow",
@@ -514,52 +514,45 @@ trailing:true white:true*/
       this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
-        this.setLabel(("_" + kindName.camelize()).loc());
+        // Pluralize - if this gets any more complicated, we should
+        // pull in a pluralize function
+        var label = "_" + kindName.camelize().pluralize();
+        this.setLabel(label.loc());
       }
       if (!this.getCollection()) {
         this.setCollection("XM." + kindName + "Collection");
+      }
+      if (!this.getWorkspace()) {
+        this.setWorkspace("XV." + kindName + "Workspace");
       }
     }
   });
 
   enyo.kind({
     name: "XV.IncidentCategoryList",
-    kind: "XV.NameDescriptionList",
-    published: {
-      workspace: "XV.IncidentCategoryWorkspace"
-    }
+    kind: "XV.NameDescriptionList"
   });
 
   enyo.kind({
     name: "XV.IncidentResolutionList",
-    kind: "XV.NameDescriptionList",
-    published: {
-      workspace: "XV.IncidentResolutionWorkspace"
-    }
+    kind: "XV.NameDescriptionList"
   });
 
   enyo.kind({
     name: "XV.IncidentSeverityList",
-    kind: "XV.NameDescriptionList",
-    published: {
-      workspace: "XV.IncidentSeverityWorkspace"
-    }
+    kind: "XV.NameDescriptionList"
   });
 
   enyo.kind({
     name: "XV.PriorityList",
-    kind: "XV.NameDescriptionList",
-    published: {
-      workspace: "XV.PriorityWorkspace"
-    }
+    kind: "XV.NameDescriptionList"
   });
 
   enyo.kind({
     name: "XV.OpportunitySourceList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'name' }] },
-      workspace: "XV.OpportunitySourceWorkspace"
+      query: {orderBy: [{ attribute: 'name' }] }
     }
   });
 
@@ -567,8 +560,7 @@ trailing:true white:true*/
     name: "XV.OpportunityStageList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'name' }] },
-      workspace: "XV.OpportunityStageWorkspace"
+      query: {orderBy: [{ attribute: 'name' }] }
     }
   });
 
@@ -576,8 +568,7 @@ trailing:true white:true*/
     name: "XV.OpportunityTypeList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'name' }] },
-      workspace: "XV.OpportunityTypeWorkspace"
+      query: {orderBy: [{ attribute: 'name' }] }
     }
   });
 

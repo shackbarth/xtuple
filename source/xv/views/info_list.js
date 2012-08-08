@@ -20,7 +20,7 @@ trailing:true white:true*/
       rowClass: "",
       query: null,
       parameterWidget: null,
-      workspace: "XV.Workspace"
+      workspace: null
     },
     collectionChanged: function () {
       var col = this.getCollection(),
