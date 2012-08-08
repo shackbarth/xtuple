@@ -129,7 +129,7 @@ trailing:true white:true*/
       var model = this._model;
       model.initialize(null, {isNew: true});
       this.clear();
-      this.attributesChanged(model, model.attributes);
+      this.attributesChanged(model, {changed: model.attributes});
     },
     panelChanged: function (inSender, inEvent) {
       if (inEvent.id) {
