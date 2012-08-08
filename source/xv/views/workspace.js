@@ -9,8 +9,8 @@ trailing:true white:true*/
     name: "XV.Workspace",
     kind: "FittableRows",
     published: {
-      title: "_opportunity".loc(),
-      model: "XM.Opportunity"
+      title: "_none".loc(),
+      model: ""
     },
     events: {
       onStatusChange: "",
@@ -22,33 +22,9 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", components: [
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", name: "number"},
-          {kind: "XV.InputWidget", name: "name"},
-          {kind: "XV.AccountWidget", name: "account"},
-          {kind: "XV.MoneyWidget", name: "amount"},
-          {kind: "XV.PercentWidget", name: "probability"}
-        ]},
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_status".loc()},
-          {kind: "XV.CheckboxWidget", name: "isActive"},
-          {kind: "XV.OpportunityStageDropdown", name: "opportunityStage"},
-          {kind: "XV.OpportunityTypeDropdown", name: "opportunityType"},
-          {kind: "XV.OpportunitySourceDropdown", name: "opportunitySource"}
-        ]},
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
-          {kind: "XV.DateWidget", name: "startDate"},
-          {kind: "XV.DateWidget", name: "assignDate"},
-          {kind: "XV.DateWidget", name: "targetClose"},
-          {kind: "XV.DateWidget", name: "actualClose"}
-        ]},
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
-          {kind: "XV.UserAccountWidget", name: "owner"},
-          {kind: "XV.UserAccountWidget", name: "assignedTo"}
-        ]}
+        {content: "Top Panel 1"},
+        {content: "Top Panel 2"},
+        {content: "Top Panel 3"}
       ]},
       {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
         {content: "Bottom Panel 1"},
@@ -108,6 +84,7 @@ trailing:true white:true*/
       this.inherited(arguments);
     },
     fetch: function (id) {
+      if (!this._model) { return; }
       this._model.fetch({id: id});
     },
     modelChanged: function () {
@@ -156,6 +133,7 @@ trailing:true white:true*/
       var model = this._model,
         attr,
         changes = {};
+      if (!model) { return; }
       model.initialize(null, {isNew: true});
       this.clear();
       for (attr in model.attributes) {
@@ -244,7 +222,10 @@ trailing:true white:true*/
     changeWorkspace: function (inSender, inEvent) {
       var workspace = this.$.workspace;
       if (inEvent.workspace) {
-        if (workspace) { this.removeComponent(workspace); }
+        if (workspace) { 
+          this.removeComponent(workspace);
+          workspace.destroy();
+        }
         workspace = {
           name: "workspace",
           container: this.$.contentPanel,

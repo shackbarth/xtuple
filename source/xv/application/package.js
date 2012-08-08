@@ -1,4 +1,5 @@
 enyo.depends(
+  "views",
   "login.js",
   "postbooks.js",
   "dashboard.js",
