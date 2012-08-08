@@ -320,6 +320,7 @@ white:true*/
       var that = this, attr;
       if (!this.id) {
         options.success = function (resp) {
+          options.force = true;
           that.set(that.idAttribute, resp, options);
         };
         XT.dataSource.dispatch('XM.Model', 'fetchId', this.recordType, options);
@@ -589,7 +590,7 @@ white:true*/
       var attrs = {},
         model = this,
         K = XM.Model,
-        success = options.success,
+        success,
         result,
         oldStatus = this.getStatus();
 
@@ -609,6 +610,7 @@ white:true*/
 
       // Only save if we should.
       if (this.isDirty() || attrs) {
+        success = options.success;
         options.wait = true;
         options.cascade = true; // Cascade status to children
         options.success = function (resp) {

@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-
+  
   enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -13,6 +13,7 @@ trailing:true white:true*/
       model: ""
     },
     events: {
+      onError: "",
       onStatusChange: "",
       onTitleChange: ""
     },
@@ -80,9 +81,20 @@ trailing:true white:true*/
       this.setModel(null);
       this.inherited(arguments);
     },
+    error: function (model, error) {
+      var inEvent = {
+        originator: this,
+        model: model,
+        error: error
+      };
+      this.doError(inEvent);
+    },
     fetch: function (id) {
       if (!this._model) { return; }
       this._model.fetch({id: id});
+    },
+    isDirty: function () {
+      return this._model ? this._model.isDirty() : false;
     },
     modelChanged: function () {
       var model = this.getModel(),
@@ -115,6 +127,7 @@ trailing:true white:true*/
       this._model = new Klass();
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
+      this._model.on("error", this.error, this);
       
       // Disable read-only attributes
       attrs = this._model ? this._model.getAttributeNames() : [];
@@ -141,8 +154,8 @@ trailing:true white:true*/
     requery: function () {
       this.fetch(this._model.id);
     },
-    save: function () {
-      this._model.save();
+    save: function (options) {
+      this._model.save(null, options);
     },
     statusChanged: function (model, status, options) {
       options = options || {};
@@ -179,6 +192,7 @@ trailing:true white:true*/
       previous: ""
     },
     handlers: {
+      onError: "errorNotify",
       onPanelChange: "changeWorkspace",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged"
@@ -210,6 +224,24 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "applyButton", disabled: true,
             style: "float: right;",
             content: "_apply".loc(), onclick: "apply"}
+        ]},
+        {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
+          modal: true, floating: true, onShow: "popupShown",
+          onHide: "popupHidden", components: [
+          {content: "_unsavedChanges".loc() },
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_discard".loc(), ontap: "unsavedDiscard" },
+          {kind: "onyx.Button", content: "_cancel".loc(), ontap: "unsavedCancel" },
+          {kind: "onyx.Button", content: "_save".loc(), ontap: "unsavedSave",
+            classes: "onyx-blue"}
+        ]},
+        {kind: "onyx.Popup", name: "errorPopup", centered: true,
+          modal: true, floating: true, onShow: "popupShown",
+          onHide: "popupHidden", components: [
+          {name: "errorMessage", content: "_error".loc()},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
+            classes: "onyx-blue"}
         ]}
       ]}
     ],
@@ -219,10 +251,7 @@ trailing:true white:true*/
     changeWorkspace: function (inSender, inEvent) {
       var workspace = this.$.workspace;
       if (inEvent.workspace) {
-        if (workspace) {
-          this.removeComponent(workspace);
-          workspace.destroy();
-        }
+        this.destroyWorkspace();
         workspace = {
           name: "workspace",
           container: this.$.contentPanel,
@@ -239,29 +268,69 @@ trailing:true white:true*/
       }
       this.setPrevious(inEvent.previous);
     },
-    close: function () {
+    close: function (options) {
+      options = options || {};
+      if (!options.force) {
+        if (this.$.workspace.isDirty()) {
+          this.$.unsavedPopup.close = true;
+          this.$.unsavedPopup.show();
+          return;
+        }
+      }
       var previous = this.getPrevious();
       this.bubble(previous, {eventName: previous});
+      this.destroyWorkspace();
     },
-    create: function () {
-      this.inherited(arguments);
+    destroyWorkspace: function () {
+      var workspace = this.$.workspace;
+      if (workspace) {
+        this.removeComponent(workspace);
+        workspace.destroy();
+      }
+    },
+    errorNotify: function (inSender, inEvent) {
+      var message = inEvent.error.message();
+      this.$.errorMessage.setContent(message);
+      this.$.errorPopup.render();
+      this.$.errorPopup.show();
+    },
+    errorOk: function () {
+      this.$.errorPopup.hide();
     },
     newRecord: function () {
       this.$.workspace.newRecord();
     },
-    requery: function () {
+    requery: function (options) {
+      options = options || {};
+      if (!options.force) {
+        if (this.$.workspace.isDirty()) {
+          this.$.unsavedPopup.close = false;
+          this.$.unsavedPopup.show();
+          return;
+        }
+      }
       this.$.workspace.requery();
     },
-    save: function () {
-      this.$.workspace.save();
+    save: function (options) {
+      this.$.workspace.save(options);
     },
     saveAndNew: function () {
-      this.save();
-      this.newRecord();
+      var that = this,
+        options = {},
+        success = function () {
+          that.newRecord();
+        };
+      options.success = success;
+      this.save(options);
     },
     saveAndClose: function () {
-      this.save();
-      this.close();
+      var that = this,
+        options = {},
+        success = function () {
+          that.close();
+        };
+      options.success = success;
+      this.save(options);
     },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
@@ -280,8 +349,24 @@ trailing:true white:true*/
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";
       this.$.title.setContent(title);
+      return true;
+    },
+    unsavedCancel: function () {
+      this.$.unsavedPopup.hide();
+    },
+    unsavedDiscard: function () {
+      var options = {force: true};
+      this.$.unsavedPopup.hide();
+      this.close(options);
+    },
+    unsavedSave: function () {
+      this.$.unsavedPopup.hide();
+      if (this.$.unsavedPopup.close) {
+        this.saveAndClose();
+      } else {
+        this.save();
+      }
     }
-    
   });
 
 }());
