@@ -127,6 +127,7 @@ XT.stringsFor("en_US", {
   "_endDate": "End Date",
   "_ending": "Ending",
   "_endingLabel": "Ending Label",
+  "_error": "Error",
   "_errorColor": "Error Color",
   "_eventRecipient": "Event Recipient",
   "_expiredColor": "Expired Color",
@@ -361,7 +362,7 @@ XT.stringsFor("en_US", {
   // ********
 
   "_assignedToRequiredAssigned": "Assigned to is required when status is 'Assigned'",
-  "_attributeIsRequired": "'{attr}' is required.",
+  "_attributeIsRequired": "{attr} is required.",
   "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.", 
   "_attributeNotInSchema": "'{attr}' does not exist in the schema.", 
   "_attributeReadOnly": "Can not edit read only attribute(s).",

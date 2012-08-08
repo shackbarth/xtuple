@@ -13,6 +13,7 @@ trailing:true white:true*/
       model: ""
     },
     events: {
+      onError: "",
       onStatusChange: "",
       onTitleChange: ""
     },
@@ -80,6 +81,14 @@ trailing:true white:true*/
       this.setModel(null);
       this.inherited(arguments);
     },
+    error: function (model, error) {
+      var inEvent = {
+        originator: this,
+        model: model,
+        error: error
+      };
+      this.doError(inEvent);
+    },
     fetch: function (id) {
       if (!this._model) { return; }
       this._model.fetch({id: id});
@@ -118,6 +127,7 @@ trailing:true white:true*/
       this._model = new Klass();
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
+      this._model.on("error", this.error, this);
       
       // Disable read-only attributes
       attrs = this._model ? this._model.getAttributeNames() : [];
@@ -182,6 +192,7 @@ trailing:true white:true*/
       previous: ""
     },
     handlers: {
+      onError: "errorNotify",
       onPanelChange: "changeWorkspace",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged"
@@ -223,6 +234,14 @@ trailing:true white:true*/
           {kind: "onyx.Button", content: "_cancel".loc(), ontap: "unsavedCancel" },
           {kind: "onyx.Button", content: "_save".loc(), ontap: "unsavedSave",
             classes: "onyx-blue"}
+        ]},
+        {kind: "onyx.Popup", name: "errorPopup", centered: true,
+          modal: true, floating: true, onShow: "popupShown",
+          onHide: "popupHidden", components: [
+          {name: "errorMessage", content: "_error".loc()},
+          {tag: "br"},
+          {kind: "onyx.Button", content: "_ok".loc(), ontap: "errorOk",
+            classes: "onyx-blue"}
         ]}
       ]}
     ],
@@ -261,15 +280,21 @@ trailing:true white:true*/
       this.bubble(previous, {eventName: previous});
       this.destroyWorkspace();
     },
-    create: function () {
-      this.inherited(arguments);
-    },
     destroyWorkspace: function () {
       var workspace = this.$.workspace;
       if (workspace) {
         this.removeComponent(workspace);
         workspace.destroy();
       }
+    },
+    errorNotify: function (inSender, inEvent) {
+      var message = inEvent.error.message();
+      this.$.errorMessage.setContent(message);
+      this.$.errorPopup.render();
+      this.$.errorPopup.show();
+    },
+    errorOk: function () {
+      this.$.errorPopup.hide();
     },
     newRecord: function () {
       this.$.workspace.newRecord();
@@ -315,6 +340,7 @@ trailing:true white:true*/
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";
       this.$.title.setContent(title);
+      return true;
     },
     unsavedCancel: function () {
       this.$.unsavedChangesPopup.hide();
