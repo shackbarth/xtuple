@@ -20,15 +20,6 @@ white:true*/
 
     enforceUpperKey: false,
 
-    privileges: {
-      "all": {
-        "create": "MaintainTitles",
-        "read": true,
-        "update": "MaintainTitles",
-        "delete": "MaintainTitles"
-      }
-    }
-
   });
 
   /**
@@ -48,24 +39,6 @@ white:true*/
     defaults: {
       owner: XM.currentUser,
       isActive: true
-    },
-
-    privileges: {
-      "all": {
-        "create": "MaintainAllContacts",
-        "read": "ViewAllContacts",
-        "update": "MaintainAllContacts",
-        "delete": "MaintainAllContacts"
-      },
-      "personal": {
-        "create": "MaintainPersonalContacts",
-        "read": "ViewPersonalContacts",
-        "update": "MaintainPersonalContacts",
-        "delete": "MaintainPersonalContacts",
-        "properties": [
-          "owner"
-        ]
-      }
     },
 
     // ..........................................................

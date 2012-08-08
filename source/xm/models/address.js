@@ -16,15 +16,6 @@ white:true*/
 
     recordType: 'XM.Country',
 
-    privileges: {
-      "all": {
-        "create": "MaintainCountries",
-        "read": true,
-        "update": "MaintainCountries",
-        "delete": "MaintainCountries"
-      }
-    },
-
     requiredAttributes: [
       "abbreviation",
       "currencyAbbreviation",
@@ -65,15 +56,6 @@ white:true*/
 
     recordType: 'XM.State',
 
-    privileges: {
-      "all": {
-        "create": "MaintainStates",
-        "read": true,
-        "update": "MaintainStates",
-        "delete": "MaintainStates"
-      }
-    },
-
     requiredAttributes: [
       "abbreviation",
       "country",
@@ -93,15 +75,6 @@ white:true*/
     recordType: 'XM.Address',
 
     numberPolicy: XM.Document.AUTO_NUMBER,
-
-    privileges: {
-      "all": {
-        "create": "MaintainAddresses",
-        "read": "ViewAddresses",
-        "update": "MaintainAddresses",
-        "delete": "MaintainAddresses"
-      }
-    },
 
     // ..........................................................
     // METHODS
@@ -294,15 +267,6 @@ white:true*/
     recordType: 'XM.AddressInfo',
 
     readOnly: false,
-
-    privileges: {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": true,
-        "delete": true
-      }
-    },
 
     // ..........................................................
     // METHODS
