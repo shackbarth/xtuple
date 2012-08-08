@@ -240,7 +240,7 @@ trailing:true white:true*/
       var model = inEvent.model,
         K = XM.Model,
         status = model.getStatus(),
-        isNotReady = !(status & K.READY),
+        isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         canNotSave = (!model.isDirty() || !model.canUpdate() ||
           model.isReadOnly());
           
