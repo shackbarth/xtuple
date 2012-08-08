@@ -13,6 +13,9 @@ regexp:true, undef:true, trailing:true, white:true */
     handlers: {
       onchange: "changed"
     },
+    clear: function (options) {
+      this.setValue(false, options);
+    },
     setValue: function (value, options) {
       options = options || {};
       this._silent = options.silent;
@@ -41,6 +44,9 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
       ]}
     ],
+    clear: function (options) {
+      this.setValue(false, options);
+    },
     create: function () {
       this.inherited(arguments);
       this.labelChanged();

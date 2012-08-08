@@ -15,6 +15,9 @@ regexp:true, undef:true, trailing:true, white:true */
     components: [
       {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
     ],
+    clear: function (options) {
+      this.setValue("", options);
+    },
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
         value = this.validate(input);

@@ -54,19 +54,24 @@ trailing:true white:true*/
     */
     attributesChanged: function (model, options) {
       options = options || {};
-      var K = XM.Model,
-        status = model.getStatus(),
-        prop,
+      var prop,
         attrs = options.changed;
-        
-      // Only process if model is in `READY` status
-      if (status & K.READY) {
-        for (prop in attrs) {
-          if (attrs.hasOwnProperty(prop)) {
-            if (this.$[prop] && this.$[prop].setValue) {
-              this.$[prop].setValue(attrs[prop], {silent: true});
-            }
+      for (prop in attrs) {
+        if (attrs.hasOwnProperty(prop)) {
+          if (this.$[prop] && this.$[prop].setValue) {
+            this.$[prop].setValue(attrs[prop], {silent: true});
           }
+        }
+      }
+    },
+    clear: function () {
+      var attrs = this._model ? this._model.getAttributeNames() : [],
+        attr,
+        i;
+      for (i = 0; i < attrs.length; i++) {
+        attr = attrs[i];
+        if (this.$[attr] && this.$[attr].clear) {
+          this.$[attr].clear({silent: true});
         }
       }
     },
@@ -121,7 +126,10 @@ trailing:true white:true*/
       this._model.on("statusChange", this.statusChanged, this);
     },
     newRecord: function () {
-      this._model.initialize(null, {isNew: true});
+      var model = this._model;
+      model.initialize(null, {isNew: true});
+      this.clear();
+      this.attributesChanged(model, model.attributes);
     },
     panelChanged: function (inSender, inEvent) {
       if (inEvent.id) {

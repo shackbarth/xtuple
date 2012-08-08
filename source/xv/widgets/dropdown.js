@@ -34,6 +34,9 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
+    clear: function (options) {
+      this.setValue(null, options);
+    },
     collectionChanged: function () {
       var nameAttribute = this.getNameAttribute(),
         collection = XT.getObjectByName(this.getCollection()),

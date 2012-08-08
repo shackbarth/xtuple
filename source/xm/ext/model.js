@@ -457,7 +457,7 @@ white:true*/
       this.requiredAttributes = this.requiredAttributes || [];
 
       // Set attributes if they weren't already set by the constructor
-      this.clear({force: true});
+      this.clear({silent: true});
       defaults = this.getValue('defaults') || {};
       attributes = _.defaults(attributes, defaults);
       if (!_.isEqual(this.attributes, attributes)) {

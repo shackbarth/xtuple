@@ -68,6 +68,9 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setValue(null);
       }
     },
+    clear: function (options) {
+      this.setValue(null, options);
+    },
     create: function () {
       this.inherited(arguments);
       this.collectionChanged();
