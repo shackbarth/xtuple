@@ -37,7 +37,6 @@
 \i xt/functions/retrieve_record.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
-\i xt/functions/validate_user.sql;
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
