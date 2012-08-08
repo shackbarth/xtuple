@@ -386,7 +386,8 @@ trailing:true white:true*/
       collection: "XM.ProjectInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
       rowClass: "XV.ProjectInfoCollectionRow",
-      parameterWidget: "XV.ProjectInfoParameters"
+      parameterWidget: "XV.ProjectInfoParameters",
+      workspace: "XV.ProjectWorkspace"
     }
   });
 
