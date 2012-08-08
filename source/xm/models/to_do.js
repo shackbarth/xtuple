@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -52,25 +52,6 @@ white:true*/
 
     recordType: 'XM.ToDo',
 
-    privileges: {
-      "all": {
-        "create": "MaintainAllToDoItems",
-        "read": "ViewAllToDoItems",
-        "update": "MaintainAllToDoItems",
-        "delete": "MaintainAllToDoItems"
-      },
-      "personal": {
-        "create": "MaintainPersonalToDoItems",
-        "read": "ViewPersonalToDoItems",
-        "update": "MaintainPersonalToDoItems",
-        "delete": "MaintainPersonalToDoItems",
-        "properties": [
-          "owner",
-          "assignedTo"
-        ]
-      }
-    },
-
     defaults: function () {
       return {
         isActive: true,
@@ -84,7 +65,7 @@ white:true*/
       "dueDate",
       "name"
     ],
-    
+
     // ..........................................................
     // METHODS
     //
@@ -92,7 +73,7 @@ white:true*/
     /**
       This is the source of data for the user three-way status interface where
       the only possible status options are `PENDING`, `DEFERRED` and `NEITHER`.
-      
+
       @returns {String}
     */
     getToDoStatusProxy: function () {
@@ -140,7 +121,7 @@ white:true*/
 
     /**
       Set the three-way status option.
-      
+
       @param {String} Value
       @returns Receiver
     */
@@ -216,7 +197,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoAccount = XM.Model.extend({
@@ -227,7 +208,7 @@ white:true*/
     isDocumentAssignment: true
 
   });
-  
+
   /**
     @class
 
@@ -239,10 +220,10 @@ white:true*/
     recordType: 'XM.ToDoAlarm'
 
   });
-  
+
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.ToDoComment = XM.Comment.extend({
@@ -254,7 +235,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoContact = XM.Model.extend({
@@ -268,7 +249,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoItem = XM.Model.extend({
@@ -282,7 +263,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoFile = XM.Model.extend({
@@ -296,7 +277,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoImage = XM.Model.extend({
@@ -310,7 +291,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoToDo = XM.Model.extend({
@@ -324,7 +305,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoUrl = XM.Model.extend({
@@ -338,7 +319,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ToDoInfo = XM.Model.extend({
@@ -357,7 +338,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.ToDoInfoCollection = XM.Collection.extend({

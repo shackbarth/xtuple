@@ -54,16 +54,16 @@ white:true*/
             return rel.key === param.attribute;
           }),
           idAttribute;
-          
+
         // Format date if applicable
         if (param.value instanceof Date) {
           param.value = param.value.toJSON();
-          
+
         // Format record if applicable
         } else if (param.value instanceof XM.Model) {
           param.value = param.value.id;
         }
-        
+
         // Format attribute if it's `HasOne` relation
         if (relation && relation.type === Backbone.HasOne &&
             relation.includeInJSON === true) {
@@ -71,7 +71,7 @@ white:true*/
           idAttribute = klass.prototype.idAttribute;
           param.attribute = param.attribute + '.' + idAttribute;
         }
-        
+
       };
 
       for (prop in parameters) {

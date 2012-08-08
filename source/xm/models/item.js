@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -18,16 +18,7 @@ white:true*/
 
     documentKey: 'code',
 
-    enforceUpperKey: false,
-
-    privileges: {
-      "all": {
-        "create": "MaintainClassCodes",
-        "read": true,
-        "update": "MaintainClassCodes",
-        "delete": "MaintainClassCodes"
-      }
-    }
+    enforceUpperKey: false
 
   });
 
@@ -43,20 +34,11 @@ white:true*/
 
     documentKey: 'code',
 
-    privileges: {
-      "all": {
-        "create": "MaintainProductCategories",
-        "read": true,
-        "update": "MaintainProductCategories",
-        "delete": "MaintainProductCategories"
-      }
-    }
-
   });
 
   /**
     @instance
-    
+
     Dummy product category for setting -1 values.
   */
   XM.emptyProductCategory = new XM.ProductCategory({
@@ -78,15 +60,6 @@ white:true*/
 
     documentKey: 'name',
 
-    privileges: {
-      "all": {
-        "create": "MaintainUOMs",
-        "read": true,
-        "update": "MaintainUOMs",
-        "delete": "MaintainUOMs"
-      }
-    },
-
     defaults: {
       isWeight: false
     },
@@ -106,15 +79,6 @@ white:true*/
     /** @scope XM.Item.prototype */
 
     recordType: 'XM.Item',
-
-    privileges: {
-      "all": {
-        "create": "MaintainItemMasters",
-        "read": "ViewItemMasters",
-        "update": "MaintainItemMasters",
-        "delete": "MaintainItemMasters"
-      }
-    },
 
     defaults: function () {
       return {
@@ -189,7 +153,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.ItemComment = XM.Comment.extend({
@@ -201,7 +165,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Characteristic
   */
   XM.ItemCharacteristic = XM.Characteristic.extend({
@@ -213,7 +177,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ItemAccount = XM.Model.extend({
@@ -227,7 +191,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ItemContact = XM.Model.extend({
@@ -241,7 +205,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ItemItem = XM.Model.extend({
@@ -255,7 +219,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ItemFile = XM.Model.extend({
@@ -269,7 +233,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ItemImage = XM.Model.extend({
@@ -283,7 +247,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ItemUrl = XM.Model.extend({
@@ -297,7 +261,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.ItemInfo = XM.Model.extend({
@@ -351,7 +315,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.ItemInfoCollection = XM.Collection.extend({

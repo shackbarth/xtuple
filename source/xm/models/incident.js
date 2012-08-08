@@ -20,15 +20,6 @@ white:true*/
 
     enforceUpperKey: false,
 
-    privileges: {
-      "all": {
-        "create": "MaintainIncidentCategories",
-        "read": true,
-        "update": "MaintainIncidentCategories",
-        "delete": "MaintainIncidentCategories"
-      }
-    },
-
     defaults: {
       order: 0
     },
@@ -59,15 +50,6 @@ white:true*/
 
     enforceUpperKey: false,
 
-    privileges: {
-      "all": {
-        "create": "MaintainIncidentSeverities",
-        "read": true,
-        "update": "MaintainIncidentSeverities",
-        "delete": "MaintainIncidentSeverities"
-      }
-    },
-
     defaults: {
       order: 0
     },
@@ -96,15 +78,6 @@ white:true*/
     documentKey: 'name',
 
     enforceUpperKey: false,
-
-    privileges: {
-      "all": {
-        "create": "MaintainIncidentResolutions",
-        "read": true,
-        "update": "MaintainIncidentResolutions",
-        "delete": "MaintainIncidentResolutions"
-      }
-    },
 
     defaults: {
       order: 0
@@ -176,25 +149,6 @@ white:true*/
     numberPolicy: XM.Document.AUTO_NUMBER,
 
     keyIsString: false,
-
-    privileges: {
-      "all": {
-        "create": "MaintainAllIncidents",
-        "read": "ViewAllIncidents",
-        "update": "MaintainAllIncidents",
-        "delete": "MaintainAllIncidents"
-      },
-      "personal": {
-        "create": "MaintainPersonalIncidents",
-        "read": "ViewPersonalIncidents",
-        "update": "MaintainPersonalIncidents",
-        "delete": "MaintainPersonalIncidents",
-        "properties": [
-          "owner",
-          "assignedTo"
-        ]
-      }
-    },
 
     defaults: function () {
       return {

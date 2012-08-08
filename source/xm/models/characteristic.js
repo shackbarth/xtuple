@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -17,15 +17,6 @@ white:true*/
     recordType: 'XM.Characteristic',
 
     documentKey: 'name',
-
-    privileges: {
-      "all": {
-        "create": "MaintainCharacteristics",
-        "read": true,
-        "update": "MaintainCharacteristics",
-        "delete": "MaintainCharacteristics"
-      }
-    },
 
     defaults: {
       characteristicType: 0,
@@ -148,15 +139,6 @@ white:true*/
 
     recordType: 'XM.CharacteristicOption',
 
-    privileges: {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-
     defaults: {
       order: 0
     },
@@ -169,9 +151,9 @@ white:true*/
 
   /**
     @class
-    
+
     Base class for use on characteristic assignment classes.
-  
+
     @extends XM.Model
   */
   XM.CharacteristicAssignment = XM.Model.extend({
@@ -201,7 +183,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.CharacteristicCollection = XM.Collection.extend({

@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,22 +8,13 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.Currency = XM.Document.extend({
     /** @scope XM.Currency.prototype */
 
     recordType: 'XM.Currency',
-
-    privileges: {
-      "all": {
-        "create": "CreateNewCurrency",
-        "read": true,
-        "update": "MaintainCurrencies",
-        "delete": "MaintainCurrencies"
-      }
-    },
 
     documentKey: 'name',
 
@@ -125,7 +116,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.CurrencyCollection = XM.Collection.extend({

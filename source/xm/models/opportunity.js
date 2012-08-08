@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.OpportunityType = XM.Document.extend({
@@ -16,22 +16,13 @@ white:true*/
 
     recordType: 'XM.OpportunityType',
 
-    documentKey: 'name',
-
-    privileges: {
-      "all": {
-        "create": "MaintainOpportunityTypes",
-        "read": true,
-        "update": "MaintainOpportunityTypes",
-        "delete": "MaintainOpportunityTypes"
-      }
-    }
+    documentKey: 'name'
 
   });
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.OpportunityStage = XM.Document.extend({
@@ -40,15 +31,6 @@ white:true*/
     recordType: 'XM.OpportunityStage',
 
     documentKey: 'name',
-
-    privileges: {
-      "all": {
-        "create": "MaintainOpportunityStages",
-        "read": true,
-        "update": "MaintainOpportunityStages",
-        "delete": "MaintainOpportunityStages"
-      }
-    },
 
     defaults: {
       deactivate: false
@@ -62,7 +44,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.OpportunitySource = XM.Document.extend({
@@ -70,22 +52,13 @@ white:true*/
 
     recordType: 'XM.OpportunitySource',
 
-    documentKey: 'name',
-
-    privileges: {
-      "all": {
-        "create": "MaintainOpportunitySources",
-        "read": true,
-        "update": "MaintainOpportunitySources",
-        "delete": "MaintainOpportunitySources"
-      }
-    }
+    documentKey: 'name'
 
   });
 
   /**
     @class
-  
+
     @extends XM.Document
   */
   XM.Opportunity = XM.Document.extend({
@@ -137,7 +110,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Comment
   */
   XM.OpportunityComment = XM.Comment.extend({
@@ -149,7 +122,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Characteristic
   */
   XM.OpportunityCharacteristic = XM.Characteristic.extend({
@@ -161,7 +134,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityAccount = XM.Model.extend({
@@ -175,7 +148,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityContact = XM.Model.extend({
@@ -189,7 +162,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityItem = XM.Model.extend({
@@ -203,7 +176,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityFile = XM.Model.extend({
@@ -217,7 +190,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityImage = XM.Model.extend({
@@ -231,7 +204,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityUrl = XM.Model.extend({
@@ -245,7 +218,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityOpportunity = XM.Model.extend({
@@ -254,12 +227,12 @@ white:true*/
     recordType: 'XM.OpportunityOpportunity',
 
     isDocumentAssignment: true
-    
+
   });
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.OpportunityInfo = XM.Model.extend({
@@ -277,7 +250,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.OpportunityTypeCollection = XM.Collection.extend({
@@ -289,7 +262,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.OpportunityStageCollection = XM.Collection.extend({
@@ -301,7 +274,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.OpportunitySourceCollection = XM.Collection.extend({
@@ -313,7 +286,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Collection
   */
   XM.OpportunityInfoCollection = XM.Collection.extend({
