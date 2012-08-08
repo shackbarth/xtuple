@@ -19,11 +19,11 @@ regexp:true, undef:true, trailing:true, white:true */
       return isNaN(value) ? false : value;
     },
     valueChanged: function (value) {
-      value = value ? Globalize.format(value, "n" + this.getScale()) : "";
+      value = value || value === 0 ? Globalize.format(value, "n" + this.getScale()) : "";
       return XV.Input.prototype.valueChanged.call(this, value);
     }
   });
-  
+
   enyo.kind({
     name: "XV.NumberWidget",
     kind: "XV.Number",

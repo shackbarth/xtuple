@@ -293,14 +293,14 @@ white:true*/
 
     recordType: 'XM.AddressInfo',
 
-    readOnly: true,
+    readOnly: false,
 
     privileges: {
       "all": {
-        "create": false,
+        "create": true,
         "read": true,
-        "update": false,
-        "delete": false
+        "update": true,
+        "delete": true
       }
     },
 

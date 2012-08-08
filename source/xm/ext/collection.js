@@ -207,9 +207,15 @@ white:true*/
     getObjectByName: function (name) {
       return Backbone.Relational.store.getObjectByName(name);
     },
-    
+
     fetch: function (options) {
-      options = options ? _.clone(options) : {};
+      /**
+       * Use default order attribute if it's specified and if no options are specified
+       * TODO: we should apply the default ordering even in the presence of options
+       * so long as the options don't have an orderBy command
+       */
+      options = options ? _.clone(options) :
+        this.orderAttribute ? { query: this.orderAttribute } : {};
       options.force = true;
       return Backbone.Collection.prototype.fetch.call(this, options);
     },
@@ -227,7 +233,9 @@ white:true*/
       }
 
       return false;
-    }
+    },
+
+    orderAttribute: null
 
   });
 

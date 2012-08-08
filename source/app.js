@@ -84,6 +84,8 @@ white:true*/
       // on application start, connect the datasource
       XT.dataSource.connect();
 
+      XT.app = this;
+
       // lets not allow this to happen again
       this.setIsStarted(true);
     },
