@@ -1,10 +1,10 @@
-select xt.install_js('XT','Model','xtuple', $$
+select xt.install_js('XM','Model','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
-  XT.Model = {};
+  XM.Model = {};
   
-  XT.Model.isDispatchable = true;
+  XM.Model.isDispatchable = true;
 
   /** 
     Pass in a record type and get the next id for that type 
@@ -12,7 +12,7 @@ select xt.install_js('XT','Model','xtuple', $$
     @param {String} record type
     @returns Number
   */
-  XT.Model.fetchId = function(recordType) { 
+  XM.Model.fetchId = function(recordType) { 
     var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
@@ -28,7 +28,7 @@ select xt.install_js('XT','Model','xtuple', $$
     @param {String} record type
     @returns Number
   */
-  XT.Model.fetchNumber = function(recordType) {
+  XM.Model.fetchNumber = function(recordType) {
     var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
@@ -45,7 +45,7 @@ select xt.install_js('XT','Model','xtuple', $$
     @param {Number} number
     @returns Boolean
   */
-  XT.Model.releaseNumber = function(recordType, number) {
+  XM.Model.releaseNumber = function(recordType, number) {
     var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),
@@ -63,7 +63,7 @@ select xt.install_js('XT','Model','xtuple', $$
     @param {Number} value
     @returns Number
   */
-  XT.Model.findExisting = function(recordType, key, value, id) {
+  XM.Model.findExisting = function(recordType, key, value, id) {
     var nameSpace = recordType.beforeDot(),
         type = recordType.afterDot(),
         map = XT.Orm.fetch(nameSpace, type),

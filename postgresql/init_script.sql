@@ -37,7 +37,6 @@
 \i xt/functions/retrieve_record.sql;
 \i xt/functions/text_gt_date.sql;
 \i xt/functions/text_lt_date.sql;
-\i xt/functions/validate_user.sql;
 
 -- xt trigger functions
 \i xt/trigger_functions/orm_did_change.sql
@@ -59,7 +58,6 @@
 
 -- xt javascript
 \i xt/javascript/data.sql;
-\i xt/javascript/model.sql;
 \i xt/javascript/orm.sql;
 \i xt/javascript/session.sql;
 
@@ -106,6 +104,7 @@
 \i xm/javascript/journal.sql;
 \i xm/javascript/ledger.sql;
 \i xm/javascript/ledger_account.sql;
+\i xm/javascript/model.sql;
 \i xm/javascript/payable.sql;
 \i xm/javascript/payment.sql;
 \i xm/javascript/payments.sql;
