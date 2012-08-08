@@ -12,7 +12,8 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.AccountTypeDropdown",
     kind: "XV.DropdownWidget",
     published: {
-      collection: "XM.accountTypes"
+      collection: "XM.accountTypes",
+      valueAttribute: "id"
     }
   });
 

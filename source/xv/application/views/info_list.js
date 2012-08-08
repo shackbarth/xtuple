@@ -47,7 +47,8 @@ trailing:true white:true*/
       collection: "XM.AccountInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
       rowClass: "XV.AccountInfoCollectionRow",
-      parameterWidget: "XV.AccountInfoParameters"
+      parameterWidget: "XV.AccountInfoParameters",
+      workspace: "XV.AccountWorkspace"
     }
   });
 
@@ -124,7 +125,8 @@ trailing:true white:true*/
         attribute: 'firstName'
       }]},
       rowClass: "XV.ContactInfoCollectionRow",
-      parameterWidget: "XV.ContactInfoParameters"
+      parameterWidget: "XV.ContactInfoParameters",
+      workspace: "XV.ContactWorkspace"
     }
   });
 
@@ -199,7 +201,8 @@ trailing:true white:true*/
       label: "_incidents".loc(),
       collection: "XM.IncidentInfoCollection",
       rowClass: "XV.IncidentInfoCollectionRow",
-      parameterWidget: "XV.IncidentInfoParameters"
+      parameterWidget: "XV.IncidentInfoParameters",
+      workspace: "XV.IncidentWorkspace"
     }
   });
 
@@ -288,7 +291,7 @@ trailing:true white:true*/
       label: "_opportunities".loc(),
       rowClass: "XV.OpportunityInfoCollectionRow",
       parameterWidget: "XV.OpportunityInfoParameters",
-      workspace: "XV.Opportunity"
+      workspace: "XV.OpportunityWorkspace"
     }
   });
 
@@ -495,7 +498,8 @@ trailing:true white:true*/
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
       rowClass: "XV.ToDoInfoCollectionRow",
-      parameterWidget: "XV.ToDoInfoParameters"
+      parameterWidget: "XV.ToDoInfoParameters",
+      workspace: "XV.ToDoWorkspace"
     }
   });
 
@@ -556,7 +560,8 @@ trailing:true white:true*/
       label: "_userAccounts".loc(),
       collection: "XM.UserAccountInfoCollection",
       query: {orderBy: [{ attribute: 'username' }] },
-      rowClass: "XV.UserAccountInfoCollectionRow"
+      rowClass: "XV.UserAccountInfoCollectionRow",
+      workspace: "XV.UserAccountWorkspace"
     }
   });
 
