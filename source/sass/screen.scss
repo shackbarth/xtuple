@@ -448,12 +448,12 @@ body {
   padding-bottom: 8px;
   padding-left: 8px;
   min-height: 250px; 
-  width: 330px; 
+  width: 350px; 
   margin-right: 5px;
 }
 
 .xv-label {
-  width: 80px;
+  width: 100px;
   padding-right: 8px;
   text-align: right;
 }
@@ -472,8 +472,9 @@ body {
 }
 
 .xv-relationwidget-description {
-  text-indent: 100px;
+  text-indent: 120px;
   font-size: small;
+  padding-bottom: 4px;
 }
 
 /********END XV WIDGETS******/

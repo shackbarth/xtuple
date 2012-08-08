@@ -34,6 +34,11 @@ trailing:true white:true*/
           {kind: "XV.OpportunityStageDropdown", name: "opportunityStage"},
           {kind: "XV.OpportunityTypeDropdown", name: "opportunityType"},
           {kind: "XV.OpportunitySourceDropdown", name: "opportunitySource"}
+        ]},
+        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
+          {kind: "XV.UserAccountWidget", name: "owner"},
+          {kind: "XV.UserAccountWidget", name: "assignedTo"}
         ]}
       ]},
       {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [

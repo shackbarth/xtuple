@@ -20,7 +20,7 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-inputwidget-decorator",
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
         components: [
         {name: "label", content: "", classes: "xv-label"},
         {name: 'input', kind: "onyx.Input", onkeyup: "keyUp",
