@@ -7,7 +7,9 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.RelationWidget",
     kind: enyo.Control,
+    classes: "xv-inputwidget xv-relationwidget",
     published: {
+      label: "",
       value: null,
       collection: null,
       keyAttribute: "number",
@@ -18,7 +20,9 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", style: "height: 27px", components: [
+      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+        components: [
+        {name: "label", content: "", classes: "xv-label"},
         {name: 'input', kind: "onyx.Input", onkeyup: "keyUp",
           onkeydown: "keyDown", onblur: "receiveBlur"},
         {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
@@ -30,13 +34,13 @@ regexp:true, undef:true, trailing:true, white:true */
             {content: "_new".loc(), value: 'new'}
           ]}
         ]},
-        {kind: "onyx.MenuDecorator", style: "left: -200px; top: 25px;",
+        {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
           onSelect: "relationSelected", components: [
           {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
         ]}
       ]},
-      {name: "name", content: ""},
-      {name: "description", content: ""}
+      {name: "name", classes: "xv-relationwidget-description"},
+      {name: "description", classes: "xv-relationwidget-description"}
     ],
     autocomplete: function () {
       var key = this.getKeyAttribute(),
@@ -64,13 +68,18 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setValue(null);
       }
     },
+    clear: function (options) {
+      this.setValue(null, options);
+    },
     create: function () {
       this.inherited(arguments);
-      if (this.getCollection()) { this.collectionChanged(); }
+      this.collectionChanged();
+      this.labelChanged();
     },
     collectionChanged: function () {
       var collection = this.getCollection(),
-        Klass = XM.Model.getObjectByName(collection);
+        Klass = collection ? XM.Model.getObjectByName(collection) : null;
+      if (!Klass) { return; }
       this._collection = new Klass();
     },
     itemSelected: function (inSender, inEvent) {
@@ -126,6 +135,11 @@ regexp:true, undef:true, trailing:true, white:true */
       } else {
         menu.hide();
       }
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.name).loc());
+      this.$.label.setContent(label + ":");
+      this.$.input.setPlaceholder(label);
     },
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();
@@ -189,59 +203,6 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(value);
     }
     
-  });
-  
-  // ..........................................................
-  // ACCOUNT
-  //
-  
-  enyo.kind({
-    name: "XV.AccountRelationWidget",
-    kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.AccountInfoCollection"
-    }
-  });
-
-  // ..........................................................
-  // INCIDENT
-  //
-  
-  enyo.kind({
-    name: "XV.IncidentRelationWidget",
-    kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.IncidentInfoCollection",
-      nameAttribute: "description"
-    }
-  });
- 
-  // ..........................................................
-  // ITEM
-  //
-  
-  enyo.kind({
-    name: "XV.ItemRelationWidget",
-    kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.ItemInfoCollection",
-      nameAttribute: "description1",
-      descripAttribute: "description2"
-    }
-  });
-  
-  // ..........................................................
-  // USER ACCOUNT
-  //
-  
-  enyo.kind({
-    name: "XV.UserAccountRelationWidget",
-    kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.UserAccountInfoCollection",
-      keyAttribute: "username",
-      nameAttribute: "properName"
-    }
   });
   
 }());

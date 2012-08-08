@@ -70,8 +70,14 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.DateWidget",
     kind: "XV.Date",
+    classes: "xv-inputwidget xv-datewidget",
+    published: {
+      label: ""
+    },
     components: [
-      {kind: "onyx.InputDecorator", name: "decorator", components: [
+      {kind: "onyx.InputDecorator", name: "decorator",
+        classes: "xv-input-decorator", components: [
+        {name: "label", content: "", classes: "xv-label"},
         {name: "input", kind: "onyx.Input", onchange: "inputChanged"},
         {name: "icon", kind: "Image", src: "assets/date-icon.jpg",
           ontap: "iconTapped"},
@@ -80,12 +86,20 @@ regexp:true, undef:true, trailing:true, white:true */
         ]}
       ]}
     ],
+    create: function () {
+      this.inherited(arguments);
+      this.labelChanged();
+    },
     datePicked: function (inSender, inEvent) {
       this.setValue(inEvent);
       this.$.datePickPopup.hide();
     },
     iconTapped: function () {
       this.$.datePickPopup.show();
+    },
+    labelChanged: function () {
+      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      this.$.label.setContent(label);
     },
     valueChanged: function (value) {
       var dateValue = value;

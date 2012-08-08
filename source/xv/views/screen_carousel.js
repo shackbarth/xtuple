@@ -68,22 +68,15 @@ trailing:true white:true*/
       this.inherited(arguments);
     },
     handleCarouselEvent: function (inSender, inEvent) {
-      var carouselEvents = this.getCarouselEvents();
-      var evt = inEvent.eventName;
-      var viewName = carouselEvents[evt];
+      var carouselEvents = this.getCarouselEvents(),
+        evt = inEvent.eventName,
+        viewName = carouselEvents[evt],
+        previous = this.getActive().name;
 
       if (viewName) {
         this.setCurrentView(viewName);
-        /**
-         * allow a payload to be attached to the event. This
-         * payload will be sent down to the view that's being
-         * rendered, if there is a payload and if the view
-         * is capable of handling it
-         */
-        var view = this.$[viewName];
-        if (inEvent.options && view && view.setOptions) {
-          view.setOptions(inEvent.options);
-        }
+        inEvent.previous = previous;
+        this.$[viewName].waterfall("onPanelChange", inEvent);
       }
 
       // we got this, stop bubbling
