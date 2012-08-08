@@ -14,7 +14,7 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
           return __method.apply(this, args.concat(Array.prototype.slice.call(arguments)));
       }
     }
-  }
+ }
 
   /* process */
   var dataHash = JSON.parse(data_hash),
@@ -36,6 +36,7 @@ create or replace function xt.dispatch(data_hash text) returns text as $$
 $$ LANGUAGE plv8;
 
 /*
+select xt.js_init();
 select xt.dispatch($${"requestType":"dispatch",
                            "className": "XM.Address",
                            "functionName":"findExisting",
@@ -49,13 +50,13 @@ select xt.dispatch($${"requestType":"dispatch",
                           }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                           "className":"XT.Record",
+                           "className":"XM.Model",
                            "functionName":"fetchId",
                            "parameters":"XM.Address"
                            }$$);
 
 select xt.dispatch($${"requestType":"dispatch",
-                          "className":"XT.Record",
+                          "className":"XM.Model",
                           "functionName":"fetchNumber",
                           "parameters":"XM.Incident"
                           }$$);
