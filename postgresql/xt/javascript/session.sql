@@ -1,4 +1,4 @@
-select xt.install_js('XT','Session','xtuple', $$
+﻿select xt.install_js('XT','Session','xtuple', $$
   /* Copyright (c) 1999-2011 by OpenMFG LLC, d/b/a xTuple. 
      See www.xm.ple.com/CPAL for the full text of the software license. */
 
@@ -86,6 +86,7 @@ select xt.install_js('XT','Session','xtuple', $$
     @returns {Hash}
   */
   XT.Session.schema = function(schema, refresh) {
+  
     if (!refresh && this._schema) { return this._schema };
     var sql = 'select c.relname as "type", ' +
               '  attname as "column", ' +
@@ -155,7 +156,15 @@ select xt.install_js('XT','Session','xtuple', $$
             processProperties(orm.extensions[n]);
           }
         }
+      },
+      processPrivileges = function (orm) {
+	if(orm.privileges) {
+	  result[type]['privileges'] = orm.privileges
+	}
       };
+
+    
+
 
     /* Loop through each field and add to the object */
     for (i = 0; i < recs.length; i++) {
@@ -165,10 +174,13 @@ select xt.install_js('XT','Session','xtuple', $$
         result[type] = {};
         result[type].columns = [];
         
-        /* Add relations */
-        result[type]['relations'] = [];
+        /* Add relations and privileges from the orm*/
         orm = XT.Orm.fetch(schema.toUpperCase(), type);
+        
+	result[type]['relations'] = [];
         processProperties(orm);
+        
+        processPrivileges(orm);
       }
       column = { 
         name: name,
