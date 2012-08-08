@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -8,7 +8,7 @@ white:true*/
 
   /**
     @class
-    
+
     Includes functionality common to xTuple documents uniquely identified by
     a user accessible `documentKey'.
   */
@@ -27,7 +27,7 @@ white:true*/
 
     /**
       Forces the document key to always be upper case.
-      
+
       @type {Boolean}
       @default true
     */
@@ -35,7 +35,7 @@ white:true*/
 
     /**
       Converts auto numbered keys to strings.
-      
+
       @type {Boolean}
       @default true
     */
@@ -59,7 +59,7 @@ white:true*/
     /**
       If set, the number Policy property will be set based on the number
       generation policy on this setting.
-      
+
       @seealso `numberPolicy`
       @type {String}
     */

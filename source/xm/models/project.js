@@ -54,25 +54,6 @@ white:true*/
       return result;
     },
 
-    privileges: {
-      "all": {
-        "create": "MaintainAllProjects",
-        "read": "ViewAllProjects",
-        "update": "MaintainAllProjects",
-        "delete": "MaintainAllProjects"
-      },
-      "personal": {
-        "create": "MaintainPersonalProjects",
-        "read": "ViewPersonalProjects",
-        "update": "MaintainPersonalProjects",
-        "delete": "MaintainPersonalProjects",
-        "properties": [
-          "owner",
-          "assignedTo"
-        ]
-      }
-    },
-
     requiredAttributes: [
       "number",
       "status",
@@ -188,7 +169,7 @@ white:true*/
         this.actualHoursTotal, XT.QTY_SCALE);
       this.balanceExpensesTotal = XT.math.subtract(this.budgetedExpensesTotal,
         this.actualExpensesTotal, XT.QTY_SCALE);
-       
+
       // Notify change
       changed = {
         budgetedHoursTotal: this.budgetedHoursTotal,

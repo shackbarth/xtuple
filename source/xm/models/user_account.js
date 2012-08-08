@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
 /*global XT:true, XM:true, Backbone:true, _:true, console:true */
@@ -37,15 +37,6 @@ white:true*/
     documentKey: 'code',
 
     enforceUpperKey: false,
-
-    privileges: {
-      "all": {
-        "create": "MaintainLocales",
-        "read": true,
-        "update": "MaintainLocales",
-        "delete": "MaintainLocales"
-      }
-    },
 
     defaults: {
       altEmphasisColor: "",
@@ -113,16 +104,7 @@ white:true*/
 
     recordType: 'XM.UserAccountRole',
 
-    documentKey: 'name',
-
-    privileges: {
-      "all": {
-        "create": "MaintainGroups",
-        "read": "MaintainGroups",
-        "update": "MaintainGroups",
-        "delete": "MaintainGroups"
-      }
-    }
+    documentKey: 'name'
 
   });
 
@@ -168,15 +150,6 @@ white:true*/
 
     enforceUpperKey: false,
 
-    privileges: {
-      "all": {
-        "create": "MaintainUsers",
-        "read": "MaintainUsers",
-        "update": "MaintainUsers",
-        "delete": false
-      }
-    },
-
     defaults: {
       canCreateUsers: false,
       disableExport: false,
@@ -201,15 +174,6 @@ white:true*/
 
     recordType: 'XM.UserAccountPrivilegeAssignment',
 
-    privileges: {
-      "all": {
-        "create": true,
-        "read": true,
-        "update": false,
-        "delete": true
-      }
-    },
-
     requiredAttributes: [
       "userAccount",
       "privilege"
@@ -231,7 +195,7 @@ white:true*/
 
   /**
     @class
-  
+
     @extends XM.Model
   */
   XM.UserAccountInfo = XM.Model.extend({

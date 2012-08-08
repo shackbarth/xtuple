@@ -1,7 +1,7 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, strict:true, trailing:true
 white:true*/
-/*global XT:true, Backbone:true, _:true, console:true, setTimeout: true, enyo:true */
+/*global XT:true, XM:true, Backbone:true, _:true, console:true, setTimeout: true, enyo:true */
 
 (function () {
   "use strict";
@@ -28,7 +28,7 @@ white:true*/
       memory. Types `XT.session.SETTINGS` or `XT.session.PRIVILEGES` can be passed
       as bitwise operators. If no arguments are passed the default is
       `XT.session.ALL` which will load all session objects.
-    
+
       @param {Number} Types
       @param {Object} Options
     */
@@ -106,14 +106,14 @@ white:true*/
             relations,
             i;
           that.setSchema(schema);
-          
+
           // Set relations
           for (prop in schema.attributes) {
             if (schema.attributes.hasOwnProperty(prop)) {
-              relations = schema.attributes[prop].relations || [];
-              if (relations.length) {
-                Klass = XM.Model.getObjectByName('XM' + '.' + prop);
-                if (Klass) {
+              Klass = XM.Model.getObjectByName('XM' + '.' + prop);
+              if (Klass) {
+                relations = schema.attributes[prop].relations || [];
+                if (relations.length) {
                   Klass.prototype.relations = [];
                   for (i = 0; i < relations.length; i++) {
                     if (relations[i].type === "Backbone.HasOne") {
@@ -125,6 +125,11 @@ white:true*/
                     }
                     Klass.prototype.relations.push(relations[i]);
                   }
+                }
+
+                privileges = schema.attributes[prop].privileges;
+                if (privileges) {
+                  Klass.prototype.privileges = privileges;
                 }
               }
             }
@@ -165,47 +170,47 @@ white:true*/
         .notify(complete)
         .send(idx);
     },
-    
+
     getAvailableSessions: function () {
       return this.availableSessions;
     },
-    
+
     getDetails: function () {
       return this.details;
     },
-    
+
     getSchema: function () {
       return this.schema;
     },
-    
+
     getSettings: function () {
       return this.settings;
     },
-    
+
     getPrivileges: function () {
       return this.privileges;
     },
-    
+
     setAvailableSessions: function (value) {
       this.availableSessions = value;
       return this;
     },
-    
+
     setDetails: function (value) {
       this.details = value;
       return this;
     },
-    
+
     setSchema: function (value) {
       this.schema = value;
       return this;
     },
-    
+
     setSettings: function (value) {
       this.settings = value;
       return this;
     },
-    
+
     setPrivileges: function (value) {
       this.privileges = value;
       return this;
@@ -234,15 +239,16 @@ white:true*/
       // and store the properties
       if (payload.code === 1) {
         this.setDetails(payload.data);
-
         XT.getStartupManager().start();
-      } else return document.location = "https://%@/login".f(h);
+      } else {
+        return document.location = "https://%@/login".f(h);
+      }
 
       if (callback && callback instanceof Function) {
         callback(payload);
       }
     },
-    
+
     start: function () {
       var c = enyo.getCookie("xtsessioncookie");
       try {
@@ -256,7 +262,7 @@ white:true*/
       XT.Request
         .handle("function/logout")
         .notify(function () {
-          document.location = "https://%@/login".f(h); 
+          document.location = "https://%@/login".f(h);
         })
         .send();
     },

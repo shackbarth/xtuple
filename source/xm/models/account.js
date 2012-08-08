@@ -48,24 +48,6 @@ white:true*/
 
     recordType: 'XM.Account',
 
-    privileges: {
-      "all": {
-        "create": "MaintainAllCRMAccounts",
-        "read": "ViewAllCRMAccounts",
-        "update": "MaintainAllCRMAccounts",
-        "delete": "MaintainAllCRMAccounts"
-      },
-      "personal": {
-        "create": "MaintainPersonalCRMAccounts",
-        "read": "ViewPersonalCRMAccounts",
-        "update": "MaintainPersonalCRMAccounts",
-        "delete": "MaintainPersonalCRMAccounts",
-        "properties": [
-          "owner"
-        ]
-      }
-    },
-
     defaults: {
       owner: XM.currentUser,
       isActive: true,
@@ -236,24 +218,6 @@ white:true*/
     recordType: 'XM.AccountInfo',
 
     readOnly: true,
-
-    privileges: {
-      "all": {
-        "create": false,
-        "read": "ViewAllCRMAccounts",
-        "update": false,
-        "delete": false
-      },
-      "personal": {
-        "create": false,
-        "read": true,
-        "update": false,
-        "delete": true,
-        "properties": [
-          "owner"
-        ]
-      }
-    }
 
   });
 
