@@ -8,10 +8,10 @@
     "comment": "Priority Map",
     "privileges": {
       "all": {
-        "create": true,
+        "create": "MaintainIncidentPriorities",
         "read": true,
-        "update": true,
-        "delete": true
+        "update": "MaintainIncidentPriorities",
+        "delete": "MaintainIncidentPriorities"
       }
     },
     "properties": [
