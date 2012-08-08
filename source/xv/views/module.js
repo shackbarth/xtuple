@@ -240,6 +240,38 @@ trailing:true white:true*/
       var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
         listName = this.name === "setup" ? listBase + "List" : listBase + "InfoList",
         list = this.$.lists.$[listName];
+
+
+      /**
+       * If the update model is part of a cached collection, refresh the cache
+       * XXX This string massaging should be refactored into intelligence within
+       * the collection itself.
+       * XXX this part will happen for each living module. But it only needs to
+       * be refreshed once. Moving away from signals would solve this. Or we
+       * could create a dedicated signal event.
+       */
+      var cacheName;
+      if (listBase.charAt(listBase.length - 1) === 'y') {
+        cacheName = listBase.substring(0, listBase.length - 1) + 'ies';
+      } else {
+        cacheName = listBase + 's';
+      }
+      if (XM[cacheName]) {
+        XM[cacheName].fetch();
+        // no need to fetch the model itself, but we do want to tell the
+        // module that contains the list to refresh that list by setting
+        // the fetched property to false
+
+        if (this.fetched[listName]) {
+          this.fetched[listName] = false;
+        }
+
+        return;
+      }
+
+      /**
+       * Update the model itself
+       */
       if (!list) {
         // we don't have this model on our list. No need to update
         return;

@@ -10,36 +10,6 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.AccountInfoParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: true
-            };
-          }
-          return param;
-        }
-      },
-      {label: "_number".loc(), attr: "number"},
-      {label: "_name".loc(), attr: "name"},
-      {label: "_primaryContact".loc(), attr: "primaryContact.name"},
-      {label: "_primaryEmail".loc(), attr: "primaryContact.primaryEmail"},
-      {label: "_phone".loc(), attr: ["primaryContact.phone", "primaryContact.alternate", "primaryContact.fax"]},
-      {label: "_street".loc(), attr: ["primaryContact.address.line1", "primaryContact.address.line2", "primaryContact.address.line3"]},
-      {label: "_city".loc(), attr: "primaryContact.address.city"},
-      {label: "_postalCode".loc(), attr: "primaryContact.address.postalCode"},
-      {label: "_state".loc(), attr: "primaryContact.address.state"},
-      {label: "_country".loc(), attr: "primaryContact.address.country"}
-    ]
-  });
-
-  enyo.kind({
     name: "XV.AccountInfoList",
     kind: "XV.InfoList",
     published: {
@@ -84,34 +54,6 @@ trailing:true white:true*/
   // ..........................................................
   // CONTACT
   //
-
-  enyo.kind({
-    name: "XV.ContactInfoParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: true
-            };
-          }
-          return param;
-        }
-      },
-      {label: "_name".loc(), attr: "name"},
-      {label: "_primaryEmail".loc(), attr: "primaryEmail"},
-      {label: "_phone".loc(), attr: ["phone", "alternate", "fax"]},
-      {label: "_street".loc(), attr: ["address.line1", "address.line2", "address.line3"]},
-      {label: "_city".loc(), attr: "address.city"},
-      {label: "_state".loc(), attr: "address.state"},
-      {label: "_postalCode".loc(), attr: "address.postalCode"},
-      {label: "_country".loc(), attr: "address.country"}
-    ]
-  });
 
   enyo.kind({
     name: "XV.ContactInfoList",
@@ -159,40 +101,6 @@ trailing:true white:true*/
   // ..........................................................
   // INCIDENT
   //
-
-  enyo.kind({
-    name: "XV.IncidentInfoParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {label: "_number".loc(), attr: "number",
-        getParameter: function () {
-          var param,
-            value = this.getValue() - 0;
-          if (value && _.isNumber(value)) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: value
-            };
-          }
-          return param;
-        }
-      },
-      {label: "_account".loc(), attr: "account",
-          defaultKind: "XV.AccountWidget"},
-      {label: "_description".loc(), attr: "description"},
-      {label: "_category".loc(), attr: "category",
-        defaultKind: "XV.IncidentCategoryDropdown"},
-      {label: "_priority".loc(), attr: "priority",
-        defaultKind: "XV.PriorityDropdown"},
-      {label: "_severity".loc(), attr: "severity",
-        defaultKind: "XV.IncidentSeverityDropdown"},
-      {label: "_resolution".loc(), attr: "resolution",
-          defaultKind: "XV.IncidentResolutionDropdown"},
-      {label: "_startDate".loc(), attr: "created", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_endDate".loc(), attr: "created", operator: "<=", defaultKind: "XV.DateWidget"}
-    ]
-  });
 
   enyo.kind({
     name: "XV.IncidentInfoList",
@@ -254,34 +162,6 @@ trailing:true white:true*/
   // ..........................................................
   // OPPORTUNITY
   //
-
-  enyo.kind({
-    name: "XV.OpportunityInfoParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {label: "_showInactive".loc(), attr: "isActive",
-        defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '=',
-              value: true
-            };
-          }
-          return param;
-        }
-      },
-      {label: "_name".loc(), attr: "name"},
-      {label: "_opportunityStage".loc(), attr: "opportunityStage",
-        defaultKind: "XV.OpportunityStageDropdown"},
-      {label: "_opportunityType".loc(), attr: "opportunityType",
-        defaultKind: "XV.OpportunityTypeDropdown"},
-      {label: "_opportunitySource".loc(), attr: "opportunitySource",
-        defaultKind: "XV.OpportunitySourceDropdown"}
-    ]
-  });
 
   enyo.kind({
     name: "XV.OpportunityInfoList",
@@ -347,36 +227,6 @@ trailing:true white:true*/
   // ..........................................................
   // PROJECT
   //
-
-  enyo.kind({
-    name: "XV.ProjectInfoParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '!=',
-              value: 'C'
-            };
-          }
-          return param;
-        }
-      },
-      {label: "_number".loc(), attr: "number"},
-      {label: "_name".loc(), attr: "name"},
-      {label: "_startStartDate".loc(), attr: "startDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_startEndDate".loc(), attr: "startDate", operator: "<=", defaultKind: "XV.DateWidget"},
-      {label: "_assignedStartDate".loc(), attr: "assignDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_assignedEndDate".loc(), attr: "assignDate", operator: "<=", defaultKind: "XV.DateWidget"},
-      {label: "_dueStartDate".loc(), attr: "dueDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_dueEndDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"},
-      {label: "_completedStartDate".loc(), attr: "completeDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_completedEndDate".loc(), attr: "completeDate", operator: "<=", defaultKind: "XV.DateWidget"}
-    ]
-  });
 
   enyo.kind({
     name: "XV.ProjectInfoList",
@@ -466,31 +316,6 @@ trailing:true white:true*/
   // ..........................................................
   // TO DO
   //
-
-  enyo.kind({
-    name: "XV.ToDoInfoParameters",
-    kind: "XV.ParameterWidget",
-    components: [
-      {label: "_showCompleted".loc(), attr: "status", defaultKind: "XV.CheckboxWidget",
-        getParameter: function () {
-          var param;
-          if (!this.getValue()) {
-            param = {
-              attribute: this.getAttr(),
-              operator: '!=',
-              value: 'C'
-            };
-          }
-          return param;
-        }
-      },
-      {label: "_name".loc(), attr: "name"},
-      {label: "_startStartDate".loc(), attr: "startDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_startEndDate".loc(), attr: "startDate", operator: "<=", defaultKind: "XV.DateWidget"},
-      {label: "_dueStartDate".loc(), attr: "dueDate", operator: ">=", defaultKind: "XV.DateWidget"},
-      {label: "_dueEndDate".loc(), attr: "dueDate", operator: "<=", defaultKind: "XV.DateWidget"}
-    ]
-  });
 
   enyo.kind({
     name: "XV.ToDoInfoList",
@@ -600,10 +425,11 @@ trailing:true white:true*/
     name: "XV.HonorificList",
     kind: "XV.InfoList",
     published: {
-      label: "_honorific".loc(),
+      label: "_honorifics".loc(),
       collection: "XM.HonorificCollection",
       query: {orderBy: [{ attribute: 'code' }] },
-      rowClass: "XV.HonorificCollectionRow"
+      rowClass: "XV.HonorificCollectionRow",
+      workspace: "XV.HonorificWorkspace"
     }
   });
 
@@ -627,10 +453,11 @@ trailing:true white:true*/
     name: "XV.StateList",
     kind: "XV.InfoList",
     published: {
-      label: "_state".loc(),
+      label: "_states".loc(),
       collection: "XM.StateCollection",
       query: {orderBy: [{ attribute: 'abbreviation' }] },
-      rowClass: "XV.AbbreviationNameRow"
+      rowClass: "XV.AbbreviationNameRow",
+      workspace: "XV.StateWorkspace"
     }
   });
 
@@ -638,10 +465,11 @@ trailing:true white:true*/
     name: "XV.CountryList",
     kind: "XV.InfoList",
     published: {
-      label: "_country".loc(),
+      label: "_countries".loc(),
       collection: "XM.CountryCollection",
       query: {orderBy: [{ attribute: 'name' }] },
-      rowClass: "XV.AbbreviationNameRow"
+      rowClass: "XV.AbbreviationNameRow",
+      workspace: "XV.CountryWorkspace"
     }
   });
 
@@ -686,10 +514,16 @@ trailing:true white:true*/
       this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
-        this.setLabel(("_" + kindName.camelize()).loc());
+        // Pluralize - if this gets any more complicated, we should
+        // pull in a pluralize function
+        var label = "_" + kindName.camelize().pluralize();
+        this.setLabel(label.loc());
       }
       if (!this.getCollection()) {
         this.setCollection("XM." + kindName + "Collection");
+      }
+      if (!this.getWorkspace()) {
+        this.setWorkspace("XV." + kindName + "Workspace");
       }
     }
   });
@@ -718,7 +552,7 @@ trailing:true white:true*/
     name: "XV.OpportunitySourceList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] }
+      query: {orderBy: [{ attribute: 'name' }] }
     }
   });
 
@@ -726,7 +560,7 @@ trailing:true white:true*/
     name: "XV.OpportunityStageList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] }
+      query: {orderBy: [{ attribute: 'name' }] }
     }
   });
 
@@ -734,7 +568,7 @@ trailing:true white:true*/
     name: "XV.OpportunityTypeList",
     kind: "XV.NameDescriptionList",
     published: {
-      query: {orderBy: [{ attribute: 'id' }] }
+      query: {orderBy: [{ attribute: 'name' }] }
     }
   });
 

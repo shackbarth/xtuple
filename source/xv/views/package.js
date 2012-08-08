@@ -3,5 +3,6 @@ enyo.depends(
   "module.js",
   "pullout.js",
   "screen_carousel.js",
-  "workspace.js"
+  "workspace.js",
+  "search.js"
 );

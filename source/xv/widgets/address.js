@@ -5,7 +5,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   //"use strict";
 
   enyo.kind({
-    name: "XV.AddressWidget",
+    name: "XV.Address",
     kind: enyo.Control,
     published: {
       model: null
@@ -15,10 +15,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     components: [
       // XXX fields are disabled until we get this whole thing to work
-      { kind: "onyx.Input", name: "line1Field", disabled: true },//onchange: "doAddressChanged" },
-      { kind: "onyx.Input", name: "line2Field", disabled: true },//onchange: "doAddressChanged" },
-      { kind: "onyx.Input", name: "line3Field", disabled: true },//onchange: "doAddressChanged" },
-      { kind: "onyx.Input", name: "cityField", disabled: true }//onchange: "doCityChanged" }
+      { kind: "onyx.Input", name: "line1Field", onchange: "doAddress1Changed" },
+      { kind: "onyx.Input", name: "line2Field", onchange: "doAddress2Changed" },
+      { kind: "onyx.Input", name: "line3Field", onchange: "doAddress3Changed" },
+      { kind: "onyx.Input", name: "cityField", onchange: "doCityChanged" }
     ],
     /**
      * A convenience function so that this object can be treated generally like an input
@@ -62,16 +62,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         this.getModel().get("postalCode")
       ) : "");
     },
-    doAddressChanged: function (inSender, inEvent) {
+    doAddress1Changed: function (inSender, inEvent) {
       this.getModel().set({ line1: inSender.getValue() });
     },
-    // XXX If we update model after the change of each field we could be operating with
-    // an address that's been half updated. This is a problem.
+    doAddress2Changed: function (inSender, inEvent) {
+      this.getModel().set({ line2: inSender.getValue() });
+    },
+    doAddress3Changed: function (inSender, inEvent) {
+      this.getModel().set({ line3: inSender.getValue() });
+    },
     // TODO use fuzzy logic match
-    // XXX if the user want to update the field in the model, then that can be persisted here
-    // (as with a grid),
-    // but if he wants to create a new model, then that has to be done at the workspace
-    // level (as with a relational widget), right!?
     doCityChanged: function (inSender, inEvent) {
       var parsed = this.parseAddress(inSender.getValue());
       this.getModel().set({ city: parsed.city, state: parsed.state, postalCode: parsed.zip });
