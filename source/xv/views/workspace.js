@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-
+  
   enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -225,7 +225,7 @@ trailing:true white:true*/
             style: "float: right;",
             content: "_apply".loc(), onclick: "apply"}
         ]},
-        {kind: "onyx.Popup", name: "unsavedChangesPopup", centered: true,
+        {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
           modal: true, floating: true, onShow: "popupShown",
           onHide: "popupHidden", components: [
           {content: "_unsavedChanges".loc() },
@@ -272,7 +272,8 @@ trailing:true white:true*/
       options = options || {};
       if (!options.force) {
         if (this.$.workspace.isDirty()) {
-          this.$.unsavedChangesPopup.show();
+          this.$.unsavedPopup.close = true;
+          this.$.unsavedPopup.show();
           return;
         }
       }
@@ -299,7 +300,15 @@ trailing:true white:true*/
     newRecord: function () {
       this.$.workspace.newRecord();
     },
-    requery: function () {
+    requery: function (options) {
+      options = options || {};
+      if (!options.force) {
+        if (this.$.workspace.isDirty()) {
+          this.$.unsavedPopup.close = false;
+          this.$.unsavedPopup.show();
+          return;
+        }
+      }
       this.$.workspace.requery();
     },
     save: function (options) {
@@ -343,16 +352,20 @@ trailing:true white:true*/
       return true;
     },
     unsavedCancel: function () {
-      this.$.unsavedChangesPopup.hide();
+      this.$.unsavedPopup.hide();
     },
     unsavedDiscard: function () {
       var options = {force: true};
-      this.$.unsavedChangesPopup.hide();
+      this.$.unsavedPopup.hide();
       this.close(options);
     },
     unsavedSave: function () {
-      this.$.unsavedChangesPopup.hide();
-      this.save();
+      this.$.unsavedPopup.hide();
+      if (this.$.unsavedPopup.close) {
+        this.saveAndClose();
+      } else {
+        this.save();
+      }
     }
   });
 
