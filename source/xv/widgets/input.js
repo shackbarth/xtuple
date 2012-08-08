@@ -7,7 +7,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Input",
     published: {
-      value: null
+      value: null,
+      disabled: false
     },
     events: {
       "onValueChange": ""
@@ -18,6 +19,13 @@ regexp:true, undef:true, trailing:true, white:true */
     clear: function (options) {
       this.setValue("", options);
     },
+    create: function () {
+      this.inherited(arguments);
+      this.disabledChanged();
+    },
+    disabledChanged: function () {
+      this.$.input.setDisabled(this.getDisabled());
+    },
     inputChanged: function (inSender, inEvent) {
       var input = this.$.input.getValue(),
         value = this.validate(input);
@@ -27,9 +35,6 @@ regexp:true, undef:true, trailing:true, white:true */
         this.setValue(null);
         this.valueChanged("");
       }
-    },
-    setDisabled: function (value) {
-      this.$.input.setDisabled(value);
     },
     setValue: function (value, options) {
       options = options || {};

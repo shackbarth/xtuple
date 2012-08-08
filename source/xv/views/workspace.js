@@ -24,7 +24,7 @@ trailing:true white:true*/
         classes: "xv-top-panel", components: [
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.InputWidget", name: "number"},
+          {kind: "XV.InputWidget", name: "number", disabled: true},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.AccountWidget", name: "account"}
         ]},
