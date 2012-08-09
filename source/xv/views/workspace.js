@@ -118,16 +118,13 @@ trailing:true white:true*/
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
         callback,
-        that = this,
-        attrs,
-        attr,
-        i,
-        isReadOnly;
+        that = this;
 
-      // Remove old bindings
+      // Clean up
       if (this._model) {
+        if (this._model.isNew()) { model.destroy(); }
         this._model.off();
-        this._model = null;
+        delete this._model;
       }
       if (!Klass) { return; }
 
@@ -146,28 +143,11 @@ trailing:true white:true*/
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
       this._model.on("error", this.error, this);
-
-      // Disable read-only attributes
-      attrs = this._model ? this._model.getAttributeNames() : [];
-      for (i = 0; i < attrs.length; i++) {
-        attr = attrs[i];
-        isReadOnly = this._model.isReadOnly(attr);
-        if (this.$[attr] && this.$[attr].setDisabled) {
-          this.$[attr].setDisabled(isReadOnly);
-        }
-      }
     },
     newRecord: function () {
-      var model = this._model,
-        attr,
-        changes = {};
-      if (!model) { return; }
-      model.initialize(null, {isNew: true});
+      this.modelChanged();
+      this._model.initialize(null, {isNew: true});
       this.clear();
-      for (attr in model.attributes) {
-        changes[attr] = true;
-      }
-      this.attributesChanged(model, {changes: changes});
     },
     requery: function () {
       this.fetch(this._model.id);

@@ -189,7 +189,7 @@ white:true*/
           }
         }
       }
-      
+
       // Mark dirty if we should
       if (status === K.READY_CLEAN) {
         this.setStatus(K.READY_DIRTY);
@@ -446,24 +446,19 @@ white:true*/
       options = options || {};
       var klass,
         K = XM.Model,
-        defaults;
+        status = this.getStatus();
 
-      // Validate record type
+      // Validate
       if (_.isEmpty(this.recordType)) { throw 'No record type defined'; }
+      if (status !== K.EMPTY) {
+        throw 'Model may only be intialized from a status of EMPTY.';
+      }
 
       // Set defaults if not provided
       this.prime = {};
       this.privileges = this.privileges || {};
       this.readOnlyAttributes = this.readOnlyAttributes || [];
       this.requiredAttributes = this.requiredAttributes || [];
-
-      // Set attributes if they weren't already set by the constructor
-      this.clear({silent: true});
-      defaults = this.getValue('defaults') || {};
-      attributes = _.defaults(attributes, defaults);
-      if (!_.isEqual(this.attributes, attributes)) {
-        this.set(attributes, {silent: true});
-      }
 
       // Handle options
       if (options.isNew) {
@@ -1039,8 +1034,8 @@ white:true*/
         value,
         i,
         props,
-        status = model.getStatus(),
-        K = XM.Model;
+        K = XM.Model,
+        status = model && model.getStatus ? model.getStatus() : K.READY;
 
       // Need to be in a valid status to "do" anything
       if (!(status & K.READY)) { return false; }
