@@ -341,17 +341,6 @@ trailing:true white:true*/
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
-
-      // Only show save buttons if the model is ever editable
-      if (isEditable) {
-        this.$.applyButton.show();
-        this.$.saveAndNewButton.show();
-        this.$.saveButton.show();
-      } else {
-        this.$.applyButton.hide();
-        this.$.saveAndNewButton.hide();
-        this.$.saveButton.hide();
-      }
     },
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";
