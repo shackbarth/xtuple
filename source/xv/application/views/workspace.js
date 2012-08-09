@@ -369,7 +369,7 @@ trailing:true white:true*/
           {kind: "XV.Input", name: "tasks.number" },
           {kind: "XV.Input", name: "tasks.name" },
           {kind: "XV.Input", name: "tasks.notes" },
-          {kind: "XV.Date", name: "tasks.dueDate" },
+          {kind: "XV.Date", name: "tasks.dueDate" }, // TODO: should be a date widget, sort of.
           {kind: "XV.Number", name: "tasks.actualHours" },
           {kind: "XV.Number", name: "tasks.actualExpenses" }
         ]},
