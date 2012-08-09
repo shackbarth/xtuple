@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XV:true, XM:true, Backbone:true, enyo:true, XT:true */
 
 (function () {
-  
+
   enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
@@ -31,9 +31,9 @@ trailing:true white:true*/
       ]}
     ],
     /**
-      Updates all children widgets on the workspace where the name of
-      the widget matches the name of an attribute on the model.
-      
+      Updates all child controls on the workspace where the name of
+      the control matches the name of an attribute on the model.
+
       @param {XM.Model} model
       @param {Object} options
     */
@@ -41,12 +41,30 @@ trailing:true white:true*/
       options = options || {};
       var attr,
         value,
-        changes = options.changes;
+        K = XM.Model,
+        status = model.getStatus(),
+        changes = options.changes,
+        canNotUpdate = !model.canUpdate() || !(status & K.READY),
+        control,
+        isReadOnly,
+        isRequired;
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
           value = model.get(attr);
-          if (this.$[attr] && this.$[attr].setValue) {
-            this.$[attr].setValue(value, {silent: true});
+          isReadOnly = model.isReadOnly(attr);
+          isRequired = model.isRequired(attr);
+          control = this.$[attr];
+          if (control) {
+            if (control.setPlaceholder && isRequired &&
+                !control.getPlaceholder()) {
+              control.setPlaceholder("_required".loc());
+            }
+            if (control.setValue) {
+              control.setValue(value, {silent: true});
+            }
+            if (control.setDisabled) {
+              control.setDisabled(canNotUpdate || isReadOnly);
+            }
           }
         }
       }
@@ -112,7 +130,7 @@ trailing:true white:true*/
         this._model = null;
       }
       if (!Klass) { return; }
-      
+
       // If we don't have a session yet then relations won't be available
       // so wait and try again after start up tasks complete
       if (!XT.session) {
@@ -122,13 +140,13 @@ trailing:true white:true*/
         XT.getStartupManager().registerCallback(callback);
         return;
       }
-      
+
       // Create new instance and bindings
       this._model = new Klass();
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
       this._model.on("error", this.error, this);
-      
+
       // Disable read-only attributes
       attrs = this._model ? this._model.getAttributeNames() : [];
       for (i = 0; i < attrs.length; i++) {
@@ -159,17 +177,15 @@ trailing:true white:true*/
     },
     statusChanged: function (model, status, options) {
       options = options || {};
-      var K = XM.Model,
-        inEvent = {model: model},
-        attr,
-        changes = {};
-      if (status === K.READY_CLEAN || status === K.READY_NEW) {
-        for (attr in model.attributes) {
-          changes[attr] = true;
-        }
-        options.changes = changes;
-        this.attributesChanged(model, options);
+      var inEvent = {model: model},
+        attrs = model.getAttributeNames(),
+        changes = {},
+        i;
+      for (i = 0; i < attrs.length; i++) {
+        changes[attrs[i]] = true;
       }
+      options.changes = changes;
+      this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
     },
     titleChanged: function () {
@@ -339,7 +355,7 @@ trailing:true white:true*/
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         canNotSave = (!model.isDirty() || !model.canUpdate() ||
           model.isReadOnly());
-          
+
       // Update buttons
       this.$.refreshButton.setDisabled(isNotReady);
       this.$.applyButton.setDisabled(canNotSave);

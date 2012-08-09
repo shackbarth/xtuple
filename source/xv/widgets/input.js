@@ -55,13 +55,14 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     }
   });
-  
+
   enyo.kind({
     name: "XV.InputWidget",
     kind: "XV.Input",
     classes: "xv-inputwidget",
     published: {
-      label: ""
+      label: "",
+      placeholder: ""
     },
     components: [
       {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
@@ -73,12 +74,16 @@ regexp:true, undef:true, trailing:true, white:true */
     create: function () {
       this.inherited(arguments);
       this.labelChanged();
+      this.placeholderChanged();
     },
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.name).loc());
       this.$.label.setContent(label + ":");
-      this.$.input.setPlaceholder(label);
+    },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.input.setPlaceholder(placeholder);
     }
   });
-  
+
 }());

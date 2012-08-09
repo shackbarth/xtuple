@@ -10,6 +10,7 @@ regexp:true, undef:true, trailing:true, white:true */
     classes: "xv-inputwidget xv-relationwidget",
     published: {
       label: "",
+      placeholder: "",
       value: null,
       collection: null,
       keyAttribute: "number",
@@ -141,7 +142,10 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.name).loc());
       this.$.label.setContent(label + ":");
-      this.$.input.setPlaceholder(label);
+    },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.input.setPlaceholder(placeholder);
     },
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();

@@ -537,6 +537,16 @@ white:true*/
       }
       return result;
     },
+    
+    /**
+      Return whether an attribute is required.
+
+      @param {String} attribute
+      @returns {Boolean}
+    */
+    isRequired: function (value) {
+      return _.contains(this.requiredAttributes, value);
+    },
 
     /**
       Recursively checks the object against the schema and converts date strings to

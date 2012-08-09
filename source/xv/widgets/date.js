@@ -17,7 +17,7 @@ regexp:true, undef:true, trailing:true, white:true */
     textToDate: function (value) {
       var date = null,
         daysInMilliseconds = 1000 * 60 * 60 * 24;
-        
+
       // Try to parse out a date given the various allowable shortcuts
       if (value === '0' ||
         value.indexOf('+') === 0 ||
@@ -40,7 +40,7 @@ regexp:true, undef:true, trailing:true, white:true */
         // we're counting on JS to parse the date correctly
         date = new Date(value);
       }
-      
+
       // Validate
       if (date) {
         if (isNaN(date.getTime())) {
@@ -72,7 +72,8 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Date",
     classes: "xv-inputwidget xv-datewidget",
     published: {
-      label: ""
+      label: "",
+      placeholder: ""
     },
     components: [
       {kind: "onyx.InputDecorator", name: "decorator",
@@ -100,6 +101,10 @@ regexp:true, undef:true, trailing:true, white:true */
       var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
       this.$.label.setContent(label);
     },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.input.setPlaceholder(placeholder);
+    },
     valueChanged: function (value) {
       var dateValue = value;
       value = XV.Date.prototype.valueChanged.call(this, value);
@@ -107,5 +112,5 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.datePick.render();
     }
   });
-  
+
 }());
