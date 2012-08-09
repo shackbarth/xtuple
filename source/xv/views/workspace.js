@@ -35,7 +35,7 @@ trailing:true white:true*/
     /**
       Updates all children widgets on the workspace where the name of
       the widget matches the name of an attribute on the model.
-      
+
       @param {XM.Model} model
       @param {Object} options
     */
@@ -103,7 +103,7 @@ trailing:true white:true*/
         this._model = null;
       }
       if (!Klass) { return; }
-      
+
       // If we don't have a session yet then relations won't be available
       // so wait and try again after start up tasks complete
       if (!XT.session) {
@@ -113,12 +113,12 @@ trailing:true white:true*/
         XT.getStartupManager().registerCallback(callback);
         return;
       }
-      
+
       // Create new instance and bindings
       this._model = new Klass();
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
-      
+
       // Disable read-only attributes
       attrs = this._model ? this._model.getAttributeNames() : [];
       for (i = 0; i < attrs.length; i++) {
@@ -222,7 +222,7 @@ trailing:true white:true*/
     changeWorkspace: function (inSender, inEvent) {
       var workspace = this.$.workspace;
       if (inEvent.workspace) {
-        if (workspace) { 
+        if (workspace) {
           this.removeComponent(workspace);
           workspace.destroy();
         }
@@ -273,7 +273,7 @@ trailing:true white:true*/
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
         canNotSave = (!model.isDirty() || !model.canUpdate() ||
           model.isReadOnly());
-          
+
       // Update buttons
       this.$.refreshButton.setDisabled(isNotReady);
       this.$.applyButton.setDisabled(canNotSave);
@@ -284,7 +284,7 @@ trailing:true white:true*/
       var title = inEvent.title || "";
       this.$.title.setContent(title);
     }
-    
+
   });
 
 }());
