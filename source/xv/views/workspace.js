@@ -59,7 +59,7 @@ trailing:true white:true*/
                 !control.getPlaceholder()) {
               control.setPlaceholder("_required".loc());
             }
-            if (control.setValue) {
+            if (control.setValue && !(status & K.BUSY)) {
               control.setValue(value, {silent: true});
             }
             if (control.setDisabled) {
