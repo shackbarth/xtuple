@@ -180,11 +180,6 @@ white:true*/
         attr;
       if (options.force) { return; }
 
-      // Mark dirty if we should
-      if (status === K.READY_CLEAN) {
-        this.setStatus(K.READY_DIRTY);
-      }
-
       // Update `prime` with original attributes for tracking
       if (status & K.READY) {
         for (attr in this.changed) {
@@ -193,6 +188,11 @@ white:true*/
             this.prime[attr] = this.previous(attr);
           }
         }
+      }
+
+      // Mark dirty if we should
+      if (status === K.READY_CLEAN) {
+        this.setStatus(K.READY_DIRTY);
       }
     },
 
@@ -446,24 +446,19 @@ white:true*/
       options = options || {};
       var klass,
         K = XM.Model,
-        defaults;
+        status = this.getStatus();
 
-      // Validate record type
+      // Validate
       if (_.isEmpty(this.recordType)) { throw 'No record type defined'; }
+      if (status !== K.EMPTY) {
+        throw 'Model may only be intialized from a status of EMPTY.';
+      }
 
       // Set defaults if not provided
       this.prime = {};
       this.privileges = this.privileges || {};
       this.readOnlyAttributes = this.readOnlyAttributes || [];
       this.requiredAttributes = this.requiredAttributes || [];
-
-      // Set attributes if they weren't already set by the constructor
-      this.clear({silent: true});
-      defaults = this.getValue('defaults') || {};
-      attributes = _.defaults(attributes, defaults);
-      if (!_.isEqual(this.attributes, attributes)) {
-        this.set(attributes, {silent: true});
-      }
 
       // Handle options
       if (options.isNew) {
@@ -536,6 +531,16 @@ white:true*/
         result = _.contains(this.readOnlyAttributes, value);
       }
       return result;
+    },
+
+    /**
+      Return whether an attribute is required.
+
+      @param {String} attribute
+      @returns {Boolean}
+    */
+    isRequired: function (value) {
+      return _.contains(this.requiredAttributes, value);
     },
 
     /**
@@ -1028,7 +1033,12 @@ white:true*/
         username = XT.session.details.username,
         value,
         i,
-        props;
+        props,
+        K = XM.Model,
+        status = model && model.getStatus ? model.getStatus() : K.READY;
+
+      // Need to be in a valid status to "do" anything
+      if (!(status & K.READY)) { return false; }
 
       // If no privileges, nothing to check.
       if (_.isEmpty(privs)) { return true; }

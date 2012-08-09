@@ -29,7 +29,8 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Number",
     classes: "xv-inputwidget xv-numberwidget",
     published: {
-      label: ""
+      label: "",
+      placeholder: ""
     },
     components: [
       {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
@@ -45,7 +46,12 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
       this.$.label.setContent(label);
+    },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.input.setPlaceholder(placeholder);
     }
+
   });
 
 }());

@@ -325,6 +325,10 @@ trailing:true white:true*/
       collection: "XM.ToDoInfoCollection",
       rowClass: "XV.ToDoInfoCollectionRow",
       parameterWidget: "XV.ToDoInfoParameters",
+      query: {orderBy: [
+        {attribute: 'dueDate'},
+        {attribute: 'name'}
+      ]},
       workspace: "XV.ToDoWorkspace"
     }
   });
