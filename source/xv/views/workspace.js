@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, onyx:true, enyo:true, XT:true */
 
 (function () {
 
@@ -254,11 +254,12 @@ trailing:true white:true*/
       }
       this.setPrevious(inEvent.previous);
       
-      // Build menu
+      // Build menu by finding group boxes
       this.$.menu.setCount(0);
       for (prop in workspace.$) {
-        if (workspace.$.hasOwnProperty(prop) && workspace.$[prop].inMenu) {
-          menuItems.push(workspace.$[prop].getContent());
+        if (workspace.$.hasOwnProperty(prop) &&
+            workspace.$[prop] instanceof onyx.Groupbox) {
+          menuItems.push(workspace.$[prop]);
         }
       }
       this.setMenuItems(menuItems);
@@ -331,8 +332,15 @@ trailing:true white:true*/
     },
     // menu
     setupItem: function (inSender, inEvent) {
-      var menuItem = this.getMenuItems()[inEvent.index];
-      this.$.item.setContent(menuItem);
+      var box = this.getMenuItems()[inEvent.index],
+        i;
+      // Find the header in the box to use as content
+      for (i = 0; i < box.children.length; i++) {
+        if (box.children[i] instanceof onyx.GroupboxHeader) {
+          this.$.item.setContent(box.children[i].getContent());
+        }
+      }
+      this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
     statusChanged: function (inSender, inEvent) {
