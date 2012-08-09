@@ -450,8 +450,10 @@ body {
   }
   .xv-input {
     width: 100px;
+    border-width: 0px;
     .xv-subinput {
       width: 90px;
+      border-width: 0px;
     }
   }
 }

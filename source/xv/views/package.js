@@ -6,5 +6,6 @@ enyo.depends(
   "workspace.js",
   "workspace_box.js",
   "repeater_box.js",
+  "repeater_box_row.js",
   "search.js"
 );
