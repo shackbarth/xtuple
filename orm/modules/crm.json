@@ -622,7 +622,7 @@
     "comment": "Extended by Crm",
     "relations": [
       {
-        "column": "cntct_id",
+        "column": "incdt_id",
         "inverse": "id"
       }
     ],
