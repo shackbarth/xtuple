@@ -410,20 +410,20 @@ trailing:true white:true*/
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", components: [
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc(), inMenu: true},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.InputWidget", name: "description"},
           {kind: "XV.PriorityDropdown", name: "priority"}
         ]},
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
+          {kind: "onyx.GroupboxHeader", content: "_schedule".loc(), inMenu: true },
           {kind: "XV.DateWidget", name: "startDate"},
           {kind: "XV.DateWidget", name: "assignDate"},
           {kind: "XV.DateWidget", name: "dueDate"},
           {kind: "XV.DateWidget", name: "completeDate"}
         ]},
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
+          {kind: "onyx.GroupboxHeader", content: "_relationships".loc(), inMenu: true},
           {kind: "XV.UserAccountWidget", name: "owner"},
           {kind: "XV.UserAccountWidget", name: "assignedTo"},
           {kind: "XV.AccountWidget", name: "account"}
