@@ -180,11 +180,6 @@ white:true*/
         attr;
       if (options.force) { return; }
 
-      // Mark dirty if we should
-      if (status === K.READY_CLEAN) {
-        this.setStatus(K.READY_DIRTY);
-      }
-
       // Update `prime` with original attributes for tracking
       if (status & K.READY) {
         for (attr in this.changed) {
@@ -193,6 +188,11 @@ white:true*/
             this.prime[attr] = this.previous(attr);
           }
         }
+      }
+      
+      // Mark dirty if we should
+      if (status === K.READY_CLEAN) {
+        this.setStatus(K.READY_DIRTY);
       }
     },
 
@@ -537,7 +537,7 @@ white:true*/
       }
       return result;
     },
-    
+
     /**
       Return whether an attribute is required.
 
@@ -1038,7 +1038,12 @@ white:true*/
         username = XT.session.details.username,
         value,
         i,
-        props;
+        props,
+        status = model.getStatus(),
+        K = XM.Model;
+
+      // Need to be in a valid status to "do" anything
+      if (!(status & K.READY)) { return false; }
 
       // If no privileges, nothing to check.
       if (_.isEmpty(privs)) { return true; }
