@@ -537,23 +537,8 @@ body {
 }
 
 /*********END PULLOUT *********/
-/*********XV WIDGETS***********/
-/* line 434, ../sass/screen.scss */
-.xv-top-panel {
-  height: 300px;
-}
-
-/* line 438, ../sass/screen.scss */
-.xv-dropdownwidget {
-  background-color: white;
-}
-
-/* line 442, ../sass/screen.scss */
-.xv-picker {
-  width: 200px;
-}
-
-/* line 446, ../sass/screen.scss */
+/*********XV VIEWS***********/
+/* line 433, ../sass/screen.scss */
 .xv-groupbox {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -563,30 +548,68 @@ body {
   margin-right: 5px;
 }
 
-/* line 455, ../sass/screen.scss */
+/* line 442, ../sass/screen.scss */
+.xv-repeater-box {
+  width: 880px;
+}
+/* line 444, ../sass/screen.scss */
+.xv-repeater-box .xv-label {
+  width: 100px;
+  font-weight: bold;
+  border-width: 0px;
+  font-size: 12px;
+  text-align: center;
+}
+/* line 451, ../sass/screen.scss */
+.xv-repeater-box .xv-input {
+  width: 100px;
+}
+/* line 453, ../sass/screen.scss */
+.xv-repeater-box .xv-input .xv-subinput {
+  width: 90px;
+}
+
+/*********END XV VIEWS***********/
+/*********XV WIDGETS***********/
+/* line 463, ../sass/screen.scss */
+.xv-top-panel {
+  height: 300px;
+}
+
+/* line 467, ../sass/screen.scss */
+.xv-dropdownwidget {
+  background-color: white;
+}
+
+/* line 471, ../sass/screen.scss */
+.xv-picker {
+  width: 200px;
+}
+
+/* line 476, ../sass/screen.scss */
 .xv-label {
   width: 100px;
   padding-right: 8px;
   text-align: right;
 }
 
-/* line 461, ../sass/screen.scss */
+/* line 482, ../sass/screen.scss */
 .xv-inputwidget {
   background-color: white;
 }
 
-/* line 465, ../sass/screen.scss */
+/* line 486, ../sass/screen.scss */
 .xv-input-decorator {
   border: 0px;
 }
 
-/* line 469, ../sass/screen.scss */
+/* line 490, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 474, ../sass/screen.scss */
+/* line 495, ../sass/screen.scss */
 .xv-relationwidget-description {
   text-indent: 120px;
   font-size: small;
@@ -594,7 +617,7 @@ body {
 }
 
 /********END XV WIDGETS******/
-/* line 448, ../sass/screen.scss */
+/* line 504, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -604,17 +627,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 456, ../sass/screen.scss */
+/* line 512, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 458, ../sass/screen.scss */
+/* line 514, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 465, ../sass/screen.scss */
+/* line 521, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -624,12 +647,12 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 473, ../sass/screen.scss */
+/* line 529, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 476, ../sass/screen.scss */
+/* line 532, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }

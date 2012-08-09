@@ -8,7 +8,7 @@ trailing:true white:true*/
   // ..........................................................
   // BASE CLASS
   //
-  
+
   enyo.kind({
     name: "XV.OrderedReferenceWorkspace",
     kind: "XV.Workspace",
@@ -120,7 +120,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // HONORIFIC
   //
@@ -142,7 +142,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // INCIDENT
   //
@@ -201,7 +201,7 @@ trailing:true white:true*/
       model: "XM.IncidentCategory"
     }
   });
-  
+
   // ..........................................................
   // INCIDENT RESOLUTION
   //
@@ -214,7 +214,7 @@ trailing:true white:true*/
       model: "XM.IncidentResolution"
     }
   });
-  
+
   // ..........................................................
   // INCIDENT RESOLUTION
   //
@@ -227,7 +227,7 @@ trailing:true white:true*/
       model: "XM.IncidentSeverity"
     }
   });
-  
+
   // ..........................................................
   // OPPORTUNITY
   //
@@ -303,7 +303,7 @@ trailing:true white:true*/
       model: "XM.OpportunityStage"
     }
   });
-  
+
   // ..........................................................
   // OPPORTUNITY TYPE
   //
@@ -316,7 +316,7 @@ trailing:true white:true*/
       model: "XM.OpportunityType"
     }
   });
-  
+
   // ..........................................................
   // PRIORITY
   //
@@ -329,7 +329,7 @@ trailing:true white:true*/
       model: "XM.Priority"
     }
   });
-  
+
   // ..........................................................
   // PROJECT
   //
@@ -365,13 +365,13 @@ trailing:true white:true*/
         ]},
         */
         // on top just for development
-        {kind: "XV.RepeaterBox", classes: "xv-groupbox", name: "tasks", components: [
-          {kind: "XV.InputWidget", name: "tasks.number" },
-          {kind: "XV.InputWidget", name: "tasks.name" },
-          {kind: "XV.InputWidget", name: "tasks.notes" },
-          {kind: "XV.DateWidget", name: "tasks.dueDate" },
-          {kind: "XV.NumberWidget", name: "tasks.actualHours" },
-          {kind: "XV.NumberWidget", name: "tasks.actualExpenses" }
+        {kind: "XV.RepeaterBox", classes: "xv-groupbox", name: "tasks", columns: [
+          {kind: "XV.Input", name: "tasks.number" },
+          {kind: "XV.Input", name: "tasks.name" },
+          {kind: "XV.Input", name: "tasks.notes" },
+          {kind: "XV.Date", name: "tasks.dueDate" },
+          {kind: "XV.Number", name: "tasks.actualHours" },
+          {kind: "XV.Number", name: "tasks.actualExpenses" }
         ]},
       ]},
       {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
@@ -404,7 +404,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // TO DO
   //

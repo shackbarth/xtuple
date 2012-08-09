@@ -6,6 +6,7 @@ regexp:true, undef:true, trailing:true, white:true */
 
   enyo.kind({
     name: "XV.Input",
+    classes: "xv-input",
     published: {
       value: null,
       disabled: false
@@ -14,7 +15,8 @@ regexp:true, undef:true, trailing:true, white:true */
       "onValueChange": ""
     },
     components: [
-      {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
+      // XXX subinput?! really we just make sure this subinput reflects css such as width in its container
+      {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
     ],
     clear: function (options) {
       this.setValue("", options);
@@ -55,7 +57,7 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     }
   });
-  
+
   enyo.kind({
     name: "XV.InputWidget",
     kind: "XV.Input",
@@ -80,5 +82,5 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setPlaceholder(label);
     }
   });
-  
+
 }());
