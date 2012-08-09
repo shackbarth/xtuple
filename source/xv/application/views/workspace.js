@@ -435,7 +435,8 @@ trailing:true white:true*/
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
           {kind: "XV.UserAccountWidget", name: "owner"},
-          {kind: "XV.UserAccountWidget", name: "assignedTo"}
+          {kind: "XV.UserAccountWidget", name: "assignedTo"},
+          {kind: "XV.AccountWidget", name: "account"}
         ]}
       ]},
       {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [

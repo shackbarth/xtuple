@@ -286,6 +286,7 @@ XT.stringsFor("en_US", {
   "_propername": "Propername",
   "_purchaseOrderNumber": "Purchase Order",
   "_purpose": "Purpose",
+  "_required": "Required",
   "_resolved": "Resolved",
   "_qualifier": "Qualifier",
   "_quantity": "Quantity",

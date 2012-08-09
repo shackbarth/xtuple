@@ -10,8 +10,10 @@ regexp:true, undef:true, trailing:true, white:true */
     classes: "xv-inputwidget xv-relationwidget",
     published: {
       label: "",
+      placeholder: "",
       value: null,
       collection: null,
+      disabled: false,
       keyAttribute: "number",
       nameAttribute: "name",
       descripAttribute: ""
@@ -75,12 +77,17 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       this.collectionChanged();
       this.labelChanged();
+      this.disabledChanged();
     },
     collectionChanged: function () {
       var collection = this.getCollection(),
         Klass = collection ? XM.Model.getObjectByName(collection) : null;
       if (!Klass) { return; }
       this._collection = new Klass();
+    },
+    disabledChanged: function () {
+      var disabled = this.getDisabled();
+      this.$.input.setDisabled(disabled);
     },
     itemSelected: function (inSender, inEvent) {
       var action = inEvent.originator.value,
@@ -141,7 +148,10 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.name).loc());
       this.$.label.setContent(label + ":");
-      this.$.input.setPlaceholder(label);
+    },
+    placeholderChanged: function () {
+      var placeholder = this.getPlaceholder();
+      this.$.input.setPlaceholder(placeholder);
     },
     receiveBlur: function (inSender, inEvent) {
       this.autocomplete();

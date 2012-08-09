@@ -31,8 +31,8 @@ trailing:true white:true*/
       ]}
     ],
     /**
-      Updates all children widgets on the workspace where the name of
-      the widget matches the name of an attribute on the model.
+      Updates all child controls on the workspace where the name of
+      the control matches the name of an attribute on the model.
 
       @param {XM.Model} model
       @param {Object} options
@@ -41,12 +41,30 @@ trailing:true white:true*/
       options = options || {};
       var attr,
         value,
-        changes = options.changes;
+        K = XM.Model,
+        status = model.getStatus(),
+        changes = options.changes,
+        canNotUpdate = !model.canUpdate() || !(status & K.READY),
+        control,
+        isReadOnly,
+        isRequired;
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
           value = model.get(attr);
-          if (this.$[attr] && this.$[attr].setValue) {
-            this.$[attr].setValue(value, {silent: true});
+          isReadOnly = model.isReadOnly(attr);
+          isRequired = model.isRequired(attr);
+          control = this.$[attr];
+          if (control) {
+            if (control.setPlaceholder && isRequired &&
+                !control.getPlaceholder()) {
+              control.setPlaceholder("_required".loc());
+            }
+            if (control.setValue) {
+              control.setValue(value, {silent: true});
+            }
+            if (control.setDisabled) {
+              control.setDisabled(canNotUpdate || isReadOnly);
+            }
           }
         }
       }
@@ -100,16 +118,13 @@ trailing:true white:true*/
       var model = this.getModel(),
         Klass = model ? XT.getObjectByName(model) : null,
         callback,
-        that = this,
-        attrs,
-        attr,
-        i,
-        isReadOnly;
+        that = this;
 
-      // Remove old bindings
+      // Clean up
       if (this._model) {
+        if (this._model.isNew()) { model.destroy(); }
         this._model.off();
-        this._model = null;
+        delete this._model;
       }
       if (!Klass) { return; }
 
@@ -128,28 +143,11 @@ trailing:true white:true*/
       this._model.on("change", this.attributesChanged, this);
       this._model.on("statusChange", this.statusChanged, this);
       this._model.on("error", this.error, this);
-
-      // Disable read-only attributes
-      attrs = this._model ? this._model.getAttributeNames() : [];
-      for (i = 0; i < attrs.length; i++) {
-        attr = attrs[i];
-        isReadOnly = this._model.isReadOnly(attr);
-        if (this.$[attr] && this.$[attr].setDisabled) {
-          this.$[attr].setDisabled(isReadOnly);
-        }
-      }
     },
     newRecord: function () {
-      var model = this._model,
-        attr,
-        changes = {};
-      if (!model) { return; }
-      model.initialize(null, {isNew: true});
+      this.modelChanged();
+      this._model.initialize(null, {isNew: true});
       this.clear();
-      for (attr in model.attributes) {
-        changes[attr] = true;
-      }
-      this.attributesChanged(model, {changes: changes});
     },
     requery: function () {
       this.fetch(this._model.id);
@@ -159,17 +157,15 @@ trailing:true white:true*/
     },
     statusChanged: function (model, status, options) {
       options = options || {};
-      var K = XM.Model,
-        inEvent = {model: model},
-        attr,
-        changes = {};
-      if (status === K.READY_CLEAN || status === K.READY_NEW) {
-        for (attr in model.attributes) {
-          changes[attr] = true;
-        }
-        options.changes = changes;
-        this.attributesChanged(model, options);
+      var inEvent = {model: model},
+        attrs = model.getAttributeNames(),
+        changes = {},
+        i;
+      for (i = 0; i < attrs.length; i++) {
+        changes[attrs[i]] = true;
       }
+      options.changes = changes;
+      this.attributesChanged(model, options);
       this.doStatusChange(inEvent);
     },
     titleChanged: function () {
@@ -337,14 +333,25 @@ trailing:true white:true*/
         K = XM.Model,
         status = model.getStatus(),
         isNotReady = (status !== K.READY_CLEAN && status !== K.READY_DIRTY),
-        canNotSave = (!model.isDirty() || !model.canUpdate() ||
-          model.isReadOnly());
+        isEditable = (model.canUpdate() && !model.isReadOnly()),
+        canNotSave = (!model.isDirty() || !isEditable);
 
-      // Update buttons
+      // Status dictates whether buttons are actionable
       this.$.refreshButton.setDisabled(isNotReady);
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
+
+      // Only show save buttons if the model is ever editable
+      if (isEditable) {
+        this.$.applyButton.show();
+        this.$.saveAndNewButton.show();
+        this.$.saveButton.show();
+      } else {
+        this.$.applyButton.hide();
+        this.$.saveAndNewButton.hide();
+        this.$.saveButton.hide();
+      }
     },
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";
