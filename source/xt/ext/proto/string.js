@@ -21,5 +21,8 @@ _.extend(String.prototype, {
   },
   trim: function() {
     return XT.String.trim(this);
-  }  
+  },
+  pluralize: function() {
+    return owl.pluralize(this);
+  }
 });
