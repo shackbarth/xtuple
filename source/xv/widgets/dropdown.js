@@ -78,8 +78,8 @@ regexp:true, undef:true, trailing:true, white:true */
       if (this.getCollection()) { this.collectionChanged(); }
       this.labelChanged();
     },
-    disabledChange: function (inSender, inEvent) {
-      this.addRemoveClass("onyx-disabled", inEvent.originator.disabled);
+    disabledChanged: function (inSender, inEvent) {
+      this.$.pickerButton.setDisabled(this.getDisabled());
     },
     itemSelected: function (inSender, inEvent) {
       var value = this.$.picker.getSelected().value,
