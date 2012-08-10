@@ -228,7 +228,32 @@ white:true*/
       ret = city + (city && state ? ', ' : '') + state;
       ret += (ret ? ' ' : '') + country;
       return ret;
-    }
+    },
+
+    // ..........................................................
+    // CONSTANTS
+    //
+
+    /**
+      Option to convert the existing address into a new one.
+
+      @static
+      @constant
+      @type Number
+      @default 0
+    */
+    CHANGE_ONE: 0,
+
+    /**
+      Option to change the existing address so all users of the
+      address are affected.
+
+      @static
+      @constant
+      @type Number
+      @default 1
+    */
+    CHANGE_ALL: 1
 
   });
 
@@ -261,16 +286,32 @@ white:true*/
 
     @extends XM.Model
   */
-  XM.AddressInfo = XM.Model.extend({
+  XM.AddressInfo = XM.Document.extend({
     /** @scope XM.AddressInfo.prototype */
 
     recordType: 'XM.AddressInfo',
 
-    readOnly: false,
+    numberPolicy: XM.Document.AUTO_NUMBER,
 
     // ..........................................................
     // METHODS
     //
+
+    /**
+     Return a copy of this address.
+
+     @param {Object} Options
+     @return {XM.Address} copy of the address
+    */
+    copy: function (options) {
+      var attrs = _.clone(this.attributes);
+      delete attrs.id;
+      delete attrs.dataState;
+      delete attrs.number;
+      delete attrs.type;
+      delete attrs.isActive;
+      return new XM.AddressInfo(attrs, {isNew: true});
+    },
 
     /**
       Formats the multiple lines of an address into a
@@ -290,6 +331,29 @@ white:true*/
     */
     formatShort: function () {
       return XM.Address.formatShort(this);
+    },
+    
+    isEmpty: function () {
+      return (_.isEmpty(this.get('line1')) &&
+              _.isEmpty(this.get('line2')) &&
+              _.isEmpty(this.get('line3')) &&
+              _.isEmpty(this.get('city')) &&
+              _.isEmpty(this.get('state')) &&
+              _.isEmpty(this.get('postalCode')) &&
+              _.isEmpty(this.get('country')))
+    },
+    
+    /**
+      Success response returns an integer from the server indicating how many times the address
+      is used by other records.
+
+      @param {Object} Options
+      @returns Receiver
+    */
+    useCount: function (options) {
+      console.log("XM.Address.useCount for: " + this.id);
+      XT.dataSource.dispatch('XM.Address', 'useCount', this.id, options);
+      return this;
     }
 
   });
