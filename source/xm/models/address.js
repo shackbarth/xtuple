@@ -300,10 +300,9 @@ white:true*/
     /**
      Return a copy of this address.
 
-     @param {Object} Options
      @return {XM.Address} copy of the address
     */
-    copy: function (options) {
+    copy: function () {
       var attrs = _.clone(this.attributes);
       delete attrs.id;
       delete attrs.dataState;
@@ -332,7 +331,7 @@ white:true*/
     formatShort: function () {
       return XM.Address.formatShort(this);
     },
-    
+
     isEmpty: function () {
       return (_.isEmpty(this.get('line1')) &&
               _.isEmpty(this.get('line2')) &&
@@ -340,9 +339,9 @@ white:true*/
               _.isEmpty(this.get('city')) &&
               _.isEmpty(this.get('state')) &&
               _.isEmpty(this.get('postalCode')) &&
-              _.isEmpty(this.get('country')))
+              _.isEmpty(this.get('country')));
     },
-    
+
     /**
       Success response returns an integer from the server indicating how many times the address
       is used by other records.

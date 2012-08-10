@@ -141,12 +141,12 @@ white:true*/
                 // Callback after successfull copy
                 // Only proceed when we have both an id and number from the server
                 callback = function () {
-                  var id = address.id,
-                    number = address.get('number');
+                  var id = newAddress.id,
+                    number = newAddress.get('number');
                   if (id && number) {
                     newAddress.off('change:id change:number', callback);
                     model.set('address', newAddress);
-                    newAddress.save(addressOptions);
+                    newAddress.save(null, addressOptions);
                   }
                 };
                 newAddress = address.copy();
