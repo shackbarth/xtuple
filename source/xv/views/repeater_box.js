@@ -9,12 +9,13 @@ white:true*/
     kind: "XV.WorkspaceBox",
     published: {
       columns: [],
-      collection: null
+      collection: null,
+      recordType: null
     },
     handlers: {
       onDeleteRow: "deleteRow"
     },
-    classes: "xv-repeater-box",
+    classes: "xv-repeater-box xv-groupbox",
     components: [
       { kind: "onyx.GroupboxHeader", name: "title", content: "Title" },
       { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline", name: "headerRow" },
@@ -53,7 +54,9 @@ white:true*/
       }
     },
     newRow: function () {
-      this.getCollection().add([{}]);
+      var modelType = XT.String.suffix(this.getRecordType());
+      var newModel = new XM[modelType](null, { isNew: true });
+      this.getCollection().add(newModel);
       this.$.repeater.setCount(this.getCollection().size());
     },
     setupRow: function (inSender, inEvent) {
@@ -78,11 +81,8 @@ white:true*/
       // XXX this should get called here but some bug is keeping setupRow from being called
       //this.$.repeater.setCount(this.getCollection().size());
     },
-    // TODO: this looks all well and good but the persist doesn't work
     deleteRow: function (inSender, inEvent) {
-      var modelToRemove = inEvent.originator.parent.getModel();
-      //this.getCollection().remove(modelToRemove);
-      modelToRemove.destroy();
+      inEvent.originator.parent.getModel().destroy();
       this.$.repeater.setCount(this.getCollection().size());
     }
   });

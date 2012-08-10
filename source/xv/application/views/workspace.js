@@ -324,7 +324,6 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", components: [
-        /*
         {kind: "XV.WorkspaceBox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "number"},
@@ -343,20 +342,9 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "owner"},
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
         ]},
-        */
-        // on top just for development
-        {kind: "XV.RepeaterBox", classes: "xv-groupbox", name: "tasks", columns: [
-          {kind: "XV.Input", name: "tasks.number" },
-          {kind: "XV.Input", name: "tasks.name" },
-          {kind: "XV.Input", name: "tasks.notes" },
-          {kind: "XV.Date", name: "tasks.dueDate" }, // TODO: should be a date widget, sort of.
-          {kind: "XV.Number", name: "tasks.actualHours" },
-          {kind: "XV.Number", name: "tasks.actualExpenses" }
-        ]},
       ]},
       {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
+        {kind: "XV.ProjectTaskRepeaterBox", name: "tasks"}
       ]}
     ]
   });
