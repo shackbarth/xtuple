@@ -461,6 +461,27 @@ body {
 .xv-repeater-box-row {
   background-color: white;
 }
+
+.xv-comment-box {
+  width: 700px;
+  .xv-repeater-box-row {
+    height: 200px;
+  }
+  .xv-comment-box-createdBy {
+    font-weight: bold;
+  }
+  .xv-comment-box-text {
+    position:absolute;
+    margin-top: 50px;
+    width:500px;
+    height:80px;
+    border: 1px solid grey;
+  }
+  .xv-repeater-box-header {
+    visibility: hidden; // doesn't work
+  }
+}
+
 /*********END XV VIEWS***********/
 
 /*********XV WIDGETS***********/

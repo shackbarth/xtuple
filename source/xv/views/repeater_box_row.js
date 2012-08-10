@@ -29,7 +29,8 @@ white:true*/
         var field = this.createComponent({
           kind: columnDesc.kind,
           name: XT.String.suffix(columnDesc.name),
-          placeholder: label // XXX doesn't work. probably have to fix XV.Input
+          placeholder: label, // XXX doesn't work. probably have to fix XV.Input
+          classes: columnDesc.classes // this is clever
         });
 
         /**

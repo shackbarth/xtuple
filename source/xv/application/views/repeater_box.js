@@ -19,4 +19,18 @@ white:true*/
       ]
     }
   });
+  enyo.kind({
+    name: "XV.OpportunityCommentBox",
+    kind: "XV.CommentBox",
+    published: {
+      recordType: "XM.OpportunityComment",
+    }
+  });
+  enyo.kind({
+    name: "XV.ProjectCommentBox",
+    kind: "XV.CommentBox",
+    published: {
+      recordType: "XM.ProjectComment",
+    }
+  });
 }());

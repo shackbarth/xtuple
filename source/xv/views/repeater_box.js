@@ -17,12 +17,14 @@ white:true*/
     },
     classes: "xv-repeater-box xv-groupbox",
     components: [
-      { kind: "onyx.GroupboxHeader", name: "title", content: "Title" },
+      { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-header", name: "title", content: "Title" },
       { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline", name: "headerRow" },
-      { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
-        { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
-      ]},
-      { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
+      { kind: "enyo.Scroller", components: [ // XXX this doesn't work
+        { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
+          { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
+        ]},
+        { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
+      ]}
     ],
     create: function () {
       this.inherited(arguments);
