@@ -261,6 +261,8 @@
     "nameSpace": "XM",
     "type": "AddressInfo",
     "table": "addr",
+    "idSequenceName": "addr_addr_id_seq",
+    "orderSequence": "AddressNumber",
     "comment": "Address Info Map",
     "privileges": {
       "all": {
