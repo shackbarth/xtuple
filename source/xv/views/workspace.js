@@ -254,12 +254,12 @@ trailing:true white:true*/
       }
       this.setPrevious(inEvent.previous);
       
-      // Build menu by finding group boxes
+      // Build menu by finding all panels
       this.$.menu.setCount(0);
       for (prop in workspace.$) {
         if (workspace.$.hasOwnProperty(prop) &&
-            workspace.$[prop] instanceof onyx.Groupbox) {
-          menuItems.push(workspace.$[prop]);
+            workspace.$[prop] instanceof enyo.Panels) {
+          menuItems = menuItems.concat(workspace.$[prop].getPanels());
         }
       }
       this.setMenuItems(menuItems);

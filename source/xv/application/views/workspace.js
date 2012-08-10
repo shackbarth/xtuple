@@ -8,7 +8,7 @@ trailing:true white:true*/
   // ..........................................................
   // BASE CLASS
   //
-  
+
   enyo.kind({
     name: "XV.OrderedReferenceWorkspace",
     kind: "XV.Workspace",
@@ -45,15 +45,10 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.AccountTypeDropdown", name: "accountType"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
-  
+
   // ..........................................................
   // CONTACT
   //
@@ -85,15 +80,10 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "alternate"},
           {kind: "XV.InputWidget", name: "fax"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
-  
+
   // ..........................................................
   // COUNTRY
   //
@@ -120,7 +110,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // HONORIFIC
   //
@@ -142,7 +132,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // INCIDENT
   //
@@ -180,15 +170,10 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
           {kind: "XV.ItemWidget", name: "item"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
-  
+
   // ..........................................................
   // INCIDENT CATEGORY
   //
@@ -201,7 +186,7 @@ trailing:true white:true*/
       model: "XM.IncidentCategory"
     }
   });
-  
+
   // ..........................................................
   // INCIDENT RESOLUTION
   //
@@ -214,7 +199,7 @@ trailing:true white:true*/
       model: "XM.IncidentResolution"
     }
   });
-  
+
   // ..........................................................
   // INCIDENT RESOLUTION
   //
@@ -227,7 +212,7 @@ trailing:true white:true*/
       model: "XM.IncidentSeverity"
     }
   });
-  
+
   // ..........................................................
   // OPPORTUNITY
   //
@@ -269,15 +254,10 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "owner"},
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
-  
+
   // ..........................................................
   // OPPORTUNITY SOURCE
   //
@@ -303,7 +283,7 @@ trailing:true white:true*/
       model: "XM.OpportunityStage"
     }
   });
-  
+
   // ..........................................................
   // OPPORTUNITY TYPE
   //
@@ -316,7 +296,7 @@ trailing:true white:true*/
       model: "XM.OpportunityType"
     }
   });
-  
+
   // ..........................................................
   // PRIORITY
   //
@@ -329,7 +309,7 @@ trailing:true white:true*/
       model: "XM.Priority"
     }
   });
-  
+
   // ..........................................................
   // PROJECT
   //
@@ -362,15 +342,10 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "owner"},
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
-  
+
   // ..........................................................
   // STATE
   //
@@ -394,7 +369,7 @@ trailing:true white:true*/
       ]}
     ]
   });
-  
+
   // ..........................................................
   // TO DO
   //
@@ -428,11 +403,6 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "assignedTo"},
           {kind: "XV.AccountWidget", name: "account"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
@@ -458,11 +428,6 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "initials"},
           {kind: "XV.InputWidget", name: "email"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
