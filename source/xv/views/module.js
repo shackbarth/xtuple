@@ -55,22 +55,15 @@ trailing:true white:true*/
               placeholder: "Search", onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
-          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout" },
-          {
-            name: "logoutWarningPopup",
-            classes: "onyx-sample-popup",
-            kind: "onyx.Popup",
-            centered: true,
-            modal: true,
-            floating: true,
-            components: [
-              { content: "_logoutConfirmation".loc() },
-              { tag: "br"},
-              { kind: "onyx.Button", content: "_ok".loc(), ontap: "logout" },
-              { kind: "onyx.Button", content: "_cancel".loc(), ontap: "closeLogoutWarningPopup" }
-
-            ]
-          }
+          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout"},
+          {kind: "onyx.Popup", name: "logoutPopup", centered: true,
+            modal: true, floating: true, components: [
+            {content: "_logoutConfirmation".loc() },
+            {tag: "br"},
+            {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout"},
+            {kind: "onyx.Button", content: "_cancel".loc(),
+              ontap: "closeLogoutPopup", classes: "onyx-blue"}
+          ]}
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
@@ -290,13 +283,13 @@ trailing:true white:true*/
      * Logout management. We show the user a warning popup before we log them out.
      */
     warnLogout: function () {
-      this.$.logoutWarningPopup.show();
+      this.$.logoutPopup.show();
     },
-    closeLogoutWarningPopup: function () {
-      this.$.logoutWarningPopup.hide();
+    closeLogoutPopup: function () {
+      this.$.logoutPopup.hide();
     },
     logout: function () {
-      this.$.logoutWarningPopup.hide();
+      this.$.logoutPopup.hide();
       XT.session.logout();
     }
 
