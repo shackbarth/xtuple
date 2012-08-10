@@ -59,7 +59,11 @@ white:true*/
     setupRow: function (inSender, inEvent) {
       var row = inEvent.item.$.repeaterRow;
       row.setColumns(this.getColumns());
-      row.setModel(this.getCollection().at(inEvent.index));
+      var model = this.getCollection().at(inEvent.index);
+      row.setModel(model);
+      if (model.getStatus() & XM.Model.DESTROYED) {
+        row.setDisabled(true);
+      }
     },
     setValue: function (value, options) {
       this.setCollection(value);
@@ -77,7 +81,8 @@ white:true*/
     // TODO: this looks all well and good but the persist doesn't work
     deleteRow: function (inSender, inEvent) {
       var modelToRemove = inEvent.originator.parent.getModel();
-      this.getCollection().remove(modelToRemove);
+      //this.getCollection().remove(modelToRemove);
+      modelToRemove.destroy();
       this.$.repeater.setCount(this.getCollection().size());
     }
   });

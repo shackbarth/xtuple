@@ -45,11 +45,6 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.AccountTypeDropdown", name: "accountType"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
@@ -85,11 +80,6 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "alternate"},
           {kind: "XV.InputWidget", name: "fax"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
@@ -177,14 +167,9 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
         ]},
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "relationships".loc()},
+          {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
           {kind: "XV.ItemWidget", name: "item"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
@@ -269,11 +254,6 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "owner"},
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
@@ -438,11 +418,6 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "assignedTo"},
           {kind: "XV.AccountWidget", name: "account"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });
@@ -468,11 +443,6 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "initials"},
           {kind: "XV.InputWidget", name: "email"}
         ]}
-      ]},
-      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
-        {content: "Bottom Panel 1"},
-        {content: "Bottom Panel 2"},
-        {content: "Bottom Panel 3"}
       ]}
     ]
   });

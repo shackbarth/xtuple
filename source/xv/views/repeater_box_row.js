@@ -51,9 +51,6 @@ white:true*/
         ontap: "deleteRow"
       });
     },
-    deleteRow: function (inSender, inEvent) {
-      this.doDeleteRow(inEvent);
-    },
     setValue: function (value, options) {
       this.setModel(value);
     },
@@ -71,6 +68,22 @@ white:true*/
        */
       this.getModel().set(updateObject);
       return true;
+    },
+    deleteRow: function (inSender, inEvent) {
+      this.setStyle("background-color:purple");
+      this.doDeleteRow(inEvent);
+
+    },
+    setDisabled: function (isDisabled) {
+      var i,
+        field,
+        style = isDisabled ? "text-decoration: line-through" : "text-decoration: none";
+
+      for (i = 0; i < this.getComponents().length; i++) {
+        var comp = this.getComponents()[i];
+        comp.setInputStyle ? comp.setInputStyle(style) : XT.log("setInputStyle not supported on widget");
+        comp.setDisabled ? comp.setDisabled(isDisabled) : XT.log("setDisabled not supported on widget");
+      }
     }
   });
 }());

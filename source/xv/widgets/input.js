@@ -55,6 +55,12 @@ regexp:true, undef:true, trailing:true, white:true */
     valueChanged: function (value) {
       this.$.input.setValue(value || "");
       return value;
+    },
+    setInputStyle: function (style) {
+      this.$.input.setStyle(style);
+    },
+    setDisabled: function (isDisabled) {
+      this.$.input.setDisabled(isDisabled);
     }
   });
 

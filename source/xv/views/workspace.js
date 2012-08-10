@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, Backbone:true, enyo:true, XT:true */
+/*global XV:true, XM:true, onyx:true, enyo:true, XT:true */
 
 (function () {
 
@@ -59,7 +59,7 @@ trailing:true white:true*/
                 !control.getPlaceholder()) {
               control.setPlaceholder("_required".loc());
             }
-            if (control.setValue) {
+            if (control.setValue && !(status & K.BUSY)) {
               control.setValue(value, {silent: true});
             }
             if (control.setDisabled) {
@@ -81,19 +81,9 @@ trailing:true white:true*/
       }
     },
     create: function () {
-      var prop;
       this.inherited(arguments);
       this.titleChanged();
       this.modelChanged();
-
-      // Create a menu for every group box
-      for (prop in this.$) {
-        if (this.$.hasOwnProperty(prop)) {
-          if (this.$[prop].kind === "onyx.GroupboxHeader") {
-            // Do something
-          }
-        }
-      }
     },
     destroy: function () {
       this.setModel(null);
@@ -185,7 +175,8 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     classes: "app enyo-unselectable",
     published: {
-      previous: ""
+      previous: "",
+      menuItems: []
     },
     handlers: {
       onError: "errorNotify",
@@ -199,8 +190,8 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "backButton",
             content: "_back".loc(), onclick: "close"}
         ]},
-        {kind: "Repeater", fit: true, touch: true, onSetupItem: "setupItem", name: "menuItems",
-          components: [
+        {name: "menu", kind: "List", fit: true, touch: true,
+           onSetupItem: "setupItem", components: [
           {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
         ]}
       ]},
@@ -219,7 +210,7 @@ trailing:true white:true*/
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
           {kind: "onyx.Button", name: "applyButton", disabled: true,
             style: "float: right;",
-            content: "_apply".loc(), onclick: "apply"}
+            content: "_apply".loc(), onclick: "save"}
         ]},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
           modal: true, floating: true, onShow: "popupShown",
@@ -241,11 +232,10 @@ trailing:true white:true*/
         ]}
       ]}
     ],
-    apply: function () {
-      this.save();
-    },
     changeWorkspace: function (inSender, inEvent) {
-      var workspace = this.$.workspace;
+      var workspace = this.$.workspace,
+        menuItems = [],
+        prop;
       if (inEvent.workspace) {
         this.destroyWorkspace();
         workspace = {
@@ -263,6 +253,18 @@ trailing:true white:true*/
         this.render();
       }
       this.setPrevious(inEvent.previous);
+      
+      // Build menu by finding all panels
+      this.$.menu.setCount(0);
+      for (prop in workspace.$) {
+        if (workspace.$.hasOwnProperty(prop) &&
+            workspace.$[prop] instanceof enyo.Panels) {
+          menuItems = menuItems.concat(workspace.$[prop].getPanels());
+        }
+      }
+      this.setMenuItems(menuItems);
+      this.$.menu.setCount(menuItems.length);
+      this.$.menu.render();
     },
     close: function (options) {
       options = options || {};
@@ -292,6 +294,26 @@ trailing:true white:true*/
     },
     errorOk: function () {
       this.$.errorPopup.hide();
+    },
+    itemTap: function (inSender, inEvent) {
+      var workspace = this.$.workspace,
+        panel = this.getMenuItems()[inEvent.index],
+        prop,
+        i,
+        panels;
+      // Find the box in the workspace and set it to current
+      for (prop in workspace.$) {
+        if (workspace.$.hasOwnProperty(prop) &&
+            workspace.$[prop] instanceof enyo.Panels) {
+          panels = workspace.$[prop].getPanels();
+          for (i = 0; i < panels.length; i++) {
+            if (panels[i] === panel) {
+              workspace.$[prop].setIndex(i);
+              break;
+            }
+          }
+        }
+      }
     },
     newRecord: function () {
       this.$.workspace.newRecord();
@@ -328,6 +350,19 @@ trailing:true white:true*/
       options.success = success;
       this.save(options);
     },
+    // menu
+    setupItem: function (inSender, inEvent) {
+      var box = this.getMenuItems()[inEvent.index],
+        i;
+      // Find the header in the box to use as content
+      for (i = 0; i < box.children.length; i++) {
+        if (box.children[i] instanceof onyx.GroupboxHeader) {
+          this.$.item.setContent(box.children[i].getContent());
+        }
+      }
+      this.$.item.box = box;
+      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,
         K = XM.Model,
@@ -341,17 +376,6 @@ trailing:true white:true*/
       this.$.applyButton.setDisabled(canNotSave);
       this.$.saveAndNewButton.setDisabled(canNotSave);
       this.$.saveButton.setDisabled(canNotSave);
-
-      // Only show save buttons if the model is ever editable
-      if (isEditable) {
-        this.$.applyButton.show();
-        this.$.saveAndNewButton.show();
-        this.$.saveButton.show();
-      } else {
-        this.$.applyButton.hide();
-        this.$.saveAndNewButton.hide();
-        this.$.saveButton.hide();
-      }
     },
     titleChanged: function (inSender, inEvent) {
       var title = inEvent.title || "";

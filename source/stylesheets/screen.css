@@ -251,7 +251,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 5px;
-  font-size: 11px;
+  font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -634,17 +634,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 517, ../sass/screen.scss */
+/* line 491, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 519, ../sass/screen.scss */
+/* line 493, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 526, ../sass/screen.scss */
+/* line 500, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -654,12 +654,12 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 534, ../sass/screen.scss */
+/* line 508, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 537, ../sass/screen.scss */
+/* line 511, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
