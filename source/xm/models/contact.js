@@ -45,6 +45,33 @@ white:true*/
     // METHODS
     //
 
+    addressChanged: function () {
+      var address = this.get('address'),
+        addressStatus = address ? address.getStatus() : false,
+        status = this.getStatus(),
+        K = XM.Model;
+      if (addressStatus === K.READY_DIRTY &&
+          status === K.READY_CLEAN) {
+        this.setStatus(K.READY_DIRTY);
+      }
+    },
+
+    didChange: function () {
+      var address,
+        that = this;
+      XM.Document.prototype.didChange.apply(this, arguments);
+      if (this.changed.address) {
+        address = this.previous('address');
+        if (address) {
+          address.off('change', this.addressChanged, that);
+        }
+        address = this.get('address');
+        if (address) {
+          address.on('change', this.addressChanged, that);
+        }
+      }
+    },
+
     destroy: function () {
       var address = this.get('address');
       if (address.isNew()) { address.releaseNumber(); }
@@ -59,35 +86,54 @@ white:true*/
     },
 
     save: function (key, value, options) {
-      options = options ? _.clone(options) : {};
       var model = this,
         address = this.get("address"),
-        maxUse = this.isNew() ? 1 : 2,
+        maxUse = this.isNew() ? 0 : 1,
+        addressOptions = {},
         useCountOptions = {},
-        success = options.success,
-        isValid = this.isValid();
+        isValid = this.isValid(),
+        success;
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (_.isObject(key) || _.isEmpty(key)) {
+        options = value ? _.clone(value) : {};
+      } else {
+        options = options ? _.clone(options) : {};
+      }
+      success = options.success;
 
       // Don't bother with address checks unless valid
-      if (isValid) {
+      if (isValid && address) {
+        // If we save the address, then call save on the original again
+        addressOptions.success = function (resp) {
+          if (_.isObject(key) || _.isEmpty(key)) { value = options; }
+          XM.Document.prototype.save.call(model, key, value, options);
+        };
+
         // If the address is empty set it to null
-        if (address && address.isEmpty()) {
+        if (address.isEmpty()) {
           if (address.isNew()) { address.releaseNumber(); }
           this.set('address', null);
 
-        // If the address has changed, check to see if used elsewhere
-        } else if (address && address.isDirty()) {
+        // If it is new, save it first
+        } else if (address.isNew()) {
+          address.save(null, options);
+          return;
+
+        // If it has changed, check to see if used elsewhere
+        } else if (address.isDirty()) {
           // Define what to do after address check
           useCountOptions.success = function (resp) {
             var error,
               K = XM.Address,
               callback,
               newAddress;
-            // If address used then we need to handle that
+            // If address is used then we need to handle that
             if (resp > maxUse) {
               // If no address option passed, then error
               if (!_.isNumber(options.address)) {
                 error = XT.Error.clone('xt2007');
-                model.trigger('error', model, resp, options);
+                model.trigger('error', model, error, options);
                 return;
 
               // `CHANGE_ONE` is always the fallback as it's the safest
@@ -100,8 +146,7 @@ white:true*/
                   if (id && number) {
                     newAddress.off('change:id change:number', callback);
                     model.set('address', newAddress);
-                    XM.Document.prototype.save.call(model, key, value, options);
-                    if (success) { success(model, resp, options); }
+                    newAddress.save(addressOptions);
                   }
                 };
                 newAddress = address.copy();
@@ -112,20 +157,18 @@ white:true*/
             }
 
             // No problem so save the address and original model after that
-            options.success = function (resp) {
-              XM.Document.prototype.save.call(model, key, value, options);
-              if (success) { success(model, resp, options); }
-            };
-            address.save(options);
+            address.save(null, addressOptions);
           };
 
           // Perform the check: find out how many places this address is used
           address.useCount(useCountOptions);
+          return;
         }
       }
 
       // No problem with address, just save the record
       // If record was invalid, this will bubble up the error
+      if (_.isObject(key) || _.isEmpty(key)) { value = options; }
       XM.Document.prototype.save.call(model, key, value, options);
     },
 
