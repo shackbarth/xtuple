@@ -177,7 +177,7 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
         ]},
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
-          {kind: "onyx.GroupboxHeader", content: "relationships".loc()},
+          {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
           {kind: "XV.ItemWidget", name: "item"}
         ]}
       ]},

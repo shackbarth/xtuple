@@ -295,6 +295,26 @@ trailing:true white:true*/
     errorOk: function () {
       this.$.errorPopup.hide();
     },
+    itemTap: function (inSender, inEvent) {
+      var workspace = this.$.workspace,
+        panel = this.getMenuItems()[inEvent.index],
+        prop,
+        i,
+        panels;
+      // Find the box in the workspace and set it to current
+      for (prop in workspace.$) {
+        if (workspace.$.hasOwnProperty(prop) &&
+            workspace.$[prop] instanceof enyo.Panels) {
+          panels = workspace.$[prop].getPanels();
+          for (i = 0; i < panels.length; i++) {
+            if (panels[i] === panel) {
+              workspace.$[prop].setIndex(i);
+              break;
+            }
+          }
+        }
+      }
+    },
     newRecord: function () {
       this.$.workspace.newRecord();
     },
