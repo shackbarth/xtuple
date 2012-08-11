@@ -8,8 +8,8 @@ XT.String = {
 
      @returns {String}
   */
-  camelize: function(str) {
-    var ret = str.replace( (/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g), function(str, separater, character) {
+  camelize: function (str) {
+    var ret = str.replace( (/([\s|\-|\_|\n])([^\s|\-|\_|\n]?)/g), function (str, separater, character) {
           return character ? character.toUpperCase() : '';
     });
     var first = ret.charAt(0),
@@ -20,7 +20,7 @@ XT.String = {
   /**
     Localize the string.
   */
-  loc: function(str) {
+  loc: function (str) {
     if (!XT.locale) {
       XT.warn("XT.String.loc(): attempt to localize string but no locale set");
       return str;
@@ -43,7 +43,7 @@ XT.String = {
   /**
     @NOTE: does not currently detect recursion depth...
   */
-  format: function(str, args) {
+  format: function (str, args) {
     if (arguments.length === 0) return "";
     if (arguments.length === 1) return str;
 
@@ -67,7 +67,7 @@ XT.String = {
 
   /**
   */
-  replaceKeys: function(str, hash) {
+  replaceKeys: function (str, hash) {
     if (typeof str !== "string") return "";
     if (typeof hash !== "object") return str;
 
@@ -93,6 +93,18 @@ XT.String = {
   trim: function trim(str) {
     if (!str || !(str instanceof String)) return "";
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+  },
+
+
+  /**
+   * Returns everything after the last dot.
+   */
+  suffix: function (value) {
+    while (value.indexOf(".") > 0) {
+      // strip off the prefix (everything before the dot) if there is one
+      value = value.substring(value.indexOf(".") + 1);
+    }
+    return value;
   }
 
 };

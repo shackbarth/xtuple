@@ -249,7 +249,7 @@ trailing:true white:true*/
     },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", components: [
+          classes: "xv-top-panel", components: [
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "number"},
@@ -283,7 +283,8 @@ trailing:true white:true*/
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
-        ]}
+        ]},
+        {kind: "XV.OpportunityCommentBox", name: "comments"}
       ]}
     ]
   });
@@ -354,20 +355,20 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", components: [
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
+        {kind: "XV.WorkspaceBox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "number"},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.ProjectStatusDropdown", name: "status"}
         ]},
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
+        {kind: "XV.WorkspaceBox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_schedule".loc()},
           {kind: "XV.DateWidget", name: "startDate"},
           {kind: "XV.DateWidget", name: "assignDate"},
           {kind: "XV.DateWidget", name: "dueDate"},
           {kind: "XV.DateWidget", name: "completeDate"}
         ]},
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
+        {kind: "XV.WorkspaceBox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", name: "owner"},
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
@@ -378,7 +379,9 @@ trailing:true white:true*/
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
-        ]}
+        ]},
+        {kind: "XV.ProjectCommentBox", name: "comments"},
+        {kind: "XV.ProjectTaskRepeaterBox", name: "tasks"}
       ]}
     ]
   });
