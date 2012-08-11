@@ -428,6 +428,65 @@ body {
 
 /*********END PULLOUT *********/
 
+/*********XV VIEWS***********/
+
+.xv-groupbox {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  min-height: 300px; 
+  width: 350px; 
+  margin-right: 5px;
+}
+
+.xv-repeater-box {
+  width: 880px;
+  .xv-label {
+    width: 100px;
+    font-weight: bold;
+    border-width: 0px;
+    font-size: 12px;
+    text-align:center;
+  }
+  .xv-input {
+    width: 100px;
+    border-width: 0px;
+    .xv-subinput {
+      width: 90px;
+      border-width: 0px;
+    }
+  }
+}
+
+.xv-repeater-box-row {
+  background-color: white;
+}
+
+.xv-comment-box {
+  width: 700px;
+  .xv-repeater-box-row {
+    height: 135px;
+  }
+  .xv-comment-box-createdBy {
+    font-weight: bold;
+  }
+  .xv-comment-box-text {
+    position:absolute;
+    margin-top: 50px;
+    width:500px;
+    height:80px;
+    border: 1px solid grey;
+    .xv-subinput {
+      height: 75px;
+      width: 490px;
+    }
+  }
+  .xv-repeater-box-header {
+    visibility: hidden;
+  }
+}
+
+/*********END XV VIEWS***********/
 
 /*********XV WIDGETS***********/
 
@@ -443,14 +502,6 @@ body {
   width: 200px;
 }
 
-.xv-groupbox {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 8px;
-  min-height: 300px; 
-  width: 350px; 
-  margin-right: 5px;
-}
 
 .xv-label {
   width: 100px;

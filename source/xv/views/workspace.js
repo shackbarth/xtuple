@@ -253,7 +253,7 @@ trailing:true white:true*/
         this.render();
       }
       this.setPrevious(inEvent.previous);
-      
+
       // Build menu by finding all panels
       this.$.menu.setCount(0);
       for (prop in workspace.$) {
@@ -399,5 +399,4 @@ trailing:true white:true*/
       }
     }
   });
-
 }());

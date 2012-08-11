@@ -7,9 +7,6 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.Date",
     kind: "XV.Input",
-    components: [
-      {name: "input", kind: "onyx.Input", onchange: "inputChanged"}
-    ],
     setValue: function (value, options) {
       value = _.isDate(value) ? new Date(value.valueOf()) : null;
       XV.Input.prototype.setValue.call(this, value, options);
