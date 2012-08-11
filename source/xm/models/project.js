@@ -129,13 +129,15 @@ white:true*/
 
     /**
     Return a copy of this project with a given number and date offset.
+    Accepted options are: 
+      number: Project number
+      offset: Due date offset
 
-    @param {String} Project number
-    @param {Offset} Days to offset due date(s).
+    @param {Object} Options
     @returns {XM.Project}
     */
-    copy: function (number, offset) {
-      return XM.Project.copy(this, number, offset);
+    copy: function (options) {
+      return XM.Project.copy(this, options);
     },
 
     initialize: function () {
@@ -193,13 +195,17 @@ white:true*/
 
     /**
     Return a copy of this project with a given number and date offset.
+    Accepted options are: 
+      number: Project number
+      offset: Due date offset
 
     @param {XM.Project} Project
-    @param {String} Project number
-    @param {Number} Due date offset
+    @param {Object} Options
     @return {XM.Project} copy of the project
     */
-    copy: function (project, number, offset) {
+    copy: function (project, options) {
+      var number = options.number,
+        offset = options.offset;
       if ((project instanceof XM.Project) === false) {
         console.log("Passed object must be an instance of 'XM.Project'");
         return false;

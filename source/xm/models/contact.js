@@ -18,7 +18,7 @@ white:true*/
 
     documentKey: 'code',
 
-    enforceUpperKey: false,
+    enforceUpperKey: false
 
   });
 
@@ -45,27 +45,6 @@ white:true*/
     // METHODS
     //
 
-    // XXX This looks like it works but I'm not sure if it really works.
-    save: function (key, value, options) {
-      var that = this,
-        K = XM.Model,
-        address = this.get("address"),
-        addressStatus = address.getStatus(),
-        addressOptions = {};
-
-      if (addressStatus === K.READY_NEW || addressStatus === K.READY_DIRTY) {
-        // The address has changed. Save the address first, then the contact
-        addressOptions.success = function (resp) {
-          XM.Document.prototype.save.call(that, key, value, options);
-        };
-        addressOptions.error = Backbone.wrapError(null, that, options);
-        address.save(null, addressOptions);
-
-      } else {
-        XM.Document.prototype.save.call(that, key, value, options);
-      }
-    },
-
     /**
     Full contact name.
 
@@ -91,9 +70,9 @@ white:true*/
     }
 
   });
-
+  
   // Add mixin
-  XM.Contact = XM.Contact.extend(XM.ContactMixin);
+  XM.Contact = XM.Contact.extend(XM.AddressCheckMixin);
 
   /**
     @class

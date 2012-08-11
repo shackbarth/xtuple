@@ -214,6 +214,11 @@ white:true*/
       this.lastError = resp;
       XT.log(resp);
     },
+    
+    isValid: function () {
+      var options = {validateSave: true};
+      return !this.validate || !this.validate(this.attributes, options);
+    },
 
     original: function (attr) {
       return this.prime[attr] || this.get(attr);
@@ -618,6 +623,7 @@ white:true*/
         success = options.success;
         options.wait = true;
         options.cascade = true; // Cascade status to children
+        options.validateSave = true;
         options.success = function (resp) {
           model.setStatus(K.READY_CLEAN, options);
           XT.log('Save successful');
@@ -877,7 +883,7 @@ white:true*/
       }
 
       // Check required.
-      if (status === K.BUSY_COMMITTING) {
+      if (options.validateSave) {
         for (i = 0; i < this.requiredAttributes.length; i += 1) {
           value = attributes[this.requiredAttributes[i]];
           if (value === undefined || value === null) {
