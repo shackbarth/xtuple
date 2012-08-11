@@ -6,9 +6,8 @@ white:true*/
 (function () {
 
   enyo.kind({
-    name: "XV.WorkspaceBox",
-    kind: "onyx.Groupbox",
-    classes: "xv-groupbox",
+    name: "XV.Scroller",
+    kind: "Scroller",
     published: {
       title: "_overview".loc()
     }
