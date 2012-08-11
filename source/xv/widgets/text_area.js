@@ -18,7 +18,6 @@ regexp:true, undef:true, trailing:true, white:true */
       var placeholder = this.getPlaceholder();
       this.$.input.setPlaceholder(placeholder);
     }
-
   });
 
 }());
