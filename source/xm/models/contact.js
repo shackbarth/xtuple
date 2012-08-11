@@ -88,13 +88,16 @@ white:true*/
     save: function (key, value, options) {
       var model = this,
         address = this.get("address"),
+        addressStatus = address ? address.getStatus() : false,
         maxUse = this.isNew() ? 0 : 1,
         addressOptions = {},
+        findExistingOptions = {},
         useCountOptions = {},
-        isValid = this.isValid();
+        isValid = this.isValid(),
+        K = XM.Model;
 
-      // Don't bother with address checks unless valid
-      if (isValid && address) {
+      // Perform address checks if warranted
+      if (isValid && address && addressStatus !== K.READY_CLEAN) {
         // Handle both `"key", value` and `{key: value}` -style arguments.
         if (_.isObject(key) || _.isEmpty(key)) {
           options = value ? _.clone(value) : {};
@@ -102,7 +105,7 @@ white:true*/
           options = options ? _.clone(options) : {};
         }
 
-        // If we save the address, then call save on the original again
+        // Callback: call save on the original again
         addressOptions.success = function (resp) {
           XM.Document.prototype.save.call(model, key, value, options);
         };
@@ -112,14 +115,39 @@ white:true*/
           if (address.isNew()) { address.releaseNumber(); }
           this.set('address', null);
 
+        // If dirty, see if this address already exists
+        } else if (address.isDirty() && !options.existingChecked) {
+          // Callback: call save on the original again
+          findExistingOptions.success = function (resp) {
+            // If found, set the address with found id
+            if (resp) {
+              address.set('id', resp, {force: true}); // Id is all that matters...
+              address.status = K.READY_CLEAN; // So we don't come back here
+            }
+
+            // Try saving again
+            options.existingChecked = true;
+            if (_.isObject(key) || _.isEmpty(key)) { value = options; }
+            model.save(key, value, options);
+          };
+          XM.Address.findExisting(address.get('line1'),
+                                  address.get('line2'),
+                                  address.get('line3'),
+                                  address.get('city'),
+                                  address.get('state'),
+                                  address.get('postalCode'),
+                                  address.get('country'),
+                                  findExistingOptions);
+          return;
+
         // If it is new, save it first
         } else if (address.isNew()) {
-          address.save(null, options);
+          address.save(null, addressOptions);
           return;
 
         // If it has changed, check to see if used elsewhere
         } else if (address.isDirty()) {
-          // Define what to do after address check
+          // Callback: define what to do after use count check
           useCountOptions.success = function (resp) {
             var error,
               K = XM.Address,
