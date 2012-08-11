@@ -12,7 +12,8 @@ white:true*/
       columns: [
         {kind: "XV.Input", name: "comments.text", classes: "xv-comment-box-text"},
         {kind: "XV.Input", name: "comments.createdBy", classes: "xv-comment-box-createdBy"},
-        {kind: "XV.Date", name: "comments.created", classes: "xv-comment-box-created"}
+        {kind: "XV.Date", name: "comments.created", classes: "xv-comment-box-created"},
+        {kind: "XV.CommentTypeDropdown", name: "comments.commentType", classes: "xv-comment-box-comment-type"}
       ]
     }
   });

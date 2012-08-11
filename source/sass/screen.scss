@@ -465,7 +465,7 @@ body {
 .xv-comment-box {
   width: 700px;
   .xv-repeater-box-row {
-    height: 200px;
+    height: 135px;
   }
   .xv-comment-box-createdBy {
     font-weight: bold;
@@ -476,9 +476,13 @@ body {
     width:500px;
     height:80px;
     border: 1px solid grey;
+    .xv-subinput {
+      height: 75px;
+      width: 490px;
+    }
   }
   .xv-repeater-box-header {
-    visibility: hidden; // doesn't work
+    visibility: hidden;
   }
 }
 

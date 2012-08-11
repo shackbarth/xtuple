@@ -582,7 +582,7 @@ body {
 }
 /* line 467, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-row {
-  height: 200px;
+  height: 135px;
 }
 /* line 470, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-createdBy {
@@ -596,52 +596,57 @@ body {
   height: 80px;
   border: 1px solid grey;
 }
-/* line 480, ../sass/screen.scss */
+/* line 479, ../sass/screen.scss */
+.xv-comment-box .xv-comment-box-text .xv-subinput {
+  height: 75px;
+  width: 490px;
+}
+/* line 484, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-header {
   visibility: hidden;
 }
 
 /*********END XV VIEWS***********/
 /*********XV WIDGETS***********/
-/* line 489, ../sass/screen.scss */
+/* line 493, ../sass/screen.scss */
 .xv-top-panel {
   height: 300px;
 }
 
-/* line 493, ../sass/screen.scss */
+/* line 497, ../sass/screen.scss */
 .xv-dropdownwidget {
   background-color: white;
 }
 
-/* line 497, ../sass/screen.scss */
+/* line 501, ../sass/screen.scss */
 .xv-picker {
   width: 200px;
 }
 
-/* line 502, ../sass/screen.scss */
+/* line 506, ../sass/screen.scss */
 .xv-label {
   width: 100px;
   padding-right: 8px;
   text-align: right;
 }
 
-/* line 508, ../sass/screen.scss */
+/* line 512, ../sass/screen.scss */
 .xv-inputwidget {
   background-color: white;
 }
 
-/* line 512, ../sass/screen.scss */
+/* line 516, ../sass/screen.scss */
 .xv-input-decorator {
   border: 0px;
 }
 
-/* line 516, ../sass/screen.scss */
+/* line 520, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 521, ../sass/screen.scss */
+/* line 525, ../sass/screen.scss */
 .xv-relationwidget-description {
   text-indent: 120px;
   font-size: small;
@@ -649,7 +654,7 @@ body {
 }
 
 /********END XV WIDGETS******/
-/* line 530, ../sass/screen.scss */
+/* line 534, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -659,17 +664,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 538, ../sass/screen.scss */
+/* line 542, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 540, ../sass/screen.scss */
+/* line 544, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 547, ../sass/screen.scss */
+/* line 551, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -679,12 +684,12 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 555, ../sass/screen.scss */
+/* line 559, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 558, ../sass/screen.scss */
+/* line 562, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }

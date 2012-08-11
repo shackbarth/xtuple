@@ -41,16 +41,21 @@ white:true*/
           field.setCollection(columnDesc.collection);
         }
         field.setValue(this.getModel().get(XT.String.suffix(columnDesc.name)), {silent: true});
+        if (this.getModel().isReadOnly() || !this.getModel().canUpdate()) {
+          this.setDisabled(true);
+        }
       }
       /**
        * Add delete buttons for each row
        */
-      this.createComponent({
-        kind: "onyx.Button",
-        name: "deleteButton",
-        content: "Delete",
-        ontap: "deleteRow"
-      });
+      if (!this.getModel().isReadOnly() && this.getModel().canDelete()) {
+        this.createComponent({
+          kind: "onyx.Button",
+          name: "deleteButton",
+          content: "Delete",
+          ontap: "deleteRow"
+        });
+      }
     },
     setValue: function (value, options) {
       this.setModel(value);
@@ -75,14 +80,22 @@ white:true*/
       this.doDeleteRow(inEvent);
 
     },
+    setDeleted: function (isDeleted) {
+        var comp,
+          style = isDeleted ? "text-decoration: line-through" : "text-decoration: none";
+
+        for (i = 0; i < this.getComponents().length; i++) {
+          comp = this.getComponents()[i];
+          comp.setInputStyle ? comp.setInputStyle(style) : XT.log("setInputStyle not supported on widget");
+        }
+        this.setDisabled(isDeleted);
+    },
     setDisabled: function (isDisabled) {
       var i,
-        field,
-        style = isDisabled ? "text-decoration: line-through" : "text-decoration: none";
+        comp;
 
       for (i = 0; i < this.getComponents().length; i++) {
-        var comp = this.getComponents()[i];
-        comp.setInputStyle ? comp.setInputStyle(style) : XT.log("setInputStyle not supported on widget");
+        comp = this.getComponents()[i];
         comp.setDisabled ? comp.setDisabled(isDisabled) : XT.log("setDisabled not supported on widget");
       }
     }

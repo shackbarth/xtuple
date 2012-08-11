@@ -17,9 +17,9 @@ white:true*/
     },
     classes: "xv-repeater-box xv-groupbox",
     components: [
-      { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-header", name: "title", content: "Title" },
-      { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline", name: "headerRow" },
-      { kind: "enyo.Scroller", components: [ // XXX this doesn't work
+      { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title", name: "title", content: "Title" },
+      { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline xv-repeater-box-header", name: "headerRow" },
+      { kind: "enyo.Scroller", fit: true, components: [ // XXX this doesn't work
         { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
           { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
         ]},
@@ -67,7 +67,7 @@ white:true*/
       var model = this.getCollection().at(inEvent.index);
       row.setModel(model);
       if (model.getStatus() & XM.Model.DESTROYED) {
-        row.setDisabled(true);
+        row.setDeleted(true);
       }
     },
     setValue: function (value, options) {

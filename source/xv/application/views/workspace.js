@@ -226,10 +226,7 @@ trailing:true white:true*/
     },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", components: [
-
-        {kind: "XV.OpportunityCommentBox", name: "comments"},
-        /*
+          classes: "xv-top-panel", components: [
         {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "number"},
@@ -256,7 +253,10 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_userAccounts".loc()},
           {kind: "XV.UserAccountWidget", name: "owner"},
           {kind: "XV.UserAccountWidget", name: "assignedTo"}
-        ]}*/
+        ]}
+      ]},
+      {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger", fit: true, components: [
+        {kind: "XV.OpportunityCommentBox", name: "comments"}
       ]}
     ]
   });
