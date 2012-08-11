@@ -490,10 +490,6 @@ body {
 
 /*********XV WIDGETS***********/
 
-.xv-top-panel {
-  height: 300px;
-}
-
 .xv-dropdownwidget {
   background-color: white;
 }
@@ -515,6 +511,13 @@ body {
 
 .xv-input-decorator {
   border: 0px;
+}
+
+.xv-textarea-input {
+  border: 0px;
+  width: 324px; 
+  min-height: 255px;
+  margin: 6px 
 }
 
 .xv-relationwidget-completer {

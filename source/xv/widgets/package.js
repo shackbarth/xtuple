@@ -4,6 +4,7 @@ enyo.depends(
   "button.js",
   "checkbox.js",
   "number.js",
+  "text_area.js",
   "dropdown.js",
   "address.js",
   "comments.js",

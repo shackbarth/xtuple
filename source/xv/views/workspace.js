@@ -22,8 +22,8 @@ trailing:true white:true*/
     },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", components: [
-        {kind: "onyx.Groupbox", classes: "xv-groupbox", components: [
+        fit: true, components: [
+        {kind: "XV.WorkspaceBox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.InputWidget", name: "description"}
@@ -353,13 +353,9 @@ trailing:true white:true*/
     // menu
     setupItem: function (inSender, inEvent) {
       var box = this.getMenuItems()[inEvent.index],
-        i;
-      // Find the header in the box to use as content
-      for (i = 0; i < box.children.length; i++) {
-        if (box.children[i] instanceof onyx.GroupboxHeader) {
-          this.$.item.setContent(box.children[i].getContent());
-        }
-      }
+        defaultTitle =  "_menu".loc() + inEvent.index,
+        title = box.getTitle ? box.getTitle() || defaultTitle : defaultTitle;
+      this.$.item.setContent(title);
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
@@ -399,4 +395,5 @@ trailing:true white:true*/
       }
     }
   });
+  
 }());

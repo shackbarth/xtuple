@@ -15,6 +15,21 @@ regexp:true, undef:true, trailing:true, white:true */
       collection: "XM.AccountInfoCollection"
     }
   });
+  
+  // ..........................................................
+  // CONTACT
+  //
+  
+  enyo.kind({
+    name: "XV.ContactWidget",
+    kind: "XV.RelationWidget",
+    published: {
+      collection: "XM.ContactInfoCollection",
+      keyAttribute: "name",
+      nameAttribute: "jobTitle",
+      descripAttribute: "phone"
+    }
+  });
 
   // ..........................................................
   // INCIDENT

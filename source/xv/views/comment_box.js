@@ -4,11 +4,13 @@ white:true*/
 /*global enyo:true, XT:true, XV:true */
 
 (function () {
+
   enyo.kind({
     name: "XV.CommentBox",
     kind: "XV.RepeaterBox",
     classes: "xv-comment-box",
     published: {
+      title: "_comments".loc(),
       columns: [
         {kind: "XV.Input", name: "comments.text", classes: "xv-comment-box-text"},
         {kind: "XV.Input", name: "comments.createdBy", classes: "xv-comment-box-createdBy"},
@@ -17,4 +19,5 @@ white:true*/
       ]
     }
   });
+
 }());
