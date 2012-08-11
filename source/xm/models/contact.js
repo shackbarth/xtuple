@@ -91,22 +91,19 @@ white:true*/
         maxUse = this.isNew() ? 0 : 1,
         addressOptions = {},
         useCountOptions = {},
-        isValid = this.isValid(),
-        success;
-
-      // Handle both `"key", value` and `{key: value}` -style arguments.
-      if (_.isObject(key) || _.isEmpty(key)) {
-        options = value ? _.clone(value) : {};
-      } else {
-        options = options ? _.clone(options) : {};
-      }
-      success = options.success;
+        isValid = this.isValid();
 
       // Don't bother with address checks unless valid
       if (isValid && address) {
+        // Handle both `"key", value` and `{key: value}` -style arguments.
+        if (_.isObject(key) || _.isEmpty(key)) {
+          options = value ? _.clone(value) : {};
+        } else {
+          options = options ? _.clone(options) : {};
+        }
+
         // If we save the address, then call save on the original again
         addressOptions.success = function (resp) {
-          if (_.isObject(key) || _.isEmpty(key)) { value = options; }
           XM.Document.prototype.save.call(model, key, value, options);
         };
 
@@ -168,7 +165,6 @@ white:true*/
 
       // No problem with address, just save the record
       // If record was invalid, this will bubble up the error
-      if (_.isObject(key) || _.isEmpty(key)) { value = options; }
       XM.Document.prototype.save.call(model, key, value, options);
     },
 
