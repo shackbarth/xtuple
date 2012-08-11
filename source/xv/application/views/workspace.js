@@ -43,7 +43,9 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "number"},
           {kind: "XV.InputWidget", name: "name"},
-          {kind: "XV.AccountTypeDropdown", name: "accountType"}
+          {kind: "XV.AccountTypeDropdown", name: "accountType"},
+          {kind: "XV.ContactWidget", name: "primaryContact"},
+          {kind: "XV.ContactWidget", name: "secondaryContact"}
         ]}
       ]},
       {kind: "Panels", name: "bottomPanel", arrangerKind: "CarouselArranger",
