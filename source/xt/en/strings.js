@@ -362,12 +362,15 @@ XT.stringsFor("en_US", {
   // Messages
   // ********
 
+  "_addressShared": "There are multiple records sharing this Address.",
   "_assignedToRequiredAssigned": "Assigned to is required when status is 'Assigned'",
   "_attributeIsRequired": "{attr} is required.",
   "_attributeTypeMismatch": "The value of '{attr}' must be type: {type}.", 
   "_attributeNotInSchema": "'{attr}' does not exist in the schema.", 
   "_attributeReadOnly": "Can not edit read only attribute(s).",
   "_canNotUpdate": "Insufficient privileges to edit the record.",
+  "_changeAll": "Change All",
+  "_changeOne": "Change only this one",
   "_characteristicContextRequired": "You must set at least one characteristic context to true.",
   "_datasourceError": "Data source error: {error}",
   "_duplicateValues": "Duplicate values are not allowed.",
@@ -395,7 +398,8 @@ XT.stringsFor("en_US", {
   "_recordStatusNotEditable": "Record with status of `{status}` is not editable.",
   "_recursiveParentDisallowed": "Record is not allowed to reference itself as the parent.",
   "_unsavedChanges": "You have unsaved changes. Do you want to save your work?",
-  "_valueExists": "Record with {attr} of '{value}' already exists."
+  "_valueExists": "Record with {attr} of '{value}' already exists.",
+  "_whatToDo": "What would you like to do?"
 
 });
 

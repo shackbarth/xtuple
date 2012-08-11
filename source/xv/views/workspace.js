@@ -301,7 +301,7 @@ trailing:true white:true*/
         prop,
         i,
         panels;
-      // Find the box in the workspace and set it to current
+      // Find the panel in the workspace and set it to current
       for (prop in workspace.$) {
         if (workspace.$.hasOwnProperty(prop) &&
             workspace.$[prop] instanceof enyo.Panels) {
