@@ -295,6 +295,25 @@ white:true*/
 
   var i;
 
+  // Incident Status
+  var incidentStatusJson = [
+    { id: "N", name: "_new".loc() },
+    { id: "F", name: "_feedback".loc() },
+    { id: "C", name: "_confirmed".loc() },
+    { id: "R", name: "_resolved".loc() },
+    { id: "L", name: "_closed".loc() }
+  ];
+  XM.IncidentStatusModel = Backbone.Model.extend();
+  XM.IncidentStatusCollection = Backbone.Collection.extend({
+    model: XM.IncidentStatusModel
+  });
+  XM.incidentStatuses = new XM.IncidentStatusCollection();
+  for (i = 0; i < incidentStatusJson.length; i++) {
+    var incidentStatus = new XM.IncidentStatusModel(incidentStatusJson[i]);
+    XM.incidentStatuses.add(incidentStatus);
+  }
+
+  // Project Status
   var projectStatusJson = [
     { id: "P", name: "_concept".loc() },
     { id: "O", name: "_inProcess".loc() },
@@ -311,7 +330,7 @@ white:true*/
     XM.projectStatuses.add(projectStatus);
   }
 
-
+  // Account Type
   var accountTypeJson = [
     { id: "O", name: "_organization".loc() },
     { id: "I", name: "_individual".loc() }
