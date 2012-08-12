@@ -198,8 +198,6 @@ trailing:true white:true*/
       {kind: "FittableRows", name: "contentPanel", components: [
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
-          {kind: "onyx.Button", name: "refreshButton", disabled: true,
-            content: "_refresh".loc(), onclick: "requery"},
           {name: "title", style: "text-align: center;"},
           {kind: "onyx.Button", name: "saveButton",
             disabled: true, // TO DO: Get the affirmative style back into CSS
@@ -210,7 +208,10 @@ trailing:true white:true*/
             content: "_saveAndNew".loc(), onclick: "saveAndNew"},
           {kind: "onyx.Button", name: "applyButton", disabled: true,
             style: "float: right;",
-            content: "_apply".loc(), onclick: "save"}
+            content: "_apply".loc(), onclick: "save"},
+          {kind: "onyx.Button", name: "refreshButton", disabled: true,
+            content: "_refresh".loc(), onclick: "requery",
+            style: "float: right;"}
         ]},
         {kind: "onyx.Popup", name: "unsavedPopup", centered: true,
           modal: true, floating: true, onShow: "popupShown",

@@ -41,21 +41,18 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", components: [
-        {kind: "FittableColumns", noStretch: true,
-           classes: "onyx-toolbar onyx-toolbar-inline", components: [
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
-          {kind: "Scroller", thumb: false, fit: true, touch: true,
-             vertical: "hidden", style: "margin: 0;", components: [
-            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
-            {name: "rightLabel", style: "text-align: center"}
-          ]},
-          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord" },
-          {kind: "onyx.InputDecorator", components: [
+          {name: "rightLabel", style: "text-align: center"},
+          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout",
+            style: "float: right;"},
+          {kind: "onyx.InputDecorator", style: "float: right;", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
-          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout"},
+          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord",
+            style: "float: right;" },
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, components: [
             {content: "_logoutConfirmation".loc() },
@@ -68,7 +65,7 @@ trailing:true white:true*/
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
       ]},
-      {kind: "Signals", onModelSave: "doRefreshInfoObject"}
+      {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
     firstTime: true,
     fetched: {},
@@ -225,7 +222,7 @@ trailing:true white:true*/
      * XXX if there are multiple modules alive then all of them will catch
      * XXX the signal, which isn't ideal for performance
      */
-    doRefreshInfoObject: function (inSender, inPayload) {
+    refreshInfoObject: function (inSender, inPayload) {
       // obnoxious massaging. Can't think of an elegant way to do this.
       // salt in wounds: in setup we massage by adding List on the end, but with
       // crm we massage by adding InfoList on the end. This is horrible.
