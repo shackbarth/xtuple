@@ -61,10 +61,9 @@ trailing:true white:true*/
       success = options.success;
       _.extend(options, {
         success: function (resp, status, xhr) {
-          that._collectionFetchSuccess(resp, status, xhr);
+          that.collectionUpdated();
           if (success) { success(resp, status, xhr); }
         },
-        error: enyo.bind(this, "_collectionFetchError"),
         query: query
       });
       // attempt to fetch (if not already fetching) and handle the
@@ -99,133 +98,113 @@ trailing:true white:true*/
       if (row && row.renderModel) {
         row.renderModel(mod);
       }
-    },
-    _collectionFetchSuccess: function () {
-      this.log();
-      this.waterfall("onCollectionUpdated");
-    },
-    _collectionFetchError: function () {
-      this.log();
     }
-    
+
   });
-  
+
   enyo.kind({
     name: "XV.InfoList2",
     kind: "List",
-    classes: "xt-info-list",
+    classes: "xv-infolist",
     published: {
       collection: null,
-      rowClass: "",
       query: null,
-      parameterWidget: null,
-      workspace: null,
       isFetching: false,
-      isMore: true
+      isMore: true,
+      parameterWidget: null,
+      workspace: null
     },
     events: {
       onInfoListRowTapped: ""
     },
     handlers: {
-      onSetupItem: "setupItem",
-      onCollectionUpdated: "collectionUpdated"
+      onSetupItem: "setupItem"
     },
     components: [
-      {classes: "item", ontap: "itemTap", components: [
-        {name: "number", classes: "cell-key account-number"},
-        {name: "name", classes: "account-name", placeholder: "_noJobTitle".loc()},
-        {name: "primaryContactPhone", classes: "cell-align-right account-primaryContact-phone"},
-        {name: "primaryContactPrimaryEmail", classes: "cell-align-right account-primaryContact-primaryEmail"},
-        {name: "primaryContactName", classes: "cell-italic account-primaryContact-name", placeholder: "_noContact".loc()},
-        {name: "primaryContactAddress", classes: "account-primaryContact-address"}
+      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
+        components: [
+        {kind: "FittableColumns", components: [
+          {classes: "xv-infolist-column left",
+            hasAttributes: true, components: [
+            {attr: "number", classes: "xv-infolist-attr key"},
+            {attr: "name", classes: "xv-infolist-attr"},
+            {attr: "primaryContact.Phone", classes: "xv-infolist-attr"},
+            {attr: "primaryContact.primaryEmail", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column right", fit: true, components: [
+            {attr: "primaryContact.name", classes: "xv-infolist-attr",
+              placeholder: "_noContact".loc()},
+            {attr: "primaryContact.address.formatShort",
+              classes: "xv-infolist-attr"}
+          ]}
+        ]}
       ]}
     ],
     collectionChanged: function () {
-      var col = this.getCollection(),
-        Klass;
-
-      // Change string to an object if necessary
-      if (typeof col === 'string') {
-        Klass = XT.getObjectByName(col);
-        col = this.collection = new Klass();
-      }
-    },
-    collectionUpdated: function () {
-      var col = this.getCollection(),
-        query = this.getQuery(),
-        offset = query.rowOffset || 0,
-        limit = query.rowLimit || 0,
-        count = col.length,
-        isMore = limit ?
-          (offset + limit <= count) && (this.getCount() !== col.length) : false;
-      this.setIsMore(isMore);
-      this.setIsFetching(false);
-
-      // take the properties as necessary...
-      this.setCount(col.length);
-      if (offset) { this.refresh(); } else { this.reset(); }
+      var collection = this.getCollection(),
+        Klass = XT.getObjectByName(collection);
+      delete this._collection;
+      if (Klass) { this._collection = new Klass(); }
     },
     create: function () {
       this.inherited(arguments);
-      this.rowClassChanged();
       this.collectionChanged();
     },
     fetch: function (options) {
       var that = this,
-        col = this.getCollection(),
         query = this.getQuery(),
         success;
       options = options ? _.clone(options) : {};
       success = options.success;
       _.extend(options, {
         success: function (resp, status, xhr) {
-          that._collectionFetchSuccess(resp, status, xhr);
+          that.fetched();
           if (success) { success(resp, status, xhr); }
         },
-        error: enyo.bind(this, "_collectionFetchError"),
         query: query
       });
-      // attempt to fetch (if not already fetching) and handle the
-      // various states appropriately
-      col.fetch(options);
+      this._collection.fetch(options);
+    },
+    fetched: function () {
+      var query = this.getQuery(),
+        offset = query.rowOffset || 0,
+        limit = query.rowLimit || 0,
+        count = this._collection.length,
+        isMore = limit ?
+          (offset + limit <= count) && (this.getCount() !== count) : false;
+      this.setIsMore(isMore);
+      this.setIsFetching(false);
+
+      // Reset the size of the list
+      this.setCount(count);
+      if (offset) {
+        this.refresh();
+      } else {
+        this.reset();
+      }
     },
     itemTap: function (inSender, inEvent) {
       this.doInfoListRowTapped(inEvent);
     },
     setupItem: function (inSender, inEvent) {
-      var coll = this.getCollection(),
-        model = coll.models[inEvent.index];
-
-      // as the rows need to be rendered, we proxy the data to their
-      // render function if they have it, otherwise, we skip
-    },
-    _collectionFetchSuccess: function () {
-      this.log();
-      this.waterfall("onCollectionUpdated");
-    },
-    _collectionFetchError: function () {
-      this.log();
-    }
-    
-  });
-
-
-  enyo.kind({
-    name: "XV.InfoListRow2",
-    classes: "xt-info-list-row",
-    events: {
-      onInfoListRowTapped: ""
-    },
-    components: [
-      {name: "number", classes: "cell-key account-number"},
-      {name: "name", classes: "account-name", placeholder: "_noJobTitle".loc()},
-      {name: "primaryContactPhone", classes: "cell-align-right account-primaryContact-phone"},
-      {name: "primaryContactPrimaryEmail", classes: "cell-align-right account-primaryContact-primaryEmail" },
-      {name: "primaryContactName", classes: "cell-italic account-primaryContact-name", placeholder: "_noContact".loc()},
-      {name: "primaryContactAddress", classes: "account-primaryContact-address" }
-    ],
-    tap: function (inSender, inEvent) {
-      this.doInfoListRowTapped(inEvent);
+      var model = this._collection.models[inEvent.index],
+        prop,
+        isPlaceholder,
+        value;
+      
+      // Loop through all attribute container children and set content
+      for (prop in this.$) {
+        if (this.$.hasOwnProperty(prop) && this.$[prop].attr) {
+          isPlaceholder = false;
+          value = model.getValue(this.$[prop].attr);
+          if (!value && this.$[prop].placeholder) {
+            value = this.$[prop].placeholder;
+            isPlaceholder = true;
+          }
+          this.$[prop].setContent(value);
+          this.$[prop].addRemoveClass("placeholder", isPlaceholder);
+        }
+      }
     }
 
   });

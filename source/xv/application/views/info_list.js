@@ -11,7 +11,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.AccountInfoList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",

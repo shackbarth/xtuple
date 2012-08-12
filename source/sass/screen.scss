@@ -162,6 +162,9 @@ body {}
           &.error {
             color: #ff0000;
           }
+          &.emphasis {
+            color: blue;
+          }
           &.bold {
             font-weight: bold;
           }
@@ -429,6 +432,36 @@ body {
 /*********END PULLOUT *********/
 
 /*********XV VIEWS***********/
+
+.xv-infolist {
+  .xv-infolist-item {
+    @include box-sizing(border-box);
+    background-color: #fff;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #ddd;
+    .xv-infolist-column {
+      .xv-infolist-attr {
+        padding: 5px;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: black;
+        &.error {
+          color: #ff0000;
+        }
+        &.key {
+          font-weight: bold;
+        }
+        &.placeholder {
+          font-style: italic;
+          color: #93a1a1;
+        }
+      }
+    }
+  }
+}
 
 .xv-groupbox {
   padding-top: 8px;
