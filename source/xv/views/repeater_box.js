@@ -17,18 +17,21 @@ white:true*/
     },
     classes: "xv-repeater-box xv-groupbox",
     components: [
-      { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title", name: "title", content: "Title" },
-      { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline xv-repeater-box-header", name: "headerRow" },
-      { kind: "enyo.Scroller", fit: true, components: [ // XXX this doesn't work
+      // XXX I'd rather not have to hardcode in the height here, but the scroller seems buggy without
+      { kind: "enyo.Scroller", maxHeight:"500px", components: [
+        { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title", name: "title", content: "Title" },
+        { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline xv-repeater-box-header", name: "headerRow" },
         { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
           { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
         ]},
+        // XXX this button should be disabled if the user doesn't have permission
+        // XXX but how to tell this from the collection?
         { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
       ]}
     ],
     create: function () {
       this.inherited(arguments);
-      this.$.title.setContent(this.name);
+      this.$.title.setContent(("_" + this.name).loc());
 
       /**
        * If the columns are defined from the outset of the creation of this class
@@ -51,7 +54,7 @@ white:true*/
         this.createComponent({
           container: this.$.headerRow,
           content: label,
-          classes: "xv-label"
+          classes: columnDesc.classes ? columnDesc.classes + " xv-label" : "xv-label"
         });
       }
     },

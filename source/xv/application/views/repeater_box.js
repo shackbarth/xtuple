@@ -12,7 +12,7 @@ white:true*/
       columns: [
         {kind: "XV.Input", name: "tasks.number" },
         {kind: "XV.Input", name: "tasks.name" },
-        {kind: "XV.Input", name: "tasks.notes" },
+        {kind: "XV.Input", name: "tasks.notes", classes: "xv-wide-entry" },
         {kind: "XV.Date", name: "tasks.dueDate" }, // TODO: should be a date widget, sort of.
         {kind: "XV.Number", name: "tasks.actualHours" },
         {kind: "XV.Number", name: "tasks.actualExpenses" }
