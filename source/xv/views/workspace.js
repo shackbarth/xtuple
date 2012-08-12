@@ -196,7 +196,7 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", name: "contentPanel", components: [
-        {kind: "onyx.Toolbar", classes: "onyx-toolbar", name: "contentToolbar", components: [
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
           {kind: "onyx.Button", name: "refreshButton", disabled: true,
             content: "_refresh".loc(), onclick: "requery"},
