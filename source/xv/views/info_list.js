@@ -7,20 +7,20 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.InfoList",
-    kind: "Panels",
+    kind: "List",
     classes: "xt-info-list",
-    draggable: false,
-    components: [
-      { name: "loader", classes: "xt-info-list-loader", content: "Loading content..." },
-      { name: "error", classes: "xt-info-list-error", content: "There was an error" },
-      { name: "list", kind: "XV.InfoListPrivate" }
-    ],
     published: {
       collection: null,
       rowClass: "",
       query: null,
       parameterWidget: null,
-      workspace: null
+      workspace: null,
+      isFetching: false,
+      isMore: true
+    },
+    handlers: {
+      onSetupItem: "setupRow",
+      onCollectionUpdated: "collectionUpdated"
     },
     collectionChanged: function () {
       var col = this.getCollection(),
@@ -31,37 +31,26 @@ trailing:true white:true*/
         Klass = XT.getObjectByName(col);
         col = this.collection = new Klass();
       }
+    },
+    collectionUpdated: function () {
+      var col = this.getCollection(),
+        query = this.getQuery(),
+        offset = query.rowOffset || 0,
+        limit = query.rowLimit || 0,
+        count = col.length,
+        isMore = limit ?
+          (offset + limit <= count) && (this.getCount() !== col.length) : false;
+      this.setIsMore(isMore);
+      this.setIsFetching(false);
 
-      if (!col) {
-        this.setIndex(1);
-        return;
-      }
-
-      // bind the change event to our handler
-      col.bind("change", enyo.bind(this, "_collectionChanged", col));
-    },
-    _collectionChanged: function (collection) {
-      this.log();
-    },
-    _collectionFetchSuccess: function () {
-      this.log();
-      this.waterfall("onCollectionUpdated");
-    },
-    _collectionFetchError: function () {
-      this.log();
+      // take the properties as necessary...
+      this.setCount(col.length);
+      if (offset) { this.refresh(); } else { this.reset(); }
     },
     create: function () {
       this.inherited(arguments);
       this.rowClassChanged();
       this.collectionChanged();
-    },
-    rowClassChanged: function () {
-      // need to pass down some information to the list
-      this.$.list.setRowClass(this.getRowClass());
-    },
-    showingChanged: function () {
-      this.inherited(arguments);
-      this.log(this.name, this.showing, this);
     },
     fetch: function (options) {
       var that = this,
@@ -81,40 +70,6 @@ trailing:true white:true*/
       // attempt to fetch (if not already fetching) and handle the
       // various states appropriately
       col.fetch(options);
-    }
-  });
-
-  enyo.kind({
-    name: "XV.InfoListPrivate",
-    kind: "List",
-    classes: "xt-info-list-private",
-    published: {
-      rowClass: "",
-      isFetching: false,
-      isMore: true
-    },
-    handlers: {
-      onSetupItem: "setupRow",
-      onCollectionUpdated: "collectionUpdated"
-    },
-    collectionUpdated: function () {
-      var col = this.parent.getCollection(),
-        query = this.parent.getQuery(),
-        offset = query.rowOffset || 0,
-        limit = query.rowLimit || 0,
-        count = col.length,
-        isMore = limit ?
-          (offset + limit <= count) && (this.getCount() !== col.length) : false;
-      this.setIsMore(isMore);
-      this.setIsFetching(false);
-
-      // take the properties as necessary...
-      this.setCount(col.length);
-      if (offset) { this.refresh(); } else { this.reset(); }
-
-      // if we updated, let the parent know we want to be
-      // visible now
-      this.parent.setIndex(2);
     },
     rowClassChanged: function () {
       //this.log(this.owner.name);
@@ -144,7 +99,7 @@ trailing:true white:true*/
     setupRow: function (inSender, inEvent) {
       //this.log(this.owner.name, this.owner.showing, this);
 
-      var col = this.parent.getCollection();
+      var col = this.getCollection();
       var row = this.$.item;
       var idx = inEvent.index;
       var mod = col.models[idx];
@@ -154,8 +109,15 @@ trailing:true white:true*/
       if (row && row.renderModel) {
         row.renderModel(mod);
       }
+    },
+    _collectionFetchSuccess: function () {
+      this.log();
+      this.waterfall("onCollectionUpdated");
+    },
+    _collectionFetchError: function () {
+      this.log();
     }
-
+    
   });
 
   enyo.kind({
