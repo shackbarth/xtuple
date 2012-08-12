@@ -19,7 +19,7 @@ trailing:true white:true*/
       isMore: true
     },
     handlers: {
-      onSetupItem: "setupRow",
+      onSetupItem: "setupItem",
       onCollectionUpdated: "collectionUpdated"
     },
     collectionChanged: function () {
@@ -72,33 +72,23 @@ trailing:true white:true*/
       col.fetch(options);
     },
     rowClassChanged: function () {
-      //this.log(this.owner.name);
-
-      var rowClass = this.getRowClass();
-      var component;
-      var item;
-
+      var rowClass = this.getRowClass(),
+        component,
+        item;
       if (rowClass) {
-        if (XT.getObjectByName(rowClass)) {
-
-          component = {
-            name: "item",
-            kind: rowClass
-          };
-
-          item = this.$.item;
-          if (item) {
-            this.removeComponent(item);
-            item.destroy();
-          }
-
-          this.createComponent(component);
+        component = {
+          name: "item",
+          kind: rowClass
+        };
+        item = this.$.item;
+        if (item) {
+          this.removeComponent(item);
+          item.destroy();
         }
+        this.createComponent(component);
       }
     },
-    setupRow: function (inSender, inEvent) {
-      //this.log(this.owner.name, this.owner.showing, this);
-
+    setupItem: function (inSender, inEvent) {
       var col = this.getCollection();
       var row = this.$.item;
       var idx = inEvent.index;
@@ -118,6 +108,126 @@ trailing:true white:true*/
       this.log();
     }
     
+  });
+  
+  enyo.kind({
+    name: "XV.InfoList2",
+    kind: "List",
+    classes: "xt-info-list",
+    published: {
+      collection: null,
+      rowClass: "",
+      query: null,
+      parameterWidget: null,
+      workspace: null,
+      isFetching: false,
+      isMore: true
+    },
+    events: {
+      onInfoListRowTapped: ""
+    },
+    handlers: {
+      onSetupItem: "setupItem",
+      onCollectionUpdated: "collectionUpdated"
+    },
+    components: [
+      {classes: "item", ontap: "itemTap", components: [
+        {name: "number", classes: "cell-key account-number"},
+        {name: "name", classes: "account-name", placeholder: "_noJobTitle".loc()},
+        {name: "primaryContactPhone", classes: "cell-align-right account-primaryContact-phone"},
+        {name: "primaryContactPrimaryEmail", classes: "cell-align-right account-primaryContact-primaryEmail"},
+        {name: "primaryContactName", classes: "cell-italic account-primaryContact-name", placeholder: "_noContact".loc()},
+        {name: "primaryContactAddress", classes: "account-primaryContact-address"}
+      ]}
+    ],
+    collectionChanged: function () {
+      var col = this.getCollection(),
+        Klass;
+
+      // Change string to an object if necessary
+      if (typeof col === 'string') {
+        Klass = XT.getObjectByName(col);
+        col = this.collection = new Klass();
+      }
+    },
+    collectionUpdated: function () {
+      var col = this.getCollection(),
+        query = this.getQuery(),
+        offset = query.rowOffset || 0,
+        limit = query.rowLimit || 0,
+        count = col.length,
+        isMore = limit ?
+          (offset + limit <= count) && (this.getCount() !== col.length) : false;
+      this.setIsMore(isMore);
+      this.setIsFetching(false);
+
+      // take the properties as necessary...
+      this.setCount(col.length);
+      if (offset) { this.refresh(); } else { this.reset(); }
+    },
+    create: function () {
+      this.inherited(arguments);
+      this.rowClassChanged();
+      this.collectionChanged();
+    },
+    fetch: function (options) {
+      var that = this,
+        col = this.getCollection(),
+        query = this.getQuery(),
+        success;
+      options = options ? _.clone(options) : {};
+      success = options.success;
+      _.extend(options, {
+        success: function (resp, status, xhr) {
+          that._collectionFetchSuccess(resp, status, xhr);
+          if (success) { success(resp, status, xhr); }
+        },
+        error: enyo.bind(this, "_collectionFetchError"),
+        query: query
+      });
+      // attempt to fetch (if not already fetching) and handle the
+      // various states appropriately
+      col.fetch(options);
+    },
+    itemTap: function (inSender, inEvent) {
+      this.doInfoListRowTapped(inEvent);
+    },
+    setupItem: function (inSender, inEvent) {
+      var coll = this.getCollection(),
+        model = coll.models[inEvent.index];
+
+      // as the rows need to be rendered, we proxy the data to their
+      // render function if they have it, otherwise, we skip
+    },
+    _collectionFetchSuccess: function () {
+      this.log();
+      this.waterfall("onCollectionUpdated");
+    },
+    _collectionFetchError: function () {
+      this.log();
+    }
+    
+  });
+
+
+  enyo.kind({
+    name: "XV.InfoListRow2",
+    classes: "xt-info-list-row",
+    events: {
+      onInfoListRowTapped: ""
+    },
+    components: [
+      {name: "number", classes: "cell-key account-number"},
+      {name: "name", classes: "account-name", placeholder: "_noJobTitle".loc()},
+      {name: "primaryContactPhone", classes: "cell-align-right account-primaryContact-phone"},
+      {name: "primaryContactPrimaryEmail", classes: "cell-align-right account-primaryContact-primaryEmail" },
+      {name: "primaryContactName", classes: "cell-italic account-primaryContact-name", placeholder: "_noContact".loc()},
+      {name: "primaryContactAddress", classes: "account-primaryContact-address" }
+    ],
+    tap: function (inSender, inEvent) {
+      this.doInfoListRowTapped(inEvent);
+    }
+
   });
 
   enyo.kind({
