@@ -85,14 +85,14 @@ trailing:true white:true*/
       this.setList(inSender.index);
     },
     didScroll: function (inSender, inEvent) {
-      if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
+      if (inEvent.originator instanceof XV.InfoList2 === false) { return; }
       var list = inEvent.originator,
         max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
         options = {};
       if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
         list.setIsFetching(true);
         options.showMore = true;
-        this.fetch(list.owner.name, options);
+        this.fetch(list.name, options);
       }
     },
     create: function () {
@@ -109,8 +109,7 @@ trailing:true white:true*/
     infoListRowTapped: function (inSender, inEvent) {
       var list = this.$.lists.getActive(),
         workspace = list.getWorkspace(),
-        itemIndex = inEvent.index,
-        id = list.collection.models[itemIndex].id;
+        id = list.getModel(inEvent.index).id;
 
       // Transition to workspace view, including the model as a payload
       this.bubble("workspace", {
@@ -168,7 +167,7 @@ trailing:true white:true*/
         // Input search parameters
         if (input) {
           query.parameters = [{
-            attribute: list.getCollection().model.getSearchableAttributes(),
+            attribute: list.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
           }];
