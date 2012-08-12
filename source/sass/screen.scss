@@ -441,6 +441,9 @@ body {
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
     .xv-infolist-column {
+      &.left {
+        width: 320px;
+      }    
       .xv-infolist-attr {
         padding: 5px;
         font-size: 13px;
@@ -448,11 +451,18 @@ body {
         overflow: hidden;
         text-overflow: ellipsis;
         color: black;
+        &.right {
+          position: absolute;
+          right: 0px;
+        }
+        &.bold {
+          font-weight: bold;
+        }
         &.error {
           color: #ff0000;
         }
-        &.key {
-          font-weight: bold;
+        &.italic {
+          font-style: italic;
         }
         &.placeholder {
           font-style: italic;

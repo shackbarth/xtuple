@@ -126,13 +126,19 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {classes: "xv-infolist-column left",
             hasAttributes: true, components: [
-            {attr: "number", classes: "xv-infolist-attr key"},
-            {attr: "name", classes: "xv-infolist-attr"},
-            {attr: "primaryContact.Phone", classes: "xv-infolist-attr"},
-            {attr: "primaryContact.primaryEmail", classes: "xv-infolist-attr"}
+            {kind: "FittableColumns", components: [
+              {attr: "number", classes: "xv-infolist-attr bold"},
+              {attr: "primaryContact.phone", fit: true,
+                classes: "xv-infolist-attr right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {attr: "name", classes: "xv-infolist-attr"},
+              {attr: "primaryContact.primaryEmail",
+                classes: "xv-infolist-attr right"}
+            ]}
           ]},
           {classes: "xv-infolist-column right", fit: true, components: [
-            {attr: "primaryContact.name", classes: "xv-infolist-attr",
+            {attr: "primaryContact.name", classes: "xv-infolist-attr italic",
               placeholder: "_noContact".loc()},
             {attr: "primaryContact.address.formatShort",
               classes: "xv-infolist-attr"}
