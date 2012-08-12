@@ -16,38 +16,34 @@ trailing:true white:true*/
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
-      rowClass: "XV.AccountInfoCollectionRow",
       parameterWidget: "XV.AccountInfoParameters",
       workspace: "XV.AccountWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.AccountInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "number", classes: "cell-key account-number" },
-        { name: "name", classes: "account-name", placeholder: "_noJobTitle".loc() }
-      ],
-      [
-        { width: 160 },
-        { name: "primaryContact.phone",
-            classes: "cell-align-right account-primaryContact-phone" },
-        { name: "primaryContact.primaryEmail",
-            classes: "cell-align-right account-primaryContact-primaryEmail" }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 320 },
-        { name: "primaryContact.name",
-            classes: "cell-italic account-primaryContact-name",
-            placeholder: "_noContact".loc() },
-        { name: "primaryContact.address.formatShort",
-            classes: "account-primaryContact-address" }
-      ]
+    },
+    components: [
+      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
+        components: [
+        {kind: "FittableColumns", components: [
+          {classes: "xv-infolist-column left",
+            hasAttributes: true, components: [
+            {kind: "FittableColumns", components: [
+              {attr: "number", classes: "xv-infolist-attr bold"},
+              {attr: "primaryContact.phone", fit: true,
+                classes: "xv-infolist-attr right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {attr: "name", classes: "xv-infolist-attr"},
+              {attr: "primaryContact.primaryEmail",
+                classes: "xv-infolist-attr right"}
+            ]}
+          ]},
+          {classes: "xv-infolist-column right", fit: true, components: [
+            {attr: "primaryContact.name", classes: "xv-infolist-attr italic",
+              placeholder: "_noContact".loc()},
+            {attr: "primaryContact.address.formatShort",
+              classes: "xv-infolist-attr"}
+          ]}
+        ]}
+      ]}
     ]
   });
 
@@ -57,7 +53,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ContactInfoList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
       label: "_contacts".loc(),
       collection: "XM.ContactInfoCollection",
@@ -66,35 +62,34 @@ trailing:true white:true*/
       }, {
         attribute: 'firstName'
       }]},
-      rowClass: "XV.ContactInfoCollectionRow",
       parameterWidget: "XV.ContactInfoParameters",
       workspace: "XV.ContactWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.ContactInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "name", classes: "cell-key contact-name" },
-        { name: "jobTitle", classes: "contact-job-title",
-            placeholder: "_noJobTitle".loc() }
-      ],
-      [
-        { width: 160 },
-        { name: "phone", classes: "cell-align-right contact-phone" },
-        { name: "primaryEmail", classes: "cell-align-right contact-email" }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 320 },
-        { name: "account.name", classes: "cell-italic contact-account-name",
-            placeholder: "_noAccountName".loc() },
-        { name: "address.formatShort", classes: "contact-account-name" }
-      ]
+    },
+    components: [
+      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
+        components: [
+        {kind: "FittableColumns", components: [
+          {classes: "xv-infolist-column left",
+            hasAttributes: true, components: [
+            {kind: "FittableColumns", components: [
+              {attr: "name", classes: "xv-infolist-attr bold"},
+              {attr: "jobTitle", fit: true,
+                classes: "xv-infolist-attr right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {attr: "phone", classes: "xv-infolist-attr"},
+              {attr: "primaryEmail",
+                classes: "xv-infolist-attr right"}
+            ]}
+          ]},
+          {classes: "xv-infolist-column right", fit: true, components: [
+            {attr: "account.name", classes: "xv-infolist-attr italic",
+              placeholder: "_noAccountName".loc()},
+            {attr: "address.formatShort",
+              classes: "xv-infolist-attr"}
+          ]}
+        ]}
+      ]}
     ]
   });
 

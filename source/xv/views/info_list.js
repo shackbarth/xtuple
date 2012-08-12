@@ -120,32 +120,6 @@ trailing:true white:true*/
     handlers: {
       onSetupItem: "setupItem"
     },
-    components: [
-      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
-        components: [
-        {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column left",
-            hasAttributes: true, components: [
-            {kind: "FittableColumns", components: [
-              {attr: "number", classes: "xv-infolist-attr bold"},
-              {attr: "primaryContact.phone", fit: true,
-                classes: "xv-infolist-attr right"}
-            ]},
-            {kind: "FittableColumns", components: [
-              {attr: "name", classes: "xv-infolist-attr"},
-              {attr: "primaryContact.primaryEmail",
-                classes: "xv-infolist-attr right"}
-            ]}
-          ]},
-          {classes: "xv-infolist-column right", fit: true, components: [
-            {attr: "primaryContact.name", classes: "xv-infolist-attr italic",
-              placeholder: "_noContact".loc()},
-            {attr: "primaryContact.address.formatShort",
-              classes: "xv-infolist-attr"}
-          ]}
-        ]}
-      ]}
-    ],
     collectionChanged: function () {
       var collection = this.getCollection(),
         Klass = XT.getObjectByName(collection);
@@ -155,6 +129,12 @@ trailing:true white:true*/
     create: function () {
       this.inherited(arguments);
       this.collectionChanged();
+    },
+    getModel: function (index) {
+      return this._collection.models[index];
+    },
+    getSearchableAttributes: function () {
+      return this._collection.model.getSearchableAttributes();
     },
     fetch: function (options) {
       var that = this,
