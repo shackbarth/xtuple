@@ -135,61 +135,6 @@ body {}
   }
 }
 
-.xt-info-list {
-  .xt-info-list-row {
-    @include box-sizing(border-box);
-    background-color: #fff;
-    padding-top: 3px;
-    padding-bottom: 3px;
-    border-bottom: 1px solid #ddd;
-    .xt-info-list-row-column {
-      @include box-sizing(border-box);
-      width: 320px;
-      min-width: 320px;
-      max-width: 320px;
-      display: inline-block;
-      .xt-info-list-basic-column {
-        @include box-sizing(border-box);
-        display: inline-block;
-        vertical-align: top;
-        .xt-info-list-basic-cell {
-          @include box-sizing(border-box);
-          padding: 5px;
-          font-size: 13px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          &.error {
-            color: #ff0000;
-          }
-          &.emphasis {
-            color: blue;
-          }
-          &.bold {
-            font-weight: bold;
-          }
-          &.empty {
-            font-style: italic;
-            color: #93a1a1;
-          }
-        }
-      }
-    }
-  }
-}
-
-.cell-key {
-  font-weight: bold;
-}
-
-.cell-align-right {
-  text-align: right;
-}
-
-.cell-italic {
-  font-style: italic;
-}
-
 .xt-sub-module-content {
   @include box-shadow(#000 -4px 0 10px -4px);
 }
