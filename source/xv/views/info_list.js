@@ -103,6 +103,11 @@ trailing:true white:true*/
   });
   
   enyo.kind({
+    name: "XV.InfoListColumn",
+    classes: "xv-infolist-column"
+  });
+  
+  enyo.kind({
     name: "XV.InfoListAttr",
     classes: "xv-infolist-attr",
     published: {

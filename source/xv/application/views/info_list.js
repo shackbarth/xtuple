@@ -23,8 +23,7 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column first",
-            hasAttributes: true, components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
               {kind: "XV.InfoListAttr", attr: "primaryContact.phone", fit: true,
@@ -36,7 +35,7 @@ trailing:true white:true*/
                 classes: "right"}
             ]}
           ]},
-          {classes: "xv-infolist-column last", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
             {kind: "XV.InfoListAttr", attr: "primaryContact.name", classes: "italic",
               placeholder: "_noContact".loc()},
             {kind: "XV.InfoListAttr", attr: "primaryContact.address.formatShort"}
@@ -68,8 +67,7 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column first",
-            hasAttributes: true, components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
               {kind: "XV.InfoListAttr", attr: "jobTitle", fit: true,
@@ -80,7 +78,7 @@ trailing:true white:true*/
               {kind: "XV.InfoListAttr", attr: "primaryEmail", classes: "right"}
             ]}
           ]},
-          {classes: "xv-infolist-column last", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
             {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "address.formatShort"}
@@ -107,8 +105,7 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column first",
-            hasAttributes: true, components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
               {kind: "XV.InfoListAttr", attr: "updated", fit: true, formatter: "formatDate",
@@ -116,17 +113,17 @@ trailing:true white:true*/
             ]},
             {attr: "description", classes: "xv-infolist-attr"}
           ]},
-          {classes: "xv-infolist-column second", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "second", fit: true, components: [
             {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
-          {classes: "xv-infolist-column third", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "third", fit: true, components: [
             {kind: "XV.InfoListAttr", attr: "getIncidentStatusString",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]},
-          {classes: "xv-infolist-column fourth", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
             {kind: "XV.InfoListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()},
             {kind: "XV.InfoListAttr", attr: "category.name",
@@ -159,27 +156,29 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column first",
-            hasAttributes: true, components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "targetClose", fit: true, formatter: "formatTargetClose",
+              {kind: "XV.InfoListAttr", attr: "targetClose", fit: true,
+                formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
             {kind: "XV.InfoListAttr", attr: "name"}
           ]},
-          {classes: "xv-infolist-column second", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "second", fit: true,
+            components: [
             {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
-          {classes: "xv-infolist-column third", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "third", fit: true,
+            components: [
             {kind: "XV.InfoListAttr", attr: "opportunityStage.name",
               placeholder: "_noStage".loc()},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]},
-          {classes: "xv-infolist-column fourth", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
             {kind: "XV.InfoListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()},
             {kind: "XV.InfoListAttr", attr: "opportunityType.name",
@@ -214,8 +213,7 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column first",
-            hasAttributes: true, components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
               {kind: "XV.InfoListAttr", attr: "dueDate", fit: true,
@@ -226,9 +224,10 @@ trailing:true white:true*/
             {kind: "XV.InfoListAttr", attr: "name"},
             {kind: "XV.InfoListAttr", attr: "account.name"}
           ]},
-          {classes: "xv-infolist-column second", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "getProjectStatusString", classes: "italic",
-              placeholder: "_noAccountName".loc()},
+          {kind: "XV.InfoListColumn", classes: "second", fit: true,
+            components: [
+            {kind: "XV.InfoListAttr", attr: "getProjectStatusString",
+              classes: "italic", placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]}
         ]}
@@ -343,26 +342,27 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column first",
-            hasAttributes: true, components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
               {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true, formatter: "formatDueDate",
-                placeholder: "_noDueDate".loc(),
+              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
             {kind: "XV.InfoListAttr", attr: "description"}
           ]},
-          {classes: "xv-infolist-column second", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "second", fit: true,
+            components: [
             {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
-          {classes: "xv-infolist-column third", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "third", fit: true,
+            components: [
             {kind: "XV.InfoListAttr", attr: "getToDoStatusString"},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]},
-          {classes: "xv-infolist-column last", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
             {kind: "XV.InfoListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()}
           ]}
