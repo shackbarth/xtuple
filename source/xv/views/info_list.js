@@ -101,6 +101,14 @@ trailing:true white:true*/
     }
 
   });
+  
+  enyo.kind({
+    name: "XV.InfoListAttr",
+    classes: "xv-infolist-attr",
+    published: {
+      attr: ""
+    }
+  });
 
   enyo.kind({
     name: "XV.InfoList2",
@@ -182,17 +190,17 @@ trailing:true white:true*/
       
       // Loop through all attribute container children and set content
       for (prop in this.$) {
-        if (this.$.hasOwnProperty(prop) && this.$[prop].attr) {
+        if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
           view = this.$[prop];
           isPlaceholder = false;
-          value = model.getValue(this.$[prop].attr);
+          value = model.getValue(this.$[prop].getAttr());
           formatter = view.formatter;
           if (!value && view.placeholder) {
             value = view.placeholder;
             isPlaceholder = true;
           }
           if (formatter) {
-            this[formatter](model, value, view);
+            this[formatter](value, view, model);
           }
           if (value && value instanceof Date) {
             value = Globalize.format(value, 'd');

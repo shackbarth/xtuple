@@ -26,6 +26,7 @@ white:true*/
     @class
 
     @extends XM.Document
+    @extends XM.AddressCheckMixin
   */
   XM.Contact = XM.Document.extend({
     /** @scope XM.Contact.prototype */

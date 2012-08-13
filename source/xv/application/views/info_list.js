@@ -26,21 +26,20 @@ trailing:true white:true*/
           {classes: "xv-infolist-column first",
             hasAttributes: true, components: [
             {kind: "FittableColumns", components: [
-              {attr: "number", classes: "xv-infolist-attr bold"},
-              {attr: "primaryContact.phone", fit: true,
-                classes: "xv-infolist-attr right"}
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "primaryContact.phone", fit: true,
+                classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
-              {attr: "name", classes: "xv-infolist-attr"},
-              {attr: "primaryContact.primaryEmail",
-                classes: "xv-infolist-attr right"}
+              {kind: "XV.InfoListAttr", attr: "name"},
+              {kind: "XV.InfoListAttr", attr: "primaryContact.primaryEmail",
+                classes: "right"}
             ]}
           ]},
           {classes: "xv-infolist-column last", fit: true, components: [
-            {attr: "primaryContact.name", classes: "xv-infolist-attr italic",
+            {kind: "XV.InfoListAttr", attr: "primaryContact.name", classes: "italic",
               placeholder: "_noContact".loc()},
-            {attr: "primaryContact.address.formatShort",
-              classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "primaryContact.address.formatShort"}
           ]}
         ]}
       ]}
@@ -72,21 +71,19 @@ trailing:true white:true*/
           {classes: "xv-infolist-column first",
             hasAttributes: true, components: [
             {kind: "FittableColumns", components: [
-              {attr: "name", classes: "xv-infolist-attr bold"},
-              {attr: "jobTitle", fit: true,
-                classes: "xv-infolist-attr right"}
+              {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "jobTitle", fit: true,
+                classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
-              {attr: "phone", classes: "xv-infolist-attr"},
-              {attr: "primaryEmail",
-                classes: "xv-infolist-attr right"}
+              {kind: "XV.InfoListAttr", attr: "phone"},
+              {kind: "XV.InfoListAttr", attr: "primaryEmail", classes: "right"}
             ]}
           ]},
           {classes: "xv-infolist-column last", fit: true, components: [
-            {attr: "account.name", classes: "xv-infolist-attr italic",
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
-            {attr: "address.formatShort",
-              classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "address.formatShort"}
           ]}
         ]}
       ]}
@@ -113,32 +110,32 @@ trailing:true white:true*/
           {classes: "xv-infolist-column first",
             hasAttributes: true, components: [
             {kind: "FittableColumns", components: [
-              {attr: "number", classes: "xv-infolist-attr bold"},
-              {attr: "updated", fit: true, formatter: "formatDate",
-                classes: "xv-infolist-attr right"}
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "updated", fit: true, formatter: "formatDate",
+                classes: "right"}
             ]},
             {attr: "description", classes: "xv-infolist-attr"}
           ]},
           {classes: "xv-infolist-column second", fit: true, components: [
-            {attr: "account.name", classes: "xv-infolist-attr italic",
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
-            {attr: "contact.name", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
           {classes: "xv-infolist-column third", fit: true, components: [
-            {attr: "getIncidentStatusString", classes: "xv-infolist-attr",
+            {kind: "XV.InfoListAttr", attr: "getIncidentStatusString",
               placeholder: "_noAccountName".loc()},
-            {attr: "owner.username", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]},
           {classes: "xv-infolist-column fourth", fit: true, components: [
-            {attr: "priority.name", classes: "xv-infolist-attr",
+            {kind: "XV.InfoListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()},
-            {attr: "category.name", classes: "xv-infolist-attr",
+            {kind: "XV.InfoListAttr", attr: "category.name",
               placeholder: "_noCategory".loc()}
           ]}
         ]}
       ]}
     ],
-    formatDate: function (model, value, view) {
+    formatDate: function (value, view, model) {
       var isToday = !XT.date.compareDate(value, new Date());
       view.addRemoveClass("bold", isToday);
       return value;
@@ -165,33 +162,33 @@ trailing:true white:true*/
           {classes: "xv-infolist-column first",
             hasAttributes: true, components: [
             {kind: "FittableColumns", components: [
-              {attr: "number", classes: "xv-infolist-attr bold"},
-              {attr: "targetClose", fit: true, formatter: "formatTargetClose",
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "targetClose", fit: true, formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
-                classes: "xv-infolist-attr right"}
+                classes: "right"}
             ]},
-            {attr: "name", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "name"}
           ]},
           {classes: "xv-infolist-column second", fit: true, components: [
-            {attr: "account.name", classes: "xv-infolist-attr italic",
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
-            {attr: "contact.name", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
           {classes: "xv-infolist-column third", fit: true, components: [
-            {attr: "opportunityStage.name", classes: "xv-infolist-attr",
+            {kind: "XV.InfoListAttr", attr: "opportunityStage.name",
               placeholder: "_noStage".loc()},
-            {attr: "owner.username", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]},
           {classes: "xv-infolist-column fourth", fit: true, components: [
-            {attr: "priority.name", classes: "xv-infolist-attr",
+            {kind: "XV.InfoListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()},
-            {attr: "opportunityType.name", classes: "xv-infolist-attr",
+            {kind: "XV.InfoListAttr", attr: "opportunityType.name",
               placeholder: "_noType".loc()}
           ]}
         ]}
       ]}
     ],
-    formatTargetClose: function (model, value, view) {
+    formatTargetClose: function (value, view, model) {
       var isLate = model && model.get('isActive') &&
         (XT.date.compareDate(value, new Date()) < 1);
       view.addRemoveClass("error", isLate);
@@ -205,14 +202,51 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ProjectInfoList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
-      rowClass: "XV.ProjectInfoCollectionRow",
       parameterWidget: "XV.ProjectInfoParameters",
       workspace: "XV.ProjectWorkspace"
+    },
+    components: [
+      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
+        components: [
+        {kind: "FittableColumns", components: [
+          {classes: "xv-infolist-column first",
+            hasAttributes: true, components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate",
+                placeholder: "_noCloseTarget".loc(),
+                classes: "right"}
+            ]},
+            {kind: "XV.InfoListAttr", attr: "name"},
+            {kind: "XV.InfoListAttr", attr: "account.name"}
+          ]},
+          {classes: "xv-infolist-column second", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "getProjectStatusString", classes: "italic",
+              placeholder: "_noAccountName".loc()},
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatDueDate: function (value, view, model) {
+      var today = new Date(),
+        K = XM.Project,
+        isLate = (model.get('status') !== K.COMPLETED &&
+          XT.date.compareDate(view, today) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
+    },
+    formatHours: function (value, view, model) {
+      return Globalize.format(value, "n" + 2) + " " + "_hrs".loc();
+    },
+    formatExpenses: function (value, view, model) {
+      return Globalize.format(value, "c" + XT.MONEY_SCALE);
     }
   });
 
@@ -312,30 +346,30 @@ trailing:true white:true*/
           {classes: "xv-infolist-column first",
             hasAttributes: true, components: [
             {kind: "FittableColumns", components: [
-              {attr: "name", classes: "xv-infolist-attr bold"},
-              {attr: "dueDate", fit: true, formatter: "formatDueDate",
+              {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true, formatter: "formatDueDate",
                 placeholder: "_noDueDate".loc(),
-                classes: "xv-infolist-attr right"}
+                classes: "right"}
             ]},
-            {attr: "description", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "description"}
           ]},
           {classes: "xv-infolist-column second", fit: true, components: [
-            {attr: "account.name", classes: "xv-infolist-attr italic",
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
-            {attr: "contact.name", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
           {classes: "xv-infolist-column third", fit: true, components: [
-            {attr: "getToDoStatusString", classes: "xv-infolist-attr"},
-            {attr: "owner.username", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "getToDoStatusString"},
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]},
-          {classes: "xv-infolist-column fourth", fit: true, components: [
-            {attr: "priority.name", classes: "xv-infolist-attr",
+          {classes: "xv-infolist-column last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()}
           ]}
         ]}
       ]}
     ],
-    formatDueDate: function (model, value, view) {
+    formatDueDate: function (value, view, model) {
       var today = new Date(),
         K = XM.ToDo,
         isLate = (model.get('status') !== K.COMPLETED &&
