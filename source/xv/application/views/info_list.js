@@ -199,55 +199,6 @@ trailing:true white:true*/
     }
   });
 
-  enyo.kind({
-    name: "XV.OpportunityInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 200 },
-        { name: "number", classes: "cell-key opportunity-number" },
-        { name: "name", classes: "opportunity-description" }
-      ],
-      [
-        { width: 120 },
-        { name: "targetClose", classes: "cell-align-right",
-            formatter: "formatTargetClose",
-            placeholder: "_noCloseTarget".loc() }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 165 },
-        { name: "account.name", classes: "cell-italic opportunity-account-name" },
-        { name: "contact.getName", classes: "opportunity-contact-name",
-           placeholder: "_noContact".loc() }
-      ],
-      [
-        { width: 75 },
-        { name: "opportunityStage.name", classes: "opportunity-opportunityStage-name",
-            placeholder: "_noStage".loc() },
-        { name: "owner.username", classes: "opportunity-owner-username" }
-      ],
-      [
-        { width: 75 },
-        { name: "priority.name", classes: "opportunity-priority-name",
-            placeholder: "_noPriority".loc() },
-        { name: "opportunityType.name", classes: "opportunity-opportunityType-name",
-            placeholder: "_noType".loc() }
-      ]
-    ],
-    formatTargetClose: function (content, model, view) {
-      var today = new Date();
-      if (model.get('isActive') &&
-          content && XT.date.compareDate(content, today) < 1) {
-        view.addClass("error");
-      } else {
-        view.removeClass("error");
-      }
-      return content;
-    }
-  });
-
   // ..........................................................
   // PROJECT
   //
@@ -343,63 +294,54 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ToDoInfoList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
-      rowClass: "XV.ToDoInfoCollectionRow",
       parameterWidget: "XV.ToDoInfoParameters",
       query: {orderBy: [
         {attribute: 'dueDate'},
         {attribute: 'name'}
       ]},
       workspace: "XV.ToDoWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.ToDoInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 245 },
-        { name: "name", classes: "cell-key toDo-name" },
-        { name: "description", classes: "cell toDo-description" }
-      ],
-      [
-        { width: 75 },
-        { name: "dueDate", classes: "cell-align-right toDo-dueDate",
-            formatter: "formatDueDate" }
-      ]
+    },
+    components: [
+      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
+        components: [
+        {kind: "FittableColumns", components: [
+          {classes: "xv-infolist-column first",
+            hasAttributes: true, components: [
+            {kind: "FittableColumns", components: [
+              {attr: "name", classes: "xv-infolist-attr bold"},
+              {attr: "dueDate", fit: true, formatter: "formatDueDate",
+                placeholder: "_noDueDate".loc(),
+                classes: "xv-infolist-attr right"}
+            ]},
+            {attr: "description", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column second", fit: true, components: [
+            {attr: "account.name", classes: "xv-infolist-attr italic",
+              placeholder: "_noAccountName".loc()},
+            {attr: "contact.name", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column third", fit: true, components: [
+            {attr: "getToDoStatusString", classes: "xv-infolist-attr"},
+            {attr: "owner.username", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column fourth", fit: true, components: [
+            {attr: "priority.name", classes: "xv-infolist-attr",
+              placeholder: "_noPriority".loc()}
+          ]}
+        ]}
+      ]}
     ],
-    rightColumn: [
-      [
-        { width: 165 },
-        { name: "account.name", classes: "cell-italic toDo-account-name",
-            placeholder: "_noAccountName".loc() },
-        { name: "contact.getName", classes: "toDo-contact-name" }
-      ],
-      [
-        { width: 75 },
-        { name: "getToDoStatusString", classes: "toDo-status" },
-        { name: "assignedTo.username", classes: "toDo-assignedTo-username" }
-      ],
-      [
-        { width: 75 },
-        { name: "priority.name", classes: "toDo-priority",
-            placeholder: "_noPriority".loc() }
-      ]
-    ],
-    formatDueDate: function (content, model, view) {
+    formatDueDate: function (model, value, view) {
       var today = new Date(),
-        K = XM.ToDo;
-      if (model.get('status') !== K.COMPLETED &&
-          XT.date.compareDate(content, today) < 1) {
-        view.addClass("error");
-      } else {
-        view.removeClass("error");
-      }
-      return content;
+        K = XM.ToDo,
+        isLate = (model.get('status') !== K.COMPLETED &&
+          XT.date.compareDate(value, today) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
     }
   });
 
