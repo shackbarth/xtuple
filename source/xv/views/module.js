@@ -85,7 +85,7 @@ trailing:true white:true*/
       this.setList(inSender.index);
     },
     didScroll: function (inSender, inEvent) {
-      if (inEvent.originator instanceof XV.InfoList2 === false) { return; }
+      if (inEvent.originator instanceof XV.InfoList === false) { return; }
       var list = inEvent.originator,
         max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
         options = {};

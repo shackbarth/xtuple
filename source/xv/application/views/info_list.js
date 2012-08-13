@@ -11,7 +11,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.AccountInfoList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
@@ -50,7 +50,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ContactInfoList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       label: "_contacts".loc(),
       collection: "XM.ContactInfoCollection",
@@ -92,7 +92,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.IncidentInfoList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       label: "_incidents".loc(),
       collection: "XM.IncidentInfoCollection",
@@ -108,16 +108,14 @@ trailing:true white:true*/
               {kind: "XV.InfoListAttr", attr: "updated", fit: true, formatter: "formatDate",
                 classes: "right"}
             ]},
-            {attr: "description", classes: "xv-infolist-attr"}
+            {kind: "XV.InfoListAttr", attr: "description"}
           ]},
           {kind: "XV.InfoListColumn", classes: "second", components: [
-            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
-              placeholder: "_noAccountName".loc()},
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic"},
             {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
           {kind: "XV.InfoListColumn", classes: "third", components: [
-            {kind: "XV.InfoListAttr", attr: "getIncidentStatusString",
-              placeholder: "_noAccountName".loc()},
+            {kind: "XV.InfoListAttr", attr: "getIncidentStatusString"},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
           ]},
           {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
@@ -142,7 +140,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.OpportunityInfoList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       collection: "XM.OpportunityInfoCollection",
       label: "_opportunities".loc(),
@@ -197,7 +195,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ProjectInfoList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
@@ -243,7 +241,7 @@ trailing:true white:true*/
       return Globalize.format(value, "c" + XT.MONEY_SCALE);
     }
   });
-
+  /*
   enyo.kind({
     name: "XV.ProjectInfoCollectionRow",
     kind: "XV.InfoListRow",
@@ -315,6 +313,7 @@ trailing:true white:true*/
       return Globalize.format(content, "c" + XT.MONEY_SCALE);
     }
   });
+  */
 
   // ..........................................................
   // TO DO
@@ -322,7 +321,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.ToDoInfoList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
@@ -383,37 +382,29 @@ trailing:true white:true*/
     published: {
       label: "_userAccounts".loc(),
       collection: "XM.UserAccountInfoCollection",
-      query: {orderBy: [{ attribute: 'username' }] },
-      rowClass: "XV.UserAccountInfoCollectionRow",
+      query: {orderBy: [{ attribute: 'username' }]},
       workspace: "XV.UserAccountWorkspace"
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "short",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "username", classes: "bold"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "short", components: [
+            {kind: "XV.InfoListAttr", attr: "propername"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "isActive", formatter: "formatActive"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatActive: function (value, view, model) {
+      return value ? "_active".loc() : "";
     }
   });
-
-  enyo.kind({
-    name: "XV.UserAccountInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "username", classes: "cell-key user-account-username" }
-      ],
-      [
-        { width: 160 },
-        { name: "propername", classes: "user-account-proper-name"  }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 320 },
-        { name: "isActive", classes: "cell-align-right user-account-active",
-          formatter: "formatActive" }
-      ]
-    ],
-    formatActive: function (content) {
-      return content ? "_active".loc() : "";
-    }
-  });
-
 
   // ..........................................................
   // HONORIFIC
@@ -421,7 +412,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.HonorificList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       label: "_honorifics".loc(),
       collection: "XM.HonorificCollection",
@@ -443,7 +434,7 @@ trailing:true white:true*/
   
   enyo.kind({
     name: "XV.AbbreviationInfoList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     components: [
       {kind: "XV.InfoListItem", components: [
         {kind: "FittableColumns", components: [
@@ -491,7 +482,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.NameDescriptionList",
-    kind: "XV.InfoList2",
+    kind: "XV.InfoList",
     published: {
       query: {orderBy: [{ attribute: 'order' }] }
     },
@@ -571,21 +562,6 @@ trailing:true white:true*/
     published: {
       query: {orderBy: [{ attribute: 'name' }] }
     }
-  });
-
-  enyo.kind({
-    name: "XV.NameDescriptionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "name", classes: "" }
-      ],
-      [
-        { width: 160 },
-        { name: "description", classes: "" }
-      ]
-    ]
   });
 
 }());
