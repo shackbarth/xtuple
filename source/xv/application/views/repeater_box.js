@@ -13,10 +13,31 @@ white:true*/
         {kind: "XV.Input", name: "tasks.number" },
         {kind: "XV.Input", name: "tasks.name" },
         {kind: "XV.Input", name: "tasks.notes", classes: "xv-wide-entry" },
-        {kind: "XV.Date", name: "tasks.dueDate" }, // TODO: should be a date widget, sort of.
+        {kind: "XV.DateWidget", name: "tasks.dueDate", classes: "xv-slim-date-widget" },
         {kind: "XV.Number", name: "tasks.actualHours" },
         {kind: "XV.Number", name: "tasks.actualExpenses" }
       ]
+    }
+  });
+  enyo.kind({
+    name: "XV.AccountCommentBox",
+    kind: "XV.CommentBox",
+    published: {
+      recordType: "XM.AccountComment",
+    }
+  });
+  enyo.kind({
+    name: "XV.ContactCommentBox",
+    kind: "XV.CommentBox",
+    published: {
+      recordType: "XM.ContactComment",
+    }
+  });
+  enyo.kind({
+    name: "XV.IncidentCommentBox",
+    kind: "XV.CommentBox",
+    published: {
+      recordType: "XM.OpportunityComment",
     }
   });
   enyo.kind({
@@ -31,6 +52,13 @@ white:true*/
     kind: "XV.CommentBox",
     published: {
       recordType: "XM.ProjectComment",
+    }
+  });
+  enyo.kind({
+    name: "XV.ToDoCommentBox",
+    kind: "XV.CommentBox",
+    published: {
+      recordType: "XM.ToDoComment",
     }
   });
 }());

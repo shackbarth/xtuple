@@ -52,7 +52,8 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
-        ]}
+        ]},
+        {kind: "XV.AccountCommentBox", name: "comments"}
       ]}
     ]
   });
@@ -92,7 +93,8 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
-        ]}
+        ]},
+        {kind: "XV.ContactCommentBox", name: "comments"}
       ]}
     ]
   });
@@ -182,7 +184,8 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
-        ]}
+        ]},
+        {kind: "XV.IncidentCommentBox", name: "comments"}
       ]}
     ]
   });
@@ -424,7 +427,8 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
-        ]}
+        ]},
+        {kind: "XV.ToDoCommentBox", name: "comments"},
       ]}
     ]
   });
