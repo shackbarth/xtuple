@@ -176,19 +176,29 @@ trailing:true white:true*/
       var model = this._collection.models[inEvent.index],
         prop,
         isPlaceholder,
-        value;
+        view,
+        value,
+        formatter;
       
       // Loop through all attribute container children and set content
       for (prop in this.$) {
         if (this.$.hasOwnProperty(prop) && this.$[prop].attr) {
+          view = this.$[prop];
           isPlaceholder = false;
           value = model.getValue(this.$[prop].attr);
-          if (!value && this.$[prop].placeholder) {
-            value = this.$[prop].placeholder;
+          formatter = view.formatter;
+          if (!value && view.placeholder) {
+            value = view.placeholder;
             isPlaceholder = true;
           }
-          this.$[prop].setContent(value);
-          this.$[prop].addRemoveClass("placeholder", isPlaceholder);
+          if (formatter) {
+            this[formatter](view, value);
+          }
+          if (value && value instanceof Date) {
+            value = Globalize.format(value, 'd');
+          }
+          view.setContent(value);
+          view.addRemoveClass("placeholder", isPlaceholder);
         }
       }
     }

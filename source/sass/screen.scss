@@ -441,9 +441,18 @@ body {
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
     .xv-infolist-column {
-      &.left {
+      &.first {
         width: 320px;
-      }    
+      }
+      &.second {
+        width: 165px;
+      }
+      &.third {
+        width: 75px;
+      }
+      &.fourth {
+        width: 75px;
+      }
       .xv-infolist-attr {
         padding: 5px;
         font-size: 13px;

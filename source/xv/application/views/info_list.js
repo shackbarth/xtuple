@@ -23,7 +23,7 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column left",
+          {classes: "xv-infolist-column first",
             hasAttributes: true, components: [
             {kind: "FittableColumns", components: [
               {attr: "number", classes: "xv-infolist-attr bold"},
@@ -36,7 +36,7 @@ trailing:true white:true*/
                 classes: "xv-infolist-attr right"}
             ]}
           ]},
-          {classes: "xv-infolist-column right", fit: true, components: [
+          {classes: "xv-infolist-column last", fit: true, components: [
             {attr: "primaryContact.name", classes: "xv-infolist-attr italic",
               placeholder: "_noContact".loc()},
             {attr: "primaryContact.address.formatShort",
@@ -69,7 +69,7 @@ trailing:true white:true*/
       {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
         components: [
         {kind: "FittableColumns", components: [
-          {classes: "xv-infolist-column left",
+          {classes: "xv-infolist-column first",
             hasAttributes: true, components: [
             {kind: "FittableColumns", components: [
               {attr: "name", classes: "xv-infolist-attr bold"},
@@ -82,7 +82,7 @@ trailing:true white:true*/
                 classes: "xv-infolist-attr right"}
             ]}
           ]},
-          {classes: "xv-infolist-column right", fit: true, components: [
+          {classes: "xv-infolist-column last", fit: true, components: [
             {attr: "account.name", classes: "xv-infolist-attr italic",
               placeholder: "_noAccountName".loc()},
             {attr: "address.formatShort",
@@ -99,58 +99,49 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.IncidentInfoList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
       label: "_incidents".loc(),
       collection: "XM.IncidentInfoCollection",
-      rowClass: "XV.IncidentInfoCollectionRow",
       parameterWidget: "XV.IncidentInfoParameters",
       workspace: "XV.IncidentWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.IncidentInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 245 },
-        { name: "number", classes: "cell-key incident-number" },
-        { name: "description", classes: "cell incident-description" }
-      ],
-      [
-        { width: 75 },
-        { name: "updated", classes: "cell-align-right incident-updated",
-           formatter: "formatDate" }
-      ]
+    },
+    components: [
+      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
+        components: [
+        {kind: "FittableColumns", components: [
+          {classes: "xv-infolist-column first",
+            hasAttributes: true, components: [
+            {kind: "FittableColumns", components: [
+              {attr: "number", classes: "xv-infolist-attr bold"},
+              {attr: "updated", fit: true, formatter: "formatDate",
+                classes: "xv-infolist-attr right"}
+            ]},
+            {attr: "description", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column second", fit: true, components: [
+            {attr: "account.name", classes: "xv-infolist-attr italic",
+              placeholder: "_noAccountName".loc()},
+            {attr: "contact.name", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column third", fit: true, components: [
+            {attr: "getIncidentStatusString", classes: "xv-infolist-attr",
+              placeholder: "_noAccountName".loc()},
+            {attr: "owner.username", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column fourth", fit: true, components: [
+            {attr: "priority.name", classes: "xv-infolist-attr",
+              placeholder: "_noPriority".loc()},
+            {attr: "category.name", classes: "xv-infolist-attr",
+              placeholder: "_noCategory".loc()}
+          ]}
+        ]}
+      ]}
     ],
-    rightColumn: [
-      [
-        { width: 165 },
-        { name: "account.name", classes: "cell-italic incident-account-name" },
-        { name: "contact.getName", classes: "incident-contact-name" }
-      ],
-      [
-        { width: 75 },
-        { name: "getIncidentStatusString", classes: "incident-status" },
-        { name: "owner.username", classes: "incident-owner-username" }
-      ],
-      [
-        { width: 75 },
-        { name: "priority.name", classes: "incident-priority",
-           placeholder: "_noPriority".loc() },
-        { name: "category.name", classes: "incident-category",
-           placeholder: "_noCategory".loc() }
-      ]
-    ],
-    formatDate: function (content, model, view) {
-      var today = new Date();
-      if (XT.date.compareDate(content, today)) {
-        view.removeClass("bold");
-      } else {
-        view.addClass("bold");
-      }
-      return content;
+    formatDate: function (view, value) {
+      var isToday = !XT.date.compareDate(value, new Date());
+      view.addRemoveClass("bold", isToday);
+      return value;
     }
   });
 
