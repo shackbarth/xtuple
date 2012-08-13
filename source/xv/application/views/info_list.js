@@ -138,7 +138,7 @@ trailing:true white:true*/
         ]}
       ]}
     ],
-    formatDate: function (view, value) {
+    formatDate: function (model, value, view) {
       var isToday = !XT.date.compareDate(value, new Date());
       view.addRemoveClass("bold", isToday);
       return value;
@@ -151,13 +151,51 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.OpportunityInfoList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
       collection: "XM.OpportunityInfoCollection",
       label: "_opportunities".loc(),
-      rowClass: "XV.OpportunityInfoCollectionRow",
       parameterWidget: "XV.OpportunityInfoParameters",
       workspace: "XV.OpportunityWorkspace"
+    },
+    components: [
+      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
+        components: [
+        {kind: "FittableColumns", components: [
+          {classes: "xv-infolist-column first",
+            hasAttributes: true, components: [
+            {kind: "FittableColumns", components: [
+              {attr: "number", classes: "xv-infolist-attr bold"},
+              {attr: "targetClose", fit: true, formatter: "formatTargetClose",
+                placeholder: "_noCloseTarget".loc(),
+                classes: "xv-infolist-attr right"}
+            ]},
+            {attr: "name", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column second", fit: true, components: [
+            {attr: "account.name", classes: "xv-infolist-attr italic",
+              placeholder: "_noAccountName".loc()},
+            {attr: "contact.name", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column third", fit: true, components: [
+            {attr: "opportunityStage.name", classes: "xv-infolist-attr",
+              placeholder: "_noStage".loc()},
+            {attr: "owner.username", classes: "xv-infolist-attr"}
+          ]},
+          {classes: "xv-infolist-column fourth", fit: true, components: [
+            {attr: "priority.name", classes: "xv-infolist-attr",
+              placeholder: "_noPriority".loc()},
+            {attr: "opportunityType.name", classes: "xv-infolist-attr",
+              placeholder: "_noType".loc()}
+          ]}
+        ]}
+      ]}
+    ],
+    formatTargetClose: function (model, value, view) {
+      var isLate = model && model.get('isActive') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return view;
     }
   });
 

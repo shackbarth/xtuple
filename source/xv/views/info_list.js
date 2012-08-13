@@ -192,7 +192,7 @@ trailing:true white:true*/
             isPlaceholder = true;
           }
           if (formatter) {
-            this[formatter](view, value);
+            this[formatter](model, value, view);
           }
           if (value && value instanceof Date) {
             value = Globalize.format(value, 'd');
