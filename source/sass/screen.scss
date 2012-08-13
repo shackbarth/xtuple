@@ -398,6 +398,9 @@ body {
       &.third {
         width: 75px;
       }
+      &.money {
+        width: 100px;
+      }
       .xv-infolist-attr {
         padding: 5px;
         font-size: 13px;
@@ -408,6 +411,9 @@ body {
         &.right {
           position: absolute;
           right: 0px;
+        }
+        &.text-align-right {
+          text-align: right;
         }
         &.bold {
           font-weight: bold;

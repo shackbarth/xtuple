@@ -217,11 +217,36 @@ trailing:true white:true*/
             {kind: "XV.InfoListAttr", attr: "name"},
             {kind: "XV.InfoListAttr", attr: "account.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "second", fit: true,
+          {kind: "XV.InfoListColumn", classes: "third",
             components: [
             {kind: "XV.InfoListAttr", attr: "getProjectStatusString",
-              classes: "italic", placeholder: "_noAccountName".loc()},
+              placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.InfoListColumn", style: "width: 80;",
+            components: [
+            {content: "_budgeted".loc() + ":", classes: "xv-infolist-attr",
+              style: "text-align: right;"},
+            {content: "_actual".loc() + ":", classes: "xv-infolist-attr",
+              style: "text-align: right;"},
+            {content: "_balance".loc() + ":", classes: "xv-infolist-attr",
+              style: "text-align: right;"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "money", components: [
+            {kind: "XV.InfoListAttr", attr: "budgetedExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.InfoListAttr", attr: "actualExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.InfoListAttr", attr: "balanceExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "money", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "budgetedHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.InfoListAttr", attr: "actualHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.InfoListAttr", attr: "balanceHours",
+              classes: "text-align-right", formatter: "formatHours"}
           ]}
         ]}
       ]}
@@ -230,90 +255,19 @@ trailing:true white:true*/
       var today = new Date(),
         K = XM.Project,
         isLate = (model.get('status') !== K.COMPLETED &&
-          XT.date.compareDate(view, today) < 1);
+          XT.date.compareDate(value, today) < 1);
       view.addRemoveClass("error", isLate);
       return value;
     },
     formatHours: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
       return Globalize.format(value, "n" + 2) + " " + "_hrs".loc();
     },
     formatExpenses: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
       return Globalize.format(value, "c" + XT.MONEY_SCALE);
     }
   });
-  /*
-  enyo.kind({
-    name: "XV.ProjectInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 200 },
-        { name: "number", classes: "cell-key project-number" },
-        { name: "name", classes: "project-name" },
-        { name: "account.name", classes: "project-account-name" }
-      ],
-      [
-        { width: 120 },
-        { name: "dueDate", classes: "cell-align-right project-due-date",
-            formatter: "formatDueDate" }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 70 },
-        { name: "getProjectStatusString", classes: "project-status" },
-        { name: "owner.username", classes: "project-owner-username" }
-      ],
-      [
-        { width: 70 },
-        { content: "budgeted:", style: "text-align: right;", isLabel: true },
-        { content: "actual:", style: "text-align: right;", isLabel: true },
-        { content: "balance:", style: "text-align: right;", isLabel: true }
-      ],
-      [
-        { width: 80 },
-        { name: "budgetedExpenses",
-            classes: "cell-align-right project-budgeted-expenses",
-            formatter: "formatExpenses" },
-        { name: "actualExpenses",
-            classes: "cell-align-right project-actual-expenses",
-            formatter: "formatExpenses" },
-        { name: "balanceExpenses",
-            classes: "cell-align-right project-balance-expenses",
-            formatter: "formatExpenses" }
-      ],
-      [
-        { width: 80 },
-        { name: "budgetedHours",
-            classes: "cell-align-right project-budgeted-hours",
-            formatter: "formatHours" },
-        { name: "actualHours",
-            classes: "cell-align-right project-actual-hours",
-            formatter: "formatHours" },
-        { name: "balanceHours",
-            classes: "cell-align-right project-balance-hours",
-            formatter: "formatHours" }
-      ]
-    ],
-    formatDueDate: function (content, model, view) {
-      var today = new Date(),
-        K = XM.Project;
-      if (model.get('status') !== K.COMPLETED &&
-          XT.date.compareDate(content, today) < 1) {
-        view.addClass("error");
-      } else {
-        view.removeClass("error");
-      }
-      return content;
-    },
-    formatHours: function (content, model, view) {
-      return Globalize.format(content, "n" + 2) + " " + "_hrs".loc();
-    },
-    formatExpenses: function (content, model, view) {
-      return Globalize.format(content, "c" + XT.MONEY_SCALE);
-    }
-  });
-  */
 
   // ..........................................................
   // TO DO
@@ -342,7 +296,8 @@ trailing:true white:true*/
                 formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
-            {kind: "XV.InfoListAttr", attr: "description"}
+            {kind: "XV.InfoListAttr", attr: "description",
+              placeholder: "_noDescription".loc()}
           ]},
           {kind: "XV.InfoListColumn", classes: "second",
             components: [
