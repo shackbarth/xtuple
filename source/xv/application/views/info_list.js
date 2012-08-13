@@ -16,38 +16,31 @@ trailing:true white:true*/
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
-      rowClass: "XV.AccountInfoCollectionRow",
       parameterWidget: "XV.AccountInfoParameters",
       workspace: "XV.AccountWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.AccountInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "number", classes: "cell-key account-number" },
-        { name: "name", classes: "account-name", placeholder: "_noJobTitle".loc() }
-      ],
-      [
-        { width: 160 },
-        { name: "primaryContact.phone",
-            classes: "cell-align-right account-primaryContact-phone" },
-        { name: "primaryContact.primaryEmail",
-            classes: "cell-align-right account-primaryContact-primaryEmail" }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 320 },
-        { name: "primaryContact.name",
-            classes: "cell-italic account-primaryContact-name",
-            placeholder: "_noContact".loc() },
-        { name: "primaryContact.address.formatShort",
-            classes: "account-primaryContact-address" }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "primaryContact.phone", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "name"},
+              {kind: "XV.InfoListAttr", attr: "primaryContact.primaryEmail",
+                classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "primaryContact.name", classes: "italic",
+              placeholder: "_noContact".loc()},
+            {kind: "XV.InfoListAttr", attr: "primaryContact.address.formatShort"}
+          ]}
+        ]}
+      ]}
     ]
   });
 
@@ -66,35 +59,30 @@ trailing:true white:true*/
       }, {
         attribute: 'firstName'
       }]},
-      rowClass: "XV.ContactInfoCollectionRow",
       parameterWidget: "XV.ContactInfoParameters",
       workspace: "XV.ContactWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.ContactInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "name", classes: "cell-key contact-name" },
-        { name: "jobTitle", classes: "contact-job-title",
-            placeholder: "_noJobTitle".loc() }
-      ],
-      [
-        { width: 160 },
-        { name: "phone", classes: "cell-align-right contact-phone" },
-        { name: "primaryEmail", classes: "cell-align-right contact-email" }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 320 },
-        { name: "account.name", classes: "cell-italic contact-account-name",
-            placeholder: "_noAccountName".loc() },
-        { name: "address.formatShort", classes: "contact-account-name" }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "jobTitle", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "phone"},
+              {kind: "XV.InfoListAttr", attr: "primaryEmail", classes: "right"}
+            ]}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
+              placeholder: "_noAccountName".loc()},
+            {kind: "XV.InfoListAttr", attr: "address.formatShort"}
+          ]}
+        ]}
+      ]}
     ]
   });
 
@@ -108,54 +96,41 @@ trailing:true white:true*/
     published: {
       label: "_incidents".loc(),
       collection: "XM.IncidentInfoCollection",
-      rowClass: "XV.IncidentInfoCollectionRow",
       parameterWidget: "XV.IncidentInfoParameters",
       workspace: "XV.IncidentWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.IncidentInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 245 },
-        { name: "number", classes: "cell-key incident-number" },
-        { name: "description", classes: "cell incident-description" }
-      ],
-      [
-        { width: 75 },
-        { name: "updated", classes: "cell-align-right incident-updated",
-           formatter: "formatDate" }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "updated", fit: true, formatter: "formatDate",
+                classes: "right"}
+            ]},
+            {kind: "XV.InfoListAttr", attr: "description"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "second", components: [
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic"},
+            {kind: "XV.InfoListAttr", attr: "contact.name"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "third", components: [
+            {kind: "XV.InfoListAttr", attr: "getIncidentStatusString"},
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "priority.name",
+              placeholder: "_noPriority".loc()},
+            {kind: "XV.InfoListAttr", attr: "category.name",
+              placeholder: "_noCategory".loc()}
+          ]}
+        ]}
+      ]}
     ],
-    rightColumn: [
-      [
-        { width: 165 },
-        { name: "account.name", classes: "cell-italic incident-account-name" },
-        { name: "contact.getName", classes: "incident-contact-name" }
-      ],
-      [
-        { width: 75 },
-        { name: "getIncidentStatusString", classes: "incident-status" },
-        { name: "owner.username", classes: "incident-owner-username" }
-      ],
-      [
-        { width: 75 },
-        { name: "priority.name", classes: "incident-priority",
-           placeholder: "_noPriority".loc() },
-        { name: "category.name", classes: "incident-category",
-           placeholder: "_noCategory".loc() }
-      ]
-    ],
-    formatDate: function (content, model, view) {
-      var today = new Date();
-      if (XT.date.compareDate(content, today)) {
-        view.removeClass("bold");
-      } else {
-        view.addClass("bold");
-      }
-      return content;
+    formatDate: function (value, view, model) {
+      var isToday = !XT.date.compareDate(value, new Date());
+      view.addRemoveClass("bold", isToday);
+      return value;
     }
   });
 
@@ -169,58 +144,48 @@ trailing:true white:true*/
     published: {
       collection: "XM.OpportunityInfoCollection",
       label: "_opportunities".loc(),
-      rowClass: "XV.OpportunityInfoCollectionRow",
       parameterWidget: "XV.OpportunityInfoParameters",
       workspace: "XV.OpportunityWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.OpportunityInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 200 },
-        { name: "number", classes: "cell-key opportunity-number" },
-        { name: "name", classes: "opportunity-description" }
-      ],
-      [
-        { width: 120 },
-        { name: "targetClose", classes: "cell-align-right",
-            formatter: "formatTargetClose",
-            placeholder: "_noCloseTarget".loc() }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "targetClose", fit: true,
+                formatter: "formatTargetClose",
+                placeholder: "_noCloseTarget".loc(),
+                classes: "right"}
+            ]},
+            {kind: "XV.InfoListAttr", attr: "name"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "second",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
+              placeholder: "_noAccountName".loc()},
+            {kind: "XV.InfoListAttr", attr: "contact.name"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "third",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "opportunityStage.name",
+              placeholder: "_noStage".loc()},
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "priority.name",
+              placeholder: "_noPriority".loc()},
+            {kind: "XV.InfoListAttr", attr: "opportunityType.name",
+              placeholder: "_noType".loc()}
+          ]}
+        ]}
+      ]}
     ],
-    rightColumn: [
-      [
-        { width: 165 },
-        { name: "account.name", classes: "cell-italic opportunity-account-name" },
-        { name: "contact.getName", classes: "opportunity-contact-name",
-           placeholder: "_noContact".loc() }
-      ],
-      [
-        { width: 75 },
-        { name: "opportunityStage.name", classes: "opportunity-opportunityStage-name",
-            placeholder: "_noStage".loc() },
-        { name: "owner.username", classes: "opportunity-owner-username" }
-      ],
-      [
-        { width: 75 },
-        { name: "priority.name", classes: "opportunity-priority-name",
-            placeholder: "_noPriority".loc() },
-        { name: "opportunityType.name", classes: "opportunity-opportunityType-name",
-            placeholder: "_noType".loc() }
-      ]
-    ],
-    formatTargetClose: function (content, model, view) {
-      var today = new Date();
-      if (model.get('isActive') &&
-          content && XT.date.compareDate(content, today) < 1) {
-        view.addClass("error");
-      } else {
-        view.removeClass("error");
-      }
-      return content;
+    formatTargetClose: function (value, view, model) {
+      var isLate = model && model.get('isActive') &&
+        (XT.date.compareDate(value, new Date()) < 1);
+      view.addRemoveClass("error", isLate);
+      return view;
     }
   });
 
@@ -235,81 +200,72 @@ trailing:true white:true*/
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
       query: {orderBy: [{ attribute: 'number' }] },
-      rowClass: "XV.ProjectInfoCollectionRow",
       parameterWidget: "XV.ProjectInfoParameters",
       workspace: "XV.ProjectWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.ProjectInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 200 },
-        { name: "number", classes: "cell-key project-number" },
-        { name: "name", classes: "project-name" },
-        { name: "account.name", classes: "project-account-name" }
-      ],
-      [
-        { width: 120 },
-        { name: "dueDate", classes: "cell-align-right project-due-date",
-            formatter: "formatDueDate" }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate",
+                placeholder: "_noCloseTarget".loc(),
+                classes: "right"}
+            ]},
+            {kind: "XV.InfoListAttr", attr: "name"},
+            {kind: "XV.InfoListAttr", attr: "account.name"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "third",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "getProjectStatusString",
+              placeholder: "_noAccountName".loc()},
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.InfoListColumn", style: "width: 80;",
+            components: [
+            {content: "_budgeted".loc() + ":", classes: "xv-infolist-attr",
+              style: "text-align: right;"},
+            {content: "_actual".loc() + ":", classes: "xv-infolist-attr",
+              style: "text-align: right;"},
+            {content: "_balance".loc() + ":", classes: "xv-infolist-attr",
+              style: "text-align: right;"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "money", components: [
+            {kind: "XV.InfoListAttr", attr: "budgetedExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.InfoListAttr", attr: "actualExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"},
+            {kind: "XV.InfoListAttr", attr: "balanceExpenses",
+              classes: "text-align-right", formatter: "formatExpenses"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "money", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "budgetedHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.InfoListAttr", attr: "actualHours",
+              classes: "text-align-right", formatter: "formatHours"},
+            {kind: "XV.InfoListAttr", attr: "balanceHours",
+              classes: "text-align-right", formatter: "formatHours"}
+          ]}
+        ]}
+      ]}
     ],
-    rightColumn: [
-      [
-        { width: 70 },
-        { name: "getProjectStatusString", classes: "project-status" },
-        { name: "owner.username", classes: "project-owner-username" }
-      ],
-      [
-        { width: 70 },
-        { content: "budgeted:", style: "text-align: right;", isLabel: true },
-        { content: "actual:", style: "text-align: right;", isLabel: true },
-        { content: "balance:", style: "text-align: right;", isLabel: true }
-      ],
-      [
-        { width: 80 },
-        { name: "budgetedExpenses",
-            classes: "cell-align-right project-budgeted-expenses",
-            formatter: "formatExpenses" },
-        { name: "actualExpenses",
-            classes: "cell-align-right project-actual-expenses",
-            formatter: "formatExpenses" },
-        { name: "balanceExpenses",
-            classes: "cell-align-right project-balance-expenses",
-            formatter: "formatExpenses" }
-      ],
-      [
-        { width: 80 },
-        { name: "budgetedHours",
-            classes: "cell-align-right project-budgeted-hours",
-            formatter: "formatHours" },
-        { name: "actualHours",
-            classes: "cell-align-right project-actual-hours",
-            formatter: "formatHours" },
-        { name: "balanceHours",
-            classes: "cell-align-right project-balance-hours",
-            formatter: "formatHours" }
-      ]
-    ],
-    formatDueDate: function (content, model, view) {
+    formatDueDate: function (value, view, model) {
       var today = new Date(),
-        K = XM.Project;
-      if (model.get('status') !== K.COMPLETED &&
-          XT.date.compareDate(content, today) < 1) {
-        view.addClass("error");
-      } else {
-        view.removeClass("error");
-      }
-      return content;
+        K = XM.Project,
+        isLate = (model.get('status') !== K.COMPLETED &&
+          XT.date.compareDate(value, today) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
     },
-    formatHours: function (content, model, view) {
-      return Globalize.format(content, "n" + 2) + " " + "_hrs".loc();
+    formatHours: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
+      return Globalize.format(value, "n" + 2) + " " + "_hrs".loc();
     },
-    formatExpenses: function (content, model, view) {
-      return Globalize.format(content, "c" + XT.MONEY_SCALE);
+    formatExpenses: function (value, view, model) {
+      view.addRemoveClass("error", value < 0);
+      return Globalize.format(value, "c" + XT.MONEY_SCALE);
     }
   });
 
@@ -323,59 +279,51 @@ trailing:true white:true*/
     published: {
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
-      rowClass: "XV.ToDoInfoCollectionRow",
       parameterWidget: "XV.ToDoInfoParameters",
       query: {orderBy: [
         {attribute: 'dueDate'},
         {attribute: 'name'}
       ]},
       workspace: "XV.ToDoWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.ToDoInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 245 },
-        { name: "name", classes: "cell-key toDo-name" },
-        { name: "description", classes: "cell toDo-description" }
-      ],
-      [
-        { width: 75 },
-        { name: "dueDate", classes: "cell-align-right toDo-dueDate",
-            formatter: "formatDueDate" }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true,
+                formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
+                classes: "right"}
+            ]},
+            {kind: "XV.InfoListAttr", attr: "description",
+              placeholder: "_noDescription".loc()}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "second",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
+              placeholder: "_noAccountName".loc()},
+            {kind: "XV.InfoListAttr", attr: "contact.name"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "third",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "getToDoStatusString"},
+            {kind: "XV.InfoListAttr", attr: "owner.username"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "priority.name",
+              placeholder: "_noPriority".loc()}
+          ]}
+        ]}
+      ]}
     ],
-    rightColumn: [
-      [
-        { width: 165 },
-        { name: "account.name", classes: "cell-italic toDo-account-name",
-            placeholder: "_noAccountName".loc() },
-        { name: "contact.getName", classes: "toDo-contact-name" }
-      ],
-      [
-        { width: 75 },
-        { name: "getToDoStatusString", classes: "toDo-status" },
-        { name: "assignedTo.username", classes: "toDo-assignedTo-username" }
-      ],
-      [
-        { width: 75 },
-        { name: "priority.name", classes: "toDo-priority",
-            placeholder: "_noPriority".loc() }
-      ]
-    ],
-    formatDueDate: function (content, model, view) {
+    formatDueDate: function (value, view, model) {
       var today = new Date(),
-        K = XM.ToDo;
-      if (model.get('status') !== K.COMPLETED &&
-          XT.date.compareDate(content, today) < 1) {
-        view.addClass("error");
-      } else {
-        view.removeClass("error");
-      }
-      return content;
+        K = XM.ToDo,
+        isLate = (model.get('status') !== K.COMPLETED &&
+          XT.date.compareDate(value, today) < 1);
+      view.addRemoveClass("error", isLate);
+      return value;
     }
   });
 
@@ -389,37 +337,29 @@ trailing:true white:true*/
     published: {
       label: "_userAccounts".loc(),
       collection: "XM.UserAccountInfoCollection",
-      query: {orderBy: [{ attribute: 'username' }] },
-      rowClass: "XV.UserAccountInfoCollectionRow",
+      query: {orderBy: [{ attribute: 'username' }]},
       workspace: "XV.UserAccountWorkspace"
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "short",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "username", classes: "bold"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "short", components: [
+            {kind: "XV.InfoListAttr", attr: "propername"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "isActive", formatter: "formatActive"}
+          ]}
+        ]}
+      ]}
+    ],
+    formatActive: function (value, view, model) {
+      return value ? "_active".loc() : "";
     }
   });
-
-  enyo.kind({
-    name: "XV.UserAccountInfoCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "username", classes: "cell-key user-account-username" }
-      ],
-      [
-        { width: 160 },
-        { name: "propername", classes: "user-account-proper-name"  }
-      ]
-    ],
-    rightColumn: [
-      [
-        { width: 320 },
-        { name: "isActive", classes: "cell-align-right user-account-active",
-          formatter: "formatActive" }
-      ]
-    ],
-    formatActive: function (content) {
-      return content ? "_active".loc() : "";
-    }
-  });
-
 
   // ..........................................................
   // HONORIFIC
@@ -432,64 +372,59 @@ trailing:true white:true*/
       label: "_honorifics".loc(),
       collection: "XM.HonorificCollection",
       query: {orderBy: [{ attribute: 'code' }] },
-      rowClass: "XV.HonorificCollectionRow",
       workspace: "XV.HonorificWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.HonorificCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "code", classes: "" }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "XV.InfoListColumn", classes: "last", components: [
+          {kind: "XV.InfoListAttr", attr: "code", classes: "bold"}
+        ]}
+      ]}
     ]
   });
-
 
   // ..........................................................
   // STATES AND COUNTRIES
   //
+  
+  enyo.kind({
+    name: "XV.AbbreviationInfoList",
+    kind: "XV.InfoList",
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "short",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "abbreviation", classes: "bold"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   enyo.kind({
     name: "XV.StateList",
-    kind: "XV.InfoList",
+    kind: "XV.AbbreviationInfoList",
     published: {
       label: "_states".loc(),
       collection: "XM.StateCollection",
       query: {orderBy: [{ attribute: 'abbreviation' }] },
-      rowClass: "XV.AbbreviationNameRow",
       workspace: "XV.StateWorkspace"
     }
   });
 
   enyo.kind({
     name: "XV.CountryList",
-    kind: "XV.InfoList",
+    kind: "XV.AbbreviationInfoList",
     published: {
       label: "_countries".loc(),
       collection: "XM.CountryCollection",
       query: {orderBy: [{ attribute: 'name' }] },
-      rowClass: "XV.AbbreviationNameRow",
       workspace: "XV.CountryWorkspace"
     }
-  });
-
-  enyo.kind({
-    name: "XV.AbbreviationNameRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "abbreviation", classes: "" }
-      ],
-      [
-        { width: 160 },
-        { name: "name", classes: "" }
-      ]
-    ]
   });
 
   // ..........................................................
@@ -504,11 +439,21 @@ trailing:true white:true*/
     name: "XV.NameDescriptionList",
     kind: "XV.InfoList",
     published: {
-      label: "",
-      collection: null,
-      query: {orderBy: [{ attribute: 'order' }] },
-      rowClass: "XV.NameDescriptionRow"
+      query: {orderBy: [{ attribute: 'order' }] }
     },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "short",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "name", classes: "bold"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
     /**
      * All of these lists follow a very similar naming convention.
      * Apply that convention unless the list overrides the label
@@ -518,8 +463,6 @@ trailing:true white:true*/
       this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
-        // Pluralize - if this gets any more complicated, we should
-        // pull in a pluralize function
         var label = "_" + kindName.camelize().pluralize();
         this.setLabel(label.loc());
       }
@@ -574,21 +517,6 @@ trailing:true white:true*/
     published: {
       query: {orderBy: [{ attribute: 'name' }] }
     }
-  });
-
-  enyo.kind({
-    name: "XV.NameDescriptionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "name", classes: "" }
-      ],
-      [
-        { width: 160 },
-        { name: "description", classes: "" }
-      ]
-    ]
   });
 
 }());

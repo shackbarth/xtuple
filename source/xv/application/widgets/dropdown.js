@@ -76,6 +76,19 @@ regexp:true, undef:true, trailing:true, white:true */
       collection: "XM.incidentSeverities"
     }
   });
+  
+  // ..........................................................
+  // INCIDENT STATUS
+  //
+  
+  enyo.kind({
+    name: "XV.IncidentStatusDropdown",
+    kind: "XV.DropdownWidget",
+    published: {
+      collection: "XM.incidentStatuses",
+      valueAttribute: "id"
+    }
+  });
 
   // ..........................................................
   // OPPORTUNITY SOURCE

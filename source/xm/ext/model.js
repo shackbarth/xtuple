@@ -215,15 +215,30 @@ white:true*/
       XT.log(resp);
     },
     
+    /**
+      Return whether the model is in a valid state to `save`.
+      
+      @returns {Boolean}
+    */
     isValid: function () {
       var options = {validateSave: true};
       return !this.validate || !this.validate(this.attributes, options);
     },
 
+    /**
+      Return the original value of an attribute the last time fetch was called.
+      
+      @returns {Object}
+    */
     original: function (attr) {
       return this.prime[attr] || this.get(attr);
     },
 
+    /**
+      Return all the original values of the attributes the last time fetch was called.
+      
+      @returns {Array}
+    */
     originalAttributes: function () {
       return _.defaults(_.clone(this.prime), _.clone(this.attributes));
     },
@@ -433,12 +448,42 @@ white:true*/
 
     /**
       Searches attributes first, if not found then returns either a function call
-      or property value on the model that matches the key.
+      or property value that matches the key. It supports search on an attribute path
+      through a model hierachy.
+      
+      example:
+        // Returns the first name attribute from primary contact model.
+        var firstName = m.getValue('primaryContact.firstName');
 
       @param {String} Key
       @returns {Any}
     */
     getValue: function (key) {
+      var parts,
+        value,
+        i;
+        
+      // Search path
+      if (key.indexOf('.') !== -1) {
+        parts = key.split('.');
+        value = this;
+        for (i = 0; i < parts.length; i++) {
+          value = value.getValue(parts[i]);
+          if (value && value instanceof Date) {
+            break;
+          } else if (value && typeof value === "object") {
+            continue;
+          } else if (typeof value === "string") {
+            break;
+          } else {
+            value = "";
+            break;
+          }
+        }
+        return value;
+      }
+      
+      // Search attribute, function, propety
       if (_.has(this.attributes, key)) { return this.attributes[key]; }
       return _.isFunction(this[key]) ? this[key]() : this[key];
     },

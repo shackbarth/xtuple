@@ -57,6 +57,7 @@ XT.stringsFor("en_US", {
   "_balanceExpensesTotal": "Balance Expenses Total",
   "_balanceHoursTotal": "Balance Hours Total",
   "_boolean": "Boolean",
+  "_budgeted": "Budgeted",
   "_budgetedExpenses": "Budgeted Expenses",
   "_budgetedExpensesTotal": "Total Expenses Budgeted",
   "_budgetedHours": "Budgeted Hours",
