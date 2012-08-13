@@ -4,8 +4,6 @@ trailing:true white:true*/
 /*global XT:true, XV:true, XM:true, _:true, enyo:true*/
 
 (function () {
-  var ROWS_PER_FETCH = 50,
-    FETCH_TRIGGER = 100;
 
   enyo.kind({
     name: "XV.Module",
@@ -18,7 +16,6 @@ trailing:true white:true*/
     },
     handlers: {
       onParameterChange: "requery",
-      onScroll: "didScroll",
       onInfoListRowTapped: "infoListRowTapped"
     },
     showPullout: true,
@@ -83,17 +80,6 @@ trailing:true white:true*/
     },
     didFinishTransition: function (inSender, inEvent) {
       this.setList(inSender.index);
-    },
-    didScroll: function (inSender, inEvent) {
-      if (inEvent.originator instanceof XV.InfoList === false) { return; }
-      var list = inEvent.originator,
-        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
-        options = {};
-      if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
-        list.setIsFetching(true);
-        options.showMore = true;
-        this.fetch(list.name, options);
-      }
     },
     create: function () {
       var i, component;
@@ -181,13 +167,6 @@ trailing:true white:true*/
         delete query.parameters;
       }
 
-      if (options.showMore) {
-        query.rowOffset += ROWS_PER_FETCH;
-        options.add = true;
-      } else {
-        query.rowOffset = 0;
-        query.rowLimit = ROWS_PER_FETCH;
-      }
       list.setQuery(query);
       list.fetch(options);
       this.fetched[name] = true;

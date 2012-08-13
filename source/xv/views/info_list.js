@@ -4,6 +4,9 @@ trailing:true white:true*/
 /*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
+  
+  var ROWS_PER_FETCH = 50;
+  var FETCH_TRIGGER = 100;
 
   enyo.kind({
     name: "XV.InfoListItem",
@@ -41,6 +44,7 @@ trailing:true white:true*/
       onInfoListRowTapped: ""
     },
     handlers: {
+      onScroll: "scrolled",
       onSetupItem: "setupItem"
     },
     collectionChanged: function () {
@@ -65,7 +69,19 @@ trailing:true white:true*/
         query = this.getQuery(),
         success;
       options = options ? _.clone(options) : {};
+      options.showMore = _.isBoolean(options.showMore) ?
+        options.showMore : false;
       success = options.success;
+      
+      // Lazy Loading
+      if (options.showMore) {
+        query.rowOffset += ROWS_PER_FETCH;
+        options.add = true;
+      } else {
+        query.rowOffset = 0;
+        query.rowLimit = ROWS_PER_FETCH;
+      }
+      
       _.extend(options, {
         success: function (resp, status, xhr) {
           that.fetched();
@@ -95,6 +111,18 @@ trailing:true white:true*/
     },
     itemTap: function (inSender, inEvent) {
       this.doInfoListRowTapped(inEvent);
+    },
+    scrolled: function (inSender, inEvent) {
+      var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
+        options = {};
+        
+      // Handle lazy loading
+      if (this.getIsMore() && this.getScrollPosition() > max && !this.getIsFetching()) {
+        this.setIsFetching(true);
+        options.showMore = true;
+        this.fetch(options);
+      }
+      return true;
     },
     setupItem: function (inSender, inEvent) {
       var model = this._collection.models[inEvent.index],
