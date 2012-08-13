@@ -20,8 +20,7 @@ trailing:true white:true*/
       workspace: "XV.AccountWorkspace"
     },
     components: [
-      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
-        components: [
+      {kind: "XV.InfoListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
@@ -64,8 +63,7 @@ trailing:true white:true*/
       workspace: "XV.ContactWorkspace"
     },
     components: [
-      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
-        components: [
+      {kind: "XV.InfoListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
@@ -102,8 +100,7 @@ trailing:true white:true*/
       workspace: "XV.IncidentWorkspace"
     },
     components: [
-      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
-        components: [
+      {kind: "XV.InfoListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
@@ -113,12 +110,12 @@ trailing:true white:true*/
             ]},
             {attr: "description", classes: "xv-infolist-attr"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "second", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "second", components: [
             {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "third", fit: true, components: [
+          {kind: "XV.InfoListColumn", classes: "third", components: [
             {kind: "XV.InfoListAttr", attr: "getIncidentStatusString",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
@@ -153,8 +150,7 @@ trailing:true white:true*/
       workspace: "XV.OpportunityWorkspace"
     },
     components: [
-      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
-        components: [
+      {kind: "XV.InfoListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
@@ -166,13 +162,13 @@ trailing:true white:true*/
             ]},
             {kind: "XV.InfoListAttr", attr: "name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "second", fit: true,
+          {kind: "XV.InfoListColumn", classes: "second",
             components: [
             {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "third", fit: true,
+          {kind: "XV.InfoListColumn", classes: "third",
             components: [
             {kind: "XV.InfoListAttr", attr: "opportunityStage.name",
               placeholder: "_noStage".loc()},
@@ -210,8 +206,7 @@ trailing:true white:true*/
       workspace: "XV.ProjectWorkspace"
     },
     components: [
-      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
-        components: [
+      {kind: "XV.InfoListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
@@ -339,8 +334,7 @@ trailing:true white:true*/
       workspace: "XV.ToDoWorkspace"
     },
     components: [
-      {name: "item", classes: "xv-infolist-item", ontap: "itemTap",
-        components: [
+      {kind: "XV.InfoListItem", components: [
         {kind: "FittableColumns", components: [
           {kind: "XV.InfoListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
@@ -351,13 +345,13 @@ trailing:true white:true*/
             ]},
             {kind: "XV.InfoListAttr", attr: "description"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "second", fit: true,
+          {kind: "XV.InfoListColumn", classes: "second",
             components: [
             {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
             {kind: "XV.InfoListAttr", attr: "contact.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "third", fit: true,
+          {kind: "XV.InfoListColumn", classes: "third",
             components: [
             {kind: "XV.InfoListAttr", attr: "getToDoStatusString"},
             {kind: "XV.InfoListAttr", attr: "owner.username"}
@@ -427,69 +421,64 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.HonorificList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
       label: "_honorifics".loc(),
       collection: "XM.HonorificCollection",
       query: {orderBy: [{ attribute: 'code' }] },
-      rowClass: "XV.HonorificCollectionRow",
       workspace: "XV.HonorificWorkspace"
-    }
-  });
-
-  enyo.kind({
-    name: "XV.HonorificCollectionRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "code", classes: "" }
-      ]
+    },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "XV.InfoListColumn", classes: "last", components: [
+          {kind: "XV.InfoListAttr", attr: "code", classes: "bold"}
+        ]}
+      ]}
     ]
   });
-
 
   // ..........................................................
   // STATES AND COUNTRIES
   //
+  
+  enyo.kind({
+    name: "XV.AbbreviationInfoList",
+    kind: "XV.InfoList2",
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "short",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "abbreviation", classes: "bold"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "name"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
 
   enyo.kind({
     name: "XV.StateList",
-    kind: "XV.InfoList",
+    kind: "XV.AbbreviationInfoList",
     published: {
       label: "_states".loc(),
       collection: "XM.StateCollection",
       query: {orderBy: [{ attribute: 'abbreviation' }] },
-      rowClass: "XV.AbbreviationNameRow",
       workspace: "XV.StateWorkspace"
     }
   });
 
   enyo.kind({
     name: "XV.CountryList",
-    kind: "XV.InfoList",
+    kind: "XV.AbbreviationInfoList",
     published: {
       label: "_countries".loc(),
       collection: "XM.CountryCollection",
       query: {orderBy: [{ attribute: 'name' }] },
-      rowClass: "XV.AbbreviationNameRow",
       workspace: "XV.CountryWorkspace"
     }
-  });
-
-  enyo.kind({
-    name: "XV.AbbreviationNameRow",
-    kind: "XV.InfoListRow",
-    leftColumn: [
-      [
-        { width: 160 },
-        { name: "abbreviation", classes: "" }
-      ],
-      [
-        { width: 160 },
-        { name: "name", classes: "" }
-      ]
-    ]
   });
 
   // ..........................................................
@@ -502,13 +491,23 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.NameDescriptionList",
-    kind: "XV.InfoList",
+    kind: "XV.InfoList2",
     published: {
-      label: "",
-      collection: null,
-      query: {orderBy: [{ attribute: 'order' }] },
-      rowClass: "XV.NameDescriptionRow"
+      query: {orderBy: [{ attribute: 'order' }] }
     },
+    components: [
+      {kind: "XV.InfoListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.InfoListColumn", classes: "short",
+            components: [
+            {kind: "XV.InfoListAttr", attr: "name", classes: "bold"}
+          ]},
+          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.InfoListAttr", attr: "description"}
+          ]}
+        ]}
+      ]}
+    ],
     /**
      * All of these lists follow a very similar naming convention.
      * Apply that convention unless the list overrides the label
@@ -518,8 +517,6 @@ trailing:true white:true*/
       this.inherited(arguments);
       var kindName = this.kind.substring(0, this.kind.length - 4).substring(3);
       if (!this.getLabel()) {
-        // Pluralize - if this gets any more complicated, we should
-        // pull in a pluralize function
         var label = "_" + kindName.camelize().pluralize();
         this.setLabel(label.loc());
       }

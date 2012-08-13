@@ -101,12 +101,18 @@ trailing:true white:true*/
     }
 
   });
-  
+
+  enyo.kind({
+    name: "XV.InfoListItem",
+    classes: "xv-infolist-item",
+    ontap: "itemTap"
+  });
+
   enyo.kind({
     name: "XV.InfoListColumn",
     classes: "xv-infolist-column"
   });
-  
+
   enyo.kind({
     name: "XV.InfoListAttr",
     classes: "xv-infolist-attr",
@@ -120,6 +126,7 @@ trailing:true white:true*/
     kind: "List",
     classes: "xv-infolist",
     published: {
+      label: "",
       collection: null,
       query: null,
       isFetching: false,
@@ -135,8 +142,9 @@ trailing:true white:true*/
     },
     collectionChanged: function () {
       var collection = this.getCollection(),
-        Klass = XT.getObjectByName(collection);
+        Klass = collection ? XT.getObjectByName(collection) : false;
       delete this._collection;
+      if (!Klass) { return; }
       if (Klass) { this._collection = new Klass(); }
     },
     create: function () {
@@ -192,7 +200,7 @@ trailing:true white:true*/
         view,
         value,
         formatter;
-      
+
       // Loop through all attribute container children and set content
       for (prop in this.$) {
         if (this.$.hasOwnProperty(prop) && this.$[prop].getAttr) {
