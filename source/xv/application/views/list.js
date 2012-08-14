@@ -57,6 +57,8 @@ trailing:true white:true*/
       label: "_contacts".loc(),
       collection: "XM.ContactInfoCollection",
       query: {orderBy: [
+        {attribute: 'lastName', isEmpty: true},
+        {attribute: 'firstName', isEmpty: true},
         {attribute: 'lastName'},
         {attribute: 'firstName'},
         {attribute: 'id'}
