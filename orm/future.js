@@ -179,7 +179,7 @@
     "context": "billing",
     "nameSpace": "XM",
     "type": "IncidentCustomer",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Customer",
     "privileges": {
@@ -1420,7 +1420,7 @@
     "context": "payments",
     "nameSpace": "XM",
     "type": "IncidentVendor",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Vendor Map",
     "privileges": {
@@ -3026,7 +3026,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerContact",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Contact Map",
     "privileges": {
@@ -3353,7 +3353,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerCustomer",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Account Map",
     "privileges": {
@@ -3419,7 +3419,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerFile",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer File Map",
     "privileges": {
@@ -3485,7 +3485,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerImage",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Image Map",
     "privileges": {
@@ -3715,7 +3715,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerItem",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Item Map",
     "privileges": {
@@ -4147,7 +4147,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "CustomerUrl",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Customer Url Map",
     "privileges": {

@@ -267,7 +267,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityAccount",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Account Map",
     "canUpdate": false,
@@ -467,7 +467,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityContact",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "privileges": {
       "all": {
@@ -532,7 +532,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityFile",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity File Map",
     "privileges": {
@@ -598,7 +598,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityImage",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Image Map",
     "privileges": {
@@ -780,7 +780,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityItem",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Item Map",
     "privileges": {
@@ -846,7 +846,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityOpportunity",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Item Map",
     "privileges": {
@@ -1042,7 +1042,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "OpportunityUrl",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Url Map",
     "privileges": {

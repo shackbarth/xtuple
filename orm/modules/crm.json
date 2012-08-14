@@ -89,7 +89,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "AccountIncident",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Account Incident Map",
     "privileges": {
@@ -155,7 +155,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "AccountOpportunity",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Account Opportunity Map",
     "privileges": {
@@ -221,7 +221,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "AccountProject",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Account Project Map",
     "privileges": {
@@ -287,7 +287,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "AccountToDo",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident To Do Map",
     "privileges": {
@@ -353,7 +353,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ContactIncident",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Incident Map",
     "privileges": {
@@ -419,7 +419,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ContactOpportunity",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Opportunity Map",
     "privileges": {
@@ -485,7 +485,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ContactProject",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Project Map",
     "privileges": {
@@ -551,7 +551,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ContactToDo",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident To Do Map",
     "privileges": {
@@ -710,7 +710,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "IncidentOpportunity",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Opportunity Map",
     "privileges": {
@@ -776,7 +776,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "IncidentProject",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Project Map",
     "privileges": {
@@ -842,7 +842,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "IncidentToDo",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident To Do Map",
     "privileges": {
@@ -961,7 +961,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "OpportunityIncident",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Incident Map",
     "privileges": {
@@ -1027,7 +1027,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "OpportunityProject",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity Project Map",
     "privileges": {
@@ -1093,7 +1093,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "OpportunityToDo",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Opportunity ToDo Map",
     "privileges": {
@@ -1204,7 +1204,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ProjectIncident",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Incident Map",
     "privileges": {
@@ -1270,7 +1270,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ProjectOpportunity",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Opportunity Map",
     "privileges": {
@@ -1336,7 +1336,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ProjectToDo",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project To Do Map",
     "privileges": {
@@ -1503,7 +1503,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ToDoIncident",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Incident Map",
     "privileges": {
@@ -1569,7 +1569,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ToDoOpportunity",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Opportunity Map",
     "privileges": {
@@ -1635,7 +1635,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ToDoProject",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Project Map",
     "privileges": {

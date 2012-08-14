@@ -252,7 +252,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactAccount",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Account Map",
     "privileges": {
@@ -460,7 +460,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactContact",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Contact Map",
     "privileges": {
@@ -568,7 +568,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactFile",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact File Map",
     "privileges": {
@@ -634,7 +634,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactImage",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Image Map",
     "privileges": {
@@ -830,7 +830,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactItem",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Item Map",
     "privileges": {
@@ -896,7 +896,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ContactUrl",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Contact Url Map",
     "privileges": {
