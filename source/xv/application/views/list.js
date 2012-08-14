@@ -15,7 +15,9 @@ trailing:true white:true*/
     published: {
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
-      query: {orderBy: [{ attribute: 'number' }] },
+      query: {orderBy: [
+        {attribute: 'number' }
+      ]},
       parameterWidget: "XV.AccountInfoParameters",
       workspace: "XV.AccountWorkspace"
     },
@@ -54,11 +56,11 @@ trailing:true white:true*/
     published: {
       label: "_contacts".loc(),
       collection: "XM.ContactInfoCollection",
-      query: {orderBy: [{
-        attribute: 'lastName'
-      }, {
-        attribute: 'firstName'
-      }]},
+      query: {orderBy: [
+        {attribute: 'lastName'},
+        {attribute: 'firstName'},
+        {attribute: 'id'}
+      ]},
       parameterWidget: "XV.ContactInfoParameters",
       workspace: "XV.ContactWorkspace"
     },
@@ -96,6 +98,9 @@ trailing:true white:true*/
     published: {
       label: "_incidents".loc(),
       collection: "XM.IncidentInfoCollection",
+      query: {orderBy: [
+        {attribute: 'number'}
+      ]},
       parameterWidget: "XV.IncidentInfoParameters",
       workspace: "XV.IncidentWorkspace"
     },
@@ -143,6 +148,11 @@ trailing:true white:true*/
     kind: "XV.List",
     published: {
       collection: "XM.OpportunityInfoCollection",
+      query: {orderBy: [
+        {attribute: 'targetClose'},
+        {attribute: 'name'},
+        {attribute: 'id'}
+      ]},
       label: "_opportunities".loc(),
       parameterWidget: "XV.OpportunityInfoParameters",
       workspace: "XV.OpportunityWorkspace"
@@ -199,7 +209,9 @@ trailing:true white:true*/
     published: {
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
-      query: {orderBy: [{ attribute: 'number' }] },
+      query: {orderBy: [
+        {attribute: 'number' }
+      ]},
       parameterWidget: "XV.ProjectInfoParameters",
       workspace: "XV.ProjectWorkspace"
     },
@@ -337,7 +349,9 @@ trailing:true white:true*/
     published: {
       label: "_userAccounts".loc(),
       collection: "XM.UserAccountInfoCollection",
-      query: {orderBy: [{ attribute: 'username' }]},
+      query: {orderBy: [
+        {attribute: 'username'}
+      ]},
       workspace: "XV.UserAccountWorkspace"
     },
     components: [
@@ -371,7 +385,9 @@ trailing:true white:true*/
     published: {
       label: "_honorifics".loc(),
       collection: "XM.HonorificCollection",
-      query: {orderBy: [{ attribute: 'code' }] },
+      query: {orderBy: [
+        {attribute: 'code'}
+      ]},
       workspace: "XV.HonorificWorkspace"
     },
     components: [
@@ -422,7 +438,9 @@ trailing:true white:true*/
     published: {
       label: "_countries".loc(),
       collection: "XM.CountryCollection",
-      query: {orderBy: [{ attribute: 'name' }] },
+      query: {orderBy: [
+        {attribute: 'abbreviation'}
+      ]},
       workspace: "XV.CountryWorkspace"
     }
   });
@@ -439,7 +457,9 @@ trailing:true white:true*/
     name: "XV.NameDescriptionList",
     kind: "XV.List",
     published: {
-      query: {orderBy: [{ attribute: 'order' }] }
+      query: {orderBy: [
+        {attribute: 'name'}
+      ]}
     },
     components: [
       {kind: "XV.ListItem", components: [

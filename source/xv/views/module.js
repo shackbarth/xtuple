@@ -102,7 +102,7 @@ trailing:true white:true*/
         workspace = list.getWorkspace(),
         id = list.getModel(inEvent.index).id;
 
-      // Transition to workspace view, including the model as a payload
+      // Transition to workspace view, including the model id payload
       this.bubble("workspace", {
         eventName: "workspace",
         workspace: workspace,
@@ -178,7 +178,7 @@ trailing:true white:true*/
         this.$.menu.select(index);
       }
 
-      // keep the selected list in state as a kind variable
+      // Keep the selected list in state as a kind variable
       this.selectedList = index;
 
       // Select list
