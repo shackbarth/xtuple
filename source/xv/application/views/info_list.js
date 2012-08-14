@@ -185,7 +185,7 @@ trailing:true white:true*/
       var isLate = model && model.get('isActive') &&
         (XT.date.compareDate(value, new Date()) < 1);
       view.addRemoveClass("error", isLate);
-      return view;
+      return value;
     }
   });
 
