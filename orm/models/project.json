@@ -222,7 +222,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ProjectAccount",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Account Map",
     "privileges": {
@@ -372,7 +372,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectContact",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Contact Map",
     "privileges": {
@@ -438,7 +438,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectFile",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project File Map",
     "privileges": {
@@ -504,7 +504,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectImage",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Image Map",
     "privileges": {
@@ -723,7 +723,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectItem",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Item Map",
     "privileges": {
@@ -789,7 +789,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectProject",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Project Map",
     "privileges": {
@@ -1326,7 +1326,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ProjectUrl",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Project Url Map",
     "privileges": {

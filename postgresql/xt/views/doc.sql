@@ -1,6 +1,6 @@
-drop view if exists xt.docinfo cascade;
+drop view if exists xt.doc cascade;
 
-create or replace view xt.docinfo as 
+create or replace view xt.doc as 
 
    select
     docass_id as id,
@@ -35,15 +35,15 @@ create or replace view xt.docinfo as
     imageass_purpose as purpose
    from imageass;
 
-grant all on table xt.docinfo to xtrole;
+grant all on table xt.doc to xtrole;
 
 -- insert rules
 
-create or replace rule "_CREATE" as on insert to xt.docinfo
+create or replace rule "_CREATE" as on insert to xt.doc
   do instead nothing;
 
 
-create or replace rule "_CREATE_DOC" as on insert to xt.docinfo
+create or replace rule "_CREATE_DOC" as on insert to xt.doc
   where new.target_type != 'IMG' do instead
 
 insert into public.docass (
@@ -61,7 +61,7 @@ values (
   new.target_type,
   new.purpose );
   
-create or replace rule "_CREATE_IMG" as on insert to xt.docinfo
+create or replace rule "_CREATE_IMG" as on insert to xt.doc
   where new.target_type = 'IMG' do instead
 
 insert into public.imageass (
@@ -79,21 +79,21 @@ values (
 
 -- update rule
 
-create or replace rule "_UPDATE" as on update to xt.docinfo
+create or replace rule "_UPDATE" as on update to xt.doc
   do instead nothing;
 
 -- delete rules
 
-create or replace rule "_DELETE" as on delete to xt.docinfo
+create or replace rule "_DELETE" as on delete to xt.doc
   do instead nothing;
   
-create or replace rule "_DELETE_DOC" as on delete to xt.docinfo
+create or replace rule "_DELETE_DOC" as on delete to xt.doc
   where old.target_type != 'IMG' do instead
 
 delete from public.docass 
 where ( docass_id = old.id );
 
-create or replace rule "_DELETE_IMG" as on delete to xt.docinfo
+create or replace rule "_DELETE_IMG" as on delete to xt.doc
   where old.target_type = 'IMG' do instead
 
 delete from public.imageass

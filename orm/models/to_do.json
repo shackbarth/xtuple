@@ -219,7 +219,7 @@
     "context": "crm",
     "nameSpace": "XM",
     "type": "ToDoAccount",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Account Map",
     "privileges": {
@@ -476,7 +476,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoContact",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Contact Map",
     "privileges": {
@@ -542,7 +542,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoFile",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo File Map",
     "privileges": {
@@ -608,7 +608,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoImage",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Image Map",
     "privileges": {
@@ -775,7 +775,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoItem",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Item Map",
     "privileges": {
@@ -919,7 +919,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoToDo",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo ToDo Map",
     "privileges": {
@@ -985,7 +985,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ToDoUrl",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "ToDo Url Map",
     "privileges": {

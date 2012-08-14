@@ -270,7 +270,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentAccount",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Account Map",
     "canUpdate": false,
@@ -625,7 +625,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentContact",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Contact Map",
     "privileges": {
@@ -691,7 +691,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentFile",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident File Map",
     "privileges": {
@@ -808,7 +808,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentImage",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Image Map",
     "privileges": {
@@ -874,7 +874,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentIncident",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Incident Map",
     "privileges": {
@@ -1073,7 +1073,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentItem",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Item Map",
     "privileges": {
@@ -1313,7 +1313,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "IncidentUrl",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Incident Url Map",
     "privileges": {

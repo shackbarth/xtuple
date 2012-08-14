@@ -235,7 +235,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemAccount",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Account Map",
     "privileges": {
@@ -512,7 +512,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemContact",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Contact Map",
     "privileges": {
@@ -578,7 +578,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemFile",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Item File Map",
     "privileges": {
@@ -644,7 +644,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemImage",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Image Map",
     "privileges": {
@@ -799,7 +799,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemItem",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Item Map",
     "privileges": {
@@ -865,7 +865,7 @@
     "context": "xtuple",
     "nameSpace": "XM",
     "type": "ItemUrl",
-    "table": "xt.docinfo",
+    "table": "xt.doc",
     "idSequenceName": "docass_docass_id_seq",
     "comment": "Item Url Map",
     "privileges": {
