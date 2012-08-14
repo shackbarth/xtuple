@@ -17,17 +17,12 @@ white:true*/
     },
     classes: "xv-repeater-box xv-groupbox",
     components: [
-      // XXX I'd rather not have to hardcode in the height here, but the scroller seems buggy without
-      { kind: "enyo.Scroller", maxHeight:"500px", components: [
-        { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title", name: "title", content: "Title" },
-        { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline xv-repeater-box-header", name: "headerRow" },
-        { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
-          { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
-        ]},
-        // XXX this button should be disabled if the user doesn't have permission
-        // XXX but how to tell this from the collection?
-        { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
-      ]}
+      { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title", name: "title", content: "Title" },
+      { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline xv-repeater-box-header", name: "headerRow" },
+      { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
+        { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
+      ]},
+      { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
     ],
     create: function () {
       this.inherited(arguments);
@@ -83,6 +78,13 @@ white:true*/
      * Display the collection in the grid when it's passed in.
      */
     collectionChanged: function () {
+      /**
+       * Disable the "create new" button if the user doesn't have permission
+       * to add a model to this collection
+       */
+      if (!this.getCollection().model.canCreate()) {
+        this.$.newRowButton.setDisabled(true);
+      }
       // XXX this should get called here but some bug is keeping setupRow from being called
       //this.$.repeater.setCount(this.getCollection().size());
     },

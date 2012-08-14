@@ -355,7 +355,8 @@ trailing:true white:true*/
     setupItem: function (inSender, inEvent) {
       var box = this.getMenuItems()[inEvent.index],
         defaultTitle =  "_menu".loc() + inEvent.index,
-        title = box.getTitle ? box.getTitle() || defaultTitle : defaultTitle;
+        title = box.getTitle ? box.getTitle() || defaultTitle :
+          box.title ? box.title || defaultTitle : defaultTitle;
       this.$.item.setContent(title);
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
@@ -396,5 +397,5 @@ trailing:true white:true*/
       }
     }
   });
-  
+
 }());

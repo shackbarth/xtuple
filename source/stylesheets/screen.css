@@ -67,7 +67,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: block;
 }
 
-/* line 16, ../sass/screen.scss */
+/* line 17, ../sass/screen.scss */
 .bggrad {
   background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 70, color-stop(0%, #666666), color-stop(70%, #333333));
   background-image: -webkit-radial-gradient(#666666, #333333 70%);
@@ -77,19 +77,19 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #999;
 }
 
-/* line 21, ../sass/screen.scss */
+/* line 22, ../sass/screen.scss */
 .app > * {
   width: 320px;
   box-shadow: -4px -4px 4px rgba(0, 0, 0, 0.3);
   background: #555;
 }
 
-/* line 27, ../sass/screen.scss */
+/* line 28, ../sass/screen.scss */
 .left {
   color: white;
 }
 
-/* line 31, ../sass/screen.scss */
+/* line 32, ../sass/screen.scss */
 .item {
   position: relative;
   border-bottom: 1px solid #0E0E0E;
@@ -97,24 +97,24 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #333333;
 }
 
-/* line 38, ../sass/screen.scss */
+/* line 39, ../sass/screen.scss */
 .item.onyx-selected {
   background-color: #226B9A;
 }
 
-/* line 42, ../sass/screen.scss */
+/* line 43, ../sass/screen.scss */
 .panels > * {
   border: 2px solid #333;
   font-size: 5em;
 }
 
-/* line 48, ../sass/screen.scss */
+/* line 49, ../sass/screen.scss */
 .wide > * {
   min-width: 50%;
 }
 
 /** DASHBOARD */
-/* line 55, ../sass/screen.scss */
+/* line 56, ../sass/screen.scss */
 .xt-app .xt-dashboard {
   background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 70, color-stop(0%, #666666), color-stop(70%, #333333));
   background-image: -webkit-radial-gradient(#666666, #333333 70%);
@@ -130,7 +130,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   right: 0;
   bottom: 0;
 }
-/* line 65, ../sass/screen.scss */
+/* line 66, ../sass/screen.scss */
 .xt-app .xt-dashboard .xt-dashboard-container {
   position: absolute;
   top: 50%;
@@ -139,11 +139,11 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   margin-top: -65px;
   height: 131px;
 }
-/* line 72, ../sass/screen.scss */
+/* line 73, ../sass/screen.scss */
 .xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons {
   margin: auto auto;
 }
-/* line 74, ../sass/screen.scss */
+/* line 75, ../sass/screen.scss */
 .xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -151,18 +151,18 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   display: inline-block;
   margin: 0 10px;
 }
-/* line 78, ../sass/screen.scss */
+/* line 79, ../sass/screen.scss */
 .xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon:hover {
   cursor: pointer;
 }
-/* line 81, ../sass/screen.scss */
+/* line 82, ../sass/screen.scss */
 .xt-app .xt-dashboard .xt-dashboard-container .xt-dashboard-icons .xt-dashboard-icon .xt-dashboard-icon-label {
   width: 100%;
   text-align: center;
 }
 
 /** END DASHBOARD */
-/* line 94, ../sass/screen.scss */
+/* line 95, ../sass/screen.scss */
 .developer-ui-container {
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
   -moz-box-shadow: #333333 4px 4px 10px -4px;
@@ -176,12 +176,12 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #d8d8d8;
   z-index: 10;
 }
-/* line 104, ../sass/screen.scss */
+/* line 105, ../sass/screen.scss */
 .developer-ui-container .developer-rows .row {
   display: block;
   margin: 10px;
 }
-/* line 110, ../sass/screen.scss */
+/* line 111, ../sass/screen.scss */
 .developer-ui-container .onyx-grabber.developer-grabber {
   -webkit-box-shadow: #333333 4px 4px 10px -4px;
   -moz-box-shadow: #333333 4px 4px 10px -4px;
@@ -200,7 +200,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   width: 50px;
 }
 
-/* line 124, ../sass/screen.scss */
+/* line 125, ../sass/screen.scss */
 .crm-menu-item {
   padding: 10px;
   margin: 10px 0;
@@ -208,54 +208,54 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
   background-color: #fff;
   color: #000;
 }
-/* line 130, ../sass/screen.scss */
+/* line 131, ../sass/screen.scss */
 .crm-menu-item.selected {
   background-color: #eee;
 }
-/* line 133, ../sass/screen.scss */
+/* line 134, ../sass/screen.scss */
 .crm-menu-item:hover {
   background-color: #eee;
 }
 
-/* line 138, ../sass/screen.scss */
+/* line 139, ../sass/screen.scss */
 .xt-sub-module-content {
   -webkit-box-shadow: black -4px 0 10px -4px;
   -moz-box-shadow: black -4px 0 10px -4px;
   box-shadow: black -4px 0 10px -4px;
 }
 
-/* line 143, ../sass/screen.scss */
+/* line 144, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu {
   width: 320px !important;
   background-color: #fff;
 }
-/* line 146, ../sass/screen.scss */
+/* line 147, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item {
   padding: 15px;
   vertical-align: middle;
   border-bottom: 1px solid #ddd;
 }
-/* line 150, ../sass/screen.scss */
+/* line 151, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:hover {
   background-color: #d6f1ff;
   cursor: pointer;
 }
-/* line 154, ../sass/screen.scss */
+/* line 155, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item:active {
   background-color: #fff;
 }
-/* line 157, ../sass/screen.scss */
+/* line 158, ../sass/screen.scss */
 .xt-module-screen .xt-module-menu .xt-module-menu-item.selected {
   background-color: #d6f1ff;
 }
 
 /******** ********/
-/* line 167, ../sass/screen.scss */
+/* line 168, ../sass/screen.scss */
 body {
   font-family: "arial", "arial black";
 }
 
-/* line 171, ../sass/screen.scss */
+/* line 172, ../sass/screen.scss */
 .xt-app {
   position: absolute;
   top: 0;
@@ -263,7 +263,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 177, ../sass/screen.scss */
+/* line 178, ../sass/screen.scss */
 .xt-app .xt-postbooks {
   position: absolute;
   top: 0;
@@ -271,7 +271,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 183, ../sass/screen.scss */
+/* line 184, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container {
   position: absolute;
   top: 0;
@@ -279,7 +279,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 191, ../sass/screen.scss */
+/* line 192, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen {
   position: absolute;
   top: 0;
@@ -288,7 +288,7 @@ body {
   bottom: 0;
   background-color: #fff;
 }
-/* line 198, ../sass/screen.scss */
+/* line 199, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block {
   background: url("../assets/login-blue-scr.png") 0 0 no-repeat;
   position: absolute;
@@ -299,7 +299,7 @@ body {
   height: 250px;
   width: 300px;
 }
-/* line 207, ../sass/screen.scss */
+/* line 208, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block {
   position: absolute;
   top: 30px;
@@ -309,19 +309,19 @@ body {
   /*background-color: $blue1;*/
   overflow: hidden;
 }
-/* line 217, ../sass/screen.scss */
+/* line 218, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-input.xt-login-input {
   display: block;
   margin: 10px;
   margin-left: 35px;
 }
-/* line 224, ../sass/screen.scss */
+/* line 225, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-user-login-block .xt-user-login-sub-block .xt-user-login-form .xt-button.xt-login-button {
   display: block;
   margin-left: 152px;
   width: 80px;
 }
-/* line 233, ../sass/screen.scss */
+/* line 234, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-postbooks-container .xt-login .xt-login-screen .xt-user-login-screen .xt-login-logo-block {
   /*@include box-shadow(#000 -9px 0 20px -14px);*/
   position: absolute;
@@ -333,7 +333,7 @@ body {
   background: url("../assets/login-logo.png") 0 0 no-repeat;
 }
 
-/* line 253, ../sass/screen.scss */
+/* line 254, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper {
   position: absolute;
   top: 80px;
@@ -341,7 +341,7 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 259, ../sass/screen.scss */
+/* line 260, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list {
   position: absolute;
   top: 0;
@@ -349,13 +349,13 @@ body {
   right: 0;
   bottom: 0;
 }
-/* line 266, ../sass/screen.scss */
+/* line 267, ../sass/screen.scss */
 .xt-login-screen .xt-session-selection-screen .xt-available-sessions .xt-available-sessions-wrapper .xt-available-sessions-list .xt-session-selection-row div {
   display: inline-block;
   padding: 5px;
 }
 
-/* line 279, ../sass/screen.scss */
+/* line 280, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-input {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -371,7 +371,7 @@ body {
   font-family: "arial", "arial black";
   width: 180px;
 }
-/* line 291, ../sass/screen.scss */
+/* line 292, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
@@ -387,48 +387,48 @@ body {
   background-color: #fff;
   color: #aaa;
 }
-/* line 301, ../sass/screen.scss */
+/* line 302, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-button:active {
   background-color: #ddd;
 }
-/* line 306, ../sass/screen.scss */
+/* line 307, ../sass/screen.scss */
 .xt-app .xt-postbooks .xt-screen-carousel {
   height: 100%;
   width: 100%;
 }
 
 /********* PULLOUT ************/
-/* line 315, ../sass/screen.scss */
+/* line 316, ../sass/screen.scss */
 .parameter-item {
   min-height: 50px;
 }
 
-/* line 319, ../sass/screen.scss */
+/* line 320, ../sass/screen.scss */
 .parameter-item-input {
   margin-top: -10px;
   float: right;
 }
 
-/* line 324, ../sass/screen.scss */
+/* line 325, ../sass/screen.scss */
 .history-header {
   text-align: center;
   padding: 10px 0;
 }
 
-/* line 329, ../sass/screen.scss */
+/* line 330, ../sass/screen.scss */
 .history-scroller {
   background-color: #fff;
 }
 
 /* adapt to smaller displays */
 @media (max-width: 480px) {
-  /* line 335, ../sass/screen.scss */
+  /* line 336, ../sass/screen.scss */
   .pullout-menu {
     display: block;
     margin: 0;
   }
 }
-/* line 341, ../sass/screen.scss */
+/* line 342, ../sass/screen.scss */
 .pullout {
   position: absolute;
   top: 57px;
@@ -438,7 +438,7 @@ body {
   background: #D8D8D8;
 }
 
-/* line 350, ../sass/screen.scss */
+/* line 351, ../sass/screen.scss */
 .pullout-shadow {
   position: absolute;
   height: 100%;
@@ -450,7 +450,7 @@ body {
   background-size: 20px 2px;
 }
 
-/* line 361, ../sass/screen.scss */
+/* line 362, ../sass/screen.scss */
 .pullout-grabbutton {
   position: absolute;
   height: 54px;
@@ -462,7 +462,7 @@ body {
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* line 372, ../sass/screen.scss */
+/* line 373, ../sass/screen.scss */
 .pullout-toolbar {
   padding-top: 4px;
   text-align: center;
@@ -470,7 +470,7 @@ body {
 
 /*********END PULLOUT *********/
 /*********XV VIEWS***********/
-/* line 382, ../sass/screen.scss */
+/* line 383, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -480,27 +480,27 @@ body {
   padding-bottom: 3px;
   border-bottom: 1px solid #ddd;
 }
-/* line 389, ../sass/screen.scss */
+/* line 390, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column.short {
   width: 150px;
 }
-/* line 392, ../sass/screen.scss */
+/* line 393, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column.first {
   width: 320px;
 }
-/* line 395, ../sass/screen.scss */
+/* line 396, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column.second {
   width: 165px;
 }
-/* line 398, ../sass/screen.scss */
+/* line 399, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column.third {
   width: 75px;
 }
-/* line 401, ../sass/screen.scss */
+/* line 402, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column.money {
   width: 100px;
 }
-/* line 404, ../sass/screen.scss */
+/* line 405, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr {
   padding: 5px;
   font-size: 13px;
@@ -509,34 +509,34 @@ body {
   text-overflow: ellipsis;
   color: black;
 }
-/* line 411, ../sass/screen.scss */
+/* line 412, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.right {
   position: absolute;
   right: 0px;
 }
-/* line 415, ../sass/screen.scss */
+/* line 416, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.text-align-right {
   text-align: right;
 }
-/* line 418, ../sass/screen.scss */
+/* line 419, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.bold {
   font-weight: bold;
 }
-/* line 421, ../sass/screen.scss */
+/* line 422, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.error {
   color: #ff0000;
 }
-/* line 424, ../sass/screen.scss */
+/* line 425, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.italic {
   font-style: italic;
 }
-/* line 427, ../sass/screen.scss */
+/* line 428, ../sass/screen.scss */
 .xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.placeholder {
   font-style: italic;
   color: #93a1a1;
 }
 
-/* line 436, ../sass/screen.scss */
+/* line 437, ../sass/screen.scss */
 .xv-groupbox {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -546,94 +546,140 @@ body {
   margin-right: 5px;
 }
 
-/* line 445, ../sass/screen.scss */
+/* line 446, ../sass/screen.scss */
 .xv-repeater-box {
   width: 880px;
 }
-/* line 447, ../sass/screen.scss */
+/* line 448, ../sass/screen.scss */
 .xv-repeater-box .xv-label {
-  width: 100px;
+  width: 90px;
   font-weight: bold;
   border-width: 0px;
   font-size: 12px;
   text-align: center;
 }
-/* line 454, ../sass/screen.scss */
+/* line 455, ../sass/screen.scss */
+.xv-repeater-box .xv-wide-entry {
+  width: 200px;
+}
+/* line 458, ../sass/screen.scss */
 .xv-repeater-box .xv-input {
   width: 100px;
   border-width: 0px;
 }
-/* line 457, ../sass/screen.scss */
+/* line 461, ../sass/screen.scss */
 .xv-repeater-box .xv-input .xv-subinput {
   width: 90px;
   border-width: 0px;
 }
+/* line 468, ../sass/screen.scss */
+.xv-repeater-box .xv-slim-date-widget .xv-input-decorator {
+  padding: 0px;
+  height: 32px;
+}
+/* line 472, ../sass/screen.scss */
+.xv-repeater-box .xv-slim-date-widget .xv-label {
+  visibility: hidden;
+}
+/* line 475, ../sass/screen.scss */
+.xv-repeater-box .xv-slim-date-widget .onyx-icon {
+  vertical-align: top;
+}
+/* line 478, ../sass/screen.scss */
+.xv-repeater-box .xv-slim-date-widget .onyx-input {
+  width: 60px;
+  vertical-align: top;
+}
 
-/* line 464, ../sass/screen.scss */
+/* line 485, ../sass/screen.scss */
 .xv-repeater-box-row {
   background-color: white;
 }
+/* line 487, ../sass/screen.scss */
+.xv-repeater-box-row .xv-wide-entry {
+  width: 200px;
+}
+/* line 489, ../sass/screen.scss */
+.xv-repeater-box-row .xv-wide-entry .xv-subinput {
+  width: 200px;
+}
+/* line 493, ../sass/screen.scss */
+.xv-repeater-box-row .xv-delete-button {
+  width: 14px;
+  height: 21px;
+  padding-top: 0px;
+}
 
-/* line 468, ../sass/screen.scss */
+/* line 500, ../sass/screen.scss */
 .xv-comment-box {
   width: 700px;
 }
-/* line 470, ../sass/screen.scss */
+/* line 502, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-row {
-  height: 135px;
+  height: 140px;
 }
-/* line 473, ../sass/screen.scss */
+/* line 505, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-createdBy {
   font-weight: bold;
 }
-/* line 476, ../sass/screen.scss */
+/* line 509, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-text {
   position: absolute;
-  margin-top: 50px;
+  margin-top: 40px;
+  border-width: 0px;
   width: 500px;
-  height: 80px;
   border: 1px solid grey;
 }
-/* line 482, ../sass/screen.scss */
-.xv-comment-box .xv-comment-box-text .xv-subinput {
+/* line 519, ../sass/screen.scss */
+.xv-comment-box .xv-textarea-input {
   height: 75px;
+  min-height: 75px;
   width: 490px;
 }
-/* line 487, ../sass/screen.scss */
+/* line 525, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-header {
   visibility: hidden;
+}
+/* line 528, ../sass/screen.scss */
+.xv-comment-box .xv-comment-box-comment-type {
+  border-width: 0px;
+}
+/* line 530, ../sass/screen.scss */
+.xv-comment-box .xv-comment-box-comment-type .xv-picker {
+  height: 25px;
+  padding: 2px;
 }
 
 /*********END XV VIEWS***********/
 /*********XV WIDGETS***********/
-/* line 496, ../sass/screen.scss */
+/* line 541, ../sass/screen.scss */
 .xv-dropdownwidget {
   background-color: white;
 }
 
-/* line 500, ../sass/screen.scss */
+/* line 545, ../sass/screen.scss */
 .xv-picker {
   width: 200px;
 }
 
-/* line 505, ../sass/screen.scss */
+/* line 550, ../sass/screen.scss */
 .xv-label {
   width: 100px;
   padding-right: 8px;
   text-align: right;
 }
 
-/* line 511, ../sass/screen.scss */
+/* line 556, ../sass/screen.scss */
 .xv-inputwidget {
   background-color: white;
 }
 
-/* line 515, ../sass/screen.scss */
+/* line 560, ../sass/screen.scss */
 .xv-input-decorator {
   border: 0px;
 }
 
-/* line 519, ../sass/screen.scss */
+/* line 564, ../sass/screen.scss */
 .xv-textarea-input {
   border: 0px;
   width: 324px;
@@ -641,13 +687,13 @@ body {
   margin: 6px;
 }
 
-/* line 526, ../sass/screen.scss */
+/* line 571, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 531, ../sass/screen.scss */
+/* line 576, ../sass/screen.scss */
 .xv-relationwidget-description {
   text-indent: 120px;
   font-size: small;
@@ -655,7 +701,7 @@ body {
 }
 
 /********END XV WIDGETS******/
-/* line 540, ../sass/screen.scss */
+/* line 585, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -665,17 +711,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 548, ../sass/screen.scss */
+/* line 593, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 550, ../sass/screen.scss */
+/* line 595, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 557, ../sass/screen.scss */
+/* line 602, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -685,12 +731,12 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 565, ../sass/screen.scss */
+/* line 610, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 568, ../sass/screen.scss */
+/* line 613, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
