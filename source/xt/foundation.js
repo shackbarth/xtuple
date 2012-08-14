@@ -182,7 +182,7 @@ _.extend(XT, {
    * we actually have the model returned so that we can give
    * a nice title to the history item.
    */
-  addToHistory: function (module, model) {
+  addToHistory: function (workspaceType, model) {
    /**
     * We don't want to have duplicate entries in the history stack,
     * so delete any entry that's identical. We do this instead of
@@ -204,7 +204,7 @@ _.extend(XT, {
       modelType: model.recordType,
       modelId: model.get("id"),
       modelName: model.getValue(model.nameAttribute),
-      module: module
+      workspaceType: workspaceType
     });
   },
 

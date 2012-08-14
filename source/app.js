@@ -16,7 +16,7 @@ white:true*/
       onInfoListAdded: "addPulloutItem",
       onParameterChange: "parameterDidChange",
       onTogglePullout: "togglePullout",
-      onHistoryChanged: "refreshHistoryPanel",
+      onHistoryChange: "refreshHistoryPanel",
       onHistoryItemSelected: "selectHistoryItem"
     },
     components: [
@@ -88,17 +88,10 @@ white:true*/
      * expects to have a model with the event to know what to drill down into.
      */
     selectHistoryItem: function (inSender, inEvent) {
-      var module = inEvent.module;
-      var modelId = inEvent.modelId;
-      var modelType = inEvent.modelType;
-      var modelShell = { recordType: modelType, id: modelId };
-      XT.log("Load from history: " + modelType + " " + modelId);
-      // XXX we don't apply the module because workspace is a peer to crm etc.
-      // this might become a problem once we're in a true multimodule environment
-      // where for example backing up from a CRM workspace really should land you
-      // in the CRM module
+      XT.log("Load from history: " + inEvent.workspace + " " + inEvent.id);
+      inEvent.eventName = "workspace";
 
-      this.$.postbooks.getContainer().applyWorkspace(modelShell);
+      this.waterfall("workspace", inEvent);
     },
     start: function () {
 

@@ -15,7 +15,8 @@ trailing:true white:true*/
     events: {
       onError: "",
       onStatusChange: "",
-      onTitleChange: ""
+      onTitleChange: "",
+      onHistoryChange: ""
     },
     handlers: {
       onValueChange: "valueChanged"
@@ -151,6 +152,20 @@ trailing:true white:true*/
         attrs = model.getAttributeNames(),
         changes = {},
         i;
+
+      /**
+       * Add to history if appropriate. This method gets hit a few
+       * times and we only want to add to history when we have an
+       * id. Adding a model multiple times is not the end of the
+       * world, as the history array screens out duplicates
+       */
+      if (model.id) {
+        XT.addToHistory(this.kind, model);
+        this.doHistoryChange(this);
+      }
+
+
+
       for (i = 0; i < attrs.length; i++) {
         changes[attrs[i]] = true;
       }

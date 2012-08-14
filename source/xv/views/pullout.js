@@ -25,18 +25,16 @@ white:true*/
         {name: "client", classes: "pullout-toolbar"},
         {classes: "xv-pullout-header", name: "pulloutHeader", content: "" },
         {name: "pulloutItems", fit: true, style: "position: relative;", components: [
-          {name: "history", kind: "FittableRows", showing: false, classes: "enyo-fit", components: [
-            {fit: true, name: "historyPanel", kind: "Scroller", components: [
-              {
-                kind: "Repeater",
-                name: "historyList",
-                onSetupItem: "setupHistoryItem",
-                count: 0,
-                components: [
-                  { name: "historyItem" }
-                ]
-              }
-            ]}
+          {fit: true, name: "history", kind: "Scroller", components: [
+            {
+              kind: "Repeater",
+              name: "historyList",
+              onSetupItem: "setupHistoryItem",
+              count: 0,
+              components: [
+                { name: "historyItem" }
+              ]
+            }
           ]}
         ]}
       ]}
@@ -65,8 +63,8 @@ white:true*/
         ontap: "doHistoryItemSelected",
         content: modelTypeShow + ": " + historyData.modelName,
         modelType: historyData.modelType,
-        modelId: historyData.modelId,
-        module: historyData.module
+        id: historyData.modelId,
+        workspace: historyData.workspaceType
       });
     },
     getItem: function (name) {
