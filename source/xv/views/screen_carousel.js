@@ -87,8 +87,8 @@ trailing:true white:true*/
 
       this.inherited(arguments);
       active = this.getActive();
-      if (active && active.didBecomeActive) {
-        active.didBecomeActive();
+      if (active && active.activated) {
+        active.activated();
       }
     }
   });

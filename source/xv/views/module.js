@@ -62,20 +62,17 @@ trailing:true white:true*/
           ]}
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
-           margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
+           margin: 0, fit: true, onTransitionFinish: "finishedTransition"}
       ]},
       {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
     firstTime: true,
     fetched: {},
-    didBecomeActive: function () {
+    activated: function () {
       if (this.firstTime) {
         this.firstTime = false;
         this.setList(0);
       }
-    },
-    didFinishTransition: function (inSender, inEvent) {
-      this.setList(inSender.index);
     },
     create: function () {
       var i, component;
@@ -87,6 +84,9 @@ trailing:true white:true*/
         this.doListAdded(component);
       }
       this.$.menu.setCount(this.lists.length);
+    },
+    finishedTransition: function (inSender, inEvent) {
+      this.setList(inSender.index);
     },
     inputChanged: function (inSender, inEvent) {
       var index = this.$.lists.getIndex(),
