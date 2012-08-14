@@ -23,15 +23,10 @@ white:true*/
       {name: "grabber", kind: "onyx.Grabber", classes: "pullout-grabbutton", ondragfinish: "grabberDragFinish"},
       {kind: "FittableRows", classes: "enyo-fit", components: [
         {name: "client", classes: "pullout-toolbar"},
+        {classes: "xv-pullout-header", name: "pulloutHeader", content: "" },
         {name: "pulloutItems", fit: true, style: "position: relative;", components: [
           {name: "history", kind: "FittableRows", showing: false, classes: "enyo-fit", components: [
-            {kind: "onyx.RadioGroup", classes: "history-header", components: [
-              // easy solution to the problem of navigating these two panels: defer until we
-              // have "saved"/bookmarked pages
-              //{content: "Saved", active: true},
-              {content: "History", active: true}
-            ]},
-            {fit: true, name: "historyPanel", kind: "Scroller", classes: "history-scroller", components: [
+            {fit: true, name: "historyPanel", kind: "Scroller", components: [
               {
                 kind: "Repeater",
                 name: "historyList",
@@ -78,6 +73,11 @@ white:true*/
       return this.$.pulloutItems.$[name] || this.$[name];
     },
     togglePullout: function (name) {
+      if (name === 'history') {
+        this.$.pulloutHeader.setContent("History");
+      } else {
+        this.$.pulloutHeader.setContent("Advanced Search");
+      }
       this.setSelectedPanel(name);
       var item = this.getItem(name),
         children = this.$.pulloutItems.children,

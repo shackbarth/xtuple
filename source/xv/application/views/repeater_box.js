@@ -13,7 +13,7 @@ white:true*/
         {kind: "XV.Input", name: "tasks.number" },
         {kind: "XV.Input", name: "tasks.name" },
         {kind: "XV.Input", name: "tasks.notes", classes: "xv-wide-entry" },
-        {kind: "XV.DateWidget", name: "tasks.dueDate", classes: "xv-slim-date-widget" },
+        {kind: "XV.DateWidget", name: "tasks.dueDate" },
         {kind: "XV.Number", name: "tasks.actualHours" },
         {kind: "XV.Number", name: "tasks.actualExpenses" }
       ]

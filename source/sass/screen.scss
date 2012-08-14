@@ -313,22 +313,49 @@ body {
 
 /********* PULLOUT ************/
 
-.parameter-item {
-	min-height: 50px;
+
+@mixin slim-datewidget($labelVisibility, $pickerVisibility: visible) {
+  .xv-input-decorator {
+    padding: 0px;
+    height: 32px;
+  }
+  .xv-label {
+    visibility: $labelVisibility;
+  }
+  .onyx-icon {
+    visibility: $pickerVisibility;
+    vertical-align: top;
+  }
+  .onyx-input {
+    width: 90px;
+    vertical-align: top;
+  }
 }
 
-.parameter-item-input {
-  margin-top: -10px;
-	float: right;
+.xv-parameter-item {
+    border-bottom: 1px solid lightgrey;
+    .xv-subinput {
+      width: 100px;
+    }
+    .xv-label {
+      width: 140px;
+    }
+    .xv-datewidget {
+      @include slim-datewidget(visible);
+    }
+    .xv-picker {
+      width:140px;
+    }
 }
 
-.history-header {
+.xv-parameter-item-input {
+  //margin-top: 10px;
+  //float: right;
+}
+
+.xv-pullout-header {
 	text-align: center;
 	padding: 10px 0;
-}
-
-.history-scroller {
-	background-color: #fff;
 }
 
 /* adapt to smaller displays */
@@ -345,7 +372,7 @@ body {
 	left: 0;
 	bottom: 0;
 	width: 320px;
-	background: #D8D8D8;
+	background: #D8D8D8
 }
 
 .pullout-shadow {
@@ -443,6 +470,7 @@ body {
   margin-right: 5px;
 }
 
+
 .xv-repeater-box {
   width: 880px;
   .xv-label {
@@ -463,22 +491,9 @@ body {
       border-width: 0px;
     }
   }
-  // XXX this slim date widget could use some work
-  .xv-slim-date-widget {
-    .xv-input-decorator {
-      padding: 0px;
-      height: 32px;
-    }
-    .xv-label {
-      visibility: hidden; // don't need the label
-    }
-    .onyx-icon {
-      vertical-align: top;
-    }
-    .onyx-input {
-      width: 60px;
-      vertical-align: top;
-    }
+
+  .xv-datewidget {
+    @include slim-datewidget(hidden, hidden);
   }
 }
 
@@ -553,6 +568,9 @@ body {
   text-align: right;
 }
 
+.xv-subinput {
+  width: 200px;
+}
 .xv-inputwidget {
   background-color: white;
 }

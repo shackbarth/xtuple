@@ -21,7 +21,10 @@ white:true*/
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
-      { name: "pullout", kind: "XV.Pullout" }
+      // XXX get this to work
+      //{ kind: "Scroller", horizontal: "hidden", components: [
+        { name: "pullout", kind: "XV.Pullout" }
+      //]}
     ],
     addPulloutItem: function (inSender, inEvent) {
       var item = {
