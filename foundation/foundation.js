@@ -1,34 +1,34 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 //........................................
 // DEFINE GLOBAL NAMESPACE
 //
-XT = {};
+X = {};
 
 (function () {
   "use strict";
 
   var _fs, _path, _;
   
-  _path = XT.path = require("path");
-  _fs   = XT.fs   = require("fs");
-  _     = XT._    = require("underscore");
+  _path = X.path = require("path");
+  _fs   = X.fs   = require("fs");
+  _     = X._    = require("underscore");
 
-  XT.util         = require("util");
-  XT.http         = require("http");
-  XT.https        = require("https");
-  XT.url          = require("url");
-  XT.crypto       = require("crypto");
+  X.util         = require("util");
+  X.http         = require("http");
+  X.https        = require("https");
+  X.url          = require("url");
+  X.crypto       = require("crypto");
   
-  XT.connect      = require("connect");
-  XT.pg           = require("pg").native;
-  XT.mongoose     = require("mongoose");
+  X.connect      = require("connect");
+  X.pg           = require("pg").native;
+  X.mongoose     = require("mongoose");
   
-  XT.$P = function () { return this; };
-  XT.$K = function () {};
-  XT.$A = function (obj) {
+  X.$P = function () { return this; };
+  X.$K = function () {};
+  X.$A = function (obj) {
     var ret, len;
     if (obj === null || obj === undefined) return [];
     if (obj.slice instanceof Function) {
@@ -46,8 +46,8 @@ XT = {};
     return _.values(obj);
   };
   
-  XT.extend = function (override) {
-    var args = XT.$A(arguments).slice(1),
+  X.extend = function (override) {
+    var args = X.$A(arguments).slice(1),
         len = args.length, i = 0,
         base = len > 1 ? args[0] : this,
         proto, tmp, key, cur;
@@ -76,13 +76,13 @@ XT = {};
     return base;
   };
   
-  XT.protoExtend = function (base, ext) {
-    base = XT.extend(true, base, ext);
+  X.protoExtend = function (base, ext) {
+    base = X.extend(true, base, ext);
     return base;
   };
   
-  XT.sire = function (base) {
-    var K = XT.$P, ret;
+  X.sire = function (base) {
+    var K = X.$P, ret;
     K.prototype = base;
     ret = new K();
     K.prototype = null;
@@ -90,36 +90,36 @@ XT = {};
     return ret;
   };
   
-  XT.isObject = function (obj) {
-    if (XT.none(obj)) return false;
+  X.isObject = function (obj) {
+    if (X.none(obj)) return false;
     if (
-      obj.constructor && obj._super && obj._XT_OBJECT
+      obj.constructor && obj._super && obj._X_OBJECT
     ) return true;
     return false;
   };
   
-  XT.mixin = function () {
-    var args = XT.$A(arguments);
+  X.mixin = function () {
+    var args = X.$A(arguments);
     args.unshift(true);
-    return XT.extend.apply(this, args);
+    return X.extend.apply(this, args);
   };
 
-  XT.complete = function () {
-    var args = XT.$A(arguments);
+  X.complete = function () {
+    var args = X.$A(arguments);
     args.unshift(false);
-    return XT.extend.apply(this, args);
+    return X.extend.apply(this, args);
   };
   
-  XT.addEvents = function (func, events) {
-    //console.log("XT.addEvents(): ", func, events);
+  X.addEvents = function (func, events) {
+    //console.log("X.addEvents(): ", func, events);
     var i = 0, len = events.length;
     for (; i < len; ++i) this.addEvent(events[i], func);
   };
   
-  XT.mixin({
+  X.mixin({
 
     none: function (obj) {
-      return !! (_.isNull(obj) || typeof obj === XT.T_UNDEFINED);
+      return !! (_.isNull(obj) || typeof obj === X.T_UNDEFINED);
     },
   
     T_STRING:     'string',
@@ -136,36 +136,36 @@ XT = {};
     T_ERROR:      'error',
     
     typeOf: function (obj) {
-      if (XT.none(obj)) {
-        if (typeof obj === XT.T_UNDEFINED) return XT.T_UNDEFINED;
-        else return XT.T_NULL;
+      if (X.none(obj)) {
+        if (typeof obj === X.T_UNDEFINED) return X.T_UNDEFINED;
+        else return X.T_NULL;
       }
-      if (XT._.isFunction(obj)) return XT.T_FUNCTION;
-      else if (_.isNumber(obj)) return XT.T_NUMBER;
-      else if (_.isBoolean(obj)) return XT.T_BOOLEAN;
-      else if (_.isString(obj)) return XT.T_STRING;
-      else if (_.isArray(obj)) return XT.T_ARRAY;
-      else if (_.isRegExp(obj)) return XT.T_REGEX;
+      if (X._.isFunction(obj)) return X.T_FUNCTION;
+      else if (_.isNumber(obj)) return X.T_NUMBER;
+      else if (_.isBoolean(obj)) return X.T_BOOLEAN;
+      else if (_.isString(obj)) return X.T_STRING;
+      else if (_.isArray(obj)) return X.T_ARRAY;
+      else if (_.isRegExp(obj)) return X.T_REGEX;
       else {
-        if (XT.isObject(obj)) return XT.T_OBJECT;
-        else return XT.T_HASH;
+        if (X.isObject(obj)) return X.T_OBJECT;
+        else return X.T_HASH;
       }
     },
     
     kindOf: function (obj, ctor) {
-      if (XT.none(obj) || !obj.constructor) return false;
+      if (X.none(obj) || !obj.constructor) return false;
       return !! (obj.constructor === ctor);
     },
     
     init: function () {
-      var args = XT.$A(arguments),
+      var args = X.$A(arguments),
           len = args.length, i = 0, key;
-      for (; i < len; ++i) XT.extend.call(this, true, args[i]);
+      for (; i < len; ++i) X.extend.call(this, true, args[i]);
       this.uid = _.uniqueId("_xt_");
       for (key in this) {
-        if (XT.typeOf(this[key]) === XT.T_FUNCTION) {
+        if (X.typeOf(this[key]) === X.T_FUNCTION) {
           if (this[key].events && this[key].events.length > 0) {
-            XT.addEvents.call(this, this[key], this[key].events);
+            X.addEvents.call(this, this[key], this[key].events);
           }
         }
       }
@@ -191,7 +191,7 @@ XT = {};
           tmp = parts.shift();
           if (parts.length === 0) cur[tmp] = value;
           else {
-            if (XT.none(cur[tmp])) cur[tmp] = {};
+            if (X.none(cur[tmp])) cur[tmp] = {};
             cur = cur[tmp];
           }
         }
@@ -201,8 +201,8 @@ XT = {};
     },
   
     run: function (func) {
-      var queue = XT.runQueue || (XT.runQueue = []);
-      if (!XT.isReady) queue.push(func);
+      var queue = X.runQueue || (X.runQueue = []);
+      if (!X.isReady) queue.push(func);
       else func();
     },
     
@@ -213,12 +213,12 @@ XT = {};
     hasBecomeReady: false,
   
     didBecomeReady: function () {
-      var wasReady = XT.hasBecomeReady,
-          queue = XT.runQueue;
+      var wasReady = X.hasBecomeReady,
+          queue = X.runQueue;
       if (wasReady) return;
       while (queue.length > 0) (queue.shift())();
-      XT.runQueue = null;
-      XT.hasBecomeReady = true;
+      X.runQueue = null;
+      X.hasBecomeReady = true;
     },
     
     get: function () {
@@ -236,22 +236,22 @@ XT = {};
       else {
         part = path.substring(0, i);
         path = path.slice(i);
-        type = XT.typeOf(cur[path]);
-        if (type === XT.T_OBJECT) value = cur[part].get(path);
-        else if (type === XT.T_HASH) value = XT.get.call(cur[part], path, true);
+        type = X.typeOf(cur[path]);
+        if (type === X.T_OBJECT) value = cur[part].get(path);
+        else if (type === X.T_HASH) value = X.get.call(cur[part], path, true);
         else return undefined;
       }
-      if (XT.typeOf(value) === XT.T_FUNCTION && value.isProperty === true) {
-        if (XT.none(args[1])) return value.call(this);
+      if (X.typeOf(value) === X.T_FUNCTION && value.isProperty === true) {
+        if (X.none(args[1])) return value.call(this);
       }
       return value;
     },
     
     json: function (json, emitExceptions) {
-      var type = XT.typeOf(json);
+      var type = X.typeOf(json);
       try {
-        if (type === XT.T_HASH || type === XT.T_ARRAY) json = JSON.stringify(json);
-        else if (type === XT.T_STRING) json = JSON.parse(json);
+        if (type === X.T_HASH || type === X.T_ARRAY) json = JSON.stringify(json);
+        else if (type === X.T_STRING) json = JSON.parse(json);
       } catch (err) { if (emitExceptions) throw err; }
       return json ? json : undefined;
     },
@@ -259,7 +259,7 @@ XT = {};
     cleanup: function () {
       var queue = this.cleanupQueue || [], task;
       if (queue.length <= 0) {
-        XT.log("All done. See ya.");
+        X.log("All done. See ya.");
         process.exit(0);
       }
       task = queue.shift();
@@ -274,13 +274,13 @@ XT = {};
     
     addCleanupTask: function (task, context) {
       var queue = this.cleanupQueue || (this.cleanupQueue = []);
-      task = XT.CleanupTask.create({ task: task, context: context });
-      queue.push(task);
+      task = X.CleanupTask.create({ task: task, context: context });
+      queue.unshift(task);
     },
   
     addProperties: function (base) {
       var args, value, part, i = 0;
-      args = XT.$A(arguments).slice(1);
+      args = X.$A(arguments).slice(1);
       value = args.pop();
       part = base;
       for (; i < args.length; ++i) {
@@ -294,7 +294,7 @@ XT = {};
     
     setup: function (options) {
       var name, option, prop, unused;
-      if (XT.isSetup) return;
+      if (X.isSetup) return;
       if (!options) {
         this.isSetup = true;
         return;
@@ -303,22 +303,22 @@ XT = {};
       for (name in options) {
         if (!options.hasOwnProperty(name)) continue;
         option = options[name];
-        if (XT.typeOf(option) === XT.T_FUNCTION) {
-          option(XT);
+        if (X.typeOf(option) === X.T_FUNCTION) {
+          option(X);
         } else {
-          if (XT.typeOf(option) === XT.T_HASH) {
+          if (X.typeOf(option) === X.T_HASH) {
             for (prop in option) {
               if (!option.hasOwnProperty(prop)) continue;
-              if (XT[name]) XT[name][prop] = option[prop];
-              else XT.addProperties(unused, name, prop, option[prop]);
+              if (X[name]) X[name][prop] = option[prop];
+              else X.addProperties(unused, name, prop, option[prop]);
             }
           } else {
-            XT.addProperties(XT, name, option);
+            X.addProperties(X, name, option);
           }
         }
       }
-      XT.isSetup = true;
-      if (XT.autoStart) XT.didBecomeReady();
+      X.isSetup = true;
+      if (X.autoStart) X.didBecomeReady();
     }
   });
     

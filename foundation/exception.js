@@ -1,34 +1,34 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 //........................................
 // DEFINE GLOBAL FUNCTION
 //
 issue = function () {
-  var args = XT.$A(arguments);
+  var args = X.$A(arguments);
   if (args.length <= 0) return;
-  XT.exception.handle(args[0]);
+  X.exception.handle(args[0]);
 };
 
 (function () {
   "use strict";
 
-  XT.exception = XT.Object.create({
+  X.exception = X.Object.create({
 
     handle: function (err) {      
       var type = err.type, message = err.message, stack = err.stack;
       switch (type) {
-        case XT.exception.T_WARNING:
-        case XT.exception.T_REPORT:
-          XT.warn("Exception encountered. ", message);
+        case X.exception.T_WARNING:
+        case X.exception.T_REPORT:
+          X.warn("Exception encountered. ", message);
           break;
-        case XT.exception.T_FATAL:
-          XT.err("Error encountered. ", message);
+        case X.exception.T_FATAL:
+          X.err("Error encountered. ", message);
           process.emit('SIGINT');
           break;
         default:
-          XT.err("Unrecoverable exception. ", message, stack);
+          X.err("Unrecoverable exception. ", message, stack);
           process.emit('SIGINT');
           break;
       }
@@ -46,12 +46,12 @@ issue = function () {
       return { type: 'warning', message: arguments[0] };
     },
     
-    className: "XT.exception"
+    className: "X.exception"
   });
   
-  XT.fatal    = XT.exception.fatal;
-  XT.warning  = XT.exception.warning;
-  XT.close    = XT.exception.close;
+  X.fatal    = X.exception.fatal;
+  X.warning  = X.exception.warning;
+  X.close    = X.exception.close;
   
-  process.on('uncaughtException', XT.exception.handle);
+  process.on('uncaughtException', X.exception.handle);
 }());

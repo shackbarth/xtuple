@@ -1,24 +1,24 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
   
-  var _ = XT._, _url = require("url");
+  var _ = X._, _url = require("url");
   
-  XT.Response = XT.Object.extend({
+  X.Response = X.Object.extend({
     init: function () {
       if (this.socket) {
-        XT.mixin(this, XT.SocketResponse);
+        X.mixin(this, X.SocketResponse);
       } else {
-        XT.mixin(this, XT.HTTPResponse);
+        X.mixin(this, X.HTTPResponse);
       }
       this.initMixin();
     }
   });
   
-  XT.HTTPResponse = {
+  X.HTTPResponse = {
     
     isReady: false,
     isClosed: false,
@@ -37,7 +37,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     debug: function (message) {
-      XT.debug("HTTPResponse debugging: %@".f(message));
+      X.debug("HTTPResponse debugging: %@".f(message));
     },
 
     chunk: function (chunk) {
@@ -45,7 +45,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     didChunk: function () {
-      if (XT.typeOf(this.data) === XT.T_STRING) this.payload = XT.json(this.data);
+      if (X.typeOf(this.data) === X.T_STRING) this.payload = X.json(this.data);
       else this.payload = this.data;
       this.set("isReady", true);
     },
@@ -56,7 +56,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     
     json: function () {
       var data = this.get("data");
-      return data ? XT.json(data) : {requestType:"NO REQUEST TYPE"};
+      return data ? X.json(data) : {requestType:"NO REQUEST TYPE"};
     }.property(),
     
     destroy: function () {
@@ -72,6 +72,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.write(message).close();
       this.destroy();
     },
+    
+    method: function () {
+      return this.get("request").method;
+    }.property(),
     
     close: function () {
       if (this.isDestroyed || this.isClosed) return this;
@@ -93,25 +97,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     write: function () {
       var res = this.get("response"),
-          args = XT.$A(arguments), i = 0;
+          args = X.$A(arguments), i = 0;
       for (; i < args.length; ++i) {
-        if (XT.typeOf(args[i]) !== XT.T_STRING) {
-          args[i] = XT.json(args[i]);
+        if (X.typeOf(args[i]) !== X.T_STRING) {
+          args[i] = X.json(args[i]);
         }
+        //X.debug("writing: ", X.typeOf(args[i]), " ", args[i]);
         res.write(args[i]);
       }
       return this;
     },
     
     codeDidChange: function () {
-      XT.debug("codeDidChange(): ");
+      X.debug("codeDidChange(): ");
       var res = this.get("response"), code = this.get("code");
       res.statusCode = code;
     }.observes("code")
     
   };
   
-  XT.SocketResponse = {
+  X.SocketResponse = {
     
     useSocket: true,
     payload: null,
@@ -121,8 +126,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       this.payload = this.data;
       this.data = this.data.payload;
       
-      if (XT.typeOf(this.data) === XT.T_HASH)
-        this.data = XT.json(this.data);
+      if (X.typeOf(this.data) === X.T_HASH)
+        this.data = X.json(this.data);
         
       this.store = {};
     },
@@ -136,7 +141,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     write: function (chunk) {
-      XT.mixin(this.store, chunk);
+      X.mixin(this.store, chunk);
       return this;
     },
     
@@ -150,7 +155,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     error: function (message) {
-      //XT.warn("XT.Response.error(): ", message);
+      //X.warn("X.Response.error(): ", message);
       this.write({reason: message, isError: true}).close();
       this.destroy();
     },

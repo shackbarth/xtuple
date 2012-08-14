@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
@@ -13,19 +13,19 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return arguments[2] ? arguments[2].toUpperCase() : "";
   };
   
-  XT.String = {};
+  X.String = {};
   
-  XT.mixin(XT.String, {
+  X.mixin(X.String, {
 
     format: function () {
-      var args = XT.$A(arguments), len = args.length,
+      var args = X.$A(arguments), len = args.length,
           i = 0, type, str = this.toString();
       for (; i < len; ++i) {
-        if (XT.none(args[i])) continue;
-        type = XT.typeOf(args[i]);
-        if (type === XT.T_HASH) str = XT.String.replaceKeys(str, args[i]);
-        else if (type === XT.T_STRING) str = str.replace(/\%@/, args[i]);
-        else if (type === XT.T_NUMBER) str = str.replace(/\%@/, String(args[i]));
+        if (X.none(args[i])) continue;
+        type = X.typeOf(args[i]);
+        if (type === X.T_HASH) str = X.String.replaceKeys(str, args[i]);
+        else if (type === X.T_STRING) str = str.replace(/\%@/, args[i]);
+        else if (type === X.T_NUMBER) str = str.replace(/\%@/, String(args[i]));
         else continue;
       }
       return str;
@@ -49,8 +49,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     replaceKeys: function (str, obj) {
       var regex, key, value, tok;
-      if (XT.none(obj) || XT.typeOf(obj) !== XT.T_HASH) return str;
-      if (XT.typeOf(str) !== XT.T_STRING) return "";
+      if (X.none(obj) || X.typeOf(obj) !== X.T_HASH) return str;
+      if (X.typeOf(str) !== X.T_STRING) return "";
       for (key in obj) {
         if (!obj.hasOwnProperty(key)) continue;
         tok = "{%@}".f(key);
@@ -73,6 +73,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     
     w: function () {
       return this.toString().split(" ");
+    },
+    
+    escape: function () {
+      return this.toString().replace(/\//g, "\\/");
     }
   });
 }());

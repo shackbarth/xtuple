@@ -1,15 +1,15 @@
 /*jshint node:true, bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, issue:true */
+/*global X:true, issue:true */
 
 (function () {
   "use strict";
   
-  var _ = XT._;
+  var _ = X._;
   
-  XT.Database = XT.Object.extend({
+  X.Database = X.Object.extend({
     poolSize: 12,
-    className: "XT.Database",
+    className: "X.Database",
     cleanupCompletedEvent: "cleanupCompleted",
     conString: function (options) {
       options.password = options.password? options.password.pre(":"): "";
@@ -17,11 +17,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     query: function (query, options, callback) {
       var str = this.conString(_.clone(options));
-      XT.pg.connect(str, _.bind(this.connected, this, query, options, callback));
+      X.pg.connect(str, _.bind(this.connected, this, query, options, callback));
     },
     connected: function (query, options, callback, err, client, ranInit) {
       if (err) {
-        issue(XT.warning("Failed to connect to database: " +
+        issue(X.warning("Failed to connect to database: " +
           "{hostname}:{port}/{database} => %@".f(options, err.message)));
         return callback(err);
       }
@@ -32,12 +32,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       } else client.query(query, callback);
     },
     init: function () {
-      XT.addCleanupTask(_.bind(this.cleanup, this), this);
-      XT.pg.defaults.poolSize = this.poolSize;
+      X.addCleanupTask(_.bind(this.cleanup, this), this);
+      X.pg.defaults.poolSize = this.poolSize;
     },
     cleanup: function () {
-      XT.log("Waiting for database pool to drain");
-      if (XT.pg) XT.pg.end();
+      X.log("Waiting for database pool to drain");
+      if (X.pg) X.pg.end();
       this.emit(this.cleanupCompletedEvent);
     }
   });

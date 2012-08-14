@@ -1,27 +1,27 @@
 /*jshint node:true, bitwise:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
 
-  var _path = XT.path, _ = XT._, mongoose = XT.mongoose;
+  var _path = X.path, _ = X._, mongoose = X.mongoose;
 
-  XT.Cache = XT.Object.extend({
-    /** @lends XT.cache */
+  X.Cache = X.Object.extend({
+    /** @lends X.cache */
 
     init: function () {
       var schemaFiles, i, prefix = this.get("prefix"), target;
 
-      target = prefix? XT.options.cache[prefix]: XT.options.cache;
+      target = prefix? X.options.cache[prefix]: X.options.cache;
 
-      XT.mixin(this, target);
+      X.mixin(this, target);
 
       this.connection = mongoose.createConnection(this.get("conString"));
       schemaFiles = this.get("schemaFiles");
 
       if (!schemaFiles || schemaFiles.length <= 0) {
-        XT.warn("no mongo schemas available!");
+        X.warn("no mongo schemas available!");
       } else {
         for (i = 0; i < schemaFiles.length; ++i) {
           require(schemaFiles[i]);
@@ -30,7 +30,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
       // catch SIGINT to close connection but don't
       // run it multiple times
-      XT.addCleanupTask(_.bind(this.cleanup, this));
+      X.addCleanupTask(_.bind(this.cleanup, this));
     },
 
     conString: function () {
@@ -55,11 +55,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     models: function () {
-      return XT.models || (XT.models = {});
+      return X.models || (X.models = {});
     }.property(),
 
     schemas: function () {
-      return XT.schemas || (XT.schemas = {});
+      return X.schemas || (X.schemas = {});
     }.property(),
 
     schemaFiles: function () {
@@ -67,8 +67,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (this._schemaFiles) {
         return this._schemaFiles;
       }
-      dir = _path.join(XT.basePath, this.get("schemaDirectory"));
-      schemaFiles = this._schemaFiles = XT.directoryFiles(dir, {extension: "js", fullPath: true});
+      dir = _path.join(X.basePath, this.get("schemaDirectory"));
+      schemaFiles = this._schemaFiles = X.directoryFiles(dir, {extension: "js", fullPath: true});
       return schemaFiles;
     }.property()
   });

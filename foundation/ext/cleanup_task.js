@@ -1,14 +1,14 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
   
-  var _ = XT._;
+  var _ = X._;
   
-  XT.CleanupTask = XT.Object.extend({
-    task: XT.$K,
+  X.CleanupTask = X.Object.extend({
+    task: X.$K,
     context: null,
     init: function () {
       var context = this.get("context"), event;

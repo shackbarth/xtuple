@@ -1,32 +1,32 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, issue:true */
+/*global X:true, issue:true */
 
 (function () {
   "use strict";
   
-  var _fs = XT.fs, _path = XT.path;
+  var _fs = X.fs, _path = X.path;
   
-  XT.mixin({
+  X.mixin({
 
     basePath: process.cwd(),
 
     directoryFiles: function (path, options, callback) {
       var files;
       if (options) {
-        if (XT.typeOf(options) === XT.T_FUNCTION) {
+        if (X.typeOf(options) === X.T_FUNCTION) {
           callback = options;
           options = {};
         }
-      } else if (XT.none(options)) options = {};
+      } else if (X.none(options)) options = {};
 
       path = _path.normalize(path);
       
       try {
-        if (XT.typeOf(callback) !== XT.T_FUNCTION) {
+        if (X.typeOf(callback) !== X.T_FUNCTION) {
           files = _fs.readdirSync(path);
           if (options.extension) {
-            files = XT.reduce(files, options.extension);
+            files = X.reduce(files, options.extension);
           }
           return options.fullPath ? files.map(function (file) {
             return _path.join(path, file);
@@ -34,7 +34,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         } else {
           _fs.readdir(path, function (err, files) {
             if (options.extension) {
-              files = XT.reduce(files, options.extension);
+              files = X.reduce(files, options.extension);
             }
             callback(options.fullPath ? files.map(function (file) {
               return _path.join(path, file);
@@ -42,16 +42,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           });
         }
       } catch (err) {
-        XT.warn(err);
-        if (XT.typeOf(callback) === XT.T_FUNCTION) {
+        X.warn(err);
+        if (X.typeOf(callback) === X.T_FUNCTION) {
           callback([]);
         } else { return []; }
       }
     },
 
     shorten: function (path, max) {
-      if (XT.none(max)) max = 3;
-      if (XT.none(path) || XT.typeOf(path) !== XT.T_STRING) return path;
+      if (X.none(max)) max = 3;
+      if (X.none(path) || X.typeOf(path) !== X.T_STRING) return path;
   
       var count = path.match(/\//g).length;
   
@@ -72,7 +72,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     readFile: function (path, filename, callback) {
-      if (XT.typeOf(filename) === XT.T_FUNCTION) {
+      if (X.typeOf(filename) === X.T_FUNCTION) {
         callback = filename;
         filename = '';
       }
@@ -80,7 +80,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       try {
         _fs.readFile(path, 'utf-8', callback);
       } catch (err) {
-        XT.warn(err);
+        X.warn(err);
         callback("");
       }
     },
@@ -91,13 +91,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     byLine: function (content) {
-      if (!content || content.length === 0 || XT.typeOf(content) !== XT.T_STRING) return [];
+      if (!content || content.length === 0 || X.typeOf(content) !== X.T_STRING) return [];
       return content.split('\n') || [];
     },
 
     exists: function (path, callback) {
       var stats;
-      if (!XT.none(callback) && XT.typeOf(callback) === XT.T_FUNCTION) {
+      if (!X.none(callback) && X.typeOf(callback) === X.T_FUNCTION) {
         return _fs.stat(path, function (err, stats) {
           if (err) callback(false, null);
           else if (stats.isDirectory() || stats.isFile())
@@ -109,7 +109,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
         stats = _fs.statSync(path);
         return stats.isDirectory() || stats.isFile() ? true : false;
       } catch (err) {
-        issue(XT.warning(err));
+        issue(X.warning(err));
         return false;
       }
     },
@@ -119,7 +119,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     writeFile: function (path, content, callback) {
-      if (XT.none(callback) || XT.typeOf(callback) !== XT.T_FUNCTION) {
+      if (X.none(callback) || X.typeOf(callback) !== X.T_FUNCTION) {
         _fs.writeFileSync(path, content, 'utf8');
       }
     },
