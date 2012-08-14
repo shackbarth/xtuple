@@ -8,28 +8,28 @@ trailing:true white:true*/
   var ROWS_PER_FETCH = 50;
 
   enyo.kind({
-    name: "XV.InfoListItem",
-    classes: "xv-infolist-item",
+    name: "XV.ListItem",
+    classes: "xv-list-item",
     ontap: "itemTap"
   });
 
   enyo.kind({
-    name: "XV.InfoListColumn",
-    classes: "xv-infolist-column"
+    name: "XV.ListColumn",
+    classes: "xv-list-column"
   });
 
   enyo.kind({
-    name: "XV.InfoListAttr",
-    classes: "xv-infolist-attr",
+    name: "XV.ListAttr",
+    classes: "xv-list-attr",
     published: {
       attr: ""
     }
   });
 
   enyo.kind({
-    name: "XV.InfoList",
+    name: "XV.List",
     kind: "List",
-    classes: "xv-infolist",
+    classes: "xv-list",
     published: {
       label: "",
       collection: null,
@@ -40,7 +40,7 @@ trailing:true white:true*/
       workspace: null
     },
     events: {
-      onInfoListRowTapped: ""
+      onListItemTapped: ""
     },
     handlers: {
       onSetupItem: "setupItem"
@@ -108,7 +108,7 @@ trailing:true white:true*/
       }
     },
     itemTap: function (inSender, inEvent) {
-      this.doInfoListRowTapped(inEvent);
+      this.doListItemTapped(inEvent);
     },
     setupItem: function (inSender, inEvent) {
       var model = this._collection.models[inEvent.index],

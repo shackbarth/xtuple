@@ -1,5 +1,5 @@
 enyo.depends(
-  "info_list.js",
+  "list.js",
   "module.js",
   "pullout.js",
   "scroller.js",

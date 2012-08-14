@@ -12,13 +12,13 @@ trailing:true white:true*/
     label: "",
     classes: "app enyo-unselectable",
     events: {
-      onInfoListAdded: "",
+      onListAdded: "",
       onTogglePullout: ""
     },
     handlers: {
       onParameterChange: "requery",
       onScroll: "scrolled",
-      onInfoListRowTapped: "infoListRowTapped"
+      onListItemTapped: "listItemTapped"
     },
     showPullout: true,
     realtimeFit: true,
@@ -68,12 +68,6 @@ trailing:true white:true*/
     ],
     firstTime: true,
     fetched: {},
-    // menu
-    setupItem: function (inSender, inEvent) {
-      var list = this.lists[inEvent.index].name;
-      this.$.item.setContent(this.$.lists.$[list].getLabel());
-      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
-    },
     didBecomeActive: function () {
       if (this.firstTime) {
         this.firstTime = false;
@@ -90,11 +84,20 @@ trailing:true white:true*/
       // Build lists
       for (i = 0; i < this.lists.length; i++) {
         component = this.$.lists.createComponent(this.lists[i]);
-        this.doInfoListAdded(component);
+        this.doListAdded(component);
       }
       this.$.menu.setCount(this.lists.length);
     },
-    infoListRowTapped: function (inSender, inEvent) {
+    inputChanged: function (inSender, inEvent) {
+      var index = this.$.lists.getIndex(),
+        list = this.lists[index].name;
+      this.fetched = {};
+      this.fetch(list);
+    },
+    itemTap: function (inSender, inEvent) {
+      this.setList(inEvent.index);
+    },
+    listItemTapped: function (inSender, inEvent) {
       var list = this.$.lists.getActive(),
         workspace = list.getWorkspace(),
         id = list.getModel(inEvent.index).id;
@@ -106,36 +109,6 @@ trailing:true white:true*/
         id: id
       });
       return true;
-    },
-    inputChanged: function (inSender, inEvent) {
-      var index = this.$.lists.getIndex(),
-        list = this.lists[index].name;
-      this.fetched = {};
-      this.fetch(list);
-    },
-    itemTap: function (inSender, inEvent) {
-      this.setList(inEvent.index);
-    },
-    setList: function (index) {
-      if (this.firstTime) { return; }
-      var list = this.lists[index].name;
-
-      // Select menu
-      if (!this.$.menu.isSelected(index)) {
-        this.$.menu.select(index);
-      }
-
-      // keep the selected list in state as a kind variable
-      this.selectedList = index;
-
-      // Select list
-      if (this.$.lists.getIndex() !== index) {
-        this.$.lists.setIndex(index);
-      }
-      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
-      if (!this.fetched[list]) {
-        this.fetch(list);
-      }
     },
     fetch: function (name, options) {
       name = name || this.$.lists.getActive().name;
@@ -186,7 +159,7 @@ trailing:true white:true*/
       this.fetch();
     },
     scrolled: function (inSender, inEvent) {
-      if (inEvent.originator instanceof XV.InfoList === false) { return; }
+      if (inEvent.originator instanceof XV.List === false) { return; }
       var list = inEvent.originator,
         max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
         options = {};
@@ -195,6 +168,33 @@ trailing:true white:true*/
         options.showMore = true;
         this.fetch(list.name, options);
       }
+    },
+    setList: function (index) {
+      if (this.firstTime) { return; }
+      var list = this.lists[index].name;
+
+      // Select menu
+      if (!this.$.menu.isSelected(index)) {
+        this.$.menu.select(index);
+      }
+
+      // keep the selected list in state as a kind variable
+      this.selectedList = index;
+
+      // Select list
+      if (this.$.lists.getIndex() !== index) {
+        this.$.lists.setIndex(index);
+      }
+      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
+      if (!this.fetched[list]) {
+        this.fetch(list);
+      }
+    },
+    // menu
+    setupItem: function (inSender, inEvent) {
+      var list = this.lists[inEvent.index].name;
+      this.$.item.setContent(this.$.lists.$[list].getLabel());
+      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
@@ -216,10 +216,10 @@ trailing:true white:true*/
     refreshInfoObject: function (inSender, inPayload) {
       // obnoxious massaging. Can't think of an elegant way to do this.
       // salt in wounds: in setup we massage by adding List on the end, but with
-      // crm we massage by adding InfoList on the end. This is horrible.
+      // crm we massage by adding List on the end. This is horrible.
       // XXX not sustainable
       var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
-        listName = this.name === "setup" ? listBase + "List" : listBase + "InfoList",
+        listName = this.name === "setup" ? listBase + "List" : listBase + "List",
         list = this.$.lists.$[listName];
 
 

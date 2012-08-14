@@ -471,7 +471,7 @@ body {
 /*********END PULLOUT *********/
 /*********XV VIEWS***********/
 /* line 382, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item {
+.xv-list .xv-list-item {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -481,27 +481,27 @@ body {
   border-bottom: 1px solid #ddd;
 }
 /* line 389, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.short {
+.xv-list .xv-list-item .xv-list-column.short {
   width: 150px;
 }
 /* line 392, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.first {
+.xv-list .xv-list-item .xv-list-column.first {
   width: 320px;
 }
 /* line 395, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.second {
+.xv-list .xv-list-item .xv-list-column.second {
   width: 165px;
 }
 /* line 398, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.third {
+.xv-list .xv-list-item .xv-list-column.third {
   width: 75px;
 }
 /* line 401, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.money {
+.xv-list .xv-list-item .xv-list-column.money {
   width: 100px;
 }
 /* line 404, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr {
   padding: 5px;
   font-size: 13px;
   white-space: nowrap;
@@ -510,28 +510,28 @@ body {
   color: black;
 }
 /* line 411, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.right {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.right {
   position: absolute;
   right: 0px;
 }
 /* line 415, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.text-align-right {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.text-align-right {
   text-align: right;
 }
 /* line 418, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.bold {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.bold {
   font-weight: bold;
 }
 /* line 421, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.error {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.error {
   color: #ff0000;
 }
 /* line 424, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.italic {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.italic {
   font-style: italic;
 }
 /* line 427, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.placeholder {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.placeholder {
   font-style: italic;
   color: #93a1a1;
 }

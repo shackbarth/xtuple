@@ -10,8 +10,8 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.AccountInfoList",
-    kind: "XV.InfoList",
+    name: "XV.AccountList",
+    kind: "XV.List",
     published: {
       label: "_accounts".loc(),
       collection: "XM.AccountInfoCollection",
@@ -20,24 +20,24 @@ trailing:true white:true*/
       workspace: "XV.AccountWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "first", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "primaryContact.phone", fit: true,
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "primaryContact.phone", fit: true,
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "name"},
-              {kind: "XV.InfoListAttr", attr: "primaryContact.primaryEmail",
+              {kind: "XV.ListAttr", attr: "name"},
+              {kind: "XV.ListAttr", attr: "primaryContact.primaryEmail",
                 classes: "right"}
             ]}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "primaryContact.name", classes: "italic",
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "primaryContact.name", classes: "italic",
               placeholder: "_noContact".loc()},
-            {kind: "XV.InfoListAttr", attr: "primaryContact.address.formatShort"}
+            {kind: "XV.ListAttr", attr: "primaryContact.address.formatShort"}
           ]}
         ]}
       ]}
@@ -49,8 +49,8 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.ContactInfoList",
-    kind: "XV.InfoList",
+    name: "XV.ContactList",
+    kind: "XV.List",
     published: {
       label: "_contacts".loc(),
       collection: "XM.ContactInfoCollection",
@@ -63,23 +63,23 @@ trailing:true white:true*/
       workspace: "XV.ContactWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "first", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "jobTitle", fit: true,
+              {kind: "XV.ListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "jobTitle", fit: true,
                 classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "phone"},
-              {kind: "XV.InfoListAttr", attr: "primaryEmail", classes: "right"}
+              {kind: "XV.ListAttr", attr: "phone"},
+              {kind: "XV.ListAttr", attr: "primaryEmail", classes: "right"}
             ]}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
-            {kind: "XV.InfoListAttr", attr: "address.formatShort"}
+            {kind: "XV.ListAttr", attr: "address.formatShort"}
           ]}
         ]}
       ]}
@@ -91,8 +91,8 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.IncidentInfoList",
-    kind: "XV.InfoList",
+    name: "XV.IncidentList",
+    kind: "XV.List",
     published: {
       label: "_incidents".loc(),
       collection: "XM.IncidentInfoCollection",
@@ -100,28 +100,28 @@ trailing:true white:true*/
       workspace: "XV.IncidentWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "first", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "updated", fit: true, formatter: "formatDate",
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "updated", fit: true, formatter: "formatDate",
                 classes: "right"}
             ]},
-            {kind: "XV.InfoListAttr", attr: "description"}
+            {kind: "XV.ListAttr", attr: "description"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "second", components: [
-            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic"},
-            {kind: "XV.InfoListAttr", attr: "contact.name"}
+          {kind: "XV.ListColumn", classes: "second", components: [
+            {kind: "XV.ListAttr", attr: "account.name", classes: "italic"},
+            {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "third", components: [
-            {kind: "XV.InfoListAttr", attr: "getIncidentStatusString"},
-            {kind: "XV.InfoListAttr", attr: "owner.username"}
+          {kind: "XV.ListColumn", classes: "third", components: [
+            {kind: "XV.ListAttr", attr: "getIncidentStatusString"},
+            {kind: "XV.ListAttr", attr: "owner.username"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "priority.name",
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()},
-            {kind: "XV.InfoListAttr", attr: "category.name",
+            {kind: "XV.ListAttr", attr: "category.name",
               placeholder: "_noCategory".loc()}
           ]}
         ]}
@@ -139,8 +139,8 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.OpportunityInfoList",
-    kind: "XV.InfoList",
+    name: "XV.OpportunityList",
+    kind: "XV.List",
     published: {
       collection: "XM.OpportunityInfoCollection",
       label: "_opportunities".loc(),
@@ -148,34 +148,34 @@ trailing:true white:true*/
       workspace: "XV.OpportunityWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "first", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "targetClose", fit: true,
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "targetClose", fit: true,
                 formatter: "formatTargetClose",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
-            {kind: "XV.InfoListAttr", attr: "name"}
+            {kind: "XV.ListAttr", attr: "name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "second",
+          {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
-            {kind: "XV.InfoListAttr", attr: "contact.name"}
+            {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "third",
+          {kind: "XV.ListColumn", classes: "third",
             components: [
-            {kind: "XV.InfoListAttr", attr: "opportunityStage.name",
+            {kind: "XV.ListAttr", attr: "opportunityStage.name",
               placeholder: "_noStage".loc()},
-            {kind: "XV.InfoListAttr", attr: "owner.username"}
+            {kind: "XV.ListAttr", attr: "owner.username"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "priority.name",
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()},
-            {kind: "XV.InfoListAttr", attr: "opportunityType.name",
+            {kind: "XV.ListAttr", attr: "opportunityType.name",
               placeholder: "_noType".loc()}
           ]}
         ]}
@@ -194,8 +194,8 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.ProjectInfoList",
-    kind: "XV.InfoList",
+    name: "XV.ProjectList",
+    kind: "XV.List",
     published: {
       label: "_projects".loc(),
       collection: "XM.ProjectInfoCollection",
@@ -204,48 +204,48 @@ trailing:true white:true*/
       workspace: "XV.ProjectWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "first", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "number", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true,
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate",
                 placeholder: "_noCloseTarget".loc(),
                 classes: "right"}
             ]},
-            {kind: "XV.InfoListAttr", attr: "name"},
-            {kind: "XV.InfoListAttr", attr: "account.name"}
+            {kind: "XV.ListAttr", attr: "name"},
+            {kind: "XV.ListAttr", attr: "account.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "third",
+          {kind: "XV.ListColumn", classes: "third",
             components: [
-            {kind: "XV.InfoListAttr", attr: "getProjectStatusString",
+            {kind: "XV.ListAttr", attr: "getProjectStatusString",
               placeholder: "_noAccountName".loc()},
-            {kind: "XV.InfoListAttr", attr: "owner.username"}
+            {kind: "XV.ListAttr", attr: "owner.username"}
           ]},
-          {kind: "XV.InfoListColumn", style: "width: 80;",
+          {kind: "XV.ListColumn", style: "width: 80;",
             components: [
-            {content: "_budgeted".loc() + ":", classes: "xv-infolist-attr",
+            {content: "_budgeted".loc() + ":", classes: "xv-list-attr",
               style: "text-align: right;"},
-            {content: "_actual".loc() + ":", classes: "xv-infolist-attr",
+            {content: "_actual".loc() + ":", classes: "xv-list-attr",
               style: "text-align: right;"},
-            {content: "_balance".loc() + ":", classes: "xv-infolist-attr",
+            {content: "_balance".loc() + ":", classes: "xv-list-attr",
               style: "text-align: right;"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "money", components: [
-            {kind: "XV.InfoListAttr", attr: "budgetedExpenses",
+          {kind: "XV.ListColumn", classes: "money", components: [
+            {kind: "XV.ListAttr", attr: "budgetedExpenses",
               classes: "text-align-right", formatter: "formatExpenses"},
-            {kind: "XV.InfoListAttr", attr: "actualExpenses",
+            {kind: "XV.ListAttr", attr: "actualExpenses",
               classes: "text-align-right", formatter: "formatExpenses"},
-            {kind: "XV.InfoListAttr", attr: "balanceExpenses",
+            {kind: "XV.ListAttr", attr: "balanceExpenses",
               classes: "text-align-right", formatter: "formatExpenses"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "money", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "budgetedHours",
+          {kind: "XV.ListColumn", classes: "money", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "budgetedHours",
               classes: "text-align-right", formatter: "formatHours"},
-            {kind: "XV.InfoListAttr", attr: "actualHours",
+            {kind: "XV.ListAttr", attr: "actualHours",
               classes: "text-align-right", formatter: "formatHours"},
-            {kind: "XV.InfoListAttr", attr: "balanceHours",
+            {kind: "XV.ListAttr", attr: "balanceHours",
               classes: "text-align-right", formatter: "formatHours"}
           ]}
         ]}
@@ -274,8 +274,8 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.ToDoInfoList",
-    kind: "XV.InfoList",
+    name: "XV.ToDoList",
+    kind: "XV.List",
     published: {
       label: "_toDos".loc(),
       collection: "XM.ToDoInfoCollection",
@@ -287,31 +287,31 @@ trailing:true white:true*/
       workspace: "XV.ToDoWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "first", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.InfoListAttr", attr: "name", classes: "bold"},
-              {kind: "XV.InfoListAttr", attr: "dueDate", fit: true,
+              {kind: "XV.ListAttr", attr: "name", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "dueDate", fit: true,
                 formatter: "formatDueDate", placeholder: "_noDueDate".loc(),
                 classes: "right"}
             ]},
-            {kind: "XV.InfoListAttr", attr: "description",
+            {kind: "XV.ListAttr", attr: "description",
               placeholder: "_noDescription".loc()}
           ]},
-          {kind: "XV.InfoListColumn", classes: "second",
+          {kind: "XV.ListColumn", classes: "second",
             components: [
-            {kind: "XV.InfoListAttr", attr: "account.name", classes: "italic",
+            {kind: "XV.ListAttr", attr: "account.name", classes: "italic",
               placeholder: "_noAccountName".loc()},
-            {kind: "XV.InfoListAttr", attr: "contact.name"}
+            {kind: "XV.ListAttr", attr: "contact.name"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "third",
+          {kind: "XV.ListColumn", classes: "third",
             components: [
-            {kind: "XV.InfoListAttr", attr: "getToDoStatusString"},
-            {kind: "XV.InfoListAttr", attr: "owner.username"}
+            {kind: "XV.ListAttr", attr: "getToDoStatusString"},
+            {kind: "XV.ListAttr", attr: "owner.username"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "priority.name",
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "priority.name",
               placeholder: "_noPriority".loc()}
           ]}
         ]}
@@ -332,8 +332,8 @@ trailing:true white:true*/
   //
 
   enyo.kind({
-    name: "XV.UserAccountInfoList",
-    kind: "XV.InfoList",
+    name: "XV.UserAccountList",
+    kind: "XV.List",
     published: {
       label: "_userAccounts".loc(),
       collection: "XM.UserAccountInfoCollection",
@@ -341,17 +341,17 @@ trailing:true white:true*/
       workspace: "XV.UserAccountWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "short",
+          {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.InfoListAttr", attr: "username", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "username", classes: "bold"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "short", components: [
-            {kind: "XV.InfoListAttr", attr: "propername"}
+          {kind: "XV.ListColumn", classes: "short", components: [
+            {kind: "XV.ListAttr", attr: "propername"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "isActive", formatter: "formatActive"}
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "isActive", formatter: "formatActive"}
           ]}
         ]}
       ]}
@@ -367,7 +367,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.HonorificList",
-    kind: "XV.InfoList",
+    kind: "XV.List",
     published: {
       label: "_honorifics".loc(),
       collection: "XM.HonorificCollection",
@@ -375,9 +375,9 @@ trailing:true white:true*/
       workspace: "XV.HonorificWorkspace"
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
-        {kind: "XV.InfoListColumn", classes: "last", components: [
-          {kind: "XV.InfoListAttr", attr: "code", classes: "bold"}
+      {kind: "XV.ListItem", components: [
+        {kind: "XV.ListColumn", classes: "last", components: [
+          {kind: "XV.ListAttr", attr: "code", classes: "bold"}
         ]}
       ]}
     ]
@@ -388,17 +388,17 @@ trailing:true white:true*/
   //
   
   enyo.kind({
-    name: "XV.AbbreviationInfoList",
-    kind: "XV.InfoList",
+    name: "XV.AbbreviationList",
+    kind: "XV.List",
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "short",
+          {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.InfoListAttr", attr: "abbreviation", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "abbreviation", classes: "bold"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "name"}
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "name"}
           ]}
         ]}
       ]}
@@ -407,7 +407,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.StateList",
-    kind: "XV.AbbreviationInfoList",
+    kind: "XV.AbbreviationList",
     published: {
       label: "_states".loc(),
       collection: "XM.StateCollection",
@@ -418,7 +418,7 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.CountryList",
-    kind: "XV.AbbreviationInfoList",
+    kind: "XV.AbbreviationList",
     published: {
       label: "_countries".loc(),
       collection: "XM.CountryCollection",
@@ -437,19 +437,19 @@ trailing:true white:true*/
 
   enyo.kind({
     name: "XV.NameDescriptionList",
-    kind: "XV.InfoList",
+    kind: "XV.List",
     published: {
       query: {orderBy: [{ attribute: 'order' }] }
     },
     components: [
-      {kind: "XV.InfoListItem", components: [
+      {kind: "XV.ListItem", components: [
         {kind: "FittableColumns", components: [
-          {kind: "XV.InfoListColumn", classes: "short",
+          {kind: "XV.ListColumn", classes: "short",
             components: [
-            {kind: "XV.InfoListAttr", attr: "name", classes: "bold"}
+            {kind: "XV.ListAttr", attr: "name", classes: "bold"}
           ]},
-          {kind: "XV.InfoListColumn", classes: "last", fit: true, components: [
-            {kind: "XV.InfoListAttr", attr: "description"}
+          {kind: "XV.ListColumn", classes: "last", fit: true, components: [
+            {kind: "XV.ListAttr", attr: "description"}
           ]}
         ]}
       ]}
