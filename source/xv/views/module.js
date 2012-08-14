@@ -4,6 +4,7 @@ trailing:true white:true*/
 /*global XT:true, XV:true, XM:true, _:true, enyo:true*/
 
 (function () {
+  var FETCH_TRIGGER = 100;
 
   enyo.kind({
     name: "XV.Module",
@@ -16,6 +17,7 @@ trailing:true white:true*/
     },
     handlers: {
       onParameterChange: "requery",
+      onScroll: "scrolled",
       onInfoListRowTapped: "infoListRowTapped"
     },
     showPullout: true,
@@ -182,6 +184,17 @@ trailing:true white:true*/
     },
     requery: function (inSender, inEvent) {
       this.fetch();
+    },
+    scrolled: function (inSender, inEvent) {
+      if (inEvent.originator instanceof XV.InfoList === false) { return; }
+      var list = inEvent.originator,
+        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
+        options = {};
+      if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
+        list.setIsFetching(true);
+        options.showMore = true;
+        this.fetch(list.name, options);
+      }
     },
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
