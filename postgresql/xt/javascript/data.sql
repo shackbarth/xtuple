@@ -727,7 +727,7 @@ select xt.install_js('XT','Data','xtuple', $$
         clause = this.buildClause(nameSpace, type, parameters),
         sql = "select * from {table} where {conditions} {orderBy} {limit} {offset}";
 
-      /* Massage order by with quoted identifiers */
+      /* Massage ordeBy with quoted identifiers */
       if (orderBy) {
         for (i = 0; i < orderBy.length; i++) {
           /* handle path case */
@@ -753,7 +753,9 @@ select xt.install_js('XT','Data','xtuple', $$
             }
             attr = '"' + orderBy[i].attribute + '"';
           }
-        
+          if (orderBy[i].isEmpty) {
+            attr = "length(" + attr + ")=0";
+          }       
           if (orderBy[i].descending) {
             attr += " desc";
           }
