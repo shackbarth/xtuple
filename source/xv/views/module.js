@@ -26,9 +26,9 @@ trailing:true white:true*/
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
-          {kind: "Group", defaultKind: "onyx.IconButton", tag: null, components: [
-            {src: "assets/menu-icon-search.png", ontap: "showParameters"},
-            {src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
+          {kind: "Group", name: "iconButtonGroup", defaultKind: "onyx.IconButton", tag: null, components: [
+            {name: "searchIconButton", src: "assets/menu-icon-search.png", ontap: "showParameters"},
+            {name: "historyIconButton", src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
           ]},
           {name: "leftLabel"}
         ]},
@@ -266,6 +266,20 @@ trailing:true white:true*/
     logout: function () {
       this.$.logoutPopup.hide();
       XT.session.logout();
+    },
+
+    /**
+     * Manually set one of the icon buttons to be active. Note passing null
+     * as the parameter will disactivate all icons.
+     */
+    setActiveIconButton: function (buttonName) {
+      var activeIconButton = null;
+      if (buttonName === 'search') {
+        activeIconButton = this.$.searchIconButton;
+      } else if (buttonName === 'history') {
+        activeIconButton = this.$.historyIconButton;
+      }
+      this.$.iconButtonGroup.setActive(activeIconButton);
     }
 
   });

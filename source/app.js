@@ -23,7 +23,7 @@ white:true*/
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
       // XXX get this to work
       //{ kind: "Scroller", horizontal: "hidden", components: [
-        { name: "pullout", kind: "XV.Pullout" }
+      { name: "pullout", kind: "XV.Pullout", onAnimateFinish: "pulloutAnimateFinish" }
       //]}
     ],
     addPulloutItem: function (inSender, inEvent) {
@@ -56,8 +56,28 @@ white:true*/
     parameterDidChange: function (inSender, inEvent) {
       this.$.postbooks.getActiveModule().waterfall("onParameterChange", inEvent);
     },
-    togglePullout: function (inSender, inEvent) {
-      this.$.pullout.togglePullout(inEvent.name);
+    /**
+     * Manages the "lit-up-ness" of the icon buttons based on the pullout.
+     * If the pull-out is put away, we want all buttons to dim. If the pull-out
+     * is activated, we want the button related to the active pullout pane
+     * to light up. The presentation of these buttons take care of themselves
+     * if the user actually clicks on the buttons.
+     */
+    pulloutAnimateFinish: function (inSender, inEvent) {
+      var activeIconButton;
+
+      if (inSender.value === inSender.max) {
+        // pullout is active
+        if (this.$.pullout.getSelectedPanel() === 'history') {
+          activeIconButton = 'history';
+        } else {
+          activeIconButton = 'search';
+        }
+      } else if (inSender.value === inSender.min) {
+        // pullout is inactive
+        activeIconButton = null;
+      }
+      this.$.postbooks.getActiveModule().setActiveIconButton(activeIconButton);
     },
     refreshHistoryPanel: function (inSender, inEvent) {
       this.$.pullout.refreshHistoryList();
@@ -98,6 +118,9 @@ white:true*/
       } else {
         this.inherited(arguments);
       }
+    },
+    togglePullout: function (inSender, inEvent) {
+      this.$.pullout.togglePullout(inEvent.name);
     }
   });
 }());
