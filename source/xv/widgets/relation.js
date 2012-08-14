@@ -96,7 +96,7 @@ regexp:true, undef:true, trailing:true, white:true */
       switch (action)
       {
       case 'search':
-        listKind = this.kind.replace("RelationWidget", "") + "InfoList";
+        listKind = this.kind.replace("RelationWidget", "") + "List";
         this.bubble("search", { eventName: "search", options: { listKind: listKind, source: this }});
         break;
       case 'open':

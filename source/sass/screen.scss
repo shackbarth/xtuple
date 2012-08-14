@@ -378,14 +378,14 @@ body {
 
 /*********XV VIEWS***********/
 
-.xv-infolist {
-  .xv-infolist-item {
+.xv-list {
+  .xv-list-item {
     @include box-sizing(border-box);
     background-color: #fff;
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
-    .xv-infolist-column {
+    .xv-list-column {
       &.short {
         width: 150px;
       }
@@ -401,7 +401,7 @@ body {
       &.money {
         width: 100px;
       }
-      .xv-infolist-attr {
+      .xv-list-attr {
         padding: 5px;
         font-size: 13px;
         white-space: nowrap;

@@ -104,6 +104,7 @@ XT.stringsFor("en_US", {
   "_dataState": "Data State",
   "_date": "Date",
   "_deactivate": "Deactivate",
+  "_deferred": "Deferred",
   "_delete": "Delete",
   "_description": "Description",
   "_description1": "Description1",

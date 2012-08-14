@@ -19,7 +19,7 @@ trailing:true white:true*/
     handlers: {
       onParameterChange: "requery",
       onScroll: "didScroll",
-      onInfoListRowTapped: "doInfoListRowTapped"
+      onListItemTapped: "listItemTapped"
     },
     showPullout: false,
     realtimeFit: true,
@@ -30,7 +30,7 @@ trailing:true white:true*/
           {name: "leftLabel"}
         ]}
       ]},
-      {kind: "FittableRows", name: "contentArea", fit:true, components: [
+      {kind: "FittableRows", name: "contentArea", fit: true, components: [
         {kind: "FittableColumns", noStretch: true,
            classes: "onyx-toolbar onyx-toolbar-inline", components: [
           {kind: "onyx.Grabber"},
@@ -43,13 +43,12 @@ trailing:true white:true*/
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
-          ]},
-        ]},
+          ]}
+        ]}
       ]}
     ],
     setOptions: function (options) {
       var listKind = options.listKind,
-        listName = listKind.replace("XV.", "").camelize(),
         parameterKind;
 
       /**
@@ -121,7 +120,7 @@ trailing:true white:true*/
     },
     // menu
     didScroll: function (inSender, inEvent) {
-      if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
+      if (inEvent.originator.kindName !== "XV.List") { return; }
       var list = inEvent.originator,
         max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
         options = {};
@@ -138,11 +137,11 @@ trailing:true white:true*/
       this.bubble("workspace", {eventName: "workspace"});
     },
     /**
-     * Catches the tap event from the {XV.InfoListRow}
+     * Catches the tap event from the {XV.List}
      * and repackages it into a carousel event to be
      * caught further up.
     */
-    doInfoListRowTapped: function (inSender, inEvent) {
+    listItemTapped: function (inSender, inEvent) {
       /**
        * Determine which item was tapped
        */
