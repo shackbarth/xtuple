@@ -61,6 +61,7 @@ trailing:true white:true*/
         {attribute: 'firstName', isEmpty: true},
         {attribute: 'lastName'},
         {attribute: 'firstName'},
+        {attribute: 'primaryEmail'},
         {attribute: 'id'}
       ]},
       parameterWidget: "XV.ContactInfoParameters",
@@ -404,7 +405,7 @@ trailing:true white:true*/
   // ..........................................................
   // STATES AND COUNTRIES
   //
-  
+
   enyo.kind({
     name: "XV.AbbreviationList",
     kind: "XV.List",
