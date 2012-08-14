@@ -8,7 +8,8 @@ white:true*/
 
   XT.dataSource = {
 
-    datasourceUrl: document.location.hostname, // development, not complete
+    //datasourceUrl: document.location.hostname, // development, not complete
+    datasourceUrl: DOCUMENT_HOSTNAME,
     datasourcePort: 443,
     isConnected: false,
 
