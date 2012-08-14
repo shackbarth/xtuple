@@ -362,6 +362,8 @@ white:true*/
   //
 
   /**
+    @class
+    
     Use this mixin on models that include an editable address. It will set the
     parent model status appropriately if the address is edited, and will
     perform address processing on the parent including:

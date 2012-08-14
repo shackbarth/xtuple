@@ -4,8 +4,6 @@ trailing:true white:true*/
 /*global XT:true, XV:true, XM:true, _:true, enyo:true*/
 
 (function () {
-  var ROWS_PER_FETCH = 50,
-    FETCH_TRIGGER = 100;
 
   enyo.kind({
     name: "XV.Module",
@@ -18,7 +16,6 @@ trailing:true white:true*/
     },
     handlers: {
       onParameterChange: "requery",
-      onScroll: "didScroll",
       onInfoListRowTapped: "infoListRowTapped"
     },
     showPullout: true,
@@ -41,21 +38,18 @@ trailing:true white:true*/
         ]}
       ]},
       {kind: "FittableRows", components: [
-        {kind: "FittableColumns", noStretch: true,
-           classes: "onyx-toolbar onyx-toolbar-inline", components: [
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
-          {kind: "Scroller", thumb: false, fit: true, touch: true,
-             vertical: "hidden", style: "margin: 0;", components: [
-            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
-            {name: "rightLabel", style: "text-align: center"}
-          ]},
-          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord" },
-          {kind: "onyx.InputDecorator", components: [
+          {name: "rightLabel", style: "text-align: center"},
+          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout",
+            style: "float: right;"},
+          {kind: "onyx.InputDecorator", style: "float: right;", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
-          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout"},
+          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord",
+            style: "float: right;" },
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, components: [
             {content: "_logoutConfirmation".loc() },
@@ -68,7 +62,7 @@ trailing:true white:true*/
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
       ]},
-      {kind: "Signals", onModelSave: "doRefreshInfoObject"}
+      {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
     firstTime: true,
     fetched: {},
@@ -87,17 +81,6 @@ trailing:true white:true*/
     didFinishTransition: function (inSender, inEvent) {
       this.setList(inSender.index);
     },
-    didScroll: function (inSender, inEvent) {
-      if (inEvent.originator.kindName !== "XV.InfoListPrivate") { return; }
-      var list = inEvent.originator,
-        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
-        options = {};
-      if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
-        list.setIsFetching(true);
-        options.showMore = true;
-        this.fetch(list.owner.name, options);
-      }
-    },
     create: function () {
       var i, component;
       this.inherited(arguments);
@@ -112,8 +95,7 @@ trailing:true white:true*/
     infoListRowTapped: function (inSender, inEvent) {
       var list = this.$.lists.getActive(),
         workspace = list.getWorkspace(),
-        itemIndex = inEvent.index,
-        id = list.collection.models[itemIndex].id;
+        id = list.getModel(inEvent.index).id;
 
       // Transition to workspace view, including the model as a payload
       this.bubble("workspace", {
@@ -171,7 +153,7 @@ trailing:true white:true*/
         // Input search parameters
         if (input) {
           query.parameters = [{
-            attribute: list.getCollection().model.getSearchableAttributes(),
+            attribute: list.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
           }];
@@ -185,13 +167,6 @@ trailing:true white:true*/
         delete query.parameters;
       }
 
-      if (options.showMore) {
-        query.rowOffset += ROWS_PER_FETCH;
-        options.add = true;
-      } else {
-        query.rowOffset = 0;
-        query.rowLimit = ROWS_PER_FETCH;
-      }
       list.setQuery(query);
       list.fetch(options);
       this.fetched[name] = true;
@@ -225,7 +200,7 @@ trailing:true white:true*/
      * XXX if there are multiple modules alive then all of them will catch
      * XXX the signal, which isn't ideal for performance
      */
-    doRefreshInfoObject: function (inSender, inPayload) {
+    refreshInfoObject: function (inSender, inPayload) {
       // obnoxious massaging. Can't think of an elegant way to do this.
       // salt in wounds: in setup we massage by adding List on the end, but with
       // crm we massage by adding InfoList on the end. This is horrible.

@@ -55,9 +55,9 @@ regexp:true, undef:true, trailing:true, white:true */
           parameters: [{
             attribute: key,
             operator: "BEGINS_WITH",
-            value: value,
-            rowLimit: 1
+            value: value
           }],
+          rowLimit: 1,
           orderBy: [{
             attribute: key
           }]
@@ -130,9 +130,9 @@ regexp:true, undef:true, trailing:true, white:true */
           parameters: [{
             attribute: key,
             operator: "BEGINS_WITH",
-            value: value,
-            rowLimit: 10
+            value: value
           }],
+          rowLimit: 10,
           orderBy: [{
             attribute: key
           }]
