@@ -276,33 +276,23 @@ select xt.install_js('XT','Orm','xtuple', $$
 
         /* process toOne  */
         if(props[i].toOne && props[i].toOne.isNested) {
-          if(DEBUG) plv8.elog(NOTICE, 'building toOne');     
           var toOne = props[i].toOne,
-              table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
-              type = table.afterDot(),
-              inverse = toOne.inverse ? toOne.inverse : 'id',
-              isEditable = toOne.isEditable !== false ? true : false,
-              toOneAlias, join;
+            table = base.nameSpace.decamelize() + '.' + toOne.type.decamelize(),
+            type = table.afterDot(),
+            inverse = toOne.inverse ? toOne.inverse.camelize() : 'id',
+            toOneAlias,
+            col = '({select}) as "{alias}"';
           if(!type) throw new Error('No type was defined on property ' + props[i].name);
-          tbl++;
-          toOneAlias = 't' + tbl;        
-          join = '{qualified} join {table} as {toOneAlias} on {toOneAlias}.{inverse} = {tableAlias}.{column}'
-                 .replace(/{qualified}/, toOne.isChild ? '' : 'left')
-                 .replace(/{table}/, table)
-                 .replace(/{toOneAlias}/g, toOneAlias)
-                 .replace(/{inverse}/, inverse)
-                 .replace(/{tableAlias}/, tblAlias)
-                 .replace(/{column}/, toOne.column);
-          toOneJoins.push(join);           
-          col = toOneAlias + ' as  "' + alias + '"';
-          cols.push(col);
+          if(DEBUG) plv8.elog(NOTICE, 'building toOne');    
+          conditions = type + '."' + inverse + '" = ' + tblAlias + '.' + toOne.column; 
 
-          /* fix any order items referencing this table */
-          if(orm.order) {
-            for(var o = 0; o < orm.order.length; o++) {
-              orm.order[o] = orm.order[o].replace(RegExp(type + ".", "g"), toOneAlias + ".");
-            }   
-          } 
+          /* build select */          
+          col = col.replace(/{select}/,
+             SELECT.replace(/{columns}/, type)
+                   .replace(/{table}/, table) 
+                   .replace(/{conditions}/, conditions))
+                   .replace(/{alias}/, alias);             
+          cols.push(col);
         }
 
         /* process toMany */
@@ -310,11 +300,15 @@ select xt.install_js('XT','Orm','xtuple', $$
           if(DEBUG) plv8.elog(NOTICE, 'building toMany');
          if(!props[i].toMany.type) throw new Error('No type was defined on property ' + props[i].name);       
           var toMany = props[i].toMany,
-              table = base.nameSpace + '.' + toMany.type.decamelize(),
-              type = toMany.type.decamelize(),     
-              column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(base.nameSpace, toMany.type)),
-              iorm = XT.Orm.fetch(base.nameSpace, toMany.type),
-              inverse, ormp, sql, col = 'array({select}) as "{alias}"', conditions;
+            table = base.nameSpace + '.' + toMany.type.decamelize(),
+            type = toMany.type.decamelize(),     
+            column = toMany.isNested ? type : XT.Orm.primaryKey(XT.Orm.fetch(base.nameSpace, toMany.type)),
+            iorm = XT.Orm.fetch(base.nameSpace, toMany.type),
+            inverse,
+            ormp,
+            sql,
+            col = 'array({select}) as "{alias}"',
+            conditions;
 
            /* handle inverse */
           inverse = toMany.inverse ? toMany.inverse.camelize() : 'id';
