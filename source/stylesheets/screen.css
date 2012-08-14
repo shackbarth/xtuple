@@ -726,8 +726,13 @@ body {
   padding-bottom: 4px;
 }
 
+/* line 601, ../sass/screen.scss */
+.xv-relationwidget .xv-subinput {
+  width: 150px;
+}
+
 /********END XV WIDGETS******/
-/* line 603, ../sass/screen.scss */
+/* line 609, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -737,17 +742,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 611, ../sass/screen.scss */
+/* line 617, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 613, ../sass/screen.scss */
+/* line 619, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 620, ../sass/screen.scss */
+/* line 626, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -757,12 +762,12 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 628, ../sass/screen.scss */
+/* line 634, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 631, ../sass/screen.scss */
+/* line 637, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
