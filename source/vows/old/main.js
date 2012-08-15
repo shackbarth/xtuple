@@ -55,6 +55,9 @@ require("tinycolor"); /*tinycolor*/
 XVOWS = {};
 XVOWS.wait = 10000;
 
+// BECAUSE THE DATASOURCE EXPECTS THIS TO EXIST...
+DOCUMENT_HOSTNAME = "";
+
 /**
   Creates a working model and automatically checks state
   is `READY_NEW` and a valid `id` immediately afterward.
@@ -251,8 +254,6 @@ XVOWS.destroy = function (model, vows, obj) {
   "locale",
   "ext/proto/string",
   "ext/string",
-  "ext/model",
-  "ext/collection",
   "ext/startup_task",
   "en/strings"
 ].map(function (path) {
@@ -314,6 +315,8 @@ Backbone.XM = XM;
 // TO PRESERVE LOAD ORDER WE HACK THIS INTO
 // UGLY OBLIVION BUT BY GOLLY IT F*@&$@# WORKS
 require("./lib/fake_enyo");
+require(_path.join(__dirname, "../xm/ext", "model.js"));
+require(_path.join(__dirname, "../xm/ext", "collection.js"));
 // GRAB THE LOAD ORDER WE WANT TO PRESERVE
 // FROM THE package.js FILE IN MODELS
 require(_path.join(__dirname, "../xm/models", "package.js"));

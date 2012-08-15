@@ -8,6 +8,7 @@ enyo.depends(
   "$lib/gts-plugins",
   "$lib/date_format",
   "$lib/socket_io",
+  "core.js",
   "xt",
   "xm",
   "xv",

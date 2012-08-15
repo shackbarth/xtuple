@@ -159,18 +159,6 @@ white:true*/
       return true;
     },
 
-    selectSession: function (idx, callback) {
-      var self = this,
-        complete = function (payload) {
-          self._didAcquireSession.call(self, payload, callback);
-        };
-
-      XT.Request
-        .handle("session/select")
-        .notify(complete)
-        .send(idx);
-    },
-
     getAvailableSessions: function () {
       return this.availableSessions;
     },
@@ -233,15 +221,13 @@ white:true*/
     },
 
     _didValidateSession: function (payload, callback) {
-      var h = document.location.hostname;
-
       // if this is a valid session acquisition, go ahead
       // and store the properties
       if (payload.code === 1) {
         this.setDetails(payload.data);
         XT.getStartupManager().start();
       } else {
-        return document.location = "https://%@/login".f(h);
+        return relocate();
       }
 
       if (callback && callback instanceof Function) {
@@ -258,11 +244,10 @@ white:true*/
     },
 
     logout: function () {
-      var h = document.location.hostname;
       XT.Request
         .handle("function/logout")
         .notify(function () {
-          document.location = "https://%@/login".f(h);
+          relocate();
         })
         .send();
     },
