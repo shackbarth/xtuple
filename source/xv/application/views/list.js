@@ -72,13 +72,16 @@ trailing:true white:true*/
         {kind: "FittableColumns", components: [
           {kind: "XV.ListColumn", classes: "first", components: [
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "name", classes: "bold"},
-              {kind: "XV.ListAttr", attr: "jobTitle", fit: true,
-                classes: "right"}
+              {kind: "FittableColumns", components: [
+                {kind: "XV.ListAttr", attr: "firstName", formatter: "formatFirstName"},
+                {kind: "XV.ListAttr", attr: "lastName", fit: true, classes: "bold",
+                  style: "padding-left: 0px;"}
+              ]},
+              {kind: "XV.ListAttr", attr: "phone", fit: true, classes: "right"}
             ]},
             {kind: "FittableColumns", components: [
-              {kind: "XV.ListAttr", attr: "phone"},
-              {kind: "XV.ListAttr", attr: "primaryEmail", classes: "right"}
+              {kind: "XV.ListAttr", attr: "jobTitle", placeholder: "_noJobTitle".loc()},
+              {kind: "XV.ListAttr", attr: "primaryEmail", classes: "right", fit: true}
             ]}
           ]},
           {kind: "XV.ListColumn", classes: "last", fit: true, components: [
@@ -88,7 +91,11 @@ trailing:true white:true*/
           ]}
         ]}
       ]}
-    ]
+    ],
+    formatFirstName: function (value, view, model) {
+      view.addRemoveClass("bold", _.isEmpty(model.get('lastName').trim()));
+      return value;
+    }
   });
 
   // ..........................................................
