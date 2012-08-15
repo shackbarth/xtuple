@@ -218,13 +218,27 @@ white:true*/
     /**
       A formatted address that includes city, state and country.
 
+      short format accepts multiple argument formats:
+        XM.Address.format(address);
+        XM.Address.format(city, state, country);
+
       @return {String}
     */
     formatShort: function (address) {
       var ret,
-        city = address.get('city') || '',
-        state = address.get('state') || '',
+        city,
+        state,
+        country;
+
+      if (typeof address === 'object') {
+        city = address.get('city') || '';
+        state = address.get('state') || '';
         country = address.get('country') || '';
+      } else {
+        city = arguments[0] || '';
+        state = arguments[1] || '';
+        country = arguments[2] || '';
+      }
       ret = city + (city && state ? ', ' : '') + state;
       ret += (ret ? ' ' : '') + country;
       return ret;
@@ -363,7 +377,7 @@ white:true*/
 
   /**
     @class
-    
+
     Use this mixin on models that include an editable address. It will set the
     parent model status appropriately if the address is edited, and will
     perform address processing on the parent including:

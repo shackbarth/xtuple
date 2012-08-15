@@ -12,6 +12,7 @@
 $highlight  : #d6f1ff;
 
 body {}
+ 
 
 .bggrad {
   @include background-image(radial-gradient(#666, #333 70%));
@@ -312,22 +313,49 @@ body {
 
 /********* PULLOUT ************/
 
-.parameter-item {
-	min-height: 50px;
+
+@mixin slim-datewidget($labelVisibility, $pickerVisibility: visible) {
+  .xv-input-decorator {
+    padding: 0px;
+    height: 32px;
+  }
+  .xv-label {
+    visibility: $labelVisibility;
+  }
+  .onyx-icon {
+    visibility: $pickerVisibility;
+    vertical-align: top;
+  }
+  .onyx-input {
+    width: 90px;
+    vertical-align: top;
+  }
 }
 
-.parameter-item-input {
-  margin-top: -10px;
-	float: right;
+.xv-parameter-item {
+    border-bottom: 1px solid lightgrey;
+    .xv-subinput {
+      width: 100px;
+    }
+    .xv-label {
+      width: 140px;
+    }
+    .xv-datewidget {
+      @include slim-datewidget(visible);
+    }
+    .xv-picker {
+      width:140px;
+    }
 }
 
-.history-header {
+.xv-parameter-item-input {
+  //margin-top: 10px;
+  //float: right;
+}
+
+.xv-pullout-header {
 	text-align: center;
 	padding: 10px 0;
-}
-
-.history-scroller {
-	background-color: #fff;
 }
 
 /* adapt to smaller displays */
@@ -378,14 +406,14 @@ body {
 
 /*********XV VIEWS***********/
 
-.xv-infolist {
-  .xv-infolist-item {
+.xv-list {
+  .xv-list-item {
     @include box-sizing(border-box);
     background-color: #fff;
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
-    .xv-infolist-column {
+    .xv-list-column {
       &.short {
         width: 150px;
       }
@@ -401,13 +429,14 @@ body {
       &.money {
         width: 100px;
       }
-      .xv-infolist-attr {
+      .xv-list-attr {
         padding: 5px;
         font-size: 13px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         color: black;
+        background-color: white;
         &.right {
           position: absolute;
           right: 0px;
@@ -442,14 +471,18 @@ body {
   margin-right: 5px;
 }
 
+
 .xv-repeater-box {
   width: 880px;
   .xv-label {
-    width: 100px;
+    width: 90px;
     font-weight: bold;
     border-width: 0px;
     font-size: 12px;
     text-align:center;
+  }
+  .xv-wide-entry {
+    width: 200px;
   }
   .xv-input {
     width: 100px;
@@ -459,33 +492,61 @@ body {
       border-width: 0px;
     }
   }
+
+  .xv-datewidget {
+    @include slim-datewidget(hidden, hidden);
+  }
 }
 
 .xv-repeater-box-row {
   background-color: white;
+  .xv-wide-entry {
+    width: 200px;
+    .xv-subinput {
+      width: 200px;
+    }
+  }
+  .xv-delete-button {
+    width: 14px;
+    height: 21px;
+    padding-top: 0px;
+  }
 }
 
 .xv-comment-box {
   width: 700px;
   .xv-repeater-box-row {
-    height: 135px;
+    height: 140px;
   }
   .xv-comment-box-createdBy {
     font-weight: bold;
   }
+  
   .xv-comment-box-text {
     position:absolute;
-    margin-top: 50px;
-    width:500px;
-    height:80px;
+    margin-top: 40px;
+    border-width: 0px;
+    width: 500px;
+    //height: 80px;
+    //min-height: 80px;
     border: 1px solid grey;
-    .xv-subinput {
-      height: 75px;
-      width: 490px;
-    }
+    //vertical-align:top;
+  }
+  .xv-textarea-input {
+    //vertical-align:top;
+    height: 75px;
+    min-height: 75px;
+    width: 490px;
   }
   .xv-repeater-box-header {
     visibility: hidden;
+  }
+  .xv-comment-box-comment-type {
+    border-width: 0px;
+    .xv-picker {
+      height: 25px;
+      padding: 2px;
+    }
   }
 }
 
@@ -508,6 +569,9 @@ body {
   text-align: right;
 }
 
+.xv-subinput {
+  width: 200px;
+}
 .xv-inputwidget {
   background-color: white;
 }
@@ -532,6 +596,12 @@ body {
   text-indent: 120px;
   font-size: small;
   padding-bottom: 4px;
+}
+
+.xv-relationwidget {
+  .xv-subinput {
+    width: 150px;
+  }
 }
 
 /********END XV WIDGETS******/

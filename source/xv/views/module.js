@@ -4,6 +4,7 @@ trailing:true white:true*/
 /*global XT:true, XV:true, XM:true, _:true, enyo:true*/
 
 (function () {
+  var FETCH_TRIGGER = 100;
 
   enyo.kind({
     name: "XV.Module",
@@ -11,12 +12,13 @@ trailing:true white:true*/
     label: "",
     classes: "app enyo-unselectable",
     events: {
-      onInfoListAdded: "",
+      onListAdded: "",
       onTogglePullout: ""
     },
     handlers: {
       onParameterChange: "requery",
-      onInfoListRowTapped: "infoListRowTapped"
+      onScroll: "scrolled",
+      onListItemTapped: "listItemTapped"
     },
     showPullout: true,
     realtimeFit: true,
@@ -26,9 +28,9 @@ trailing:true white:true*/
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
-          {kind: "Group", defaultKind: "onyx.IconButton", tag: null, components: [
-            {src: "assets/menu-icon-search.png", ontap: "showParameters"},
-            {src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
+          {kind: "Group", name: "iconButtonGroup", defaultKind: "onyx.IconButton", tag: null, components: [
+            {name: "searchIconButton", src: "assets/menu-icon-search.png", ontap: "showParameters"},
+            {name: "historyIconButton", src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
           ]},
           {name: "leftLabel"}
         ]},
@@ -60,26 +62,17 @@ trailing:true white:true*/
           ]}
         ]},
         {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
-           margin: 0, fit: true, onTransitionFinish: "didFinishTransition"}
+           margin: 0, fit: true, onTransitionFinish: "finishedTransition"}
       ]},
       {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
     firstTime: true,
     fetched: {},
-    // menu
-    setupItem: function (inSender, inEvent) {
-      var list = this.lists[inEvent.index].name;
-      this.$.item.setContent(this.$.lists.$[list].getLabel());
-      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
-    },
-    didBecomeActive: function () {
+    activated: function () {
       if (this.firstTime) {
         this.firstTime = false;
         this.setList(0);
       }
-    },
-    didFinishTransition: function (inSender, inEvent) {
-      this.setList(inSender.index);
     },
     create: function () {
       var i, component;
@@ -88,22 +81,12 @@ trailing:true white:true*/
       // Build lists
       for (i = 0; i < this.lists.length; i++) {
         component = this.$.lists.createComponent(this.lists[i]);
-        this.doInfoListAdded(component);
+        this.doListAdded(component);
       }
       this.$.menu.setCount(this.lists.length);
     },
-    infoListRowTapped: function (inSender, inEvent) {
-      var list = this.$.lists.getActive(),
-        workspace = list.getWorkspace(),
-        id = list.getModel(inEvent.index).id;
-
-      // Transition to workspace view, including the model as a payload
-      this.bubble("workspace", {
-        eventName: "workspace",
-        workspace: workspace,
-        id: id
-      });
-      return true;
+    finishedTransition: function (inSender, inEvent) {
+      this.setList(inSender.index);
     },
     inputChanged: function (inSender, inEvent) {
       var index = this.$.lists.getIndex(),
@@ -114,26 +97,18 @@ trailing:true white:true*/
     itemTap: function (inSender, inEvent) {
       this.setList(inEvent.index);
     },
-    setList: function (index) {
-      if (this.firstTime) { return; }
-      var list = this.lists[index].name;
+    listItemTapped: function (inSender, inEvent) {
+      var list = this.$.lists.getActive(),
+        workspace = list.getWorkspace(),
+        id = list.getModel(inEvent.index).id;
 
-      // Select menu
-      if (!this.$.menu.isSelected(index)) {
-        this.$.menu.select(index);
-      }
-
-      // keep the selected list in state as a kind variable
-      this.selectedList = index;
-
-      // Select list
-      if (this.$.lists.getIndex() !== index) {
-        this.$.lists.setIndex(index);
-      }
-      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
-      if (!this.fetched[list]) {
-        this.fetch(list);
-      }
+      // Transition to workspace view, including the model id payload
+      this.bubble("workspace", {
+        eventName: "workspace",
+        workspace: workspace,
+        id: id
+      });
+      return true;
     },
     fetch: function (name, options) {
       name = name || this.$.lists.getActive().name;
@@ -183,6 +158,44 @@ trailing:true white:true*/
     requery: function (inSender, inEvent) {
       this.fetch();
     },
+    scrolled: function (inSender, inEvent) {
+      if (inEvent.originator instanceof XV.List === false) { return; }
+      var list = inEvent.originator,
+        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
+        options = {};
+      if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
+        list.setIsFetching(true);
+        options.showMore = true;
+        this.fetch(list.name, options);
+      }
+    },
+    setList: function (index) {
+      if (this.firstTime) { return; }
+      var list = this.lists[index].name;
+
+      // Select menu
+      if (!this.$.menu.isSelected(index)) {
+        this.$.menu.select(index);
+      }
+
+      // Keep the selected list in state as a kind variable
+      this.selectedList = index;
+
+      // Select list
+      if (this.$.lists.getIndex() !== index) {
+        this.$.lists.setIndex(index);
+      }
+      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
+      if (!this.fetched[list]) {
+        this.fetch(list);
+      }
+    },
+    // menu
+    setupItem: function (inSender, inEvent) {
+      var list = this.lists[inEvent.index].name;
+      this.$.item.setContent(this.$.lists.$[list].getLabel());
+      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
     },
@@ -203,10 +216,10 @@ trailing:true white:true*/
     refreshInfoObject: function (inSender, inPayload) {
       // obnoxious massaging. Can't think of an elegant way to do this.
       // salt in wounds: in setup we massage by adding List on the end, but with
-      // crm we massage by adding InfoList on the end. This is horrible.
+      // crm we massage by adding List on the end. This is horrible.
       // XXX not sustainable
       var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
-        listName = this.name === "setup" ? listBase + "List" : listBase + "InfoList",
+        listName = this.name === "setup" ? listBase + "List" : listBase + "List",
         list = this.$.lists.$[listName];
 
 
@@ -266,6 +279,20 @@ trailing:true white:true*/
     logout: function () {
       this.$.logoutPopup.hide();
       XT.session.logout();
+    },
+
+    /**
+     * Manually set one of the icon buttons to be active. Note passing null
+     * as the parameter will disactivate all icons.
+     */
+    setActiveIconButton: function (buttonName) {
+      var activeIconButton = null;
+      if (buttonName === 'search') {
+        activeIconButton = this.$.searchIconButton;
+      } else if (buttonName === 'history') {
+        activeIconButton = this.$.historyIconButton;
+      }
+      this.$.iconButtonGroup.setActive(activeIconButton);
     }
 
   });
