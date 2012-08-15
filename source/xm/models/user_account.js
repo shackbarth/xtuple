@@ -151,13 +151,11 @@ white:true*/
     enforceUpperKey: false,
 
     defaults: {
-      canCreateUsers: false,
       disableExport: false,
       isDatabaseUser: false
     },
 
     requiredAttributes: [
-      "canCreateUsers",
       "disableExport",
       "isDatabaseUser"
     ]
@@ -189,7 +187,7 @@ white:true*/
   XM.UserAccountUserAccountRoleAssignment = XM.Document.extend({
     /** @scope XM.UserAccountUserAccountRoleAssignment.prototype */
 
-    recordType: 'UserAccountUserAccountRoleAssignment'
+    recordType: 'XM.UserAccountUserAccountRoleAssignment'
 
   });
 

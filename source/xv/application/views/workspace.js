@@ -457,14 +457,16 @@ trailing:true white:true*/
     },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", components: [
+        fit:true, classes: "xv-top-panel", components: [
         {kind: "XV.WorkspaceBox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.CheckboxWidget", name: "isActive"},
           {kind: "XV.InputWidget", name: "properName"},
           {kind: "XV.InputWidget", name: "initials"},
           {kind: "XV.InputWidget", name: "email"}
-        ]}
+        ]},
+        // XXX probably will generalize this one day
+        {kind: "XV.UserAccountWorkspaceBox", name: "grantedPrivileges"}
       ]}
     ]
   });

@@ -214,10 +214,10 @@ white:true*/
       this.lastError = resp;
       XT.log(resp);
     },
-    
+
     /**
       Return whether the model is in a valid state to `save`.
-      
+
       @returns {Boolean}
     */
     isValid: function () {
@@ -227,7 +227,7 @@ white:true*/
 
     /**
       Return the original value of an attribute the last time fetch was called.
-      
+
       @returns {Object}
     */
     original: function (attr) {
@@ -236,7 +236,7 @@ white:true*/
 
     /**
       Return all the original values of the attributes the last time fetch was called.
-      
+
       @returns {Array}
     */
     originalAttributes: function () {
@@ -450,7 +450,7 @@ white:true*/
       Searches attributes first, if not found then returns either a function call
       or property value that matches the key. It supports search on an attribute path
       through a model hierachy.
-      
+
       example:
         // Returns the first name attribute from primary contact model.
         var firstName = m.getValue('primaryContact.firstName');
@@ -462,7 +462,7 @@ white:true*/
       var parts,
         value,
         i;
-        
+
       // Search path
       if (key.indexOf('.') !== -1) {
         parts = key.split('.');
@@ -482,7 +482,7 @@ white:true*/
         }
         return value;
       }
-      
+
       // Search attribute, function, propety
       if (_.has(this.attributes, key)) { return this.attributes[key]; }
       return _.isFunction(this[key]) ? this[key]() : this[key];
