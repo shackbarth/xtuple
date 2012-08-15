@@ -6,31 +6,30 @@ trailing:true white:true*/
 (function () {
   
   var ROWS_PER_FETCH = 50;
-  var FETCH_TRIGGER = 100;
 
   enyo.kind({
-    name: "XV.InfoListItem",
-    classes: "xv-infolist-item",
+    name: "XV.ListItem",
+    classes: "xv-list-item",
     ontap: "itemTap"
   });
 
   enyo.kind({
-    name: "XV.InfoListColumn",
-    classes: "xv-infolist-column"
+    name: "XV.ListColumn",
+    classes: "xv-list-column"
   });
 
   enyo.kind({
-    name: "XV.InfoListAttr",
-    classes: "xv-infolist-attr",
+    name: "XV.ListAttr",
+    classes: "xv-list-attr",
     published: {
       attr: ""
     }
   });
 
   enyo.kind({
-    name: "XV.InfoList",
+    name: "XV.List",
     kind: "List",
-    classes: "xv-infolist",
+    classes: "xv-list",
     published: {
       label: "",
       collection: null,
@@ -41,10 +40,9 @@ trailing:true white:true*/
       workspace: null
     },
     events: {
-      onInfoListRowTapped: ""
+      onListItemTapped: ""
     },
     handlers: {
-      onScroll: "scrolled",
       onSetupItem: "setupItem"
     },
     collectionChanged: function () {
@@ -110,19 +108,7 @@ trailing:true white:true*/
       }
     },
     itemTap: function (inSender, inEvent) {
-      this.doInfoListRowTapped(inEvent);
-    },
-    scrolled: function (inSender, inEvent) {
-      var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
-        options = {};
-        
-      // Handle lazy loading
-      if (this.getIsMore() && this.getScrollPosition() > max && !this.getIsFetching()) {
-        this.setIsFetching(true);
-        options.showMore = true;
-        this.fetch(options);
-      }
-      return true;
+      this.doListItemTapped(inEvent);
     },
     setupItem: function (inSender, inEvent) {
       var model = this._collection.models[inEvent.index],

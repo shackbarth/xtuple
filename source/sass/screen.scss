@@ -372,7 +372,7 @@ body {
 	left: 0;
 	bottom: 0;
 	width: 320px;
-	background: #D8D8D8
+	background: #D8D8D8;
 }
 
 .pullout-shadow {
@@ -406,14 +406,14 @@ body {
 
 /*********XV VIEWS***********/
 
-.xv-infolist {
-  .xv-infolist-item {
+.xv-list {
+  .xv-list-item {
     @include box-sizing(border-box);
     background-color: #fff;
     padding-top: 3px;
     padding-bottom: 3px;
     border-bottom: 1px solid #ddd;
-    .xv-infolist-column {
+    .xv-list-column {
       &.short {
         width: 150px;
       }
@@ -429,13 +429,14 @@ body {
       &.money {
         width: 100px;
       }
-      .xv-infolist-attr {
+      .xv-list-attr {
         padding: 5px;
         font-size: 13px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         color: black;
+        background-color: white;
         &.right {
           position: absolute;
           right: 0px;

@@ -1,8 +1,7 @@
 enyo.depends(
-  "info_list.js",
+  "list.js",
   "module.js",
   "pullout.js",
-  "scroller.js",
   "screen_carousel.js",
   "workspace.js",
   "workspace_box.js",

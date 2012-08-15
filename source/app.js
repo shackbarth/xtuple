@@ -13,7 +13,7 @@ white:true*/
       isStarted: false
     },
     handlers: {
-      onInfoListAdded: "addPulloutItem",
+      onListAdded: "addPulloutItem",
       onParameterChange: "parameterDidChange",
       onTogglePullout: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",

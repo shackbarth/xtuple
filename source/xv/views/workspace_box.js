@@ -8,7 +8,7 @@ white:true*/
   enyo.kind({
     name: "XV.WorkspaceBox",
     kind: "Scroller",
-    classes: "xv-groupbox",
+    classes: "onyx-groupbox xv-groupbox",
     published: {
       title: "_overview".loc()
     }
