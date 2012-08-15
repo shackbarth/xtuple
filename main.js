@@ -1,22 +1,22 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
 
   var options = require("./lib/options");
 
-  // include the XT framework
+  // include the X framework
   require("xt");
 
   // make absolutely sure we're going to start
   options.autoStart = true;
 
-  XT.debugging = true;
+  X.debugging = true;
 
   // set the options
-  XT.setup(options);
+  X.setup(options);
 
   require("./lib/ext/session");
   require("./lib/ext/proxy");
@@ -26,14 +26,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   require("./lib/dataserver");
   
   // load up the redirector
-  require("./lib/redirect");
   
-  XT.userCache = XT.Cache.create({prefix: "users"});
-  XT.sessionCache = XT.Cache.create({
+  X.userCache = X.Cache.create({prefix: "users"});
+  X.sessionCache = X.Cache.create({
     prefix: "session",
     init: function () {
       this._super.init.call(this);
-      XT.Session.cache = this;
+      X.Session.cache = this;
     }
   });
 }());
