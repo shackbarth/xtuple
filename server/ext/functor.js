@@ -1,20 +1,20 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
   
-  var _ = XT._, _path = XT.path;
+  var _ = X._, _path = X.path;
   
-  XT.Functor = XT.Object.extend({
+  X.Functor = X.Object.extend({
 
     init: function () {
       var handles = this.get("handles");
-      if (XT.typeOf(handles) !== XT.T_ARRAY) handles = [handles];
-      XT.functors.push({handles: handles, target: this});
+      if (X.typeOf(handles) !== X.T_ARRAY) handles = [handles];
+      X.functors.push({handles: handles, target: this});
       _.each(handles, function (handle) {
-        XT.functorMap[handle] = this;
+        X.functorMap[handle] = this;
       }, this);
     },
   
@@ -22,23 +22,23 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
     handles: null,
 
-    className: "XT.Functor"
+    className: "X.Functor"
   });
   
-  XT.run(function () {
+  X.run(function () {
     var path, files;
     
-    if (!XT.functorsDirectory) return;
+    if (!X.functorsDirectory) return;
     
-    path = _path.join(XT.basePath, XT.functorsDirectory);
+    path = _path.join(X.basePath, X.functorsDirectory);
     
-    XT.functors = [];
-    XT.functorMap = {};
+    X.functors = [];
+    X.functorMap = {};
     
-    XT.log("Loading available functors from %@".f(
-      XT.shorten(path, 5)));
+    X.log("Loading available functors from %@".f(
+      X.shorten(path, 5)));
     
-    files = XT.directoryFiles(path, {extension: ".js", fullPath: true});
+    files = X.directoryFiles(path, {extension: ".js", fullPath: true});
     _.each(files, function (file) {
       require(file);
     });

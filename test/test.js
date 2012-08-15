@@ -2,7 +2,7 @@
 
 require("../xt");
 
-//XT.setup({
+//X.setup({
 //  autoStart: true,
 //  version: "beta1",
 //  requireDatabase: true,
@@ -10,7 +10,7 @@ require("../xt");
 //});
 
 
-var b = XT.Object.create({
+var b = X.Object.create({
   some1: function () {
     console.log("some1");
   }.observes("something")
@@ -18,7 +18,7 @@ var b = XT.Object.create({
 
 b.emit("something");
 
-var c = XT.Object.extend({
+var c = X.Object.extend({
   some2: function () {
     console.log("some2");
   }.observes("something")

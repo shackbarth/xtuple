@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true, issue:true */
+/*global X:true, issue:true */
 
 (function () {
   "use strict";
@@ -10,9 +10,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   require("./ext/router");
   require('./ext/functor');
 
-  var _ = XT._, _fs = XT.fs, _path = XT.path;
+  var _ = X._, _fs = X.fs, _path = X.path;
 
-  XT.Server = XT.Object.extend({
+  X.Server = X.Object.extend({
     autoStart: false,
     port: null,
     name: null,
@@ -34,13 +34,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       if (!port) {
         var e = new Error("yo");
         console.log(e.stack);
-        issue(XT.fatal("cannot create a server with no port %@".f(name)));
+        issue(X.fatal("cannot create a server with no port %@".f(name)));
       }
-      if (!router && !sockets) issue(XT.fatal("cannot create a non-websocket server with no router"));
+      if (!router && !sockets) issue(X.fatal("cannot create a non-websocket server with no router"));
 
       if (auto) this.start();
   
-      XT.Server.registerServer(this);
+      X.Server.registerServer(this);
     },
     sockets: function () {
       return this._io && this._io.sockets ? this._io.sockets : null;
@@ -51,11 +51,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     cert: function () {
       var file = this.get("certFile");
-      return _fs.readFileSync(_path.join(XT.basePath, file), "utf8");
+      return _fs.readFileSync(_path.join(X.basePath, file), "utf8");
     }.property(),
     key: function () {
       var file = this.get("keyFile");
-      return _fs.readFileSync(_path.join(XT.basePath, file), "utf8");
+      return _fs.readFileSync(_path.join(X.basePath, file), "utf8");
     }.property(),
     start: function () {
       var port = this.get("port"), useSockets = this.get("useWebSocket"), 
@@ -70,16 +70,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // TODO: remove this from a try/catch but test for consequences in fail case...
       // right now it wraps unintended sub-calls
       try {
-        if (XT.none(app)) {
-          if (secure) app = XT.connect(options).use(_.bind(this.route, this));
-          else app = XT.connect().use(_.bind(this.route, this));
+        if (X.none(app)) {
+          if (secure) app = X.connect(options).use(_.bind(this.route, this));
+          else app = X.connect().use(_.bind(this.route, this));
         }
         
         if (bindAddress) server = this.server = app.listen(port, bindAddress);
         else server = this.server = app.listen(port);
         
         if (useSockets) {
-          this._io = require("socket.io").listen(server, XT.mixin({
+          this._io = require("socket.io").listen(server, X.mixin({
             "log level": 0,
             "browser client": false,
             "origins": "*:*",
@@ -90,9 +90,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
             ]
           }, options));
         }
-      } catch (err) { issue(XT.fatal(err)); }
+      } catch (err) { issue(X.fatal(err)); }
   
-      XT.log("Started %@server, %@, listening on port %@".f(secure? "secure ": "", this.get("name"), port));
+      X.log("Started %@server, %@, listening on port %@".f(secure? "secure ": "", this.get("name"), port));
   
       return this;
     },
@@ -110,16 +110,16 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     close: function () {
       if (this.server) {
-        XT.log("Server: '%@' shutting down.".f(this.get('name')));
+        X.log("Server: '%@' shutting down.".f(this.get('name')));
         this.server.close();
       }
       return this;
     },
-    className: "XT.Server"
+    className: "X.Server"
   });
   
   
-  XT.mixin(XT.Server, {
+  X.mixin(X.Server, {
 
     activeServers: {},
 
@@ -127,7 +127,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var name = server.get('name'),
           servers = this.activeServers;
       if (servers[name]) {
-        issue(XT.warning("Registering server but under unique name " +
+        issue(X.warning("Registering server but under unique name " +
           "because a server by that name already existed (%@ => %@)".f(
           name, server.get('uid'))));
         name = server.get('uid');
@@ -136,7 +136,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
 
     closeAll: function () {
-      XT.log("Shutting down all active servers.");
+      X.log("Shutting down all active servers.");
       var servers = this.activeServers,
           names = Object.keys(servers), i, name, server;
       for (i = 0; i < names.length; ++i) {
@@ -147,5 +147,5 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   });
   
-  XT.addCleanupTask(_.bind(XT.Server.closeAll, XT.Server));
+  X.addCleanupTask(_.bind(X.Server.closeAll, X.Server));
 }());

@@ -2,8 +2,8 @@
 var _path   = require('path');
 var _fs     = require('fs');
 
-XT.Logger = XT.Object.extend(
-  /** @scope XT.Logger.prototype */ {
+X.Logger = X.Object.extend(
+  /** @scope X.Logger.prototype */ {
 
   init: function() {
     var path = this.get('path');
@@ -15,7 +15,7 @@ XT.Logger = XT.Object.extend(
         
       }
     } catch (err) {
-      issue(XT.fatal("Could not find path to log files", err));
+      issue(X.fatal("Could not find path to log files", err));
     }
   }
     

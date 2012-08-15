@@ -1,16 +1,16 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
   
-  XT.Object = function () {
-    this._super = XT.Object.prototype;
-    return XT.init.apply(this, arguments[0]);
+  X.Object = function () {
+    this._super = X.Object.prototype;
+    return X.init.apply(this, arguments[0]);
   };
   
-  XT.mixin(XT.Object, {
+  X.mixin(X.Object, {
     
     create: function () {
       var K = this, ret = new K(arguments);
@@ -18,11 +18,11 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     extend: function () {
-      var ret = function () { return XT.init.apply(this, arguments[0]); },
-          args = XT.$A(arguments), len = args.length, i = 0, proto;
-      ret = XT.mixin(ret, this);
-      proto = (ret.prototype = XT.sire(this.prototype));
-      for (; i < len; ++i) XT.protoExtend(proto, args[i]);
+      var ret = function () { return X.init.apply(this, arguments[0]); },
+          args = X.$A(arguments), len = args.length, i = 0, proto;
+      ret = X.mixin(ret, this);
+      proto = (ret.prototype = X.sire(this.prototype));
+      for (; i < len; ++i) X.protoExtend(proto, args[i]);
       proto.constructor = ret;
       return ret;
     },
@@ -33,26 +33,26 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     }
   });
   
-  XT.Object.prototype = {};
+  X.Object.prototype = {};
   
-  XT.mixin(XT.Object.prototype, {
+  X.mixin(X.Object.prototype, {
 
     init: function () {},
 
     set: function () {
-      return XT.set.apply(this, arguments);
+      return X.set.apply(this, arguments);
     },
 
     get: function () {
-      return XT.get.apply(this, arguments);
+      return X.get.apply(this, arguments);
     },
 
-    className: "XT.Object",
+    className: "X.Object",
 
     _events: null,
   
     addEvent: function (event, listener) {
-      //XT.log("addEvent(): %@ => %@".f(this.uid, event));
+      //X.log("addEvent(): %@ => %@".f(this.uid, event));
       // TODO: revert to custom event handling system
       // as opposed to native here
       this.addListener(event, listener);
@@ -69,13 +69,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     
     mixin: function () {
-      var args = XT.$A(arguments);
+      var args = X.$A(arguments);
       args.unshift(this);
-      XT.mixin.apply(this, args);
+      X.mixin.apply(this, args);
     },
   
-    _XT_OBJECT: true
+    _X_OBJECT: true
   });
   
-  XT.mixin(XT.Object.prototype, require("events").EventEmitter.prototype);
+  X.mixin(X.Object.prototype, require("events").EventEmitter.prototype);
 }());
