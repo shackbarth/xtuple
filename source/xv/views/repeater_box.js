@@ -19,16 +19,14 @@ white:true*/
     components: [
       { kind: "onyx.GroupboxHeader", classes: "xv-repeater-box-title", name: "title", content: "Title" },
       { kind: "onyx.Groupbox", classes: "onyx-toolbar-inline xv-repeater-box-header", name: "headerRow" },
-      { kind: "enyo.Scroller", fit: true, components: [ // XXX this doesn't work
-        { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
-          { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
-        ]},
-        { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
-      ]}
+      { kind: "Repeater", name: "repeater", count: 0, onSetupItem: "setupRow", components: [
+        { kind: "XV.RepeaterBoxRow", name: "repeaterRow" }
+      ]},
+      { kind: "onyx.Button", name: "newRowButton", onclick: "newRow", content: "Add New" }
     ],
     create: function () {
       this.inherited(arguments);
-      this.$.title.setContent(this.name);
+      this.$.title.setContent(("_" + this.name).loc());
 
       /**
        * If the columns are defined from the outset of the creation of this class
@@ -51,7 +49,7 @@ white:true*/
         this.createComponent({
           container: this.$.headerRow,
           content: label,
-          classes: "xv-label"
+          classes: columnDesc.classes ? columnDesc.classes + " xv-label" : "xv-label"
         });
       }
     },
@@ -80,6 +78,13 @@ white:true*/
      * Display the collection in the grid when it's passed in.
      */
     collectionChanged: function () {
+      /**
+       * Disable the "create new" button if the user doesn't have permission
+       * to add a model to this collection
+       */
+      if (!this.getCollection().model.canCreate()) {
+        this.$.newRowButton.setDisabled(true);
+      }
       // XXX this should get called here but some bug is keeping setupRow from being called
       //this.$.repeater.setCount(this.getCollection().size());
     },
