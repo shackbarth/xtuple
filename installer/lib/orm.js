@@ -1,16 +1,16 @@
 /*jshint node:true, indent:2, curly:false, eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, strict:true, trailing:true, white:true */
-/*global XT:true */
+/*global X:true */
 
 (function () {
   "use strict";
 
-  var _path = XT.path, _ = XT._, _fs = XT.fs, initSocket, testConnection, dive,
+  var _path = X.path, _ = X._, _fs = X.fs, initSocket, testConnection, dive,
       parseFile, calculateDependencies, dependenciesFor, checkDependencies, cleanse,
       installQueue, submit;
   
-  XT.debugging = true;
-  XT.db = XT.Database.create();
+  X.debugging = true;
+  X.db = X.Database.create();
   
   initSocket = function (socket) {
     socket.on("refresh", _.bind(this.refresh, this, socket));
@@ -70,10 +70,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
 
     socket.emit("message", "installing %@%@.%@".f(isExtension? "(extension %@) ".f(context): "", orm.nameSpace, orm.type));
 
-    query = "select xt.install_orm('%@')".f(XT.json(cleanse(orm)));
+    query = "select xt.install_orm('%@')".f(X.json(cleanse(orm)));
 
-    //XT.db.query(socket.organization, query, _.bind(function (err, res) {
-    XT.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
+    //X.db.query(socket.organization, query, _.bind(function (err, res) {
+    X.db.query(query, socket.databaseOptions, _.bind(function (err, res) {
       var c = extensionList.length;
       if (err) {
         socket.emit("message", err.message);        
@@ -137,17 +137,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   parseFile = function (path) {
     try {
-      return XT.json(_fs.readFileSync(path, "utf8"), true);
+      return X.json(_fs.readFileSync(path, "utf8"), true);
     } catch (err) { return {isError: true, message: err.message, file: path}; }
   };
   
   dive = function (path, root) {
-    var files = XT.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
+    var files = X.directoryFiles(path, {fullPath: true}), stat, isTop, ret, content, errors = [];
     isTop = root? false: true;
     _.each(files, function (file) {
       stat = _fs.statSync(file);
       if (stat.isDirectory()) dive(file, root? root: (root = {}));
-      else if (XT.ext(file) === "json") root[file] = "";
+      else if (X.ext(file) === "json") root[file] = "";
     });
     if (isTop) {
       ret = [];
@@ -188,7 +188,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       dependenciesFor(socket, extension, dependencies);
     });
     namespace = orm.table.match(/^(.*)\./);
-    if (!XT.none(namespace) && !ignore.contains(namespace[1].toUpperCase())) {
+    if (!X.none(namespace) && !ignore.contains(namespace[1].toUpperCase())) {
       namespace = namespace[1].toUpperCase();
       table = orm.table.match(/\.(.*)$/)[1].h();
       dep = {nameSpace: namespace, type: table};
@@ -198,7 +198,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       var ns, type;
       ns = orms[dependency.nameSpace];
       type = ns[dependency.type];
-      if (XT.none(type)) {
+      if (X.none(type)) {
         orm.missingDependencies.push("%@.%@".f(dependency.nameSpace, dependency.type));
       }
     });
@@ -228,12 +228,12 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   checkDependencies = function (socket, orm) {
     var enabled = true, dependencies = orm.dependencies, found, orms;
-    if (XT.typeOf(orm.enabled) !== XT.T_UNDEFINED) return orm.enabled;
+    if (X.typeOf(orm.enabled) !== X.T_UNDEFINED) return orm.enabled;
     if (!dependencies || dependencies.length <= 0) return enabled;
     orms = socket.orms;
     _.each(dependencies, function (dependency) {
       found = orms[dependency.nameSpace][dependency.type];
-      if (XT.none(found)) {
+      if (X.none(found)) {
         if (!orm.undefinedDependencies) orm.undefinedDependencies = [];
         orm.undefinedDependencies.push("%@.%@".f(dependency.namespace, dependency.type));
         enabled = false;
@@ -249,8 +249,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     return enabled;
   };
   
-  XT.Server.create({
-    port: XT.options.orm.port,
+  X.Server.create({
+    port: X.options.orm.port,
     useWebSocket: true,
     name: "ORM",
     autoStart: true,
@@ -258,10 +258,10 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       
       // since we're using the over-load-ability of the sub-server
       // interface we create this now using connect
-      var server = XT.connect.createServer(), root;
-      root = _path.join(XT.basePath, "www");
-      server.use(XT.connect.static(root, {redirect: true}));
-      server.use(XT.connect.directory(root, {icons: true}));
+      var server = X.connect.createServer(), root;
+      root = _path.join(X.basePath, "www");
+      server.use(X.connect.static(root, {redirect: true}));
+      server.use(X.connect.directory(root, {icons: true}));
       this.set("server", server);
       
       // super initializer
@@ -282,17 +282,17 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       installer(valid);
     },
     refresh: function (socket, ack) {
-      var path = _path.join(XT.basePath, "../orm"), files, orms, extensions, errors;
+      var path = _path.join(X.basePath, "../orm"), files, orms, extensions, errors;
       orms = {};
       extensions = {};
       files = dive(path);
       
       // if the first element is not an array
-      if (XT.typeOf(files[0]) === XT.T_HASH) {
+      if (X.typeOf(files[0]) === X.T_HASH) {
         errors = files.shift();
         errors = errors.errors;
         _.each(errors, function (error) {
-          socket.emit("message", "failed to parse %@: %@".f(XT.shorten(error.file, 4), error.message));
+          socket.emit("message", "failed to parse %@: %@".f(X.shorten(error.file, 4), error.message));
         });
       }
       
@@ -304,8 +304,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           ns = orm.nameSpace;
           type = orm.type;
           ctx = orm.context;
-          if (ext) extensions = XT.addProperties(extensions, ctx, ns, type, orm);
-          else orms = XT.addProperties(orms, ns, type, orm);
+          if (ext) extensions = X.addProperties(extensions, ctx, ns, type, orm);
+          else orms = X.addProperties(orms, ns, type, orm);
         });
       });
       
@@ -347,14 +347,14 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       
       callback = _.bind(testConnection, this, socket, ack, creds);
       
-      XT.db.query("select * from usr limit 1", creds, callback);
+      X.db.query("select * from usr limit 1", creds, callback);
       
       // test our connection credentials
-      //XT.db.user = options.username;
-      //XT.db.hostname = options.hostname;
-      //XT.db.port = options.port;
-      //XT.db.password = options.password;
-      //XT.db.query(options.organization, "select * from usr limit 1", callback);
+      //X.db.user = options.username;
+      //X.db.hostname = options.hostname;
+      //X.db.port = options.port;
+      //X.db.password = options.password;
+      //X.db.query(options.organization, "select * from usr limit 1", callback);
     }
   });
   
