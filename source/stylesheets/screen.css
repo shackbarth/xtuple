@@ -455,7 +455,7 @@ body {
   left: 0;
   bottom: 0;
   width: 320px;
-  background: #d8d8d8;
+  background: #D8D8D8;
 }
 
 /* line 378, ../sass/screen.scss */
@@ -491,7 +491,7 @@ body {
 /*********END PULLOUT *********/
 /*********XV VIEWS***********/
 /* line 410, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item {
+.xv-list .xv-list-item {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -501,62 +501,63 @@ body {
   border-bottom: 1px solid #ddd;
 }
 /* line 417, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.short {
+.xv-list .xv-list-item .xv-list-column.short {
   width: 150px;
 }
 /* line 420, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.first {
+.xv-list .xv-list-item .xv-list-column.first {
   width: 320px;
 }
 /* line 423, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.second {
+.xv-list .xv-list-item .xv-list-column.second {
   width: 165px;
 }
 /* line 426, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.third {
+.xv-list .xv-list-item .xv-list-column.third {
   width: 75px;
 }
 /* line 429, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column.money {
+.xv-list .xv-list-item .xv-list-column.money {
   width: 100px;
 }
 /* line 432, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr {
+.xv-list .xv-list-item .xv-list-column .xv-list-attr {
   padding: 5px;
   font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: black;
+  background-color: white;
 }
-/* line 439, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.right {
+/* line 440, ../sass/screen.scss */
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.right {
   position: absolute;
   right: 0px;
 }
-/* line 443, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.text-align-right {
+/* line 444, ../sass/screen.scss */
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.text-align-right {
   text-align: right;
 }
-/* line 446, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.bold {
+/* line 447, ../sass/screen.scss */
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.bold {
   font-weight: bold;
 }
-/* line 449, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.error {
+/* line 450, ../sass/screen.scss */
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.error {
   color: #ff0000;
 }
-/* line 452, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.italic {
+/* line 453, ../sass/screen.scss */
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.italic {
   font-style: italic;
 }
-/* line 455, ../sass/screen.scss */
-.xv-infolist .xv-infolist-item .xv-infolist-column .xv-infolist-attr.placeholder {
+/* line 456, ../sass/screen.scss */
+.xv-list .xv-list-item .xv-list-column .xv-list-attr.placeholder {
   font-style: italic;
   color: #93a1a1;
 }
 
-/* line 464, ../sass/screen.scss */
+/* line 465, ../sass/screen.scss */
 .xv-groupbox {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -566,11 +567,11 @@ body {
   margin-right: 5px;
 }
 
-/* line 474, ../sass/screen.scss */
+/* line 475, ../sass/screen.scss */
 .xv-repeater-box {
   width: 880px;
 }
-/* line 476, ../sass/screen.scss */
+/* line 477, ../sass/screen.scss */
 .xv-repeater-box .xv-label {
   width: 90px;
   font-weight: bold;
@@ -578,16 +579,16 @@ body {
   font-size: 12px;
   text-align: center;
 }
-/* line 483, ../sass/screen.scss */
+/* line 484, ../sass/screen.scss */
 .xv-repeater-box .xv-wide-entry {
   width: 200px;
 }
-/* line 486, ../sass/screen.scss */
+/* line 487, ../sass/screen.scss */
 .xv-repeater-box .xv-input {
   width: 100px;
   border-width: 0px;
 }
-/* line 489, ../sass/screen.scss */
+/* line 490, ../sass/screen.scss */
 .xv-repeater-box .xv-input .xv-subinput {
   width: 90px;
   border-width: 0px;
@@ -612,38 +613,38 @@ body {
   vertical-align: top;
 }
 
-/* line 500, ../sass/screen.scss */
+/* line 501, ../sass/screen.scss */
 .xv-repeater-box-row {
   background-color: white;
 }
-/* line 502, ../sass/screen.scss */
+/* line 503, ../sass/screen.scss */
 .xv-repeater-box-row .xv-wide-entry {
   width: 200px;
 }
-/* line 504, ../sass/screen.scss */
+/* line 505, ../sass/screen.scss */
 .xv-repeater-box-row .xv-wide-entry .xv-subinput {
   width: 200px;
 }
-/* line 508, ../sass/screen.scss */
+/* line 509, ../sass/screen.scss */
 .xv-repeater-box-row .xv-delete-button {
   width: 14px;
   height: 21px;
   padding-top: 0px;
 }
 
-/* line 515, ../sass/screen.scss */
+/* line 516, ../sass/screen.scss */
 .xv-comment-box {
   width: 700px;
 }
-/* line 517, ../sass/screen.scss */
+/* line 518, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-row {
   height: 140px;
 }
-/* line 520, ../sass/screen.scss */
+/* line 521, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-createdBy {
   font-weight: bold;
 }
-/* line 524, ../sass/screen.scss */
+/* line 525, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-text {
   position: absolute;
   margin-top: 40px;
@@ -651,21 +652,21 @@ body {
   width: 500px;
   border: 1px solid grey;
 }
-/* line 534, ../sass/screen.scss */
+/* line 535, ../sass/screen.scss */
 .xv-comment-box .xv-textarea-input {
   height: 75px;
   min-height: 75px;
   width: 490px;
 }
-/* line 540, ../sass/screen.scss */
+/* line 541, ../sass/screen.scss */
 .xv-comment-box .xv-repeater-box-header {
   visibility: hidden;
 }
-/* line 543, ../sass/screen.scss */
+/* line 544, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-comment-type {
   border-width: 0px;
 }
-/* line 545, ../sass/screen.scss */
+/* line 546, ../sass/screen.scss */
 .xv-comment-box .xv-comment-box-comment-type .xv-picker {
   height: 25px;
   padding: 2px;
@@ -673,39 +674,39 @@ body {
 
 /*********END XV VIEWS***********/
 /*********XV WIDGETS***********/
-/* line 556, ../sass/screen.scss */
+/* line 557, ../sass/screen.scss */
 .xv-dropdownwidget {
   background-color: white;
 }
 
-/* line 560, ../sass/screen.scss */
+/* line 561, ../sass/screen.scss */
 .xv-picker {
   width: 200px;
 }
 
-/* line 565, ../sass/screen.scss */
+/* line 566, ../sass/screen.scss */
 .xv-label {
   width: 100px;
   padding-right: 8px;
   text-align: right;
 }
 
-/* line 571, ../sass/screen.scss */
+/* line 572, ../sass/screen.scss */
 .xv-subinput {
   width: 200px;
 }
 
-/* line 574, ../sass/screen.scss */
+/* line 575, ../sass/screen.scss */
 .xv-inputwidget {
   background-color: white;
 }
 
-/* line 578, ../sass/screen.scss */
+/* line 579, ../sass/screen.scss */
 .xv-input-decorator {
   border: 0px;
 }
 
-/* line 582, ../sass/screen.scss */
+/* line 583, ../sass/screen.scss */
 .xv-textarea-input {
   border: 0px;
   width: 324px;
@@ -713,26 +714,26 @@ body {
   margin: 6px;
 }
 
-/* line 589, ../sass/screen.scss */
+/* line 590, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 594, ../sass/screen.scss */
+/* line 595, ../sass/screen.scss */
 .xv-relationwidget-description {
   text-indent: 120px;
   font-size: small;
   padding-bottom: 4px;
 }
 
-/* line 601, ../sass/screen.scss */
+/* line 602, ../sass/screen.scss */
 .xv-relationwidget .xv-subinput {
   width: 150px;
 }
 
 /********END XV WIDGETS******/
-/* line 609, ../sass/screen.scss */
+/* line 610, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -742,17 +743,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 617, ../sass/screen.scss */
+/* line 618, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 619, ../sass/screen.scss */
+/* line 620, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 626, ../sass/screen.scss */
+/* line 627, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -762,12 +763,12 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 634, ../sass/screen.scss */
+/* line 635, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 637, ../sass/screen.scss */
+/* line 638, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
