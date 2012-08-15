@@ -31,6 +31,7 @@ white:true*/
           name: XT.String.suffix(columnDesc.name),
           placeholder: label, // XXX doesn't work. probably have to fix XV.Input
           classes: columnDesc.classes // this is clever
+
         });
 
         /**
@@ -52,7 +53,8 @@ white:true*/
         this.createComponent({
           kind: "onyx.Button",
           name: "deleteButton",
-          content: "Delete",
+          classes: "xv-delete-button",
+          content: "x",
           ontap: "deleteRow"
         });
       }

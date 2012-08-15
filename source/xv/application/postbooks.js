@@ -37,8 +37,4 @@ enyo.kind({
   getModuleByName: function (name) {
     return this.$[name];
   },
-  applyWorkspace: function (model) {
-    this.setCurrentView("workspace");
-    this.$.workspace.setOptions(model);
-  }
 });

@@ -25,8 +25,14 @@ regexp:true, undef:true, trailing:true, white:true */
       {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
         components: [
         {name: "label", content: "", classes: "xv-label"},
-        {name: 'input', kind: "onyx.Input", onkeyup: "keyUp",
-          onkeydown: "keyDown", onblur: "receiveBlur"},
+        {
+          name: 'input',
+          kind: "onyx.Input",
+          classes: "xv-subinput",
+          onkeyup: "keyUp",
+          onkeydown: "keyDown",
+          onblur: "receiveBlur"
+        },
         {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
           {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
           {name: 'popupMenu', kind: "onyx.Menu",

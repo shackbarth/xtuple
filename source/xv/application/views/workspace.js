@@ -52,6 +52,9 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
+        ]},
+        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
+          {kind: "XV.AccountCommentBox", name: "comments"}
         ]}
       ]}
     ]
@@ -95,6 +98,9 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
+        ]},
+        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
+          {kind: "XV.ContactCommentBox", name: "comments"}
         ]}
       ]}
     ]
@@ -186,6 +192,9 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
+        ]},
+        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
+          {kind: "XV.IncidentCommentBox", name: "comments"}
         ]}
       ]}
     ]
@@ -272,7 +281,9 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
         ]},
-        {kind: "XV.OpportunityCommentBox", name: "comments"}
+        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
+          {kind: "XV.OpportunityCommentBox", name: "comments"}
+        ]}
       ]}
     ]
   });
@@ -367,9 +378,12 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
         ]},
-        {kind: "XV.ProjectCommentBox", name: "comments"},
-        {kind: "XV.ProjectTaskRepeaterBox", name: "tasks",
-          title: "_tasks".loc()}
+        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
+          {kind: "XV.ProjectCommentBox", name: "comments"},
+        ]},
+        {kind: "Scroller", horizontal: "hidden", title: "_tasks".loc(), components: [
+          {kind: "XV.ProjectTaskRepeaterBox", name: "tasks"}
+        ]}
       ]}
     ]
   });
@@ -434,6 +448,9 @@ trailing:true white:true*/
         {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", name: "notes"}
+        ]},
+        {kind: "Scroller", horizontal: "hidden", title: "_comments".loc(), components: [
+          {kind: "XV.ToDoCommentBox", name: "comments"},
         ]}
       ]}
     ]

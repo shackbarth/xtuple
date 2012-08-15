@@ -1,4 +1,4 @@
-/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true, 
+/*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XM:true, XT:true, _:true, console:true */
@@ -7,7 +7,7 @@ white:true*/
 
   enyo.kind({
     name: "XV.ParameterItem",
-    classes: "parameter-item",
+    classes: "xv-parameter-item",
     published: {
       value: "",
       label: "",
@@ -21,7 +21,7 @@ white:true*/
       onValueChange: "parameterChanged"
     },
     components: [
-      {name: "input", classes: "parameter-item-input"}
+      {name: "input", classes: "xv-parameter-item-input"}
     ],
     defaultKind: "XV.InputWidget",
     create: function () {
@@ -58,7 +58,7 @@ white:true*/
       this.$.input.setValue(this.value);
     }
   });
-  
+
   enyo.kind({
     name: "XV.ParameterWidget",
     kind: "FittableRows",
