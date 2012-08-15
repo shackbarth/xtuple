@@ -497,6 +497,10 @@ body {
   }
 }
 
+.xv-repeater-box-header {
+  background-color: lightgrey;
+}
+
 .xv-repeater-box-row {
   background-color: white;
   .xv-wide-entry {
@@ -526,19 +530,17 @@ body {
     margin-top: 40px;
     border-width: 0px;
     width: 500px;
-    //height: 80px;
-    //min-height: 80px;
     border: 1px solid grey;
-    //vertical-align:top;
+    border-radius: 4px 4px 4px 4px;
   }
   .xv-textarea-input {
-    //vertical-align:top;
-    height: 75px;
-    min-height: 75px;
-    width: 490px;
+    height: 65px;
+    min-height: 65px;
+    width: 480px;
   }
   .xv-repeater-box-header {
     visibility: hidden;
+    height: 0px;
   }
   .xv-comment-box-comment-type {
     border-width: 0px;
