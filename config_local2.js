@@ -7,7 +7,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
   
   module.exports = {
     debugging: true,
-    version: "beta1",
     requireDatabase: true,
     requireServer: true,
     requireCache: true,
@@ -20,7 +19,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     },
     datasource: {
       sessionTimeout: 15,
-      securePort: 443,
+      securePort: 20101,
       secureKeyFile: "./lib/private/key.pem",
       secureCertFile: "./lib/private/cert.crt",
       secureSaltFile: "./lib/private/salt.txt"
