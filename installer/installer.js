@@ -9,7 +9,7 @@
   
   options.autoStart = true;
   
-  XT.setup(options);
+  X.setup(options);
   
   require("./lib/orm");
 }());
