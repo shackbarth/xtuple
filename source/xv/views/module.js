@@ -40,7 +40,15 @@ trailing:true white:true*/
             {name: "searchIconButton", src: "assets/menu-icon-search.png",
               ontap: "showParameters"}
           ]},
-          {name: "leftLabel"}
+          {name: "leftLabel"},
+          {kind: "onyx.Popup", name: "logoutPopup", centered: true,
+            modal: true, floating: true, components: [
+            {content: "_logoutConfirmation".loc() },
+            {tag: "br"},
+            {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout"},
+            {kind: "onyx.Button", content: "_cancel".loc(),
+              ontap: "closeLogoutPopup", classes: "onyx-blue"}
+          ]}
         ]},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
           components: [
@@ -68,37 +76,23 @@ trailing:true white:true*/
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
           {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord",
-            style: "float: right;" },
-          {kind: "onyx.Popup", name: "logoutPopup", centered: true,
-            modal: true, floating: true, components: [
-            {content: "_logoutConfirmation".loc() },
-            {tag: "br"},
-            {kind: "onyx.Button", content: "_ok".loc(), ontap: "logout"},
-            {kind: "onyx.Button", content: "_cancel".loc(),
-              ontap: "closeLogoutPopup", classes: "onyx-blue"}
-          ]}
+            style: "float: right;" }
         ]},
         {name: "panels", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "finishedTransition"}
       ]},
       {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
-    firstTime: true,
     fetched: {},
     activate: function () {
-      if (this.firstTime) {
-        this.firstTime = false;
-        this.setPanel(0);
-      }
+      this.setMenuPanel(MODULE_MENU);
     },
     backTapped: function () {
       var index = this.$.menuPanels.getIndex();
       if (index === MODULE_MENU) {
         this.warnLogout();
       } else {
-        this.$.menuPanels.setIndex(MODULE_MENU);
-        this.$.moduleMenu.select(0);
-        this.handleBackButton();
+        this.setMenuPanel(MODULE_MENU);
       }
     },
     create: function () {
@@ -115,6 +109,8 @@ trailing:true white:true*/
       for (i = 0; i < modules.length; i++) {
         panels = modules[i].panels || [];
         for (n = 0; n < panels.length; n++) {
+          // Keep track of where this panel is being placed for later reference
+          panels[n].index = this.$.panels.panelCount++;
           panel = this.$.panels.createComponent(panels[n]);
           if (panel instanceof XV.List) {
             // Bubble parameter widget up to pullout
@@ -194,11 +190,8 @@ trailing:true white:true*/
       });
       return true;
     },
-    handleBackButton: function (inSender, inEvent) {
-      var label = this.$.menuPanels.index ? "_back".loc() : "_logout".loc();
-      this.$.backButton.setContent(label);
-    },
     menuItemTap: function (inSender, inEvent) {
+      var module = this.getSelectedModule();
       //this.setPanel(inEvent.index);
     },
     moduleItemTap: function (inSender, inEvent) {
@@ -208,8 +201,7 @@ trailing:true white:true*/
       if (len) {
         this._module = module;
         this.$.panelMenu.setCount(len);
-        this.$.menuPanels.setIndex(PANEL_MENU);
-        this.handleBackButton();
+        this.setMenuPanel(PANEL_MENU);
       }
     },
     requery: function (inSender, inEvent) {
@@ -225,6 +217,12 @@ trailing:true white:true*/
         options.showMore = true;
         this.fetch(list.name, options);
       }
+    },
+    setMenuPanel: function (index) {
+      var label = index ? "_back".loc() : "_logout".loc();
+      this.$.menuPanels.setIndex(index);
+      if (!index) { this.$.moduleMenu.select(0); }
+      this.$.backButton.setContent(label);
     },
     setPanel: function (index) {
       if (this.firstTime) { return; }
