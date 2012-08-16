@@ -77,8 +77,8 @@ trailing:true white:true*/
           {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord",
             style: "float: right;" }
         ]},
-        {name: "contentPanels", kind: "Panels", arrangerKind: "LeftRightArranger",
-           margin: 0, fit: true, panelCount: 0, onTransitionFinish: "finishedTransition"}
+        {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
+          draggable: false, panelCount: 0}
       ]},
       {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
@@ -118,9 +118,6 @@ trailing:true white:true*/
         }
       }
       this.$.moduleMenu.setCount(modules.length);
-    },
-    finishedTransition: function (inSender, inEvent) {
-      this.setContentPanel(inSender.index);
     },
     getSelectedModule: function (index) {
       return this._selectedModule;
