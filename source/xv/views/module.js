@@ -21,7 +21,6 @@ trailing:true white:true*/
       onListItemTapped: "listItemTapped"
     },
     showPullout: true,
-    realtimeFit: true,
     arrangerKind: "CollapsingArranger",
     selectedList: 0, // used for "new", to know what list is being shown
     components: [
