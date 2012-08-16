@@ -5,12 +5,17 @@ trailing:true white:true*/
 
 (function () {
   var FETCH_TRIGGER = 100;
+  var MODULE_MENU = 0;
+  var PANEL_MENU = 1;
 
   enyo.kind({
     name: "XV.Module",
     kind: "Panels",
-    label: "",
     classes: "app enyo-unselectable",
+    published: {
+      label: "",
+      modules: []
+    },
     events: {
       onListAdded: "",
       onTogglePullout: ""
@@ -26,25 +31,25 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
+          {kind: "onyx.Button", content: "_back".loc(), ontap: "showModules"},
           {kind: "Group", name: "iconButtonGroup", defaultKind: "onyx.IconButton", tag: null, components: [
             {name: "searchIconButton", src: "assets/menu-icon-search.png", ontap: "showParameters"},
             {name: "historyIconButton", src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
           ]},
           {name: "leftLabel"}
         ]},
-        {name: "menuPanels", kind: "Panels", draggable: true,
+        {name: "menuPanels", kind: "Panels", draggable: false,
            margin: 0, fit: true, components: [
           {name: "moduleMenu", kind: "List", touch: true,
               onSetupItem: "setupModuleMenuItem",
               components: [
             {name: "moduleItem", classes: "item enyo-border-box", ontap: "moduleItemTap"}
           ]},
-          {name: "listMenu", kind: "List", touch: true,
-             onSetupItem: "setupListMenuItem", components: [
+          {name: "panelMenu", kind: "List", touch: true,
+             onSetupItem: "setupPanelMenuItem", components: [
             {name: "listItem", classes: "item enyo-border-box", ontap: "menuItemTap"}
           ]},
-          {} // This is irritating, why do panels only work when there are 3 objects?
+          {} // This is irritating, why do panels only work when there are 3+ objects?
         ]}
       ]},
       {kind: "FittableRows", components: [
@@ -83,22 +88,33 @@ trailing:true white:true*/
       }
     },
     create: function () {
-      var i, component;
       this.inherited(arguments);
-      this.$.leftLabel.setContent(this.label);
+      var modules = this.getModules() || [],
+        label = this.getLabel(),
+        panels,
+        panel,
+        i,
+        n;
+      this.$.leftLabel.setContent(label);
+      
       // Build panels
-      for (i = 0; i < this.panels.length; i++) {
-        component = this.$.panels.createComponent(this.panels[i]);
-        this.doListAdded(component);
+      for (i = 0; i < modules.length; i++) {
+        panels = modules[i].panels || [];
+        for (n = 0; n < panels.length; n++) {
+          panel = this.$.panels.createComponent(panels[n]);
+          if (panel instanceof XV.List) {
+            // Bubble parameter widget up to pullout
+            this.doListAdded(panel);
+          }
+        }
       }
-      this.$.moduleMenu.setCount(this.modules.length);
-      this.$.listMenu.setCount(this.panels.length);
-      this.$.moduleMenu.render();
-      this.$.menuPanels.reflow();
-      this.$.menuPanels.setIndex(0);
+      this.$.moduleMenu.setCount(modules.length);
     },
     finishedTransition: function (inSender, inEvent) {
       this.setPanel(inSender.index);
+    },
+    getSelectedModule: function (index) {
+      return this._module;
     },
     inputChanged: function (inSender, inEvent) {
       var index = this.$.panels.getIndex(),
@@ -165,7 +181,17 @@ trailing:true white:true*/
       return true;
     },
     menuItemTap: function (inSender, inEvent) {
-      this.setPanel(inEvent.index);
+      //this.setPanel(inEvent.index);
+    },
+    moduleItemTap: function (inSender, inEvent) {
+      var module = this.getModules()[inEvent.index],
+        panels = module.panels || [],
+        len = panels.length;
+      if (len) {
+        this._module = module;
+        this.$.panelMenu.setCount(len);
+        this.$.menuPanels.setIndex(PANEL_MENU);
+      }
     },
     requery: function (inSender, inEvent) {
       this.fetch();
@@ -183,13 +209,18 @@ trailing:true white:true*/
     },
     setPanel: function (index) {
       if (this.firstTime) { return; }
-      var list = this.panels[index].name;
+      var module = this.getSelectedModule(),
+        panel = module ? module.panels[index].name : false,
+        label = panel ? this.$.panels.$[panel].getLabel() : "";
+      if (!panel) { return; }
 
-      // Select listMenu
-      if (!this.$.listMenu.isSelected(index)) {
-        this.$.listMenu.select(index);
+      // Select panelMenu
+      /*
+      if (!this.$.panelMenu.isSelected(index)) {
+        this.$.panelMenu.select(index);
       }
-
+      */
+      
       // Keep the selected list in state as a kind variable
       this.selectedList = index;
 
@@ -197,24 +228,26 @@ trailing:true white:true*/
       if (this.$.panels.getIndex() !== index) {
         this.$.panels.setIndex(index);
       }
-      this.$.rightLabel.setContent(this.$.panels.$[list].getLabel());
-      if (!this.fetched[list]) {
-        this.fetch(list);
+      this.$.rightLabel.setContent(label);
+      if (!this.fetched[panel]) {
+        this.fetch(panel);
       }
     },
     // menu
-    setupListMenuItem: function (inSender, inEvent) {
-      var list = this.panels[inEvent.index].name;
-      this.$.listItem.setContent(this.$.panels.$[list].getLabel());
-      this.$.listItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
-    },
     setupModuleMenuItem: function (inSender, inEvent) {
-      var module = this.modules[inEvent.index];
-      this.$.moduleItem.setContent(module);
+      var label = this.modules[inEvent.index].label;
+      this.$.moduleItem.setContent(label);
       this.$.moduleItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
-    showDashboard: function () {
-      this.bubble("dashboard", {eventName: "dashboard"});
+    setupPanelMenuItem: function (inSender, inEvent) {
+      var module = this.getSelectedModule(),
+        panel;
+      panel =  module.panels[inEvent.index].name;
+      this.$.listItem.setContent(this.$.panels.$[panel].getLabel());
+      this.$.listItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
+    showModules: function () {
+      this.$.menuPanels.setIndex(MODULE_MENU);
     },
     showHistory: function (inSender, inEvent) {
       var panel = {name: 'history'};
