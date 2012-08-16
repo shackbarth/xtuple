@@ -465,8 +465,8 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "initials"},
           {kind: "XV.InputWidget", name: "email"}
         ]},
+        {kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"},
         {kind: "XV.UserAccountPrivilegeWorkspaceBox", name: "grantedPrivileges"},
-        //{kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"}
       ]}
     ]
   });

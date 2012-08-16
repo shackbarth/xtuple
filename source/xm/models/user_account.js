@@ -252,6 +252,18 @@ white:true*/
 
    @extends XM.Collection
   */
+  XM.UserAccountRoleCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRoleCollection.prototype */
+
+    model: XM.UserAccountRole
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
   XM.UserAccountRoleInfoCollection = XM.Collection.extend({
    /** @scope XM.UserAccountRoleInfoCollection.prototype */
 

@@ -21,10 +21,11 @@ white:true*/
       title: "",
       type: "",
       assignedCollection: null,
+      assignedPrivileges: null,
       totalCollection: null,
       totalCollectionName: "",
-      segments: [],
-      segmentedCollections: []
+      segments: null,
+      segmentedCollections: null
     },
     components: [
       {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
@@ -34,17 +35,41 @@ white:true*/
         ]}
       ]}
     ],
+    /**
+     * Every time the assigned collection changes we want to make sure that that
+     * assignedPrivileges object is updated as well.
+     */
+    assignedCollectionChanged: function () {
+      this.setAssignedPrivileges(this.getAssignedCollection().map(function (model) {
+        return model.get("privilege");
+      }));
+    },
     create: function () {
       this.inherited(arguments);
 
-      var i;
+      var i,
+        that = this;
+
+      this.setSegmentedCollections([]);
       for (i = 0; i < this.getSegments().length; i++) {
         this.getSegmentedCollections()[i] = new XM[this.getTotalCollectionName()]();
         this.getSegmentedCollections()[i].comparator = function (model) {
           return model.get("name");
         };
       }
-      this.setTotalCollection(XM[this.getType()]);
+      /**
+       * Get the collection from the cache if it exists
+       */
+      if (XM[this.getType()]) {
+        this.setTotalCollection(XM[this.getType()]);
+        this.segmentizeTotalCollection();
+      } else {
+        this.setTotalCollection(new XM[this.getTotalCollectionName()]());
+        var options = {success: function () {
+          that.segmentizeTotalCollection();
+        }};
+        this.getTotalCollection().fetch(options);
+      }
     },
     setupSegment: function (inSender, inEvent) {
       var index = inEvent.index,
@@ -70,9 +95,7 @@ white:true*/
 
       row.setLabel(("_" + data.get("name")).loc());
       row.setName(data.get("name"));
-      // XXX probably needs to be optimized
-      var assignedPrivileges = this.getAssignedCollection().map(function (model) { return model.get("privilege"); });
-      if (_.indexOf(assignedPrivileges, data) >= 0) {
+      if (_.indexOf(this.getAssignedPrivileges(), data) >= 0) {
         row.setValue(true, { silent: true });
       }
       return true;
@@ -82,33 +105,49 @@ white:true*/
       /*
        * We wait to do this until we have the granted collection
        */
-      this.$.segmentRepeater.setCount(this.getSegments().length);
+      this.tryToRender();
     },
-    totalCollectionChanged: function () {
+    segmentizeTotalCollection: function () {
       var i, j, model, module;
       for (i = 0; i < this.getTotalCollection().length; i++) {
         model = this.getTotalCollection().models[i];
+
         module = model.get("module");
         for (j = 0; j < this.getSegments().length; j++) {
-          if (module === this.getSegments()[j]) {
+          if (this.getSegments().length === 1 || module === this.getSegments()[j]) {
+            // if there's only one segment then no need to segmentize at all
             this.getSegmentedCollections()[j].add(model);
           }
         }
       }
+      this.tryToRender();
+    },
+    /**
+     * We render by firing off the segment repeater.
+     * We can only render if we know *both* what the options and and also
+     * what's already assigned. These both can happen asynchronously,
+     * which is why we have to check and only execute when both are done.
+     */
+    tryToRender: function () {
+      if (this.getAssignedCollection() && this.getSegmentedCollections()[0]) {
+        this.$.segmentRepeater.setCount(this.getSegments().length);
+      }
     }
   });
 
-  // TODO
+  /**
+   * Assign roles to users
+   */
   enyo.kind({
     name: "XV.UserAccountRoleWorkspaceBox",
     kind: "XV.AssignmentBox",
+    segments: ["Roles"],
     title: "_roles".loc(),
-    components: [
-      {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
-      {kind: "Repeater", name: "repeater", fit: true, onSetupItem: "setupItem", components: [
-        {kind: "XV.CheckboxWidget", name: "role"}
-      ]}
-    ]
+    totalCollectionName: "UserAccountRoleCollection",
+    type: "roles",
+    checkboxChange: function (inSender, inEvent) {
+      //TODO
+    }
   });
 
   /**
@@ -117,10 +156,10 @@ white:true*/
   enyo.kind({
     name: "XV.UserAccountPrivilegeWorkspaceBox",
     kind: "XV.AssignmentBox",
+    segments: ["System", "CRM"], // these must follow the capitalization conventions of the privilege module
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privileges",
-    segments: ["System", "CRM"], // these must follow the capitalization conventions of the privilege module
     checkboxChange: function (inSender, inEvent) {
       var privilegeName = inEvent.originator.name,
         value = inEvent.value,
