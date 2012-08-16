@@ -46,7 +46,7 @@
   XVOWS = X.Object.create({
     className: "XVOWS",
     
-    wait: 1000,
+    wait: 5000,
     
     init: function () {
       this.nexted = _.bind(this.next, this, [true]);
