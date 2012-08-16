@@ -254,6 +254,7 @@ white:true*/
     destroy: function (options) {
       options = options ? _.clone(options) : {};
       var klass = this.getClass(),
+        canDelete = klass.canDelete(this),
         success = options.success,
         model = this,
         result,
@@ -273,12 +274,12 @@ white:true*/
           });
         };
       if ((parent && parent.canUpdate(this)) ||
-          (!parent && klass.canDelete(this))) {
+          (!parent && canDelete)) {
         this.setStatus(K.DESTROYED_DIRTY, {cascade: true});
         this._wasNew = this.isNew(); // Hack so prototype call will still work
 
         // If it's top level commit to the server now.
-        if (!parent && klass.canDelete(this)) {
+        if (!parent && canDelete) {
           findChildren(this); // Lord Vader ... rise
           this.setStatus(K.BUSY_DESTROYING, {cascade: true});
           options.wait = true;
@@ -507,8 +508,10 @@ white:true*/
       // Set defaults if not provided
       this.prime = {};
       this.privileges = this.privileges || {};
-      this.readOnlyAttributes = this.readOnlyAttributes || [];
-      this.requiredAttributes = this.requiredAttributes || [];
+      this.readOnlyAttributes = this.readOnlyAttributes ?
+        this.readOnlyAttributes.slice(0) : [];
+      this.requiredAttributes = this.requiredAttributes ?
+        this.requiredAttributes.slice(0) : [];
 
       // Handle options
       if (options.isNew) {
