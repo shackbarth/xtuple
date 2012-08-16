@@ -27,7 +27,6 @@ trailing:true white:true*/
     },
     showPullout: true,
     arrangerKind: "CollapsingArranger",
-    selectedList: 0, // used for "new", to know what list is being shown
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
@@ -78,8 +77,8 @@ trailing:true white:true*/
           {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord",
             style: "float: right;" }
         ]},
-        {name: "panels", kind: "Panels", arrangerKind: "LeftRightArranger",
-           margin: 0, fit: true, onTransitionFinish: "finishedTransition"}
+        {name: "contentPanels", kind: "Panels", arrangerKind: "LeftRightArranger",
+           margin: 0, fit: true, panelCount: 0, onTransitionFinish: "finishedTransition"}
       ]},
       {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
@@ -104,14 +103,14 @@ trailing:true white:true*/
         i,
         n;
       this.$.leftLabel.setContent(label);
-      
+
       // Build panels
       for (i = 0; i < modules.length; i++) {
         panels = modules[i].panels || [];
         for (n = 0; n < panels.length; n++) {
           // Keep track of where this panel is being placed for later reference
-          panels[n].index = this.$.panels.panelCount++;
-          panel = this.$.panels.createComponent(panels[n]);
+          panels[n].index = this.$.contentPanels.panelCount++;
+          panel = this.$.contentPanels.createComponent(panels[n]);
           if (panel instanceof XV.List) {
             // Bubble parameter widget up to pullout
             this.doListAdded(panel);
@@ -121,19 +120,19 @@ trailing:true white:true*/
       this.$.moduleMenu.setCount(modules.length);
     },
     finishedTransition: function (inSender, inEvent) {
-      this.setPanel(inSender.index);
+      this.setContentPanel(inSender.index);
     },
     getSelectedModule: function (index) {
-      return this._module;
+      return this._selectedModule;
     },
     inputChanged: function (inSender, inEvent) {
-      var index = this.$.panels.getIndex(),
+      var index = this.$.contentPanels.getIndex(),
         list = this.panels[index].name;
       this.fetched = {};
       this.fetch(list);
     },
     listItemTapped: function (inSender, inEvent) {
-      var list = this.$.panels.getActive(),
+      var list = this.$.contentPanels.getActive(),
         workspace = list.getWorkspace(),
         id = list.getModel(inEvent.index).id;
 
@@ -145,13 +144,19 @@ trailing:true white:true*/
       });
       return true;
     },
-    fetch: function (name, options) {
-      name = name || this.$.panels.getActive().name;
-      var list = this.$.panels.$[name],
-        query = list.getQuery() || {},
-        input = this.$.searchInput.getValue(),
-        parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null,
-        parameters = parameterWidget ? parameterWidget.getParameters() : [];
+    fetch: function (index, options) {
+      index = index || this.$.contentPanels.getIndex();
+      var panel = this.$.contentPanels.getPanels()[index],
+        name = panel ? panel.name : "",
+        query,
+        input,
+        parameterWidget,
+        parameters;
+      if (!panel instanceof XV.List) { return; }
+      query = panel.getQuery() || {};
+      input = this.$.searchInput.getValue();
+      parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
+      parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
@@ -163,7 +168,7 @@ trailing:true white:true*/
         // Input search parameters
         if (input) {
           query.parameters = [{
-            attribute: list.getSearchableAttributes(),
+            attribute: panel.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
           }];
@@ -177,12 +182,12 @@ trailing:true white:true*/
         delete query.parameters;
       }
 
-      list.setQuery(query);
-      list.fetch(options);
-      this.fetched[name] = true;
+      panel.setQuery(query);
+      panel.fetch(options);
+      this.fetched[index] = true;
     },
     newRecord: function (inSender, inEvent) {
-      var list = this.$.panels.getActive(),
+      var list = this.$.contentPanels.getActive(),
         workspace = list.getWorkspace();
       this.bubble("workspace", {
         eventName: "workspace",
@@ -191,18 +196,10 @@ trailing:true white:true*/
       return true;
     },
     menuItemTap: function (inSender, inEvent) {
-      var module = this.getSelectedModule();
-      //this.setPanel(inEvent.index);
+      this.setContentPanel(inEvent.index);
     },
     moduleItemTap: function (inSender, inEvent) {
-      var module = this.getModules()[inEvent.index],
-        panels = module.panels || [],
-        len = panels.length;
-      if (len) {
-        this._module = module;
-        this.$.panelMenu.setCount(len);
-        this.setMenuPanel(PANEL_MENU);
-      }
+      //this.setModule(inEvent.index);
     },
     requery: function (inSender, inEvent) {
       this.fetch();
@@ -218,49 +215,58 @@ trailing:true white:true*/
         this.fetch(list.name, options);
       }
     },
-    setMenuPanel: function (index) {
-      var label = index ? "_back".loc() : "_logout".loc();
-      this.$.menuPanels.setIndex(index);
-      if (!index) { this.$.moduleMenu.select(0); }
-      this.$.backButton.setContent(label);
-    },
-    setPanel: function (index) {
-      if (this.firstTime) { return; }
+    setContentPanel: function (index) {
       var module = this.getSelectedModule(),
-        panel = module ? module.panels[index].name : false,
-        label = panel ? this.$.panels.$[panel].getLabel() : "";
+        panelIndex = module && module.panels ? module.panels[index].index : -1,
+        panel = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
+        label = panel ? panel.getLabel() : "";
       if (!panel) { return; }
 
       // Select panelMenu
-      /*
       if (!this.$.panelMenu.isSelected(index)) {
         this.$.panelMenu.select(index);
       }
-      */
-      
-      // Keep the selected list in state as a kind variable
-      this.selectedList = index;
 
       // Select list
-      if (this.$.panels.getIndex() !== index) {
-        this.$.panels.setIndex(index);
+      if (this.$.contentPanels.getIndex() !== panelIndex) {
+        this.$.contentPanels.setIndex(panelIndex);
       }
       this.$.rightLabel.setContent(label);
-      if (!this.fetched[panel]) {
-        this.fetch(panel);
+      if (panel.fetch && !this.fetched[panelIndex]) {
+        this.fetch(panelIndex);
       }
     },
-    // menu
+    setMenuPanel: function (index) {
+      var label = index ? "_back".loc() : "_logout".loc();
+      this.$.menuPanels.setIndex(index);
+      this.$.menuPanels.getActive().select(0);
+      this.setContentPanel(0);
+      this.$.backButton.setContent(label);
+    },
+    setModule: function (index) {
+      var module = this.getModules()[index],
+        panels = module.panels || [];
+      if (module !== this._selectedModule) {
+        this._selectedModule = module;
+        if (panels.length) {
+          this.$.panelMenu.setCount(panels.length);
+          this.setMenuPanel(PANEL_MENU);
+        }
+      }
+    },
     setupModuleMenuItem: function (inSender, inEvent) {
-      var label = this.modules[inEvent.index].label;
+      var index = inEvent.index,
+        label = this.modules[index].label,
+        isSelected = inSender.isSelected(index);
       this.$.moduleItem.setContent(label);
-      this.$.moduleItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+      this.$.moduleItem.addRemoveClass("onyx-selected", isSelected);
+      if (isSelected) { this.setModule(index); }
     },
     setupPanelMenuItem: function (inSender, inEvent) {
       var module = this.getSelectedModule(),
         panel;
       panel =  module.panels[inEvent.index].name;
-      this.$.listItem.setContent(this.$.panels.$[panel].getLabel());
+      this.$.listItem.setContent(this.$.contentPanels.$[panel].getLabel());
       this.$.listItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
     showHistory: function (inSender, inEvent) {
@@ -268,7 +274,7 @@ trailing:true white:true*/
       this.doTogglePullout(panel);
     },
     showParameters: function (inSender, inEvent) {
-      var panel = this.$.panels.getActive();
+      var panel = this.$.contentPanels.getActive();
       this.doTogglePullout(panel);
     },
     /**
@@ -284,7 +290,7 @@ trailing:true white:true*/
       // XXX not sustainable
       var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
         listName = this.name === "setup" ? listBase + "List" : listBase + "List",
-        list = this.$.panels.$[listName];
+        list = this.$.contentPanels.$[listName];
 
 
       /**
@@ -332,8 +338,8 @@ trailing:true white:true*/
     },
 
     /**
-     * Logout management. We show the user a warning popup before we log them out.
-     */
+      Logout management. We show the user a warning popup before we log them out.
+    */
     warnLogout: function () {
       this.$.logoutPopup.show();
     },
@@ -346,9 +352,9 @@ trailing:true white:true*/
     },
 
     /**
-     * Manually set one of the icon buttons to be active. Note passing null
-     * as the parameter will disactivate all icons.
-     */
+      Manually set one of the icon buttons to be active. Note passing null
+      as the parameter will disactivate all icons.
+    */
     setActiveIconButton: function (buttonName) {
       var activeIconButton = null;
       if (buttonName === 'search') {
