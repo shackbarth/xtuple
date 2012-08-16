@@ -50,7 +50,7 @@ white:true*/
       XT.app = this;
     },
     handlePullout: function (inSender, inEvent) {
-      var showing = inSender.$.container.getActive().showPullout || false;
+      var showing = inSender.getActiveModule().showPullout || false;
       this.$.pullout.setShowing(showing);
     },
     parameterDidChange: function (inSender, inEvent) {

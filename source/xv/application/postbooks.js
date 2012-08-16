@@ -4,18 +4,18 @@ enyo.kind({
   kind: "Panels",
   classes: "xt-postbooks enyo-unselectable",
   components: [
-    { name: "container", kind: "XV.PostbooksContainer" }
+    { name: "navigationPanels", kind: "XV.NavigationPanels" }
   ],
-  getContainer: function () {
-    return this.$.container;
+  getNavigationPanels: function () {
+    return this.$.navigationPanels;
   },
   getActiveModule: function () {
-    return this.getContainer().getActive();
+    return this.getNavigationPanels().getActive();
   }
 });
 
 enyo.kind({
-  name: "XV.PostbooksContainer",
+  name: "XV.NavigationPanels",
   kind: "Panels",
   classes: "xt-postbooks-container enyo-unselectable",
   draggable: false,
