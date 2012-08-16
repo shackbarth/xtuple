@@ -40,6 +40,11 @@ white:true*/
   XM.Comment = XM.Model.extend({
     /** @scope XM.Comment.prototype */
 
+    readOnlyAttributes: [
+      "created",
+      "createdBy"
+    ],
+
     // ..........................................................
     // METHODS
     //
@@ -52,6 +57,12 @@ white:true*/
       result.isPublic = publicDefault || false;
       return result;
     },
+    
+    initialize: function (attributes, options) {
+      XM.Model.prototype.initialize.apply(this, arguments);
+      this.on('statusChange', this.statusChanged);
+      this.statusChanged();
+    },
 
     isReadOnly: function () {
       var commentType = this.get('commentType'),
@@ -60,6 +71,14 @@ white:true*/
           commentType.get('commentsEditable'));
 
       return !editable || XM.Model.prototype.isReadOnly.apply(this, arguments);
+    },
+    
+    statusChanged: function () {
+      var status = this.getStatus(),
+        K = XM.Model;
+      if (status === K.READY_CLEAN) {
+        this.setReadOnly('commentType');
+      }
     }
 
   });

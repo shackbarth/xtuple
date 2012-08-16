@@ -144,7 +144,7 @@
                 }
               };
             comment.set({
-              commentType: commentType.id,
+              commentType: commentType,
               text: 'My first comment'
             });
             model.on('statusChange', callback);
