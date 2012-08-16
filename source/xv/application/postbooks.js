@@ -4,7 +4,9 @@ enyo.kind({
   kind: "Panels",
   classes: "xt-postbooks enyo-unselectable",
   components: [
-    {name: "navigation", kind: "XV.Module", lists: [
+    {name: "navigation", kind: "XV.Module", modules: [
+      "_welcome".loc(), "_crm".loc(), "_setup".loc()
+      ], panels: [
       {name: "accountList", kind: "XV.AccountList"},
       {name: "contactList", kind: "XV.ContactList"},
       {name: "toDoList", kind: "XV.ToDoList"},

@@ -33,9 +33,18 @@ trailing:true white:true*/
           ]},
           {name: "leftLabel"}
         ]},
-        {name: "listMenu", kind: "List", fit: true, touch: true,
-           onSetupItem: "setupItem", components: [
-          {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
+        {name: "menuPanels", kind: "Panels", draggable: true,
+           margin: 0, fit: true, components: [
+          {name: "moduleMenu", kind: "List", touch: true,
+              onSetupItem: "setupModuleMenuItem",
+              components: [
+            {name: "moduleItem", classes: "item enyo-border-box", ontap: "moduleItemTap"}
+          ]},
+          {name: "listMenu", kind: "List", touch: true,
+             onSetupItem: "setupListMenuItem", components: [
+            {name: "listItem", classes: "item enyo-border-box", ontap: "menuItemTap"}
+          ]},
+          {} // This is irritating, why do panels only work when there are 3 objects?
         ]}
       ]},
       {kind: "FittableRows", components: [
@@ -60,7 +69,7 @@ trailing:true white:true*/
               ontap: "closeLogoutPopup", classes: "onyx-blue"}
           ]}
         ]},
-        {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
+        {name: "panels", kind: "Panels", arrangerKind: "LeftRightArranger",
            margin: 0, fit: true, onTransitionFinish: "finishedTransition"}
       ]},
       {kind: "Signals", onModelSave: "refreshInfoObject"}
@@ -70,34 +79,35 @@ trailing:true white:true*/
     activate: function () {
       if (this.firstTime) {
         this.firstTime = false;
-        this.setList(0);
+        this.setPanel(0);
       }
     },
     create: function () {
       var i, component;
       this.inherited(arguments);
       this.$.leftLabel.setContent(this.label);
-      // Build lists
-      for (i = 0; i < this.lists.length; i++) {
-        component = this.$.lists.createComponent(this.lists[i]);
+      // Build panels
+      for (i = 0; i < this.panels.length; i++) {
+        component = this.$.panels.createComponent(this.panels[i]);
         this.doListAdded(component);
       }
-      this.$.listMenu.setCount(this.lists.length);
+      this.$.moduleMenu.setCount(this.modules.length);
+      this.$.listMenu.setCount(this.panels.length);
+      this.$.moduleMenu.render();
+      this.$.menuPanels.reflow();
+      this.$.menuPanels.setIndex(0);
     },
     finishedTransition: function (inSender, inEvent) {
-      this.setList(inSender.index);
+      this.setPanel(inSender.index);
     },
     inputChanged: function (inSender, inEvent) {
-      var index = this.$.lists.getIndex(),
-        list = this.lists[index].name;
+      var index = this.$.panels.getIndex(),
+        list = this.panels[index].name;
       this.fetched = {};
       this.fetch(list);
     },
-    itemTap: function (inSender, inEvent) {
-      this.setList(inEvent.index);
-    },
     listItemTapped: function (inSender, inEvent) {
-      var list = this.$.lists.getActive(),
+      var list = this.$.panels.getActive(),
         workspace = list.getWorkspace(),
         id = list.getModel(inEvent.index).id;
 
@@ -110,8 +120,8 @@ trailing:true white:true*/
       return true;
     },
     fetch: function (name, options) {
-      name = name || this.$.lists.getActive().name;
-      var list = this.$.lists.$[name],
+      name = name || this.$.panels.getActive().name;
+      var list = this.$.panels.$[name],
         query = list.getQuery() || {},
         input = this.$.searchInput.getValue(),
         parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null,
@@ -146,13 +156,16 @@ trailing:true white:true*/
       this.fetched[name] = true;
     },
     newRecord: function (inSender, inEvent) {
-      var list = this.$.lists.getActive(),
+      var list = this.$.panels.getActive(),
         workspace = list.getWorkspace();
       this.bubble("workspace", {
         eventName: "workspace",
         workspace: workspace
       });
       return true;
+    },
+    menuItemTap: function (inSender, inEvent) {
+      this.setPanel(inEvent.index);
     },
     requery: function (inSender, inEvent) {
       this.fetch();
@@ -168,9 +181,9 @@ trailing:true white:true*/
         this.fetch(list.name, options);
       }
     },
-    setList: function (index) {
+    setPanel: function (index) {
       if (this.firstTime) { return; }
-      var list = this.lists[index].name;
+      var list = this.panels[index].name;
 
       // Select listMenu
       if (!this.$.listMenu.isSelected(index)) {
@@ -181,19 +194,24 @@ trailing:true white:true*/
       this.selectedList = index;
 
       // Select list
-      if (this.$.lists.getIndex() !== index) {
-        this.$.lists.setIndex(index);
+      if (this.$.panels.getIndex() !== index) {
+        this.$.panels.setIndex(index);
       }
-      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
+      this.$.rightLabel.setContent(this.$.panels.$[list].getLabel());
       if (!this.fetched[list]) {
         this.fetch(list);
       }
     },
     // menu
-    setupItem: function (inSender, inEvent) {
-      var list = this.lists[inEvent.index].name;
-      this.$.item.setContent(this.$.lists.$[list].getLabel());
-      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    setupListMenuItem: function (inSender, inEvent) {
+      var list = this.panels[inEvent.index].name;
+      this.$.listItem.setContent(this.$.panels.$[list].getLabel());
+      this.$.listItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
+    setupModuleMenuItem: function (inSender, inEvent) {
+      var module = this.modules[inEvent.index];
+      this.$.moduleItem.setContent(module);
+      this.$.moduleItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
     showDashboard: function () {
       this.bubble("dashboard", {eventName: "dashboard"});
@@ -203,11 +221,11 @@ trailing:true white:true*/
       this.doTogglePullout(panel);
     },
     showParameters: function (inSender, inEvent) {
-      var panel = this.$.lists.getActive();
+      var panel = this.$.panels.getActive();
       this.doTogglePullout(panel);
     },
     /**
-     * If a model has changed, check the lists of this module to see if we can
+     * If a model has changed, check the panels of this module to see if we can
      * update the info object in the list.
      * XXX if there are multiple modules alive then all of them will catch
      * XXX the signal, which isn't ideal for performance
@@ -219,7 +237,7 @@ trailing:true white:true*/
       // XXX not sustainable
       var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
         listName = this.name === "setup" ? listBase + "List" : listBase + "List",
-        list = this.$.lists.$[listName];
+        list = this.$.panels.$[listName];
 
 
       /**
