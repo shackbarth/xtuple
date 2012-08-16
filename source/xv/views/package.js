@@ -8,6 +8,6 @@ enyo.depends(
   "repeater_box.js",
   "repeater_box_row.js",
   "comment_box.js",
-  "privilege_box.js",
+  "assignment_box.js",
   "search.js"
 );

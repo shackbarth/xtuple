@@ -471,4 +471,28 @@ trailing:true white:true*/
     ]
   });
 
+  // ..........................................................
+  // USER ACCOUNT ROLE
+  //
+
+  enyo.kind({
+    name: "XV.UserAccountRoleWorkspace",
+    kind: "XV.Workspace",
+    published: {
+      title: "_userAccountRole".loc(),
+      model: "XM.UserAccountRole"
+    },
+    components: [
+      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+        fit:true, classes: "xv-top-panel", components: [
+        {kind: "XV.WorkspaceBox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", name: "name"},
+          {kind: "XV.InputWidget", name: "description"}
+        ]},
+        {kind: "XV.UserAccountRolePrivilegeWorkspaceBox", name: "grantedPrivileges"}
+      ]}
+    ]
+  });
+
 }());

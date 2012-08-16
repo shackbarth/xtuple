@@ -116,7 +116,7 @@ white:true*/
   XM.UserAccountRoleInfo = XM.Model.extend({
     /** @scope XM.UserAccountRoleInfo.prototype */
 
-    recordType: 'UserAccountRole',
+    recordType: 'XM.UserAccountRole',
 
     readOnly: true
 
@@ -130,7 +130,7 @@ white:true*/
   XM.UserAccountRolePrivilegeAssignment = XM.Document.extend({
     /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */
 
-    recordType: 'UserAccountRolePrivilegeAssignment'
+    recordType: 'XM.UserAccountRolePrivilegeAssignment'
 
   });
 
@@ -244,6 +244,18 @@ white:true*/
    /** @scope XM.PrivilegeCollection.prototype */
 
     model: XM.Privilege
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountRoleInfoCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRoleInfoCollection.prototype */
+
+    model: XM.UserAccountRoleInfo
 
   });
 

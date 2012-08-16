@@ -5,8 +5,13 @@ white:true*/
 
 (function () {
 
+  /**
+   * Functionality that's common to all of these AssignmentBoxes.
+   * At least, for now! This is a work in progress and subject
+   * to change as assumptions must be relaxed.
+   */
   enyo.kind({
-    name: "XV.PrivilegeBox",
+    name: "XV.AssignmentBox",
     kind: "XV.WorkspaceBox",
     classes: "xv-privilege-box",
     handlers: {
@@ -59,7 +64,7 @@ white:true*/
     setupCheckbox: function (inSender, inEvent) {
       var index = inEvent.item.indexInContainer(), //inEvent.index,
         parentSegmentRepeater = inSender.parent.parent,
-        segmentIndex = parentSegmentRepeater.segmentIndex;
+        segmentIndex = parentSegmentRepeater.segmentIndex,
         data = this.getSegmentedCollections()[segmentIndex].at(index),
         row = inEvent.item.$.checkbox;
 
@@ -93,9 +98,10 @@ white:true*/
     }
   });
 
+  // TODO
   enyo.kind({
     name: "XV.UserAccountRoleWorkspaceBox",
-    kind: "XV.PrivilegeBox",
+    kind: "XV.AssignmentBox",
     title: "_roles".loc(),
     components: [
       {kind: "onyx.GroupboxHeader", content: "_roles".loc()},
@@ -103,17 +109,14 @@ white:true*/
         {kind: "XV.CheckboxWidget", name: "role"}
       ]}
     ]
-
-
   });
 
+  /**
+   * Assign privileges to users
+   */
   enyo.kind({
     name: "XV.UserAccountPrivilegeWorkspaceBox",
-    kind: "XV.PrivilegeBox",
-    published: {
-      crmCollection: null,
-      systemCollection: null
-    },
+    kind: "XV.AssignmentBox",
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privileges",
@@ -134,19 +137,41 @@ white:true*/
         // assumption: no duplicate privilege names
         checkedModel = _.filter(this.getTotalCollection().models,
           function (model) { return model.get("name") === privilegeName; })[0];
-        newModel = new XM.UserAccountPrivilegeAssignment({
-          privilege: checkedModel,
-          type: "UserAccountPrivilegeAssignment",
-          userAccount: this.getAssignedCollection().userAccount
-        }, {isNew: true});
+        newModel = this.getAssignmentModel(checkedModel);
         this.getAssignedCollection().add(newModel);
       } else {
-        checkedModel = _.filter(this.getAssignedCollection().models,
-          function (model) { return model.get("privilege").get("name") === privilegeName; })[0];
+        checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
+          return model.get("privilege") && model.get("privilege").get("name") === privilegeName;
+        })[0];
         checkedModel.destroy();
       }
-
       return true;
     },
+    getAssignmentModel: function (privilegeModel) {
+      return new XM.UserAccountPrivilegeAssignment({
+        privilege: privilegeModel,
+        type: "UserAccountPrivilegeAssignment",
+        userAccount: this.getAssignedCollection().userAccount
+      }, {isNew: true});
+    }
   });
+
+  /**
+   * Assign privileges to roles. Almost identical to the one that assigns
+   * privileges to users.
+   */
+  enyo.kind({
+    name: "XV.UserAccountRolePrivilegeWorkspaceBox",
+    kind: "XV.UserAccountPrivilegeWorkspaceBox",
+    getAssignmentModel: function (privilegeModel) {
+      return new XM.UserAccountRolePrivilegeAssignment({
+        privilege: privilegeModel,
+        type: "UserAccountRolePrivilegeAssignment",
+        userAccountRole: this.getAssignedCollection().user_account_role,
+        // XXX why this redundancy in UserAccountRolePrivilegeAssignment?
+        user_account_role: this.getAssignedCollection().user_account_role
+      }, {isNew: true});
+    }
+  });
+
 }());
