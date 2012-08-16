@@ -33,7 +33,6 @@ enyo.kind({
   components: [
     { name: "dashboard", kind: "XV.Dashboard" },
     { name: "crm", kind: "XV.Crm" },
-    { name: "billing", kind: "XV.Billing" },
     { name: "setup", kind: "XV.Setup" },
     { name: "workspace", kind: "XV.WorkspaceContainer" },
     { name: "search", kind: "XV.Search" }
