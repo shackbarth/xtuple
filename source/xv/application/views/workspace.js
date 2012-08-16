@@ -465,8 +465,8 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "initials"},
           {kind: "XV.InputWidget", name: "email"}
         ]},
-        // XXX probably will generalize this one day
-        {kind: "XV.UserAccountWorkspaceBox", name: "grantedPrivileges"}
+        {kind: "XV.UserAccountPrivilegeWorkspaceBox", name: "grantedPrivileges"},
+        {kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"}
       ]}
     ]
   });
