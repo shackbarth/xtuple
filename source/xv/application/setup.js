@@ -11,6 +11,7 @@ trailing:true white:true*/
     label: "_setup".loc(),
     lists: [
       {name: "userAccountList", kind: "XV.UserAccountList"},
+      {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"},
       {name: "stateList", kind: "XV.StateList"},
       {name: "countryList", kind: "XV.CountryList"},
       {name: "priorityList", kind: "XV.PriorityList"},

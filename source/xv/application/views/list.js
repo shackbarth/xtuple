@@ -549,4 +549,8 @@ trailing:true white:true*/
     }
   });
 
+  enyo.kind({
+    name: "XV.UserAccountRoleList",
+    kind: "XV.NameDescriptionList"
+  });
 }());
