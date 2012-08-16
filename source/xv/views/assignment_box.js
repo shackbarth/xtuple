@@ -20,8 +20,9 @@ white:true*/
     published: {
       title: "",
       type: "",
+      cacheName: "",
       assignedCollection: null,
-      assignedPrivileges: null,
+      assignedIds: null,
       totalCollection: null,
       totalCollectionName: "",
       segments: null,
@@ -37,11 +38,13 @@ white:true*/
     ],
     /**
      * Every time the assigned collection changes we want to make sure that that
-     * assignedPrivileges object is updated as well.
+     * assignedSubcollection object is updated as well.
      */
     assignedCollectionChanged: function () {
-      this.setAssignedPrivileges(this.getAssignedCollection().map(function (model) {
-        return model.get("privilege");
+      var that = this;
+
+      this.setAssignedIds(this.getAssignedCollection().map(function (model) {
+        return model.get(that.getType()).get("id");
       }));
     },
     create: function () {
@@ -50,7 +53,11 @@ white:true*/
       var i,
         that = this;
 
+      // crazy: if we put segmentedCollections: [] in the
+      // published fields than all instances of this kind or subkind will share the same array,
+      // yielding very strange behavior.
       this.setSegmentedCollections([]);
+
       for (i = 0; i < this.getSegments().length; i++) {
         this.getSegmentedCollections()[i] = new XM[this.getTotalCollectionName()]();
         this.getSegmentedCollections()[i].comparator = function (model) {
@@ -60,8 +67,8 @@ white:true*/
       /**
        * Get the collection from the cache if it exists
        */
-      if (XM[this.getType()]) {
-        this.setTotalCollection(XM[this.getType()]);
+      if (XM[this.getCacheName()]) {
+        this.setTotalCollection(XM[this.getCacheName()]);
         this.segmentizeTotalCollection();
       } else {
         this.setTotalCollection(new XM[this.getTotalCollectionName()]());
@@ -95,7 +102,7 @@ white:true*/
 
       row.setLabel(("_" + data.get("name")).loc());
       row.setName(data.get("name"));
-      if (_.indexOf(this.getAssignedPrivileges(), data) >= 0) {
+      if (_.indexOf(this.getAssignedIds(), data.get("id")) >= 0) {
         row.setValue(true, { silent: true });
       }
       return true;
@@ -144,7 +151,7 @@ white:true*/
     segments: ["Roles"],
     title: "_roles".loc(),
     totalCollectionName: "UserAccountRoleCollection",
-    type: "roles",
+    type: "userAccountRole",
     checkboxChange: function (inSender, inEvent) {
       //TODO
     }
@@ -156,10 +163,11 @@ white:true*/
   enyo.kind({
     name: "XV.UserAccountPrivilegeWorkspaceBox",
     kind: "XV.AssignmentBox",
+    cacheName: "privileges",
     segments: ["System", "CRM"], // these must follow the capitalization conventions of the privilege module
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
-    type: "privileges",
+    type: "privilege",
     checkboxChange: function (inSender, inEvent) {
       var privilegeName = inEvent.originator.name,
         value = inEvent.value,
