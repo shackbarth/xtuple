@@ -508,8 +508,10 @@ white:true*/
       // Set defaults if not provided
       this.prime = {};
       this.privileges = this.privileges || {};
-      this.readOnlyAttributes = this.readOnlyAttributes || [];
-      this.requiredAttributes = this.requiredAttributes || [];
+      this.readOnlyAttributes = this.readOnlyAttributes ?
+        this.readOnlyAttributes.slice(0) : [];
+      this.requiredAttributes = this.requiredAttributes ?
+        this.requiredAttributes.slice(0) : [];
 
       // Handle options
       if (options.isNew) {
