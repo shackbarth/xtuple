@@ -33,7 +33,7 @@ trailing:true white:true*/
           ]},
           {name: "leftLabel"}
         ]},
-        {name: "menu", kind: "List", fit: true, touch: true,
+        {name: "listMenu", kind: "List", fit: true, touch: true,
            onSetupItem: "setupItem", components: [
           {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
         ]}
@@ -67,7 +67,7 @@ trailing:true white:true*/
     ],
     firstTime: true,
     fetched: {},
-    activated: function () {
+    activate: function () {
       if (this.firstTime) {
         this.firstTime = false;
         this.setList(0);
@@ -82,7 +82,7 @@ trailing:true white:true*/
         component = this.$.lists.createComponent(this.lists[i]);
         this.doListAdded(component);
       }
-      this.$.menu.setCount(this.lists.length);
+      this.$.listMenu.setCount(this.lists.length);
     },
     finishedTransition: function (inSender, inEvent) {
       this.setList(inSender.index);
@@ -114,7 +114,7 @@ trailing:true white:true*/
       var list = this.$.lists.$[name],
         query = list.getQuery() || {},
         input = this.$.searchInput.getValue(),
-        parameterWidget = XT.app.$.pullout.getItem(name),
+        parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null,
         parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
@@ -172,9 +172,9 @@ trailing:true white:true*/
       if (this.firstTime) { return; }
       var list = this.lists[index].name;
 
-      // Select menu
-      if (!this.$.menu.isSelected(index)) {
-        this.$.menu.select(index);
+      // Select listMenu
+      if (!this.$.listMenu.isSelected(index)) {
+        this.$.listMenu.select(index);
       }
 
       // Keep the selected list in state as a kind variable

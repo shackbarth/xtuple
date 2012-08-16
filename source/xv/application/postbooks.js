@@ -4,16 +4,24 @@ enyo.kind({
   kind: "Panels",
   classes: "xt-postbooks enyo-unselectable",
   components: [
-    { name: "navigationPanels", kind: "XV.NavigationPanels" }
+    {name: "navigation", kind: "XV.Module", lists: [
+      {name: "accountList", kind: "XV.AccountList"},
+      {name: "contactList", kind: "XV.ContactList"},
+      {name: "toDoList", kind: "XV.ToDoList"},
+      {name: "opportunityList", kind: "XV.OpportunityList"},
+      {name: "incidentList", kind: "XV.IncidentList"},
+      {name: "projectList", kind: "XV.ProjectList"}
+    ]}
   ],
-  getNavigationPanels: function () {
-    return this.$.navigationPanels;
+  create: function () {
+    this.inherited(arguments);
   },
-  getActiveModule: function () {
-    return this.getNavigationPanels().getActive();
+  getNavigation: function () {
+    return this.$.navigation;
   }
 });
 
+/*
 enyo.kind({
   name: "XV.NavigationPanels",
   kind: "Panels",
@@ -117,5 +125,6 @@ enyo.kind({
       active.activated();
     }
   }
-    
+
 });
+*/

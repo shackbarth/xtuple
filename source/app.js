@@ -49,12 +49,17 @@ white:true*/
       }
       XT.app = this;
     },
+    getPullout: function () {
+      return this.$.pullout;
+    },
     handlePullout: function (inSender, inEvent) {
-      var showing = inSender.getActiveModule().showPullout || false;
+      var showing = inSender.getNavigation().showPullout || false;
       this.$.pullout.setShowing(showing);
     },
     parameterDidChange: function (inSender, inEvent) {
-      this.$.postbooks.getActiveModule().waterfall("onParameterChange", inEvent);
+      if (this.getIsStarted()) {
+        this.$.postbooks.getNavigation().waterfall("onParameterChange", inEvent);
+      }
     },
     /**
      * Manages the "lit-up-ness" of the icon buttons based on the pullout.
@@ -77,7 +82,7 @@ white:true*/
         // pullout is inactive
         activeIconButton = null;
       }
-      this.$.postbooks.getActiveModule().setActiveIconButton(activeIconButton);
+      this.$.postbooks.getNavigation().setActiveIconButton(activeIconButton);
     },
     refreshHistoryPanel: function (inSender, inEvent) {
       this.$.pullout.refreshHistoryList();
@@ -94,13 +99,15 @@ white:true*/
       this.waterfall("workspace", inEvent);
     },
     start: function () {
-
       if (this.getIsStarted()) { return; }
+      XT.app = this;
 
       // on application start, connect the datasource
+      var callback = function () {
+        XT.app.$.postbooks.getNavigation().activate();
+      };
+      XT.getStartupManager().registerCallback(callback);
       XT.dataSource.connect();
-
-      XT.app = this;
 
       // lets not allow this to happen again
       this.setIsStarted(true);
