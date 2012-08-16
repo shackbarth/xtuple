@@ -31,33 +31,37 @@ trailing:true white:true*/
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", content: "_back".loc(), ontap: "showModules"},
-          {kind: "Group", name: "iconButtonGroup", defaultKind: "onyx.IconButton", tag: null, components: [
-            {name: "searchIconButton", src: "assets/menu-icon-search.png", ontap: "showParameters"},
-            {name: "historyIconButton", src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
+          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
+            ontap: "backTapped"},
+          {kind: "Group", name: "iconButtonGroup",
+            defaultKind: "onyx.IconButton", tag: null, components: [
+            {name: "historyIconButton", src: "assets/menu-icon-bookmark.png",
+              ontap: "showHistory"},
+            {name: "searchIconButton", src: "assets/menu-icon-search.png",
+              ontap: "showParameters"}
           ]},
           {name: "leftLabel"}
         ]},
-        {name: "menuPanels", kind: "Panels", draggable: false,
-           margin: 0, fit: true, components: [
+        {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
+          components: [
           {name: "moduleMenu", kind: "List", touch: true,
               onSetupItem: "setupModuleMenuItem",
               components: [
-            {name: "moduleItem", classes: "item enyo-border-box", ontap: "moduleItemTap"}
+            {name: "moduleItem", classes: "item enyo-border-box",
+              ontap: "moduleItemTap"}
           ]},
           {name: "panelMenu", kind: "List", touch: true,
              onSetupItem: "setupPanelMenuItem", components: [
-            {name: "listItem", classes: "item enyo-border-box", ontap: "menuItemTap"}
+            {name: "listItem", classes: "item enyo-border-box",
+              ontap: "menuItemTap"}
           ]},
-          {} // This is irritating, why do panels only work when there are 3+ objects?
+          {} // Why do panels only work when there are 3+ objects?
         ]}
       ]},
       {kind: "FittableRows", components: [
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
           {name: "rightLabel", style: "text-align: center"},
-          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout",
-            style: "float: right;"},
           {kind: "onyx.InputDecorator", style: "float: right;", components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
@@ -85,6 +89,16 @@ trailing:true white:true*/
       if (this.firstTime) {
         this.firstTime = false;
         this.setPanel(0);
+      }
+    },
+    backTapped: function () {
+      var index = this.$.menuPanels.getIndex();
+      if (index === MODULE_MENU) {
+        this.warnLogout();
+      } else {
+        this.$.menuPanels.setIndex(MODULE_MENU);
+        this.$.moduleMenu.select(0);
+        this.handleBackButton();
       }
     },
     create: function () {
@@ -180,6 +194,10 @@ trailing:true white:true*/
       });
       return true;
     },
+    handleBackButton: function (inSender, inEvent) {
+      var label = this.$.menuPanels.index ? "_back".loc() : "_logout".loc();
+      this.$.backButton.setContent(label);
+    },
     menuItemTap: function (inSender, inEvent) {
       //this.setPanel(inEvent.index);
     },
@@ -191,6 +209,7 @@ trailing:true white:true*/
         this._module = module;
         this.$.panelMenu.setCount(len);
         this.$.menuPanels.setIndex(PANEL_MENU);
+        this.handleBackButton();
       }
     },
     requery: function (inSender, inEvent) {
@@ -245,9 +264,6 @@ trailing:true white:true*/
       panel =  module.panels[inEvent.index].name;
       this.$.listItem.setContent(this.$.panels.$[panel].getLabel());
       this.$.listItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
-    },
-    showModules: function () {
-      this.$.menuPanels.setIndex(MODULE_MENU);
     },
     showHistory: function (inSender, inEvent) {
       var panel = {name: 'history'};

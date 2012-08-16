@@ -39,6 +39,7 @@ trailing:true white:true*/
       parameterWidget: null,
       workspace: null
     },
+    fixedHeight: true,
     events: {
       onListItemTapped: ""
     },
