@@ -26,7 +26,8 @@ white:true*/
       totalCollection: null,
       totalCollectionName: "",
       segments: null,
-      segmentedCollections: null
+      segmentedCollections: null,
+      translateLabels: true
     },
     components: [
       {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [
@@ -44,8 +45,43 @@ white:true*/
       var that = this;
 
       this.setAssignedIds(this.getAssignedCollection().map(function (model) {
+        if (!model.get(that.getType())) {
+          // I have seen cases where assignments point to models that don't exist.
+          // So ignore these. XXX should I return -9999 instead of null? I'd hate
+          // for there to be nulls in there that might somehow get "matched up on"
+          // by null checkboxes somehow.
+          return null;
+        }
+
         return model.get(that.getType()).get("id");
       }));
+    },
+    checkboxChange: function (inSender, inEvent) {
+      var that = this,
+        originatorName = inEvent.originator.name,
+        value = inEvent.value,
+        checkedModel,
+        newModel;
+
+        /**
+         * The record type in totalCollection is XM.Privilege and the
+         * record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
+         * so we have to navigate this.
+         */
+      if (value) {
+        // filter returns an array and we want a model: that's why I [0]
+        // assumption: no duplicate privilege names
+        checkedModel = _.filter(this.getTotalCollection().models,
+          function (model) { return model.get("name") === originatorName; })[0];
+        newModel = this.getAssignmentModel(checkedModel);
+        this.getAssignedCollection().add(newModel);
+      } else {
+        checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
+          return model.get(that.getType()) && model.get(that.getType()).get("name") === originatorName;
+        })[0];
+        checkedModel.destroy();
+      }
+      return true;
     },
     create: function () {
       this.inherited(arguments);
@@ -98,9 +134,10 @@ white:true*/
         parentSegmentRepeater = inSender.parent.parent,
         segmentIndex = parentSegmentRepeater.segmentIndex,
         data = this.getSegmentedCollections()[segmentIndex].at(index),
-        row = inEvent.item.$.checkbox;
+        row = inEvent.item.$.checkbox,
+        label = this.getTranslateLabels() ? ("_" + data.get("name")).loc() : data.get("name");
 
-      row.setLabel(("_" + data.get("name")).loc());
+      row.setLabel(label);
       row.setName(data.get("name"));
       if (_.indexOf(this.getAssignedIds(), data.get("id")) >= 0) {
         row.setValue(true, { silent: true });
@@ -150,10 +187,15 @@ white:true*/
     kind: "XV.AssignmentBox",
     segments: ["Roles"],
     title: "_roles".loc(),
+    translateLabels: false,
     totalCollectionName: "UserAccountRoleCollection",
     type: "userAccountRole",
-    checkboxChange: function (inSender, inEvent) {
-      //TODO
+    getAssignmentModel: function (roleModel) {
+      return new XM.UserAccountUserAccountRoleAssignment({
+        userAccountRole: roleModel,
+        type: "UserAccountUserAccountRoleAssignment",
+        userAccount: this.getAssignedCollection().userAccount
+      }, {isNew: true});
     }
   });
 
@@ -168,32 +210,6 @@ white:true*/
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
-    checkboxChange: function (inSender, inEvent) {
-      var privilegeName = inEvent.originator.name,
-        value = inEvent.value,
-        checkedModel,
-        newModel;
-
-        /**
-         * The record type in totalCollection is XM.Privilege and the
-         * record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
-         * so we have to navigate this.
-         */
-      if (value) {
-        // filter returns an array and we want a model: that's why I [0]
-        // assumption: no duplicate privilege names
-        checkedModel = _.filter(this.getTotalCollection().models,
-          function (model) { return model.get("name") === privilegeName; })[0];
-        newModel = this.getAssignmentModel(checkedModel);
-        this.getAssignedCollection().add(newModel);
-      } else {
-        checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
-          return model.get("privilege") && model.get("privilege").get("name") === privilegeName;
-        })[0];
-        checkedModel.destroy();
-      }
-      return true;
-    },
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountPrivilegeAssignment({
         privilege: privilegeModel,
