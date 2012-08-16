@@ -80,7 +80,7 @@ white:true*/
       var item = this.getItem(name),
         children = this.$.pulloutItems.children,
         i;
-      if (item.showing && this.isAtMax()) {
+      if (item && item.showing && this.isAtMax()) {
         this.animateToMin();
       } else {
         this.animateToMax();
