@@ -4,6 +4,7 @@ enyo.kind({
   kind: "Panels",
   classes: "xt-postbooks enyo-unselectable",
   handlers: {
+    onPrevious: "previous",
     onWorkspace: "addWorkspacePanel"
   },
   components: [
@@ -41,12 +42,16 @@ enyo.kind({
       panel.render();
       this.reflow();
       panel.setWorkspace(inEvent.workspace, inEvent.id);
-      //panel.waterfall("onPanelChange", inEvent);
       this.setIndex(this.getPanels().length);
     }
   },
   getNavigation: function () {
     return this.$.navigation;
+  },
+  previous: function() {
+    var last = this.getActive();
+    this.inherited(arguments);
+    last.destroy();
   }
   
 });

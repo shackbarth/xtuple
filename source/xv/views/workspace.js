@@ -200,6 +200,9 @@ trailing:true white:true*/
     published: {
       menuItems: []
     },
+    events: {
+      onPrevious: ""
+    },
     handlers: {
       onError: "errorNotify",
       onStatusChange: "statusChanged",
@@ -263,9 +266,7 @@ trailing:true white:true*/
           return;
         }
       }
-      var previous = this.getPrevious();
-      this.bubble(previous, {eventName: previous});
-      this.destroyWorkspace();
+      this.doPrevious();
     },
     destroyWorkspace: function () {
       var workspace = this.$.workspace;
