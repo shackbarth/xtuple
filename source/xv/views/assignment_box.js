@@ -13,7 +13,7 @@ white:true*/
   enyo.kind({
     name: "XV.AssignmentBox",
     kind: "XV.WorkspaceBox",
-    classes: "xv-privilege-box",
+    classes: "xv-assignment-box",
     handlers: {
       onValueChange: "checkboxChange"
     },
@@ -39,22 +39,10 @@ white:true*/
     ],
     /**
      * Every time the assigned collection changes we want to make sure that that
-     * assignedSubcollection object is updated as well.
+     * assignedIds object is updated as well.
      */
     assignedCollectionChanged: function () {
-      var that = this;
-
-      this.setAssignedIds(this.getAssignedCollection().map(function (model) {
-        if (!model.get(that.getType())) {
-          // I have seen cases where assignments point to models that don't exist.
-          // So ignore these. XXX should I return -9999 instead of null? I'd hate
-          // for there to be nulls in there that might somehow get "matched up on"
-          // by null checkboxes somehow.
-          return null;
-        }
-
-        return model.get(that.getType()).get("id");
-      }));
+      this.mapIds();
     },
     checkboxChange: function (inSender, inEvent) {
       var that = this,
@@ -70,7 +58,7 @@ white:true*/
          */
       if (value) {
         // filter returns an array and we want a model: that's why I [0]
-        // assumption: no duplicate privilege names
+        // assumption: no duplicate originator names
         checkedModel = _.filter(this.getTotalCollection().models,
           function (model) { return model.get("name") === originatorName; })[0];
         newModel = this.getAssignmentModel(checkedModel);
@@ -114,6 +102,21 @@ white:true*/
         this.getTotalCollection().fetch(options);
       }
     },
+    mapIds: function () {
+      var that = this;
+
+      this.setAssignedIds(this.getAssignedCollection().map(function (model) {
+        if (!model.get(that.getType())) {
+          // I have seen cases where assignments point to models that don't exist.
+          // So ignore these. XXX should I return -9999 instead of null? I'd hate
+          // for there to be nulls in there that might somehow get "matched up on"
+          // by null checkboxes somehow.
+          return null;
+        }
+
+        return model.get(that.getType()).get("id");
+      }));
+    },
     setupSegment: function (inSender, inEvent) {
       var index = inEvent.index,
         row = inEvent.item,
@@ -121,6 +124,7 @@ white:true*/
 
       if (inEvent.originator.name !== 'segmentRepeater') {
         // not sure why the checkbox repeater is bringing us here, but ignore
+        // the return true at the bottom of setupCheckbox should have fixed this
         return;
       }
 
@@ -178,63 +182,4 @@ white:true*/
       }
     }
   });
-
-  /**
-   * Assign roles to users
-   */
-  enyo.kind({
-    name: "XV.UserAccountRoleWorkspaceBox",
-    kind: "XV.AssignmentBox",
-    segments: ["Roles"],
-    title: "_roles".loc(),
-    translateLabels: false,
-    totalCollectionName: "UserAccountRoleCollection",
-    type: "userAccountRole",
-    getAssignmentModel: function (roleModel) {
-      return new XM.UserAccountUserAccountRoleAssignment({
-        userAccountRole: roleModel,
-        type: "UserAccountUserAccountRoleAssignment",
-        userAccount: this.getAssignedCollection().userAccount
-      }, {isNew: true});
-    }
-  });
-
-  /**
-   * Assign privileges to users
-   */
-  enyo.kind({
-    name: "XV.UserAccountPrivilegeWorkspaceBox",
-    kind: "XV.AssignmentBox",
-    cacheName: "privileges",
-    segments: ["System", "CRM"], // these must follow the capitalization conventions of the privilege module
-    title: "_privileges".loc(),
-    totalCollectionName: "PrivilegeCollection",
-    type: "privilege",
-    getAssignmentModel: function (privilegeModel) {
-      return new XM.UserAccountPrivilegeAssignment({
-        privilege: privilegeModel,
-        type: "UserAccountPrivilegeAssignment",
-        userAccount: this.getAssignedCollection().userAccount
-      }, {isNew: true});
-    }
-  });
-
-  /**
-   * Assign privileges to roles. Almost identical to the one that assigns
-   * privileges to users.
-   */
-  enyo.kind({
-    name: "XV.UserAccountRolePrivilegeWorkspaceBox",
-    kind: "XV.UserAccountPrivilegeWorkspaceBox",
-    getAssignmentModel: function (privilegeModel) {
-      return new XM.UserAccountRolePrivilegeAssignment({
-        privilege: privilegeModel,
-        type: "UserAccountRolePrivilegeAssignment",
-        userAccountRole: this.getAssignedCollection().user_account_role,
-        // XXX why this redundancy in UserAccountRolePrivilegeAssignment?
-        user_account_role: this.getAssignedCollection().user_account_role
-      }, {isNew: true});
-    }
-  });
-
 }());

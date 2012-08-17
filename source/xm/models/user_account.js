@@ -116,7 +116,7 @@ white:true*/
   XM.UserAccountRoleInfo = XM.Model.extend({
     /** @scope XM.UserAccountRoleInfo.prototype */
 
-    recordType: 'XM.UserAccountRole',
+    recordType: 'XM.UserAccountRoleInfo',
 
     readOnly: true
 
