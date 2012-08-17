@@ -89,15 +89,14 @@ white:true*/
       this.$.pullout.refreshHistoryList();
     },
     /**
-     * When a history item is selected we bubble an event way up the application.
-     * Note that we create a sort of ersatz model to mimic the way the handler
-     * expects to have a model with the event to know what to drill down into.
-     */
+      When a history item is selected we bubble an event way up the application.
+      Note that we create a sort of ersatz model to mimic the way the handler
+      expects to have a model with the event to know what to drill down into.
+    */
     selectHistoryItem: function (inSender, inEvent) {
       XT.log("Load from history: " + inEvent.workspace + " " + inEvent.id);
-      inEvent.eventName = "workspace";
-
-      this.waterfall("workspace", inEvent);
+      inEvent.eventName = "onWorkspace";
+      this.waterfall("onWorkspace", inEvent);
     },
     dataLoaded: function () {
       XT.app.$.postbooks.next();
@@ -110,7 +109,6 @@ white:true*/
       // on application start, connect the datasource
       var startupManager = XT.getStartupManager(),
         progressBar = XT.app.$.postbooks.getStartupProgressBar(),
-        count,
         eachCallback = function () {
           var completed = startupManager.get('completed').length;
           progressBar.animateProgressTo(completed);
