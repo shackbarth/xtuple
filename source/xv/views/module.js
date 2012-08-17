@@ -97,17 +97,17 @@ trailing:true white:true*/
         panel,
         i,
         n;
-        
+
       // Build panels
       for (i = 0; i < modules.length; i++) {
         panels = modules[i].panels || [];
         for (n = 0; n < panels.length; n++) {
-          
+
           // Keep track of where this panel is being placed for later reference
           panels[n].index = this.$.contentPanels.panelCount++;
           panel = this.$.contentPanels.createComponent(panels[n]);
           if (panel instanceof XV.List) {
-            
+
             // Bubble parameter widget up to pullout
             this.doListAdded(panel);
           }
@@ -128,6 +128,7 @@ trailing:true white:true*/
         parameterWidget,
         parameters;
       if (!panel instanceof XV.List) { return; }
+      this.fetched[index] = true;
       query = panel.getQuery() || {};
       input = this.$.searchInput.getValue();
       parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
@@ -158,7 +159,6 @@ trailing:true white:true*/
 
       panel.setQuery(query);
       panel.fetch(options);
-      this.fetched[index] = true;
     },
     inputChanged: function (inSender, inEvent) {
       this.fetched = {};
@@ -221,12 +221,17 @@ trailing:true white:true*/
     setModule: function (index) {
       var module = this.getModules()[index],
         panels = module.panels || [],
-        hasSubmenu = module.hasSubmenu !== false && panels.length;
+        hasSubmenu = module.hasSubmenu !== false && panels.length,
+        i;
       if (module !== this._selectedModule) {
         this._selectedModule = module;
         if (hasSubmenu) {
           this.$.panelMenu.setCount(panels.length);
           this.setMenuPanel(PANEL_MENU);
+          // Fetch all
+          for (i = 0; i < panels.length; i++) {
+            this.fetch({index: panels[i].index});
+          }
         }
       }
     },
