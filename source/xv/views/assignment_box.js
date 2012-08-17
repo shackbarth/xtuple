@@ -69,6 +69,11 @@ white:true*/
           function (model) { return model.get("name") === originatorName; });
         checkedModel = checkedModelArray[0];
         // XXX I would love to revisit this when I have another two hours to burn on crazy bugs
+        // the issue is that by creating the model we uncheck somehow the checkbox. Or maybe we're replacing
+        // the checkbox with a different checkbox that itself is unchecked. Adding to the craziness is
+        // that inEvent disappears at the same time. In WTF1land everything is normal. In WTF2land everything
+        // is zany. And the problem disappears entirely when I set a breakpoint! The hack above and below
+        // cannot possibly stand the test of time. But after 2 hours I'm ready to move on for now.
         // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         newModel = this.getAssignmentModel(checkedModel);
         // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
