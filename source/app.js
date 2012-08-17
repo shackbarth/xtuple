@@ -104,7 +104,7 @@ white:true*/
 
       // on application start, connect the datasource
       var callback = function () {
-        XT.app.$.postbooks.setIndex(1);
+        XT.app.$.postbooks.next();
         XT.app.$.postbooks.getNavigator().activate();
       };
       XT.getStartupManager().registerCallback(callback);

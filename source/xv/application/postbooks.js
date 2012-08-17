@@ -56,8 +56,10 @@ enyo.kind({
     return this.$.navigator;
   },
   previous: function() {
-    var last = this.getActive();
-    this.inherited(arguments);
+    // Stock implementation is screwy, do our own
+    var last = this.getActive(),
+      previous = this.getPanels().length - 1;
+    this.setIndex(previous);
     last.destroy();
   }
   
