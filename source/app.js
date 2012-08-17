@@ -53,12 +53,12 @@ white:true*/
       return this.$.pullout;
     },
     handlePullout: function (inSender, inEvent) {
-      var showing = inSender.getNavigation().showPullout || false;
+      var showing = inSender.getNavigator().showPullout || false;
       this.$.pullout.setShowing(showing);
     },
     parameterDidChange: function (inSender, inEvent) {
       if (this.getIsStarted()) {
-        this.$.postbooks.getNavigation().waterfall("onParameterChange", inEvent);
+        this.$.postbooks.getNavigator().waterfall("onParameterChange", inEvent);
       }
     },
     /**
@@ -82,7 +82,7 @@ white:true*/
         // pullout is inactive
         activeIconButton = null;
       }
-      this.$.postbooks.getNavigation().setActiveIconButton(activeIconButton);
+      this.$.postbooks.getNavigator().setActiveIconButton(activeIconButton);
     },
     refreshHistoryPanel: function (inSender, inEvent) {
       this.$.pullout.refreshHistoryList();
@@ -104,7 +104,8 @@ white:true*/
 
       // on application start, connect the datasource
       var callback = function () {
-        XT.app.$.postbooks.getNavigation().activate();
+        XT.app.$.postbooks.setIndex(1);
+        XT.app.$.postbooks.getNavigator().activate();
       };
       XT.getStartupManager().registerCallback(callback);
       XT.dataSource.connect();
