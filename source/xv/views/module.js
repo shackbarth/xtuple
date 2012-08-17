@@ -13,7 +13,6 @@ trailing:true white:true*/
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
-      label: "",
       modules: []
     },
     events: {
@@ -39,7 +38,6 @@ trailing:true white:true*/
             {name: "searchIconButton", src: "assets/menu-icon-search.png",
               ontap: "showParameters", showing: false}
           ]},
-          {name: "leftLabel"},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, components: [
             {content: "_logoutConfirmation".loc() },
@@ -97,21 +95,21 @@ trailing:true white:true*/
     create: function () {
       this.inherited(arguments);
       var modules = this.getModules() || [],
-        label = this.getLabel(),
         panels,
         panel,
         i,
         n;
-      this.$.leftLabel.setContent(label);
-
+        
       // Build panels
       for (i = 0; i < modules.length; i++) {
         panels = modules[i].panels || [];
         for (n = 0; n < panels.length; n++) {
+          
           // Keep track of where this panel is being placed for later reference
           panels[n].index = this.$.contentPanels.panelCount++;
           panel = this.$.contentPanels.createComponent(panels[n]);
           if (panel instanceof XV.List) {
+            
             // Bubble parameter widget up to pullout
             this.doListAdded(panel);
           }
