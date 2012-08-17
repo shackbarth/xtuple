@@ -248,69 +248,6 @@ body {
   }
 }
 
-.xt-login-screen {
-  .xt-session-selection-screen {
-    .xt-available-sessions {
-      .xt-available-sessions-wrapper {
-        position: absolute;
-        top: 80px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        .xt-available-sessions-list {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          .xt-session-selection-row {
-            div {
-              display: inline-block;
-              padding: 5px;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-.xt-app {
-  .xt-postbooks {
-    .xt-input {
-      @include border-radius(5px);
-      padding: 8px 8px 10px 8px;
-      border: 1px solid #ddd;
-      margin: 0;
-      outline: none;
-      cursor: pointer;
-      font-size: 14px;
-      font-family: "arial", "arial black";
-      width: 180px;
-    }
-
-    .xt-button {
-      @include border-radius(5px);
-      padding: 5px;
-      border: 1px solid #ddd;
-      margin: 0;
-      cursor: pointer;
-      font-family: "arial", "arial black";
-      font-size: 14px;
-      background-color: #fff;
-      color: #aaa;
-      &:active {
-        background-color: #ddd;
-      }
-    }
-
-    .xt-screen-carousel {
-      height: 100%;
-      width: 100%;
-    }
-  }
-}
-
 /********* PULLOUT ************/
 
 
@@ -649,3 +586,28 @@ body {
     }
   }
 }
+
+.xv-startup-panel {
+  .xv-startup-divider {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    top: 200px;
+    position: relative;
+  	color: #F49200;
+  	text-transform: uppercase;
+  	font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+  	font-size: 14px;
+  	font-weight: bold;
+  	margin-bottom: 8px;
+  }
+  .xv-startup-progress {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    top: 200px;
+    position: relative;
+  }
+}
+
+

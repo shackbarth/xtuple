@@ -360,6 +360,7 @@ XT.stringsFor("en_US", {
   "_value": "Value",
   "_warningColor": "Warning Color",
   "_webAddress": "Web Address",
+  "_welcome": "Welcome",
   "_xtuplePostbooks": "PostBooks",
 
   // ********

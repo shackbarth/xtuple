@@ -2,12 +2,12 @@ enyo.depends(
   "list.js",
   "module.js",
   "pullout.js",
-  "screen_carousel.js",
   "workspace.js",
   "workspace_box.js",
   "repeater_box.js",
   "repeater_box_row.js",
   "comment_box.js",
   "assignment_box.js",
-  "search.js"
+  "search.js",
+  "screen_carousel.js"
 );
