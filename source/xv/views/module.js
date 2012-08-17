@@ -21,8 +21,7 @@ trailing:true white:true*/
     },
     handlers: {
       onParameterChange: "requery",
-      onScroll: "scrolled",
-      onListItemTapped: "listItemTapped"
+      onScroll: "scrolled"
     },
     showPullout: true,
     arrangerKind: "CollapsingArranger",
@@ -164,19 +163,6 @@ trailing:true white:true*/
     inputChanged: function (inSender, inEvent) {
       this.fetched = {};
       this.fetch();
-    },
-    listItemTapped: function (inSender, inEvent) {
-      var list = this.$.contentPanels.getActive(),
-        workspace = list.getWorkspace(),
-        id = list.getModel(inEvent.index).id;
-
-      // Transition to workspace view, including the model id payload
-      this.bubble("workspace", {
-        eventName: "workspace",
-        workspace: workspace,
-        id: id
-      });
-      return true;
     },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),

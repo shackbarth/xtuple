@@ -3,6 +3,9 @@ enyo.kind({
   name: "XV.Postbooks",
   kind: "Panels",
   classes: "xt-postbooks enyo-unselectable",
+  handlers: {
+    onWorkspace: "addWorkspacePanel"
+  },
   components: [
     {name: "navigation", kind: "XV.Module", modules: [
       {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 
@@ -31,9 +34,21 @@ enyo.kind({
       ]}
     ]}
   ],
+  addWorkspacePanel: function(inSender, inEvent) {
+    var panel;
+    if (inEvent.workspace) {
+      panel = this.createComponent({kind: "XV.WorkspaceContainer"});
+      panel.render();
+      this.reflow();
+      panel.setWorkspace(inEvent.workspace, inEvent.id);
+      //panel.waterfall("onPanelChange", inEvent);
+      this.setIndex(this.getPanels().length);
+    }
+  },
   getNavigation: function () {
     return this.$.navigation;
   }
+  
 });
 
 /*

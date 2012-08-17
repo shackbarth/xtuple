@@ -6,6 +6,14 @@ trailing:true white:true*/
 (function () {
 
   enyo.kind({
+    name: "XV.WorkspaceAttr",
+    classes: "xv-workspace-attr",
+    published: {
+      attr: ""
+    }
+  });
+
+  enyo.kind({
     name: "XV.Workspace",
     kind: "FittableRows",
     published: {
@@ -190,12 +198,10 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     classes: "app enyo-unselectable",
     published: {
-      previous: "",
       menuItems: []
     },
     handlers: {
       onError: "errorNotify",
-      onPanelChange: "changeWorkspace",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged"
     },
@@ -248,40 +254,6 @@ trailing:true white:true*/
         ]}
       ]}
     ],
-    changeWorkspace: function (inSender, inEvent) {
-      var workspace = this.$.workspace,
-        menuItems = [],
-        prop;
-      if (inEvent.workspace) {
-        this.destroyWorkspace();
-        workspace = {
-          name: "workspace",
-          container: this.$.contentPanel,
-          kind: inEvent.workspace,
-          fit: true
-        };
-        workspace = this.createComponent(workspace);
-        if (inEvent.id) {
-          workspace.fetch(inEvent.id);
-        } else {
-          workspace.newRecord();
-        }
-        this.render();
-      }
-      this.setPrevious(inEvent.previous);
-
-      // Build menu by finding all panels
-      this.$.menu.setCount(0);
-      for (prop in workspace.$) {
-        if (workspace.$.hasOwnProperty(prop) &&
-            workspace.$[prop] instanceof enyo.Panels) {
-          menuItems = menuItems.concat(workspace.$[prop].getPanels());
-        }
-      }
-      this.setMenuItems(menuItems);
-      this.$.menu.setCount(menuItems.length);
-      this.$.menu.render();
-    },
     close: function (options) {
       options = options || {};
       if (!options.force) {
@@ -375,6 +347,38 @@ trailing:true white:true*/
       this.$.item.setContent(title);
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
+    setWorkspace: function (workspace, id) {
+      var menuItems = [],
+        prop;
+      if (workspace) {
+        this.destroyWorkspace();
+        workspace = {
+          name: "workspace",
+          container: this.$.contentPanel,
+          kind: workspace,
+          fit: true
+        };
+        workspace = this.createComponent(workspace);
+        if (id) {
+          workspace.fetch(id);
+        } else {
+          workspace.newRecord();
+        }
+        this.render();
+      }
+
+      // Build menu by finding all panels
+      this.$.menu.setCount(0);
+      for (prop in workspace.$) {
+        if (workspace.$.hasOwnProperty(prop) &&
+            workspace.$[prop] instanceof enyo.Panels) {
+          menuItems = menuItems.concat(workspace.$[prop].getPanels());
+        }
+      }
+      this.setMenuItems(menuItems);
+      this.$.menu.setCount(menuItems.length);
+      this.$.menu.render();
     },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,

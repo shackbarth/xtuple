@@ -39,10 +39,10 @@ trailing:true white:true*/
       parameterWidget: null,
       workspace: null
     },
-    fixedHeight: true,
     events: {
-      onListItemTapped: ""
+      onWorkspace: ""
     },
+    fixedHeight: true,
     handlers: {
       onSetupItem: "setupItem"
     },
@@ -109,7 +109,11 @@ trailing:true white:true*/
       }
     },
     itemTap: function (inSender, inEvent) {
-      this.doListItemTapped(inEvent);
+      var workspace = this.getWorkspace(),
+        id = this.getModel(inEvent.index).id;
+
+      // Bubble requset for workspace view, including the model id payload
+      if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
     },
     setupItem: function (inSender, inEvent) {
       var model = this._collection.models[inEvent.index],
