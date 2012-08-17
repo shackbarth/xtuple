@@ -120,28 +120,10 @@ trailing:true white:true*/
     getSelectedModule: function (index) {
       return this._selectedModule;
     },
-    inputChanged: function (inSender, inEvent) {
-      var index = this.$.contentPanels.getIndex(),
-        list = this.panels[index].name;
-      this.fetched = {};
-      this.fetch(list);
-    },
-    listItemTapped: function (inSender, inEvent) {
-      var list = this.$.contentPanels.getActive(),
-        workspace = list.getWorkspace(),
-        id = list.getModel(inEvent.index).id;
-
-      // Transition to workspace view, including the model id payload
-      this.bubble("workspace", {
-        eventName: "workspace",
-        workspace: workspace,
-        id: id
-      });
-      return true;
-    },
-    fetch: function (index, options) {
-      index = index || this.$.contentPanels.getIndex();
-      var panel = this.$.contentPanels.getPanels()[index],
+    fetch: function (options) {
+      options = options ? _.clone(options) : {};
+      var index = options.index || this.$.contentPanels.getIndex(),
+        panel = this.$.contentPanels.getPanels()[index],
         name = panel ? panel.name : "",
         query,
         input,
@@ -152,7 +134,6 @@ trailing:true white:true*/
       input = this.$.searchInput.getValue();
       parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
       parameters = parameterWidget ? parameterWidget.getParameters() : [];
-      options = options ? _.clone(options) : {};
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
@@ -181,6 +162,26 @@ trailing:true white:true*/
       panel.fetch(options);
       this.fetched[index] = true;
     },
+    inputChanged: function (inSender, inEvent) {
+      this.fetched = {};
+      this.fetch();
+    },
+    listItemTapped: function (inSender, inEvent) {
+      var list = this.$.contentPanels.getActive(),
+        workspace = list.getWorkspace(),
+        id = list.getModel(inEvent.index).id;
+
+      // Transition to workspace view, including the model id payload
+      this.bubble("workspace", {
+        eventName: "workspace",
+        workspace: workspace,
+        id: id
+      });
+      return true;
+    },
+    menuItemTap: function (inSender, inEvent) {
+      this.setContentPanel(inEvent.index);
+    },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         workspace = list.getWorkspace();
@@ -189,9 +190,6 @@ trailing:true white:true*/
         workspace: workspace
       });
       return true;
-    },
-    menuItemTap: function (inSender, inEvent) {
-      this.setContentPanel(inEvent.index);
     },
     requery: function (inSender, inEvent) {
       this.fetch();
@@ -204,7 +202,7 @@ trailing:true white:true*/
       if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
         list.setIsFetching(true);
         options.showMore = true;
-        this.fetch(list.name, options);
+        this.fetch(options);
       }
     },
     setContentPanel: function (index) {
@@ -225,7 +223,7 @@ trailing:true white:true*/
       }
       this.$.rightLabel.setContent(label);
       if (panel.fetch && !this.fetched[panelIndex]) {
-        this.fetch(panelIndex);
+        this.fetch();
       }
     },
     setMenuPanel: function (index) {
