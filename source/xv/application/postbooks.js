@@ -13,11 +13,11 @@ enyo.kind({
     {name: "startup", classes: "xv-startup-panel", style: "background: #333;",
       components: [
       {classes: "xv-startup-divider", content: "Loading application data..."},
-      {name: "startupProgressBar", kind: "onyx.ProgressBar", 
+      {name: "startupProgressBar", kind: "onyx.ProgressBar",
         classes: "xv-startup-progress", progress: 0}
     ]},
     {name: "navigator", kind: "XV.Module", modules: [
-      {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 
+      {name: "welcome", label: "_welcome".loc(), hasSubmenu: false,
         panels: [
         {name: "welcomePage", content: "Welcome"
           //tag: '<iframe src="http://www.xtuple.com/beta"></iframe>'
@@ -32,6 +32,8 @@ enyo.kind({
         {name: "projectList", kind: "XV.ProjectList"}
       ]},
       {name: "setup", label: "_setup".loc(), panels: [
+        {name: "userAccountList", kind: "XV.UserAccountList"},
+        {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"},
         {name: "stateList", kind: "XV.StateList"},
         {name: "countryList", kind: "XV.CountryList"},
         {name: "priorityList", kind: "XV.PriorityList"},
@@ -45,7 +47,7 @@ enyo.kind({
       ]}
     ]}
   ],
-  addWorkspacePanel: function(inSender, inEvent) {
+  addWorkspacePanel: function (inSender, inEvent) {
     var panel;
     if (inEvent.workspace) {
       panel = this.createComponent({kind: "XV.WorkspaceContainer"});
@@ -61,12 +63,12 @@ enyo.kind({
   getStartupProgressBar: function () {
     return this.$.startupProgressBar;
   },
-  previous: function() {
+  previous: function () {
     // Stock implementation is screwy, do our own
     var last = this.getActive(),
       previous = this.getPanels().length - 1;
     this.setIndex(previous);
     last.destroy();
   }
-  
+
 });
