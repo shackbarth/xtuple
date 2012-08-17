@@ -56,8 +56,7 @@ trailing:true white:true*/
           ]},
           {name: "panelMenu", kind: "List", touch: true,
              onSetupItem: "setupPanelMenuItem", components: [
-            {name: "listItem", classes: "item enyo-border-box",
-              ontap: "menuItemTap"}
+            {name: "listItem", classes: "item enyo-border-box"}
           ]},
           {} // Why do panels only work when there are 3+ objects?
         ]}
@@ -179,9 +178,6 @@ trailing:true white:true*/
       });
       return true;
     },
-    menuItemTap: function (inSender, inEvent) {
-      this.setContentPanel(inEvent.index);
-    },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
         workspace = list.getWorkspace();
@@ -258,15 +254,18 @@ trailing:true white:true*/
     },
     setupPanelMenuItem: function (inSender, inEvent) {
       var module = this.getSelectedModule(),
+        index = inEvent.index,
+        isSelected = inSender.isSelected(index),
         panel,
         name,
         label;
-      panel =  module.panels[inEvent.index];
-      name = panel && panel.name ? module.panels[inEvent.index].name : "";
+      panel =  module.panels[index];
+      name = panel && panel.name ? module.panels[index].name : "";
       panel = this.$.contentPanels.$[name];
       label = panel && panel.getLabel ? panel.getLabel() : "";
       this.$.listItem.setContent(label);
-      this.$.listItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+      this.$.listItem.addRemoveClass("onyx-selected", isSelected);
+      if (isSelected) { this.setContentPanel(index); }
     },
     showHistory: function (inSender, inEvent) {
       var panel = {name: 'history'};
