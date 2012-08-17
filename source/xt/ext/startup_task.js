@@ -116,7 +116,8 @@ white:true*/
       tasks: {},
       completed: [],
       isStarted: false,
-      callbacks: []
+      callbacks: [],
+      eachCallbacks: []
     };
   }, manager;
 
@@ -163,12 +164,22 @@ white:true*/
   stm.prototype.taskDidComplete = function (inTask) {
     var taskName = inTask.get("taskName"),
       completed = this.get("completed"),
+      callbacks = this.get("eachCallbacks") || [],
+      i,
+      cb,
       tasks = this.get("tasks"),
       task,
       entry,
       num = Object.keys(tasks).length;
 
     completed.push(taskName);
+    
+    for (i = 0; i < callbacks.length; i++) {
+      cb = callbacks[i];
+      if (cb && cb instanceof Function) {
+        cb();
+      }
+    }
 
     for (task in tasks) {
       if (tasks.hasOwnProperty(task)) {
@@ -218,8 +229,8 @@ white:true*/
     }
   };
 
-  stm.prototype.registerCallback = function (callback) {
-    var callbacks = this.get("callbacks") || [];
+  stm.prototype.registerCallback = function (callback, onEach) {
+    var callbacks = onEach ? this.get("eachCallbacks") : this.get("callbacks");
     callbacks.push(callback);
   };
 

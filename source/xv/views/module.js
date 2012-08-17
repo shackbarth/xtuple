@@ -5,53 +5,38 @@ trailing:true white:true*/
 
 (function () {
   var FETCH_TRIGGER = 100;
+  var MODULE_MENU = 0;
+  var PANEL_MENU = 1;
 
   enyo.kind({
     name: "XV.Module",
     kind: "Panels",
-    label: "",
     classes: "app enyo-unselectable",
+    published: {
+      modules: []
+    },
     events: {
       onListAdded: "",
       onTogglePullout: ""
     },
     handlers: {
       onParameterChange: "requery",
-      onScroll: "scrolled",
-      onListItemTapped: "listItemTapped"
+      onScroll: "scrolled"
     },
     showPullout: true,
-    realtimeFit: true,
     arrangerKind: "CollapsingArranger",
-    selectedList: 0, // used for "new", to know what list is being shown
     components: [
       {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", content: "_back".loc(), ontap: "showDashboard"},
-          {kind: "Group", name: "iconButtonGroup", defaultKind: "onyx.IconButton", tag: null, components: [
-            {name: "searchIconButton", src: "assets/menu-icon-search.png", ontap: "showParameters"},
-            {name: "historyIconButton", src: "assets/menu-icon-bookmark.png", ontap: "showHistory"}
+          {kind: "onyx.Button", name: "backButton", content: "_logout".loc(),
+            ontap: "backTapped"},
+          {kind: "Group", name: "iconButtonGroup",
+            defaultKind: "onyx.IconButton", tag: null, components: [
+            {name: "historyIconButton", src: "assets/menu-icon-bookmark.png",
+              ontap: "showHistory"},
+            {name: "searchIconButton", src: "assets/menu-icon-search.png",
+              ontap: "showParameters", showing: false}
           ]},
-          {name: "leftLabel"}
-        ]},
-        {name: "menu", kind: "List", fit: true, touch: true,
-           onSetupItem: "setupItem", components: [
-          {name: "item", classes: "item enyo-border-box", ontap: "itemTap"}
-        ]}
-      ]},
-      {kind: "FittableRows", components: [
-        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
-          {kind: "onyx.Grabber"},
-          {name: "rightLabel", style: "text-align: center"},
-          {kind: "onyx.Button", content: "_logout".loc(), ontap: "warnLogout",
-            style: "float: right;"},
-          {kind: "onyx.InputDecorator", style: "float: right;", components: [
-            {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-              placeholder: "Search", onchange: "inputChanged"},
-            {kind: "Image", src: "assets/search-input-search.png"}
-          ]},
-          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord",
-            style: "float: right;" },
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
             modal: true, floating: true, components: [
             {content: "_logoutConfirmation".loc() },
@@ -61,63 +46,93 @@ trailing:true white:true*/
               ontap: "closeLogoutPopup", classes: "onyx-blue"}
           ]}
         ]},
-        {name: "lists", kind: "Panels", arrangerKind: "LeftRightArranger",
-           margin: 0, fit: true, onTransitionFinish: "finishedTransition"}
+        {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
+          components: [
+          {name: "moduleMenu", kind: "List", touch: true,
+              onSetupItem: "setupModuleMenuItem",
+              components: [
+            {name: "moduleItem", classes: "item enyo-border-box"}
+          ]},
+          {name: "panelMenu", kind: "List", touch: true,
+             onSetupItem: "setupPanelMenuItem", components: [
+            {name: "listItem", classes: "item enyo-border-box"}
+          ]},
+          {} // Why do panels only work when there are 3+ objects?
+        ]}
+      ]},
+      {kind: "FittableRows", components: [
+        {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
+          {kind: "onyx.Grabber"},
+          {name: "rightLabel", style: "text-align: center"},
+          {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
+            showing: false, components: [
+            {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
+              placeholder: "Search", onchange: "inputChanged"},
+            {kind: "Image", src: "assets/search-input-search.png"}
+          ]},
+          {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
+            ontap: "newRecord", style: "float: right;", showing: false}
+        ]},
+        {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
+          draggable: false, panelCount: 0}
       ]},
       {kind: "Signals", onModelSave: "refreshInfoObject"}
     ],
-    firstTime: true,
     fetched: {},
-    activated: function () {
-      if (this.firstTime) {
-        this.firstTime = false;
-        this.setList(0);
+    activate: function () {
+      this.setMenuPanel(MODULE_MENU);
+    },
+    backTapped: function () {
+      var index = this.$.menuPanels.getIndex();
+      if (index === MODULE_MENU) {
+        this.warnLogout();
+      } else {
+        this.setMenuPanel(MODULE_MENU);
       }
     },
     create: function () {
-      var i, component;
       this.inherited(arguments);
-      this.$.leftLabel.setContent(this.label);
-      // Build lists
-      for (i = 0; i < this.lists.length; i++) {
-        component = this.$.lists.createComponent(this.lists[i]);
-        this.doListAdded(component);
-      }
-      this.$.menu.setCount(this.lists.length);
-    },
-    finishedTransition: function (inSender, inEvent) {
-      this.setList(inSender.index);
-    },
-    inputChanged: function (inSender, inEvent) {
-      var index = this.$.lists.getIndex(),
-        list = this.lists[index].name;
-      this.fetched = {};
-      this.fetch(list);
-    },
-    itemTap: function (inSender, inEvent) {
-      this.setList(inEvent.index);
-    },
-    listItemTapped: function (inSender, inEvent) {
-      var list = this.$.lists.getActive(),
-        workspace = list.getWorkspace(),
-        id = list.getModel(inEvent.index).id;
+      var modules = this.getModules() || [],
+        panels,
+        panel,
+        i,
+        n;
 
-      // Transition to workspace view, including the model id payload
-      this.bubble("workspace", {
-        eventName: "workspace",
-        workspace: workspace,
-        id: id
-      });
-      return true;
+      // Build panels
+      for (i = 0; i < modules.length; i++) {
+        panels = modules[i].panels || [];
+        for (n = 0; n < panels.length; n++) {
+
+          // Keep track of where this panel is being placed for later reference
+          panels[n].index = this.$.contentPanels.panelCount++;
+          panel = this.$.contentPanels.createComponent(panels[n]);
+          if (panel instanceof XV.List) {
+
+            // Bubble parameter widget up to pullout
+            this.doListAdded(panel);
+          }
+        }
+      }
+      this.$.moduleMenu.setCount(modules.length);
     },
-    fetch: function (name, options) {
-      name = name || this.$.lists.getActive().name;
-      var list = this.$.lists.$[name],
-        query = list.getQuery() || {},
-        input = this.$.searchInput.getValue(),
-        parameterWidget = XT.app.$.pullout.getItem(name),
-        parameters = parameterWidget ? parameterWidget.getParameters() : [];
+    getSelectedModule: function (index) {
+      return this._selectedModule;
+    },
+    fetch: function (options) {
       options = options ? _.clone(options) : {};
+      var index = options.index || this.$.contentPanels.getIndex(),
+        panel = this.$.contentPanels.getPanels()[index],
+        name = panel ? panel.name : "",
+        query,
+        input,
+        parameterWidget,
+        parameters;
+      if (!panel instanceof XV.List) { return; }
+      this.fetched[index] = true;
+      query = panel.getQuery() || {};
+      input = this.$.searchInput.getValue();
+      parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
+      parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
@@ -128,7 +143,7 @@ trailing:true white:true*/
         // Input search parameters
         if (input) {
           query.parameters = [{
-            attribute: list.getSearchableAttributes(),
+            attribute: panel.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
           }];
@@ -142,12 +157,15 @@ trailing:true white:true*/
         delete query.parameters;
       }
 
-      list.setQuery(query);
-      list.fetch(options);
-      this.fetched[name] = true;
+      panel.setQuery(query);
+      panel.fetch(options);
+    },
+    inputChanged: function (inSender, inEvent) {
+      this.fetched = {};
+      this.fetch();
     },
     newRecord: function (inSender, inEvent) {
-      var list = this.$.lists.getActive(),
+      var list = this.$.contentPanels.getActive(),
         workspace = list.getWorkspace();
       this.bubble("workspace", {
         eventName: "workspace",
@@ -166,49 +184,90 @@ trailing:true white:true*/
       if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
         list.setIsFetching(true);
         options.showMore = true;
-        this.fetch(list.name, options);
+        this.fetch(options);
       }
     },
-    setList: function (index) {
-      if (this.firstTime) { return; }
-      var list = this.lists[index].name;
+    setContentPanel: function (index) {
+      var module = this.getSelectedModule(),
+        panelIndex = module && module.panels ? module.panels[index].index : -1,
+        panel = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
+        label = panel && panel.label ? panel.label : "";
+      if (!panel) { return; }
 
-      // Select menu
-      if (!this.$.menu.isSelected(index)) {
-        this.$.menu.select(index);
+      // Select panelMenu
+      if (!this.$.panelMenu.isSelected(index)) {
+        this.$.panelMenu.select(index);
       }
-
-      // Keep the selected list in state as a kind variable
-      this.selectedList = index;
 
       // Select list
-      if (this.$.lists.getIndex() !== index) {
-        this.$.lists.setIndex(index);
+      if (this.$.contentPanels.getIndex() !== panelIndex) {
+        this.$.contentPanels.setIndex(panelIndex);
       }
-      this.$.rightLabel.setContent(this.$.lists.$[list].getLabel());
-      if (!this.fetched[list]) {
-        this.fetch(list);
+      this.$.rightLabel.setContent(label);
+      if (panel.fetch && !this.fetched[panelIndex]) {
+        this.fetch();
       }
     },
-    // menu
-    setupItem: function (inSender, inEvent) {
-      var list = this.lists[inEvent.index].name;
-      this.$.item.setContent(this.$.lists.$[list].getLabel());
-      this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    setMenuPanel: function (index) {
+      var label = index ? "_back".loc() : "_logout".loc();
+      this.$.menuPanels.setIndex(index);
+      this.$.menuPanels.getActive().select(0);
+      this.setContentPanel(0);
+      this.$.backButton.setContent(label);
+      this.$.newButton.setShowing(index);
+      this.$.search.setShowing(index);
+      this.$.searchIconButton.setShowing(index);
     },
-    showDashboard: function () {
-      this.bubble("dashboard", {eventName: "dashboard"});
+    setModule: function (index) {
+      var module = this.getModules()[index],
+        panels = module.panels || [],
+        hasSubmenu = module.hasSubmenu !== false && panels.length,
+        i;
+      if (module !== this._selectedModule) {
+        this._selectedModule = module;
+        if (hasSubmenu) {
+          this.$.panelMenu.setCount(panels.length);
+          this.setMenuPanel(PANEL_MENU);
+          // Fetch all
+          for (i = 0; i < panels.length; i++) {
+            this.fetch({index: panels[i].index});
+          }
+        }
+      }
+    },
+    setupModuleMenuItem: function (inSender, inEvent) {
+      var index = inEvent.index,
+        label = this.modules[index].label,
+        isSelected = inSender.isSelected(index);
+      this.$.moduleItem.setContent(label);
+      this.$.moduleItem.addRemoveClass("onyx-selected", isSelected);
+      if (isSelected) { this.setModule(index); }
+    },
+    setupPanelMenuItem: function (inSender, inEvent) {
+      var module = this.getSelectedModule(),
+        index = inEvent.index,
+        isSelected = inSender.isSelected(index),
+        panel,
+        name,
+        label;
+      panel =  module.panels[index];
+      name = panel && panel.name ? module.panels[index].name : "";
+      panel = this.$.contentPanels.$[name];
+      label = panel && panel.getLabel ? panel.getLabel() : "";
+      this.$.listItem.setContent(label);
+      this.$.listItem.addRemoveClass("onyx-selected", isSelected);
+      if (isSelected) { this.setContentPanel(index); }
     },
     showHistory: function (inSender, inEvent) {
       var panel = {name: 'history'};
       this.doTogglePullout(panel);
     },
     showParameters: function (inSender, inEvent) {
-      var panel = this.$.lists.getActive();
+      var panel = this.$.contentPanels.getActive();
       this.doTogglePullout(panel);
     },
     /**
-     * If a model has changed, check the lists of this module to see if we can
+     * If a model has changed, check the panels of this module to see if we can
      * update the info object in the list.
      * XXX if there are multiple modules alive then all of them will catch
      * XXX the signal, which isn't ideal for performance
@@ -220,7 +279,7 @@ trailing:true white:true*/
       // XXX not sustainable
       var listBase = XV.util.stripModelNamePrefix(inPayload.recordType).camelize(),
         listName = this.name === "setup" ? listBase + "List" : listBase + "List",
-        list = this.$.lists.$[listName];
+        list = this.$.contentPanels.$[listName];
 
 
       /**
@@ -268,8 +327,8 @@ trailing:true white:true*/
     },
 
     /**
-     * Logout management. We show the user a warning popup before we log them out.
-     */
+      Logout management. We show the user a warning popup before we log them out.
+    */
     warnLogout: function () {
       this.$.logoutPopup.show();
     },
@@ -282,9 +341,9 @@ trailing:true white:true*/
     },
 
     /**
-     * Manually set one of the icon buttons to be active. Note passing null
-     * as the parameter will disactivate all icons.
-     */
+      Manually set one of the icon buttons to be active. Note passing null
+      as the parameter will disactivate all icons.
+    */
     setActiveIconButton: function (buttonName) {
       var activeIconButton = null;
       if (buttonName === 'search') {

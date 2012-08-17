@@ -116,7 +116,7 @@ white:true*/
   XM.UserAccountRoleInfo = XM.Model.extend({
     /** @scope XM.UserAccountRoleInfo.prototype */
 
-    recordType: 'UserAccountRole',
+    recordType: 'XM.UserAccountRoleInfo',
 
     readOnly: true
 
@@ -130,7 +130,7 @@ white:true*/
   XM.UserAccountRolePrivilegeAssignment = XM.Document.extend({
     /** @scope XM.UserAccountRolePrivilegeAssignment.prototype */
 
-    recordType: 'UserAccountRolePrivilegeAssignment'
+    recordType: 'XM.UserAccountRolePrivilegeAssignment'
 
   });
 
@@ -151,13 +151,11 @@ white:true*/
     enforceUpperKey: false,
 
     defaults: {
-      canCreateUsers: false,
       disableExport: false,
       isDatabaseUser: false
     },
 
     requiredAttributes: [
-      "canCreateUsers",
       "disableExport",
       "isDatabaseUser"
     ]
@@ -189,7 +187,7 @@ white:true*/
   XM.UserAccountUserAccountRoleAssignment = XM.Document.extend({
     /** @scope XM.UserAccountUserAccountRoleAssignment.prototype */
 
-    recordType: 'UserAccountUserAccountRoleAssignment'
+    recordType: 'XM.UserAccountUserAccountRoleAssignment'
 
   });
 
@@ -246,6 +244,30 @@ white:true*/
    /** @scope XM.PrivilegeCollection.prototype */
 
     model: XM.Privilege
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountRoleCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRoleCollection.prototype */
+
+    model: XM.UserAccountRole
+
+  });
+
+  /**
+   @class
+
+   @extends XM.Collection
+  */
+  XM.UserAccountRoleInfoCollection = XM.Collection.extend({
+   /** @scope XM.UserAccountRoleInfoCollection.prototype */
+
+    model: XM.UserAccountRoleInfo
 
   });
 
