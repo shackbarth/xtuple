@@ -51,6 +51,12 @@ white:true*/
         checkedModel,
         newModel;
 
+      // BEGIN HACK
+      var tempChecked = inEvent.originator.$.input.checked;
+      var segmentNum = inEvent.originator.parent.parent.parent.indexInContainer();
+      var checkboxNum = inEvent.originator.parent.indexInContainer();
+      //END HACK
+
         /**
          * The record type in totalCollection is XM.Privilege and the
          * record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
@@ -59,9 +65,13 @@ white:true*/
       if (value) {
         // filter returns an array and we want a model: that's why I [0]
         // assumption: no duplicate originator names
-        checkedModel = _.filter(this.getTotalCollection().models,
-          function (model) { return model.get("name") === originatorName; })[0];
+        var checkedModelArray = _.filter(this.getTotalCollection().models,
+          function (model) { return model.get("name") === originatorName; });
+        checkedModel = checkedModelArray[0];
+        // XXX I would love to revisit this when I have another two hours to burn on crazy bugs
+        // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         newModel = this.getAssignmentModel(checkedModel);
+        // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         this.getAssignedCollection().add(newModel);
       } else {
         checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
@@ -69,6 +79,12 @@ white:true*/
         })[0];
         checkedModel.destroy();
       }
+      // BEGIN HACK
+      if (tempChecked && !this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked) {
+        this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked = true;
+      }
+      // END HACK
+      this.render();
       return true;
     },
     create: function () {
@@ -101,6 +117,12 @@ white:true*/
         }};
         this.getTotalCollection().fetch(options);
       }
+    },
+    /**
+     * We rely on the subkinds to override this function.
+     */
+    getAssignmentModel: function () {
+      return null;
     },
     mapIds: function () {
       var that = this;

@@ -3,7 +3,7 @@ regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, Globalize:true, enyo:true, _:true */
 
 (function () {
- 
+
   enyo.kind({
     name: "XV.Checkbox",
     kind: "onyx.Checkbox",
@@ -29,7 +29,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     }
   });
-  
+
   enyo.kind({
     name: "XV.CheckboxWidget",
     kind: "XV.Input",
@@ -52,6 +52,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.labelChanged();
     },
     inputChanged: function (inSender, inEvent) {
+      XT.log("Checkbox widget:: inputChanged: " + inEvent.originator.active + this.$.input.checked + this.getId());
       var input = this.$.input.getValue();
       this.setValue(input);
     },
@@ -60,9 +61,10 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.label.setContent(label);
     },
     valueChanged: function (value) {
+      XT.log("Checkbox widget:: valueChanged: " + value + this.$.input.checked + this.getId());
       this.$.input.setValue(value);
       return value;
     }
   });
-  
+
 }());

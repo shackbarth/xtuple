@@ -47,6 +47,7 @@ white:true*/
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
     getAssignmentModel: function (privilegeModel) {
+      XT.log("abc2599?: " + this.$.segmentRepeater.children[0].children[1].children[3].$.checkbox.$.input.checked);
       return new XM.UserAccountPrivilegeAssignment({
         privilege: privilegeModel,
         type: "UserAccountPrivilegeAssignment",
