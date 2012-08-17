@@ -47,7 +47,7 @@ trailing:true white:true*/
           ]}
         ]},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
-          components: [
+          arrangerKind: "LeftRightArranger", margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
               onSetupItem: "setupModuleMenuItem",
               components: [
@@ -221,17 +221,13 @@ trailing:true white:true*/
     setModule: function (index) {
       var module = this.getModules()[index],
         panels = module.panels || [],
-        hasSubmenu = module.hasSubmenu !== false && panels.length,
-        i;
+        hasSubmenu = module.hasSubmenu !== false && panels.length;
       if (module !== this._selectedModule) {
         this._selectedModule = module;
         if (hasSubmenu) {
           this.$.panelMenu.setCount(panels.length);
+          this.$.panelMenu.render();
           this.setMenuPanel(PANEL_MENU);
-          // Fetch all
-          for (i = 0; i < panels.length; i++) {
-            this.fetch({index: panels[i].index});
-          }
         }
       }
     },
