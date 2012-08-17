@@ -10,10 +10,10 @@ enyo.kind({
     onWorkspace: "addWorkspacePanel"
   },
   components: [
-    {name: "startup", style: "background: #333;",
+    {name: "startup", classes: "xv-startup-panel", style: "background: #333;",
       components: [
       {classes: "xv-startup-divider", content: "Loading application data..."},
-      {kind: "onyx.ProgressBar", progress: 25}
+      {kind: "onyx.ProgressBar", classes: "xv-startup-progress", progress: 25}
     ]},
     {name: "navigator", kind: "XV.Module", modules: [
       {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 

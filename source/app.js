@@ -53,7 +53,7 @@ white:true*/
       return this.$.pullout;
     },
     handlePullout: function (inSender, inEvent) {
-      var showing = inSender.getNavigator().showPullout || false;
+      var showing = inSender.getActive().showPullout || false;
       this.$.pullout.setShowing(showing);
     },
     parameterDidChange: function (inSender, inEvent) {
