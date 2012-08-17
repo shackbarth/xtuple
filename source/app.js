@@ -17,7 +17,8 @@ white:true*/
       onParameterChange: "parameterDidChange",
       onTogglePullout: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
-      onHistoryItemSelected: "selectHistoryItem"
+      onHistoryItemSelected: "selectHistoryItem",
+      onAnimateProgressFinish: "dataLoaded"
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
@@ -98,17 +99,26 @@ white:true*/
 
       this.waterfall("workspace", inEvent);
     },
+    dataLoaded: function () {
+      XT.app.$.postbooks.next();
+      XT.app.$.postbooks.getNavigator().activate();
+    },
     start: function () {
       if (this.getIsStarted()) { return; }
       XT.app = this;
 
       // on application start, connect the datasource
-      var callback = function () {
-        XT.app.$.postbooks.next();
-        XT.app.$.postbooks.getNavigator().activate();
-      };
-      XT.getStartupManager().registerCallback(callback);
+      var startupManager = XT.getStartupManager(),
+        progressBar = XT.app.$.postbooks.getStartupProgressBar(),
+        count,
+        eachCallback = function () {
+          var completed = startupManager.get('completed').length;
+          progressBar.animateProgressTo(completed);
+        };
+      startupManager.registerCallback(eachCallback, true);
       XT.dataSource.connect();
+      progressBar.setMax(startupManager.get('queue').length +
+        startupManager.get('completed').length);
 
       // lets not allow this to happen again
       this.setIsStarted(true);

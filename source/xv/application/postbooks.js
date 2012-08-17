@@ -13,12 +13,15 @@ enyo.kind({
     {name: "startup", classes: "xv-startup-panel", style: "background: #333;",
       components: [
       {classes: "xv-startup-divider", content: "Loading application data..."},
-      {kind: "onyx.ProgressBar", classes: "xv-startup-progress", progress: 25}
+      {name: "startupProgressBar", kind: "onyx.ProgressBar", 
+        classes: "xv-startup-progress", progress: 0}
     ]},
     {name: "navigator", kind: "XV.Module", modules: [
       {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 
         panels: [
-        {name: "welcomePage", tag: '<iframe src="http://www.xtuple.com/beta"></iframe>'}
+        {name: "welcomePage", content: "Welcome"
+          //tag: '<iframe src="http://www.xtuple.com/beta"></iframe>'
+          }
       ]},
       {name: "crm", label: "_crm".loc(), panels: [
         {name: "accountList", kind: "XV.AccountList"},
@@ -54,6 +57,9 @@ enyo.kind({
   },
   getNavigator: function () {
     return this.$.navigator;
+  },
+  getStartupProgressBar: function () {
+    return this.$.startupProgressBar;
   },
   previous: function() {
     // Stock implementation is screwy, do our own
