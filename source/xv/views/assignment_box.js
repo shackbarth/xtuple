@@ -52,9 +52,13 @@ white:true*/
         newModel;
 
       // BEGIN HACK
-      var tempChecked = inEvent.originator.$.input.checked;
-      var segmentNum = inEvent.originator.parent.parent.parent.indexInContainer();
-      var checkboxNum = inEvent.originator.parent.indexInContainer();
+      try {
+        var tempChecked = inEvent.originator.$.input.checked;
+        var segmentNum = inEvent.originator.parent.parent.parent.indexInContainer();
+        var checkboxNum = inEvent.originator.parent.indexInContainer();
+      } catch(error) {
+        XT.log("Crazy hack failed. Not bothering with it.");
+      }
       //END HACK
 
         /**
@@ -65,31 +69,45 @@ white:true*/
       if (value) {
         // filter returns an array and we want a model: that's why I [0]
         // assumption: no duplicate originator names
-        var checkedModelArray = _.filter(this.getTotalCollection().models,
-          function (model) { return model.get("name") === originatorName; });
-        checkedModel = checkedModelArray[0];
+        var checkedModel = _.filter(this.getTotalCollection().models, function (model) {
+          return model.get("name") === originatorName;
+        })[0];
         // XXX I would love to revisit this when I have another two hours to burn on crazy bugs
         // the issue is that by creating the model we uncheck somehow the checkbox. Or maybe we're replacing
         // the checkbox with a different checkbox that itself is unchecked. Adding to the craziness is
         // that inEvent disappears at the same time. In WTF1land everything is normal. In WTF2land everything
         // is zany. And the problem disappears entirely when I set a breakpoint! The hack above and below
         // cannot possibly stand the test of time. But after 2 hours I'm ready to move on for now.
-        // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
+         XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         newModel = this.getAssignmentModel(checkedModel);
-        // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
+         XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         this.getAssignedCollection().add(newModel);
       } else {
         checkedModel = _.filter(this.getAssignedCollection().models, function (model) {
-          return model.get(that.getType()) && model.get(that.getType()).get("name") === originatorName;
+          // we don't want to redestroy a destroyed model, because there's probably a living one
+          // behind it that actually is the one to destroy
+          return !(model.getStatus() & XM.Model.DESTROYED)
+            && model.get(that.getType())
+            && model.get(that.getType()).get("name") === originatorName;
         })[0];
+        if (!checkedModel) {
+          XT.log("No model to destroy. This is probably a bug."); // XXX
+        }
+        // XT.log("WTF1?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
         checkedModel.destroy();
+        // XT.log("WTF2?: " + this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked);
       }
       // BEGIN HACK
-      if (tempChecked && !this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked) {
-        this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked = true;
+      try{
+        if (tempChecked != this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked) {
+          XT.log("applying hack: setting checkbox to " + tempChecked);
+          this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked = tempChecked;
+          this.render();
+        }
+      } catch(error) {
+        XT.log("Crazy hack failed. Not bothering with it.");
       }
       // END HACK
-      this.render();
       return true;
     },
     create: function () {

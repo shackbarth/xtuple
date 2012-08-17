@@ -461,6 +461,8 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
+        {kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"},
+        {kind: "XV.UserAccountPrivilegeWorkspaceBox", name: "grantedPrivileges"},
         {kind: "XV.WorkspaceBox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.CheckboxWidget", name: "isActive"},
@@ -468,11 +470,10 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", name: "initials"},
           {kind: "XV.InputWidget", name: "email"}
         ]},
-        {kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"},
-        {kind: "XV.UserAccountPrivilegeWorkspaceBox", name: "grantedPrivileges"}
       ]}
     ],
     refreshPrivileges: function (inSender, inEvent) {
+      this.$.grantedPrivileges.mapIds();
       this.$.grantedPrivileges.tryToRender();
     }
   });

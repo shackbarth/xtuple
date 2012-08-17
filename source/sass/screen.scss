@@ -549,7 +549,11 @@ body {
   }
 }
 
-
+.xv-half-check {
+  border: 5px solid green;
+  background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;;
+  background-color: darkgrey;
+}
 /********END XV WIDGETS******/
 
 .xv-login {

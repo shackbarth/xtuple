@@ -47,7 +47,6 @@ white:true*/
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
     getAssignmentModel: function (privilegeModel) {
-      XT.log("abc2599?: " + this.$.segmentRepeater.children[0].children[1].children[3].$.checkbox.$.input.checked);
       return new XM.UserAccountPrivilegeAssignment({
         privilege: privilegeModel,
         type: "UserAccountPrivilegeAssignment",
@@ -59,7 +58,7 @@ white:true*/
 
       var grantedRoles = this.getAssignedCollection().userAccount.get("grantedUserAccountRoles"),
         privsFromRoles = grantedRoles.map(function (model) {
-          return model.get("userAccountRole").get("grantedPrivileges");
+          return model.getStatus() & XM.Model.DESTROYED ? [] : model.get("userAccountRole").get("grantedPrivileges");
         }),
         privIdsFromRoles = _.map(privsFromRoles, function (collection) {
           return collection.map(function (model) {
@@ -88,9 +87,10 @@ white:true*/
     },
     // I expect this to be one day abstracted
     disableCheckbox: function (checkbox, isDisabled) {
-      checkbox.setDisabled(isDisabled);
-      if (isDisabled && !checkbox.$.input.value) {
-        checkbox.setLabel(checkbox.getLabel() + " (Role)");
+      if (isDisabled && !checkbox.$.input.checked) {
+        checkbox.$.input.addClass("xv-half-check");
+      } else {
+        checkbox.$.input.removeClass("xv-half-check");
       }
     }
   });
