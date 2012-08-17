@@ -5,7 +5,10 @@ enyo.kind({
   classes: "xt-postbooks enyo-unselectable",
   components: [
     {name: "navigation", kind: "XV.Module", modules: [
-      {name: "welcome", label: "_welcome".loc()},
+      {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 
+        panels: [
+        {name: "welcomePage", content: "Welcome to xTuple"}
+      ]},
       {name: "crm", label: "_crm".loc(), panels: [
         {name: "accountList", kind: "XV.AccountList"},
         {name: "contactList", kind: "XV.ContactList"},
@@ -28,9 +31,6 @@ enyo.kind({
       ]}
     ]}
   ],
-  create: function () {
-    this.inherited(arguments);
-  },
   getNavigation: function () {
     return this.$.navigation;
   }

@@ -54,8 +54,7 @@ trailing:true white:true*/
           {name: "moduleMenu", kind: "List", touch: true,
               onSetupItem: "setupModuleMenuItem",
               components: [
-            {name: "moduleItem", classes: "item enyo-border-box",
-              ontap: "moduleItemTap"}
+            {name: "moduleItem", classes: "item enyo-border-box"}
           ]},
           {name: "panelMenu", kind: "List", touch: true,
              onSetupItem: "setupPanelMenuItem", components: [
@@ -195,9 +194,6 @@ trailing:true white:true*/
     menuItemTap: function (inSender, inEvent) {
       this.setContentPanel(inEvent.index);
     },
-    moduleItemTap: function (inSender, inEvent) {
-      //this.setModule(inEvent.index);
-    },
     requery: function (inSender, inEvent) {
       this.fetch();
     },
@@ -216,7 +212,7 @@ trailing:true white:true*/
       var module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
         panel = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
-        label = panel ? panel.getLabel() : "";
+        label = panel && panel.getLabel ? panel.getLabel() : "";
       if (!panel) { return; }
 
       // Select panelMenu
@@ -242,10 +238,11 @@ trailing:true white:true*/
     },
     setModule: function (index) {
       var module = this.getModules()[index],
-        panels = module.panels || [];
+        panels = module.panels || [],
+        hasSubmenu = module.hasSubmenu !== false && panels.length;
       if (module !== this._selectedModule) {
         this._selectedModule = module;
-        if (panels.length) {
+        if (hasSubmenu) {
           this.$.panelMenu.setCount(panels.length);
           this.setMenuPanel(PANEL_MENU);
         }
@@ -261,9 +258,14 @@ trailing:true white:true*/
     },
     setupPanelMenuItem: function (inSender, inEvent) {
       var module = this.getSelectedModule(),
-        panel;
-      panel =  module.panels[inEvent.index].name;
-      this.$.listItem.setContent(this.$.contentPanels.$[panel].getLabel());
+        panel,
+        name,
+        label;
+      panel =  module.panels[inEvent.index];
+      name = panel && panel.name ? module.panels[inEvent.index].name : "";
+      panel = this.$.contentPanels.$[name];
+      label = panel && panel.getLabel ? panel.getLabel() : "";
+      this.$.listItem.setContent(label);
       this.$.listItem.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
     },
     showHistory: function (inSender, inEvent) {
