@@ -18,7 +18,7 @@ enyo.kind({
     {name: "navigator", kind: "XV.Module", modules: [
       {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 
         panels: [
-        {name: "welcomePage", content: "Welcome to xTuple"}
+        {name: "welcomePage", tag: '<iframe src="http://www.xtuple.com/beta"></iframe>'}
       ]},
       {name: "crm", label: "_crm".loc(), panels: [
         {name: "accountList", kind: "XV.AccountList"},
