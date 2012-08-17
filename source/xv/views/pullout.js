@@ -40,9 +40,9 @@ white:true*/
       ]}
     ],
     /**
-     * Called whenever the pullout is pulled via the dragger. We ensure that if
-     * no panel is yet selected, we default to the history panel.
-     */
+      Called whenever the pullout is pulled via the dragger. We ensure that if
+      no panel is yet selected, we default to the history panel.
+    */
     grabberDragFinish: function () {
       if (!this.getSelectedPanel()) {
         this.togglePullout("history");

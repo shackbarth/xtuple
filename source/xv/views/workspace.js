@@ -161,19 +161,13 @@ trailing:true white:true*/
         changes = {},
         i;
 
-      /**
-       * Add to history if appropriate. This method gets hit a few
-       * times and we only want to add to history when we have an
-       * id. Adding a model multiple times is not the end of the
-       * world, as the history array screens out duplicates
-       */
+      // Add to history if appropriate.
       if (model.id) {
         XT.addToHistory(this.kind, model);
         this.doHistoryChange(this);
       }
-
-
-
+      
+      // Update attributes
       for (i = 0; i < attrs.length; i++) {
         changes[attrs[i]] = true;
       }
