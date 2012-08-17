@@ -37,7 +37,7 @@ trailing:true white:true*/
             {name: "historyIconButton", src: "assets/menu-icon-bookmark.png",
               ontap: "showHistory"},
             {name: "searchIconButton", src: "assets/menu-icon-search.png",
-              ontap: "showParameters"}
+              ontap: "showParameters", showing: false}
           ]},
           {name: "leftLabel"},
           {kind: "onyx.Popup", name: "logoutPopup", centered: true,
@@ -68,13 +68,14 @@ trailing:true white:true*/
         {kind: "onyx.MoreToolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
           {name: "rightLabel", style: "text-align: center"},
-          {kind: "onyx.InputDecorator", style: "float: right;", components: [
+          {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
+            showing: false, components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
               placeholder: "Search", onchange: "inputChanged"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]},
-          {kind: "onyx.Button", content: "_new".loc(), ontap: "newRecord",
-            style: "float: right;" }
+          {name: "newButton", kind: "onyx.Button", content: "_new".loc(),
+            ontap: "newRecord", style: "float: right;", showing: false}
         ]},
         {name: "contentPanels", kind: "Panels", margin: 0, fit: true,
           draggable: false, panelCount: 0}
@@ -212,7 +213,7 @@ trailing:true white:true*/
       var module = this.getSelectedModule(),
         panelIndex = module && module.panels ? module.panels[index].index : -1,
         panel = panelIndex > -1 ? this.$.contentPanels.getPanels()[panelIndex] : null,
-        label = panel && panel.getLabel ? panel.getLabel() : "";
+        label = panel && panel.label ? panel.label : "";
       if (!panel) { return; }
 
       // Select panelMenu
@@ -235,6 +236,9 @@ trailing:true white:true*/
       this.$.menuPanels.getActive().select(0);
       this.setContentPanel(0);
       this.$.backButton.setContent(label);
+      this.$.newButton.setShowing(index);
+      this.$.search.setShowing(index);
+      this.$.searchIconButton.setShowing(index);
     },
     setModule: function (index) {
       var module = this.getModules()[index],
