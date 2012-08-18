@@ -32,10 +32,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_account".loc(),
-      model: "XM.Account"
-    },
+    title: "_account".loc(),
+    model: "XM.Account",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -65,10 +63,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ContactWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_contact".loc(),
-      model: "XM.Contact"
-    },
+    title: "_contact".loc(),
+    model: "XM.Contact",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -109,10 +105,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.CountryWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_country".loc(),
-      model: "XM.Country"
-    },
+    title: "_country".loc(),
+    model: "XM.Country",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -136,10 +130,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.HonorificWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_honorific".loc(),
-      model: "XM.Honorific"
-    },
+    title: "_honorific".loc(),
+    model: "XM.Honorific",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -158,10 +150,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_incident".loc(),
-      model: "XM.Incident"
-    },
+    title: "_incident".loc(),
+    model: "XM.Incident",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -201,10 +191,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentCategoryWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_incidentCategory".loc(),
-      model: "XM.IncidentCategory"
-    }
+    title: "_incidentCategory".loc(),
+    model: "XM.IncidentCategory"
   });
 
   // ..........................................................
@@ -214,10 +202,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentResolutionWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_incidentResolution".loc(),
-      model: "XM.IncidentResolution"
-    }
+    title: "_incidentResolution".loc(),
+    model: "XM.IncidentResolution"
   });
 
   // ..........................................................
@@ -227,10 +213,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentSeverityWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_incidentSeverity".loc(),
-      model: "XM.IncidentSeverity"
-    }
+    title: "_incidentSeverity".loc(),
+    model: "XM.IncidentSeverity"
   });
 
   // ..........................................................
@@ -240,10 +224,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunity".loc(),
-      model: "XM.Opportunity"
-    },
+    title: "_opportunity".loc(),
+    model: "XM.Opportunity",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -287,10 +269,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunitySourceWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunitySource".loc(),
-      model: "XM.OpportunitySource"
-    }
+    title: "_opportunitySource".loc(),
+    model: "XM.OpportunitySource"
   });
 
   // ..........................................................
@@ -300,10 +280,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityStageWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunityStage".loc(),
-      model: "XM.OpportunityStage"
-    }
+    title: "_opportunityStage".loc(),
+    model: "XM.OpportunityStage"
   });
 
   // ..........................................................
@@ -313,10 +291,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityTypeWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunityType".loc(),
-      model: "XM.OpportunityType"
-    }
+    title: "_opportunityType".loc(),
+    model: "XM.OpportunityType"
   });
 
   // ..........................................................
@@ -326,10 +302,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.PriorityWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_priority".loc(),
-      model: "XM.Priority"
-    }
+    title: "_priority".loc(),
+    model: "XM.Priority"
   });
 
   // ..........................................................
@@ -339,10 +313,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ProjectWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_project".loc(),
-      model: "XM.Project"
-    },
+    title: "_project".loc(),
+    model: "XM.Project",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
@@ -385,10 +357,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.StateWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_state".loc(),
-      model: "XM.State"
-    },
+    title: "_state".loc(),
+    model: "XM.State",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -409,10 +379,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_toDo".loc(),
-      model: "XM.ToDo"
-    },
+    title: "_toDo".loc(),
+    model: "XM.ToDo",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
@@ -451,10 +419,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.UserAccountWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_userAccount".loc(),
-      model: "XM.UserAccount"
-    },
+    title: "_userAccount".loc(),
+    model: "XM.UserAccount",
     handlers: {
       onRefreshPrivileges: "refreshPrivileges"
     },
@@ -469,7 +435,7 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", attr: "properName"},
           {kind: "XV.InputWidget", attr: "initials"},
           {kind: "XV.InputWidget", attr: "email"}
-        ]},
+        ]}
       ]}
     ],
     refreshPrivileges: function (inSender, inEvent) {
@@ -485,10 +451,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.UserAccountRoleWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_userAccountRole".loc(),
-      model: "XM.UserAccountRole"
-    },
+    title: "_userAccountRole".loc(),
+    model: "XM.UserAccountRole",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
