@@ -4,7 +4,7 @@ trailing:true white:true*/
 /*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
-  
+
   var ROWS_PER_FETCH = 50;
 
   enyo.kind({
@@ -44,6 +44,7 @@ trailing:true white:true*/
     },
     fixedHeight: true,
     handlers: {
+      onModelChange: "modelChanged",
       onSetupItem: "setupItem"
     },
     collectionChanged: function () {
@@ -71,7 +72,7 @@ trailing:true white:true*/
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
       success = options.success;
-      
+
       // Lazy Loading
       if (options.showMore) {
         query.rowOffset += ROWS_PER_FETCH;
@@ -80,7 +81,7 @@ trailing:true white:true*/
         query.rowOffset = 0;
         query.rowLimit = ROWS_PER_FETCH;
       }
-      
+
       _.extend(options, {
         success: function (resp, status, xhr) {
           that.fetched();
@@ -114,6 +115,25 @@ trailing:true white:true*/
 
       // Bubble requset for workspace view, including the model id payload
       if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+    },
+    modelChanged: function (inSender, inEvent) {
+      var that = this,
+        workspace = this.getWorkspace(),
+        options = {},
+        model;
+      // If the model that changed was related to and exists on this list
+      // refresh the item.
+      workspace = workspace ? XT.getObjectByName(workspace) : null;
+      if (workspace && workspace.prototype.model === inEvent.model &&
+          this._collection) {
+        model = this._collection.get(inEvent.id);
+        if (model) {
+          options.success = function () {
+            that.refresh();
+          };
+          model.fetch(options);
+        }
+      }
     },
     setupItem: function (inSender, inEvent) {
       var model = this._collection.models[inEvent.index],
