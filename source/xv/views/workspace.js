@@ -22,6 +22,7 @@ trailing:true white:true*/
     },
     events: {
       onError: "",
+      onModelChange: "",
       onStatusChange: "",
       onTitleChange: "",
       onHistoryChange: ""
@@ -152,6 +153,18 @@ trailing:true white:true*/
       this.fetch(this._model.id);
     },
     save: function (options) {
+      options = options || {};
+      var that = this,
+        success = options.success,
+        inEvent = {
+          originator: this,
+          model: this.getModel(),
+          id: this._model.id
+        };
+      options.success = function (model, resp, options) {
+        that.doModelChange(inEvent);
+        if (success) { success(model, resp, options); }
+      };
       this._model.save(null, options);
     },
     statusChanged: function (model, status, options) {
