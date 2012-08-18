@@ -9,6 +9,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: enyo.Control,
     classes: "xv-inputwidget xv-relationwidget",
     published: {
+      attr: null,
       label: "",
       placeholder: "",
       value: null,
@@ -152,7 +153,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc());
+      var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
     },
     placeholderChanged: function () {

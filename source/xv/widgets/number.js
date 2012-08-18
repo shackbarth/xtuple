@@ -44,7 +44,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.labelChanged();
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      var label = (this.getLabel() || ("_" + this.attr + "").loc()) + ":";
       this.$.label.setContent(label);
     },
     placeholderChanged: function () {

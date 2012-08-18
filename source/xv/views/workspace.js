@@ -1,17 +1,9 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, onyx:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, onyx:true, enyo:true, XT:true */
 
 (function () {
-
-  enyo.kind({
-    name: "XV.WorkspaceAttr",
-    classes: "xv-workspace-attr",
-    published: {
-      attr: ""
-    }
-  });
 
   enyo.kind({
     name: "XV.Workspace",
@@ -49,7 +41,8 @@ trailing:true white:true*/
     */
     attributesChanged: function (model, options) {
       options = options || {};
-      var attr,
+      var that = this,
+        attr,
         value,
         K = XM.Model,
         status = model.getStatus(),
@@ -57,13 +50,18 @@ trailing:true white:true*/
         canNotUpdate = !model.canUpdate() || !(status & K.READY),
         control,
         isReadOnly,
-        isRequired;
+        isRequired,
+        findControl = function (attr) {
+          return _.find(that.$, function (ctl) {
+            return ctl.attr === attr;
+          });
+        };
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
           value = model.get(attr);
           isReadOnly = model.isReadOnly(attr);
           isRequired = model.isRequired(attr);
-          control = this.$[attr];
+          control = findControl(attr);
           if (control) {
             if (control.setPlaceholder && isRequired &&
                 !control.getPlaceholder()) {
@@ -194,7 +192,7 @@ trailing:true white:true*/
     },
     valueChanged: function (inSender, inEvent) {
       var attrs = {};
-      attrs[inEvent.originator.name] = inEvent.value;
+      attrs[inEvent.originator.attr] = inEvent.value;
       this._model.set(attrs);
     }
   });

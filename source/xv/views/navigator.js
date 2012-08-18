@@ -4,12 +4,11 @@ trailing:true white:true*/
 /*global XT:true, XV:true, XM:true, _:true, enyo:true*/
 
 (function () {
-  var FETCH_TRIGGER = 100;
   var MODULE_MENU = 0;
   var PANEL_MENU = 1;
 
   enyo.kind({
-    name: "XV.Module",
+    name: "XV.Navigator",
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
@@ -17,11 +16,11 @@ trailing:true white:true*/
     },
     events: {
       onListAdded: "",
-      onTogglePullout: ""
+      onTogglePullout: "",
+      onWorkspace: ""
     },
     handlers: {
-      onParameterChange: "requery",
-      onScroll: "scrolled"
+      onParameterChange: "requery"
     },
     showPullout: true,
     arrangerKind: "CollapsingArranger",
@@ -165,26 +164,12 @@ trailing:true white:true*/
     },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
-        workspace = list.getWorkspace();
-      this.bubble("workspace", {
-        eventName: "workspace",
-        workspace: workspace
-      });
+        workspace = list instanceof XV.List ? list.getWorkspace() : null;
+      if (workspace) { this.doWorkspace({workspace: workspace}); }
       return true;
     },
     requery: function (inSender, inEvent) {
       this.fetch();
-    },
-    scrolled: function (inSender, inEvent) {
-      if (inEvent.originator instanceof XV.List === false) { return; }
-      var list = inEvent.originator,
-        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
-        options = {};
-      if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
-        list.setIsFetching(true);
-        options.showMore = true;
-        this.fetch(options);
-      }
     },
     setContentPanel: function (index) {
       var module = this.getSelectedModule(),
