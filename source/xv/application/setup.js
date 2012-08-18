@@ -5,6 +5,7 @@ trailing:true white:true*/
 
 (function () {
 
+  /*
   enyo.kind({
     name: "XV.Setup",
     kind: "XV.Module",
@@ -22,5 +23,6 @@ trailing:true white:true*/
       {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
     ]
   });
+  */
 
 }());

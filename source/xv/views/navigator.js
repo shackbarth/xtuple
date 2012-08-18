@@ -8,7 +8,7 @@ trailing:true white:true*/
   var PANEL_MENU = 1;
 
   enyo.kind({
-    name: "XV.Module",
+    name: "XV.Navigator",
     kind: "Panels",
     classes: "app enyo-unselectable",
     published: {
