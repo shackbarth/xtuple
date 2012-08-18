@@ -17,7 +17,8 @@ trailing:true white:true*/
     },
     events: {
       onListAdded: "",
-      onTogglePullout: ""
+      onTogglePullout: "",
+      onWorkspace: ""
     },
     handlers: {
       onParameterChange: "requery",
@@ -165,11 +166,8 @@ trailing:true white:true*/
     },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
-        workspace = list.getWorkspace();
-      this.bubble("workspace", {
-        eventName: "workspace",
-        workspace: workspace
-      });
+        workspace = list instanceof XV.List ? list.getWorkspace() : null;
+      if (workspace) { this.doWorkspace({workspace: workspace}); }
       return true;
     },
     requery: function (inSender, inEvent) {
