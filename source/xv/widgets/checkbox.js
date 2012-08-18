@@ -3,7 +3,7 @@ regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, Globalize:true, enyo:true, _:true */
 
 (function () {
- 
+
   enyo.kind({
     name: "XV.Checkbox",
     kind: "onyx.Checkbox",
@@ -29,7 +29,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     }
   });
-  
+
   enyo.kind({
     name: "XV.CheckboxWidget",
     kind: "XV.Input",
@@ -64,5 +64,5 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     }
   });
-  
+
 }());

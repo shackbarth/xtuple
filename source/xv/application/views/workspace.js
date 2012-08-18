@@ -455,16 +455,49 @@ trailing:true white:true*/
       title: "_userAccount".loc(),
       model: "XM.UserAccount"
     },
+    handlers: {
+      onRefreshPrivileges: "refreshPrivileges"
+    },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
-        classes: "xv-top-panel", components: [
+        fit: true, classes: "xv-top-panel", components: [
+        {kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"},
+        {kind: "XV.UserAccountPrivilegeWorkspaceBox", name: "grantedPrivileges"},
         {kind: "XV.WorkspaceBox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.CheckboxWidget", name: "isActive"},
           {kind: "XV.InputWidget", name: "properName"},
           {kind: "XV.InputWidget", name: "initials"},
           {kind: "XV.InputWidget", name: "email"}
-        ]}
+        ]},
+      ]}
+    ],
+    refreshPrivileges: function (inSender, inEvent) {
+      this.$.grantedPrivileges.mapIds();
+      this.$.grantedPrivileges.tryToRender();
+    }
+  });
+
+  // ..........................................................
+  // USER ACCOUNT ROLE
+  //
+
+  enyo.kind({
+    name: "XV.UserAccountRoleWorkspace",
+    kind: "XV.Workspace",
+    published: {
+      title: "_userAccountRole".loc(),
+      model: "XM.UserAccountRole"
+    },
+    components: [
+      {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
+        fit: true, classes: "xv-top-panel", components: [
+        {kind: "XV.WorkspaceBox", components: [
+          {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
+          {kind: "XV.InputWidget", name: "name"},
+          {kind: "XV.InputWidget", name: "description"}
+        ]},
+        {kind: "XV.UserAccountRolePrivilegeWorkspaceBox", name: "grantedPrivileges"}
       ]}
     ]
   });
