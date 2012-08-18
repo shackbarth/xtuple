@@ -9,6 +9,7 @@ regexp:true, undef:true, trailing:true, white:true */
     kind: "XV.Input",
     classes: "xv-inputwidget xv-textarea",
     published: {
+      attr: null,
       placeholder: ""
     },
     components: [

@@ -12,6 +12,7 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     published: {
+      attr: null,
       label: "",
       value: null,
       collection: null,
@@ -87,7 +88,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(attribute ? value[attribute] : value);
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
     },
     setValue: function (value, options) {

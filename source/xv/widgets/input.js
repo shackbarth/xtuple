@@ -8,6 +8,7 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.Input",
     classes: "xv-input",
     published: {
+      attr: null,
       value: null,
       disabled: false
     },
@@ -85,7 +86,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.placeholderChanged();
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc());
+      var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
     },
     placeholderChanged: function () {
