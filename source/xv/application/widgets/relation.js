@@ -24,11 +24,11 @@ regexp:true, undef:true, trailing:true, white:true */
     name: "XV.ContactWidget",
     kind: "XV.RelationWidget",
     published: {
+      list: "XV.ContactList",
       collection: "XM.ContactInfoCollection",
       keyAttribute: "name",
       nameAttribute: "jobTitle"
     },
-    // XXX here it is. It works but don't feel like it's a slam dunk.
     componentExtension: [
       {name: "phone", classes: "xv-relationwidget-description"},
       {name: "fax", classes: "xv-relationwidget-description"},
@@ -39,9 +39,10 @@ regexp:true, undef:true, trailing:true, white:true */
       this.processComponentExtension();
     },
     processComponentExtension: function () {
-      var i, field;
+      var i,
+        field;
       for (i = 0; i < this.componentExtension.length; i++) {
-        var field = this.componentExtension[i];
+        field = this.componentExtension[i];
         this.createComponent(field);
       }
     },

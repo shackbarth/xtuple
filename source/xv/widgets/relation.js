@@ -13,6 +13,7 @@ regexp:true, undef:true, trailing:true, white:true */
       label: "",
       placeholder: "",
       value: null,
+      list: "",
       collection: null,
       disabled: false,
       keyAttribute: "number",
@@ -20,7 +21,11 @@ regexp:true, undef:true, trailing:true, white:true */
       descripAttribute: ""
     },
     events: {
-      onValueChange: ""
+      onValueChange: "",
+      onWorkspace: ""
+    },
+    handlers: {
+      onModelChange: "modelChanged"
     },
     components: [
       {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
@@ -85,6 +90,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.collectionChanged();
       this.labelChanged();
       this.disabledChanged();
+      this.listChanged();
     },
     collectionChanged: function () {
       var collection = this.getCollection(),
@@ -98,8 +104,12 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     itemSelected: function (inSender, inEvent) {
       var action = inEvent.originator.value,
-        model,
+        list = this._list,
+        model = this.getValue(),
+        id = model ? model.id : null,
+        workspace = list ? list.prototype.workspace : null,
         listKind;
+      if (!list || !workspace) { return; }
       switch (action)
       {
       case 'search':
@@ -107,12 +117,10 @@ regexp:true, undef:true, trailing:true, white:true */
         this.bubble("search", { eventName: "search", options: { listKind: listKind, source: this }});
         break;
       case 'open':
-        model = this.getValue();
-        this.bubble("workspace", {eventName: "workspace", options: model});
+        this.doWorkspace({workspace: workspace, id: id});
         break;
       case 'new':
-        model = new this._collection.model();
-        this.bubble("workspace", {eventName: "workspace", options: model});
+        this.doWorkspace({workspace: workspace});
         break;
       }
     },
@@ -155,6 +163,31 @@ regexp:true, undef:true, trailing:true, white:true */
     labelChanged: function () {
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
+    },
+    listChanged: function () {
+      var list = this.getList();
+      delete this._list;
+      if (!list) { return; }
+      this._list = XT.getObjectByName(list);
+    },
+    modelChanged: function (inSender, inEvent) {
+      var that = this,
+        list = this._list,
+        workspace = list ? list.prototype.workspace : null,
+        options = {},
+        model = this.getValue();
+      // If the model that changed was related to and exists on this widget
+      // refresh the item.
+      if (!list || !workspace || !model) { return; }
+      workspace = workspace ? XT.getObjectByName(workspace) : null;
+      if (workspace && workspace.prototype.model === inEvent.model) {
+        if (model.id === inEvent.id) {
+          options.success = function () {
+            that.render();
+          };
+          model.fetch(options);
+        }
+      }
     },
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
