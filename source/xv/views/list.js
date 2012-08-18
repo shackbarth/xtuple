@@ -6,6 +6,7 @@ trailing:true white:true*/
 (function () {
 
   var ROWS_PER_FETCH = 50;
+  var FETCH_TRIGGER = 100;
 
   enyo.kind({
     name: "XV.ListItem",
@@ -134,6 +135,18 @@ trailing:true white:true*/
           model.fetch(options);
         }
       }
+    },
+    scroll: function (inSender, inEvent) {
+      var r = this.inherited(arguments);
+      // Manage lazy loading
+      var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
+        options = {};
+      if (this.getIsMore() && this.getScrollPosition() > max && !this.getIsFetching()) {
+        this.setIsFetching(true);
+        options.showMore = true;
+        this.fetch(options);
+      }
+      return r;
     },
     setupItem: function (inSender, inEvent) {
       var model = this._collection.models[inEvent.index],
