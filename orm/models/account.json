@@ -98,8 +98,7 @@
      {
        "name": "contactRelations",
        "toMany": {
-         "type": "ContactInfo",
-         "isNested": true,
+         "type": "AccountContactInfo",
          "column": "crmacct_id",
          "inverse": "account"
        }
@@ -590,6 +589,13 @@
          "type": "UserAccountInfo",
          "column": "cntct_owner_username",
          "inverse": "username"
+       }
+     },
+     {
+       "name": "account",
+       "attr": {
+         "type": "Number",
+         "column": "cntct_crmacct_id"
        }
      }
     ],
