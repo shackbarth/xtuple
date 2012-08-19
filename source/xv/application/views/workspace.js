@@ -40,9 +40,12 @@ trailing:true white:true*/
         {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
+          {kind: "XV.CheckboxWidget", attr: "isActive"},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.AccountTypeDropdown", attr: "accountType"},
+          {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
           {kind: "XV.ContactWidget", attr: "primaryContact"},
+          {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
           {kind: "XV.ContactWidget", attr: "secondaryContact"}
         ]},
         {kind: "XV.Groupbox", title: "_notes".loc(), components: [

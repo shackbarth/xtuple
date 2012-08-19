@@ -74,10 +74,12 @@ regexp:true, undef:true, trailing:true, white:true */
       placeholder: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
+      {kind: "FittableColumns", components: [
         {name: "label", content: "", classes: "xv-label"},
-        {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
+        {kind: "onyx.InputDecorator", fit: true, classes: "xv-input-decorator",
+          components: [
+          {name: "input", kind: "onyx.Input", classes: "xv-subinput", onchange: "inputChanged"}
+        ]}
       ]}
     ],
     create: function () {

@@ -73,13 +73,15 @@ regexp:true, undef:true, trailing:true, white:true */
       placeholder: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", name: "decorator",
-        classes: "xv-input-decorator", components: [
-        {name: "label", content: "", classes: "xv-label"},
-        {name: "input", kind: "onyx.Input", onchange: "inputChanged"},
-        {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped", src: "assets/date-icon.png"},
-        {name: "datePickPopup", kind: "onyx.Popup", modal: true, components: [
-          {kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked"}
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label"},
+        {kind: "onyx.InputDecorator", name: "decorator",
+          classes: "xv-input-decorator", components: [
+          {name: "input", kind: "onyx.Input", onchange: "inputChanged"},
+          {name: "icon", kind: "onyx.IconButton", ontap: "iconTapped", src: "assets/date-icon.png"},
+          {name: "datePickPopup", kind: "onyx.Popup", modal: true, components: [
+            {kind: "GTS.DatePicker", name: "datePick", style: "", onChange: "datePicked"}
+          ]}
         ]}
       ]}
     ],

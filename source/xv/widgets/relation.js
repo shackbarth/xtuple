@@ -27,35 +27,37 @@ regexp:true, undef:true, trailing:true, white:true */
       onModelChange: "modelChanged"
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
-        {name: "label", content: "", classes: "xv-label"},
-        {
-          name: 'input',
-          kind: "onyx.Input",
-          classes: "xv-subinput",
-          onkeyup: "keyUp",
-          onkeydown: "keyDown",
-          onblur: "receiveBlur"
-        },
-        {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-          {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
-          {name: 'popupMenu', kind: "onyx.Menu",
-            components: [
-            {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
-            {kind: "XV.MenuItem", name: 'openItem', content: "_open".loc(),
-              disabled: true},
-            {kind: "XV.MenuItem", name: 'newItem', content: "_new".loc(),
-              disabled: true}
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label"},
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+          components: [
+          {
+            name: 'input',
+            kind: "onyx.Input",
+            classes: "xv-subinput",
+            onkeyup: "keyUp",
+            onkeydown: "keyDown",
+            onblur: "receiveBlur"
+          },
+          {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
+            {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
+            {name: 'popupMenu', kind: "onyx.Menu",
+              components: [
+              {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
+              {kind: "XV.MenuItem", name: 'openItem', content: "_open".loc(),
+                disabled: true},
+              {kind: "XV.MenuItem", name: 'newItem', content: "_new".loc(),
+                disabled: true}
+            ]}
+          ]},
+          {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
+            onSelect: "relationSelected", components: [
+            {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
           ]}
         ]},
-        {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
-          onSelect: "relationSelected", components: [
-          {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
-        ]}
-      ]},
-      {name: "name", classes: "xv-relationwidget-description"},
-      {name: "description", classes: "xv-relationwidget-description"}
+        {name: "name", classes: "xv-relationwidget-description"},
+        {name: "description", classes: "xv-relationwidget-description"}
+      ]}
     ],
     autocomplete: function () {
       var key = this.getKeyAttribute(),

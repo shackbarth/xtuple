@@ -21,6 +21,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ContactWidget",
     kind: "XV.RelationWidget",
+    label: "_name".loc(),
     list: "XV.ContactList",
     keyAttribute: "name",
     nameAttribute: "jobTitle",
