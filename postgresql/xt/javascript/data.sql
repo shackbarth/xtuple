@@ -790,8 +790,8 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} encryption key
       @returns Object
     */
-    retrieveRecord: function(recordType, id, encryptionKey) {
-      return this.retrieveRecords(recordType, [id], encryptionKey)[0] || {}; 
+    retrieveRecord: function(recordType, id, encryptionKey, options) {
+      return this.retrieveRecords(recordType, [id], encryptionKey, options)[0] || {}; 
     },
 
     /**
@@ -803,7 +803,8 @@ select xt.install_js('XT','Data','xtuple', $$
       @param {String} encryption key
       @returns Object
     */
-    retrieveRecords: function(recordType, ids, encryptionKey) {
+    retrieveRecords: function(recordType, ids, encryptionKey, options) {
+      options = options || {};
       var nameSpace = recordType.beforeDot(), 
           type = recordType.afterDot(),
           map = XT.Orm.fetch(nameSpace, type),
@@ -821,7 +822,13 @@ select xt.install_js('XT','Data','xtuple', $$
             .replace(/{ids}/, ids.join(','));
 
       /* validate - don't bother running the query if the user has no privileges */
-      if(!this.checkPrivileges(nameSpace, type)) throw new Error("Access Denied.");
+      if(!this.checkPrivileges(nameSpace, type)) {
+        if (options.silentError) {
+          return false;
+        } else {
+          throw new Error("Access Denied.");
+        }
+      }
 
       /* query the map */
       if(DEBUG) plv8.elog(NOTICE, 'sql = ', sql);
@@ -829,7 +836,13 @@ select xt.install_js('XT','Data','xtuple', $$
 
       for (var i = 0; i < ret.length; i++) {
         /* check privileges again, this time against record specific criteria where applicable */
-        if(!this.checkPrivileges(nameSpace, type, ret[i])) throw new Error("Access Denied.");
+        if(!this.checkPrivileges(nameSpace, type, ret[i])) {
+          if (options.silentError) {
+            return false;
+          } else {
+            throw new Error("Access Denied.");
+          }
+        }
         
         /* decrypt result where applicable */
         ret[i] = this.decrypt(nameSpace, type, ret[i], encryptionKey);

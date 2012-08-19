@@ -120,7 +120,7 @@ select xt.dispatch($${"requestType":"dispatch",
 
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Crm",
-                          "functionName":"updateSettings",
+                          "functionName":"commitSettings",
                           "parameters":{ 
                             "NextCRMAccountNumber": 1,
                             "NextIncidentNumber": 1600,
@@ -140,10 +140,10 @@ select xt.dispatch($${"requestType":"dispatch",
                             "IncidentClosedColor": "grey"
                            }
                           }$$);    
-
+                          
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Receivables",
-                          "functionName":"updateSettings",
+                          "functionName":"commitSettings",
                           "parameters":{ 
                             "NextARMemoNumber": 100,
                             "NextCashRcptNumber": 2000,
@@ -168,7 +168,7 @@ select xt.dispatch($${"requestType":"dispatch",
 
 select xt.dispatch($${"requestType":"dispatch",
                           "className":"XM.Payables",
-                          "functionName":"updateSettings",
+                          "functionName":"commitSettings",
                           "parameters":{ 
                             "NextAPMemoNumber": 100,
                             "ACHEnabled": false,
