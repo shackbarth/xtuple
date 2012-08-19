@@ -794,26 +794,31 @@ body {
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
+/* line 639, ../sass/screen.scss */
+.xv-relationwidget-description.hyperlink {
+  color: blue;
+  text-decoration: underline;
+}
 
-/* line 642, ../sass/screen.scss */
+/* line 646, ../sass/screen.scss */
 .xv-relationwidget .xv-subinput {
   width: 150px;
 }
 
-/* line 647, ../sass/screen.scss */
+/* line 651, ../sass/screen.scss */
 .xv-half-check {
   border: 5px solid green;
   background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;
   background-color: darkgrey;
 }
 
-/* line 654, ../sass/screen.scss */
+/* line 658, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
 
 /********END XV WIDGETS******/
-/* line 662, ../sass/screen.scss */
+/* line 666, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -823,17 +828,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 670, ../sass/screen.scss */
+/* line 674, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 672, ../sass/screen.scss */
+/* line 676, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 679, ../sass/screen.scss */
+/* line 683, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -843,17 +848,17 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 687, ../sass/screen.scss */
+/* line 691, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 690, ../sass/screen.scss */
+/* line 694, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
 
-/* line 698, ../sass/screen.scss */
+/* line 702, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
   margin-left: auto;
@@ -867,7 +872,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
-/* line 711, ../sass/screen.scss */
+/* line 715, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
   margin-left: auto;

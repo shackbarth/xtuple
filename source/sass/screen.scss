@@ -636,6 +636,10 @@ body {
   &.hasLabel {
     text-indent: 0px;
   }
+  &.hyperlink {
+    color: blue;
+    text-decoration:underline;
+  }
 }
 
 .xv-relationwidget {

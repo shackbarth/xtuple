@@ -1,6 +1,6 @@
 /*jshint node:true, indent:2, curly:true eqeqeq:true, immed:true, latedef:true, newcap:true, noarg:true,
 regexp:true, undef:true, trailing:true, white:true */
-/*global XT:true, XV:true, XM:true, Backbone:true, enyo:true, _:true */
+/*global XT:true, XV:true, XM:true, Backbone:true, window:true, enyo:true, _:true */
 
 (function () {
 
@@ -78,8 +78,10 @@ regexp:true, undef:true, trailing:true, white:true */
           {name: "description", classes: "xv-relationwidget-description hasLabel"},
           {name: "alternate", classes: "xv-relationwidget-description hasLabel"},
           {name: "fax", classes: "xv-relationwidget-description hasLabel"},
-          {name: "primaryEmail", classes: "xv-relationwidget-description hasLabel"},
-          {name: "webAddress", classes: "xv-relationwidget-description hasLabel"}
+          {name: "primaryEmail", ontap: "sendMail",
+            classes: "xv-relationwidget-description hasLabel hyperlink"},
+          {name: "webAddress", ontap: "openWindow",
+            classes: "xv-relationwidget-description hasLabel hyperlink"}
         ]}
       ]}
     ],
@@ -120,6 +122,20 @@ regexp:true, undef:true, trailing:true, white:true */
         this.$.webAddress.setContent(webAddress);
         this.$.webAddressLabel.setShowing(webAddress);
       }
+    },
+    openWindow: function () {
+      var address = this.value ? this.value.get('webAddress') : null;
+      if (address) { window.open('http://' + address); }
+      return true;
+    },
+    sendMail: function () {
+      var email = this.value ? this.value.get('primaryEmail') : null,
+        win;
+      if (email) {
+        win = window.open('mailto:' + email);
+        win.close();
+      }
+      return true;
     }
   });
 
