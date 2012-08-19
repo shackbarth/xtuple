@@ -42,9 +42,11 @@ regexp:true, undef:true, trailing:true, white:true */
           {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
           {name: 'popupMenu', kind: "onyx.Menu",
             components: [
-            {content: "_search".loc(), value: 'search'},
-            {content: "_open".loc(), value: 'open'},
-            {content: "_new".loc(), value: 'new'}
+            {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
+            {kind: "XV.MenuItem", name: 'openItem', content: "_open".loc(),
+              disabled: true},
+            {kind: "XV.MenuItem", name: 'newItem', content: "_new".loc(),
+              disabled: true}
           ]}
         ]},
         {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
@@ -95,23 +97,23 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.input.setDisabled(disabled);
     },
     itemSelected: function (inSender, inEvent) {
-      var action = inEvent.originator.value,
+      var menuItem = inEvent.originator,
         List = this._List,
         model = this.getValue(),
         id = model ? model.id : null,
         workspace = List ? List.prototype.workspace : null,
         listKind;
       if (!List || !workspace) { return; }
-      switch (action)
+      switch (menuItem.name)
       {
-      case 'search':
+      case 'searchItem':
         listKind = this.kind.replace("RelationWidget", "") + "List";
         this.bubble("search", { eventName: "search", options: { listKind: listKind, source: this }});
         break;
-      case 'open':
+      case 'openItem':
         this.doWorkspace({workspace: workspace, id: id});
         break;
-      case 'new':
+      case 'newItem':
         this.doWorkspace({workspace: workspace});
         break;
       }
@@ -158,31 +160,34 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     listChanged: function () {
       var list = this.getList(),
-        collection,
-        Klass;
+        Collection;
       delete this._List;
-      
+
       // Get List class
       if (!list) { return; }
       this._List = XT.getObjectByName(list);
-      
+
+      // Get Workspace class
+      this._Workspace = this._List.prototype.workspace ?
+        XT.getObjectByName(this._List.prototype.workspace) : null;
+
       // Setup collection instance
-      collection = this._List.prototype.collection;
-      Klass = collection ? XT.getObjectByName(collection) : null;
-      if (!Klass) { return; }
-      this._collection = new Klass();
+      Collection = this._List.prototype.collection ?
+        XT.getObjectByName(this._List.prototype.collection) : null;
+      if (!Collection) { return; }
+      this._collection = new Collection();
     },
     modelChanged: function (inSender, inEvent) {
       var that = this,
         List = this._List,
-        workspace = List ? List.prototype.workspace : null,
+        Workspace = List && List.prototype.workspace ?
+          XT.getObjectByName(List.prototype.workspace) : null,
         options = {},
         model = this.getValue();
       // If the model that changed was related to and exists on this widget
       // refresh the local model.
-      if (!List || !workspace || !model) { return; }
-      workspace = workspace ? XT.getObjectByName(workspace) : null;
-      if (workspace && workspace.prototype.model === inEvent.model &&
+      if (!List || !Workspace || !model) { return; }
+      if (Workspace.prototype.model === inEvent.model &&
         model.id === inEvent.id) {
         options.success = function () {
           that.setValue(model);
@@ -204,15 +209,34 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       options = options || {};
-      var newId = value ? value.id : null,
+      var that = this,
+        newId = value ? value.id : null,
         oldId = this.value ? this.value.id : null,
         key = this.getKeyAttribute(),
         name = this.getNameAttribute(),
         descrip = this.getDescripAttribute(),
+        inEvent = { value: value, originator: this },
         keyValue = "",
         nameValue = "",
         descripValue = "",
-        inEvent = { value: value, originator: this };
+        Workspace = this._Workspace,
+        Model = Workspace && Workspace.prototype.model ?
+          XT.getObjectByName(Workspace.prototype.model)  : null,
+        recordType = Model ? Model.prototype.recordType : null,
+        setPrivileges = function () {
+          var options = {},
+            params = {};
+          // Need to request read priv. from the server
+          if (newId) {
+            options.success = function (resp) {
+              that.$.openItem.setDisabled(!resp);
+            };
+            params.recordType = recordType;
+            params.id = newId;
+            XT.dataSource.dispatch('XM.Model', 'canRead', params, options);
+            that.$.newItem.setDisabled(!Model.canCreate());
+          }
+        };
       this.value = value;
       if (value && value.get) {
         keyValue = value.get(key) || "";
@@ -225,6 +249,17 @@ regexp:true, undef:true, trailing:true, white:true */
 
       // Only notify if selection actually changed
       if (newId !== oldId && !options.silent) { this.doValueChange(inEvent); }
+
+      // Handle privileges
+      that.$.openItem.setDisabled(true);
+      that.$.newItem.setDisabled(true);
+      if (Model) {
+        if (XT.session) {
+          setPrivileges();
+        } else {
+          XT.getStartupManager().registerCallback(setPrivileges);
+        }
+      }
     },
     /** @private */
     _collectionFetchSuccess: function () {

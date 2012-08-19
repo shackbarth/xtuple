@@ -554,6 +554,13 @@ body {
   background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;;
   background-color: darkgrey;
 }
+
+.xv-menuitem {
+  &.disabled {
+    color: Dimgray;
+  }
+}
+
 /********END XV WIDGETS******/
 
 .xv-login {
