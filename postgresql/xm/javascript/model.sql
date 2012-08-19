@@ -7,6 +7,29 @@ select xt.install_js('XM','Model','xtuple', $$
   XM.Model.isDispatchable = true;
 
   /** 
+    Deterimine if a specific record can be read. 
+
+    @param {String} Record type
+    @param {Number|String} Id
+    @returns Boolean
+  */
+  XM.Model.canRead = function(recordType, id) {
+    if (typeof recordType === 'object') {
+      id = recordType.id;
+      recordType = recordType.recordType;
+    }
+    var data = new Object(XT.Data),
+      record = data.retrieveRecord(recordType, id, null, {silentError: true}),
+      prop;
+    for (prop in record) { 
+      if (record.hasOwnProperty(prop)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /** 
     Pass in a record type and get the next id for that type 
 
     @param {String} record type
