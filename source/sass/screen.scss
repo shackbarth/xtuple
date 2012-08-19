@@ -384,6 +384,10 @@ body {
           font-style: italic;
           color: #93a1a1;
         }
+        &.hyperlink {
+          color: blue;
+          text-decoration:underline;
+        }
       }
     }
   }
