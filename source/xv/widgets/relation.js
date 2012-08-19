@@ -14,7 +14,6 @@ regexp:true, undef:true, trailing:true, white:true */
       placeholder: "",
       value: null,
       list: "",
-      collection: null,
       disabled: false,
       keyAttribute: "number",
       nameAttribute: "name",
@@ -87,16 +86,9 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     create: function () {
       this.inherited(arguments);
-      this.collectionChanged();
+      this.listChanged();
       this.labelChanged();
       this.disabledChanged();
-      this.listChanged();
-    },
-    collectionChanged: function () {
-      var collection = this.getCollection(),
-        Klass = collection ? XM.Model.getObjectByName(collection) : null;
-      if (!Klass) { return; }
-      this._collection = new Klass();
     },
     disabledChanged: function () {
       var disabled = this.getDisabled();
@@ -104,12 +96,12 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     itemSelected: function (inSender, inEvent) {
       var action = inEvent.originator.value,
-        list = this._list,
+        List = this._List,
         model = this.getValue(),
         id = model ? model.id : null,
-        workspace = list ? list.prototype.workspace : null,
+        workspace = List ? List.prototype.workspace : null,
         listKind;
-      if (!list || !workspace) { return; }
+      if (!List || !workspace) { return; }
       switch (action)
       {
       case 'search':
@@ -165,28 +157,37 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.label.setContent(label + ":");
     },
     listChanged: function () {
-      var list = this.getList();
-      delete this._list;
+      var list = this.getList(),
+        collection,
+        Klass;
+      delete this._List;
+      
+      // Get List class
       if (!list) { return; }
-      this._list = XT.getObjectByName(list);
+      this._List = XT.getObjectByName(list);
+      
+      // Setup collection instance
+      collection = this._List.prototype.collection;
+      Klass = collection ? XT.getObjectByName(collection) : null;
+      if (!Klass) { return; }
+      this._collection = new Klass();
     },
     modelChanged: function (inSender, inEvent) {
       var that = this,
-        list = this._list,
-        workspace = list ? list.prototype.workspace : null,
+        List = this._List,
+        workspace = List ? List.prototype.workspace : null,
         options = {},
         model = this.getValue();
       // If the model that changed was related to and exists on this widget
-      // refresh the item.
-      if (!list || !workspace || !model) { return; }
+      // refresh the local model.
+      if (!List || !workspace || !model) { return; }
       workspace = workspace ? XT.getObjectByName(workspace) : null;
-      if (workspace && workspace.prototype.model === inEvent.model) {
-        if (model.id === inEvent.id) {
-          options.success = function () {
-            that.render();
-          };
-          model.fetch(options);
-        }
+      if (workspace && workspace.prototype.model === inEvent.model &&
+        model.id === inEvent.id) {
+        options.success = function () {
+          that.setValue(model);
+        };
+        model.fetch(options);
       }
     },
     placeholderChanged: function () {

@@ -11,9 +11,7 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.AccountWidget",
     kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.AccountInfoCollection"
-    }
+    list: "XV.AccountList"
   });
 
   // ..........................................................
@@ -23,12 +21,9 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ContactWidget",
     kind: "XV.RelationWidget",
-    published: {
-      list: "XV.ContactList",
-      collection: "XM.ContactInfoCollection",
-      keyAttribute: "name",
-      nameAttribute: "jobTitle"
-    },
+    list: "XV.ContactList",
+    keyAttribute: "name",
+    nameAttribute: "jobTitle",
     componentExtension: [
       {name: "phone", classes: "xv-relationwidget-description"},
       {name: "fax", classes: "xv-relationwidget-description"},
@@ -66,10 +61,8 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.IncidentWidget",
     kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.IncidentInfoCollection",
-      nameAttribute: "description"
-    }
+    list: "XV.IncidentList",
+    nameAttribute: "description"
   });
 
   // ..........................................................
@@ -79,11 +72,9 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.ItemWidget",
     kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.ItemInfoCollection",
-      nameAttribute: "description1",
-      descripAttribute: "description2"
-    }
+    list: "XV.ItemList",
+    nameAttribute: "description1",
+    descripAttribute: "description2"
   });
 
   // ..........................................................
@@ -93,11 +84,9 @@ regexp:true, undef:true, trailing:true, white:true */
   enyo.kind({
     name: "XV.UserAccountWidget",
     kind: "XV.RelationWidget",
-    published: {
-      collection: "XM.UserAccountInfoCollection",
-      keyAttribute: "username",
-      nameAttribute: "properName"
-    }
+    list: "XV.UserAccountList",
+    keyAttribute: "username",
+    nameAttribute: "properName"
   });
 
 }());
