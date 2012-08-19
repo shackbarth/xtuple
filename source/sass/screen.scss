@@ -440,7 +440,6 @@ body {
 }
 
 .xv-groupbox .onyx-input-decorator {
-	/*display: block;*/
 	border: 0px;
 }
 
@@ -612,12 +611,30 @@ body {
   top: 15px;
 }
 
+.xv-relationwidget-column {
+  &.left {
+    padding-right: 18px;
+    color: black;
+    width: 140px;
+  }
+}
 .xv-relationwidget-description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-indent: 140px;
   font-size: small;
   padding-bottom: 4px;
   &.disabled {
     opacity: 0.4;
+  }
+  &.label {
+    text-indent: 0px; 
+    text-align: right;
+    
+  }
+  &.hasLabel {
+    text-indent: 0px;
   }
 }
 

@@ -243,7 +243,9 @@ regexp:true, undef:true, trailing:true, white:true */
         descripValue = value.get(descrip) || "";
       }
       this.$.input.setValue(keyValue);
+      this.$.name.setShowing(nameValue);
       this.$.name.setContent(nameValue);
+      this.$.description.setShowing(descripValue);
       this.$.description.setContent(descripValue);
 
       // Only notify if selection actually changed

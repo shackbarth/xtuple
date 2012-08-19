@@ -8,6 +8,7 @@ white:true*/
   enyo.kind({
     name: "XV.Groupbox",
     kind: "Scroller",
+    horizontal: "hidden",
     classes: "xv-groupbox",
     published: {
       title: "_overview".loc()
