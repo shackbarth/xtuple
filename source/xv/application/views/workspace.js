@@ -43,6 +43,7 @@ trailing:true white:true*/
           {kind: "XV.CheckboxWidget", attr: "isActive"},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.AccountTypeDropdown", attr: "accountType"},
+          {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
           {kind: "XV.ContactWidget", attr: "primaryContact"},
           {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},

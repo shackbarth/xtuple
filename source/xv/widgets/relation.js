@@ -31,13 +31,8 @@ regexp:true, undef:true, trailing:true, white:true */
         {name: "label", content: "", classes: "xv-decorated-label"},
         {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {
-            name: 'input',
-            kind: "onyx.Input",
-            classes: "xv-subinput",
-            onkeyup: "keyUp",
-            onkeydown: "keyDown",
-            onblur: "receiveBlur"
+          {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
+            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
             {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
@@ -54,10 +49,10 @@ regexp:true, undef:true, trailing:true, white:true */
             onSelect: "relationSelected", components: [
             {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
           ]}
-        ]},
-        {name: "name", classes: "xv-relationwidget-description"},
-        {name: "description", classes: "xv-relationwidget-description"}
-      ]}
+        ]}
+      ]},
+      {name: "name", classes: "xv-relationwidget-description"},
+      {name: "description", classes: "xv-relationwidget-description"}
     ],
     autocomplete: function () {
       var key = this.getKeyAttribute(),
@@ -97,6 +92,8 @@ regexp:true, undef:true, trailing:true, white:true */
     disabledChanged: function () {
       var disabled = this.getDisabled();
       this.$.input.setDisabled(disabled);
+      this.$.name.addRemoveClass("disabled", disabled);
+      this.$.description.addRemoveClass("disabled", disabled);
     },
     itemSelected: function (inSender, inEvent) {
       var menuItem = inEvent.originator,

@@ -34,6 +34,15 @@ regexp:true, undef:true, trailing:true, white:true */
       this.inherited(arguments);
       this.processComponentExtension();
     },
+    disabledChanged: function () {
+      this.inherited(arguments);
+      var disabled = this.getDisabled();
+      if (this.$.phone) {
+        this.$.phone.addRemoveClass("disabled", disabled);
+        this.$.fax.addRemoveClass("disabled", disabled);
+        this.$.email.addRemoveClass("disabled", disabled);
+      }
+    },
     processComponentExtension: function () {
       var i,
         field;

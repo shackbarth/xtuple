@@ -467,6 +467,10 @@ body {
 	border-radius: 4px;
 }
 
+.xv-error {
+  color: #ff0000;
+}
+
 /* RepeaterBox.scss */
 .xv-repeater-box {
   width: 880px;
@@ -609,9 +613,12 @@ body {
 }
 
 .xv-relationwidget-description {
-  text-indent: 120px;
+  text-indent: 140px;
   font-size: small;
   padding-bottom: 4px;
+  &.disabled {
+    opacity: 0.4;
+  }
 }
 
 .xv-relationwidget {
