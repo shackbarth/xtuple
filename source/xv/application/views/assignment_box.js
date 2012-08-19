@@ -8,7 +8,7 @@ white:true*/
    * Assign roles to users
    */
   enyo.kind({
-    name: "XV.UserAccountRoleWorkspaceBox",
+    name: "XV.UserAccountRoleGroupbox",
     kind: "XV.AssignmentBox",
     events: {
       onRefreshPrivileges: ""
@@ -36,7 +36,7 @@ white:true*/
    * Assign privileges to users
    */
   enyo.kind({
-    name: "XV.UserAccountPrivilegeWorkspaceBox",
+    name: "XV.UserAccountPrivilegeGroupbox",
     kind: "XV.AssignmentBox",
     published: {
       idsFromRoles: null
@@ -100,8 +100,8 @@ white:true*/
    * privileges to users.
    */
   enyo.kind({
-    name: "XV.UserAccountRolePrivilegeWorkspaceBox",
-    kind: "XV.UserAccountPrivilegeWorkspaceBox",
+    name: "XV.UserAccountRolePrivilegeGroupbox",
+    kind: "XV.UserAccountPrivilegeGroupbox",
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountRolePrivilegeAssignment({
         privilege: privilegeModel,

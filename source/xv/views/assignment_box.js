@@ -12,7 +12,7 @@ white:true*/
    */
   enyo.kind({
     name: "XV.AssignmentBox",
-    kind: "XV.WorkspaceBox",
+    kind: "XV.Groupbox",
     classes: "xv-assignment-box",
     handlers: {
       onValueChange: "checkboxChange"

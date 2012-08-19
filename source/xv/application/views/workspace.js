@@ -15,7 +15,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"},
@@ -37,7 +37,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.InputWidget", attr: "name"},
@@ -45,7 +45,7 @@ trailing:true white:true*/
           {kind: "XV.ContactWidget", attr: "primaryContact"},
           {kind: "XV.ContactWidget", attr: "secondaryContact"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -68,7 +68,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.CheckboxWidget", attr: "isActive"},
@@ -87,7 +87,7 @@ trailing:true white:true*/
           {kind: "XV.AccountWidget", attr: "account"},
           {kind: "XV.UserAccountWidget", attr: "owner"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -110,7 +110,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "abbreviation"},
           {kind: "XV.InputWidget", attr: "name"},
@@ -135,7 +135,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "code"}
         ]}
@@ -155,7 +155,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.InputWidget", attr: "description"},
@@ -173,7 +173,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
           {kind: "XV.ItemWidget", attr: "item"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -229,7 +229,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.CheckboxWidget", attr: "isActive"},
@@ -251,7 +251,7 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -318,7 +318,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.InputWidget", attr: "name"},
@@ -335,7 +335,7 @@ trailing:true white:true*/
           {kind: "XV.AccountWidget", attr: "account"},
           {kind: "XV.ContactWidget", attr: "contact"}
         ]},
-        {kind: "XV.WorkspaceBox",
+        {kind: "XV.Groupbox",
           title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
@@ -362,7 +362,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "abbreviation"},
           {kind: "XV.InputWidget", attr: "name"},
@@ -384,7 +384,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"},
@@ -401,7 +401,7 @@ trailing:true white:true*/
           {kind: "XV.AccountWidget", attr: "account"},
           {kind: "XV.ContactWidget", attr: "contact"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -427,9 +427,9 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"},
-        {kind: "XV.UserAccountPrivilegeWorkspaceBox", name: "grantedPrivileges"},
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.UserAccountRoleGroupbox", name: "grantedUserAccountRoles"},
+        {kind: "XV.UserAccountPrivilegeGroupbox", name: "grantedPrivileges"},
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.CheckboxWidget", attr: "isActive"},
           {kind: "XV.InputWidget", attr: "properName"},
@@ -456,12 +456,12 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"}
         ]},
-        {kind: "XV.UserAccountRolePrivilegeWorkspaceBox", attr: "grantedPrivileges"}
+        {kind: "XV.UserAccountRolePrivilegeGroupbox", attr: "grantedPrivileges"}
       ]}
     ]
   });
