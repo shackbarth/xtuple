@@ -5,11 +5,12 @@ white:true*/
 
 (function () {
 
-  /** @Class
+  /**
+   * @class
    *
    * Manages the assignment of roles to user accounts.
    *
-   * @Extends XV.AssignmentBox
+   * @extends XV.AssignmentBox
    */
   enyo.kind({
     name: "XV.UserAccountRoleGroupbox",
@@ -22,11 +23,21 @@ white:true*/
     translateLabels: false,
     totalCollectionName: "UserAccountRoleCollection",
     type: "userAccountRole",
+    /**
+     * The extra quirk handled here is that when a role is assigned to
+     * a user we want to fire up an event so that the users privileges
+     * can be immediately updated.
+     */
     checkboxChange: function (inSender, inEvent) {
       this.inherited(arguments);
       this.doRefreshPrivileges();
       return true;
     },
+    /**
+     * Returns a model specific to this AssignmentBox.
+     *
+     * @type {XM.UserAccountUserAccountRoleAssignment}
+     */
     getAssignmentModel: function (roleModel) {
       return new XM.UserAccountUserAccountRoleAssignment({
         userAccountRole: roleModel,
@@ -35,14 +46,15 @@ white:true*/
     }
   });
 
-  /** @Class
+  /**
+   * @class
    *
    * Manages the assignment of privileges to user accounts. This is a complicated case
    * because user accounts can have privileges directly assigned to them, but they can
    * also have privileges available to them on account of a role that they're assigned
    * to.
    *
-   * @Extends XV.AssignmentBox
+   * @extends XV.AssignmentBox
    */
   enyo.kind({
     name: "XV.UserAccountPrivilegeGroupbox",
@@ -55,6 +67,11 @@ white:true*/
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
+    /**
+     * Returns a model specific to this AssignmentBox.
+     *
+     * @type {XM.UserAccountPrivilegeAssignment}
+     */
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountPrivilegeAssignment({
         privilege: privilegeModel,
@@ -119,7 +136,12 @@ white:true*/
       var id = model.get("privilege") ? model.get("privilege").get("id") : model.get("id");
       this.undercheckCheckbox(checkbox, _.indexOf(this.getIdsFromRoles(), id) >= 0);
     },
-    // This could easily be moved into the superkind if it needs to be
+
+    // This could easily be moved into the superkind if we want to
+    /**
+     * Apply a half-ghosty underchecking style to the checkbox if we want to. Used here to
+     * denote that a privilege is grated via a role but not directly to a user.
+     */
     undercheckCheckbox: function (checkbox, isUnderchecked) {
       if (isUnderchecked && !checkbox.$.input.checked) {
         checkbox.$.input.addClass("xv-half-check");
@@ -129,11 +151,12 @@ white:true*/
     }
   });
 
-  /** @Class
+  /**
+   * @class
    *
    * Manages the assignment of privileges to roles.
    *
-   * @Extends XV.AssignmentBox
+   * @extends XV.AssignmentBox
    */
   enyo.kind({
     name: "XV.UserAccountRolePrivilegeGroupbox",
@@ -143,6 +166,11 @@ white:true*/
     translateLabels: false,
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
+    /**
+     * Returns a model specific to this AssignmentBox.
+     *
+     * @type {XM.UserAccountRolePrivilegeAssignment}
+     */
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountRolePrivilegeAssignment({
         privilege: privilegeModel,

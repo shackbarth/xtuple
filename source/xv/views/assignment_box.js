@@ -5,15 +5,16 @@ white:true*/
 
 (function () {
 
-  /** @Class
-   *
-   * An assignment box is a groupbox that manages the assignment of a set of
-   * available options to an object. For example, setting up the privileges that
-   * are associated with a role.
-   *
-   * @Extends XV.Groupbox
+  /**
+    @class
+
+    An assignment box is a groupbox that manages the assignment of a set of
+    available options to an object. For example, setting up the privileges that
+    are associated with a role.
+
+    @extends XV.Groupbox
    */
-  enyo.kind({
+   XV.jsDocLookAtMe = enyo.kind({
     name: "XV.AssignmentBox",
     kind: "XV.Groupbox",
     classes: "xv-assignment-box",
