@@ -6,7 +6,7 @@ white:true*/
 (function () {
   enyo.kind({
     name: "XV.RepeaterBox",
-    kind: "XV.WorkspaceBox",
+    kind: "XV.Groupbox",
     published: {
       attr: null,
       columns: [],

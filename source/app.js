@@ -14,6 +14,7 @@ white:true*/
     },
     handlers: {
       onListAdded: "addPulloutItem",
+      onModelChange: "modelChanged",
       onParameterChange: "parameterDidChange",
       onTogglePullout: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
@@ -56,6 +57,9 @@ white:true*/
     handlePullout: function (inSender, inEvent) {
       var showing = inSender.getActive().showPullout || false;
       this.$.pullout.setShowing(showing);
+    },
+    modelChanged: function (inSender, inEvent) {
+      this.$.postbooks.waterfall("onModelChange", inEvent);
     },
     parameterDidChange: function (inSender, inEvent) {
       if (this.getIsStarted()) {

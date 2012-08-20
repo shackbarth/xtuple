@@ -41,10 +41,12 @@ regexp:true, undef:true, trailing:true, white:true */
       label: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
-        {name: "label", content: "", classes: "xv-label"},
-        {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label"},
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+          components: [
+          {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
+        ]}
       ]}
     ],
     clear: function (options) {

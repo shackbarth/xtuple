@@ -6,7 +6,6 @@ enyo.kind({
   draggable: false,
   classes: "xt-postbooks enyo-unselectable",
   handlers: {
-    onModelChange: "modelChanged",
     onPrevious: "previous",
     onWorkspace: "addWorkspacePanel"
   },
@@ -63,9 +62,6 @@ enyo.kind({
   },
   getStartupProgressBar: function () {
     return this.$.startupProgressBar;
-  },
-  modelChanged: function (inSender, inEvent) {
-    this.$.navigator.waterfall("onModelChange", inEvent);
   },
   previous: function () {
     // Stock implementation is screwy, do our own

@@ -15,7 +15,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"},
@@ -32,22 +32,24 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.AccountWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_account".loc(),
-      model: "XM.Account"
-    },
+    title: "_account".loc(),
+    model: "XM.Account",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
+          {kind: "XV.CheckboxWidget", attr: "isActive"},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.AccountTypeDropdown", attr: "accountType"},
+          {kind: "XV.UserAccountWidget", attr: "owner"},
+          {kind: "onyx.GroupboxHeader", content: "_primaryContact".loc()},
           {kind: "XV.ContactWidget", attr: "primaryContact"},
+          {kind: "onyx.GroupboxHeader", content: "_secondaryContact".loc()},
           {kind: "XV.ContactWidget", attr: "secondaryContact"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -65,14 +67,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ContactWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_contact".loc(),
-      model: "XM.Contact"
-    },
+    title: "_contact".loc(),
+    model: "XM.Contact",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.CheckboxWidget", attr: "isActive"},
@@ -91,7 +91,7 @@ trailing:true white:true*/
           {kind: "XV.AccountWidget", attr: "account"},
           {kind: "XV.UserAccountWidget", attr: "owner"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -109,14 +109,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.CountryWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_country".loc(),
-      model: "XM.Country"
-    },
+    title: "_country".loc(),
+    model: "XM.Country",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "abbreviation"},
           {kind: "XV.InputWidget", attr: "name"},
@@ -136,14 +134,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.HonorificWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_honorific".loc(),
-      model: "XM.Honorific"
-    },
+    title: "_honorific".loc(),
+    model: "XM.Honorific",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "code"}
         ]}
@@ -158,14 +154,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_incident".loc(),
-      model: "XM.Incident"
-    },
+    title: "_incident".loc(),
+    model: "XM.Incident",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.InputWidget", attr: "description"},
@@ -183,7 +177,7 @@ trailing:true white:true*/
           {kind: "onyx.GroupboxHeader", content: "_relationships".loc()},
           {kind: "XV.ItemWidget", attr: "item"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -201,10 +195,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentCategoryWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_incidentCategory".loc(),
-      model: "XM.IncidentCategory"
-    }
+    title: "_incidentCategory".loc(),
+    model: "XM.IncidentCategory"
   });
 
   // ..........................................................
@@ -214,10 +206,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentResolutionWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_incidentResolution".loc(),
-      model: "XM.IncidentResolution"
-    }
+    title: "_incidentResolution".loc(),
+    model: "XM.IncidentResolution"
   });
 
   // ..........................................................
@@ -227,10 +217,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.IncidentSeverityWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_incidentSeverity".loc(),
-      model: "XM.IncidentSeverity"
-    }
+    title: "_incidentSeverity".loc(),
+    model: "XM.IncidentSeverity"
   });
 
   // ..........................................................
@@ -240,14 +228,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunity".loc(),
-      model: "XM.Opportunity"
-    },
+    title: "_opportunity".loc(),
+    model: "XM.Opportunity",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.CheckboxWidget", attr: "isActive"},
@@ -269,7 +255,7 @@ trailing:true white:true*/
           {kind: "XV.UserAccountWidget", attr: "owner"},
           {kind: "XV.UserAccountWidget", attr: "assignedTo"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -287,10 +273,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunitySourceWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunitySource".loc(),
-      model: "XM.OpportunitySource"
-    }
+    title: "_opportunitySource".loc(),
+    model: "XM.OpportunitySource"
   });
 
   // ..........................................................
@@ -300,10 +284,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityStageWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunityStage".loc(),
-      model: "XM.OpportunityStage"
-    }
+    title: "_opportunityStage".loc(),
+    model: "XM.OpportunityStage"
   });
 
   // ..........................................................
@@ -313,10 +295,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.OpportunityTypeWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_opportunityType".loc(),
-      model: "XM.OpportunityType"
-    }
+    title: "_opportunityType".loc(),
+    model: "XM.OpportunityType"
   });
 
   // ..........................................................
@@ -326,10 +306,8 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.PriorityWorkspace",
     kind: "XV.OrderedReferenceWorkspace",
-    published: {
-      title: "_priority".loc(),
-      model: "XM.Priority"
-    }
+    title: "_priority".loc(),
+    model: "XM.Priority"
   });
 
   // ..........................................................
@@ -339,14 +317,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ProjectWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_project".loc(),
-      model: "XM.Project"
-    },
+    title: "_project".loc(),
+    model: "XM.Project",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         classes: "xv-top-panel", fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "number"},
           {kind: "XV.InputWidget", attr: "name"},
@@ -363,7 +339,7 @@ trailing:true white:true*/
           {kind: "XV.AccountWidget", attr: "account"},
           {kind: "XV.ContactWidget", attr: "contact"}
         ]},
-        {kind: "XV.WorkspaceBox",
+        {kind: "XV.Groupbox",
           title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
@@ -385,14 +361,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.StateWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_state".loc(),
-      model: "XM.State"
-    },
+    title: "_state".loc(),
+    model: "XM.State",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "abbreviation"},
           {kind: "XV.InputWidget", attr: "name"},
@@ -409,14 +383,12 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.ToDoWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_toDo".loc(),
-      model: "XM.ToDo"
-    },
+    title: "_toDo".loc(),
+    model: "XM.ToDo",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"},
@@ -433,7 +405,7 @@ trailing:true white:true*/
           {kind: "XV.AccountWidget", attr: "account"},
           {kind: "XV.ContactWidget", attr: "contact"}
         ]},
-        {kind: "XV.WorkspaceBox", title: "_notes".loc(), components: [
+        {kind: "XV.Groupbox", title: "_notes".loc(), components: [
           {kind: "onyx.GroupboxHeader", content: "_notes".loc()},
           {kind: "XV.TextArea", attr: "notes"}
         ]},
@@ -451,25 +423,23 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.UserAccountWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_userAccount".loc(),
-      model: "XM.UserAccount"
-    },
+    title: "_userAccount".loc(),
+    model: "XM.UserAccount",
     handlers: {
       onRefreshPrivileges: "refreshPrivileges"
     },
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.UserAccountRoleWorkspaceBox", name: "grantedUserAccountRoles"},
-        {kind: "XV.UserAccountPrivilegeWorkspaceBox", name: "grantedPrivileges"},
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.UserAccountRoleGroupbox", name: "grantedUserAccountRoles"},
+        {kind: "XV.UserAccountPrivilegeGroupbox", name: "grantedPrivileges"},
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.CheckboxWidget", attr: "isActive"},
           {kind: "XV.InputWidget", attr: "properName"},
           {kind: "XV.InputWidget", attr: "initials"},
           {kind: "XV.InputWidget", attr: "email"}
-        ]},
+        ]}
       ]}
     ],
     refreshPrivileges: function (inSender, inEvent) {
@@ -485,19 +455,17 @@ trailing:true white:true*/
   enyo.kind({
     name: "XV.UserAccountRoleWorkspace",
     kind: "XV.Workspace",
-    published: {
-      title: "_userAccountRole".loc(),
-      model: "XM.UserAccountRole"
-    },
+    title: "_userAccountRole".loc(),
+    model: "XM.UserAccountRole",
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"}
         ]},
-        {kind: "XV.UserAccountRolePrivilegeWorkspaceBox", attr: "grantedPrivileges"}
+        {kind: "XV.UserAccountRolePrivilegeGroupbox", attr: "grantedPrivileges"}
       ]}
     ]
   });

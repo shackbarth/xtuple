@@ -13,39 +13,42 @@ regexp:true, undef:true, trailing:true, white:true */
       label: "",
       placeholder: "",
       value: null,
-      collection: null,
+      list: "",
       disabled: false,
       keyAttribute: "number",
       nameAttribute: "name",
       descripAttribute: ""
     },
     events: {
-      onValueChange: ""
+      onValueChange: "",
+      onWorkspace: ""
+    },
+    handlers: {
+      onModelChange: "modelChanged"
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
-        {name: "label", content: "", classes: "xv-label"},
-        {
-          name: 'input',
-          kind: "onyx.Input",
-          classes: "xv-subinput",
-          onkeyup: "keyUp",
-          onkeydown: "keyDown",
-          onblur: "receiveBlur"
-        },
-        {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
-          {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
-          {name: 'popupMenu', kind: "onyx.Menu",
-            components: [
-            {content: "_search".loc(), value: 'search'},
-            {content: "_open".loc(), value: 'open'},
-            {content: "_new".loc(), value: 'new'}
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label"},
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+          components: [
+          {name: 'input', kind: "onyx.Input", classes: "xv-subinput",
+            onkeyup: "keyUp", onkeydown: "keyDown", onblur: "receiveBlur"
+          },
+          {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
+            {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
+            {name: 'popupMenu', floating: true, kind: "onyx.Menu",
+              components: [
+              {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
+              {kind: "XV.MenuItem", name: 'openItem', content: "_open".loc(),
+                disabled: true},
+              {kind: "XV.MenuItem", name: 'newItem', content: "_new".loc(),
+                disabled: true}
+            ]}
+          ]},
+          {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
+            onSelect: "relationSelected", components: [
+            {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
           ]}
-        ]},
-        {kind: "onyx.MenuDecorator", classes: "xv-relationwidget-completer",
-          onSelect: "relationSelected", components: [
-          {kind: "onyx.Menu", name: "autocompleteMenu", modal: false}
         ]}
       ]},
       {name: "name", classes: "xv-relationwidget-description"},
@@ -82,37 +85,35 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     create: function () {
       this.inherited(arguments);
-      this.collectionChanged();
+      this.listChanged();
       this.labelChanged();
       this.disabledChanged();
-    },
-    collectionChanged: function () {
-      var collection = this.getCollection(),
-        Klass = collection ? XM.Model.getObjectByName(collection) : null;
-      if (!Klass) { return; }
-      this._collection = new Klass();
     },
     disabledChanged: function () {
       var disabled = this.getDisabled();
       this.$.input.setDisabled(disabled);
+      this.$.name.addRemoveClass("disabled", disabled);
+      this.$.description.addRemoveClass("disabled", disabled);
     },
     itemSelected: function (inSender, inEvent) {
-      var action = inEvent.originator.value,
-        model,
+      var menuItem = inEvent.originator,
+        List = this._List,
+        model = this.getValue(),
+        id = model ? model.id : null,
+        workspace = List ? List.prototype.workspace : null,
         listKind;
-      switch (action)
+      if (!List || !workspace) { return; }
+      switch (menuItem.name)
       {
-      case 'search':
+      case 'searchItem':
         listKind = this.kind.replace("RelationWidget", "") + "List";
         this.bubble("search", { eventName: "search", options: { listKind: listKind, source: this }});
         break;
-      case 'open':
-        model = this.getValue();
-        this.bubble("workspace", {eventName: "workspace", options: model});
+      case 'openItem':
+        this.doWorkspace({workspace: workspace, id: id});
         break;
-      case 'new':
-        model = new this._collection.model();
-        this.bubble("workspace", {eventName: "workspace", options: model});
+      case 'newItem':
+        this.doWorkspace({workspace: workspace});
         break;
       }
     },
@@ -156,6 +157,43 @@ regexp:true, undef:true, trailing:true, white:true */
       var label = (this.getLabel() || ("_" + this.attr || "").loc());
       this.$.label.setContent(label + ":");
     },
+    listChanged: function () {
+      var list = this.getList(),
+        Collection;
+      delete this._List;
+
+      // Get List class
+      if (!list) { return; }
+      this._List = XT.getObjectByName(list);
+
+      // Get Workspace class
+      this._Workspace = this._List.prototype.workspace ?
+        XT.getObjectByName(this._List.prototype.workspace) : null;
+
+      // Setup collection instance
+      Collection = this._List.prototype.collection ?
+        XT.getObjectByName(this._List.prototype.collection) : null;
+      if (!Collection) { return; }
+      this._collection = new Collection();
+    },
+    modelChanged: function (inSender, inEvent) {
+      var that = this,
+        List = this._List,
+        Workspace = List && List.prototype.workspace ?
+          XT.getObjectByName(List.prototype.workspace) : null,
+        options = {},
+        model = this.getValue();
+      // If the model that changed was related to and exists on this widget
+      // refresh the local model.
+      if (!List || !Workspace || !model) { return; }
+      if (Workspace.prototype.model === inEvent.model &&
+        model.id === inEvent.id) {
+        options.success = function () {
+          that.setValue(model);
+        };
+        model.fetch(options);
+      }
+    },
     placeholderChanged: function () {
       var placeholder = this.getPlaceholder();
       this.$.input.setPlaceholder(placeholder);
@@ -170,15 +208,34 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     setValue: function (value, options) {
       options = options || {};
-      var newId = value ? value.id : null,
+      var that = this,
+        newId = value ? value.id : null,
         oldId = this.value ? this.value.id : null,
         key = this.getKeyAttribute(),
         name = this.getNameAttribute(),
         descrip = this.getDescripAttribute(),
+        inEvent = { value: value, originator: this },
         keyValue = "",
         nameValue = "",
         descripValue = "",
-        inEvent = { value: value, originator: this };
+        Workspace = this._Workspace,
+        Model = Workspace && Workspace.prototype.model ?
+          XT.getObjectByName(Workspace.prototype.model)  : null,
+        recordType = Model ? Model.prototype.recordType : null,
+        setPrivileges = function () {
+          var options = {},
+            params = {};
+          // Need to request read priv. from the server
+          if (newId) {
+            options.success = function (resp) {
+              that.$.openItem.setDisabled(!resp);
+            };
+            params.recordType = recordType;
+            params.id = newId;
+            XT.dataSource.dispatch('XM.Model', 'canRead', params, options);
+            that.$.newItem.setDisabled(!Model.canCreate());
+          }
+        };
       this.value = value;
       if (value && value.get) {
         keyValue = value.get(key) || "";
@@ -186,11 +243,24 @@ regexp:true, undef:true, trailing:true, white:true */
         descripValue = value.get(descrip) || "";
       }
       this.$.input.setValue(keyValue);
+      this.$.name.setShowing(nameValue);
       this.$.name.setContent(nameValue);
+      this.$.description.setShowing(descripValue);
       this.$.description.setContent(descripValue);
 
       // Only notify if selection actually changed
       if (newId !== oldId && !options.silent) { this.doValueChange(inEvent); }
+
+      // Handle privileges
+      that.$.openItem.setDisabled(true);
+      that.$.newItem.setDisabled(true);
+      if (Model) {
+        if (XT.session) {
+          setPrivileges();
+        } else {
+          XT.getStartupManager().registerCallback(setPrivileges);
+        }
+      }
     },
     /** @private */
     _collectionFetchSuccess: function () {
