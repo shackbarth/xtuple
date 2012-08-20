@@ -319,6 +319,12 @@ body {
 /* Parameter.scss */
 .xv-parameter-item {
   background-color: white;
+  .xv-label {
+    color: black;
+  }
+  .xv-decorated-label {
+    color: black;
+  }
   .xv-picker {
     width: 150px;
   }
