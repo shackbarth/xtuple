@@ -550,9 +550,11 @@ body {
 }
 
 .xv-half-check {
-  border: 5px solid green;
-  background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;;
-  background-color: darkgrey;
+  background-image: url("../../assets/checkbox.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: 0 -96px;
+  background-color: transparent;
 }
 /********END XV WIDGETS******/
 

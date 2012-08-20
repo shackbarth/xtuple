@@ -682,13 +682,15 @@ body {
 
 /* line 552, ../sass/screen.scss */
 .xv-half-check {
-  border: 5px solid green;
-  background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;
-  background-color: darkgrey;
+  background-image: url("../../assets/checkbox.png");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: 0 -96px;
+  background-color: transparent;
 }
 
 /********END XV WIDGETS******/
-/* line 560, ../sass/screen.scss */
+/* line 562, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -698,17 +700,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 568, ../sass/screen.scss */
+/* line 570, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 570, ../sass/screen.scss */
+/* line 572, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 577, ../sass/screen.scss */
+/* line 579, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -718,17 +720,17 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 585, ../sass/screen.scss */
+/* line 587, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 588, ../sass/screen.scss */
+/* line 590, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
 
-/* line 596, ../sass/screen.scss */
+/* line 598, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
   margin-left: auto;
@@ -742,7 +744,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
-/* line 609, ../sass/screen.scss */
+/* line 611, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
   margin-left: auto;
