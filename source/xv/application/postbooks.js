@@ -79,6 +79,7 @@ enyo.kind({
       this.reflow();
       panel.setList(inEvent.list);
       panel.setSearchText(inEvent.searchText);
+      panel.setCallback(inEvent.callback);
       panel.fetch();
       this.next();    
     }

@@ -162,7 +162,7 @@ trailing:true white:true*/
         };
       options.success = function (model, resp, options) {
         that.doModelChange(inEvent);
-        if (that.callback) { that.callback(model, resp, options); }
+        if (that.callback) { that.callback(model); }
         if (success) { success(model, resp, options); }
       };
       this._model.save(null, options);

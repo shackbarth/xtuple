@@ -9,10 +9,14 @@ trailing:true white:true*/
     name: "XV.SearchContainer",
     kind: "Panels",
     classes: "app enyo-unselectable",
+    published: {
+      callback: null
+    },
     events: {
       onPrevious: ""
     },
     handlers: {
+      onItemTap: "itemTap",
       onParameterChange: "requery"
     },
     arrangerKind: "CollapsingArranger",
@@ -39,6 +43,15 @@ trailing:true white:true*/
     ],
     close: function (options) {
       this.doPrevious();
+    },
+    itemTap: function (inSender, inEvent) {
+      var list = inEvent.list,
+        value = list ? list.getModel(inEvent.index) : null;
+        
+      if (value) {
+        if (this.callback) { this.callback(value); }
+        this.close();
+      }
     },
     fetch: function (options) {
       options = options ? _.clone(options) : {};
@@ -82,13 +95,14 @@ trailing:true white:true*/
       this.fetch();
       return true;
     },
-    setList: function (list) {
+    setList: function (list, callback) {
       this.createComponent({
         name: "list",
         container: this.$.listPanel,
         kind: list,
         fit: true
       });
+      this.setCallback(callback);
       this.render();
     },
     setSearchText: function (searchText) {

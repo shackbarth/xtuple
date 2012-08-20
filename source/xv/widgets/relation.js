@@ -107,7 +107,14 @@ regexp:true, undef:true, trailing:true, white:true */
       switch (menuItem.name)
       {
       case 'searchItem':
-        this.doSearch({list: list, searchText: this.$.input.getValue()});
+        callback = function (value) {
+          that.setValue(value);
+        };
+        this.doSearch({
+          list: list,
+          searchText: this.$.input.getValue(),
+          callback: callback
+        });
         break;
       case 'openItem':
         this.doWorkspace({workspace: workspace, id: id});
@@ -115,7 +122,7 @@ regexp:true, undef:true, trailing:true, white:true */
       case 'newItem':
         // Callback options on commit of the workspace
         // Find the model with matching id, fetch and set it.
-        callback = function (model, resp, xhr) {
+        callback = function (model) {
           var Model = that._collection.model,
             value = new Model({id: model.id}),
             options = {};

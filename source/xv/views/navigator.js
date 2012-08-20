@@ -20,7 +20,8 @@ trailing:true white:true*/
       onWorkspace: ""
     },
     handlers: {
-      onParameterChange: "requery"
+      onParameterChange: "requery",
+      onItemTap: "itemTap"
     },
     showPullout: true,
     arrangerKind: "CollapsingArranger",
@@ -161,6 +162,14 @@ trailing:true white:true*/
     inputChanged: function (inSender, inEvent) {
       this.fetched = {};
       this.fetch();
+    },
+    itemTap: function (inSender, inEvent) {
+      var list = inEvent.list,
+        workspace = list ? list.getWorkspace() : null,
+        id = list ? list.getModel(inEvent.index).id : null;
+
+      // Bubble requset for workspace view, including the model id payload
+      if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
     },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
