@@ -4,86 +4,57 @@ trailing:true white:true*/
 /*global XT:true, XV:true, XM:true, _:true, enyo:true*/
 
 (function () {
-  var ROWS_PER_FETCH = 50,
-    FETCH_TRIGGER = 100;
 
   enyo.kind({
-    name: "XV.Search",
+    name: "XV.SearchContainer",
     kind: "Panels",
-    arrangerKind: "CollapsingArranger",
-    label: "",
     classes: "app enyo-unselectable",
-    published: {
-      widgetSource: null
+    events: {
+      onPrevious: ""
     },
     handlers: {
-      onParameterChange: "requery",
-      onScroll: "didScroll",
-      onListItemTapped: "listItemTapped"
+      onParameterChange: "requery"
     },
-    showPullout: false,
-    realtimeFit: true,
+    arrangerKind: "CollapsingArranger",
     components: [
-      {kind: "FittableRows", name: "leftBar", classes: "left", components: [
+      {kind: "FittableRows", classes: "left", components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
-          {kind: "onyx.Button", content: "_back".loc(), ontap: "tapBack" },
-          {name: "leftLabel"}
-        ]}
+          {kind: "onyx.Button", name: "backButton", content: "_back".loc(),
+            ontap: "close"}
+        ]},
+        {name: "parameterWidget", content: "Parameters go here"}
       ]},
-      {kind: "FittableRows", name: "contentArea", fit: true, components: [
-        {kind: "FittableColumns", noStretch: true,
-           classes: "onyx-toolbar onyx-toolbar-inline", components: [
+      {kind: "FittableRows", components: [
+        {kind: "onyx.Toolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
-          {kind: "Scroller", thumb: false, fit: true, touch: true,
-             vertical: "hidden", style: "margin: 0;", components: [
-            {classes: "onyx-toolbar-inline", style: "white-space: nowrap;"},
-            {name: "rightLabel", style: "text-align: center"}
-          ]},
-          {kind: "onyx.InputDecorator", components: [
+          {name: "rightLabel", style: "text-align: center"},
+          {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
+            components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
-              placeholder: "Search", onchange: "inputChanged"},
+              placeholder: "Search", onchange: "requery"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]}
-        ]}
+        ]},
+        {name: "list", content: "List goes here"}
       ]}
     ],
-    setOptions: function (options) {
-      var listKind = options.listKind,
-        parameterKind;
-
-      /**
-       * We want to keep track of the widget that spawned this view
-       * so that we know what to send back as the place to update
-       */
-      this.setWidgetSource(options.source);
-
-      /**
-       * Add the appropriate search list
-       */
-      if (this.$.contentArea.$.searchList) {
-        this.$.contentArea.removeChild(this.$.contentArea.$.searchList);
-      }
-      this.createComponent({ kind: listKind, name: "searchList", container: this.$.contentArea, fit: true });
-      this.$.searchList.fetch(); // never a bad idea to refresh, in case the list doesn't exist
-      this.$.contentArea.render();
-      /**
-       * Add the appropriate search parameters
-       */
-      if (this.$.leftBar.$.searchParameters) {
-        this.$.leftBar.removeChild(this.$.leftBar.$.searchParameters);
-      }
-      parameterKind = this.$.searchList.getParameterWidget();
-      this.createComponent({ kind: parameterKind, name: "searchParameters", container: this.$.leftBar });
-      this.$.leftBar.render();
+    close: function (options) {
+      this.doPrevious();
     },
-
     fetch: function (options) {
-      var list = this.$.searchList,
-        query = list.getQuery() || {},
-        input = this.$.searchInput.getValue(),
-        parameterWidget = this.$.searchParameters,
-        parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options = options ? _.clone(options) : {};
+      var index = options.index || this.$.contentPanels.getIndex(),
+        list = this.$.list,
+        query,
+        input,
+        parameterWidget,
+        parameters;
+      if (!list) { return; }
+      this.fetched[index] = true;
+      query = list.getQuery() || {};
+      input = this.$.searchInput.getValue();
+      parameterWidget = this.$.parameterWidget;
+      parameters = parameterWidget ? parameterWidget.getParameters() : [];
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
 
@@ -94,7 +65,7 @@ trailing:true white:true*/
         // Input search parameters
         if (input) {
           query.parameters = [{
-            attribute: list.getCollection().model.getSearchableAttributes(),
+            attribute: list.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
           }];
@@ -107,59 +78,11 @@ trailing:true white:true*/
       } else {
         delete query.parameters;
       }
-
-      if (options.showMore) {
-        query.rowOffset += ROWS_PER_FETCH;
-        options.add = true;
-      } else {
-        query.rowOffset = 0;
-        query.rowLimit = ROWS_PER_FETCH;
-      }
       list.setQuery(query);
       list.fetch(options);
     },
-    // menu
-    didScroll: function (inSender, inEvent) {
-      if (inEvent.originator.kindName !== "XV.List") { return; }
-      var list = inEvent.originator,
-        max = list.getScrollBounds().maxTop - list.rowHeight * FETCH_TRIGGER,
-        options = {};
-      if (list.getIsMore() && list.getScrollPosition() > max && !list.getIsFetching()) {
-        list.setIsFetching(true);
-        options.showMore = true;
-        this.fetch(list.owner.name, options);
-      }
-    },
     requery: function (inSender, inEvent) {
       this.fetch();
-    },
-    tapBack: function () {
-      this.bubble("workspace", {eventName: "workspace"});
-    },
-    /**
-     * Catches the tap event from the {XV.List}
-     * and repackages it into a carousel event to be
-     * caught further up.
-    */
-    listItemTapped: function (inSender, inEvent) {
-      /**
-       * Determine which item was tapped
-       */
-      var itemIndex = inEvent.index;
-      var tappedModel = this.$.searchList.collection.models[itemIndex];
-
-      /**
-       * Update the widget that spawned this search
-       */
-      this.getWidgetSource().setValue(tappedModel);
-
-      /**
-       * Bubble up an event so that we can transition to workspace view.
-       * We don't want to add the tapped model as a payload in the event
-       * because we don't want to drill down to the tapped model; we
-       * want to stay in the workspace that spawned this search.
-       */
-      this.bubble("workspace", {eventName: "workspace" });
       return true;
     }
   });

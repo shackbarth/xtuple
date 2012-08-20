@@ -20,6 +20,7 @@ regexp:true, undef:true, trailing:true, white:true */
       descripAttribute: ""
     },
     events: {
+      onSearch: "",
       onValueChange: "",
       onWorkspace: ""
     },
@@ -102,14 +103,12 @@ regexp:true, undef:true, trailing:true, white:true */
         model = this.getValue(),
         id = model ? model.id : null,
         workspace = List ? List.prototype.workspace : null,
-        listKind,
         callback;
       if (!List || !workspace) { return; }
       switch (menuItem.name)
       {
       case 'searchItem':
-        listKind = this.kind.replace("RelationWidget", "") + "List";
-        this.bubble("search", { eventName: "search", options: { listKind: listKind, source: this }});
+        this.doSearch({list: List, searchText: this.$.input});
         break;
       case 'openItem':
         this.doWorkspace({workspace: workspace, id: id});
