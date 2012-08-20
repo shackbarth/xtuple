@@ -4,13 +4,13 @@ create or replace view xt.nodeusr as
 
   select 
     useracct_username as nodeusr_username,
-    coalesce((select 
-              case when usrpref_value='t' then true 
-                   else false 
-              end 
-              from usrpref 
-              where usrpref_username=usename 
-               and usrpref_name='active'), userCanLogin(useracct_username)) as nodeusr_active,
+    (select 
+       case when usrpref_value='t' then true 
+         else false 
+       end 
+       from usrpref 
+       where usrpref_username=usename 
+         and usrpref_name='active') as nodeusr_active,
     coalesce((select usrpref_value 
               from usrpref 
               where usrpref_username=useracct_username
