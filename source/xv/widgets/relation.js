@@ -87,7 +87,7 @@ regexp:true, undef:true, trailing:true, white:true */
     },
     collectionChanged: function () {
       var collection = this.getCollection(),
-        Klass = collection ? XM.Model.getObjectByName(collection) : null;
+        Klass = collection ? XT.getObjectByName(collection) : null;
       if (!Klass) { return; }
       this._collection = new Klass();
     },
