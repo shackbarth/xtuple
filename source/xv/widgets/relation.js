@@ -96,12 +96,14 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.description.addRemoveClass("disabled", disabled);
     },
     itemSelected: function (inSender, inEvent) {
-      var menuItem = inEvent.originator,
+      var that = this,
+        menuItem = inEvent.originator,
         List = this._List,
         model = this.getValue(),
         id = model ? model.id : null,
         workspace = List ? List.prototype.workspace : null,
-        listKind;
+        listKind,
+        callback;
       if (!List || !workspace) { return; }
       switch (menuItem.name)
       {
@@ -113,7 +115,18 @@ regexp:true, undef:true, trailing:true, white:true */
         this.doWorkspace({workspace: workspace, id: id});
         break;
       case 'newItem':
-        this.doWorkspace({workspace: workspace});
+        // Callback options on commit of the workspace
+        // Find the model with matching id, fetch and set it.
+        callback = function (model, resp, xhr) {
+          var Model = that._collection.model,
+            value = new Model({id: model.id}),
+            options = {};
+          options.success = function () {
+            that.setValue(value);
+          };
+          value.fetch(options);
+        };
+        this.doWorkspace({workspace: workspace, callback: callback});
         break;
       }
     },
@@ -161,6 +174,7 @@ regexp:true, undef:true, trailing:true, white:true */
       var list = this.getList(),
         Collection;
       delete this._List;
+      delete this._Workspace;
 
       // Get List class
       if (!list) { return; }

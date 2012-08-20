@@ -53,7 +53,7 @@ enyo.kind({
       panel = this.createComponent({kind: "XV.WorkspaceContainer"});
       panel.render();
       this.reflow();
-      panel.setWorkspace(inEvent.workspace, inEvent.id);
+      panel.setWorkspace(inEvent.workspace, inEvent.id, inEvent.callback);
       this.next();
     }
   },
