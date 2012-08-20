@@ -99,16 +99,15 @@ regexp:true, undef:true, trailing:true, white:true */
     itemSelected: function (inSender, inEvent) {
       var that = this,
         menuItem = inEvent.originator,
-        List = this._List,
+        list = this.getList(),
         model = this.getValue(),
         id = model ? model.id : null,
-        workspace = List ? List.prototype.workspace : null,
+        workspace = this._List ? this._List.prototype.workspace : null,
         callback;
-      if (!List || !workspace) { return; }
       switch (menuItem.name)
       {
       case 'searchItem':
-        this.doSearch({list: List, searchText: this.$.input});
+        this.doSearch({list: list, searchText: this.$.input.getValue()});
         break;
       case 'openItem':
         this.doWorkspace({workspace: workspace, id: id});
@@ -267,7 +266,7 @@ regexp:true, undef:true, trailing:true, white:true */
       // Handle privileges
       that.$.openItem.setDisabled(true);
       that.$.newItem.setDisabled(true);
-      if (Model) {
+      if (Model && Workspace) {
         if (XT.session) {
           setPrivileges();
         } else {

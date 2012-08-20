@@ -17,14 +17,14 @@ trailing:true white:true*/
     },
     arrangerKind: "CollapsingArranger",
     components: [
-      {kind: "FittableRows", classes: "left", components: [
+      {name: "parameterPanel", kind: "FittableRows", classes: "left",
+        components: [
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", name: "backButton", content: "_back".loc(),
             ontap: "close"}
-        ]},
-        {name: "parameterWidget", content: "Parameters go here"}
+        ]}
       ]},
-      {kind: "FittableRows", components: [
+      {name: "listPanel", kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
           {name: "rightLabel", style: "text-align: center"},
@@ -34,8 +34,7 @@ trailing:true white:true*/
               placeholder: "Search", onchange: "requery"},
             {kind: "Image", src: "assets/search-input-search.png"}
           ]}
-        ]},
-        {name: "list", content: "List goes here"}
+        ]}
       ]}
     ],
     close: function (options) {
@@ -43,14 +42,12 @@ trailing:true white:true*/
     },
     fetch: function (options) {
       options = options ? _.clone(options) : {};
-      var index = options.index || this.$.contentPanels.getIndex(),
-        list = this.$.list,
+      var list = this.$.list,
         query,
         input,
         parameterWidget,
         parameters;
       if (!list) { return; }
-      this.fetched[index] = true;
       query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
       parameterWidget = this.$.parameterWidget;
@@ -84,6 +81,18 @@ trailing:true white:true*/
     requery: function (inSender, inEvent) {
       this.fetch();
       return true;
+    },
+    setList: function (list) {
+      this.createComponent({
+        name: "list",
+        container: this.$.listPanel,
+        kind: list,
+        fit: true
+      });
+      this.render();
+    },
+    setSearchText: function (searchText) {
+      this.$.searchInput.setValue(searchText);
     }
   });
 

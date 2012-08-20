@@ -77,7 +77,9 @@ enyo.kind({
       panel = this.createComponent({kind: "XV.SearchContainer"});
       panel.render();
       this.reflow();
-      //panel.setList(inEvent.workspace, inEvent.id, inEvent.callback);
+      panel.setList(inEvent.list);
+      panel.setSearchText(inEvent.searchText);
+      panel.fetch();
       this.next();    
     }
   }
