@@ -45,9 +45,13 @@ white:true*/
     },
     create: function () {
       this.inherited(arguments);
-      var pulloutItems = this._pulloutItems || [], i;
+      var pulloutItems = this._pulloutItems || [],
+        item,
+        i;
       for (i = 0; i < pulloutItems.length; i++) {
-        this.$.pullout.$.pulloutItems.createComponent(pulloutItems[i]);
+        item = pulloutItems[i];
+        item.container = this.$.pullout.$.pulloutItems;
+        this.$.pullout.createComponent(item);
       }
       XT.app = this;
     },

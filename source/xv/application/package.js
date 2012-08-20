@@ -3,7 +3,6 @@ enyo.depends(
   "views",
   "login.js",
   "postbooks.js",
-  "dashboard.js",
   "crm.js",
   "setup.js"
 );

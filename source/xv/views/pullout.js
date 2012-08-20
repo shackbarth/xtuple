@@ -24,7 +24,10 @@ white:true*/
       {kind: "FittableRows", classes: "enyo-fit", components: [
         {name: "client", classes: "pullout-toolbar"},
         {classes: "xv-pullout-header", name: "pulloutHeader", content: "" },
-        {name: "pulloutItems", fit: true, style: "position: relative;", components: [
+        { name: "pulloutItems", fit: true,
+          kind: "Scroller",
+          style: "position: relative;",
+          components: [
           {fit: true, name: "history", kind: "Scroller", components: [
             {
               kind: "Repeater",
@@ -71,24 +74,27 @@ white:true*/
       return this.$.pulloutItems.$[name] || this.$[name];
     },
     togglePullout: function (name) {
+      var item = this.getItem(name),
+        children = this.$.pulloutItems.children[0].children,
+        i;
       if (name === 'history') {
         this.$.pulloutHeader.setContent("History");
       } else {
         this.$.pulloutHeader.setContent("Advanced Search");
       }
       this.setSelectedPanel(name);
-      var item = this.getItem(name),
-        children = this.$.pulloutItems.children,
-        i;
       if (item && item.showing && this.isAtMax()) {
         this.animateToMin();
       } else {
-        this.animateToMax();
         for (i = 0; i < children.length; i++) {
           children[i].hide();
         }
         item.show();
         item.resized();
+        if (!this.isAtMax()) {
+          this.render();
+          this.animateToMax();
+        }
       }
     }
   });

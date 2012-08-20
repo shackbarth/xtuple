@@ -41,6 +41,7 @@ trailing:true white:true*/
       workspace: null
     },
     events: {
+      onItemTap: "",
       onWorkspace: ""
     },
     fixedHeight: true,
@@ -111,11 +112,8 @@ trailing:true white:true*/
       }
     },
     itemTap: function (inSender, inEvent) {
-      var workspace = this.getWorkspace(),
-        id = this.getModel(inEvent.index).id;
-
-      // Bubble requset for workspace view, including the model id payload
-      if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+      inEvent.list = this;
+      this.doItemTap(inEvent);
     },
     modelChanged: function (inSender, inEvent) {
       var that = this,
