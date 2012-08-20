@@ -14,10 +14,12 @@ white:true*/
     },
     handlers: {
       onListAdded: "addPulloutItem",
+      onModelChange: "modelChanged",
       onParameterChange: "parameterDidChange",
       onTogglePullout: "togglePullout",
       onHistoryChange: "refreshHistoryPanel",
-      onHistoryItemSelected: "selectHistoryItem"
+      onHistoryItemSelected: "selectHistoryItem",
+      onAnimateProgressFinish: "dataLoaded"
     },
     components: [
       { name: "postbooks", kind: "XV.Postbooks",  onTransitionStart: "handlePullout" },
@@ -49,12 +51,20 @@ white:true*/
       }
       XT.app = this;
     },
+    getPullout: function () {
+      return this.$.pullout;
+    },
     handlePullout: function (inSender, inEvent) {
-      var showing = inSender.$.container.getActive().showPullout || false;
+      var showing = inSender.getActive().showPullout || false;
       this.$.pullout.setShowing(showing);
     },
+    modelChanged: function (inSender, inEvent) {
+      this.$.postbooks.waterfall("onModelChange", inEvent);
+    },
     parameterDidChange: function (inSender, inEvent) {
-      this.$.postbooks.getActiveModule().waterfall("onParameterChange", inEvent);
+      if (this.getIsStarted()) {
+        this.$.postbooks.getNavigator().waterfall("onParameterChange", inEvent);
+      }
     },
     /**
      * Manages the "lit-up-ness" of the icon buttons based on the pullout.
@@ -77,30 +87,40 @@ white:true*/
         // pullout is inactive
         activeIconButton = null;
       }
-      this.$.postbooks.getActiveModule().setActiveIconButton(activeIconButton);
+      this.$.postbooks.getNavigator().setActiveIconButton(activeIconButton);
     },
     refreshHistoryPanel: function (inSender, inEvent) {
       this.$.pullout.refreshHistoryList();
     },
     /**
-     * When a history item is selected we bubble an event way up the application.
-     * Note that we create a sort of ersatz model to mimic the way the handler
-     * expects to have a model with the event to know what to drill down into.
-     */
+      When a history item is selected we bubble an event way up the application.
+      Note that we create a sort of ersatz model to mimic the way the handler
+      expects to have a model with the event to know what to drill down into.
+    */
     selectHistoryItem: function (inSender, inEvent) {
       XT.log("Load from history: " + inEvent.workspace + " " + inEvent.id);
-      inEvent.eventName = "workspace";
-
-      this.waterfall("workspace", inEvent);
+      inEvent.eventName = "onWorkspace";
+      this.waterfall("onWorkspace", inEvent);
+    },
+    dataLoaded: function () {
+      XT.app.$.postbooks.next();
+      XT.app.$.postbooks.getNavigator().activate();
     },
     start: function () {
-
       if (this.getIsStarted()) { return; }
+      XT.app = this;
 
       // on application start, connect the datasource
+      var startupManager = XT.getStartupManager(),
+        progressBar = XT.app.$.postbooks.getStartupProgressBar(),
+        eachCallback = function () {
+          var completed = startupManager.get('completed').length;
+          progressBar.animateProgressTo(completed);
+        };
+      startupManager.registerCallback(eachCallback, true);
       XT.dataSource.connect();
-
-      XT.app = this;
+      progressBar.setMax(startupManager.get('queue').length +
+        startupManager.get('completed').length);
 
       // lets not allow this to happen again
       this.setIsStarted(true);

@@ -248,72 +248,7 @@ body {
   }
 }
 
-.xt-login-screen {
-  .xt-session-selection-screen {
-    .xt-available-sessions {
-      .xt-available-sessions-wrapper {
-        position: absolute;
-        top: 80px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        .xt-available-sessions-list {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          .xt-session-selection-row {
-            div {
-              display: inline-block;
-              padding: 5px;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-.xt-app {
-  .xt-postbooks {
-    .xt-input {
-      @include border-radius(5px);
-      padding: 8px 8px 10px 8px;
-      border: 1px solid #ddd;
-      margin: 0;
-      outline: none;
-      cursor: pointer;
-      font-size: 14px;
-      font-family: "arial", "arial black";
-      width: 180px;
-    }
-
-    .xt-button {
-      @include border-radius(5px);
-      padding: 5px;
-      border: 1px solid #ddd;
-      margin: 0;
-      cursor: pointer;
-      font-family: "arial", "arial black";
-      font-size: 14px;
-      background-color: #fff;
-      color: #aaa;
-      &:active {
-        background-color: #ddd;
-      }
-    }
-
-    .xt-screen-carousel {
-      height: 100%;
-      width: 100%;
-    }
-  }
-}
-
-/********* PULLOUT ************/
-
-
+/* Pullout.scss */
 @mixin slim-datewidget($labelVisibility, $pickerVisibility: visible) {
   .xv-input-decorator {
     padding: 0px;
@@ -346,11 +281,6 @@ body {
     .xv-picker {
       width:140px;
     }
-}
-
-.xv-parameter-item-input {
-  //margin-top: 10px;
-  //float: right;
 }
 
 .xv-pullout-header {
@@ -402,10 +332,7 @@ body {
 	text-align: center;
 }
 
-/*********END PULLOUT *********/
-
-/*********XV VIEWS***********/
-
+/* List.scss */
 .xv-list {
   .xv-list-item {
     @include box-sizing(border-box);
@@ -457,11 +384,16 @@ body {
           font-style: italic;
           color: #93a1a1;
         }
+        &.hyperlink {
+          color: blue;
+          text-decoration:underline;
+        }
       }
     }
   }
 }
 
+/* Groupbox.css */
 .xv-groupbox {
   padding-top: 8px;
   padding-bottom: 8px;
@@ -471,7 +403,78 @@ body {
   margin-right: 5px;
 }
 
+.xv-groupbox > * {
+	display: block;
+	/*box-shadow: inset 0px 1px 1px rgba(255,255,255,0.5);*/
+	border-color: #aaaaaa;
+	border-style: solid;
+	border-width: 0 1px 1px 1px;
+	/*padding: 10px;*/
+	/* reset styles that make 'item' look bad if they happen to be there */
+	border-radius: 0;
+	margin: 0;
+}
 
+.xv-groupbox > *:first-child {
+	border-top-color: #aaaaaa;
+	border-width: 1px;
+	border-radius: 4px 4px 0 0;
+}
+
+.xv-groupbox > *:last-child {
+	border-radius: 0 0 4px 4px;
+}
+
+.xv-groupbox > *:first-child:last-child {
+	border-radius: 4px;
+}
+
+.xv-groupbox-header {
+	padding: 2px 10px;
+	/**/
+	color: white;
+	font-family: Segoe UI, Neue Helvetica, Helvectica, Arial, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+	/**/
+	background-color: #343434;
+	border: none;
+	background: #4c4c4c url(../../images/gradient.png) repeat-x 0 10px;
+}
+
+.xv-groupbox .onyx-input-decorator {
+	border: 0px;
+}
+
+.xv-groupbox > .onyx-input-decorator {
+	border-color: #aaaaaa;
+	border-width: 0 1px 1px 1px;
+	border-radius: 0;
+}
+
+.xv-groupbox > .xv-inputwidget {
+  background-color: white;
+}
+
+.xv-groupbox > .onyx-input-decorator:first-child {
+	border-width: 1px;
+	border-radius: 4px 4px 0 0;
+}
+
+.xv-groupbox > .onyx-input-decorator:last-child {
+	border-radius: 0 0 4px 4px;
+}
+
+.xv-groupbox > .onyx-input-decorator:first-child:last-child {
+	border-radius: 4px;
+}
+
+.xv-error {
+  color: #ff0000;
+}
+
+/* RepeaterBox.scss */
 .xv-repeater-box {
   width: 880px;
   .xv-label {
@@ -498,6 +501,10 @@ body {
   }
 }
 
+.xv-repeater-box-header {
+  background-color: lightgrey;
+}
+
 .xv-repeater-box-row {
   background-color: white;
   .xv-wide-entry {
@@ -513,6 +520,7 @@ body {
   }
 }
 
+/* CommentBox.scss */
 .xv-comment-box {
   width: 700px;
   .xv-repeater-box-row {
@@ -527,19 +535,17 @@ body {
     margin-top: 40px;
     border-width: 0px;
     width: 500px;
-    //height: 80px;
-    //min-height: 80px;
     border: 1px solid grey;
-    //vertical-align:top;
+    border-radius: 4px 4px 4px 4px;
   }
   .xv-textarea-input {
-    //vertical-align:top;
-    height: 75px;
-    min-height: 75px;
-    width: 490px;
+    height: 65px;
+    min-height: 65px;
+    width: 480px;
   }
   .xv-repeater-box-header {
     visibility: hidden;
+    height: 0px;
   }
   .xv-comment-box-comment-type {
     border-width: 0px;
@@ -550,7 +556,11 @@ body {
   }
 }
 
-/*********END XV VIEWS***********/
+.xv-assignment-box {
+  .xv-label {
+    width: 250px;  
+  }
+}
 
 /*********XV WIDGETS***********/
 
@@ -559,25 +569,38 @@ body {
 }
 
 .xv-picker {
-  width: 200px;
+  width: 190px;
 }
 
-
 .xv-label {
-  width: 100px;
+  width: 130px;
+  padding-bottom: 8px;
+  padding-left: 8px;
   padding-right: 8px;
+  padding-top: 8px;
+  text-align: right;
+}
+
+.xv-decorated-label {
+  width: 130px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 14px;
+  text-align: right;
+}
+
+.xv-dropdown-label {
+  width: 130px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 18px;
   text-align: right;
 }
 
 .xv-subinput {
   width: 200px;
-}
-.xv-inputwidget {
-  background-color: white;
-}
-
-.xv-input-decorator {
-  border: 0px;
 }
 
 .xv-textarea-input {
@@ -592,15 +615,52 @@ body {
   top: 15px;
 }
 
+.xv-relationwidget-column {
+  &.left {
+    padding-right: 18px;
+    color: black;
+    width: 140px;
+  }
+}
 .xv-relationwidget-description {
-  text-indent: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-indent: 140px;
   font-size: small;
   padding-bottom: 4px;
+  &.disabled {
+    opacity: 0.4;
+  }
+  &.label {
+    text-indent: 0px; 
+    text-align: right;
+    
+  }
+  &.hasLabel {
+    text-indent: 0px;
+  }
+  &.hyperlink {
+    color: blue;
+    text-decoration:underline;
+  }
 }
 
 .xv-relationwidget {
   .xv-subinput {
     width: 150px;
+  }
+}
+
+.xv-half-check {
+  border: 5px solid green;
+  background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;;
+  background-color: darkgrey;
+}
+
+.xv-menuitem {
+  &.disabled {
+    color: Dimgray;
   }
 }
 
@@ -641,3 +701,28 @@ body {
     }
   }
 }
+
+.xv-startup-panel {
+  .xv-startup-divider {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    top: 200px;
+    position: relative;
+  	color: #F49200;
+  	text-transform: uppercase;
+  	font-family: Segoe UI, Prelude Medium, Helvetica, Verdana, sans-serif;
+  	font-size: 14px;
+  	font-weight: bold;
+  	margin-bottom: 8px;
+  }
+  .xv-startup-progress {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    top: 200px;
+    position: relative;
+  }
+}
+
+

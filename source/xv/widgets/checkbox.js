@@ -3,10 +3,13 @@ regexp:true, undef:true, trailing:true, white:true */
 /*global XT:true, Globalize:true, enyo:true, _:true */
 
 (function () {
- 
+
   enyo.kind({
     name: "XV.Checkbox",
     kind: "onyx.Checkbox",
+    published: {
+      attr: null
+    },
     events: {
       onValueChange: ""
     },
@@ -29,7 +32,7 @@ regexp:true, undef:true, trailing:true, white:true */
       }
     }
   });
-  
+
   enyo.kind({
     name: "XV.CheckboxWidget",
     kind: "XV.Input",
@@ -38,10 +41,12 @@ regexp:true, undef:true, trailing:true, white:true */
       label: ""
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
-        {name: "label", content: "", classes: "xv-label"},
-        {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-decorated-label"},
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
+          components: [
+          {name: "input", kind: "onyx.Checkbox", onchange: "inputChanged"}
+        ]}
       ]}
     ],
     clear: function (options) {
@@ -56,7 +61,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(input);
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
     },
     valueChanged: function (value) {
@@ -64,5 +69,5 @@ regexp:true, undef:true, trailing:true, white:true */
       return value;
     }
   });
-  
+
 }());

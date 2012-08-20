@@ -1,40 +1,74 @@
 
 enyo.kind({
   name: "XV.Postbooks",
-  kind: "Control",
+  kind: "Panels",
+  arrangerKind: "CardArranger",
+  draggable: false,
   classes: "xt-postbooks enyo-unselectable",
-  components: [
-    { name: "container", kind: "XV.PostbooksContainer" }
-  ],
-  getContainer: function () {
-    return this.$.container;
+  handlers: {
+    onPrevious: "previous",
+    onWorkspace: "addWorkspacePanel"
   },
-  getActiveModule: function () {
-    return this.getContainer().getActive();
+  components: [
+    {name: "startup", classes: "xv-startup-panel", style: "background: #333;",
+      components: [
+      {classes: "xv-startup-divider", content: "Loading application data..."},
+      {name: "startupProgressBar", kind: "onyx.ProgressBar",
+        classes: "xv-startup-progress", progress: 0}
+    ]},
+    {name: "navigator", kind: "XV.Navigator", modules: [
+      {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 
+        panels: [
+        {name: "welcomePage", content: "Welcome"
+          //tag: '<iframe src="http://www.xtuple.com/beta"></iframe>'
+          }
+      ]},
+      {name: "crm", label: "_crm".loc(), panels: [
+        {name: "accountList", kind: "XV.AccountList"},
+        {name: "contactList", kind: "XV.ContactList"},
+        {name: "toDoList", kind: "XV.ToDoList"},
+        {name: "opportunityList", kind: "XV.OpportunityList"},
+        {name: "incidentList", kind: "XV.IncidentList"},
+        {name: "projectList", kind: "XV.ProjectList"}
+      ]},
+      {name: "setup", label: "_setup".loc(), panels: [
+        {name: "userAccountList", kind: "XV.UserAccountList"},
+        {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"},
+        {name: "stateList", kind: "XV.StateList"},
+        {name: "countryList", kind: "XV.CountryList"},
+        {name: "priorityList", kind: "XV.PriorityList"},
+        {name: "honorificList", kind: "XV.HonorificList"},
+        {name: "incidentCategoryList", kind: "XV.IncidentCategoryList"},
+        {name: "incidentResoulutionList", kind: "XV.IncidentResolutionList"},
+        {name: "incidentSeverityList", kind: "XV.IncidentSeverityList"},
+        {name: "opportunitySourceList", kind: "XV.OpportunitySourceList"},
+        {name: "opportunityStageList", kind: "XV.OpportunityStageList"},
+        {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"}
+      ]}
+    ]}
+  ],
+  addWorkspacePanel: function (inSender, inEvent) {
+    var panel;
+    if (inEvent.workspace) {
+      panel = this.createComponent({kind: "XV.WorkspaceContainer"});
+      panel.render();
+      this.reflow();
+      panel.setWorkspace(inEvent.workspace, inEvent.id);
+      this.next();
+    }
+  },
+  getNavigator: function () {
+    return this.$.navigator;
+  },
+  getStartupProgressBar: function () {
+    return this.$.startupProgressBar;
+  },
+  previous: function () {
+    // Stock implementation is screwy, do our own
+    var last = this.getActive(),
+      previous = this.getPanels().length - 1;
+    this.setIndex(previous);
+    last.destroy();
   }
-});
 
-enyo.kind({
-  name: "XV.PostbooksContainer",
-  kind: "XV.ScreenCarousel",
-  classes: "xt-postbooks-container enyo-unselectable",
-  components: [
-    { name: "dashboard", kind: "XV.Dashboard" },
-    { name: "crm", kind: "XV.Crm" },
-    { name: "billing", kind: "XV.Billing" },
-    { name: "setup", kind: "XV.Setup" },
-    { name: "workspace", kind: "XV.WorkspaceContainer" },
-    { name: "search", kind: "XV.Search" }
-  ],
-  carouselEvents: {
-    crm: "crm",
-    billing: "billing",
-    setup: "setup",
-    workspace: "workspace",
-    dashboard: "dashboard",
-    search: "search"
-  },
-  getModuleByName: function (name) {
-    return this.$[name];
-  },
 });

@@ -1,13 +1,14 @@
 /*jshint indent:2, curly:true eqeqeq:true, immed:true, latedef:true,
 newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
-/*global enyo:true, XT:true, XV:true */
+/*global enyo:true, XT:true, XM:true, XV:true */
 
 (function () {
   enyo.kind({
     name: "XV.RepeaterBox",
-    kind: "XV.WorkspaceBox",
+    kind: "XV.Groupbox",
     published: {
+      attr: null,
       columns: [],
       collection: null,
       recordType: null
@@ -26,7 +27,7 @@ white:true*/
     ],
     create: function () {
       this.inherited(arguments);
-      this.$.title.setContent(("_" + this.name).loc());
+      this.$.title.setContent(("_" + this.attr || "").loc());
 
       /**
        * If the columns are defined from the outset of the creation of this class

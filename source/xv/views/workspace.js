@@ -1,7 +1,7 @@
 /*jshint bitwise:false, indent:2, curly:true eqeqeq:true, immed:true,
 latedef:true, newcap:true, noarg:true, regexp:true, undef:true,
 trailing:true white:true*/
-/*global XV:true, XM:true, onyx:true, enyo:true, XT:true */
+/*global XV:true, XM:true, _:true, onyx:true, enyo:true, XT:true */
 
 (function () {
 
@@ -14,6 +14,7 @@ trailing:true white:true*/
     },
     events: {
       onError: "",
+      onModelChange: "",
       onStatusChange: "",
       onTitleChange: "",
       onHistoryChange: ""
@@ -24,7 +25,7 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, components: [
-        {kind: "XV.WorkspaceBox", components: [
+        {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", name: "name"},
           {kind: "XV.InputWidget", name: "description"}
@@ -40,7 +41,8 @@ trailing:true white:true*/
     */
     attributesChanged: function (model, options) {
       options = options || {};
-      var attr,
+      var that = this,
+        attr,
         value,
         K = XM.Model,
         status = model.getStatus(),
@@ -48,13 +50,18 @@ trailing:true white:true*/
         canNotUpdate = !model.canUpdate() || !(status & K.READY),
         control,
         isReadOnly,
-        isRequired;
+        isRequired,
+        findControl = function (attr) {
+          return _.find(that.$, function (ctl) {
+            return ctl.attr === attr;
+          });
+        };
       for (attr in changes) {
         if (changes.hasOwnProperty(attr)) {
           value = model.get(attr);
           isReadOnly = model.isReadOnly(attr);
           isRequired = model.isRequired(attr);
-          control = this.$[attr];
+          control = findControl(attr);
           if (control) {
             if (control.setPlaceholder && isRequired &&
                 !control.getPlaceholder()) {
@@ -144,6 +151,18 @@ trailing:true white:true*/
       this.fetch(this._model.id);
     },
     save: function (options) {
+      options = options || {};
+      var that = this,
+        success = options.success,
+        inEvent = {
+          originator: this,
+          model: this.getModel(),
+          id: this._model.id
+        };
+      options.success = function (model, resp, options) {
+        that.doModelChange(inEvent);
+        if (success) { success(model, resp, options); }
+      };
       this._model.save(null, options);
     },
     statusChanged: function (model, status, options) {
@@ -153,19 +172,13 @@ trailing:true white:true*/
         changes = {},
         i;
 
-      /**
-       * Add to history if appropriate. This method gets hit a few
-       * times and we only want to add to history when we have an
-       * id. Adding a model multiple times is not the end of the
-       * world, as the history array screens out duplicates
-       */
+      // Add to history if appropriate.
       if (model.id) {
         XT.addToHistory(this.kind, model);
         this.doHistoryChange(this);
       }
-
-
-
+      
+      // Update attributes
       for (i = 0; i < attrs.length; i++) {
         changes[attrs[i]] = true;
       }
@@ -179,7 +192,7 @@ trailing:true white:true*/
     },
     valueChanged: function (inSender, inEvent) {
       var attrs = {};
-      attrs[inEvent.originator.name] = inEvent.value;
+      attrs[inEvent.originator.attr] = inEvent.value;
       this._model.set(attrs);
     }
   });
@@ -190,12 +203,13 @@ trailing:true white:true*/
     arrangerKind: "CollapsingArranger",
     classes: "app enyo-unselectable",
     published: {
-      previous: "",
       menuItems: []
+    },
+    events: {
+      onPrevious: ""
     },
     handlers: {
       onError: "errorNotify",
-      onPanelChange: "changeWorkspace",
       onStatusChange: "statusChanged",
       onTitleChange: "titleChanged"
     },
@@ -248,40 +262,6 @@ trailing:true white:true*/
         ]}
       ]}
     ],
-    changeWorkspace: function (inSender, inEvent) {
-      var workspace = this.$.workspace,
-        menuItems = [],
-        prop;
-      if (inEvent.workspace) {
-        this.destroyWorkspace();
-        workspace = {
-          name: "workspace",
-          container: this.$.contentPanel,
-          kind: inEvent.workspace,
-          fit: true
-        };
-        workspace = this.createComponent(workspace);
-        if (inEvent.id) {
-          workspace.fetch(inEvent.id);
-        } else {
-          workspace.newRecord();
-        }
-        this.render();
-      }
-      this.setPrevious(inEvent.previous);
-
-      // Build menu by finding all panels
-      this.$.menu.setCount(0);
-      for (prop in workspace.$) {
-        if (workspace.$.hasOwnProperty(prop) &&
-            workspace.$[prop] instanceof enyo.Panels) {
-          menuItems = menuItems.concat(workspace.$[prop].getPanels());
-        }
-      }
-      this.setMenuItems(menuItems);
-      this.$.menu.setCount(menuItems.length);
-      this.$.menu.render();
-    },
     close: function (options) {
       options = options || {};
       if (!options.force) {
@@ -291,9 +271,7 @@ trailing:true white:true*/
           return;
         }
       }
-      var previous = this.getPrevious();
-      this.bubble(previous, {eventName: previous});
-      this.destroyWorkspace();
+      this.doPrevious();
     },
     destroyWorkspace: function () {
       var workspace = this.$.workspace;
@@ -375,6 +353,38 @@ trailing:true white:true*/
       this.$.item.setContent(title);
       this.$.item.box = box;
       this.$.item.addRemoveClass("onyx-selected", inSender.isSelected(inEvent.index));
+    },
+    setWorkspace: function (workspace, id) {
+      var menuItems = [],
+        prop;
+      if (workspace) {
+        this.destroyWorkspace();
+        workspace = {
+          name: "workspace",
+          container: this.$.contentPanel,
+          kind: workspace,
+          fit: true
+        };
+        workspace = this.createComponent(workspace);
+        if (id) {
+          workspace.fetch(id);
+        } else {
+          workspace.newRecord();
+        }
+        this.render();
+      }
+
+      // Build menu by finding all panels
+      this.$.menu.setCount(0);
+      for (prop in workspace.$) {
+        if (workspace.$.hasOwnProperty(prop) &&
+            workspace.$[prop] instanceof enyo.Panels) {
+          menuItems = menuItems.concat(workspace.$[prop].getPanels());
+        }
+      }
+      this.setMenuItems(menuItems);
+      this.$.menu.setCount(menuItems.length);
+      this.$.menu.render();
     },
     statusChanged: function (inSender, inEvent) {
       var model = inEvent.model,

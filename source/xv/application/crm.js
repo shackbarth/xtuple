@@ -5,6 +5,7 @@ trailing:true white:true*/
 
 (function () {
 
+  /*
   enyo.kind({
     name: "XV.Crm",
     kind: "XV.Module",
@@ -18,5 +19,6 @@ trailing:true white:true*/
       {name: "projectList", kind: "XV.ProjectList"}
     ]
   });
+  */
 
 }());

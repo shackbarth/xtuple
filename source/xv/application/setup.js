@@ -5,11 +5,14 @@ trailing:true white:true*/
 
 (function () {
 
+  /*
   enyo.kind({
     name: "XV.Setup",
     kind: "XV.Module",
     label: "_setup".loc(),
     lists: [
+      {name: "userAccountList", kind: "XV.UserAccountList"},
+      {name: "userAccountRoleList", kind: "XV.UserAccountRoleList"},
       {name: "stateList", kind: "XV.StateList"},
       {name: "countryList", kind: "XV.CountryList"},
       {name: "priorityList", kind: "XV.PriorityList"},
@@ -22,5 +25,6 @@ trailing:true white:true*/
       {name: "opportunityTypeList", kind: "XV.OpportunityTypeList"},
     ]
   });
+  */
 
 }());

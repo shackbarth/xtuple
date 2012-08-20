@@ -40,9 +40,9 @@ white:true*/
       ]}
     ],
     /**
-     * Called whenever the pullout is pulled via the dragger. We ensure that if
-     * no panel is yet selected, we default to the history panel.
-     */
+      Called whenever the pullout is pulled via the dragger. We ensure that if
+      no panel is yet selected, we default to the history panel.
+    */
     grabberDragFinish: function () {
       if (!this.getSelectedPanel()) {
         this.togglePullout("history");
@@ -80,7 +80,7 @@ white:true*/
       var item = this.getItem(name),
         children = this.$.pulloutItems.children,
         i;
-      if (item.showing && this.isAtMax()) {
+      if (item && item.showing && this.isAtMax()) {
         this.animateToMin();
       } else {
         this.animateToMax();

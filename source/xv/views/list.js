@@ -4,8 +4,9 @@ trailing:true white:true*/
 /*global XT:true, XM:true, _:true, enyo:true, Globalize:true*/
 
 (function () {
-  
+
   var ROWS_PER_FETCH = 50;
+  var FETCH_TRIGGER = 100;
 
   enyo.kind({
     name: "XV.ListItem",
@@ -40,9 +41,11 @@ trailing:true white:true*/
       workspace: null
     },
     events: {
-      onListItemTapped: ""
+      onWorkspace: ""
     },
+    fixedHeight: true,
     handlers: {
+      onModelChange: "modelChanged",
       onSetupItem: "setupItem"
     },
     collectionChanged: function () {
@@ -70,7 +73,7 @@ trailing:true white:true*/
       options.showMore = _.isBoolean(options.showMore) ?
         options.showMore : false;
       success = options.success;
-      
+
       // Lazy Loading
       if (options.showMore) {
         query.rowOffset += ROWS_PER_FETCH;
@@ -79,7 +82,7 @@ trailing:true white:true*/
         query.rowOffset = 0;
         query.rowLimit = ROWS_PER_FETCH;
       }
-      
+
       _.extend(options, {
         success: function (resp, status, xhr) {
           that.fetched();
@@ -108,7 +111,42 @@ trailing:true white:true*/
       }
     },
     itemTap: function (inSender, inEvent) {
-      this.doListItemTapped(inEvent);
+      var workspace = this.getWorkspace(),
+        id = this.getModel(inEvent.index).id;
+
+      // Bubble requset for workspace view, including the model id payload
+      if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+    },
+    modelChanged: function (inSender, inEvent) {
+      var that = this,
+        workspace = this.getWorkspace(),
+        options = {},
+        model;
+      // If the model that changed was related to and exists on this list
+      // refresh the item.
+      workspace = workspace ? XT.getObjectByName(workspace) : null;
+      if (workspace && workspace.prototype.model === inEvent.model &&
+          this._collection) {
+        model = this._collection.get(inEvent.id);
+        if (model) {
+          options.success = function () {
+            that.refresh();
+          };
+          model.fetch(options);
+        }
+      }
+    },
+    scroll: function (inSender, inEvent) {
+      var r = this.inherited(arguments);
+      // Manage lazy loading
+      var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
+        options = {};
+      if (this.getIsMore() && this.getScrollPosition() > max && !this.getIsFetching()) {
+        this.setIsFetching(true);
+        options.showMore = true;
+        this.fetch(options);
+      }
+      return r;
     },
     setupItem: function (inSender, inEvent) {
       var model = this._collection.models[inEvent.index],

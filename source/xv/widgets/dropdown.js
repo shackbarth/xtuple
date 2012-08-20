@@ -12,6 +12,7 @@ regexp:true, undef:true, trailing:true, white:true */
       onValueChange: ""
     },
     published: {
+      attr: null,
       label: "",
       value: null,
       collection: null,
@@ -24,13 +25,15 @@ regexp:true, undef:true, trailing:true, white:true */
       onSelect: "itemSelected"
     },
     components: [
-      {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
-        components: [
-        {name: "label", content: "", classes: "xv-label"},
-        {kind: "onyx.PickerDecorator",
+      {kind: "FittableColumns", components: [
+        {name: "label", content: "", classes: "xv-dropdown-label"},
+        {kind: "onyx.InputDecorator", classes: "xv-input-decorator",
           components: [
-          {content: "_none".loc(), classes: "xv-picker"},
-          {name: "picker", kind: "onyx.Picker"}
+          {kind: "onyx.PickerDecorator",
+            components: [
+            {content: "_none".loc(), classes: "xv-picker"},
+            {name: "picker", kind: "onyx.Picker"}
+          ]}
         ]}
       ]}
     ],
@@ -87,7 +90,7 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(attribute ? value[attribute] : value);
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.name).loc()) + ":";
+      var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
       this.$.label.setContent(label);
     },
     setValue: function (value, options) {
