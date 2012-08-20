@@ -55,12 +55,14 @@ values (
   new.nodeusr_username
 );
 
+select xt.execute_query('alter table usrpref disable trigger usrprefaftertrigger');
 select setUserPreference(new.nodeusr_username, 'DisableExportContents', case when new.nodeusr_disable_export then 't' else 'f' end );
 select setUserPreference(new.nodeusr_username, 'propername', new.nodeusr_propername);
 select setUserPreference(new.nodeusr_username, 'email', new.nodeusr_email);
 select setUserPreference(new.nodeusr_username, 'initials', new.nodeusr_initials);
 select setUserPreference(new.nodeusr_username, 'locale_id', new.nodeusr_locale_id::text);
 select setUserPreference(new.nodeusr_username, 'active', case when new.nodeusr_active then 't' else 'f' end );
+select xt.execute_query('alter table usrpref enable trigger usrprefaftertrigger');
 
 );
 
