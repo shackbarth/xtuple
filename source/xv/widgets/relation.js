@@ -36,7 +36,7 @@ regexp:true, undef:true, trailing:true, white:true */
           },
           {kind: "onyx.MenuDecorator", onSelect: "itemSelected", components: [
             {kind: "onyx.IconButton", src: "assets/relation-icon-search.png"},
-            {name: 'popupMenu', kind: "onyx.Menu",
+            {name: 'popupMenu', floating: true, kind: "onyx.Menu",
               components: [
               {kind: "XV.MenuItem", name: 'searchItem', content: "_search".loc()},
               {kind: "XV.MenuItem", name: 'openItem', content: "_open".loc(),
