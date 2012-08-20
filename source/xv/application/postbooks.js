@@ -16,8 +16,8 @@ enyo.kind({
       {name: "startupProgressBar", kind: "onyx.ProgressBar",
         classes: "xv-startup-progress", progress: 0}
     ]},
-    {name: "navigator", kind: "XV.Module", modules: [
-      {name: "welcome", label: "_welcome".loc(), hasSubmenu: false,
+    {name: "navigator", kind: "XV.Navigator", modules: [
+      {name: "welcome", label: "_welcome".loc(), hasSubmenu: false, 
         panels: [
         {name: "welcomePage", content: "Welcome"
           //tag: '<iframe src="http://www.xtuple.com/beta"></iframe>'

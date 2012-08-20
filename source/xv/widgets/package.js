@@ -1,4 +1,5 @@
 enyo.depends(
+  "menu.js",
   "label.js",
   "input.js",
   "button.js",
