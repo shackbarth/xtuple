@@ -96,13 +96,22 @@ trailing:true white:true*/
       return true;
     },
     setList: function (list, callback) {
-      this.createComponent({
+      var component;
+      component = this.createComponent({
         name: "list",
         container: this.$.listPanel,
         kind: list,
         fit: true
       });
       this.setCallback(callback);
+      if (component) {
+        this.createComponent({
+          name: "parameterWidget",
+          container: this.$.parameterPanel,
+          kind: component.getParameterWidget(),
+          fit: true
+        });
+      }
       this.render();
     },
     setSearchText: function (searchText) {
