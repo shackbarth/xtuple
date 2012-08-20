@@ -90,7 +90,8 @@ regexp:true, undef:true, trailing:true, white:true */
       this.setValue(attribute ? value[attribute] : value);
     },
     labelChanged: function () {
-      var label = (this.getLabel() || ("_" + this.attr || "").loc()) + ":";
+      var label = this.getLabel() || (this.attr ? ("_" + this.attr).loc() + ":" : "");
+      this.$.label.setShowing(label);
       this.$.label.setContent(label);
     },
     setValue: function (value, options) {
