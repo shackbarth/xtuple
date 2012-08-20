@@ -431,14 +431,17 @@ trailing:true white:true*/
     components: [
       {kind: "Panels", name: "topPanel", arrangerKind: "CarouselArranger",
         fit: true, classes: "xv-top-panel", components: [
-        {kind: "XV.UserAccountRoleGroupbox", name: "grantedUserAccountRoles"},
-        {kind: "XV.UserAccountPrivilegeGroupbox", name: "grantedPrivileges"},
+        // XXX we probably want to put overview first but if we do so then clicking
+        // a privilege creates an unfortunate jitter that needs to be fixed
+        {kind: "XV.UserAccountRoleGroupbox", attr: "grantedUserAccountRoles"},
+        {kind: "XV.UserAccountPrivilegeGroupbox", attr: "grantedPrivileges", name: "grantedPrivileges" },
         {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
-          {kind: "XV.CheckboxWidget", attr: "isActive"},
+          {kind: "XV.InputWidget", attr: "username"},
           {kind: "XV.InputWidget", attr: "properName"},
           {kind: "XV.InputWidget", attr: "initials"},
-          {kind: "XV.InputWidget", attr: "email"}
+          {kind: "XV.InputWidget", attr: "email"},
+          {kind: "XV.CheckboxWidget", attr: "isActive"}
         ]}
       ]}
     ],

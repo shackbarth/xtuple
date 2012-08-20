@@ -4,8 +4,12 @@ white:true*/
 /*global enyo:true, XM:true, XV:true, _:true */
 
 (function () {
-  /**
-   * Assign roles to users
+
+  /** @Class
+   *
+   * Manages the assignment of roles to user accounts.
+   *
+   * @Extends XV.AssignmentBox
    */
   enyo.kind({
     name: "XV.UserAccountRoleGroupbox",
@@ -26,14 +30,19 @@ white:true*/
     getAssignmentModel: function (roleModel) {
       return new XM.UserAccountUserAccountRoleAssignment({
         userAccountRole: roleModel,
-        type: "UserAccountUserAccountRoleAssignment",
         userAccount: this.getAssignedCollection().userAccount
       }, {isNew: true});
     }
   });
 
-  /**
-   * Assign privileges to users
+  /** @Class
+   *
+   * Manages the assignment of privileges to user accounts. This is a complicated case
+   * because user accounts can have privileges directly assigned to them, but they can
+   * also have privileges available to them on account of a role that they're assigned
+   * to.
+   *
+   * @Extends XV.AssignmentBox
    */
   enyo.kind({
     name: "XV.UserAccountPrivilegeGroupbox",
@@ -42,26 +51,40 @@ white:true*/
       idsFromRoles: null
     },
     cacheName: "privileges",
-    segments: ["System", "CRM"], // these must follow the capitalization conventions of the privilege module
+    segments: ["System", "CRM"],
     title: "_privileges".loc(),
     totalCollectionName: "PrivilegeCollection",
     type: "privilege",
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountPrivilegeAssignment({
         privilege: privilegeModel,
-        type: "UserAccountPrivilegeAssignment",
         userAccount: this.getAssignedCollection().userAccount
       }, {isNew: true});
     },
+    /**
+     * The extra spice in here is that we have to account for all of the
+     * privileges that were granted on behalf of a role. We generated that
+     * (published) array here, and use it later.
+     */
     mapIds: function () {
       this.inherited(arguments);
 
-      var grantedRoles = this.getAssignedCollection().userAccount.get("grantedUserAccountRoles"),
+      if (this.getAssignedCollection().models.length === 0) {
+        // if there are no models in this collection then there are no IDs to map
+        return;
+      }
+      var grantedRoles = this.getAssignedCollection().models[0].get("userAccount").get("grantedUserAccountRoles"),
         privsFromRoles = grantedRoles.map(function (model) {
           return model.getStatus() & XM.Model.DESTROYED ? [] : model.get("userAccountRole").get("grantedPrivileges");
         }),
         privIdsFromRoles = _.map(privsFromRoles, function (collection) {
           return collection.map(function (model) {
+            if (typeof model.privilege === 'number') {
+              // to be honest I'm not quite sure why this "model" variable here is sometimes a model
+              // but sometimes, as in this case, a simple js object.
+              return model.privilege;
+            }
+
             var privilege = model.get("privilege");
             if (privilege) {
               return privilege.get("id");
@@ -74,20 +97,31 @@ white:true*/
 
       this.setIdsFromRoles(uniqueIdsFromRoles);
     },
+    /**
+     * The extra piece of the override here is that we make use of the IdsFromRoles
+     * array that we've already generated. If a priv is assigned not to a user
+     * directly but the user has access to that priv through one of their roles, we
+     * want to show the checkbox as half-checked using CSS.
+     */
     setupCheckbox: function (inSender, inEvent) {
       this.inherited(arguments);
 
       var index = inEvent.item.indexInContainer(), //inEvent.index,
         parentSegmentRepeater = inSender.parent.parent,
         segmentIndex = parentSegmentRepeater.segmentIndex,
-        data = this.getSegmentedCollections()[segmentIndex].at(index),
-        row = inEvent.item.$.checkbox;
+        model = this.getSegmentedCollections()[segmentIndex].at(index),
+        checkbox = inEvent.item.$.checkbox;
 
-       this.disableCheckbox(row, _.indexOf(this.getIdsFromRoles(), data.get("id")) >= 0);
+      this.applyPostCheckFormatting(checkbox, model);
     },
-    // I expect this to be one day abstracted
-    disableCheckbox: function (checkbox, isDisabled) {
-      if (isDisabled && !checkbox.$.input.checked) {
+    applyPostCheckFormatting: function (checkbox, model) {
+      // we support the model coming in as the privilege itself or as the privilege assignment
+      var id = model.get("privilege") ? model.get("privilege").get("id") : model.get("id");
+      this.undercheckCheckbox(checkbox, _.indexOf(this.getIdsFromRoles(), id) >= 0);
+    },
+    // This could easily be moved into the superkind if it needs to be
+    undercheckCheckbox: function (checkbox, isUnderchecked) {
+      if (isUnderchecked && !checkbox.$.input.checked) {
         checkbox.$.input.addClass("xv-half-check");
       } else {
         checkbox.$.input.removeClass("xv-half-check");
@@ -95,20 +129,25 @@ white:true*/
     }
   });
 
-  /**
-   * Assign privileges to roles. Almost identical to the one that assigns
-   * privileges to users.
+  /** @Class
+   *
+   * Manages the assignment of privileges to roles.
+   *
+   * @Extends XV.AssignmentBox
    */
   enyo.kind({
     name: "XV.UserAccountRolePrivilegeGroupbox",
-    kind: "XV.UserAccountPrivilegeGroupbox",
+    kind: "XV.AssignmentBox",
+    segments: ["System", "CRM"],
+    title: "_privileges".loc(),
+    translateLabels: false,
+    totalCollectionName: "PrivilegeCollection",
+    type: "privilege",
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountRolePrivilegeAssignment({
         privilege: privilegeModel,
-        type: "UserAccountRolePrivilegeAssignment",
-        userAccountRole: this.getAssignedCollection().user_account_role,
-        // XXX why this redundancy in UserAccountRolePrivilegeAssignment?
-        user_account_role: this.getAssignedCollection().user_account_role
+        userAccountRole: this.getAssignedCollection().user_account_role, // XXX bad practice to use this field
+        // we could get it by having the workspace inject it into us
       }, {isNew: true});
     }
   });

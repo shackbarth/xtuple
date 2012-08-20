@@ -453,7 +453,7 @@ body {
 	border-radius: 0;
 }
 
-.xv-groupbox > .xv-inputwidget {
+.xv-groupbox .xv-inputwidget {
   background-color: white;
 }
 
@@ -557,6 +557,9 @@ body {
 }
 
 .xv-assignment-box {
+  .xv-decorated-label {
+    width: 250px;  
+  }
   .xv-label {
     width: 250px;  
   }
