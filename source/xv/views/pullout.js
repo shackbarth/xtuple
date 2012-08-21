@@ -78,9 +78,9 @@ white:true*/
         children = this.$.pulloutItems.children[0].children,
         i;
       if (name === 'history') {
-        this.$.pulloutHeader.setContent("History");
+        this.$.pulloutHeader.setContent("_history".loc());
       } else {
-        this.$.pulloutHeader.setContent("Advanced Search");
+        this.$.pulloutHeader.setContent("_advancedSearch".loc());
       }
       this.setSelectedPanel(name);
       if (item && item.showing && this.isAtMax()) {

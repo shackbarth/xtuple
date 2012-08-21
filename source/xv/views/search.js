@@ -27,7 +27,7 @@ trailing:true white:true*/
           {kind: "onyx.Button", name: "backButton", content: "_back".loc(),
             ontap: "close"}
         ]},
-        {name: "leftTitle", content: "Advanced Search", classes: "xv-parameter-title"}
+        {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"}
       ]},
       {name: "listPanel", kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
