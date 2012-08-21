@@ -64,8 +64,6 @@ trailing:true white:true*/
     label: "_contacts".loc(),
     collection: "XM.ContactInfoCollection",
     query: {orderBy: [
-      {attribute: 'lastName', isEmpty: true},
-      {attribute: 'firstName', isEmpty: true},
       {attribute: 'lastName'},
       {attribute: 'firstName'},
       {attribute: 'primaryEmail'},
@@ -127,7 +125,7 @@ trailing:true white:true*/
     label: "_incidents".loc(),
     collection: "XM.IncidentInfoCollection",
     query: {orderBy: [
-      {attribute: 'id'}
+      {attribute: 'created'}
     ]},
     parameterWidget: "XV.IncidentInfoParameters",
     workspace: "XV.IncidentWorkspace",
