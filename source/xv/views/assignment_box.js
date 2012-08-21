@@ -24,59 +24,58 @@ white:true*/
       onValueChange: "checkboxChange"
     },
 
-      /**
-       *
-       * Published fields
-       * @type {Object}
-       *
-       * @property {String} title
-       * Used by the workspace to title the menu item for the box.
-       *
-       * @property {String} type
-       * Camelized name of assignable model. Used for drilling down from the assignment
-       *    (link) model to the assignable model.
-       *
-       * @property {String} cacheName
-       * The name of the cached collection if the collection is stored in the XM cache.
-       *
-       * @property {XM.Collection} assignedCollection
-       * The collection that backs this box. The model of the collection is the
-       *    assignment (link) model.
-       *
-       * @property {Array} assignedIds
-       * The ids of the assignable models. Cached for performance and recached whenever
-       *    the assignedCollection is changed.
-       *
-       * @property {XM.Collection} totalCollection
-       * The collection of all possible assignable models.
-       *
-       * @property {String} totalCollectionName
-       * The name in the the XM namespace of the collection. Used to making new
-       * segmentedCollections.
-       *
-       * @property {Array} segments
-       * We allow the assignable checkboxes to be grouped by segment, such as module.
-       * If this array is length one then there is no segmentation, and the one value
-       * of the array becomes the header of the box.
-       *
-       * @property {Array} segmentedCollections
-       * An array of collections, each of whom are a subset of totalCollection.
-       *
-       * @property {Boolean} translateLabels
-       * We want to translate the labels if they are hardcoded into our system (such as privileges)
-       * but not if they are user-defined.
-       */
+    /**
+     * Published fields
+     * @type {Object}
+     *
+     * @property {XM.Collection} assignedCollection
+     * The collection that backs this box. The model of the collection is the
+     *    assignment (link) model.
+     *
+     * @property {Array} assignedIds
+     * The ids of the assignable models. Cached for performance and recached whenever
+     *    the assignedCollection is changed.
+     *
+     * @property {String} cacheName
+     * The name of the cached collection if the collection is stored in the XM cache.
+     *
+     * @property {Array} segmentedCollections
+     * An array of collections, each of whom are a subset of totalCollection.
+     *
+     * @property {Array} segments
+     * We allow the assignable checkboxes to be grouped by segment, such as module.
+     * If this array is length one then there is no segmentation, and the one value
+     * of the array becomes the header of the box.
+     *
+     * @property {String} title
+     * Used by the workspace to title the menu item for the box.
+     *
+     * @property {XM.Collection} totalCollection
+     * The collection of all possible assignable models.
+     *
+     * @property {String} totalCollectionName
+     * The name in the the XM namespace of the collection. Used to making new
+     * segmentedCollections.
+     *
+     * @property {Boolean} translateLabels
+     * We want to translate the labels if they are hardcoded into our system (such as privileges)
+     * but not if they are user-defined.
+     *
+     * @property {String} type
+     * Camelized name of assignable model. Used for drilling down from the assignment
+     *    (link) model to the assignable model.
+     */
     published: {
-      title: "",
-      type: "",
-      cacheName: "",
       assignedCollection: null,
       assignedIds: null,
+      cacheName: "",
+      segmentedCollections: null,
+      segments: null,
+      title: "",
       totalCollection: null,
       totalCollectionName: "",
-      segments: null,
-      segmentedCollections: null,
-      translateLabels: true
+      translateLabels: true,
+      type: ""
     },
     components: [
       {kind: "Repeater", name: "segmentRepeater", fit: true, onSetupItem: "setupSegment", segmentIndex: 0, components: [

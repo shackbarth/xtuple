@@ -433,8 +433,8 @@ trailing:true white:true*/
         fit: true, classes: "xv-top-panel", components: [
         // XXX we probably want to put overview first but if we do so then clicking
         // a privilege creates an unfortunate jitter that needs to be fixed
-        {kind: "XV.UserAccountRoleGroupbox", attr: "grantedUserAccountRoles"},
-        {kind: "XV.UserAccountPrivilegeGroupbox", attr: "grantedPrivileges", name: "grantedPrivileges" },
+        {kind: "XV.UserAccountRoleAssignmentBox", attr: "grantedUserAccountRoles"},
+        {kind: "XV.UserAccountPrivilegeAssignmentBox", attr: "grantedPrivileges", name: "grantedPrivileges" },
         {kind: "XV.Groupbox", components: [
           {kind: "onyx.GroupboxHeader", content: "_overview".loc()},
           {kind: "XV.InputWidget", attr: "username"},
@@ -468,7 +468,7 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", attr: "name"},
           {kind: "XV.InputWidget", attr: "description"}
         ]},
-        {kind: "XV.UserAccountRolePrivilegeGroupbox", attr: "grantedPrivileges"}
+        {kind: "XV.UserAccountRolePrivilegeAssignmentBox", attr: "grantedPrivileges"}
       ]}
     ]
   });

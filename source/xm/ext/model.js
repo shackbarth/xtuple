@@ -134,7 +134,6 @@ white:true*/
     /**
       Returns only attribute records that have changed.
 
-      @property
       @type Hash
     */
     changeSet: function () {

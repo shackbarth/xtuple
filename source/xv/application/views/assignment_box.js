@@ -11,11 +11,11 @@ white:true*/
    * Manages the assignment of roles to user accounts.
    *
    * @class
-   * @alias XV.UserAccountRoleGroupbox
+   * @alias XV.UserAccountRoleAssignmentBox
    * @extends XV.AssignmentBox
    */
-  var userAccountRoleGroupbox = {
-    name: "XV.UserAccountRoleGroupbox",
+  var userAccountRoleAssignmentBox = {
+    name: "XV.UserAccountRoleAssignmentBox",
     kind: "XV.AssignmentBox",
     events: {
       onRefreshPrivileges: ""
@@ -50,7 +50,7 @@ white:true*/
       }, {isNew: true});
     }
   };
-  enyo.kind(userAccountRoleGroupbox);
+  enyo.kind(userAccountRoleAssignmentBox);
 
   /**
    * Manages the assignment of privileges to user accounts. This is a complicated case
@@ -59,12 +59,20 @@ white:true*/
    * to.
    *
    * @class
-   * @alias XV.UserAccountPrivilegeGroupbox
+   * @alias XV.UserAccountPrivilegeAssignmentBox
    * @extends XV.AssignmentBox
    */
-  var userAccountPrivilegeGroupbox = {
-    name: "XV.UserAccountPrivilegeGroupbox",
+  var userAccountPrivilegeAssignmentBox = {
+    name: "XV.UserAccountPrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
+      /**
+       * Published fields
+       * @type {Object}
+       *
+       * @property {Array} idsFromRole
+       * An array of ids that the account has inherited from the role. Used
+       * for the same caching
+       */
     published: {
       idsFromRoles: null
     },
@@ -161,17 +169,17 @@ white:true*/
       }
     }
   };
-  enyo.kind(userAccountPrivilegeGroupbox);
+  enyo.kind(userAccountPrivilegeAssignmentBox);
 
   /**
    * Manages the assignment of privileges to roles.
    *
    * @class
-   * @alias XV.UserAccountRolePrivilegeGroupbox
+   * @alias XV.UserAccountRolePrivilegeAssignmentBox
    * @extends XV.AssignmentBox
    */
-  var userAccountRolePrivilegeGroupbox = {
-    name: "XV.UserAccountRolePrivilegeGroupbox",
+  var userAccountRolePrivilegeAssignmentBox = {
+    name: "XV.UserAccountRolePrivilegeAssignmentBox",
     kind: "XV.AssignmentBox",
     segments: ["System", "CRM"],
     title: "_privileges".loc(),
@@ -182,6 +190,7 @@ white:true*/
      * Returns a model specific to this AssignmentBox.
      *
      * @override
+     * @methodOf userAccountRolePrivilegeAssignmentBox#
      * @return {XM.UserAccountRolePrivilegeAssignment}
      */
     getAssignmentModel: function (privilegeModel) {
@@ -193,6 +202,6 @@ white:true*/
       }, {isNew: true});
     }
   };
-  enyo.kind(userAccountRolePrivilegeGroupbox);
+  enyo.kind(userAccountRolePrivilegeAssignmentBox);
 
 }());

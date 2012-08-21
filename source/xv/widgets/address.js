@@ -30,9 +30,6 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
      * A convenience function so that this object can be treated generally like an input
      */
     getValue: function () {
-      /**
-       *
-       */
       return this.getModel();
     },
     formatCity: function (city, state, zip) {
