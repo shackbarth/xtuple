@@ -41,6 +41,7 @@ trailing:true white:true*/
       workspace: null
     },
     events: {
+      onItemTap: "",
       onWorkspace: ""
     },
     fixedHeight: true,
@@ -111,11 +112,8 @@ trailing:true white:true*/
       }
     },
     itemTap: function (inSender, inEvent) {
-      var workspace = this.getWorkspace(),
-        id = this.getModel(inEvent.index).id;
-
-      // Bubble requset for workspace view, including the model id payload
-      if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+      inEvent.list = this;
+      this.doItemTap(inEvent);
     },
     modelChanged: function (inSender, inEvent) {
       var that = this,
@@ -134,6 +132,30 @@ trailing:true white:true*/
           };
           model.fetch(options);
         }
+      }
+    },
+    /**
+      Makes sure the collection can handle the sort order
+      defined in the query.
+    */
+    queryChanged: function () {
+      var query = this.getQuery();
+      if (this._collection && query.orderBy) {
+        this._collection.comparator = function (a, b) {
+          var aval,
+            bval,
+            attr,
+            i;
+          for (i = 0; i < query.orderBy.length; i++) {
+            attr = query.orderBy[i].attribute;
+            aval = a.get(attr);
+            bval = b.get(attr);
+            if (aval !== bval) {
+              return aval > bval ? 1 : -1;
+            }
+          }
+          return 0;
+        };
       }
     },
     scroll: function (inSender, inEvent) {
@@ -176,6 +198,14 @@ trailing:true white:true*/
           view.setContent(value);
           view.addRemoveClass("placeholder", isPlaceholder);
         }
+      }
+    },
+    setQuery: function () {
+      var old = _.clone(this.query);
+      this.inherited(arguments);
+      // Standard call doesn't do deep comparison
+      if (_.isEqual(old, this.query)) {
+        this.queryChanged();
       }
     }
 

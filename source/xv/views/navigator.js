@@ -20,7 +20,8 @@ trailing:true white:true*/
       onWorkspace: ""
     },
     handlers: {
-      onParameterChange: "requery"
+      onParameterChange: "requery",
+      onItemTap: "itemTap"
     },
     showPullout: true,
     arrangerKind: "CollapsingArranger",
@@ -119,15 +120,15 @@ trailing:true white:true*/
     fetch: function (options) {
       options = options ? _.clone(options) : {};
       var index = options.index || this.$.contentPanels.getIndex(),
-        panel = this.$.contentPanels.getPanels()[index],
-        name = panel ? panel.name : "",
+        list = this.$.contentPanels.getPanels()[index],
+        name = list ? list.name : "",
         query,
         input,
         parameterWidget,
         parameters;
-      if (!panel instanceof XV.List) { return; }
+      if (!list instanceof XV.List) { return; }
       this.fetched[index] = true;
-      query = panel.getQuery() || {};
+      query = list.getQuery() || {};
       input = this.$.searchInput.getValue();
       parameterWidget = XT.app ? XT.app.getPullout().getItem(name) : null;
       parameters = parameterWidget ? parameterWidget.getParameters() : [];
@@ -141,7 +142,7 @@ trailing:true white:true*/
         // Input search parameters
         if (input) {
           query.parameters = [{
-            attribute: panel.getSearchableAttributes(),
+            attribute: list.getSearchableAttributes(),
             operator: 'MATCHES',
             value: this.$.searchInput.getValue()
           }];
@@ -155,17 +156,45 @@ trailing:true white:true*/
         delete query.parameters;
       }
 
-      panel.setQuery(query);
-      panel.fetch(options);
+      list.setQuery(query);
+      list.fetch(options);
     },
     inputChanged: function (inSender, inEvent) {
       this.fetched = {};
       this.fetch();
     },
+    itemTap: function (inSender, inEvent) {
+      var list = inEvent.list,
+        workspace = list ? list.getWorkspace() : null,
+        id = list ? list.getModel(inEvent.index).id : null;
+
+      // Bubble requset for workspace view, including the model id payload
+      if (workspace) { this.doWorkspace({workspace: workspace, id: id}); }
+    },
     newRecord: function (inSender, inEvent) {
       var list = this.$.contentPanels.getActive(),
-        workspace = list instanceof XV.List ? list.getWorkspace() : null;
-      if (workspace) { this.doWorkspace({workspace: workspace}); }
+        workspace = list instanceof XV.List ? list.getWorkspace() : null,
+        callback;
+      if (!list instanceof XV.List) { return; }
+      // Callback options on commit of the workspace
+      // Fetch the corresponding list model and add
+      callback = function (model) {
+        var Model = list._collection.model,
+          value = new Model({id: model.id}),
+          options = {};
+        options.success = function () {
+          list._collection.add(value);
+          list.setCount(list._collection.length);
+          list.refresh();
+        };
+        value.fetch(options);
+      };
+      if (workspace) {
+        this.doWorkspace({
+          workspace: workspace,
+          callback: callback
+        });
+      }
       return true;
     },
     requery: function (inSender, inEvent) {

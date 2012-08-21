@@ -20,6 +20,7 @@ regexp:true, undef:true, trailing:true, white:true */
       descripAttribute: ""
     },
     events: {
+      onSearch: "",
       onValueChange: "",
       onWorkspace: ""
     },
@@ -96,24 +97,41 @@ regexp:true, undef:true, trailing:true, white:true */
       this.$.description.addRemoveClass("disabled", disabled);
     },
     itemSelected: function (inSender, inEvent) {
-      var menuItem = inEvent.originator,
-        List = this._List,
+      var that = this,
+        menuItem = inEvent.originator,
+        list = this.getList(),
         model = this.getValue(),
         id = model ? model.id : null,
-        workspace = List ? List.prototype.workspace : null,
-        listKind;
-      if (!List || !workspace) { return; }
+        workspace = this._List ? this._List.prototype.workspace : null,
+        callback;
       switch (menuItem.name)
       {
       case 'searchItem':
-        listKind = this.kind.replace("RelationWidget", "") + "List";
-        this.bubble("search", { eventName: "search", options: { listKind: listKind, source: this }});
+        callback = function (value) {
+          that.setValue(value);
+        };
+        this.doSearch({
+          list: list,
+          searchText: this.$.input.getValue(),
+          callback: callback
+        });
         break;
       case 'openItem':
         this.doWorkspace({workspace: workspace, id: id});
         break;
       case 'newItem':
-        this.doWorkspace({workspace: workspace});
+        // Callback options on commit of the workspace
+        // Find the model with matching id, fetch and set it.
+        callback = function (model) {
+          var Model = that._collection.model,
+            value = new Model({id: model.id}),
+            options = {};
+          options.success = function () {
+            that.setValue(value);
+          };
+          value.fetch(options);
+        };
+        this.doWorkspace({workspace: workspace, callback: callback});
         break;
       }
     },
@@ -161,6 +179,7 @@ regexp:true, undef:true, trailing:true, white:true */
       var list = this.getList(),
         Collection;
       delete this._List;
+      delete this._Workspace;
 
       // Get List class
       if (!list) { return; }
@@ -228,7 +247,9 @@ regexp:true, undef:true, trailing:true, white:true */
           // Need to request read priv. from the server
           if (newId) {
             options.success = function (resp) {
-              that.$.openItem.setDisabled(!resp);
+              if (!that.destroyed) {
+                that.$.openItem.setDisabled(!resp);
+              }
             };
             params.recordType = recordType;
             params.id = newId;
@@ -251,10 +272,12 @@ regexp:true, undef:true, trailing:true, white:true */
       // Only notify if selection actually changed
       if (newId !== oldId && !options.silent) { this.doValueChange(inEvent); }
 
-      // Handle privileges
+      // Handle menu actions
+      that.$.openItem.setShowing(Workspace);
+      that.$.newItem.setShowing(Workspace);
       that.$.openItem.setDisabled(true);
       that.$.newItem.setDisabled(true);
-      if (Model) {
+      if (Model && Workspace) {
         if (XT.session) {
           setPrivileges();
         } else {
