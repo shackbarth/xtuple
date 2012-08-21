@@ -3,101 +3,79 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XM:true, XV:true, XT:true, _:true */
 
+/** @module XV */
+
 (function () {
 
   /**
-    @class
-
-    An assignment box is a groupbox that manages the assignment of a set of
-    available options to an object. For example, setting up the privileges that
-    are associated with a role.
-
-    @extends XV.Groupbox
+   * An assignment box is a groupbox that manages the assignment of a set of
+   * available options to an object. For example, setting up the privileges that
+   * are associated with a role.
+   *
+   * @class
+   * @alias XV.AssignmentBox
+   * @extends XV.Groupbox
    */
-   XV.jsDocLookAtMe = enyo.kind({
+  var enyoObj = {
     name: "XV.AssignmentBox",
     kind: "XV.Groupbox",
     classes: "xv-assignment-box",
     handlers: {
       onValueChange: "checkboxChange"
     },
-    published: {
-      /**
-       * Used by the workspace to title the menu item for the box
-       *
-       * @type {String}
-       */
-      title: "",
 
       /**
-       * Camelized name of assignable model. Used for drilling down from the
-       * assignment (link) model to the assignable model.
        *
-       */
-      type: "",
-
-      /**
-       * The name of the cached collection if the collection is stored
-       * in the XM cache.
+       * Published fields
+       * @type {Object}
        *
-       * @type {String}
-       */
-      cacheName: "",
-
-      /**
-       * The collection that backs this box. The model of the collection is
-       * the assignment (link) model
+       * @property {String} title
+       * Used by the workspace to title the menu item for the box.
        *
-       * @type {XM.Collection}
-       */
-      assignedCollection: null,
-
-      /**
+       * @property {String} type
+       * Camelized name of assignable model. Used for drilling down from the assignment
+       *    (link) model to the assignable model.
+       *
+       * @property {String} cacheName
+       * The name of the cached collection if the collection is stored in the XM cache.
+       *
+       * @property {XM.Collection} assignedCollection
+       * The collection that backs this box. The model of the collection is the
+       *    assignment (link) model.
+       *
+       * @property {Array} assignedIds
        * The ids of the assignable models. Cached for performance and recached whenever
-       * the assignedCollection is changed.
+       *    the assignedCollection is changed.
        *
-       * @type {Array}
-       */
-      assignedIds: null,
-
-
-      /**
+       * @property {XM.Collection} totalCollection
        * The collection of all possible assignable models.
        *
-       * @type {XM.Collection}
-       */
-      totalCollection: null,
-
-      /**
+       * @property {String} totalCollectionName
        * The name in the the XM namespace of the collection. Used to making new
-       * segmentedCollections
+       * segmentedCollections.
        *
-       * @type {String}
-       */
-      totalCollectionName: "",
-
-      /**
+       * @property {Array} segments
        * We allow the assignable checkboxes to be grouped by segment, such as module.
        * If this array is length one then there is no segmentation, and the one value
        * of the array becomes the header of the box.
        *
-       * @type {Array}
-       */
-      segments: null,
-
-      /**
+       * @property {Array} segmentedCollections
        * An array of collections, each of whom are a subset of totalCollection.
        *
-       * @type {Array}
-       */
-      segmentedCollections: null,
-
-      /**
+       * @property {Boolean} translateLabels
        * We want to translate the labels if they are hardcoded into our system (such as privileges)
        * but not if they are user-defined.
-       *
-       * @type {Boolean}
        */
+    published: {
+      title: "",
+      type: "",
+      cacheName: "",
+      assignedCollection: null,
+      assignedIds: null,
+      totalCollection: null,
+      totalCollectionName: "",
+      segments: null,
+      segmentedCollections: null,
       translateLabels: true
     },
     components: [
@@ -143,11 +121,11 @@ white:true*/
       }
       //END HACK
 
-        /**
-         * The record type in totalCollection is XM.Privilege and the
-         * record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
-         * so we have to navigate this.
-         */
+        //
+        // The record type in totalCollection is XM.Privilege and the
+        // record type in assignedCollection is XM.UserAccountPrivilegeAssignment,
+        // so we have to navigate this.
+        //
       if (value) {
         // filter returns an array and we want a model: that's why I [0]
         // assumption: no duplicate originator names
@@ -183,7 +161,7 @@ white:true*/
       try {
         if (tempChecked !== this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox.$.input.checked) {
           XT.log("applying hack: setting checkbox to " + tempChecked);
-          checkbox = this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox
+          checkbox = this.$.segmentRepeater.children[segmentNum].children[1].children[checkboxNum].$.checkbox;
           checkbox.$.input.checked = tempChecked;
           this.render();
         }
@@ -213,9 +191,9 @@ white:true*/
           return model.get("name");
         };
       }
-      /**
-       * Get the collection from the cache if it exists
-       */
+      //
+      // Get the collection from the cache if it exists
+      //
       if (XM[this.getCacheName()]) {
         this.setTotalCollection(XM[this.getCacheName()]);
         this.segmentizeTotalCollection();
@@ -328,5 +306,7 @@ white:true*/
         this.$.segmentRepeater.setCount(this.getSegments().length);
       }
     }
-  });
+  };
+
+  enyo.kind(enyoObj);
 }());

@@ -3,16 +3,18 @@ newcap:true, noarg:true, regexp:true, undef:true, trailing:true
 white:true*/
 /*global enyo:true, XM:true, XV:true, _:true */
 
+/** @module XV */
+
 (function () {
 
   /**
-   * @class
-   *
    * Manages the assignment of roles to user accounts.
    *
+   * @class
+   * @alias XV.UserAccountRoleGroupbox
    * @extends XV.AssignmentBox
    */
-  enyo.kind({
+  var userAccountRoleGroupbox = {
     name: "XV.UserAccountRoleGroupbox",
     kind: "XV.AssignmentBox",
     events: {
@@ -27,6 +29,8 @@ white:true*/
      * The extra quirk handled here is that when a role is assigned to
      * a user we want to fire up an event so that the users privileges
      * can be immediately updated.
+     *
+     * @override
      */
     checkboxChange: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -36,7 +40,8 @@ white:true*/
     /**
      * Returns a model specific to this AssignmentBox.
      *
-     * @type {XM.UserAccountUserAccountRoleAssignment}
+     * @override
+     * @return {XM.UserAccountUserAccountRoleAssignment}
      */
     getAssignmentModel: function (roleModel) {
       return new XM.UserAccountUserAccountRoleAssignment({
@@ -44,19 +49,20 @@ white:true*/
         userAccount: this.getAssignedCollection().userAccount
       }, {isNew: true});
     }
-  });
+  };
+  enyo.kind(userAccountRoleGroupbox);
 
   /**
-   * @class
-   *
    * Manages the assignment of privileges to user accounts. This is a complicated case
    * because user accounts can have privileges directly assigned to them, but they can
    * also have privileges available to them on account of a role that they're assigned
    * to.
    *
+   * @class
+   * @alias XV.UserAccountPrivilegeGroupbox
    * @extends XV.AssignmentBox
    */
-  enyo.kind({
+  var userAccountPrivilegeGroupbox = {
     name: "XV.UserAccountPrivilegeGroupbox",
     kind: "XV.AssignmentBox",
     published: {
@@ -70,7 +76,8 @@ white:true*/
     /**
      * Returns a model specific to this AssignmentBox.
      *
-     * @type {XM.UserAccountPrivilegeAssignment}
+     * @override
+     * @return {XM.UserAccountPrivilegeAssignment}
      */
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountPrivilegeAssignment({
@@ -82,6 +89,8 @@ white:true*/
      * The extra spice in here is that we have to account for all of the
      * privileges that were granted on behalf of a role. We generated that
      * (published) array here, and use it later.
+     *
+     * @override
      */
     mapIds: function () {
       this.inherited(arguments);
@@ -119,6 +128,8 @@ white:true*/
      * array that we've already generated. If a priv is assigned not to a user
      * directly but the user has access to that priv through one of their roles, we
      * want to show the checkbox as half-checked using CSS.
+     *
+     * @override
      */
     setupCheckbox: function (inSender, inEvent) {
       this.inherited(arguments);
@@ -149,16 +160,17 @@ white:true*/
         checkbox.$.input.removeClass("xv-half-check");
       }
     }
-  });
+  };
+  enyo.kind(userAccountPrivilegeGroupbox);
 
   /**
-   * @class
-   *
    * Manages the assignment of privileges to roles.
    *
+   * @class
+   * @alias XV.UserAccountRolePrivilegeGroupbox
    * @extends XV.AssignmentBox
    */
-  enyo.kind({
+  var userAccountRolePrivilegeGroupbox = {
     name: "XV.UserAccountRolePrivilegeGroupbox",
     kind: "XV.AssignmentBox",
     segments: ["System", "CRM"],
@@ -169,15 +181,18 @@ white:true*/
     /**
      * Returns a model specific to this AssignmentBox.
      *
-     * @type {XM.UserAccountRolePrivilegeAssignment}
+     * @override
+     * @return {XM.UserAccountRolePrivilegeAssignment}
      */
     getAssignmentModel: function (privilegeModel) {
       return new XM.UserAccountRolePrivilegeAssignment({
         privilege: privilegeModel,
-        userAccountRole: this.getAssignedCollection().user_account_role, // XXX bad practice to use this field
+        // XXX bad practice to use this field
         // we could get it by having the workspace inject it into us
+        userAccountRole: this.getAssignedCollection().user_account_role
       }, {isNew: true});
     }
-  });
+  };
+  enyo.kind(userAccountRolePrivilegeGroupbox);
 
 }());
