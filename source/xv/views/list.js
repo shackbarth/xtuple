@@ -134,6 +134,30 @@ trailing:true white:true*/
         }
       }
     },
+    /**
+      Makes sure the collection can handle the sort order
+      defined in the query.
+    */
+    queryChanged: function () {
+      var query = this.getQuery();
+      if (this._collection && query.orderBy) {
+        this._collection.comparator = function (a, b) {
+          var aval,
+            bval,
+            attr,
+            i;
+          for (i = 0; i < query.orderBy.length; i++) {
+            attr = query.orderBy[i].attribute;
+            aval = a.get(attr);
+            bval = b.get(attr);
+            if (aval !== bval) {
+              return aval > bval ? 1 : -1;
+            }
+          }
+          return 0;
+        };
+      }
+    },
     scroll: function (inSender, inEvent) {
       var r = this.inherited(arguments);
       // Manage lazy loading
@@ -174,6 +198,14 @@ trailing:true white:true*/
           view.setContent(value);
           view.addRemoveClass("placeholder", isPlaceholder);
         }
+      }
+    },
+    setQuery: function () {
+      var old = _.clone(this.query);
+      this.inherited(arguments);
+      // Standard call doesn't do deep comparison
+      if (_.isEqual(old, this.query)) {
+        this.queryChanged();
       }
     }
 

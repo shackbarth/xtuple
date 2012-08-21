@@ -7,7 +7,7 @@ enyo.kind({
   classes: "xt-postbooks enyo-unselectable",
   handlers: {
     onPrevious: "previous",
-    onSearch: "search",
+    onSearch: "addSearch",
     onWorkspace: "addWorkspacePanel"
   },
   components: [
@@ -48,6 +48,19 @@ enyo.kind({
       ]}
     ]}
   ],
+  addSearch: function (inSender, inEvent) {
+    var panel;
+    if (inEvent.list) {
+      panel = this.createComponent({kind: "XV.SearchContainer"});
+      panel.render();
+      this.reflow();
+      panel.setList(inEvent.list);
+      panel.setSearchText(inEvent.searchText);
+      panel.setCallback(inEvent.callback);
+      panel.fetch();
+      this.next();    
+    }
+  },
   addWorkspacePanel: function (inSender, inEvent) {
     var panel;
     if (inEvent.workspace) {
@@ -70,19 +83,6 @@ enyo.kind({
       previous = this.getPanels().length - 1;
     this.setIndex(previous);
     last.destroy();
-  },
-  search: function (inSender, inEvent) {
-    var panel;
-    if (inEvent.list) {
-      panel = this.createComponent({kind: "XV.SearchContainer"});
-      panel.render();
-      this.reflow();
-      panel.setList(inEvent.list);
-      panel.setSearchText(inEvent.searchText);
-      panel.setCallback(inEvent.callback);
-      panel.fetch();
-      this.next();    
-    }
   }
 
 });

@@ -26,12 +26,13 @@ trailing:true white:true*/
         {kind: "onyx.Toolbar", classes: "onyx-menu-toolbar", components: [
           {kind: "onyx.Button", name: "backButton", content: "_back".loc(),
             ontap: "close"}
-        ]}
+        ]},
+        {name: "leftTitle", content: "_advancedSearch".loc(), classes: "xv-parameter-title"}
       ]},
       {name: "listPanel", kind: "FittableRows", components: [
         {kind: "onyx.Toolbar", name: "contentToolbar", components: [
           {kind: "onyx.Grabber"},
-          {name: "rightLabel", style: "text-align: center"},
+          {name: "rightLabel", content: "_search".loc(), style: "text-align: center"},
           {name: "search", kind: "onyx.InputDecorator", style: "float: right;",
             components: [
             {name: 'searchInput', kind: "onyx.Input", style: "width: 200px;",
@@ -41,6 +42,7 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    init: false,
     close: function (options) {
       this.doPrevious();
     },
@@ -54,6 +56,7 @@ trailing:true white:true*/
       }
     },
     fetch: function (options) {
+      if (!this.init) { return; }
       options = options ? _.clone(options) : {};
       var list = this.$.list,
         query,
@@ -103,6 +106,7 @@ trailing:true white:true*/
         kind: list,
         fit: true
       });
+      this.$.rightLabel.setContent(component.label);
       this.setCallback(callback);
       if (component) {
         this.createComponent({
@@ -112,6 +116,7 @@ trailing:true white:true*/
           fit: true
         });
       }
+      this.init = true;
       this.render();
     },
     setSearchText: function (searchText) {
