@@ -127,7 +127,7 @@ trailing:true white:true*/
     label: "_incidents".loc(),
     collection: "XM.IncidentInfoCollection",
     query: {orderBy: [
-      {attribute: 'number'}
+      {attribute: 'id'}
     ]},
     parameterWidget: "XV.IncidentInfoParameters",
     workspace: "XV.IncidentWorkspace",
