@@ -270,7 +270,9 @@ regexp:true, undef:true, trailing:true, white:true */
       // Only notify if selection actually changed
       if (newId !== oldId && !options.silent) { this.doValueChange(inEvent); }
 
-      // Handle privileges
+      // Handle menu actions
+      that.$.openItem.setShowing(Workspace);
+      that.$.newItem.setShowing(Workspace);
       that.$.openItem.setDisabled(true);
       that.$.newItem.setDisabled(true);
       if (Model && Workspace) {

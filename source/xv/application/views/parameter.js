@@ -125,6 +125,33 @@ trailing:true white:true*/
         defaultKind: "XV.DateWidget"}
     ]
   });
+  
+  // ..........................................................
+  // CONTACT
+  //
+
+  enyo.kind({
+    name: "XV.ItemInfoParameters",
+    kind: "XV.ParameterWidget",
+    components: [
+      {kind: "onyx.GroupboxHeader", content: "_item".loc()},
+      {attr: "isActive", label: "_showInactive".loc(), defaultKind: "XV.CheckboxWidget",
+        getParameter: function () {
+          var param;
+          if (!this.getValue()) {
+            param = {
+              attribute: this.getAttr(),
+              operator: '=',
+              value: true
+            };
+          }
+          return param;
+        }
+      },
+      {label: "_number".loc(), attr: "number"},
+      {label: "_description".loc(), attr: ["description1", "description2"]}
+    ]
+  });
 
   // ..........................................................
   // OPPORTUNITY

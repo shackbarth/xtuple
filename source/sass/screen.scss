@@ -631,6 +631,7 @@ body {
   text-indent: 140px;
   font-size: small;
   padding-bottom: 4px;
+  max-width: 325px;
   &.disabled {
     opacity: 0.4;
   }
