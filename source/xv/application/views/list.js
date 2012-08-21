@@ -167,6 +167,35 @@ trailing:true white:true*/
   });
 
   // ..........................................................
+  // ITEM
+  //
+
+  enyo.kind({
+    name: "XV.ItemList",
+    kind: "XV.List",
+    label: "_items".loc(),
+    collection: "XM.ItemInfoCollection",
+    query: {orderBy: [
+      {attribute: 'number'}
+    ]},
+    parameterWidget: "XV.ItemInfoParameters",
+    components: [
+      {kind: "XV.ListItem", components: [
+        {kind: "FittableColumns", components: [
+          {kind: "XV.ListColumn", classes: "first", components: [
+            {kind: "FittableColumns", components: [
+              {kind: "XV.ListAttr", attr: "number", classes: "bold"},
+              {kind: "XV.ListAttr", attr: "inventoryUnit.name", fit: true,
+                classes: "right"}
+            ]},
+            {kind: "XV.ListAttr", attr: "description1"}
+          ]}
+        ]}
+      ]}
+    ]
+  });
+
+  // ..........................................................
   // OPPORTUNITY
   //
 
