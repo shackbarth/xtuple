@@ -247,7 +247,9 @@ regexp:true, undef:true, trailing:true, white:true */
           // Need to request read priv. from the server
           if (newId) {
             options.success = function (resp) {
-              that.$.openItem.setDisabled(!resp);
+              if (!that.destroyed) {
+                that.$.openItem.setDisabled(!resp);
+              }
             };
             params.recordType = recordType;
             params.id = newId;
