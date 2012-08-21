@@ -47,7 +47,7 @@ trailing:true white:true*/
           ]}
         ]},
         {name: "menuPanels", kind: "Panels", draggable: false, fit: true,
-          arrangerKind: "LeftRightArranger", margin: 0, components: [
+          margin: 0, components: [
           {name: "moduleMenu", kind: "List", touch: true,
               onSetupItem: "setupModuleMenuItem",
               components: [
