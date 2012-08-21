@@ -81,6 +81,8 @@ trailing:true white:true*/
           {kind: "XV.InputWidget", attr: "middleName"},
           {kind: "XV.InputWidget", attr: "lastName"},
           {kind: "XV.InputWidget", attr: "suffix"},
+          {kind: "onyx.GroupboxHeader", content: "_address".loc()},
+          {kind: "XV.AddressWidget", attr: "address"},
           {kind: "onyx.GroupboxHeader", content: "_information".loc()},
           {kind: "XV.InputWidget", attr: "jobTitle"},
           {kind: "XV.InputWidget", attr: "primaryEmail"},

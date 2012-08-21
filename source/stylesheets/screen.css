@@ -707,16 +707,33 @@ body {
 
 /*********XV WIDGETS***********/
 /* line 579, ../sass/screen.scss */
+.xv-addresswidget {
+  background-color: white;
+}
+/* line 581, ../sass/screen.scss */
+.xv-addresswidget .xv-addresswidget-viewer {
+  padding: 8px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 70px;
+}
+/* line 586, ../sass/screen.scss */
+.xv-addresswidget .xv-addresswidget-viewer .xv-placeholder {
+  font-style: italic;
+  opacity: 0.4;
+}
+
+/* line 593, ../sass/screen.scss */
 .xv-dropdownwidget {
   background-color: white;
 }
 
-/* line 583, ../sass/screen.scss */
+/* line 597, ../sass/screen.scss */
 .xv-picker {
   width: 180px;
 }
 
-/* line 587, ../sass/screen.scss */
+/* line 601, ../sass/screen.scss */
 .xv-label {
   width: 130px;
   padding-bottom: 8px;
@@ -726,7 +743,7 @@ body {
   text-align: right;
 }
 
-/* line 596, ../sass/screen.scss */
+/* line 610, ../sass/screen.scss */
 .xv-decorated-label {
   width: 130px;
   padding-bottom: 8px;
@@ -736,7 +753,7 @@ body {
   text-align: right;
 }
 
-/* line 605, ../sass/screen.scss */
+/* line 619, ../sass/screen.scss */
 .xv-dropdown-label {
   width: 130px;
   padding-bottom: 8px;
@@ -746,7 +763,7 @@ body {
   text-align: right;
 }
 
-/* line 614, ../sass/screen.scss */
+/* line 628, ../sass/screen.scss */
 .xv-textarea-input {
   border: 0px;
   width: 324px;
@@ -754,20 +771,20 @@ body {
   margin: 6px;
 }
 
-/* line 621, ../sass/screen.scss */
+/* line 635, ../sass/screen.scss */
 .xv-relationwidget-completer {
   left: -200px;
   top: 15px;
 }
 
-/* line 627, ../sass/screen.scss */
+/* line 641, ../sass/screen.scss */
 .xv-relationwidget-column.left {
   padding-right: 18px;
   color: black;
   width: 140px;
 }
 
-/* line 633, ../sass/screen.scss */
+/* line 647, ../sass/screen.scss */
 .xv-relationwidget-description {
   white-space: nowrap;
   overflow: hidden;
@@ -777,38 +794,38 @@ body {
   padding-bottom: 4px;
   max-width: 325px;
 }
-/* line 641, ../sass/screen.scss */
+/* line 655, ../sass/screen.scss */
 .xv-relationwidget-description.disabled {
   opacity: 0.4;
 }
-/* line 644, ../sass/screen.scss */
+/* line 658, ../sass/screen.scss */
 .xv-relationwidget-description.label {
   text-indent: 0px;
   text-align: right;
 }
-/* line 649, ../sass/screen.scss */
+/* line 663, ../sass/screen.scss */
 .xv-relationwidget-description.hasLabel {
   text-indent: 0px;
 }
-/* line 652, ../sass/screen.scss */
+/* line 666, ../sass/screen.scss */
 .xv-relationwidget-description.hyperlink {
   color: blue;
 }
 
-/* line 657, ../sass/screen.scss */
+/* line 671, ../sass/screen.scss */
 .xv-half-check {
   border: 5px solid green;
   background: url("../../images/not_a_checkbox.png") no-repeat scroll 0 0 transparent;
   background-color: darkgrey;
 }
 
-/* line 664, ../sass/screen.scss */
+/* line 678, ../sass/screen.scss */
 .xv-menuitem.disabled {
   color: Dimgray;
 }
 
 /********END XV WIDGETS******/
-/* line 672, ../sass/screen.scss */
+/* line 686, ../sass/screen.scss */
 .xv-login .xv-login-form {
   position: absolute;
   height: 250px;
@@ -818,17 +835,17 @@ body {
   margin-top: -125px;
   margin-left: -150px;
 }
-/* line 680, ../sass/screen.scss */
+/* line 694, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box {
   font-size: 12px;
   text-align: center;
   padding: 10px;
 }
-/* line 682, ../sass/screen.scss */
+/* line 696, ../sass/screen.scss */
 .xv-login .xv-login-form .xv-message-box.error {
   color: #ff0000;
 }
-/* line 689, ../sass/screen.scss */
+/* line 703, ../sass/screen.scss */
 .xv-login .xv-organizations-selection {
   position: absolute;
   height: 300px;
@@ -838,17 +855,17 @@ body {
   margin-top: -150px;
   margin-left: -200px;
 }
-/* line 697, ../sass/screen.scss */
+/* line 711, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row {
   padding: 5px;
   cursor: pointer;
 }
-/* line 700, ../sass/screen.scss */
+/* line 714, ../sass/screen.scss */
 .xv-login .xv-organizations-selection .xv-organization-row:hover {
   background-color: #ddd;
 }
 
-/* line 708, ../sass/screen.scss */
+/* line 722, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-divider {
   width: 70%;
   margin-left: auto;
@@ -862,7 +879,7 @@ body {
   font-weight: bold;
   margin-bottom: 8px;
 }
-/* line 721, ../sass/screen.scss */
+/* line 735, ../sass/screen.scss */
 .xv-startup-panel .xv-startup-progress {
   width: 70%;
   margin-left: auto;

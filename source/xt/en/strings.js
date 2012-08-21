@@ -377,6 +377,7 @@ XT.stringsFor("en_US", {
   "_logoutConfirmation": "Are you sure you want to log out?",
   "_nameRequired": "A name is required.",
   "_noAccountName": "No Account Name",
+  "_noAddress": "No Address",
   "_noCategory": "No Category",
   "_noCloseTarget": "No Close Target",
   "_noContact": "No Contact",
