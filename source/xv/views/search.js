@@ -41,6 +41,7 @@ trailing:true white:true*/
         ]}
       ]}
     ],
+    init: false,
     close: function (options) {
       this.doPrevious();
     },
@@ -54,6 +55,7 @@ trailing:true white:true*/
       }
     },
     fetch: function (options) {
+      if (!this.init) { return; }
       options = options ? _.clone(options) : {};
       var list = this.$.list,
         query,
@@ -112,6 +114,7 @@ trailing:true white:true*/
           fit: true
         });
       }
+      this.init = true;
       this.render();
     },
     setSearchText: function (searchText) {
