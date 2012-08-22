@@ -23,6 +23,7 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     keyFile: null,
     certFile: null,
     bindAddress: null,
+    parseCookies: false,
     init: function () {
       var auto = this.get("autoStart"),
           port = this.get("port"),
@@ -32,11 +33,9 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
           
       if (!name) name = this.name = "NONAME%@".f(_.uniqueId("_server"));
       if (!port) {
-        var e = new Error("yo");
-        console.log(e.stack);
         issue(X.fatal("cannot create a server with no port %@".f(name)));
       }
-      if (!router && !sockets) issue(X.fatal("cannot create a non-websocket server with no router"));
+      //if (!router && !sockets) issue(X.fatal("cannot create a non-websocket server with no router"));
 
       if (auto) this.start();
   
@@ -60,7 +59,8 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
     start: function () {
       var port = this.get("port"), useSockets = this.get("useWebSocket"), 
           generator = this.get("generator"), server, app = this.server, options = {},
-          secure = this.get("secure"), bindAddress = this.get("bindAddress");
+          secure = this.get("secure"), bindAddress = this.get("bindAddress"),
+          cookies = this.get("parseCookies");
           
       if (secure) {
         options.key = this.get("key");
@@ -71,8 +71,13 @@ regexp:true, undef:true, strict:true, trailing:true, white:true */
       // right now it wraps unintended sub-calls
       try {
         if (X.none(app)) {
-          if (secure) app = X.connect(options).use(_.bind(this.route, this));
-          else app = X.connect().use(_.bind(this.route, this));
+          //if (secure) app = X.connect(options).use(_.bind(this.route, this));
+          //else app = X.connect().use(_.bind(this.route, this));
+          if (secure) app = X.connect(options);
+          else app = X.connect();
+          
+          if (cookies) app.use(X.connect.cookieParser());
+          app.use(_.bind(this.route, this));
         }
         
         if (bindAddress) server = this.server = app.listen(port, bindAddress);
