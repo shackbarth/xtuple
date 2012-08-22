@@ -181,7 +181,7 @@ white:true*/
         line3 = arguments[0].get('line3');
         city = arguments[0].get('city');
         state = arguments[0].get('state');
-        postalcode = arguments[0].get('postalcode');
+        postalcode = arguments[0].get('postalCode');
         country = arguments[0].get('country');
         breaks = (arguments[1] === undefined ? false : arguments[1]) ? '<br />' : '\n';
       } else if (typeof arguments[0] === 'string')  {

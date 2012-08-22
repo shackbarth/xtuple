@@ -121,8 +121,8 @@ trailing:true white:true*/
 
       // Clean up
       if (this._model) {
-        if (this._model.isNew()) { model.destroy(); }
         this._model.off();
+        if (this._model.isNew()) { this._model.destroy(); }
         delete this._model;
       }
       if (!Klass) { return; }

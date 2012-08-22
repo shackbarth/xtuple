@@ -99,12 +99,16 @@ trailing:true white:true*/
         limit = query.rowLimit || 0,
         count = this._collection.length,
         isMore = limit ?
-          (offset + limit <= count) && (this.getCount() !== count) : false;
+          (offset + limit <= count) && (this.getCount() !== count) : false,
+        rowsPerPage = 50 > count ? count : 50;
       this.setIsMore(isMore);
       this.setIsFetching(false);
 
       // Reset the size of the list
       this.setCount(count);
+      if (rowsPerPage !== this.rowsPerPage) {
+        this.setRowsPerPage(rowsPerPage);
+      }
       if (offset) {
         this.refresh();
       } else {
@@ -163,7 +167,7 @@ trailing:true white:true*/
       // Manage lazy loading
       var max = this.getScrollBounds().maxTop - this.rowHeight * FETCH_TRIGGER,
         options = {};
-      if (this.getIsMore() && this.getScrollPosition() > max && !this.getIsFetching()) {
+      if (this.getIsMore() && this.getScrollPosition() > max && !this.fetching) {
         this.setIsFetching(true);
         options.showMore = true;
         this.fetch(options);

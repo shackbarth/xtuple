@@ -576,6 +576,19 @@ body {
 
 /*********XV WIDGETS***********/
 
+.xv-addresswidget {
+  background-color: white;
+  min-height: 104px;
+  .xv-addresswidget-viewer {
+    padding: 8px;
+    border: 0px;
+    font-size: medium;
+  }
+  .xv-addresswidget-input {
+    display: black;
+  }
+}
+
 .xv-dropdownwidget {
   background-color: white;
 }
