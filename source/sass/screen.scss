@@ -50,47 +50,6 @@ body {}
 	min-width: 50%;
 }
 
-/** DASHBOARD */
-
-.xt-app {
-  .xt-dashboard {
-    @include background-image(radial-gradient(#666, #333 70%));
-    background-color: #999;
-    color: #fff;
-    font-weight: bold;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    .xt-dashboard-container {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      margin-top: -65px;
-      height: 131px;
-      .xt-dashboard-icons {
-        margin: auto auto;
-        .xt-dashboard-icon {
-          @include box-sizing(border-box);
-          display: inline-block;
-          margin: 0 10px;
-          &:hover {
-            cursor: pointer;
-          }
-          .xt-dashboard-icon-label {
-            width: 100%;
-            text-align: center;
-          }
-        }
-      }
-    }
-  }
-}
-
-/** END DASHBOARD */
-
 
 .developer-ui-container {
   @include box-shadow(#333 4px 4px 10px -4px);
@@ -119,20 +78,6 @@ body {}
       height: 54px;
       width: 50px;
     }
-  }
-}
-
-.crm-menu-item {
-  padding: 10px;
-  margin: 10px 0;
-  text-align: center;
-  background-color: #fff;
-  color: #000;
-  &.selected {
-    background-color: #eee;
-  }
-  &:hover {
-    background-color: #eee;
   }
 }
 
@@ -314,6 +259,13 @@ body {
 .pullout-toolbar {
 	padding-top: 4px;
 	text-align: center;
+}
+
+/* Workspace.scss */
+.xv-workspace-header {
+  color: white;
+  padding-top: 8px;
+  padding-left: 8px;
 }
 
 /* Parameter.scss */
